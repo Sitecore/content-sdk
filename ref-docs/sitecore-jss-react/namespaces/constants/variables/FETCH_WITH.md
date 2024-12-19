@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../../../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../../../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../../../README.md) / [constants](../README.md) / FETCH\_WITH
+[@sitecore-jss/sitecore-jss-react](../../../README.md) / [constants](../README.md) / FETCH\_WITH
 
 # Variable: FETCH\_WITH
 

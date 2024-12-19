@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../README.md) / RetryStrategy
+[@sitecore-jss/sitecore-jss-react](../README.md) / RetryStrategy
 
 # Interface: RetryStrategy
 

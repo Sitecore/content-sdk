@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../README.md) / EnhancedOmit
+[@sitecore-jss/sitecore-jss-react](../README.md) / EnhancedOmit
 
 # Type Alias: EnhancedOmit\<T, K\>
 

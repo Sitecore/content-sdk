@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../README.md) / BYOCComponent
+[@sitecore-jss/sitecore-jss-react](../README.md) / BYOCComponent
 
 # Class: BYOCComponent
 
@@ -39,7 +39,7 @@ component props
 
 #### Defined in
 
-[packages/sitecore-jss-react/src/components/BYOCComponent.tsx:95](https://github.com/Sitecore/xmc-jss-dev/blob/f739f952c1ea1be244446f2466e23085eb12739b/packages/sitecore-jss-react/src/components/BYOCComponent.tsx#L95)
+[packages/sitecore-jss-react/src/components/BYOCComponent.tsx:95](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss-react/src/components/BYOCComponent.tsx#L95)
 
 ## Properties
 
@@ -129,7 +129,7 @@ packages/sitecore-jss-react/node\_modules/@types/react/index.d.ts:1033
 
 #### Defined in
 
-[packages/sitecore-jss-react/src/components/BYOCComponent.tsx:93](https://github.com/Sitecore/xmc-jss-dev/blob/f739f952c1ea1be244446f2466e23085eb12739b/packages/sitecore-jss-react/src/components/BYOCComponent.tsx#L93)
+[packages/sitecore-jss-react/src/components/BYOCComponent.tsx:93](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss-react/src/components/BYOCComponent.tsx#L93)
 
 ***
 
@@ -191,7 +191,7 @@ the entire component tree to unmount.
 
 #### Defined in
 
-[packages/sitecore-jss-react/src/components/BYOCComponent.tsx:105](https://github.com/Sitecore/xmc-jss-dev/blob/f739f952c1ea1be244446f2466e23085eb12739b/packages/sitecore-jss-react/src/components/BYOCComponent.tsx#L105)
+[packages/sitecore-jss-react/src/components/BYOCComponent.tsx:105](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss-react/src/components/BYOCComponent.tsx#L105)
 
 ***
 
@@ -457,7 +457,7 @@ packages/sitecore-jss-react/node\_modules/@types/react/index.d.ts:1426
 
 #### Defined in
 
-[packages/sitecore-jss-react/src/components/BYOCComponent.tsx:109](https://github.com/Sitecore/xmc-jss-dev/blob/f739f952c1ea1be244446f2466e23085eb12739b/packages/sitecore-jss-react/src/components/BYOCComponent.tsx#L109)
+[packages/sitecore-jss-react/src/components/BYOCComponent.tsx:109](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss-react/src/components/BYOCComponent.tsx#L109)
 
 ***
 
@@ -674,4 +674,4 @@ packages/sitecore-jss-react/node\_modules/@types/react/index.d.ts:1527
 
 #### Defined in
 
-[packages/sitecore-jss-react/src/components/BYOCComponent.tsx:100](https://github.com/Sitecore/xmc-jss-dev/blob/f739f952c1ea1be244446f2466e23085eb12739b/packages/sitecore-jss-react/src/components/BYOCComponent.tsx#L100)
+[packages/sitecore-jss-react/src/components/BYOCComponent.tsx:100](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss-react/src/components/BYOCComponent.tsx#L100)

@@ -1,8 +1,8 @@
-**@xmcloud-jss/react** • **Docs**
+**@sitecore-jss/sitecore-jss-react** • **Docs**
 
 ***
 
-# @xmcloud-jss/react
+# @sitecore-jss/sitecore-jss-react
 
 ## Namespaces
 

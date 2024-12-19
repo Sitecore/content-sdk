@@ -23,12 +23,10 @@
 
 ### Classes
 
-- [AxiosDataFetcher](classes/AxiosDataFetcher.md)
 - [BYOCComponent](classes/BYOCComponent.md)
 - [CdpHelper](classes/CdpHelper.md)
 - [ComponentBuilder](classes/ComponentBuilder.md)
 - [ComponentPropsService](classes/ComponentPropsService.md)
-- [DisconnectedSitemapService](classes/DisconnectedSitemapService.md)
 - [GraphQLDictionaryService](classes/GraphQLDictionaryService.md)
 - [GraphQLErrorPagesService](classes/GraphQLErrorPagesService.md)
 - [GraphQLLayoutService](classes/GraphQLLayoutService.md)
@@ -40,14 +38,11 @@
 - [MultisiteGraphQLSitemapService](classes/MultisiteGraphQLSitemapService.md)
 - [NativeDataFetcher](classes/NativeDataFetcher.md)
 - [RestComponentLayoutService](classes/RestComponentLayoutService.md)
-- [RestDictionaryService](classes/RestDictionaryService.md)
-- [RestLayoutService](classes/RestLayoutService.md)
 - [SitecoreContext](classes/SitecoreContext.md)
 - [SiteResolver](classes/SiteResolver.md)
 
 ### Interfaces
 
-- [AxiosResponse](interfaces/AxiosResponse.md)
 - [CacheClient](interfaces/CacheClient.md)
 - [CacheOptions](interfaces/CacheOptions.md)
 - [CampaignInstance](interfaces/CampaignInstance.md)
@@ -92,7 +87,6 @@
 
 ### Type Aliases
 
-- [AxiosDataFetcherConfig](type-aliases/AxiosDataFetcherConfig.md)
 - [BYOCComponentParams](type-aliases/BYOCComponentParams.md)
 - [BYOCComponentProps](type-aliases/BYOCComponentProps.md)
 - [ComponentBuilderConfig](type-aliases/ComponentBuilderConfig.md)
@@ -115,8 +109,6 @@
 - [ModuleFactory](type-aliases/ModuleFactory.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
 - [PlaceholdersData](type-aliases/PlaceholdersData.md)
-- [RestDictionaryServiceConfig](type-aliases/RestDictionaryServiceConfig.md)
-- [RestLayoutServiceConfig](type-aliases/RestLayoutServiceConfig.md)
 - [RichTextProps](type-aliases/RichTextProps.md)
 - [RobotsQueryResult](type-aliases/RobotsQueryResult.md)
 - [SitecoreContextValue](type-aliases/SitecoreContextValue.md)
@@ -163,7 +155,6 @@
 - [Text](functions/Text.md)
 - [useComponentProps](functions/useComponentProps.md)
 - [useSitecoreContext](functions/useSitecoreContext.md)
-- [VisitorIdentification](functions/VisitorIdentification.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEditorChromes](functions/withEditorChromes.md)
 - [withEmptyFieldEditingComponent](functions/withEmptyFieldEditingComponent.md)

@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../README.md) / CacheClient
+[@sitecore-jss/sitecore-jss-react](../README.md) / CacheClient
 
 # Interface: CacheClient\<T\>
 

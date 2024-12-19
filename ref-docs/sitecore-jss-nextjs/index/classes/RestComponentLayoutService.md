@@ -12,7 +12,7 @@ Returns layoutData for one single rendered component
 
 ## Extends
 
-- [`RestLayoutService`](RestLayoutService.md)
+- `RestLayoutService`
 
 ## Constructors
 
@@ -24,7 +24,7 @@ Returns layoutData for one single rendered component
 
 | Parameter | Type |
 | ------ | ------ |
-| `config` | [`RestLayoutServiceConfig`](../type-aliases/RestLayoutServiceConfig.md) |
+| `config` | `RestLayoutServiceConfig` |
 
 #### Returns
 
@@ -32,7 +32,7 @@ Returns layoutData for one single rendered component
 
 #### Overrides
 
-[`RestLayoutService`](RestLayoutService.md).[`constructor`](RestLayoutService.md#constructors)
+`RestLayoutService.constructor`
 
 #### Defined in
 
@@ -42,7 +42,7 @@ sitecore-jss/types/editing/rest-component-layout-service.d.ts:53
 
 ### getDefaultFetcher()
 
-> `protected` **getDefaultFetcher**: \<`T`\>(`req`?, `res`?) => (`url`, `data`?) => `Promise`\<[`AxiosResponse`](../interfaces/AxiosResponse.md)\<`T`\>\>
+> `protected` **getDefaultFetcher**: \<`T`\>(`req`?, `res`?) => (`url`, `data`?) => `Promise`\<`AxiosResponse`\<`T`\>\>
 
 Provides default
 
@@ -74,7 +74,7 @@ default fetcher
 
 ##### Returns
 
-`Promise`\<[`AxiosResponse`](../interfaces/AxiosResponse.md)\<`T`\>\>
+`Promise`\<`AxiosResponse`\<`T`\>\>
 
 #### See
 
@@ -82,7 +82,7 @@ AxiosDataFetcher data fetcher
 
 #### Inherited from
 
-[`RestLayoutService`](RestLayoutService.md).[`getDefaultFetcher`](RestLayoutService.md#getdefaultfetcher)
+`RestLayoutService.getDefaultFetcher`
 
 #### Defined in
 
@@ -107,7 +107,7 @@ sitecore-jss/types/layout/rest-layout-service.d.ts:97
 
 #### Inherited from
 
-[`RestLayoutService`](RestLayoutService.md).[`getFetcher`](RestLayoutService.md#getfetcher)
+`RestLayoutService.getFetcher`
 
 #### Defined in
 
@@ -135,7 +135,7 @@ fetch options
 
 #### Inherited from
 
-[`RestLayoutService`](RestLayoutService.md).[`getFetchParams`](RestLayoutService.md#getfetchparams)
+`RestLayoutService.getFetchParams`
 
 #### Defined in
 
@@ -192,7 +192,7 @@ the item with the specified path is not found
 
 #### Inherited from
 
-[`RestLayoutService`](RestLayoutService.md).[`fetchLayoutData`](RestLayoutService.md#fetchlayoutdata)
+`RestLayoutService.fetchLayoutData`
 
 #### Defined in
 
@@ -226,7 +226,7 @@ placeholder data
 
 #### Inherited from
 
-[`RestLayoutService`](RestLayoutService.md).[`fetchPlaceholderData`](RestLayoutService.md#fetchplaceholderdata)
+`RestLayoutService.fetchPlaceholderData`
 
 #### Defined in
 
@@ -274,7 +274,7 @@ the layout service url
 
 #### Inherited from
 
-[`RestLayoutService`](RestLayoutService.md).[`resolveLayoutServiceUrl`](RestLayoutService.md#resolvelayoutserviceurl)
+`RestLayoutService.resolveLayoutServiceUrl`
 
 #### Defined in
 
@@ -312,7 +312,7 @@ axios request config
 
 #### Inherited from
 
-[`RestLayoutService`](RestLayoutService.md).[`setupReqHeaders`](RestLayoutService.md#setupreqheaders)
+`RestLayoutService.setupReqHeaders`
 
 #### Defined in
 
@@ -322,7 +322,7 @@ sitecore-jss/types/layout/rest-layout-service.d.ts:103
 
 ### setupResHeaders()
 
-> `protected` **setupResHeaders**(`res`): (`serverRes`) => [`AxiosResponse`](../interfaces/AxiosResponse.md)\<`any`\>
+> `protected` **setupResHeaders**(`res`): (`serverRes`) => `AxiosResponse`\<`any`\>
 
 Setup response headers based on response from layout service
 
@@ -342,15 +342,15 @@ response
 
 | Parameter | Type |
 | ------ | ------ |
-| `serverRes` | [`AxiosResponse`](../interfaces/AxiosResponse.md)\<`any`\> |
+| `serverRes` | `AxiosResponse`\<`any`\> |
 
 ##### Returns
 
-[`AxiosResponse`](../interfaces/AxiosResponse.md)\<`any`\>
+`AxiosResponse`\<`any`\>
 
 #### Inherited from
 
-[`RestLayoutService`](RestLayoutService.md).[`setupResHeaders`](RestLayoutService.md#setupresheaders)
+`RestLayoutService.setupResHeaders`
 
 #### Defined in
 

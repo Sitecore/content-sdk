@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../README.md) / FEaaSWrapper
+[@sitecore-jss/sitecore-jss-react](../README.md) / FEaaSWrapper
 
 # Function: FEaaSWrapper()
 
@@ -20,4 +20,4 @@
 
 ## Defined in
 
-[packages/sitecore-jss-react/src/components/FEaaSWrapper.tsx:6](https://github.com/Sitecore/xmc-jss-dev/blob/f739f952c1ea1be244446f2466e23085eb12739b/packages/sitecore-jss-react/src/components/FEaaSWrapper.tsx#L6)
+[packages/sitecore-jss-react/src/components/FEaaSWrapper.tsx:6](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss-react/src/components/FEaaSWrapper.tsx#L6)

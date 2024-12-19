@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../../../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../../../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../../../README.md) / [mediaApi](../README.md) / getRequiredParams
+[@sitecore-jss/sitecore-jss-react](../../../README.md) / [mediaApi](../README.md) / getRequiredParams
 
 # Function: getRequiredParams()
 

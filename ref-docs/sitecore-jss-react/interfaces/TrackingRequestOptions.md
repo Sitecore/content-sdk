@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../README.md) / TrackingRequestOptions
+[@sitecore-jss/sitecore-jss-react](../README.md) / TrackingRequestOptions
 
 # Interface: TrackingRequestOptions
 

@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../../../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../../../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../../../README.md) / [constants](../README.md) / HIDDEN\_RENDERING\_NAME
+[@sitecore-jss/sitecore-jss-react](../../../README.md) / [constants](../README.md) / HIDDEN\_RENDERING\_NAME
 
 # Variable: HIDDEN\_RENDERING\_NAME
 

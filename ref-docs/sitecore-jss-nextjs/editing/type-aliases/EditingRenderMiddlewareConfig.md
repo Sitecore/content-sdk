@@ -14,7 +14,7 @@ Configuration for the Editing Render Middleware.
 
 ### dataFetcher?
 
-> `optional` **dataFetcher**: [`AxiosDataFetcher`](../../index/classes/AxiosDataFetcher.md)
+> `optional` **dataFetcher**: `AxiosDataFetcher`
 
 -- Edit Mode Chromes --
 
@@ -115,4 +115,4 @@ resolvePageUrl
 
 ## Defined in
 
-[sitecore-jss-nextjs/src/editing/editing-render-middleware.ts:21](https://github.com/Sitecore/jss/blob/32e43cec490a623a675f03f30cb52f47552c878c/packages/sitecore-jss-nextjs/src/editing/editing-render-middleware.ts#L21)
+[sitecore-jss-nextjs/src/editing/editing-render-middleware.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss-nextjs/src/editing/editing-render-middleware.ts#L21)

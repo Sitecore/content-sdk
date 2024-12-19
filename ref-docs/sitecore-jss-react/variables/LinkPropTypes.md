@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../README.md) / LinkPropTypes
+[@sitecore-jss/sitecore-jss-react](../README.md) / LinkPropTypes
 
 # Variable: LinkPropTypes
 
@@ -28,4 +28,4 @@
 
 ## Defined in
 
-[packages/sitecore-jss-react/src/components/Link.tsx:131](https://github.com/Sitecore/xmc-jss-dev/blob/f739f952c1ea1be244446f2466e23085eb12739b/packages/sitecore-jss-react/src/components/Link.tsx#L131)
+[packages/sitecore-jss-react/src/components/Link.tsx:131](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss-react/src/components/Link.tsx#L131)

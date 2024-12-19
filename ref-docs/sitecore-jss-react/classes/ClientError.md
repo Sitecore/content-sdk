@@ -1,8 +1,8 @@
-[**@xmcloud-jss/react**](../README.md) • **Docs**
+[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
 
 ***
 
-[@xmcloud-jss/react](../README.md) / ClientError
+[@sitecore-jss/sitecore-jss-react](../README.md) / ClientError
 
 # Class: ClientError
 
