@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
+[**@xmcloud-jss/react**](../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-react](../README.md) / getEEMarkup
+[@xmcloud-jss/react](../README.md) / getEEMarkup
 
 # Function: getEEMarkup()
 
@@ -25,4 +25,4 @@ Experience Editor Markup
 
 ## Defined in
 
-[packages/sitecore-jss-react/src/components/Image.tsx:118](https://github.com/Sitecore/jss/blob/32e43cec490a623a675f03f30cb52f47552c878c/packages/sitecore-jss-react/src/components/Image.tsx#L118)
+[packages/sitecore-jss-react/src/components/Image.tsx:118](https://github.com/Sitecore/xmc-jss-dev/blob/f739f952c1ea1be244446f2466e23085eb12739b/packages/sitecore-jss-react/src/components/Image.tsx#L118)

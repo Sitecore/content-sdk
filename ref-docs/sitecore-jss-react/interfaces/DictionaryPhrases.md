@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
+[**@xmcloud-jss/react**](../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-react](../README.md) / DictionaryPhrases
+[@xmcloud-jss/react](../README.md) / DictionaryPhrases
 
 # Interface: DictionaryPhrases
 

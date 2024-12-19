@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
+[**@xmcloud-jss/react**](../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-react](../README.md) / EditButtonTypes
+[@xmcloud-jss/react](../README.md) / EditButtonTypes
 
 # Type Alias: EditButtonTypes
 

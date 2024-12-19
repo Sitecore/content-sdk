@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
+[**@xmcloud-jss/react**](../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-react](../README.md) / getContentStylesheetLink
+[@xmcloud-jss/react](../README.md) / getContentStylesheetLink
 
 # Function: getContentStylesheetLink()
 

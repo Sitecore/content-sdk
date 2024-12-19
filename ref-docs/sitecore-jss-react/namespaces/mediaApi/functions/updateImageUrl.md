@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-react**](../../../README.md) • **Docs**
+[**@xmcloud-jss/react**](../../../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-react](../../../README.md) / [mediaApi](../README.md) / updateImageUrl
+[@xmcloud-jss/react](../../../README.md) / [mediaApi](../README.md) / updateImageUrl
 
 # Function: updateImageUrl()
 

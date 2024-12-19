@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-react**](../../../README.md) • **Docs**
+[**@xmcloud-jss/react**](../../../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-react](../../../README.md) / [constants](../README.md) / SITECORE\_EDGE\_URL\_DEFAULT
+[@xmcloud-jss/react](../../../README.md) / [constants](../README.md) / SITECORE\_EDGE\_URL\_DEFAULT
 
 # Variable: SITECORE\_EDGE\_URL\_DEFAULT
 

@@ -1,8 +1,8 @@
-**@sitecore-jss/sitecore-jss-react** • **Docs**
+**@xmcloud-jss/react** • **Docs**
 
 ***
 
-# @sitecore-jss/sitecore-jss-react
+# @xmcloud-jss/react
 
 ## Namespaces
 
@@ -126,7 +126,6 @@
 - [RichText](functions/RichText.md)
 - [Text](functions/Text.md)
 - [useSitecoreContext](functions/useSitecoreContext.md)
-- [VisitorIdentification](functions/VisitorIdentification.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEditorChromes](functions/withEditorChromes.md)
 - [withEmptyFieldEditingComponent](functions/withEmptyFieldEditingComponent.md)

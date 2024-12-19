@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
+[**@xmcloud-jss/react**](../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-react](../README.md) / LayoutServiceContext
+[@xmcloud-jss/react](../README.md) / LayoutServiceContext
 
 # Interface: LayoutServiceContext
 

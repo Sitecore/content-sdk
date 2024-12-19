@@ -29,11 +29,7 @@ import * as FEAASWrapper from './FEaaSWrapper';
 import { HiddenRendering } from './HiddenRendering';
 import { MissingComponent, MissingComponentProps } from './MissingComponent';
 import { Placeholder } from './Placeholder';
-import {
-  ComponentProps,
-  getDynamicPlaceholderPattern,
-  isDynamicPlaceholder,
-} from './PlaceholderCommon';
+import { ComponentProps } from './PlaceholderCommon';
 import { SitecoreContext } from './SitecoreContext';
 import { ComponentFactory } from './sharedTypes';
 import { PlaceholderMetadata } from './PlaceholderMetadata';

@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
+[**@xmcloud-jss/react**](../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-react](../README.md) / getFieldValue
+[@xmcloud-jss/react](../README.md) / getFieldValue
 
 # Function: getFieldValue()
 

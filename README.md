@@ -4,6 +4,10 @@
 
 This repository contains source code for all Sitecore JSS packages and templates to help you get started using Sitecore JSS.
 
+<!--
+@TODO: adjust for new versioning
+-->
+
 ## Getting started with JSS
 
 To develop a JSS application, you need:

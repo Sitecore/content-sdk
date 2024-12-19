@@ -6,7 +6,6 @@ export {
   EditingRenderMiddleware,
   EditingRenderMiddlewareConfig,
   EditingMetadataPreviewData,
-  isEditingMetadataPreviewData,
   isComponentLibraryPreviewData,
 } from './editing-render-middleware';
 export {

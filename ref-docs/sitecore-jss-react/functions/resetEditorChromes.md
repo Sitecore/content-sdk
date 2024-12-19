@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
+[**@xmcloud-jss/react**](../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-react](../README.md) / resetEditorChromes
+[@xmcloud-jss/react](../README.md) / resetEditorChromes
 
 # Function: resetEditorChromes()
 

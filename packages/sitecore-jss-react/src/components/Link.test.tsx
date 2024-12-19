@@ -126,7 +126,7 @@ describe('<Link />', () => {
     const link = c.find('a');
     expect(ref.current?.id).to.equal(link.props().id);
   });
-  describe('editMode metadata', () => {
+  describe('edit mode', () => {
     const testMetadata = {
       contextItem: {
         id: '{09A07660-6834-476C-B93B-584248D3003B}',

@@ -1,6 +1,6 @@
 import { JssConfig } from 'lib/config';
 import { ConfigPlugin } from '..';
-import { getPublicUrl } from '@sitecore-jss/sitecore-jss-nextjs/utils';
+import { getPublicUrl } from '@sitecore-jss/sitecore-jss-nextjs';
 
 /**
  * This config will set fallback values for properties that were left empty

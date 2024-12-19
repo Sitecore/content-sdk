@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-react**](../README.md) • **Docs**
+[**@xmcloud-jss/react**](../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-react](../README.md) / MemoryCacheClient
+[@xmcloud-jss/react](../README.md) / MemoryCacheClient
 
 # Class: MemoryCacheClient\<T\>
 
