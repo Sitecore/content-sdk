@@ -1,0 +1,76 @@
+{
+  "name": "@sitecore-jss/sitecore-jss",
+  "version": "22.4.0-canary.7",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
+    "clean": "del-cli dist types",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "test": "mocha --require ts-node/register \"./src/**/*.test.ts\"",
+    "prepublishOnly": "npm run build",
+    "coverage": "nyc npm test",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/sitecore-jss --entryPoints src/index.ts --entryPoints src/graphql/index.ts --entryPoints src/i18n/index.ts --entryPoints src/layout/index.ts --entryPoints src/media/index.ts --entryPoints src/personalize/index.ts --entryPoints src/site/index.ts --entryPoints src/tracking/index.ts --entryPoints src/utils/index.ts --entryPoints src/editing/index.ts --githubPages false"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "author": {
+    "name": "Sitecore Corporation",
+    "url": "https://jss.sitecore.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sitecore/jss"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://jss.sitecore.com",
+  "bugs": {
+    "url": "https://github.com/sitecore/jss/issues"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.3",
+    "@types/chai-spies": "^1.0.3",
+    "@types/chai-string": "^1.4.2",
+    "@types/debug": "^4.1.5",
+    "@types/lodash.unescape": "^4.0.6",
+    "@types/memory-cache": "^0.2.1",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^22.9.0",
+    "@types/sinon": "^17.0.3",
+    "@types/url-parse": "1.4.8",
+    "chai": "^4.2.0",
+    "chai-spies": "^1.0.0",
+    "chai-string": "^1.5.0",
+    "del-cli": "^5.0.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-jsdoc": "48.7.0",
+    "mocha": "^10.2.0",
+    "nock": "^13.0.5",
+    "nyc": "^15.1.0",
+    "sinon": "^17.0.1",
+    "ts-node": "^8.4.1",
+    "tslib": "^1.10.0",
+    "typescript": "~5.6.3"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "chalk": "^4.1.0",
+    "debug": "^4.3.1",
+    "graphql": "^16.5.0",
+    "graphql-request": "^4.2.0",
+    "lodash.unescape": "^4.0.1",
+    "memory-cache": "^0.2.0",
+    "url-parse": "^1.5.9"
+  },
+  "description": "",
+  "types": "types/index.d.ts",
+  "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
+  "files": [
+    "dist",
+    "types",
+    "/*.js",
+    "/*.d.ts"
+  ]
+}

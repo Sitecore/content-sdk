@@ -1,0 +1,25 @@
+{
+  "extension": [
+    ".ts"
+  ],
+  "exclude": [
+    "**/index.ts",
+    "**/*.d.ts",
+    "**/*.test.ts",
+    "src/test-data",
+    "dist",
+    "src/test.ts",
+    "src/index.ts",
+    "src/dataModels.ts",
+    "./*.js",
+    "./*.d.ts",
+    "**/layout/models.ts",
+    "*.js"
+  ],
+  "all": true,
+  "reporter": [
+    "cobertura",
+    "text"
+  ],
+  "require": ["ts-node/register"]
+}

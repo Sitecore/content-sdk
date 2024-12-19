@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "jsx": "react",
+    "outDir": "dist/cjs",
+    "strictNullChecks": false,
+    "types": ["node", "mocha"],
+    "typeRoots": ["node_modules/@types"],
+    "declarationDir": "./types",
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "node_modules",
+    "types",
+    "typings",
+    "dist",
+    "src/tests/*",
+    "src/test-data/*",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}
