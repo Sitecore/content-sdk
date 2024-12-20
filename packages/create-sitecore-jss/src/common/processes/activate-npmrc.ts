@@ -5,7 +5,6 @@ import chalk from 'chalk';
 // for some reason npmrc is not copied with templates
 // this is a workaround to address that - and ensure packages are installed from right place
 /**
- * @param {string} templatePath
  * @param {string} destinationPath
  */
 export function activateNpmrc(destinationPath: string) {
