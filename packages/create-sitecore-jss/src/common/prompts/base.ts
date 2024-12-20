@@ -1,11 +1,6 @@
 import chalk from 'chalk';
 import { Answers, DistinctQuestion } from 'inquirer';
 
-export enum FetchWith {
-  GraphQL = 'GraphQL',
-  REST = 'REST',
-}
-
 /**
  * Set of CLI answers for the client-side app
  */
@@ -20,7 +15,6 @@ export type ClientAppAnswer = Answers & {
  * Default app name for the new app
  */
 export const DEFAULT_APPNAME = 'sitecore-jss-app';
-export const DEFAULT_FETCHWITH = FetchWith.GraphQL;
 
 /**
  * Set of CLI prompts for the client-side app

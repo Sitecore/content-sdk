@@ -1,4 +1,4 @@
-﻿import {
+import {
   generatePlugins,
   ModuleType,
   PluginDefinition,

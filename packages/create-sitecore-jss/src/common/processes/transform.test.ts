@@ -31,9 +31,7 @@ describe('transform', () => {
         appPrefix: true,
         appName: 'test',
         destination: '.\\test-data\\test',
-        fetchWith: 'GraphQL',
         prerender: 'SSG',
-        hostName: 'https://cm.jss.localhost',
         templates: [],
       };
 
@@ -366,9 +364,7 @@ describe('transform', () => {
 
       const answers = {
         appName: 'JssNextWeb',
-        hostName: 'http://jssnextweb',
         destination: 'samples/next',
-        fetchWith: 'REST',
         force: false,
         templates: [],
         language: 'en',
@@ -391,9 +387,7 @@ describe('transform', () => {
 
       const answers = {
         appName: 'JssNextWeb',
-        hostName: 'http://jssnextweb',
         destination: 'samples/next',
-        fetchWith: 'REST',
         force: false,
         templates: [],
         language: 'en',
@@ -416,9 +410,7 @@ describe('transform', () => {
 
       const answers = {
         appName: 'JssNextWeb',
-        hostName: 'http://jssnextweb',
         destination: 'samples/next',
-        fetchWith: 'REST',
         force: false,
         templates: [],
         language: 'en',
@@ -443,9 +435,7 @@ describe('transform', () => {
 
       const answers = {
         appName: 'JssNextWeb',
-        hostName: 'http://jssnextweb',
         destination: 'samples/next',
-        fetchWith: 'REST',
         force: false,
         templates: [],
         language: 'en',

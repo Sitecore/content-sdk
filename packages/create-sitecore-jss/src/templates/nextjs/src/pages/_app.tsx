@@ -3,7 +3,7 @@ import { I18nProvider } from 'next-localization';
 import { SitecorePageProps } from 'lib/page-props';
 import Bootstrap from 'src/Bootstrap';
 
-import 'assets/app.css';
+import 'assets/main.scss';
 
 function App({ Component, pageProps }: AppProps<SitecorePageProps>): JSX.Element {
   const { dictionary, ...rest } = pageProps;

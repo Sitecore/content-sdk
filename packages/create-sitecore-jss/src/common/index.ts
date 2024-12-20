@@ -1,5 +1,4 @@
 export { ClientAppArgs, BaseArgs } from './args/base';
-export { StyleguideArgs } from './args/styleguide';
 
 export {
   ClientAppAnswer,
@@ -8,8 +7,6 @@ export {
   incompatibleAddonsMsg,
   missingAddonMsg,
 } from './prompts/base';
-export { StyleguideAnswer, styleguidePrompts } from './prompts/styleguide';
-export { SxpAnswer, sxpPrompts } from './prompts/sxp';
 export {
   isDevEnvironment,
   openJsonFile,
