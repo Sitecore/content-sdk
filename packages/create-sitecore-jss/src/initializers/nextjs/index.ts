@@ -4,7 +4,6 @@ import { prompts, NextjsAnswer } from './prompts';
 import { Initializer, transform, isDevEnvironment } from '../../common';
 import { removeDevDependencies } from './remove-dev-dependencies';
 import { NextjsArgs } from './args';
-import { activateNpmrc } from '../../common/processes/activate-npmrc';
 
 export default class NextjsInitializer implements Initializer {
   get isBase(): boolean {
@@ -28,7 +27,6 @@ export default class NextjsInitializer implements Initializer {
       appName: answers.appName,
       initializers: addInitializers,
     };
-    activateNpmrc(args.destination);
 
     return response;
   }

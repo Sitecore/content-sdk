@@ -1,18 +1,12 @@
 {
   "name": "<%- appName %>",
   "description": "Application utilizing Sitecore JavaScript Services and Next.js",
-  "version": "22.4.0-canary",
+  "version": "<%- version %>",
   "private": true,
   "config": {
     "appName": "<%- appName %>",
     "graphQLEndpointPath": "/sitecore/api/graph/edge",
-    "language": "en",
-    "templates": [
-      "nextjs",
-      "nextjs-xmcloud",
-      "nextjs-sxa",
-      "nextjs-multisite"
-    ]
+    "language": "en"
   },
   "author": {
     "name": "Sitecore Corporation",
