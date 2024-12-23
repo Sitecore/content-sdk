@@ -8,7 +8,7 @@ class ComponentThemesPlugin implements Plugin {
   order = 10;
 
   async exec(props: SitecorePageProps) {
-    // Collect FEAAS, BYOC, SXA component themes
+    // Collect SXA component themes
     props.headLinks.push(
       ...getComponentLibraryStylesheetLinks(
         props.layoutData,

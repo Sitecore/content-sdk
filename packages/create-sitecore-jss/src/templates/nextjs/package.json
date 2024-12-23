@@ -23,7 +23,6 @@
   "dependencies": {
     "@sitecore-cloudsdk/core": "^0.4.2",
     "@sitecore-cloudsdk/events": "^0.4.2",
-    "@sitecore-feaas/clientside": "^0.5.19",
     "@sitecore-jss/sitecore-jss-nextjs": "~22.4.0-canary",
     "@sitecore/components": "~2.0.1",
     "bootstrap": "^5.1.3",
