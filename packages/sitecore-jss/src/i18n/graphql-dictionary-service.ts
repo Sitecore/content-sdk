@@ -15,42 +15,6 @@ export const queryError =
   'Valid value for rootItemId not provided and failed to auto-resolve app root item.';
 
 /** @default */
-const query = /* GraphQL */ `
-  query DictionarySearch(
-    $rootItemId: String!
-    $language: String!
-    $templates: String!
-    $pageSize: Int = 10
-    $after: String
-  ) {
-    search(
-      where: {
-        AND: [
-          { name: "_path", value: $rootItemId, operator: CONTAINS }
-          { name: "_language", value: $language }
-          { name: "_templates", value: $templates, operator: CONTAINS }
-        ]
-      }
-      first: $pageSize
-      after: $after
-    ) {
-      total
-      pageInfo {
-        endCursor
-        hasNext
-      }
-      results {
-        key: field(name: "Key") {
-          value
-        }
-        phrase: field(name: "Phrase") {
-          value
-        }
-      }
-    }
-  }
-`;
-
 const siteQuery = /* GraphQL */ `
   query DictionarySiteQuery(
     $siteName: String!
@@ -138,7 +102,6 @@ export type DictionarySiteQueryResponse = {
  */
 export class GraphQLDictionaryService extends DictionaryServiceBase {
   private graphQLClient: GraphQLClient;
-  private searchService: SearchQueryService<DictionaryQueryResult>;
 
   /**
    * Creates an instance of graphQL dictionary service with the provided options
@@ -147,7 +110,6 @@ export class GraphQLDictionaryService extends DictionaryServiceBase {
   constructor(public options: GraphQLDictionaryServiceConfig) {
     super(options);
     this.graphQLClient = this.getGraphQLClient();
-    this.searchService = new SearchQueryService<DictionaryQueryResult>(this.graphQLClient);
   }
 
   /**
@@ -164,51 +126,9 @@ export class GraphQLDictionaryService extends DictionaryServiceBase {
       return cachedValue;
     }
 
-    const phrases = this.options.useSiteQuery
-      ? await this.fetchWithSiteQuery(language)
-      : await this.fetchWithSearchQuery(language);
+    const phrases = await this.fetchWithSiteQuery(language);
 
     this.setCacheValue(cacheKey, phrases);
-    return phrases;
-  }
-
-  /**
-   * Fetches dictionary data with search query
-   * This is the default behavior for non-XMCloud deployments. Uses `query` to retrieve data.
-   * @param {string} language the language to fetch
-   * @returns {Promise<DictionaryPhrases>} dictionary phrases
-   * @throws {Error} if the app root was not found for the specified site and language.
-   */
-  async fetchWithSearchQuery(language: string): Promise<DictionaryPhrases> {
-    debug.dictionary('fetching site root for %s %s', language, this.options.siteName);
-
-    // If the caller does not specify a root item ID, then we try to figure it out
-    const rootItemId =
-      this.options.rootItemId ||
-      (await getAppRootId(
-        this.graphQLClient,
-        this.options.siteName,
-        language,
-        this.options.jssAppTemplateId
-      ));
-
-    if (!rootItemId) {
-      throw new Error(queryError);
-    }
-
-    debug.dictionary('fetching dictionary data for %s %s', language, this.options.siteName);
-    const phrases: DictionaryPhrases = {};
-    await this.searchService
-      .fetch(query, {
-        rootItemId,
-        language,
-        templates: this.options.dictionaryEntryTemplateId || SitecoreTemplateId.DictionaryEntry,
-        pageSize: this.options.pageSize,
-      })
-      .then((results) => {
-        results.forEach((item) => (phrases[item.key.value] = item.phrase.value));
-      });
-
     return phrases;
   }
 

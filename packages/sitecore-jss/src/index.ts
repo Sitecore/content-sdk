@@ -3,7 +3,6 @@
 
 import * as constants from './constants';
 export { default as debug, Debugger, enableDebug } from './debug';
-export { HttpDataFetcher, HttpResponse, fetchData } from './data-fetcher';
 export {
   RetryStrategy,
   DefaultRetryStrategy,
@@ -13,7 +12,6 @@ export {
   GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
 } from './graphql-request-client';
-export { AxiosDataFetcher, AxiosDataFetcherConfig } from './axios-fetcher';
 export { CacheClient, CacheOptions, MemoryCacheClient } from './cache-client';
 export { AxiosResponse } from 'axios';
 export { ClientError } from 'graphql-request';

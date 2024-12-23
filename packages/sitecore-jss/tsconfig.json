@@ -18,7 +18,6 @@
     "utils.d.ts",
     "graphql.d.ts",
     "i18n.d.ts",
-    "tracking.d.ts",
     "site.d.ts",
     "personalize.d.ts",
     "feaas.d.ts",
