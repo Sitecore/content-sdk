@@ -50,28 +50,32 @@ steps:
 - script: |
     yarn lint-packages
   displayName: 'lint packages'
-- script: |
-    npm run build
-  displayName: 'build packages'
-- script: |
-    yarn coverage-packages
-  displayName: 'running tests'
-  env: {
-    testEnv: 'ci'
-  }
-- task: reportgenerator@5
-  displayName: 'generate code coverage report'
-  inputs:
-    reports: '$(System.DefaultWorkingDirectory)/**/cobertura-coverage.xml'
-    targetdir: '$(Build.SourcesDirectory)/coverlet'
-    reporttypes: 'HtmlInline_AzurePipelines;Cobertura'
-    verbosity: 'Verbose'
-- task: PublishCodeCoverageResults@1
-  displayName: 'publish code coverage report'
-  inputs: 
-    codeCoverageTool: Cobertura
-    summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/Cobertura.xml'
-    reportDirectory: '$(Build.SourcesDirectory)/coverlet'
+- script: 'echo "shouldPublish: $(shouldPublish)"'
+  displayName: 'Debug shouldPublish'
+- script: 'echo "Build.SourceBranch: $(Build.SourceBranch)"'
+  displayName: 'Debug Build.SourceBranch'
+# - script: |
+#     npm run build
+#   displayName: 'build packages'
+# - script: |
+#     yarn coverage-packages
+#   displayName: 'running tests'
+#   env: {
+#     testEnv: 'ci'
+#   }
+# - task: reportgenerator@5
+#   displayName: 'generate code coverage report'
+#   inputs:
+#     reports: '$(System.DefaultWorkingDirectory)/**/cobertura-coverage.xml'
+#     targetdir: '$(Build.SourcesDirectory)/coverlet'
+#     reporttypes: 'HtmlInline_AzurePipelines;Cobertura'
+#     verbosity: 'Verbose'
+# - task: PublishCodeCoverageResults@1
+#   displayName: 'publish code coverage report'
+#   inputs: 
+#     codeCoverageTool: Cobertura
+#     summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/Cobertura.xml'
+#     reportDirectory: '$(Build.SourcesDirectory)/coverlet'
 - script: |
     yarn scaffold-samples
   displayName: 'scaffold samples'
