@@ -35,12 +35,6 @@ export { getContentStylesheetLink } from './content-styles';
 export { LayoutService } from './layout-service';
 
 export {
-  RestLayoutService,
-  RestLayoutServiceConfig,
-  DataFetcherResolver,
-} from './rest-layout-service';
-
-export {
   GraphQLLayoutService,
   GraphQLLayoutServiceConfig,
   GRAPHQL_LAYOUT_QUERY_NAME,

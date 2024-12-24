@@ -23,7 +23,7 @@ export interface HttpResponse<T> {
  * - Comply with the rules of REST by returning appropriate response status codes when there is an error instead of throwing exceptions.
  * - Send HTTP POST requests if `data` param is specified; GET is suggested but not required for data-less requests
  */
-export type HttpDataFetcher<T> = (url: string, data?: unknown) => Promise<HttpResponse<T>>;
+export type HttpDataFetcher<T> = (url: string, data?: RequestInit) => Promise<HttpResponse<T>>;
 
 export class ResponseError extends Error {
   response: HttpResponse<unknown>;
@@ -62,7 +62,6 @@ export function fetchData<T>(
   return fetcher(resolveUrl(url, params))
     .then(checkStatus)
     .then((response) => {
-      // axios auto-parses JSON responses, don't need to JSON.parse
       return response.data;
     });
 }

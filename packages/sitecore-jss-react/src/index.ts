@@ -5,6 +5,9 @@ export {
   CacheClient,
   CacheOptions,
   MemoryCacheClient,
+  NativeDataFetcher,
+  NativeDataFetcherResponse,
+  NativeDataFetcherConfig,
 } from '@sitecore-jss/sitecore-jss';
 export { EnhancedOmit } from '@sitecore-jss/sitecore-jss/utils';
 export {
@@ -26,7 +29,6 @@ export {
   LayoutServiceContext,
   LayoutServiceContextData,
   GraphQLLayoutService,
-  RestLayoutService,
   RouteData,
   Field,
   Item,
@@ -39,19 +41,9 @@ export {
   EditMode,
 } from '@sitecore-jss/sitecore-jss/layout';
 export {
-  trackingApi,
-  TrackingRequestOptions,
-  CampaignInstance,
-  GoalInstance,
-  OutcomeInstance,
-  EventInstance,
-  PageViewInstance,
-} from '@sitecore-jss/sitecore-jss/tracking';
-export {
   DictionaryPhrases,
   DictionaryService,
   GraphQLDictionaryService,
-  RestDictionaryService,
 } from '@sitecore-jss/sitecore-jss/i18n';
 export {
   GraphQLClientError,

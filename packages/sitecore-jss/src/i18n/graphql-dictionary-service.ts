@@ -3,10 +3,9 @@ import {
   GraphQLRequestClientConfig,
   GraphQLRequestClientFactory,
 } from '../graphql-request-client';
-import { SitecoreTemplateId } from '../constants';
 import { DictionaryPhrases, DictionaryServiceBase } from './dictionary-service';
 import { CacheOptions } from '../cache-client';
-import { getAppRootId, SearchQueryService, PageInfo, SearchQueryVariables } from '../graphql';
+import { PageInfo, SearchQueryVariables } from '../graphql';
 import { siteNameError, languageError } from '../graphql/app-root-query';
 import debug from '../debug';
 

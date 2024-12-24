@@ -169,7 +169,7 @@ export class NativeDataFetcher {
   /**
    * Determines settings for the request
    * @param {RequestInit} init Custom settings for request
-   * @param {unknown} [data] Optional data to POST with the request
+   * @param {RequestInit} [data] Optional data to POST with the request
    * @returns {RequestInit} The final request settings
    */
   protected getRequestInit(init: RequestInit = {}): RequestInit {
