@@ -21,4 +21,4 @@
 
 ## Defined in
 
-[packages/sitecore-jss-react/src/components/Image.tsx:144](https://github.com/Sitecore/jss/blob/32e43cec490a623a675f03f30cb52f47552c878c/packages/sitecore-jss-react/src/components/Image.tsx#L144)
+[packages/sitecore-jss-react/src/components/Image.tsx:144](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss-react/src/components/Image.tsx#L144)

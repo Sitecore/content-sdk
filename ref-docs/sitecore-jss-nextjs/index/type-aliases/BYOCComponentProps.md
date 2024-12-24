@@ -10,4 +10,4 @@
 
 ## Defined in
 
-sitecore-jss-react/types/components/BYOCComponent.d.ts:64
+sitecore-jss-react/types/components/BYOCComponent.d.ts:67

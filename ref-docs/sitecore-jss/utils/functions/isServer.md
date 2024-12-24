@@ -18,4 +18,4 @@ true if executing server-side
 
 ## Defined in
 
-[packages/sitecore-jss/src/utils/is-server.ts:5](https://github.com/Sitecore/jss/blob/32e43cec490a623a675f03f30cb52f47552c878c/packages/sitecore-jss/src/utils/is-server.ts#L5)
+[packages/sitecore-jss/src/utils/is-server.ts:5](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss/src/utils/is-server.ts#L5)

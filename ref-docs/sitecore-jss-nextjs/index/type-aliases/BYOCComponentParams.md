@@ -42,4 +42,4 @@ A string with classes that can be used to apply themes, via SXA functionality
 
 ## Defined in
 
-sitecore-jss-react/types/components/BYOCComponent.d.ts:19
+sitecore-jss-react/types/components/BYOCComponent.d.ts:22

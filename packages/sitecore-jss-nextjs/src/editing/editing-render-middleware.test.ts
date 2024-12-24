@@ -15,14 +15,9 @@ import {
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from './constants';
 import { EE_PATH, EE_LANGUAGE, EE_LAYOUT, EE_DICTIONARY, EE_BODY } from '../test-data/ee-data';
-import {
-  ChromesHandler,
-  EditingRenderMiddleware,
-  isEditingMetadataPreviewData,
-} from './editing-render-middleware';
+import { ChromesHandler, EditingRenderMiddleware } from './editing-render-middleware';
 import { spy, match } from 'sinon';
 import sinonChai from 'sinon-chai';
-import { EditMode } from '@sitecore-jss/sitecore-jss/layout';
 
 use(sinonChai);
 
@@ -435,27 +430,6 @@ describe('EditingRenderMiddleware', () => {
         html:
           '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
       });
-    });
-
-    it('isEditingMetadataPreviewData should validate preview data type', () => {
-      const metadataPreviewData = {
-        site: 'website',
-        itemId: '{11111111-1111-1111-1111-111111111111}',
-        language: 'en',
-        variantIds: ['dev'],
-        version: 'latest',
-        editMode: 'metadata',
-        pageState: 'edit',
-      };
-
-      const chromesPreviewData = {
-        key: 'key1234',
-        serverUrl: 'http://localhost:3000',
-        params: {},
-      };
-
-      expect(isEditingMetadataPreviewData(metadataPreviewData)).to.be.true;
-      expect(isEditingMetadataPreviewData(chromesPreviewData)).to.be.false;
     });
 
     it('should modify the Set-Cookie header', async () => {

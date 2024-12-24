@@ -8,6 +8,8 @@
 
 > **default**(`props`): `Element`
 
+TODO: remove when framework agnostic forms implemented
+
 ## Parameters
 
 | Parameter | Type |
@@ -20,4 +22,4 @@
 
 ## Defined in
 
-sitecore-jss-react/types/components/BYOCWrapper.d.ts:3
+sitecore-jss-react/types/components/BYOCWrapper.d.ts:6

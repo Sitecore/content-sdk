@@ -50,4 +50,3 @@
 ### Functions
 
 - [isComponentLibraryPreviewData](functions/isComponentLibraryPreviewData.md)
-- [isEditingMetadataPreviewData](functions/isEditingMetadataPreviewData.md)

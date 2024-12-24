@@ -6,8 +6,8 @@ export {
   EditingRenderMiddleware,
   EditingRenderMiddlewareConfig,
   EditingMetadataPreviewData,
-  isEditingMetadataPreviewData,
   isComponentLibraryPreviewData,
+  isEditingMetadataPreviewData,
 } from './editing-render-middleware';
 export {
   EditingPreviewData,

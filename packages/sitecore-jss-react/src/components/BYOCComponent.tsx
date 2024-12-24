@@ -7,6 +7,10 @@ import * as FEAAS from '@sitecore-feaas/clientside/react';
 export const BYOC_COMPONENT_RENDERING_NAME = 'BYOCComponent';
 
 /**
+ * TODO: remove when framework agnostic forms implemented
+ */
+
+/**
  * FEaaS props for server rendering.
  */
 type BYOCServerProps = {

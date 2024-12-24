@@ -83,7 +83,7 @@ describe('<DateField />', () => {
     expect(c.html()).equal('<span><h1 class="super">11-23-2001</h1></span>');
   });
 
-  describe('editMode metadata', () => {
+  describe('edit mode', () => {
     const testMetadata = {
       contextItem: {
         id: '{09A07660-6834-476C-B93B-584248D3003B}',

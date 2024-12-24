@@ -76,27 +76,7 @@ describe('<EditingScripts />', () => {
     expect(scripts.find('script')).to.have.length(0);
   });
 
-  ['Edit', 'Preview'].forEach((pageState) => {
-    it(`should render nothing when in ${pageState} pageState and Chromes editmode`, () => {
-      const layoutData = getLayoutData({
-        editMode: EditMode.Chromes,
-        pageState: LayoutServicePageState.Preview,
-        pageEditing: true,
-      });
-
-      const component = mount(
-        <SitecoreContext componentFactory={mockComponentFactory} layoutData={layoutData}>
-          <EditingScripts />
-        </SitecoreContext>
-      );
-
-      const scripts = component.find('EditingScripts');
-
-      expect(scripts.html()).to.be.null;
-      expect(scripts.find('script')).to.have.length(0);
-    });
-  });
-  describe('should render Pages scripts when in Metadata mode', () => {
+  describe('should render Pages scripts when in Edit mode', () => {
     it('should render scripts', () => {
       const layoutData = getLayoutData({
         editMode: EditMode.Metadata,
