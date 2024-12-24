@@ -321,6 +321,21 @@ export const isComponentLibraryPreviewData = (
 };
 
 /**
+ * Type guard for EditingMetadataPreviewData
+ * @param {object} data preview data to check
+ * @returns true if the data is EditingMetadataPreviewData
+ * @see EditingMetadataPreviewData
+ */
+export const isEditingMetadataPreviewData = (data: unknown): data is EditingMetadataPreviewData => {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'editMode' in data &&
+    (data as EditingMetadataPreviewData).editMode === EditMode.Metadata
+  );
+};
+
+/**
  * Handler for the Editing Metadata GET requests.
  * This handler is responsible for redirecting the request to the page route.
  * The page fetches the layout, dictionary and renders the page.
