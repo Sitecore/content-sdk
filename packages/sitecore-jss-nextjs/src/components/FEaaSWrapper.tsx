@@ -7,9 +7,9 @@ import {
   GetStaticComponentProps,
   GetServerSideComponentProps,
 } from '../sharedTypes/component-props';
-import { constants } from '@sitecore-jss/sitecore-jss';
 
 /**
+ * TODO: remove when framework agnostic forms implemented
  * This is a repackaged version of the React FEaaSWrapper component with support for
  * server rendering in Next.js (using component-level data-fetching feature of JSS).
  */
@@ -21,9 +21,6 @@ import { constants } from '@sitecore-jss/sitecore-jss';
  * @returns {GetStaticPropsContext} context
  */
 export const getStaticProps: GetStaticComponentProps = async (rendering, layoutData) => {
-  if (process.env.JSS_MODE === constants.JSS_MODE.DISCONNECTED) {
-    return null;
-  }
   const params: FEaaSComponentParams = rendering.params || {};
   const result = await fetchFEaaSComponentServerProps(
     params,
@@ -39,9 +36,6 @@ export const getStaticProps: GetStaticComponentProps = async (rendering, layoutD
  * @returns {GetStaticPropsContext} context
  */
 export const getServerSideProps: GetServerSideComponentProps = async (rendering, layoutData) => {
-  if (process.env.JSS_MODE === constants.JSS_MODE.DISCONNECTED) {
-    return null;
-  }
   const params: FEaaSComponentParams = rendering.params || {};
   const result = await fetchFEaaSComponentServerProps(
     params,

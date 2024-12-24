@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { AxiosDataFetcher, GraphQLSitemapXmlService, AxiosResponse } from '@sitecore-jss/sitecore-jss-nextjs';
+import { Stream } from 'stream';
+import { NativeDataFetcher, GraphQLSitemapXmlService } from '@sitecore-jss/sitecore-jss-nextjs'
 import { siteResolver } from 'lib/site-resolver';
 import config from 'temp/config';
 import clientFactory from 'lib/graphql-client-factory';
@@ -34,11 +35,11 @@ const sitemapApi = async (
     res.setHeader('Content-Type', 'text/xml;charset=utf-8');
 
     // need to prepare stream from sitemap url
-    return new AxiosDataFetcher()
-      .get(sitemapUrl, {
+    return new NativeDataFetcher()
+      .fetch<Stream>(sitemapUrl, {
         responseType: 'stream',
       })
-      .then((response: AxiosResponse) => {
+      .then((response) => {
         response.data.pipe(res);
       })
       .catch(() => res.redirect('/404'));

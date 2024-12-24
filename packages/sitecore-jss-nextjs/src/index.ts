@@ -3,9 +3,6 @@ export {
   // generic data access
   HttpDataFetcher,
   HttpResponse,
-  AxiosResponse,
-  AxiosDataFetcher,
-  AxiosDataFetcherConfig,
   NativeDataFetcher,
   NativeDataFetcherConfig,
   HTMLLink,
@@ -24,8 +21,6 @@ export {
   LayoutServiceContextData,
   GraphQLLayoutService,
   GraphQLLayoutServiceConfig,
-  RestLayoutService,
-  RestLayoutServiceConfig,
   PlaceholderData,
   PlaceholdersData,
   RouteData,
@@ -56,8 +51,6 @@ export {
   DictionaryService,
   GraphQLDictionaryService,
   GraphQLDictionaryServiceConfig,
-  RestDictionaryService,
-  RestDictionaryServiceConfig,
 } from '@sitecore-jss/sitecore-jss/i18n';
 export {
   personalizeLayout,
@@ -78,8 +71,6 @@ export {
 export { ModuleFactory, Module } from './sharedTypes/module-factory';
 
 export { ComponentPropsService } from './services/component-props-service';
-
-export { DisconnectedSitemapService } from './services/disconnected-sitemap-service';
 
 export {
   GraphQLSitemapService,
@@ -155,7 +146,6 @@ export {
   ComponentLibraryLayout,
   DefaultEmptyFieldEditingComponentImage,
   DefaultEmptyFieldEditingComponentText,
-  VisitorIdentification,
   PlaceholderComponentProps,
   SitecoreContext,
   SitecoreContextState,
