@@ -28,7 +28,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  shouldPublish: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))]
+  shouldPublish: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/dev'),
+    startsWith(variables['System.PullRequest.TargetBranch'], 'refs/heads/release/')]
   ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/') }}:
     branchName: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
   ${{ if startsWith(variables['Build.SourceBranch'], 'refs/pull/') }}:
