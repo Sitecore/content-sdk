@@ -1,4 +1,3 @@
-import { HttpResponse } from './data-fetcher';
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './utils/timeout-promise';
 
@@ -17,6 +16,19 @@ type NativeDataFetcherOptions = {
   timeout?: number;
 };
 
+/**
+ * Response data for an HTTP request sent to an API
+ * @template T the type of data model requested
+ */
+export interface NativeDataFetcherResponse<T> {
+  /** HTTP status code of the response (i.e. 200, 404) */
+  status: number;
+  /** HTTP status text of the response (i.e. 'OK', 'Bad Request') */
+  statusText: string;
+  /** Response content */
+  data: T;
+}
+
 export type NativeDataFetcherConfig = NativeDataFetcherOptions & RequestInit;
 
 export class NativeDataFetcher {
@@ -25,17 +37,17 @@ export class NativeDataFetcher {
   constructor(protected config: NativeDataFetcherConfig = {}) {}
 
   /**
-   * Implements a data fetcher. @see HttpDataFetcher<T> type for implementation details/notes.
-   * @param {string} url The URL to request; may include query string
-   * @param {unknown} [data] Optional data to POST with the request.
-   * @returns {Promise<HttpResponse<T>>} response
+   * Implements a data fetcher.
+   * @param {string} url The URL to request (may include query string)
+   * @param {RequestInit} [options] Optional fetch options
+   * @returns {Promise<NativeDataFetcherResponse<T>>} response
    */
-  async fetch<T>(url: string, data?: unknown): Promise<HttpResponse<T>> {
+  async fetch<T>(url: string, options: RequestInit = {}): Promise<NativeDataFetcherResponse<T>> {
     const { debugger: debugOverride, fetch: fetchOverride, ...init } = this.config;
     const startTimestamp = Date.now();
     const fetchImpl = fetchOverride || fetch;
     const debug = debugOverride || debuggers.http;
-    const requestInit = this.getRequestInit(init, data);
+    const requestInit = this.getRequestInit({ ...init, ...options });
 
     const fetchWithOptionalTimeout = [fetchImpl(url, requestInit)];
     if (init.timeout) {
@@ -44,7 +56,7 @@ export class NativeDataFetcher {
     }
 
     // Note a goal here is to provide consistent debug logging and error handling
-    // as we do in AxiosDataFetcher and GraphQLRequestClient
+    // as we do in GraphQLRequestClient
 
     const { headers: reqHeaders, ...rest } = requestInit;
 
@@ -67,7 +79,13 @@ export class NativeDataFetcher {
       respData = await response.json().catch((error) => {
         debug('response.json() error: %o', error);
       });
+    } else {
+      // if not JSON, just read the response as text
+      respData = await response.text().catch((error) => {
+        debug('response.text() error: %o', error);
+      });
     }
+
     const debugResponse = {
       status: response.status,
       statusText: response.statusText,
@@ -89,18 +107,77 @@ export class NativeDataFetcher {
   }
 
   /**
+   * Perform a GET request
+   * @param {string} url The URL to request (may include query string)
+   * @param {RequestInit} [options] Fetch options
+   * @returns {Promise<NativeDataFetcherResponse<T>>} response
+   */
+  async get<T>(url: string, options: RequestInit = {}): Promise<NativeDataFetcherResponse<T>> {
+    return this.fetch(url, { method: 'GET', ...options });
+  }
+
+  /**
+   * Perform a POST request
+   * @param {string} url The URL to request (may include query string)
+   * @param {unknown} body The data to send with the request
+   * @param {RequestInit} [options] Fetch options
+   * @returns {Promise<NativeDataFetcherResponse<T>>} response
+   */
+  async post<T>(
+    url: string,
+    body: unknown,
+    options: RequestInit = {}
+  ): Promise<NativeDataFetcherResponse<T>> {
+    return this.fetch(url, { method: 'POST', body: JSON.stringify(body), ...options });
+  }
+
+  /**
+   * Perform a DELETE request
+   * @param {string} url The URL to request (may include query string)
+   * @param {RequestInit} [options] Fetch options
+   * @returns {Promise<NativeDataFetcherResponse<T>>} response
+   */
+  async delete<T>(url: string, options: RequestInit = {}): Promise<NativeDataFetcherResponse<T>> {
+    return this.fetch(url, { method: 'DELETE', ...options });
+  }
+
+  /**
+   * Perform a PUT request
+   * @param {string} url The URL to request (may include query string)
+   * @param {unknown} body The data to send with the request
+   * @param {RequestInit} [options] Fetch options
+   * @returns {Promise<NativeDataFetcherResponse<T>>} response
+   */
+  async put<T>(
+    url: string,
+    body: unknown,
+    options: RequestInit = {}
+  ): Promise<NativeDataFetcherResponse<T>> {
+    return this.fetch(url, { method: 'PUT', body: JSON.stringify(body), ...options });
+  }
+
+  /**
+   * Perform a HEAD request
+   * @param {string} url The URL to request (may include query string)
+   * @param {RequestInit} [options] Fetch options
+   * @returns {Promise<NativeDataFetcherResponse<T>>} response
+   */
+  head<T>(url: string, options: RequestInit = {}): Promise<NativeDataFetcherResponse<T>> {
+    return this.fetch(url, { method: 'HEAD', ...options });
+  }
+
+  /**
    * Determines settings for the request
    * @param {RequestInit} init Custom settings for request
    * @param {unknown} [data] Optional data to POST with the request
    * @returns {RequestInit} The final request settings
    */
-  protected getRequestInit(init: RequestInit = {}, data?: unknown): RequestInit {
-    // This is a focused implementation (GET or POST only using JSON input/output)
-    // so we are opinionated about method, body, and Content-Type
-    init.method = data ? 'POST' : 'GET';
-    init.body = data ? JSON.stringify(data) : undefined;
-
+  protected getRequestInit(init: RequestInit = {}): RequestInit {
     const headers = new Headers(init.headers);
+
+    if (!init.method) {
+      init.method = init.body ? 'POST' : 'GET';
+    }
     headers.set('Content-Type', 'application/json');
     init.headers = headers;
 

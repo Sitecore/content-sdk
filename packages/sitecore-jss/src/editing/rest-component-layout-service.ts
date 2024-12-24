@@ -1,7 +1,8 @@
 import { RestLayoutServiceConfig, RestLayoutService } from '../layout/rest-layout-service';
 import { LayoutServiceData, EditMode } from '../layout/models';
 import { IncomingMessage, ServerResponse } from 'http';
-import { debug, fetchData } from '..';
+import { debug, NativeDataFetcher, NativeDataFetcherConfig } from '..';
+import { fetchData } from '../data-fetcher';
 
 /**
  * Params for requesting component data from service in Component Library mode
@@ -82,6 +83,35 @@ export class RestComponentLayoutService extends RestLayoutService {
       throw error;
     });
   }
+
+  protected getFetcher = (req?: IncomingMessage, res?: ServerResponse) => {
+    return this.serviceConfig.dataFetcherResolver
+      ? this.serviceConfig.dataFetcherResolver<LayoutServiceData>(req, res)
+      : this.getDefaultFetcher<LayoutServiceData>(req, res);
+  };
+
+  /**
+   * Provides default @see AxiosDataFetcher data fetcher
+   * @param {IncomingMessage} [req] Request instance
+   * @param {ServerResponse} [res] Response instance
+   * @returns default fetcher
+   */
+  protected getDefaultFetcher = <T>(req?: IncomingMessage, res?: ServerResponse) => {
+    const config = {
+      debugger: debug.layout,
+    } as NativeDataFetcherConfig;
+    if (req && res) {
+      config.onReq = this.setupReqHeaders(req);
+      config.onRes = this.setupResHeaders(res);
+    }
+    const nativeFetcher = new NativeDataFetcher(config);
+
+    const fetcher = (url: string, data?: unknown) => {
+      return nativeFetcher.fetch<T>(url, data);
+    };
+
+    return fetcher;
+  };
 
   protected getComponentFetchParams(params: ComponentLayoutRequestParams) {
     // exclude undefined params with this one simple trick
