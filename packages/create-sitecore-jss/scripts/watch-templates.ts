@@ -1,6 +1,4 @@
-import { execSync, exec } from 'child_process';
-import { promisify } from 'util';
-import fs from 'fs';
+import { execSync } from 'child_process';
 import path from 'path';
 import chalk from 'chalk';
 import chokidar from 'chokidar';
@@ -43,40 +41,12 @@ function restoreLockfile() {
   }
 }
 
-/**
- * Removes and then regenerates the yarn.lock file in order to resolve conflicting dependencies for react template.
- */
-async function regenerateLockFile() {
-  const yarnLockPath = path.join(__dirname, '..', '..', '..', 'yarn.lock');
-  const rootPath = path.join(__dirname, '..', '..', '..');
-
-  console.log(chalk.yellow('Wait until yarn.lock is regenerated...'));
-
-  try {
-    // Remove yarn.lock
-    fs.unlinkSync(yarnLockPath);
-    console.log(chalk.red('yarn.lock was removed.'));
-    console.log(chalk.yellow('Installing dependencies...'));
-
-    // Re-install dependencies
-    await promisify(exec)('yarn install', { cwd: rootPath });
-    // Dependencies installed successfully
-    console.log(chalk.green('Dependencies installed successfully.'));
-    console.log(chalk.green('yarn.lock generated successfully.'));
-  } catch (err) {
-    console.error(err);
-  }
-}
-
 const initializeApps = async (noInstall: boolean) => {
   let watch;
   try {
     watch = await import(path.resolve('watch.json'));
     const initializers = watch.initializers || [];
     await initRunner(initializers, { ...watch.args, templates: initializers, noInstall });
-    if (initializers.includes('react')) {
-      await regenerateLockFile();
-    }
     if (watch.args.restoreLockfile) {
       restoreLockfile();
     }

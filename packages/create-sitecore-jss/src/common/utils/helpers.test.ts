@@ -198,7 +198,7 @@ describe('helpers', () => {
       writeFileSync = sinon.stub(fs, 'writeFileSync');
       const pkgPath = path.resolve('src', 'common', 'test-data', 'test.package.json');
       const pkg = openJsonFile(pkgPath);
-      const templates = ['nextjs', 'nextjs-styleguide'];
+      const templates = ['nextjs'];
 
       saveConfiguration(templates, pkgPath);
 

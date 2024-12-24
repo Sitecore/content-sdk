@@ -4,23 +4,25 @@
  * @returns component src boilerplate as a string
  */
 function generateComponentSrc(componentName: string): string {
-  return `import { Text, Field, withDatasourceCheck } from '@sitecore-jss/sitecore-jss-nextjs';
-import { ComponentProps } from 'lib/component-props';
+  return `import React from 'react';
+import { ComponentParams, ComponentRendering } from '@sitecore-jss/sitecore-jss-nextjs';
 
-type ${componentName}Props = ComponentProps & {
-  fields: {
-    heading: Field<string>;
-  };
+interface ${componentName}Props {
+  rendering: ComponentRendering & { params: ComponentParams };
+  params: ComponentParams;
+}
+
+export const Default = (props: ${componentName}Props): JSX.Element => {
+  const id = props.params.RenderingIdentifier;
+
+  return (
+    <div className={\`component \${props.params.styles}\`} id={id ? id : undefined}>
+      <div className="component-content">
+        <p>${componentName} Component</p>
+      </div>
+    </div>
+  );
 };
-
-const ${componentName} = (props: ${componentName}Props): JSX.Element => (
-  <div>
-    <p>${componentName} Component</p>
-    <Text field={props.fields.heading} />
-  </div>
-);
-
-export default withDatasourceCheck()<${componentName}Props>(${componentName});
 `;
 }
 

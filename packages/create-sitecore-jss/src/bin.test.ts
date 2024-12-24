@@ -41,12 +41,6 @@ describe('bin', () => {
         '.\\test\\proxypath',
         '--templates',
         'foo,bar',
-        '--hostName',
-        'test.com',
-        '--fetchWith',
-        'GraphQL',
-        '--language',
-        'da-DK',
       ];
 
       const args = parseArgs();
@@ -61,9 +55,6 @@ describe('bin', () => {
       expect(args.appName).to.equal('test');
       expect(args.destination).to.equal('.\\test\\path');
       expect(args.templates).to.equal('foo,bar');
-      expect(args.hostName).to.equal('test.com');
-      expect(args.fetchWith).to.equal('GraphQL');
-      expect(args.language).to.equal('da-DK');
     });
 
     it('should accept positional parameters', () => {

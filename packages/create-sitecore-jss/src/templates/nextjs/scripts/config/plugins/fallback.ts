@@ -13,7 +13,6 @@ class FallbackPlugin implements ConfigPlugin {
   async exec(config: JssConfig) {
     return Object.assign({}, config, {
       defaultLanguage: config.defaultLanguage || 'en',
-      layoutServiceConfigurationName: config.layoutServiceConfigurationName || 'default',
       publicUrl: config.publicUrl || getPublicUrl(),
     });
   }
