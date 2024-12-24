@@ -5,17 +5,7 @@
   "exclude": [
     "**/*.d.ts",
     "**/*.test.ts",
-    "src/**/test-data",
-    "src/pipelines/test",
-    "dist",
-    "types",
-    "./src/manifest/index.ts",
-    "./src/pipelines/index.ts",
-    "./src/bin/*.ts",
-    "./src/manifest/generator/SitecoreIcon.ts",
-    "./src/manifest/generator/manifest.types*.ts",
-    "./src/manifest/generator/manifest.babel-shim.ts",
-    "**/pipeline.config.ts"
+    "dist"
   ],
   "all": true,
   "reporter": [
