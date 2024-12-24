@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { initRunner } from './init-runner';
 import minimist, { ParsedArgs } from 'minimist';
-import { getAllTemplates, getBaseTemplates } from './common';
+import { getBaseTemplates, getAllTemplates } from './common';
 
 export const parseArgs = (): ParsedArgs => {
   // parse any command line arguments passed into `init sitecore-jss`
@@ -12,15 +12,7 @@ export const parseArgs = (): ParsedArgs => {
   // useful for CI and testing purposes
   const options = {
     boolean: ['appPrefix', 'force', 'noInstall', 'yes', 'silent', 'prePushHook'],
-    string: [
-      'appName',
-      'destination',
-      'proxyAppDestination',
-      'templates',
-      'hostName',
-      'fetchWith',
-      'language',
-    ],
+    string: ['appName', 'destination', 'proxyAppDestination', 'templates'],
     default: { prePushHook: null },
   };
   const args: ParsedArgs = minimist(process.argv.slice(2), options);

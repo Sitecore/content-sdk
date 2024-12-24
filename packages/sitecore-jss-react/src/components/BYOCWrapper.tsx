@@ -3,6 +3,10 @@ import React from 'react';
 
 export const BYOC_WRAPPER_RENDERING_NAME = 'BYOCWrapper';
 
+/**
+ * TODO: remove when framework agnostic forms implemented
+ */
+
 export const BYOCWrapper = (props: BYOCComponentProps): JSX.Element => {
   const styles = props.params?.styles?.trimEnd();
   const id = props.params?.RenderingIdentifier;

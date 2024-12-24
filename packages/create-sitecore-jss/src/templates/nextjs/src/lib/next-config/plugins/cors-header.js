@@ -1,4 +1,4 @@
-﻿const config = require('../../../temp/config');
+const config = require('../../../temp/config');
 
 /**
  * @param {import('next').NextConfig} nextConfig

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @param {import('next').NextConfig} nextConfig
  */
 const monorepoPlugin = (nextConfig = {}) => {
@@ -14,7 +14,7 @@ const monorepoPlugin = (nextConfig = {}) => {
       }
 
       return config;
-    }
+    },
   });
 };
 

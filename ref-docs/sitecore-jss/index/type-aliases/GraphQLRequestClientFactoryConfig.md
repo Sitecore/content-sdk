@@ -22,4 +22,4 @@ Configuration type for
 
 ## Defined in
 
-[packages/sitecore-jss/src/graphql-request-client.ts:108](https://github.com/Sitecore/jss/blob/32e43cec490a623a675f03f30cb52f47552c878c/packages/sitecore-jss/src/graphql-request-client.ts#L108)
+[packages/sitecore-jss/src/graphql-request-client.ts:108](https://github.com/Sitecore/xmc-jss-dev/blob/6bb35d1fb67e125ec198f967a41cfdefc0c0a459/packages/sitecore-jss/src/graphql-request-client.ts#L108)

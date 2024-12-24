@@ -39,7 +39,7 @@ component props
 
 #### Defined in
 
-sitecore-jss-react/types/components/BYOCComponent.d.ts:79
+sitecore-jss-react/types/components/BYOCComponent.d.ts:82
 
 ## Properties
 
@@ -129,7 +129,7 @@ sitecore-jss-react/node\_modules/@types/react/index.d.ts:1033
 
 #### Defined in
 
-sitecore-jss-react/types/components/BYOCComponent.d.ts:76
+sitecore-jss-react/types/components/BYOCComponent.d.ts:79
 
 ***
 
@@ -191,7 +191,7 @@ the entire component tree to unmount.
 
 #### Defined in
 
-sitecore-jss-react/types/components/BYOCComponent.d.ts:83
+sitecore-jss-react/types/components/BYOCComponent.d.ts:86
 
 ***
 
@@ -457,7 +457,7 @@ sitecore-jss-react/node\_modules/@types/react/index.d.ts:1426
 
 #### Defined in
 
-sitecore-jss-react/types/components/BYOCComponent.d.ts:84
+sitecore-jss-react/types/components/BYOCComponent.d.ts:87
 
 ***
 
@@ -674,4 +674,4 @@ sitecore-jss-react/node\_modules/@types/react/index.d.ts:1527
 
 #### Defined in
 
-sitecore-jss-react/types/components/BYOCComponent.d.ts:80
+sitecore-jss-react/types/components/BYOCComponent.d.ts:83

@@ -23,7 +23,7 @@ const nextConfig = {
     // These should generally match (or at least be a subset of) those in Sitecore.
     locales: ['en'],
     // This is the locale that will be used when visiting a non-locale
-    // prefixed path e.g. `/styleguide`.
+    // prefixed path e.g. `/about`.
     defaultLocale: jssConfig.defaultLanguage,
   },
 
@@ -48,12 +48,7 @@ const nextConfig = {
         hostname: 'xmc-*.**',
         port: '',
       },
-      {
-        protocol: 'https',
-        hostname: 'feaas*.blob.core.windows.net',
-        port: '',
-      },
-    ]
+    ],
   },
 
   async rewrites() {

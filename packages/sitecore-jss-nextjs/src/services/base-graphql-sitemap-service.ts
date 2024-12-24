@@ -21,7 +21,7 @@ export function getSiteEmptyError(siteName: string) {
 const languageEmptyError = 'The language must be a non-empty string';
 
 /**
- * GQL query made dynamic based on schema differences between SXP and XM Cloud
+ * GQL query made dynamic based whether personalization is enabled or not
  * @param {boolean} usesPersonalize flag to detrmine which variation of a query to run
  * @returns GraphQL query to fetch site paths with
  */
