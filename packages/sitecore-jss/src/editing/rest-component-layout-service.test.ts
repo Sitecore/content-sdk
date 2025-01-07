@@ -36,28 +36,21 @@ describe('RestComponentLayoutService', () => {
     nock.cleanAll();
   });
 
-  it.only('should fetch component data', async () => {
+  it('should fetch component data', async () => {
     nock('http://sctest')
       .get(
         '/sitecore/api/layout/component/jss?sc_apikey=0FBFF61E-267A-43E3-9252-B77E71CEE4BA&item=123&uid=456&sc_site=supersite&sc_lang=en'
       )
-      .reply(200, (_, requestBody) => ({
-        requestBody: requestBody,
-        data: defaultTestData,
-      }));
+      .reply(200, (_) => defaultTestData);
 
     const service = new RestComponentLayoutService({
       apiHost: 'http://sctest',
       apiKey: '0FBFF61E-267A-43E3-9252-B77E71CEE4BA',
       siteName: 'supersite',
     });
-    try {
-      const result = await service.fetchComponentData(defaultTestInput);
-      expect(result).to.deep.equal(defaultTestData);
-    } catch (e) {
-      expect((e as Error).message).to.equal('');
-    }
-  }).timeout(10000);
+    const result = await service.fetchComponentData(defaultTestInput);
+    expect(result).to.deep.equal(defaultTestData);
+  });
 
   it('should fetch component data when optional params provided', () => {
     const testInput: ComponentLayoutRequestParams = {
@@ -106,30 +99,10 @@ describe('RestComponentLayoutService', () => {
       .get(
         '/sitecore/api/layout/component/jss?sc_apikey=0FBFF61E-267A-43E3-9252-B77E71CEE4BA&item=123&uid=456&dataSourceId=789&sc_site=supersite&sc_lang=en'
       )
-      .reply(200, (_, requestBody) => ({
-        requestBody: requestBody,
-        data: testExpectedData,
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          cookie: 'test-cookie-value',
-          referer: 'http://sctest',
-          'user-agent': 'test-user-agent-value',
-          'X-Forwarded-For': '192.168.1.10',
-        },
-      }))
+      .reply(200, (_) => testExpectedData)
       .get('/sitecore/api/layout/component/jss')
       .query(true)
-      .reply(200, (_, requestBody) => ({
-        requestBody: requestBody,
-        data: testUnexpectedData,
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          cookie: 'test-cookie-value',
-          referer: 'http://sctest',
-          'user-agent': 'test-user-agent-value',
-          'X-Forwarded-For': '192.168.1.10',
-        },
-      }));
+      .reply(200, (_) => testUnexpectedData);
 
     const req = {
       connection: {
@@ -208,30 +181,10 @@ describe('RestComponentLayoutService', () => {
       .get(
         '/sitecore/api/layout/component/jss?sc_apikey=0FBFF61E-267A-43E3-9252-B77E71CEE4BA&item=123&uid=456&sc_site=mysite&sc_lang=en'
       )
-      .reply(200, (_, requestBody) => ({
-        requestBody: requestBody,
-        data: testExpectedData,
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          cookie: 'test-cookie-value',
-          referer: 'http://sctest',
-          'user-agent': 'test-user-agent-value',
-          'X-Forwarded-For': '192.168.1.10',
-        },
-      }))
+      .reply(200, (_) => testExpectedData)
       .get('/sitecore/api/layout/component/jss')
       .query(true)
-      .reply(200, (_, requestBody) => ({
-        requestBody: requestBody,
-        data: testUnexpectedData,
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          cookie: 'test-cookie-value',
-          referer: 'http://sctest',
-          'user-agent': 'test-user-agent-value',
-          'X-Forwarded-For': '192.168.1.10',
-        },
-      }));
+      .reply(200, (_) => testUnexpectedData);
 
     const req = {
       connection: {
@@ -268,10 +221,7 @@ describe('RestComponentLayoutService', () => {
       .get(
         '/sitecore/api/layout/component/listen?sc_apikey=0FBFF61E-267A-43E3-9252-B77E71CEE4BA&item=123&uid=456&sc_site=supersite&sc_lang=en'
       )
-      .reply(200, (_, requestBody) => ({
-        requestBody: requestBody,
-        data: defaultTestData,
-      }));
+      .reply(200, (_) => defaultTestData);
 
     const service = new RestComponentLayoutService({
       apiHost: 'http://sctest',
@@ -296,9 +246,7 @@ describe('RestComponentLayoutService', () => {
       .get(
         '/sitecore/api/layout/component/jss?sc_apikey=0FBFF61E-267A-43E3-9252-B77E71CEE4BA&item=123&uid=456&sc_site=supersite&sc_lang=en'
       )
-      .reply(200, () => ({
-        data: defaultTestData,
-      }));
+      .reply(200, () => defaultTestData);
 
     const service = new RestComponentLayoutService({
       apiHost: 'http://sctest',
@@ -310,7 +258,7 @@ describe('RestComponentLayoutService', () => {
     return service
       .fetchComponentData(defaultTestInput)
       .then((layoutServiceData: LayoutServiceData) => {
-        expect(layoutServiceData).to.deep.equal({ data: defaultTestData });
+        expect(layoutServiceData).to.deep.equal(defaultTestData);
 
         expect(fetcherSpy).to.be.called.once;
         expect(fetcherSpy).to.be.called.with(

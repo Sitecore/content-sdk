@@ -113,7 +113,8 @@ export class RestComponentLayoutService {
 
     const fetchUrl = this.resolveLayoutServiceUrl('component');
 
-    return fetchData<LayoutServiceData>(fetchUrl, fetcher, querystringParams).catch((error) => {
+    return fetchData(fetchUrl, fetcher, querystringParams).catch((error) => {
+      console.log(JSON.stringify(error));
       if (error.response?.status === 404) {
         return error.response.data;
       }
@@ -146,12 +147,12 @@ export class RestComponentLayoutService {
    */
   protected getDefaultFetcher = <T>(req?: IncomingMessage) => {
     const config = {
-      debugger: debug.layout,
+      debugger: debug.editing,
     } as NativeDataFetcherConfig;
     const nativeFetcher = new NativeDataFetcher(config);
     const headers = req && {
       ...req.headers,
-      ...(req.socket.remoteAddress && { 'X-Forwarded-For': req.socket.remoteAddress }),
+      ...(req.socket?.remoteAddress ? { 'X-Forwarded-For': req.socket.remoteAddress } : {}),
     };
     const fetcher = (url: string, data?: RequestInit) => {
       data = { ...data, ...{ headers: headers as HeadersInit } };

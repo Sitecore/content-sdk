@@ -29,6 +29,13 @@ export interface NativeDataFetcherResponse<T> {
   data: T;
 }
 
+/**
+ * Native fetcher error type to include response text and status
+ */
+export type NativeDataFetcherError = Error & {
+  response: NativeDataFetcherResponse<unknown>,
+};
+
 export type NativeDataFetcherConfig = NativeDataFetcherOptions & RequestInit;
 
 export class NativeDataFetcher {
@@ -97,11 +104,20 @@ export class NativeDataFetcher {
 
     if (!response.ok) {
       debug('response error: %o', debugResponse);
-      throw new Error(`HTTP ${response.status} ${response.statusText}`);
+      const error: NativeDataFetcherError = {
+        ...new Error(`HTTP ${response.status} ${response.statusText}`),
+        response: {
+          ...debugResponse,
+          ...response,
+        },
+      };
+      throw error;
     }
     debug('response in %dms: %o', Date.now() - startTimestamp, debugResponse);
     return {
       ...response,
+      status: response.status,
+      statusText: response.statusText,
       data: respData as T,
     };
   }

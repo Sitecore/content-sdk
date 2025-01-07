@@ -180,14 +180,18 @@ describe('NativeDataFetcher', () => {
       expect(fetchInit?.body).to.be.undefined;
     });
 
-    it('should throw error for failed request', async () => {
+    it('should execute failed request with data', async () => {
       const fetcher = new NativeDataFetcher();
 
-      spy.on(global, 'fetch', mockFetch(400));
+      spy.on(
+        global,
+        'fetch',
+        mockFetch(400, { status: 400, statusText: 'Error', data: { test: 'test?' } })
+      );
 
       await fetcher.fetch('http://test.com/api').catch((error) => {
-        expect(error).to.be.instanceOf(Error);
-        expect(error.message).to.equal('HTTP 400 ERROR');
+        expect(error.response.status).to.equal(400);
+        expect(error.response.data.data).to.deep.equal({ test: 'test?' });
       });
     });
 
