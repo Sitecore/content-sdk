@@ -1223,20 +1223,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.37.3":
-  version: 0.37.5
-  resolution: "@mswjs/interceptors@npm:0.37.5"
-  dependencies:
-    "@open-draft/deferred-promise": ^2.2.0
-    "@open-draft/logger": ^0.3.0
-    "@open-draft/until": ^2.0.0
-    is-node-process: ^1.2.0
-    outvariant: ^1.4.3
-    strict-event-emitter: ^0.5.1
-  checksum: 5401b0c1ad65a10bcfc18c688a22d3424f55b06c7754f9956629bf095f870d5306ba816ad09a85accc7bbc34c908ad2bbaa692ce82c8992815119580cfb78cd8
-  languageName: node
-  linkType: hard
-
 "@next/env@npm:14.2.18":
   version: 14.2.18
   resolution: "@next/env@npm:14.2.18"
@@ -1768,30 +1754,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@open-draft/deferred-promise@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "@open-draft/deferred-promise@npm:2.2.0"
-  checksum: 7f29d39725bb8ab5b62f89d88a4202ce2439ac740860979f9e3d0015dfe4bc3daddcfa5727fa4eed482fdbee770aa591b1136b98b0a0f0569a65294f35bdf56a
-  languageName: node
-  linkType: hard
-
-"@open-draft/logger@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@open-draft/logger@npm:0.3.0"
-  dependencies:
-    is-node-process: ^1.2.0
-    outvariant: ^1.4.0
-  checksum: 7adfe3d0ed8ca32333ce2a77f9a93d561ebc89c989eaa9722f1dc8a2d2854f5de1bef6fa6894cdf58e16fa4dd9cfa99444ea1f5cac6eb1518e9247911ed042d5
-  languageName: node
-  linkType: hard
-
-"@open-draft/until@npm:^2.0.0":
-  version: 2.1.0
-  resolution: "@open-draft/until@npm:2.1.0"
-  checksum: 140ea3b16f4a3a6a729c1256050e20a93d408d7aa1e125648ce2665b3c526ed452510c6e4a6f4b15d95fb5e41203fb51510eb8fbc8812d5e5a91880293d66471
-  languageName: node
-  linkType: hard
-
 "@parcel/watcher@npm:2.0.4":
   version: 2.0.4
   resolution: "@parcel/watcher@npm:2.0.4"
@@ -2209,7 +2171,7 @@ __metadata:
     lodash.unescape: ^4.0.1
     memory-cache: ^0.2.0
     mocha: ^10.2.0
-    nock: 14.0.0-beta.19
+    nock: 14.0.0-beta.7
     nyc: ^15.1.0
     sinon: ^17.0.1
     ts-node: ^8.4.1
@@ -7180,13 +7142,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-node-process@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "is-node-process@npm:1.2.0"
-  checksum: 930765cdc6d81ab8f1bbecbea4a8d35c7c6d88a3ff61f3630e0fc7f22d624d7661c1df05c58547d0eb6a639dfa9304682c8e342c4113a6ed51472b704cee2928
-  languageName: node
-  linkType: hard
-
 "is-number-object@npm:^1.0.4":
   version: 1.0.7
   resolution: "is-number-object@npm:1.0.7"
@@ -8931,14 +8886,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:14.0.0-beta.19":
-  version: 14.0.0-beta.19
-  resolution: "nock@npm:14.0.0-beta.19"
+"nock@npm:14.0.0-beta.7":
+  version: 14.0.0-beta.7
+  resolution: "nock@npm:14.0.0-beta.7"
   dependencies:
-    "@mswjs/interceptors": ^0.37.3
     json-stringify-safe: ^5.0.1
     propagate: ^2.0.0
-  checksum: 76ddfb4e4d5137d60ec704e5473f548b7cd00c7662d2ccfa9cbc61805a89b6d1c2ba75d965c6c80447c84c0addca2ef3d698ed3e757eaacf45a421da9e97e314
+  checksum: 882e9e1468f8753f3b5f401cfd24d050e1603182dc4f33e9b041350bb779db3048353dadb9af1ed13540fa34e24db52c269bb9b672b6d75b72d2e6d807c73097
   languageName: node
   linkType: hard
 
@@ -9541,13 +9495,6 @@ __metadata:
   version: 1.0.2
   resolution: "os-tmpdir@npm:1.0.2"
   checksum: 5666560f7b9f10182548bf7013883265be33620b1c1b4a4d405c25be2636f970c5488ff3e6c48de75b55d02bde037249fe5dbfbb4c0fb7714953d56aed062e6d
-  languageName: node
-  linkType: hard
-
-"outvariant@npm:^1.4.0, outvariant@npm:^1.4.3":
-  version: 1.4.3
-  resolution: "outvariant@npm:1.4.3"
-  checksum: 4a3551fb2b45309e585eebf88bad094dbe56ac6d3a28d59dd2e4050b431aa2beb6097a0763fce3cd82ca0f077026f380a9b60fffc306aaf430141421e7a7b6ed
   languageName: node
   linkType: hard
 
@@ -11440,13 +11387,6 @@ __metadata:
   version: 1.1.0
   resolution: "streamsearch@npm:1.1.0"
   checksum: 1cce16cea8405d7a233d32ca5e00a00169cc0e19fbc02aa839959985f267335d435c07f96e5e0edd0eadc6d39c98d5435fb5bbbdefc62c41834eadc5622ad942
-  languageName: node
-  linkType: hard
-
-"strict-event-emitter@npm:^0.5.1":
-  version: 0.5.1
-  resolution: "strict-event-emitter@npm:0.5.1"
-  checksum: 350480431bc1c28fdb601ef4976c2f8155fc364b4740f9692dd03e5bdd48aafc99a5e021fe655fbd986d0b803e9f3fc5c4b018b35cb838c4690d60f2a26f1cf3
   languageName: node
   linkType: hard
 

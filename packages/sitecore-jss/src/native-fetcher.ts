@@ -33,7 +33,7 @@ export interface NativeDataFetcherResponse<T> {
  * Native fetcher error type to include response text and status
  */
 export type NativeDataFetcherError = Error & {
-  response: NativeDataFetcherResponse<unknown>,
+  response: NativeDataFetcherResponse<unknown>;
 };
 
 export type NativeDataFetcherConfig = NativeDataFetcherOptions & RequestInit;
@@ -185,7 +185,6 @@ export class NativeDataFetcher {
   /**
    * Determines settings for the request
    * @param {RequestInit} init Custom settings for request
-   * @param {RequestInit} [data] Optional data to POST with the request
    * @returns {RequestInit} The final request settings
    */
   protected getRequestInit(init: RequestInit = {}): RequestInit {

@@ -2,11 +2,9 @@
 import { expect } from 'chai';
 import sinon, { SinonSpy } from 'sinon';
 import nock from 'nock';
-import { SitecoreTemplateId } from '../constants';
 import { GraphQLClient, GraphQLRequestClient } from '../graphql-request-client';
 import { GraphQLDictionaryServiceConfig } from './graphql-dictionary-service';
 import { GraphQLDictionaryService } from '.';
-import dictionaryQueryResponse from '../test-data/mockDictionaryQueryResponse.json';
 import dictionarySiteQueryResponse from '../test-data/mockDictionarySiteQueryResponse.json';
 
 class TestService extends GraphQLDictionaryService {
@@ -31,43 +29,10 @@ describe('GraphQLDictionaryService', () => {
     nock.cleanAll();
   });
 
-  it('should use custom dictionary entry template ID, if provided', async () => {
-    const customTemplateId = 'custom-template-id';
-
-    nock(endpoint)
-      .post('/', (body) => body.variables.templates === customTemplateId)
-      .reply(200, dictionaryQueryResponse);
-
-    const service = new GraphQLDictionaryService({
-      clientFactory,
-      siteName,
-      rootItemId,
-      cacheEnabled: false,
-      dictionaryEntryTemplateId: customTemplateId,
-    });
-    const result = await service.fetchDictionaryData('en');
-    expect(result).to.have.all.keys('foo', 'bar');
-  });
-
-  it('should use default dictionary entry template ID, if template ID not provided', async () => {
-    nock(endpoint)
-      .post('/', (body) => body.variables.templates === SitecoreTemplateId.DictionaryEntry)
-      .reply(200, dictionaryQueryResponse);
-
-    const service = new GraphQLDictionaryService({
-      clientFactory,
-      siteName,
-      rootItemId,
-      cacheEnabled: false,
-    });
-    const result = await service.fetchDictionaryData('en');
-    expect(result).to.have.all.keys('foo', 'bar');
-  });
-
   it('should use cache', async () => {
     nock(endpoint, { reqheaders: { sc_apikey: apiKey } })
-      .post('/', /DictionarySearch/gi)
-      .reply(200, dictionaryQueryResponse);
+      .post('/', /DictionarySiteQuery/gi)
+      .reply(200, dictionarySiteQueryResponse.singlepage);
 
     const service = new GraphQLDictionaryService({
       clientFactory,
