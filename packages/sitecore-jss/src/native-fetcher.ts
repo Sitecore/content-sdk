@@ -128,7 +128,10 @@ export class NativeDataFetcher {
    * @param {RequestInit} [options] Fetch options
    * @returns {Promise<NativeDataFetcherResponse<T>>} response
    */
-  async get<T>(url: string, options: RequestInit = {}): Promise<NativeDataFetcherResponse<T>> {
+  async get<T>(
+    url: string,
+    options: { [key: string]: string | string[] } = {}
+  ): Promise<NativeDataFetcherResponse<T>> {
     return this.fetch(url, { method: 'GET', ...options });
   }
 

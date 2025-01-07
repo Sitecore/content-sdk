@@ -38,11 +38,11 @@ export abstract class RenderMiddlewareBase {
    */
   protected getHeadersForPropagation = (
     headers: IncomingHttpHeaders
-  ): { [key: string]: string | string[] } => {
-    const result: { [key: string]: string | string[] } = {};
+  ): { [key: string]: string } => {
+    const result: { [key: string]: string } = {};
     EDITING_PASS_THROUGH_HEADERS.forEach((header) => {
       if (headers[header]) {
-        result[header] = headers[header]!;
+        result[header] = [headers[header]!].join();
       }
     });
     return result;

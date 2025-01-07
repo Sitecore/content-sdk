@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Stream } from 'stream';
 import { NativeDataFetcher, GraphQLSitemapXmlService } from '@sitecore-jss/sitecore-jss-nextjs'
 import { siteResolver } from 'lib/site-resolver';
 import config from 'temp/config';
@@ -36,11 +35,9 @@ const sitemapApi = async (
 
     // need to prepare stream from sitemap url
     return new NativeDataFetcher()
-      .fetch<Stream>(sitemapUrl, {
-        responseType: 'stream',
-      })
+      .get(sitemapUrl)
       .then((response) => {
-        response.data.pipe(res);
+        res.send(response.data);
       })
       .catch(() => res.redirect('/404'));
   }

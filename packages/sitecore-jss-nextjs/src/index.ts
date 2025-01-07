@@ -37,15 +37,6 @@ export {
 export { RestComponentLayoutService } from '@sitecore-jss/sitecore-jss/editing';
 export { mediaApi } from '@sitecore-jss/sitecore-jss/media';
 export {
-  trackingApi,
-  TrackingRequestOptions,
-  CampaignInstance,
-  GoalInstance,
-  OutcomeInstance,
-  EventInstance,
-  PageViewInstance,
-} from '@sitecore-jss/sitecore-jss/tracking';
-export {
   DictionaryPhrases,
   DictionaryService,
   GraphQLDictionaryService,
