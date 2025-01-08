@@ -1,6 +1,6 @@
 # Sitecore JavaScript Rendering SDK Developer Tools
 
-This module is provided as a part of Sitecore JavaScript Rendering SDK (JSS). It contains developer tooling, such as development proxies and deployment scripts.
+This module is provided as a part of Sitecore JavaScript Rendering SDK (JSS). It contains developer tooling, such as scripts concerning metadata, scaffolding components, component builder.
 
 <!---
 @TODO: Update to next version docs before release
