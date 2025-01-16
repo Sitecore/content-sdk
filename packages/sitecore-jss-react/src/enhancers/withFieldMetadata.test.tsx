@@ -3,7 +3,6 @@ import React, { forwardRef } from 'react';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import { withFieldMetadata } from './withFieldMetadata';
-import { describe } from 'node:test';
 
 describe('withFieldMetadata', () => {
   const testMetadata = {

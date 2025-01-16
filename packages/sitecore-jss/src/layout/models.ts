@@ -18,12 +18,9 @@ export enum LayoutServicePageState {
 }
 
 /**
- * Represents the possible modes for rendering content in Sitecore Editor
- * - chromes - supported by Sitecore Experience Editor / Pages
- * - metadata - supported by Sitecore Pages
+ * Represents the edit mode for rendering content in Sitecore Editors
  */
 export enum EditMode {
-  Chromes = 'chromes',
   Metadata = 'metadata',
 }
 
@@ -41,7 +38,6 @@ export interface LayoutServiceContext {
     name?: string;
   };
   renderingType?: RenderingType;
-  editMode?: EditMode;
   clientScripts?: string[];
   clientData?: Record<string, Record<string, unknown>>;
 }
@@ -73,10 +69,9 @@ export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
 
 /**
  * Placeholder contents data (name: placeholder name, then array of components within that placeholder name)
- * Note: HtmlElementRendering is used by Sitecore Experience Editor
  */
 export type PlaceholdersData<TYPEDNAME extends string = string> = {
-  [P in TYPEDNAME]: Array<ComponentRendering | HtmlElementRendering>;
+  [P in TYPEDNAME]: Array<ComponentRendering>;
 };
 
 /**
@@ -106,18 +101,6 @@ export interface ComponentRendering<T = ComponentFields> {
 }
 
 /**
- * HTML content used to support Sitecore Experience Editor
- */
-export interface HtmlElementRendering {
-  name: string;
-  type?: string;
-  contents: string | null;
-  attributes: {
-    [name: string]: string | undefined;
-  };
-}
-
-/**
  * Field value data on a component
  */
 export type GenericFieldValue =
@@ -130,12 +113,8 @@ export type GenericFieldValue =
 
 export interface Field<T = GenericFieldValue> extends FieldMetadata {
   value: T;
-  editable?: string;
 }
 
-/**
- * represents the field metadata provided by layout service in editMode 'metadata'
- */
 export interface FieldMetadata {
   metadata?: { [key: string]: unknown };
 }
@@ -159,7 +138,7 @@ export interface Item {
 export interface PlaceholderData {
   name: string;
   path: string;
-  elements: Array<HtmlElementRendering | ComponentRendering>;
+  elements: ComponentRendering[];
 }
 
 /**

@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import { getComponentLibraryStylesheetLinks, getStylesheetUrl } from './themes';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import { ComponentRendering, HtmlElementRendering } from '.';
+import { ComponentRendering } from '.';
 
 describe('themes', () => {
   const sitecoreEdgeContextId = 'test';
 
   describe('getComponentLibraryStylesheetLinks', () => {
-    const setBasicLayoutData = (component: ComponentRendering | HtmlElementRendering) => {
+    const setBasicLayoutData = (component: ComponentRendering) => {
       return {
         sitecore: {
           context: {},
@@ -180,38 +180,6 @@ describe('themes', () => {
         )
       ).to.deep.equal([
         { href: getStylesheetUrl('bar', sitecoreEdgeContextId), rel: 'stylesheet' },
-      ]);
-    });
-
-    it('should read LibraryId from class when matching param or field is not found', () => {
-      expect(
-        getComponentLibraryStylesheetLinks(
-          setBasicLayoutData({
-            componentName: 'styled',
-            params: {
-              NotCSSStyles: '-library--not-foo',
-              NotStyles: '-library--not-foo',
-              NotLibraryId: 'not-foo',
-            },
-            fields: {
-              NotCSSStyles: {
-                value: '-library--not-foo',
-              },
-              NotStyles: {
-                value: '-library--not-foo',
-              },
-              NotLibraryId: {
-                value: 'not-foo',
-              },
-            },
-            attributes: {
-              class: '-library--foo',
-            },
-          }),
-          sitecoreEdgeContextId
-        )
-      ).to.deep.equal([
-        { href: getStylesheetUrl('foo', sitecoreEdgeContextId), rel: 'stylesheet' },
       ]);
     });
 
@@ -426,38 +394,6 @@ describe('themes', () => {
           rel: 'stylesheet',
         }))
       );
-    });
-
-    it('should return links using class attribute', () => {
-      expect(
-        getComponentLibraryStylesheetLinks(
-          setBasicLayoutData({
-            name: 'foo-component',
-            contents: null,
-            attributes: {
-              class: '-library--bar',
-            },
-          }),
-          sitecoreEdgeContextId
-        )
-      ).to.deep.equal([
-        { href: getStylesheetUrl('bar', sitecoreEdgeContextId), rel: 'stylesheet' },
-      ]);
-    });
-
-    it('should not return id when class does not match pattern', () => {
-      expect(
-        getComponentLibraryStylesheetLinks(
-          setBasicLayoutData({
-            name: 'foo-component',
-            contents: null,
-            attributes: {
-              class: 'bar',
-            },
-          }),
-          sitecoreEdgeContextId
-        )
-      ).to.deep.equal([]);
     });
   });
 

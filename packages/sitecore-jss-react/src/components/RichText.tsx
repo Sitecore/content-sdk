@@ -8,7 +8,6 @@ import { FieldMetadata, isFieldValueEmpty } from '@sitecore-jss/sitecore-jss/lay
 
 export interface RichTextField extends FieldMetadata {
   value?: string;
-  editable?: string;
 }
 
 export interface RichTextProps extends EditableFieldProps {
@@ -30,13 +29,13 @@ export const RichText: React.FC<RichTextProps> = withFieldMetadata<RichTextProps
         { field, tag = 'div', editable = true, ...otherProps }: RichTextProps,
         ref: ForwardedRef<HTMLElement>
       ) => {
-        if (!field || (!field.editable && isFieldValueEmpty(field))) {
+        if (isFieldValueEmpty(field)) {
           return null;
         }
 
         const htmlProps = {
           dangerouslySetInnerHTML: {
-            __html: field.editable && editable ? field.editable : field.value,
+            __html: field.value,
           },
           ref,
           ...otherProps,
@@ -53,7 +52,6 @@ export const RichText: React.FC<RichTextProps> = withFieldMetadata<RichTextProps
 export const RichTextPropTypes = {
   field: PropTypes.shape({
     value: PropTypes.string,
-    editable: PropTypes.string,
     metadata: PropTypes.objectOf(PropTypes.any),
   }),
   tag: PropTypes.string,

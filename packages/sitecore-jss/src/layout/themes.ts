@@ -1,10 +1,4 @@
-import {
-  ComponentRendering,
-  HtmlElementRendering,
-  LayoutServiceData,
-  RouteData,
-  getFieldValue,
-} from '.';
+import { ComponentRendering, LayoutServiceData, RouteData, getFieldValue } from '.';
 import { HTMLLink } from '../models';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 
@@ -48,17 +42,12 @@ export const getStylesheetUrl = (
 
 /**
  * Traverse placeholder and components to add library ids
- * @param {Array<ComponentRendering | HtmlElementRendering>} components
+ * @param {ComponentRendering[]} components
  * @param {Set<string>} ids library ids
  */
-const traversePlaceholder = (
-  components: Array<ComponentRendering | HtmlElementRendering>,
-  ids: Set<string>
-) => {
+const traversePlaceholder = (components: ComponentRendering[], ids: Set<string>) => {
   components.map((component) => {
-    const rendering = component as ComponentRendering;
-
-    return traverseComponent(rendering, ids);
+    return traverseComponent(component, ids);
   });
 };
 
@@ -67,10 +56,7 @@ const traversePlaceholder = (
  * @param {RouteData | ComponentRendering | HtmlElementRendering} component component data
  * @param {Set<string>} ids library ids
  */
-const traverseComponent = (
-  component: RouteData | ComponentRendering | HtmlElementRendering,
-  ids: Set<string>
-) => {
+const traverseComponent = (component: RouteData | ComponentRendering, ids: Set<string>) => {
   let libraryId: string | undefined = undefined;
   if ('params' in component && component.params) {
     // LibraryID in css class name takes precedence over LibraryId attribute
@@ -80,7 +66,7 @@ const traverseComponent = (
       component.params.LibraryId ||
       undefined;
   }
-  // if params are empty we try to fall back to data source or attributes
+  // if params are empty we try to fall back to data source
   if (!libraryId && 'fields' in component && component.fields) {
     libraryId =
       getFieldValue(component.fields, 'CSSStyles', '').match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
@@ -88,10 +74,7 @@ const traverseComponent = (
       getFieldValue(component.fields, 'LibraryId', '') ||
       undefined;
   }
-  // HTMLRendering its class attribute
-  if (!libraryId && 'attributes' in component && typeof component.attributes.class === 'string') {
-    libraryId = component.attributes.class.match(STYLES_LIBRARY_ID_REGEX)?.[1];
-  }
+
   if (libraryId) {
     ids.add(libraryId);
   }

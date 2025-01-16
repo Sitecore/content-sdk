@@ -3,11 +3,11 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-jss/sitecore-jss/editing';
-import { getJssEditingSecret } from '../utils/utils';
 import { debug } from '@sitecore-jss/sitecore-jss';
-import { EditMode } from '@sitecore-jss/sitecore-jss/layout';
 import { Metadata } from '@sitecore-jss/sitecore-jss-dev-tools';
 import { enforceCors } from '@sitecore-jss/sitecore-jss/utils';
+import { EditMode } from '@sitecore-jss/sitecore-jss/layout';
+import { getJssEditingSecret } from '../utils/utils';
 
 export type EditingConfigMiddlewareConfig = {
   /**
@@ -18,12 +18,6 @@ export type EditingConfigMiddlewareConfig = {
    * Application metadata
    */
   metadata: Metadata;
-  /**
-   * Determines which editing mode should be used by Pages.
-   * Can be either 'chromes' or 'metadata'.
-   * By default its 'metadata'
-   */
-  pagesEditMode?: EditMode;
 };
 
 /**
@@ -74,12 +68,10 @@ export class EditingConfigMiddleware {
       ? this.config.components
       : Array.from(this.config.components.keys());
 
-    const editMode = this.config.pagesEditMode || EditMode.Metadata;
-
     return res.status(200).json({
       components,
       packages: this.config.metadata.packages,
-      editMode,
+      editMode: EditMode.Metadata,
     });
   };
 }

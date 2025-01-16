@@ -36,7 +36,6 @@ describe('GraphQLEditingService', () => {
   const layoutDataResponse = {
     sitecore: {
       context: {
-        editMode: EditMode.Metadata,
         pageEditing: true,
         language: 'en',
       },

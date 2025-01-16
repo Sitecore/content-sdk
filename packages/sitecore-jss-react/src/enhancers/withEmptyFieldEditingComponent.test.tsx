@@ -4,7 +4,6 @@ import { expect } from 'chai';
 import { mount } from 'enzyme';
 import { withEmptyFieldEditingComponent } from './withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from '../components/DefaultEmptyFieldEditingComponents';
-import { describe } from 'node:test';
 import { EMPTY_DATE_FIELD_VALUE } from '@sitecore-jss/sitecore-jss/layout';
 
 describe('withEmptyFieldEditingComponent', () => {
