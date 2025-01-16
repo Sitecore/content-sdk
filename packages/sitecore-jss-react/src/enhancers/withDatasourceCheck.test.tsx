@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import React from 'react';
 import { expect } from 'chai';
-import { mount } from 'enzyme';
+import {render, screen} from '@testing-library/react'
 import { spy } from 'sinon';
 
 import {

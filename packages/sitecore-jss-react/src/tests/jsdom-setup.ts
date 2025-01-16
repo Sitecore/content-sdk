@@ -7,7 +7,6 @@ declare module 'style-attr';
 
 // eslint-disable-next-line no-var
 declare var global: NodeJS.Global;
-
 const { JSDOM } = require('jsdom');
 
 const jsdom = new JSDOM('<!doctype html><html><body></body></html>', {

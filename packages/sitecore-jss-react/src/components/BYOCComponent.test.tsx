@@ -1,6 +1,6 @@
 import React from 'react';
 import { expect } from 'chai';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { BYOCComponent } from './BYOCComponent';
 import { MissingComponent, MissingComponentProps } from './MissingComponent';
@@ -27,13 +27,14 @@ describe('BYOCComponent', () => {
         },
       },
     });
-    const wrapper = mount(<BYOCComponent {...mockProps} />);
-    const fooComponent = wrapper.find('feaas-external');
-    expect(fooComponent).to.have.lengthOf(1);
-    expect(fooComponent.prop('prop1')).to.equal('value1');
-    expect(fooComponent.prop('data-external-id')).to.equal('Foo');
-    expect(fooComponent.find('#foo-content')).to.have.length(1);
-    expect(fooComponent.prop('uid')).to.equal('1111-2222-3333-4444');
+    const { container } = render(<BYOCComponent {...mockProps} />);
+    const fooComponent = container.querySelectorAll('feaas-external');
+    expect(fooComponent).to.not.be.null;
+    expect(container.querySelectorAll('feaas-external')).to.have.lengthOf(1);
+    expect(fooComponent[0]?.getAttribute('prop1')).to.equal('value1');
+    expect(fooComponent[0]?.getAttribute('data-external-id')).to.equal('Foo');
+    expect(fooComponent[0]?.querySelectorAll('#foo-content')).to.have.length(1);
+    expect(fooComponent[0]?.getAttribute('uid')).to.equal('1111-2222-3333-4444');
   });
 
   it('should use datasource fields when provided', () => {
@@ -58,12 +59,12 @@ describe('BYOCComponent', () => {
         },
       },
     });
-    const wrapper = mount(<BYOCComponent {...mockProps} />);
-    const fooComponent = wrapper.find('feaas-external');
-    expect(fooComponent).to.have.lengthOf(1);
-    expect(fooComponent.prop('prop1')).to.equal('value2');
-    expect(fooComponent.prop('data-external-id')).to.equal('Foo');
-    expect(fooComponent.find('#foo-content')).to.have.length(1);
+    const { container } = render(<BYOCComponent {...mockProps} />);
+    const fooComponent = container.querySelectorAll('feaas-external');
+    expect(container.querySelectorAll('feaas-external')).to.have.lengthOf(1);
+    expect(fooComponent[0].getAttribute('prop1')).to.equal('value2');
+    expect(fooComponent[0].getAttribute('data-external-id')).to.equal('Foo');
+    expect(fooComponent[0].querySelectorAll('#foo-content')).to.have.length(1);
   });
 
   it('should prefer ComponentProps over datasource fields', () => {
@@ -89,12 +90,12 @@ describe('BYOCComponent', () => {
         },
       },
     });
-    const wrapper = mount(<BYOCComponent {...mockProps} />);
-    const fooComponent = wrapper.find('feaas-external');
-    expect(fooComponent).to.have.lengthOf(1);
-    expect(fooComponent.prop('prop1')).to.equal('value1');
-    expect(fooComponent.prop('data-external-id')).to.equal('Foo');
-    expect(fooComponent.find('#foo-content')).to.have.length(1);
+    const { container } = render(<BYOCComponent {...mockProps} />);
+    expect(container.querySelectorAll('feaas-external')).to.have.lengthOf(1);
+    const fooComponent = container.querySelector('feaas-external');
+    expect(fooComponent?.getAttribute('prop1')).to.equal('value1');
+    expect(fooComponent?.getAttribute('data-external-id')).to.equal('Foo');
+    expect(fooComponent?.querySelectorAll('#foo-content')).to.have.length(1);
   });
 
   it('should combine ComponentProps and datasource fields', () => {
@@ -120,13 +121,13 @@ describe('BYOCComponent', () => {
         },
       },
     });
-    const wrapper = mount(<BYOCComponent {...mockProps} />);
-    const fooComponent = wrapper.find('feaas-external');
-    expect(fooComponent).to.have.lengthOf(1);
-    expect(fooComponent.prop('prop1')).to.equal('value1');
-    expect(fooComponent.prop('prop2')).to.equal('value2');
-    expect(fooComponent.prop('data-external-id')).to.equal('Foo');
-    expect(fooComponent.find('#foo-content')).to.have.length(1);
+    const { container } = render(<BYOCComponent {...mockProps} />);
+    const fooComponent = container.querySelector('feaas-external');
+    expect(container.querySelectorAll('feaas-external')).to.have.lengthOf(1);
+    expect(fooComponent?.getAttribute('prop1')).to.equal('value1');
+    expect(fooComponent?.getAttribute('prop2')).to.equal('value2');
+    expect(fooComponent?.getAttribute('data-external-id')).to.equal('Foo');
+    expect(fooComponent?.querySelectorAll('#foo-content')).to.have.length(1);
   });
 
   it('should render with static and fetched props when props are prefetched', () => {
@@ -152,13 +153,13 @@ describe('BYOCComponent', () => {
         },
       },
     });
-    const wrapper = mount(<BYOCComponent {...mockProps} />);
-    const fooComponent = wrapper.find('feaas-external');
-    expect(fooComponent).to.have.lengthOf(1);
-    expect(fooComponent.prop('prop1')).to.equal('value1');
-    expect(fooComponent.prop('datasources')).to.equal('{"prop2":"prefetched_value1","_":{}}');
-    expect(fooComponent.prop('data-external-id')).to.equal('Foo');
-    expect(fooComponent.find('#foo-content')).to.have.length(1);
+    const { container } = render(<BYOCComponent {...mockProps} />);
+    const fooComponent = container.querySelector('feaas-external');
+    expect(container.querySelectorAll('feaas-external')).to.have.lengthOf(1);
+    expect(fooComponent?.getAttribute('prop1')).to.equal('value1');
+    expect(fooComponent?.getAttribute('datasources')).to.equal('{"prop2":"prefetched_value1","_":{}}');
+    expect(fooComponent?.getAttribute('data-external-id')).to.equal('Foo');
+    expect(fooComponent?.querySelectorAll('#foo-content')).to.have.length(1);
   });
 
   it('should render with props when ComponentProps are provided but fetchedData is not present', () => {
@@ -177,12 +178,12 @@ describe('BYOCComponent', () => {
         },
       },
     });
-    const wrapper = mount(<BYOCComponent {...mockProps} />);
-    const fooComponent = wrapper.find('feaas-external');
-    expect(fooComponent).to.have.lengthOf(1);
-    expect(fooComponent.prop('prop1')).to.equal('value1');
-    expect(fooComponent.prop('data-external-id')).to.equal('Foo');
-    expect(fooComponent.find('#foo-content')).to.have.length(1);
+    const { container } = render(<BYOCComponent {...mockProps} />);
+    const fooComponent = container.querySelector('feaas-external');
+    expect(container.querySelectorAll('feaas-external')).to.have.lengthOf(1);
+    expect(fooComponent?.getAttribute('prop1')).to.equal('value1');
+    expect(fooComponent?.getAttribute('data-external-id')).to.equal('Foo');
+    expect(fooComponent?.querySelectorAll('#foo-content')).to.have.length(1);
   });
 });
 
