@@ -22,8 +22,15 @@ class PreviewModePlugin implements Plugin {
     if (!context.preview) return props;
 
     if (isComponentLibraryPreviewData(context.previewData)) {
-      const { itemId, componentUid, site, language, renderingId, dataSourceId, version, variant } =
-        context.previewData;
+      const {
+        itemId,
+        componentUid,
+        site,
+        language,
+        renderingId,
+        dataSourceId,
+        version,
+      } = context.previewData;
 
       const componentService = new RestComponentLayoutService({
         apiHost: config.sitecoreApiHost,
@@ -39,7 +46,6 @@ class PreviewModePlugin implements Plugin {
         componentUid,
         renderingId,
         dataSourceId,
-        variant,
         version,
       });
 
