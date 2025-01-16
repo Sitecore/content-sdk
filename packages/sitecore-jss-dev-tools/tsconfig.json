@@ -14,7 +14,6 @@
     "dist",
     "src/test",
     "src/**/*.test.ts",
-    "react.d.ts",
     "nextjs.d.ts",
     "nextjs-component-props-loader.d.ts",
   ]
