@@ -156,21 +156,19 @@ describe('<Placeholder />', () => {
         expect(renderedComponent.find('.wrapper').length).to.equal(1);
       });
 
-      it('when null passed to render function', () => {
-        it('should render empty placeholder', () => {
-          const component = dataSet.data.sitecore.route as RouteData;
-          const phKey = 'mainEmpty';
+      it('should render empty placeholder', () => {
+        const component = dataSet.data.sitecore.route as RouteData;
+        const phKey = 'mainEmpty';
 
-          const renderedComponent = mount(
-            <SitecoreContext componentFactory={componentFactory}>
-              <Placeholder name={phKey} rendering={component} render={() => null} />
-            </SitecoreContext>
-          );
+        const renderedComponent = mount(
+          <SitecoreContext componentFactory={componentFactory}>
+            <Placeholder name={phKey} rendering={component} />
+          </SitecoreContext>
+        );
 
-          const placeholder = renderedComponent.find(Placeholder);
-          expect(placeholder.length).to.equal(1);
-          expect(placeholder.children()).to.be.empty;
-        });
+        const placeholder = renderedComponent.find(Placeholder);
+        expect(placeholder.length).to.equal(1);
+        expect(placeholder.children()).to.be.empty;
       });
 
       it('should render output based on the renderEmpty function in case of no renderings', () => {
