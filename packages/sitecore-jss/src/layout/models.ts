@@ -115,6 +115,9 @@ export interface Field<T = GenericFieldValue> extends FieldMetadata {
   value: T;
 }
 
+/**
+ * Field metadata in editing mode
+ */
 export interface FieldMetadata {
   metadata?: { [key: string]: unknown };
 }

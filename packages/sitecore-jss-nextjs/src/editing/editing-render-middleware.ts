@@ -19,18 +19,15 @@ export type EditingRenderMiddlewareConfig = {
   /**
    * Function used to determine route/page URL to render.
    * This may be necessary for certain custom Next.js routing configurations.
-   * @param {object} args Arguments for resolving the page URL
-   * @param {string} args.serverUrl The root server URL e.g. 'http://localhost:3000'. Available in Chromes Edit Mode only.
    * @param {string} itemPath The Sitecore relative item path e.g. '/styleguide'
    * @returns {string} The URL to render
    * @default `${itemPath}`
-   * @see resolveServerUrl
    */
   resolvePageUrl?: (itemPath: string) => string;
 };
 
 /**
- * Next.js API request with Metadata query parameters.
+ * Next.js API request with editing request query parameters.
  */
 export type EditingNextApiRequest = NextApiRequest & {
   query: EditingRenderQueryParams;
@@ -68,8 +65,8 @@ export interface ComponentLibraryRenderPreviewData {
 /**
  * Type guard for Component Library mode
  * @param {object} data preview data to check
- * @returns true if the data is EditingMetadataPreviewData
- * @see EditingMetadataPreviewData
+ * @returns true if the data is EditingPreviewData
+ * @see EditingPreviewData
  */
 export const isComponentLibraryPreviewData = (
   data: unknown
@@ -165,9 +162,9 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     const startTimestamp = Date.now();
 
     const mode = query.mode;
-    const metadataDefaultRequiredParams = ['sc_site', 'sc_itemid', 'sc_lang', 'route', 'mode'];
+    const defaultRequiredParams = ['sc_site', 'sc_itemid', 'sc_lang', 'route', 'mode'];
 
-    const metadataComponentRequiredParams = [
+    const componentRequiredParams = [
       'sc_site',
       'sc_itemid',
       'sc_renderingId',
@@ -176,7 +173,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       'mode',
     ];
     const requiredQueryParams =
-      mode === 'library' ? metadataComponentRequiredParams : metadataDefaultRequiredParams;
+      mode === 'library' ? componentRequiredParams : defaultRequiredParams;
 
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
 
