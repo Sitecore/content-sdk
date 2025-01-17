@@ -19,7 +19,6 @@ describe('<BYOCWrapper />', () => {
     const { container } = await render(<BYOCWrapper {...mockProps} />);
     const props = byocComponentStub.args[0][0];
     expect(container.querySelectorAll('.bar')).to.have.lengthOf(1);
-    // const props = byocComponent.prop .props() as BYOCComponent.BYOCComponentProps;
     expect(props?.params).to.deep.equal({
       ComponentName: 'xxx',
       ComponentProps: JSON.stringify({ prop1: 'value1' }),

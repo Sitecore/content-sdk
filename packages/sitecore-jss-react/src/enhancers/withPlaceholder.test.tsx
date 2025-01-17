@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactElement, ReactNode } from 'react';
 import { expect } from 'chai';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { convertedDevData as nonEeDevData } from '../test-data/non-ee-data';
 import { convertedData as eeData } from '../test-data/ee-data';
 import * as metadataData from '../test-data/metadata-data';
@@ -108,7 +108,7 @@ describe('withPlaceholder HOC', () => {
         rendering: (null as unknown) as ComponentRendering,
       };
       const Element = withPlaceholder(phKey)(ErrorComponent);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext
           layoutData={(nonEeDevData as unknown) as LayoutServiceData}
           componentFactory={componentFactory}
@@ -116,7 +116,9 @@ describe('withPlaceholder HOC', () => {
           <Element {...props} />
         </SitecoreContext>
       );
-      expect(renderedComponent.find('.sc-jss-placeholder-error').length).to.equal(1);
+      expect(
+        renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length
+      ).to.equal(1);
     });
 
     it('should render custom component error on wrapped component error, when provided', () => {
@@ -127,7 +129,7 @@ describe('withPlaceholder HOC', () => {
         errorComponent: ErrorMessageComponent,
       };
       const Element = withPlaceholder(phKey)(ErrorComponent);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext
           layoutData={(nonEeDevData as unknown) as LayoutServiceData}
           componentFactory={componentFactory}
@@ -135,7 +137,7 @@ describe('withPlaceholder HOC', () => {
           <Element {...props} />
         </SitecoreContext>
       );
-      expect(renderedComponent.find('.error-handled').length).to.equal(1);
+      expect(renderedComponent.container.querySelectorAll('.error-handled').length).to.equal(1);
     });
 
     it('should render nested broken component', () => {
@@ -149,16 +151,22 @@ describe('withPlaceholder HOC', () => {
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext layoutData={nonEeDevData} componentFactory={componentFactory}>
           <Element {...props} />
         </SitecoreContext>
       );
 
-      expect(renderedComponent.find('.download-callout-mock').length).to.equal(1);
-      expect(renderedComponent.find('.sc-jss-placeholder-error').length).to.equal(1);
-      expect(renderedComponent.find('h4').length).to.equal(1);
-      expect(renderedComponent.find('h4').html()).to.equal('<h4>Loading component...</h4>');
+      expect(
+        renderedComponent.container.querySelectorAll('.download-callout-mock').length
+      ).to.equal(1);
+      expect(
+        renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length
+      ).to.equal(1);
+      expect(renderedComponent.container.querySelectorAll('h4').length).to.equal(1);
+      expect(renderedComponent.container.querySelector('h4')?.outerHTML).to.equal(
+        '<h4>Loading component...</h4>'
+      );
     });
 
     it('should render nested components using custom error component', () => {
@@ -174,19 +182,24 @@ describe('withPlaceholder HOC', () => {
         componentLoadingMessage: 'Custom loading message...',
       };
       const Element = withPlaceholder(phKey)(Home);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext layoutData={nonEeDevData} componentFactory={componentFactory}>
           <Element {...props} />
         </SitecoreContext>
       );
 
-      expect(renderedComponent.find('.download-callout-mock').length).to.equal(1);
-      expect(renderedComponent.find('.error-handled').length).to.equal(1);
-      expect(renderedComponent.find('h4').length).to.equal(1);
-      expect(renderedComponent.find('h4').html()).to.equal('<h4>Custom loading message...</h4>');
+      expect(
+        renderedComponent.container.querySelectorAll('.download-callout-mock').length
+      ).to.equal(1);
+      expect(renderedComponent.container.querySelectorAll('.error-handled').length).to.equal(1);
+      expect(renderedComponent.container.querySelectorAll('h4').length).to.equal(1);
+      expect(renderedComponent.container.querySelector('h4')?.outerHTML).to.equal(
+        '<h4>Custom loading message...</h4>'
+      );
     });
 
     describe('Edit mode', () => {
+      // TODO: revisit
       const component = (eeData.sitecore.route?.placeholders.main as (
         | ComponentRendering
         | RouteData
@@ -197,7 +210,7 @@ describe('withPlaceholder HOC', () => {
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext
           layoutData={eeData as LayoutServiceData}
           componentFactory={componentFactory}
@@ -207,16 +220,23 @@ describe('withPlaceholder HOC', () => {
       );
 
       it('should render normal component', () => {
-        expect(renderedComponent.find('.download-callout-mock').length).to.equal(1);
+        expect(renderedComponent.container.innerHTML).to.equal('123');
+        expect(
+          renderedComponent.container.querySelectorAll('.download-callout-mock').length
+        ).to.equal(1);
       });
 
       it('should render nested broken component', () => {
-        expect(renderedComponent.find('.sc-jss-placeholder-error').length).to.equal(1);
+        expect(
+          renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length
+        ).to.equal(1);
       });
 
       it('should render nested dynamic broken component', () => {
-        expect(renderedComponent.find('h4').length).to.equal(1);
-        expect(renderedComponent.find('h4').html()).to.equal('<h4>Loading component...</h4>');
+        expect(renderedComponent.container.querySelectorAll('h4').length).to.equal(1);
+        expect(renderedComponent.container.querySelector('h4')?.outerHTML).to.equal(
+          '<h4>Loading component...</h4>'
+        );
       });
     });
   });
@@ -234,7 +254,7 @@ describe('withPlaceholder HOC', () => {
           rendering: component,
         };
         const Element = withPlaceholder(phKey)(Home);
-        const renderedComponent = mount(
+        const renderedComponent = render(
           <SitecoreContext
             layoutData={dataSet.data as LayoutServiceData}
             componentFactory={componentFactory}
@@ -242,7 +262,9 @@ describe('withPlaceholder HOC', () => {
             <Element {...props} />
           </SitecoreContext>
         );
-        expect(renderedComponent.find('.download-callout-mock').length).to.equal(1);
+        expect(
+          renderedComponent.container.querySelectorAll('.download-callout-mock').length
+        ).to.equal(1);
       });
 
       it('should render a placeholder with given key and prop', () => {
@@ -259,7 +281,7 @@ describe('withPlaceholder HOC', () => {
           rendering: component,
         };
         const Element = withPlaceholder(phKeyAndProp)(Home);
-        const renderedComponent = mount(
+        const renderedComponent = render(
           <SitecoreContext
             layoutData={dataSet.data as LayoutServiceData}
             componentFactory={componentFactory}
@@ -267,8 +289,10 @@ describe('withPlaceholder HOC', () => {
             <Element {...props} />
           </SitecoreContext>
         );
-        expect(renderedComponent.find('.home-mock-with-prop').length).to.not.equal(0);
-        expect(renderedComponent.find('.jumbotron-mock').length).to.equal(1);
+        expect(
+          renderedComponent.container.querySelectorAll('.home-mock-with-prop').length
+        ).to.not.equal(0);
+        expect(renderedComponent.container.querySelectorAll('.jumbotron-mock').length).to.equal(1);
       });
 
       it('should use propsTransformer method when provided', () => {
@@ -290,7 +314,7 @@ describe('withPlaceholder HOC', () => {
           rendering: component,
         };
         const Element = withPlaceholder(phKeyAndProp, phOptions)(Home);
-        const renderedComponent = mount(
+        const renderedComponent = render(
           <SitecoreContext
             layoutData={dataSet.data as LayoutServiceData}
             componentFactory={componentFactory}
@@ -298,8 +322,10 @@ describe('withPlaceholder HOC', () => {
             <Element {...props} />
           </SitecoreContext>
         );
-        expect(renderedComponent.find('.home-mock-with-prop').length).to.equal(0);
-        expect(renderedComponent.find('.home-mock').length).to.not.equal(0);
+        expect(
+          renderedComponent.container.querySelectorAll('.home-mock-with-prop').length
+        ).to.equal(0);
+        expect(renderedComponent.container.querySelectorAll('.home-mock').length).to.not.equal(0);
       });
     });
   });
@@ -336,12 +362,12 @@ describe('withPlaceholder HOC', () => {
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext layoutData={layoutData} componentFactory={componentFactory}>
           <Element {...props} />
         </SitecoreContext>
       );
-      expect(renderedComponent.html()).to.equal(
+      expect(renderedComponent?.container.innerHTML).to.equal(
         [
           '<div class="home-mock">',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
@@ -372,13 +398,13 @@ describe('withPlaceholder HOC', () => {
         rendering: component,
       };
       const Element = withPlaceholder(phKeyAndProp)(Home);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext layoutData={layoutData} componentFactory={componentFactory}>
           <Element {...props} />
         </SitecoreContext>
       );
 
-      expect(renderedComponent.html()).to.equal(
+      expect(renderedComponent?.container.innerHTML).to.equal(
         [
           '<div class="home-mock-with-prop">',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
@@ -405,7 +431,7 @@ describe('withPlaceholder HOC', () => {
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext
           layoutData={layoutDataWithEmptyPlaceholder}
           componentFactory={componentFactory}
@@ -414,7 +440,7 @@ describe('withPlaceholder HOC', () => {
         </SitecoreContext>
       );
 
-      expect(renderedComponent.html()).to.equal(
+      expect(renderedComponent?.container.innerHTML).to.equal(
         [
           '<div class="home-mock">',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
@@ -432,7 +458,7 @@ describe('withPlaceholder HOC', () => {
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext
           layoutData={layoutDataWithUnknownComponent}
           componentFactory={componentFactory}
@@ -441,7 +467,7 @@ describe('withPlaceholder HOC', () => {
         </SitecoreContext>
       );
 
-      expect(renderedComponent.html()).to.equal(
+      expect(renderedComponent?.container.innerHTML).to.equal(
         [
           '<div class="home-mock">',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
@@ -463,13 +489,13 @@ describe('withPlaceholder HOC', () => {
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext layoutData={layoutData} componentFactory={componentFactory}>
           <Element {...props} />
         </SitecoreContext>
       );
 
-      expect(renderedComponent.html()).to.equal(
+      expect(renderedComponent?.container.innerHTML).to.equal(
         [
           '<div class="home-mock">',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="container-{*}_00000000-0000-0000-0000-000000000000"></code>',
@@ -496,13 +522,13 @@ describe('withPlaceholder HOC', () => {
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
-      const renderedComponent = mount(
+      const renderedComponent = render(
         <SitecoreContext layoutData={layoutData} componentFactory={componentFactory}>
           <Element {...props} />
         </SitecoreContext>
       );
 
-      expect(renderedComponent.html()).to.equal(
+      expect(renderedComponent?.container.innerHTML).to.equal(
         [
           '<div class="home-mock">',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="container-1-{*}_00000000-0000-0000-0000-000000000000"></code>',

@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { expect } from 'chai';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { spy } from 'sinon';
 import ErrorBoundary from './ErrorBoundary';
 import { SitecoreContextReactContext } from '../components/SitecoreContext';
@@ -30,7 +30,7 @@ describe('ErrorBoundary', () => {
         return <div>This is a custom error component!</div>;
       };
 
-      const rendered = mount(
+      const rendered = render(
         <SitecoreContextReactContext.Provider value={testComponentProps}>
           <ErrorBoundary rendering={rendering} errorComponent={CustomErrorComponent}>
             <TestErrorComponent />
@@ -38,8 +38,10 @@ describe('ErrorBoundary', () => {
         </SitecoreContextReactContext.Provider>
       );
 
-      expect(rendered.find('div').length).to.equal(1);
-      expect(rendered.find('div').text()).to.equal('This is a custom error component!');
+      expect(rendered.container.querySelectorAll('div').length).to.equal(1);
+      expect(rendered.container.querySelector('div')?.textContent).to.equal(
+        'This is a custom error component!'
+      );
     });
 
     it('Should render errors message and errored component name when error is thrown in edit mode', () => {
@@ -60,29 +62,19 @@ describe('ErrorBoundary', () => {
         throw Error(errorMessage);
       };
 
-      const rendered = mount(
+      const rendered = render(
         <SitecoreContextReactContext.Provider value={testComponentProps}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
         </SitecoreContextReactContext.Provider>
       );
-
-      expect(rendered.html()).to.contain('class="sc-jss-placeholder-error"');
-      expect(rendered.html()).to.contain('A rendering error occurred in component');
-      expect(rendered.find('em').length).to.equal(2);
-      expect(
-        rendered
-          .find('em')
-          .at(0)
-          .text()
-      ).to.equal(testComponentName);
-      expect(
-        rendered
-          .find('em')
-          .at(1)
-          .text()
-      ).to.equal(errorMessage);
+      const ems = rendered.container.querySelectorAll('em');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
+      expect(ems.length).to.equal(2);
+      expect(ems[0].textContent).to.equal(testComponentName);
+      expect(ems[1].textContent).to.equal(errorMessage);
     });
 
     it('Should render errors message and errored component name when error is thrown in preview mode', () => {
@@ -103,28 +95,23 @@ describe('ErrorBoundary', () => {
         throw Error(errorMessage);
       };
 
-      const rendered = mount(
+      const rendered = render(
         <SitecoreContextReactContext.Provider value={testComponentProps}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
         </SitecoreContextReactContext.Provider>
       );
+      const ems = rendered.container.querySelectorAll('em');
 
-      expect(rendered.html()).to.contain('class="sc-jss-placeholder-error"');
-      expect(rendered.html()).to.contain('A rendering error occurred in component');
-      expect(rendered.find('em').length).to.equal(2);
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
+      expect(ems.length).to.equal(2);
       expect(
-        rendered
-          .find('em')
-          .at(0)
-          .text()
+        ems[0].textContent
       ).to.equal(testComponentName);
       expect(
-        rendered
-          .find('em')
-          .at(1)
-          .text()
+        ems[1].textContent
       ).to.equal(errorMessage);
     });
   });
@@ -147,13 +134,13 @@ describe('ErrorBoundary', () => {
         return <div>This is a custom error component!</div>;
       };
 
-      const rendered = mount(
+      const rendered = render(
         <ErrorBoundary errorComponent={CustomErrorComponent}>
           <TestErrorComponent />
         </ErrorBoundary>
       );
-      expect(rendered.find('div').length).to.equal(1);
-      expect(rendered.find('div').text()).to.equal('This is a custom error component!');
+      expect(rendered.container.querySelectorAll('div').length).to.equal(1);
+      expect(rendered.container.querySelector('div')?.textContent).to.equal('This is a custom error component!');
     });
 
     it('Should render errors message and errored component name when error is thrown and is in page editing mode', () => {
@@ -174,28 +161,22 @@ describe('ErrorBoundary', () => {
         throw Error(errorMessage);
       };
 
-      const rendered = mount(
+      const rendered = render(
         <SitecoreContextReactContext.Provider value={testComponentProps}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
         </SitecoreContextReactContext.Provider>
       );
-
-      expect(rendered.html()).to.contain('class="sc-jss-placeholder-error"');
-      expect(rendered.html()).to.contain('A rendering error occurred in component');
-      expect(rendered.find('em').length).to.equal(2);
+      const ems = rendered.container.querySelectorAll('em');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
+      expect(ems.length).to.equal(2);
       expect(
-        rendered
-          .find('em')
-          .at(0)
-          .text()
+        ems[0].textContent
       ).to.equal(testComponentName);
       expect(
-        rendered
-          .find('em')
-          .at(1)
-          .text()
+        ems[1].textContent
       ).to.equal(errorMessage);
     });
 
@@ -217,28 +198,23 @@ describe('ErrorBoundary', () => {
         throw Error(errorMessage);
       };
 
-      const rendered = mount(
+      const rendered = render(
         <SitecoreContextReactContext.Provider value={testComponentProps}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
         </SitecoreContextReactContext.Provider>
       );
+      const ems = rendered.container.querySelectorAll('em');
 
-      expect(rendered.html()).to.contain('class="sc-jss-placeholder-error"');
-      expect(rendered.html()).to.contain('A rendering error occurred in component');
-      expect(rendered.find('em').length).to.equal(2);
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
+      expect(ems.length).to.equal(2);
       expect(
-        rendered
-          .find('em')
-          .at(0)
-          .text()
+        ems[0].textContent
       ).to.equal(testComponentName);
       expect(
-        rendered
-          .find('em')
-          .at(1)
-          .text()
+        ems[1].textContent
       ).to.equal(errorMessage);
     });
   });
@@ -254,37 +230,36 @@ describe('ErrorBoundary', () => {
     );
 
     it('should render a loading message', async () => {
-      const rendered = mount(
+      const rendered = render(
         <ErrorBoundary>
           <ItsADynamicComponent />
         </ErrorBoundary>
       );
-      expect(rendered.text()).to.equal('Loading component...');
+      expect(rendered.baseElement.textContent).to.equal('Loading component...');
     });
 
     it('should render custom loading message', async () => {
       const loading = 'I am customly loading...';
-      const rendered = mount(
+      const rendered = render(
         <ErrorBoundary componentLoadingMessage={loading}>
           <ItsADynamicComponent />
         </ErrorBoundary>
       );
-      expect(rendered.text()).to.equal(loading);
+      expect(rendered.baseElement.textContent).to.equal(loading);
     });
 
     it('should not render Suspense and default loading message when wrapping a dynamic component', async () => {
       // mount fails with lazy component and no suspense
-      const rendered = mount(
+      const rendered = render(
         <Suspense>
           <ErrorBoundary isDynamic={true}>
             <ItsADynamicComponent />
           </ErrorBoundary>
         </Suspense>
       );
-      expect(rendered.text()).to.equal('');
+      expect(rendered.baseElement.textContent).to.equal('');
       await delay(500);
-      rendered.update();
-      expect(rendered.text()).to.equal('No error');
+      expect(rendered.baseElement.textContent).to.equal('No error');
     });
 
     it('Should render custom error component when custom error component is provided and error is thrown', () => {
@@ -297,13 +272,13 @@ describe('ErrorBoundary', () => {
         return <div>This is a custom error component!</div>;
       };
 
-      const rendered = mount(
+      const rendered = render(
         <ErrorBoundary errorComponent={CustomErrorComponent}>
           <TestErrorComponent />
         </ErrorBoundary>
       );
-      expect(rendered.find('div').length).to.equal(1);
-      expect(rendered.find('div').text()).to.equal('This is a custom error component!');
+      expect(rendered.container.querySelectorAll('div').length).to.equal(1);
+      expect(rendered.container.querySelector('div')?.textContent).to.equal('This is a custom error component!');
     });
 
     it('Should render default errors message when error is thrown and custom error component is not provided', () => {
@@ -312,18 +287,18 @@ describe('ErrorBoundary', () => {
         throw Error(errorMessage);
       };
 
-      const rendered = mount(
+      const rendered = render(
         <ErrorBoundary>
           <TestErrorComponent />
         </ErrorBoundary>
       );
 
-      expect(rendered.html()).to.contain('class="sc-jss-placeholder-error"');
-      expect(rendered.html()).to.contain(
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain(
         'There was a problem loading this section.' // eslint-disable-line
       );
-      expect(rendered.find('em').length).to.equal(0);
-      expect(rendered.html()).to.not.contain(errorMessage);
+      expect(rendered.container.querySelectorAll('em').length).to.equal(0);
+      expect(rendered.baseElement.innerHTML).to.not.contain(errorMessage);
     });
   });
 });

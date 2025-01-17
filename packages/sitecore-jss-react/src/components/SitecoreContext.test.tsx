@@ -36,7 +36,7 @@ const mockLayoutData: LayoutServiceData = {
     },
   },
 };
-
+// TODO: revisit
 describe('SitecoreContext', () => {
   it('should update context', () => {
     const component = shallow<SitecoreContext>(

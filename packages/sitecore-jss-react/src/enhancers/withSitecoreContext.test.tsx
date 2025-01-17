@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { expect, use } from 'chai';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 
@@ -11,6 +11,7 @@ import { SitecoreContextReactContext } from '../components/SitecoreContext';
 use(sinonChai);
 
 describe('withSitecoreContext', () => {
+  // TODO: revisit
   it('withSitecoreContext()', () => {
     const setContext = spy();
 
@@ -30,7 +31,7 @@ describe('withSitecoreContext', () => {
 
     let TestComponentWithContext: React.FC<any> = withSitecoreContext()(TestComponent);
 
-    let wrapper = mount(
+    let wrapper = render(
       <SitecoreContextReactContext.Provider value={testComponentProps}>
         <TestComponentWithContext customProp="xxx" />
       </SitecoreContextReactContext.Provider>
@@ -46,7 +47,7 @@ describe('withSitecoreContext', () => {
 
     TestComponentWithContext = withSitecoreContext({ updatable: true })(TestComponent);
 
-    wrapper = mount(
+    wrapper = render(
       <SitecoreContextReactContext.Provider value={testComponentProps}>
         <TestComponentWithContext customProp="xxx" />
       </SitecoreContextReactContext.Provider>
@@ -81,7 +82,7 @@ describe('withSitecoreContext', () => {
         );
       };
 
-      const wrapper = mount(
+      const wrapper = render(
         <SitecoreContextReactContext.Provider value={testComponentProps}>
           <TestComponent customProp="xxx" />
         </SitecoreContextReactContext.Provider>
@@ -118,7 +119,7 @@ describe('withSitecoreContext', () => {
         );
       };
 
-      const wrapper = mount(
+      const wrapper = render(
         <SitecoreContextReactContext.Provider value={testComponentProps}>
           <TestComponent customProp="bbb" />
         </SitecoreContextReactContext.Provider>
