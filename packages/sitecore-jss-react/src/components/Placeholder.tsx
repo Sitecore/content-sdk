@@ -1,14 +1,13 @@
 import React from 'react';
 import { PlaceholderCommon, PlaceholderProps } from './PlaceholderCommon';
 import { withComponentFactory } from '../enhancers/withComponentFactory';
-import { ComponentRendering, HtmlElementRendering } from '@sitecore-jss/sitecore-jss/layout';
-import { HorizonEditor } from '@sitecore-jss/sitecore-jss/editing';
+import { ComponentRendering } from '@sitecore-jss/sitecore-jss/layout';
+import { PagesEditor } from '@sitecore-jss/sitecore-jss/editing';
 import { withSitecoreContext } from '../enhancers/withSitecoreContext';
 
 export interface PlaceholderComponentProps extends PlaceholderProps {
   /**
    * Render props function that is called when the placeholder contains no content components.
-   * Can be used to wrap the Sitecore EE empty placeholder markup in something that's visually correct
    */
   renderEmpty?: (components: React.ReactNode[]) => React.ReactNode;
   /**
@@ -17,27 +16,15 @@ export interface PlaceholderComponentProps extends PlaceholderProps {
    */
   render?: (
     components: React.ReactNode[],
-    data: (ComponentRendering | HtmlElementRendering)[],
+    data: ComponentRendering[],
     props: PlaceholderProps
   ) => React.ReactNode;
 
   /**
    * Render props function that is called for each non-system component added to the placeholder.
-   * Mutually exclusive with `render`. System components added during Experience Editor are automatically rendered as-is.
+   * Mutually exclusive with `render`.
    */
   renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
-}
-
-/**
- * @param {HtmlElementRendering | ComponentRendering} rendering
- */
-function isRawRendering(
-  rendering: HtmlElementRendering | ComponentRendering
-): rendering is HtmlElementRendering {
-  return (
-    !(rendering as ComponentRendering).componentName &&
-    (rendering as HtmlElementRendering).name !== undefined
-  );
 }
 
 class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> {
@@ -50,16 +37,13 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
   }
 
   componentDidMount() {
-    super.componentDidMount();
-    if (this.isEmpty && HorizonEditor.isActive()) {
-      HorizonEditor.resetChromes();
+    if (this.isEmpty && PagesEditor.isActive()) {
+      PagesEditor.resetChromes();
     }
   }
 
   /**
-   * In case we need to render an empty placeholder, some part of the markup will be inserted by the EE,
-   * so we need to separate the empty placeholder's markup and allow React reconciliation to be executed correctly
-   * and retain sibling tags
+   * Renders the placeholder when it is empty. The required CSS styles are applied to the placeholder in edit mode.
    * @param {React.ReactNode | React.ReactElement[]} node react node
    * @returns react node
    */
@@ -89,21 +73,19 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
     const placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
       renderingData,
       this.props.name,
-      this.props.sitecoreContext?.editMode
+      this.props.sitecoreContext?.pageEditing
     );
 
-    this.isEmpty = placeholderData.every((rendering: ComponentRendering | HtmlElementRendering) =>
-      isRawRendering(rendering)
-    );
+    this.isEmpty = !placeholderData.length;
 
     const components = this.getComponentsForRenderingData(placeholderData);
 
-    if (this.props.renderEmpty && this.isEmpty) {
-      const rendered = this.props.renderEmpty(components);
+    if (this.isEmpty) {
+      const rendered = this.props.renderEmpty ? this.props.renderEmpty(components) : components;
 
-      return components.length ? this.renderEmptyPlaceholder(rendered) : rendered;
-    } else if (components.length && this.isEmpty) {
-      return this.renderEmptyPlaceholder(components);
+      return this.props.sitecoreContext?.pageEditing
+        ? this.renderEmptyPlaceholder(rendered)
+        : rendered;
     } else if (this.props.render) {
       return this.props.render(components, placeholderData, childProps);
     } else if (this.props.renderEach) {

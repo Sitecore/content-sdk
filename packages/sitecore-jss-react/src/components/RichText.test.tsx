@@ -3,8 +3,6 @@ import { expect } from 'chai';
 import { mount } from 'enzyme';
 
 import { RichText, RichTextField } from './RichText';
-import { richTextField as eeRichTextData } from '../test-data/ee-data';
-import { describe } from 'node:test';
 
 describe('<RichText />', () => {
   it('should render nothing with missing field', () => {
@@ -21,26 +19,15 @@ describe('<RichText />', () => {
     expect(rendered).to.have.length(0);
   });
 
-  it('should render nothing with missing editable and value', () => {
+  it('should render nothing with missing value', () => {
     const field = {};
     const rendered = mount(<RichText field={field} />).find('div');
     expect(rendered).to.have.length(0);
   });
 
-  it('should render editable with editable value', () => {
-    const field = {
-      value: 'value',
-      editable: 'editable',
-    };
-    const rendered = mount(<RichText field={field} />).find('div');
-    expect(rendered).to.have.length(1);
-    expect(rendered.html()).to.contain('editable');
-  });
-
   it('should render value with editing explicitly disabled', () => {
     const field = {
       value: 'value',
-      editable: 'editable',
     };
     const rendered = mount(<RichText field={field} editable={false} />).find('div');
     expect(rendered).to.have.length(1);
@@ -63,16 +50,6 @@ describe('<RichText />', () => {
     const rendered = mount(<RichText field={field} />).find('div');
     expect(rendered).to.have.length(1);
     expect(rendered.html()).to.contain(field.value);
-  });
-
-  it('should render ee HTML', () => {
-    const field = {
-      editable: eeRichTextData,
-    };
-    const rendered = mount(<RichText field={field} />).find('div');
-    expect(rendered).to.have.length(1);
-    expect(rendered.html()).to.contain('<input');
-    expect(rendered.html()).to.contain('<span class="scChromeData">');
   });
 
   it('should render tag with a tag provided', () => {
@@ -153,7 +130,7 @@ describe('<RichText />', () => {
         metadata: testMetadata,
       };
 
-      const EmptyFieldEditingComponent: React.FC = () => (
+      const EmptyFieldEditingComponent = () => (
         <span className="empty-field-value-placeholder">Custom Empty field value</span>
       );
 

@@ -9,7 +9,6 @@ import { SitecorePageProps } from 'lib/page-props';
 import { sitecorePagePropsFactory } from 'lib/page-props-factory';
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
-import config from 'temp/config';
 
 const FEAASRender = ({
   notFound,
@@ -28,7 +27,7 @@ const FEAASRender = ({
       >
         <Head>
           <title>Sitecore Component Library</title>
-          <link rel="icon" href={`${config.publicUrl}/favicon.ico`} />
+          <link rel="icon" href="/favicon.ico" />
           {headLinks.map((headLink) => (
             <link rel={headLink.rel} key={headLink.href} href={headLink.href} />
           ))}

@@ -4,7 +4,6 @@ import { expect } from 'chai';
 import { mount } from 'enzyme';
 
 import { Text, TextField } from './Text';
-import { textField as eeTextData } from '../test-data/ee-data';
 
 describe('<Text />', () => {
   it('should render nothing with missing field', () => {
@@ -22,27 +21,16 @@ describe('<Text />', () => {
     expect(rendered.html()).to.equal('');
   });
 
-  it('should render nothing with missing editable and value', () => {
+  it('should render nothing with missing value', () => {
     const field = {};
     const rendered = mount(<Text field={field} />);
     expect(rendered).to.have.length(1);
     expect(rendered.html()).to.equal('');
   });
 
-  it('should render editable with editable value', () => {
-    const field = {
-      value: 'value',
-      editable: 'editable',
-    };
-    const rendered = mount(<Text field={field} />).find('span');
-    expect(rendered).to.have.length(1);
-    expect(rendered.html()).to.contain('editable');
-  });
-
   it('should render value with editing explicitly disabled', () => {
     const field = {
       value: 'value',
-      editable: 'editable',
     };
     const rendered = mount(<Text tag="span" field={field} editable={false} />).find('span');
     expect(rendered).to.have.length(1);
@@ -137,25 +125,6 @@ describe('<Text />', () => {
     const rendered = mount(<Text field={field} encode={false} />).find('span');
     expect(rendered).to.have.length(1);
     expect(rendered.html()).to.contain(field.value);
-  });
-
-  it('should render ee HTML', () => {
-    const field = {
-      editable: eeTextData,
-    };
-    const rendered = mount(<Text field={field} />).find('span');
-    expect(rendered).to.have.length(1);
-    expect(rendered.html()).to.contain('<input');
-    expect(rendered.html()).to.contain('<span class="scChromeData">');
-  });
-
-  it('should render ee HTML with line breaks', () => {
-    const field = {
-      editable: 'xxx\n\naa\nbbb\n',
-    };
-    const rendered = mount(<Text field={field} />).find('span');
-    expect(rendered).to.have.length(1);
-    expect(rendered.html()).to.equal('<span>xxx\n\naa\nbbb\n</span>');
   });
 
   it('should render tag with a tag provided', () => {

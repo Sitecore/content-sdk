@@ -1,40 +1,7 @@
-import unescape from 'lodash.unescape';
 import URL from 'url-parse';
-
-// finds an img tag with HTML attributes
-const imgTagRegex = /<img([^>]+)\/>/i;
-
-// finds all the HTML attributes in a string
-const htmlAttrsRegex = /([^=\s]+)(="([^"]*)")?/gi;
 
 // finds the Sitecore media URL prefix
 const mediaUrlPrefixRegex = /\/([-~]{1})\/media\//i;
-
-/**
- * Makes a request to Sitecore Content Service for the specified item path.
- * @param {string} editorMarkup the markup to parse
- * @returns {object | null} found image tag; null in case if not found
- */
-export const findEditorImageTag = (editorMarkup: string) => {
-  // match the tag
-  const tagMatch = editorMarkup.match(imgTagRegex);
-  if (!tagMatch || tagMatch.length < 2) {
-    return null;
-  }
-
-  // find the attrs and turn them into a Map
-  const attrs = {} as { [key: string]: string };
-  let match = htmlAttrsRegex.exec(tagMatch[1]);
-  while (match !== null) {
-    attrs[match[1]] = unescape(match[3]);
-    match = htmlAttrsRegex.exec(tagMatch[1]);
-  }
-
-  return {
-    imgTag: tagMatch[0],
-    attrs,
-  };
-};
 
 /**
  * Get required query string params which should be merged with user params

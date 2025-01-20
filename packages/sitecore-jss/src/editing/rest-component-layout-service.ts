@@ -33,7 +33,7 @@ export interface ComponentLayoutRequestParams {
    */
   version?: string;
   /**
-   * edit mode (edit, preview) to be rendered component in. Component is rendered in normal mode by default
+   * edit mode to be rendered component in. Component is rendered in normal mode by default
    */
   editMode?: EditMode;
   /**

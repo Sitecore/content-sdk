@@ -2,7 +2,6 @@ import {
   GraphQLDictionaryQueryResponse,
   GraphQLEditingQueryResponse,
 } from '../editing/graphql-editing-service';
-import { EditMode } from '../layout';
 
 export const mockEditingServiceResponse = (
   hasNext = false
@@ -12,7 +11,6 @@ export const mockEditingServiceResponse = (
       rendered: {
         sitecore: {
           context: {
-            editMode: EditMode.Metadata,
             pageEditing: true,
             language: 'en',
           },

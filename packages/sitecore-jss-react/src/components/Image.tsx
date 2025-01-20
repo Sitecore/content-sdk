@@ -1,8 +1,7 @@
 import { mediaApi } from '@sitecore-jss/sitecore-jss/media';
 import PropTypes, { Requireable } from 'prop-types';
 import React from 'react';
-import { addClassName, convertAttributesToReactProps } from '../utils';
-import { getAttributesString } from '../utils';
+import { addClassName } from '../utils';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentImage } from './DefaultEmptyFieldEditingComponents';
@@ -18,7 +17,6 @@ export interface ImageFieldValue {
 
 export interface ImageField {
   value?: ImageFieldValue;
-  editable?: string;
 }
 
 export interface ImageSizeParameters {
@@ -65,16 +63,6 @@ export interface ImageProps extends EditableFieldProps {
   /** HTML attributes that will be appended to the rendered <img /> tag. */
 }
 
-const getEditableWrapper = (editableMarkup: string, ...otherProps: unknown[]) => (
-  // create an inline wrapper and use dangerouslySetInnerHTML.
-  // if we try to parse the EE value, the parser will strip invalid or disallowed attributes from html elements - and EE uses several
-  <span
-    className="sc-image-wrapper"
-    {...otherProps}
-    dangerouslySetInnerHTML={{ __html: editableMarkup }}
-  />
-);
-
 const getImageAttrs = (
   {
     src,
@@ -108,52 +96,13 @@ const getImageAttrs = (
   return newAttrs;
 };
 
-/**
- * @param {ImageField} imageField {ImageField} provides the dynamicMedia which is used to render the image
- * @param {ImageProps.imageParams} imageParams {ImageProp['imageParams']}} provides the image parameters that will be attached to the image URL
- * @param {RegExp} mediaUrlPrefix {RegExp} the url prefix regex used in the mediaApi
- * @param {ImageProps} otherProps {ImageProps} all other props included on the image component
- * @returns Experience Editor Markup
- */
-export const getEEMarkup = (
-  imageField: ImageField,
-  imageParams?: ImageProps['imageParams'],
-  mediaUrlPrefix?: RegExp,
-  otherProps?: ImageProps
-) => {
-  // we likely have an experience editor value, should be a string
-  const foundImg = mediaApi.findEditorImageTag(imageField.editable);
-  if (!foundImg) {
-    return getEditableWrapper(imageField.editable);
-  }
-
-  const foundImgProps = convertAttributesToReactProps(foundImg.attrs);
-  // Note: otherProps may override values from foundImgProps, e.g. `style`, `className` prop
-  // We do not attempt to merge.
-  const imgAttrs = getImageAttrs({ ...foundImgProps, ...otherProps }, imageParams, mediaUrlPrefix);
-
-  if (!imgAttrs) {
-    return getEditableWrapper(imageField.editable);
-  }
-
-  const imgHtml = `<img ${getAttributesString(imgAttrs as { [key: string]: unknown })} />`;
-  const editableMarkup = imageField.editable.replace(foundImg.imgTag, imgHtml);
-  return getEditableWrapper(editableMarkup);
-};
-
 export const Image: React.FC<ImageProps> = withFieldMetadata<ImageProps>(
   withEmptyFieldEditingComponent<ImageProps>(
     ({ editable = true, imageParams, field, mediaUrlPrefix, ...otherProps }) => {
       const dynamicMedia = field as ImageField | ImageFieldValue;
 
-      if (!field || (!dynamicMedia.editable && isFieldValueEmpty(dynamicMedia))) {
+      if (isFieldValueEmpty(dynamicMedia)) {
         return null;
-      }
-
-      const imageField = dynamicMedia as ImageField;
-
-      if (editable && imageField.editable) {
-        return getEEMarkup(imageField, imageParams, mediaUrlPrefix, otherProps);
       }
 
       // some wise-guy/gal is passing in a 'raw' image object value
@@ -187,7 +136,6 @@ Image.propTypes = {
     }),
     PropTypes.shape({
       value: PropTypes.object,
-      editable: PropTypes.string,
     }),
   ]),
   editable: PropTypes.bool,

@@ -1,15 +1,7 @@
 import { HIDDEN_RENDERING_NAME } from '../constants';
-import {
-  LayoutServiceData,
-  ComponentRendering,
-  HtmlElementRendering,
-  PlaceholdersData,
-  EditMode,
-} from './../layout/models';
+import { LayoutServiceData, ComponentRendering, PlaceholdersData } from './../layout/models';
 
-const transformToHiddenRenderingVariant = (
-  component: ComponentRendering | HtmlElementRendering
-) => ({
+const transformToHiddenRenderingVariant = (component: ComponentRendering) => ({
   ...component,
   componentName: HIDDEN_RENDERING_NAME,
   experiences: {},
@@ -36,14 +28,13 @@ export function personalizeLayout(
   if (Object.keys(placeholders).length === 0) {
     return undefined;
   }
-  const metadataEditing =
-    layout.sitecore.context.pageEditing && layout.sitecore.context.editMode === EditMode.Metadata;
+  const isEditing = layout.sitecore.context.pageEditing;
   if (placeholders) {
     Object.keys(placeholders).forEach((placeholder) => {
       placeholders[placeholder] = personalizePlaceholder(
         placeholders[placeholder],
         [variantId, ...(componentVariantIds || [])],
-        metadataEditing
+        isEditing
       );
     });
   }
@@ -53,14 +44,14 @@ export function personalizeLayout(
 /**
  * @param {Array} components components within placeholder
  * @param {string[]} variantIds variant ids
- * @param {boolean} metadataEditing indicates if page is rendered in metadata edit mode
- * @returns {Array<ComponentRendering | HtmlElementRendering>} components with personalization applied
+ * @param {boolean} isEditing indicates if page is rendered in metadata edit mode
+ * @returns {ComponentRendering[]} components with personalization applied
  */
 export function personalizePlaceholder(
-  components: Array<ComponentRendering | HtmlElementRendering>,
+  components: ComponentRendering[],
   variantIds: string[],
-  metadataEditing?: boolean
-): Array<ComponentRendering | HtmlElementRendering> {
+  isEditing?: boolean
+): ComponentRendering[] {
   return components
     .map((component) => {
       const rendering = component as ComponentRendering;
@@ -69,8 +60,8 @@ export function personalizePlaceholder(
         return personalizeComponent(
           rendering as ComponentRenderingWithExperiences,
           variantIds,
-          metadataEditing
-        ) as ComponentRendering | HtmlElementRendering;
+          isEditing
+        ) as ComponentRendering;
       } else if (rendering.placeholders) {
         const placeholders = rendering.placeholders as PlaceholdersData;
 
@@ -78,7 +69,7 @@ export function personalizePlaceholder(
           placeholders[placeholder] = personalizePlaceholder(
             placeholders[placeholder],
             variantIds,
-            metadataEditing
+            isEditing
           );
         });
       }
@@ -91,13 +82,13 @@ export function personalizePlaceholder(
 /**
  * @param {ComponentRenderingWithExperiences} component component with experiences
  * @param {string[]} variantIds variant ids
- * @param {boolean} metadataEditing indicates if page is rendered in metadata edit mode
+ * @param {boolean} isEditing indicates if page is rendered in metadata edit mode
  * @returns {ComponentRendering | null} component with personalization applied or null if hidden
  */
 export function personalizeComponent(
   component: ComponentRenderingWithExperiences,
   variantIds: string[],
-  metadataEditing?: boolean
+  isEditing?: boolean
 ): ComponentRendering | null {
   // Check if we have a page/component experience matching any of the variants (there should be at most 1)
   const match = Object.keys(component.experiences).find((variantId) =>
@@ -108,14 +99,14 @@ export function personalizeComponent(
   // variant and componentName can be undefined or null
   if (!variant && !component.componentName) {
     // DEFAULT IS HIDDEN
-    if (metadataEditing) {
+    if (isEditing) {
       component = transformToHiddenRenderingVariant(component);
     } else {
       return null;
     }
   } else if (variant && variant.componentName === null && variant.dataSource === null) {
     // VARIANT IS HIDDEN
-    if (metadataEditing) {
+    if (isEditing) {
       component = transformToHiddenRenderingVariant(component);
     } else {
       return null;

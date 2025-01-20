@@ -22,13 +22,9 @@ export interface FileProps {
 }
 
 export const File: React.FC<FileProps> = ({ field, children, ...otherProps }) => {
-  /*
-    File fields cannot be managed via the EE. We never output "editable."
-  */
-
   const dynamicField: FileField | FileFieldValue = field;
 
-  if (!field || isFieldValueEmpty(dynamicField)) {
+  if (isFieldValueEmpty(dynamicField)) {
     return null;
   }
 

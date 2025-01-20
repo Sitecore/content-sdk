@@ -2,7 +2,7 @@ import debug from '../debug';
 import { PageInfo } from '../graphql';
 import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases } from '../i18n';
-import { EditMode, LayoutServiceData } from '../layout';
+import { LayoutServiceData } from '../layout';
 import { LayoutKind } from './models';
 
 /**
@@ -186,7 +186,7 @@ export class GraphQLEditingService {
     return {
       layoutData: editingData?.item?.rendered || {
         sitecore: {
-          context: { pageEditing: true, language, editMode: EditMode.Metadata },
+          context: { pageEditing: true, language },
           route: null,
         },
       },
