@@ -201,7 +201,6 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           pageState: LayoutServicePageState.Normal,
           mode: 'library',
           dataSourceId: query.sc_datasourceId,
-          variant: query.sc_variant || DEFAULT_VARIANT,
           version: query.sc_version,
         } as ComponentLibraryRenderPreviewData,
         {

@@ -4,8 +4,11 @@ export {
   isAbsoluteUrl,
   isTimeoutError,
   enforceCors,
-  getPermutations,
   EnhancedOmit,
   getAllowedOriginsFromEnv,
+  isRegexOrUrl,
+  areURLSearchParamsEqual,
+  escapeNonSpecialQuestionMarks,
+  mergeURLSearchParams,
 } from './utils';
 export { tryParseEnvValue } from './env';

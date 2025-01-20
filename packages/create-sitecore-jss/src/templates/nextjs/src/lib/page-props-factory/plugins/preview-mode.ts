@@ -29,7 +29,6 @@ class PreviewModePlugin implements Plugin {
         renderingId,
         dataSourceId,
         version,
-        variant,
       } = context.previewData;
 
       const componentService = new RestComponentLayoutService({
@@ -46,7 +45,6 @@ class PreviewModePlugin implements Plugin {
         componentUid,
         renderingId,
         dataSourceId,
-        variant,
         version,
       });
 
