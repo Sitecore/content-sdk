@@ -33,17 +33,13 @@ export interface ComponentLayoutRequestParams {
    */
   version?: string;
   /**
-   * edit mode (edit, preview) to be rendered component in. Component is rendered in normal mode by default
+   * edit mode to be rendered component in. Component is rendered in normal mode by default
    */
   editMode?: EditMode;
   /**
    * site name to be used as context for rendering the component
    */
   siteName?: string;
-  /**
-   * variant to be rendered for component if set (works with rendering existing component)
-   */
-  variant?: string;
 }
 
 /**
@@ -96,7 +92,6 @@ export class RestComponentLayoutService extends RestLayoutService {
         sc_site: params.siteName,
         sc_lang: params.language || 'en',
         sc_mode: params.editMode,
-        sc_variant: params.variant,
       })
     );
   }

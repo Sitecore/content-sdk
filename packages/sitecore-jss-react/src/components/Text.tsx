@@ -8,7 +8,6 @@ import { FieldMetadata, isFieldValueEmpty } from '@sitecore-jss/sitecore-jss/lay
 
 export interface TextField extends FieldMetadata {
   value?: string | number;
-  editable?: string;
 }
 
 export interface TextProps extends EditableFieldProps {
@@ -28,7 +27,7 @@ export interface TextProps extends EditableFieldProps {
 export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
   withEmptyFieldEditingComponent<TextProps>(
     ({ field, tag, editable = true, encode = true, ...otherProps }) => {
-      if (!field || (!field.editable && isFieldValueEmpty(field))) {
+      if (isFieldValueEmpty(field)) {
         return null;
       }
 
@@ -38,36 +37,27 @@ export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
         editable = false;
       }
 
-      const isEditable = field.editable && editable;
-
-      let output: string | number | (ReactElement | string)[] = isEditable
-        ? field.editable || ''
-        : field.value === undefined
-        ? ''
-        : field.value;
+      let output: string | number | (ReactElement | string)[] =
+        field.value === undefined ? '' : field.value;
 
       // when string value isn't formatted, we should format line breaks
-      if (!field.editable && typeof output === 'string') {
-        const splitted = String(output).split('\n');
+      const splitted = String(output).split('\n');
 
-        if (splitted.length) {
-          const formatted: (ReactElement | string)[] = [];
+      if (splitted.length) {
+        const formatted: (ReactElement | string)[] = [];
 
-          splitted.forEach((str, i) => {
-            const isLast = i === splitted.length - 1;
+        splitted.forEach((str, i) => {
+          const isLast = i === splitted.length - 1;
 
-            formatted.push(str);
+          formatted.push(str);
 
-            if (!isLast) {
-              formatted.push(<br key={i} />);
-            }
-          });
+          if (!isLast) {
+            formatted.push(<br key={i} />);
+          }
+        });
 
-          output = formatted;
-        }
+        output = formatted;
       }
-
-      const setDangerously = isEditable || !encode;
 
       let children = null;
       const htmlProps: {
@@ -77,7 +67,7 @@ export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
         ...otherProps,
       };
 
-      if (setDangerously) {
+      if (!encode) {
         htmlProps.dangerouslySetInnerHTML = {
           __html: output,
         };
@@ -85,7 +75,7 @@ export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
         children = output;
       }
 
-      if (tag || setDangerously) {
+      if (tag || !encode) {
         return React.createElement(tag || 'span', htmlProps, children);
       } else {
         return <React.Fragment>{children}</React.Fragment>;
@@ -98,7 +88,6 @@ export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
 Text.propTypes = {
   field: PropTypes.shape({
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    editable: PropTypes.string,
     metadata: PropTypes.objectOf(PropTypes.any),
   }),
   tag: PropTypes.string,

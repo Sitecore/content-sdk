@@ -2081,7 +2081,6 @@ __metadata:
     react-dom: ^18.2.0
     sinon: ^15.0.0
     sinon-chai: ^3.7.0
-    style-attr: ^1.3.0
     ts-node: ^10.9.1
     typescript: ~4.9.3
   peerDependencies:
@@ -2099,7 +2098,6 @@ __metadata:
     "@types/chai-spies": ^1.0.3
     "@types/chai-string": ^1.4.2
     "@types/debug": ^4.1.5
-    "@types/lodash.unescape": ^4.0.6
     "@types/memory-cache": ^0.2.1
     "@types/mocha": ^9.0.0
     "@types/node": ^22.9.0
@@ -2116,7 +2114,6 @@ __metadata:
     eslint-plugin-jsdoc: 48.7.0
     graphql: ^16.5.0
     graphql-request: ^4.2.0
-    lodash.unescape: ^4.0.1
     memory-cache: ^0.2.0
     mocha: ^10.2.0
     nock: ^13.0.5
@@ -2420,22 +2417,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 309fda20eb5f1cf68f2df28931afdf189c5e7e6bec64ac783ce737bb98908d57f6f58757ad5da9be37b815645a6f914e2d4f3ac66c574b8fe1ba6616284d0e97
-  languageName: node
-  linkType: hard
-
-"@types/lodash.unescape@npm:^4.0.6":
-  version: 4.0.9
-  resolution: "@types/lodash.unescape@npm:4.0.9"
-  dependencies:
-    "@types/lodash": "*"
-  checksum: 0930893921d310fc5c443f8b0a32aa786c0a3cb69c19b1df28e6e09d70ca3287e499d1af48437c3c126a489a4dd33daf970004c045e6e5d594eb844bfc49d39e
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:*":
-  version: 4.17.13
-  resolution: "@types/lodash@npm:4.17.13"
-  checksum: d0bf8fbd950be71946e0076b30fd40d492293baea75f05931b6b5b906fd62583708c6229abdb95b30205ad24ce1ed2f48bc9d419364f682320edd03405cc0c7e
   languageName: node
   linkType: hard
 
@@ -7701,13 +7682,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.unescape@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "lodash.unescape@npm:4.0.1"
-  checksum: 7a9c2133f534619f18e415ea5ae61f654b4d8837a76f31128a8484c1e429357335c8a159d0d79b0f545fd7833d4633194314fa09bfc8be3fff033a07ba6884d8
-  languageName: node
-  linkType: hard
-
 "lodash@npm:^4.15.0, lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.17.4":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
@@ -11059,13 +11033,6 @@ __metadata:
   bin:
     sl-log-transformer: bin/sl-log-transformer.js
   checksum: abf9a4ac143118f26c3a0771b204b02f5cf4fa80384ae158f25e02bfbff761038accc44a7f65869ccd5a5995a7f2c16b1466b83149644ba6cecd3072a8927297
-  languageName: node
-  linkType: hard
-
-"style-attr@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "style-attr@npm:1.3.0"
-  checksum: 7a74551e34894590a92b2b90e9d4592c21534bc7566822e522d827acf958abfd303c186eb107ee09b0f437fe18d16e26e4aced6965dd8846cf0b135681bd3b58
   languageName: node
   linkType: hard
 

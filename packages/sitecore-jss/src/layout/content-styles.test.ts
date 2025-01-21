@@ -7,7 +7,7 @@ import {
   traversePlaceholder,
   getContentStylesheetLink,
 } from './content-styles';
-import { ComponentRendering, Field, HtmlElementRendering, Item, LayoutServiceData } from './models';
+import { ComponentRendering, Field, Item, LayoutServiceData } from './models';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 
 describe('content-styles', () => {
@@ -163,32 +163,6 @@ describe('content-styles', () => {
       });
     });
 
-    describe('editing', () => {
-      it('should set "loadStyles: false" when field does not have a ck-content class', () => {
-        const config = { loadStyles: false };
-        const field: Field = {
-          value: '',
-          editable: falsyValue.value,
-        };
-
-        traverseField(field, config);
-
-        expect(config.loadStyles).to.be.false;
-      });
-
-      it('should set "loadStyles: true" when field has a ck-content class', () => {
-        const config = { loadStyles: false };
-        const field: Field = {
-          value: '',
-          editable: truthyValue.value,
-        };
-
-        traverseField(field, config);
-
-        expect(config.loadStyles).to.be.true;
-      });
-    });
-
     it('should skip when field is undefined', () => {
       const config = { loadStyles: false };
       const field = undefined;
@@ -277,7 +251,7 @@ describe('content-styles', () => {
 
     it('should set "loadStyles: false" when placeholder does not have a ck-content class', () => {
       const config = { loadStyles: false };
-      const components: (ComponentRendering | HtmlElementRendering)[] = [
+      const components: ComponentRendering[] = [
         {
           componentName: 'ContentBlock',
           fields: {
@@ -305,7 +279,7 @@ describe('content-styles', () => {
 
     it('should set "loadStyles: true" when component has a ck-content class', () => {
       const config = { loadStyles: false };
-      const components: (ComponentRendering | HtmlElementRendering)[] = [
+      const components: ComponentRendering[] = [
         {
           componentName: 'ContentBlock',
           fields: {

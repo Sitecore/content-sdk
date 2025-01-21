@@ -4,7 +4,6 @@ import { expect } from 'chai';
 import { render } from '@testing-library/react';
 
 import { Text, TextField } from './Text';
-import { textField as eeTextData } from '../test-data/ee-data';
 
 describe('<Text />', () => {
   it('should render nothing with missing field', () => {
@@ -21,25 +20,15 @@ describe('<Text />', () => {
     expect(rendered.container.innerHTML).to.equal('');
   });
 
-  it('should render nothing with missing editable and value', () => {
+  it('should render nothing with missing value', () => {
     const field = {};
     const rendered = render(<Text field={field} />);
     expect(rendered.container.innerHTML).to.equal('');
   });
 
-  it('should render editable with editable value', () => {
-    const field = {
-      value: 'value',
-      editable: 'editable',
-    };
-    const rendered = render(<Text field={field} />).container.querySelector('span');
-    expect(rendered?.innerHTML).to.contain('editable');
-  });
-
   it('should render value with editing explicitly disabled', () => {
     const field = {
       value: 'value',
-      editable: 'editable',
     };
     const rendered = render(
       <Text tag="span" field={field} editable={false} />
@@ -127,23 +116,6 @@ describe('<Text />', () => {
     };
     const rendered = render(<Text field={field} encode={false} />).container.querySelector('span');
     expect(rendered?.innerHTML).to.contain(field.value);
-  });
-
-  it('should render ee HTML', () => {
-    const field = {
-      editable: eeTextData,
-    };
-    const rendered = render(<Text field={field} />).container.querySelector('span');
-    expect(rendered?.outerHTML).to.contain('<input');
-    expect(rendered?.outerHTML).to.contain('<span class="scChromeData">');
-  });
-
-  it('should render ee HTML with line breaks', () => {
-    const field = {
-      editable: 'xxx\n\naa\nbbb\n',
-    };
-    const rendered = render(<Text field={field} />).container.querySelector('span');
-    expect(rendered?.outerHTML).to.equal('<span>xxx\n\naa\nbbb\n</span>');
   });
 
   it('should render tag with a tag provided', () => {

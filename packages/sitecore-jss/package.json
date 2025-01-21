@@ -34,7 +34,6 @@
     "@types/chai-spies": "^1.0.3",
     "@types/chai-string": "^1.4.2",
     "@types/debug": "^4.1.5",
-    "@types/lodash.unescape": "^4.0.6",
     "@types/memory-cache": "^0.2.1",
     "@types/mocha": "^9.0.0",
     "@types/node": "^22.9.0",
@@ -60,7 +59,6 @@
     "debug": "^4.3.1",
     "graphql": "^16.5.0",
     "graphql-request": "^4.2.0",
-    "lodash.unescape": "^4.0.1",
     "memory-cache": "^0.2.0",
     "url-parse": "^1.5.9"
   },

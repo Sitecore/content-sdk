@@ -1,10 +1,4 @@
-import {
-  ComponentRendering,
-  ComponentFields,
-  Field,
-  GenericFieldValue,
-  HtmlElementRendering,
-} from './models';
+import { ComponentRendering, ComponentFields, Field, GenericFieldValue } from './models';
 
 /**
  * Safely extracts a field value from a rendering or fields object.
@@ -61,12 +55,12 @@ export function getFieldValue<T>(
  * Gets rendering definitions in a given child placeholder under a current rendering.
  * @param {ComponentRendering} rendering
  * @param {string} placeholderName
- * @returns {Array<ComponentRendering | HtmlElementRendering>} child placeholder
+ * @returns {ComponentRendering[]} child placeholder
  */
 export function getChildPlaceholder(
   rendering: ComponentRendering,
   placeholderName: string
-): Array<ComponentRendering | HtmlElementRendering> {
+): ComponentRendering[] {
   if (
     !rendering ||
     !placeholderName ||

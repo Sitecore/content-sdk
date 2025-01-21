@@ -3,7 +3,7 @@ import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import { spy } from 'sinon';
-import { ExperienceEditor } from '@sitecore-jss/sitecore-jss/editing';
+import { PagesEditor } from '@sitecore-jss/sitecore-jss/editing';
 
 import { withEditorChromes } from '../enhancers/withEditorChromes';
 
@@ -18,7 +18,7 @@ describe('withEditorChromes', () => {
       stringProp: '123',
     };
     // sinon cannot spy on the resetEditorChromes instance used in withEditorChromes - so we test for method that is called by it
-    const utilSpy = spy(ExperienceEditor, 'isActive');
+    const utilSpy = spy(PagesEditor, 'isActive');
 
     const rendered = render(<WrappedComponent {...props} />);
     expect(rendered.container.children.length).to.not.equal(0);

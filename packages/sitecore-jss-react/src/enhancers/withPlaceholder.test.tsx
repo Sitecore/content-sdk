@@ -5,8 +5,7 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import { convertedDevData as nonEeDevData } from '../test-data/non-ee-data';
-import { convertedData as eeData } from '../test-data/ee-data';
+import { convertedDevData as normalModeDevData } from '../test-data/normal-mode-data';
 import * as metadataData from '../test-data/metadata-data';
 import { withPlaceholder } from '../enhancers/withPlaceholder';
 import { SitecoreContext } from '../components/SitecoreContext';
@@ -89,10 +88,7 @@ const componentFactory: ComponentFactory = (componentName: string) => {
   return components.get(componentName) || null;
 };
 
-const testData = [
-  { label: 'Dev data', data: nonEeDevData },
-  { label: 'LayoutService data - EE on', data: eeData },
-];
+const testData = [{ label: 'Dev data', data: normalModeDevData }];
 
 describe('withPlaceholder HOC', () => {
   describe('Error handling', () => {
@@ -110,7 +106,7 @@ describe('withPlaceholder HOC', () => {
       const Element = withPlaceholder(phKey)(ErrorComponent);
       const renderedComponent = render(
         <SitecoreContext
-          layoutData={(nonEeDevData as unknown) as LayoutServiceData}
+          layoutData={(normalModeDevData as unknown) as LayoutServiceData}
           componentFactory={componentFactory}
         >
           <Element {...props} />
@@ -131,7 +127,7 @@ describe('withPlaceholder HOC', () => {
       const Element = withPlaceholder(phKey)(ErrorComponent);
       const renderedComponent = render(
         <SitecoreContext
-          layoutData={(nonEeDevData as unknown) as LayoutServiceData}
+          layoutData={(normalModeDevData as unknown) as LayoutServiceData}
           componentFactory={componentFactory}
         >
           <Element {...props} />
@@ -141,7 +137,7 @@ describe('withPlaceholder HOC', () => {
     });
 
     it('should render nested broken component', () => {
-      const component = (nonEeDevData.sitecore.route?.placeholders.main as (
+      const component = (normalModeDevData.sitecore.route?.placeholders.main as (
         | ComponentRendering
         | RouteData
       )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
@@ -170,7 +166,7 @@ describe('withPlaceholder HOC', () => {
     });
 
     it('should render nested components using custom error component', () => {
-      const component = (nonEeDevData.sitecore.route?.placeholders.main as (
+      const component = (normalModeDevData.sitecore.route?.placeholders.main as (
         | ComponentRendering
         | RouteData
       )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
@@ -196,48 +192,6 @@ describe('withPlaceholder HOC', () => {
       expect(renderedComponent.container.querySelector('h4')?.outerHTML).to.equal(
         '<h4>Custom loading message...</h4>'
       );
-    });
-
-    describe('Edit mode', () => {
-      // TODO: revisit
-      const component = (eeData.sitecore.route?.placeholders.main as (
-        | ComponentRendering
-        | RouteData
-      )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
-      const phKey = 'page-content';
-      const props: EnhancedOmit<PlaceholderProps, 'sitecoreContext'> = {
-        name: phKey,
-        rendering: component,
-      };
-      const Element = withPlaceholder(phKey)(Home);
-      const renderedComponent = render(
-        <SitecoreContext
-          layoutData={eeData as LayoutServiceData}
-          componentFactory={componentFactory}
-        >
-          <Element {...props} />
-        </SitecoreContext>
-      );
-
-      it('should render normal component', () => {
-        expect(renderedComponent.container.innerHTML).to.equal('123');
-        expect(
-          renderedComponent.container.querySelectorAll('.download-callout-mock').length
-        ).to.equal(1);
-      });
-
-      it('should render nested broken component', () => {
-        expect(
-          renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length
-        ).to.equal(1);
-      });
-
-      it('should render nested dynamic broken component', () => {
-        expect(renderedComponent.container.querySelectorAll('h4').length).to.equal(1);
-        expect(renderedComponent.container.querySelector('h4')?.outerHTML).to.equal(
-          '<h4>Loading component...</h4>'
-        );
-      });
     });
   });
 

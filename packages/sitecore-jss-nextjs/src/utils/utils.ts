@@ -1,29 +1,6 @@
 import { isEditorActive, resetEditorChromes } from '@sitecore-jss/sitecore-jss/editing';
 
 /**
- * Get the publicUrl.
- * This is used primarily to enable compatibility with Sitecore editors.
- * This is set to http://localhost:3000 by default.
- * VERCEL_URL is provided by Vercel in case if we are in Preview deployment (deployment based on the custom branch),
- * preview deployment has unique url, we don't know exact url.
- * Similarly, DEPLOY_URL is provided by Netlify and would give us the deploy URL
- * In production non-editing environments it is desirable to use relative urls, so in that case set PUBLIC_URL = ''
- */
-export const getPublicUrl = (): string => {
-  let url = process.env.PUBLIC_URL;
-
-  if (url === undefined) {
-    if (process.env.NETLIFY && process.env.DEPLOY_URL) return process.env.DEPLOY_URL;
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-
-    url = 'http://localhost:3000';
-  }
-
-  // Ensure no trailing slash
-  return url.replace(/\/$/, '');
-};
-
-/**
  * Since Sitecore editors do not support Fast Refresh:
  * 1. Subscribe on events provided by webpack.
  * 2. Reset editor chromes when build is finished
@@ -34,7 +11,7 @@ export const handleEditorFastRefresh = (forceReload = false): void => {
     // Only run if development mode and editor is active
     return;
   }
-  const eventSource = new window.EventSource(`${getPublicUrl()}/_next/webpack-hmr`);
+  const eventSource = new window.EventSource('/_next/webpack-hmr');
 
   window.addEventListener('beforeunload', () => eventSource.close());
 

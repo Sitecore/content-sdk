@@ -7,16 +7,7 @@ export {
   MemoryCacheClient,
 } from '@sitecore-jss/sitecore-jss';
 export { EnhancedOmit } from '@sitecore-jss/sitecore-jss/utils';
-export {
-  isEditorActive,
-  resetEditorChromes,
-  DefaultEditFrameButton,
-  DefaultEditFrameButtons,
-  EditFrameDataSource,
-  FieldEditButton,
-  WebEditButton,
-  EditButtonTypes,
-} from '@sitecore-jss/sitecore-jss/editing';
+export { isEditorActive, resetEditorChromes } from '@sitecore-jss/sitecore-jss/editing';
 export {
   getContentStylesheetLink,
   getComponentLibraryStylesheetLinks,
@@ -30,7 +21,6 @@ export {
   RouteData,
   Field,
   Item,
-  HtmlElementRendering,
   getChildPlaceholder,
   getFieldValue,
   ComponentRendering,
@@ -67,7 +57,6 @@ export {
   Image,
   ImageProps,
   ImageField,
-  getEEMarkup,
   ImageFieldValue,
   ImageSizeParameters,
 } from './components/Image';
@@ -107,7 +96,6 @@ export {
 export { withEditorChromes } from './enhancers/withEditorChromes';
 export { withPlaceholder } from './enhancers/withPlaceholder';
 export { withDatasourceCheck } from './enhancers/withDatasourceCheck';
-export { EditFrameProps, EditFrame } from './components/EditFrame';
 export { ComponentBuilder, ComponentBuilderConfig } from './ComponentBuilder';
 export { withFieldMetadata } from './enhancers/withFieldMetadata';
 export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditingComponent';

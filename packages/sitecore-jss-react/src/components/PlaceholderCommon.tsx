@@ -7,13 +7,10 @@ import {
   RouteData,
   Field,
   Item,
-  HtmlElementRendering,
-  EditMode,
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
 } from '@sitecore-jss/sitecore-jss/layout';
 import { constants } from '@sitecore-jss/sitecore-jss';
-import { convertAttributesToReactProps } from '../utils';
 import { HiddenRendering } from './HiddenRendering';
 import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from './FEaaSComponent';
 import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from './FEaaSWrapper';
@@ -120,22 +117,17 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     sitecoreContext: PropTypes.object as Requireable<SitecoreContextValue>,
   };
 
-  nodeRefs: Element[];
   state: Readonly<{ error?: Error }>;
 
   constructor(props: T) {
     super(props);
-    this.nodeRefs = [];
     this.state = {};
-    this.addRef = this.addRef.bind(this);
-    this.updateKeyAttributes = this.updateKeyAttributes.bind(this);
-    this.createRawElement = this.createRawElement.bind(this);
   }
 
   static getPlaceholderDataFromRenderingData(
     rendering: ComponentRendering | RouteData,
     name: string,
-    editMode?: EditMode
+    isEditing: boolean
   ) {
     let result;
     let phName = name.slice();
@@ -152,7 +144,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
           : null;
 
         if (patternPlaceholder && patternPlaceholder.test(phName)) {
-          if (editMode === EditMode.Metadata) {
+          if (isEditing) {
             phName = placeholder;
           } else {
             rendering.placeholders[phName] = rendering.placeholders[placeholder];
@@ -180,14 +172,6 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     return result;
   }
 
-  componentDidMount() {
-    this.updateKeyAttributes();
-  }
-
-  componentDidUpdate() {
-    this.updateKeyAttributes();
-  }
-
   componentDidCatch(error: Error) {
     this.setState({ error });
   }
@@ -201,7 +185,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     );
   }
 
-  getComponentsForRenderingData(placeholderData: (ComponentRendering | HtmlElementRendering)[]) {
+  getComponentsForRenderingData(placeholderData: ComponentRendering[]) {
     const {
       name,
       fields: placeholderFields,
@@ -212,19 +196,12 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     } = this.props;
 
     const transformedComponents = placeholderData
-      .map((rendering: ComponentRendering | HtmlElementRendering, index: number) => {
+      .map((rendering: ComponentRendering, index: number) => {
         const key = (rendering as ComponentRendering).uid
           ? (rendering as ComponentRendering).uid
           : `component-${index}`;
         const commonProps = { key };
         let isEmpty = false;
-        // if the element is not a 'component rendering', render it 'raw'
-        if (
-          !(rendering as ComponentRendering).componentName &&
-          (rendering as HtmlElementRendering).name
-        ) {
-          return this.createRawElement(rendering as HtmlElementRendering, commonProps);
-        }
 
         const componentRendering = rendering as ComponentRendering;
 
@@ -303,8 +280,8 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
           );
         }
 
-        // if editMode is equal to 'metadata' then emit shallow chromes for hydration in Pages
-        if (this.props.sitecoreContext?.editMode === EditMode.Metadata) {
+        // if in edit mode then emit shallow chromes for hydration in Pages
+        if (this.props.sitecoreContext?.pageEditing) {
           return (
             <PlaceholderMetadata key={key} rendering={rendering as ComponentRendering}>
               {rendered}
@@ -316,7 +293,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
       })
       .filter((element) => element); // remove nulls
 
-    if (this.props.sitecoreContext?.editMode === EditMode.Metadata) {
+    if (this.props.sitecoreContext?.pageEditing) {
       return [
         <PlaceholderMetadata
           key={(this.props.rendering as ComponentRendering).uid}
@@ -350,60 +327,5 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     }
 
     return componentFactory(renderingDefinition.componentName);
-  }
-
-  addRef(nodeRef: Element) {
-    this.nodeRefs.push(nodeRef);
-  }
-
-  createRawElement(elem: HtmlElementRendering, baseProps: { key?: string }) {
-    if (!elem.name) {
-      console.error(
-        '"elem.name" is undefined in "createRawElement". Something is likely wrong with your component data. Ensure that your components have a name.'
-      );
-      return null;
-    }
-    const attributes = convertAttributesToReactProps(elem.attributes);
-
-    const props: {
-      [attr: string]: unknown;
-      key?: string;
-      dangerouslySetInnerHTML?: {
-        __html: string | null;
-      };
-    } = {
-      ...baseProps,
-      ...attributes,
-      dangerouslySetInnerHTML: elem.contents ? { __html: elem.contents } : undefined,
-    };
-
-    /* Since we can't set the "key" attribute via React, stash it
-     * so we can set in the DOM after render.
-     */
-    if (!Array.isArray(attributes) && attributes && attributes.chrometype === 'placeholder') {
-      props.phkey = elem.attributes.key; // props that get rendered as dom attribute names need to be lowercase, otherwise React complains.
-      props.ref = this.addRef; // only need ref for placeholder containers, trying to add it to other components (e.g. stateless components) may result in a warning.
-    }
-
-    return React.createElement(elem.name, props);
-  }
-
-  updateKeyAttributes() {
-    if (!this.nodeRefs) {
-      return;
-    }
-
-    this.nodeRefs.forEach((ref: Element) => {
-      if (ref && ref.getAttribute) {
-        // ref might be a wrapped component, so check for existence of getAttribute method
-        const key = ref.getAttribute('phkey');
-        if (key) {
-          // need to manually set the 'key' attribute after component mount because
-          // 'key' is a reserved attribute/prop in React. so it will never be rendered
-          // as an html attribute.
-          ref.setAttribute('key', key);
-        }
-      }
-    });
   }
 }

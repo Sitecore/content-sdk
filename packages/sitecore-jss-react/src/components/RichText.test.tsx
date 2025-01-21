@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { render } from '@testing-library/react';
 
 import { RichText, RichTextField } from './RichText';
-import { richTextField as eeRichTextData } from '../test-data/ee-data';
 
 describe('<RichText />', () => {
   it('should render nothing with missing field', () => {
@@ -20,26 +19,15 @@ describe('<RichText />', () => {
     expect(rendered).to.have.length(0);
   });
 
-  it('should render nothing with missing editable and value', () => {
+  it('should render nothing with missing value', () => {
     const field = {};
     const rendered = render(<RichText field={field} />).container.querySelectorAll('div');
     expect(rendered).to.have.length(0);
   });
 
-  it('should render editable with editable value', () => {
-    const field = {
-      value: 'value',
-      editable: 'editable',
-    };
-    const rendered = render(<RichText field={field} />).container.querySelectorAll('div');
-    expect(rendered).to.have.length(1);
-    expect(rendered[0].innerHTML).to.contain('editable');
-  });
-
   it('should render value with editing explicitly disabled', () => {
     const field = {
       value: 'value',
-      editable: 'editable',
     };
     const rendered = render(<RichText field={field} editable={false} />).container.querySelectorAll('div');
     expect(rendered).to.have.length(1);
@@ -62,16 +50,6 @@ describe('<RichText />', () => {
     const rendered = render(<RichText field={field} />).container.querySelectorAll('div');
     expect(rendered).to.have.length(1);
     expect(rendered[0].innerHTML).to.contain(field.value);
-  });
-
-  it('should render ee HTML', () => {
-    const field = {
-      editable: eeRichTextData,
-    };
-    const rendered = render(<RichText field={field} />).container.querySelectorAll('div');
-    expect(rendered).to.have.length(1);
-    expect(rendered[0].innerHTML).to.contain('<input');
-    expect(rendered[0].innerHTML).to.contain('<span class="scChromeData">');
   });
 
   it('should render tag with a tag provided', () => {
@@ -152,7 +130,7 @@ describe('<RichText />', () => {
         metadata: testMetadata,
       };
 
-      const EmptyFieldEditingComponent: React.FC = () => (
+      const EmptyFieldEditingComponent = () => (
         <span className="empty-field-value-placeholder">Custom Empty field value</span>
       );
 

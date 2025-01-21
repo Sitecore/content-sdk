@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { render } from '@testing-library/react';
 
 import { Link, LinkField } from './Link';
-import { generalLinkField as eeLinkData } from '../test-data/ee-data';
 
 describe('<Link />', () => {
   it('should render nothing with missing field', () => {
@@ -12,20 +11,10 @@ describe('<Link />', () => {
     expect(rendered.container.innerHTML).to.equal('');
   });
 
-  it('should render nothing with missing editable and value', () => {
+  it('should render nothing with missing value', () => {
     const field = {};
     const rendered = render(<Link field={field} />);
     expect(rendered.container.innerHTML).to.equal('');
-  });
-
-  it('should render editable with an editable value', () => {
-    const field = {
-      editableFirstPart: '<a href="/services" class="yo">Lorem',
-      editableLastPart: '</a>',
-    };
-    const rendered = render(<Link field={field} />);
-
-    expect(rendered.container.innerHTML).to.contain(field.editableFirstPart);
   });
 
   it('should render value with editing explicitly disabled', () => {
@@ -34,7 +23,6 @@ describe('<Link />', () => {
         href: '/lorem',
         text: 'ipsum',
       },
-      editable: '<a href="/services" class="yo">Lorem</a>',
     };
     const rendered = render(<Link field={field} editable={false} />).container.querySelector('a');
     expect(rendered?.outerHTML).to.contain(field.value.href);
@@ -61,15 +49,6 @@ describe('<Link />', () => {
     const rendered = render(<Link field={field} />).container.querySelector('a');
     expect(rendered?.outerHTML).to.contain(`href="${field.href}"`);
     expect(rendered?.text).to.equal(field.text);
-  });
-
-  it('should render ee HTML', () => {
-    const field = {
-      editableFirstPart: eeLinkData,
-    };
-    const rendered = render(<Link field={field} />);
-    expect(rendered.container.outerHTML).to.contain('<input');
-    expect(rendered.container.outerHTML).to.contain('chrometype="field"');
   });
 
   it('should render all value attributes', () => {
@@ -103,15 +82,6 @@ describe('<Link />', () => {
     const rendered = render(<Link field={field} id="my-link" accessKey="a" />).container.querySelector('a');
     expect(rendered?.outerHTML).to.contain('id="my-link"');
     expect(rendered?.outerHTML).to.contain('accesskey="a"');
-  });
-
-  it('should render other attributes on wrapper span with other props provided with editable', () => {
-    const field = {
-      editableFirstPart: '<a href="/services" class="yo">Lorem',
-      editableLastPart: '</a>',
-    };
-    const rendered = render(<Link field={field} id="my-link" />);
-    expect(rendered.container.outerHTML).to.contain('id="my-link"');
   });
 
   it('should render with a ref to the anchor', () => {

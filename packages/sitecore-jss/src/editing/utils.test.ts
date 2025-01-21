@@ -36,16 +36,7 @@ describe('utils', () => {
       expect(isEditorActive()).to.be.false;
     });
 
-    it('should return true when EE is active', () => {
-      global.window = {
-        document: nonPagesEditingDocument,
-        location: { search: '' },
-        Sitecore: { PageModes: { ChromeManager: {} } },
-      };
-      expect(isEditorActive()).to.be.true;
-    });
-
-    it('should return true when XMC Pages edit mode is active', () => {
+    it('should return true when edit mode is active', () => {
       global.window = {
         document: pagesEditingDocument,
         location: { search: '' },
@@ -54,7 +45,7 @@ describe('utils', () => {
       expect(isEditorActive()).to.be.true;
     });
 
-    it('should return false when XMC Pages preview mode is active', () => {
+    it('should return false when preview mode is active', () => {
       global.window = {
         document: nonPagesEditingDocument,
         location: { search: '?sc_horizon=preview' },
@@ -63,7 +54,7 @@ describe('utils', () => {
       expect(isEditorActive()).to.be.false;
     });
 
-    it('should return false when EE and XMC Pages are not active', () => {
+    it('should return false when edit mode is not active', () => {
       global.window = {
         document: nonPagesEditingDocument,
         location: { search: '' },
@@ -82,18 +73,7 @@ describe('utils', () => {
       expect(resetEditorChromes()).to.not.throw;
     });
 
-    it('should reset chromes when EE is active', () => {
-      const resetChromes = spy();
-      global.window = {
-        document: nonPagesEditingDocument,
-        location: { search: '' },
-        Sitecore: { PageModes: { ChromeManager: { resetChromes } } },
-      };
-      resetEditorChromes();
-      expect(resetChromes).to.have.been.called.once;
-    });
-
-    it('should reset chromes when XMC Pages edit mode is active', () => {
+    it('should reset chromes when edit mode is active', () => {
       const resetChromes = spy();
       global.window = {
         document: pagesEditingDocument,
@@ -105,7 +85,7 @@ describe('utils', () => {
       expect(resetChromes).to.have.been.called.once;
     });
 
-    it('should not throw when EE and XMC Pages are not active', () => {
+    it('should not throw when edit mode is not active', () => {
       global.window = {
         document: nonPagesEditingDocument,
         location: { search: '' },

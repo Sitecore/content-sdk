@@ -3,7 +3,6 @@ import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import {
-  EditMode,
   LayoutServiceData,
   LayoutServicePageState,
 } from '@sitecore-jss/sitecore-jss/layout';
@@ -16,13 +15,11 @@ describe('<EditingScripts />', () => {
   const mockComponentFactory: ComponentFactory = () => null;
 
   const getLayoutData = ({
-    editMode,
     pageState,
     pageEditing,
     clientData,
     clientScripts,
   }: {
-    editMode?: EditMode;
     pageState: LayoutServicePageState;
     pageEditing: boolean;
     clientData?: Record<string, Record<string, unknown>>;
@@ -30,7 +27,6 @@ describe('<EditingScripts />', () => {
   }): LayoutServiceData => ({
     sitecore: {
       context: {
-        editMode,
         pageState,
         pageEditing,
         site: {
@@ -79,7 +75,6 @@ describe('<EditingScripts />', () => {
   describe('should render Pages scripts when in Edit mode', () => {
     it('should render scripts', () => {
       const layoutData = getLayoutData({
-        editMode: EditMode.Metadata,
         pageState: LayoutServicePageState.Edit,
         pageEditing: true,
       });
@@ -118,7 +113,6 @@ describe('<EditingScripts />', () => {
 
     it('should render jss pages script elements when data is not provided', () => {
       const layoutData = getLayoutData({
-        editMode: EditMode.Metadata,
         pageState: LayoutServicePageState.Edit,
         pageEditing: true,
         clientData: {},
