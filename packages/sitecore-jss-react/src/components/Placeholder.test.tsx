@@ -8,18 +8,17 @@ import { mount, shallow } from 'enzyme';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { stub } from 'sinon';
-import { convertedData as eeData, emptyPlaceholderData } from '../test-data/ee-data';
 import {
   byocWrapperData,
   feaasWrapperData,
-  convertedDevData as nonEeDevData,
-  convertedLayoutServiceData as nonEeLsData,
+  convertedDevData as normalModeDevData,
+  convertedLayoutServiceData as normalModeLsData,
   sxaRenderingColumnSplitterVariant,
   sxaRenderingVariantDataWithCommonContainerName as sxaRenderingCommonContainerName,
   sxaRenderingVariantData,
   sxaRenderingVariantDoubleDigitDynamicPlaceholder as sxaRenderingDoubleDigitContainerName,
   sxaRenderingVariantDataWithoutCommonContainerName as sxaRenderingWithoutContainerName,
-} from '../test-data/non-ee-data';
+} from '../test-data/normal-mode-data';
 import * as metadataData from '../test-data/metadata-data';
 import * as SxaRichText from '../test-data/sxa-rich-text';
 import * as BYOCComponent from './BYOCComponent';
@@ -88,9 +87,8 @@ describe('<Placeholder />', () => {
   });
 
   const testData = [
-    { label: 'Dev data', data: nonEeDevData },
-    { label: 'LayoutService data - EE off', data: nonEeLsData },
-    { label: 'LayoutService data - EE on', data: eeData },
+    { label: 'Dev data', data: normalModeDevData },
+    { label: 'LayoutService data - Editing off', data: normalModeLsData },
   ];
 
   testData.forEach((dataSet) => {
@@ -158,21 +156,19 @@ describe('<Placeholder />', () => {
         expect(renderedComponent.find('.wrapper').length).to.equal(1);
       });
 
-      it('when null passed to render function', () => {
-        it('should render empty placeholder', () => {
-          const component = dataSet.data.sitecore.route as RouteData;
-          const phKey = 'mainEmpty';
+      it('should render empty placeholder', () => {
+        const component = dataSet.data.sitecore.route as RouteData;
+        const phKey = 'mainEmpty';
 
-          const renderedComponent = mount(
-            <SitecoreContext componentFactory={componentFactory}>
-              <Placeholder name={phKey} rendering={component} render={() => null} />
-            </SitecoreContext>
-          );
+        const renderedComponent = mount(
+          <SitecoreContext componentFactory={componentFactory}>
+            <Placeholder name={phKey} rendering={component} />
+          </SitecoreContext>
+        );
 
-          const placeholder = renderedComponent.find(Placeholder);
-          expect(placeholder.length).to.equal(1);
-          expect(placeholder.children()).to.be.empty;
-        });
+        const placeholder = renderedComponent.find(Placeholder);
+        expect(placeholder.length).to.equal(1);
+        expect(placeholder.children()).to.be.empty;
       });
 
       it('should render output based on the renderEmpty function in case of no renderings', () => {
@@ -204,27 +200,6 @@ describe('<Placeholder />', () => {
         expect(renderedComponent.find('.download-callout-mock').length).to.equal(0);
         expect(renderedComponent.find('.home-mock').length).to.equal(0);
         expect(renderedComponent.find('.jumbotron-mock').length).to.equal(0);
-      });
-
-      it('should render output based on the renderEmpty function in case of empty placeholder', () => {
-        const route = emptyPlaceholderData.sitecore.route as RouteData;
-        const phKey = 'mainEmpty';
-
-        const renderedComponent = mount(
-          <SitecoreContext componentFactory={componentFactory}>
-            <Placeholder
-              name={phKey}
-              rendering={route}
-              renderEmpty={() => <span>My name is empty placeholder</span>}
-            />
-          </SitecoreContext>
-        );
-
-        console.log(renderedComponent.debug());
-
-        expect(renderedComponent.html()).to.equal(
-          '<div class="sc-jss-empty-placeholder"><span>My name is empty placeholder</span></div>'
-        );
       });
 
       it('should pass properties to nested components', () => {
@@ -474,59 +449,6 @@ describe('<Placeholder />', () => {
       feaasComponentStub.restore();
       feaasWrapperStub.restore();
     });
-  });
-
-  it('should populate the "key" attribute of placeholder chrome', () => {
-    const component: any = eeData.sitecore.route;
-    const phKey = 'main';
-
-    const renderedComponent = mount(
-      <SitecoreContext componentFactory={componentFactory}>
-        <Placeholder name={phKey} rendering={component} />
-      </SitecoreContext>
-    );
-
-    const eeChrome = renderedComponent.find(`code#${phKey}[chrometype="placeholder"][kind="open"]`);
-    expect(eeChrome.length).to.eq(1);
-    const keyAttribute = eeChrome.get(0).key;
-    expect(keyAttribute).to.not.be.undefined;
-    expect(keyAttribute).to.eq(`${phKey}`);
-  });
-
-  it('should render empty placeholder', () => {
-    const phKey = 'mainEmpty';
-
-    const renderedComponent = mount(
-      <SitecoreContext componentFactory={componentFactory}>
-        <Placeholder name={phKey} rendering={emptyPlaceholderData.sitecore.route} />
-      </SitecoreContext>
-    );
-    expect(renderedComponent.find('.sc-jss-empty-placeholder').length).to.equal(1);
-  });
-
-  it('should render empty placeholder with no extra markup', () => {
-    const phKey = 'mainEmpty';
-
-    const renderedComponent = mount(
-      <Placeholder
-        name={phKey}
-        rendering={emptyPlaceholderData.sitecore.route}
-        componentFactory={componentFactory}
-      />
-    );
-    const emptyPlaceholder = renderedComponent.find('.sc-jss-empty-placeholder');
-    // TODO: change this as needed when merging "simplify editing" feature changes into dev
-    expect(emptyPlaceholder.html()).to.equal(
-      [
-        '<div class="sc-jss-empty-placeholder">',
-        '<code type="text/sitecore" chrometype="placeholder" kind="open" id="main" class="scpm" data-selectable="true" phkey="main" key="main">',
-        '{}',
-        '</code>',
-        '<code type="text/sitecore" id="scEnclosingTag_" chrometype="placeholder" kind="close" hintname="main" class="scpm">',
-        '</code>',
-        '</div>',
-      ].join('')
-    );
   });
 
   it('should render null for unknown placeholder', () => {

@@ -359,30 +359,12 @@ describe('<Link />', () => {
     expect(ref.current.id).to.equal(link.props().id);
   });
 
-  it('should render ReactLink if editable', () => {
-    const field = {
-      value: {
-        href: '/lorem',
-        text: 'ipsum',
-      },
-      editable: '<a href="/lorem">Lorem</a>',
-    };
-    const rendered = mount(
-      <Page>
-        <Link field={field} />
-      </Page>
-    );
-    expect(rendered.find(NextLink).length).to.equal(0);
-    expect(rendered.find(ReactLink).length).to.equal(1);
-  });
-
   it('should render NextLink with editing explicitly disabled', () => {
     const field = {
       value: {
         href: '/lorem',
         text: 'ipsum',
       },
-      editable: '<a href="/lorem">Lorem</a>',
     };
     const rendered = mount(
       <Page>

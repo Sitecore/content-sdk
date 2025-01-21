@@ -1,12 +1,5 @@
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import {
-  ComponentRendering,
-  Field,
-  HtmlElementRendering,
-  Item,
-  LayoutServiceData,
-  RouteData,
-} from './index';
+import { ComponentRendering, Field, Item, LayoutServiceData, RouteData } from './index';
 import { HTMLLink } from '../models';
 
 /**
@@ -48,10 +41,7 @@ export const getContentStylesheetUrl = (
 ): string =>
   `${sitecoreEdgeUrl}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`;
 
-export const traversePlaceholder = (
-  components: Array<ComponentRendering | HtmlElementRendering>,
-  config: Config
-) => {
+export const traversePlaceholder = (components: Array<ComponentRendering>, config: Config) => {
   if (config.loadStyles) return;
 
   components.forEach((component) => {
@@ -62,9 +52,7 @@ export const traversePlaceholder = (
 export const traverseField = (field: Field | Item | Item[] | undefined, config: Config) => {
   if (!field || config.loadStyles) return;
 
-  if ('editable' in field && field.editable) {
-    config.loadStyles = CLASS_REGEXP.test(field.editable);
-  } else if ('value' in field && typeof field.value === 'string') {
+  if ('value' in field && typeof field.value === 'string') {
     config.loadStyles = CLASS_REGEXP.test(field.value);
   } else if ('fields' in field) {
     Object.values(field.fields).forEach((field) => {
@@ -77,10 +65,7 @@ export const traverseField = (field: Field | Item | Item[] | undefined, config: 
   }
 };
 
-export const traverseComponent = (
-  component: RouteData | ComponentRendering | HtmlElementRendering,
-  config: Config
-) => {
+export const traverseComponent = (component: RouteData | ComponentRendering, config: Config) => {
   if (config.loadStyles) return;
 
   if ('fields' in component && component.fields) {

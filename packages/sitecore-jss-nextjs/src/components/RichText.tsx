@@ -32,13 +32,13 @@ export const RichText = (props: RichTextProps): JSX.Element => {
     ...rest
   } = props;
   const hasText = props.field && props.field.value;
-  const isEditing = editable && props.field && (props.field.editable || props.field.metadata);
+  const isEditing = editable && props.field && props.field.metadata;
 
   const router = useRouter();
   const richTextRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    // NOT IN EXPERIENCE EDITOR
+    // NOT IN EDIT MODE
     if (hasText && !isEditing) {
       initializeLinks();
     }

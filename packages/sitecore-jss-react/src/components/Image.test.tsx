@@ -3,14 +3,13 @@ import chai from 'chai';
 import chaiString from 'chai-string';
 import { mount } from 'enzyme';
 import React from 'react';
-import { imageField as eeImageData } from '../test-data/ee-data';
 import { Image, ImageField } from './Image';
 import { DefaultEmptyFieldEditingComponentImage } from './DefaultEmptyFieldEditingComponents';
 
 const expect = chai.use(chaiString).expect;
 
 describe('<Image />', () => {
-  describe('with direct image object, no value/editable', () => {
+  describe('with direct image object, no value', () => {
     const props = {
       field: {
         src: '/assets/img/test0.png',
@@ -99,84 +98,9 @@ describe('<Image />', () => {
     });
   });
 
-  describe('with "editable" property value', () => {
-    const props = {
-      field: { editable: eeImageData },
-      style: { width: '100%' },
-      className: 'the-dude-abides',
-    };
-    const rendered = mount(<Image {...props} />).find('.sc-image-wrapper');
-    const img = rendered.getDOMNode().getElementsByTagName('img')[0];
-
-    it('should render wrapper containing experience editor value', () => {
-      expect(rendered).to.have.length(1);
-      expect(img).to.not.be.undefined;
-      expect(rendered.html()).to.contain('<input');
-    });
-
-    it('should render <img /> with style and className props', () => {
-      expect(img.getAttribute('style')).to.equal('width:100%');
-      expect(img.getAttribute('class')).to.equal(props.className);
-    });
-  });
-
-  describe('with enhanced "editable" property value', () => {
-    const props = {
-      field: { editable: eeImageData },
-      imageParams: { h: '100', w: '150' },
-      id: 'some-id',
-      height: '100',
-      width: '150',
-      style: { width: '100%' },
-      className: 'the-dude-abides',
-    };
-    const rendered = mount(<Image {...props} />).find('.sc-image-wrapper');
-    const img = rendered.getDOMNode().getElementsByTagName('img')[0];
-
-    it('should render img with additional props', () => {
-      expect(img.getAttribute('id')).to.equal(props.id);
-      expect(img.getAttribute('height')).to.equal(props.height);
-      expect(img.getAttribute('width')).to.equal(props.width);
-    });
-
-    it('should update image url', () => {
-      const url = new URL(img.getAttribute('src') as string, 'http://test.com');
-      expect(url.pathname).to.contain('/-/jssmedia/');
-      expect(url.searchParams.get('h')).to.equal(props.imageParams.h);
-      expect(url.searchParams.get('w')).to.equal(props.imageParams.w);
-      expect(url.hash).to.be.empty;
-    });
-
-    it('should render <img /> with style and className props', () => {
-      expect(img.getAttribute('style')).to.equal('width:100%');
-      expect(img.getAttribute('class')).to.equal(props.className);
-    });
-  });
-
-  describe('with "editable" property value but editing disabled', () => {
-    const props = {
-      field: { editable: eeImageData, value: { src: '/assets/img/test0.png', alt: 'my image' } },
-      editable: false,
-      style: { width: '100%' },
-      className: 'the-dude-abides',
-    };
-    const rendered = mount(<Image {...props} />).find('img');
-
-    it('should render <img /> component with "value" properties', () => {
-      expect(rendered).to.have.length(1);
-      expect(rendered.prop('src')).to.eql(props.field.value.src);
-      expect(rendered.prop('alt')).to.eql(props.field.value.alt);
-    });
-
-    it('should render <img /> with style and className props', () => {
-      expect(rendered.prop('style')).to.eql(props.style);
-      expect(rendered.prop('className')).to.eql(props.className);
-    });
-  });
-
   describe('with "class" and "className" property set', () => {
     const props = {
-      field: { editable: eeImageData, value: { src: '/assets/img/test0.png', alt: 'my image' } },
+      field: { value: { src: '/assets/img/test0.png', alt: 'my image' } },
       editable: false,
       style: { width: '100%' },
       className: 'the-dude',
@@ -212,7 +136,7 @@ describe('<Image />', () => {
       expect(rendered.find('img').prop('src')).to.equal('/-/jssmedia/img/test0.png?foo=bar');
     });
 
-    it('should transform url with direct image object, no value/editable', () => {
+    it('should transform url with direct image object, no value', () => {
       const props = {
         field: {
           src: '/~assets/img/test0.png',
