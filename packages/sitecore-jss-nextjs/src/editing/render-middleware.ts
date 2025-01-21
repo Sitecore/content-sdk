@@ -39,12 +39,15 @@ export abstract class RenderMiddlewareBase {
   protected getHeadersForPropagation = (
     headers: IncomingHttpHeaders
   ): { [key: string]: string } => {
-    const result: { [key: string]: string } = {};
-    EDITING_PASS_THROUGH_HEADERS.forEach((header) => {
-      if (headers[header]) {
-        result[header] = [headers[header]!].join();
+    // Filter and normalize headers
+    const filteredHeaders = EDITING_PASS_THROUGH_HEADERS.reduce((acc, header) => {
+      const value = headers[header];
+      if (value) {
+        acc[header] = Array.isArray(value) ? value.join(', ') : value;
       }
-    });
-    return result;
+      return acc;
+    }, {} as Record<string, string>);
+
+    return filteredHeaders;
   };
 }

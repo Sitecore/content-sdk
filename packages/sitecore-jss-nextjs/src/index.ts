@@ -4,6 +4,7 @@ export {
   NativeDataFetcher,
   NativeDataFetcherConfig,
   NativeDataFetcherResponse,
+  NativeDataFetcherError,
   HTMLLink,
   enableDebug,
   debug,

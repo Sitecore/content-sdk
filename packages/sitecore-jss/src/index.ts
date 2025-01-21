@@ -13,11 +13,11 @@ export {
   GraphQLRequestClientFactoryConfig,
 } from './graphql-request-client';
 export { CacheClient, CacheOptions, MemoryCacheClient } from './cache-client';
-export { AxiosResponse } from 'axios';
 export { ClientError } from 'graphql-request';
 export {
   NativeDataFetcher,
   NativeDataFetcherConfig,
+  NativeDataFetcherError,
   NativeDataFetcherResponse,
 } from './native-fetcher';
 export { HTMLLink } from './models';
