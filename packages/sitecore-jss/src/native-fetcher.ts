@@ -27,6 +27,8 @@ export interface NativeDataFetcherResponse<T> {
   statusText: string;
   /** Response content */
   data: T;
+  /** Response headers */
+  headers?: HeadersInit;
 }
 
 /**
@@ -35,6 +37,17 @@ export interface NativeDataFetcherResponse<T> {
 export type NativeDataFetcherError = Error & {
   response: NativeDataFetcherResponse<unknown>;
 };
+
+/**
+ * A function that fetches data from a given URL and returns a `NativeDataFetcherResponse`.
+ * @param {string} url The URL to request (can include query string parameters).
+ * @param {unknown} [data] Optional data to send with the request (e.g., for POST or PUT requests).
+ * @returns {Promise<NativeDataFetcherResponse<T>>} A promise that resolves to a `NativeDataFetcherResponse<T>`,
+ */
+export type NativeDataFetcherFunction<T> = (
+  url: string,
+  data?: RequestInit
+) => Promise<NativeDataFetcherResponse<T>>;
 
 export type NativeDataFetcherConfig = NativeDataFetcherOptions & RequestInit;
 
@@ -54,6 +67,7 @@ export class NativeDataFetcher {
     const startTimestamp = Date.now();
     const fetchImpl = fetchOverride || fetch;
     const debug = debugOverride || debuggers.http;
+
     const requestInit = this.getRequestInit({ ...init, ...options });
 
     const fetchWithOptionalTimeout = [fetchImpl(url, requestInit)];
@@ -62,64 +76,39 @@ export class NativeDataFetcher {
       fetchWithOptionalTimeout.push(this.abortTimeout.start as Promise<Response>);
     }
 
-    // Note a goal here is to provide consistent debug logging and error handling
-    // as we do in GraphQLRequestClient
+    debug('Request initiated: %o', {
+      url,
+      headers: this.extractDebugHeaders(requestInit.headers),
+      ...requestInit,
+    });
 
-    const { headers: reqHeaders, ...rest } = requestInit;
-
-    debug('request: %o', { url, headers: this.extractDebugHeaders(reqHeaders), ...rest });
-    const response = await Promise.race(fetchWithOptionalTimeout)
-      .then((res) => {
+    try {
+      const response = await Promise.race(fetchWithOptionalTimeout).then((res) => {
         this.abortTimeout?.clear();
         return res;
-      })
-      .catch((error) => {
-        this.abortTimeout?.clear();
-        debug('request error: %o', error);
+      });
+
+      const respData = await this.parseResponse(response, debug);
+      if (!response.ok) {
+        const error = this.createError(response, respData);
+        debug('Response error: %o', error.response);
         throw error;
+      }
+
+      debug('Response in %dms: %o', Date.now() - startTimestamp, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: this.extractDebugHeaders(response.headers),
+        url: response.url,
+        data: respData,
       });
 
-    // Note even an error status may send useful json data in response (which we want for logging)
-    let respData: unknown = undefined;
-    const isJson = response.headers.get('Content-Type')?.includes('application/json');
-    if (isJson) {
-      respData = await response.json().catch((error) => {
-        debug('response.json() error: %o', error);
-      });
-    } else {
-      // if not JSON, just read the response as text
-      respData = await response.text().catch((error) => {
-        debug('response.text() error: %o', error);
-      });
-    }
-
-    const debugResponse = {
-      status: response.status,
-      statusText: response.statusText,
-      headers: this.extractDebugHeaders(response.headers),
-      url: response.url,
-      redirected: response.redirected,
-      data: respData,
-    };
-
-    if (!response.ok) {
-      debug('response error: %o', debugResponse);
-      const error: NativeDataFetcherError = {
-        ...new Error(`HTTP ${response.status} ${response.statusText}`),
-        response: {
-          ...debugResponse,
-          ...response,
-        },
-      };
+      return { ...response, data: respData as T };
+    } catch (error) {
+      this.abortTimeout?.clear();
+      debug('Request failed: %o', error);
       throw error;
     }
-    debug('response in %dms: %o', Date.now() - startTimestamp, debugResponse);
-    return {
-      ...response,
-      status: response.status,
-      statusText: response.statusText,
-      data: respData as T,
-    };
   }
 
   /**
@@ -128,10 +117,7 @@ export class NativeDataFetcher {
    * @param {RequestInit} [options] Fetch options
    * @returns {Promise<NativeDataFetcherResponse<T>>} response
    */
-  async get<T>(
-    url: string,
-    options: { [key: string]: string | string[] } = {}
-  ): Promise<NativeDataFetcherResponse<T>> {
+  async get<T>(url: string, options: RequestInit = {}): Promise<NativeDataFetcherResponse<T>> {
     return this.fetch(url, { method: 'GET', ...options });
   }
 
@@ -196,6 +182,7 @@ export class NativeDataFetcher {
     if (!init.method) {
       init.method = init.body ? 'POST' : 'GET';
     }
+
     headers.set('Content-Type', 'application/json');
     init.headers = headers;
 
@@ -217,5 +204,45 @@ export class NativeDataFetcher {
     }
 
     return headers;
+  }
+
+  /**
+   * Parses the response data.
+   * @param {Response} response - The fetch response object.
+   * @param {Function} debug - The debug logger function.
+   * @returns {Promise<unknown>} - The parsed response data.
+   */
+  private async parseResponse(
+    response: Response,
+    debug: (message: string, ...optionalParams: any[]) => void
+  ): Promise<unknown> {
+    const contentType = response.headers.get('Content-Type') || '';
+    try {
+      if (contentType.includes('application/json')) {
+        return await response.json();
+      }
+      return await response.text();
+    } catch (error) {
+      debug('Response parsing error: %o', error);
+      return undefined;
+    }
+  }
+
+  /**
+   * Creates a custom error for fetch failures.
+   * @param {Response} response - The fetch response object.
+   * @param {unknown} data - The parsed response data.
+   * @returns {NativeDataFetcherError} - The constructed error object.
+   */
+  private createError(response: Response, data?: unknown): NativeDataFetcherError {
+    return {
+      ...new Error(`HTTP ${response.status} ${response.statusText}`),
+      response: {
+        status: response.status,
+        statusText: response.statusText,
+        headers: this.extractDebugHeaders(response.headers) as HeadersInit,
+        data,
+      },
+    };
   }
 }

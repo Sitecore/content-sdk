@@ -33,13 +33,23 @@ const sitemapApi = async (
     const sitemapUrl = isAbsoluteUrl ? sitemapPath : `${config.sitecoreApiHost}${sitemapPath}`;
     res.setHeader('Content-Type', 'text/xml;charset=utf-8');
 
-    // need to prepare stream from sitemap url
-    return new NativeDataFetcher()
-      .get(sitemapUrl)
-      .then((response) => {
-        res.send(response.data);
-      })
-      .catch(() => res.redirect('/404'));
+    try {
+      const fetcher = new NativeDataFetcher();
+      const response = await fetcher.fetch(sitemapUrl);
+
+      const reader = response.data?.getReader();
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          if (value) res.write(value);
+        }
+      }
+      res.end();
+    } catch (error) {
+      return res.redirect('/404');
+    }
+    return;
   }
 
   // this approache if user go to /sitemap.xml - under it generate xml page with list of sitemaps
