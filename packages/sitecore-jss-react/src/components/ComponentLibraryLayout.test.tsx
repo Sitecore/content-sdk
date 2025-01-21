@@ -51,7 +51,7 @@ describe('<ComponentLibraryLayout />', () => {
   it('should render', () => {
     const basicPage = getTestLayoutData();
     rendered = mount(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
         <ComponentLibraryLayout {...basicPage.layoutData} />
       </SitecoreContext>
     );
@@ -69,7 +69,7 @@ describe('<ComponentLibraryLayout />', () => {
   it('should render component with placeholders', () => {
     const placeholderPage = getTestLayoutData(true);
     const rendered = mount(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentFactory={componentFactory} layoutData={placeholderPage.layoutData}>
         <ComponentLibraryLayout {...placeholderPage.layoutData} />
       </SitecoreContext>
     );
@@ -91,7 +91,7 @@ describe('<ComponentLibraryLayout />', () => {
   it('should fire component:ready event', () => {
     const basicPage = getTestLayoutData();
     const rendered = mount(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
         <ComponentLibraryLayout {...basicPage.layoutData} />
       </SitecoreContext>
     );
@@ -117,7 +117,7 @@ describe('<ComponentLibraryLayout />', () => {
   it('should update root component', async () => {
     const basicPage = getTestLayoutData();
     const rendered = mount(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
         <ComponentLibraryLayout {...basicPage.layoutData} />
       </SitecoreContext>
     );
@@ -159,7 +159,7 @@ describe('<ComponentLibraryLayout />', () => {
   it('should update nested component', async () => {
     const placeholderPage = getTestLayoutData(true);
     const rendered = mount(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentFactory={componentFactory} layoutData={placeholderPage.layoutData}>
         <ComponentLibraryLayout {...placeholderPage.layoutData} />
       </SitecoreContext>
     );

@@ -7,7 +7,6 @@ export {
   RouteData,
   PlaceholderData,
   ComponentRendering,
-  HtmlElementRendering,
   Field,
   GenericFieldValue,
   Item,

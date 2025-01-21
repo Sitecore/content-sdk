@@ -4,7 +4,6 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { EditingConfigMiddleware } from './editing-config-middleware';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-jss/sitecore-jss/editing';
-import { EditMode } from '@sitecore-jss/sitecore-jss/layout';
 
 type Query = {
   [key: string]: string;
@@ -48,12 +47,6 @@ const componentsMap = new Map<string, unknown>();
 componentsMap.set('TestComponentOne', {});
 componentsMap.set('TestComponentTwo', {});
 const metadata = { packages: { testPackageOne: '0.1.1' } };
-
-const expectedResultWithChromes = {
-  components: ['TestComponentOne', 'TestComponentTwo'],
-  packages: { testPackageOne: '0.1.1' },
-  editMode: 'chromes',
-};
 
 const expectedResultWithMetadata = {
   components: ['TestComponentOne', 'TestComponentTwo'],
@@ -150,17 +143,13 @@ describe('EditingConfigMiddleware', () => {
     expect(res.send).to.have.been.calledOnceWith(null);
   });
 
-  const testEditingConfig = async (
-    components: string[] | Map<string, unknown>,
-    expectedResult,
-    pagesEditMode?: EditMode
-  ) => {
+  const testEditingConfig = async (components: string[] | Map<string, unknown>, expectedResult) => {
     const key = 'wrongkey';
     const query = { key } as Query;
     query[QUERY_PARAM_EDITING_SECRET] = secret;
     const req = mockRequest('GET', query);
     const res = mockResponse();
-    const middleware = new EditingConfigMiddleware({ components, metadata, pagesEditMode });
+    const middleware = new EditingConfigMiddleware({ components, metadata });
     const handler = middleware.getHandler();
 
     await handler(req, res);
@@ -171,19 +160,11 @@ describe('EditingConfigMiddleware', () => {
     expect(res.json).to.have.been.calledWith(expectedResult);
   };
 
-  it('should respond with 200 and return config data with components array as argument and editMode as chromes', async () => {
-    await testEditingConfig(componentsArray, expectedResultWithChromes, EditMode.Chromes);
-  });
-
-  it('should respond with 200 and return config data with components map as argument and editMode as chromes', async () => {
-    await testEditingConfig(componentsMap, expectedResultWithChromes, EditMode.Chromes);
-  });
-
-  it('should respond with 200 and return config data with components array as argument and editMode as metadata', async () => {
+  it('should respond with 200 and return config data with components array as argument', async () => {
     await testEditingConfig(componentsArray, expectedResultWithMetadata);
   });
 
-  it('should respond with 200 and return config data with components map as argument and editMode as metadata', async () => {
+  it('should respond with 200 and return config data with components map as argument', async () => {
     await testEditingConfig(componentsMap, expectedResultWithMetadata);
   });
 });

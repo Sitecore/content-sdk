@@ -1,11 +1,9 @@
 export { GraphQLEditingService } from './graphql-editing-service';
 export {
   DEFAULT_PLACEHOLDER_UID,
-  ExperienceEditor,
-  HorizonEditor,
+  PagesEditor,
   isEditorActive,
   resetEditorChromes,
-  handleEditorAnchors,
   Metadata,
   getJssPagesClientData,
   addComponentUpdateHandler,
@@ -19,16 +17,5 @@ export {
   RestComponentLayoutService,
   ComponentLayoutRequestParams,
 } from './rest-component-layout-service';
-export {
-  DefaultEditFrameButton,
-  DefaultEditFrameButtons,
-  DefaultEditFrameButtonIds,
-  EditFrameDataSource,
-  ChromeCommand,
-  FieldEditButton,
-  WebEditButton,
-  EditButtonTypes,
-  mapButtonToCommand,
-} from './edit-frame';
-export { RenderMetadataQueryParams, RenderComponentQueryParams } from './models';
+export { EditingRenderQueryParams, RenderComponentQueryParams } from './models';
 export { LayoutKind, MetadataKind } from './models';

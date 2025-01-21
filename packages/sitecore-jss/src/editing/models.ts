@@ -2,10 +2,10 @@ import { LayoutServicePageState } from '../layout';
 
 /**
  * Query parameters appended to the page route URL
- * Appended when XMCloud Pages preview (editing) Metadata Edit Mode is used
+ * Appended when XMCloud Pages preview (editing) mode is used
  * `mode` is a special case as it serves editing and component library both
  */
-export interface RenderMetadataQueryParams {
+export interface EditingRenderQueryParams {
   [key: string]: unknown;
   secret: string;
   sc_lang: string;

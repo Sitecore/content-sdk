@@ -2,7 +2,6 @@ import { mediaApi } from '@sitecore-jss/sitecore-jss/media';
 import PropTypes, { Requireable } from 'prop-types';
 import React from 'react';
 import {
-  getEEMarkup,
   ImageProps,
   ImageField,
   ImageFieldValue,
@@ -27,20 +26,8 @@ export const NextImage: React.FC<NextImageProps> = withFieldMetadata<NextImagePr
 
       const dynamicMedia = field as ImageField | ImageFieldValue;
 
-      if (!field || (!dynamicMedia.editable && isFieldValueEmpty(dynamicMedia))) {
+      if (isFieldValueEmpty(dynamicMedia)) {
         return null;
-      }
-
-      const imageField = dynamicMedia as ImageField;
-
-      // we likely have an experience editor value, should be a string
-      if (editable && imageField.editable) {
-        return getEEMarkup(
-          imageField,
-          imageParams as { [paramName: string]: string | number },
-          mediaUrlPrefix as RegExp,
-          otherProps as { src: string }
-        );
       }
 
       // some wise-guy/gal is passing in a 'raw' image object value
@@ -99,7 +86,6 @@ NextImage.propTypes = {
     }),
     PropTypes.shape({
       value: PropTypes.object,
-      editable: PropTypes.string,
     }),
   ]),
   editable: PropTypes.bool,

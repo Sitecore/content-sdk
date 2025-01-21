@@ -17,7 +17,6 @@ const defaultConfig: JssConfig = {
   graphQLEndpointPath: process.env[`${constantCase('graphQLEndpointPath')}`],
   defaultLanguage: process.env[`${constantCase('defaultLanguage')}`],
   graphQLEndpoint: process.env[`${constantCase('graphQLEndpoint')}`],
-  publicUrl: process.env[`${constantCase('publicUrl')}`],
 };
 
 generateConfig(defaultConfig);

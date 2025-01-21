@@ -39,7 +39,7 @@ describe('<NextImage />', () => {
     () => mockLoader.resetHistory();
   });
 
-  describe('with direct image object, no value/editable', () => {
+  describe('with direct image object, no value', () => {
     const props = {
       field: {
         src: '/assets/img/test0.png',
@@ -180,36 +180,6 @@ describe('<NextImage />', () => {
     });
   });
 
-  describe('with "editable" property value but editing disabled', () => {
-    const props = {
-      field: { value: { src: '/assets/img/test0.png', alt: 'my image' } },
-      width,
-      height: 10,
-      alt: 'my image',
-      editable: false,
-      className: 'the-dude-abides w-100',
-    };
-    const rendered = mount(
-      <SitecoreContextReactContext.Provider value={testContextProps}>
-        <NextImage loader={mockLoader} {...props} />
-      </SitecoreContextReactContext.Provider>
-    ).find('img');
-
-    it('should render image component with "value" properties', () => {
-      expect(rendered).to.have.length(1);
-      expect(rendered.prop('src')).to.eql(`${HOSTNAME}${props.field.value.src}?w=${props.width}`);
-      expect(rendered.prop('alt')).to.eql(props.field.value.alt);
-      expect(mockLoader.called).to.be.true;
-      expect(mockLoader).to.have.been.calledWith(
-        match({ src: props.field.value.src, width: props.width })
-      );
-    });
-
-    it('should render image with className prop', () => {
-      expect(rendered.prop('className')).to.eql(props.className);
-    });
-  });
-
   describe('with "mediaUrlPrefix" property', () => {
     it('should transform url with "value" property value', () => {
       const props = {
@@ -252,7 +222,7 @@ describe('<NextImage />', () => {
       );
     });
 
-    it('should transform url with direct image object, no value/editable', () => {
+    it('should transform url with direct image object, no value', () => {
       const props = {
         field: {
           value: { src: '/~assets/img/test0.png', alt: 'my image' },

@@ -12,7 +12,6 @@ export interface DateFieldProps extends EditableFieldProps {
   [htmlAttributes: string]: unknown;
   field: FieldMetadata & {
     value?: string;
-    editable?: string;
   };
   /**
    * The HTML element that will wrap the contents of the field.
@@ -25,7 +24,7 @@ export interface DateFieldProps extends EditableFieldProps {
 export const DateField: React.FC<DateFieldProps> = withFieldMetadata<DateFieldProps>(
   withEmptyFieldEditingComponent<DateFieldProps>(
     ({ field, tag, editable = true, render, ...otherProps }) => {
-      if (!field || (!field.editable && isFieldValueEmpty(field))) {
+      if (isFieldValueEmpty(field)) {
         return null;
       }
 
@@ -38,17 +37,13 @@ export const DateField: React.FC<DateFieldProps> = withFieldMetadata<DateFieldPr
         ...otherProps,
       };
 
-      if (field.editable && editable) {
-        htmlProps.dangerouslySetInnerHTML = {
-          __html: field.editable,
-        };
-      } else if (render) {
+      if (render) {
         children = render(field.value ? new Date(field.value) : null);
       } else {
         children = field.value;
       }
 
-      if (tag || (field.editable && editable)) {
+      if (tag) {
         return React.createElement(tag || 'span', htmlProps, children);
       } else {
         return <React.Fragment>{children}</React.Fragment>;
@@ -61,7 +56,6 @@ export const DateField: React.FC<DateFieldProps> = withFieldMetadata<DateFieldPr
 DateField.propTypes = {
   field: PropTypes.shape({
     value: PropTypes.string,
-    editable: PropTypes.string,
     metadata: PropTypes.objectOf(PropTypes.any),
   }).isRequired,
   tag: PropTypes.string,

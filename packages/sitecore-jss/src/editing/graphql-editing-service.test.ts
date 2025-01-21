@@ -14,7 +14,6 @@ import {
   mockEditingServiceDictionaryResponse,
   mockEditingServiceResponse,
 } from '../test-data/mockEditingServiceResponse';
-import { EditMode } from '../layout';
 import { LayoutKind } from './models';
 import debug from '../debug';
 
@@ -36,7 +35,6 @@ describe('GraphQLEditingService', () => {
   const layoutDataResponse = {
     sitecore: {
       context: {
-        editMode: EditMode.Metadata,
         pageEditing: true,
         language: 'en',
       },
@@ -175,7 +173,7 @@ describe('GraphQLEditingService', () => {
     expect(result).to.deep.equal({
       layoutData: {
         sitecore: {
-          context: { pageEditing: true, language, editMode: EditMode.Metadata },
+          context: { pageEditing: true, language },
           route: null,
         },
       },

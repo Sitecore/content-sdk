@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  ComponentRendering,
-  RouteData,
-  HtmlElementRendering,
-} from '@sitecore-jss/sitecore-jss/layout';
+import { ComponentRendering, RouteData } from '@sitecore-jss/sitecore-jss/layout';
 import { PlaceholderProps, PlaceholderCommon } from '../components/PlaceholderCommon';
 import { withComponentFactory } from './withComponentFactory';
 import { withSitecoreContext } from './withSitecoreContext';
@@ -90,13 +86,13 @@ export function withPlaceholder(
           : placeholders;
 
         definitelyArrayPlacholders.forEach((placeholder: string | PlaceholderToPropMapping) => {
-          let placeholderData: (ComponentRendering | HtmlElementRendering)[];
+          let placeholderData: ComponentRendering[];
 
           if (typeof placeholder !== 'string' && placeholder.placeholder && placeholder.prop) {
             placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
               renderingData,
               placeholder.placeholder,
-              childProps.sitecoreContext.editMode
+              childProps.sitecoreContext.pageEditing
             );
             if (placeholderData) {
               childProps[placeholder.prop] = this.getComponentsForRenderingData(placeholderData);
@@ -105,7 +101,7 @@ export function withPlaceholder(
             placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
               renderingData,
               placeholder as string,
-              childProps.sitecoreContext.editMode
+              childProps.sitecoreContext.pageEditing
             );
             if (placeholderData) {
               childProps[placeholder as string] = this.getComponentsForRenderingData(

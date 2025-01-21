@@ -289,31 +289,6 @@ describe('RichText', () => {
     expect(c.find(ReactRichText).length).to.equal(1);
   });
 
-  it('should not initialize links when editable', () => {
-    const router = Router();
-
-    const props = {
-      field: {
-        editable: '<div id="test"><h1>Hello!</h1><a href="/t1">t1</a><a href="/t2">t2</a></div>',
-      },
-    };
-
-    const c = mount(
-      <Page value={router}>
-        <RichText {...props} />
-      </Page>
-    );
-
-    expect(c.html()).contains('<div id="test">');
-    expect(c.html()).contains('<h1>Hello!</h1>');
-    expect(c.html()).contains('<a href="/t1">t1</a>');
-    expect(c.html()).contains('<a href="/t2">t2</a>');
-
-    expect(router.prefetch).callCount(0);
-
-    expect(c.find(ReactRichText).length).to.equal(1);
-  });
-
   it('should not initialize links when target set to "_blank"', () => {
     const app = document.createElement('main');
 

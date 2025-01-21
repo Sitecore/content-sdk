@@ -3,11 +3,10 @@ import { expect } from 'chai';
 import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { DateField } from './Date';
-import { describe } from 'node:test';
 import { EMPTY_DATE_FIELD_VALUE } from '@sitecore-jss/sitecore-jss/layout';
 
 describe('<DateField />', () => {
-  it('should return null if no editable or value', () => {
+  it('should return null if no value', () => {
     const p = {
       field: {},
     };
@@ -42,21 +41,6 @@ describe('<DateField />', () => {
     expect(c.html()).equal('<p>Fri Nov 23 2001</p>');
   });
 
-  it('should render null value using render prop function', () => {
-    const render = (date: Date | null) => <p>{date ? date.toDateString() : ''}</p>;
-    const p = {
-      field: {
-        editable: 'xxx',
-      },
-      editable: false,
-      render,
-    };
-
-    const c = shallow(<DateField {...p} />);
-
-    expect(c.html()).equal('<p></p>');
-  });
-
   it('should render value with provided tag', () => {
     const p = {
       field: {
@@ -68,19 +52,6 @@ describe('<DateField />', () => {
     const c = shallow(<DateField {...p} />);
 
     expect(c.html()).equal('<h3>11-23-2001</h3>');
-  });
-
-  it('should render editable value', () => {
-    const p = {
-      field: {
-        editable: '<h1 class="super">11-23-2001</h1>',
-      },
-      editable: true,
-    };
-
-    const c = shallow(<DateField {...p} />);
-
-    expect(c.html()).equal('<span><h1 class="super">11-23-2001</h1></span>');
   });
 
   describe('edit mode', () => {
@@ -165,7 +136,7 @@ describe('<DateField />', () => {
             metadata: testMetadata,
           };
 
-          const EmptyFieldEditingComponent: React.FC = () => (
+          const EmptyFieldEditingComponent = () => (
             <span className="empty-field-value-placeholder">Custom Empty field value</span>
           );
 
@@ -190,7 +161,7 @@ describe('<DateField />', () => {
             metadata: testMetadata,
           };
 
-          const EmptyFieldEditingComponent: React.FC = () => (
+          const EmptyFieldEditingComponent = () => (
             <span className="empty-field-value-placeholder">Custom Empty field value</span>
           );
 
