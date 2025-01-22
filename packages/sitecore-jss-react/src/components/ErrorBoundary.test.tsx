@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { expect } from 'chai';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { spy } from 'sinon';
 import ErrorBoundary from './ErrorBoundary';
 import { SitecoreContextReactContext } from '../components/SitecoreContext';
@@ -258,8 +258,7 @@ describe('ErrorBoundary', () => {
         </Suspense>
       );
       expect(rendered.baseElement.textContent).to.equal('');
-      await delay(500);
-      expect(rendered.baseElement.textContent).to.equal('No error');
+      await waitFor(() => expect(rendered.getAllByText('No error').length).to.equal(1));
     });
 
     it('Should render custom error component when custom error component is provided and error is thrown', () => {

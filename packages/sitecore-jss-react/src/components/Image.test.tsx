@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import chai from 'chai';
 import chaiString from 'chai-string';
-import { render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import React from 'react';
 import { Image, ImageField } from './Image';
 import { DefaultEmptyFieldEditingComponentImage } from './DefaultEmptyFieldEditingComponents';
@@ -40,6 +40,8 @@ describe('<Image />', () => {
       expect(rendered[0]?.getAttribute('style')).to.eql('width: 100%;');
       expect(rendered[0]?.getAttribute('class')).to.eql(props.className);
     });
+
+    cleanup();
   });
 
   describe('with responsive image object', () => {
@@ -71,6 +73,8 @@ describe('<Image />', () => {
     it('should render <img /> with style and className props', () => {
       expect(rendered[0]?.getAttribute('class')).to.eql(props.className);
     });
+
+    cleanup();
   });
 
   describe('with "value" property value', () => {
@@ -96,6 +100,8 @@ describe('<Image />', () => {
       expect(rendered[0]?.getAttribute('style')).to.eql('width: 100%;');
       expect(rendered[0]?.getAttribute('class')).to.eql(props.className);
     });
+
+    cleanup();
   });
 
   describe('with "class" and "className" property set', () => {
@@ -112,6 +118,7 @@ describe('<Image />', () => {
     it('should attach "class" value at the end of class attribute', () => {
       expect(rendered?.getAttribute('class')).to.eql(`${props.className} ${props.class}`);
     });
+    cleanup();
   });
 
   describe('with "mediaUrlPrefix" property', () => {

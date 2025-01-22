@@ -1,6 +1,6 @@
 import React from 'react';
 import { expect } from 'chai';
-import { render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { BYOCComponent } from './BYOCComponent';
 import { MissingComponent, MissingComponentProps } from './MissingComponent';
@@ -157,7 +157,9 @@ describe('BYOCComponent', () => {
     const fooComponent = container.querySelector('feaas-external');
     expect(container.querySelectorAll('feaas-external')).to.have.lengthOf(1);
     expect(fooComponent?.getAttribute('prop1')).to.equal('value1');
-    expect(fooComponent?.getAttribute('datasources')).to.equal('{"prop2":"prefetched_value1","_":{}}');
+    expect(fooComponent?.getAttribute('datasources')).to.equal(
+      '{"prop2":"prefetched_value1","_":{}}'
+    );
     expect(fooComponent?.getAttribute('data-external-id')).to.equal('Foo');
     expect(fooComponent?.querySelectorAll('#foo-content')).to.have.length(1);
   });
@@ -196,9 +198,11 @@ describe('Error handling', () => {
       },
       fetchedData: {},
     };
-    const wrapper = mount(<BYOCComponent {...props} />);
-    const errorComponent = wrapper.find('DefaultErrorComponent');
-    expect(errorComponent).to.have.lengthOf(1);
+    const wrapper = render(<BYOCComponent {...props} />, { container: document.body });
+
+    expect(wrapper.baseElement.innerHTML).to.equal(
+      '<div>A rendering error occurred: Unexpected token \'i\', "invalid-json" is not valid JSON.</div>'
+    );
   });
 
   it('should render custom error component when provided, when underlying component throws', () => {
@@ -212,9 +216,8 @@ describe('Error handling', () => {
       fetchedData: {},
     };
 
-    const wrapper = mount(<BYOCComponent {...props} />);
-
-    expect(wrapper.find('div').text()).to.contain('custom error:');
+    const wrapper = render(<BYOCComponent {...props} />);
+    expect(wrapper.queryAllByText('custom error:', { exact: false }).length).to.equal(1);
   });
 
   it('renders MissingComponent when no ComponentName is provided', () => {
@@ -224,12 +227,17 @@ describe('Error handling', () => {
         ComponentDataOverride: JSON.stringify({ text: 'this is a BYOC component' }),
       },
     };
-    const wrapper = mount(<BYOCComponent {...props} />);
-    const missingComponent = wrapper.find('MissingComponent');
+    const wrapper = render(<BYOCComponent {...props} />, { container: document.body });
 
-    expect(missingComponent).to.have.lengthOf(1);
-    expect(wrapper.find('p').text()).to.contain(
-      'BYOC: The ComponentName for this rendering is missing'
+    expect(wrapper.baseElement.innerHTML).to.equal(
+      [
+        '<div style="background: darkorange; ',
+        'outline: 5px solid orange; padding: 10px; ',
+        'color: white; max-width: 500px;">',
+        '<h2>Unnamed Component</h2>',
+        '<p>BYOC: The ComponentName for this rendering is missing',
+        '</p></div>',
+      ].join('')
     );
   });
 
@@ -245,11 +253,9 @@ describe('Error handling', () => {
       params: { ComponentName: '' },
     };
 
-    const wrapper = mount(<BYOCComponent {...props} />);
-
-    expect(wrapper.find('div').text()).to.contain('Custom missive');
-    expect(wrapper.find('div').text()).to.contain(
-      'The ComponentName for this rendering is missing'
+    const wrapper = render(<BYOCComponent {...props} />, { container: document.body });
+    expect(wrapper.baseElement.innerHTML).to.equal(
+      '<div>Custom missive for : BYOC: The ComponentName for this rendering is missing</div>'
     );
   });
 
@@ -263,10 +269,9 @@ describe('Error handling', () => {
       fetchedData: {},
     };
 
-    const wrapper = mount(<BYOCComponent {...props} />);
+    const wrapper = render(<BYOCComponent {...props} />);
 
-    expect(wrapper.find(MissingComponent)).to.have.lengthOf(1);
-    expect(wrapper.find('div p').text()).to.contain('This component was not registered');
+    expect(wrapper.queryAllByText('his component was not registered').length).to.equal(1);
   });
 
   xit('should render custom missing component when provided, when component is not registered', () => {
@@ -282,9 +287,10 @@ describe('Error handling', () => {
       components: {},
       fetchedData: {},
     };
-    const wrapper = mount(<BYOCComponent {...props} />);
+    const wrapper = render(<BYOCComponent {...props} />);
+    const text = wrapper.container.querySelector('div')?.innerText;
 
-    expect(wrapper.find('div').text()).to.contain('Custom missive for NonExistentComponent');
-    expect(wrapper.find('div').text()).to.contain('This component was not registered');
+    expect(text).to.contain('Custom missive for NonExistentComponent');
+    expect(text).to.contain('This component was not registered');
   });
 });

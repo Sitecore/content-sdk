@@ -63,13 +63,12 @@ describe('<EditingScripts />', () => {
     const component = render(
       <SitecoreContext componentFactory={mockComponentFactory} layoutData={layoutData}>
         <EditingScripts />
-      </SitecoreContext>
+      </SitecoreContext>,
+      { container: document.body }
     );
 
-    const scripts = component.find('EditingScripts');
-
-    expect(scripts.html()).to.be.null;
-    expect(scripts.find('script')).to.have.length(0);
+    expect(component.baseElement.innerHTML).to.be.empty;
+    expect(component.container.querySelectorAll('script')).to.have.length(0);
   });
 
   describe('should render Pages scripts when in Edit mode', () => {

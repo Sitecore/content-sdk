@@ -11,7 +11,7 @@ describe('<DateField />', () => {
       field: {},
     };
 
-    const c = render(<DateField {...p} />);
+    const c = render(<DateField {...p} />, { container: document.body });
     expect(c.baseElement.innerHTML).to.equal('');
   });
 
@@ -33,7 +33,7 @@ describe('<DateField />', () => {
       field: {
         value: '11-23-2001',
       },
-      renderDate,
+      render: renderDate,
     };
 
     const c = render(<DateField {...p} />, { container: document.body });

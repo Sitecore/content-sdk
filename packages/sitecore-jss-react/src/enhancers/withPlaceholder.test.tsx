@@ -148,7 +148,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreContext layoutData={nonEeDevData} componentFactory={componentFactory}>
+        <SitecoreContext layoutData={normalModeDevData} componentFactory={componentFactory}>
           <Element {...props} />
         </SitecoreContext>
       );
@@ -179,7 +179,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreContext layoutData={nonEeDevData} componentFactory={componentFactory}>
+        <SitecoreContext layoutData={normalModeDevData} componentFactory={componentFactory}>
           <Element {...props} />
         </SitecoreContext>
       );

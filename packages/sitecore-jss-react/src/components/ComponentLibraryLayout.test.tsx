@@ -58,6 +58,7 @@ describe('<ComponentLibraryLayout />', () => {
     );
     expect(rendered.baseElement.innerHTML).to.equal(
       [
+        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
@@ -77,6 +78,7 @@ describe('<ComponentLibraryLayout />', () => {
 
     expect(rendered.baseElement.innerHTML).to.equal(
       [
+        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
@@ -100,6 +102,7 @@ describe('<ComponentLibraryLayout />', () => {
 
     expect(rendered.baseElement.innerHTML).to.equal(
       [
+        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
@@ -127,6 +130,7 @@ describe('<ComponentLibraryLayout />', () => {
 
     expect(rendered.baseElement.innerHTML).to.equal(
       [
+        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
@@ -150,6 +154,7 @@ describe('<ComponentLibraryLayout />', () => {
 
     expect(rendered.baseElement.innerHTML).to.equal(
       [
+        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         'new content!',
@@ -168,6 +173,7 @@ describe('<ComponentLibraryLayout />', () => {
     );
     expect(rendered.baseElement.innerHTML).to.equal(
       [
+        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
@@ -195,6 +201,7 @@ describe('<ComponentLibraryLayout />', () => {
 
     expect(rendered.baseElement.innerHTML).to.equal(
       [
+        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
