@@ -2060,8 +2060,8 @@ __metadata:
     "@types/mocha": ^10.0.1
     "@types/node": 20.14.2
     "@types/prop-types": ^15.7.5
-    "@types/react": ^19.0.7
-    "@types/react-dom": ^19.0.3
+    "@types/react": ^18.2.45
+    "@types/react-dom": ^18.0.10
     "@types/sinon": ^10.0.13
     "@types/sinon-chai": ^3.2.9
     "@wojtekmaj/enzyme-adapter-react-17": ^0.8.0
@@ -2533,15 +2533,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^19.0.3":
-  version: 19.0.3
-  resolution: "@types/react-dom@npm:19.0.3"
-  peerDependencies:
-    "@types/react": ^19.0.0
-  checksum: a253931fc3a41a74ef99a7380fa3fa02b94ddd1addba9fc0aea39c90ce3dfb22d60fbac292669de224b1ffb23836cde3cc78c2425f0c77593435b6368a9fd2ed
-  languageName: node
-  linkType: hard
-
 "@types/react@npm:*, @types/react@npm:^18.2.45":
   version: 18.3.12
   resolution: "@types/react@npm:18.3.12"
@@ -2560,15 +2551,6 @@ __metadata:
     "@types/scheduler": ^0.16
     csstype: ^3.0.2
   checksum: 6bb8b4f912d42cbf29c684f50db94c766263f46056cda6d8b4813b2989afd577a11f9a1a69c9a094e55268655139d8ab8625848072c91ca1b624e7b2ec90c099
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^19.0.7":
-  version: 19.0.7
-  resolution: "@types/react@npm:19.0.7"
-  dependencies:
-    csstype: ^3.0.2
-  checksum: 594e06f9d6e4d771d7046876de25ad019a55963912514499b1a1c92ea3a404bf0153bfe1c037675feef67ece22fc9bceb0c9bdfd26e7f735145924d4e3d3d8e7
   languageName: node
   linkType: hard
 
