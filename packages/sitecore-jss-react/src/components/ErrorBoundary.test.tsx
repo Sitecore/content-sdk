@@ -107,12 +107,8 @@ describe('ErrorBoundary', () => {
       expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
-      expect(
-        ems[0].textContent
-      ).to.equal(testComponentName);
-      expect(
-        ems[1].textContent
-      ).to.equal(errorMessage);
+      expect(ems[0].textContent).to.equal(testComponentName);
+      expect(ems[1].textContent).to.equal(errorMessage);
     });
   });
   describe('when in development mode', () => {
@@ -140,7 +136,9 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
       expect(rendered.container.querySelectorAll('div').length).to.equal(1);
-      expect(rendered.container.querySelector('div')?.textContent).to.equal('This is a custom error component!');
+      expect(rendered.container.querySelector('div')?.textContent).to.equal(
+        'This is a custom error component!'
+      );
     });
 
     it('Should render errors message and errored component name when error is thrown and is in page editing mode', () => {
@@ -172,12 +170,8 @@ describe('ErrorBoundary', () => {
       expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
-      expect(
-        ems[0].textContent
-      ).to.equal(testComponentName);
-      expect(
-        ems[1].textContent
-      ).to.equal(errorMessage);
+      expect(ems[0].textContent).to.equal(testComponentName);
+      expect(ems[1].textContent).to.equal(errorMessage);
     });
 
     it('Should render errors message and errored component name when error is thrown and is not in page editing mode', () => {
@@ -210,12 +204,8 @@ describe('ErrorBoundary', () => {
       expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
-      expect(
-        ems[0].textContent
-      ).to.equal(testComponentName);
-      expect(
-        ems[1].textContent
-      ).to.equal(errorMessage);
+      expect(ems[0].textContent).to.equal(testComponentName);
+      expect(ems[1].textContent).to.equal(errorMessage);
     });
   });
   describe('when not in page editing and not in development mode', () => {
@@ -277,7 +267,9 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
       expect(rendered.container.querySelectorAll('div').length).to.equal(1);
-      expect(rendered.container.querySelector('div')?.textContent).to.equal('This is a custom error component!');
+      expect(rendered.container.querySelector('div')?.textContent).to.equal(
+        'This is a custom error component!'
+      );
     });
 
     it('Should render default errors message when error is thrown and custom error component is not provided', () => {

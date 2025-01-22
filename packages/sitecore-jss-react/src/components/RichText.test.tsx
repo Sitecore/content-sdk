@@ -29,7 +29,9 @@ describe('<RichText />', () => {
     const field = {
       value: 'value',
     };
-    const rendered = render(<RichText field={field} editable={false} />).container.querySelectorAll('div');
+    const rendered = render(<RichText field={field} editable={false} />).container.querySelectorAll(
+      'div'
+    );
     expect(rendered).to.have.length(1);
     expect(rendered[0].innerHTML).to.contain('value');
   });

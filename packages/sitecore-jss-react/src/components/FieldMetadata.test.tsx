@@ -24,7 +24,8 @@ describe('<FieldMetadata />', () => {
     const rendered = render(
       <FieldMetadata {...props}>
         <Foo />
-      </FieldMetadata>, { container: document.body }
+      </FieldMetadata>,
+      { container: document.body }
     );
 
     expect(rendered.baseElement.innerHTML).to.equal(

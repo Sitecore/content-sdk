@@ -88,7 +88,9 @@ describe('withSitecoreContext', () => {
         </SitecoreContextReactContext.Provider>
       );
 
-      expect(wrapper.container.querySelector('div')?.textContent).equal(testComponentProps.context.text + 'xxx');
+      expect(wrapper.container.querySelector('div')?.textContent).equal(
+        testComponentProps.context.text + 'xxx'
+      );
       fireEvent.click(wrapper.container.querySelector('div') as Element);
 
       // eslint-disable-next-line no-unused-expressions
@@ -123,7 +125,9 @@ describe('withSitecoreContext', () => {
         </SitecoreContextReactContext.Provider>
       );
 
-      expect(wrapper.container.querySelector('div')?.textContent).equal(testComponentProps.context.text + 'bbb');
+      expect(wrapper.container.querySelector('div')?.textContent).equal(
+        testComponentProps.context.text + 'bbb'
+      );
       fireEvent.click(wrapper.container.querySelector('div') as Element);
 
       // eslint-disable-next-line no-unused-expressions

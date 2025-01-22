@@ -777,7 +777,7 @@ describe('PlaceholderMetadata', () => {
         layoutData={layoutDataWithEmptyPlaceholder}
       >
         <Placeholder name="main" rendering={layoutDataWithEmptyPlaceholder.sitecore.route} />
-      </SitecoreContext>, 
+      </SitecoreContext>,
       { container: document.body }
     );
 

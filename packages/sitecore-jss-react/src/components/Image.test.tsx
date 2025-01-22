@@ -133,7 +133,9 @@ describe('<Image />', () => {
       };
       const rendered = render(<Image {...props} />);
 
-      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal('/~/jssmedia/img/test0.png?foo=bar');
+      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal(
+        '/~/jssmedia/img/test0.png?foo=bar'
+      );
 
       const newProps = {
         ...props,
@@ -142,7 +144,9 @@ describe('<Image />', () => {
 
       rendered.rerender(<Image {...newProps} />);
 
-      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal('/-/jssmedia/img/test0.png?foo=bar');
+      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal(
+        '/-/jssmedia/img/test0.png?foo=bar'
+      );
     });
 
     it('should transform url with direct image object, no value', () => {
@@ -162,7 +166,9 @@ describe('<Image />', () => {
       };
       const rendered = render(<Image {...props} />);
 
-      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal('/~/jssmedia/img/test0.png?foo=bar');
+      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal(
+        '/~/jssmedia/img/test0.png?foo=bar'
+      );
 
       const newProps = {
         ...props,
@@ -175,7 +181,9 @@ describe('<Image />', () => {
 
       rendered.rerender(<Image {...newProps} />);
 
-      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal('/-/jssmedia/img/test0.png?foo=bar');
+      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal(
+        '/-/jssmedia/img/test0.png?foo=bar'
+      );
     });
 
     it('should transform url with responsive image object', () => {
@@ -192,7 +200,9 @@ describe('<Image />', () => {
 
       const rendered = render(<Image {...props} />);
 
-      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal('/~assets/img/test0.png');
+      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal(
+        '/~assets/img/test0.png'
+      );
       expect(rendered.container.querySelector('img')?.getAttribute('srcSet')).to.equal(
         '/~/jssmedia/img/test0.png?mw=100 100w, /~/jssmedia/img/test0.png?mw=300 300w'
       );
@@ -209,7 +219,9 @@ describe('<Image />', () => {
 
       rendered.rerender(<Image {...newProps} />);
 
-      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal('/-/jssmedia/img/test0.png?foo=bar');
+      expect(rendered.container.querySelector('img')?.getAttribute('src')).to.equal(
+        '/-/jssmedia/img/test0.png?foo=bar'
+      );
       expect(rendered.container.querySelector('img')?.getAttribute('srcSet')).to.equal(
         '/-/jssmedia/img/test0.png?foo=bar&mw=100 100w, /-/jssmedia/img/test0.png?foo=bar&mw=300 300w'
       );
