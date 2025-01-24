@@ -8,7 +8,6 @@ export enum Prerender {
 
 export type NextjsAnswer = ClientAppAnswer & {
   prerender: Prerender;
-  xmcloud: boolean;
 };
 
 const DEFAULT_PRERENDER = Prerender.SSG;

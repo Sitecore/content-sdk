@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import path, { sep } from 'path';
-import { InitializerFactory } from '../../InitializerFactory';
 import { JsonObjectType } from '../processes/transform';
 
 // matched for proxy templates
@@ -71,13 +70,13 @@ export const writeJsonFile = (data: { [key: string]: unknown }, jsonFilePath: st
 
 /**
  * Save configuration params to the package.json
- * @param {string[]} templates templates applied to the sample
+ * @param {string[]} template template applied to the sample
  * @param {string} [pkgPath] path to the package.json
  */
-export const saveConfiguration = (templates: string[], pkgPath: string) => {
+export const saveConfiguration = (template: string, pkgPath: string) => {
   const pkg = openJsonFile(pkgPath);
 
-  writeJsonFile({ ...pkg, config: { ...pkg.config, templates } }, pkgPath);
+  writeJsonFile({ ...pkg, config: { ...pkg.config, template } }, pkgPath);
 };
 
 export const sortKeys = (obj: JsonObjectType) => {
@@ -96,23 +95,6 @@ export const sortKeys = (obj: JsonObjectType) => {
  */
 export const getAllTemplates = (templatePath: string): string[] => {
   return fs.readdirSync(templatePath, 'utf8');
-};
-
-/**
- * Returns subset of base templates
- * @param {string} templatePath path to the templates
- * @returns {string[]} base templates
- */
-export const getBaseTemplates = async (templatePath: string): Promise<string[]> => {
-  const templates = fs.readdirSync(templatePath, 'utf8');
-  const initFactory = new InitializerFactory();
-  const baseTemplates = [];
-
-  for (const template of templates) {
-    const res = await initFactory.create(template);
-    res?.isBase && baseTemplates.push(template);
-  }
-  return baseTemplates;
 };
 
 export const getAppPrefix = (appPrefix: boolean, appName: string, includeHyphen = true): string =>

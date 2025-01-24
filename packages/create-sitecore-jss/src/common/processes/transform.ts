@@ -2,14 +2,11 @@ import chalk from 'chalk';
 import fs from 'fs-extra';
 import glob from 'glob';
 import path, { sep } from 'path';
-import { parse } from 'dotenv';
 import { Data, renderFile } from 'ejs';
 import inquirer from 'inquirer';
 import {
   getPascalCaseName,
   getAppPrefix,
-  openJsonFile,
-  sortKeys,
   writeFileToPath,
   isDevEnvironment,
 } from '../utils/helpers';
@@ -33,79 +30,6 @@ export const transformFilename = (file: string, args: BaseArgs): string => {
     file = file.replace(`{{${key}}}`, value);
   }
   return file;
-};
-
-export const merge = (targetObj: JsonObjectType, sourceObj: JsonObjectType): JsonObjectType => {
-  const mergeObject = (target: JsonObjectType, source: JsonObjectType) => {
-    for (const key of Object.keys(source)) {
-      const sourceVal = source[key];
-      const targetVal = target[key];
-
-      if (Array.isArray(targetVal) && Array.isArray(sourceVal)) {
-        // use Set to remove duplicates from arrays
-        target[key] = [...new Set([...targetVal, ...sourceVal])];
-      } else if (
-        !Array.isArray(targetVal) &&
-        !Array.isArray(sourceVal) &&
-        typeof targetVal === 'object' &&
-        typeof sourceVal === 'object'
-      ) {
-        target[key] = sortKeys(mergeObject(targetVal, sourceVal));
-      } else {
-        target[key] = sourceVal;
-      }
-    }
-
-    return target;
-  };
-
-  return mergeObject(targetObj, sourceObj);
-};
-
-export const mergeEnv = (targetContent: string, sourceContent: string): string => {
-  const sourceEnv = parse(sourceContent);
-
-  if (!sourceEnv || !Object.keys(sourceEnv).length) return targetContent;
-
-  const targetEnv = parse(targetContent);
-
-  const sourceLines = sourceContent.split('\r\n');
-
-  Object.keys(sourceEnv).forEach((sourceEnvVar) => {
-    const isDuplicate = Object.keys(targetEnv).includes(sourceEnvVar);
-
-    if (!isDuplicate) return;
-
-    // Overriding value in a target .env file
-    targetContent = targetContent.replace(
-      new RegExp(`^${sourceEnvVar}=.*$`, 'gm'),
-      `${sourceEnvVar}=${sourceEnv[sourceEnvVar]}`
-    );
-
-    // Removing duplicate variable and related comments in a source .env file,
-    // since source and target will be concatenated
-    let lineIndex = sourceLines.findIndex((line) => line.startsWith(sourceEnvVar));
-
-    // remove empty lines after the definition
-    while (sourceLines[lineIndex + 1] === '') {
-      sourceLines.splice(lineIndex + 1, 1);
-    }
-
-    // remove definition and comments
-    do {
-      sourceLines.splice(lineIndex, 1);
-      lineIndex--;
-    } while (lineIndex >= 0 && sourceLines[lineIndex].startsWith('#'));
-  });
-
-  sourceContent = sourceLines.join('\r\n');
-
-  // No variables left in a source
-  if (!sourceContent) return targetContent;
-
-  // NOTE we are enforcing CRLF for the repo in .gitattributes, so match it here
-  const eol = '\r\n';
-  return targetContent + eol + sourceContent;
 };
 
 /**
@@ -277,9 +201,6 @@ export const transform = async (
         continue;
       }
 
-      // holds the content to be written to the new file
-      let str: string | undefined;
-
       // if the directory doesn't exist, create it
       fs.mkdirsSync(path.dirname(transformFilename(pathToNewFile, answers)));
 
@@ -290,35 +211,20 @@ export const transform = async (
         continue;
       }
 
-      if (file.endsWith('.json') && fs.existsSync(pathToNewFile)) {
-        // we treat a .json a bit differently
-        // read the current .json and the template .json (rendered with ejs)
-        const currentJson = openJsonFile(pathToNewFile);
-        const templateJson = JSON.parse(await renderFile(path.resolve(pathToTemplate), ejsData));
-        // merge them and set the result to str which will then go through diff
-        const merged = merge(currentJson, templateJson);
-        str = JSON.stringify(merged, null, 2);
-      }
-
-      if (file.endsWith('.env') && fs.existsSync(pathToNewFile)) {
-        // we treat .env files a bit differently
-        // read the current .env and the template .env (rendered with ejs)
-        const currentDotEnv = fs.readFileSync(path.resolve(process.cwd(), pathToNewFile), 'utf8');
-        const templateDotEnv = await renderFile(path.resolve(pathToTemplate), ejsData);
-        // merge them and set the result to str which will then go through diff
-        str = mergeEnv(currentDotEnv, templateDotEnv);
-      }
-
-      str = str ?? (await renderFile(path.resolve(pathToTemplate), ejsData));
+      // holds the content to be written to the new file
+      const renderedFile: string | undefined = await renderFile(
+        path.resolve(pathToTemplate),
+        ejsData
+      );
 
       if (!answers.force) {
         await diffAndWriteFiles({
-          rendered: str,
+          rendered: renderedFile,
           pathToNewFile,
           answers,
         });
       } else {
-        writeFileToPath(transformFilename(pathToNewFile, answers), str);
+        writeFileToPath(transformFilename(pathToNewFile, answers), renderedFile);
       }
     } catch (error) {
       console.log(chalk.red(error));

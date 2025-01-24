@@ -4,16 +4,16 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { initRunner } from './init-runner';
 import minimist, { ParsedArgs } from 'minimist';
-import { getBaseTemplates, getAllTemplates } from './common';
+import { getAllTemplates } from './common';
 
 export const parseArgs = (): ParsedArgs => {
   // parse any command line arguments passed into `init sitecore-jss`
   // to pass to the generator prompts and skip them.
   // useful for CI and testing purposes
   const options = {
-    boolean: ['appPrefix', 'force', 'noInstall', 'yes', 'silent', 'prePushHook'],
+    boolean: ['appPrefix', 'force', 'noInstall', 'yes', 'silent'],
     string: ['appName', 'destination', 'proxyAppDestination', 'templates'],
-    default: { prePushHook: null },
+    default: {},
   };
   const args: ParsedArgs = minimist(process.argv.slice(2), options);
 
@@ -26,14 +26,15 @@ export const parseArgs = (): ParsedArgs => {
   return args;
 };
 
-export const getDestination = async (args: ParsedArgs, templates: string[]) => {
-  if (templates.length === 0) {
+export const getDestination = async (args: ParsedArgs, template: string) => {
+  if (!template) {
     throw new Error('Unable to get destinations, provided templates are empty');
   }
   // validate/gather destinations
   const defaultBaseDestination = `${process.cwd()}${
-    args.appName ? sep + args.appName : `${sep}${templates[0]}`
+    args.appName ? sep + args.appName : `${sep}${template}`
   }`;
+
   let destination = args.destination;
   if (!destination) {
     destination = args.yes
@@ -43,6 +44,7 @@ export const getDestination = async (args: ParsedArgs, templates: string[]) => {
           defaultBaseDestination
         );
   }
+
   return destination;
 };
 
@@ -58,33 +60,23 @@ export const promptDestination = async (prompt: string, defaultDestination: stri
 };
 
 export const main = async (args: ParsedArgs) => {
-  let templates: string[] = [];
+  let template: string = '';
 
   // check if templates were provided
   if (args._.length > 0 && args._[0] !== undefined) {
     // use positional parameter
-    templates = (args._[0] && args._[0].split(/[\s,]+/)) || [];
+    template = args._[0];
   } else {
     // use --templates arg
-    templates = (args.templates && args.templates.split(/[\s,]+/)) || [];
+    template = args.template ? args.template : '';
   }
 
   // validate/gather templates
   const templatePath = path.resolve(__dirname, 'templates');
-  if (templates.length > 0) {
-    const allTemplates = getAllTemplates(templatePath);
-    const validTemplates: string[] = [];
-    templates.forEach((template) => {
-      if (allTemplates.includes(template)) {
-        validTemplates.push(template);
-      } else {
-        console.log(chalk.yellow(`Ignoring unknown template '${template}'...`));
-      }
-    });
-    templates = validTemplates;
-  }
-  if (!templates.length) {
-    const baseTemplates = await getBaseTemplates(templatePath);
+  const allTemplates = getAllTemplates(templatePath);
+
+  if (!template || !allTemplates.includes(template)) {
+    const baseTemplates = await getAllTemplates(templatePath);
     const answer = await inquirer.prompt({
       type: 'list',
       name: 'template',
@@ -92,10 +84,11 @@ export const main = async (args: ParsedArgs) => {
       choices: baseTemplates,
       default: 'nextjs',
     });
-    templates.push(answer.template);
+
+    template = answer.template;
   }
 
-  const destination = await getDestination(args, templates);
+  const destination = await getDestination(args, template);
 
   if (!args.force && fs.existsSync(destination) && fs.readdirSync(destination).length > 0) {
     const answer = await inquirer.prompt({
@@ -110,25 +103,8 @@ export const main = async (args: ParsedArgs) => {
     args.force = true;
   }
 
-  if (!args.yes) {
-    if (args.prePushHook === null) {
-      const answer = await inquirer.prompt({
-        type: 'confirm',
-        name: 'prePushHook',
-        message: 'Would you like to use the pre-push hook for linting check?',
-        default: false,
-      });
-
-      args.prePushHook = answer.prePushHook;
-    }
-  } else {
-    if (args.prePushHook === null) {
-      args.prePushHook = false;
-    }
-  }
-
   try {
-    await initRunner(templates.slice(), { ...args, destination, templates });
+    await initRunner(template, { ...args, destination, template });
   } catch (error) {
     console.log(chalk.red('An error occurred: ', error));
     process.exit(1);
