@@ -1,10 +1,10 @@
-import {
+﻿import {
   GraphQLClient,
   GraphQLRequestClientFactory,
   PageInfo,
-} from '@sitecore-jss/sitecore-jss/graphql';
-import { debug } from '@sitecore-jss/sitecore-jss';
-import { getPersonalizedRewrite } from '@sitecore-jss/sitecore-jss/personalize';
+} from '@xmcloud-jss/sitecore-jss/graphql';
+import { debug } from '@xmcloud-jss/sitecore-jss';
+import { getPersonalizedRewrite } from '@xmcloud-jss/sitecore-jss/personalize';
 
 /** @private */
 export const languageError = 'The list of languages cannot be empty';

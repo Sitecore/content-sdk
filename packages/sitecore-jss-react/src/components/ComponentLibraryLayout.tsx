@@ -1,15 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import { Placeholder } from './Placeholder';
 import {
   ComponentRendering,
   EDITING_COMPONENT_ID,
   EDITING_COMPONENT_PLACEHOLDER,
   LayoutServiceData,
-} from '@sitecore-jss/sitecore-jss/layout';
+} from '@xmcloud-jss/sitecore-jss/layout';
 import {
   addComponentUpdateHandler,
   COMPONENT_LIBRARY_READY_MESSAGE,
-} from '@sitecore-jss/sitecore-jss/editing';
+} from '@xmcloud-jss/sitecore-jss/editing';
 import { EditingScripts } from './EditingScripts';
 
 export const ComponentLibraryLayout = (layoutData: LayoutServiceData): JSX.Element => {

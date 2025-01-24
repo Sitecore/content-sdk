@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+﻿/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ReactNode } from 'react';
 import { use, expect } from 'chai';
-import { RichText as ReactRichText } from '@sitecore-jss/sitecore-jss-react';
+import { RichText as ReactRichText } from '@xmcloud-jss/sitecore-jss-react';
 import { NextRouter } from 'next/router';
 import { mount } from 'enzyme';
 import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';

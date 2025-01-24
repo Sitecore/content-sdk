@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import {
@@ -7,7 +7,7 @@ import {
   FEaaSComponentParams,
   FEaaSComponentProps,
 } from './FEaaSComponent';
-import { ComponentFields } from '@sitecore-jss/sitecore-jss/layout';
+import { ComponentFields } from '@xmcloud-jss/sitecore-jss/layout';
 
 describe('<FEaaSComponent />', () => {
   const requiredParams: FEaaSComponentParams = {

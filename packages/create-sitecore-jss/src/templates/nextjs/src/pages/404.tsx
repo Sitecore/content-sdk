@@ -1,9 +1,9 @@
-import config from 'temp/config';
+﻿import config from 'temp/config';
 import {
   GraphQLErrorPagesService,
   SitecoreContext,
   ErrorPages,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@xmcloud-jss/sitecore-jss-nextjs';
 import { SitecorePageProps } from 'lib/page-props';
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';

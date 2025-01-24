@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ComponentRendering, RouteData } from '@sitecore-jss/sitecore-jss/layout';
+import { ComponentRendering, RouteData } from '@xmcloud-jss/sitecore-jss/layout';
 import { expect } from 'chai';
 import { mount, shallow } from 'enzyme';
 import PropTypes from 'prop-types';

@@ -1,10 +1,10 @@
-import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
+﻿import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import chalk from 'chalk';
 import {
   LayoutServiceData,
   ComponentRendering,
   PlaceholdersData,
-} from '@sitecore-jss/sitecore-jss/layout';
+} from '@xmcloud-jss/sitecore-jss/layout';
 import {
   ComponentPropsCollection,
   ComponentPropsFetchFunction,

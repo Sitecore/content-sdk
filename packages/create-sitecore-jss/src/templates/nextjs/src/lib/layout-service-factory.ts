@@ -1,7 +1,7 @@
-import {
+﻿import {
   LayoutService,
   GraphQLLayoutService,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@xmcloud-jss/sitecore-jss-nextjs';
 import clientFactory from 'lib/graphql-client-factory';
 
 /**

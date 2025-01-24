@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+﻿import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {
   RichText as ReactRichText,
   RichTextPropTypes,
   RichTextProps as ReactRichTextProps,
-} from '@sitecore-jss/sitecore-jss-react';
+} from '@xmcloud-jss/sitecore-jss-react';
 
 export type RichTextProps = ReactRichTextProps & {
   /**

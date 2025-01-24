@@ -1,4 +1,4 @@
-import { normalizeSiteRewrite } from '@sitecore-jss/sitecore-jss-nextjs';
+﻿import { normalizeSiteRewrite } from '@xmcloud-jss/sitecore-jss-nextjs';
 import { Plugin } from '..';
 
 class MultisitePlugin implements Plugin {

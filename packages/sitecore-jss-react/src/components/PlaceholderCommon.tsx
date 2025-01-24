@@ -1,4 +1,4 @@
-import React, { ComponentType } from 'react';
+﻿import React, { ComponentType } from 'react';
 import PropTypes, { Requireable } from 'prop-types';
 import { MissingComponent } from './MissingComponent';
 import { ComponentFactory, JssComponentType } from './sharedTypes';
@@ -9,8 +9,8 @@ import {
   Item,
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
-} from '@sitecore-jss/sitecore-jss/layout';
-import { constants } from '@sitecore-jss/sitecore-jss';
+} from '@xmcloud-jss/sitecore-jss/layout';
+import { constants } from '@xmcloud-jss/sitecore-jss';
 import { HiddenRendering } from './HiddenRendering';
 import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from './FEaaSComponent';
 import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from './FEaaSWrapper';

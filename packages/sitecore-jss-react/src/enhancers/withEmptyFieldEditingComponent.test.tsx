@@ -1,10 +1,10 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 import React, { forwardRef } from 'react';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import { withEmptyFieldEditingComponent } from './withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from '../components/DefaultEmptyFieldEditingComponents';
-import { EMPTY_DATE_FIELD_VALUE } from '@sitecore-jss/sitecore-jss/layout';
+import { EMPTY_DATE_FIELD_VALUE } from '@xmcloud-jss/sitecore-jss/layout';
 
 describe('withEmptyFieldEditingComponent', () => {
   describe('Metadata', () => {

@@ -1,8 +1,8 @@
-import React from 'react';
+﻿import React from 'react';
 import { stub } from 'sinon';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import { ComponentFields } from '@sitecore-jss/sitecore-jss/layout';
+import { ComponentFields } from '@xmcloud-jss/sitecore-jss/layout';
 import { FEaaSWrapper } from './FEaaSWrapper';
 import * as FEaaSComponent from './FEaaSComponent';
 

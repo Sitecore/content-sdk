@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { DateField } from './Date';
-import { EMPTY_DATE_FIELD_VALUE } from '@sitecore-jss/sitecore-jss/layout';
+import { EMPTY_DATE_FIELD_VALUE } from '@xmcloud-jss/sitecore-jss/layout';
 
 describe('<DateField />', () => {
   it('should return null if no value', () => {

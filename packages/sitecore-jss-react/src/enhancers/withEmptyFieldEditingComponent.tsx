@@ -1,10 +1,10 @@
-import React, { ComponentType, forwardRef } from 'react';
+﻿import React, { ComponentType, forwardRef } from 'react';
 import {
   GenericFieldValue,
   Field,
   isFieldValueEmpty,
   FieldMetadata,
-} from '@sitecore-jss/sitecore-jss/layout';
+} from '@xmcloud-jss/sitecore-jss/layout';
 
 /**
  * The HOC options

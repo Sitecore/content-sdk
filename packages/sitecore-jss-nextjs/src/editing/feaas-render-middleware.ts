@@ -1,12 +1,12 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { debug } from '@sitecore-jss/sitecore-jss';
+﻿import { NextApiRequest, NextApiResponse } from 'next';
+import { debug } from '@xmcloud-jss/sitecore-jss';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
-} from '@sitecore-jss/sitecore-jss/editing';
+} from '@xmcloud-jss/sitecore-jss/editing';
 import { getJssEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
-import { enforceCors } from '@sitecore-jss/sitecore-jss/utils';
+import { enforceCors } from '@xmcloud-jss/sitecore-jss/utils';
 
 /**
  * Configuration for `FEAASRenderMiddleware`.

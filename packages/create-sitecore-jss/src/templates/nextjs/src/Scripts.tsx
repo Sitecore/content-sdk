@@ -1,4 +1,4 @@
-import { EditingScripts } from '@sitecore-jss/sitecore-jss-nextjs';
+﻿import { EditingScripts } from '@xmcloud-jss/sitecore-jss-nextjs';
 import CdpPageView from 'components/CdpPageView';
 
 const Scripts = (): JSX.Element => {

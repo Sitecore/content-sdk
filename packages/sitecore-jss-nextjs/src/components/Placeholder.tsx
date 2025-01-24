@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+﻿import React, { useContext } from 'react';
 import {
   Placeholder as ReactPlaceholder,
   PlaceholderComponentProps,
   WithSitecoreContextProps,
   EnhancedOmit,
-} from '@sitecore-jss/sitecore-jss-react';
+} from '@xmcloud-jss/sitecore-jss-react';
 import { ComponentPropsReactContext } from './ComponentPropsContext';
 
 /**

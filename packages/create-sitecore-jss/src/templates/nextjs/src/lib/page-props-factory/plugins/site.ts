@@ -1,6 +1,6 @@
-import { SitecorePageProps } from 'lib/page-props';
+﻿import { SitecorePageProps } from 'lib/page-props';
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
-import { getSiteRewriteData } from '@sitecore-jss/sitecore-jss-nextjs';
+import { getSiteRewriteData } from '@xmcloud-jss/sitecore-jss-nextjs';
 import { Plugin } from '..';
 import { siteResolver } from 'lib/site-resolver';
 import config from 'temp/config';

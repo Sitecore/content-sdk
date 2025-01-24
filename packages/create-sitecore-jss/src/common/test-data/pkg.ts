@@ -1,4 +1,4 @@
-export const currentPkg = {
+﻿export const currentPkg = {
   name: 'test',
   version: '1.0.0',
   description: 'Test package.json',
@@ -37,7 +37,7 @@ export const partialPkg = {
     nprogress: '~0.2.0',
   },
   devDependencies: {
-    '@sitecore-jss/sitecore-jss-dev-tools': '^20.0.0-canary',
+    '@xmcloud-jss/sitecore-jss-dev-tools': '^20.0.0-canary',
   },
   scripts: {
     start:

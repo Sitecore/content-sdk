@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+﻿import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import NextLink from 'next/link';
 import {
@@ -7,7 +7,7 @@ import {
   LinkField,
   LinkProps as ReactLinkProps,
   LinkPropTypes,
-} from '@sitecore-jss/sitecore-jss-react';
+} from '@xmcloud-jss/sitecore-jss-react';
 
 export type LinkProps = ReactLinkProps & {
   /**

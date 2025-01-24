@@ -1,6 +1,6 @@
-[
+﻿[
   {
-    "name": "@sitecore-jss/sitecore-jss",
+    "name": "@xmcloud-jss/sitecore-jss",
     "version": "22.2.0-canary.69",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
@@ -67,9 +67,14 @@
     "description": "",
     "types": "types/index.d.ts",
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "files": ["dist", "types", "/*.js", "/*.d.ts"],
-    "_id": "@sitecore-jss/sitecore-jss@22.2.0-canary.69",
-    "pkgid": "sitecore-jss@npm:@sitecore-jss/sitecore-jss@22.2.0-canary.69",
+    "files": [
+      "dist",
+      "types",
+      "/*.js",
+      "/*.d.ts"
+    ],
+    "_id": "@xmcloud-jss/sitecore-jss@22.2.0-canary.69",
+    "pkgid": "sitecore-jss@npm:@xmcloud-jss/sitecore-jss@22.2.0-canary.69",
     "location": "../../packages/sitecore-jss",
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss",
@@ -114,7 +119,7 @@
     "queryContext": {}
   },
   {
-    "name": "@sitecore-jss/sitecore-jss-cli",
+    "name": "@xmcloud-jss/sitecore-jss-cli",
     "version": "22.2.0-canary.69",
     "description": "Sitecore JSS command-line",
     "main": "dist/cjs/cli.js",
@@ -147,7 +152,7 @@
       "url": "https://github.com/sitecore/jss/issues"
     },
     "dependencies": {
-      "@sitecore-jss/sitecore-jss-dev-tools": "22.2.0-canary.69",
+      "@xmcloud-jss/sitecore-jss-dev-tools": "22.2.0-canary.69",
       "chalk": "^4.1.2",
       "cross-spawn": "^7.0.3",
       "dotenv": "^16.0.3",
@@ -178,16 +183,19 @@
       "typescript": "~4.9.4"
     },
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "files": ["dist", "types"],
-    "_id": "@sitecore-jss/sitecore-jss-cli@22.2.0-canary.69",
-    "pkgid": "sitecore-jss-cli@npm:@sitecore-jss/sitecore-jss-cli@22.2.0-canary.69",
+    "files": [
+      "dist",
+      "types"
+    ],
+    "_id": "@xmcloud-jss/sitecore-jss-cli@22.2.0-canary.69",
+    "pkgid": "sitecore-jss-cli@npm:@xmcloud-jss/sitecore-jss-cli@22.2.0-canary.69",
     "location": "../../packages/sitecore-jss-cli",
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-cli",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-cli",
     "resolved": null,
     "from": [],
     "to": [
-      "../../packages/sitecore-jss-cli/node_modules/@sitecore-jss/sitecore-jss-dev-tools",
+      "../../packages/sitecore-jss-cli/node_modules/@xmcloud-jss/sitecore-jss-dev-tools",
       "../../packages/sitecore-jss-cli/node_modules/chalk",
       "../../packages/sitecore-jss-cli/node_modules/cross-spawn",
       "../../packages/sitecore-jss-cli/node_modules/dotenv",
@@ -222,7 +230,7 @@
     "queryContext": {}
   },
   {
-    "name": "@sitecore-jss/sitecore-jss-dev-tools",
+    "name": "@xmcloud-jss/sitecore-jss-dev-tools",
     "version": "22.2.0-canary.69",
     "description": "Utilities to assist in the development and deployment of Sitecore JSS apps.",
     "main": "dist/cjs/index.js",
@@ -256,7 +264,7 @@
     },
     "dependencies": {
       "@babel/parser": "^7.24.0",
-      "@sitecore-jss/sitecore-jss": "22.2.0-canary.69",
+      "@xmcloud-jss/sitecore-jss": "22.2.0-canary.69",
       "axios": "^1.3.2",
       "chalk": "^4.1.2",
       "chokidar": "^3.6.0",
@@ -310,9 +318,14 @@
     },
     "types": "types/index.d.ts",
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "files": ["dist", "types", "/*.js", "/*.d.ts"],
-    "_id": "@sitecore-jss/sitecore-jss-dev-tools@22.2.0-canary.69",
-    "pkgid": "sitecore-jss-dev-tools@npm:@sitecore-jss/sitecore-jss-dev-tools@22.2.0-canary.69",
+    "files": [
+      "dist",
+      "types",
+      "/*.js",
+      "/*.d.ts"
+    ],
+    "_id": "@xmcloud-jss/sitecore-jss-dev-tools@22.2.0-canary.69",
+    "pkgid": "sitecore-jss-dev-tools@npm:@xmcloud-jss/sitecore-jss-dev-tools@22.2.0-canary.69",
     "location": "../../packages/sitecore-jss-dev-tools",
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-dev-tools",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-dev-tools",
@@ -320,7 +333,7 @@
     "from": [],
     "to": [
       "../../packages/sitecore-jss-dev-tools/node_modules/@babel/parser",
-      "../../packages/sitecore-jss-dev-tools/node_modules/@sitecore-jss/sitecore-jss",
+      "../../packages/sitecore-jss-dev-tools/node_modules/@xmcloud-jss/sitecore-jss",
       "../../packages/sitecore-jss-dev-tools/node_modules/axios",
       "../../packages/sitecore-jss-dev-tools/node_modules/chalk",
       "../../packages/sitecore-jss-dev-tools/node_modules/chokidar",
@@ -376,7 +389,7 @@
     "queryContext": {}
   },
   {
-    "name": "@sitecore-jss/sitecore-jss-nextjs",
+    "name": "@xmcloud-jss/sitecore-jss-nextjs",
     "version": "22.2.0-canary.69",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
@@ -449,9 +462,9 @@
       "react-dom": "^18.2.0"
     },
     "dependencies": {
-      "@sitecore-jss/sitecore-jss": "22.2.0-canary.69",
-      "@sitecore-jss/sitecore-jss-dev-tools": "22.2.0-canary.69",
-      "@sitecore-jss/sitecore-jss-react": "22.2.0-canary.69",
+      "@xmcloud-jss/sitecore-jss": "22.2.0-canary.69",
+      "@xmcloud-jss/sitecore-jss-dev-tools": "22.2.0-canary.69",
+      "@xmcloud-jss/sitecore-jss-react": "22.2.0-canary.69",
       "@vercel/kv": "^0.2.1",
       "prop-types": "^15.8.1",
       "regex-parser": "^2.2.11",
@@ -460,18 +473,23 @@
     "description": "",
     "types": "types/index.d.ts",
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "files": ["dist", "types", "/*.js", "/*.d.ts"],
-    "_id": "@sitecore-jss/sitecore-jss-nextjs@22.2.0-canary.69",
-    "pkgid": "sitecore-jss-nextjs@npm:@sitecore-jss/sitecore-jss-nextjs@22.2.0-canary.69",
+    "files": [
+      "dist",
+      "types",
+      "/*.js",
+      "/*.d.ts"
+    ],
+    "_id": "@xmcloud-jss/sitecore-jss-nextjs@22.2.0-canary.69",
+    "pkgid": "sitecore-jss-nextjs@npm:@xmcloud-jss/sitecore-jss-nextjs@22.2.0-canary.69",
     "location": "../../packages/sitecore-jss-nextjs",
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-nextjs",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-nextjs",
     "resolved": null,
     "from": [],
     "to": [
-      "../../packages/sitecore-jss-nextjs/node_modules/@sitecore-jss/sitecore-jss",
-      "../../packages/sitecore-jss-nextjs/node_modules/@sitecore-jss/sitecore-jss-dev-tools",
-      "../../packages/sitecore-jss-nextjs/node_modules/@sitecore-jss/sitecore-jss-react",
+      "../../packages/sitecore-jss-nextjs/node_modules/@xmcloud-jss/sitecore-jss",
+      "../../packages/sitecore-jss-nextjs/node_modules/@xmcloud-jss/sitecore-jss-dev-tools",
+      "../../packages/sitecore-jss-nextjs/node_modules/@xmcloud-jss/sitecore-jss-react",
       "../../packages/sitecore-jss-nextjs/node_modules/@vercel/kv",
       "../../packages/sitecore-jss-nextjs/node_modules/prop-types",
       "../../packages/sitecore-jss-nextjs/node_modules/regex-parser",
@@ -543,7 +561,10 @@
       "build:cjs": "tsc -b tsconfig.cjs.json",
       "build:es": "tsc -b ."
     },
-    "files": ["dist", "README.md"],
+    "files": [
+      "dist",
+      "README.md"
+    ],
     "engines": {
       "node": ">=18"
     },
@@ -556,7 +577,9 @@
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-nextjs\\node_modules\\@sitecore-cloudsdk\\core",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-nextjs\\node_modules\\@sitecore-cloudsdk\\core",
     "resolved": null,
-    "from": ["../../packages/sitecore-jss-nextjs/node_modules/@sitecore-cloudsdk/personalize"],
+    "from": [
+      "../../packages/sitecore-jss-nextjs/node_modules/@sitecore-cloudsdk/personalize"
+    ],
     "to": [
       "../../packages/sitecore-jss-nextjs/node_modules/@sitecore-cloudsdk/utils",
       "../../packages/sitecore-jss-nextjs/node_modules/debug"
@@ -612,7 +635,9 @@
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-nextjs\\node_modules\\@sitecore-cloudsdk\\personalize",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-nextjs\\node_modules\\@sitecore-cloudsdk\\personalize",
     "resolved": null,
-    "from": ["../../packages/sitecore-jss-nextjs"],
+    "from": [
+      "../../packages/sitecore-jss-nextjs"
+    ],
     "to": [
       "../../packages/sitecore-jss-nextjs/node_modules/@sitecore-cloudsdk/core",
       "../../packages/sitecore-jss-nextjs/node_modules/@sitecore-cloudsdk/utils"
@@ -645,7 +670,10 @@
       "build:cjs": "tsc -b tsconfig.cjs.json",
       "build:es": "tsc -b ."
     },
-    "files": ["dist", "README.md"],
+    "files": [
+      "dist",
+      "README.md"
+    ],
     "engines": {
       "node": ">=18"
     },
@@ -667,7 +695,7 @@
     "queryContext": {}
   },
   {
-    "name": "@sitecore-jss/sitecore-jss-react",
+    "name": "@xmcloud-jss/sitecore-jss-react",
     "version": "22.2.0-canary.69",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
@@ -729,7 +757,7 @@
       "react-dom": "^18.2.0"
     },
     "dependencies": {
-      "@sitecore-jss/sitecore-jss": "22.2.0-canary.69",
+      "@xmcloud-jss/sitecore-jss": "22.2.0-canary.69",
       "fast-deep-equal": "^3.1.3",
       "prop-types": "^15.8.1",
       "style-attr": "^1.3.0"
@@ -737,16 +765,19 @@
     "description": "",
     "types": "types/index.d.ts",
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "files": ["dist", "types"],
-    "_id": "@sitecore-jss/sitecore-jss-react@22.2.0-canary.69",
-    "pkgid": "sitecore-jss-react@npm:@sitecore-jss/sitecore-jss-react@22.2.0-canary.69",
+    "files": [
+      "dist",
+      "types"
+    ],
+    "_id": "@xmcloud-jss/sitecore-jss-react@22.2.0-canary.69",
+    "pkgid": "sitecore-jss-react@npm:@xmcloud-jss/sitecore-jss-react@22.2.0-canary.69",
     "location": "../../packages/sitecore-jss-react",
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-react",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-react",
     "resolved": null,
     "from": [],
     "to": [
-      "../../packages/sitecore-jss-react/node_modules/@sitecore-jss/sitecore-jss",
+      "../../packages/sitecore-jss-react/node_modules/@xmcloud-jss/sitecore-jss",
       "../../packages/sitecore-jss-react/node_modules/fast-deep-equal",
       "../../packages/sitecore-jss-react/node_modules/prop-types",
       "../../packages/sitecore-jss-react/node_modules/style-attr",
@@ -881,7 +912,9 @@
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-react\\node_modules\\@sitecore-feaas\\clientside",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-react\\node_modules\\@sitecore-feaas\\clientside",
     "resolved": null,
-    "from": ["../../packages/sitecore-jss-react"],
+    "from": [
+      "../../packages/sitecore-jss-react"
+    ],
     "to": [
       "../../packages/sitecore-jss-react/node_modules/react-dom",
       "../../packages/sitecore-jss-react/node_modules/@sitecore/byoc"
@@ -952,7 +985,9 @@
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-react\\node_modules\\@sitecore\\byoc",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-react\\node_modules\\@sitecore\\byoc",
     "resolved": null,
-    "from": ["../../packages/sitecore-jss-react/node_modules/@sitecore-feaas/clientside"],
+    "from": [
+      "../../packages/sitecore-jss-react/node_modules/@sitecore-feaas/clientside"
+    ],
     "to": [
       "../../packages/sitecore-jss-react/node_modules/@rjsf/utils",
       "../../packages/sitecore-jss-react/node_modules/json-schema"
@@ -989,7 +1024,10 @@
       "build:cjs": "tsc -b tsconfig.cjs.json",
       "build:es": "tsc -b ."
     },
-    "files": ["dist", "README.md"],
+    "files": [
+      "dist",
+      "README.md"
+    ],
     "engines": {
       "node": ">=18"
     },
@@ -1002,8 +1040,13 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\core",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\core",
     "resolved": null,
-    "from": ["node_modules/@sitecore-cloudsdk/events"],
-    "to": ["node_modules/@sitecore-cloudsdk/utils", "node_modules/debug"],
+    "from": [
+      "node_modules/@sitecore-cloudsdk/events"
+    ],
+    "to": [
+      "node_modules/@sitecore-cloudsdk/utils",
+      "node_modules/debug"
+    ],
     "dev": false,
     "inBundle": false,
     "deduped": false,
@@ -1055,8 +1098,13 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\events",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\events",
     "resolved": null,
-    "from": [""],
-    "to": ["node_modules/@sitecore-cloudsdk/core", "node_modules/@sitecore-cloudsdk/utils"],
+    "from": [
+      ""
+    ],
+    "to": [
+      "node_modules/@sitecore-cloudsdk/core",
+      "node_modules/@sitecore-cloudsdk/utils"
+    ],
     "dev": false,
     "inBundle": false,
     "deduped": false,
@@ -1085,7 +1133,10 @@
       "build:cjs": "tsc -b tsconfig.cjs.json",
       "build:es": "tsc -b ."
     },
-    "files": ["dist", "README.md"],
+    "files": [
+      "dist",
+      "README.md"
+    ],
     "engines": {
       "node": ">=18"
     },
@@ -1095,7 +1146,10 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\utils",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\utils",
     "resolved": null,
-    "from": ["node_modules/@sitecore-cloudsdk/events", "node_modules/@sitecore-cloudsdk/core"],
+    "from": [
+      "node_modules/@sitecore-cloudsdk/events",
+      "node_modules/@sitecore-cloudsdk/core"
+    ],
     "to": [],
     "dev": false,
     "inBundle": false,
@@ -1199,8 +1253,13 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-feaas\\clientside",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-feaas\\clientside",
     "resolved": null,
-    "from": [""],
-    "to": ["node_modules/react-dom", "node_modules/@sitecore/byoc"],
+    "from": [
+      ""
+    ],
+    "to": [
+      "node_modules/react-dom",
+      "node_modules/@sitecore/byoc"
+    ],
     "dev": false,
     "inBundle": false,
     "deduped": false,
@@ -1274,8 +1333,14 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore\\byoc",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore\\byoc",
     "resolved": null,
-    "from": ["node_modules/@sitecore/components", "node_modules/@sitecore-feaas/clientside"],
-    "to": ["node_modules/@rjsf/utils", "node_modules/json-schema"],
+    "from": [
+      "node_modules/@sitecore/components",
+      "node_modules/@sitecore-feaas/clientside"
+    ],
+    "to": [
+      "node_modules/@rjsf/utils",
+      "node_modules/json-schema"
+    ],
     "dev": false,
     "inBundle": false,
     "deduped": false,
@@ -1348,8 +1413,12 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore\\components",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore\\components",
     "resolved": null,
-    "from": [""],
-    "to": ["node_modules/@sitecore/byoc"],
+    "from": [
+      ""
+    ],
+    "to": [
+      "node_modules/@sitecore/byoc"
+    ],
     "dev": false,
     "inBundle": false,
     "deduped": false,

@@ -1,4 +1,4 @@
-/* eslint-disable quotes */
+﻿/* eslint-disable quotes */
 import { ComponentFile, PackageDefinition } from '../../components';
 
 const isLazyLoadingModule = (componentPath: string) => componentPath.includes('.dynamic');
@@ -26,7 +26,7 @@ export const getComponentBuilderTemplate = (components: (PackageDefinition | Com
 // See scripts/generate-component-builder/index.ts to modify the generation of this file.
 
 ${hasLazyModules ? "import dynamic from 'next/dynamic';" : ''}
-import { ComponentBuilder } from '@sitecore-jss/sitecore-jss-nextjs';
+import { ComponentBuilder } from '@xmcloud-jss/sitecore-jss-nextjs';
 
 ${packages
   .map((pkg) => {

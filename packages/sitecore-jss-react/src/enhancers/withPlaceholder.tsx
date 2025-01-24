@@ -1,5 +1,5 @@
-import React from 'react';
-import { ComponentRendering, RouteData } from '@sitecore-jss/sitecore-jss/layout';
+﻿import React from 'react';
+import { ComponentRendering, RouteData } from '@xmcloud-jss/sitecore-jss/layout';
 import { PlaceholderProps, PlaceholderCommon } from '../components/PlaceholderCommon';
 import { withComponentFactory } from './withComponentFactory';
 import { withSitecoreContext } from './withSitecoreContext';

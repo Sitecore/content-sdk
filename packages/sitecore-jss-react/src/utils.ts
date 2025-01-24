@@ -1,4 +1,4 @@
-import { ComponentFields, getFieldValue } from '@sitecore-jss/sitecore-jss/layout';
+﻿import { ComponentFields, getFieldValue } from '@xmcloud-jss/sitecore-jss/layout';
 
 /**
  * "class" property will be transformed into or appended to "className" instead.

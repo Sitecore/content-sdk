@@ -1,13 +1,13 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */
 import chai, { use } from 'chai';
 import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
-import { GraphQLRequestClient, debug } from '@sitecore-jss/sitecore-jss';
-import { SiteResolver } from '@sitecore-jss/sitecore-jss/site';
-import { CdpHelper } from '@sitecore-jss/sitecore-jss/personalize';
+import { GraphQLRequestClient, debug } from '@xmcloud-jss/sitecore-jss';
+import { SiteResolver } from '@xmcloud-jss/sitecore-jss/site';
+import { CdpHelper } from '@xmcloud-jss/sitecore-jss/personalize';
 import { PersonalizeMiddleware } from './personalize-middleware';
 
 use(sinonChai);

@@ -1,11 +1,11 @@
-/* eslint-disable dot-notation */
+﻿/* eslint-disable dot-notation */
 import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
 import { MiddlewareBase } from './middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { SiteResolver } from '@sitecore-jss/sitecore-jss/site';
+import { SiteResolver } from '@xmcloud-jss/sitecore-jss/site';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;

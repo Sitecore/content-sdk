@@ -1,10 +1,10 @@
-import { GetServerSideProps } from 'next';
+﻿import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import {
   ComponentLibraryLayout,
   ComponentPropsContext,
   SitecoreContext,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@xmcloud-jss/sitecore-jss-nextjs';
 import { SitecorePageProps } from 'lib/page-props';
 import { sitecorePagePropsFactory } from 'lib/page-props-factory';
 import NotFound from 'src/NotFound';

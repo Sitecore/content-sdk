@@ -1,14 +1,14 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */
 import chai, { use } from 'chai';
 import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
-import { debug } from '@sitecore-jss/sitecore-jss';
+import { debug } from '@xmcloud-jss/sitecore-jss';
 
 import { MultisiteMiddleware } from './multisite-middleware';
-import { SiteResolver } from '@sitecore-jss/sitecore-jss/site';
+import { SiteResolver } from '@xmcloud-jss/sitecore-jss/site';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;

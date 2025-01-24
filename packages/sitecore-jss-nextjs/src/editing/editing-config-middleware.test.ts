@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 import { NextApiRequest, NextApiResponse } from 'next';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { EditingConfigMiddleware } from './editing-config-middleware';
-import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-jss/sitecore-jss/editing';
+import { QUERY_PARAM_EDITING_SECRET } from '@xmcloud-jss/sitecore-jss/editing';
 
 type Query = {
   [key: string]: string;

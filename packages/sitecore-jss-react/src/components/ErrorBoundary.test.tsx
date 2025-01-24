@@ -1,10 +1,10 @@
-import React, { Suspense } from 'react';
+﻿import React, { Suspense } from 'react';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import { spy } from 'sinon';
 import ErrorBoundary from './ErrorBoundary';
 import { SitecoreContextReactContext } from '../components/SitecoreContext';
-import { ComponentRendering, LayoutServicePageState } from '@sitecore-jss/sitecore-jss/layout';
+import { ComponentRendering, LayoutServicePageState } from '@xmcloud-jss/sitecore-jss/layout';
 
 describe('ErrorBoundary', () => {
   describe('when in page editing or preview mode', () => {

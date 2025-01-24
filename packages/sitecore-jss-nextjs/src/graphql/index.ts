@@ -1,4 +1,4 @@
-export {
+﻿export {
   GraphQLClientError,
   RetryStrategy,
   DefaultRetryStrategy,
@@ -6,4 +6,4 @@ export {
   GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
   getEdgeProxyContentUrl,
-} from '@sitecore-jss/sitecore-jss/graphql';
+} from '@xmcloud-jss/sitecore-jss/graphql';

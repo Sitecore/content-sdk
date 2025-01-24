@@ -1,6 +1,6 @@
-import { expect } from 'chai';
+﻿import { expect } from 'chai';
 import { addClassName, getDataFromFields } from './utils';
-import { ComponentFields } from '@sitecore-jss/sitecore-jss/layout';
+import { ComponentFields } from '@xmcloud-jss/sitecore-jss/layout';
 
 describe('jss-react utils', () => {
   describe('addClassName', () => {

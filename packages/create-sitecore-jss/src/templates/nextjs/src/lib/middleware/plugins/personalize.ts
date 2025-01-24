@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PersonalizeMiddleware } from '@sitecore-jss/sitecore-jss-nextjs/middleware';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import { PersonalizeMiddleware } from '@xmcloud-jss/sitecore-jss-nextjs/middleware';
 import { MiddlewarePlugin } from '..';
 import clientFactory from 'lib/graphql-client-factory';
 import config from 'temp/config';

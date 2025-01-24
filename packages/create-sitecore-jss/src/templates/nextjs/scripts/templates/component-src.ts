@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Generates React boilerplate for a component under `src/components`
  * @param componentName - the component name
  * @returns component src boilerplate as a string
  */
 function generateComponentSrc(componentName: string): string {
   return `import React from 'react';
-import { ComponentParams, ComponentRendering } from '@sitecore-jss/sitecore-jss-nextjs';
+import { ComponentParams, ComponentRendering } from '@xmcloud-jss/sitecore-jss-nextjs';
 
 interface ${componentName}Props {
   rendering: ComponentRendering & { params: ComponentParams };

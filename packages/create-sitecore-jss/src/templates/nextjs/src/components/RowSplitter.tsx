@@ -1,9 +1,9 @@
-import React from 'react';
+﻿import React from 'react';
 import {
   ComponentParams,
   ComponentRendering,
   Placeholder,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@xmcloud-jss/sitecore-jss-nextjs';
 
 interface ComponentProps {
   rendering: ComponentRendering & { params: ComponentParams };

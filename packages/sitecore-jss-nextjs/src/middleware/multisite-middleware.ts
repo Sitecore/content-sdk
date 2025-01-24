@@ -1,6 +1,6 @@
-import { NextResponse, NextRequest } from 'next/server';
-import { getSiteRewrite } from '@sitecore-jss/sitecore-jss/site';
-import { debug } from '@sitecore-jss/sitecore-jss';
+﻿import { NextResponse, NextRequest } from 'next/server';
+import { getSiteRewrite } from '@xmcloud-jss/sitecore-jss/site';
+import { debug } from '@xmcloud-jss/sitecore-jss';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
 
 export type CookieAttributes = {

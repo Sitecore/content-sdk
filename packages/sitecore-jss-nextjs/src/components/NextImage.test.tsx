@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 import chai, { use } from 'chai';
 import chaiString from 'chai-string';
 import { mount } from 'enzyme';
@@ -9,7 +9,7 @@ import {
   DefaultEmptyFieldEditingComponentImage,
   LayoutServicePageState,
   SitecoreContextReactContext,
-} from '@sitecore-jss/sitecore-jss-react';
+} from '@xmcloud-jss/sitecore-jss-react';
 import Image, { ImageLoader } from 'next/image';
 import { spy, match } from 'sinon';
 import sinonChai from 'sinon-chai';

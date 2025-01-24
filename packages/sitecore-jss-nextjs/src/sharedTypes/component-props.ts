@@ -1,5 +1,5 @@
-import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
-import { ComponentRendering, LayoutServiceData } from '@sitecore-jss/sitecore-jss/layout';
+﻿import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
+import { ComponentRendering, LayoutServiceData } from '@xmcloud-jss/sitecore-jss/layout';
 
 export type ComponentPropsError = { error: string; componentName: string };
 

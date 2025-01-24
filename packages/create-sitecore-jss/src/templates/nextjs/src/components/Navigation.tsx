@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Link,
   LinkField,
   Text,
   TextField,
   useSitecoreContext,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@xmcloud-jss/sitecore-jss-nextjs';
 
 interface Fields {
   Id: string;

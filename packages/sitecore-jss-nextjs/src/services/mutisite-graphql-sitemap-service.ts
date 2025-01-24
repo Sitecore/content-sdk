@@ -1,4 +1,4 @@
-import { getSiteRewrite } from '@sitecore-jss/sitecore-jss/site';
+﻿import { getSiteRewrite } from '@xmcloud-jss/sitecore-jss/site';
 import {
   BaseGraphQLSitemapService,
   BaseGraphQLSitemapServiceConfig,

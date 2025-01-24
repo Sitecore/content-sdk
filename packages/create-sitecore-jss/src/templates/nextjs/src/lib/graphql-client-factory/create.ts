@@ -1,8 +1,8 @@
-import {
+﻿import {
   GraphQLRequestClientFactoryConfig,
   GraphQLRequestClient,
   getEdgeProxyContentUrl
-} from '@sitecore-jss/sitecore-jss-nextjs/graphql';
+} from '@xmcloud-jss/sitecore-jss-nextjs/graphql';
 import { JssConfig } from 'lib/config';
 
 /**

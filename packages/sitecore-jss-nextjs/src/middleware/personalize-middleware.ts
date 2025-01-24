@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from 'next/server';
+﻿import { NextResponse, NextRequest } from 'next/server';
 import {
   GraphQLPersonalizeService,
   GraphQLPersonalizeServiceConfig,
@@ -6,8 +6,8 @@ import {
   PersonalizeInfo,
   CdpHelper,
   DEFAULT_VARIANT,
-} from '@sitecore-jss/sitecore-jss/personalize';
-import { debug } from '@sitecore-jss/sitecore-jss';
+} from '@xmcloud-jss/sitecore-jss/personalize';
+import { debug } from '@xmcloud-jss/sitecore-jss';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';

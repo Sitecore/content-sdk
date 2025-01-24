@@ -1,5 +1,5 @@
-import React from 'react';
-import { EnhancedOmit } from '@sitecore-jss/sitecore-jss/utils';
+﻿import React from 'react';
+import { EnhancedOmit } from '@xmcloud-jss/sitecore-jss/utils';
 import { SitecoreContextReactContext, SitecoreContextValue } from '../components/SitecoreContext';
 
 export interface WithSitecoreContextOptions {

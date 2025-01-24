@@ -1,4 +1,4 @@
-import { GraphQLRequestClient } from '@sitecore-jss/sitecore-jss-nextjs/graphql';
+﻿import { GraphQLRequestClient } from '@xmcloud-jss/sitecore-jss-nextjs/graphql';
 import fs from 'fs';
 import { getIntrospectionQuery } from 'graphql';
 

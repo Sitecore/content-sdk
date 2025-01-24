@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link as JssLink, Text, LinkField, TextField } from '@sitecore-jss/sitecore-jss-nextjs';
+﻿import React from 'react';
+import { Link as JssLink, Text, LinkField, TextField } from '@xmcloud-jss/sitecore-jss-nextjs';
 
 type ResultsFieldLink = {
   field: {

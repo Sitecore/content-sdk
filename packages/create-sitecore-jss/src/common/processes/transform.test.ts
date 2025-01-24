@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 import fs from 'fs-extra';
 import path, { sep } from 'path';
 import chalk from 'chalk';
@@ -62,7 +62,7 @@ describe('transform', () => {
           nprogress: '~0.2.0',
         },
         devDependencies: {
-          '@sitecore-jss/sitecore-jss-dev-tools': '^20.0.0-canary',
+          '@xmcloud-jss/sitecore-jss-dev-tools': '^20.0.0-canary',
           '@types/node': '^20.14.2',
           typescript: '~4.3.5',
         },

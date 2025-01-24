@@ -1,4 +1,4 @@
-import { isEditorActive, resetEditorChromes } from '@sitecore-jss/sitecore-jss/editing';
+﻿import { isEditorActive, resetEditorChromes } from '@xmcloud-jss/sitecore-jss/editing';
 
 /**
  * Since Sitecore editors do not support Fast Refresh:

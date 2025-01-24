@@ -1,8 +1,8 @@
-import {
+﻿import {
   ComponentParams,
   ComponentRendering,
   SitecoreContextValue,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@xmcloud-jss/sitecore-jss-nextjs';
 
 /**
  * Shared component props

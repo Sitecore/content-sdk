@@ -1,4 +1,4 @@
-import { SiteInfo, SiteResolver } from '@sitecore-jss/sitecore-jss/site';
+﻿import { SiteInfo, SiteResolver } from '@xmcloud-jss/sitecore-jss/site';
 import { NextRequest, NextResponse } from 'next/server';
 
 export type MiddlewareBaseConfig = {

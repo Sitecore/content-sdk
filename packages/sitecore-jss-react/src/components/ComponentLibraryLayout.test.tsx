@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import sinon from 'sinon';
@@ -14,7 +14,7 @@ import { Placeholder } from '..';
 import {
   COMPONENT_LIBRARY_READY_MESSAGE,
   ComponentUpdateEventArgs,
-} from '@sitecore-jss/sitecore-jss/editing';
+} from '@xmcloud-jss/sitecore-jss/editing';
 
 describe('<ComponentLibraryLayout />', () => {
   const postMessageSpy = sinon.spy(global.window, 'postMessage');

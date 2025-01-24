@@ -1,7 +1,7 @@
-import React, { createRef, ReactNode } from 'react';
+﻿import React, { createRef, ReactNode } from 'react';
 import { NextRouter } from 'next/router';
 import NextLink from 'next/link';
-import { Link as ReactLink, LinkField } from '@sitecore-jss/sitecore-jss-react';
+import { Link as ReactLink, LinkField } from '@xmcloud-jss/sitecore-jss-react';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';

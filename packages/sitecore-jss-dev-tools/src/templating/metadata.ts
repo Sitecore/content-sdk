@@ -1,4 +1,4 @@
-import { Metadata } from '@sitecore-jss/sitecore-jss/editing';
+﻿import { Metadata } from '@xmcloud-jss/sitecore-jss/editing';
 import { execSync } from 'child_process';
 
 type Package = {

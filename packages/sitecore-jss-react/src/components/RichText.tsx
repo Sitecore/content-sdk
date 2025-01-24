@@ -1,10 +1,10 @@
-import React, { ForwardedRef, forwardRef } from 'react';
+﻿import React, { ForwardedRef, forwardRef } from 'react';
 import PropTypes, { Requireable } from 'prop-types';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata, isFieldValueEmpty } from '@sitecore-jss/sitecore-jss/layout';
+import { FieldMetadata, isFieldValueEmpty } from '@xmcloud-jss/sitecore-jss/layout';
 
 export interface RichTextField extends FieldMetadata {
   value?: string;

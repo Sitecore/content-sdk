@@ -1,10 +1,10 @@
-import {
+﻿import {
   DictionaryPhrases,
   ComponentPropsCollection,
   LayoutServiceData,
   SiteInfo,
   HTMLLink,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@xmcloud-jss/sitecore-jss-nextjs';
 
 /**
  * Sitecore page props

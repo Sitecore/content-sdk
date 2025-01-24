@@ -1,8 +1,8 @@
-import {
+﻿import {
   FEaaSWrapper,
   FEaaSComponentParams,
   fetchFEaaSComponentServerProps,
-} from '@sitecore-jss/sitecore-jss-react';
+} from '@xmcloud-jss/sitecore-jss-react';
 import {
   GetStaticComponentProps,
   GetServerSideComponentProps,

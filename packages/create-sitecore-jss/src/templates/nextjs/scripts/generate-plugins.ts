@@ -1,8 +1,8 @@
-import {
+﻿import {
   generatePlugins,
   ModuleType,
   PluginDefinition,
-} from '@sitecore-jss/sitecore-jss-dev-tools';
+} from '@xmcloud-jss/sitecore-jss-dev-tools';
 
 /*
   PLUGINS GENERATION

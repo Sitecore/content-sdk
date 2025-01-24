@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 import React from 'react';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import { spy } from 'sinon';
-import { PagesEditor } from '@sitecore-jss/sitecore-jss/editing';
+import { PagesEditor } from '@xmcloud-jss/sitecore-jss/editing';
 
 import { withEditorChromes } from '../enhancers/withEditorChromes';
 

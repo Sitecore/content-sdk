@@ -1,6 +1,6 @@
 {
-  "name": "@sitecore-jss/sitecore-jss-dev-tools",
-  "version": "22.4.0-canary.7",
+  "name": "@xmcloud-jss/sitecore-jss-dev-tools",
+  "version": "0.1.0-beta.0",
   "description": "Utilities to assist in the development of Sitecore JSS apps.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@babel/parser": "^7.24.0",
-    "@sitecore-jss/sitecore-jss": "22.4.0-canary.7",
+    "@xmcloud-jss/sitecore-jss": "0.1.0-beta.0",
     "chalk": "^4.1.2",
     "chokidar": "^3.6.0",
     "del": "^6.0.0",

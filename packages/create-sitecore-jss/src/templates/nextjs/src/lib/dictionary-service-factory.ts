@@ -1,4 +1,4 @@
-import { DictionaryService, GraphQLDictionaryService } from '@sitecore-jss/sitecore-jss-nextjs';
+﻿import { DictionaryService, GraphQLDictionaryService } from '@xmcloud-jss/sitecore-jss-nextjs';
 import clientFactory from 'lib/graphql-client-factory';
 
 /**

@@ -1,13 +1,13 @@
-export {
+﻿export {
   constants,
   enableDebug,
   ClientError,
   CacheClient,
   CacheOptions,
   MemoryCacheClient,
-} from '@sitecore-jss/sitecore-jss';
-export { EnhancedOmit } from '@sitecore-jss/sitecore-jss/utils';
-export { isEditorActive, resetEditorChromes } from '@sitecore-jss/sitecore-jss/editing';
+} from '@xmcloud-jss/sitecore-jss';
+export { EnhancedOmit } from '@xmcloud-jss/sitecore-jss/utils';
+export { isEditorActive, resetEditorChromes } from '@xmcloud-jss/sitecore-jss/editing';
 export {
   getContentStylesheetLink,
   getComponentLibraryStylesheetLinks,
@@ -27,7 +27,7 @@ export {
   ComponentFields,
   ComponentParams,
   EditMode,
-} from '@sitecore-jss/sitecore-jss/layout';
+} from '@xmcloud-jss/sitecore-jss/layout';
 export {
   trackingApi,
   TrackingRequestOptions,
@@ -36,21 +36,21 @@ export {
   OutcomeInstance,
   EventInstance,
   PageViewInstance,
-} from '@sitecore-jss/sitecore-jss/tracking';
+} from '@xmcloud-jss/sitecore-jss/tracking';
 export {
   DictionaryPhrases,
   DictionaryService,
   GraphQLDictionaryService,
   RestDictionaryService,
-} from '@sitecore-jss/sitecore-jss/i18n';
+} from '@xmcloud-jss/sitecore-jss/i18n';
 export {
   GraphQLClientError,
   RetryStrategy,
   DefaultRetryStrategy,
   GraphQLRequestClientFactoryConfig,
   GraphQLRequestClient,
-} from '@sitecore-jss/sitecore-jss/graphql';
-export { mediaApi } from '@sitecore-jss/sitecore-jss/media';
+} from '@xmcloud-jss/sitecore-jss/graphql';
+export { mediaApi } from '@xmcloud-jss/sitecore-jss/media';
 export { ComponentFactory, JssComponentType } from './components/sharedTypes';
 export { Placeholder, PlaceholderComponentProps } from './components/Placeholder';
 export {

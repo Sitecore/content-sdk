@@ -1,4 +1,4 @@
-import { mediaApi } from '@sitecore-jss/sitecore-jss/media';
+﻿import { mediaApi } from '@xmcloud-jss/sitecore-jss/media';
 import PropTypes, { Requireable } from 'prop-types';
 import React from 'react';
 import { addClassName } from '../utils';
@@ -6,8 +6,8 @@ import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentImage } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata } from '@sitecore-jss/sitecore-jss/layout';
-import { isFieldValueEmpty } from '@sitecore-jss/sitecore-jss/layout';
+import { FieldMetadata } from '@xmcloud-jss/sitecore-jss/layout';
+import { isFieldValueEmpty } from '@xmcloud-jss/sitecore-jss/layout';
 
 export interface ImageFieldValue {
   [attributeName: string]: unknown;

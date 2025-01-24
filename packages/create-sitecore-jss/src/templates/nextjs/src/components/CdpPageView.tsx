@@ -1,8 +1,8 @@
-import {
+﻿import {
   CdpHelper,
   LayoutServicePageState,
   useSitecoreContext,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@xmcloud-jss/sitecore-jss-nextjs';
 import { useEffect } from 'react';
 import { pageView } from '@sitecore-cloudsdk/events/browser';
 import config from 'temp/config';

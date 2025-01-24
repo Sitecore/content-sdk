@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+﻿import { useEffect } from 'react';
 <% if (prerender === 'SSG') { -%>
 import { GetStaticPaths, GetStaticProps } from 'next';
 <% } else if (prerender === 'SSR') { -%>
@@ -12,8 +12,8 @@ import {
   <% if (prerender === 'SSG') { -%>
   StaticPath,
   <% } -%>
-} from '@sitecore-jss/sitecore-jss-nextjs';
-import { handleEditorFastRefresh } from '@sitecore-jss/sitecore-jss-nextjs/utils';
+} from '@xmcloud-jss/sitecore-jss-nextjs';
+import { handleEditorFastRefresh } from '@xmcloud-jss/sitecore-jss-nextjs/utils';
 import { SitecorePageProps } from 'lib/page-props';
 import { sitecorePagePropsFactory } from 'lib/page-props-factory';
 import { componentBuilder } from 'temp/componentBuilder';

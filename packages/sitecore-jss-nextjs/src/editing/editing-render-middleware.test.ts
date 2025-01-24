@@ -1,4 +1,4 @@
-/* eslint-disable dot-notation */
+﻿/* eslint-disable dot-notation */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect, use } from 'chai';
@@ -7,7 +7,7 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   EditingRenderQueryParams,
-} from '@sitecore-jss/sitecore-jss/editing';
+} from '@xmcloud-jss/sitecore-jss/editing';
 import { EditingRenderMiddleware, EditingNextApiRequest } from './editing-render-middleware';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';

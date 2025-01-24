@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -16,9 +16,9 @@ import {
   ComponentRendering,
   LayoutServiceData,
   RouteData,
-} from '@sitecore-jss/sitecore-jss/layout';
+} from '@xmcloud-jss/sitecore-jss/layout';
 import { Placeholder } from '../components/Placeholder';
-import { EnhancedOmit } from '@sitecore-jss/sitecore-jss/utils';
+import { EnhancedOmit } from '@xmcloud-jss/sitecore-jss/utils';
 
 type CalloutProps = PlaceholderProps & {
   [prop: string]: unknown;

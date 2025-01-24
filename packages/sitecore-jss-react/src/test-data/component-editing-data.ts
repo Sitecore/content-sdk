@@ -1,5 +1,5 @@
-import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-jss/sitecore-jss/layout';
-import { LayoutServicePageState } from '@sitecore-jss/sitecore-jss/src/layout';
+﻿import { EDITING_COMPONENT_PLACEHOLDER } from '@xmcloud-jss/sitecore-jss/layout';
+import { LayoutServicePageState } from '@xmcloud-jss/sitecore-jss/src/layout';
 
 const basicPage = {
   path: '/Styleguide',

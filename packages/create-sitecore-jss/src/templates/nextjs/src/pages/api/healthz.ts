@@ -1,4 +1,4 @@
-import { HealthcheckMiddleware } from '@sitecore-jss/sitecore-jss-nextjs/monitoring';
+﻿import { HealthcheckMiddleware } from '@xmcloud-jss/sitecore-jss-nextjs/monitoring';
 
 /**
  * This Next.js API route is used to handle healthz check request.

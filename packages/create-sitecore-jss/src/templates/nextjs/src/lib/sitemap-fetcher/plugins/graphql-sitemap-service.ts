@@ -1,9 +1,9 @@
-import {
+﻿import {
   MultisiteGraphQLSitemapService,
   StaticPath,
   constants,
   SiteInfo,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@xmcloud-jss/sitecore-jss-nextjs';
 import config from 'temp/config';
 import { SitemapFetcherPlugin } from '..';
 import { GetStaticPathsContext } from 'next';

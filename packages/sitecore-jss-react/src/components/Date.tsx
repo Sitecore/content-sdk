@@ -1,11 +1,11 @@
-import React from 'react';
+﻿import React from 'react';
 import PropTypes, { Requireable } from 'prop-types';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata } from '@sitecore-jss/sitecore-jss/layout';
-import { isFieldValueEmpty } from '@sitecore-jss/sitecore-jss/layout';
+import { FieldMetadata } from '@xmcloud-jss/sitecore-jss/layout';
+import { isFieldValueEmpty } from '@xmcloud-jss/sitecore-jss/layout';
 
 export interface DateFieldProps extends EditableFieldProps {
   /** The date field data. */

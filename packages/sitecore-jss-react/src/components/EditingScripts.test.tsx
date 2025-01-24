@@ -1,12 +1,12 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 import React from 'react';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import { LayoutServiceData, LayoutServicePageState } from '@sitecore-jss/sitecore-jss/layout';
+import { LayoutServiceData, LayoutServicePageState } from '@xmcloud-jss/sitecore-jss/layout';
 import { EditingScripts } from './EditingScripts';
 import { SitecoreContext } from './SitecoreContext';
 import { ComponentFactory } from './sharedTypes';
-import { getJssPagesClientData } from '@sitecore-jss/sitecore-jss/editing';
+import { getJssPagesClientData } from '@xmcloud-jss/sitecore-jss/editing';
 
 describe('<EditingScripts />', () => {
   const mockComponentFactory: ComponentFactory = () => null;
