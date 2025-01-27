@@ -3,7 +3,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { mount } from 'enzyme';
+import { fireEvent, render } from '@testing-library/react';
 import { ComponentLibraryLayout } from './ComponentLibraryLayout';
 import { getTestLayoutData } from '../test-data/component-editing-data';
 import { ComponentFactory } from './sharedTypes';
@@ -18,7 +18,6 @@ import {
 
 describe('<ComponentLibraryLayout />', () => {
   const postMessageSpy = sinon.spy(global.window, 'postMessage');
-  let rendered = mount(<div />);
 
   const componentFactory: ComponentFactory = (componentName: string) => {
     const components = new Map<string, React.FC>();
@@ -50,13 +49,14 @@ describe('<ComponentLibraryLayout />', () => {
 
   it('should render', () => {
     const basicPage = getTestLayoutData();
-    rendered = mount(
-      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
+    // don't wrap the content in divs
+    const rendered = render(
+      <SitecoreContext componentFactory={componentFactory}>
         <ComponentLibraryLayout {...basicPage.layoutData} />
-      </SitecoreContext>
+      </SitecoreContext>,
+      { container: document.body }
     );
-
-    expect(rendered.html()).to.equal(
+    expect(rendered.baseElement.innerHTML).to.equal(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -68,13 +68,14 @@ describe('<ComponentLibraryLayout />', () => {
 
   it('should render component with placeholders', () => {
     const placeholderPage = getTestLayoutData(true);
-    const rendered = mount(
+    const rendered = render(
       <SitecoreContext componentFactory={componentFactory} layoutData={placeholderPage.layoutData}>
         <ComponentLibraryLayout {...placeholderPage.layoutData} />
-      </SitecoreContext>
+      </SitecoreContext>,
+      { container: document.body }
     );
 
-    expect(rendered.html()).to.equal(
+    expect(rendered.baseElement.innerHTML).to.equal(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -90,13 +91,14 @@ describe('<ComponentLibraryLayout />', () => {
 
   it('should fire component:ready event', () => {
     const basicPage = getTestLayoutData();
-    const rendered = mount(
+    const rendered = render(
       <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
         <ComponentLibraryLayout {...basicPage.layoutData} />
-      </SitecoreContext>
+      </SitecoreContext>,
+      { container: document.body }
     );
 
-    expect(rendered.html()).to.equal(
+    expect(rendered.baseElement.innerHTML).to.equal(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -116,13 +118,14 @@ describe('<ComponentLibraryLayout />', () => {
 
   it('should update root component', async () => {
     const basicPage = getTestLayoutData();
-    const rendered = mount(
+    const rendered = render(
       <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
         <ComponentLibraryLayout {...basicPage.layoutData} />
-      </SitecoreContext>
+      </SitecoreContext>,
+      { container: document.body }
     );
 
-    expect(rendered.html()).to.equal(
+    expect(rendered.baseElement.innerHTML).to.equal(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -143,10 +146,9 @@ describe('<ComponentLibraryLayout />', () => {
     updateEvent.initEvent('message', false, true);
     (updateEvent as any).origin = window.location.origin;
     (updateEvent as any).data = updateEventData;
-    await window.dispatchEvent(updateEvent);
+    await fireEvent(window, updateEvent);
 
-    rendered.update();
-    expect(rendered.html()).to.equal(
+    expect(rendered.baseElement.innerHTML).to.equal(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -157,13 +159,15 @@ describe('<ComponentLibraryLayout />', () => {
   });
 
   it('should update nested component', async () => {
+    const basicPage = getTestLayoutData();
     const placeholderPage = getTestLayoutData(true);
-    const rendered = mount(
-      <SitecoreContext componentFactory={componentFactory} layoutData={placeholderPage.layoutData}>
+    const rendered = render(
+      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
         <ComponentLibraryLayout {...placeholderPage.layoutData} />
-      </SitecoreContext>
+      </SitecoreContext>,
+      { container: document.body }
     );
-    expect(rendered.html()).to.equal(
+    expect(rendered.baseElement.innerHTML).to.equal(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -188,11 +192,9 @@ describe('<ComponentLibraryLayout />', () => {
     updateEvent.initEvent('message');
     (updateEvent as any).origin = window.location.origin;
     (updateEvent as any).data = updateEventData;
-    await window.dispatchEvent(updateEvent);
+    await fireEvent(window, updateEvent);
 
-    rendered.update();
-
-    expect(rendered.html()).to.equal(
+    expect(rendered.baseElement.innerHTML).to.equal(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',

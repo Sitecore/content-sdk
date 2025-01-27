@@ -12,7 +12,11 @@ export const EditingScripts = (): JSX.Element => {
   } = useSitecoreContext();
 
   // Don't render anything if not in editing/preview mode
-  if (pageState === LayoutServicePageState.Normal || pageState === LayoutServicePageState.Preview) {
+  if (
+    pageState === LayoutServicePageState.Normal ||
+    pageState === LayoutServicePageState.Preview ||
+    !pageState
+  ) {
     return <></>;
   }
 

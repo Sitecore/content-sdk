@@ -5,6 +5,9 @@
   CacheClient,
   CacheOptions,
   MemoryCacheClient,
+  NativeDataFetcher,
+  NativeDataFetcherResponse,
+  NativeDataFetcherConfig,
 } from '@xmcloud-jss/sitecore-jss';
 export { EnhancedOmit } from '@xmcloud-jss/sitecore-jss/utils';
 export { isEditorActive, resetEditorChromes } from '@xmcloud-jss/sitecore-jss/editing';
@@ -17,7 +20,6 @@ export {
   LayoutServiceContext,
   LayoutServiceContextData,
   GraphQLLayoutService,
-  RestLayoutService,
   RouteData,
   Field,
   Item,
@@ -29,19 +31,9 @@ export {
   EditMode,
 } from '@xmcloud-jss/sitecore-jss/layout';
 export {
-  trackingApi,
-  TrackingRequestOptions,
-  CampaignInstance,
-  GoalInstance,
-  OutcomeInstance,
-  EventInstance,
-  PageViewInstance,
-} from '@xmcloud-jss/sitecore-jss/tracking';
-export {
   DictionaryPhrases,
   DictionaryService,
   GraphQLDictionaryService,
-  RestDictionaryService,
 } from '@xmcloud-jss/sitecore-jss/i18n';
 export {
   GraphQLClientError,
