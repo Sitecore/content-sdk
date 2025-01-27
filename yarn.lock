@@ -2091,11 +2091,9 @@ __metadata:
     "@types/node": ^22.9.0
     "@types/sinon": ^17.0.3
     "@types/url-parse": 1.4.8
-    axios: ^0.21.1
     chai: ^4.2.0
     chai-spies: ^1.0.0
     chai-string: ^1.5.0
-    chalk: ^4.1.0
     debug: ^4.3.1
     del-cli: ^5.0.0
     eslint: ^8.56.0
@@ -2104,7 +2102,7 @@ __metadata:
     graphql-request: ^4.2.0
     memory-cache: ^0.2.0
     mocha: ^10.2.0
-    nock: ^13.0.5
+    nock: 14.0.0-beta.7
     nyc: ^15.1.0
     sinon: ^17.0.1
     ts-node: ^8.4.1
@@ -3216,15 +3214,6 @@ __metadata:
   dependencies:
     possible-typed-array-names: ^1.0.0
   checksum: 1aa3ffbfe6578276996de660848b6e95669d9a95ad149e3dd0c0cda77db6ee1dbd9d1dd723b65b6d277b882dd0c4b91a654ae9d3cf9e1254b7e93e4908d78fd3
-  languageName: node
-  linkType: hard
-
-"axios@npm:^0.21.1":
-  version: 0.21.4
-  resolution: "axios@npm:0.21.4"
-  dependencies:
-    follow-redirects: ^1.14.0
-  checksum: 44245f24ac971e7458f3120c92f9d66d1fc695e8b97019139de5b0cc65d9b8104647db01e5f46917728edfc0cfd88eb30fc4c55e6053eef4ace76768ce95ff3c
   languageName: node
   linkType: hard
 
@@ -5513,7 +5502,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.15.6":
+"follow-redirects@npm:^1.15.6":
   version: 1.15.9
   resolution: "follow-redirects@npm:1.15.9"
   peerDependenciesMeta:
@@ -8348,7 +8337,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:^13.0.5, nock@npm:^13.3.0":
+"nock@npm:14.0.0-beta.7":
+  version: 14.0.0-beta.7
+  resolution: "nock@npm:14.0.0-beta.7"
+  dependencies:
+    json-stringify-safe: ^5.0.1
+    propagate: ^2.0.0
+  checksum: 882e9e1468f8753f3b5f401cfd24d050e1603182dc4f33e9b041350bb779db3048353dadb9af1ed13540fa34e24db52c269bb9b672b6d75b72d2e6d807c73097
+  languageName: node
+  linkType: hard
+
+"nock@npm:^13.3.0":
   version: 13.5.6
   resolution: "nock@npm:13.5.6"
   dependencies:
