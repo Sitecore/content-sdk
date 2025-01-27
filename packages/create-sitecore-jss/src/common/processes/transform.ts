@@ -162,8 +162,6 @@ type TransformOptions = {
  * - Determines files for copy.
  * - Determines files for skip.
  * if some files already exist:
- *   - merges package.json files
- *   - concatenates .env files
  *   - compares diffs
  * @param {string} templatePath path to the template
  * @param {BaseArgs} answers CLI arguments
