@@ -1,7 +1,5 @@
 ﻿{
-  "initializers": [
-    "nextjs"
-  ],
+  "initializer": "nextjs",
   "args": {
     "yes": true,
     "force": true,
