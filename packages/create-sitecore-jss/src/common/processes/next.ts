@@ -2,14 +2,12 @@ import chalk from 'chalk';
 
 /**
  * Logs app creation completion message and next steps
- * @param {string[]} appNames application name(s) for the new app
+ * @param {string} appName application name for the new app
  * @param {string[]} nextStepsArr next steps to be performed after app is created
  */
-export const nextSteps = async (appNames: string[], nextStepsArr: string[]) => {
-  const successMessage =
-    appNames.length > 1
-      ? `JSS applications ${chalk.green(appNames.join(', '))} are ready!`
-      : `JSS application ${chalk.green(appNames[0])} is ready!`;
+export const nextSteps = async (appName: string, nextStepsArr: string[]) => {
+  const successMessage = `JSS application ${chalk.green(appName)} is ready!`;
+
   console.log(chalk.red('                 -/oyhdmNNNNmdhyo/-                '));
   console.log(chalk.red('             :sdMMMMMMMMMMMMMMMMMMMMds:            '));
   console.log(chalk.red('          :yNMMMMMMMMMMMMMMMMMMMMMMMMMMNy:         '));

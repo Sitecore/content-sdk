@@ -35,13 +35,10 @@ describe('bin', () => {
         '--noInstall',
         '--yes',
         '--silent',
-        '--prePushHook',
         '--appName',
         'test',
         '--destination',
         '.\\test\\path',
-        '--proxyAppDestination',
-        '.\\test\\proxypath',
         '--template',
         'foo',
       ];
@@ -54,7 +51,6 @@ describe('bin', () => {
       expect(args.noInstall).to.equal(true);
       expect(args.yes).to.equal(true);
       expect(args.silent).to.equal(true);
-      expect(args.prePushHook).to.equal(true);
       expect(args.appName).to.equal('test');
       expect(args.destination).to.equal('.\\test\\path');
       expect(args.template).to.equal('foo');
@@ -131,7 +127,6 @@ describe('bin', () => {
       const args = mockArgs({
         template: 'foo',
         destination: 'test\\path',
-        prePushHook: false,
       });
       const expectedTemplate = 'foo';
 
@@ -169,9 +164,6 @@ describe('bin', () => {
       getAllTemplatesStub.returns(allTemplates);
       fsExistsSyncStub.returns(false);
       fsReaddirSyncStub.returns([]);
-      inquirerPromptStub.returns({
-        prePushHook: true,
-      });
 
       inquirerPromptStub
         .withArgs({

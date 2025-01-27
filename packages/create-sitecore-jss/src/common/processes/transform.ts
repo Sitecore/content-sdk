@@ -11,7 +11,7 @@ import {
   isDevEnvironment,
 } from '../utils/helpers';
 import { diffLines, diffJson, Change } from 'diff';
-import { BaseArgs } from '../args/base';
+import { BaseArgs } from '../base/args';
 const { version } = require('../../../package.json');
 
 const FILE_FOR_COPY_REGEXP = /(index\.html)$|\.(gif|jpg|jpeg|tiff|png|svg|ashx|ico|pdf|jar|eot|woff|ttf|woff2)$/;

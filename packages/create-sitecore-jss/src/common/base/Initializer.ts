@@ -1,7 +1,7 @@
-import { BaseArgs } from './args/base';
+import { BaseArgs } from './args';
+
 export type InitializerResults = {
   appName: string;
-  initializers?: string[];
   nextSteps?: string[];
 };
 

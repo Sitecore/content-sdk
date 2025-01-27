@@ -12,7 +12,7 @@ export const parseArgs = (): ParsedArgs => {
   // useful for CI and testing purposes
   const options = {
     boolean: ['appPrefix', 'force', 'noInstall', 'yes', 'silent'],
-    string: ['appName', 'destination', 'proxyAppDestination', 'template'],
+    string: ['appName', 'destination', 'template'],
     default: {},
   };
   const args: ParsedArgs = minimist(process.argv.slice(2), options);

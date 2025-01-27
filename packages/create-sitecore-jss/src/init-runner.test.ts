@@ -4,7 +4,7 @@ import sinon, { SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import chalk from 'chalk';
 import path, { sep } from 'path';
-import { Initializer, InitializerResults } from './common/Initializer';
+import { Initializer, InitializerResults } from './common/base/Initializer';
 import { InitializerFactory } from './InitializerFactory';
 import { initRunner } from './init-runner';
 import * as helpers from './common/utils/helpers';
@@ -68,39 +68,10 @@ describe('initRunner', () => {
     );
     expect(installPackagesStub).to.be.calledOnceWith(args.destination, args.silent);
     expect(lintFixStub).to.be.calledOnceWith(args.destination, args.silent);
-    expect(nextStepsStub).to.be.calledOnceWith([appName], []);
+    expect(nextStepsStub).to.be.calledOnceWith(appName, []);
   });
 
-  it('should run for both base and proxy path when latter is provided', async () => {
-    const template = 'foo';
-    const appName = 'test-app';
-    const args = {
-      silent: false,
-      destination: 'samples/next',
-      proxyAppDestination: 'samples/proxy',
-      template,
-    };
-
-    const mockFoo = mockInitializer({ appName });
-    createStub = sinon.stub(InitializerFactory.prototype, 'create');
-    createStub.withArgs('foo').returns(mockFoo);
-
-    await initRunner(template, args);
-
-    expect(log.getCalls().length).to.equal(1);
-    expect(log.getCall(0).args[0]).to.equal(chalk.cyan(`Initializing '${template}'...`));
-    expect(mockFoo.init).to.be.calledOnceWith(args);
-
-    expect(installPackagesStub).to.be.calledTwice;
-    expect(installPackagesStub.getCall(0).args[0]).to.equal(args.destination);
-    expect(installPackagesStub.getCall(1).args[0]).to.equal(args.proxyAppDestination);
-
-    expect(lintFixStub).to.be.calledTwice;
-    expect(lintFixStub.getCall(0).args[0]).to.equal(args.destination);
-    expect(lintFixStub.getCall(1).args[0]).to.equal(args.proxyAppDestination);
-  });
-
-  it('should process returned initializers', async () => {
+  it('should process nextSteps', async () => {
     const template = 'foo';
     const appName = 'test-app';
     const args = {
@@ -109,39 +80,13 @@ describe('initRunner', () => {
       template,
     };
 
-    const mockFoo = mockInitializer({ appName, initializers: ['baz'] });
-    const mockBaz = mockInitializer({ appName, initializers: ['huh'] });
-    const mockHuh = mockInitializer({ appName, initializers: [] });
+    const mockFoo = mockInitializer({ appName, nextSteps: ['foo step 1', 'foo step 2'] });
     createStub = sinon.stub(InitializerFactory.prototype, 'create');
     createStub.withArgs('foo').returns(mockFoo);
-    createStub.withArgs('baz').returns(mockBaz);
-    createStub.withArgs('huh').returns(mockHuh);
 
     await initRunner(template, args);
 
-    expect(mockFoo.init).to.be.calledOnceWith(args);
-    expect(mockBaz.init).to.be.calledOnceWith(args);
-    expect(mockHuh.init).to.be.calledOnceWith(args);
-  });
-
-  it('should aggregate nextSteps', async () => {
-    const template = 'foo';
-    const appName = 'test-app';
-    const args = {
-      silent: false,
-      destination: 'samples/next',
-      template,
-    };
-
-    const mockFoo = mockInitializer({ appName, nextSteps: ['foo step 1'], initializers: ['baz'] });
-    const mockBaz = mockInitializer({ appName, nextSteps: ['baz step 1'] });
-    createStub = sinon.stub(InitializerFactory.prototype, 'create');
-    createStub.withArgs('foo').returns(mockFoo);
-    createStub.withArgs('baz').returns(mockBaz);
-
-    await initRunner(template, args);
-
-    expect(nextStepsStub).to.be.calledOnceWith([appName], ['foo step 1', 'baz step 1']);
+    expect(nextStepsStub).to.be.calledOnceWith(appName, ['foo step 1', 'foo step 2']);
   });
 
   it('should respect silent', async () => {

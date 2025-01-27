@@ -1,6 +1,7 @@
-export { ClientAppArgs, BaseArgs } from './args/base';
+export { ClientAppArgs, BaseArgs } from './base/args';
+export { ClientAppAnswer, clientAppPrompts, DEFAULT_APPNAME } from './base/prompts';
+export { Initializer } from './base/Initializer';
 
-export { ClientAppAnswer, clientAppPrompts, DEFAULT_APPNAME } from './prompts/base';
 export {
   isDevEnvironment,
   openJsonFile,
@@ -9,8 +10,6 @@ export {
   saveConfiguration,
   removeFile,
 } from './utils/helpers';
-
-export { Initializer } from './Initializer';
 
 export { transform } from './processes/transform';
 export { nextSteps } from './processes/next';

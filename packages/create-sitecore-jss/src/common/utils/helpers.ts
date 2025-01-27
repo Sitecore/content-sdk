@@ -1,22 +1,7 @@
 import chalk from 'chalk';
 import fs from 'fs';
-import path, { sep } from 'path';
+import path from 'path';
 import { JsonObjectType } from '../processes/transform';
-
-// matched for proxy templates
-export const proxyAppMatcher = /node-headless.+|node-xmcloud.+/g;
-
-/**
- * Returns the default path for proxy app initialized alongside main JSS tempalates.
- * @param {string} mainAppDestination target destination for main app
- * @param {string} proxyName name of for the proxy app folder
- * @returns {string} target path for proxy app
- */
-export const getDefaultProxyDestination = (mainAppDestination: string, proxyName: string) =>
-  path.join(mainAppDestination, '..', proxyName);
-
-export const getRelativeProxyDestination = (mainDestination: string, proxyDestination: string) =>
-  `${path.relative(path.resolve(mainDestination), path.resolve(proxyDestination))}${sep}`;
 
 /**
  * Determines whether you are in a dev environment.

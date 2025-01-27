@@ -5,7 +5,7 @@ import { InitializerFactory } from './InitializerFactory';
 
 export const initRunner = async (template: string, args: BaseArgs) => {
   let nextStepsArr: string[] = [];
-  const appNames = new Set<string>([]);
+  let appName = '';
 
   const initFactory = new InitializerFactory();
 
@@ -18,31 +18,22 @@ export const initRunner = async (template: string, args: BaseArgs) => {
     args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
     const response = await initializer.init(args);
 
-    // We can have multiple appNames if base template requires to setup an additional standalone app (e.g. XM Cloud proxy)
-    appNames.add(response.appName);
+    appName = response.appName;
+
     nextStepsArr = [...nextStepsArr, ...(response.nextSteps ?? [])];
-    // process any returned initializers (e.g. proxy app)
-    if (response.initializers && response.initializers.length > 0) {
-      for (const initializer of response.initializers) {
-        await runner(initializer);
-      }
-    }
   };
 
   await runner(template);
 
   saveConfiguration(args.template, path.resolve(`${args.destination}${sep}package.json`));
 
-  for (const destination of [args.destination, args.proxyAppDestination]) {
-    if (!destination) continue;
-    // final steps (install, lint)
-    if (!args.noInstall) {
-      installPackages(destination, args.silent);
-      lintFix(destination, args.silent);
-    }
+  // final steps (install, lint)
+  if (!args.noInstall) {
+    installPackages(args.destination, args.silent);
+    lintFix(args.destination, args.silent);
   }
 
   if (!args.silent) {
-    nextSteps([...appNames], nextStepsArr);
+    nextSteps(appName, nextStepsArr);
   }
 };

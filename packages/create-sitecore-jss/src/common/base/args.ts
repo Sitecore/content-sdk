@@ -1,4 +1,4 @@
-import { ClientAppAnswer } from '../prompts/base';
+import { ClientAppAnswer } from './prompts';
 
 type Arg = string | number | boolean;
 
@@ -29,10 +29,6 @@ export type BaseArgs = {
    * Default values will be used
    */
   yes?: boolean;
-  /**
-   * Optional destination for proxy app, whether it's initialized alongside the main one or standalone
-   */
-  proxyAppDestination?: string;
 };
 
 /**

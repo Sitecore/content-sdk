@@ -15,9 +15,9 @@ describe('next', () => {
       log?.restore();
     });
 
-    it('displays appNames in output', async () => {
-      const appNames = ['my-cool-app', 'second-app'];
-      await nextSteps(appNames, []);
+    it('displays appName in output', async () => {
+      const appName = 'my-cool-app';
+      await nextSteps(appName, []);
 
       const calls = log.getCalls();
       calls.forEach((call) => {
@@ -25,15 +25,14 @@ describe('next', () => {
       });
       expect(
         calls.some(
-          (call) =>
-            call.args[0] === `JSS applications ${chalk.green('my-cool-app, second-app')} are ready!`
+          (call) => call.args[0] === `JSS application ${chalk.green('my-cool-app')} is ready!`
         )
       ).to.equal(true);
     });
 
     it('displays single app name with single item wording in output', async () => {
-      const appNames = ['my-cool-app'];
-      await nextSteps(appNames, []);
+      const appName = 'my-cool-app';
+      await nextSteps(appName, []);
 
       const calls = log.getCalls();
       calls.forEach((call) => {
@@ -49,7 +48,7 @@ describe('next', () => {
     it('displays next steps in output', async () => {
       const nextStepsArr = ['first, do this', 'then, do this', 'finally, do this!'];
 
-      await nextSteps(['my-cool-app'], nextStepsArr);
+      await nextSteps('my-cool-app', nextStepsArr);
 
       const calls = log.getCalls();
       const fistStepIndex = calls.findIndex((call) => call.args[0] === nextStepsArr[0]);

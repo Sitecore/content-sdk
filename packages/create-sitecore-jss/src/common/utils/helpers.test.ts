@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import path, { sep } from 'path';
+import path from 'path';
 import fs from 'fs';
 import { expect } from 'chai';
 import chalk from 'chalk';
@@ -12,41 +12,12 @@ import {
   getAllTemplates,
   getAppPrefix,
   saveConfiguration,
-  getDefaultProxyDestination,
-  getRelativeProxyDestination,
 } from './helpers';
 import { JsonObjectType } from '../processes/transform';
 import testPackage from '../test-data/test.package.json';
 import testJson from '../test-data/test.json';
-import { cwd } from 'process';
 
 describe('helpers', () => {
-  describe('getDefaultProxyDestination', () => {
-    it('should return default proxy destination alongside main app', () => {
-      expect(getDefaultProxyDestination(`..${sep}app-path${sep}main-app`, 'my-proxy')).to.equal(
-        `..${sep}app-path${sep}my-proxy`
-      );
-    });
-  });
-
-  describe('getRelativeProxyDestination', () => {
-    it('should return relative path between two relative destinations', () => {
-      const destination = 'samples/next';
-      const proxyAppDestination = 'samples/proxy';
-
-      const result = getRelativeProxyDestination(destination, proxyAppDestination);
-      expect(result).to.equal(`..${sep}proxy${sep}`);
-    });
-
-    it('should return relative path between absolute and relative destinations', () => {
-      const destination = path.join(cwd(), 'samples/next');
-      const proxyAppDestination = 'samples/proxy';
-
-      const result = getRelativeProxyDestination(destination, proxyAppDestination);
-      expect(result).to.equal(`..${sep}proxy${sep}`);
-    });
-  });
-
   describe('getPascalCaseName', () => {
     it('should reformat kebab-case to PascalCase', () => {
       const result = getPascalCaseName('my-next-sitecore-app');
