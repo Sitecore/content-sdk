@@ -10,7 +10,6 @@ import {
   writeJsonFile,
   sortKeys,
   getAllTemplates,
-  getBaseTemplates,
   getAppPrefix,
   saveConfiguration,
   getDefaultProxyDestination,
@@ -19,8 +18,6 @@ import {
 import { JsonObjectType } from '../processes/transform';
 import testPackage from '../test-data/test.package.json';
 import testJson from '../test-data/test.json';
-import { Initializer } from '../Initializer';
-import { InitializerFactory } from '../../InitializerFactory';
 import { cwd } from 'process';
 
 describe('helpers', () => {
@@ -198,13 +195,13 @@ describe('helpers', () => {
       writeFileSync = sinon.stub(fs, 'writeFileSync');
       const pkgPath = path.resolve('src', 'common', 'test-data', 'test.package.json');
       const pkg = openJsonFile(pkgPath);
-      const templates = ['nextjs'];
+      const template = 'nextjs';
 
-      saveConfiguration(templates, pkgPath);
+      saveConfiguration(template, pkgPath);
 
       expect(writeFileSync.calledOnce).to.equal(true);
       expect(writeFileSync.getCall(0).args[1]).to.equal(
-        JSON.stringify({ ...pkg, config: { ...pkg.config, templates } }, null, 2)
+        JSON.stringify({ ...pkg, config: { ...pkg.config, template } }, null, 2)
       );
     });
   });
@@ -266,54 +263,6 @@ describe('helpers', () => {
       expect(readdirSync.calledOnce).to.equal(true);
       expect(readdirSync.getCall(0).args[0]).to.equal('./mock/path');
       expect(templates).to.deep.equal(['foo', 'bar', 'baz']);
-    });
-  });
-
-  describe('getBaseTemplates', () => {
-    let readdirSync: SinonStub;
-    let createStub: SinonStub;
-
-    const mockInitializer = (isBase: boolean) => {
-      const mock = <Initializer>{};
-      mock.init = sinon.stub();
-      mock.isBase = isBase;
-      return mock;
-    };
-
-    afterEach(() => {
-      readdirSync?.restore();
-      createStub?.restore();
-    });
-
-    it('should only return base templates', async () => {
-      readdirSync = sinon.stub(fs, 'readdirSync');
-      readdirSync.returns(['foo', 'bar', 'baz']);
-
-      createStub = sinon.stub(InitializerFactory.prototype, 'create');
-      createStub.withArgs('foo').returns(mockInitializer(false));
-      createStub.withArgs('bar').returns(mockInitializer(true));
-      createStub.withArgs('baz').returns(mockInitializer(true));
-
-      const templates = await getBaseTemplates('./mock/path');
-
-      expect(readdirSync.calledOnce).to.equal(true);
-      expect(readdirSync.getCall(0).args[0]).to.equal('./mock/path');
-      expect(templates).to.deep.equal(['bar', 'baz']);
-    });
-
-    it('should not include unkown templates', async () => {
-      readdirSync = sinon.stub(fs, 'readdirSync');
-      readdirSync.returns(['foo', 'bar']);
-
-      createStub = sinon.stub(InitializerFactory.prototype, 'create');
-      createStub.withArgs('foo').returns(mockInitializer(true));
-      createStub.withArgs('bar').returns(undefined);
-
-      const templates = await getBaseTemplates('./mock/path');
-
-      expect(readdirSync.calledOnce).to.equal(true);
-      expect(readdirSync.getCall(0).args[0]).to.equal('./mock/path');
-      expect(templates).to.deep.equal(['foo']);
     });
   });
 

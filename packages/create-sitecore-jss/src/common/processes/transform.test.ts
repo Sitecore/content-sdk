@@ -1,25 +1,20 @@
 /* eslint-disable no-unused-expressions */
 import fs from 'fs-extra';
-import path, { sep } from 'path';
+import path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import ejs from 'ejs';
 import glob from 'glob';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import sinon, { SinonStub } from 'sinon';
-import { currentPkg, partialPkg } from '../test-data/pkg';
+import sinonChai from 'sinon-chai';
 import * as transform from './transform';
 import * as helpers from '../utils/helpers';
 import proxyquire from 'proxyquire';
 
-const {
-  transformFilename,
-  merge,
-  mergeEnv,
-  diffFiles,
-  diffAndWriteFiles,
-  transform: transformFunc,
-} = transform;
+chai.use(sinonChai);
+
+const { transformFilename, diffFiles, diffAndWriteFiles, transform: transformFunc } = transform;
 
 describe('transform', () => {
   describe('transformFilename', () => {
@@ -32,188 +27,12 @@ describe('transform', () => {
         appName: 'test',
         destination: '.\\test-data\\test',
         prerender: 'SSG',
-        templates: [],
+        template: '',
       };
 
       const transformedFileName = transformFilename(fileName, answers);
 
       expect(transformedFileName).to.equal('test.config');
-    });
-  });
-
-  describe('merge', () => {
-    it('should merge the contents of a partial package.json with the target package.json', () => {
-      const expected = {
-        name: 'test',
-        version: '2.0.0',
-        description: 'Updated package.json',
-        scripts: {
-          start:
-            'cross-env-shell JSS_MODE=disconnected "npm-run-all --serial bootstrap --parallel next:dev start:disconnected-proxy start:watch-components"',
-          test: 'tests are good',
-        },
-        config: {
-          rootPlaceholders: ['jss-main', 'jss-test'],
-        },
-        files: ['dist'],
-        dependencies: {
-          bootstrap: '^4.3.1',
-          chalk: '^4.1.2',
-          nprogress: '~0.2.0',
-        },
-        devDependencies: {
-          '@sitecore-jss/sitecore-jss-dev-tools': '^20.0.0-canary',
-          '@types/node': '^20.14.2',
-          typescript: '~4.3.5',
-        },
-        foo: {
-          bar: [4, 5, 6, 1, 2, 3],
-          x: {
-            y: {
-              bar: [1, 2, 3, 7, 8, 9],
-              x: '20',
-              y: 15,
-              z: ['1', '2', '3', '9', '10', '11'],
-            },
-          },
-        },
-      };
-
-      const result = merge(currentPkg, partialPkg);
-
-      expect(result).to.deep.equal(expected);
-    });
-  });
-
-  describe('mergeEnv', () => {
-    it('should merge content when source includes duplicates and unique variables', () => {
-      const target = [
-        '# Foo1',
-        '# Foo2',
-        'VAL1=ONE',
-        'VAL2=TWO',
-        '',
-        '',
-        '# Bar1',
-        '# Bar2',
-        'VAL3=three',
-      ].join('\r\n');
-      const source = [
-        'VAL4=four',
-        '# Foo1',
-        '# Foo2',
-        'VAL1=ONE_MODIFIED',
-        '# Bar5',
-        'VAL5=five',
-        '',
-        '# Car1',
-        '# Car2',
-        'VAL3=THREE_MODIFIED',
-        '',
-        '',
-        '',
-        '# Bar6',
-        'VAL6=SIX',
-      ].join('\r\n');
-
-      const result = mergeEnv(target, source);
-
-      expect(result).to.equal(
-        [
-          '# Foo1',
-          '# Foo2',
-          'VAL1=ONE_MODIFIED',
-          'VAL2=TWO',
-          '',
-          '',
-          '# Bar1',
-          '# Bar2',
-          'VAL3=THREE_MODIFIED',
-          'VAL4=four',
-          '# Bar5',
-          'VAL5=five',
-          '',
-          '# Bar6',
-          'VAL6=SIX',
-        ].join('\r\n')
-      );
-    });
-
-    it('should merge content when source includes duplicates only', () => {
-      const target = [
-        '# Foo1',
-        '# Foo2',
-        'VAL1=ONE',
-        'VAL2=TWO',
-        '# Bar1',
-        '# Bar2',
-        'VAL3=three',
-      ].join('\r\n');
-      const source = ['# Bar1', '# Bar2', 'VAL3=three_modified', 'VAL2=two_modified'].join('\r\n');
-
-      const result = mergeEnv(target, source);
-
-      expect(result).to.equal(
-        [
-          '# Foo1',
-          '# Foo2',
-          'VAL1=ONE',
-          'VAL2=two_modified',
-          '# Bar1',
-          '# Bar2',
-          'VAL3=three_modified',
-        ].join('\r\n')
-      );
-    });
-
-    it('should merge content when source includes unique values only', () => {
-      const target = [
-        '# Foo1',
-        '# Foo2',
-        'VAL1=ONE',
-        'VAL2=TWO',
-        '# Bar1',
-        '# Bar2',
-        'VAL3=three',
-      ].join('\r\n');
-      const source = ['# Bar4', '# Bar5', 'VAL4=four', 'VAL5=five'].join('\r\n');
-
-      const result = mergeEnv(target, source);
-
-      expect(result).to.equal(
-        [
-          '# Foo1',
-          '# Foo2',
-          'VAL1=ONE',
-          'VAL2=TWO',
-          '# Bar1',
-          '# Bar2',
-          'VAL3=three',
-          '# Bar4',
-          '# Bar5',
-          'VAL4=four',
-          'VAL5=five',
-        ].join('\r\n')
-      );
-    });
-
-    it('should return target content when source is empty', () => {
-      const target = [
-        '# Foo1',
-        '# Foo2',
-        'VAL1=ONE',
-        'VAL2=TWO',
-        '# Bar1',
-        '# Bar2',
-        'VAL3=three',
-      ].join('\r\n');
-      const source = '';
-
-      const result = mergeEnv(target, source);
-
-      expect(result).to.equal(
-        ['# Foo1', '# Foo2', 'VAL1=ONE', 'VAL2=TWO', '# Bar1', '# Bar2', 'VAL3=three'].join('\r\n')
-      );
     });
   });
 
@@ -366,7 +185,7 @@ describe('transform', () => {
         appName: 'JssNextWeb',
         destination: 'samples/next',
         force: false,
-        templates: [],
+        template: '',
         language: 'en',
       };
 
@@ -389,7 +208,7 @@ describe('transform', () => {
         appName: 'JssNextWeb',
         destination: 'samples/next',
         force: false,
-        templates: [],
+        template: '',
         language: 'en',
       };
 
@@ -412,7 +231,7 @@ describe('transform', () => {
         appName: 'JssNextWeb',
         destination: 'samples/next',
         force: false,
-        templates: [],
+        template: '',
         language: 'en',
       };
 
@@ -437,7 +256,7 @@ describe('transform', () => {
         appName: 'JssNextWeb',
         destination: 'samples/next',
         force: false,
-        templates: [],
+        template: '',
         language: 'en',
       };
 
@@ -501,7 +320,7 @@ describe('transform', () => {
 
       const answers = {
         destination: destinationPath,
-        templates: [],
+        template: '',
         appPrefix: false,
         force: false,
       };
@@ -541,7 +360,7 @@ describe('transform', () => {
 
       const answers = {
         destination: destinationPath,
-        templates: [],
+        template: '',
         appPrefix: false,
         force: false,
       };
@@ -566,7 +385,7 @@ describe('transform', () => {
 
       const answers = {
         destination: destinationPath,
-        templates: [],
+        template: '',
         appPrefix: false,
         force: false,
       };
@@ -596,7 +415,7 @@ describe('transform', () => {
 
       const answers = {
         destination: destinationPath,
-        templates: [],
+        template: '',
         appPrefix: false,
         force: false,
       };
@@ -613,147 +432,6 @@ describe('transform', () => {
       expect(diffAndWriteFilesStub).to.not.have.been.called;
     });
 
-    it('should merge package.json file', async () => {
-      const templatePath = path.resolve('templates/next');
-      const destinationPath = path.resolve('samples/next');
-      const file = 'package.json';
-      const renderFileOutput = '{ "one": 1, "two": 2}';
-      const currentPkg = { three: 3, four: 4 };
-      const templatePkg = JSON.parse(renderFileOutput);
-      const mergedPkg = { merged: true };
-
-      globSyncStub = sinon.stub(glob, 'sync').returns([file]);
-      fsExistsSyncStub = sinon.stub(fs, 'existsSync').returns(true);
-      openJsonFileStub = sinon.stub(helpers, 'openJsonFile').returns(currentPkg);
-      ejsRenderFileStub = sinon.stub(ejs, 'renderFile').returns(Promise.resolve(renderFileOutput));
-
-      const answers = {
-        destination: destinationPath,
-        templates: [],
-        appPrefix: false,
-        force: false,
-      };
-
-      const transformModule = proxyquire('./transform', {
-        '../../../package.json': { version: '22.2.1-canary.33' },
-      });
-
-      diffAndWriteFilesStub = sinon.stub(transformModule, 'diffAndWriteFiles');
-      mergeStub = sinon.stub(transformModule, 'merge').returns(mergedPkg);
-
-      await transformModule.transform(templatePath, answers);
-
-      expect(ejsRenderFileStub).to.have.been.calledOnceWith(path.join(templatePath, file), {
-        ...answers,
-        version: '22.2.1-canary',
-        helper: {
-          isDev: false,
-          getPascalCaseName: helpers.getPascalCaseName,
-          getAppPrefix: helpers.getAppPrefix,
-        },
-      });
-      expect(mergeStub).to.have.been.calledOnceWith(currentPkg, templatePkg);
-      expect(diffAndWriteFilesStub).to.have.been.calledOnceWith({
-        rendered: JSON.stringify(mergedPkg, null, 2),
-        pathToNewFile: path.join(destinationPath, file),
-        answers,
-      });
-    });
-
-    it('should merge json file', async () => {
-      const templatePath = path.resolve('templates/next');
-      const destinationPath = path.resolve('samples/next');
-      const file = 'test.json';
-      const renderFileOutput = '{ "one": 1, "two": 2}';
-      const currentJson = { three: 3, four: 4 };
-      const templateJson = JSON.parse(renderFileOutput);
-      const mergedPkg = { merged: true };
-
-      globSyncStub = sinon.stub(glob, 'sync').returns([file]);
-      fsExistsSyncStub = sinon.stub(fs, 'existsSync').returns(true);
-      openJsonFileStub = sinon.stub(helpers, 'openJsonFile').returns(currentJson);
-      ejsRenderFileStub = sinon.stub(ejs, 'renderFile').returns(Promise.resolve(renderFileOutput));
-
-      const answers = {
-        destination: destinationPath,
-        templates: [],
-        appPrefix: false,
-        force: false,
-      };
-
-      const transformModule = proxyquire('./transform', {
-        '../../../package.json': { version: '22.2.1-canary.33' },
-      });
-
-      mergeStub = sinon.stub(transformModule, 'merge').returns(mergedPkg);
-      diffAndWriteFilesStub = sinon.stub(transformModule, 'diffAndWriteFiles');
-
-      await transformModule.transform(templatePath, answers);
-
-      expect(ejsRenderFileStub).to.have.been.calledOnceWith(path.join(templatePath, file), {
-        ...answers,
-        version: '22.2.1-canary',
-        helper: {
-          isDev: false,
-          getPascalCaseName: helpers.getPascalCaseName,
-          getAppPrefix: helpers.getAppPrefix,
-        },
-      });
-      expect(mergeStub).to.have.been.calledOnceWith(currentJson, templateJson);
-      expect(openJsonFileStub).to.have.been.calledOnceWith(`${destinationPath}${sep}${file}`);
-      expect(diffAndWriteFilesStub).to.have.been.calledOnceWith({
-        rendered: JSON.stringify(mergedPkg, null, 2),
-        pathToNewFile: path.join(destinationPath, file),
-        answers,
-      });
-    });
-
-    it('should concatenate .env file', async () => {
-      const templatePath = path.resolve('templates/next');
-      const destinationPath = path.resolve('samples/next');
-      const file = '.env';
-      const templateDotEnv = 'ONE=one';
-      const currentDotEnv = 'TWO=2';
-      const concatDotEnv = 'CONCATENATED=true';
-
-      globSyncStub = sinon.stub(glob, 'sync').returns([file]);
-      fsExistsSyncStub = sinon.stub(fs, 'existsSync').returns(true);
-      fsReadFileSunc = sinon.stub(fs, 'readFileSync').returns(currentDotEnv);
-      ejsRenderFileStub = sinon.stub(ejs, 'renderFile').returns(Promise.resolve(templateDotEnv));
-
-      const transformModule = proxyquire('./transform', {
-        '../../../package.json': { version: '22.2.1-canary.33' },
-      });
-
-      mergeEnvStub = sinon.stub(transformModule, 'mergeEnv').returns(concatDotEnv);
-      diffAndWriteFilesStub = sinon.stub(transformModule, 'diffAndWriteFiles');
-
-      const answers = {
-        destination: destinationPath,
-        templates: [],
-        appPrefix: false,
-        force: false,
-      };
-
-      await transformModule.transform(templatePath, answers);
-
-      expect(ejsRenderFileStub).to.have.been.calledOnceWith(path.join(templatePath, file), {
-        ...answers,
-        version: '22.2.1-canary',
-        helper: {
-          isDev: false,
-          getPascalCaseName: helpers.getPascalCaseName,
-          getAppPrefix: helpers.getAppPrefix,
-        },
-      });
-      expect(mergeEnvStub).to.have.been.calledOnceWith(currentDotEnv, templateDotEnv);
-      expect(diffAndWriteFilesStub).to.have.been.calledOnceWith({
-        rendered: concatDotEnv,
-        pathToNewFile: path.join(destinationPath, file),
-        answers,
-      });
-    });
-
     it('should rename gitignore file', async () => {
       const templatePath = path.resolve('templates/next');
       const destinationPath = path.resolve('samples/next');
@@ -765,7 +443,7 @@ describe('transform', () => {
 
       const answers = {
         destination: destinationPath,
-        templates: [],
+        template: '',
         appPrefix: false,
         force: false,
       };
@@ -792,7 +470,7 @@ describe('transform', () => {
 
       const answers = {
         destination: destinationPath,
-        templates: [],
+        template: '',
         appPrefix: false,
         force: true,
       };
@@ -818,7 +496,7 @@ describe('transform', () => {
 
       const answers = {
         destination: destinationPath,
-        templates: [],
+        template: '',
         appPrefix: false,
         force: false,
       };

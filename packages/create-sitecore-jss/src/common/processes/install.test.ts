@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-expressions */
-import childProcess from 'child_process';
 import chalk from 'chalk';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import sinon, { SinonStub } from 'sinon';
-import { installPackages, lintFix, installPrePushHook } from './install';
+import sinonChai from 'sinon-chai';
+import { installPackages, lintFix } from './install';
 import * as cmd from '../utils/cmd';
 import * as helpers from '../utils/helpers';
+
+chai.use(sinonChai);
 
 describe('install', () => {
   let run: SinonStub;
@@ -146,80 +148,6 @@ describe('install', () => {
           encoding: 'utf8',
         },
         silent
-      );
-    });
-  });
-
-  describe('installPrePushHook', () => {
-    let execStub: SinonStub;
-    beforeEach(() => {
-      execStub = sinon.stub(childProcess, 'exec');
-    });
-
-    afterEach(() => {
-      execStub?.restore();
-    });
-
-    it('should run exec function', () => {
-      const destination = './some/path';
-      openJsonFile = sinon.stub(helpers, 'openJsonFile').returns({
-        scripts: {
-          'install-pre-push-hook': 'stub',
-        },
-      });
-      installPrePushHook(destination);
-
-      expect(log).to.have.been.calledOnceWith(chalk.cyan('Installing pre-push hook...'));
-      expect(execStub).to.have.been.calledWith(
-        `cd ${destination} && git init && npm run install-pre-push-hook`
-      );
-    });
-
-    it('should respect silent', () => {
-      const destination = './some/path';
-      const silent = true;
-      openJsonFile = sinon.stub(helpers, 'openJsonFile').returns({
-        scripts: {
-          'install-pre-push-hook': 'stub',
-        },
-      });
-      installPrePushHook(destination, silent);
-
-      expect(log).to.not.have.been.called;
-      expect(execStub).to.have.been.calledWith(
-        `cd ${destination} && git init && npm run install-pre-push-hook`
-      );
-    });
-
-    it('should skip if installPrePushHook script not defined', () => {
-      const destination = './some/path';
-      openJsonFile = sinon.stub(helpers, 'openJsonFile').returns({
-        scripts: {},
-      });
-
-      installPrePushHook(destination);
-
-      expect(log).to.not.have.been.called;
-      expect(execStub).to.not.have.been.called;
-    });
-
-    it('should log a warning message if there is an error', async () => {
-      const destination = './some/path';
-      const error = new Error('some error');
-      execStub.yields(error);
-      openJsonFile = sinon.stub(helpers, 'openJsonFile').returns({
-        scripts: {
-          'install-pre-push-hook': 'stub',
-        },
-      });
-      try {
-        await installPrePushHook(destination);
-      } catch (err) {
-        expect(err).to.equal(error);
-      }
-
-      expect(log).to.have.been.calledWith(
-        chalk.yellow(`Warning: Pre-push hook may not be working due to error ${error}`)
       );
     });
   });

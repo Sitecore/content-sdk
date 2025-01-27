@@ -12,7 +12,7 @@ export const parseArgs = (): ParsedArgs => {
   // useful for CI and testing purposes
   const options = {
     boolean: ['appPrefix', 'force', 'noInstall', 'yes', 'silent'],
-    string: ['appName', 'destination', 'proxyAppDestination', 'templates'],
+    string: ['appName', 'destination', 'proxyAppDestination', 'template'],
     default: {},
   };
   const args: ParsedArgs = minimist(process.argv.slice(2), options);
@@ -28,7 +28,7 @@ export const parseArgs = (): ParsedArgs => {
 
 export const getDestination = async (args: ParsedArgs, template: string) => {
   if (!template) {
-    throw new Error('Unable to get destinations, provided templates are empty');
+    throw new Error('Unable to get destinations, provided template is empty');
   }
   // validate/gather destinations
   const defaultBaseDestination = `${process.cwd()}${
@@ -62,26 +62,25 @@ export const promptDestination = async (prompt: string, defaultDestination: stri
 export const main = async (args: ParsedArgs) => {
   let template: string = '';
 
-  // check if templates were provided
+  // check if template was provided
   if (args._.length > 0 && args._[0] !== undefined) {
     // use positional parameter
     template = args._[0];
   } else {
-    // use --templates arg
+    // use --template arg
     template = args.template ? args.template : '';
   }
 
-  // validate/gather templates
+  // validate/gather template
   const templatePath = path.resolve(__dirname, 'templates');
   const allTemplates = getAllTemplates(templatePath);
 
   if (!template || !allTemplates.includes(template)) {
-    const baseTemplates = await getAllTemplates(templatePath);
     const answer = await inquirer.prompt({
       type: 'list',
       name: 'template',
       message: 'Which template would you like to create?',
-      choices: baseTemplates,
+      choices: allTemplates,
       default: 'nextjs',
     });
 
