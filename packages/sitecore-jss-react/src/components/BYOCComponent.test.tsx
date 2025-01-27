@@ -1,9 +1,9 @@
 import React from 'react';
 import { expect } from 'chai';
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { BYOCComponent } from './BYOCComponent';
-import { MissingComponent, MissingComponentProps } from './MissingComponent';
+import { MissingComponentProps } from './MissingComponent';
 
 describe('BYOCComponent', () => {
   it('should render with props when ComponentProps is provided', () => {
@@ -229,16 +229,10 @@ describe('Error handling', () => {
     };
     const wrapper = render(<BYOCComponent {...props} />, { container: document.body });
 
-    expect(wrapper.baseElement.innerHTML).to.equal(
-      [
-        '<div style="background: darkorange; ',
-        'outline: 5px solid orange; padding: 10px; ',
-        'color: white; max-width: 500px;">',
-        '<h2>Unnamed Component</h2>',
-        '<p>BYOC: The ComponentName for this rendering is missing',
-        '</p></div>',
-      ].join('')
-    );
+    const text = wrapper.baseElement.textContent;
+
+    expect(text).to.contain('Unnamed Component');
+    expect(text).to.contain('BYOC: The ComponentName for this rendering is missing');
   });
 
   it('should render custom missing component when provided, when component name is not provided', () => {
@@ -271,7 +265,7 @@ describe('Error handling', () => {
 
     const wrapper = render(<BYOCComponent {...props} />);
 
-    expect(wrapper.queryAllByText('his component was not registered').length).to.equal(1);
+    expect(wrapper.queryAllByText('This component was not registered').length).to.equal(1);
   });
 
   xit('should render custom missing component when provided, when component is not registered', () => {

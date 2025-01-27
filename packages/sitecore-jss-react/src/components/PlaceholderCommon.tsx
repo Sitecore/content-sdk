@@ -130,7 +130,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     isEditing: boolean
   ) {
     let result;
-    let phName = name?.slice();
+    let phName = name.slice();
 
     /**
      * Process (SXA) dynamic placeholders

@@ -40,7 +40,6 @@ describe('withSitecoreContext', () => {
       testComponentProps.context.text + 'xxx'
     );
     fireEvent.click(wrapper.container.querySelector('div') as Element);
-    // wrapper.find('div').simulate('click');
 
     // eslint-disable-next-line no-unused-expressions
     expect(testComponentProps.setContext).not.to.be.called;

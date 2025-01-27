@@ -31,7 +31,6 @@ import { Placeholder } from './Placeholder';
 import { ComponentProps } from './PlaceholderCommon';
 import { SitecoreContext } from './SitecoreContext';
 import { ComponentFactory } from './sharedTypes';
-import { PlaceholderMetadata } from './PlaceholderMetadata';
 
 const componentFactory: ComponentFactory = (componentName: string) => {
   const components = new Map<string, React.FC>();

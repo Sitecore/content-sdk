@@ -17,8 +17,8 @@ describe('<EditingScripts />', () => {
     clientData,
     clientScripts,
   }: {
-    pageState: LayoutServicePageState;
     pageEditing: boolean;
+    pageState?: LayoutServicePageState;
     clientData?: Record<string, Record<string, unknown>>;
     clientScripts?: string[];
   }): LayoutServiceData => ({
@@ -54,6 +54,23 @@ describe('<EditingScripts />', () => {
   it('should render nothing when not in editing', () => {
     const layoutData = getLayoutData({
       pageState: LayoutServicePageState.Normal,
+      pageEditing: false,
+    });
+
+    const component = render(
+      <SitecoreContext componentFactory={mockComponentFactory} layoutData={layoutData}>
+        <EditingScripts />
+      </SitecoreContext>,
+      { container: document.body }
+    );
+
+    expect(component.baseElement.innerHTML).to.be.empty;
+    expect(component.container.querySelectorAll('script')).to.have.length(0);
+  });
+
+  it('should render nothing when pageState is undefined', () => {
+    const layoutData = getLayoutData({
+      pageState: undefined,
       pageEditing: false,
     });
 

@@ -58,7 +58,6 @@ describe('<ComponentLibraryLayout />', () => {
     );
     expect(rendered.baseElement.innerHTML).to.equal(
       [
-        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
@@ -78,7 +77,6 @@ describe('<ComponentLibraryLayout />', () => {
 
     expect(rendered.baseElement.innerHTML).to.equal(
       [
-        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
@@ -94,7 +92,7 @@ describe('<ComponentLibraryLayout />', () => {
   it('should fire component:ready event', () => {
     const basicPage = getTestLayoutData();
     const rendered = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
         <ComponentLibraryLayout {...basicPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
@@ -102,7 +100,6 @@ describe('<ComponentLibraryLayout />', () => {
 
     expect(rendered.baseElement.innerHTML).to.equal(
       [
-        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
@@ -122,7 +119,7 @@ describe('<ComponentLibraryLayout />', () => {
   it('should update root component', async () => {
     const basicPage = getTestLayoutData();
     const rendered = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
         <ComponentLibraryLayout {...basicPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
@@ -130,7 +127,6 @@ describe('<ComponentLibraryLayout />', () => {
 
     expect(rendered.baseElement.innerHTML).to.equal(
       [
-        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
@@ -154,7 +150,6 @@ describe('<ComponentLibraryLayout />', () => {
 
     expect(rendered.baseElement.innerHTML).to.equal(
       [
-        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         'new content!',
@@ -164,16 +159,16 @@ describe('<ComponentLibraryLayout />', () => {
   });
 
   it('should update nested component', async () => {
+    const basicPage = getTestLayoutData();
     const placeholderPage = getTestLayoutData(true);
     const rendered = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
         <ComponentLibraryLayout {...placeholderPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
     );
     expect(rendered.baseElement.innerHTML).to.equal(
       [
-        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',
@@ -201,7 +196,6 @@ describe('<ComponentLibraryLayout />', () => {
 
     expect(rendered.baseElement.innerHTML).to.equal(
       [
-        '<script id="jss-hrz-editing" type="application/json">{}</script>',
         '<main><div id="editing-component">',
         '<div class="test"><div>',
         '<p>This is a live set of examples of how to use JSS</p>\n',

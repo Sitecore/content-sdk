@@ -7,7 +7,6 @@ import { LayoutServiceData } from '../index';
 import { render } from '@testing-library/react';
 import { useSitecoreContext } from '../enhancers/withSitecoreContext';
 
-// TODO: revisit
 describe('SitecoreContext', () => {
   let nestedContext = {};
   let nestedSetContext = (_: any) => {};
@@ -17,10 +16,11 @@ describe('SitecoreContext', () => {
   const NestedComponent: FC<NestedComponentProps> = (props: NestedComponentProps) => {
     const { sitecoreContext, updateSitecoreContext } = useSitecoreContext();
     nestedContext = sitecoreContext;
+    // making typescript happy with backup value
     nestedSetContext =
       updateSitecoreContext ||
       (() => {
-        console.log('updateSitecoreContext empty??');
+        console.log('this should not be hit');
       });
     <div>{props.sitecoreContext && 'test'}</div>;
   };
