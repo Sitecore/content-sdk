@@ -4,8 +4,8 @@ import { installPackages, lintFix, nextSteps, BaseArgs, saveConfiguration } from
 import { InitializerFactory } from './InitializerFactory';
 
 export const initRunner = async (template: string, args: BaseArgs) => {
-  let nextStepsArr: string[] = [];
-  let appName = '';
+  let nextStepsText: string | undefined = '';
+  let appName: string = '';
 
   const initFactory = new InitializerFactory();
 
@@ -20,7 +20,7 @@ export const initRunner = async (template: string, args: BaseArgs) => {
 
     appName = response.appName;
 
-    nextStepsArr = [...nextStepsArr, ...(response.nextSteps ?? [])];
+    nextStepsText = response.nextSteps;
   };
 
   await runner(template);
@@ -34,6 +34,6 @@ export const initRunner = async (template: string, args: BaseArgs) => {
   }
 
   if (!args.silent) {
-    nextSteps(appName, nextStepsArr);
+    nextSteps(appName, nextStepsText);
   }
 };

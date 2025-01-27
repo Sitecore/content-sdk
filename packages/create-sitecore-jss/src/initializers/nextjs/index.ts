@@ -17,7 +17,7 @@ export default class NextjsInitializer implements Initializer {
     }
 
     const response = {
-      nextSteps: [],
+      nextSteps: '',
       appName: answers.appName,
     };
 

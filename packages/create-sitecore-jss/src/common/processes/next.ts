@@ -3,9 +3,9 @@ import chalk from 'chalk';
 /**
  * Logs app creation completion message and next steps
  * @param {string} appName application name for the new app
- * @param {string[]} nextStepsArr next steps to be performed after app is created
+ * @param {string} nextSteps next steps to be performed after app is created
  */
-export const nextSteps = async (appName: string, nextStepsArr: string[]) => {
+export const nextSteps = async (appName: string, nextStepsText: string) => {
   const successMessage = `JSS application ${chalk.green(appName)} is ready!`;
 
   console.log(chalk.red('                 -/oyhdmNNNNmdhyo/-                '));
@@ -42,9 +42,9 @@ export const nextSteps = async (appName: string, nextStepsArr: string[]) => {
   console.log(successMessage);
   console.log();
   console.log(chalk.yellow('Next steps:'));
-  nextStepsArr.forEach((step) => {
-    console.log(step);
-  });
+  if (nextStepsText) {
+    console.log(nextStepsText);
+  }
   console.log('* Enable source control (i.e. git init) (optional)');
   console.log('* Check out the JSS documentation at https://jss.sitecore.com');
   console.log();

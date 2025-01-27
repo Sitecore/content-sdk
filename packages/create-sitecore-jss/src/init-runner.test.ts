@@ -68,7 +68,7 @@ describe('initRunner', () => {
     );
     expect(installPackagesStub).to.be.calledOnceWith(args.destination, args.silent);
     expect(lintFixStub).to.be.calledOnceWith(args.destination, args.silent);
-    expect(nextStepsStub).to.be.calledOnceWith(appName, []);
+    expect(nextStepsStub).to.be.calledOnceWith(appName, undefined);
   });
 
   it('should process nextSteps', async () => {
@@ -80,13 +80,13 @@ describe('initRunner', () => {
       template,
     };
 
-    const mockFoo = mockInitializer({ appName, nextSteps: ['foo step 1', 'foo step 2'] });
+    const mockFoo = mockInitializer({ appName, nextSteps: 'foo next step' });
     createStub = sinon.stub(InitializerFactory.prototype, 'create');
     createStub.withArgs('foo').returns(mockFoo);
 
     await initRunner(template, args);
 
-    expect(nextStepsStub).to.be.calledOnceWith(appName, ['foo step 1', 'foo step 2']);
+    expect(nextStepsStub).to.be.calledOnceWith(appName, 'foo next step');
   });
 
   it('should respect silent', async () => {

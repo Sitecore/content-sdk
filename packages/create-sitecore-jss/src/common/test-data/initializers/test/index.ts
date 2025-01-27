@@ -7,9 +7,8 @@ export default class TestInitializer implements Initializer {
 
   async init(_args: BaseArgs) {
     return {
-      nextSteps: [],
+      nextSteps: '',
       appName: '',
-      initializers: [],
     };
-  };
+  }
 }

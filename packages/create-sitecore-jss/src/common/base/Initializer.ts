@@ -2,7 +2,7 @@ import { BaseArgs } from './args';
 
 export type InitializerResults = {
   appName: string;
-  nextSteps?: string[];
+  nextSteps?: string;
 };
 
 /**
