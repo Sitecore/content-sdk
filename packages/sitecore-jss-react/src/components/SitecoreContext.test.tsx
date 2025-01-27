@@ -9,21 +9,19 @@ import { useSitecoreContext } from '../enhancers/withSitecoreContext';
 
 describe('SitecoreContext', () => {
   let nestedContext = {};
-  let nestedSetContext = (_: any) => {};
+
   interface NestedComponentProps extends WithSitecoreContextProps {
     anotherProperty?: string;
   }
+
   const NestedComponent: FC<NestedComponentProps> = (props: NestedComponentProps) => {
-    const { sitecoreContext, updateSitecoreContext } = useSitecoreContext();
+    const { sitecoreContext } = useSitecoreContext();
+
     nestedContext = sitecoreContext;
-    // making typescript happy with backup value
-    nestedSetContext =
-      updateSitecoreContext ||
-      (() => {
-        console.log('this should not be hit');
-      });
+
     <div>{props.sitecoreContext && 'test'}</div>;
   };
+
   const NestedComponentWithContext = withSitecoreContext()(NestedComponent);
 
   const components = new Map();

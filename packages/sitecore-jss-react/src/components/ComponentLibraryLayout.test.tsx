@@ -69,7 +69,7 @@ describe('<ComponentLibraryLayout />', () => {
   it('should render component with placeholders', () => {
     const placeholderPage = getTestLayoutData(true);
     const rendered = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentFactory={componentFactory} layoutData={placeholderPage.layoutData}>
         <ComponentLibraryLayout {...placeholderPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
