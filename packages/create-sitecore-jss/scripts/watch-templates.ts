@@ -3,7 +3,7 @@ import path from 'path';
 import chalk from 'chalk';
 import chokidar from 'chokidar';
 
-import { initRunner } from '../src/init-runner';
+import { main } from '../src/bin';
 
 chokidar
   .watch(path.join(process.cwd(), '.\\src\\templates'), { ignoreInitial: true })
@@ -46,7 +46,7 @@ const initializeApps = async (noInstall: boolean) => {
   try {
     watch = await import(path.resolve('watch.json'));
     const initializer = watch.initializer || '';
-    await initRunner(initializer, { ...watch.args, template: initializer, noInstall });
+    await main({ ...watch.args, template: initializer, noInstall });
     if (watch.args.restoreLockfile) {
       restoreLockfile();
     }

@@ -63,7 +63,7 @@ export const main = async (args: ParsedArgs) => {
   let template: string = '';
 
   // check if template was provided
-  if (args._.length > 0 && args._[0] !== undefined) {
+  if (args._?.length > 0 && args._[0] !== undefined) {
     // use positional parameter
     template = args._[0];
   } else {
