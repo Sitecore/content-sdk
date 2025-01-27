@@ -82,13 +82,13 @@ export const diffFiles = async (
 export const diffAndWriteFiles = async ({
   rendered,
   pathToNewFile,
-  answers,
+  args,
 }: {
   rendered: string;
   pathToNewFile: string;
-  answers: BaseArgs;
+  args: BaseArgs;
 }) => {
-  const targetFilePath = transformFilename(pathToNewFile, answers);
+  const targetFilePath = transformFilename(pathToNewFile, args);
   const choice = await diffFiles(rendered, targetFilePath);
 
   switch (choice) {
@@ -97,7 +97,7 @@ export const diffAndWriteFiles = async ({
       return;
     case 'yes to all':
       // set force to true so diff is not run again
-      answers.force = true;
+      args.force = true;
       writeFileToPath(targetFilePath, rendered);
       return;
     case 'skip':
@@ -117,8 +117,8 @@ export const diffAndWriteFiles = async ({
   }
 };
 
-export const populateEjsData = (answers: BaseArgs, destination?: string) => {
-  // pass in helper to answers object
+export const populateEjsData = (args: BaseArgs, destination?: string) => {
+  // pass in helper to args object
 
   // Don't expose canary build number in the generated app
   const jssVersion = version.includes('canary')
@@ -126,10 +126,10 @@ export const populateEjsData = (answers: BaseArgs, destination?: string) => {
     : version;
 
   const ejsData: Data = {
-    ...answers,
+    ...args,
     version: jssVersion,
     helper: {
-      isDev: isDevEnvironment(destination || answers.destination),
+      isDev: isDevEnvironment(destination || args.destination),
       getPascalCaseName: getPascalCaseName,
       getAppPrefix: getAppPrefix,
     },
@@ -164,23 +164,23 @@ type TransformOptions = {
  * if some files already exist:
  *   - compares diffs
  * @param {string} templatePath path to the template
- * @param {BaseArgs} answers CLI arguments
+ * @param {BaseArgs} args CLI arguments
  * @param {TransformOptions} options custom options
  */
 export const transform = async (
   templatePath: string,
-  answers: BaseArgs,
+  args: BaseArgs,
   options: TransformOptions = {}
 ) => {
   const { isFileForCopy, isFileForSkip, fileForCopyRegExp = FILE_FOR_COPY_REGEXP } = options;
 
-  const destinationPath = path.resolve(answers.destination);
+  const destinationPath = path.resolve(args.destination);
 
-  if (!answers.appPrefix) {
-    answers.appPrefix = false;
+  if (!args.appPrefix) {
+    args.appPrefix = false;
   }
 
-  const ejsData: Data = populateEjsData(answers);
+  const ejsData: Data = populateEjsData(args);
   // the templates to be run through ejs render or copied directly
   const files = glob.sync('**/*', { cwd: templatePath, dot: true, nodir: true });
 
@@ -200,7 +200,7 @@ export const transform = async (
       }
 
       // if the directory doesn't exist, create it
-      fs.mkdirsSync(path.dirname(transformFilename(pathToNewFile, answers)));
+      fs.mkdirsSync(path.dirname(transformFilename(pathToNewFile, args)));
 
       if (isFileForCopy ? isFileForCopy(file, fileForCopyRegExp) : file.match(fileForCopyRegExp)) {
         // pdfs may have <% encoded, which throws an error for ejs.
@@ -215,14 +215,14 @@ export const transform = async (
         ejsData
       );
 
-      if (!answers.force) {
+      if (!args.force) {
         await diffAndWriteFiles({
           rendered: renderedFile,
           pathToNewFile,
-          answers,
+          args,
         });
       } else {
-        writeFileToPath(transformFilename(pathToNewFile, answers), renderedFile);
+        writeFileToPath(transformFilename(pathToNewFile, args), renderedFile);
       }
     } catch (error) {
       console.log(chalk.red(error));

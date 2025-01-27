@@ -20,7 +20,7 @@ describe('transform', () => {
   describe('transformFilename', () => {
     it('should replace placeholder filename with appropriate key', () => {
       const fileName = '{{appName}}.config';
-      const answers = {
+      const args = {
         force: true,
         silent: true,
         appPrefix: true,
@@ -30,7 +30,7 @@ describe('transform', () => {
         template: '',
       };
 
-      const transformedFileName = transformFilename(fileName, answers);
+      const transformedFileName = transformFilename(fileName, args);
 
       expect(transformedFileName).to.equal('test.config');
     });
@@ -181,7 +181,7 @@ describe('transform', () => {
       diffFilesStub = sinon.stub(transform, 'diffFiles').returns(Promise.resolve('yes'));
       writeFileToPathStub = sinon.stub(helpers, 'writeFileToPath');
 
-      const answers = {
+      const args = {
         appName: 'JssNextWeb',
         destination: 'samples/next',
         force: false,
@@ -192,19 +192,19 @@ describe('transform', () => {
       await diffAndWriteFiles({
         rendered: 'test',
         pathToNewFile: 'samples/next/{{language}}.txt',
-        answers,
+        args,
       });
 
       expect(writeFileToPathStub.calledOnceWith('samples/next/en.txt', 'test')).to.equal(true);
 
-      expect(answers.force).to.equal(false);
+      expect(args.force).to.equal(false);
     });
 
     it('should overwrite a single file and later do not ask the same question', async () => {
       diffFilesStub = sinon.stub(transform, 'diffFiles').returns(Promise.resolve('yes to all'));
       writeFileToPathStub = sinon.stub(helpers, 'writeFileToPath');
 
-      const answers = {
+      const args = {
         appName: 'JssNextWeb',
         destination: 'samples/next',
         force: false,
@@ -215,19 +215,19 @@ describe('transform', () => {
       await diffAndWriteFiles({
         rendered: 'test',
         pathToNewFile: 'samples/next/{{language}}.txt',
-        answers,
+        args,
       });
 
       expect(writeFileToPathStub.calledOnceWith('samples/next/en.txt', 'test')).to.equal(true);
 
-      expect(answers.force).to.equal(true);
+      expect(args.force).to.equal(true);
     });
 
     it('should skip file', async () => {
       diffFilesStub = sinon.stub(transform, 'diffFiles').returns(Promise.resolve('skip'));
       writeFileToPathStub = sinon.stub(helpers, 'writeFileToPath');
 
-      const answers = {
+      const args = {
         appName: 'JssNextWeb',
         destination: 'samples/next',
         force: false,
@@ -238,12 +238,12 @@ describe('transform', () => {
       await diffAndWriteFiles({
         rendered: 'test',
         pathToNewFile: 'samples/next/{{language}}.txt',
-        answers,
+        args,
       });
 
       expect(writeFileToPathStub.notCalled).to.equal(true);
 
-      expect(answers.force).to.equal(false);
+      expect(args.force).to.equal(false);
     });
 
     it('should abort a process', async () => {
@@ -252,7 +252,7 @@ describe('transform', () => {
 
       processExitStub = sinon.stub(process, 'exit');
 
-      const answers = {
+      const args = {
         appName: 'JssNextWeb',
         destination: 'samples/next',
         force: false,
@@ -263,14 +263,14 @@ describe('transform', () => {
       await diffAndWriteFiles({
         rendered: 'test',
         pathToNewFile: 'samples/next/{{language}}.txt',
-        answers,
+        args,
       });
 
       expect(writeFileToPathStub.notCalled).to.equal(true);
 
       expect(processExitStub.calledOnce).to.equal(true);
 
-      expect(answers.force).to.equal(false);
+      expect(args.force).to.equal(false);
     });
   });
 
@@ -318,7 +318,7 @@ describe('transform', () => {
       globSyncStub = sinon.stub(glob, 'sync').returns([file]);
       ejsRenderFileStub = sinon.stub(ejs, 'renderFile').returns(Promise.resolve(renderFileOutput));
 
-      const answers = {
+      const args = {
         destination: destinationPath,
         template: '',
         appPrefix: false,
@@ -331,10 +331,10 @@ describe('transform', () => {
 
       diffAndWriteFilesStub = sinon.stub(transformModule, 'diffAndWriteFiles');
 
-      await transformModule.transform(templatePath, answers);
+      await transformModule.transform(templatePath, args);
 
       expect(ejsRenderFileStub).to.have.been.calledOnceWith(path.join(templatePath, file), {
-        ...answers,
+        ...args,
         version: '22.2.1-canary',
         helper: {
           isDev: false,
@@ -345,7 +345,7 @@ describe('transform', () => {
       expect(diffAndWriteFilesStub).to.have.been.calledOnceWith({
         rendered: renderFileOutput,
         pathToNewFile: path.join(destinationPath, file),
-        answers,
+        args,
       });
     });
 
@@ -358,14 +358,14 @@ describe('transform', () => {
       ejsRenderFileStub = sinon.stub(ejs, 'renderFile');
       diffAndWriteFilesStub = sinon.stub(transform, 'diffAndWriteFiles');
 
-      const answers = {
+      const args = {
         destination: destinationPath,
         template: '',
         appPrefix: false,
         force: false,
       };
 
-      await transformFunc(templatePath, answers, {
+      await transformFunc(templatePath, args, {
         isFileForSkip: (f) => f === file,
       });
 
@@ -383,14 +383,14 @@ describe('transform', () => {
       ejsRenderFileStub = sinon.stub(ejs, 'renderFile');
       diffAndWriteFilesStub = sinon.stub(transform, 'diffAndWriteFiles');
 
-      const answers = {
+      const args = {
         destination: destinationPath,
         template: '',
         appPrefix: false,
         force: false,
       };
 
-      await transformFunc(templatePath, answers);
+      await transformFunc(templatePath, args);
 
       expect(fsCopySyncStub).to.have.been.calledTwice;
       files.forEach((file) => {
@@ -413,14 +413,14 @@ describe('transform', () => {
       ejsRenderFileStub = sinon.stub(ejs, 'renderFile');
       diffAndWriteFilesStub = sinon.stub(transform, 'diffAndWriteFiles');
 
-      const answers = {
+      const args = {
         destination: destinationPath,
         template: '',
         appPrefix: false,
         force: false,
       };
 
-      await transformFunc(templatePath, answers, {
+      await transformFunc(templatePath, args, {
         isFileForCopy: (f) => f === file,
       });
 
@@ -441,19 +441,19 @@ describe('transform', () => {
       ejsRenderFileStub = sinon.stub(ejs, 'renderFile').returns(Promise.resolve(renderFileOutput));
       diffAndWriteFilesStub = sinon.stub(transform, 'diffAndWriteFiles');
 
-      const answers = {
+      const args = {
         destination: destinationPath,
         template: '',
         appPrefix: false,
         force: false,
       };
 
-      await transformFunc(templatePath, answers);
+      await transformFunc(templatePath, args);
 
       expect(diffAndWriteFilesStub).to.have.been.calledOnceWith({
         rendered: renderFileOutput,
         pathToNewFile: path.join(destinationPath, '.gitignore'),
-        answers,
+        args,
       });
     });
 
@@ -468,14 +468,14 @@ describe('transform', () => {
       writeFileToPathStub = sinon.stub(helpers, 'writeFileToPath');
       diffAndWriteFilesStub = sinon.stub(transform, 'diffAndWriteFiles');
 
-      const answers = {
+      const args = {
         destination: destinationPath,
         template: '',
         appPrefix: false,
         force: true,
       };
 
-      await transformFunc(templatePath, answers);
+      await transformFunc(templatePath, args);
 
       expect(writeFileToPathStub).to.have.been.calledOnceWith(
         path.join(destinationPath, file),
@@ -494,14 +494,14 @@ describe('transform', () => {
       ejsRenderFileStub = sinon.stub(ejs, 'renderFile').throws(error);
       log = sinon.stub(console, 'log');
 
-      const answers = {
+      const args = {
         destination: destinationPath,
         template: '',
         appPrefix: false,
         force: false,
       };
 
-      await transformFunc(templatePath, answers);
+      await transformFunc(templatePath, args);
 
       expect(log.getCall(0).args[0]).to.equal(chalk.red(error));
       expect(log.getCall(1).args[0]).to.equal(
