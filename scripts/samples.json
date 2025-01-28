@@ -1,8 +1,6 @@
 ﻿[
   {
-    "initializers": [
-      "nextjs"
-    ],
+    "initializer": "nextjs",
     "args": {
       "appName": "nextjs-vanilla",
       "fetchWith": "GraphQL",
