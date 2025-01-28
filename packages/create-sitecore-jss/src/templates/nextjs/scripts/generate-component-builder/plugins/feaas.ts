@@ -8,7 +8,7 @@ class FEaaSPlugin implements ComponentBuilderPlugin {
 
   exec(config: ComponentBuilderPluginConfig) {
     config.packages.push({
-      name: '@sitecore-jss/sitecore-jss-nextjs',
+      name: '@xmcloud-jss/sitecore-jss-nextjs',
       components: [
         {
           componentName: 'BYOCWrapper',
