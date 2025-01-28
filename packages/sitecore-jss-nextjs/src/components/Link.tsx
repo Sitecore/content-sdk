@@ -63,6 +63,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
             className={value.class}
             {...htmlLinkProps}
             ref={ref}
+            {...(process.env.TEST ? { 'data-nextjs-link': true } : {})}
           >
             {text}
             {children}
@@ -75,7 +76,13 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
     const reactLinkProps = { ...props };
     delete reactLinkProps.internalLinkMatcher;
 
-    return <ReactLink {...reactLinkProps} ref={ref} />;
+    return (
+      <ReactLink
+        {...reactLinkProps}
+        ref={ref}
+        {...(process.env.TEST ? { 'data-react-link': true } : {})}
+      />
+    );
   }
 );
 
