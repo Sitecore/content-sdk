@@ -232,7 +232,7 @@ describe('<NextImage />', () => {
         </SitecoreContextReactContext.Provider>
       );
 
-      const img2 = rendered2.container.querySelector('img')
+      const img2 = rendered2.container.querySelector('img');
 
       expect(img2?.getAttribute('src')).to.equal(
         `${HOSTNAME}/-/jssmedia/img/test0.png?foo=bar&w=8`
@@ -298,7 +298,7 @@ describe('<NextImage />', () => {
         <SitecoreContextReactContext.Provider value={testContextProps}>
           <NextImage field={img} />
         </SitecoreContextReactContext.Provider>
-      )
+      );
       expect(rendered.container.querySelectorAll('img')).to.have.length(0);
     });
   });
