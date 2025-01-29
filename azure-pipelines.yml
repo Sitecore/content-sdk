@@ -45,16 +45,10 @@ steps:
   inputs:
     versionSpec: '22.x'
 - script: |
-    git remote set-url origin https://$(GITHUB_PAT)@github.com/Sitecore/xmc-jss-dev.git
-    git fetch origin dev
-  displayName: 'Fetch origin/dev branch'
-  env:
-    GITHUB_PAT: $(GITHUB_PAT)
-- script: |
     yarn cache clean --all && yarn install --immutable
   displayName: 'yarn install - initial'
 - script: |
-    yarn lint-packages ${{ variables.lernaSinceFlag }}
+    yarn lint-packages
   displayName: 'lint packages'
 - script: |
     npm run build
@@ -89,7 +83,7 @@ steps:
   env:
     YARN_ENABLE_IMMUTABLE_INSTALLS: false
 - script: |
-    yarn lint-samples ${{ variables.lernaSinceFlag }}
+    yarn lint-samples
   displayName: 'lint samples'
   condition: and(succeeded(), ne(variables.shouldPublish, true))
 
