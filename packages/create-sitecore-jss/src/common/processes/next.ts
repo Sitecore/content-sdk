@@ -3,7 +3,7 @@ import chalk from 'chalk';
 /**
  * Logs app creation completion message and next steps
  * @param {string} appName application name for the new app
- * @param {string} nextSteps next steps to be performed after app is created
+ * @param {string} nextStepsText next steps to be performed after app is created
  */
 export const nextSteps = async (appName: string, nextStepsText: string) => {
   const successMessage = `JSS application ${chalk.green(appName)} is ready!`;

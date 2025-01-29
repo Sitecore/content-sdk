@@ -77,12 +77,13 @@ export const main = async (args: ParsedArgs) => {
 
   if (!template || !allTemplates.includes(template)) {
     if (allTemplates.length === 1) {
-      if (template)
+      if (template) {
         console.log(
           chalk.red(
             `Template '${template}' not found. '${allTemplates[0]}' will be initialized instead.`
           )
         );
+      }
       template = allTemplates[0];
     } else {
       const answer = await inquirer.prompt({
