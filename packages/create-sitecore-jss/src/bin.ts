@@ -76,15 +76,25 @@ export const main = async (args: ParsedArgs) => {
   const allTemplates = getAllTemplates(templatePath);
 
   if (!template || !allTemplates.includes(template)) {
-    const answer = await inquirer.prompt({
-      type: 'list',
-      name: 'template',
-      message: 'Which template would you like to create?',
-      choices: allTemplates,
-      default: 'nextjs',
-    });
+    if (allTemplates.length === 1) {
+      if (template)
+        console.log(
+          chalk.red(
+            `Template '${template}' not found. '${allTemplates[0]}' will be initialized instead.`
+          )
+        );
+      template = allTemplates[0];
+    } else {
+      const answer = await inquirer.prompt({
+        type: 'list',
+        name: 'template',
+        message: 'Which template would you like to create?',
+        choices: allTemplates,
+        default: 'nextjs',
+      });
 
-    template = answer.template;
+      template = answer.template;
+    }
   }
 
   const destination = await getDestination(args, template);
