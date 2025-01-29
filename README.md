@@ -19,17 +19,6 @@ To develop a JSS application, you need:
 
 > To run a JSS application in production or develop using Sitecore data you need to connect your application to a Sitecore instance with the Headless Services module installed (requires a **Sitecore Headless Services license**). Sitecore _requires Windows_, but the Sitecore instance does not need to be local. You can use a Sitecore instance installed in a virtual machine or on a remote server.
 
-### Identify the JSS version for your Sitecore version
-
-JSS versions are coupled with Sitecore versions. The current JSS release is compatible with the latest version of Sitecore.
-
-If you use an older version of Sitecore, before creating a JSS project, you need to determine which JSS version is compatible with your version of Sitecore XP.
-
-To identify the correct JSS version for your Sitecore XP version:
-
-- For Sitecore XP 7.5—9.3, in the [Sitecore modules compatibility table for Sitecore XP 7.5—9.3](https://support.sitecore.com/kb?id=kb_article_view&sysparm_article=KB0541788), in the section _Headless Services_, identify the correct JavaScript Services version for your Sitecore version.
-- For Sitecore XP 10.0 and later, in the [Sitecore modules compatibility table for Sitecore XP 10.0 and later versions](https://support.sitecore.com/kb?id=kb_article_view&sysparm_article=KB1000576), in the section _Headless Services_, identify the correct JavaScript Services version for your Sitecore version.
-
 ### Getting started with the latest version of JSS
 
 To create a JSS project:
@@ -55,41 +44,10 @@ To create a JSS project:
    jss start
    ```
 
-### Working with older versions
-
-If you need to use an older version of JSS, you must install the JSS CLI version 19.x or older.
-
-To create a JSS project for an older version of JSS and Sitecore:
-
-1. [Identify the correct JSS version for your Sitecore XP version](#identify-the-jss-version-for-your-sitecore-version).
-
-2. Run the JSS CLI installation command:
-   ```
-   npm i @sitecore-jss/sitecore-jss-cli@<version>
-   ```
-   Replace `<version>` with your desired version. For example, `npm i @sitecore-jss/sitecore-jss-cli@13.0.0`.
-3. In a terminal, create your JSS project by running the following command:
-
-   ```
-   jss create my-jss-app react --branch release/13.0.0
-   ```
-
-   > The command uses the `--branch` option and you need to provide the name of a branch in the JSS repository. You can use a [release branch](https://github.com/Sitecore/jss/branches/all?query=release%2F) or any other branch from the repository.
-
-4. Change directory to your application folder:
-   ```
-   cd my-first-jss-app
-   ```
-5. Start the development server:
-   ```
-   jss start
-   ```
-
 ## Documentation and community resources
 
 - Official JSS documentation:
   - [XM Cloud](https://doc.sitecore.com/xmc/en/developers/jss/latest/jss-xmc/index-en.html)
-  - [XP](https://doc.sitecore.com/xp/en/developers/hd/latest/sitecore-headless-development/sitecore-javascript-rendering-sdks--jss-.html)
 - [StackExchange](https://sitecore.stackexchange.com/)
 - [Community Slack](https://sitecorechat.slack.com/messages/jss)
 - [Sitecore Community Forum](https://community.sitecore.net/developers/f/40)

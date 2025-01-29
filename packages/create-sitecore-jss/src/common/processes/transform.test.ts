@@ -831,4 +831,24 @@ describe('transform', () => {
       );
     });
   });
+
+  describe('populateEjsData', () => {
+    it('should remove prerelease build number from version', () => {
+      const destinationPath = path.resolve('samples/next');
+      const answers = {
+        destination: destinationPath,
+        templates: [],
+        appPrefix: false,
+        force: false,
+      };
+
+      const transformModule = proxyquire('./transform', {
+        '../../../package.json': { version: '22.4.1-beta.33' },
+      });
+
+      const result = transformModule.populateEjsData(answers);
+
+      expect(result.version).to.equal('22.4.1-beta');
+    });
+  });
 });
