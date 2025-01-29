@@ -1,5 +1,5 @@
 {
-  "name": "create-sitecore-jss",
+  "name": "@xmcloud-jss/create-sitecore-jss",
   "version": "0.1.0-beta.0",
   "description": "Sitecore JSS initializer",
   "bin": "./dist/index.js",
