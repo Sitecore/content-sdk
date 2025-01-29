@@ -45,6 +45,13 @@ steps:
   inputs:
     versionSpec: '22.x'
 - script: |
+    git fetch origin dev
+  displayName: 'Fetch origin/dev branch'
+- script: |
+    git branch -a
+    git log -1
+  displayName: 'Debug repository state'
+- script: |
     yarn cache clean --all && yarn install --immutable
   displayName: 'yarn install - initial'
 - script: |
