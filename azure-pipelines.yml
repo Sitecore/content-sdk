@@ -45,6 +45,7 @@ steps:
   inputs:
     versionSpec: '22.x'
 - script: |
+    git remote set-url origin https://$GITHUB_PAT_ENV@github.com/Sitecore/xmc-jss-dev.git
     git fetch origin dev
   displayName: 'Fetch origin/dev branch'
 - script: |
