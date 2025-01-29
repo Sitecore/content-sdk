@@ -45,13 +45,11 @@ steps:
   inputs:
     versionSpec: '22.x'
 - script: |
-    git remote set-url origin https://$GITHUB_PAT_ENV@github.com/Sitecore/xmc-jss-dev.git
+    git remote set-url origin https://$(GITHUB_PAT)@github.com/Sitecore/xmc-jss-dev.git
     git fetch origin dev
   displayName: 'Fetch origin/dev branch'
-- script: |
-    git branch -a
-    git log -1
-  displayName: 'Debug repository state'
+  env:
+    GITHUB_PAT: $(GITHUB_PAT)
 - script: |
     yarn cache clean --all && yarn install --immutable
   displayName: 'yarn install - initial'
