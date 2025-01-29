@@ -4,7 +4,7 @@ import path, { sep } from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import ejs from 'ejs';
-import glob from 'glob';
+import * as glob from 'glob';
 import { expect } from 'chai';
 import sinon, { SinonStub } from 'sinon';
 import { currentPkg, partialPkg } from '../test-data/pkg';
@@ -466,7 +466,6 @@ describe('transform', () => {
     let mergeStub: SinonStub;
     let diffAndWriteFilesStub: SinonStub;
     let writeFileToPathStub: SinonStub;
-    let transformFilenameStub: SinonStub;
     let openJsonFileStub: SinonStub;
     let log: SinonStub;
 
@@ -485,7 +484,6 @@ describe('transform', () => {
       mergeStub?.restore();
       diffAndWriteFilesStub?.restore();
       writeFileToPathStub?.restore();
-      transformFilenameStub?.restore();
       openJsonFileStub?.restore();
       log?.restore();
     });

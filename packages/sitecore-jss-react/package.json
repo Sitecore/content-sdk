@@ -8,7 +8,7 @@
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
     "lint": "eslint \"./src/**/*.tsx\" \"./src/**/*.ts\"",
-    "test": "mocha \"./src/**/*.test.ts\" \"./src/**/*.test.tsx\" --exit",
+    "test": "mocha --require ts-node/register/transpile-only --require ./src/tests/jsdom-setup.ts \"./src/**/*.test.ts\" \"./src/**/*.test.tsx\" --exit",
     "prepublishOnly": "npm run build",
     "coverage": "nyc npm test",
     "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/sitecore-jss-react src/index.ts --githubPages false"
@@ -45,15 +45,14 @@
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.31.11",
     "jsdom": "^26.0.0",
-    "mocha": "^11.1.0",
+    "mocha": "^10.2.0",
     "nyc": "^17.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sinon": "^19.0.2",
-    "sinon-chai": "^4.0.0",
+    "sinon-chai": "^3.7.0",
     "ts-node": "^10.9.1",
-    "tsx": "^4.19.2",
-    "typescript": "~4.9.3"
+    "typescript": "~5.7.3"
   },
   "peerDependencies": {
     "@sitecore-feaas/clientside": "^0.5.19",
