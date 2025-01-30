@@ -229,10 +229,10 @@ describe('helpers', () => {
       readdirSync = sinon.stub(fs, 'readdirSync');
       readdirSync.returns(['foo', 'bar', 'baz']);
 
-      const templates = getAllTemplates('./mock/path');
+      const templates = getAllTemplates();
 
       expect(readdirSync.calledOnce).to.equal(true);
-      expect(readdirSync.getCall(0).args[0]).to.equal('./mock/path');
+      expect(readdirSync.getCall(0).args[0]).to.equal(path.resolve(__dirname, 'templates'));
       expect(templates).to.deep.equal(['foo', 'bar', 'baz']);
     });
   });

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import path, { sep } from 'path';
+import { sep } from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { initRunner } from './init-runner';
@@ -71,10 +71,8 @@ export const main = async (args: ParsedArgs) => {
     template = args.template ? args.template : '';
   }
 
-  // validate/gather template
-  const templatePath = path.resolve(__dirname, 'templates');
-  const allTemplates = getAllTemplates(templatePath);
-
+  // validate template
+  const allTemplates = getAllTemplates();
   if (!template || !allTemplates.includes(template)) {
     const answer = await inquirer.prompt({
       type: 'list',

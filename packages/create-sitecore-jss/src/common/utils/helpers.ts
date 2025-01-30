@@ -75,10 +75,10 @@ export const sortKeys = (obj: JsonObjectType) => {
 
 /**
  * Returns all templates
- * @param {string} templatePath path to the templates
  * @returns {string[]} templates
  */
-export const getAllTemplates = (templatePath: string): string[] => {
+export const getAllTemplates = (): string[] => {
+  const templatePath = path.resolve(__dirname, 'templates');
   return fs.readdirSync(templatePath, 'utf8');
 };
 
