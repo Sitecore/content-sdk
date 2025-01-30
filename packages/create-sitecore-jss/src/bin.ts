@@ -11,7 +11,7 @@ export const parseArgs = (): ParsedArgs => {
   // to pass to the generator prompts and skip them.
   // useful for CI and testing purposes
   const options = {
-    boolean: ['appPrefix', 'force', 'noInstall', 'yes', 'silent'],
+    boolean: ['force', 'noInstall', 'yes', 'silent'],
     string: ['appName', 'destination', 'template'],
     default: {},
   };

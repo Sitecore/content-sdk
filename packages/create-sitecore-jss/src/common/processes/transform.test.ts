@@ -23,7 +23,6 @@ describe('transform', () => {
       const args = {
         force: true,
         silent: true,
-        appPrefix: true,
         appName: 'test',
         destination: '.\\test-data\\test',
         prerender: 'SSG',
@@ -321,7 +320,6 @@ describe('transform', () => {
       const args = {
         destination: destinationPath,
         template: '',
-        appPrefix: false,
         force: false,
       };
 
@@ -338,8 +336,6 @@ describe('transform', () => {
         version: '22.2.1-canary',
         helper: {
           isDev: false,
-          getPascalCaseName: helpers.getPascalCaseName,
-          getAppPrefix: helpers.getAppPrefix,
         },
       });
       expect(diffAndWriteFilesStub).to.have.been.calledOnceWith({
@@ -361,7 +357,6 @@ describe('transform', () => {
       const args = {
         destination: destinationPath,
         template: '',
-        appPrefix: false,
         force: false,
       };
 
@@ -386,7 +381,6 @@ describe('transform', () => {
       const args = {
         destination: destinationPath,
         template: '',
-        appPrefix: false,
         force: false,
       };
 
@@ -416,7 +410,6 @@ describe('transform', () => {
       const args = {
         destination: destinationPath,
         template: '',
-        appPrefix: false,
         force: false,
       };
 
@@ -444,7 +437,6 @@ describe('transform', () => {
       const args = {
         destination: destinationPath,
         template: '',
-        appPrefix: false,
         force: false,
       };
 
@@ -471,7 +463,6 @@ describe('transform', () => {
       const args = {
         destination: destinationPath,
         template: '',
-        appPrefix: false,
         force: true,
       };
 
@@ -497,7 +488,6 @@ describe('transform', () => {
       const args = {
         destination: destinationPath,
         template: '',
-        appPrefix: false,
         force: false,
       };
 

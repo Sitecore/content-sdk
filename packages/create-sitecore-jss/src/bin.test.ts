@@ -30,7 +30,6 @@ describe('bin', () => {
       process.argv = [
         'node',
         'index.ts',
-        '--appPrefix',
         '--force',
         '--noInstall',
         '--yes',
@@ -46,7 +45,6 @@ describe('bin', () => {
       const args = parseArgs();
 
       expect(args._).to.be.empty;
-      expect(args.appPrefix).to.equal(true);
       expect(args.force).to.equal(true);
       expect(args.noInstall).to.equal(true);
       expect(args.yes).to.equal(true);
@@ -57,22 +55,20 @@ describe('bin', () => {
     });
 
     it('should accept positional parameters', () => {
-      process.argv = ['node', 'index.ts', 'foo,bar', '--appPrefix', '--appName', 'test'];
+      process.argv = ['node', 'index.ts', 'foo,bar', '--appName', 'test'];
 
       const args = parseArgs();
 
       expect(args._.length).to.equal(1);
       expect(args._[0]).to.equal('foo,bar');
-      expect(args.appPrefix).to.equal(true);
       expect(args.appName).to.equal('test');
     });
 
     it('should accept boolean values for boolean parameters', () => {
-      process.argv = ['node', 'index.ts', '--appPrefix', 'true', '--force', 'false'];
+      process.argv = ['node', 'index.ts', 'true', '--force', 'false'];
 
       const args = parseArgs();
 
-      expect(args.appPrefix).to.equal(true);
       expect(args.force).to.equal(false);
     });
 

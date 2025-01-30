@@ -17,13 +17,6 @@ export const isDevEnvironment = (cwd?: string): boolean => {
   return fs.existsSync(path.join(lernaPath, 'lerna.json'));
 };
 
-export const getPascalCaseName = (name: string): string => {
-  // handle underscores by converting them to hyphens
-  const temp: string[] = name.replace(/_/g, '-').split('-');
-  name = temp.map((item: string) => (item = item.charAt(0).toUpperCase() + item.slice(1))).join('');
-  return name;
-};
-
 /**
  * Provides json data from a file
  * @param {string} jsonFilePath path to the .json file.
@@ -81,9 +74,6 @@ export const getAllTemplates = (): string[] => {
   const templatePath = path.resolve(__dirname, 'templates');
   return fs.readdirSync(templatePath, 'utf8');
 };
-
-export const getAppPrefix = (appPrefix: boolean, appName: string, includeHyphen = true): string =>
-  appPrefix ? `${getPascalCaseName(appName)}${includeHyphen ? '-' : ''}` : '';
 
 export const writeFileToPath = (destinationPath: string, content: string) => {
   fs.writeFileSync(destinationPath, content, 'utf8');

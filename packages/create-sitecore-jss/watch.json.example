@@ -4,7 +4,6 @@
     "yes": true,
     "force": true,
     "silent": true,
-    "appPrefix": true,
     "appName": "sitecore-jss-nextjs",
     "destination": "..\\..\\samples\\sitecore-jss-nextjs",
     "prerender": "SSG",

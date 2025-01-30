@@ -4,12 +4,7 @@ import glob from 'glob';
 import path, { sep } from 'path';
 import { Data, renderFile } from 'ejs';
 import inquirer from 'inquirer';
-import {
-  getPascalCaseName,
-  getAppPrefix,
-  writeFileToPath,
-  isDevEnvironment,
-} from '../utils/helpers';
+import { writeFileToPath, isDevEnvironment } from '../utils/helpers';
 import { diffLines, diffJson, Change } from 'diff';
 import { BaseArgs } from '../base/args';
 const { version } = require('../../../package.json');
@@ -130,8 +125,6 @@ export const populateEjsData = (args: BaseArgs, destination?: string) => {
     version: jssVersion,
     helper: {
       isDev: isDevEnvironment(destination || args.destination),
-      getPascalCaseName: getPascalCaseName,
-      getAppPrefix: getAppPrefix,
     },
   };
   return ejsData;
@@ -175,10 +168,6 @@ export const transform = async (
   const { isFileForCopy, isFileForSkip, fileForCopyRegExp = FILE_FOR_COPY_REGEXP } = options;
 
   const destinationPath = path.resolve(args.destination);
-
-  if (!args.appPrefix) {
-    args.appPrefix = false;
-  }
 
   const ejsData: Data = populateEjsData(args);
   // the templates to be run through ejs render or copied directly

@@ -34,7 +34,4 @@ export type BaseArgs = {
 /**
  * Set of arguments for the client-side app
  */
-export type ClientAppArgs = BaseArgs &
-  Partial<ClientAppAnswer> & {
-    appPrefix?: boolean;
-  };
+export type ClientAppArgs = BaseArgs & Partial<ClientAppAnswer>;

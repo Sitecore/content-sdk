@@ -5,12 +5,10 @@ import { expect } from 'chai';
 import chalk from 'chalk';
 import sinon, { SinonStub } from 'sinon';
 import {
-  getPascalCaseName,
   openJsonFile,
   writeJsonFile,
   sortKeys,
   getAllTemplates,
-  getAppPrefix,
   saveConfiguration,
 } from './helpers';
 import { JsonObjectType } from '../processes/transform';
@@ -18,26 +16,6 @@ import testPackage from '../test-data/test.package.json';
 import testJson from '../test-data/test.json';
 
 describe('helpers', () => {
-  describe('getPascalCaseName', () => {
-    it('should reformat kebab-case to PascalCase', () => {
-      const result = getPascalCaseName('my-next-sitecore-app');
-
-      expect(result).to.match(/MyNextSitecoreApp/);
-    });
-
-    it('should reformat snake_case to PascalCase', () => {
-      const result = getPascalCaseName('my_next_sitecore_app');
-
-      expect(result).to.match(/MyNextSitecoreApp/);
-    });
-
-    it('should reformat one word lowercase app name to be capitalized', () => {
-      const result = getPascalCaseName('onewordappnamenohyphen');
-
-      expect(result).to.match(/Onewordappnamenohyphen/);
-    });
-  });
-
   describe('openJsonFile', () => {
     let log: SinonStub;
 
@@ -234,32 +212,6 @@ describe('helpers', () => {
       expect(readdirSync.calledOnce).to.equal(true);
       expect(readdirSync.getCall(0).args[0]).to.equal(path.resolve(__dirname, 'templates'));
       expect(templates).to.deep.equal(['foo', 'bar', 'baz']);
-    });
-  });
-
-  describe('getAppPrefix', () => {
-    it('should return value when appPrefix is true', () => {
-      const result = getAppPrefix(true, 'test');
-
-      expect(result).to.not.be.empty;
-    });
-
-    it('should return empty when appPrefix is false', () => {
-      const result = getAppPrefix(false, 'test');
-
-      expect(result).to.be.empty;
-    });
-
-    it('should return pascal name plus hyphen by default', () => {
-      const result = getAppPrefix(true, 'Foo-Bar');
-
-      expect(result).to.equal('FooBar-');
-    });
-
-    it('should return pascal name without hyphen', () => {
-      const result = getAppPrefix(true, 'Foo-Bar', false);
-
-      expect(result).to.equal('FooBar');
     });
   });
 });
