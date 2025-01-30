@@ -1,29 +1,18 @@
 import chalk from 'chalk';
 import path, { sep } from 'path';
-import { installPackages, lintFix, nextSteps, BaseArgs, saveConfiguration } from './common';
-import { InitializerFactory } from './InitializerFactory';
+import {
+  installPackages,
+  lintFix,
+  nextSteps,
+  BaseArgs,
+  saveConfiguration,
+  Initializer,
+} from './common';
 
 export const initialize = async (template: string, args: BaseArgs) => {
-  let nextStepsText: string | undefined = '';
-  let appName: string = '';
-
-  const initFactory = new InitializerFactory();
-
-  const runner = async (template: string): Promise<void> => {
-    const initializer = await initFactory.create(template);
-    if (!initializer) {
-      throw new RangeError(`Unknown template '${template}'`);
-    }
-
-    args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
-    const response = await initializer.init(args);
-
-    appName = response.appName;
-
-    nextStepsText = response.nextSteps;
-  };
-
-  await runner(template);
+  const initializer = await getInitializer(template);
+  args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
+  const response = await initializer.init(args);
 
   saveConfiguration(args.template, path.resolve(`${args.destination}${sep}package.json`));
 
@@ -34,6 +23,13 @@ export const initialize = async (template: string, args: BaseArgs) => {
   }
 
   if (!args.silent) {
-    nextSteps(appName, nextStepsText);
+    nextSteps(response.appName, response.nextSteps);
   }
+};
+
+export const getInitializer = async (template: string): Promise<Initializer> => {
+  const { default: Initializer } = await import(
+    path.resolve(__dirname, 'initializers', template, 'index')
+  );
+  return new Initializer();
 };
