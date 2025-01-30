@@ -159,7 +159,7 @@ describe('bin', () => {
       });
     });
 
-    it('should prompt for template if missing and there are more than one available templates', async () => {
+    it('should prompt for template if missing', async () => {
       const allTemplates = ['nextjs', 'foo', 'bar'];
       getAllTemplatesStub.returns(allTemplates);
       fsExistsSyncStub.returns(false);
@@ -188,83 +188,6 @@ describe('bin', () => {
         destination: args.destination,
         template: expectedTemplate,
       });
-    });
-
-    it('should prompt for template if not available and there are more than one available templates', async () => {
-      const allTemplates = ['nextjs', 'foo', 'bar'];
-      getAllTemplatesStub.returns(allTemplates);
-      fsExistsSyncStub.returns(false);
-      fsReaddirSyncStub.returns([]);
-
-      inquirerPromptStub
-        .withArgs({
-          type: 'list',
-          name: 'template',
-          message: 'Which template would you like to create?',
-          choices: allTemplates,
-          default: 'nextjs',
-        })
-        .returns({
-          template: 'foo',
-        });
-
-      const args = mockArgs({
-        destination: 'test\\path',
-        template: 'wrong-template',
-      });
-      const expectedTemplate = 'foo';
-      await main(args);
-
-      expect(inquirerPromptStub).to.have.been.calledOnce;
-      expect(initRunnerStub).to.have.been.calledOnceWith(expectedTemplate, {
-        ...args,
-        destination: args.destination,
-        template: expectedTemplate,
-      });
-    });
-
-    it('should use the single available template if template parameter is missing and there is only on available template', async () => {
-      const allTemplates = ['foo'];
-      getAllTemplatesStub.returns(allTemplates);
-      fsExistsSyncStub.returns(false);
-      fsReaddirSyncStub.returns([]);
-
-      const args = mockArgs({
-        destination: 'test\\path',
-      });
-      await main(args);
-
-      expect(inquirerPromptStub).to.not.have.been.called;
-      expect(initRunnerStub).to.have.been.calledOnceWith(allTemplates[0], {
-        ...args,
-        destination: args.destination,
-        template: allTemplates[0],
-      });
-    });
-
-    it('should use the single available template and notify user if provided template is not available, are there is only on available template', async () => {
-      const allTemplates = ['foo'];
-      getAllTemplatesStub.returns(allTemplates);
-      fsExistsSyncStub.returns(false);
-      fsReaddirSyncStub.returns([]);
-
-      const args = mockArgs({
-        destination: 'test\\path',
-        template: 'wrong-template',
-      });
-      await main(args);
-
-      expect(inquirerPromptStub).to.not.have.been.called;
-      expect(initRunnerStub).to.have.been.calledOnceWith(allTemplates[0], {
-        ...args,
-        destination: args.destination,
-        template: allTemplates[0],
-      });
-      expect(consoleLogStub).to.have.been.calledWith(
-        chalk.red(
-          `Template '${args.template}' not found. '${allTemplates[0]}' will be initialized instead.`
-        )
-      );
     });
 
     describe('promptDestination', () => {
