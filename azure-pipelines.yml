@@ -74,6 +74,7 @@ steps:
     reportDirectory: '$(Build.SourcesDirectory)/coverlet'
 
 # skipping the following steps until we publish the first canary
+# TODO: revert this change after we publish first canary
 # - script: |
 #     yarn scaffold-samples
 #   displayName: 'scaffold samples'
