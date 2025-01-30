@@ -68,7 +68,7 @@ export const main = async (args: ParsedArgs) => {
     template = args._[0];
   } else {
     // use --template arg
-    template = args.template ? args.template : '';
+    template = args.template || '';
   }
 
   // validate/gather template
