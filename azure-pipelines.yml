@@ -38,7 +38,7 @@ variables:
   disable.coverage.autogenerate: 'true'
 # Some steps here scaffold jss apps and check if they build and lint correctly
 # build apps step currently excluded: RAV apps have issues with yarn build, nextjs has some with all builds without Sitecore connection
-# TODO: add step for lerna run build --scope sample-* when RAV and nextjs yarn build issues are resolved
+# TODO: add step for lerna run build --scope sample-* when RAV and nextjs yarn build issues are resolved trest
 
 steps:
 - task: NodeTool@0
