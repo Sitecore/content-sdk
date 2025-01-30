@@ -83,6 +83,9 @@ steps:
 #   env:
 #     YARN_ENABLE_IMMUTABLE_INSTALLS: false
 - script: |
+    yarn cache clean --all && yarn install --immutable
+  displayName: 'yarn install samples - initial'
+- script: |
     yarn lint-samples
   displayName: 'lint samples'
   condition: and(succeeded(), ne(variables.shouldPublish, true))
