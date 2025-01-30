@@ -72,20 +72,23 @@ steps:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/Cobertura.xml'
     reportDirectory: '$(Build.SourcesDirectory)/coverlet'
-- script: |
-    yarn scaffold-samples
-  displayName: 'scaffold samples'
-  condition: and(succeeded(), ne(variables.shouldPublish, true))
-- script: |
-    yarn install
-  displayName: 'yarn install - refresh'
-  condition: and(succeeded(), ne(variables.shouldPublish, true))
-  env:
-    YARN_ENABLE_IMMUTABLE_INSTALLS: false
-- script: |
-    yarn lint-samples
-  displayName: 'lint samples'
-  condition: and(succeeded(), ne(variables.shouldPublish, true))
+
+# skipping the following steps until we publish the first canary
+# - script: |
+#     yarn scaffold-samples
+#   displayName: 'scaffold samples'
+#   condition: and(succeeded(), ne(variables.shouldPublish, true))
+# - script: |
+#     yarn install
+#   displayName: 'yarn install - refresh'
+#   condition: and(succeeded(), ne(variables.shouldPublish, true))
+#   env:
+#     YARN_ENABLE_IMMUTABLE_INSTALLS: false
+# - script: |
+#     yarn lint-samples
+#   displayName: 'lint samples'
+#   condition: and(succeeded(), ne(variables.shouldPublish, true))
+
 
   # * Configure git with a commit user
   # * Update git remote to include a Personal Access Token, so lerna can push
