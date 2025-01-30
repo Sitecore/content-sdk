@@ -56,7 +56,7 @@ steps:
     yarn cache clean --all && yarn install --immutable
   displayName: 'yarn install - initial'
 - script: |
-    yarn lint-packages  ${{ variables.lernaSinceFlag }
+    yarn lint-packages  ${{ variables.lernaSinceFlag }}
   displayName: 'lint packages'
 - script: |
     npm run build
