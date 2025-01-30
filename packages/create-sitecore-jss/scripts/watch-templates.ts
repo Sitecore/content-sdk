@@ -45,8 +45,7 @@ const initializeApps = async (noInstall: boolean) => {
   let watch;
   try {
     watch = await import(path.resolve('watch.json'));
-    const initializer = watch.initializer || '';
-    await main({ ...watch.args, template: initializer, noInstall });
+    await main({ ...watch.args, template: watch.template, noInstall });
     if (watch.args.restoreLockfile) {
       restoreLockfile();
     }

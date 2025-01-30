@@ -12,7 +12,7 @@ for (const sample of samplesToScaffold) {
   // we need to keep noInstall as true - otherwise both yarn install and lint will execute
   // we run lint separately in the azure pipeline
   let scaffoldArgs = {
-    template: sample.initializer,
+    template: sample.template,
     yes: true,
     force: true,
     silent: true,
