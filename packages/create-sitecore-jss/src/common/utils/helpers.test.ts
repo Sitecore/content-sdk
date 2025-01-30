@@ -210,7 +210,7 @@ describe('helpers', () => {
       const templates = getAllTemplates();
 
       expect(readdirSync.calledOnce).to.equal(true);
-      expect(readdirSync.getCall(0).args[0]).to.equal(path.resolve(__dirname, 'templates'));
+      expect(readdirSync.getCall(0).args[0]).to.equal(path.resolve(__dirname, './../../templates'));
       expect(templates).to.deep.equal(['foo', 'bar', 'baz']);
     });
   });
