@@ -19,5 +19,5 @@ for (const sample of samplesToScaffold) {
     noInstall: true,
     ...sample.args,
   };
-  initialize(sample.initializer, scaffoldArgs);
+  initialize(sample.template, scaffoldArgs);
 }
