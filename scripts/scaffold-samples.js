@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 
-const { initRunner } = require('../packages/create-sitecore-jss/dist/init-runner');
+const { initialize } = require('../packages/create-sitecore-jss/dist/initialize');
 const samplesToScaffold = require('./samples.json');
 const { getAppName } = require('./utils');
 
@@ -19,5 +19,5 @@ for (const sample of samplesToScaffold) {
     noInstall: true,
     ...sample.args,
   };
-  initRunner(sample.initializer, scaffoldArgs);
+  initialize(sample.initializer, scaffoldArgs);
 }
