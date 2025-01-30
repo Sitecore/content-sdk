@@ -3,7 +3,7 @@ import path, { sep } from 'path';
 import { installPackages, lintFix, nextSteps, BaseArgs, saveConfiguration } from './common';
 import { InitializerFactory } from './InitializerFactory';
 
-export const initRunner = async (template: string, args: BaseArgs) => {
+export const initialize = async (template: string, args: BaseArgs) => {
   let nextStepsText: string | undefined = '';
   let appName: string = '';
 

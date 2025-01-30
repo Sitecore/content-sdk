@@ -9,7 +9,7 @@ import inquirer from 'inquirer';
 import { ParsedArgs } from 'minimist';
 import { parseArgs, main, promptDestination, getDestination } from './bin';
 import * as helpers from './common/utils/helpers';
-import * as initRunner from './init-runner';
+import * as initialize from './initialize';
 
 chai.use(sinonChai);
 
@@ -87,7 +87,7 @@ describe('bin', () => {
     let inquirerPromptStub: SinonStub;
     let fsExistsSyncStub: SinonStub;
     let fsReaddirSyncStub: SinonStub;
-    let initRunnerStub: SinonStub;
+    let initializeStub: SinonStub;
     let consoleLogStub: SinonStub;
     let processExitStub: SinonStub;
 
@@ -100,7 +100,7 @@ describe('bin', () => {
       inquirerPromptStub = sinon.stub(inquirer, 'prompt');
       fsExistsSyncStub = sinon.stub(fs, 'existsSync');
       fsReaddirSyncStub = sinon.stub(fs, 'readdirSync');
-      initRunnerStub = sinon.stub(initRunner, 'initRunner');
+      initializeStub = sinon.stub(initialize, 'initialize');
       consoleLogStub = sinon.stub(console, 'log');
       processExitStub = sinon.stub(process, 'exit');
     });
@@ -110,7 +110,7 @@ describe('bin', () => {
       inquirerPromptStub?.restore();
       fsExistsSyncStub?.restore();
       fsReaddirSyncStub?.restore();
-      initRunnerStub?.restore();
+      initializeStub?.restore();
       consoleLogStub?.restore();
       processExitStub?.restore();
     });
@@ -128,7 +128,7 @@ describe('bin', () => {
 
       await main(args);
       expect(inquirerPromptStub).to.not.have.been.called;
-      expect(initRunnerStub).to.have.been.calledOnceWith(expectedTemplate, {
+      expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
         ...args,
         destination: args.destination,
         template: expectedTemplate,
@@ -148,7 +148,7 @@ describe('bin', () => {
       await main(args);
 
       expect(inquirerPromptStub).to.not.have.been.called;
-      expect(initRunnerStub).to.have.been.calledOnceWith(expectedTemplate, {
+      expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
         ...args,
         destination: args.destination,
         template: expectedTemplate,
@@ -179,7 +179,7 @@ describe('bin', () => {
       const expectedTemplate = 'foo';
       await main(args);
 
-      expect(initRunnerStub).to.have.been.calledOnceWith(expectedTemplate, {
+      expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
         ...args,
         destination: args.destination,
         template: expectedTemplate,
@@ -266,10 +266,10 @@ describe('bin', () => {
       });
     });
 
-    // this partially duplicates tests for getDestinations, but we need to ensure initRunnerStub is called with correct values
+    // this partially duplicates tests for getDestinations, but we need to ensure initializeStub is called with correct values
     // no way around it however - sinon cannot mock getDestinations on its own, which could've prevented this
     describe('main with destinations from args', () => {
-      it('should call initRunnerStub with value from getDestination', async () => {
+      it('should call initializeStub with value from getDestination', async () => {
         getAllTemplatesStub.returns(['foo', 'bar']);
         fsExistsSyncStub.returns(false);
         fsReaddirSyncStub.returns([]);
@@ -284,7 +284,7 @@ describe('bin', () => {
 
         await main(args);
 
-        expect(initRunnerStub).to.have.been.calledWith(expectedTemplate, {
+        expect(initializeStub).to.have.been.calledWith(expectedTemplate, {
           ...args,
           destination: mockDestination,
           template: expectedTemplate,
@@ -314,7 +314,7 @@ describe('bin', () => {
           name: 'continue',
           message: `Directory '${args.destination}' not empty. Are you sure you want to continue?`,
         });
-        expect(initRunnerStub).to.have.been.calledWith(expectedTemplate, {
+        expect(initializeStub).to.have.been.calledWith(expectedTemplate, {
           ...args,
           destination: args.destination,
           template: expectedTemplate,
@@ -343,7 +343,7 @@ describe('bin', () => {
           });
           expect(processExitStub).to.have.been.calledOnce;
           expect(error.name).to.equal('process.exit');
-          expect(initRunnerStub).to.not.have.been.called;
+          expect(initializeStub).to.not.have.been.called;
         });
       });
 
@@ -361,7 +361,7 @@ describe('bin', () => {
         await main(args);
 
         expect(inquirerPromptStub).to.not.have.been.called;
-        expect(initRunnerStub).to.have.been.calledOnceWith(expectedTemplate, {
+        expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
           ...args,
           destination: args.destination,
           template: expectedTemplate,
@@ -369,12 +369,12 @@ describe('bin', () => {
       });
     });
 
-    it('should handle initRunner error', async () => {
+    it('should handle initialize error', async () => {
       getAllTemplatesStub.returns(['foo', 'bar']);
       fsExistsSyncStub.returns(false);
       fsReaddirSyncStub.returns([]);
       const error = new Error('nope');
-      initRunnerStub.throws(error);
+      initializeStub.throws(error);
       inquirerPromptStub.returns({
         continue: false,
       });

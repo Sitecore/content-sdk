@@ -2,7 +2,7 @@ import fs from 'fs';
 import { sep } from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { initRunner } from './init-runner';
+import { initialize } from './initialize';
 import minimist, { ParsedArgs } from 'minimist';
 import { getAllTemplates } from './common';
 
@@ -101,7 +101,7 @@ export const main = async (args: ParsedArgs) => {
   }
 
   try {
-    await initRunner(template, { ...args, destination, template });
+    await initialize(template, { ...args, destination, template });
   } catch (error) {
     console.log(chalk.red('An error occurred: ', error));
     process.exit(1);

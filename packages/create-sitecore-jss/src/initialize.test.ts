@@ -6,14 +6,14 @@ import chalk from 'chalk';
 import path, { sep } from 'path';
 import { Initializer, InitializerResults } from './common/base/Initializer';
 import { InitializerFactory } from './InitializerFactory';
-import { initRunner } from './init-runner';
+import { initialize } from './initialize';
 import * as helpers from './common/utils/helpers';
 import * as install from './common/processes/install';
 import * as next from './common/processes/next';
 
 chai.use(sinonChai);
 
-describe('initRunner', () => {
+describe('initialize', () => {
   let log: SinonStub;
   let installPackagesStub: SinonStub;
   let lintFixStub: SinonStub;
@@ -57,7 +57,7 @@ describe('initRunner', () => {
     createStub = sinon.stub(InitializerFactory.prototype, 'create');
     createStub.withArgs('foo').returns(mockFoo);
 
-    await initRunner(template, args);
+    await initialize(template, args);
 
     expect(log.getCalls().length).to.equal(1);
     expect(log.getCall(0).args[0]).to.equal(chalk.cyan(`Initializing '${template}'...`));
@@ -84,7 +84,7 @@ describe('initRunner', () => {
     createStub = sinon.stub(InitializerFactory.prototype, 'create');
     createStub.withArgs('foo').returns(mockFoo);
 
-    await initRunner(template, args);
+    await initialize(template, args);
 
     expect(nextStepsStub).to.be.calledOnceWith(appName, 'foo next step');
   });
@@ -102,7 +102,7 @@ describe('initRunner', () => {
     createStub = sinon.stub(InitializerFactory.prototype, 'create');
     createStub.withArgs('foo').returns(mockFoo);
 
-    await initRunner(template, args);
+    await initialize(template, args);
 
     expect(log).to.not.have.been.called;
     expect(installPackagesStub).to.be.calledOnceWith(args.destination, args.silent);
@@ -124,7 +124,7 @@ describe('initRunner', () => {
     createStub = sinon.stub(InitializerFactory.prototype, 'create');
     createStub.withArgs('foo').returns(mockFoo);
 
-    await initRunner(template, args);
+    await initialize(template, args);
 
     expect(installPackagesStub).to.not.have.been.called;
     expect(lintFixStub).to.not.have.been.called;
@@ -141,7 +141,7 @@ describe('initRunner', () => {
     createStub = sinon.stub(InitializerFactory.prototype, 'create');
     createStub.returns(undefined);
 
-    await initRunner(template, args).catch((error) => {
+    await initialize(template, args).catch((error) => {
       expect(error).to.be.instanceOf(RangeError);
     });
   });
