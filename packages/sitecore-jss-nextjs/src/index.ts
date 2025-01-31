@@ -1,10 +1,10 @@
 export {
   constants,
   // generic data access
-  HttpDataFetcher,
-  HttpResponse,
   NativeDataFetcher,
   NativeDataFetcherConfig,
+  NativeDataFetcherResponse,
+  NativeDataFetcherError,
   HTMLLink,
   enableDebug,
   debug,
@@ -36,15 +36,6 @@ export {
 } from '@sitecore-jss/sitecore-jss/layout';
 export { RestComponentLayoutService } from '@sitecore-jss/sitecore-jss/editing';
 export { mediaApi } from '@sitecore-jss/sitecore-jss/media';
-export {
-  trackingApi,
-  TrackingRequestOptions,
-  CampaignInstance,
-  GoalInstance,
-  OutcomeInstance,
-  EventInstance,
-  PageViewInstance,
-} from '@sitecore-jss/sitecore-jss/tracking';
 export {
   DictionaryPhrases,
   DictionaryService,

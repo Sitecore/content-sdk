@@ -1,7 +1,48 @@
-import { RestLayoutServiceConfig, RestLayoutService } from '../layout/rest-layout-service';
 import { LayoutServiceData, EditMode } from '../layout/models';
 import { IncomingMessage, ServerResponse } from 'http';
-import { debug, fetchData } from '..';
+import { debug, NativeDataFetcher, NativeDataFetcherConfig } from '..';
+import { fetchData, HttpDataFetcher } from '../data-fetcher';
+
+/**
+ * Data fetcher resolver in order to provide custom data fetcher
+ * @param {IncomingMessage} [req] Request instance
+ * @param {ServerResponse} [res] Response instance
+ */
+export type DataFetcherResolver = <T>(
+  req?: IncomingMessage,
+  res?: ServerResponse
+) => HttpDataFetcher<T>;
+
+export type RestLayoutServiceConfig = {
+  /**
+   * Your Sitecore instance hostname that is the backend for JSS
+   */
+  apiHost: string;
+  /**
+   * The Sitecore SSC API key your app uses
+   */
+  apiKey: string;
+  /**
+   * The JSS application name
+   */
+  siteName: string;
+  /**
+   * Enables/disables analytics tracking for the Layout Service invocation (default is true).
+   * More than likely, this would be set to false for SSG/hybrid implementations, and the
+   * JSS tracker would instead be used on the client-side: {@link https://jss.sitecore.com/docs/fundamentals/services/tracking}
+   * @default true
+   */
+  tracking?: boolean;
+  /**
+   * Function that handles fetching API data
+   */
+  dataFetcherResolver?: DataFetcherResolver;
+
+  /**
+   * Layout Service "named" configuration
+   */
+  configurationName?: string;
+};
 
 /**
  * Params for requesting component data from service in Component Library mode
@@ -47,10 +88,8 @@ export interface ComponentLayoutRequestParams {
  * Makes a request to /sitecore/api/layout/component in 'library' mode in Pages.
  * Returns layoutData for one single rendered component
  */
-export class RestComponentLayoutService extends RestLayoutService {
-  constructor(private config: RestLayoutServiceConfig) {
-    super(config);
-  }
+export class RestComponentLayoutService {
+  constructor(private config: RestLayoutServiceConfig) {}
 
   fetchComponentData(
     params: ComponentLayoutRequestParams,
@@ -78,6 +117,45 @@ export class RestComponentLayoutService extends RestLayoutService {
       throw error;
     });
   }
+
+  protected getFetcher = (req?: IncomingMessage, res?: ServerResponse) => {
+    return this.config.dataFetcherResolver
+      ? this.config.dataFetcherResolver<LayoutServiceData>(req, res)
+      : this.getDefaultFetcher<LayoutServiceData>(req);
+  };
+
+  /**
+   * Resolves layout service url
+   * @param {string} apiType which layout service API to call ('render' or 'placeholder')
+   * @returns the layout service url
+   */
+  protected resolveLayoutServiceUrl(apiType: string): string {
+    const { apiHost = '', configurationName = 'jss' } = this.config;
+
+    return `${apiHost}/sitecore/api/layout/${apiType}/${configurationName}`;
+  }
+
+  /**
+   * Provides default @see NativeDataFetcher data fetcher
+   * @param {IncomingMessage} [req] Request instance
+   * @returns default fetcher
+   */
+  protected getDefaultFetcher = <T>(req?: IncomingMessage) => {
+    const config = {
+      debugger: debug.editing,
+    } as NativeDataFetcherConfig;
+    const nativeFetcher = new NativeDataFetcher(config);
+    const headers = req && {
+      ...req.headers,
+      ...(req.socket?.remoteAddress ? { 'X-Forwarded-For': req.socket.remoteAddress } : {}),
+    };
+    const fetcher = (url: string, data?: RequestInit) => {
+      data = { ...data, ...{ headers: headers as HeadersInit } };
+      return nativeFetcher.fetch<T>(url, data);
+    };
+
+    return fetcher;
+  };
 
   protected getComponentFetchParams(params: ComponentLayoutRequestParams) {
     // exclude undefined params with this one simple trick

@@ -15,11 +15,11 @@ chai.use(sinonChai);
 
 describe('bin', () => {
   describe('parseArgs', () => {
-    let originalArgv: string[];
+    let originalArgv: string[] = [];
 
     beforeEach(() => {
       // eslint-disable-next-line no-unused-labels
-      originalArgv: process.argv;
+      originalArgv = process.argv;
     });
 
     afterEach(() => {

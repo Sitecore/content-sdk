@@ -10,7 +10,7 @@ class SXAPlugin implements ConfigPlugin {
 
   async exec(config: JssConfig) {
     return Object.assign({}, config, {
-      layoutServiceConfigurationName: 'sxa-jss',
+      layoutServiceConfigurationName: 'jss',
     });
   }
 }

@@ -33,6 +33,7 @@ export interface GraphQLClient {
  * In cases where an error status was sent back from the server (`!response.ok`), the `response` will be populated with details. In cases where a response was never received, the `code` can be populated with the error code (e.g. Node's 'ECONNRESET', 'ETIMEDOUT', etc).
  */
 export type GraphQLClientError = Partial<ClientError> & {
+  headers?: HeadersInit;
   code?: string;
 };
 
@@ -140,7 +141,7 @@ export class DefaultRetryStrategy implements RetryStrategy {
   }
 
   getDelay(error: GraphQLClientError, attempt: number): number {
-    const rawHeaders = error.response?.headers;
+    const rawHeaders = error.response?.headers as Headers;
     const retryAfterHeader = rawHeaders?.get('Retry-After');
 
     if (
@@ -230,7 +231,7 @@ export class GraphQLRequestClient implements GraphQLClient {
 
     const retryer = async (): Promise<T> => {
       // Note we don't have access to raw request/response with graphql-request
-      // (or nice hooks like we have with Axios), but we should log whatever we have.
+      // but we should log whatever we have.
       this.debug('request: %o', {
         url: this.endpoint,
         headers: { ...this.headers, ...options?.headers },
@@ -245,10 +246,10 @@ export class GraphQLRequestClient implements GraphQLClient {
       }
 
       return Promise.race(fetchWithOptionalTimeout).then(
-        (data: T) => {
+        (data: unknown) => {
           this.abortTimeout?.clear();
           this.debug('response in %dms: %o', Date.now() - startTimestamp, data);
-          return Promise.resolve(data);
+          return Promise.resolve(data as T);
         },
         async (error: GraphQLClientError) => {
           this.abortTimeout?.clear();

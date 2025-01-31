@@ -77,9 +77,7 @@ export class GraphQLLayoutService extends LayoutServiceBase {
   }
 
   /**
-   * Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
-   * library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
-   * want to use something else.
+   * Gets a GraphQL client that can make requests to the API.
    * @returns {GraphQLClient} implementation
    */
   protected getGraphQLClient(): GraphQLClient {

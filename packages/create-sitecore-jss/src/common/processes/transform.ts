@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import fs from 'fs-extra';
-import glob from 'glob';
+import * as glob from 'glob';
 import path, { sep } from 'path';
 import { Data, renderFile } from 'ejs';
 import { writeFileToPath, isDevEnvironment } from '../utils/helpers';
@@ -17,10 +17,8 @@ export type JsonObjectType = {
 export const populateEjsData = (args: BaseAppArgs, destination?: string) => {
   // pass in helper to args object
 
-  // Don't expose canary build number in the generated app
-  const jssVersion = version.includes('canary')
-    ? version.replace(/(-canary\.\d+)$/, '-canary')
-    : version;
+  // Don't expose prerelease build number in the generated app
+  const jssVersion = version.replace(/(\.\d+)$/, '');
 
   const ejsData: Data = {
     ...args,
