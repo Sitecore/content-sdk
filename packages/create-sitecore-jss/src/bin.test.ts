@@ -34,8 +34,6 @@ describe('bin', () => {
         '--noInstall',
         '--yes',
         '--silent',
-        '--appName',
-        'test',
         '--destination',
         '.\\test\\path',
         '--template',
@@ -49,19 +47,18 @@ describe('bin', () => {
       expect(args.noInstall).to.equal(true);
       expect(args.yes).to.equal(true);
       expect(args.silent).to.equal(true);
-      expect(args.appName).to.equal('test');
       expect(args.destination).to.equal('.\\test\\path');
       expect(args.template).to.equal('foo');
     });
 
     it('should accept positional parameters', () => {
-      process.argv = ['node', 'index.ts', 'foo,bar', '--appName', 'test'];
+      process.argv = ['node', 'index.ts', 'foo,bar', '--destination', '.\\test\\path'];
 
       const args = parseArgs();
 
       expect(args._.length).to.equal(1);
       expect(args._[0]).to.equal('foo,bar');
-      expect(args.appName).to.equal('test');
+      expect(args.destination).to.equal('.\\test\\path');
     });
 
     it('should accept boolean values for boolean parameters', () => {
@@ -73,11 +70,11 @@ describe('bin', () => {
     });
 
     it('should remove string parameters that are missing values', () => {
-      process.argv = ['node', 'index.ts', '--appName', 'valid', '--destination'];
+      process.argv = ['node', 'index.ts', '--destination', '--template', 'nextjs'];
 
       const args = parseArgs();
 
-      expect(args.appName).to.equal('valid');
+      expect(args.template).to.equal('nextjs');
       expect(args.destination).to.be.undefined;
     });
   });
@@ -245,14 +242,14 @@ describe('bin', () => {
         expect(await getDestination(testArgs, testTemplate)).to.deep.equal(expectedDestination);
       });
 
-      it('should return default base destination with args.appName when provided and --yes arg is used', async () => {
-        const testAppName = 'myapp';
+      it('should return default base destination with args.template when provided and --yes arg is used', async () => {
+        const testTemplate = 'nextjss';
         const testArgs = mockArgs({
           destination: undefined,
-          appName: testAppName,
+          template: testTemplate,
           yes: true,
         });
-        const expectedDestination = `${process.cwd()}${sep + testAppName}`;
+        const expectedDestination = `${process.cwd()}${sep + testTemplate}`;
         expect(await getDestination(testArgs, testTemplate)).to.deep.equal(expectedDestination);
       });
 

@@ -1,4 +1,4 @@
-import { BaseArgs } from './args';
+import { BaseAppArgs } from './args';
 
 export type InitializerResults = {
   appName: string;
@@ -10,8 +10,12 @@ export type InitializerResults = {
  */
 export interface Initializer {
   /**
+   * The name for the app
+   */
+  appName: string;
+  /**
    * Entrypoint for initializer
    * @param {BaseArgs} args CLI arguments
    */
-  init: (args: BaseArgs) => Promise<InitializerResults>;
+  init: (args: BaseAppArgs) => Promise<InitializerResults>;
 }

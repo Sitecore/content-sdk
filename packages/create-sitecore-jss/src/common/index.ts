@@ -1,5 +1,5 @@
-export { ClientAppArgs, BaseArgs } from './base/args';
-export { ClientAppAnswer, clientAppPrompts, DEFAULT_APPNAME } from './base/prompts';
+export { BaseAppArgs } from './base/args';
+export { BaseAppAnswer, baseAppPrompts } from './base/prompts';
 export { Initializer } from './base/Initializer';
 
 export {

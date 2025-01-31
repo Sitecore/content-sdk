@@ -12,12 +12,12 @@ export const parseArgs = (): ParsedArgs => {
   // useful for CI and testing purposes
   const options = {
     boolean: ['force', 'noInstall', 'yes', 'silent'],
-    string: ['appName', 'destination', 'template'],
+    string: ['destination', 'template'],
     default: {},
   };
   const args: ParsedArgs = minimist(process.argv.slice(2), options);
 
-  // we need to coerce string parameters in minimist above (to prevent string options without a value e.g. `--appName` from coming in as a boolean `true`).
+  // we need to coerce string parameters in minimist above (to prevent string options without a value e.g. `--template` from coming in as a boolean `true`).
   // however, coersion will result in an empty string and inquirer will treat this as a valid answer value (and not prompt!).
   // we need to go back through and remove these to prevent this.
   options.string.forEach((key) => {
@@ -30,10 +30,9 @@ export const getDestination = async (args: ParsedArgs, template: string) => {
   if (!template) {
     throw new Error('Unable to get destinations, provided template is empty');
   }
-  // validate/gather destinations
-  const defaultBaseDestination = `${process.cwd()}${
-    args.appName ? sep + args.appName : `${sep}${template}`
-  }`;
+
+  // validate/gather destination
+  const defaultBaseDestination = `${process.cwd()}${sep}${template}`;
 
   let destination = args.destination;
   if (!destination) {

@@ -5,10 +5,10 @@ const samplesToScaffold = require('./samples.json');
 const { getAppName } = require('./utils');
 
 for (const sample of samplesToScaffold) {
-  sample.args.appName = getAppName(sample.args);
-  sample.args.destination = `./samples/${sample.args.appName}`;
-  sample.args.hostName = `${sample.args.appName}.jss.localhost`;
-  console.log(chalk.green(`Initializing sample ${sample.args.appName} ...`));
+  const appName = getAppName(sample.args);
+  sample.args.destination = `./samples/${appName}`;
+  sample.args.hostName = `${appName}.jss.localhost`;
+  console.log(chalk.green(`Initializing sample ${appName} ...`));
   // we need to keep noInstall as true - otherwise both yarn install and lint will execute
   // we run lint separately in the azure pipeline
   let scaffoldArgs = {

@@ -1,11 +1,9 @@
-import { ClientAppAnswer } from './prompts';
-
 type Arg = string | number | boolean;
 
 /**
  * A base set of arguments used by CLI
  */
-export type BaseArgs = {
+export type BaseAppArgs = {
   [key: string]: Arg | Arg[] | undefined;
   /**
    * The template to be used
@@ -29,9 +27,8 @@ export type BaseArgs = {
    * Default values will be used
    */
   yes?: boolean;
+  /**
+   * The name of the application. Provided by the Initializer.
+   */
+  appName?: string;
 };
-
-/**
- * Set of arguments for the client-side app
- */
-export type ClientAppArgs = BaseArgs & Partial<ClientAppAnswer>;

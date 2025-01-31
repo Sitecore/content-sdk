@@ -22,8 +22,11 @@ describe('initialize', () => {
   let saveConfigurationStub: SinonStub;
   let getInitializerStub: SinonStub;
 
-  const mockInitializer = (results: InitializerResults) => {
+  const defaultAppName = 'jss-foo-app';
+
+  const mockInitializer = (results: Partial<InitializerResults>) => {
     const mock = <Initializer>{};
+    results.appName = defaultAppName;
     mock.init = sinon.stub().returns(results);
     return mock;
   };
@@ -48,14 +51,13 @@ describe('initialize', () => {
 
   it('should run', async () => {
     const template = 'foo';
-    const appName = 'test-app';
     const args = {
       silent: false,
       destination: 'samples/next',
       template,
     };
 
-    const mockFoo = mockInitializer({ appName });
+    const mockFoo = mockInitializer({});
     getInitializerStub.withArgs('foo').returns(mockFoo);
 
     await initializeFunc(template, args);
@@ -69,36 +71,34 @@ describe('initialize', () => {
     );
     expect(installPackagesStub).to.be.calledOnceWith(args.destination, args.silent);
     expect(lintFixStub).to.be.calledOnceWith(args.destination, args.silent);
-    expect(nextStepsStub).to.be.calledOnceWith(appName, undefined);
+    expect(nextStepsStub).to.be.calledOnceWith(defaultAppName, undefined);
   });
 
   it('should process nextSteps', async () => {
     const template = 'foo';
-    const appName = 'test-app';
     const args = {
       silent: false,
       destination: 'samples/next',
       template,
     };
 
-    const mockFoo = mockInitializer({ appName, nextSteps: 'foo next step' });
+    const mockFoo = mockInitializer({ nextSteps: 'foo next step' });
     getInitializerStub.withArgs('foo').returns(mockFoo);
 
     await initializeFunc(template, args);
 
-    expect(nextStepsStub).to.be.calledOnceWith(appName, 'foo next step');
+    expect(nextStepsStub).to.be.calledOnceWith(defaultAppName, 'foo next step');
   });
 
   it('should respect silent', async () => {
     const template = 'foo';
-    const appName = 'test-app';
     const args = {
       silent: true,
       destination: 'samples/next',
       template,
     };
 
-    const mockFoo = mockInitializer({ appName });
+    const mockFoo = mockInitializer({});
     getInitializerStub.withArgs('foo').returns(mockFoo);
 
     await initializeFunc(template, args);
@@ -111,7 +111,6 @@ describe('initialize', () => {
 
   it('should respect noInstall', async () => {
     const template = 'foo';
-    const appName = 'test-app';
     const args = {
       silent: false,
       noInstall: true,
@@ -119,7 +118,7 @@ describe('initialize', () => {
       template,
     };
 
-    const mockFoo = mockInitializer({ appName });
+    const mockFoo = mockInitializer({});
     getInitializerStub.withArgs('foo').returns(mockFoo);
 
     await initializeFunc(template, args);

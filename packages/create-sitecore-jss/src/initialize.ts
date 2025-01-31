@@ -4,12 +4,12 @@ import {
   installPackages,
   lintFix,
   nextSteps,
-  BaseArgs,
+  BaseAppArgs,
   saveConfiguration,
   Initializer,
 } from './common';
 
-export const initialize = async (template: string, args: BaseArgs) => {
+export const initialize = async (template: string, args: BaseAppArgs) => {
   const initializer = await getInitializer(template);
   args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
   const response = await initializer.init(args);

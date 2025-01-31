@@ -4,7 +4,7 @@ import glob from 'glob';
 import path, { sep } from 'path';
 import { Data, renderFile } from 'ejs';
 import { writeFileToPath, isDevEnvironment } from '../utils/helpers';
-import { BaseArgs } from '../base/args';
+import { BaseAppArgs } from '../base/args';
 const { version } = require('../../../package.json');
 
 const FILE_FOR_COPY_REGEXP = /(index\.html)$|\.(gif|jpg|jpeg|tiff|png|svg|ashx|ico|pdf|jar|eot|woff|ttf|woff2)$/;
@@ -14,7 +14,7 @@ export type JsonObjectType = {
   [key: string]: JsonPropertyType;
 };
 
-export const transformFilename = (file: string, args: BaseArgs): string => {
+export const transformFilename = (file: string, args: BaseAppArgs): string => {
   // eslint-disable-next-line guard-for-in
   for (const key in args) {
     const value = args[key];
@@ -25,7 +25,7 @@ export const transformFilename = (file: string, args: BaseArgs): string => {
   return file;
 };
 
-export const populateEjsData = (args: BaseArgs, destination?: string) => {
+export const populateEjsData = (args: BaseAppArgs, destination?: string) => {
   // pass in helper to args object
 
   // Don't expose canary build number in the generated app
@@ -73,7 +73,7 @@ type TransformOptions = {
  */
 export const transform = async (
   templatePath: string,
-  args: BaseArgs,
+  args: BaseAppArgs,
   options: TransformOptions = {}
 ) => {
   const { isFileForCopy, isFileForSkip, fileForCopyRegExp = FILE_FOR_COPY_REGEXP } = options;
