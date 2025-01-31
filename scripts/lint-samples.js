@@ -12,7 +12,7 @@ const runLintCommand = (scope) =>
 
 if (!lernaSinceFlag) {
   // lint all the samples
-  runLintCommand('sample-*');
+  runLintCommand('jss-*');
 
   return;
 }
