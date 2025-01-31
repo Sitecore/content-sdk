@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
 import ejs from 'ejs';
-import glob from 'glob';
+import * as glob from 'glob';
 import chai, { expect } from 'chai';
 import sinon, { SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
@@ -17,33 +17,17 @@ const { transform: transformFunc } = transform;
 
 describe('transform', () => {
   describe('transform', () => {
-    let fsMkdirsSyncStub: SinonStub;
     let fsCopySyncStub: SinonStub;
-    let fsExistsSyncStub: SinonStub;
-    let fsReadFileSunc: SinonStub;
     let globSyncStub: SinonStub;
     let ejsRenderFileStub: SinonStub;
-    let mergeEnvStub: SinonStub;
-    let mergeStub: SinonStub;
     let writeFileToPathStub: SinonStub;
-    let openJsonFileStub: SinonStub;
     let log: SinonStub;
 
-    beforeEach(() => {
-      fsMkdirsSyncStub = sinon.stub(fs, 'mkdirsSync');
-    });
-
     afterEach(() => {
-      fsMkdirsSyncStub?.restore();
       fsCopySyncStub?.restore();
-      fsExistsSyncStub?.restore();
-      fsReadFileSunc?.restore();
       globSyncStub?.restore();
       ejsRenderFileStub?.restore();
-      mergeEnvStub?.restore();
-      mergeStub?.restore();
       writeFileToPathStub?.restore();
-      openJsonFileStub?.restore();
       log?.restore();
     });
 
