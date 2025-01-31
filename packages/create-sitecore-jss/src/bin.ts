@@ -93,11 +93,10 @@ export const main = async (args: ParsedArgs) => {
       name: 'continue',
       message: `Directory '${destination}' not empty. Are you sure you want to continue?`,
     });
+
     if (!answer.continue) {
       process.exit();
     }
-  } else {
-    args.force = true;
   }
 
   try {

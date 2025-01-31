@@ -3,9 +3,7 @@ import fs from 'fs-extra';
 import glob from 'glob';
 import path, { sep } from 'path';
 import { Data, renderFile } from 'ejs';
-import inquirer from 'inquirer';
 import { writeFileToPath, isDevEnvironment } from '../utils/helpers';
-import { diffLines, diffJson, Change } from 'diff';
 import { BaseArgs } from '../base/args';
 const { version } = require('../../../package.json');
 
@@ -25,91 +23,6 @@ export const transformFilename = (file: string, args: BaseArgs): string => {
     file = file.replace(`{{${key}}}`, value);
   }
   return file;
-};
-
-/**
- * @param {string} sourceFileContent transformed version of our template
- * @param {string} targetFilePath user's file path
- */
-export const diffFiles = async (
-  sourceFileContent: string,
-  targetFilePath: string
-): Promise<string> => {
-  if (!fs.pathExistsSync(targetFilePath)) return '';
-
-  const targetFileContents = fs.readFileSync(path.resolve(process.cwd(), targetFilePath), 'utf8');
-
-  if (targetFileContents === sourceFileContent) return '';
-
-  const diff = targetFilePath.endsWith('.json')
-    ? diffJson(JSON.parse(targetFileContents), JSON.parse(sourceFileContent))
-    : diffLines(targetFileContents, sourceFileContent);
-
-  diff.forEach((change: Change) => {
-    const color = change.added ? chalk.green : change.removed ? chalk.red : chalk.gray;
-    const prefix = change.added ? '+' : change.removed ? '-' : '=';
-
-    change.value.split('\n').forEach((value) => {
-      if (!value) return;
-
-      console.log(color(`${prefix} ${value}`));
-    });
-  });
-  // TODO - enhancement: Write 'pagination' function that prints off
-  // only x lines and prints remaining x lines on user input.
-  // allow user to move forward and back like when piping to more in bash
-  // examples of more: https://shapeshed.com/unix-more/#what-is-the-more-command-in-unix
-
-  console.log(`Showing potential changes in ${chalk.yellow(targetFilePath.replace('/', '\\'))}`);
-
-  const answer = await inquirer.prompt({
-    type: 'list',
-    name: 'choice',
-    choices: ['yes', 'skip', 'yes to all', 'abort'],
-    message: `File ${chalk.yellow(
-      targetFilePath.replace('/', '\\')
-    )} is about to be overwritten with the above changes. Are you sure you want to continue?`,
-  });
-
-  return answer.choice;
-};
-
-export const diffAndWriteFiles = async ({
-  rendered,
-  pathToNewFile,
-  args,
-}: {
-  rendered: string;
-  pathToNewFile: string;
-  args: BaseArgs;
-}) => {
-  const targetFilePath = transformFilename(pathToNewFile, args);
-  const choice = await diffFiles(rendered, targetFilePath);
-
-  switch (choice) {
-    case 'yes':
-      writeFileToPath(targetFilePath, rendered);
-      return;
-    case 'yes to all':
-      // set force to true so diff is not run again
-      args.force = true;
-      writeFileToPath(targetFilePath, rendered);
-      return;
-    case 'skip':
-      return;
-    case 'abort':
-      console.log(chalk.yellow('Goodbye!'));
-      return process.exit();
-    // eslint-disable no-fallthrough
-    case '':
-      // writeFile to default case so that when an initializer is
-      // run for the first time, it will still copy files that
-      // do not return a diff.
-      writeFileToPath(targetFilePath, rendered);
-      return;
-    default:
-      return;
-  }
 };
 
 export const populateEjsData = (args: BaseArgs, destination?: string) => {
@@ -154,8 +67,6 @@ type TransformOptions = {
  * Handles each template file and applies ejs renderer, also:
  * - Determines files for copy.
  * - Determines files for skip.
- * if some files already exist:
- *   - compares diffs
  * @param {string} templatePath path to the template
  * @param {BaseArgs} args CLI arguments
  * @param {TransformOptions} options custom options
@@ -204,15 +115,7 @@ export const transform = async (
         ejsData
       );
 
-      if (!args.force) {
-        await diffAndWriteFiles({
-          rendered: renderedFile,
-          pathToNewFile,
-          args,
-        });
-      } else {
-        writeFileToPath(transformFilename(pathToNewFile, args), renderedFile);
-      }
+      writeFileToPath(transformFilename(pathToNewFile, args), renderedFile);
     } catch (error) {
       console.log(chalk.red(error));
       console.log(`Error occurred when trying to render to ${chalk.yellow(path.resolve(file))}`);
