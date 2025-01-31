@@ -5,10 +5,12 @@ import sinonChai from 'sinon-chai';
 import chalk from 'chalk';
 import path, { sep } from 'path';
 import { Initializer, InitializerResults } from './common/base/Initializer';
-import * as init from './initialize';
+import * as initialize from './initialize';
 import * as helpers from './common/utils/helpers';
 import * as install from './common/processes/install';
 import * as next from './common/processes/next';
+
+const { getInitializer, initialize: initializeFunc } = initialize;
 
 chai.use(sinonChai);
 
@@ -32,7 +34,7 @@ describe('initialize', () => {
     lintFixStub = sinon.stub(install, 'lintFix');
     nextStepsStub = sinon.stub(next, 'nextSteps');
     saveConfigurationStub = sinon.stub(helpers, 'saveConfiguration');
-    getInitializerStub = sinon.stub(init, 'getInitializer');
+    getInitializerStub = sinon.stub(initialize, 'getInitializer');
   });
 
   afterEach(() => {
@@ -56,7 +58,7 @@ describe('initialize', () => {
     const mockFoo = mockInitializer({ appName });
     getInitializerStub.withArgs('foo').returns(mockFoo);
 
-    await init.initialize(template, args);
+    await initializeFunc(template, args);
 
     expect(log.getCalls().length).to.equal(1);
     expect(log.getCall(0).args[0]).to.equal(chalk.cyan(`Initializing '${template}'...`));
@@ -82,7 +84,7 @@ describe('initialize', () => {
     const mockFoo = mockInitializer({ appName, nextSteps: 'foo next step' });
     getInitializerStub.withArgs('foo').returns(mockFoo);
 
-    await init.initialize(template, args);
+    await initializeFunc(template, args);
 
     expect(nextStepsStub).to.be.calledOnceWith(appName, 'foo next step');
   });
@@ -99,7 +101,7 @@ describe('initialize', () => {
     const mockFoo = mockInitializer({ appName });
     getInitializerStub.withArgs('foo').returns(mockFoo);
 
-    await init.initialize(template, args);
+    await initializeFunc(template, args);
 
     expect(log).to.not.have.been.called;
     expect(installPackagesStub).to.be.calledOnceWith(args.destination, args.silent);
@@ -120,7 +122,7 @@ describe('initialize', () => {
     const mockFoo = mockInitializer({ appName });
     getInitializerStub.withArgs('foo').returns(mockFoo);
 
-    await init.initialize(template, args);
+    await initializeFunc(template, args);
 
     expect(installPackagesStub).to.not.have.been.called;
     expect(lintFixStub).to.not.have.been.called;
@@ -129,7 +131,7 @@ describe('initialize', () => {
 
 describe('getInitializer', () => {
   it('should return initializer', async () => {
-    const initializer = await init.getInitializer('./../../src/common/test-data/initializers/test');
+    const initializer = await getInitializer('./../../src/common/test-data/initializers/test');
 
     expect(initializer).to.not.be.undefined;
     expect(initializer?.constructor.name).to.equal('TestInitializer');
