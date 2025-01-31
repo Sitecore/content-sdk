@@ -223,7 +223,6 @@ describe('<ComponentLibraryLayout />', () => {
       fields: { content: { value: 'new content!' } },
     });
 
-    
     expect(
       postMessageSpy
         .getCalls()
