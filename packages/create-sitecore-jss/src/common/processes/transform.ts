@@ -14,17 +14,6 @@ export type JsonObjectType = {
   [key: string]: JsonPropertyType;
 };
 
-export const transformFilename = (file: string, args: BaseAppArgs): string => {
-  // eslint-disable-next-line guard-for-in
-  for (const key in args) {
-    const value = args[key];
-    if (typeof value !== 'string') continue;
-
-    file = file.replace(`{{${key}}}`, value);
-  }
-  return file;
-};
-
 export const populateEjsData = (args: BaseAppArgs, destination?: string) => {
   // pass in helper to args object
 
@@ -100,7 +89,7 @@ export const transform = async (
       }
 
       // if the directory doesn't exist, create it
-      fs.mkdirsSync(path.dirname(transformFilename(pathToNewFile, args)));
+      fs.mkdirsSync(path.dirname(pathToNewFile));
 
       if (isFileForCopy ? isFileForCopy(file, fileForCopyRegExp) : file.match(fileForCopyRegExp)) {
         // pdfs may have <% encoded, which throws an error for ejs.
@@ -115,7 +104,7 @@ export const transform = async (
         ejsData
       );
 
-      writeFileToPath(transformFilename(pathToNewFile, args), renderedFile);
+      writeFileToPath(pathToNewFile, renderedFile);
     } catch (error) {
       console.log(chalk.red(error));
       console.log(`Error occurred when trying to render to ${chalk.yellow(path.resolve(file))}`);

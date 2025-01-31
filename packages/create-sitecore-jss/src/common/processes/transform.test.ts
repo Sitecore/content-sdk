@@ -13,27 +13,9 @@ import proxyquire from 'proxyquire';
 
 chai.use(sinonChai);
 
-const { transformFilename, transform: transformFunc } = transform;
+const { transform: transformFunc } = transform;
 
 describe('transform', () => {
-  describe('transformFilename', () => {
-    it('should replace placeholder filename with appropriate key', () => {
-      const fileName = '{{appName}}.config';
-      const args = {
-        force: true,
-        silent: true,
-        appName: 'test',
-        destination: '.\\test-data\\test',
-        prerender: 'SSG',
-        template: '',
-      };
-
-      const transformedFileName = transformFilename(fileName, args);
-
-      expect(transformedFileName).to.equal('test.config');
-    });
-  });
-
   describe('transform', () => {
     let fsMkdirsSyncStub: SinonStub;
     let fsCopySyncStub: SinonStub;
@@ -44,7 +26,6 @@ describe('transform', () => {
     let mergeEnvStub: SinonStub;
     let mergeStub: SinonStub;
     let writeFileToPathStub: SinonStub;
-    let transformFilenameStub: SinonStub;
     let openJsonFileStub: SinonStub;
     let log: SinonStub;
 
@@ -62,7 +43,6 @@ describe('transform', () => {
       mergeEnvStub?.restore();
       mergeStub?.restore();
       writeFileToPathStub?.restore();
-      transformFilenameStub?.restore();
       openJsonFileStub?.restore();
       log?.restore();
     });
