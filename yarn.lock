@@ -2548,13 +2548,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/diff@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@types/diff@npm:7.0.0"
-  checksum: d3dfb880835c057ebbf3a7e3b2d53782d6334d855d1929e5abcfa147e0c5abc209f0985263ba333d4afd184a52dafe596a1887c468ecd5deaa336a82b15df0ec
-  languageName: node
-  linkType: hard
-
 "@types/ejs@npm:^3.1.5":
   version: 3.1.5
   resolution: "@types/ejs@npm:3.1.5"
@@ -4211,7 +4204,6 @@ __metadata:
   dependencies:
     "@types/chai": ^5.0.1
     "@types/cross-spawn": ^6.0.6
-    "@types/diff": ^7.0.0
     "@types/ejs": ^3.1.5
     "@types/fs-extra": ^11.0.4
     "@types/glob": ^8.1.0
@@ -4227,7 +4219,6 @@ __metadata:
     chokidar: ^4.0.3
     cross-spawn: ^7.0.6
     del-cli: ^6.0.0
-    diff: ^7.0.0
     dotenv: ^16.4.7
     ejs: ^3.1.10
     eslint: ^8.56.0
