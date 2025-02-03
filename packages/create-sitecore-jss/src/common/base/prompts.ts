@@ -6,6 +6,6 @@ import { Answers, DistinctQuestion } from 'inquirer';
 export type BaseAppAnswer = Answers & {};
 
 /**
- * A base set of CLI prompts for the client-side app
+ * A base set of CLI prompts for the app
  */
 export const baseAppPrompts: DistinctQuestion<BaseAppAnswer>[] = [];
