@@ -183,6 +183,42 @@ describe('bin', () => {
       });
     });
 
+    it('should prompt if provided template if wrong', async () => {
+      const allTemplates = ['nextjs', 'foo', 'bar'];
+      getAllTemplatesStub.returns(allTemplates);
+      fsExistsSyncStub.returns(false);
+      fsReaddirSyncStub.returns([]);
+
+      inquirerPromptStub
+        .withArgs({
+          type: 'list',
+          name: 'template',
+          message: 'Which template would you like to create?',
+          choices: allTemplates,
+          default: 'nextjs',
+        })
+        .returns({
+          template: 'foo',
+        });
+
+      const args = mockArgs({
+        template: 'not-existing-template',
+        destination: 'test\\path',
+      });
+
+      const expectedTemplate = 'foo';
+      await main(args);
+
+      expect(consoleLogStub).to.have.been.calledWith(
+        chalk.yellow(`Unknown template provided: '${args.template}'...`)
+      );
+      expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
+        ...args,
+        destination: args.destination,
+        template: expectedTemplate,
+      });
+    });
+
     describe('promptDestination', () => {
       it('should prompt with provided prompt text and return input value', async () => {
         const mockDestination = 'my\\path';

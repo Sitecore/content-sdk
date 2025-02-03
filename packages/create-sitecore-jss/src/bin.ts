@@ -73,6 +73,10 @@ export const main = async (args: ParsedArgs) => {
   // validate template
   const allTemplates = getAllTemplates();
   if (!template || !allTemplates.includes(template)) {
+    if (template) {
+      console.log(chalk.yellow(`Unknown template provided: '${template}'...`));
+    }
+
     const answer = await inquirer.prompt({
       type: 'list',
       name: 'template',
