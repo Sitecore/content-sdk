@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "../../.eslintrc",
+    "../../eslint-configs/typescript"
+  ]
+}
