@@ -1,7 +1,7 @@
 import { Answers, DistinctQuestion } from 'inquirer';
 
 /**
- * A base set of CLI answers for the client-side app
+ * A base set of CLI answers for the app
  */
 export type BaseAppAnswer = Answers & {};
 
