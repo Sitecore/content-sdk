@@ -3,7 +3,11 @@ import * as dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
 /**
- * @param {string} dir The directory containing the .env files to load.
+ * Loads and processes environment variables from `.env` files in the specified directory.
+ * It supports multiple `.env` files, including
+ * environment-specific files (e.g., `.env.development`, `.env.production`) and local overrides
+ * (e.g., `.env.local`, `.env.development.local`).
+ * @param {string} dir - The directory to search for `.env` files.
  */
 export default function processEnv(dir: string) {
   // replicate Next.js handling/behavior, but without a default NODE_ENV

@@ -28,7 +28,10 @@ export async function getPackageScriptCommands() {
 }
 
 /**
- * @param {string} script script name
+ * Creates a yargs command object for a package.json script.
+ * This function is used to dynamically generate CLI commands based on scripts
+ * defined in a project's `package.json` file.
+ * @param {string} script - The name of the script from `package.json` (e.g., `build`, `start`).
  */
 export function makeCommand(script: string) {
   return {

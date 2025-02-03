@@ -5,6 +5,6 @@
     "force": true,
     "silent": true,
     "destination": "..\\..\\samples\\sitecore-jss-nextjs",
-    "prerender": "SSG",
+    "prerender": "SSG"
   }
 }

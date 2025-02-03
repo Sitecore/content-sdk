@@ -3,6 +3,9 @@
 import resolve from 'resolve';
 import processEnv from '../utils/process-env';
 
+/**
+ * Resolves and executes the locally installed version of the JSS CLI.
+ */
 resolve('@sitecore-jss/sitecore-jss-cli', { basedir: process.cwd() }, (_, projectLocalCli) => {
   // No error implies a projectLocalCli, which will load whatever
   // version of jss-cli you have installed in a local package.json
