@@ -46,9 +46,7 @@ const initializeApps = async (noInstall: boolean) => {
   try {
     watch = await import(path.resolve('watch.json'));
     await main({ ...watch.args, template: watch.template, noInstall });
-    if (watch.args.restoreLockfile) {
-      restoreLockfile();
-    }
+    restoreLockfile();
   } catch (error) {
     console.log(chalk.red('An error occurred: ', error));
     if (!watch) {

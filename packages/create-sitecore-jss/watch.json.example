@@ -6,6 +6,5 @@
     "silent": true,
     "destination": "..\\..\\samples\\sitecore-jss-nextjs",
     "prerender": "SSG",
-    "restoreLockfile": true
   }
 }
