@@ -1,6 +1,6 @@
 const { execSync } = require('child_process');
 const samples = require('./samples.json');
-const { getAppName } = require('./utils');
+const { getAppFolder } = require('./utils');
 
 const cliArgs = process.argv.slice(2);
 const lernaSinceFlag = cliArgs.length ? cliArgs[0].replace('--since=', '') : undefined;
@@ -12,7 +12,7 @@ const runLintCommand = (scope) =>
 
 if (!lernaSinceFlag) {
   // lint all the samples
-  runLintCommand('sample-*');
+  runLintCommand('jss-*');
 
   return;
 }
@@ -47,7 +47,7 @@ if (!affectedTemplates.length) {
 
 const affectedSamples = samples
   .filter((sample) => sample.initializers.some((template) => affectedTemplates.includes(template)))
-  .map((sample) => getAppName(sample.args));
+  .map((sample) => getAppFolder(sample.args));
 
 if (!affectedSamples.length) {
   console.log('No modified samples to lint');

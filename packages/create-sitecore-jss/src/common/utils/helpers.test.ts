@@ -1,75 +1,15 @@
 /* eslint-disable no-unused-expressions */
-import path, { sep } from 'path';
+import path from 'path';
 import fs from 'fs';
 import { expect } from 'chai';
 import chalk from 'chalk';
 import sinon, { SinonStub } from 'sinon';
-import {
-  getPascalCaseName,
-  openJsonFile,
-  writeJsonFile,
-  sortKeys,
-  getAllTemplates,
-  getBaseTemplates,
-  getAppPrefix,
-  saveConfiguration,
-  getDefaultProxyDestination,
-  getRelativeProxyDestination,
-} from './helpers';
+import { openJsonFile, writeJsonFile, sortKeys, getAllTemplates } from './helpers';
 import { JsonObjectType } from '../processes/transform';
 import testPackage from '../test-data/test.package.json';
 import testJson from '../test-data/test.json';
-import { Initializer } from '../Initializer';
-import { InitializerFactory } from '../../InitializerFactory';
-import { cwd } from 'process';
 
 describe('helpers', () => {
-  describe('getDefaultProxyDestination', () => {
-    it('should return default proxy destination alongside main app', () => {
-      expect(getDefaultProxyDestination(`..${sep}app-path${sep}main-app`, 'my-proxy')).to.equal(
-        `..${sep}app-path${sep}my-proxy`
-      );
-    });
-  });
-
-  describe('getRelativeProxyDestination', () => {
-    it('should return relative path between two relative destinations', () => {
-      const destination = 'samples/next';
-      const proxyAppDestination = 'samples/proxy';
-
-      const result = getRelativeProxyDestination(destination, proxyAppDestination);
-      expect(result).to.equal(`..${sep}proxy${sep}`);
-    });
-
-    it('should return relative path between absolute and relative destinations', () => {
-      const destination = path.join(cwd(), 'samples/next');
-      const proxyAppDestination = 'samples/proxy';
-
-      const result = getRelativeProxyDestination(destination, proxyAppDestination);
-      expect(result).to.equal(`..${sep}proxy${sep}`);
-    });
-  });
-
-  describe('getPascalCaseName', () => {
-    it('should reformat kebab-case to PascalCase', () => {
-      const result = getPascalCaseName('my-next-sitecore-app');
-
-      expect(result).to.match(/MyNextSitecoreApp/);
-    });
-
-    it('should reformat snake_case to PascalCase', () => {
-      const result = getPascalCaseName('my_next_sitecore_app');
-
-      expect(result).to.match(/MyNextSitecoreApp/);
-    });
-
-    it('should reformat one word lowercase app name to be capitalized', () => {
-      const result = getPascalCaseName('onewordappnamenohyphen');
-
-      expect(result).to.match(/Onewordappnamenohyphen/);
-    });
-  });
-
   describe('openJsonFile', () => {
     let log: SinonStub;
 
@@ -185,28 +125,6 @@ describe('helpers', () => {
     });
   });
 
-  describe('saveConfiguration', () => {
-    let writeFileSync: SinonStub;
-
-    afterEach(() => {
-      writeFileSync?.restore();
-    });
-
-    it('should save configuration', () => {
-      writeFileSync = sinon.stub(fs, 'writeFileSync');
-      const pkgPath = path.resolve('src', 'common', 'test-data', 'test.package.json');
-      const pkg = openJsonFile(pkgPath);
-      const templates = ['nextjs'];
-
-      saveConfiguration(templates, pkgPath);
-
-      expect(writeFileSync.calledOnce).to.equal(true);
-      expect(writeFileSync.getCall(0).args[1]).to.equal(
-        JSON.stringify({ ...pkg, config: { ...pkg.config, templates } }, null, 2)
-      );
-    });
-  });
-
   describe('sortKeys', () => {
     it('should sort the keys of an object alphabetically', () => {
       const obj: JsonObjectType = {
@@ -259,85 +177,11 @@ describe('helpers', () => {
       readdirSync = sinon.stub(fs, 'readdirSync');
       readdirSync.returns(['foo', 'bar', 'baz']);
 
-      const templates = getAllTemplates('./mock/path');
+      const templates = getAllTemplates();
 
       expect(readdirSync.calledOnce).to.equal(true);
-      expect(readdirSync.getCall(0).args[0]).to.equal('./mock/path');
+      expect(readdirSync.getCall(0).args[0]).to.equal(path.resolve(__dirname, './../../templates'));
       expect(templates).to.deep.equal(['foo', 'bar', 'baz']);
-    });
-  });
-
-  describe('getBaseTemplates', () => {
-    let readdirSync: SinonStub;
-    let createStub: SinonStub;
-
-    const mockInitializer = (isBase: boolean) => {
-      const mock = <Initializer>{};
-      mock.init = sinon.stub();
-      mock.isBase = isBase;
-      return mock;
-    };
-
-    afterEach(() => {
-      readdirSync?.restore();
-      createStub?.restore();
-    });
-
-    it('should only return base templates', async () => {
-      readdirSync = sinon.stub(fs, 'readdirSync');
-      readdirSync.returns(['foo', 'bar', 'baz']);
-
-      createStub = sinon.stub(InitializerFactory.prototype, 'create');
-      createStub.withArgs('foo').returns(mockInitializer(false));
-      createStub.withArgs('bar').returns(mockInitializer(true));
-      createStub.withArgs('baz').returns(mockInitializer(true));
-
-      const templates = await getBaseTemplates('./mock/path');
-
-      expect(readdirSync.calledOnce).to.equal(true);
-      expect(readdirSync.getCall(0).args[0]).to.equal('./mock/path');
-      expect(templates).to.deep.equal(['bar', 'baz']);
-    });
-
-    it('should not include unkown templates', async () => {
-      readdirSync = sinon.stub(fs, 'readdirSync');
-      readdirSync.returns(['foo', 'bar']);
-
-      createStub = sinon.stub(InitializerFactory.prototype, 'create');
-      createStub.withArgs('foo').returns(mockInitializer(true));
-      createStub.withArgs('bar').returns(undefined);
-
-      const templates = await getBaseTemplates('./mock/path');
-
-      expect(readdirSync.calledOnce).to.equal(true);
-      expect(readdirSync.getCall(0).args[0]).to.equal('./mock/path');
-      expect(templates).to.deep.equal(['foo']);
-    });
-  });
-
-  describe('getAppPrefix', () => {
-    it('should return value when appPrefix is true', () => {
-      const result = getAppPrefix(true, 'test');
-
-      expect(result).to.not.be.empty;
-    });
-
-    it('should return empty when appPrefix is false', () => {
-      const result = getAppPrefix(false, 'test');
-
-      expect(result).to.be.empty;
-    });
-
-    it('should return pascal name plus hyphen by default', () => {
-      const result = getAppPrefix(true, 'Foo-Bar');
-
-      expect(result).to.equal('FooBar-');
-    });
-
-    it('should return pascal name without hyphen', () => {
-      const result = getAppPrefix(true, 'Foo-Bar', false);
-
-      expect(result).to.equal('FooBar');
     });
   });
 });

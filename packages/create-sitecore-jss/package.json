@@ -31,8 +31,6 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "cross-spawn": "^7.0.6",
-    "diff": "^7.0.0",
-    "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "fs-extra": "^11.3.0",
     "glob": "^11.0.1",
@@ -42,7 +40,6 @@
   "devDependencies": {
     "@types/chai": "^5.0.1",
     "@types/cross-spawn": "^6.0.6",
-    "@types/diff": "^7.0.0",
     "@types/ejs": "^3.1.5",
     "@types/fs-extra": "^11.0.4",
     "@types/glob": "^8.1.0",

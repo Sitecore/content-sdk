@@ -1,23 +1,7 @@
 import chalk from 'chalk';
 import fs from 'fs';
-import path, { sep } from 'path';
-import { InitializerFactory } from '../../InitializerFactory';
+import path from 'path';
 import { JsonObjectType } from '../processes/transform';
-
-// matched for proxy templates
-export const proxyAppMatcher = /node-headless.+|node-xmcloud.+/g;
-
-/**
- * Returns the default path for proxy app initialized alongside main JSS tempalates.
- * @param {string} mainAppDestination target destination for main app
- * @param {string} proxyName name of for the proxy app folder
- * @returns {string} target path for proxy app
- */
-export const getDefaultProxyDestination = (mainAppDestination: string, proxyName: string) =>
-  path.join(mainAppDestination, '..', proxyName);
-
-export const getRelativeProxyDestination = (mainDestination: string, proxyDestination: string) =>
-  `${path.relative(path.resolve(mainDestination), path.resolve(proxyDestination))}${sep}`;
 
 /**
  * Determines whether you are in a dev environment.
@@ -31,13 +15,6 @@ export const isDevEnvironment = (cwd?: string): boolean => {
   const lernaPath = path.join(currentPath, '..', '..');
 
   return fs.existsSync(path.join(lernaPath, 'lerna.json'));
-};
-
-export const getPascalCaseName = (name: string): string => {
-  // handle underscores by converting them to hyphens
-  const temp: string[] = name.replace(/_/g, '-').split('-');
-  name = temp.map((item: string) => (item = item.charAt(0).toUpperCase() + item.slice(1))).join('');
-  return name;
 };
 
 /**
@@ -69,17 +46,6 @@ export const writeJsonFile = (data: { [key: string]: unknown }, jsonFilePath: st
   }
 };
 
-/**
- * Save configuration params to the package.json
- * @param {string[]} templates templates applied to the sample
- * @param {string} [pkgPath] path to the package.json
- */
-export const saveConfiguration = (templates: string[], pkgPath: string) => {
-  const pkg = openJsonFile(pkgPath);
-
-  writeJsonFile({ ...pkg, config: { ...pkg.config, templates } }, pkgPath);
-};
-
 export const sortKeys = (obj: JsonObjectType) => {
   const sorted: any = {};
   Object.keys(obj)
@@ -91,32 +57,12 @@ export const sortKeys = (obj: JsonObjectType) => {
 
 /**
  * Returns all templates
- * @param {string} templatePath path to the templates
  * @returns {string[]} templates
  */
-export const getAllTemplates = (templatePath: string): string[] => {
+export const getAllTemplates = (): string[] => {
+  const templatePath = path.resolve(__dirname, './../../templates');
   return fs.readdirSync(templatePath, 'utf8');
 };
-
-/**
- * Returns subset of base templates
- * @param {string} templatePath path to the templates
- * @returns {string[]} base templates
- */
-export const getBaseTemplates = async (templatePath: string): Promise<string[]> => {
-  const templates = fs.readdirSync(templatePath, 'utf8');
-  const initFactory = new InitializerFactory();
-  const baseTemplates = [];
-
-  for (const template of templates) {
-    const res = await initFactory.create(template);
-    res?.isBase && baseTemplates.push(template);
-  }
-  return baseTemplates;
-};
-
-export const getAppPrefix = (appPrefix: boolean, appName: string, includeHyphen = true): string =>
-  appPrefix ? `${getPascalCaseName(appName)}${includeHyphen ? '-' : ''}` : '';
 
 export const writeFileToPath = (destinationPath: string, content: string) => {
   fs.writeFileSync(destinationPath, content, 'utf8');

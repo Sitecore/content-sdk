@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import sinon, { SinonStub } from 'sinon';
+import sinonChai from 'sinon-chai';
 import fs from 'fs';
 import { sep } from 'path';
 import chalk from 'chalk';
@@ -8,7 +9,9 @@ import inquirer from 'inquirer';
 import { ParsedArgs } from 'minimist';
 import { parseArgs, main, promptDestination, getDestination } from './bin';
 import * as helpers from './common/utils/helpers';
-import * as initRunner from './init-runner';
+import * as initialize from './initialize';
+
+chai.use(sinonChai);
 
 describe('bin', () => {
   describe('parseArgs', () => {
@@ -27,73 +30,61 @@ describe('bin', () => {
       process.argv = [
         'node',
         'index.ts',
-        '--appPrefix',
         '--force',
         '--noInstall',
         '--yes',
         '--silent',
-        '--prePushHook',
-        '--appName',
-        'test',
         '--destination',
         '.\\test\\path',
-        '--proxyAppDestination',
-        '.\\test\\proxypath',
-        '--templates',
-        'foo,bar',
+        '--template',
+        'foo',
       ];
 
       const args = parseArgs();
 
       expect(args._).to.be.empty;
-      expect(args.appPrefix).to.equal(true);
       expect(args.force).to.equal(true);
       expect(args.noInstall).to.equal(true);
       expect(args.yes).to.equal(true);
       expect(args.silent).to.equal(true);
-      expect(args.prePushHook).to.equal(true);
-      expect(args.appName).to.equal('test');
       expect(args.destination).to.equal('.\\test\\path');
-      expect(args.templates).to.equal('foo,bar');
+      expect(args.template).to.equal('foo');
     });
 
     it('should accept positional parameters', () => {
-      process.argv = ['node', 'index.ts', 'foo,bar', '--appPrefix', '--appName', 'test'];
+      process.argv = ['node', 'index.ts', 'foo,bar', '--destination', '.\\test\\path'];
 
       const args = parseArgs();
 
       expect(args._.length).to.equal(1);
       expect(args._[0]).to.equal('foo,bar');
-      expect(args.appPrefix).to.equal(true);
-      expect(args.appName).to.equal('test');
+      expect(args.destination).to.equal('.\\test\\path');
     });
 
     it('should accept boolean values for boolean parameters', () => {
-      process.argv = ['node', 'index.ts', '--appPrefix', 'true', '--force', 'false'];
+      process.argv = ['node', 'index.ts', 'true', '--force', 'false'];
 
       const args = parseArgs();
 
-      expect(args.appPrefix).to.equal(true);
       expect(args.force).to.equal(false);
     });
 
     it('should remove string parameters that are missing values', () => {
-      process.argv = ['node', 'index.ts', '--appName', 'valid', '--destination'];
+      process.argv = ['node', 'index.ts', '--destination', '--template', 'nextjs'];
 
       const args = parseArgs();
 
-      expect(args.appName).to.equal('valid');
+      expect(args.template).to.equal('nextjs');
       expect(args.destination).to.be.undefined;
     });
   });
 
   describe('main', async () => {
     let getAllTemplatesStub: SinonStub;
-    let getBaseTemplatesStub: SinonStub;
     let inquirerPromptStub: SinonStub;
     let fsExistsSyncStub: SinonStub;
     let fsReaddirSyncStub: SinonStub;
-    let initRunnerStub: SinonStub;
+    let initializeStub: SinonStub;
     let consoleLogStub: SinonStub;
     let processExitStub: SinonStub;
 
@@ -103,108 +94,76 @@ describe('bin', () => {
 
     beforeEach(() => {
       getAllTemplatesStub = sinon.stub(helpers, 'getAllTemplates');
-      getBaseTemplatesStub = sinon.stub(helpers, 'getBaseTemplates');
       inquirerPromptStub = sinon.stub(inquirer, 'prompt');
       fsExistsSyncStub = sinon.stub(fs, 'existsSync');
       fsReaddirSyncStub = sinon.stub(fs, 'readdirSync');
-      initRunnerStub = sinon.stub(initRunner, 'initRunner');
+      initializeStub = sinon.stub(initialize, 'initialize');
       consoleLogStub = sinon.stub(console, 'log');
       processExitStub = sinon.stub(process, 'exit');
     });
 
     afterEach(() => {
       getAllTemplatesStub?.restore();
-      getBaseTemplatesStub?.restore();
       inquirerPromptStub?.restore();
       fsExistsSyncStub?.restore();
       fsReaddirSyncStub?.restore();
-      initRunnerStub?.restore();
+      initializeStub?.restore();
       consoleLogStub?.restore();
       processExitStub?.restore();
     });
 
     it('should initialize with provided args', async () => {
       getAllTemplatesStub.returns(['foo', 'bar']);
-      getBaseTemplatesStub.returns(['foo']);
       fsExistsSyncStub.returns(false);
       fsReaddirSyncStub.returns([]);
 
       const args = mockArgs({
-        templates: 'foo,bar',
+        template: 'foo',
         destination: 'test\\path',
-        prePushHook: false,
       });
-      const expectedTemplates = ['foo', 'bar'];
+      const expectedTemplate = 'foo';
 
       await main(args);
       expect(inquirerPromptStub).to.not.have.been.called;
-      expect(initRunnerStub).to.have.been.calledOnceWith(expectedTemplates, {
+      expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
         ...args,
         destination: args.destination,
-        templates: expectedTemplates,
+        template: expectedTemplate,
       });
     });
 
-    it('should accept templates as positional parameter', async () => {
+    it('should accept template as positional parameter', async () => {
       getAllTemplatesStub.returns(['foo', 'bar']);
-      getBaseTemplatesStub.returns(['foo']);
       fsExistsSyncStub.returns(false);
       fsReaddirSyncStub.returns([]);
 
       const args = mockArgs({
         destination: 'test\\path',
-        _: ['foo,bar'],
+        _: ['foo'],
       });
-      const expectedTemplates = ['foo', 'bar'];
+      const expectedTemplate = 'foo';
       await main(args);
 
       expect(inquirerPromptStub).to.not.have.been.called;
-      expect(initRunnerStub).to.have.been.calledOnceWith(expectedTemplates, {
+      expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
         ...args,
         destination: args.destination,
-        templates: expectedTemplates,
-      });
-    });
-
-    it('should ignore unknown templates', async () => {
-      getAllTemplatesStub.returns(['foo', 'bar']);
-      getBaseTemplatesStub.returns(['foo']);
-      fsExistsSyncStub.returns(false);
-      fsReaddirSyncStub.returns([]);
-
-      const invalidTemplate = 'baz';
-      const args = mockArgs({
-        templates: `foo,bar,${invalidTemplate}`,
-        destination: 'test\\path',
-      });
-      const expectedTemplates = ['foo', 'bar'];
-      await main(args);
-
-      expect(consoleLogStub).to.have.been.calledWith(
-        chalk.yellow(`Ignoring unknown template '${invalidTemplate}'...`)
-      );
-      expect(initRunnerStub).to.have.been.calledWith(expectedTemplates, {
-        ...args,
-        destination: args.destination,
-        templates: expectedTemplates,
+        template: expectedTemplate,
       });
     });
 
     it('should prompt for template if missing', async () => {
-      const baseTemplates = ['nextjs', 'foo', 'bar'];
-      getBaseTemplatesStub.returns(baseTemplates);
+      const allTemplates = ['nextjs', 'foo', 'bar'];
+      getAllTemplatesStub.returns(allTemplates);
       fsExistsSyncStub.returns(false);
       fsReaddirSyncStub.returns([]);
-      inquirerPromptStub.returns({
-        prePushHook: true,
-      });
 
       inquirerPromptStub
         .withArgs({
           type: 'list',
           name: 'template',
           message: 'Which template would you like to create?',
-          choices: baseTemplates,
+          choices: allTemplates,
           default: 'nextjs',
         })
         .returns({
@@ -214,41 +173,49 @@ describe('bin', () => {
       const args = mockArgs({
         destination: 'test\\path',
       });
-      const expectedTemplates = ['foo'];
+      const expectedTemplate = 'foo';
       await main(args);
 
-      expect(initRunnerStub).to.have.been.calledOnceWith(expectedTemplates, {
+      expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
         ...args,
         destination: args.destination,
-        templates: expectedTemplates,
+        template: expectedTemplate,
       });
     });
 
-    it('should prompt for prePushHook if missing', async () => {
-      getAllTemplatesStub.returns(['foo', 'bar']);
-      getBaseTemplatesStub.returns(['foo']);
+    it('should prompt if provided template if wrong', async () => {
+      const allTemplates = ['nextjs', 'foo', 'bar'];
+      getAllTemplatesStub.returns(allTemplates);
       fsExistsSyncStub.returns(false);
       fsReaddirSyncStub.returns([]);
-      inquirerPromptStub.returns({
+
+      inquirerPromptStub
+        .withArgs({
+          type: 'list',
+          name: 'template',
+          message: 'Which template would you like to create?',
+          choices: allTemplates,
+          default: 'nextjs',
+        })
+        .returns({
+          template: 'foo',
+        });
+
+      const args = mockArgs({
+        template: 'not-existing-template',
         destination: 'test\\path',
       });
 
-      const mockPrePushHook = true;
-      inquirerPromptStub.returns({
-        prePushHook: mockPrePushHook,
-      });
-
-      const args = mockArgs({
-        templates: 'foo',
-      });
-      const expectedTemplates = ['foo'];
+      const expectedTemplate = 'foo';
       await main(args);
 
-      expect(inquirerPromptStub).to.have.been.called;
-      expect(initRunnerStub).to.have.been.calledWith(expectedTemplates, {
+      expect(consoleLogStub).to.have.been.calledWith(
+        chalk.yellow(`Unknown template provided: '${args.template}'...`)
+      );
+      expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
         ...args,
         destination: args.destination,
-        templates: expectedTemplates,
+        template: expectedTemplate,
       });
     });
 
@@ -277,14 +244,14 @@ describe('bin', () => {
     });
 
     describe('getDestination', () => {
-      const testTemplates = ['foo', 'bar'];
+      const testTemplate = 'foo';
 
       it('should return base args.destination value only when provided', async () => {
         const testPath = 'test\\path';
         const testArgs = mockArgs({
           destination: testPath,
         });
-        expect(await getDestination(testArgs, testTemplates)).to.equal(testPath);
+        expect(await getDestination(testArgs, testTemplate)).to.equal(testPath);
       });
 
       it('should prompt to get base destination when args.destination is empty', async () => {
@@ -295,7 +262,7 @@ describe('bin', () => {
         const testArgs = mockArgs({
           destination: undefined,
         });
-        await getDestination(testArgs, testTemplates);
+        await getDestination(testArgs, testTemplate);
         expect(inquirerPromptStub).to.have.been.calledOnce;
         expect(inquirerPromptStub.getCall(0).args[0].message).to.be.equal(
           'Where would you like your new app created?'
@@ -307,54 +274,53 @@ describe('bin', () => {
           destination: undefined,
           yes: true,
         });
-        const expectedDestination = `${process.cwd()}${sep + testTemplates[0]}`;
-        expect(await getDestination(testArgs, testTemplates)).to.deep.equal(expectedDestination);
+        const expectedDestination = `${process.cwd()}${sep + testTemplate}`;
+        expect(await getDestination(testArgs, testTemplate)).to.deep.equal(expectedDestination);
       });
 
-      it('should return default base destination with args.appName when provided and --yes arg is used', async () => {
-        const testAppName = 'myapp';
+      it('should return default base destination with args.template when provided and --yes arg is used', async () => {
+        const testTemplate = 'nextjss';
         const testArgs = mockArgs({
           destination: undefined,
-          appName: testAppName,
+          template: testTemplate,
           yes: true,
         });
-        const expectedDestination = `${process.cwd()}${sep + testAppName}`;
-        expect(await getDestination(testArgs, testTemplates)).to.deep.equal(expectedDestination);
+        const expectedDestination = `${process.cwd()}${sep + testTemplate}`;
+        expect(await getDestination(testArgs, testTemplate)).to.deep.equal(expectedDestination);
       });
 
-      it('should throw when templates are empty', async () => {
+      it('should throw when template is empty', async () => {
         const testArgs = mockArgs();
-        await getDestination(testArgs, []).catch((error) => {
+        await getDestination(testArgs, '').catch((error) => {
           expect(error.message).to.be.equal(
-            'Unable to get destinations, provided templates are empty'
+            'Unable to get destinations, provided template is empty'
           );
         });
       });
     });
 
-    // this partially duplicates tests for getDestinations, but we need to ensure initRunnerStub is called with correct values
+    // this partially duplicates tests for getDestinations, but we need to ensure initializeStub is called with correct values
     // no way around it however - sinon cannot mock getDestinations on its own, which could've prevented this
     describe('main with destinations from args', () => {
-      it('should call initRunnerStub with value from getDestination', async () => {
+      it('should call initializeStub with value from getDestination', async () => {
         getAllTemplatesStub.returns(['foo', 'bar']);
-        getBaseTemplatesStub.returns(['foo']);
         fsExistsSyncStub.returns(false);
         fsReaddirSyncStub.returns([]);
 
         const mockDestination = 'my\\path';
 
         const args = mockArgs({
-          templates: 'foo',
+          template: 'foo',
           destination: mockDestination,
         });
-        const expectedTemplates = ['foo'];
+        const expectedTemplate = 'foo';
 
         await main(args);
 
-        expect(initRunnerStub).to.have.been.calledWith(expectedTemplates, {
+        expect(initializeStub).to.have.been.calledWith(expectedTemplate, {
           ...args,
           destination: mockDestination,
-          templates: expectedTemplates,
+          template: expectedTemplate,
         });
       });
     });
@@ -362,7 +328,6 @@ describe('bin', () => {
     describe('destination not empty', () => {
       it('should prompt and continue if yes', async () => {
         getAllTemplatesStub.returns(['foo', 'bar']);
-        getBaseTemplatesStub.returns(['foo']);
         fsExistsSyncStub.returns(true);
         fsReaddirSyncStub.returns(['file.txt']);
 
@@ -371,10 +336,10 @@ describe('bin', () => {
         });
 
         const args = mockArgs({
-          templates: 'foo,bar',
+          template: 'foo',
           destination: 'test\\path',
         });
-        const expectedTemplates = ['foo', 'bar'];
+        const expectedTemplate = 'foo';
         await main(args);
 
         expect(inquirerPromptStub).to.have.been.calledWith({
@@ -382,16 +347,15 @@ describe('bin', () => {
           name: 'continue',
           message: `Directory '${args.destination}' not empty. Are you sure you want to continue?`,
         });
-        expect(initRunnerStub).to.have.been.calledWith(expectedTemplates, {
+        expect(initializeStub).to.have.been.calledWith(expectedTemplate, {
           ...args,
           destination: args.destination,
-          templates: expectedTemplates,
+          template: expectedTemplate,
         });
       });
 
       it('should prompt and exit if no', async () => {
         getAllTemplatesStub.returns(['foo', 'bar']);
-        getBaseTemplatesStub.returns(['foo']);
         fsExistsSyncStub.returns(true);
         fsReaddirSyncStub.returns(['file.txt']);
         // throw to ensure subsequent code isn't run
@@ -401,7 +365,7 @@ describe('bin', () => {
         });
 
         const args = mockArgs({
-          templates: 'foo,bar',
+          template: 'foo',
           destination: 'test\\path',
         });
         await main(args).catch((error) => {
@@ -412,46 +376,44 @@ describe('bin', () => {
           });
           expect(processExitStub).to.have.been.calledOnce;
           expect(error.name).to.equal('process.exit');
-          expect(initRunnerStub).to.not.have.been.called;
+          expect(initializeStub).to.not.have.been.called;
         });
       });
 
       it('should respect force', async () => {
         getAllTemplatesStub.returns(['foo', 'bar']);
-        getBaseTemplatesStub.returns(['foo']);
         fsExistsSyncStub.returns(true);
         fsReaddirSyncStub.returns(['file.txt']);
 
         const args = mockArgs({
-          templates: 'foo,bar',
+          template: 'foo',
           destination: 'test\\path',
           force: true,
         });
-        const expectedTemplates = ['foo', 'bar'];
+        const expectedTemplate = 'foo';
         await main(args);
 
         expect(inquirerPromptStub).to.not.have.been.called;
-        expect(initRunnerStub).to.have.been.calledOnceWith(expectedTemplates, {
+        expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
           ...args,
           destination: args.destination,
-          templates: expectedTemplates,
+          template: expectedTemplate,
         });
       });
     });
 
-    it('should handle initRunner error', async () => {
+    it('should handle initialize error', async () => {
       getAllTemplatesStub.returns(['foo', 'bar']);
-      getBaseTemplatesStub.returns(['foo']);
       fsExistsSyncStub.returns(false);
       fsReaddirSyncStub.returns([]);
       const error = new Error('nope');
-      initRunnerStub.throws(error);
+      initializeStub.throws(error);
       inquirerPromptStub.returns({
         continue: false,
       });
 
       const args = mockArgs({
-        templates: 'foo,bar',
+        template: 'foo',
         destination: 'test\\path',
       });
       await main(args);
