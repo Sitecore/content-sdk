@@ -2,7 +2,6 @@
   {
     "template": "nextjs",
     "args": {
-      "fetchWith": "GraphQL",
       "prerender": "SSG",
       "silent": false
     }
