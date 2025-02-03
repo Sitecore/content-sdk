@@ -5,7 +5,7 @@ import {
   lintFix,
   nextSteps,
   BaseAppArgs,
-  saveConfiguration,
+  openJsonFile,
   Initializer,
 } from './common';
 
@@ -14,8 +14,6 @@ export const initialize = async (template: string, args: BaseAppArgs) => {
   args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
   const response = await initializer.init(args);
 
-  saveConfiguration(args.template, path.resolve(`${args.destination}${sep}package.json`));
-
   // final steps (install, lint)
   if (!args.noInstall) {
     installPackages(args.destination, args.silent);
@@ -23,7 +21,8 @@ export const initialize = async (template: string, args: BaseAppArgs) => {
   }
 
   if (!args.silent) {
-    nextSteps(response.appName, response.nextSteps);
+    const pkg = openJsonFile(path.resolve(`${args.destination}${sep}package.json`));
+    nextSteps(pkg.config.appName, response.nextSteps);
   }
 };
 

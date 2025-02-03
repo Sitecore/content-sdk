@@ -7,7 +7,6 @@ export {
   openJsonFile,
   writeJsonFile,
   getAllTemplates,
-  saveConfiguration,
   removeFile,
 } from './utils/helpers';
 

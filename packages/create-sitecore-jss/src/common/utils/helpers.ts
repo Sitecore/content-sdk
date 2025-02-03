@@ -46,17 +46,6 @@ export const writeJsonFile = (data: { [key: string]: unknown }, jsonFilePath: st
   }
 };
 
-/**
- * Save configuration params to the package.json
- * @param {string[]} template template applied to the sample
- * @param {string} [pkgPath] path to the package.json
- */
-export const saveConfiguration = (template: string, pkgPath: string) => {
-  const pkg = openJsonFile(pkgPath);
-
-  writeJsonFile({ ...pkg, config: { ...pkg.config, template } }, pkgPath);
-};
-
 export const sortKeys = (obj: JsonObjectType) => {
   const sorted: any = {};
   Object.keys(obj)

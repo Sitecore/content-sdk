@@ -4,13 +4,7 @@ import fs from 'fs';
 import { expect } from 'chai';
 import chalk from 'chalk';
 import sinon, { SinonStub } from 'sinon';
-import {
-  openJsonFile,
-  writeJsonFile,
-  sortKeys,
-  getAllTemplates,
-  saveConfiguration,
-} from './helpers';
+import { openJsonFile, writeJsonFile, sortKeys, getAllTemplates } from './helpers';
 import { JsonObjectType } from '../processes/transform';
 import testPackage from '../test-data/test.package.json';
 import testJson from '../test-data/test.json';
@@ -128,28 +122,6 @@ describe('helpers', () => {
       );
 
       log.restore();
-    });
-  });
-
-  describe('saveConfiguration', () => {
-    let writeFileSync: SinonStub;
-
-    afterEach(() => {
-      writeFileSync?.restore();
-    });
-
-    it('should save configuration', () => {
-      writeFileSync = sinon.stub(fs, 'writeFileSync');
-      const pkgPath = path.resolve('src', 'common', 'test-data', 'test.package.json');
-      const pkg = openJsonFile(pkgPath);
-      const template = 'nextjs';
-
-      saveConfiguration(template, pkgPath);
-
-      expect(writeFileSync.calledOnce).to.equal(true);
-      expect(writeFileSync.getCall(0).args[1]).to.equal(
-        JSON.stringify({ ...pkg, config: { ...pkg.config, template } }, null, 2)
-      );
     });
   });
 

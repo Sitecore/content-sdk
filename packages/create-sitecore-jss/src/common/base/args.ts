@@ -27,8 +27,4 @@ export type BaseAppArgs = {
    * Default values will be used
    */
   yes?: boolean;
-  /**
-   * The name of the application. Provided by the Initializer.
-   */
-  appName?: string;
 };

@@ -1,12 +1,13 @@
 {
-  "name": "<%- appName %>",
+  "name": "jss-nextjs",
   "description": "Application utilizing Sitecore JavaScript Services and Next.js",
   "version": "<%- version %>",
   "private": true,
   "config": {
-    "appName": "<%- appName %>",
+    "appName": "jss-nextjs",
     "graphQLEndpointPath": "/sitecore/api/graph/edge",
-    "language": "en"
+    "language": "en",
+    "template": "nextjs"
   },
   "author": {
     "name": "Sitecore Corporation",
