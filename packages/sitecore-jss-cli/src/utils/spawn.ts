@@ -2,9 +2,10 @@ import { SpawnSyncOptionsWithStringEncoding } from 'child_process';
 import spawn from 'cross-spawn';
 
 /**
- * @param {string} command
- * @param {string[]} args
- * @param {SpawnSyncOptionsWithStringEncoding} options
+ * Executes a command synchronously using `spawnSync` and handles process termination signals and exit codes.
+ * @param {string} command - The command to execute (e.g., `npm`, `git`, `ls`).
+ * @param {string[]} args - An array of arguments to pass to the command.
+ * @param {SpawnSyncOptionsWithStringEncoding} [options] - Optional configuration for the `spawnSync` call.
  */
 export default function(
   command: string,

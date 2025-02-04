@@ -1,5 +1,9 @@
 import resolve from 'resolve';
 
+/**
+ * Resolves and loads the `package.json` file from the current working directory.
+ * @returns {Promise<object>} A promise that resolves to the contents of the `package.json` file.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default (): Promise<any> =>
   new Promise((resolvePromise, rejectPromise) => {
