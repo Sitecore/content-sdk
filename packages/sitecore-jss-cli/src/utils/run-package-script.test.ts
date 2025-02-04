@@ -5,6 +5,9 @@ import runPackageScript, { transformPackageArgs } from './run-package-script';
 import { expect } from 'chai';
 
 describe('run-package-script', () => {
+  afterEach(() => {
+    sinon.restore();
+  });
   it('runPackageScript should invoke spawn with args', () => {
     const spawnMock = sinon.stub(spawn, 'default');
 
