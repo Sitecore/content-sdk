@@ -26,6 +26,10 @@ export async function cli(commands: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (appCommands as any).$0 = 'jss';
 
+  if (!commands) {
+    commands = await getPackageScriptCommands();
+  }
+
   for (const cmd of Object.keys(commands)) {
     const commandObject = commands[cmd];
 
@@ -100,13 +104,4 @@ export function makeCommand(script: string) {
       }
     },
   };
-}
-
-/**
- * implements CLI commands when executed from a local node_modules folder
- */
-export default async function() {
-  const packageScripts = await getPackageScriptCommands();
-
-  cli(Object.assign({}, packageScripts));
 }
