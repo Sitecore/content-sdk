@@ -17,8 +17,8 @@ export type JsonObjectType = {
 export const populateEjsData = (args: BaseAppArgs, destination?: string) => {
   // pass in helper to args object
 
-  // Don't expose prerelease build number in the generated app
-  const jssVersion = version.replace(/(\.\d+)$/, '');
+  // Use exact version for jss dependencies in beta and canary versions
+  const jssVersion: string = version.match(/(\-[a-zA-Z]+\.\d+)$/) ? version : `~${version}`;
 
   const ejsData: Data = {
     ...args,

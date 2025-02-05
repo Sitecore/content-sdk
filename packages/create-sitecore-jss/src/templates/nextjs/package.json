@@ -1,7 +1,7 @@
 {
   "name": "jss-nextjs",
   "description": "Application utilizing Sitecore JavaScript Services and Next.js",
-  "version": "<%- version %>",
+  "version": "0.1.0",
   "private": true,
   "config": {
     "appName": "jss-nextjs",
@@ -24,7 +24,7 @@
   "dependencies": {
     "@sitecore-cloudsdk/core": "^0.4.2",
     "@sitecore-cloudsdk/events": "^0.4.2",
-    "@sitecore-jss/sitecore-jss-nextjs": "~<%- version %>",
+    "@sitecore-jss/sitecore-jss-nextjs": "<%- version %>",
     "@sitecore/components": "~2.0.1",
     "@sitecore-feaas/clientside": "^0.5.19",
     "bootstrap": "^5.3.3",
@@ -38,8 +38,8 @@
     "sharp": "0.33.5"
   },
   "devDependencies": {
-    "@sitecore-jss/sitecore-jss-cli": "~22.4.0-canary",
-    "@sitecore-jss/sitecore-jss-dev-tools": "~22.4.0-canary",
+    "@sitecore-jss/sitecore-jss-cli": "<%- version %>",
+    "@sitecore-jss/sitecore-jss-dev-tools": "<%- version %>",
     "@types/node": "^22.9.0",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.0.5",
