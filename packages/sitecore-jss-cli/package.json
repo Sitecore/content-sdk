@@ -7,10 +7,8 @@
   "sideEffects": false,
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
-    "watch": "npm run build -- --watch",
     "clean": "del-cli dist types",
     "lint": "eslint \"./src/**/*.ts\"",
-    "prepublishOnly": "npm run build",
     "jss": "node ./dist/cjs/bin/jss.js",
     "test": "mocha --require ts-node/register/transpile-only \"./src/**/*.test.ts\"",
     "coverage": "nyc --require ts-node/register/transpile-only npm test"
