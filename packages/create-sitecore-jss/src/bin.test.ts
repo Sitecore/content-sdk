@@ -228,7 +228,7 @@ describe('bin', () => {
       const args = mockArgs({
         template: 'not-existing-template',
         destination: 'test\\path',
-        "yes": true,
+        yes: true,
       });
 
       await main(args).catch((error) => {
@@ -244,9 +244,9 @@ describe('bin', () => {
 
       const args = mockArgs({
         destination: 'test\\path',
-        "yes": true,
+        yes: true,
       });
-      
+
       await main(args).catch((error) => {
         expect(error).to.be.instanceOf(RangeError);
       });
@@ -367,11 +367,13 @@ describe('bin', () => {
         const args = mockArgs({
           template: 'foo',
           destination: mockDestination,
-          yes: true
+          yes: true,
         });
 
         await main(args).catch((error) => {
-          expect(error.message).to.be.equal(`Directory '${mockDestination}' not empty. To overwrite it, use the --force flag.`);
+          expect(error.message).to.be.equal(
+            `Directory '${mockDestination}' not empty. To overwrite it, use the --force flag.`
+          );
         });
       });
     });
