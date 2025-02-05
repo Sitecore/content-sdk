@@ -2,7 +2,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import cli from './cli';
-// import yargs from 'yargs';
 
 describe('cli', () => {
   afterEach(() => {
