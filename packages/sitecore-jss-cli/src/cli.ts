@@ -1,6 +1,4 @@
-import yargs, { Argv, CommandModule, Arguments } from 'yargs';
-import resolvePackage from './utils/resolve-package';
-import runPackageScript from './utils/run-package-script';
+import yargs, { Argv, CommandModule } from 'yargs';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -16,7 +14,7 @@ process.on('unhandledRejection', (err) => {
  * Each key in the object represents a command name, and the value is a `CommandModule` object
  * that defines the command's behavior, arguments, and options.
  */
-export async function cli(commands: {
+export default async function cli(commands: {
   [key: string]: CommandModule & { disableStrictArgs?: boolean };
 }) {
   let appCommands = yargs.usage('$0 <command>');
@@ -25,10 +23,6 @@ export async function cli(commands: {
   // when the command is just 'jss' as a global bin
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (appCommands as any).$0 = 'jss';
-
-  if (!commands) {
-    commands = await getPackageScriptCommands();
-  }
 
   for (const cmd of Object.keys(commands)) {
     const commandObject = commands[cmd];
@@ -59,49 +53,4 @@ export async function cli(commands: {
   if (!argv._[0]) {
     console.log('Missing command. Use --help to see all available options.');
   }
-}
-
-/**
- * Get package script commands
- */
-export async function getPackageScriptCommands() {
-  const packageJson = await resolvePackage();
-  const result: { [key: string]: CommandModule } = {};
-
-  if (!packageJson || !packageJson.scripts) {
-    return result;
-  }
-
-  Object.keys(packageJson.scripts).forEach((script) => {
-    if (script === 'jss') {
-      return;
-    }
-
-    const command = makeCommand(script);
-
-    result[script] = command;
-  });
-
-  return result;
-}
-
-/**
- * Creates a yargs command object for a package.json script.
- * This function is used to dynamically generate CLI commands based on scripts
- * defined in a project's `package.json` file.
- * @param {string} script - The name of the script from `package.json` (e.g., `build`, `start`).
- */
-export function makeCommand(script: string) {
-  return {
-    command: script,
-    describe: 'package.json script',
-    builder: {},
-    disableStrictArgs: true,
-    handler: (argv: Arguments) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((argv as any)._[0]) {
-        runPackageScript(process.argv.slice(2));
-      }
-    },
-  };
 }

@@ -1,74 +1,37 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { getPackageScriptCommands, makeCommand } from './cli';
-import * as resolvePkg from './utils/resolve-package';
-import * as packageScript from './utils/run-package-script';
-import { Arguments } from 'yargs';
+import cli from './cli';
+// import yargs from 'yargs';
 
 describe('cli', () => {
-  describe('getPackageScriptCommands', async () => {
-    afterEach(() => {
-      sinon.restore();
-    });
-    const packageJson = {
-      scripts: {
-        first: 'do --this',
-        second: 'do --that',
-        third: 'do --all',
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  it('should set the $0 property to "jss" to prevent showing help with "jss.js" as the base command', async () => {
+    const yargs = await import('yargs');
+
+    const appCommands = yargs.default.usage('$0 <command>');
+    const commands = {};
+
+    cli(commands);
+    expect((appCommands as any).$0).to.equal('jss');
+  });
+
+  it('should call the builder function of each command', async () => {
+    const yargs = await import('yargs');
+
+    const appCommands = yargs.default.usage('$0 <command>');
+    const commands = {
+      test: {
+        builder: sinon.stub().returns(appCommands),
+        handler: () => {},
       },
     };
 
-    it('should read scripts from package.json and return result with handlers', async () => {
-      sinon.stub(resolvePkg, 'default').resolves(packageJson);
+    cli(commands);
 
-      const result = await getPackageScriptCommands();
-      const runScriptStub = sinon.stub(packageScript, 'default');
-      const mockArgs: Arguments = {
-        _: ['arg1', 'arg2'],
-        $0: '',
-      };
-
-      expect(Object.keys(packageJson.scripts)).to.be.deep.equal(Object.keys(result));
-      for (const key of Object.keys(result)) {
-        const expectedCommand = makeCommand(key);
-        for (const field of Object.keys(expectedCommand)) {
-          if (typeof expectedCommand[field] === 'function') {
-            expectedCommand[field](mockArgs);
-            expect(runScriptStub.called).to.be.true;
-          } else {
-            expect(result[key][field]).to.deep.equal(expectedCommand[field]);
-          }
-        }
-      }
-    });
-
-    it('should return empty result when package.json contents are empty', async () => {
-      const emptyPackage = {};
-
-      sinon.stub(resolvePkg, 'default').resolves(emptyPackage);
-
-      const result = await getPackageScriptCommands();
-
-      expect(result).to.deep.equal(emptyPackage);
-    });
-
-    it('should ignore jss script entry', async () => {
-      const packageJson = {
-        scripts: {
-          jss: 'do --this',
-          second: 'do --that',
-          third: 'do --all',
-        },
-      };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { jss: _, ...expectedScripts } = packageJson.scripts;
-
-      sinon.stub(resolvePkg, 'default').resolves(packageJson);
-
-      const result = await getPackageScriptCommands();
-
-      expect(Object.keys(expectedScripts)).to.be.deep.equal(Object.keys(result));
-    });
+    expect(commands.test.builder.calledOnce).to.be.true;
   });
 });
