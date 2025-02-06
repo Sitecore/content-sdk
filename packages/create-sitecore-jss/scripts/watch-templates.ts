@@ -53,7 +53,8 @@ const initializeApps = async (noInstall: boolean) => {
       console.log(
         chalk.red('Could not find config. Did you create a watch.json file at the root?')
       );
-      process.exit(1);
     }
+
+    process.exit(1);
   }
 };
