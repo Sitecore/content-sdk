@@ -14,43 +14,46 @@ process.on('unhandledRejection', (err) => {
  * Each key in the object represents a command name, and the value is a `CommandModule` object
  * that defines the command's behavior, arguments, and options.
  */
-export default async function cli(commands: {
+export default async function cli(commands?: {
   [key: string]: CommandModule & { disableStrictArgs?: boolean };
 }) {
-  let appCommands = yargs.usage('$0 <command>');
+  let appCommands: Argv = yargs.usage('$0 <command>');
 
-  // this prevents yargs from showing help with 'jss.js' as the base command
-  // when the command is just 'jss' as a global bin
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (appCommands as any).$0 = 'jss';
+  appCommands = appCommands.scriptName('jss');
 
-  for (const cmd of Object.keys(commands)) {
-    const commandObject = commands[cmd];
+  // Register commands if available
+  if (commands && Object.keys(commands).length > 0) {
+    for (const cmd of Object.keys(commands)) {
+      const commandObject = commands[cmd];
 
-    // command is a yargs builder function that takes a yargs and returns a yargs
-    // YARRRRRGS :D
-    if (typeof commandObject.builder === 'function') {
-      appCommands = await commandObject.builder(appCommands);
-    }
+      if (typeof commandObject.builder === 'function') {
+        appCommands = await commandObject.builder(appCommands);
+      }
 
-    // command is a yargs 'command module' (https://github.com/yargs/yargs/blob/master/docs/advanced.md#providing-a-command-module)
-    if (typeof commandObject.builder === 'object') {
-      const ogBuilder = commandObject.builder;
+      if (typeof commandObject.builder === 'object') {
+        const ogBuilder = commandObject.builder;
+        const builderFunc = commandObject.disableStrictArgs
+          ? (yarrrrg: Argv) => yarrrrg.options(ogBuilder)
+          : (yarrrrg: Argv) => yarrrrg.options(ogBuilder).strict();
 
-      // apply strict-ness to the args of each command
-      const builderFunc = commandObject.disableStrictArgs
-        ? (yarrrrg: Argv) => yarrrrg.options(ogBuilder)
-        : (yarrrrg: Argv) => yarrrrg.options(ogBuilder).strict();
-
-      commandObject.builder = builderFunc;
-
-      appCommands = appCommands.command(commandObject);
+        commandObject.builder = builderFunc;
+        appCommands = appCommands.command(commandObject);
+      }
     }
   }
 
-  const argv = await appCommands.demandCommand(1).help().argv;
+  appCommands.command({
+    command: '*',
+    handler: (argv) => {
+      console.log('test');
+      if (argv._.length > 0) {
+        console.error(`Command not found: "${argv._[0]}". Use --help to see available commands.`);
+      } else {
+        console.error('No command provided. Use --help to see available commands.');
+      }
+      process.exit(1);
+    },
+  });
 
-  if (!argv._[0]) {
-    console.log('Missing command. Use --help to see all available options.');
-  }
+  await appCommands.argv;
 }
