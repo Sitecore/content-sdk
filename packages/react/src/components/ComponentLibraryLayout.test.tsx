@@ -14,6 +14,7 @@ import { Placeholder } from '..';
 import {
   ComponentLibraryStatus,
   ComponentUpdateEventArgs,
+  getComponentLibraryStatusEvent,
 } from '@sitecore-content-sdk/core/editing';
 
 describe('<ComponentLibraryLayout />', () => {
