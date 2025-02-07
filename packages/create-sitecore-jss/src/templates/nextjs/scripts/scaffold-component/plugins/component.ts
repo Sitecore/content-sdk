@@ -1,5 +1,5 @@
 ﻿import path from 'path';
-import { scaffoldFile } from '@xmcloud-jss/sitecore-jss-dev-tools';
+import { scaffoldFile } from '@sitecore-content-sdk/sitecore-jss-dev-tools';
 import { ScaffoldComponentPlugin, ScaffoldComponentPluginConfig } from '..';
 
 /**

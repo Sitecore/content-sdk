@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import { getAppRootId, siteNameError, languageError } from './app-root-query';
 import { SearchQueryService } from './search-service';
-import { GraphQLRequestClient } from './../graphql-request-client';
+import { GraphQLRequestClient } from '../graphql-request-client';
 import appRootQueryResponse from '../test-data/mockAppRootQueryResponse.json';
 import nock from 'nock';
 import { SitecoreTemplateId } from '../constants';

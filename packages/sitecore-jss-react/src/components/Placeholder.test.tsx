@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ComponentRendering, RouteData } from '@xmcloud-jss/sitecore-jss/layout';
+import { ComponentRendering, RouteData } from '@sitecore-content-sdk/sitecore-jss/layout';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import PropTypes from 'prop-types';

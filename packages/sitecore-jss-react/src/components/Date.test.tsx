@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import React from 'react';
 import { DateField } from './Date';
-import { EMPTY_DATE_FIELD_VALUE } from '@xmcloud-jss/sitecore-jss/layout';
+import { EMPTY_DATE_FIELD_VALUE } from '@sitecore-content-sdk/sitecore-jss/layout';
 
 describe('<DateField />', () => {
   it('should return null if no value', () => {

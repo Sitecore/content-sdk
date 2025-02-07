@@ -8,7 +8,7 @@ export {
   GraphQLRequestClientConfig,
   GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
-} from './../graphql-request-client';
+} from '../graphql-request-client';
 export {
   SearchQueryResult,
   SearchQueryVariables,

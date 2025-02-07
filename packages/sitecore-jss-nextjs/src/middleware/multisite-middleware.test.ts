@@ -5,10 +5,10 @@ import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
-import { debug } from '@xmcloud-jss/sitecore-jss';
+import { debug } from '@sitecore-content-sdk/sitecore-jss';
 
 import { MultisiteMiddleware } from './multisite-middleware';
-import { SiteResolver } from '@xmcloud-jss/sitecore-jss/site';
+import { SiteResolver } from '@sitecore-content-sdk/sitecore-jss/site';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;

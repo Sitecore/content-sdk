@@ -1,4 +1,4 @@
-﻿import { SiteInfo, SiteResolver } from '@xmcloud-jss/sitecore-jss-nextjs/site';
+﻿import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/sitecore-jss-nextjs/site';
 import * as plugins from 'temp/site-resolver-plugins';
 
 /*

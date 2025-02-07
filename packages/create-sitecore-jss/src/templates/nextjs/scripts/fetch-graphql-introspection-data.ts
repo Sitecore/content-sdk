@@ -1,4 +1,4 @@
-﻿import { GraphQLRequestClient } from '@xmcloud-jss/sitecore-jss-nextjs/graphql';
+﻿import { GraphQLRequestClient } from '@sitecore-content-sdk/sitecore-jss-nextjs/graphql';
 import fs from 'fs';
 import { getIntrospectionQuery } from 'graphql';
 
@@ -11,9 +11,7 @@ try {
   // eslint-disable-next-line
   jssConfig = require('../src/temp/config');
 } catch (e) {
-  console.error(
-    'Unable to require JSS config. Ensure the app has been started at least once.'
-  );
+  console.error('Unable to require JSS config. Ensure the app has been started at least once.');
   console.error(e);
   process.exit(1);
 }

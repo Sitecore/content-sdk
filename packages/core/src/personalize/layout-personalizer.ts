@@ -1,5 +1,5 @@
 import { HIDDEN_RENDERING_NAME } from '../constants';
-import { LayoutServiceData, ComponentRendering, PlaceholdersData } from './../layout/models';
+import { LayoutServiceData, ComponentRendering, PlaceholdersData } from '../layout/models';
 
 const transformToHiddenRenderingVariant = (component: ComponentRendering) => ({
   ...component,

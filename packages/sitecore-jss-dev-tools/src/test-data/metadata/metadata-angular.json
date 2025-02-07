@@ -1,9 +1,9 @@
 ﻿{
   "packages": {
-    "@xmcloud-jss/sitecore-jss-angular": "22.2.0-canary.69",
-    "@xmcloud-jss/sitecore-jss-angular-schematics": "22.2.0-canary.69",
-    "@xmcloud-jss/sitecore-jss-cli": "22.2.0-canary.69",
-    "@xmcloud-jss/sitecore-jss-dev-tools": "22.2.0-canary.69",
-    "@xmcloud-jss/sitecore-jss": "22.2.0-canary.69"
+    "@sitecore-content-sdk/sitecore-jss-angular": "22.2.0-canary.69",
+    "@sitecore-content-sdk/sitecore-jss-angular-schematics": "22.2.0-canary.69",
+    "@sitecore-content-sdk/sitecore-jss-cli": "22.2.0-canary.69",
+    "@sitecore-content-sdk/sitecore-jss-dev-tools": "22.2.0-canary.69",
+    "@sitecore-content-sdk/sitecore-jss": "22.2.0-canary.69"
   }
 }

@@ -1,16 +1,16 @@
 ﻿import { NextApiRequest, NextApiResponse } from 'next';
-import { debug } from '@xmcloud-jss/sitecore-jss';
-import { LayoutServicePageState } from '@xmcloud-jss/sitecore-jss/layout';
+import { debug } from '@sitecore-content-sdk/sitecore-jss';
+import { LayoutServicePageState } from '@sitecore-content-sdk/sitecore-jss/layout';
 import {
   QUERY_PARAM_EDITING_SECRET,
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
   LayoutKind,
-} from '@xmcloud-jss/sitecore-jss/editing';
+} from '@sitecore-content-sdk/sitecore-jss/editing';
 import { getJssEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
-import { enforceCors, getAllowedOriginsFromEnv } from '@xmcloud-jss/sitecore-jss/utils';
-import { DEFAULT_VARIANT } from '@xmcloud-jss/sitecore-jss/personalize';
+import { enforceCors, getAllowedOriginsFromEnv } from '@sitecore-content-sdk/sitecore-jss/utils';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/sitecore-jss/personalize';
 
 /**
  * Configuration for the Editing Render Middleware.

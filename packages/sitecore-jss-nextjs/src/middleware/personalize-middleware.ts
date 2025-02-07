@@ -6,8 +6,8 @@ import {
   PersonalizeInfo,
   CdpHelper,
   DEFAULT_VARIANT,
-} from '@xmcloud-jss/sitecore-jss/personalize';
-import { debug } from '@xmcloud-jss/sitecore-jss';
+} from '@sitecore-content-sdk/sitecore-jss/personalize';
+import { debug } from '@sitecore-content-sdk/sitecore-jss';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';

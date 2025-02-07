@@ -1,3 +1,3 @@
-﻿export { Metadata } from '@xmcloud-jss/sitecore-jss/editing';
+﻿export { Metadata } from '@sitecore-content-sdk/sitecore-jss/editing';
 
 export * from './templating';

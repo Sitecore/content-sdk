@@ -1,5 +1,8 @@
 ﻿import React, { ReactNode, Suspense } from 'react';
-import { ComponentRendering, LayoutServicePageState } from '@xmcloud-jss/sitecore-jss/layout';
+import {
+  ComponentRendering,
+  LayoutServicePageState,
+} from '@sitecore-content-sdk/sitecore-jss/layout';
 import { withSitecoreContext } from '../enhancers/withSitecoreContext';
 import { SitecoreContextValue } from './SitecoreContext';
 

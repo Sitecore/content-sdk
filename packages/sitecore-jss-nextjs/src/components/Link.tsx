@@ -7,7 +7,7 @@ import {
   LinkField,
   LinkProps as ReactLinkProps,
   LinkPropTypes,
-} from '@xmcloud-jss/sitecore-jss-react';
+} from '@sitecore-content-sdk/sitecore-jss-react';
 
 export type LinkProps = ReactLinkProps & {
   /**

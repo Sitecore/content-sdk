@@ -39,7 +39,7 @@ describe('generate-component-builder', () => {
           '// See scripts/generate-component-builder/index.ts to modify the generation of this file.\n' +
           '\n' +
           '\n' +
-          "import { ComponentBuilder } from '@xmcloud-jss/sitecore-jss-nextjs';\n" +
+          "import { ComponentBuilder } from '@sitecore-content-sdk/sitecore-jss-nextjs';\n" +
           '\n' +
           "import { Foo } from 'custom-module';\n" +
           '\n' +
@@ -114,7 +114,7 @@ describe('generate-component-builder', () => {
           '// See scripts/generate-component-builder/index.ts to modify the generation of this file.\n' +
           '\n' +
           "import dynamic from 'next/dynamic';\n" +
-          "import { ComponentBuilder } from '@xmcloud-jss/sitecore-jss-nextjs';\n" +
+          "import { ComponentBuilder } from '@sitecore-content-sdk/sitecore-jss-nextjs';\n" +
           '\n' +
           "import { Foo } from 'custom-module';\n" +
           '\n' +

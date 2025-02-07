@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import PropTypes from 'prop-types';
-import { MetadataKind } from '@xmcloud-jss/sitecore-jss/editing';
+import { MetadataKind } from '@sitecore-content-sdk/sitecore-jss/editing';
 
 interface FieldMetadataProps {
   metadata: { [key: string]: unknown };

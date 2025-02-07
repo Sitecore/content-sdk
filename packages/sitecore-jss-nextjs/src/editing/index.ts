@@ -1,4 +1,4 @@
-﻿export { GraphQLEditingService } from '@xmcloud-jss/sitecore-jss/editing';
+﻿export { GraphQLEditingService } from '@sitecore-content-sdk/sitecore-jss/editing';
 export {
   EditingRenderMiddleware,
   EditingRenderMiddlewareConfig,
@@ -14,4 +14,4 @@ export {
   RenderingType,
   EDITING_COMPONENT_PLACEHOLDER,
   EDITING_COMPONENT_ID,
-} from '@xmcloud-jss/sitecore-jss/layout';
+} from '@sitecore-content-sdk/sitecore-jss/layout';

@@ -4,7 +4,7 @@ import {
   Field,
   isFieldValueEmpty,
   FieldMetadata,
-} from '@xmcloud-jss/sitecore-jss/layout';
+} from '@sitecore-content-sdk/sitecore-jss/layout';
 
 /**
  * The HOC options

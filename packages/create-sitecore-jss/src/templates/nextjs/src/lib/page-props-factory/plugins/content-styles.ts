@@ -1,5 +1,5 @@
 ﻿import { SitecorePageProps } from 'lib/page-props';
-import { getContentStylesheetLink } from '@xmcloud-jss/sitecore-jss-nextjs';
+import { getContentStylesheetLink } from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import { Plugin } from '..';
 import config from 'temp/config';
 

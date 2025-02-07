@@ -12,9 +12,13 @@ import { SitecoreContext } from '../components/SitecoreContext';
 import { PlaceholderProps } from '../components/PlaceholderCommon';
 import PropTypes from 'prop-types';
 import { ComponentFactory } from '../components/sharedTypes';
-import { ComponentRendering, LayoutServiceData, RouteData } from '@xmcloud-jss/sitecore-jss/layout';
+import {
+  ComponentRendering,
+  LayoutServiceData,
+  RouteData,
+} from '@sitecore-content-sdk/sitecore-jss/layout';
 import { Placeholder } from '../components/Placeholder';
-import { EnhancedOmit } from '@xmcloud-jss/sitecore-jss/utils';
+import { EnhancedOmit } from '@sitecore-content-sdk/sitecore-jss/utils';
 
 type CalloutProps = PlaceholderProps & {
   [prop: string]: unknown;

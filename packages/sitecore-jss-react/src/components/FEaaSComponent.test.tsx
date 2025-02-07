@@ -7,7 +7,7 @@ import {
   FEaaSComponentParams,
   FEaaSComponentProps,
 } from './FEaaSComponent';
-import { ComponentFields } from '@xmcloud-jss/sitecore-jss/layout';
+import { ComponentFields } from '@sitecore-content-sdk/sitecore-jss/layout';
 
 describe('<FEaaSComponent />', () => {
   const requiredParams: FEaaSComponentParams = {

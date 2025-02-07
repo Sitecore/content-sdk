@@ -14,7 +14,7 @@ import { Placeholder } from '..';
 import {
   ComponentLibraryStatus,
   ComponentUpdateEventArgs,
-} from '@xmcloud-jss/sitecore-jss/editing';
+} from '@sitecore-content-sdk/sitecore-jss/editing';
 
 describe('<ComponentLibraryLayout />', () => {
   const postMessageSpy = sinon.spy(global.window, 'postMessage');

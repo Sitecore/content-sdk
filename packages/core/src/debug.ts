@@ -1,7 +1,7 @@
 import debug from 'debug';
 import isServer from './utils/is-server';
 
-const rootNamespace = 'sitecore-jss';
+const rootNamespace = 'core';
 
 export type Debugger = debug.Debugger;
 
@@ -24,7 +24,7 @@ if (
 export const enableDebug = (namespaces: string) => debug.enable(namespaces);
 
 /**
- * Default Sitecore JSS 'debug' module debuggers. Uses namespace prefix 'sitecore-jss:'.
+ * Default Sitecore JSS 'debug' module debuggers. Uses namespace prefix 'core:'.
  * See {@link https://www.npmjs.com/package/debug} for details.
  */
 export default {

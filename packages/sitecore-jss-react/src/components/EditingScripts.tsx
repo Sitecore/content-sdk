@@ -1,7 +1,7 @@
 ﻿import React from 'react';
-import { LayoutServicePageState } from '@xmcloud-jss/sitecore-jss/layout';
+import { LayoutServicePageState } from '@sitecore-content-sdk/sitecore-jss/layout';
 import { useSitecoreContext } from '../enhancers/withSitecoreContext';
-import { getJssPagesClientData } from '@xmcloud-jss/sitecore-jss/editing';
+import { getJssPagesClientData } from '@sitecore-content-sdk/sitecore-jss/editing';
 
 /**
  * Renders client scripts and data for editing/preview mode in Pages.

@@ -3,7 +3,12 @@
  */
 import React from 'react';
 import Head from 'next/head';
-import { Placeholder, LayoutServiceData, Field, HTMLLink } from '@xmcloud-jss/sitecore-jss-nextjs';
+import {
+  Placeholder,
+  LayoutServiceData,
+  Field,
+  HTMLLink,
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import Scripts from 'src/Scripts';
 
 interface LayoutProps {
@@ -28,7 +33,7 @@ const Layout = ({ layoutData, headLinks }: LayoutProps): JSX.Element => {
       <Head>
         <title>{fields?.Title?.value?.toString() || 'Page'}</title>
         <link rel="icon" href="/favicon.ico" />
-        {headLinks.map((headLink) => (
+        {headLinks.map(headLink => (
           <link rel={headLink.rel} key={headLink.href} href={headLink.href} />
         ))}
       </Head>

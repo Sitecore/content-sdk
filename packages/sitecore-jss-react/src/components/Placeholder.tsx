@@ -1,8 +1,8 @@
 ﻿import React from 'react';
 import { PlaceholderCommon, PlaceholderProps } from './PlaceholderCommon';
 import { withComponentFactory } from '../enhancers/withComponentFactory';
-import { ComponentRendering } from '@xmcloud-jss/sitecore-jss/layout';
-import { PagesEditor } from '@xmcloud-jss/sitecore-jss/editing';
+import { ComponentRendering } from '@sitecore-content-sdk/sitecore-jss/layout';
+import { PagesEditor } from '@sitecore-content-sdk/sitecore-jss/editing';
 import { withSitecoreContext } from '../enhancers/withSitecoreContext';
 
 export interface PlaceholderComponentProps extends PlaceholderProps {

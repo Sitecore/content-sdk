@@ -2,7 +2,7 @@
   BYOCWrapper,
   BYOCComponentParams,
   fetchBYOCComponentServerProps,
-} from '@xmcloud-jss/sitecore-jss-react';
+} from '@sitecore-content-sdk/sitecore-jss-react';
 import {
   GetStaticComponentProps,
   GetServerSideComponentProps,

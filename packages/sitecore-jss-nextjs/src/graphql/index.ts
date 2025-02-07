@@ -6,4 +6,4 @@
   GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
   getEdgeProxyContentUrl,
-} from '@xmcloud-jss/sitecore-jss/graphql';
+} from '@sitecore-content-sdk/sitecore-jss/graphql';

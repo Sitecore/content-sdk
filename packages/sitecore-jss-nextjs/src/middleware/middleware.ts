@@ -1,4 +1,4 @@
-﻿import { SiteInfo, SiteResolver } from '@xmcloud-jss/sitecore-jss/site';
+﻿import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/sitecore-jss/site';
 import { NextRequest, NextResponse } from 'next/server';
 
 export type MiddlewareBaseConfig = {
@@ -55,8 +55,7 @@ export abstract class MiddlewareBase {
   protected isPrefetch(req: NextRequest): boolean {
     return (
       // eslint-disable-next-line prettier/prettier
-      req.headers.get('purpose') === 'prefetch' || // Pages Router
-      req.headers.get('Next-Router-Prefetch') === '1' // App Router
+      req.headers.get('purpose') === 'prefetch' || req.headers.get('Next-Router-Prefetch') === '1' // Pages Router // App Router
     );
   }
 

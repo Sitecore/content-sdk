@@ -9,7 +9,7 @@ import {
   DefaultEmptyFieldEditingComponentImage,
   LayoutServicePageState,
   SitecoreContextReactContext,
-} from '@xmcloud-jss/sitecore-jss-react';
+} from '@sitecore-content-sdk/sitecore-jss-react';
 import { ImageLoader } from 'next/image';
 import { spy, match } from 'sinon';
 import sinonChai from 'sinon-chai';

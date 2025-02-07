@@ -2,7 +2,7 @@
   generatePlugins,
   ModuleType,
   PluginDefinition,
-} from '@xmcloud-jss/sitecore-jss-dev-tools';
+} from '@sitecore-content-sdk/sitecore-jss-dev-tools';
 
 /*
   PLUGINS GENERATION

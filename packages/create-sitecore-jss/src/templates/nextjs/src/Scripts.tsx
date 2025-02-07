@@ -1,4 +1,4 @@
-import { EditingScripts } from '@xmcloud-jss/sitecore-jss-nextjs';
+import { EditingScripts } from '@sitecore-content-sdk/sitecore-jss-nextjs';
 // The BYOC bundle imports external (BYOC) components into the app and makes sure they are ready to be used
 import BYOC from 'src/byoc';
 import FEAASScripts from 'components/FEAASScripts';

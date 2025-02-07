@@ -4,7 +4,7 @@ import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata, isFieldValueEmpty } from '@xmcloud-jss/sitecore-jss/layout';
+import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/sitecore-jss/layout';
 
 export interface RichTextField extends FieldMetadata {
   value?: string;

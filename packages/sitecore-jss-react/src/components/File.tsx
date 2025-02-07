@@ -1,4 +1,4 @@
-﻿import { isFieldValueEmpty } from '@xmcloud-jss/sitecore-jss/layout';
+﻿import { isFieldValueEmpty } from '@sitecore-content-sdk/sitecore-jss/layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 

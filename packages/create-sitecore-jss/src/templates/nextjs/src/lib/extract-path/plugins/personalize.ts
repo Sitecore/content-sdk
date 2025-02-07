@@ -1,4 +1,4 @@
-﻿import { normalizePersonalizedRewrite } from '@xmcloud-jss/sitecore-jss-nextjs';
+﻿import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import { Plugin } from '..';
 
 class PersonalizePlugin implements Plugin {

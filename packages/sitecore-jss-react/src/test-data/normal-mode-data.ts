@@ -1,4 +1,4 @@
-﻿import { LayoutServiceData } from '@xmcloud-jss/sitecore-jss/layout';
+﻿import { LayoutServiceData } from '@sitecore-content-sdk/sitecore-jss/layout';
 
 export const convertedDevData: LayoutServiceData = {
   sitecore: {

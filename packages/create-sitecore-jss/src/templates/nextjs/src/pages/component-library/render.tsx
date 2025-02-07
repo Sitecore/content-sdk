@@ -4,7 +4,7 @@ import {
   ComponentLibraryLayout,
   ComponentPropsContext,
   SitecoreContext,
-} from '@xmcloud-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import { SitecorePageProps } from 'lib/page-props';
 import { sitecorePagePropsFactory } from 'lib/page-props-factory';
 import NotFound from 'src/NotFound';
@@ -28,7 +28,7 @@ const FEAASRender = ({
         <Head>
           <title>Sitecore Component Library</title>
           <link rel="icon" href="/favicon.ico" />
-          {headLinks.map((headLink) => (
+          {headLinks.map(headLink => (
             <link rel={headLink.rel} key={headLink.href} href={headLink.href} />
           ))}
         </Head>
@@ -38,7 +38,7 @@ const FEAASRender = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async context => {
   const props = await sitecorePagePropsFactory.create(context);
   return {
     props,

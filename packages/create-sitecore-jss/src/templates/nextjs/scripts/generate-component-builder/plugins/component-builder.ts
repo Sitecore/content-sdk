@@ -1,4 +1,4 @@
-﻿import { generateComponentBuilder } from '@xmcloud-jss/sitecore-jss-dev-tools/nextjs';
+﻿import { generateComponentBuilder } from '@sitecore-content-sdk/sitecore-jss-dev-tools/nextjs';
 import {
   ComponentBuilderPluginConfig,
   ComponentBuilderPlugin as ComponentBuilderPluginType,

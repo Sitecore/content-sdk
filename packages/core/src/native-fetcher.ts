@@ -3,7 +3,7 @@ import TimeoutPromise from './utils/timeout-promise';
 
 type NativeDataFetcherOptions = {
   /**
-   * Override debugger for logging. Uses 'sitecore-jss:http' by default.
+   * Override debugger for logging. Uses 'core:http' by default.
    */
   debugger?: Debugger;
   /**

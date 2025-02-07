@@ -6,7 +6,7 @@ import {
   ImageField,
   Field,
   LinkField,
-} from '@xmcloud-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 
 interface Fields {
   PromoIcon: ImageField;

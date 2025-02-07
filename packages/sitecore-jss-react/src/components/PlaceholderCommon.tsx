@@ -9,8 +9,8 @@ import {
   Item,
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
-} from '@xmcloud-jss/sitecore-jss/layout';
-import { constants } from '@xmcloud-jss/sitecore-jss';
+} from '@sitecore-content-sdk/sitecore-jss/layout';
+import { constants } from '@sitecore-content-sdk/sitecore-jss';
 import { HiddenRendering } from './HiddenRendering';
 import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from './FEaaSComponent';
 import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from './FEaaSWrapper';

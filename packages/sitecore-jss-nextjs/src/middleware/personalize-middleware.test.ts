@@ -5,9 +5,9 @@ import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
-import { GraphQLRequestClient, debug } from '@xmcloud-jss/sitecore-jss';
-import { SiteResolver } from '@xmcloud-jss/sitecore-jss/site';
-import { CdpHelper } from '@xmcloud-jss/sitecore-jss/personalize';
+import { GraphQLRequestClient, debug } from '@sitecore-content-sdk/sitecore-jss';
+import { SiteResolver } from '@sitecore-content-sdk/sitecore-jss/site';
+import { CdpHelper } from '@sitecore-content-sdk/sitecore-jss/personalize';
 import { PersonalizeMiddleware } from './personalize-middleware';
 
 use(sinonChai);

@@ -6,7 +6,7 @@
   LinkField,
   Text,
   useSitecoreContext,
-} from '@xmcloud-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import React, { CSSProperties } from 'react';
 
 interface Fields {

@@ -10,7 +10,7 @@ import {
   EMPTY_DATE_FIELD_VALUE,
 } from './utils';
 
-describe('sitecore-jss layout utils', () => {
+describe('core layout utils', () => {
   describe('getFieldValue', () => {
     const fields = {
       crop: {

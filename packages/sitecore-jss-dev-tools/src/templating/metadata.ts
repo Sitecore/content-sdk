@@ -1,4 +1,4 @@
-﻿import { Metadata } from '@xmcloud-jss/sitecore-jss/editing';
+﻿import { Metadata } from '@sitecore-content-sdk/sitecore-jss/editing';
 import { execSync } from 'child_process';
 
 type Package = {
@@ -6,7 +6,12 @@ type Package = {
   version: string;
 };
 
-const trackedScopes = ['@sitecore', '@sitecore-cloudsdk', '@sitecore-feaas', '@xmcloud-jss'];
+const trackedScopes = [
+  '@sitecore',
+  '@sitecore-cloudsdk',
+  '@sitecore-feaas',
+  '@sitecore-content-sdk',
+];
 
 /**
  * Get application metadata

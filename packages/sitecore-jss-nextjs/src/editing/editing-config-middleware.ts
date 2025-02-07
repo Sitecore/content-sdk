@@ -2,11 +2,11 @@
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
-} from '@xmcloud-jss/sitecore-jss/editing';
-import { debug } from '@xmcloud-jss/sitecore-jss';
-import { Metadata } from '@xmcloud-jss/sitecore-jss-dev-tools';
-import { enforceCors } from '@xmcloud-jss/sitecore-jss/utils';
-import { EditMode } from '@xmcloud-jss/sitecore-jss/layout';
+} from '@sitecore-content-sdk/sitecore-jss/editing';
+import { debug } from '@sitecore-content-sdk/sitecore-jss';
+import { Metadata } from '@sitecore-content-sdk/sitecore-jss-dev-tools';
+import { enforceCors } from '@sitecore-content-sdk/sitecore-jss/utils';
+import { EditMode } from '@sitecore-content-sdk/sitecore-jss/layout';
 import { getJssEditingSecret } from '../utils/utils';
 
 export type EditingConfigMiddlewareConfig = {

@@ -6,7 +6,7 @@
     test: 'tests are good',
   },
   config: {
-    rootPlaceholders: ['jss-main']
+    rootPlaceholders: ['jss-main'],
   },
   files: ['dist'],
   dependencies: {
@@ -23,10 +23,10 @@
         bar: [1, 2, 3],
         x: '10',
         y: 5,
-        z: ['1', '2', '3']
-      }
-    }
-  }
+        z: ['1', '2', '3'],
+      },
+    },
+  },
 };
 
 export const partialPkg = {
@@ -37,14 +37,14 @@ export const partialPkg = {
     nprogress: '~0.2.0',
   },
   devDependencies: {
-    '@xmcloud-jss/sitecore-jss-dev-tools': '^20.0.0-canary',
+    '@sitecore-content-sdk/sitecore-jss-dev-tools': '^20.0.0-canary',
   },
   scripts: {
     start:
       'cross-env-shell JSS_MODE=disconnected "npm-run-all --serial bootstrap --parallel next:dev start:disconnected-proxy start:watch-components"',
   },
   config: {
-    rootPlaceholders: ['jss-main', 'jss-test']
+    rootPlaceholders: ['jss-main', 'jss-test'],
   },
   foo: {
     bar: [1, 2, 3, 4],
@@ -53,8 +53,8 @@ export const partialPkg = {
         bar: [7, 8, 9],
         x: '20',
         y: 15,
-        z: ['9', '10', '11']
-      }
-    }
-  }
+        z: ['9', '10', '11'],
+      },
+    },
+  },
 };

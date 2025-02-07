@@ -1,3 +1,3 @@
 ﻿export { handleEditorFastRefresh } from './utils';
-export { tryParseEnvValue, resolveUrl } from '@xmcloud-jss/sitecore-jss/utils';
-export { isEditorActive, resetEditorChromes } from '@xmcloud-jss/sitecore-jss/editing';
+export { tryParseEnvValue, resolveUrl } from '@sitecore-content-sdk/sitecore-jss/utils';
+export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/sitecore-jss/editing';

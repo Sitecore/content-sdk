@@ -1,5 +1,5 @@
 ﻿import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
-import { DictionaryService, LayoutService } from '@xmcloud-jss/sitecore-jss-nextjs';
+import { DictionaryService, LayoutService } from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import { dictionaryServiceFactory } from 'lib/dictionary-service-factory';
 import { layoutServiceFactory } from 'lib/layout-service-factory';
 import { SitecorePageProps } from 'lib/page-props';
@@ -45,7 +45,7 @@ class NormalModePlugin implements Plugin {
     }
 
     // Fetch dictionary data if layout data was present
-    if (!props.notFound) {      
+    if (!props.notFound) {
       const dictionaryService = this.getDictionaryService(props.site.name);
       props.dictionary = await dictionaryService.fetchDictionaryData(props.locale);
     }

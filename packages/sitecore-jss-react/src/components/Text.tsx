@@ -4,7 +4,7 @@ import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditi
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import PropTypes, { Requireable } from 'prop-types';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata, isFieldValueEmpty } from '@xmcloud-jss/sitecore-jss/layout';
+import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/sitecore-jss/layout';
 
 export interface TextField extends FieldMetadata {
   value?: string | number;

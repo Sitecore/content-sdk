@@ -2,11 +2,14 @@
 import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import { LayoutServiceData, LayoutServicePageState } from '@xmcloud-jss/sitecore-jss/layout';
+import {
+  LayoutServiceData,
+  LayoutServicePageState,
+} from '@sitecore-content-sdk/sitecore-jss/layout';
 import { EditingScripts } from './EditingScripts';
 import { SitecoreContext } from './SitecoreContext';
 import { ComponentFactory } from './sharedTypes';
-import { getJssPagesClientData } from '@xmcloud-jss/sitecore-jss/editing';
+import { getJssPagesClientData } from '@sitecore-content-sdk/sitecore-jss/editing';
 
 describe('<EditingScripts />', () => {
   const mockComponentFactory: ComponentFactory = () => null;

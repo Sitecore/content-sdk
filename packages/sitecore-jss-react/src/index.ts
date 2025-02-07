@@ -8,9 +8,9 @@
   NativeDataFetcher,
   NativeDataFetcherResponse,
   NativeDataFetcherConfig,
-} from '@xmcloud-jss/sitecore-jss';
-export { EnhancedOmit } from '@xmcloud-jss/sitecore-jss/utils';
-export { isEditorActive, resetEditorChromes } from '@xmcloud-jss/sitecore-jss/editing';
+} from '@sitecore-content-sdk/sitecore-jss';
+export { EnhancedOmit } from '@sitecore-content-sdk/sitecore-jss/utils';
+export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/sitecore-jss/editing';
 export {
   getContentStylesheetLink,
   getComponentLibraryStylesheetLinks,
@@ -29,20 +29,20 @@ export {
   ComponentFields,
   ComponentParams,
   EditMode,
-} from '@xmcloud-jss/sitecore-jss/layout';
+} from '@sitecore-content-sdk/sitecore-jss/layout';
 export {
   DictionaryPhrases,
   DictionaryService,
   GraphQLDictionaryService,
-} from '@xmcloud-jss/sitecore-jss/i18n';
+} from '@sitecore-content-sdk/sitecore-jss/i18n';
 export {
   GraphQLClientError,
   RetryStrategy,
   DefaultRetryStrategy,
   GraphQLRequestClientFactoryConfig,
   GraphQLRequestClient,
-} from '@xmcloud-jss/sitecore-jss/graphql';
-export { mediaApi } from '@xmcloud-jss/sitecore-jss/media';
+} from '@sitecore-content-sdk/sitecore-jss/graphql';
+export { mediaApi } from '@sitecore-content-sdk/sitecore-jss/media';
 export { ComponentFactory, JssComponentType } from './components/sharedTypes';
 export { Placeholder, PlaceholderComponentProps } from './components/Placeholder';
 export {

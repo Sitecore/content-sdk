@@ -1,4 +1,4 @@
-import { FEAASRenderMiddleware } from '@xmcloud-jss/sitecore-jss-nextjs/editing';
+import { FEAASRenderMiddleware } from '@sitecore-content-sdk/sitecore-jss-nextjs/editing';
 
 /**
  * This Next.js API route is used to handle GET requests from Sitecore Component Builder.

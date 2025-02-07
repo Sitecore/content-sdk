@@ -4,7 +4,7 @@ import {
   LayoutServiceData,
   ComponentRendering,
   PlaceholdersData,
-} from '@xmcloud-jss/sitecore-jss/layout';
+} from '@sitecore-content-sdk/sitecore-jss/layout';
 import {
   ComponentPropsCollection,
   ComponentPropsFetchFunction,

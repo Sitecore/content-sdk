@@ -67,7 +67,7 @@ export type GraphQLRequestClientConfig = {
    */
   apiKey?: string;
   /**
-   * Override debugger for logging. Uses 'sitecore-jss:http' by default.
+   * Override debugger for logging. Uses 'core:http' by default.
    */
   debugger?: Debugger;
   /**

@@ -3,15 +3,15 @@ import {
   SiteInfo,
   personalizeLayout,
   getGroomedVariantIds,
-} from '@xmcloud-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import {
   EditingPreviewData,
   isComponentLibraryPreviewData,
-} from '@xmcloud-jss/sitecore-jss-nextjs/editing';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs/editing';
 import { SitecorePageProps } from 'lib/page-props';
 import { graphQLEditingService } from 'lib/graphql-editing-service';
 import { Plugin } from '..';
-import { RestComponentLayoutService } from '@xmcloud-jss/sitecore-jss-nextjs';
+import { RestComponentLayoutService } from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import config from 'temp/config';
 
 class PreviewModePlugin implements Plugin {

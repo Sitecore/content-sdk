@@ -2,7 +2,7 @@
   ComponentParams,
   ComponentRendering,
   SitecoreContextValue,
-} from '@xmcloud-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 
 /**
  * Shared component props

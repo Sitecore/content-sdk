@@ -1,5 +1,5 @@
 ﻿import type { NextApiRequest, NextApiResponse } from 'next';
-import { GraphQLRobotsService } from '@xmcloud-jss/sitecore-jss-nextjs';
+import { GraphQLRobotsService } from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import { siteResolver } from 'lib/site-resolver';
 import clientFactory from 'lib/graphql-client-factory';
 

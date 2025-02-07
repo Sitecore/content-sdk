@@ -4,8 +4,8 @@ import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata } from '@xmcloud-jss/sitecore-jss/layout';
-import { isFieldValueEmpty } from '@xmcloud-jss/sitecore-jss/layout';
+import { FieldMetadata } from '@sitecore-content-sdk/sitecore-jss/layout';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/sitecore-jss/layout';
 
 export interface DateFieldProps extends EditableFieldProps {
   /** The date field data. */

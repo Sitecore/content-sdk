@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { ComponentFields, ComponentRendering } from '@xmcloud-jss/sitecore-jss/layout';
+import { ComponentFields, ComponentRendering } from '@sitecore-content-sdk/sitecore-jss/layout';
 import { getDataFromFields } from '../utils';
 import { MissingComponent, MissingComponentProps } from './MissingComponent';
 import * as FEAAS from '@sitecore-feaas/clientside/react';

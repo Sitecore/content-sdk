@@ -8,7 +8,7 @@ import { getSiteEmptyError, languageError } from './graphql-sitemap-service';
 import sitemapDefaultQueryResult from '../test-data/sitemapDefaultQueryResult.json';
 import sitemapPersonalizeQueryResult from '../test-data/sitemapPersonalizeQueryResult.json';
 import sitemapServiceMultisiteResult from '../test-data/sitemapServiceMultisiteResult';
-import { GraphQLClient, GraphQLRequestClient } from '@xmcloud-jss/sitecore-jss/graphql';
+import { GraphQLClient, GraphQLRequestClient } from '@sitecore-content-sdk/sitecore-jss/graphql';
 
 class TestService extends MultisiteGraphQLSitemapService {
   public client: GraphQLClient;

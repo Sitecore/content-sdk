@@ -4,7 +4,7 @@ import {
   PlaceholderComponentProps,
   WithSitecoreContextProps,
   EnhancedOmit,
-} from '@xmcloud-jss/sitecore-jss-react';
+} from '@sitecore-content-sdk/sitecore-jss-react';
 import { ComponentPropsReactContext } from './ComponentPropsContext';
 
 /**

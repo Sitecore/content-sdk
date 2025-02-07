@@ -1,4 +1,7 @@
-﻿import { ComponentPropsService, ComponentPropsError } from '@xmcloud-jss/sitecore-jss-nextjs';
+﻿import {
+  ComponentPropsService,
+  ComponentPropsError,
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import { SitecorePageProps } from 'lib/page-props';
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import { moduleFactory } from 'temp/componentBuilder';

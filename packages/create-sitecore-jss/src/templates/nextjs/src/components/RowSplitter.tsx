@@ -3,7 +3,7 @@ import {
   ComponentParams,
   ComponentRendering,
   Placeholder,
-} from '@xmcloud-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 
 interface ComponentProps {
   rendering: ComponentRendering & { params: ComponentParams };

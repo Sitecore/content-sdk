@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { Field, RichText as JssRichText } from '@xmcloud-jss/sitecore-jss-nextjs';
+import { Field, RichText as JssRichText } from '@sitecore-content-sdk/sitecore-jss-nextjs';
 
 interface Fields {
   Text: Field<string>;

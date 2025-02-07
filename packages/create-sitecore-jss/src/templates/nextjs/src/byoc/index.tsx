@@ -7,7 +7,7 @@ import config from 'temp/config';
 import {
   LayoutServicePageState,
   SitecoreContextReactContext,
-} from '@xmcloud-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 /**
  * This is an out-of-box bundler for External components (BYOC) (see Sitecore documentation for more details)
  * It enables registering components in client-only or SSR/hybrid contexts

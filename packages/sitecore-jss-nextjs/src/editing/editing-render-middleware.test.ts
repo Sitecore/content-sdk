@@ -7,7 +7,7 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   EditingRenderQueryParams,
-} from '@xmcloud-jss/sitecore-jss/editing';
+} from '@sitecore-content-sdk/sitecore-jss/editing';
 import { EditingRenderMiddleware, EditingNextApiRequest } from './editing-render-middleware';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';

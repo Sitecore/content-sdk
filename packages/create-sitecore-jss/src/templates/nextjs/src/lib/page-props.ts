@@ -4,7 +4,7 @@
   LayoutServiceData,
   SiteInfo,
   HTMLLink,
-} from '@xmcloud-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 
 /**
  * Sitecore page props

@@ -1,4 +1,4 @@
-﻿import { ComponentFactory, JssComponentType } from '@xmcloud-jss/sitecore-jss-react';
+﻿import { ComponentFactory, JssComponentType } from '@sitecore-content-sdk/sitecore-jss-react';
 import { Module, ModuleFactory } from './sharedTypes/module-factory';
 
 /**

@@ -1,6 +1,6 @@
 ﻿[
   {
-    "name": "@xmcloud-jss/sitecore-jss",
+    "name": "@sitecore-content-sdk/sitecore-jss",
     "version": "22.2.0-canary.69",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
@@ -73,8 +73,8 @@
       "/*.js",
       "/*.d.ts"
     ],
-    "_id": "@xmcloud-jss/sitecore-jss@22.2.0-canary.69",
-    "pkgid": "sitecore-jss@npm:@xmcloud-jss/sitecore-jss@22.2.0-canary.69",
+    "_id": "@sitecore-content-sdk/sitecore-jss@22.2.0-canary.69",
+    "pkgid": "sitecore-jss@npm:@sitecore-content-sdk/sitecore-jss@22.2.0-canary.69",
     "location": "../../packages/sitecore-jss",
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss",
@@ -119,7 +119,7 @@
     "queryContext": {}
   },
   {
-    "name": "@xmcloud-jss/sitecore-jss-angular",
+    "name": "@sitecore-content-sdk/sitecore-jss-angular",
     "version": "22.2.0-canary.69",
     "description": "",
     "scripts": {
@@ -178,7 +178,7 @@
       "rxjs": "~7.8.1"
     },
     "dependencies": {
-      "@xmcloud-jss/sitecore-jss": "22.2.0-canary.69"
+      "@sitecore-content-sdk/sitecore-jss": "22.2.0-canary.69"
     },
     "main": "dist/esm2022/sitecore-jss-sitecore-jss-angular.mjs",
     "module": "dist/esm2022/sitecore-jss-sitecore-jss-angular.js",
@@ -200,15 +200,15 @@
       "/bundles",
       "/components"
     ],
-    "_id": "@xmcloud-jss/sitecore-jss-angular@22.2.0-canary.69",
-    "pkgid": "sitecore-jss-angular@npm:@xmcloud-jss/sitecore-jss-angular@22.2.0-canary.69",
+    "_id": "@sitecore-content-sdk/sitecore-jss-angular@22.2.0-canary.69",
+    "pkgid": "sitecore-jss-angular@npm:@sitecore-content-sdk/sitecore-jss-angular@22.2.0-canary.69",
     "location": "../../packages/sitecore-jss-angular",
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-angular",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-angular",
     "resolved": null,
     "from": [],
     "to": [
-      "../../packages/sitecore-jss-angular/node_modules/@xmcloud-jss/sitecore-jss",
+      "../../packages/sitecore-jss-angular/node_modules/@sitecore-content-sdk/sitecore-jss",
       "../../packages/sitecore-jss-angular/node_modules/@angular-devkit/build-angular",
       "../../packages/sitecore-jss-angular/node_modules/@angular-eslint/eslint-plugin",
       "../../packages/sitecore-jss-angular/node_modules/@angular/cli",
@@ -246,7 +246,7 @@
     "queryContext": {}
   },
   {
-    "name": "@xmcloud-jss/sitecore-jss-angular-schematics",
+    "name": "@sitecore-content-sdk/sitecore-jss-angular-schematics",
     "version": "22.2.0-canary.69",
     "description": "Scaffolding schematics for Sitecore JSS Angular apps",
     "scripts": {
@@ -283,8 +283,8 @@
       "typescript": "~5.2.2"
     },
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "_id": "@xmcloud-jss/sitecore-jss-angular-schematics@22.2.0-canary.69",
-    "pkgid": "sitecore-jss-angular-schematics@npm:@xmcloud-jss/sitecore-jss-angular-schematics@22.2.0-canary.69",
+    "_id": "@sitecore-content-sdk/sitecore-jss-angular-schematics@22.2.0-canary.69",
+    "pkgid": "sitecore-jss-angular-schematics@npm:@sitecore-content-sdk/sitecore-jss-angular-schematics@22.2.0-canary.69",
     "location": "../../packages/sitecore-jss-angular-schematics",
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-angular-schematics",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-angular-schematics",
@@ -308,7 +308,7 @@
     "queryContext": {}
   },
   {
-    "name": "@xmcloud-jss/sitecore-jss-cli",
+    "name": "@sitecore-content-sdk/sitecore-jss-cli",
     "version": "22.2.0-canary.69",
     "description": "Sitecore JSS command-line",
     "main": "dist/cjs/cli.js",
@@ -341,7 +341,7 @@
       "url": "https://github.com/sitecore/jss/issues"
     },
     "dependencies": {
-      "@xmcloud-jss/sitecore-jss-dev-tools": "22.2.0-canary.69",
+      "@sitecore-content-sdk/sitecore-jss-dev-tools": "22.2.0-canary.69",
       "chalk": "^4.1.2",
       "cross-spawn": "^7.0.3",
       "dotenv": "^16.0.3",
@@ -376,15 +376,15 @@
       "dist",
       "types"
     ],
-    "_id": "@xmcloud-jss/sitecore-jss-cli@22.2.0-canary.69",
-    "pkgid": "sitecore-jss-cli@npm:@xmcloud-jss/sitecore-jss-cli@22.2.0-canary.69",
+    "_id": "@sitecore-content-sdk/sitecore-jss-cli@22.2.0-canary.69",
+    "pkgid": "sitecore-jss-cli@npm:@sitecore-content-sdk/sitecore-jss-cli@22.2.0-canary.69",
     "location": "../../packages/sitecore-jss-cli",
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-cli",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-cli",
     "resolved": null,
     "from": [],
     "to": [
-      "../../packages/sitecore-jss-cli/node_modules/@xmcloud-jss/sitecore-jss-dev-tools",
+      "../../packages/sitecore-jss-cli/node_modules/@sitecore-content-sdk/sitecore-jss-dev-tools",
       "../../packages/sitecore-jss-cli/node_modules/chalk",
       "../../packages/sitecore-jss-cli/node_modules/cross-spawn",
       "../../packages/sitecore-jss-cli/node_modules/dotenv",
@@ -419,7 +419,7 @@
     "queryContext": {}
   },
   {
-    "name": "@xmcloud-jss/sitecore-jss-dev-tools",
+    "name": "@sitecore-content-sdk/sitecore-jss-dev-tools",
     "version": "22.2.0-canary.69",
     "description": "Utilities to assist in the development and deployment of Sitecore JSS apps.",
     "main": "dist/cjs/index.js",
@@ -453,7 +453,7 @@
     },
     "dependencies": {
       "@babel/parser": "^7.24.0",
-      "@xmcloud-jss/sitecore-jss": "22.2.0-canary.69",
+      "@sitecore-content-sdk/sitecore-jss": "22.2.0-canary.69",
       "axios": "^1.3.2",
       "chalk": "^4.1.2",
       "chokidar": "^3.6.0",
@@ -513,8 +513,8 @@
       "/*.js",
       "/*.d.ts"
     ],
-    "_id": "@xmcloud-jss/sitecore-jss-dev-tools@22.2.0-canary.69",
-    "pkgid": "sitecore-jss-dev-tools@npm:@xmcloud-jss/sitecore-jss-dev-tools@22.2.0-canary.69",
+    "_id": "@sitecore-content-sdk/sitecore-jss-dev-tools@22.2.0-canary.69",
+    "pkgid": "sitecore-jss-dev-tools@npm:@sitecore-content-sdk/sitecore-jss-dev-tools@22.2.0-canary.69",
     "location": "../../packages/sitecore-jss-dev-tools",
     "path": "C:\\workspace\\jss\\packages\\sitecore-jss-dev-tools",
     "realpath": "C:\\workspace\\jss\\packages\\sitecore-jss-dev-tools",
@@ -522,7 +522,7 @@
     "from": [],
     "to": [
       "../../packages/sitecore-jss-dev-tools/node_modules/@babel/parser",
-      "../../packages/sitecore-jss-dev-tools/node_modules/@xmcloud-jss/sitecore-jss",
+      "../../packages/sitecore-jss-dev-tools/node_modules/@sitecore-content-sdk/sitecore-jss",
       "../../packages/sitecore-jss-dev-tools/node_modules/axios",
       "../../packages/sitecore-jss-dev-tools/node_modules/chalk",
       "../../packages/sitecore-jss-dev-tools/node_modules/chokidar",

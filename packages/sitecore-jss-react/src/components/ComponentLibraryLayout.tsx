@@ -5,12 +5,12 @@ import {
   EDITING_COMPONENT_ID,
   EDITING_COMPONENT_PLACEHOLDER,
   LayoutServiceData,
-} from '@xmcloud-jss/sitecore-jss/layout';
+} from '@sitecore-content-sdk/sitecore-jss/layout';
 import {
   ComponentLibraryStatus,
   getComponentLibraryStatusEvent,
   addComponentUpdateHandler,
-} from '@xmcloud-jss/sitecore-jss/editing';
+} from '@sitecore-content-sdk/sitecore-jss/editing';
 import { EditingScripts } from './EditingScripts';
 
 export const ComponentLibraryLayout = (layoutData: LayoutServiceData): JSX.Element => {

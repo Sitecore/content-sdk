@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
-import { ComponentFields, LayoutServicePageState } from '@xmcloud-jss/sitecore-jss/layout';
+import { ComponentFields, LayoutServicePageState } from '@sitecore-content-sdk/sitecore-jss/layout';
 import { getDataFromFields } from '../utils';
 
 export const FEAAS_COMPONENT_RENDERING_NAME = 'FEaaSComponent';

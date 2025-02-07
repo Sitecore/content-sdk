@@ -2,7 +2,7 @@
 import { stub } from 'sinon';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import { ComponentFields } from '@xmcloud-jss/sitecore-jss/layout';
+import { ComponentFields } from '@sitecore-content-sdk/sitecore-jss/layout';
 import { FEaaSWrapper } from './FEaaSWrapper';
 import * as FEaaSComponent from './FEaaSComponent';
 

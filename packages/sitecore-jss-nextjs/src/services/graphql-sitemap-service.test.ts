@@ -10,7 +10,7 @@ import sitemapDefaultQueryResult from '../test-data/sitemapDefaultQueryResult.js
 import sitemapPersonalizeQueryResult from '../test-data/sitemapPersonalizeQueryResult.json';
 import sitemapComponentTestingQueryResult from '../test-data/sitemapComponentTestingQueryResult.json';
 import sitemapServiceSinglesiteResult from '../test-data/sitemapServiceSinglesiteResult';
-import { GraphQLClient, GraphQLRequestClient } from '@xmcloud-jss/sitecore-jss/graphql';
+import { GraphQLClient, GraphQLRequestClient } from '@sitecore-content-sdk/sitecore-jss/graphql';
 
 class TestService extends GraphQLSitemapService {
   public client: GraphQLClient;

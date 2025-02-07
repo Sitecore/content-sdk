@@ -1,4 +1,4 @@
-﻿import { EditingConfigMiddleware } from '@xmcloud-jss/sitecore-jss-nextjs/editing';
+﻿import { EditingConfigMiddleware } from '@sitecore-content-sdk/sitecore-jss-nextjs/editing';
 import { components } from 'temp/componentBuilder';
 import metadata from 'temp/metadata.json';
 

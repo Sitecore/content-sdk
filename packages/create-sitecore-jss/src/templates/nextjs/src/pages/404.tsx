@@ -3,7 +3,7 @@ import {
   GraphQLErrorPagesService,
   SitecoreContext,
   ErrorPages,
-} from '@xmcloud-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import { SitecorePageProps } from 'lib/page-props';
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
@@ -27,7 +27,7 @@ const Custom404 = (props: SitecorePageProps): JSX.Element => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async context => {
   const site = siteResolver.getByName(config.sitecoreSiteName);
   const errorPagesService = new GraphQLErrorPagesService({
     clientFactory,

@@ -1,4 +1,4 @@
-﻿import { debug } from '@xmcloud-jss/sitecore-jss';
+﻿import { debug } from '@sitecore-content-sdk/sitecore-jss';
 import {
   GraphQLRedirectsService,
   GraphQLRedirectsServiceConfig,
@@ -7,13 +7,13 @@ import {
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectInfo,
   SiteInfo,
-} from '@xmcloud-jss/sitecore-jss/site';
+} from '@sitecore-content-sdk/sitecore-jss/site';
 import {
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
   isRegexOrUrl,
   mergeURLSearchParams,
-} from '@xmcloud-jss/sitecore-jss/utils';
+} from '@sitecore-content-sdk/sitecore-jss/utils';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';

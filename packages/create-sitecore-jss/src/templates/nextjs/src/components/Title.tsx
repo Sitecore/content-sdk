@@ -4,7 +4,7 @@
   Text,
   TextField,
   useSitecoreContext,
-} from '@xmcloud-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/sitecore-jss-nextjs';
 import React from 'react';
 
 interface Fields {

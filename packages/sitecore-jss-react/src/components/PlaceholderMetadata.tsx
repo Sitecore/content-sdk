@@ -3,8 +3,8 @@ import {
   ComponentRendering,
   getDynamicPlaceholderPattern,
   isDynamicPlaceholder,
-} from '@xmcloud-jss/sitecore-jss/layout';
-import { MetadataKind, DEFAULT_PLACEHOLDER_UID } from '@xmcloud-jss/sitecore-jss/editing';
+} from '@sitecore-content-sdk/sitecore-jss/layout';
+import { MetadataKind, DEFAULT_PLACEHOLDER_UID } from '@sitecore-content-sdk/sitecore-jss/editing';
 
 /**
  *  Props containing the component data to render.
