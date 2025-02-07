@@ -1,4 +1,4 @@
-﻿import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/sitecore-jss/editing';
+﻿import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
 
 /**
  * Since Sitecore editors do not support Fast Refresh:

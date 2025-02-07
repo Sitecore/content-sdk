@@ -4,7 +4,7 @@ import {
   LayoutServiceData,
   ComponentRendering,
   PlaceholdersData,
-} from '@sitecore-content-sdk/sitecore-jss/layout';
+} from '@sitecore-content-sdk/core/layout';
 import {
   ComponentPropsCollection,
   ComponentPropsFetchFunction,

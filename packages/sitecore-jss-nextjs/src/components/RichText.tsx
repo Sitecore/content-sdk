@@ -5,7 +5,7 @@ import {
   RichText as ReactRichText,
   RichTextPropTypes,
   RichTextProps as ReactRichTextProps,
-} from '@sitecore-content-sdk/sitecore-jss-react';
+} from '@sitecore-content-sdk/react';
 
 export type RichTextProps = ReactRichTextProps & {
   /**

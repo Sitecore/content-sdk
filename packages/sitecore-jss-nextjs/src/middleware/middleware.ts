@@ -1,4 +1,4 @@
-﻿import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/sitecore-jss/site';
+﻿import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
 import { NextRequest, NextResponse } from 'next/server';
 
 export type MiddlewareBaseConfig = {

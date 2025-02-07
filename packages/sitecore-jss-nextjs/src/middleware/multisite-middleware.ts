@@ -1,6 +1,6 @@
 ﻿import { NextResponse, NextRequest } from 'next/server';
-import { getSiteRewrite } from '@sitecore-content-sdk/sitecore-jss/site';
-import { debug } from '@sitecore-content-sdk/sitecore-jss';
+import { getSiteRewrite } from '@sitecore-content-sdk/core/site';
+import { debug } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
 
 export type CookieAttributes = {

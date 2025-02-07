@@ -11,7 +11,7 @@
   CacheClient,
   CacheOptions,
   MemoryCacheClient,
-} from '@sitecore-content-sdk/sitecore-jss';
+} from '@sitecore-content-sdk/core';
 
 export {
   LayoutService,
@@ -33,15 +33,15 @@ export {
   ComponentParams,
   getContentStylesheetLink,
   EditMode,
-} from '@sitecore-content-sdk/sitecore-jss/layout';
-export { RestComponentLayoutService } from '@sitecore-content-sdk/sitecore-jss/editing';
-export { mediaApi } from '@sitecore-content-sdk/sitecore-jss/media';
+} from '@sitecore-content-sdk/core/layout';
+export { RestComponentLayoutService } from '@sitecore-content-sdk/core/editing';
+export { mediaApi } from '@sitecore-content-sdk/core/media';
 export {
   DictionaryPhrases,
   DictionaryService,
   GraphQLDictionaryService,
   GraphQLDictionaryServiceConfig,
-} from '@sitecore-content-sdk/sitecore-jss/i18n';
+} from '@sitecore-content-sdk/core/i18n';
 export {
   personalizeLayout,
   getPersonalizedRewrite,
@@ -49,7 +49,7 @@ export {
   getGroomedVariantIds,
   normalizePersonalizedRewrite,
   CdpHelper,
-} from '@sitecore-content-sdk/sitecore-jss/personalize';
+} from '@sitecore-content-sdk/core/personalize';
 
 export {
   ComponentPropsCollection,
@@ -88,7 +88,7 @@ export {
   getSiteRewrite,
   getSiteRewriteData,
   normalizeSiteRewrite,
-} from '@sitecore-content-sdk/sitecore-jss/site';
+} from '@sitecore-content-sdk/core/site';
 
 export { StaticPath } from './services/graphql-sitemap-service';
 
@@ -152,4 +152,4 @@ export {
   withFieldMetadata,
   withEmptyFieldEditingComponent,
   EditingScripts,
-} from '@sitecore-content-sdk/sitecore-jss-react';
+} from '@sitecore-content-sdk/react';

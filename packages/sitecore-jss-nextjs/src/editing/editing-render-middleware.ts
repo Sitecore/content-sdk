@@ -1,16 +1,16 @@
 ﻿import { NextApiRequest, NextApiResponse } from 'next';
-import { debug } from '@sitecore-content-sdk/sitecore-jss';
-import { LayoutServicePageState } from '@sitecore-content-sdk/sitecore-jss/layout';
+import { debug } from '@sitecore-content-sdk/core';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import {
   QUERY_PARAM_EDITING_SECRET,
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
   LayoutKind,
-} from '@sitecore-content-sdk/sitecore-jss/editing';
+} from '@sitecore-content-sdk/core/editing';
 import { getJssEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
-import { enforceCors, getAllowedOriginsFromEnv } from '@sitecore-content-sdk/sitecore-jss/utils';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/sitecore-jss/personalize';
+import { enforceCors, getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';
 
 /**
  * Configuration for the Editing Render Middleware.

@@ -2,9 +2,9 @@
   GraphQLClient,
   GraphQLRequestClientFactory,
   PageInfo,
-} from '@sitecore-content-sdk/sitecore-jss/graphql';
-import { debug } from '@sitecore-content-sdk/sitecore-jss';
-import { getPersonalizedRewrite } from '@sitecore-content-sdk/sitecore-jss/personalize';
+} from '@sitecore-content-sdk/core/graphql';
+import { debug } from '@sitecore-content-sdk/core';
+import { getPersonalizedRewrite } from '@sitecore-content-sdk/core/personalize';
 
 /** @private */
 export const languageError = 'The list of languages cannot be empty';

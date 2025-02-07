@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { EditingConfigMiddleware } from './editing-config-middleware';
-import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/sitecore-jss/editing';
+import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/core/editing';
 
 type Query = {
   [key: string]: string;

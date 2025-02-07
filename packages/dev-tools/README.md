@@ -9,4 +9,4 @@ This module is provided as a part of Sitecore JavaScript Rendering SDK (JSS). It
 
 [Documentation (XM Cloud)](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-javascript-rendering-sdks--jss-.html)
 
-[API reference documentation](/ref-docs/sitecore-jss-dev-tools/)
+[API reference documentation](/ref-docs/dev-tools/)

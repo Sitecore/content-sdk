@@ -1,4 +1,4 @@
-﻿import { debug } from '@sitecore-content-sdk/sitecore-jss';
+﻿import { debug } from '@sitecore-content-sdk/core';
 import {
   GraphQLRedirectsService,
   GraphQLRedirectsServiceConfig,
@@ -7,13 +7,13 @@ import {
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectInfo,
   SiteInfo,
-} from '@sitecore-content-sdk/sitecore-jss/site';
+} from '@sitecore-content-sdk/core/site';
 import {
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
   isRegexOrUrl,
   mergeURLSearchParams,
-} from '@sitecore-content-sdk/sitecore-jss/utils';
+} from '@sitecore-content-sdk/core/utils';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';

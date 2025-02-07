@@ -7,4 +7,4 @@ This module is provided as a part of Sitecore JavaScript Rendering SDK. It conta
 
 [Documentation (XM Cloud)](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-javascript-rendering-sdk--jss--for-next-js.html)
 
-[API reference documentation](/ref-docs/sitecore-jss-nextjs/)
+[API reference documentation](/ref-docs/nextjs/)

@@ -6,4 +6,4 @@
   GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
   getEdgeProxyContentUrl,
-} from '@sitecore-content-sdk/sitecore-jss/graphql';
+} from '@sitecore-content-sdk/core/graphql';

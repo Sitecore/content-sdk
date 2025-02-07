@@ -2,7 +2,7 @@
   BYOCWrapper,
   BYOCComponentParams,
   fetchBYOCComponentServerProps,
-} from '@sitecore-content-sdk/sitecore-jss-react';
+} from '@sitecore-content-sdk/react';
 import {
   GetStaticComponentProps,
   GetServerSideComponentProps,

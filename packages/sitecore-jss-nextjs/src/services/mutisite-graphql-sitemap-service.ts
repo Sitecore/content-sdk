@@ -1,4 +1,4 @@
-﻿import { getSiteRewrite } from '@sitecore-content-sdk/sitecore-jss/site';
+﻿import { getSiteRewrite } from '@sitecore-content-sdk/core/site';
 import {
   BaseGraphQLSitemapService,
   BaseGraphQLSitemapServiceConfig,

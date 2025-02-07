@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import chaiString from 'chai-string';
 import { MiddlewareBase } from './middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { SiteResolver } from '@sitecore-content-sdk/sitecore-jss/site';
+import { SiteResolver } from '@sitecore-content-sdk/core/site';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;

@@ -1,13 +1,13 @@
 ﻿/* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable dot-notation */
-import { debug, GraphQLRequestClient } from '@sitecore-content-sdk/sitecore-jss';
+import { debug, GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import {
   REDIRECT_TYPE_301,
   REDIRECT_TYPE_302,
   REDIRECT_TYPE_SERVER_TRANSFER,
   SiteResolver,
-} from '@sitecore-content-sdk/sitecore-jss/site';
+} from '@sitecore-content-sdk/core/site';
 import chai, { use } from 'chai';
 import chaiString from 'chai-string';
 import { NextRequest, NextResponse } from 'next/server';

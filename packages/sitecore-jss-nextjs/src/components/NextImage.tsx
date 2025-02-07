@@ -1,4 +1,4 @@
-﻿import { mediaApi } from '@sitecore-content-sdk/sitecore-jss/media';
+﻿import { mediaApi } from '@sitecore-content-sdk/core/media';
 import PropTypes, { Requireable } from 'prop-types';
 import React from 'react';
 import {
@@ -7,14 +7,14 @@ import {
   ImageFieldValue,
   withFieldMetadata,
   SitecoreContextReactContext,
-} from '@sitecore-content-sdk/sitecore-jss-react';
+} from '@sitecore-content-sdk/react';
 import Image, { ImageProps as NextImageProperties } from 'next/image';
-import { withEmptyFieldEditingComponent } from '@sitecore-content-sdk/sitecore-jss-react';
-import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/sitecore-jss-react';
+import { withEmptyFieldEditingComponent } from '@sitecore-content-sdk/react';
+import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
 import {
   isFieldValueEmpty,
   LayoutServicePageState,
-} from '@sitecore-content-sdk/sitecore-jss/layout';
+} from '@sitecore-content-sdk/core/layout';
 
 type NextImageProps = ImageProps & Partial<NextImageProperties>;
 export const NextImage: React.FC<NextImageProps> = withFieldMetadata<NextImageProps>(

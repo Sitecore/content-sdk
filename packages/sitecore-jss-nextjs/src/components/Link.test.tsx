@@ -1,6 +1,6 @@
 ﻿import React, { createRef, ReactNode } from 'react';
 import { NextRouter } from 'next/router';
-import { LinkField } from '@sitecore-content-sdk/sitecore-jss-react';
+import { LinkField } from '@sitecore-content-sdk/react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
