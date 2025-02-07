@@ -4,10 +4,7 @@ import { render, waitFor } from '@testing-library/react';
 import { spy } from 'sinon';
 import ErrorBoundary from './ErrorBoundary';
 import { SitecoreContextReactContext } from '../components/SitecoreContext';
-import {
-  ComponentRendering,
-  LayoutServicePageState,
-} from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 
 describe('ErrorBoundary', () => {
   describe('when in page editing or preview mode', () => {

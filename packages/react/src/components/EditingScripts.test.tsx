@@ -2,10 +2,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import {
-  LayoutServiceData,
-  LayoutServicePageState,
-} from '@sitecore-content-sdk/core/layout';
+import { LayoutServiceData, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { EditingScripts } from './EditingScripts';
 import { SitecoreContext } from './SitecoreContext';
 import { ComponentFactory } from './sharedTypes';
