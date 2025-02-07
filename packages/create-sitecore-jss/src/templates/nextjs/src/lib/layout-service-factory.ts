@@ -1,4 +1,4 @@
-﻿import { LayoutService, GraphQLLayoutService } from '@sitecore-content-sdk/sitecore-jss-nextjs';
+﻿import { LayoutService, GraphQLLayoutService } from '@sitecore-content-sdk/nextjs';
 import clientFactory from 'lib/graphql-client-factory';
 
 /**

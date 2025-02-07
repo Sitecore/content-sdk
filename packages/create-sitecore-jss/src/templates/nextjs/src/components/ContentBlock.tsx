@@ -3,7 +3,7 @@
   RichText,
   Field,
   withDatasourceCheck,
-} from '@sitecore-content-sdk/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from 'lib/component-props';
 
 type ContentBlockProps = ComponentProps & {

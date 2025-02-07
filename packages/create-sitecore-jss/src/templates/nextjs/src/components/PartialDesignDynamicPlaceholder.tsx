@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { Placeholder, ComponentRendering } from '@sitecore-content-sdk/sitecore-jss-nextjs';
+import { Placeholder, ComponentRendering } from '@sitecore-content-sdk/nextjs';
 
 type DynamicPlaceholderProps = {
   rendering: ComponentRendering;

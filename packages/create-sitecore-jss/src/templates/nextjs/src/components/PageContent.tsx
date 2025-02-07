@@ -3,7 +3,7 @@ import {
   RichText as JssRichText,
   useSitecoreContext,
   RichTextField,
-} from '@sitecore-content-sdk/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 
 interface Fields {
   Content: RichTextField;

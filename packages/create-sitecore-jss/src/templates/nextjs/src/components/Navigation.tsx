@@ -5,7 +5,7 @@ import {
   Text,
   TextField,
   useSitecoreContext,
-} from '@sitecore-content-sdk/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 
 interface Fields {
   Id: string;

@@ -37,7 +37,7 @@ export const partialPkg = {
     nprogress: '~0.2.0',
   },
   devDependencies: {
-    '@sitecore-content-sdk/sitecore-jss-dev-tools': '^20.0.0-canary',
+    '@sitecore-content-sdk/dev-tools': '^20.0.0-canary',
   },
   scripts: {
     start:

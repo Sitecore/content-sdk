@@ -1,4 +1,4 @@
-﻿import { GraphQLRequestClient } from '@sitecore-content-sdk/sitecore-jss-nextjs/graphql';
+﻿import { GraphQLRequestClient } from '@sitecore-content-sdk/nextjs/graphql';
 import fs from 'fs';
 import { getIntrospectionQuery } from 'graphql';
 

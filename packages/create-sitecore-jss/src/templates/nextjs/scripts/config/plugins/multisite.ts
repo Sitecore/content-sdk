@@ -1,5 +1,5 @@
 ﻿import chalk from 'chalk';
-import { GraphQLSiteInfoService, SiteInfo } from '@sitecore-content-sdk/sitecore-jss-nextjs';
+import { GraphQLSiteInfoService, SiteInfo } from '@sitecore-content-sdk/nextjs';
 import { createGraphQLClientFactory } from 'lib/graphql-client-factory/create';
 import { JssConfig } from 'lib/config';
 import { ConfigPlugin } from '..';

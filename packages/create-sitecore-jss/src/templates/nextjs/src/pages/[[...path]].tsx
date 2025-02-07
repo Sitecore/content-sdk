@@ -12,8 +12,8 @@ import {
   <% if (prerender === 'SSG') { -%>
   StaticPath,
   <% } -%>
-} from '@sitecore-content-sdk/sitecore-jss-nextjs';
-import { handleEditorFastRefresh } from '@sitecore-content-sdk/sitecore-jss-nextjs/utils';
+} from '@sitecore-content-sdk/nextjs';
+import { handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
 import { SitecorePageProps } from 'lib/page-props';
 import { sitecorePagePropsFactory } from 'lib/page-props-factory';
 import { componentBuilder } from 'temp/componentBuilder';

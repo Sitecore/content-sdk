@@ -2,7 +2,7 @@
   generatePlugins,
   ModuleType,
   PluginDefinition,
-} from '@sitecore-content-sdk/sitecore-jss-dev-tools';
+} from '@sitecore-content-sdk/dev-tools';
 
 /*
   PLUGINS GENERATION

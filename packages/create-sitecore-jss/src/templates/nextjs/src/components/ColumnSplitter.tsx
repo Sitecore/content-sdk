@@ -3,7 +3,7 @@ import {
   ComponentParams,
   ComponentRendering,
   Placeholder,
-} from '@sitecore-content-sdk/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 
 interface ComponentProps {
   rendering: ComponentRendering & { params: ComponentParams };

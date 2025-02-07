@@ -4,7 +4,7 @@ import {
   Text,
   LinkField,
   TextField,
-} from '@sitecore-content-sdk/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 
 type ResultsFieldLink = {
   field: {

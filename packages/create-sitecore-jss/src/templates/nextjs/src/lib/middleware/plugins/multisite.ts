@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { MultisiteMiddleware } from '@sitecore-content-sdk/sitecore-jss-nextjs/middleware';
+import { MultisiteMiddleware } from '@sitecore-content-sdk/nextjs/middleware';
 import { siteResolver } from 'lib/site-resolver';
 import { MiddlewarePlugin } from '..';
 

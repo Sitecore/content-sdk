@@ -8,7 +8,7 @@ import {
   LayoutServiceData,
   Field,
   HTMLLink,
-} from '@sitecore-content-sdk/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 
 interface LayoutProps {

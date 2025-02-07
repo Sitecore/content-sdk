@@ -1,4 +1,4 @@
-﻿import { ModuleType, generatePlugins } from '@sitecore-content-sdk/sitecore-jss-dev-tools';
+﻿import { ModuleType, generatePlugins } from '@sitecore-content-sdk/dev-tools';
 import generateComponentSrc from 'scripts/templates/component-src';
 import chalk from 'chalk';
 

@@ -1,5 +1,5 @@
 ﻿import { GetStaticPathsContext } from 'next';
-import { StaticPath } from '@sitecore-content-sdk/sitecore-jss-nextjs';
+import { StaticPath } from '@sitecore-content-sdk/nextjs';
 import * as plugins from 'temp/sitemap-fetcher-plugins';
 
 export interface SitemapFetcherPlugin {

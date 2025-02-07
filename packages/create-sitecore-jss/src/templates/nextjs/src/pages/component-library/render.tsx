@@ -4,7 +4,7 @@ import {
   ComponentLibraryLayout,
   ComponentPropsContext,
   SitecoreContext,
-} from '@sitecore-content-sdk/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 import { SitecorePageProps } from 'lib/page-props';
 import { sitecorePagePropsFactory } from 'lib/page-props-factory';
 import NotFound from 'src/NotFound';

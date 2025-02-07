@@ -1,5 +1,5 @@
 ﻿import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
-import { debug } from '@sitecore-content-sdk/sitecore-jss-nextjs';
+import { debug } from '@sitecore-content-sdk/nextjs';
 import { SitecorePageProps } from 'lib/page-props';
 import * as plugins from 'temp/page-props-factory-plugins';
 

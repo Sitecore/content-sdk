@@ -1,8 +1,8 @@
-[**@sitecore-jss/sitecore-jss-angular**](../README.md) • **Docs**
+[**/sitecore-jss-angular**](../README.md) • **Docs**
 
 ***
 
-[@sitecore-jss/sitecore-jss-angular](../README.md) / RestLayoutService
+[/sitecore-jss-angular](../README.md) / RestLayoutService
 
 # Class: RestLayoutService
 
