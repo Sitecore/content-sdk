@@ -45,7 +45,6 @@ export default async function cli(commands?: {
   appCommands.command({
     command: '*',
     handler: (argv) => {
-      console.log('test');
       if (argv._.length > 0) {
         console.error(`Command not found: "${argv._[0]}". Use --help to see available commands.`);
       } else {
