@@ -11,10 +11,7 @@ import {
 import Image, { ImageProps as NextImageProperties } from 'next/image';
 import { withEmptyFieldEditingComponent } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
-import {
-  isFieldValueEmpty,
-  LayoutServicePageState,
-} from '@sitecore-content-sdk/core/layout';
+import { isFieldValueEmpty, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 
 type NextImageProps = ImageProps & Partial<NextImageProperties>;
 export const NextImage: React.FC<NextImageProps> = withFieldMetadata<NextImageProps>(
