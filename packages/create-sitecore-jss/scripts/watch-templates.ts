@@ -3,7 +3,7 @@ import path from 'path';
 import chalk from 'chalk';
 import chokidar from 'chokidar';
 
-import { initRunner } from '../src/init-runner';
+import { main } from '../src/bin';
 
 chokidar
   .watch(path.join(process.cwd(), '.\\src\\templates'), { ignoreInitial: true })
@@ -45,18 +45,16 @@ const initializeApps = async (noInstall: boolean) => {
   let watch;
   try {
     watch = await import(path.resolve('watch.json'));
-    const initializers = watch.initializers || [];
-    await initRunner(initializers, { ...watch.args, templates: initializers, noInstall });
-    if (watch.args.restoreLockfile) {
-      restoreLockfile();
-    }
+    await main({ ...watch.args, template: watch.template, noInstall });
+    restoreLockfile();
   } catch (error) {
     console.log(chalk.red('An error occurred: ', error));
     if (!watch) {
       console.log(
         chalk.red('Could not find config. Did you create a watch.json file at the root?')
       );
-      process.exit(1);
     }
+
+    process.exit(1);
   }
 };

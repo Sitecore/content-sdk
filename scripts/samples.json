@@ -1,11 +1,7 @@
 ﻿[
   {
-    "initializers": [
-      "nextjs"
-    ],
+    "template": "nextjs",
     "args": {
-      "appName": "nextjs-vanilla",
-      "fetchWith": "GraphQL",
       "prerender": "SSG",
       "silent": false
     }

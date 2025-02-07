@@ -1,9 +1,8 @@
 /**
- * Generates unique app name based on sample app configuration
+ * Generates unique app folder name based on sample app configuration
  * @param {Record<string, string>} args sample app arguments
  * @returns unique app name
  */
-module.exports.getAppName = (args) =>
-  `sample-${args.appName}${args.fetchWith ? `-${args.fetchWith}` : ''}${
-    args.prerender ? `-${args.prerender}` : ''
+module.exports.getAppFolder = (args) =>
+  `sample-${args.template}${args.prerender ? `-${args.prerender}` : ''
   }`;

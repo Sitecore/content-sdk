@@ -1,15 +1,9 @@
-import { BaseArgs, Initializer } from '../../..';
+import { BaseAppArgs, Initializer } from '../../..';
 
 export default class TestInitializer implements Initializer {
-  get isBase(): boolean {
-    return true;
-  }
-
-  async init(_args: BaseArgs) {
+  async init(_args: BaseAppArgs) {
     return {
-      nextSteps: [],
-      appName: '',
-      initializers: [],
+      nextSteps: '',
     };
-  };
+  }
 }

@@ -1,16 +1,14 @@
-import { ClientAppAnswer } from '../prompts/base';
-
 type Arg = string | number | boolean;
 
 /**
  * A base set of arguments used by CLI
  */
-export type BaseArgs = {
+export type BaseAppArgs = {
   [key: string]: Arg | Arg[] | undefined;
   /**
-   * Array of templates to be used
+   * The template to be used
    */
-  templates: string[];
+  template: string;
   /**
    * Destination path
    */
@@ -29,20 +27,4 @@ export type BaseArgs = {
    * Default values will be used
    */
   yes?: boolean;
-  /**
-   * Pre-push hook for linting check
-   */
-  prePushHook?: boolean;
-  /**
-   * Optional destination for proxy app, whether it's initialized alongside the main one or standalone
-   */
-  proxyAppDestination?: string;
 };
-
-/**
- * Set of arguments for the client-side app
- */
-export type ClientAppArgs = BaseArgs &
-  Partial<ClientAppAnswer> & {
-    appPrefix?: boolean;
-  };

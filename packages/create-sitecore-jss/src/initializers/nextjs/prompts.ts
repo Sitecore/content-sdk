@@ -1,20 +1,19 @@
 import { QuestionCollection } from 'inquirer';
-import { clientAppPrompts, ClientAppAnswer } from '../../common';
+import { baseAppPrompts, BaseAppAnswer } from '../../common';
 
 export enum Prerender {
   SSG = 'SSG',
   SSR = 'SSR',
 }
 
-export type NextjsAnswer = ClientAppAnswer & {
+export type NextjsAnswer = BaseAppAnswer & {
   prerender: Prerender;
-  xmcloud: boolean;
 };
 
 const DEFAULT_PRERENDER = Prerender.SSG;
 
 export const prompts: QuestionCollection<NextjsAnswer> = [
-  ...clientAppPrompts,
+  ...baseAppPrompts,
   {
     type: 'list',
     name: 'prerender',
