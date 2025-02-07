@@ -4,11 +4,11 @@ import { expect } from 'chai';
 import { getMetadata } from './metadata';
 import sinon, { SinonStub } from 'sinon';
 import childProcess from 'child_process';
-import metadataNextjs from './../test-data/metadata/metadata-nextjs.json';
-import metadataAngular from './../test-data/metadata/metadata-angular.json';
-import npmQueryResultNext from './../test-data/metadata/npm-query-nextjs.json';
-import npmQueryResultAngular from './../test-data/metadata/npm-query-angular.json';
-import npmQueryResultNoSc from './../test-data/metadata/npm-query-no-sc.json';
+import metadataNextjs from '../test-data/metadata/metadata-nextjs.json';
+import metadataAngular from '../test-data/metadata/metadata-angular.json';
+import npmQueryResultNext from '../test-data/metadata/npm-query-nextjs.json';
+import npmQueryResultAngular from '../test-data/metadata/npm-query-angular.json';
+import npmQueryResultNoSc from '../test-data/metadata/npm-query-no-sc.json';
 
 describe('metadata', () => {
   afterEach(() => {

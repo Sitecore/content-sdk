@@ -26,7 +26,7 @@ export const getComponentBuilderTemplate = (components: (PackageDefinition | Com
 // See scripts/generate-component-builder/index.ts to modify the generation of this file.
 
 ${hasLazyModules ? "import dynamic from 'next/dynamic';" : ''}
-import { ComponentBuilder } from '@sitecore-content-sdk/sitecore-jss-nextjs';
+import { ComponentBuilder } from '@sitecore-content-sdk/nextjs';
 
 ${packages
   .map((pkg) => {
