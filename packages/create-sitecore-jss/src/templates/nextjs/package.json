@@ -1,5 +1,5 @@
 {
-  "name": "<%- appName %>",
+  "name": "jss-nextjs",
   "description": "Application utilizing Sitecore JavaScript Services and Next.js",
   "version": "<%- version %>",
   "private": true,
