@@ -6,7 +6,7 @@
 
 # Class: `abstract` DictionaryServiceBase
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:24](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/core/src/i18n/dictionary-service.ts#L24)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:24](https://github.com/Sitecore/xmc-jss-dev/blob/7d08f3848ecc646e56af22ef11f8adc934af98c7/packages/core/src/i18n/dictionary-service.ts#L24)
 
 Base implementation of
 
@@ -29,7 +29,7 @@ DictionaryService that handles caching dictionary values
 
 > **new DictionaryServiceBase**(`options`): [`DictionaryServiceBase`](DictionaryServiceBase.md)
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/core/src/i18n/dictionary-service.ts#L32)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/7d08f3848ecc646e56af22ef11f8adc934af98c7/packages/core/src/i18n/dictionary-service.ts#L32)
 
 Initializes a new instance of
 
@@ -54,7 +54,7 @@ Initializes a new instance of
 
 > **options**: [`CacheOptions`](../../index/interfaces/CacheOptions.md)
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/core/src/i18n/dictionary-service.ts#L32)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/7d08f3848ecc646e56af22ef11f8adc934af98c7/packages/core/src/i18n/dictionary-service.ts#L32)
 
 Configuration options
 
@@ -64,7 +64,7 @@ Configuration options
 
 > `abstract` **fetchDictionaryData**(`language`): `Promise`\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:71](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/core/src/i18n/dictionary-service.ts#L71)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:71](https://github.com/Sitecore/xmc-jss-dev/blob/7d08f3848ecc646e56af22ef11f8adc934af98c7/packages/core/src/i18n/dictionary-service.ts#L71)
 
 Fetch dictionary data for a language.
 
@@ -88,7 +88,7 @@ Fetch dictionary data for a language.
 
 > `protected` **getCacheClient**(): [`CacheClient`](../../index/interfaces/CacheClient.md)\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:62](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/core/src/i18n/dictionary-service.ts#L62)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:62](https://github.com/Sitecore/xmc-jss-dev/blob/7d08f3848ecc646e56af22ef11f8adc934af98c7/packages/core/src/i18n/dictionary-service.ts#L62)
 
 Gets a cache client that can cache data. Uses memory-cache as the default
 library for caching (@see MemoryCacheClient). Override this method if you
@@ -106,7 +106,7 @@ implementation
 
 > **getCacheValue**(`key`): `null` \| [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:52](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/core/src/i18n/dictionary-service.ts#L52)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:52](https://github.com/Sitecore/xmc-jss-dev/blob/7d08f3848ecc646e56af22ef11f8adc934af98c7/packages/core/src/i18n/dictionary-service.ts#L52)
 
 Retrieves a
 
@@ -137,7 +137,7 @@ The
 
 > **setCacheValue**(`key`, `value`): [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/core/src/i18n/dictionary-service.ts#L43)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/7d08f3848ecc646e56af22ef11f8adc934af98c7/packages/core/src/i18n/dictionary-service.ts#L43)
 
 Caches a
 

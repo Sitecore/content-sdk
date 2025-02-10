@@ -8,7 +8,7 @@
 
 > **AppRootQueryResult**: `object`
 
-Defined in: [packages/core/src/graphql/app-root-query.ts:27](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/core/src/graphql/app-root-query.ts#L27)
+Defined in: [packages/core/src/graphql/app-root-query.ts:27](https://github.com/Sitecore/xmc-jss-dev/blob/7d08f3848ecc646e56af22ef11f8adc934af98c7/packages/core/src/graphql/app-root-query.ts#L27)
 
 The schema of data returned in response to an app root query request
 

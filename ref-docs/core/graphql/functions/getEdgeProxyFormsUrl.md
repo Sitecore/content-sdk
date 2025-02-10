@@ -8,7 +8,7 @@
 
 > **getEdgeProxyFormsUrl**(`sitecoreEdgeContextId`, `formId`, `sitecoreEdgeUrl`?): `string`
 
-Defined in: [packages/core/src/graphql/graphql-edge-proxy.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/core/src/graphql/graphql-edge-proxy.ts#L21)
+Defined in: [packages/core/src/graphql/graphql-edge-proxy.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/7d08f3848ecc646e56af22ef11f8adc934af98c7/packages/core/src/graphql/graphql-edge-proxy.ts#L21)
 
 Generates a URL for accessing Sitecore Edge Platform Forms using the provided form ID and context ID.
 
