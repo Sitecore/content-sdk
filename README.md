@@ -26,13 +26,7 @@ To create a JSS project:
 1. In a terminal, run one of the following commands and follow the prompts:
 
    ```
-   npm init sitecore-jss
-   ```
-
-   or
-
-   ```
-   npx create-sitecore-jss
+   npx @sitecore-content-sdk/create-sitecore-jss
    ```
 
 2. Change directory to your application folder:
