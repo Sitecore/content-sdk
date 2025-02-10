@@ -138,6 +138,7 @@ steps:
   #
 - script: |
     echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+    npm config set access public
     npm exec -- lerna publish from-git --canary --pre-dist-tag beta --preid beta --no-verify-access --yes
   displayName: 'pre-release beta publish'
   condition: and(succeeded(), eq(variables.shouldPublish, true))

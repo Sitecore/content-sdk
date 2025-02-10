@@ -4,6 +4,10 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
@@ -19,9 +23,6 @@
   "author": {
     "name": "Sitecore Corporation",
     "url": "https://jss.sitecore.com"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "license": "Apache-2.0",
   "homepage": "https://jss.sitecore.com",
