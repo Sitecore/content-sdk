@@ -1,10 +1,14 @@
 {
   "name": "@sitecore-content-sdk/cli",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.2",
   "description": "Sitecore JSS command-line",
   "main": "dist/cjs/cli.js",
   "module": "dist/esm/cli.js",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",

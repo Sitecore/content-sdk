@@ -1,8 +1,12 @@
 {
   "name": "@sitecore-content-sdk/create-sitecore-jss",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.2",
   "description": "Sitecore JSS initializer",
   "bin": "./dist/index.js",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "npm run clean && tsc && ts-node ./scripts/build-templates.ts",
     "clean": "del-cli dist types",

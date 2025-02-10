@@ -1,10 +1,14 @@
 {
   "name": "@sitecore-content-sdk/dev-tools",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.2",
   "description": "Utilities to assist in the development of Sitecore JSS apps.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "watch": "npm run build -- --watch",
@@ -29,7 +33,7 @@
   },
   "dependencies": {
     "@babel/parser": "^7.24.0",
-    "@sitecore-content-sdk/core": "0.1.0-beta.0",
+    "@sitecore-content-sdk/core": "0.1.0-beta.2",
     "chalk": "^4.1.2",
     "chokidar": "^4.0.3",
     "del": "^8.0.0",

@@ -1,9 +1,13 @@
 {
   "name": "@sitecore-content-sdk/core",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.2",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
