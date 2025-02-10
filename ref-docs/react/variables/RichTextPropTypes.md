@@ -8,7 +8,7 @@
 
 > `const` **RichTextPropTypes**: `object`
 
-Defined in: [packages/react/src/components/RichText.tsx:52](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/react/src/components/RichText.tsx#L52)
+Defined in: [packages/react/src/components/RichText.tsx:52](https://github.com/Sitecore/xmc-jss-dev/blob/c05a522c5533cbbabb306233de7c60e3deff8ed5/packages/react/src/components/RichText.tsx#L52)
 
 ## Type declaration
 

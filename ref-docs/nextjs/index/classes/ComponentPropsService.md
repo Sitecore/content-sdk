@@ -6,7 +6,7 @@
 
 # Class: ComponentPropsService
 
-Defined in: [nextjs/src/services/component-props-service.ts:31](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/nextjs/src/services/component-props-service.ts#L31)
+Defined in: [nextjs/src/services/component-props-service.ts:31](https://github.com/Sitecore/xmc-jss-dev/blob/c05a522c5533cbbabb306233de7c60e3deff8ed5/packages/nextjs/src/services/component-props-service.ts#L31)
 
 ## Constructors
 
@@ -24,7 +24,7 @@ Defined in: [nextjs/src/services/component-props-service.ts:31](https://github.c
 
 > `protected` **collectRequests**\<`NextContext`\>(`params`): `Promise`\<`ComponentPropsRequest`\<`NextContext`\>[]\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:115](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/nextjs/src/services/component-props-service.ts#L115)
+Defined in: [nextjs/src/services/component-props-service.ts:115](https://github.com/Sitecore/xmc-jss-dev/blob/c05a522c5533cbbabb306233de7c60e3deff8ed5/packages/nextjs/src/services/component-props-service.ts#L115)
 
 Go through layout service data, check all renderings using displayName, which should make some side effects.
 Write result in requests variable
@@ -58,7 +58,7 @@ array of requests
 
 > `protected` **execRequests**\<`NextContext`\>(`requests`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:163](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/nextjs/src/services/component-props-service.ts#L163)
+Defined in: [nextjs/src/services/component-props-service.ts:163](https://github.com/Sitecore/xmc-jss-dev/blob/c05a522c5533cbbabb306233de7c60e3deff8ed5/packages/nextjs/src/services/component-props-service.ts#L163)
 
 Execute request for component props
 
@@ -86,7 +86,7 @@ requests result
 
 > `protected` **fetchComponentProps**\<`NextContext`\>(`fetchFunctionFactory`, `layoutData`, `context`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:88](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/nextjs/src/services/component-props-service.ts#L88)
+Defined in: [nextjs/src/services/component-props-service.ts:88](https://github.com/Sitecore/xmc-jss-dev/blob/c05a522c5533cbbabb306233de7c60e3deff8ed5/packages/nextjs/src/services/component-props-service.ts#L88)
 
 Traverse Layout Service data tree and call side effects on component level.
 Side effect function can be: getStaticProps (SSG) or getServerSideProps (SSR)
@@ -117,7 +117,7 @@ component props
 
 > **fetchServerSideComponentProps**(`params`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:38](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/nextjs/src/services/component-props-service.ts#L38)
+Defined in: [nextjs/src/services/component-props-service.ts:38](https://github.com/Sitecore/xmc-jss-dev/blob/c05a522c5533cbbabb306233de7c60e3deff8ed5/packages/nextjs/src/services/component-props-service.ts#L38)
 
 SSR mode
 Fetch component props using getServerSideProps function
@@ -140,7 +140,7 @@ props
 
 > **fetchStaticComponentProps**(`params`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:62](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/nextjs/src/services/component-props-service.ts#L62)
+Defined in: [nextjs/src/services/component-props-service.ts:62](https://github.com/Sitecore/xmc-jss-dev/blob/c05a522c5533cbbabb306233de7c60e3deff8ed5/packages/nextjs/src/services/component-props-service.ts#L62)
 
 SSG mode
 Fetch component props using getStaticProps function
@@ -163,7 +163,7 @@ props
 
 > `protected` **flatRenderings**(`placeholders`): [`ComponentRendering`](../interfaces/ComponentRendering.md)[]
 
-Defined in: [nextjs/src/services/component-props-service.ts:217](https://github.com/Sitecore/xmc-jss-dev/blob/a044b326cf7fdf7e220ec3cd173873f1315ba099/packages/nextjs/src/services/component-props-service.ts#L217)
+Defined in: [nextjs/src/services/component-props-service.ts:217](https://github.com/Sitecore/xmc-jss-dev/blob/c05a522c5533cbbabb306233de7c60e3deff8ed5/packages/nextjs/src/services/component-props-service.ts#L217)
 
 Take renderings from all placeholders and returns a flat array of renderings.
 
