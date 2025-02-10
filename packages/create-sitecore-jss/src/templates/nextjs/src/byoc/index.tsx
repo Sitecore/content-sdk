@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import * as Events from '@sitecore-cloudsdk/events/browser';
 import '@sitecore/components/context';
@@ -7,7 +7,7 @@ import config from 'temp/config';
 import {
   LayoutServicePageState,
   SitecoreContextReactContext,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 /**
  * This is an out-of-box bundler for External components (BYOC) (see Sitecore documentation for more details)
  * It enables registering components in client-only or SSR/hybrid contexts

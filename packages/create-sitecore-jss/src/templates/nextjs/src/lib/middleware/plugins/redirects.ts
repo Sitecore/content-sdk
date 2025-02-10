@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { RedirectsMiddleware } from '@sitecore-jss/sitecore-jss-nextjs/middleware';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import { RedirectsMiddleware } from '@sitecore-content-sdk/nextjs/middleware';
 import { MiddlewarePlugin } from '..';
 import { siteResolver } from 'lib/site-resolver';
 import clientFactory from 'lib/graphql-client-factory';
@@ -32,7 +32,7 @@ class RedirectsPlugin implements MiddlewarePlugin {
    * @param req<NextRequest>
    * @returns Promise<NextResponse>
    */
-  async exec(req: NextRequest, res?:NextResponse): Promise<NextResponse> {
+  async exec(req: NextRequest, res?: NextResponse): Promise<NextResponse> {
     return this.redirectsMiddleware.getHandler()(req, res);
   }
 }

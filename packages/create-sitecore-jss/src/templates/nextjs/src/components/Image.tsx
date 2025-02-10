@@ -1,4 +1,4 @@
-import {
+﻿import {
   Field,
   ImageField,
   NextImage as JssImage,
@@ -6,7 +6,7 @@ import {
   LinkField,
   Text,
   useSitecoreContext,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 import React, { CSSProperties } from 'react';
 
 interface Fields {
