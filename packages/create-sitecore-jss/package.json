@@ -3,6 +3,10 @@
   "version": "0.1.0-beta.0",
   "description": "Sitecore JSS initializer",
   "bin": "./dist/index.js",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "npm run clean && tsc && ts-node ./scripts/build-templates.ts",
     "clean": "del-cli dist types",
