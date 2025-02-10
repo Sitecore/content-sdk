@@ -8,7 +8,7 @@
 
 > **useSitecoreContext**(`options`?): `object`
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:65](https://github.com/Sitecore/xmc-jss-dev/blob/7d08f3848ecc646e56af22ef11f8adc934af98c7/packages/react/src/enhancers/withSitecoreContext.tsx#L65)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:65](https://github.com/Sitecore/xmc-jss-dev/blob/8e2aea64ecdce7bb4d961b7ce3c4a30f3682bd2c/packages/react/src/enhancers/withSitecoreContext.tsx#L65)
 
 This hook grants acсess to the current Sitecore page context
 by default JSS includes the following properties in this context:
