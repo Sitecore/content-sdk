@@ -49,9 +49,6 @@ steps:
     git config user.name "Automated Build"
     git remote set-url origin https://$GITHUB_PAT_ENV@github.com/Sitecore/xmc-jss-dev.git
     git fetch --all
-    git status
-    git remote -v
-    git branch -a
     git checkout $(branchName)
   displayName: 'apply git configuration'
   env:
