@@ -49,7 +49,6 @@ steps:
     cat .npmrc
     npm whoami
   displayName: 'pre-release beta publish'
-  condition: and(succeeded(), eq(variables.shouldPublish, true))
   env:
     NPM_TOKEN: $(NPM-TOKEN)
 
