@@ -45,12 +45,12 @@ steps:
   inputs:
     versionSpec: '22.x'
 - script: |
-    git config user.email builds@sitecore.com
-    git config user.name "Automated Build"
-    git remote set-url origin https://$GITHUB_PAT_ENV@github.com/Sitecore/xmc-jss-dev.git
-    git checkout $(branchName)
-  displayName: 'apply git configuration'
+    echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+    cat .npmrc
+    npm whoami
+  displayName: 'pre-release beta publish'
+  condition: and(succeeded(), eq(variables.shouldPublish, true))
   env:
-    GITHUB_PAT_ENV: $(GITHUB-PAT)
+    NPM_TOKEN: $(NPM-TOKEN)
 
 
