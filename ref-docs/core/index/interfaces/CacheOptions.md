@@ -6,7 +6,7 @@
 
 # Interface: CacheOptions
 
-Defined in: [packages/core/src/cache-client.ts:35](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/cache-client.ts#L35)
+Defined in: [packages/core/src/cache-client.ts:35](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/cache-client.ts#L35)
 
 Minimum configuration options for classes that implement
 
@@ -24,7 +24,7 @@ CacheClient
 
 > `optional` **cacheEnabled**: `boolean`
 
-Defined in: [packages/core/src/cache-client.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/cache-client.ts#L40)
+Defined in: [packages/core/src/cache-client.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/cache-client.ts#L40)
 
 Enable/disable caching mechanism
 
@@ -40,7 +40,7 @@ true
 
 > `optional` **cacheTimeout**: `number`
 
-Defined in: [packages/core/src/cache-client.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/cache-client.ts#L45)
+Defined in: [packages/core/src/cache-client.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/cache-client.ts#L45)
 
 Cache timeout (sec)
 

@@ -6,7 +6,7 @@
 
 # Class: DefaultRetryStrategy
 
-Defined in: [packages/core/src/graphql-request-client.ts:119](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/graphql-request-client.ts#L119)
+Defined in: [packages/core/src/graphql-request-client.ts:119](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/graphql-request-client.ts#L119)
 
 Represents a default retry strategy for handling retry attempts in case of specific HTTP status codes.
 This class implements the RetryStrategy interface and provides methods to determine whether a request
@@ -22,7 +22,7 @@ should be retried and calculates the delay before the next retry attempt.
 
 > **new DefaultRetryStrategy**(`options`): [`DefaultRetryStrategy`](DefaultRetryStrategy.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:130](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/graphql-request-client.ts#L130)
+Defined in: [packages/core/src/graphql-request-client.ts:130](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/graphql-request-client.ts#L130)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [packages/core/src/graphql-request-client.ts:130](https://github.com
 
 > **getDelay**(`error`, `attempt`): `number`
 
-Defined in: [packages/core/src/graphql-request-client.ts:143](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/graphql-request-client.ts#L143)
+Defined in: [packages/core/src/graphql-request-client.ts:143](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/graphql-request-client.ts#L143)
 
 Calculates the delay (in milliseconds) before the next retry based on the given error and attempt count.
 
@@ -70,7 +70,7 @@ The delay in milliseconds before the next retry.
 
 > **shouldRetry**(`error`, `attempt`, `retries`): `boolean`
 
-Defined in: [packages/core/src/graphql-request-client.ts:136](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/graphql-request-client.ts#L136)
+Defined in: [packages/core/src/graphql-request-client.ts:136](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/graphql-request-client.ts#L136)
 
 Determines whether a request should be retried based on the given error and attempt count.
 

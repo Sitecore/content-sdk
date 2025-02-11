@@ -6,7 +6,7 @@
 
 # Interface: Metadata
 
-Defined in: [packages/core/src/editing/utils.ts:51](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/editing/utils.ts#L51)
+Defined in: [packages/core/src/editing/utils.ts:51](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/editing/utils.ts#L51)
 
 Application metadata
 
@@ -16,7 +16,7 @@ Application metadata
 
 > **packages**: `object`
 
-Defined in: [packages/core/src/editing/utils.ts:52](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/editing/utils.ts#L52)
+Defined in: [packages/core/src/editing/utils.ts:52](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/editing/utils.ts#L52)
 
 #### Index Signature
 

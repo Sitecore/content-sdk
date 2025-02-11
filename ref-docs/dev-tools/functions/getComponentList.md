@@ -8,7 +8,7 @@
 
 > **getComponentList**(`path`): [`ComponentFile`](../interfaces/ComponentFile.md)[]
 
-Defined in: [dev-tools/src/templating/components.ts:33](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/dev-tools/src/templating/components.ts#L33)
+Defined in: [dev-tools/src/templating/components.ts:33](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/dev-tools/src/templating/components.ts#L33)
 
 Get list of components from
 

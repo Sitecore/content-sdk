@@ -6,7 +6,7 @@
 
 # Interface: RouteData\<Fields\>
 
-Defined in: [packages/core/src/layout/models.ts:55](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L55)
+Defined in: [packages/core/src/layout/models.ts:55](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L55)
 
 Shape of route data returned from Sitecore Layout Service
 
@@ -22,7 +22,7 @@ Shape of route data returned from Sitecore Layout Service
 
 > `optional` **databaseName**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:59](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L59)
+Defined in: [packages/core/src/layout/models.ts:59](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L59)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [packages/core/src/layout/models.ts:59](https://github.com/Sitecore/
 
 > `optional` **deviceId**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:60](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L60)
+Defined in: [packages/core/src/layout/models.ts:60](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L60)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/core/src/layout/models.ts:60](https://github.com/Sitecore/
 
 > `optional` **displayName**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:57](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L57)
+Defined in: [packages/core/src/layout/models.ts:57](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L57)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [packages/core/src/layout/models.ts:57](https://github.com/Sitecore/
 
 > `optional` **fields**: `Fields`
 
-Defined in: [packages/core/src/layout/models.ts:58](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L58)
+Defined in: [packages/core/src/layout/models.ts:58](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L58)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [packages/core/src/layout/models.ts:58](https://github.com/Sitecore/
 
 > `optional` **itemId**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:67](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L67)
+Defined in: [packages/core/src/layout/models.ts:67](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L67)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [packages/core/src/layout/models.ts:67](https://github.com/Sitecore/
 
 > `optional` **itemLanguage**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:61](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L61)
+Defined in: [packages/core/src/layout/models.ts:61](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L61)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [packages/core/src/layout/models.ts:61](https://github.com/Sitecore/
 
 > `optional` **itemVersion**: `number`
 
-Defined in: [packages/core/src/layout/models.ts:62](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L62)
+Defined in: [packages/core/src/layout/models.ts:62](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L62)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [packages/core/src/layout/models.ts:62](https://github.com/Sitecore/
 
 > `optional` **layoutId**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:63](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L63)
+Defined in: [packages/core/src/layout/models.ts:63](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L63)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [packages/core/src/layout/models.ts:63](https://github.com/Sitecore/
 
 > **name**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:56](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L56)
+Defined in: [packages/core/src/layout/models.ts:56](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L56)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [packages/core/src/layout/models.ts:56](https://github.com/Sitecore/
 
 > **placeholders**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
 
-Defined in: [packages/core/src/layout/models.ts:66](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L66)
+Defined in: [packages/core/src/layout/models.ts:66](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L66)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [packages/core/src/layout/models.ts:66](https://github.com/Sitecore/
 
 > `optional` **templateId**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:64](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L64)
+Defined in: [packages/core/src/layout/models.ts:64](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L64)
 
 ***
 
@@ -110,4 +110,4 @@ Defined in: [packages/core/src/layout/models.ts:64](https://github.com/Sitecore/
 
 > `optional` **templateName**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:65](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/layout/models.ts#L65)
+Defined in: [packages/core/src/layout/models.ts:65](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/layout/models.ts#L65)

@@ -8,7 +8,7 @@
 
 > **getMetadata**(): [`Metadata`](../interfaces/Metadata.md)
 
-Defined in: [dev-tools/src/templating/metadata.ts:19](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/dev-tools/src/templating/metadata.ts#L19)
+Defined in: [dev-tools/src/templating/metadata.ts:19](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/dev-tools/src/templating/metadata.ts#L19)
 
 Get application metadata
 

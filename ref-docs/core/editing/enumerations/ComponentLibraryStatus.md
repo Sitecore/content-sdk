@@ -6,7 +6,7 @@
 
 # Enumeration: ComponentLibraryStatus
 
-Defined in: [packages/core/src/editing/component-library.ts:22](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/editing/component-library.ts#L22)
+Defined in: [packages/core/src/editing/component-library.ts:22](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/editing/component-library.ts#L22)
 
 Enumeration of statuses for the component library.
 
@@ -16,7 +16,7 @@ Enumeration of statuses for the component library.
 
 > **READY**: `"ready"`
 
-Defined in: [packages/core/src/editing/component-library.ts:23](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/editing/component-library.ts#L23)
+Defined in: [packages/core/src/editing/component-library.ts:23](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/editing/component-library.ts#L23)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/core/src/editing/component-library.ts:23](https://github.c
 
 > **RENDERED**: `"rendered"`
 
-Defined in: [packages/core/src/editing/component-library.ts:24](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/editing/component-library.ts#L24)
+Defined in: [packages/core/src/editing/component-library.ts:24](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/core/src/editing/component-library.ts#L24)
