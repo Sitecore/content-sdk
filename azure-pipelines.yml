@@ -73,22 +73,20 @@ steps:
     summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/Cobertura.xml'
     reportDirectory: '$(Build.SourcesDirectory)/coverlet'
 
-# skipping the following steps until we publish the first canary
-# TODO: revert this change after we publish first canary
-# - script: |
-#     yarn scaffold-samples
-#   displayName: 'scaffold samples'
-#   condition: and(succeeded(), ne(variables.shouldPublish, true))
-# - script: |
-#     yarn install
-#   displayName: 'yarn install - refresh'
-#   condition: and(succeeded(), ne(variables.shouldPublish, true))
-#   env:
-#     YARN_ENABLE_IMMUTABLE_INSTALLS: false
-# - script: |
-#     yarn lint-samples
-#   displayName: 'lint samples'
-#   condition: and(succeeded(), ne(variables.shouldPublish, true))
+- script: |
+    yarn scaffold-samples
+  displayName: 'scaffold samples'
+  condition: and(succeeded(), ne(variables.shouldPublish, true))
+- script: |
+    yarn install
+  displayName: 'yarn install - refresh'
+  condition: and(succeeded(), ne(variables.shouldPublish, true))
+  env:
+    YARN_ENABLE_IMMUTABLE_INSTALLS: false
+- script: |
+    yarn lint-samples
+  displayName: 'lint samples'
+  condition: and(succeeded(), ne(variables.shouldPublish, true))
 
 
   # * Configure git with a commit user
@@ -139,7 +137,7 @@ steps:
 - script: |
     echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
     npm config set access public
-    npm exec -- lerna publish from-git --canary --pre-dist-tag beta --preid beta --no-verify-access --yes
+    npm exec -- lerna publish from-git --exact --canary --pre-dist-tag beta --preid beta --no-verify-access --yes
   displayName: 'pre-release beta publish'
   condition: and(succeeded(), eq(variables.shouldPublish, true))
   env:
