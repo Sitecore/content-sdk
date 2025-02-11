@@ -8,7 +8,7 @@
 
 > **GraphQLSitemapXmlServiceConfig**: `object`
 
-Defined in: [packages/core/src/site/graphql-sitemap-service.ts:19](https://github.com/Sitecore/xmc-jss-dev/blob/ecfb4b66ff16c45f596cda74396c27d7d39de5a5/packages/core/src/site/graphql-sitemap-service.ts#L19)
+Defined in: [packages/core/src/site/graphql-sitemap-service.ts:19](https://github.com/Sitecore/xmc-jss-dev/blob/d7b466243452103e100673b5863a2d80ef6e68eb/packages/core/src/site/graphql-sitemap-service.ts#L19)
 
 ## Type declaration
 
