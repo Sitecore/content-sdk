@@ -6,7 +6,7 @@
 
 # Interface: WithSitecoreContextProps
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:10](https://github.com/Sitecore/xmc-jss-dev/blob/3c401a01ef03d9637337d095614dea1096bc9b70/packages/react/src/enhancers/withSitecoreContext.tsx#L10)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:10](https://github.com/Sitecore/xmc-jss-dev/blob/ecfb4b66ff16c45f596cda74396c27d7d39de5a5/packages/react/src/enhancers/withSitecoreContext.tsx#L10)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:10](https://gi
 
 > **sitecoreContext**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:11](https://github.com/Sitecore/xmc-jss-dev/blob/3c401a01ef03d9637337d095614dea1096bc9b70/packages/react/src/enhancers/withSitecoreContext.tsx#L11)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:11](https://github.com/Sitecore/xmc-jss-dev/blob/ecfb4b66ff16c45f596cda74396c27d7d39de5a5/packages/react/src/enhancers/withSitecoreContext.tsx#L11)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:11](https://gi
 
 > `optional` **updateSitecoreContext**: `false` \| (`value`) => `void`
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:12](https://github.com/Sitecore/xmc-jss-dev/blob/3c401a01ef03d9637337d095614dea1096bc9b70/packages/react/src/enhancers/withSitecoreContext.tsx#L12)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:12](https://github.com/Sitecore/xmc-jss-dev/blob/ecfb4b66ff16c45f596cda74396c27d7d39de5a5/packages/react/src/enhancers/withSitecoreContext.tsx#L12)

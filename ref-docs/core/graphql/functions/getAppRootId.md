@@ -8,7 +8,7 @@
 
 > **getAppRootId**(`client`, `siteName`, `language`, `jssAppTemplateId`?): `Promise`\<`string` \| `null`\>
 
-Defined in: [packages/core/src/graphql/app-root-query.ts:51](https://github.com/Sitecore/xmc-jss-dev/blob/3c401a01ef03d9637337d095614dea1096bc9b70/packages/core/src/graphql/app-root-query.ts#L51)
+Defined in: [packages/core/src/graphql/app-root-query.ts:51](https://github.com/Sitecore/xmc-jss-dev/blob/ecfb4b66ff16c45f596cda74396c27d7d39de5a5/packages/core/src/graphql/app-root-query.ts#L51)
 
 Gets the ID of the JSS App root item for the specified site and language.
 
