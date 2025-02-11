@@ -1,8 +1,8 @@
-import {
+﻿import {
   CdpHelper,
   LayoutServicePageState,
   useSitecoreContext,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 import { useEffect } from 'react';
 import { pageView } from '@sitecore-cloudsdk/events/browser';
 import config from 'temp/config';
@@ -53,7 +53,7 @@ const CdpPageView = (): JSX.Element => {
       page: route.name,
       pageVariantId,
       language,
-    }).catch((e) => console.debug(e));
+    }).catch(e => console.debug(e));
   }, [pageState, route, variantId, site]);
 
   return <></>;

@@ -219,6 +219,39 @@ describe('bin', () => {
       });
     });
 
+    it('should throw range error if unknown template and --yes is present', async () => {
+      const allTemplates = ['nextjs', 'foo', 'bar'];
+      getAllTemplatesStub.returns(allTemplates);
+      fsExistsSyncStub.returns(false);
+      fsReaddirSyncStub.returns([]);
+
+      const args = mockArgs({
+        template: 'not-existing-template',
+        destination: 'test\\path',
+        yes: true,
+      });
+
+      await main(args).catch((error) => {
+        expect(error).to.be.instanceOf(RangeError);
+      });
+    });
+
+    it('should throw range error if template is missing and --yes is present', async () => {
+      const allTemplates = ['nextjs', 'foo', 'bar'];
+      getAllTemplatesStub.returns(allTemplates);
+      fsExistsSyncStub.returns(false);
+      fsReaddirSyncStub.returns([]);
+
+      const args = mockArgs({
+        destination: 'test\\path',
+        yes: true,
+      });
+
+      await main(args).catch((error) => {
+        expect(error).to.be.instanceOf(RangeError);
+      });
+    });
+
     describe('promptDestination', () => {
       it('should prompt with provided prompt text and return input value', async () => {
         const mockDestination = 'my\\path';
@@ -321,6 +354,26 @@ describe('bin', () => {
           ...args,
           destination: mockDestination,
           template: expectedTemplate,
+        });
+      });
+
+      it('should throw error if destination not empty and args.yes is used', async () => {
+        getAllTemplatesStub.returns(['foo', 'bar']);
+        fsExistsSyncStub.returns(true);
+        fsReaddirSyncStub.returns(['file.txt']);
+
+        const mockDestination = 'my\\path';
+
+        const args = mockArgs({
+          template: 'foo',
+          destination: mockDestination,
+          yes: true,
+        });
+
+        await main(args).catch((error) => {
+          expect(error.message).to.be.equal(
+            `Directory '${mockDestination}' not empty. To overwrite it, use the --force flag.`
+          );
         });
       });
     });

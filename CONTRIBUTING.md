@@ -56,9 +56,8 @@ yarn workspaces foreach -Rt --no-private run build
 For the creation of the samples we are using `initializers` approach. 
 
 - `initializer` - the process for handling the creation of the appropriate template. See [initializers](https://github.com/Sitecore/jss/tree/dev/packages/create-sitecore-jss/src/initializers).
-- `template` - the sample populated by [ejs](https://ejs.co/) tokens. See [templates](https://github.com/Sitecore/jss/tree/dev/packages/create-sitecore-jss/src/templates). Templates can be:
-	- `base` - contains foundation for the application (e.g. *nextjs*).
-	- `add-on` - provides additional features for the base template. Multiple *add-on* templates can be applied to the *base* (e.g. *nextjs-styleguide*).
+- `template` - the sample populated by [ejs](https://ejs.co/) tokens. See [templates](https://github.com/Sitecore/jss/tree/dev/packages/create-sitecore-jss/src/templates). Templates can be for e.g. *nextjs*.
+
 
 If you want to use [*create-sitecore-jss*](https://github.com/Sitecore/jss/tree/dev/packages/create-sitecore-jss) from your local repository, run:
 
@@ -85,7 +84,7 @@ yarn lint-apps // lint everything under ./samples
 You may also lint a package by itself by running `yarn lint` while the `cwd` is the root of the package, for example:
 
 ```shell
-cd ./packages/sitecore-jss
+cd ./packages/core
 yarn lint
 ```
 

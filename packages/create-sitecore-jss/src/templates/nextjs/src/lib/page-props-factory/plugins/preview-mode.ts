@@ -1,17 +1,17 @@
-import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
+﻿import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import {
   SiteInfo,
   personalizeLayout,
   getGroomedVariantIds,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 import {
   EditingPreviewData,
   isComponentLibraryPreviewData,
-} from '@sitecore-jss/sitecore-jss-nextjs/editing';
+} from '@sitecore-content-sdk/nextjs/editing';
 import { SitecorePageProps } from 'lib/page-props';
 import { graphQLEditingService } from 'lib/graphql-editing-service';
 import { Plugin } from '..';
-import { RestComponentLayoutService } from '@sitecore-jss/sitecore-jss-nextjs';
+import { RestComponentLayoutService } from '@sitecore-content-sdk/nextjs';
 import config from 'temp/config';
 
 class PreviewModePlugin implements Plugin {

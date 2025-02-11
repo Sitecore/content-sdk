@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { NativeDataFetcher, GraphQLSitemapXmlService } from '@sitecore-jss/sitecore-jss-nextjs';
+﻿import type { NextApiRequest, NextApiResponse } from 'next';
+import { NativeDataFetcher, GraphQLSitemapXmlService } from '@sitecore-content-sdk/nextjs'
 import { siteResolver } from 'lib/site-resolver';
 import config from 'temp/config';
 import clientFactory from 'lib/graphql-client-factory';

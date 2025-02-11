@@ -73,6 +73,10 @@ export const main = async (args: ParsedArgs) => {
   // validate template
   const allTemplates = getAllTemplates();
   if (!template || !allTemplates.includes(template)) {
+    if (args.yes) {
+      throw new RangeError(`No or unknown template provided: '${template}'`);
+    }
+
     if (template) {
       console.log(chalk.yellow(`Unknown template provided: '${template}'...`));
     }
@@ -91,6 +95,12 @@ export const main = async (args: ParsedArgs) => {
   const destination = await getDestination(args, template);
 
   if (!args.force && fs.existsSync(destination) && fs.readdirSync(destination).length > 0) {
+    if (args.yes) {
+      throw new Error(
+        `Directory '${destination}' not empty. To overwrite it, use the --force flag.`
+      );
+    }
+
     const answer = await inquirer.prompt({
       type: 'confirm',
       name: 'continue',
