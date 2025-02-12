@@ -70,49 +70,49 @@ export const main = async (args: ParsedArgs) => {
     template = args.template || '';
   }
 
-  // validate template
-  const allTemplates = getAllTemplates();
-  if (!template || !allTemplates.includes(template)) {
-    if (args.yes) {
-      throw new RangeError(`No or unknown template provided: '${template}'`);
-    }
-
-    if (template) {
-      console.log(chalk.yellow(`Unknown template provided: '${template}'...`));
-    }
-
-    const answer = await inquirer.prompt({
-      type: 'list',
-      name: 'template',
-      message: 'Which template would you like to create?',
-      choices: allTemplates,
-      default: 'nextjs',
-    });
-
-    template = answer.template;
-  }
-
-  const destination = await getDestination(args, template);
-
-  if (!args.force && fs.existsSync(destination) && fs.readdirSync(destination).length > 0) {
-    if (args.yes) {
-      throw new Error(
-        `Directory '${destination}' not empty. To overwrite it, use the --force flag.`
-      );
-    }
-
-    const answer = await inquirer.prompt({
-      type: 'confirm',
-      name: 'continue',
-      message: `Directory '${destination}' not empty. Are you sure you want to continue?`,
-    });
-
-    if (!answer.continue) {
-      process.exit();
-    }
-  }
-
   try {
+    // validate template
+    const allTemplates = getAllTemplates();
+    if (!template || !allTemplates.includes(template)) {
+      if (args.yes) {
+        throw new RangeError(`No or unknown template provided: '${template}'`);
+      }
+
+      if (template) {
+        console.log(chalk.yellow(`Unknown template provided: '${template}'...`));
+      }
+
+      const answer = await inquirer.prompt({
+        type: 'list',
+        name: 'template',
+        message: 'Which template would you like to create?',
+        choices: allTemplates,
+        default: 'nextjs',
+      });
+
+      template = answer.template;
+    }
+
+    const destination = await getDestination(args, template);
+
+    if (!args.force && fs.existsSync(destination) && fs.readdirSync(destination).length > 0) {
+      if (args.yes) {
+        throw new Error(
+          `Directory '${destination}' not empty. To overwrite it, use the --force flag.`
+        );
+      }
+
+      const answer = await inquirer.prompt({
+        type: 'confirm',
+        name: 'continue',
+        message: `Directory '${destination}' not empty. Are you sure you want to continue?`,
+      });
+
+      if (!answer.continue) {
+        process.exit();
+      }
+    }
+
     await initialize(template, { ...args, destination, template });
   } catch (error) {
     console.log(chalk.red('An error occurred: ', error));
