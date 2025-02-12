@@ -427,7 +427,7 @@ describe('bin', () => {
             name: 'continue',
             message: `Directory '${args.destination}' not empty. Are you sure you want to continue?`,
           });
-          expect(processExitStub).to.have.been.calledOnce;
+          expect(processExitStub).to.have.been.calledTwice;
           expect(error.name).to.equal('process.exit');
           expect(initializeStub).to.not.have.been.called;
         });
