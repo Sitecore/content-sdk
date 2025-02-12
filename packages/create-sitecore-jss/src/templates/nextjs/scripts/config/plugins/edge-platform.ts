@@ -1,7 +1,5 @@
-import chalk from 'chalk';
-import { constantCase } from 'constant-case';
-import { JssConfig } from 'lib/config';
 import { ConfigPlugin } from '..';
+import { JssConfigInput } from '@sitecore-jss/sitecore-jss-nextjs';
 
 /**
  * This plugin will set config props used by the Sitecore Edge Platform.
@@ -9,19 +7,9 @@ import { ConfigPlugin } from '..';
 class EdgePlatformPlugin implements ConfigPlugin {
   order = 2;
 
-  async exec(config: JssConfig) {
-    const sitecoreEdgeUrl =
-      process.env[`${constantCase('sitecoreEdgeUrl')}`]?.replace(/\/$/, '') ||
-      'https://edge-platform.sitecorecloud.io';
-    const sitecoreEdgeContextId = process.env[`${constantCase('sitecoreEdgeContextId')}`];
-
-    if (config.sitecoreApiKey && sitecoreEdgeContextId) {
-      console.log(
-        chalk.yellow(
-          "You have configured both 'sitecoreApiKey' and 'sitecoreEdgeContextId' values. The 'sitecoreEdgeContextId' is used instead."
-        )
-      );
-    }
+  async exec(config: JssConfigInput) {
+    const sitecoreEdgeUrl = config.api?.edgeUrl || 'https://edge-platform.sitecorecloud.io';
+    const sitecoreEdgeContextId = config.api.contextId;
 
     return Object.assign({}, config, {
       sitecoreEdgeUrl,

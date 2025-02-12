@@ -1,4 +1,4 @@
-import config from 'temp/config';
+import config from 'sitecore.config';
 import {
   GraphQLErrorPagesService,
   SitecoreContext,
@@ -28,7 +28,7 @@ const Custom404 = (props: SitecorePageProps): JSX.Element => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const site = siteResolver.getByName(config.sitecoreSiteName);
+  const site = siteResolver.getByName(config.defaultSite);
   const errorPagesService = new GraphQLErrorPagesService({
     clientFactory,
     siteName: site.name,

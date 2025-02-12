@@ -1,4 +1,4 @@
-const jssConfig = require('./src/temp/config');
+const jssConfig = require('./sitecore.config');
 const plugins = require('./src/temp/next-config-plugins') || {};
 
 /**

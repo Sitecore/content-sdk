@@ -22,3 +22,4 @@ export {
 } from './native-fetcher';
 export { HTMLLink } from './models';
 export { constants };
+export { loadConfig, JssConfigInput } from './config/jss-config';

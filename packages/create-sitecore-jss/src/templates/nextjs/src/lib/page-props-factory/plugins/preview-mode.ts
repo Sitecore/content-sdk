@@ -12,7 +12,7 @@ import { SitecorePageProps } from 'lib/page-props';
 import { graphQLEditingService } from 'lib/graphql-editing-service';
 import { Plugin } from '..';
 import { RestComponentLayoutService } from '@sitecore-jss/sitecore-jss-nextjs';
-import config from 'temp/config';
+import config from 'sitecore.config';
 
 class PreviewModePlugin implements Plugin {
   order = 1;
@@ -32,10 +32,11 @@ class PreviewModePlugin implements Plugin {
       } = context.previewData;
 
       const componentService = new RestComponentLayoutService({
-        apiHost: config.sitecoreApiHost,
-        apiKey: config.sitecoreApiKey,
+        apiHost: config.api?.apiHost,
+        apiKey: config.api?.apiKey,
         siteName: site,
-        configurationName: config.layoutServiceConfigurationName,
+        // TODO: adjust for config
+        configurationName: 'jss',
       });
 
       const componentData = await componentService.fetchComponentData({

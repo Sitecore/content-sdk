@@ -1,7 +1,7 @@
 import { SitecorePageProps } from 'lib/page-props';
 import { getComponentLibraryStylesheetLinks } from '@sitecore-jss/sitecore-jss-nextjs';
 import { Plugin } from '..';
-import config from 'temp/config';
+import config from 'sitecore.config';
 
 class ComponentThemesPlugin implements Plugin {
   // Make sure to run this plugin after the personalization plugin, since it relies on the layout data
@@ -12,8 +12,8 @@ class ComponentThemesPlugin implements Plugin {
     props.headLinks.push(
       ...getComponentLibraryStylesheetLinks(
         props.layoutData,
-        config.sitecoreEdgeContextId,
-        config.sitecoreEdgeUrl
+        config.api.contextId,
+        config.api.edgeUrl
       )
     );
     return props;

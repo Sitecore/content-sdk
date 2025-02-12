@@ -8,7 +8,7 @@ import { SitecorePageProps } from 'lib/page-props';
 import Layout from 'src/Layout';
 import { componentBuilder } from 'temp/componentBuilder';
 import { GetStaticProps } from 'next';
-import config from 'temp/config';
+import config from 'sitecore.config';
 import { siteResolver } from 'lib/site-resolver';
 import clientFactory from 'lib/graphql-client-factory';
 
@@ -44,7 +44,7 @@ const Custom500 = (props: SitecorePageProps): JSX.Element => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const site = siteResolver.getByName(config.sitecoreSiteName);
+  const site = siteResolver.getByName(config.defaultSite);
   const errorPagesService = new GraphQLErrorPagesService({
     clientFactory,
     siteName: site.name,

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { NativeDataFetcher, GraphQLSitemapXmlService } from '@sitecore-jss/sitecore-jss-nextjs';
 import { siteResolver } from 'lib/site-resolver';
-import config from 'temp/config';
+import config from 'sitecore.config';
 import clientFactory from 'lib/graphql-client-factory';
 
 const ABSOLUTE_URL_REGEXP = '^(?:[a-z]+:)?//';
@@ -31,7 +31,7 @@ const sitemapApi = async (
   // regular sitemap
   if (sitemapPath) {
     const isAbsoluteUrl = sitemapPath.match(ABSOLUTE_URL_REGEXP);
-    const sitemapUrl = isAbsoluteUrl ? sitemapPath : `${config.sitecoreApiHost}${sitemapPath}`;
+    const sitemapUrl = isAbsoluteUrl ? sitemapPath : `${config.api?.apiHost}${sitemapPath}`;
     res.setHeader('Content-Type', 'text/xml;charset=utf-8');
 
     try {
