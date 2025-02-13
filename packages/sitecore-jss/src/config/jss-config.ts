@@ -1,7 +1,7 @@
 // import { RetryStrategy } from '../graphql-request-client';
-import { cwd } from 'process';
-import path from 'path';
-import fs from 'fs';
+// import { cwd } from 'process';
+// import path from 'path';
+// import fs from 'fs';
 
 export type JssConfigInput = {
   api:
@@ -60,9 +60,18 @@ export const defaultConfig: JssConfigInput = {
   defaultSite: 'jss',
   defaultLanguage: 'en',
   editingSecret: '',
+  redirects: {
+    enabled: process.env.NODE_ENV !== 'development',
+    locales: ['en'],
+  },
+  multisite: {
+    enabled: true,
+    useCookieResolution: () => process.env.VERCEL_ENV === 'preview',
+  },
 };
 
-export const loadConfig = async () => {
+export const loadConfig = () => {
+  /* TODO: adjust this logic to work in edge runtime without path, fs modules
   const configBaseName = 'sitecore.config';
   const supportedConfigNames = [`${configBaseName}.mjs`, `${configBaseName}.js`];
   const configPath = findConfig(supportedConfigNames);
@@ -71,18 +80,11 @@ export const loadConfig = async () => {
       `Config not found. Please ensure ${configBaseName} is present with mjs or js extension`
     );
   }
+  */
   // TODO: switch to imports and transpiling ts when switching to ESM
   const configImport = require('sitecore.config');
   const config = configImport.default || configImport;
   return { ...defaultConfig, ...config };
 };
 
-const findConfig = (names: string[]) => {
-  for (const name of names) {
-    const filePath = path.join(cwd(), name);
-    if (fs.existsSync(filePath)) {
-      return name;
-    }
-  }
-  return null;
-};
+export const runtimeConfig = loadConfig();

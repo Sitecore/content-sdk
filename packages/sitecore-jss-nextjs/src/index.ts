@@ -11,8 +11,6 @@ export {
   CacheClient,
   CacheOptions,
   MemoryCacheClient,
-  loadConfig,
-  JssConfigInput,
 } from '@sitecore-jss/sitecore-jss';
 
 export {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PersonalizeMiddleware } from '@sitecore-jss/sitecore-jss-nextjs/middleware';
 import { MiddlewarePlugin } from '..';
 import clientFactory from 'lib/graphql-client-factory';
-import config from 'sitecore.config';
+import { runtimeConfig as config } from '@sitecore-jss/sitecore-jss-nextjs/config';
 import { siteResolver } from 'lib/site-resolver';
 
 /**
@@ -21,23 +21,18 @@ class PersonalizePlugin implements MiddlewarePlugin {
   order = 1;
 
   constructor() {
+    console.log(JSON.stringify(config));
     this.personalizeMiddleware = new PersonalizeMiddleware({
       // Configuration for your Sitecore Experience Edge endpoint
       edgeConfig: {
         clientFactory,
-        timeout:
-          (process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT &&
-            parseInt(process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT)) ||
-          400,
+        timeout: config.personalize.edgeTimeout || 400,
       },
       // Configuration for your Sitecore CDP endpoint
       cdpConfig: {
         sitecoreEdgeUrl: config.api.edgeUrl,
         sitecoreEdgeContextId: config.api.contextId,
-        timeout:
-          (process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT &&
-            parseInt(process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT)) ||
-          400,
+        timeout: config.personalize.cdpTimeout || 400,
       },
       // Optional Sitecore Personalize scope identifier.
       scope: process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,

@@ -1,9 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2017",
     "useUnknownInCatchVariables": false,
-    "module": "commonjs",
+    "module": "es2022",
     "outDir": "dist/cjs",
     "typeRoots": ["node_modules/@types"],
     "declarationDir": "./types"

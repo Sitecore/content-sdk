@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MultisiteMiddleware } from '@sitecore-jss/sitecore-jss-nextjs/middleware';
 import { siteResolver } from 'lib/site-resolver';
 import { MiddlewarePlugin } from '..';
-
+import { runtimeConfig as config } from '@sitecore-jss/sitecore-jss-nextjs/config';
 /**
  * This is the multisite middleware plugin for Next.js.
  * It is used to enable Sitecore multisite in Next.js.
@@ -27,7 +27,7 @@ class MultisitePlugin implements MiddlewarePlugin {
       // Site resolver implementation
       siteResolver,
       // This function allows resolving site from sc_site cookie, which could be useful in case of Vercel preview URLs. Accepts NextRequest.
-      useCookieResolution: () => process.env.VERCEL_ENV === 'preview',
+      useCookieResolution: config.multisite.useCookieResolution,
     });
   }
 
