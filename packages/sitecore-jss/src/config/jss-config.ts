@@ -53,13 +53,15 @@ export type JssConfigInput = {
 
 export const defaultConfig: JssConfigInput = {
   api: {
-    contextId: '',
-    edgeUrl: undefined,
-    path: undefined,
+    contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
+    edgeUrl: process.env.SITECORE_EDGE_URL,
   },
-  defaultSite: 'jss',
+  defaultSite: process.env.SITECORE_SITE_NAME || 'jss',
   defaultLanguage: 'en',
-  editingSecret: '',
+  editingSecret: process.env.JSS_EDITING_SECRET || 'editing-secret-missing',
+  retries: {
+    count: 3,
+  },
   redirects: {
     enabled: process.env.NODE_ENV !== 'development',
     locales: ['en'],
@@ -67,6 +69,18 @@ export const defaultConfig: JssConfigInput = {
   multisite: {
     enabled: true,
     useCookieResolution: () => process.env.VERCEL_ENV === 'preview',
+  },
+  personalize: {
+    enabled: true,
+    scope: process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE || '',
+    edgeTimeout:
+      (process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT &&
+        parseInt(process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT, 10)) ||
+      100,
+    cdpTimeout:
+      (process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT &&
+        parseInt(process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT, 10)) ||
+      100,
   },
 };
 
