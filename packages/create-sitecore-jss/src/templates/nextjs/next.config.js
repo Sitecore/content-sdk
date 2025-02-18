@@ -14,7 +14,7 @@ const nextConfig = {
     locales: ['en'],
     // This is the locale that will be used when visiting a non-locale
     // prefixed path e.g. `/about`.
-    defaultLocale: jssConfig.defaultLanguage,
+    defaultLocale: jssConfig.defaultLanguage || 'en',
   },
 
   // Enable React Strict Mode

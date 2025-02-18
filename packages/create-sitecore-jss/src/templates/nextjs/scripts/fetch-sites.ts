@@ -4,6 +4,7 @@ import config from 'sitecore.config';
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
+import { JssConfigInput } from '@sitecore-content-sdk/nextjs/config';
 
 //TODO: better async logic
 fetchSites().then(() => {});
@@ -11,14 +12,10 @@ fetchSites().then(() => {});
 async function fetchSites() {
   let sites: SiteInfo[] = [];
   const sitesFilePath = path.resolve('src/temp/sites.js');
-  if (fs.existsSync(sitesFilePath)) {
-    console.warn(`${sitesFilePath} already exists, skipping site fetch`);
-    return;
-  }
   console.log('Fetching site information');
   try {
     const siteInfoService = new GraphQLSiteInfoService({
-      clientFactory: createGraphQLClientFactory(config),
+      clientFactory: createGraphQLClientFactory(config as JssConfigInput),
     });
     sites = await siteInfoService.fetchSiteInfo();
   } catch (error) {
