@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable no-unused-expressions */
 import fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
@@ -14,6 +14,8 @@ import proxyquire from 'proxyquire';
 chai.use(sinonChai);
 
 const { transform: transformFunc } = transform;
+
+const pkgVersion = '22.2.1-canary.33';
 
 describe('transform', () => {
   describe('transform', () => {
@@ -47,7 +49,7 @@ describe('transform', () => {
       };
 
       const transformModule = proxyquire('./transform', {
-        '../../../package.json': { version: '22.2.1-canary.33' },
+        '../../../package.json': { version: pkgVersion },
       });
 
       writeFileToPathStub = sinon.stub(helpers, 'writeFileToPath');
@@ -56,7 +58,7 @@ describe('transform', () => {
 
       expect(ejsRenderFileStub).to.have.been.calledOnceWith(path.join(templatePath, file), {
         ...args,
-        version: '22.2.1-canary',
+        version: pkgVersion,
         helper: {
           isDev: false,
         },
@@ -197,7 +199,7 @@ describe('transform', () => {
   });
 
   describe('populateEjsData', () => {
-    it('should remove prerelease build number from version', () => {
+    it('should use exact version for app and dependency versions for beta', () => {
       const destinationPath = path.resolve('samples/next');
       const answers = {
         destination: destinationPath,
@@ -205,14 +207,53 @@ describe('transform', () => {
         appPrefix: false,
         force: false,
       };
+      const pkgVersionBeta = '22.4.1-beta.33';
 
       const transformModule = proxyquire('./transform', {
-        '../../../package.json': { version: '22.4.1-beta.33' },
+        '../../../package.json': { version: pkgVersionBeta },
       });
 
       const result = transformModule.populateEjsData(answers);
 
-      expect(result.version).to.equal('22.4.1-beta');
+      expect(result.version).to.equal(pkgVersionBeta);
+    });
+
+    it('should use exact version for app and dependency versions for canary', () => {
+      const destinationPath = path.resolve('samples/next');
+      const answers = {
+        destination: destinationPath,
+        templates: [],
+        appPrefix: false,
+        force: false,
+      };
+      const pkgVersionCanary = '22.4.1-canary.33';
+
+      const transformModule = proxyquire('./transform', {
+        '../../../package.json': { version: pkgVersionCanary },
+      });
+
+      const result = transformModule.populateEjsData(answers);
+
+      expect(result.version).to.equal(pkgVersionCanary);
+    });
+
+    it('should use exact version for app and ~ version for dependencies for release', () => {
+      const destinationPath = path.resolve('samples/next');
+      const answers = {
+        destination: destinationPath,
+        templates: [],
+        appPrefix: false,
+        force: false,
+      };
+      const pkgVersionRelease = '22.4.1';
+
+      const transformModule = proxyquire('./transform', {
+        '../../../package.json': { version: pkgVersionRelease },
+      });
+
+      const result = transformModule.populateEjsData(answers);
+
+      expect(result.version).to.equal(`~${pkgVersionRelease}`);
     });
   });
 });

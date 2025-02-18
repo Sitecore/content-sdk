@@ -1,5 +1,5 @@
 import { createGraphQLClientFactory } from 'lib/graphql-client-factory/create';
-import { GraphQLSiteInfoService, SiteInfo } from '@sitecore-jss/sitecore-jss-nextjs';
+import { GraphQLSiteInfoService, SiteInfo } from '@sitecore-content-sdk/nextjs';
 import config from 'sitecore.config';
 import fs from 'fs';
 import path from 'path';

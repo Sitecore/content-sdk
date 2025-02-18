@@ -1,6 +1,6 @@
-import fs from 'fs';
+﻿import fs from 'fs';
 import path from 'path';
-import { Metadata, getMetadata } from '@sitecore-jss/sitecore-jss-dev-tools';
+import { Metadata, getMetadata } from '@sitecore-content-sdk/dev-tools';
 
 /*
   METADATA GENERATION

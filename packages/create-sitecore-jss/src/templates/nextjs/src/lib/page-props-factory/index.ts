@@ -1,5 +1,5 @@
-import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
-import { debug } from '@sitecore-jss/sitecore-jss-nextjs';
+﻿import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
+import { debug } from '@sitecore-content-sdk/nextjs';
 import { SitecorePageProps } from 'lib/page-props';
 import * as plugins from 'temp/page-props-factory-plugins';
 
@@ -7,7 +7,7 @@ import * as plugins from 'temp/page-props-factory-plugins';
  * Determines whether context is GetServerSidePropsContext (SSR) or GetStaticPropsContext (SSG)
  * @param {GetServerSidePropsContext | GetStaticPropsContext} context
  */
-export const isServerSidePropsContext = function (
+export const isServerSidePropsContext = function(
   context: GetServerSidePropsContext | GetStaticPropsContext
 ): context is GetServerSidePropsContext {
   return (<GetServerSidePropsContext>context).req !== undefined;

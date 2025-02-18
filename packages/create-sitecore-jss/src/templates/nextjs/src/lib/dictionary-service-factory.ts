@@ -1,4 +1,7 @@
-import { DictionaryService, GraphQLDictionaryService } from '@sitecore-jss/sitecore-jss-nextjs';
+﻿import {
+  DictionaryService,
+  GraphQLDictionaryService,
+} from '@sitecore-content-sdk/nextjs';
 import clientFactory from 'lib/graphql-client-factory';
 
 /**

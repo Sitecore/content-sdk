@@ -1,4 +1,4 @@
-import { GraphQLEditingService } from '@sitecore-jss/sitecore-jss-nextjs/editing';
+﻿import { GraphQLEditingService } from '@sitecore-content-sdk/nextjs/editing';
 import clientFactory from 'lib/graphql-client-factory';
 
 /**

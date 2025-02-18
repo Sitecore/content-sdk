@@ -1,4 +1,4 @@
-import { ComponentBuilderPlugin, ComponentBuilderPluginConfig } from '..';
+﻿import { ComponentBuilderPlugin, ComponentBuilderPluginConfig } from '..';
 
 /**
  * Provides custom components configuration
@@ -16,7 +16,7 @@ class ComponentsPlugin implements ComponentBuilderPlugin {
      * }
      *
      * Or you can register all components from a path using the below approach:
-     * import { getComponentList } from '@sitecore-jss/sitecore-jss-dev-tools';
+     * import { getComponentList } from '@sitecore-content-sdk/dev-tools';
      * ...
      * const componentsPath = 'src/extra';
      * config.components = getComponentList(componentsPath);

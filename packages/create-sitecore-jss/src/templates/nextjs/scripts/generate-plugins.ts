@@ -1,8 +1,8 @@
-import {
+﻿import {
   generatePlugins,
   ModuleType,
   PluginDefinition,
-} from '@sitecore-jss/sitecore-jss-dev-tools';
+} from '@sitecore-content-sdk/dev-tools';
 
 /*
   PLUGINS GENERATION

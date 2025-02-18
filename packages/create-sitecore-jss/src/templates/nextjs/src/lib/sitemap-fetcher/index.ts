@@ -1,5 +1,5 @@
-import { GetStaticPathsContext } from 'next';
-import { StaticPath } from '@sitecore-jss/sitecore-jss-nextjs';
+﻿import { GetStaticPathsContext } from 'next';
+import { StaticPath } from '@sitecore-content-sdk/nextjs';
 import * as plugins from 'temp/sitemap-fetcher-plugins';
 
 export interface SitemapFetcherPlugin {
@@ -16,7 +16,7 @@ export class SitecoreSitemapFetcher {
    */
   async fetch(context?: GetStaticPathsContext): Promise<StaticPath[]> {
     const pluginsList = Object.values(plugins) as SitemapFetcherPlugin[];
-    const pluginsResults = await Promise.all(pluginsList.map((plugin) => plugin.exec(context)));
+    const pluginsResults = await Promise.all(pluginsList.map(plugin => plugin.exec(context)));
     const results = pluginsResults.reduce((acc, cur) => [...acc, ...cur], []);
     return results;
   }

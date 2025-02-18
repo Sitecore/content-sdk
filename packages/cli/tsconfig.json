@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist/cjs",
+    "typeRoots": ["node_modules/@types"],
+    "declarationDir": "./types"
+  },
+  "exclude": ["node_modules", "types", "dist", "src/test", "src/**/*.test.ts"]
+}

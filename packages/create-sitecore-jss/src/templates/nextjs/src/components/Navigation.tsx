@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Link,
   LinkField,
   Text,
   TextField,
   useSitecoreContext,
-} from '@sitecore-jss/sitecore-jss-nextjs';
+} from '@sitecore-content-sdk/nextjs';
 
 interface Fields {
   Id: string;
@@ -77,7 +77,7 @@ export const Default = (props: NavigationProps): JSX.Element => {
   };
 
   const list = Object.values(props.fields)
-    .filter((element) => element)
+    .filter(element => element)
     .map((element: Fields, key: number) => (
       <NavigationList
         key={`${key}${element.Id}`}

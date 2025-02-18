@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+﻿import { useEffect } from 'react';
 import { SitecorePageProps } from 'lib/page-props';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
-import { LayoutServicePageState } from '@sitecore-jss/sitecore-jss-nextjs';
+import { LayoutServicePageState } from '@sitecore-content-sdk/nextjs';
 
 /**
  * The Bootstrap component is the entry point for performing any initialization logic

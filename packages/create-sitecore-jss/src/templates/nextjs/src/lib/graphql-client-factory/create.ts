@@ -1,9 +1,9 @@
-import {
+﻿import {
   GraphQLRequestClientFactoryConfig,
   GraphQLRequestClient,
   getEdgeProxyContentUrl,
-} from '@sitecore-jss/sitecore-jss-nextjs/graphql';
-import { JssConfigInput } from '@sitecore-jss/sitecore-jss-nextjs/config';
+} from '@sitecore-content-sdk/nextjs/graphql';
+import { JssConfigInput } from '@sitecore-content-sdk/nextjs';
 
 //TODO: better type handling
 type EdgeApi = {
