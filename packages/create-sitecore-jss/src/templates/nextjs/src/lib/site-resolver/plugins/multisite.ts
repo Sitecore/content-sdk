@@ -1,11 +1,11 @@
 ﻿import { SiteInfo } from '@sitecore-content-sdk/nextjs/site';
 import { SiteResolverPlugin } from '..';
-import sitesJson from 'temp/sites';
+import { sites as siteCollection } from '@sitecore-content-sdk/nextjs/config';
 
 class MultisitePlugin implements SiteResolverPlugin {
   exec(sites: SiteInfo[]): SiteInfo[] {
     // Add preloaded sites
-    sites.push(...(sitesJson as SiteInfo[]));
+    sites.push(...siteCollection);
     return sites;
   }
 }

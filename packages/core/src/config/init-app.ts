@@ -1,4 +1,4 @@
-import { SiteInfo } from "../site/models";
+import { SiteInfo } from '../site/models';
 
 export let sites: SiteInfo[] = [];
 
