@@ -6,7 +6,8 @@ const nextConfig = {
   api: {
     edge: {
       contextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
-      edgeUrl: process.env.NEXT_PUBLIC_SITECORE_EDGE_URL || 'https://edge-platform.sitecorecloud.io',
+      edgeUrl:
+        process.env.NEXT_PUBLIC_SITECORE_EDGE_URL || 'https://edge-platform.sitecorecloud.io',
     },
     local: {
       apiKey: process.env.NEXT_PUBLIC_SITECORE_API_KEY || '',
@@ -14,5 +15,5 @@ const nextConfig = {
     },
   },
   defaultSite: process.env.NEXT_PUBLIC_SITECORE_SITE_NAME || 'jss',
-}
+};
 export const runtimeConfig = loadConfig(nextConfig as SitecoreConfig);
