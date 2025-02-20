@@ -4,7 +4,7 @@
     "target": "es2017",
     "skipLibCheck": true,
     "useUnknownInCatchVariables": false,
-    "module": "es2022",
+    "module": "commonjs",
     "outDir": "dist/cjs",
     "typeRoots": ["node_modules/@types"],
     "declarationDir": "./types"
