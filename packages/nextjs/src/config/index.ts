@@ -1,5 +1,5 @@
 import { loadConfig, SitecoreConfig } from '@sitecore-content-sdk/core/config';
-export { SitecoreConfig, initApp, sites } from '@sitecore-content-sdk/core/config';
+export { SitecoreConfig, initSitecore, sites } from '@sitecore-content-sdk/core/config';
 // default env values stop working in browser
 // TODO: adjust this when separating server and client edge context details
 const nextConfig = {
