@@ -2,14 +2,17 @@
 import { SitecorePageProps } from 'lib/page-props';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
-import config from 'sitecore.config';
+import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
 import { LayoutServicePageState } from '@sitecore-content-sdk/nextjs';
+import sitesList from 'temp/sites';
+import { initApp } from '@sitecore-content-sdk/nextjs/config';
 
 /**
  * The Bootstrap component is the entry point for performing any initialization logic
  * that needs to happen early in the application's lifecycle.
  */
 const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
+  initApp(sitesList);
   // Browser ClientSDK init allows for page view events to be tracked
   useEffect(() => {
     const pageState = props.layoutData?.sitecore?.context.pageState;
@@ -20,9 +23,9 @@ const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
       console.debug('Browser Events SDK is not initialized in edit and preview modes');
     else {
       CloudSDK({
-        sitecoreEdgeUrl: config.sitecoreEdgeUrl,
-        sitecoreEdgeContextId: config.sitecoreEdgeContextId,
-        siteName: props.site?.name || config.sitecoreSiteName,
+        sitecoreEdgeUrl: config.api.edge.edgeUrl,
+        sitecoreEdgeContextId: config.api.edge.contextId,
+        siteName: props.site?.name || config.defaultSite,
         enableBrowserCookie: true,
         // Replace with the top level cookie domain of the website that is being integrated e.g ".example.com" and not "www.example.com"
         cookieDomain: window.location.hostname.replace(/^www\./, ''),

@@ -3,7 +3,7 @@
   StaticPath,
   SiteInfo,
 } from '@sitecore-content-sdk/nextjs';
-import config from 'sitecore.config';
+import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
 import { SitemapFetcherPlugin } from '..';
 import { GetStaticPathsContext } from 'next';
 import { siteResolver } from 'lib/site-resolver';

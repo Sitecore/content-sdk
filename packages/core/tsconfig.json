@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es2017",
+    "skipLibCheck": true,
     "useUnknownInCatchVariables": false,
     "module": "es2022",
     "outDir": "dist/cjs",
@@ -12,6 +13,7 @@
     "node_modules",
     "types",
     "dist",
+    "config.d.ts",
     "editing.d.ts",
     "layout.d.ts",
     "media.d.ts",

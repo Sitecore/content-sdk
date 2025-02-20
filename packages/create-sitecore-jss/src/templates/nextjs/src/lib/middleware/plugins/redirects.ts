@@ -22,7 +22,7 @@ class RedirectsPlugin implements MiddlewarePlugin {
       excludeRoute: () => false,
       // This function determines if the middleware should be turned off.
       // By default it is disabled while in development mode.
-      disabled: () => config.redirects.enabled !== true,
+      disabled: () => config.redirects?.enabled !== true,
       // Site resolver implementation
       siteResolver,
     });

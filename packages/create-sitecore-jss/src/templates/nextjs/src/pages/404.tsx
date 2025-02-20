@@ -1,4 +1,4 @@
-import config from 'sitecore.config';
+import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
 import {
   GraphQLErrorPagesService,
   SitecoreContext,

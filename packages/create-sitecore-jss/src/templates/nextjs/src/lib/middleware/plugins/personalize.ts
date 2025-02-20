@@ -21,7 +21,6 @@ class PersonalizePlugin implements MiddlewarePlugin {
   order = 1;
 
   constructor() {
-    console.log(JSON.stringify(config));
     this.personalizeMiddleware = new PersonalizeMiddleware({
       // Configuration for your Sitecore Experience Edge endpoint
       edgeConfig: {
@@ -30,8 +29,8 @@ class PersonalizePlugin implements MiddlewarePlugin {
       },
       // Configuration for your Sitecore CDP endpoint
       cdpConfig: {
-        sitecoreEdgeUrl: config.api.edgeUrl,
-        sitecoreEdgeContextId: config.api.contextId,
+        sitecoreEdgeUrl: config.api?.edge?.edgeUrl,
+        sitecoreEdgeContextId: config.api?.edge?.contextId,
         timeout: config.personalize.cdpTimeout || 400,
       },
       // Optional Sitecore Personalize scope identifier.

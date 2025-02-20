@@ -2,6 +2,7 @@ import { GraphQLClient } from '../graphql';
 import debug from '../debug';
 import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
+import { SiteInfo } from './models';
 
 const siteQuery = /* GraphQL */ `
   query {
@@ -14,25 +15,6 @@ const siteQuery = /* GraphQL */ `
     }
   }
 `;
-
-export type SiteInfo = {
-  /**
-   * Additional user-defined properties
-   */
-  [key: string]: unknown;
-  /**
-   * Site name
-   */
-  name: string;
-  /**
-   * Site host name. May include multiple values (separated by '|') and wildcards ('*')
-   */
-  hostName: string;
-  /**
-   * Site default language
-   */
-  language: string;
-};
 
 export type GraphQLSiteInfoServiceConfig = CacheOptions & {
   /**

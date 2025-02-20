@@ -5,7 +5,7 @@
 } from '@sitecore-content-sdk/nextjs';
 import { useEffect } from 'react';
 import { pageView } from '@sitecore-cloudsdk/events/browser';
-import config from 'sitecore.config';
+import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
 
 /**
  * This is the CDP page view component.

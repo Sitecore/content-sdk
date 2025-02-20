@@ -1,4 +1,4 @@
-import { SiteInfo } from './graphql-siteinfo-service';
+import { SiteInfo } from './models';
 
 // Delimiters for multi-value hostnames
 const DELIMITERS = /\||,|;/g;
