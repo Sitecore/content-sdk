@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es2017",
-    "module": "ESNext",
+    "module": "commonjs",
     "jsx": "react",
     "skipLibCheck": true,
     "outDir": "dist/cjs",
