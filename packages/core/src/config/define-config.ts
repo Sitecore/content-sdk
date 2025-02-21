@@ -7,18 +7,18 @@ import { SitecoreConfig, SitecoreConfigInput } from './models';
 export const getDefaultConfig = () => ({
   api: {
     edge: {
-      contextId: process.env.SITECORE_EDGE_CONTEXT_ID || 'context-id-missing',
-      clientContextId: process.env.SITECORE_EDGE_CONTEXT_ID || 'context-id-missing',
-      edgeUrl: process.env.SITECORE_EDGE_URL || 'https://edge-platform.sitecorecloud.io',
+      contextId: 'context-id-missing',
+      clientContextId: 'context-id-missing',
+      edgeUrl: 'https://edge-platform.sitecorecloud.io',
     },
     local: {
-      apiKey: process.env.SITECORE_API_KEY || 'key-missing',
-      apiHost: process.env.SITECORE_API_HOST || 'host-not-specified',
+      apiKey: 'key-missing',
+      apiHost: 'host-not-specified',
     },
   },
-  defaultSite: process.env.SITECORE_SITE_NAME || 'sitecore-headless',
-  defaultLanguage: process.env.DEFAULT_LANGUAGE || 'en',
-  editingSecret: process.env.JSS_EDITING_SECRET || 'editing-secret-missing',
+  defaultSite: 'sitecore-headless',
+  defaultLanguage: 'en',
+  editingSecret: 'editing-secret-missing',
   retries: {
     count: 3,
   },
@@ -28,19 +28,11 @@ export const getDefaultConfig = () => ({
   },
   multisite: {
     enabled: true,
-    useCookieResolution: () => process.env.VERCEL_ENV === 'preview',
   },
   personalize: {
     enabled: true,
-    scope: process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE || undefined,
-    edgeTimeout:
-      (process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT &&
-        parseInt(process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT, 10)) ||
-      300,
-    cdpTimeout:
-      (process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT &&
-        parseInt(process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT, 10)) ||
-      300,
+    edgeTimeout: 300,
+    cdpTimeout: 300,
   },
 });
 

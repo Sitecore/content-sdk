@@ -27,23 +27,6 @@ describe('define-config', () => {
     clearEnv();
   });
 
-  it('should return default config values when env is set', () => {
-    setEnv();
-    const config = defineConfig({});
-    expect(config.api.edge.contextId).to.equal(process.env.SITECORE_EDGE_CONTEXT_ID);
-    expect(config.api.edge.edgeUrl).to.equal(process.env.SITECORE_EDGE_URL);
-    expect(config.defaultSite).to.equal(process.env.SITECORE_SITE_NAME);
-    expect(config.defaultLanguage).to.equal('en');
-    expect(config.editingSecret).to.equal(process.env.JSS_EDITING_SECRET);
-    expect(config.retries?.count).to.equal(3);
-    expect(config.redirects.enabled).to.equal(true);
-    expect(config.redirects.locales).to.deep.equal(['en']);
-    expect(config.multisite.enabled).to.be.true;
-    expect(config.personalize.enabled).to.be.true;
-    expect(config.personalize.edgeTimeout).to.equal(500);
-    expect(config.personalize.cdpTimeout).to.equal(500);
-  });
-
   it('should return default fallback values when env is empty', () => {
     const config = defineConfig({});
     expect(config.api.edge.contextId).to.equal('context-id-missing');

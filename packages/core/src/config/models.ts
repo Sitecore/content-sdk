@@ -56,7 +56,6 @@ export type SitecoreConfig = {
     enabled: boolean;
     locales?: string[];
   };
-  initialized?: boolean;
 };
 
 /**
