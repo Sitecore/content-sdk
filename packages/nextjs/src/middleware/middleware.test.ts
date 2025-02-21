@@ -26,7 +26,7 @@ class MockSiteResolver extends SiteResolver {
 
 describe('MiddlewareBase', () => {
   class SampleMiddleware extends MiddlewareBase {
-    handler() {
+    handle() {
       return Promise.resolve({} as NextResponse);
     }
   }
@@ -144,25 +144,71 @@ describe('MiddlewareBase', () => {
     });
   });
 
-  describe('excludeRoute', () => {
+  describe('disabled', () => {
     it('default', () => {
       const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
 
-      expect(middleware['excludeRoute']('/api/layout/render')).to.equal(true);
-      expect(middleware['excludeRoute']('/sitecore/render')).to.equal(true);
-      expect(middleware['excludeRoute']('/_next/webpack')).to.equal(true);
+      expect(
+        middleware['disabled'](
+          createReq({
+            nextUrl: {
+              pathname: '/api/layout/render',
+            },
+          }),
+          createRes()
+        )
+      ).to.equal(true);
+      expect(
+        middleware['disabled'](
+          createReq({
+            nextUrl: {
+              pathname: '/sitecore/render',
+            },
+          }),
+          createRes()
+        )
+      ).to.equal(true);
+      expect(
+        middleware['disabled'](
+          createReq({
+            nextUrl: {
+              pathname: '/_next/webpack',
+            },
+          }),
+          createRes()
+        )
+      ).to.equal(true);
     });
 
     it('custom function', () => {
       const middleware = new SampleMiddleware({
         siteResolver: new MockSiteResolver([]),
-        excludeRoute(path: string) {
+        disabled(req: NextRequest) {
+          const path = req.nextUrl.pathname;
           return path === 'foo';
         },
       });
 
-      expect(middleware['excludeRoute']('bar')).to.equal(false);
-      expect(middleware['excludeRoute']('foo')).to.equal(true);
+      expect(
+        middleware['disabled'](
+          createReq({
+            nextUrl: {
+              pathname: 'bar',
+            },
+          }),
+          createRes()
+        )
+      ).to.equal(false);
+      expect(
+        middleware['disabled'](
+          createReq({
+            nextUrl: {
+              pathname: 'foo',
+            },
+          }),
+          createRes()
+        )
+      ).to.equal(true);
     });
   });
 
@@ -291,7 +337,7 @@ describe('defineMiddleware', () => {
   type CustomResponse = { params: string[] } & NextResponse;
 
   class SampleMiddleware extends MiddlewareBase {
-    handler(_req: NextRequest, res: CustomResponse) {
+    handle(_req: NextRequest, res: CustomResponse) {
       res.params.push('m1');
 
       return Promise.resolve(res);
@@ -301,13 +347,13 @@ describe('defineMiddleware', () => {
   it('should execute middlewares', async () => {
     const middleware1 = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
     const middleware2: Middleware = {
-      handler: (_req, res) => {
+      handle: (_req, res) => {
         (res as CustomResponse).params.push('m2');
         return Promise.resolve(res);
       },
     };
     const middleware3: Middleware = {
-      handler: (_req, res) => {
+      handle: (_req, res) => {
         (res as CustomResponse).params.push('m3');
         return Promise.resolve(res);
       },

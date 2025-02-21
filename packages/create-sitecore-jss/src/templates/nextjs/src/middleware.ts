@@ -10,10 +10,10 @@ import clientFactory from 'lib/graphql-client-factory';
 import scConfig from 'temp/config';
 
 const multisite = new MultisiteMiddleware({
-  // This function determines if a route should be excluded from site resolution.
-  // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to exclude more.
+  // This function determines if the middleware should be turned off.
+  // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to disable more.
   // This is an important performance consideration since Next.js Edge middleware runs on every request.
-  excludeRoute: () => false,
+  disabled: () => false,
   // Site resolver implementation
   siteResolver,
   // This function allows resolving site from sc_site cookie, which could be useful in case of Vercel preview URLs. Accepts NextRequest.
@@ -26,12 +26,10 @@ const redirects = new RedirectsMiddleware({
   // These are all the locales you support in your application.
   // These should match those in your next.config.js (i18n.locales).
   locales: ['en'],
-  // This function determines if a route should be excluded from RedirectsMiddleware.
-  // Certain paths are ignored by default (e.g. Next.js API routes), but you may wish to exclude more.
-  // This is an important performance consideration since Next.js Edge middleware runs on every request.
-  excludeRoute: () => false,
   // This function determines if the middleware should be turned off.
+  // Certain paths are ignored by default (e.g. Next.js API routes), but you may wish to disable more.
   // By default it is disabled while in development mode.
+  // This is an important performance consideration since Next.js Edge middleware runs on every request.
   disabled: () => process.env.NODE_ENV === 'development',
   // Site resolver implementation
   siteResolver,
@@ -59,12 +57,10 @@ const personalize = new PersonalizeMiddleware({
   scope: process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,
   // This function determines if the middleware should be turned off.
   // IMPORTANT: You should implement based on your cookie consent management solution of choice.
+  // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to disable more.
   // You may wish to keep it disabled while in development mode.
-  disabled: () => process.env.NODE_ENV === 'development',
-  // This function determines if a route should be excluded from personalization.
-  // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to exclude more.
   // This is an important performance consideration since Next.js Edge middleware runs on every request.
-  excludeRoute: () => false,
+  disabled: () => process.env.NODE_ENV === 'development',
   // Site resolver implementation
   siteResolver,
 });

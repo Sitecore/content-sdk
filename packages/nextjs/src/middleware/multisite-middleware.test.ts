@@ -131,7 +131,7 @@ describe('MultisiteMiddleware', () => {
   });
 
   describe('request skipped', () => {
-    describe('excluded route', () => {
+    describe('disabled', () => {
       const res = createResponse();
 
       const test = async (pathname: string, middleware) => {
@@ -141,7 +141,7 @@ describe('MultisiteMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
         validateDebugLog('multisite middleware start: %o', {
           pathname,
@@ -149,7 +149,7 @@ describe('MultisiteMiddleware', () => {
           hostname: 'foo.net',
         });
 
-        validateDebugLog('skipped (%s)', 'route excluded');
+        validateDebugLog('skipped (multisite middleware is disabled)');
 
         expect(finalRes).to.deep.equal(res);
 
@@ -165,11 +165,11 @@ describe('MultisiteMiddleware', () => {
         await test('/_next/webpack', middleware);
       });
 
-      it('should apply both default and custom rules when custom excludeRoute function provided', async () => {
-        const excludeRoute = (pathname: string) => pathname === '/crazypath/luna';
+      it('should apply both default and custom rules when custom disabled function provided', async () => {
+        const disabled = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
 
         const { middleware } = createMiddleware({
-          excludeRoute,
+          disabled,
         });
 
         await test('/src/image.png', middleware);
@@ -191,9 +191,9 @@ describe('MultisiteMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
-        validateDebugLog('skipped (%s)', 'preview');
+        validateDebugLog('skipped (preview)');
 
         expect(finalRes).to.deep.equal(res);
       });
@@ -208,9 +208,9 @@ describe('MultisiteMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
-        validateDebugLog('skipped (%s)', 'preview');
+        validateDebugLog('skipped (preview)');
 
         expect(finalRes).to.deep.equal(res);
       });
@@ -242,7 +242,7 @@ describe('MultisiteMiddleware', () => {
         defaultHostname: 'bar.net',
       });
 
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -286,7 +286,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware();
 
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -328,7 +328,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware();
 
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -370,7 +370,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware({});
 
-      const finalRes = await middleware.handler(req);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -416,7 +416,7 @@ describe('MultisiteMiddleware', () => {
         useCookieResolution: () => true,
       });
 
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -463,7 +463,7 @@ describe('MultisiteMiddleware', () => {
         useCookieResolution: () => true,
       });
 
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -508,7 +508,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware();
 
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -577,7 +577,7 @@ describe('MultisiteMiddleware', () => {
         siteResolver: new SampleSiteResolver([]),
       });
 
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       expect(errorSpy.getCall(0).calledWith('Multisite middleware failed:')).to.be.true;
       expect(errorSpy.getCall(1).calledWith(error)).to.be.true;

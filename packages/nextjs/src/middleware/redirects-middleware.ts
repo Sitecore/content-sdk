@@ -55,7 +55,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
     this.locales = config.locales;
   }
 
-  handler = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     try {
       const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req);
@@ -70,25 +70,23 @@ export class RedirectsMiddleware extends MiddlewareBase {
       });
 
       const createResponse = async () => {
-        const response = res || NextResponse.next();
-
-        if (this.config.disabled && this.config.disabled(req, res || NextResponse.next())) {
+        if (this.disabled(req, res)) {
           debug.redirects('skipped (redirects middleware is disabled)');
-          return response;
+          return res;
         }
 
-        if (this.isPreview(req) || this.excludeRoute(pathname)) {
-          debug.redirects('skipped (%s)', this.isPreview(req) ? 'preview' : 'route excluded');
+        if (this.isPreview(req)) {
+          debug.redirects('skipped (preview)');
 
-          return response;
+          return res;
         }
 
         // Skip prefetch requests from Next.js, which are not original client requests
         // as they load unnecessary requests that burden the redirects middleware with meaningless traffic
         if (this.isPrefetch(req)) {
           debug.redirects('skipped (prefetch)');
-          response.headers.set('x-middleware-cache', 'no-cache');
-          return response;
+          res.headers.set('x-middleware-cache', 'no-cache');
+          return res;
         }
 
         site = this.getSite(req, res);
@@ -99,7 +97,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
         if (!existsRedirect) {
           debug.redirects('skipped (redirect does not exist)');
 
-          return response;
+          return res;
         }
 
         // Find context site language and replace token
@@ -163,16 +161,16 @@ export class RedirectsMiddleware extends MiddlewareBase {
         /** return Response redirect with http code of redirect type */
         switch (existsRedirect.redirectType) {
           case REDIRECT_TYPE_301: {
-            return this.createRedirectResponse(url, response, 301, 'Moved Permanently');
+            return this.createRedirectResponse(url, res, 301, 'Moved Permanently');
           }
           case REDIRECT_TYPE_302: {
-            return this.createRedirectResponse(url, response, 302, 'Found');
+            return this.createRedirectResponse(url, res, 302, 'Found');
           }
           case REDIRECT_TYPE_SERVER_TRANSFER: {
-            return this.rewrite(url.href, req, response);
+            return this.rewrite(url.href, req, res);
           }
           default:
-            return response;
+            return res;
         }
       };
 
@@ -189,7 +187,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
     } catch (error) {
       console.log('Redirect middleware failed:');
       console.log(error);
-      return res || NextResponse.next();
+      return res;
     }
   };
 

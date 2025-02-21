@@ -93,16 +93,13 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     });
   }
 
-  handler = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     try {
       const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
       const timeout = this.config.cdpConfig.timeout;
-
-      // Response will be provided if other middleware is run before us (e.g. redirects)
-      let response = res || NextResponse.next();
 
       debug.personalize('personalize middleware start: %o', {
         pathname,
@@ -111,24 +108,20 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         headers: this.extractDebugHeaders(req.headers),
       });
 
-      if (this.config.disabled && this.config.disabled(req, response)) {
+      if (this.disabled(req, res)) {
         debug.personalize('skipped (personalize middleware is disabled)');
-        return response;
+        return res;
       }
 
       if (
-        response.redirected || // Don't attempt to personalize a redirect
-        this.isPreview(req) || // No need to personalize for preview (layout data is already prepared for preview)
-        this.excludeRoute(pathname)
+        res.redirected || // Don't attempt to personalize a redirect
+        this.isPreview(req) // No need to personalize for preview (layout data is already prepared for preview)
       ) {
-        debug.personalize(
-          'skipped (%s)',
-          response.redirected ? 'redirected' : this.isPreview(req) ? 'preview' : 'route excluded'
-        );
-        return response;
+        debug.personalize('skipped (%s)', res.redirected ? 'redirected' : 'preview');
+        return res;
       }
 
-      const site = this.getSite(req, response);
+      const site = this.getSite(req, res);
 
       // Get personalization info from Experience Edge
       const personalizeInfo = await this.personalizeService.getPersonalizeInfo(
@@ -139,12 +132,12 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       if (!personalizeInfo) {
         // Likely an invalid route / language
         debug.personalize('skipped (personalize info not found)');
-        return response;
+        return res;
       }
 
       if (personalizeInfo.variantIds.length === 0) {
         debug.personalize('skipped (no personalization configured)');
-        return response;
+        return res;
       }
 
       if (this.isPrefetch(req)) {
@@ -153,15 +146,15 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         // In this case, don't execute a personalize request; otherwise, the metrics for component A/B experiments would be inaccurate.
         // Disable preflight caching to force revalidation on client-side navigation (personalization WILL be influenced).
         // Note the reason we don't move this any earlier in the middleware is that we would then be sacrificing performance for non-personalized pages.
-        response.headers.set('x-middleware-cache', 'no-cache');
-        return response;
+        res.headers.set('x-middleware-cache', 'no-cache');
+        return res;
       }
 
       await this.initPersonalizeServer({
         hostname,
         siteName: site.name,
         request: req,
-        response,
+        response: res,
       });
 
       const params = this.getExperienceParams(req);
@@ -194,7 +187,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 
       if (identifiedVariantIds.length === 0) {
         debug.personalize('skipped (no variant(s) identified)');
-        return response;
+        return res;
       }
 
       // Path can be rewritten by previously executed middleware
@@ -202,7 +195,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 
       // Rewrite to persononalized path
       const rewritePath = getPersonalizedRewrite(basePath, identifiedVariantIds);
-      response = this.rewrite(rewritePath, req, response);
+      const response = this.rewrite(rewritePath, req, res);
 
       // Disable preflight caching to force revalidation on client-side navigation (personalization MAY be influenced).
       // See https://github.com/vercel/next.js/pull/32767
@@ -217,7 +210,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     } catch (error) {
       console.log('Personalize middleware failed:');
       console.log(error);
-      return res || NextResponse.next();
+      return res;
     }
   };
 
@@ -294,9 +287,9 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     };
   }
 
-  protected excludeRoute(pathname: string): boolean | undefined {
+  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
     // ignore files
-    return pathname.includes('.') || super.excludeRoute(pathname);
+    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
   }
 
   /**

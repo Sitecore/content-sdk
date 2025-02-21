@@ -234,33 +234,6 @@ describe('PersonalizeMiddleware', () => {
   });
 
   describe('request skipped', () => {
-    it('disabled', async () => {
-      const props = {
-        disabled: (req) => req?.nextUrl.pathname === '/styleguide' && req.nextUrl.locale === 'en',
-      };
-
-      const req = createRequest();
-
-      const res = createResponse();
-
-      const { middleware } = createMiddleware(props);
-
-      const finalRes = await middleware.handler(req, res);
-
-      validateDebugLog('personalize middleware start: %o', {
-        hostname: 'foo.net',
-        pathname: '/styleguide',
-        language: 'en',
-        headers: {
-          ...req.headers,
-        },
-      });
-
-      validateDebugLog('skipped (personalize middleware is disabled)');
-
-      expect(finalRes).to.deep.equal(res);
-    });
-
     it('redirected', async () => {
       const req = createRequest();
 
@@ -268,7 +241,7 @@ describe('PersonalizeMiddleware', () => {
 
       const { middleware } = createMiddleware();
 
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('personalize middleware start: %o', {
         hostname: 'foo.net',
@@ -294,7 +267,7 @@ describe('PersonalizeMiddleware', () => {
         const res = createResponse();
         const { middleware } = createMiddleware();
         const getCookiesSpy = spy(req.cookies, 'get');
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
         validateDebugLog('personalize middleware start: %o', {
           hostname: 'foo.net',
@@ -318,7 +291,7 @@ describe('PersonalizeMiddleware', () => {
         const res = createResponse();
         const { middleware } = createMiddleware();
         const getCookiesSpy = spy(req.cookies, 'get');
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
         validateDebugLog('personalize middleware start: %o', {
           hostname: 'foo.net',
@@ -334,7 +307,7 @@ describe('PersonalizeMiddleware', () => {
         expect(finalRes).to.deep.equal(res);
       });
     });
-    describe('excluded route', () => {
+    describe('disabled', () => {
       const res = createResponse();
       const test = async (pathname: string, middleware) => {
         const req = createRequest({
@@ -342,7 +315,7 @@ describe('PersonalizeMiddleware', () => {
             pathname,
           },
         });
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
         const headers = {};
         req.headers.forEach((value, key) => (headers[key] = value));
         validateDebugLog('personalize middleware start: %o', {
@@ -351,7 +324,7 @@ describe('PersonalizeMiddleware', () => {
           language: 'en',
           headers,
         });
-        validateDebugLog('skipped (%s)', 'route excluded');
+        validateDebugLog('skipped (personalize middleware is disabled)');
         expect(finalRes).to.deep.equal(res);
         debugSpy.resetHistory();
       };
@@ -362,10 +335,10 @@ describe('PersonalizeMiddleware', () => {
         await test('/sitecore/render', middleware);
         await test('/_next/webpack', middleware);
       });
-      it('should apply both default and custom rules when custom excludeRoute function provided', async () => {
-        const excludeRoute = (pathname: string) => pathname === '/crazypath/luna';
+      it('should apply both default and custom rules when custom disabled function provided', async () => {
+        const disabled = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
         const { middleware } = createMiddleware({
-          excludeRoute,
+          disabled,
         });
         await test('/src/image.png', middleware);
         await test('/api/layout/render', middleware);
@@ -380,7 +353,7 @@ describe('PersonalizeMiddleware', () => {
       const { middleware, getPersonalizeInfo } = createMiddleware({
         personalizeInfo: null,
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
       const headers = {};
       req.headers.forEach((value, key) => (headers[key] = value));
       validateDebugLog('personalize middleware start: %o', {
@@ -402,7 +375,7 @@ describe('PersonalizeMiddleware', () => {
           variantIds: [],
         },
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
       const headers = {};
       req.headers.forEach((value, key) => (headers[key] = value));
       validateDebugLog('personalize middleware start: %o', {
@@ -428,7 +401,7 @@ describe('PersonalizeMiddleware', () => {
       });
       const headers = {};
       req.headers.forEach((value, key) => (headers[key] = value));
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
       validateDebugLog('personalize middleware start: %o', {
         hostname: 'foo.net',
         pathname: '/styleguide',
@@ -459,7 +432,7 @@ describe('PersonalizeMiddleware', () => {
         variantId: invalidVariant,
         handleCookieStub,
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
       const headers = {};
       req.headers.forEach((value, key) => (headers[key] = value));
       validateDebugLog('personalize middleware start: %o', {
@@ -483,7 +456,7 @@ describe('PersonalizeMiddleware', () => {
       });
       const res = createResponse();
       const { middleware } = createMiddleware();
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('personalize middleware start: %o', {
         hostname: 'foo.net',
@@ -524,7 +497,7 @@ describe('PersonalizeMiddleware', () => {
           pageId,
         },
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('personalize middleware start: %o', {
         headers: {
@@ -568,7 +541,7 @@ describe('PersonalizeMiddleware', () => {
       } = createMiddleware({
         variantId: 'variant-2',
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('personalize middleware start: %o', {
         headers: {
@@ -607,7 +580,7 @@ describe('PersonalizeMiddleware', () => {
       } = createMiddleware({
         variantId: 'variant-2',
       });
-      const finalRes = await middleware.handler(req);
+      const finalRes = await middleware.handle(req, res);
 
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be.true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
@@ -647,7 +620,7 @@ describe('PersonalizeMiddleware', () => {
       } = createMiddleware({
         variantId: 'variant-2',
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('personalize middleware start: %o', {
         headers: {
@@ -690,7 +663,7 @@ describe('PersonalizeMiddleware', () => {
       } = createMiddleware({
         variantId: 'variant-2',
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('personalize middleware start: %o', {
         headers: {
@@ -734,7 +707,7 @@ describe('PersonalizeMiddleware', () => {
       } = createMiddleware({
         variantId: 'variant-2',
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('personalize middleware start: %o', {
         headers: {
@@ -777,7 +750,7 @@ describe('PersonalizeMiddleware', () => {
       } = createMiddleware({
         variantId: 'variant-2',
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('personalize middleware start: %o', {
         headers: {
@@ -821,7 +794,7 @@ describe('PersonalizeMiddleware', () => {
         variantId: 'variant-2',
         defaultHostname: 'foobar',
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
       validateDebugLog('personalize middleware start: %o', {
@@ -859,7 +832,7 @@ describe('PersonalizeMiddleware', () => {
         },
         personalizeStub,
       });
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en', siteName)).to.be.true;
       expect(
@@ -924,7 +897,7 @@ describe('PersonalizeMiddleware', () => {
         },
         personalizeStub,
       });
-      const finalRes = await middleware.handler(req);
+      const finalRes = await middleware.handle(req, res);
 
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be.true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
@@ -986,7 +959,7 @@ describe('PersonalizeMiddleware', () => {
         getPersonalizeInfoStub: getPersonalizeInfoWithError,
       });
 
-      const finalRes = await middleware.handler(req, res);
+      const finalRes = await middleware.handle(req, res);
 
       expect(initPersonalizeServer.called).to.be.false;
       expect(personalize.called).to.be.false;

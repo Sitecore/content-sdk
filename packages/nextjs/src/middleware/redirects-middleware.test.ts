@@ -37,6 +37,7 @@ describe('RedirectsMiddleware', () => {
     { name: 'nextjs-app', hostName: '*', language: 'da' },
   ];
   const setCookies = () => {};
+  const getCookies = () => {};
 
   const createRequest = (props: any = {}) => {
     const req = {
@@ -73,6 +74,7 @@ describe('RedirectsMiddleware', () => {
     const res = {
       cookies: {
         set: setCookies || (() => {}),
+        get: getCookies || (() => {}),
       },
       headers: {},
       ...rest,
@@ -162,7 +164,7 @@ describe('RedirectsMiddleware', () => {
       return ({
         url,
         status: statusCode,
-        cookies: { set: setCookies },
+        cookies: { set: setCookies, get: getCookies },
         headers: new Headers(headers),
       } as unknown) as NextResponse;
     });
@@ -173,15 +175,15 @@ describe('RedirectsMiddleware', () => {
       return ({
         url,
         status,
-        cookies: { set: setCookies },
+        cookies: { set: setCookies, get: getCookies },
         headers: res.headers,
       } as unknown) as NextResponse;
     });
   };
 
-  const runTestWithRedirect = async (middlewareOptions, req, _hostname = hostname) => {
+  const runTestWithRedirect = async (middlewareOptions, req, res, _hostname = hostname) => {
     const { middleware, fetchRedirects, siteResolver } = createMiddleware(middlewareOptions);
-    const finalRes = await middleware.handler(req);
+    const finalRes = await middleware.handle(req, res);
 
     validateDebugLog('redirects middleware start: %o', {
       hostname: _hostname,
@@ -230,7 +232,7 @@ describe('RedirectsMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -238,7 +240,7 @@ describe('RedirectsMiddleware', () => {
           pathname: '/styleguide',
         });
 
-        validateDebugLog('skipped (%s)', 'preview');
+        validateDebugLog('skipped (preview)');
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
           headers: {
@@ -262,7 +264,7 @@ describe('RedirectsMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -270,7 +272,7 @@ describe('RedirectsMiddleware', () => {
           pathname: '/styleguide',
         });
 
-        validateDebugLog('skipped (%s)', 'preview');
+        validateDebugLog('skipped (preview)');
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
           headers: {
@@ -285,7 +287,7 @@ describe('RedirectsMiddleware', () => {
       });
     });
 
-    describe('exclude route', () => {
+    it('should apply both default and custom rules when custom disabled function provided', async () => {
       const res = NextResponse.next();
 
       const test = async (pathname: string, middleware) => {
@@ -295,7 +297,7 @@ describe('RedirectsMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -303,7 +305,7 @@ describe('RedirectsMiddleware', () => {
           pathname,
         });
 
-        validateDebugLog('skipped (%s)', 'route excluded');
+        validateDebugLog('skipped (redirects middleware is disabled)');
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
           headers: {
@@ -318,26 +320,17 @@ describe('RedirectsMiddleware', () => {
 
         expect(finalRes).to.deep.equal(res);
       };
-      it('default', async () => {
-        const { middleware } = createMiddleware();
 
-        await test('/api/layout/render', middleware);
-        await test('/sitecore/render', middleware);
-        await test('/_next/webpack', middleware);
+      const disabled = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
+
+      const { middleware } = createMiddleware({
+        disabled,
       });
 
-      it('should apply both default and custom rules when custom excludeRoute function provided', async () => {
-        const excludeRoute = (pathname: string) => pathname === '/crazypath/luna';
-
-        const { middleware } = createMiddleware({
-          excludeRoute,
-        });
-
-        await test('/api/layout/render', middleware);
-        await test('/sitecore/render', middleware);
-        await test('/_next/webpack', middleware);
-        await test('/crazypath/luna', middleware);
-      });
+      await test('/api/layout/render', middleware);
+      await test('/sitecore/render', middleware);
+      await test('/_next/webpack', middleware);
+      await test('/crazypath/luna', middleware);
     });
 
     it('should return next response if disabled is true', async () => {
@@ -353,7 +346,7 @@ describe('RedirectsMiddleware', () => {
       };
       const req = createRequest();
       const { middleware } = createMiddleware(props);
-      const finalRes = await middleware.handler(req);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('redirects middleware start: %o', {
         hostname: 'foo.net',
@@ -382,7 +375,7 @@ describe('RedirectsMiddleware', () => {
       const nextStub = sinon.stub(NextResponse, 'next').returns((res as unknown) as NextResponse);
       const req = createRequest();
       const { middleware, fetchRedirects, siteResolver } = createMiddleware();
-      const finalRes = await middleware.handler(req);
+      const finalRes = await middleware.handle(req, res);
 
       validateDebugLog('redirects middleware start: %o', {
         hostname: 'foo.net',
@@ -442,7 +435,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: false,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -493,7 +487,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: true,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -546,7 +541,8 @@ describe('RedirectsMiddleware', () => {
             redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
             isQueryStringPreserved: true,
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -598,7 +594,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: true,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -639,7 +636,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: true,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -688,7 +686,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: false,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -740,7 +739,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: false,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -790,7 +790,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: false,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -841,7 +842,8 @@ describe('RedirectsMiddleware', () => {
             locale: 'en',
             sites: sitesFromConfigFile,
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -891,7 +893,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: true,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -939,7 +942,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: true,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -987,7 +991,7 @@ describe('RedirectsMiddleware', () => {
           headers: { ...res?.headers },
         });
 
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -1029,7 +1033,7 @@ describe('RedirectsMiddleware', () => {
 
         const { middleware, fetchRedirects, siteResolver } = createMiddleware();
 
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -1078,7 +1082,7 @@ describe('RedirectsMiddleware', () => {
           disabled: () => true,
         });
 
-        const finalRes = await middleware.handler(req, res);
+        const finalRes = await middleware.handle(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -1140,6 +1144,7 @@ describe('RedirectsMiddleware', () => {
             locale: 'en',
           },
           req,
+          res,
           'localhost'
         );
 
@@ -1192,6 +1197,7 @@ describe('RedirectsMiddleware', () => {
             defaultHostname: 'foobar',
           },
           req,
+          res,
           'foobar'
         );
 
@@ -1239,7 +1245,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: true,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -1289,7 +1296,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: true,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -1341,7 +1349,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: false,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -1395,7 +1404,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: true,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -1446,7 +1456,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: true,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -1499,7 +1510,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: false,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -1549,7 +1561,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: true,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -1601,7 +1614,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: false,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
@@ -1654,7 +1668,8 @@ describe('RedirectsMiddleware', () => {
             isQueryStringPreserved: false,
             locale: 'en',
           },
-          req
+          req,
+          res
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {

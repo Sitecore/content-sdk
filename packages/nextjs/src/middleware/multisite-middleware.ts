@@ -18,7 +18,7 @@ export type CookieAttributes = {
   sameSite?: true | false | 'lax' | 'strict' | 'none' | undefined;
 };
 
-export type MultisiteMiddlewareConfig = Omit<MiddlewareBaseConfig, 'disabled'> & {
+export type MultisiteMiddlewareConfig = MiddlewareBaseConfig & {
   /**
    * Function used to determine if site should be resolved from sc_site cookie when present
    */
@@ -36,7 +36,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
     super(config);
   }
 
-  handler = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     try {
       const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req);
@@ -49,13 +49,16 @@ export class MultisiteMiddleware extends MiddlewareBase {
         hostname,
       });
 
-      // Response will be provided if other middleware is run before us
-      let response = res || NextResponse.next();
+      if (this.disabled(req, res)) {
+        debug.multisite('skipped (multisite middleware is disabled)');
 
-      if (this.isPreview(req) || this.excludeRoute(pathname)) {
-        debug.multisite('skipped (%s)', this.isPreview(req) ? 'preview' : 'route excluded');
+        return res;
+      }
 
-        return response;
+      if (this.isPreview(req)) {
+        debug.multisite('skipped (preview)');
+
+        return res;
       }
 
       // Site name can be forced by query string parameter or cookie
@@ -70,7 +73,8 @@ export class MultisiteMiddleware extends MiddlewareBase {
       const rewritePath = getSiteRewrite(pathname, {
         siteName,
       });
-      response = this.rewrite(rewritePath, req, response);
+
+      const response = this.rewrite(rewritePath, req, res);
 
       // default site cookie attributes
       const defaultCookieAttributes = {
@@ -97,8 +101,8 @@ export class MultisiteMiddleware extends MiddlewareBase {
     }
   };
 
-  protected excludeRoute(pathname: string): boolean | undefined {
+  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
     // ignore files
-    return pathname.includes('.') || super.excludeRoute(pathname);
+    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
   }
 }

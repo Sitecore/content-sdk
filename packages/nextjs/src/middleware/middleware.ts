@@ -5,18 +5,10 @@ import { NextRequest, NextFetchEvent, NextResponse } from 'next/server';
 export type MiddlewareBaseConfig = {
   /**
    * function, determines if middleware should be turned off, based on cookie, header, or other considerations
-   * @param {NextRequest} [req] request object from middleware handler
-   * @param {NextResponse} [res] response object from middleware handler
+   * @param {NextRequest} req request object from middleware handler
+   * @param {NextResponse} res response object from middleware handler
    */
-  disabled?: (req?: NextRequest, res?: NextResponse) => boolean;
-  /**
-   * Function used to determine if route should be excluded.
-   * By default, files (pathname.includes('.')), Next.js API routes (pathname.startsWith('/api/')), and Sitecore API routes (pathname.startsWith('/sitecore/')) are ignored.
-   * This is an important performance consideration since Next.js Edge middleware runs on every request.
-   * @param {string} pathname The pathname
-   * @returns {boolean} Whether to exclude the route
-   */
-  excludeRoute?: (pathname: string) => boolean;
+  disabled?: (req: NextRequest, res: NextResponse) => boolean;
   /**
    * Fallback hostname in case `host` header is not present
    * @default localhost
@@ -38,7 +30,7 @@ export abstract class Middleware {
    * @param {NextResponse} res response
    * @param {NextFetchEvent} ev fetch event
    */
-  abstract handler(req: NextRequest, res: NextResponse, ev: NextFetchEvent): Promise<NextResponse>;
+  abstract handle(req: NextRequest, res: NextResponse, ev: NextFetchEvent): Promise<NextResponse>;
 }
 
 /**
@@ -77,12 +69,14 @@ export abstract class MiddlewareBase extends Middleware {
     );
   }
 
-  protected excludeRoute(pathname: string) {
+  protected disabled(req: NextRequest, res: NextResponse) {
+    const { pathname } = req.nextUrl;
+
     return (
       pathname.startsWith('/api/') || // Ignore Next.js API calls
       pathname.startsWith('/sitecore/') || // Ignore Sitecore API calls
       pathname.startsWith('/_next') || // Ignore next service calls
-      (this.config?.excludeRoute && this.config?.excludeRoute(pathname))
+      (this.config.disabled && this.config.disabled(req, res))
     );
   }
 
@@ -164,7 +158,7 @@ export const defineMiddleware = (...middlewares: Middleware[]) => {
       const start = Date.now();
 
       const middlewareResponse = await middlewares.reduce(
-        (p, middleware) => p.then((res) => middleware.handler(req, res, ev)),
+        (p, middleware) => p.then((res) => middleware.handle(req, res, ev)),
         Promise.resolve(res)
       );
 
