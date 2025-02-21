@@ -334,18 +334,21 @@ describe('MiddlewareBase', () => {
 });
 
 describe('defineMiddleware', () => {
-  type CustomResponse = { params: string[] } & NextResponse;
-
-  class SampleMiddleware extends MiddlewareBase {
-    handle(_req: NextRequest, res: CustomResponse) {
-      res.params.push('m1');
-
-      return Promise.resolve(res);
-    }
-  }
-
   it('should execute middlewares', async () => {
-    const middleware1 = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+    type CustomResponse = {
+      params: string[];
+    } & NextResponse;
+    class SampleMiddleware extends MiddlewareBase {
+      handle(_req: NextRequest, res: CustomResponse) {
+        res.params.push('m1');
+
+        return Promise.resolve(res);
+      }
+    }
+
+    const middleware1 = new SampleMiddleware({
+      siteResolver: new MockSiteResolver([]),
+    });
     const middleware2: Middleware = {
       handle: (_req, res) => {
         (res as CustomResponse).params.push('m2');
@@ -365,10 +368,43 @@ describe('defineMiddleware', () => {
     } as unknown) as NextResponse;
     const ev = {} as NextFetchEvent;
 
-    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, res, ev);
+    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev, res);
 
     expect(result).to.deep.equal({
       params: ['m2', 'm1', 'm3'],
     });
+  });
+
+  it('should execute middlewares with empty response', async () => {
+    class SampleMiddleware extends MiddlewareBase {
+      handle(_req: NextRequest, res: NextResponse) {
+        res.headers.set('m1', 'true');
+
+        return Promise.resolve(res);
+      }
+    }
+
+    const middleware1 = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+    const middleware2: Middleware = {
+      handle: (_req, res) => {
+        res.headers.set('m2', 'true');
+        return Promise.resolve(res);
+      },
+    };
+    const middleware3: Middleware = {
+      handle: (_req, res) => {
+        res.headers.set('m3', 'true');
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+    const ev = {} as NextFetchEvent;
+
+    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev);
+
+    expect(result.headers.get('m1')).to.equal('true');
+    expect(result.headers.get('m2')).to.equal('true');
+    expect(result.headers.get('m3')).to.equal('true');
   });
 });

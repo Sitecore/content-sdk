@@ -1,4 +1,4 @@
-import { type NextRequest, type NextFetchEvent, NextResponse } from 'next/server';
+import { type NextRequest, type NextFetchEvent } from 'next/server';
 import {
   defineMiddleware,
   MultisiteMiddleware,
@@ -66,8 +66,6 @@ const personalize = new PersonalizeMiddleware({
 });
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
-  const res = NextResponse.next();
-
   return defineMiddleware(multisite, redirects, personalize).exec(req, res, ev);
 }
 

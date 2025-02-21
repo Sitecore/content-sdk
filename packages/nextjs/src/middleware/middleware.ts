@@ -152,14 +152,22 @@ export abstract class MiddlewareBase extends Middleware {
  */
 export const defineMiddleware = (...middlewares: Middleware[]) => {
   return {
-    exec: async (req: NextRequest, res: NextResponse, ev: NextFetchEvent) => {
+    /**
+     * Execute all middlewares
+     * @param {NextRequest} req request
+     * @param {NextFetchEvent} ev fetch event
+     * @param {NextResponse} [res] response
+     */
+    exec: async (req: NextRequest, ev: NextFetchEvent, res?: NextResponse) => {
+      const response = res || NextResponse.next();
+
       debug.common('middleware start');
 
       const start = Date.now();
 
       const middlewareResponse = await middlewares.reduce(
         (p, middleware) => p.then((res) => middleware.handle(req, res, ev)),
-        Promise.resolve(res)
+        Promise.resolve(response)
       );
 
       debug.common('middleware end in %dms', Date.now() - start);
