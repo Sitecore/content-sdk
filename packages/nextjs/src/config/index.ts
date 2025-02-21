@@ -3,6 +3,5 @@ export {
   SitecoreConfigInput,
   SitecoreConfig,
   initSitecore,
-  getRuntimeConfig,
-  sitecoreRuntimeConfig,
+  getSitecoreConfig,
 } from '@sitecore-content-sdk/core/config';

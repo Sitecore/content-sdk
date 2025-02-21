@@ -1,36 +1,39 @@
-import { SitecoreIntializationOptions } from './models';
+import { SitecoreIntializationOptions, SitecoreRuntimeConfig } from './models';
 
 /**
  * Configuration with all relevant runtime properties
  * Expected to be be initialized via `initSitecore` in app bootstrap
  */
-export let sitecoreRuntimeConfig: Partial<SitecoreIntializationOptions> & {
-  initialized: boolean;
-} = {
+export let sitecoreRuntimeConfig: SitecoreRuntimeConfig = {
   initialized: false,
 };
 
-// this function is strictly for testing
+// this function is strictly for unit testing
 // alternative is getter/setter for sitecoreRuntimeConfig - but we only want to export getter
 // eslint-disable-next-line
 export function setTestSitecoreRuntimeConfig(
   input: Partial<SitecoreIntializationOptions>,
   initialized: boolean
 ) {
-  sitecoreRuntimeConfig = { ...input, initialized };
+  sitecoreRuntimeConfig = {
+    ...input.sitecoreConfig,
+    sites: input.sites,
+    components: input.components,
+    initialized,
+  };
 }
 
 /**
  * Retrieves runtime Sitecore configuration after it was initialized
- * @returns {SitecoreIntializationOptions} configured sites, components and config
+ * @returns {SitecoreIntializationOptions} configured sites, components and config values
  */
-export const getRuntimeConfig = () => {
+export const getSitecoreConfig = () => {
   if (!sitecoreRuntimeConfig.initialized) {
     throw new Error(
       'Sitecore runtime config not initialized. Ensure initSitecore() call was performed.'
     );
   }
-  return sitecoreRuntimeConfig as SitecoreIntializationOptions;
+  return sitecoreRuntimeConfig;
 };
 
 /**
@@ -40,7 +43,7 @@ export const getRuntimeConfig = () => {
  */
 export const initSitecore = (options: SitecoreIntializationOptions) => {
   sitecoreRuntimeConfig = {
-    sitecoreConfig: options.sitecoreConfig,
+    ...options.sitecoreConfig,
     sites: options.sites,
     components: options.components,
     initialized: true,

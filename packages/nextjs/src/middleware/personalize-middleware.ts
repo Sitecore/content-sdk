@@ -11,7 +11,6 @@ import { debug } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
-import { sitecoreRuntimeConfig, getRuntimeConfig } from '../config';
 
 export type CdpServiceConfig = {
   /**
@@ -85,8 +84,6 @@ export class PersonalizeMiddleware extends MiddlewareBase {
    */
   constructor(protected config: PersonalizeMiddlewareConfig) {
     super(config);
-    console.log(sitecoreRuntimeConfig);
-    console.log(getRuntimeConfig());
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
     this.personalizeService = new GraphQLPersonalizeService({

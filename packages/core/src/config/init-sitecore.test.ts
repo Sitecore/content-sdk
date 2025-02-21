@@ -1,9 +1,7 @@
 import { expect } from 'chai';
 import * as initSitecore from './init-sitecore';
-import sinon from 'sinon';
 
 describe('define-config', () => {
-  const sandbox = sinon.createSandbox();
   const mockConfig = {
     api: {
       edge: {
@@ -45,31 +43,34 @@ describe('define-config', () => {
     sitecoreConfig: mockConfig,
   };
 
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   describe('initSitecore', () => {
     it('should populate and initialize sitecoreRuntimeConfig', () => {
       initSitecore.initSitecore(mockOptions);
       expect(initSitecore.sitecoreRuntimeConfig).to.deep.equal({
-        ...mockOptions,
+        ...mockOptions.sitecoreConfig,
+        sites: mockOptions.sites,
+        components: mockOptions.components,
         initialized: true,
       });
     });
   });
 
-  describe('getRuntimeConfig', () => {
+  describe('getSitecoreConfig', () => {
     it('should throw when sitecoreRuntimeConfig not initialized', () => {
       initSitecore.setTestSitecoreRuntimeConfig({}, false);
-      expect(() => initSitecore.getRuntimeConfig()).to.throw(
+      expect(() => initSitecore.getSitecoreConfig()).to.throw(
         'Sitecore runtime config not initialized. Ensure initSitecore() call was performed.'
       );
     });
 
     it('should return sitecoreRuntimeConfig when initialized', () => {
       initSitecore.setTestSitecoreRuntimeConfig(mockOptions, true);
-      expect(initSitecore.getRuntimeConfig()).to.deep.equal({ ...mockOptions, initialized: true });
+      expect(initSitecore.getSitecoreConfig()).to.deep.equal({
+        ...mockOptions.sitecoreConfig,
+        sites: mockOptions.sites,
+        components: mockOptions.components,
+        initialized: true,
+      });
     });
   });
 });

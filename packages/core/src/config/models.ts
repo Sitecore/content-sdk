@@ -5,6 +5,9 @@ type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : Partial<T[P]>;
 };
 
+/**
+ * Basic Sitecore configuration
+ */
 export type SitecoreConfig = {
   api: {
     // keeping both edge and local sets until component library starts using edge credentials
@@ -57,11 +60,22 @@ export type SitecoreConfig = {
 };
 
 /**
+ * Extended Sitecore configuration initalized on runtime
+ */
+export type SitecoreRuntimeConfig = Partial<SitecoreConfig> &
+  Partial<Omit<SitecoreIntializationOptions, 'sitecoreConfig'>> & {
+    initialized: boolean;
+  };
+
+/**
  * Type to be used as config input in sitecore.config
  * All props are made optional so that config can be overriden in a flexible way
  */
 export type SitecoreConfigInput = DeepPartial<SitecoreConfig>;
 
+/**
+ * Sitecore initialization options to be passed on runtime into init function
+ */
 export type SitecoreIntializationOptions = {
   sitecoreConfig: SitecoreConfig;
   sites: SiteInfo[];

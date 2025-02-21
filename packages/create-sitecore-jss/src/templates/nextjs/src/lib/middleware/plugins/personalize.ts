@@ -2,9 +2,9 @@
 import { PersonalizeMiddleware } from '@sitecore-content-sdk/nextjs/middleware';
 import { MiddlewarePlugin } from '..';
 import clientFactory from 'lib/graphql-client-factory';
-// TODO: replace with other usage when moving logic to package:
-// import { getRuntimeConfig } from '@sitecore-content-sdk/core/config';
-import config from 'sitecore.config';
+// example usage of how runtime config will work in package
+// TODO: move to package when middleware rework done
+import { getSitecoreConfig, SitecoreConfig } from '@sitecore-content-sdk/nextjs/config';
 import { siteResolver } from 'lib/site-resolver';
 
 /**
@@ -23,11 +23,12 @@ class PersonalizePlugin implements MiddlewarePlugin {
   order = 1;
 
   constructor() {
+    const config = getSitecoreConfig() as SitecoreConfig;
     this.personalizeMiddleware = new PersonalizeMiddleware({
       // Configuration for your Sitecore Experience Edge endpoint
       edgeConfig: {
         clientFactory,
-        timeout: config.personalize.edgeTimeout || 400,
+        timeout: config.personalize?.edgeTimeout || 400,
       },
       // Configuration for your Sitecore CDP endpoint
       cdpConfig: {

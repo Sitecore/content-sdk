@@ -1,8 +1,12 @@
 import type { NextRequest, NextFetchEvent } from 'next/server';
 import middleware from 'lib/middleware';
+import scConfig from 'sitecore.config';
+import sitesList from 'temp/sites';
+import { initSitecore } from '@sitecore-content-sdk/nextjs/config';
 
 // eslint-disable-next-line
 export default async function (req: NextRequest, ev: NextFetchEvent) {
+  initSitecore({ sitecoreConfig: scConfig, sites: sitesList });
   return middleware(req, ev);
 }
 
