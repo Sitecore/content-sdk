@@ -3,28 +3,32 @@ import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
-import { MiddlewareBase } from './middleware';
-import { NextRequest, NextResponse } from 'next/server';
+import { defineMiddleware, Middleware, MiddlewareBase } from './middleware';
+import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 import { SiteResolver } from '@sitecore-content-sdk/core/site';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
+class MockSiteResolver extends SiteResolver {
+  getByName = sinon.stub().callsFake((siteName: string) => ({
+    name: siteName,
+    language: 'en',
+    hostName: 'foo.net',
+  }));
+
+  getByHost = sinon.stub().callsFake((hostName: string) => ({
+    name: 'foo',
+    language: 'en',
+    hostName,
+  }));
+}
+
 describe('MiddlewareBase', () => {
-  class SampleMiddleware extends MiddlewareBase {}
-
-  class MockSiteResolver extends SiteResolver {
-    getByName = sinon.stub().callsFake((siteName: string) => ({
-      name: siteName,
-      language: 'en',
-      hostName: 'foo.net',
-    }));
-
-    getByHost = sinon.stub().callsFake((hostName: string) => ({
-      name: 'foo',
-      language: 'en',
-      hostName,
-    }));
+  class SampleMiddleware extends MiddlewareBase {
+    handle() {
+      return Promise.resolve({} as NextResponse);
+    }
   }
 
   const createReq = (props: any = {}) => {
@@ -140,25 +144,71 @@ describe('MiddlewareBase', () => {
     });
   });
 
-  describe('excludeRoute', () => {
+  describe('disabled', () => {
     it('default', () => {
       const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
 
-      expect(middleware['excludeRoute']('/api/layout/render')).to.equal(true);
-      expect(middleware['excludeRoute']('/sitecore/render')).to.equal(true);
-      expect(middleware['excludeRoute']('/_next/webpack')).to.equal(true);
+      expect(
+        middleware['disabled'](
+          createReq({
+            nextUrl: {
+              pathname: '/api/layout/render',
+            },
+          }),
+          createRes()
+        )
+      ).to.equal(true);
+      expect(
+        middleware['disabled'](
+          createReq({
+            nextUrl: {
+              pathname: '/sitecore/render',
+            },
+          }),
+          createRes()
+        )
+      ).to.equal(true);
+      expect(
+        middleware['disabled'](
+          createReq({
+            nextUrl: {
+              pathname: '/_next/webpack',
+            },
+          }),
+          createRes()
+        )
+      ).to.equal(true);
     });
 
     it('custom function', () => {
       const middleware = new SampleMiddleware({
         siteResolver: new MockSiteResolver([]),
-        excludeRoute(path: string) {
+        disabled(req: NextRequest) {
+          const path = req.nextUrl.pathname;
           return path === 'foo';
         },
       });
 
-      expect(middleware['excludeRoute']('bar')).to.equal(false);
-      expect(middleware['excludeRoute']('foo')).to.equal(true);
+      expect(
+        middleware['disabled'](
+          createReq({
+            nextUrl: {
+              pathname: 'bar',
+            },
+          }),
+          createRes()
+        )
+      ).to.equal(false);
+      expect(
+        middleware['disabled'](
+          createReq({
+            nextUrl: {
+              pathname: 'foo',
+            },
+          }),
+          createRes()
+        )
+      ).to.equal(true);
     });
   });
 
@@ -280,5 +330,81 @@ describe('MiddlewareBase', () => {
 
     expect(middleware['getSite'](req, res).hostName).to.equal('yyy.net');
     expect(siteResolver.getByHost).to.be.calledWith('yyy.net');
+  });
+});
+
+describe('defineMiddleware', () => {
+  it('should execute middlewares', async () => {
+    type CustomResponse = {
+      params: string[];
+    } & NextResponse;
+    class SampleMiddleware extends MiddlewareBase {
+      handle(_req: NextRequest, res: CustomResponse) {
+        res.params.push('m1');
+
+        return Promise.resolve(res);
+      }
+    }
+
+    const middleware1 = new SampleMiddleware({
+      siteResolver: new MockSiteResolver([]),
+    });
+    const middleware2: Middleware = {
+      handle: (_req, res) => {
+        (res as CustomResponse).params.push('m2');
+        return Promise.resolve(res);
+      },
+    };
+    const middleware3: Middleware = {
+      handle: (_req, res) => {
+        (res as CustomResponse).params.push('m3');
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+    const res = ({
+      params: [],
+    } as unknown) as NextResponse;
+    const ev = {} as NextFetchEvent;
+
+    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev, res);
+
+    expect(result).to.deep.equal({
+      params: ['m2', 'm1', 'm3'],
+    });
+  });
+
+  it('should execute middlewares with empty response', async () => {
+    class SampleMiddleware extends MiddlewareBase {
+      handle(_req: NextRequest, res: NextResponse) {
+        res.headers.set('m1', 'true');
+
+        return Promise.resolve(res);
+      }
+    }
+
+    const middleware1 = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+    const middleware2: Middleware = {
+      handle: (_req, res) => {
+        res.headers.set('m2', 'true');
+        return Promise.resolve(res);
+      },
+    };
+    const middleware3: Middleware = {
+      handle: (_req, res) => {
+        res.headers.set('m3', 'true');
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+    const ev = {} as NextFetchEvent;
+
+    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev);
+
+    expect(result.headers.get('m1')).to.equal('true');
+    expect(result.headers.get('m2')).to.equal('true');
+    expect(result.headers.get('m3')).to.equal('true');
   });
 });

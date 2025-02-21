@@ -55,152 +55,140 @@ export class RedirectsMiddleware extends MiddlewareBase {
     this.locales = config.locales;
   }
 
-  /**
-   * Gets the Next.js middleware handler with error handling
-   * @returns route handler
-   */
-  public getHandler(): (req: NextRequest, res?: NextResponse) => Promise<NextResponse> {
-    return async (req, res) => {
-      try {
-        return await this.handler(req, res);
-      } catch (error) {
-        console.log('Redirect middleware failed:');
-        console.log(error);
-        return res || NextResponse.next();
-      }
-    };
-  }
+  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+    try {
+      const pathname = req.nextUrl.pathname;
+      const language = this.getLanguage(req);
+      const hostname = this.getHostHeader(req) || this.defaultHostname;
+      let site: SiteInfo | undefined;
+      const startTimestamp = Date.now();
 
-  private handler = async (req: NextRequest, res?: NextResponse): Promise<NextResponse> => {
-    const pathname = req.nextUrl.pathname;
-    const language = this.getLanguage(req);
-    const hostname = this.getHostHeader(req) || this.defaultHostname;
-    let site: SiteInfo | undefined;
-    const startTimestamp = Date.now();
+      debug.redirects('redirects middleware start: %o', {
+        pathname,
+        language,
+        hostname,
+      });
 
-    debug.redirects('redirects middleware start: %o', {
-      pathname,
-      language,
-      hostname,
-    });
-
-    const createResponse = async () => {
-      const response = res || NextResponse.next();
-
-      if (this.config.disabled && this.config.disabled(req, res || NextResponse.next())) {
-        debug.redirects('skipped (redirects middleware is disabled)');
-        return response;
-      }
-
-      if (this.isPreview(req) || this.excludeRoute(pathname)) {
-        debug.redirects('skipped (%s)', this.isPreview(req) ? 'preview' : 'route excluded');
-
-        return response;
-      }
-
-      // Skip prefetch requests from Next.js, which are not original client requests
-      // as they load unnecessary requests that burden the redirects middleware with meaningless traffic
-      if (this.isPrefetch(req)) {
-        debug.redirects('skipped (prefetch)');
-        response.headers.set('x-middleware-cache', 'no-cache');
-        return response;
-      }
-
-      site = this.getSite(req, res);
-
-      // Find the redirect from result of RedirectService
-      const existsRedirect = await this.getExistsRedirect(req, site.name);
-
-      if (!existsRedirect) {
-        debug.redirects('skipped (redirect does not exist)');
-
-        return response;
-      }
-
-      // Find context site language and replace token
-      if (
-        REGEXP_CONTEXT_SITE_LANG.test(existsRedirect.target) &&
-        !(
-          REGEXP_ABSOLUTE_URL.test(existsRedirect.target) &&
-          existsRedirect.target.includes(hostname)
-        )
-      ) {
-        existsRedirect.target = existsRedirect.target.replace(
-          REGEXP_CONTEXT_SITE_LANG,
-          site.language
-        );
-        req.nextUrl.locale = site.language;
-      }
-
-      const url = this.normalizeUrl(req.nextUrl.clone());
-
-      if (REGEXP_ABSOLUTE_URL.test(existsRedirect.target)) {
-        url.href = existsRedirect.target;
-      } else {
-        const isUrl = isRegexOrUrl(existsRedirect.pattern) === 'url';
-        const targetParts = existsRedirect.target.split('/');
-        const urlFirstPart = targetParts[1];
-
-        if (this.locales.includes(urlFirstPart)) {
-          req.nextUrl.locale = urlFirstPart;
-          existsRedirect.target = existsRedirect.target.replace(`/${urlFirstPart}`, '');
+      const createResponse = async () => {
+        if (this.disabled(req, res)) {
+          debug.redirects('skipped (redirects middleware is disabled)');
+          return res;
         }
 
-        const targetSegments = isUrl
-          ? existsRedirect.target.split('?')
-          : url.pathname.replace(/\/*$/gi, '') + existsRedirect.matchedQueryString;
+        if (this.isPreview(req)) {
+          debug.redirects('skipped (preview)');
 
-        const [targetPath, targetQueryString] = isUrl
-          ? targetSegments
-          : (targetSegments as string)
-              .replace(regexParser(existsRedirect.pattern), existsRedirect.target)
-              .replace(/^\/\//, '/')
-              .split('?');
-
-        const mergedQueryString = existsRedirect.isQueryStringPreserved
-          ? mergeURLSearchParams(
-              new URLSearchParams(url.search ?? ''),
-              new URLSearchParams(targetQueryString || '')
-            )
-          : targetQueryString || '';
-
-        const prepareNewURL = new URL(
-          `${targetPath}${mergedQueryString ? '?' + mergedQueryString : ''}`,
-          url.origin
-        );
-
-        url.href = prepareNewURL.href;
-        url.pathname = prepareNewURL.pathname;
-        url.search = prepareNewURL.search;
-        url.locale = req.nextUrl.locale;
-      }
-
-      /** return Response redirect with http code of redirect type */
-      switch (existsRedirect.redirectType) {
-        case REDIRECT_TYPE_301: {
-          return this.createRedirectResponse(url, response, 301, 'Moved Permanently');
+          return res;
         }
-        case REDIRECT_TYPE_302: {
-          return this.createRedirectResponse(url, response, 302, 'Found');
+
+        // Skip prefetch requests from Next.js, which are not original client requests
+        // as they load unnecessary requests that burden the redirects middleware with meaningless traffic
+        if (this.isPrefetch(req)) {
+          debug.redirects('skipped (prefetch)');
+          res.headers.set('x-middleware-cache', 'no-cache');
+          return res;
         }
-        case REDIRECT_TYPE_SERVER_TRANSFER: {
-          return this.rewrite(url.href, req, response);
+
+        site = this.getSite(req, res);
+
+        // Find the redirect from result of RedirectService
+        const existsRedirect = await this.getExistsRedirect(req, site.name);
+
+        if (!existsRedirect) {
+          debug.redirects('skipped (redirect does not exist)');
+
+          return res;
         }
-        default:
-          return response;
-      }
-    };
 
-    const response = await createResponse();
+        // Find context site language and replace token
+        if (
+          REGEXP_CONTEXT_SITE_LANG.test(existsRedirect.target) &&
+          !(
+            REGEXP_ABSOLUTE_URL.test(existsRedirect.target) &&
+            existsRedirect.target.includes(hostname)
+          )
+        ) {
+          existsRedirect.target = existsRedirect.target.replace(
+            REGEXP_CONTEXT_SITE_LANG,
+            site.language
+          );
+          req.nextUrl.locale = site.language;
+        }
 
-    debug.redirects('redirects middleware end in %dms: %o', Date.now() - startTimestamp, {
-      redirected: response.redirected,
-      status: response.status,
-      url: response.url,
-      headers: this.extractDebugHeaders(response.headers),
-    });
+        const url = this.normalizeUrl(req.nextUrl.clone());
 
-    return response;
+        if (REGEXP_ABSOLUTE_URL.test(existsRedirect.target)) {
+          url.href = existsRedirect.target;
+        } else {
+          const isUrl = isRegexOrUrl(existsRedirect.pattern) === 'url';
+          const targetParts = existsRedirect.target.split('/');
+          const urlFirstPart = targetParts[1];
+
+          if (this.locales.includes(urlFirstPart)) {
+            req.nextUrl.locale = urlFirstPart;
+            existsRedirect.target = existsRedirect.target.replace(`/${urlFirstPart}`, '');
+          }
+
+          const targetSegments = isUrl
+            ? existsRedirect.target.split('?')
+            : url.pathname.replace(/\/*$/gi, '') + existsRedirect.matchedQueryString;
+
+          const [targetPath, targetQueryString] = isUrl
+            ? targetSegments
+            : (targetSegments as string)
+                .replace(regexParser(existsRedirect.pattern), existsRedirect.target)
+                .replace(/^\/\//, '/')
+                .split('?');
+
+          const mergedQueryString = existsRedirect.isQueryStringPreserved
+            ? mergeURLSearchParams(
+                new URLSearchParams(url.search ?? ''),
+                new URLSearchParams(targetQueryString || '')
+              )
+            : targetQueryString || '';
+
+          const prepareNewURL = new URL(
+            `${targetPath}${mergedQueryString ? '?' + mergedQueryString : ''}`,
+            url.origin
+          );
+
+          url.href = prepareNewURL.href;
+          url.pathname = prepareNewURL.pathname;
+          url.search = prepareNewURL.search;
+          url.locale = req.nextUrl.locale;
+        }
+
+        /** return Response redirect with http code of redirect type */
+        switch (existsRedirect.redirectType) {
+          case REDIRECT_TYPE_301: {
+            return this.createRedirectResponse(url, res, 301, 'Moved Permanently');
+          }
+          case REDIRECT_TYPE_302: {
+            return this.createRedirectResponse(url, res, 302, 'Found');
+          }
+          case REDIRECT_TYPE_SERVER_TRANSFER: {
+            return this.rewrite(url.href, req, res);
+          }
+          default:
+            return res;
+        }
+      };
+
+      const response = await createResponse();
+
+      debug.redirects('redirects middleware end in %dms: %o', Date.now() - startTimestamp, {
+        redirected: response.redirected,
+        status: response.status,
+        url: response.url,
+        headers: this.extractDebugHeaders(response.headers),
+      });
+
+      return response;
+    } catch (error) {
+      console.log('Redirect middleware failed:');
+      console.log(error);
+      return res;
+    }
   };
 
   /**
