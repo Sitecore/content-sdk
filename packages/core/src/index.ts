@@ -22,3 +22,4 @@ export {
 } from './native-fetcher';
 export { HTMLLink } from './models';
 export { constants };
+export { defineConfig } from './config';

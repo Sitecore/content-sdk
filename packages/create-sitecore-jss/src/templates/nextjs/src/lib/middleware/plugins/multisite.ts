@@ -2,7 +2,7 @@
 import { MultisiteMiddleware } from '@sitecore-content-sdk/nextjs/middleware';
 import { siteResolver } from 'lib/site-resolver';
 import { MiddlewarePlugin } from '..';
-import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
+import config from 'sitecore.config';
 /**
  * This is the multisite middleware plugin for Next.js.
  * It is used to enable Sitecore multisite in Next.js.

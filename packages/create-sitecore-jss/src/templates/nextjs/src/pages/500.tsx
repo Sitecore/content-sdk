@@ -8,7 +8,7 @@ import { SitecorePageProps } from 'lib/page-props';
 import Layout from 'src/Layout';
 import { componentBuilder } from 'temp/componentBuilder';
 import { GetStaticProps } from 'next';
-import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
+import config from 'sitecore.config';
 import { siteResolver } from 'lib/site-resolver';
 import clientFactory from 'lib/graphql-client-factory';
 

@@ -1,7 +1,7 @@
 ﻿import type { NextApiRequest, NextApiResponse } from 'next';
 import { NativeDataFetcher, GraphQLSitemapXmlService } from '@sitecore-content-sdk/nextjs'
 import { siteResolver } from 'lib/site-resolver';
-import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
+import config from 'sitecore.config';
 import clientFactory from 'lib/graphql-client-factory';
 
 const ABSOLUTE_URL_REGEXP = '^(?:[a-z]+:)?//';

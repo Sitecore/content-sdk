@@ -3,7 +3,7 @@ import * as FEAAS from '@sitecore-feaas/clientside/react';
 import * as Events from '@sitecore-cloudsdk/events/browser';
 import '@sitecore/components/context';
 import dynamic from 'next/dynamic';
-import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
+import config from 'sitecore.config';
 import {
   LayoutServicePageState,
   SitecoreContextReactContext,

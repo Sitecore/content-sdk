@@ -2,7 +2,7 @@
 import { SitecorePageProps } from 'lib/page-props';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
-import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
+import config from 'sitecore.config';
 import { LayoutServicePageState } from '@sitecore-content-sdk/nextjs';
 import sitesList from 'temp/sites';
 import { initSitecore } from '@sitecore-content-sdk/nextjs/config';
@@ -12,7 +12,8 @@ import { initSitecore } from '@sitecore-content-sdk/nextjs/config';
  * that needs to happen early in the application's lifecycle.
  */
 const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
-  initSitecore({ sites: sitesList });
+  initSitecore({ sitecoreConfig: config, sites: sitesList });
+
   // Browser ClientSDK init allows for page view events to be tracked
   useEffect(() => {
     const pageState = props.layoutData?.sitecore?.context.pageState;
@@ -22,16 +23,20 @@ const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
     else if (pageState !== LayoutServicePageState.Normal || renderingType === 'component')
       console.debug('Browser Events SDK is not initialized in edit and preview modes');
     else {
-      CloudSDK({
-        sitecoreEdgeUrl: config.api.edge.edgeUrl,
-        sitecoreEdgeContextId: config.api.edge.contextId,
-        siteName: props.site?.name || config.defaultSite,
-        enableBrowserCookie: true,
-        // Replace with the top level cookie domain of the website that is being integrated e.g ".example.com" and not "www.example.com"
-        cookieDomain: window.location.hostname.replace(/^www\./, ''),
-      })
-        .addEvents()
-        .initialize();
+      if (config.api.edge?.clientContextId) {
+        CloudSDK({
+          sitecoreEdgeUrl: config.api.edge.edgeUrl,
+          sitecoreEdgeContextId: config.api.edge.clientContextId,
+          siteName: props.site?.name || config.defaultSite,
+          enableBrowserCookie: true,
+          // Replace with the top level cookie domain of the website that is being integrated e.g ".example.com" and not "www.example.com"
+          cookieDomain: window.location.hostname.replace(/^www\./, ''),
+        })
+          .addEvents()
+          .initialize();
+      } else {
+        console.error('Client Edge API settings missing from configuration');
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.site?.name]);

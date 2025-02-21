@@ -1,6 +1,7 @@
 export default {
   api: {
     edge: {
+      contextId: 'custom-id',
       edgeUrl: 'customUrl',
     },
   },

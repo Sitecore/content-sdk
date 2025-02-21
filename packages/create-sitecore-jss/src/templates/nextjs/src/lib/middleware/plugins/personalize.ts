@@ -2,7 +2,9 @@
 import { PersonalizeMiddleware } from '@sitecore-content-sdk/nextjs/middleware';
 import { MiddlewarePlugin } from '..';
 import clientFactory from 'lib/graphql-client-factory';
-import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
+// TODO: replace with other usage when moving logic to package:
+// import { getRuntimeConfig } from '@sitecore-content-sdk/core/config';
+import config from 'sitecore.config';
 import { siteResolver } from 'lib/site-resolver';
 
 /**
@@ -29,16 +31,16 @@ class PersonalizePlugin implements MiddlewarePlugin {
       },
       // Configuration for your Sitecore CDP endpoint
       cdpConfig: {
-        sitecoreEdgeUrl: config.api?.edge?.edgeUrl,
-        sitecoreEdgeContextId: config.api?.edge?.contextId,
+        sitecoreEdgeUrl: config.api.edge.edgeUrl,
+        sitecoreEdgeContextId: config.api.edge.contextId,
         timeout: config.personalize.cdpTimeout || 400,
       },
       // Optional Sitecore Personalize scope identifier.
-      scope: process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,
+      scope: config.personalize.scope,
       // This function determines if the middleware should be turned off.
       // IMPORTANT: You should implement based on your cookie consent management solution of choice.
       // You may wish to keep it disabled while in development mode.
-      disabled: () => process.env.NODE_ENV === 'development',
+      disabled: () => config.personalize.enabled !== true,
       // This function determines if a route should be excluded from personalization.
       // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to exclude more.
       // This is an important performance consideration since Next.js Edge middleware runs on every request.

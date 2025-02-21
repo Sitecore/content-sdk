@@ -1,4 +1,4 @@
-import { runtimeConfig as config } from '@sitecore-content-sdk/nextjs/config';
+import config from 'sitecore.config';
 ﻿import { SiteInfo } from '@sitecore-content-sdk/nextjs/site';
 import { SiteResolverPlugin } from '..';
 

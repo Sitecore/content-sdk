@@ -1,5 +1,3 @@
-import { loadConfig } from './sitecore-config';
-export { initSitecore, sites, components, SitecoreIntializationOptions } from './init-sitecore';
-export { loadConfig, SitecoreConfig } from './sitecore-config';
-// separate export to have more controlled unit tests
-export const runtimeConfig = loadConfig();
+export { initSitecore, getRuntimeConfig, sitecoreRuntimeConfig } from './init-sitecore';
+export { SitecoreIntializationOptions, SitecoreConfig, SitecoreConfigInput } from './models';
+export { defineConfig } from './define-config';
