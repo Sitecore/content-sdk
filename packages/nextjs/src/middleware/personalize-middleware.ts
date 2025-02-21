@@ -93,7 +93,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     });
   }
 
-  handler = async (req: NextRequest, res?: NextResponse): Promise<NextResponse> => {
+  handler = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     try {
       const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req);

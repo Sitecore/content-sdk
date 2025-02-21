@@ -36,7 +36,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
     super(config);
   }
 
-  handler = async (req: NextRequest, res?: NextResponse): Promise<NextResponse> => {
+  handler = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     try {
       const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req);

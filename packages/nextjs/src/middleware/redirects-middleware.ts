@@ -55,7 +55,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
     this.locales = config.locales;
   }
 
-  handler = async (req: NextRequest, res?: NextResponse): Promise<NextResponse> => {
+  handler = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     try {
       const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req);
