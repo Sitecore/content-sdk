@@ -97,7 +97,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
     } catch (error) {
       console.log('Multisite middleware failed:');
       console.log(error);
-      return res || NextResponse.next();
+      return res;
     }
   };
 
