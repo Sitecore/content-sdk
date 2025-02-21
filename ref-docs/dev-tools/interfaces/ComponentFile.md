@@ -6,7 +6,7 @@
 
 # Interface: ComponentFile
 
-Defined in: [dev-tools/src/templating/components.ts:6](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/dev-tools/src/templating/components.ts#L6)
+Defined in: [dev-tools/src/templating/components.ts:6](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/dev-tools/src/templating/components.ts#L6)
 
 Describes a file that represents a component definition
 
@@ -16,7 +16,7 @@ Describes a file that represents a component definition
 
 > **componentName**: `string`
 
-Defined in: [dev-tools/src/templating/components.ts:9](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/dev-tools/src/templating/components.ts#L9)
+Defined in: [dev-tools/src/templating/components.ts:9](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/dev-tools/src/templating/components.ts#L9)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [dev-tools/src/templating/components.ts:9](https://github.com/Siteco
 
 > **moduleName**: `string`
 
-Defined in: [dev-tools/src/templating/components.ts:8](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/dev-tools/src/templating/components.ts#L8)
+Defined in: [dev-tools/src/templating/components.ts:8](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/dev-tools/src/templating/components.ts#L8)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [dev-tools/src/templating/components.ts:8](https://github.com/Siteco
 
 > **path**: `string`
 
-Defined in: [dev-tools/src/templating/components.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/dev-tools/src/templating/components.ts#L7)
+Defined in: [dev-tools/src/templating/components.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/dev-tools/src/templating/components.ts#L7)

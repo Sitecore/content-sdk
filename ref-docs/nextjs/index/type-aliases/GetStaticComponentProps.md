@@ -8,6 +8,6 @@
 
 > **GetStaticComponentProps**: `ComponentPropsFetchFunction`\<`GetStaticPropsContext`\>
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:30](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/nextjs/src/sharedTypes/component-props.ts#L30)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:30](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/sharedTypes/component-props.ts#L30)
 
 Shape of getStaticProps function on component level

@@ -6,9 +6,9 @@
 
 # Type Alias: MultisiteMiddlewareConfig
 
-> **MultisiteMiddlewareConfig**: `Omit`\<[`MiddlewareBaseConfig`](MiddlewareBaseConfig.md), `"disabled"`\> & `object`
+> **MultisiteMiddlewareConfig**: [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `object`
 
-Defined in: [nextjs/src/middleware/multisite-middleware.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/nextjs/src/middleware/multisite-middleware.ts#L21)
+Defined in: [nextjs/src/middleware/multisite-middleware.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/multisite-middleware.ts#L21)
 
 ## Type declaration
 
