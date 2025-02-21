@@ -3,28 +3,32 @@ import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
-import { MiddlewareBase } from './middleware';
-import { NextRequest, NextResponse } from 'next/server';
+import { defineMiddleware, Middleware, MiddlewareBase } from './middleware';
+import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 import { SiteResolver } from '@sitecore-content-sdk/core/site';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
+class MockSiteResolver extends SiteResolver {
+  getByName = sinon.stub().callsFake((siteName: string) => ({
+    name: siteName,
+    language: 'en',
+    hostName: 'foo.net',
+  }));
+
+  getByHost = sinon.stub().callsFake((hostName: string) => ({
+    name: 'foo',
+    language: 'en',
+    hostName,
+  }));
+}
+
 describe('MiddlewareBase', () => {
-  class SampleMiddleware extends MiddlewareBase {}
-
-  class MockSiteResolver extends SiteResolver {
-    getByName = sinon.stub().callsFake((siteName: string) => ({
-      name: siteName,
-      language: 'en',
-      hostName: 'foo.net',
-    }));
-
-    getByHost = sinon.stub().callsFake((hostName: string) => ({
-      name: 'foo',
-      language: 'en',
-      hostName,
-    }));
+  class SampleMiddleware extends MiddlewareBase {
+    handler() {
+      return Promise.resolve({} as NextResponse);
+    }
   }
 
   const createReq = (props: any = {}) => {
@@ -280,5 +284,45 @@ describe('MiddlewareBase', () => {
 
     expect(middleware['getSite'](req, res).hostName).to.equal('yyy.net');
     expect(siteResolver.getByHost).to.be.calledWith('yyy.net');
+  });
+});
+
+describe('defineMiddleware', () => {
+  type CustomResponse = { params: string[] } & NextResponse;
+
+  class SampleMiddleware extends MiddlewareBase {
+    handler(_req: NextRequest, res: CustomResponse) {
+      res.params.push('m1');
+
+      return Promise.resolve(res);
+    }
+  }
+
+  it('should execute middlewares', async () => {
+    const middleware1 = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+    const middleware2: Middleware = {
+      handler: (_req, res) => {
+        (res as CustomResponse).params.push('m2');
+        return Promise.resolve(res);
+      },
+    };
+    const middleware3: Middleware = {
+      handler: (_req, res) => {
+        (res as CustomResponse).params.push('m3');
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+    const res = ({
+      params: [],
+    } as unknown) as NextResponse;
+    const ev = {} as NextFetchEvent;
+
+    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, res, ev);
+
+    expect(result).to.deep.equal({
+      params: ['m2', 'm1', 'm3'],
+    });
   });
 });

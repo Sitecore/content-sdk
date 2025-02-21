@@ -141,7 +141,7 @@ describe('MultisiteMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.getHandler()(req, res);
+        const finalRes = await middleware.handler(req, res);
 
         validateDebugLog('multisite middleware start: %o', {
           pathname,
@@ -191,7 +191,7 @@ describe('MultisiteMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.getHandler()(req, res);
+        const finalRes = await middleware.handler(req, res);
 
         validateDebugLog('skipped (%s)', 'preview');
 
@@ -208,7 +208,7 @@ describe('MultisiteMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.getHandler()(req, res);
+        const finalRes = await middleware.handler(req, res);
 
         validateDebugLog('skipped (%s)', 'preview');
 
@@ -242,7 +242,7 @@ describe('MultisiteMiddleware', () => {
         defaultHostname: 'bar.net',
       });
 
-      const finalRes = await middleware.getHandler()(req, res);
+      const finalRes = await middleware.handler(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -286,7 +286,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware();
 
-      const finalRes = await middleware.getHandler()(req, res);
+      const finalRes = await middleware.handler(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -328,7 +328,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware();
 
-      const finalRes = await middleware.getHandler()(req, res);
+      const finalRes = await middleware.handler(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -370,7 +370,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware({});
 
-      const finalRes = await middleware.getHandler()(req);
+      const finalRes = await middleware.handler(req);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -416,7 +416,7 @@ describe('MultisiteMiddleware', () => {
         useCookieResolution: () => true,
       });
 
-      const finalRes = await middleware.getHandler()(req, res);
+      const finalRes = await middleware.handler(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -463,7 +463,7 @@ describe('MultisiteMiddleware', () => {
         useCookieResolution: () => true,
       });
 
-      const finalRes = await middleware.getHandler()(req, res);
+      const finalRes = await middleware.handler(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -508,7 +508,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware();
 
-      const finalRes = await middleware.getHandler()(req, res);
+      const finalRes = await middleware.handler(req, res);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -577,7 +577,7 @@ describe('MultisiteMiddleware', () => {
         siteResolver: new SampleSiteResolver([]),
       });
 
-      const finalRes = await middleware.getHandler()(req, res);
+      const finalRes = await middleware.handler(req, res);
 
       expect(errorSpy.getCall(0).calledWith('Multisite middleware failed:')).to.be.true;
       expect(errorSpy.getCall(1).calledWith(error)).to.be.true;

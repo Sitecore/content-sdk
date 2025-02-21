@@ -36,79 +36,69 @@ export class MultisiteMiddleware extends MiddlewareBase {
     super(config);
   }
 
-  /**
-   * Gets the Next.js middleware handler with error handling
-   * @returns middleware handler
-   */
-  public getHandler(): (req: NextRequest, res?: NextResponse) => Promise<NextResponse> {
-    return async (req, res) => {
-      try {
-        return await this.handler(req, res);
-      } catch (error) {
-        console.log('Multisite middleware failed:');
-        console.log(error);
-        return res || NextResponse.next();
+  handler = async (req: NextRequest, res?: NextResponse): Promise<NextResponse> => {
+    try {
+      const pathname = req.nextUrl.pathname;
+      const language = this.getLanguage(req);
+      const hostname = this.getHostHeader(req) || this.defaultHostname;
+      const startTimestamp = Date.now();
+
+      debug.multisite('multisite middleware start: %o', {
+        pathname,
+        language,
+        hostname,
+      });
+
+      // Response will be provided if other middleware is run before us
+      let response = res || NextResponse.next();
+
+      if (this.isPreview(req) || this.excludeRoute(pathname)) {
+        debug.multisite('skipped (%s)', this.isPreview(req) ? 'preview' : 'route excluded');
+
+        return response;
       }
-    };
-  }
+
+      // Site name can be forced by query string parameter or cookie
+      const siteName =
+        req.nextUrl.searchParams.get(this.SITE_SYMBOL) ||
+        (this.config.useCookieResolution &&
+          this.config.useCookieResolution(req) &&
+          req.cookies.get(this.SITE_SYMBOL)?.value) ||
+        this.config.siteResolver.getByHost(hostname).name;
+
+      // Rewrite to site specific path
+      const rewritePath = getSiteRewrite(pathname, {
+        siteName,
+      });
+      response = this.rewrite(rewritePath, req, response);
+
+      // default site cookie attributes
+      const defaultCookieAttributes = {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+      } as CookieAttributes;
+
+      // Share site name with the following executed middlewares
+      response.cookies.set(this.SITE_SYMBOL, siteName, defaultCookieAttributes);
+
+      debug.multisite('multisite middleware end in %dms: %o', Date.now() - startTimestamp, {
+        rewritePath,
+        siteName,
+        headers: this.extractDebugHeaders(response.headers),
+        cookies: response.cookies,
+      });
+
+      return response;
+    } catch (error) {
+      console.log('Multisite middleware failed:');
+      console.log(error);
+      return res || NextResponse.next();
+    }
+  };
 
   protected excludeRoute(pathname: string): boolean | undefined {
     // ignore files
     return pathname.includes('.') || super.excludeRoute(pathname);
   }
-
-  private handler = async (req: NextRequest, res?: NextResponse): Promise<NextResponse> => {
-    const pathname = req.nextUrl.pathname;
-    const language = this.getLanguage(req);
-    const hostname = this.getHostHeader(req) || this.defaultHostname;
-    const startTimestamp = Date.now();
-
-    debug.multisite('multisite middleware start: %o', {
-      pathname,
-      language,
-      hostname,
-    });
-
-    // Response will be provided if other middleware is run before us
-    let response = res || NextResponse.next();
-
-    if (this.isPreview(req) || this.excludeRoute(pathname)) {
-      debug.multisite('skipped (%s)', this.isPreview(req) ? 'preview' : 'route excluded');
-
-      return response;
-    }
-
-    // Site name can be forced by query string parameter or cookie
-    const siteName =
-      req.nextUrl.searchParams.get(this.SITE_SYMBOL) ||
-      (this.config.useCookieResolution &&
-        this.config.useCookieResolution(req) &&
-        req.cookies.get(this.SITE_SYMBOL)?.value) ||
-      this.config.siteResolver.getByHost(hostname).name;
-
-    // Rewrite to site specific path
-    const rewritePath = getSiteRewrite(pathname, {
-      siteName,
-    });
-    response = this.rewrite(rewritePath, req, response);
-
-    // default site cookie attributes
-    const defaultCookieAttributes = {
-      secure: true,
-      httpOnly: true,
-      sameSite: 'none',
-    } as CookieAttributes;
-
-    // Share site name with the following executed middlewares
-    response.cookies.set(this.SITE_SYMBOL, siteName, defaultCookieAttributes);
-
-    debug.multisite('multisite middleware end in %dms: %o', Date.now() - startTimestamp, {
-      rewritePath,
-      siteName,
-      headers: this.extractDebugHeaders(response.headers),
-      cookies: response.cookies,
-    });
-
-    return response;
-  };
 }

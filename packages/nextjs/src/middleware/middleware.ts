@@ -1,5 +1,6 @@
 ﻿import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
-import { NextRequest, NextResponse } from 'next/server';
+import { debug } from '@sitecore-content-sdk/core';
+import { NextRequest, NextFetchEvent, NextResponse } from 'next/server';
 
 export type MiddlewareBaseConfig = {
   /**
@@ -27,12 +28,29 @@ export type MiddlewareBaseConfig = {
   siteResolver: SiteResolver;
 };
 
-export abstract class MiddlewareBase {
+/**
+ * Middleware class to be extended by all middleware implementations
+ */
+export abstract class Middleware {
+  /**
+   * Handler method to execute middleware logic
+   * @param {NextRequest} req request
+   * @param {NextResponse} res response
+   * @param {NextFetchEvent} ev fetch event
+   */
+  abstract handler(req: NextRequest, res: NextResponse, ev: NextFetchEvent): Promise<NextResponse>;
+}
+
+/**
+ * Base middleware class with common methods
+ */
+export abstract class MiddlewareBase extends Middleware {
   protected SITE_SYMBOL = 'sc_site';
   protected REWRITE_HEADER_NAME = 'x-sc-rewrite';
   protected defaultHostname: string;
 
   constructor(protected config: MiddlewareBaseConfig) {
+    super();
     this.defaultHostname = config.defaultHostname || 'localhost';
   }
 
@@ -133,3 +151,26 @@ export abstract class MiddlewareBase {
     return response;
   }
 }
+
+/**
+ * Define a middleware with a list of middlewares
+ * @param {Middleware[]} middlewares List of middlewares to execute
+ */
+export const defineMiddleware = (...middlewares: Middleware[]) => {
+  return {
+    exec: async (req: NextRequest, res: NextResponse, ev: NextFetchEvent) => {
+      debug.common('middleware start');
+
+      const start = Date.now();
+
+      const middlewareResponse = await middlewares.reduce(
+        (p, middleware) => p.then((res) => middleware.handler(req, res, ev)),
+        Promise.resolve(res)
+      );
+
+      debug.common('middleware end in %dms', Date.now() - start);
+
+      return middlewareResponse;
+    },
+  };
+};

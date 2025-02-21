@@ -181,7 +181,7 @@ describe('RedirectsMiddleware', () => {
 
   const runTestWithRedirect = async (middlewareOptions, req, _hostname = hostname) => {
     const { middleware, fetchRedirects, siteResolver } = createMiddleware(middlewareOptions);
-    const finalRes = await middleware.getHandler()(req);
+    const finalRes = await middleware.handler(req);
 
     validateDebugLog('redirects middleware start: %o', {
       hostname: _hostname,
@@ -218,7 +218,7 @@ describe('RedirectsMiddleware', () => {
     nextRewriteStub?.restore();
   });
 
-  describe('redirects middleware - getHandler', () => {
+  describe('redirects middleware - handler', () => {
     describe('preview', () => {
       it('prerender bypass cookie is present', async () => {
         const { middleware } = createMiddleware();
@@ -230,7 +230,7 @@ describe('RedirectsMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.getHandler()(req, res);
+        const finalRes = await middleware.handler(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -262,7 +262,7 @@ describe('RedirectsMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.getHandler()(req, res);
+        const finalRes = await middleware.handler(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -295,7 +295,7 @@ describe('RedirectsMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.getHandler()(req, res);
+        const finalRes = await middleware.handler(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -353,7 +353,7 @@ describe('RedirectsMiddleware', () => {
       };
       const req = createRequest();
       const { middleware } = createMiddleware(props);
-      const finalRes = await middleware.getHandler()(req);
+      const finalRes = await middleware.handler(req);
 
       validateDebugLog('redirects middleware start: %o', {
         hostname: 'foo.net',
@@ -382,7 +382,7 @@ describe('RedirectsMiddleware', () => {
       const nextStub = sinon.stub(NextResponse, 'next').returns((res as unknown) as NextResponse);
       const req = createRequest();
       const { middleware, fetchRedirects, siteResolver } = createMiddleware();
-      const finalRes = await middleware.getHandler()(req);
+      const finalRes = await middleware.handler(req);
 
       validateDebugLog('redirects middleware start: %o', {
         hostname: 'foo.net',
@@ -987,7 +987,7 @@ describe('RedirectsMiddleware', () => {
           headers: { ...res?.headers },
         });
 
-        const finalRes = await middleware.getHandler()(req, res);
+        const finalRes = await middleware.handler(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -1029,7 +1029,7 @@ describe('RedirectsMiddleware', () => {
 
         const { middleware, fetchRedirects, siteResolver } = createMiddleware();
 
-        const finalRes = await middleware.getHandler()(req, res);
+        const finalRes = await middleware.handler(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -1078,7 +1078,7 @@ describe('RedirectsMiddleware', () => {
           disabled: () => true,
         });
 
-        const finalRes = await middleware.getHandler()(req, res);
+        const finalRes = await middleware.handler(req, res);
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
