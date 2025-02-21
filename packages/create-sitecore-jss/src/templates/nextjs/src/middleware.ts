@@ -66,7 +66,7 @@ const personalize = new PersonalizeMiddleware({
 });
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
-  return defineMiddleware(multisite, redirects, personalize).exec(req, res, ev);
+  return defineMiddleware(multisite, redirects, personalize).exec(req, ev);
 }
 
 export const config = {
