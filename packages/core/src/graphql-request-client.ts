@@ -4,7 +4,7 @@ import { DocumentNode } from 'graphql';
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './utils/timeout-promise';
 import { GenericGraphQLClientError, RetryStrategy } from './models';
-import { getSitecoreConfig } from './config';
+import { DefaultRetryStrategy } from './retries';
 
 /**
  * Options for configuring a GraphQL request.
@@ -12,12 +12,6 @@ import { getSitecoreConfig } from './config';
 interface RequestOptions {
   headers?: Record<string, string>;
 }
-
-/**
- * This type represents errors that can occur in a GraphQL client.
- * In cases where an error status was sent back from the server (`!response.ok`), the `response` will be populated with details. In cases where a response was never received, the `code` can be populated with the error code (e.g. Node's 'ECONNRESET', 'ETIMEDOUT', etc).
- */
-export type GraphQLClientError = Partial<ClientError> & GenericGraphQLClientError;
 
 /**
  * An interface for GraphQL clients for Sitecore APIs
@@ -35,6 +29,12 @@ export interface GraphQLClient {
     options?: RequestOptions
   ): Promise<T>;
 }
+
+/**
+ * This type represents errors that can occur in a GraphQL client.
+ * In cases where an error status was sent back from the server (`!response.ok`), the `response` will be populated with details. In cases where a response was never received, the `code` can be populated with the error code (e.g. Node's 'ECONNRESET', 'ETIMEDOUT', etc).
+ */
+export type GraphQLClientError = Partial<ClientError> & GenericGraphQLClientError;
 
 /**
  * Minimum configuration options for classes that implement @see GraphQLClient
@@ -57,10 +57,6 @@ export type GraphQLRequestClientConfig = {
    */
   timeout?: number;
   /**
-   * Custom headers to be sent with each request.
-   */
-  headers?: Record<string, string>;
-  /**
    * Number of retries for client. Will use the specified `retryStrategy`.
    */
   retries?: number;
@@ -69,6 +65,10 @@ export type GraphQLRequestClientConfig = {
    * back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
    */
   retryStrategy?: RetryStrategy;
+  /**
+   * Custom headers to be sent with each request.
+   */
+  headers?: Record<string, string>;
 };
 
 /**
@@ -87,10 +87,6 @@ export type GraphQLRequestClientFactory = (
 export type GraphQLRequestClientFactoryConfig = {
   endpoint: string;
   apiKey?: string;
-  retries?: {
-    count?: number;
-    retryStrategy: RetryStrategy;
-  };
 };
 
 /**
@@ -125,17 +121,12 @@ export class GraphQLRequestClient implements GraphQLClient {
         `Invalid GraphQL endpoint '${endpoint}'. Verify that 'layoutServiceHost' property in 'scjssconfig.json' file or appropriate environment variable is set`
       );
     }
+
     this.timeout = clientConfig.timeout;
-    // we don't need to depend on config, if retry strategy detail provided in clientConfig
-    if (clientConfig.retries !== undefined && clientConfig.retryStrategy) {
-      this.retries = clientConfig.retries;
-      this.retryStrategy = clientConfig.retryStrategy;
-    } else {
-      const config = getSitecoreConfig();
-      this.retries =
-        clientConfig.retries !== undefined ? clientConfig.retries : config.retries.count;
-      this.retryStrategy = clientConfig.retryStrategy || config.retries.retryStrategy;
-    }
+    this.retries = clientConfig.retries ?? 3;
+    this.retryStrategy =
+      clientConfig.retryStrategy ||
+      new DefaultRetryStrategy({ statusCodes: [429, 502, 503, 504, 520, 521, 522, 523, 524] });
     this.client = new Client(endpoint, {
       headers: this.headers,
       fetch: clientConfig.fetch,
@@ -148,20 +139,13 @@ export class GraphQLRequestClient implements GraphQLClient {
    * @param {object} config - client configuration options.
    * @param {string} config.endpoint - endpoint
    * @param {string} [config.apiKey] - apikey
-   * @param {object} [config.retries] - retry settings from sitecore.config
    */
   static createClientFactory({
     endpoint,
     apiKey,
-    retries,
   }: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory {
     return (config: Omit<GraphQLRequestClientConfig, 'apiKey'> = {}) =>
-      new GraphQLRequestClient(endpoint, {
-        retries: retries?.count,
-        retryStrategy: retries?.retryStrategy,
-        ...config,
-        apiKey,
-      });
+      new GraphQLRequestClient(endpoint, { ...config, apiKey });
   }
 
   /**

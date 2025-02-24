@@ -8,8 +8,6 @@ import {
 import { siteResolver } from 'lib/site-resolver';
 import clientFactory from 'lib/graphql-client-factory';
 import scConfig from 'sitecore.config';
-import sitesList from 'temp/sites';
-import { initSitecore } from '@sitecore-content-sdk/nextjs/config';
 
 const multisite = new MultisiteMiddleware({
   // This function determines if the middleware should be turned off.
@@ -62,7 +60,6 @@ const personalize = new PersonalizeMiddleware({
 });
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
-  initSitecore({ sitecoreConfig: scConfig, sites: sitesList || [] });
   return defineMiddleware(multisite, redirects, personalize).exec(req, ev);
 }
 

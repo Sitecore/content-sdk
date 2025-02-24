@@ -1,9 +1,4 @@
 import { RetryStrategy } from '../models';
-import { SiteInfo } from '../site/models';
-
-export type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : Partial<T[P]>;
-};
 
 export type DeepRequired<T> = Required<
   {
@@ -95,20 +90,3 @@ export type SitecoreConfigInput = {
  * Every property should be populated, either from sitecore.config or built-in fallback values
  */
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
-
-/**
- * Extended Sitecore configuration, initialized during runtime
- */
-export type SitecoreRuntimeConfig = SitecoreConfig &
-  Partial<Omit<SitecoreIntializationOptions, 'sitecoreConfig'>> & {
-    initialized?: boolean;
-  };
-
-/**
- * Sitecore initialization options to be passed during runtime into init function
- */
-export type SitecoreIntializationOptions = {
-  sitecoreConfig: SitecoreConfig;
-  sites: SiteInfo[];
-  components?: Map<string, unknown>;
-};

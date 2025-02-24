@@ -99,11 +99,12 @@ export class GraphQLLayoutService extends LayoutServiceBase {
    * @returns {string} GraphQL query
    */
   protected getLayoutQuery(itemPath: string, language?: string): string {
+    const languageVariable = language ? `, language:"${language}"` : '';
+
     const layoutQuery = this.serviceConfig.formatLayoutQuery
       ? this.serviceConfig.formatLayoutQuery(this.serviceConfig.siteName, itemPath, language)
-      : `layout(site:"${this.serviceConfig.siteName}", routePath:"${itemPath}"${
-          language ? `, language:"${language}"` : ''
-        })`;
+      : `layout(site:"${this.serviceConfig.siteName}", routePath:"${itemPath}"${languageVariable})`;
+
     return `query ${GRAPHQL_LAYOUT_QUERY_NAME} {
       ${layoutQuery}{
         item {
