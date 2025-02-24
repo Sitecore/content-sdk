@@ -1,16 +1,16 @@
 ﻿import { NextResponse, NextRequest } from 'next/server';
 import {
   GraphQLPersonalizeService,
-  GraphQLPersonalizeServiceConfig,
   getPersonalizedRewrite,
   PersonalizeInfo,
   CdpHelper,
   DEFAULT_VARIANT,
 } from '@sitecore-content-sdk/core/personalize';
-import { debug } from '@sitecore-content-sdk/core';
+import { debug, GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
+import { SitecoreConfig } from '../config';
 
 export type CdpServiceConfig = {
   /**
@@ -36,20 +36,11 @@ export type CdpServiceConfig = {
   timeout?: number;
 };
 
-export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig & {
-  /**
-   * Configuration for your Sitecore Experience Edge endpoint
-   */
-  edgeConfig: Omit<GraphQLPersonalizeServiceConfig, 'fetch'>;
-  /**
-   * Configuration for your Sitecore CDP endpoint
-   */
-  cdpConfig: CdpServiceConfig;
-  /**
-   * Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
-   */
-  scope?: string;
-};
+export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
+  SitecoreConfig['api']['edge'] &
+  SitecoreConfig['personalize'] & {
+    clientFactory: GraphQLRequestClientFactory;
+  };
 
 /**
  * Object model of Experience Context data
@@ -87,18 +78,23 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
     this.personalizeService = new GraphQLPersonalizeService({
-      ...config.edgeConfig,
+      clientFactory: this.config.clientFactory,
+      scope: this.config.scope,
       fetch: fetch,
     });
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+    if (!this.config.enabled) {
+      debug.redirects('skipped (personalize middleware is disabled globally)');
+      return res;
+    }
     try {
       const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
-      const timeout = this.config.cdpConfig.timeout;
+      const timeout = this.config.cdpTimeout;
 
       debug.personalize('personalize middleware start: %o', {
         pathname,
@@ -225,8 +221,8 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     response: NextResponse;
   }): Promise<void> {
     await CloudSDK(request, response, {
-      sitecoreEdgeUrl: this.config.cdpConfig.sitecoreEdgeUrl,
-      sitecoreEdgeContextId: this.config.cdpConfig.sitecoreEdgeContextId,
+      sitecoreEdgeUrl: this.config.edgeUrl,
+      sitecoreEdgeContextId: this.config.contextId,
       siteName,
       cookieDomain: hostname,
       enableServerCookie: true,
@@ -256,8 +252,8 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     return (await personalize(
       request,
       {
-        channel: this.config.cdpConfig.channel || 'WEB',
-        currency: this.config.cdpConfig.currency ?? 'USD',
+        channel: this.config.channel || 'WEB',
+        currency: this.config.currency ?? 'USD',
         friendlyId,
         params,
         language,
@@ -313,7 +309,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
           personalizeInfo.pageId,
           componentId,
           language,
-          this.config.scope || this.config.edgeConfig.scope
+          this.config.scope
         );
         const execution = results.find((x) => x.friendlyId === friendlyId);
         if (execution) {
@@ -331,7 +327,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         const friendlyId = CdpHelper.getPageFriendlyId(
           personalizeInfo.pageId,
           language,
-          this.config.scope || this.config.edgeConfig.scope
+          this.config.scope
         );
         const execution = results.find((x) => x.friendlyId === friendlyId);
         if (execution) {

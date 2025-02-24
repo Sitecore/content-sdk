@@ -134,11 +134,14 @@ describe('RedirectsMiddleware', () => {
     });
 
     const middleware = new RedirectsMiddleware({
-      siteResolver,
-      ...props,
+      enabled: true,
+      sites: [],
       clientFactory,
       locales: ['en', 'ua'],
+      ...props,
     });
+
+    middleware['siteResolver'] = siteResolver;
 
     const fetchRedirects = (middleware['redirectsService']['fetchRedirects'] =
       props.fetchRedirectsStub ||
@@ -307,15 +310,6 @@ describe('RedirectsMiddleware', () => {
 
         validateDebugLog('skipped (redirects middleware is disabled)');
 
-        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'x-middleware-next': '1',
-          },
-          redirected: false,
-          status: 200,
-          url: '',
-        });
-
         debugSpy.resetHistory();
 
         expect(finalRes).to.deep.equal(res);
@@ -355,13 +349,6 @@ describe('RedirectsMiddleware', () => {
       });
 
       validateDebugLog('skipped (redirects middleware is disabled)');
-
-      validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-        headers: {},
-        redirected: undefined,
-        status: undefined,
-        url: 'http://localhost:3000',
-      });
 
       expect(finalRes).to.deep.equal(res);
 
@@ -1091,17 +1078,6 @@ describe('RedirectsMiddleware', () => {
         });
 
         validateDebugLog('skipped (redirects middleware is disabled)');
-
-        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'set-cookie': 'sc_site=learn2grow; Path=/',
-            'x-middleware-next': '1',
-            'x-middleware-set-cookie': 'sc_site=learn2grow; Path=/',
-          },
-          redirected: false,
-          status: 200,
-          url: '',
-        });
 
         expect(siteResolver.getByHost).to.not.be.called;
         expect(siteResolver.getByName).to.not.be.called;

@@ -8,7 +8,7 @@ import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { GraphQLRequestClient, debug } from '@sitecore-content-sdk/core';
 import { SiteResolver } from '@sitecore-content-sdk/core/site';
 import { CdpHelper } from '@sitecore-content-sdk/core/personalize';
-import { PersonalizeMiddleware } from './personalize-middleware';
+import { PersonalizeMiddleware, PersonalizeMiddlewareConfig } from './personalize-middleware';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -32,6 +32,21 @@ describe('PersonalizeMiddleware', () => {
   const variantIds = ['variant-1', 'variant-2'];
   const defaultLang = 'en';
   const referrer = 'http://localhost:3000';
+
+  const defaultConfig: Omit<PersonalizeMiddlewareConfig, 'clientFactory'> = {
+    enabled: true,
+    edgeTimeout: 400,
+    cdpTimeout: 400,
+    scope: undefined,
+    channel: undefined,
+    currency: undefined,
+    contextId: '0000-0000-0000',
+    clientContextId: '0000-0000-0000',
+    edgeUrl: 'https://foo.bar',
+    path: '',
+    sites: [],
+  };
+
   const createRequest = (props: any = {}) => {
     const req = {
       ...props,
@@ -138,11 +153,9 @@ describe('PersonalizeMiddleware', () => {
   const createMiddleware = (
     props: {
       [key: string]: unknown;
+      config?: Omit<PersonalizeMiddlewareConfig, 'clientFactory'>;
       language?: string;
       siteResolver?: SiteResolver;
-      edgeConfig?: any;
-      cdpConfig?: any;
-      scope?: string;
       variantId?: string;
       personalizeInfo?: {
         pageId: string;
@@ -151,20 +164,16 @@ describe('PersonalizeMiddleware', () => {
       getPersonalizeInfoStub?: sinon.SinonStub;
       personalizeStub?: sinon.SinonStub;
       handleCookieStub?: sinon.SinonStub;
-    } = {}
+    } = { config: defaultConfig }
   ) => {
-    const cdpConfig = {
-      sitecoreEdgeContextId: '0000-0000-0000',
-      sitecoreEdgeUrl: 'https://foo.bar',
-      ...(props?.cdpConfig || {}),
-    };
     const clientFactory = GraphQLRequestClient.createClientFactory({
       apiKey: 'edge-api-key',
       endpoint: 'http://edge-endpoint/api/graph/edge',
     });
-    const edgeConfig = {
+    const personalizeConfig = {
+      ...defaultConfig,
       clientFactory,
-      ...(props?.edgeConfig || {}),
+      ...(props?.config || {}),
     };
 
     class MockSiteResolver extends SiteResolver {
@@ -183,11 +192,10 @@ describe('PersonalizeMiddleware', () => {
 
     const siteResolver: SiteResolver = props.siteResolver || new MockSiteResolver([]);
     const middleware = new PersonalizeMiddleware({
-      siteResolver,
       ...props,
-      cdpConfig,
-      edgeConfig,
+      ...personalizeConfig,
     });
+    middleware['siteResolver'] = siteResolver;
 
     const initPersonalizeServer = (middleware['initPersonalizeServer'] = sinon.stub());
 
@@ -338,7 +346,7 @@ describe('PersonalizeMiddleware', () => {
       it('should apply both default and custom rules when custom disabled function provided', async () => {
         const disabled = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
         const { middleware } = createMiddleware({
-          disabled,
+          config: { ...defaultConfig, disabled },
         });
         await test('/src/image.png', middleware);
         await test('/api/layout/render', middleware);
@@ -825,7 +833,7 @@ describe('PersonalizeMiddleware', () => {
       const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const personalizeStub = sinon.stub().returns(Promise.resolve({ variantId: undefined }));
       const { middleware, getPersonalizeInfo, personalize } = createMiddleware({
-        scope,
+        config: { ...defaultConfig, scope },
         personalizeInfo: {
           pageId,
           variantIds: ['variant1'],

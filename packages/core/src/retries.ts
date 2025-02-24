@@ -1,5 +1,4 @@
-import { RetryStrategy } from '.';
-import { GenericGraphQLClientError } from './models';
+import { RetryStrategy, GenericGraphQLClientError } from './models';
 
 /**
  * Represents a default retry strategy for handling retry attempts in case of specific HTTP status codes.

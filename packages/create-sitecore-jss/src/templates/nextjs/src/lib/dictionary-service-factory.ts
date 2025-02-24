@@ -26,6 +26,8 @@ export class DictionaryServiceFactory {
       */
       retries: sitecoreConfig.retries.count,
       retryStrategy: sitecoreConfig.retries.retryStrategy,
+      cacheEnabled: sitecoreConfig.dictionary.caching.enabled,
+      cacheTimeout: sitecoreConfig.dictionary.caching.timeout,
     });
   }
 }

@@ -3,8 +3,7 @@ import {
   GraphQLRequestClientConfig,
   GraphQLRequestClientFactory,
 } from '../graphql-request-client';
-import { DictionaryPhrases, DictionaryServiceBase } from './dictionary-service';
-import { CacheOptions } from '../cache-client';
+import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
 import { PageInfo, SearchQueryVariables } from '../graphql';
 import { siteNameError, languageError } from '../graphql/app-root-query';
 import debug from '../debug';
@@ -39,6 +38,24 @@ const siteQuery = /* GraphQL */ `
 `;
 
 /**
+ * Object model for Sitecore dictionary phrases
+ */
+export interface DictionaryPhrases {
+  [k: string]: string;
+}
+
+/**
+ * Service that fetches dictionary data using Sitecore's GraphQL API.
+ */
+export interface DictionaryService {
+  /**
+   * Fetch dictionary data for a language.
+   * @param {string} language the language to be used to fetch the dictionary
+   */
+  fetchDictionaryData(language: string): Promise<DictionaryPhrases>;
+}
+
+/**
  * Configuration options for @see GraphQLDictionaryService instances
  */
 export interface GraphQLDictionaryServiceConfig
@@ -68,11 +85,6 @@ export interface GraphQLDictionaryServiceConfig
    * @default '061cba1554744b918a0617903b102b82' (/sitecore/templates/Foundation/JavaScript Services/App)
    */
   jssAppTemplateId?: string;
-
-  /**
-   * Optional. Use site query for dictionary fetch instead of search query (XM Cloud only)
-   */
-  useSiteQuery?: boolean;
 }
 
 /**
@@ -99,15 +111,15 @@ export type DictionarySiteQueryResponse = {
  * @augments DictionaryServiceBase
  * @mixes SearchQueryService<DictionaryQueryResult>
  */
-export class GraphQLDictionaryService extends DictionaryServiceBase {
+export class GraphQLDictionaryService implements DictionaryService, CacheClient<DictionaryPhrases> {
   private graphQLClient: GraphQLClient;
-
+  private cache: CacheClient<DictionaryPhrases>;
   /**
    * Creates an instance of graphQL dictionary service with the provided options
    * @param {GraphQLDictionaryService} options instance
    */
   constructor(public options: GraphQLDictionaryServiceConfig) {
-    super(options);
+    this.cache = this.getCacheClient();
     this.graphQLClient = this.getGraphQLClient();
   }
 
@@ -175,6 +187,36 @@ export class GraphQLDictionaryService extends DictionaryServiceBase {
     results.forEach((item) => (phrases[item.key] = item.value));
 
     return phrases;
+  }
+
+  /**
+   * Caches a @see DictionaryPhrases value for the specified cache key.
+   * @param {string} key The cache key.
+   * @param {DictionaryPhrases} value The value to cache.
+   * @returns The value added to the cache.
+   * @mixes CacheClient<DictionaryPhrases>
+   */
+  setCacheValue(key: string, value: DictionaryPhrases): DictionaryPhrases {
+    return this.cache.setCacheValue(key, value);
+  }
+
+  /**
+   * Retrieves a @see DictionaryPhrases value from the cache.
+   * @param {string} key The cache key.
+   * @returns The @see DictionaryPhrases value, or null if the specified key is not found in the cache.
+   */
+  getCacheValue(key: string): DictionaryPhrases | null {
+    return this.cache.getCacheValue(key);
+  }
+
+  /**
+   * Gets a cache client that can cache data. Uses memory-cache as the default
+   * library for caching (@see MemoryCacheClient). Override this method if you
+   * want to use something else.
+   * @returns {CacheClient} implementation
+   */
+  protected getCacheClient(): CacheClient<DictionaryPhrases> {
+    return new MemoryCacheClient<DictionaryPhrases>(this.options);
   }
 
   /**

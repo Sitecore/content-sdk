@@ -7,7 +7,7 @@ import chalk from 'chalk';
 import { SitecoreConfig } from '@sitecore-content-sdk/nextjs/config';
 
 //TODO: better async logic
-fetchSites().then(() => {});
+fetchSites();
 
 async function fetchSites() {
   let sites: SiteInfo[] = [];

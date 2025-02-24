@@ -1,3 +1,4 @@
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { DefaultRetryStrategy } from '../retries';
 import { SitecoreConfig, SitecoreConfigInput } from './models';
 
@@ -10,13 +11,12 @@ export const getFallbackConfig = (): SitecoreConfig => ({
     edge: {
       contextId: 'context-id-missing',
       clientContextId: 'context-id-missing',
-      edgeUrl: 'https://edge-platform.sitecorecloud.io',
-      path: '',
+      edgeUrl: SITECORE_EDGE_URL_DEFAULT,
     },
     local: {
       apiKey: 'key-missing',
       apiHost: 'host-not-specified',
-      path: '',
+      path: '/sitecore/api/graph/edge',
     },
   },
   editingSecret: 'editing-secret-missing',

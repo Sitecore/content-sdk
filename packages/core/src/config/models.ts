@@ -16,13 +16,14 @@ export type SitecoreConfigInput = {
    */
   api: {
     /**
-     * Edge endpoint credentials for Sitecore connection. Can be used for XMCloud deploy
+     * Edge endpoint credentials for Sitecore connection. Will be used to connect to SaaS XMCloud instance
      */
     edge?: {
+      // for now contextID will take the role of both server and client IDs
       contextId?: string;
+      // clientContextId will be utilized when we know more specifics about it
       clientContextId?: string;
       edgeUrl?: string;
-      path?: string;
     };
     /**
      * API endpoint (legacy) credentials for Sitecore connection. Can be used for local deploy
@@ -36,7 +37,7 @@ export type SitecoreConfigInput = {
   defaultSite: string;
   defaultLanguage: string;
   /**
-   * Editing secret required for Pages editing and preview integration
+   * Editing secret required to support Sitecore editing and preview functionality.
    */
   editingSecret?: string;
   retries?: {
@@ -59,7 +60,7 @@ export type SitecoreConfigInput = {
   };
   dictionary?: {
     /**
-     * configure local memory caching for DIctionary Service requests
+     * configure local memory caching for Dictionary Service requests
      */
     caching?: {
       enabled?: boolean;
@@ -68,19 +69,45 @@ export type SitecoreConfigInput = {
   };
   multisite: {
     enabled: boolean;
+    /**
+     * Fallback hostname in case `host` header is not present
+     * @default localhost
+     */
     defaultHostname?: string;
-    useCookieResolution?: () => boolean;
+    /**
+     * Function used to determine if site should be resolved from sc_site cookie when present
+     */
+    useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
   };
   personalize: {
     enabled: boolean;
+    /**
+     * Configuration for your Sitecore Experience Edge endpoint
+     */
     edgeTimeout: number;
+    /**
+     * Configuration for your Sitecore CDP endpoint
+     */
     cdpTimeout: number;
+    /**
+     * Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
+     */
     scope: string | undefined;
-    channel?: string;
-    currency?: string;
+    /**
+     * The Sitecore CDP channel to use for events. Uses 'WEB' by default.
+     */
+    channel?: string | undefined;
+    /**
+     * Currency for CDP request. Uses 'USA' as default.
+     */
+    currency?: string | undefined;
   };
   redirects: {
     enabled: boolean;
+    /**
+     * These are all the locales you support in your application.
+     * These should match those in your next.config.js (i18n.locales).
+     */
     locales?: string[];
   };
 };

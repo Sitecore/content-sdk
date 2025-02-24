@@ -25,6 +25,13 @@ describe('MultisiteMiddleware', () => {
 
   const siteName = 'foo';
 
+  const defaultConfig = {
+    sites: [],
+    enabled: true,
+    useCookieResolution: () => false,
+    defaultHostname: '',
+  };
+
   const createRequest = (props: any = {}) => {
     const req = {
       ...props,
@@ -93,32 +100,27 @@ describe('MultisiteMiddleware', () => {
     return res;
   };
 
-  const createMiddleware = (
-    props: {
-      [key: string]: any;
-      siteResolver?: SiteResolver;
-    } = {}
-  ) => {
+  const createMiddleware = (input: { [key: string]: any; siteResolver?: SiteResolver } = {}) => {
+    const props = { ...defaultConfig, ...input.config };
     class MockSiteResolver extends SiteResolver {
       getByName = sinon.stub().returns({
         name: siteName,
-        language: props.language || '',
-        hostName: props.hostName,
+        language: input.language || '',
+        hostName: input.hostName,
       });
 
       getByHost = sinon.stub().returns({
         name: siteName,
-        language: props.language || '',
-        hostName: props.hostName,
+        language: input.language || '',
+        hostName: input.hostName,
       });
     }
 
-    const siteResolver = props.siteResolver || new MockSiteResolver([]);
-
+    const siteResolver = input.siteResolver || new MockSiteResolver([]);
     const middleware = new MultisiteMiddleware({
-      siteResolver,
       ...props,
     });
+    middleware['siteResolver'] = siteResolver;
 
     return { middleware, siteResolver };
   };
@@ -169,7 +171,7 @@ describe('MultisiteMiddleware', () => {
         const disabled = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
 
         const { middleware } = createMiddleware({
-          disabled,
+          config: { ...defaultConfig, disabled },
         });
 
         await test('/src/image.png', middleware);
@@ -239,7 +241,7 @@ describe('MultisiteMiddleware', () => {
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
       const { middleware, siteResolver } = createMiddleware({
-        defaultHostname: 'bar.net',
+        config: { ...defaultConfig, defaultHostname: 'bar.net' },
       });
 
       const finalRes = await middleware.handle(req, res);
@@ -460,7 +462,7 @@ describe('MultisiteMiddleware', () => {
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
       const { middleware, siteResolver } = createMiddleware({
-        useCookieResolution: () => true,
+        config: { ...defaultConfig, useCookieResolution: () => true },
       });
 
       const finalRes = await middleware.handle(req, res);

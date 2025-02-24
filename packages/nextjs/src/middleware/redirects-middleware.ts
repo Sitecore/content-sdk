@@ -18,6 +18,7 @@ import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
+import { SitecoreConfig } from '../config';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
@@ -28,13 +29,8 @@ type RedirectResult = RedirectInfo & { matchedQueryString?: string };
  * extended RedirectsMiddlewareConfig config type for RedirectsMiddleware
  */
 export type RedirectsMiddlewareConfig = Omit<GraphQLRedirectsServiceConfig, 'fetch'> &
-  MiddlewareBaseConfig & {
-    /**
-     * These are all the locales you support in your application.
-     * These should match those in your next.config.js (i18n.locales).
-     */
-    locales: string[];
-  };
+  MiddlewareBaseConfig &
+  SitecoreConfig['redirects'];
 /**
  * Middleware / handler fetches all redirects from Sitecore instance by grapqhl service
  * compares with current url and redirects to target url
@@ -48,7 +44,6 @@ export class RedirectsMiddleware extends MiddlewareBase {
    */
   constructor(protected config: RedirectsMiddlewareConfig) {
     super(config);
-
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
     this.redirectsService = new GraphQLRedirectsService({ ...config, fetch: fetch });
@@ -56,6 +51,10 @@ export class RedirectsMiddleware extends MiddlewareBase {
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+    if (!this.config.enabled) {
+      debug.redirects('skipped (redirects middleware is disabled globally)');
+      return res;
+    }
     try {
       const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req);
@@ -69,12 +68,12 @@ export class RedirectsMiddleware extends MiddlewareBase {
         hostname,
       });
 
-      const createResponse = async () => {
-        if (this.disabled(req, res)) {
-          debug.redirects('skipped (redirects middleware is disabled)');
-          return res;
-        }
+      if (this.disabled(req, res)) {
+        debug.redirects('skipped (redirects middleware is disabled)');
+        return res;
+      }
 
+      const createResponse = async () => {
         if (this.isPreview(req)) {
           debug.redirects('skipped (preview)');
 
