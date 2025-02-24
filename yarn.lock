@@ -2190,7 +2190,6 @@ __metadata:
     "@types/chai-spies": ^1.0.6
     "@types/chai-string": ^1.4.5
     "@types/debug": ^4.1.12
-    "@types/fs-extra": ^11.0.4
     "@types/memory-cache": ^0.2.6
     "@types/mocha": ^10.0.1
     "@types/node": ^22.12.0
@@ -2203,7 +2202,6 @@ __metadata:
     del-cli: ^6.0.0
     eslint: ^8.56.0
     eslint-plugin-jsdoc: 48.7.0
-    fs-extra: ^11.3.0
     graphql: ^16.10.0
     graphql-request: ^6.1.0
     memory-cache: ^0.2.0

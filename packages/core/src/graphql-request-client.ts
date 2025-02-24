@@ -157,10 +157,10 @@ export class GraphQLRequestClient implements GraphQLClient {
   }: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory {
     return (config: Omit<GraphQLRequestClientConfig, 'apiKey'> = {}) =>
       new GraphQLRequestClient(endpoint, {
-        ...config,
-        apiKey,
         retries: retries?.count,
         retryStrategy: retries?.retryStrategy,
+        ...config,
+        apiKey,
       });
   }
 
