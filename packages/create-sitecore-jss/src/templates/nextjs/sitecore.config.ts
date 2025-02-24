@@ -5,7 +5,7 @@ import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
 export default defineConfig({
   api: {
     edge: {
-      contextId: process.env.SITECORE_EDGE_CONTEXT_ID,
+      contextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || process.env.SITECORE_EDGE_CONTEXT_ID,
       clientContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
       edgeUrl: process.env.SITECORE_EDGE_URL,
     },
