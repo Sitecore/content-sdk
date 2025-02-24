@@ -7,11 +7,11 @@ export default defineConfig({
     edge: {
       contextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || process.env.SITECORE_EDGE_CONTEXT_ID,
       clientContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
-      edgeUrl: process.env.SITECORE_EDGE_URL,
+      edgeUrl: process.env.NEXT_PUBLIC_SITECORE_EDGE_URL || process.env.SITECORE_EDGE_URL,
     },
     local: {
-      apiKey: process.env.SITECORE_API_KEY,
-      apiHost: process.env.SITECORE_API_HOST,
+      apiKey: process.env.NEXT_PUBLIC_SITECORE_API_KEY || process.env.SITECORE_API_KEY,
+      apiHost: process.env.NEXT_PUBLIC_SITECORE_API_HOST || process.env.SITECORE_API_HOST,
     },
   },
   defaultSite: process.env.SITECORE_SITE_NAME || 'sitecore-headless',
