@@ -6,7 +6,7 @@
 
 # Enumeration: ModuleType
 
-Defined in: [dev-tools/src/templating/plugins.ts:8](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/dev-tools/src/templating/plugins.ts#L8)
+Defined in: [dev-tools/src/templating/plugins.ts:8](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/dev-tools/src/templating/plugins.ts#L8)
 
 Identifies the format of the module to be compiled
 
@@ -16,7 +16,7 @@ Identifies the format of the module to be compiled
 
 > **CJS**: `0`
 
-Defined in: [dev-tools/src/templating/plugins.ts:9](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/dev-tools/src/templating/plugins.ts#L9)
+Defined in: [dev-tools/src/templating/plugins.ts:9](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/dev-tools/src/templating/plugins.ts#L9)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [dev-tools/src/templating/plugins.ts:9](https://github.com/Sitecore/
 
 > **ESM**: `1`
 
-Defined in: [dev-tools/src/templating/plugins.ts:10](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/dev-tools/src/templating/plugins.ts#L10)
+Defined in: [dev-tools/src/templating/plugins.ts:10](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/dev-tools/src/templating/plugins.ts#L10)

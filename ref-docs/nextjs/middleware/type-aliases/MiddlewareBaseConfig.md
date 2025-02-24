@@ -8,7 +8,7 @@
 
 > **MiddlewareBaseConfig**: `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:4](https://github.com/Sitecore/xmc-jss-dev/blob/4e954baaff703857abef880e6218bead13dfe25d/packages/nextjs/src/middleware/middleware.ts#L4)
+Defined in: [nextjs/src/middleware/middleware.ts:5](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L5)
 
 ## Type declaration
 
@@ -26,7 +26,7 @@ localhost
 
 ### disabled()?
 
-> `optional` **disabled**: (`req`?, `res`?) => `boolean`
+> `optional` **disabled**: (`req`, `res`) => `boolean`
 
 function, determines if middleware should be turned off, based on cookie, header, or other considerations
 
@@ -34,32 +34,12 @@ function, determines if middleware should be turned off, based on cookie, header
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `req`? | `NextRequest` | request object from middleware handler |
-| `res`? | `NextResponse` | response object from middleware handler |
+| `req` | `NextRequest` | request object from middleware handler |
+| `res` | `NextResponse` | response object from middleware handler |
 
 #### Returns
 
 `boolean`
-
-### excludeRoute()?
-
-> `optional` **excludeRoute**: (`pathname`) => `boolean`
-
-Function used to determine if route should be excluded.
-By default, files (pathname.includes('.')), Next.js API routes (pathname.startsWith('/api/')), and Sitecore API routes (pathname.startsWith('/sitecore/')) are ignored.
-This is an important performance consideration since Next.js Edge middleware runs on every request.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `pathname` | `string` | The pathname |
-
-#### Returns
-
-`boolean`
-
-Whether to exclude the route
 
 ### siteResolver
 
