@@ -1,3 +1,4 @@
+import { getFallbackConfig } from './define-config';
 import { SitecoreIntializationOptions, SitecoreRuntimeConfig } from './models';
 
 /**
@@ -5,6 +6,8 @@ import { SitecoreIntializationOptions, SitecoreRuntimeConfig } from './models';
  * Expected to be be initialized via `initSitecore` in app bootstrap
  */
 export let sitecoreRuntimeConfig: SitecoreRuntimeConfig = {
+  ...getFallbackConfig(),
+  sites: [],
   initialized: false,
 };
 
@@ -12,13 +15,11 @@ export let sitecoreRuntimeConfig: SitecoreRuntimeConfig = {
 // alternative is getter/setter for sitecoreRuntimeConfig - but we only want to export getter
 // eslint-disable-next-line
 export function setTestSitecoreRuntimeConfig(
-  input: Partial<SitecoreIntializationOptions>,
+  input: SitecoreRuntimeConfig,
   initialized: boolean
 ) {
   sitecoreRuntimeConfig = {
-    ...input.sitecoreConfig,
-    sites: input.sites,
-    components: input.components,
+    ...input,
     initialized,
   };
 }

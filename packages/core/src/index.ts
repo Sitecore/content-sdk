@@ -4,14 +4,13 @@
 import * as constants from './constants';
 export { default as debug, Debugger, enableDebug } from './debug';
 export {
-  RetryStrategy,
-  DefaultRetryStrategy,
   GraphQLClient,
   GraphQLRequestClient,
   GraphQLRequestClientConfig,
   GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
 } from './graphql-request-client';
+export { DefaultRetryStrategy } from './retries';
 export { CacheClient, CacheOptions, MemoryCacheClient } from './cache-client';
 export { ClientError } from 'graphql-request';
 export {
@@ -20,6 +19,6 @@ export {
   NativeDataFetcherError,
   NativeDataFetcherResponse,
 } from './native-fetcher';
-export { HTMLLink } from './models';
+export { HTMLLink, RetryStrategy, GenericGraphQLClientError } from './models';
 export { constants };
 export { defineConfig } from './config';

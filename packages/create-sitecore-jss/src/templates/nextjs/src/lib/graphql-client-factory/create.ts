@@ -15,6 +15,7 @@ export const createGraphQLClientFactory = (config: SitecoreConfig) => {
   if (config.api.edge.contextId) {
     clientConfig = {
       endpoint: getEdgeProxyContentUrl(config.api.edge.contextId, config.api.edge.edgeUrl),
+      retries: config.retries,
     };
   } else {
     throw new Error(

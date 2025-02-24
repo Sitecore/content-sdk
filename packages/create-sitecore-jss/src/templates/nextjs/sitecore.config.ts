@@ -14,22 +14,24 @@ export default defineConfig({
       apiHost: process.env.SITECORE_API_HOST,
     },
   },
-  defaultSite: process.env.SITECORE_SITE_NAME,
-  defaultLanguage: process.env.DEFAULT_LANGUAGE,
+  defaultSite: process.env.SITECORE_SITE_NAME || 'sitecore-headless',
+  defaultLanguage: process.env.DEFAULT_LANGUAGE || 'en',
   editingSecret: process.env.JSS_EDITING_SECRET,
   redirects: {
     enabled: process.env.NODE_ENV !== 'development',
   },
   multisite: {
+    enabled: true,
     useCookieResolution: () => process.env.VERCEL_ENV === 'preview',
   },
   personalize: {
+    enabled: true,
     scope: process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,
     edgeTimeout: process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT
       ? parseInt(process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT, 10)
-      : 300,
+      : 400,
     cdpTimeout: process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT
       ? parseInt(process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT, 10)
-      : 300,
+      : 400,
   },
 });

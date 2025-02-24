@@ -1,26 +1,30 @@
+import { DefaultRetryStrategy } from '../retries';
 import { SitecoreConfig, SitecoreConfigInput } from './models';
 
 /**
  * Provides default initial values for SitecoreConfig
  * @returns default config
  */
-export const getDefaultConfig = () => ({
+export const getFallbackConfig = (): SitecoreConfig => ({
   api: {
     edge: {
       contextId: 'context-id-missing',
       clientContextId: 'context-id-missing',
       edgeUrl: 'https://edge-platform.sitecorecloud.io',
+      path: '',
     },
     local: {
       apiKey: 'key-missing',
       apiHost: 'host-not-specified',
+      path: '',
     },
   },
-  defaultSite: 'sitecore-headless',
-  defaultLanguage: 'en',
   editingSecret: 'editing-secret-missing',
   retries: {
     count: 3,
+    retryStrategy: new DefaultRetryStrategy({
+      statusCodes: [429, 502, 503, 504, 520, 521, 522, 523, 524],
+    }),
   },
   redirects: {
     enabled: process.env.NODE_ENV !== 'development',
@@ -28,11 +32,30 @@ export const getDefaultConfig = () => ({
   },
   multisite: {
     enabled: true,
+    defaultHostname: '',
+    useCookieResolution: () => false,
   },
   personalize: {
     enabled: true,
-    edgeTimeout: 300,
-    cdpTimeout: 300,
+    edgeTimeout: 400,
+    cdpTimeout: 400,
+    scope: undefined,
+    channel: 'WEB',
+    currency: 'USD',
+  },
+  defaultSite: 'sitecore-headless',
+  defaultLanguage: 'en',
+  layout: {
+    formatLayoutQuery: (siteName, itemPath, locale) =>
+      `layout(site:"${siteName}", routePath:"${itemPath}"${
+        locale ? `, language:"${locale}"` : ''
+      })`,
+  },
+  dictionary: {
+    caching: {
+      enabled: true,
+      timeout: 60,
+    },
   },
 });
 
@@ -57,7 +80,22 @@ const deepMerge = (base: SitecoreConfigInput, override: SitecoreConfigInput) => 
     redirects: { ...base.redirects, ...override.redirects },
     dictionary: { ...base.dictionary, ...override.dictionary },
   };
+
+  if (result.api.edge?.contextId && !result.api.edge.clientContextId) {
+    result.api.edge.clientContextId = result.api.edge.contextId;
+  }
   return result;
+};
+
+const validateConfig = (config: SitecoreConfigInput) => {
+  if (
+    !config.api?.edge?.contextId &&
+    (!config?.api?.local?.apiHost || !config?.api?.local?.apiKey)
+  ) {
+    throw new Error(
+      'Configuration error: either context ID or API key and host must be specified in sitecore.config'
+    );
+  }
 };
 
 /**
@@ -66,5 +104,6 @@ const deepMerge = (base: SitecoreConfigInput, override: SitecoreConfigInput) => 
  * @returns {SitecoreConfig} full runtime sitecore configuration to use in application
  */
 export const defineConfig = (config: SitecoreConfigInput) => {
-  return deepMerge(getDefaultConfig(), config) as SitecoreConfig;
+  validateConfig(config);
+  return deepMerge(getFallbackConfig(), config) as SitecoreConfig;
 };

@@ -4,10 +4,12 @@ import { expect, use, spy } from 'chai';
 import sinon from 'sinon';
 import spies from 'chai-spies';
 import nock from 'nock';
-import { GraphQLRequestClient, DefaultRetryStrategy } from './graphql-request-client';
+import { GraphQLRequestClient } from './graphql-request-client';
+import { DefaultRetryStrategy } from './retries';
 import { ClientError } from 'graphql-request';
 import debugApi from 'debug';
 import debug from './debug';
+import sitecoreConfig from './test-data/config/sitecore.config';
 
 use(spies);
 
@@ -222,17 +224,15 @@ describe('GraphQLRequestClient', () => {
       expect(graphQLClient['retryStrategy']).to.deep.equal(clientConfig.retryStrategy);
     });
 
-    it('should fallback to use default values when clientConfig is undefined', () => {
+    it('should fallback to use config values when clientConfig is undefined', () => {
       const clientConfig = { retries: undefined, retryStrategy: undefined };
       const graphQLClient = new GraphQLRequestClient(endpoint, clientConfig);
 
-      expect(graphQLClient['retries']).to.equal(3);
-      expect(graphQLClient['retryStrategy']).to.deep.equal(
-        new DefaultRetryStrategy({ statusCodes: statusErrorCodes })
-      );
+      expect(graphQLClient['retries']).to.equal(sitecoreConfig.retries.count);
+      expect(graphQLClient['retryStrategy']).to.deep.equal(sitecoreConfig.retries.retryStrategy);
     });
 
-    it('should be enabled by default and use default value of 3 when retries are not configured', async function() {
+    it('should be enabled by default and use value from sitecore config when retries are not configured', async function() {
       this.timeout(8000);
       nock('http://jssnextweb')
         .post('/graphql')
@@ -380,6 +380,9 @@ describe('GraphQLRequestClient', () => {
     });
 
     describe('Retryable status codes', () => {
+      const retryStrategy = new DefaultRetryStrategy({
+        statusCodes: [429, 502, 503, 504, 520, 521, 522, 523, 524],
+      });
       const retryableStatusCodeThrowError = async (statusCode: number) => {
         nock('http://jssnextweb')
           .post('/graphql')
@@ -391,6 +394,7 @@ describe('GraphQLRequestClient', () => {
 
         const graphQLClient = new GraphQLRequestClient(endpoint, {
           retries: 2,
+          retryStrategy,
         });
 
         spy.on(graphQLClient['client'], 'request');
@@ -427,6 +431,7 @@ describe('GraphQLRequestClient', () => {
 
         const graphQLClient = new GraphQLRequestClient(endpoint, {
           retries: 3,
+          retryStrategy,
         });
 
         spy.on(graphQLClient['client'], 'request');
@@ -461,6 +466,7 @@ describe('GraphQLRequestClient', () => {
 
         const graphQLClient = new GraphQLRequestClient(endpoint, {
           retries: 2,
+          retryStrategy,
         });
 
         spy.on(graphQLClient['client'], 'request');
@@ -497,6 +503,7 @@ describe('GraphQLRequestClient', () => {
 
         const graphQLClient = new GraphQLRequestClient(endpoint, {
           retries: 3,
+          retryStrategy,
         });
 
         spy.on(graphQLClient['client'], 'request');
@@ -566,6 +573,7 @@ describe('GraphQLRequestClient', () => {
 
         const graphQLClient = new GraphQLRequestClient(endpoint, {
           retries: 4,
+          retryStrategy,
         });
 
         spy.on(graphQLClient['client'], 'request');

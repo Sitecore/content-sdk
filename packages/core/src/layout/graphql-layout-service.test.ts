@@ -175,7 +175,6 @@ describe('GraphQLLayoutService', () => {
     });
 
     const data = await service.fetchLayoutData('/styleguide');
-
     expect(data).to.deep.equal({
       sitecore: {
         context: {

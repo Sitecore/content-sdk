@@ -3,6 +3,8 @@ import parse from 'url-parse';
 import { DocumentNode } from 'graphql';
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './utils/timeout-promise';
+import { GenericGraphQLClientError, RetryStrategy } from './models';
+import { getSitecoreConfig } from './config';
 
 /**
  * Options for configuring a GraphQL request.
@@ -10,6 +12,12 @@ import TimeoutPromise from './utils/timeout-promise';
 interface RequestOptions {
   headers?: Record<string, string>;
 }
+
+/**
+ * This type represents errors that can occur in a GraphQL client.
+ * In cases where an error status was sent back from the server (`!response.ok`), the `response` will be populated with details. In cases where a response was never received, the `code` can be populated with the error code (e.g. Node's 'ECONNRESET', 'ETIMEDOUT', etc).
+ */
+export type GraphQLClientError = Partial<ClientError> & GenericGraphQLClientError;
 
 /**
  * An interface for GraphQL clients for Sitecore APIs
@@ -26,36 +34,6 @@ export interface GraphQLClient {
     variables?: { [key: string]: unknown },
     options?: RequestOptions
   ): Promise<T>;
-}
-
-/**
- * This type represents errors that can occur in a GraphQL client.
- * In cases where an error status was sent back from the server (`!response.ok`), the `response` will be populated with details. In cases where a response was never received, the `code` can be populated with the error code (e.g. Node's 'ECONNRESET', 'ETIMEDOUT', etc).
- */
-export type GraphQLClientError = Partial<ClientError> & {
-  headers?: HeadersInit;
-  code?: string;
-};
-
-/**
- * Defines the strategy for retrying GraphQL requests based on errors and attempts.
- */
-export interface RetryStrategy {
-  /**
-   * Determines whether a request should be retried based on the given error and attempt count.
-   * @param error - The error received from the GraphQL request.
-   * @param attempt - The current attempt number.
-   * @param retries - The number of retries configured.
-   * @returns A boolean indicating whether to retry the request.
-   */
-  shouldRetry(error: GraphQLClientError, attempt: number, retries: number): boolean;
-  /**
-   * Calculates the delay (in milliseconds) before the next retry based on the given error and attempt count.
-   * @param error - The error received from the GraphQL request.
-   * @param attempt - The current attempt number.
-   * @returns The delay in milliseconds before the next retry.
-   */
-  getDelay(error: GraphQLClientError, attempt: number): number;
 }
 
 /**
@@ -79,6 +57,10 @@ export type GraphQLRequestClientConfig = {
    */
   timeout?: number;
   /**
+   * Custom headers to be sent with each request.
+   */
+  headers?: Record<string, string>;
+  /**
    * Number of retries for client. Will use the specified `retryStrategy`.
    */
   retries?: number;
@@ -87,10 +69,6 @@ export type GraphQLRequestClientConfig = {
    * back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
    */
   retryStrategy?: RetryStrategy;
-  /**
-   * Custom headers to be sent with each request.
-   */
-  headers?: Record<string, string>;
 };
 
 /**
@@ -109,53 +87,11 @@ export type GraphQLRequestClientFactory = (
 export type GraphQLRequestClientFactoryConfig = {
   endpoint: string;
   apiKey?: string;
+  retries?: {
+    count?: number;
+    retryStrategy: RetryStrategy;
+  };
 };
-
-/**
- * Represents a default retry strategy for handling retry attempts in case of specific HTTP status codes.
- * This class implements the RetryStrategy interface and provides methods to determine whether a request
- * should be retried and calculates the delay before the next retry attempt.
- */
-export class DefaultRetryStrategy implements RetryStrategy {
-  private statusCodes: number[];
-  private errorCodes: string[];
-  private factor: number;
-
-  /**
-   * @param {object} options Configurable options for retry mechanism.
-   * @param {number[]} [options.statusCodes] HTTP status codes to trigger retries on. Default is [429].
-   * @param {string[]} [options.errorCodes] Node error codes to trigger retries. Default is ['ECONNRESET', 'ETIMEDOUT', 'EPROTO'].
-   * @param {number} [options.factor] Factor by which the delay increases with each retry attempt. Default is 2.
-   */
-  constructor(options: { statusCodes?: number[]; errorCodes?: string[]; factor?: number } = {}) {
-    this.statusCodes = options.statusCodes || [429];
-    this.errorCodes = options.errorCodes || ['ECONNRESET', 'ETIMEDOUT', 'EPROTO'];
-    this.factor = options.factor || 2;
-  }
-
-  shouldRetry(error: GraphQLClientError, attempt: number, retries: number): boolean {
-    const isStatusCodeError =
-      error.response?.status !== undefined && this.statusCodes.includes(error.response.status);
-    const isNodeErrorCode = error.code !== undefined && this.errorCodes.includes(error.code);
-    return retries > 0 && attempt <= retries && (isStatusCodeError || isNodeErrorCode);
-  }
-
-  getDelay(error: GraphQLClientError, attempt: number): number {
-    const rawHeaders = error.response?.headers as Headers;
-    const retryAfterHeader = rawHeaders?.get('Retry-After');
-
-    if (
-      retryAfterHeader !== null &&
-      retryAfterHeader !== undefined &&
-      retryAfterHeader.trim() !== ''
-    ) {
-      const delaySeconds = Number.parseFloat(retryAfterHeader);
-      return delaySeconds * 1000;
-    } else {
-      return Math.pow(this.factor, attempt - 1) * 1000;
-    }
-  }
-}
 
 /**
  * A GraphQL client for Sitecore APIs that uses the 'graphql-request' library.
@@ -189,12 +125,17 @@ export class GraphQLRequestClient implements GraphQLClient {
         `Invalid GraphQL endpoint '${endpoint}'. Verify that 'layoutServiceHost' property in 'scjssconfig.json' file or appropriate environment variable is set`
       );
     }
-
     this.timeout = clientConfig.timeout;
-    this.retries = clientConfig.retries ?? 3;
-    this.retryStrategy =
-      clientConfig.retryStrategy ||
-      new DefaultRetryStrategy({ statusCodes: [429, 502, 503, 504, 520, 521, 522, 523, 524] });
+    // we don't need to depend on config, if retry strategy detail provided in clientConfig
+    if (clientConfig.retries !== undefined && clientConfig.retryStrategy) {
+      this.retries = clientConfig.retries;
+      this.retryStrategy = clientConfig.retryStrategy;
+    } else {
+      const config = getSitecoreConfig();
+      this.retries =
+        clientConfig.retries !== undefined ? clientConfig.retries : config.retries.count;
+      this.retryStrategy = clientConfig.retryStrategy || config.retries.retryStrategy;
+    }
     this.client = new Client(endpoint, {
       headers: this.headers,
       fetch: clientConfig.fetch,
@@ -207,13 +148,20 @@ export class GraphQLRequestClient implements GraphQLClient {
    * @param {object} config - client configuration options.
    * @param {string} config.endpoint - endpoint
    * @param {string} [config.apiKey] - apikey
+   * @param {object} [config.retries] - retry settings from sitecore.config
    */
   static createClientFactory({
     endpoint,
     apiKey,
+    retries,
   }: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory {
     return (config: Omit<GraphQLRequestClientConfig, 'apiKey'> = {}) =>
-      new GraphQLRequestClient(endpoint, { ...config, apiKey });
+      new GraphQLRequestClient(endpoint, {
+        ...config,
+        apiKey,
+        retries: retries?.count,
+        retryStrategy: retries?.retryStrategy,
+      });
   }
 
   /**

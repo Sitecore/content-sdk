@@ -1,60 +1,131 @@
 import { expect } from 'chai';
-import { defineConfig } from './define-config';
-import testConfig from '../test-data/config/sitecore.config.js';
+import { defineConfig, getFallbackConfig } from './define-config';
+import { SitecoreConfigInput } from './models';
+import { DefaultRetryStrategy } from '..';
 
 describe('define-config', () => {
-  const setEnv = () => {
-    process.env.SITECORE_EDGE_CONTEXT_ID = 'custom-context-id';
-    process.env.SITECORE_EDGE_URL = 'https://custom-edge-url';
-    process.env.SITECORE_SITE_NAME = 'custom-site';
-    process.env.JSS_EDITING_SECRET = 'custom-secret';
-    process.env.SITECORE_PERSONALIZE_SCOPE = 'custom-scope';
-    process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT = '500';
-    process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT = '500';
+  const mockConfig: SitecoreConfigInput = {
+    api: {
+      edge: {
+        contextId: 'context-id',
+        clientContextId: 'client-id',
+      },
+      local: {
+        apiHost: 'api-host.com',
+        apiKey: 'api-key',
+      },
+    },
+    defaultSite: 'unit-site',
+    defaultLanguage: 'en',
+    multisite: {
+      enabled: true,
+    },
+    personalize: {
+      enabled: false,
+      edgeTimeout: 1000,
+      cdpTimeout: 1000,
+      scope: 'unit-scope',
+    },
+    redirects: {
+      enabled: true,
+      locales: ['en'],
+    },
   };
 
-  const clearEnv = () => {
-    delete process.env.SITECORE_EDGE_CONTEXT_ID;
-    delete process.env.SITECORE_EDGE_URL;
-    delete process.env.SITECORE_SITE_NAME;
-    delete process.env.JSS_EDITING_SECRET;
-    delete process.env.SITECORE_PERSONALIZE_SCOPE;
-    delete process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT;
-    delete process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT;
-  };
+  it('should merge config from sitecore.config with default values', () => {
+    const config = defineConfig(mockConfig);
+    const fallbackConfig = getFallbackConfig();
+    // api.edge
+    expect(config.api.edge.contextId).to.equal(mockConfig.api.edge?.contextId);
+    expect(config.api.edge.clientContextId).to.equal(mockConfig.api.edge?.clientContextId);
+    expect(config.api.edge.path).to.equal(fallbackConfig.api.edge.path);
+    expect(config.api.edge.edgeUrl).to.equal(fallbackConfig.api.edge.edgeUrl);
 
-  afterEach(() => {
-    clearEnv();
-  });
+    // api.local
+    expect(config.api.local.apiHost).to.equal(mockConfig.api.local?.apiHost);
+    expect(config.api.local.apiKey).to.equal(mockConfig.api.local?.apiKey);
 
-  it('should return default fallback values when env is empty', () => {
-    const config = defineConfig({});
-    expect(config.api.edge.contextId).to.equal('context-id-missing');
-    expect(config.defaultSite).to.equal('sitecore-headless');
-    expect(config.defaultLanguage).to.equal('en');
-    expect(config.editingSecret).to.equal('editing-secret-missing');
-    expect(config.retries?.count).to.equal(3);
-    expect(config.redirects.enabled).to.equal(true);
-    expect(config.redirects.locales).to.deep.equal(['en']);
-    expect(config.multisite.enabled).to.be.true;
-    expect(config.personalize.enabled).to.be.true;
-    expect(config.personalize.edgeTimeout).to.equal(300);
-    expect(config.personalize.cdpTimeout).to.equal(300);
-  });
+    // defaultSite
+    expect(config.defaultSite).to.equal(mockConfig.defaultSite);
 
-  it('should load config from sitecore.config module', () => {
-    const config = defineConfig(testConfig);
-    expect(config.api.edge.contextId).to.equal(testConfig.api.edge.contextId);
-    expect(config.api.edge.edgeUrl).to.equal(testConfig.api.edge.edgeUrl);
-    expect(config.defaultSite).to.equal(testConfig.defaultSite);
-    expect(config.defaultLanguage).to.equal('en');
-    expect(config.editingSecret).to.equal('editing-secret-missing');
-    expect(config.retries?.count).to.equal(testConfig.retries.count);
+    // defaultLanguage
+    expect(config.defaultLanguage).to.equal(mockConfig.defaultLanguage);
+
+    // multisite
+    expect(config.multisite.enabled).to.equal(mockConfig.multisite.enabled);
+    expect(config.multisite.useCookieResolution()).to.equal(false);
+    expect(config.multisite.defaultHostname).to.equal(fallbackConfig.multisite.defaultHostname);
+
+    // personalize
+    expect(config.personalize.enabled).to.equal(mockConfig.personalize.enabled);
+    expect(config.personalize.edgeTimeout).to.equal(mockConfig.personalize.edgeTimeout);
+    expect(config.personalize.cdpTimeout).to.equal(mockConfig.personalize.cdpTimeout);
+    expect(config.personalize.scope).to.equal(mockConfig.personalize.scope);
+    expect(config.personalize.currency).to.equal(fallbackConfig.personalize.currency);
+    expect(config.personalize.channel).to.equal(fallbackConfig.personalize.channel);
+
+    // redirects
+    expect(config.redirects.enabled).to.equal(mockConfig.redirects.enabled);
+    expect(config.redirects.locales).to.deep.equal(mockConfig.redirects.locales);
+
+    // retries (fallback config values)
+    expect(config.retries?.count).to.equal(fallbackConfig.retries.count);
     expect(config.retries?.retryStrategy).to.not.be.undefined;
-    expect(config.redirects.enabled).to.equal(testConfig.redirects.enabled);
-    expect(config.redirects.locales).to.deep.equal(['en']);
-    expect(config.multisite.enabled).to.be.true;
-    expect(config.personalize.enabled).to.equal(testConfig.personalize.enabled);
-    expect(config.personalize.scope).to.equal(testConfig.personalize.scope);
+
+    // dictionary caching
+    expect(config.dictionary.caching.enabled).to.equal(fallbackConfig.dictionary.caching.enabled);
+    expect(config.dictionary.caching.timeout).to.equal(fallbackConfig.dictionary.caching.timeout);
+  });
+
+  it('should contain default layout service query delegate', () => {
+    const config = defineConfig(mockConfig);
+    expect(config.layout.formatLayoutQuery('test-site', 'test-route', 'uk-UA')).to.equal(
+      'layout(site:"test-site", routePath:"test-route", language:"uk-UA")'
+    );
+  });
+
+  it('should throw when both api.edge and api.local sets are missing', () => {
+    const failingConfig = {
+      ...mockConfig,
+      api: {
+        edge: undefined,
+        local: undefined,
+      },
+    };
+    expect(() => defineConfig(failingConfig)).to.throw(
+      'Configuration error: either context ID or API key and host must be specified in sitecore.config'
+    );
+  });
+
+  it('should throw when api.edge is empty and api.local is partially empty', () => {
+    const failingConfig = {
+      ...mockConfig,
+      api: {
+        edge: undefined,
+        local: {
+          apiKey: 'not-empty',
+          apiHost: undefined,
+        },
+      },
+    };
+    expect(() => defineConfig(failingConfig)).to.throw(
+      'Configuration error: either context ID or API key and host must be specified in sitecore.config'
+    );
+  });
+
+  it('should use DefaultRetryStrategy with correct error codes', () => {
+    const config = defineConfig(mockConfig);
+    // eslint-disable-next-line
+    expect((config.retries.retryStrategy as DefaultRetryStrategy)['statusCodes']).to.deep.equal([
+      429,
+      502,
+      503,
+      504,
+      520,
+      521,
+      522,
+      523,
+      524,
+    ]);
   });
 });

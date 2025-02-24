@@ -1,39 +1,71 @@
-import { RetryStrategy } from '../graphql-request-client';
+import { RetryStrategy } from '../models';
 import { SiteInfo } from '../site/models';
 
-type DeepPartial<T> = {
+export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : Partial<T[P]>;
 };
 
+export type DeepRequired<T> = Required<
+  {
+    [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
+  }
+>;
+
 /**
- * Basic Sitecore configuration
+ * Type to be used as config input in sitecore.config
  */
-export type SitecoreConfig = {
+export type SitecoreConfigInput = {
+  /**
+   * API settings required to connect to Sitecore.
+   * Both edge and local set can be specified as JSS app will use API Key for component library
+   */
   api: {
-    // keeping both edge and local sets until component library starts using edge credentials
-    edge: {
-      contextId: string;
-      clientContextId: string;
-      edgeUrl: string;
+    /**
+     * Edge endpoint credentials for Sitecore connection. Can be used for XMCloud deploy
+     */
+    edge?: {
+      contextId?: string;
+      clientContextId?: string;
+      edgeUrl?: string;
       path?: string;
     };
+    /**
+     * API endpoint (legacy) credentials for Sitecore connection. Can be used for local deploy
+     */
     local?: {
-      apiKey: string;
-      apiHost: string;
+      apiKey?: string;
+      apiHost?: string;
       path?: string;
     };
   };
   defaultSite: string;
   defaultLanguage: string;
+  /**
+   * Editing secret required for Pages editing and preview integration
+   */
   editingSecret?: string;
   retries?: {
+    /**
+     * Number of retries for graphql client. Will use the specified `retryStrategy`.
+     */
     count?: number;
+    /**
+     * Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
+     * back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
+     */
     retryStrategy?: RetryStrategy;
   };
   layout?: {
+    /**
+     * Customize GraphQL Layout Service request query
+     * Default: layout(site:"${siteName}", routePath:"${itemPath}", language:"${locale}"`
+     */
     formatLayoutQuery?: (siteName: string, itemPath: string, locale?: string) => string;
   };
   dictionary?: {
+    /**
+     * configure local memory caching for DIctionary Service requests
+     */
     caching?: {
       enabled?: boolean;
       timeout?: number;
@@ -46,11 +78,11 @@ export type SitecoreConfig = {
   };
   personalize: {
     enabled: boolean;
-    scope?: string;
+    edgeTimeout: number;
+    cdpTimeout: number;
+    scope: string | undefined;
     channel?: string;
     currency?: string;
-    edgeTimeout?: number;
-    cdpTimeout?: number;
   };
   redirects: {
     enabled: boolean;
@@ -59,21 +91,21 @@ export type SitecoreConfig = {
 };
 
 /**
- * Extended Sitecore configuration initalized on runtime
+ * Final sitecore config type used at runtime
+ * Every property should be populated, either from sitecore.config or built-in fallback values
  */
-export type SitecoreRuntimeConfig = Partial<SitecoreConfig> &
+export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
+
+/**
+ * Extended Sitecore configuration, initialized during runtime
+ */
+export type SitecoreRuntimeConfig = SitecoreConfig &
   Partial<Omit<SitecoreIntializationOptions, 'sitecoreConfig'>> & {
-    initialized: boolean;
+    initialized?: boolean;
   };
 
 /**
- * Type to be used as config input in sitecore.config
- * All props are made optional so that config can be overriden in a flexible way
- */
-export type SitecoreConfigInput = DeepPartial<SitecoreConfig>;
-
-/**
- * Sitecore initialization options to be passed on runtime into init function
+ * Sitecore initialization options to be passed during runtime into init function
  */
 export type SitecoreIntializationOptions = {
   sitecoreConfig: SitecoreConfig;
