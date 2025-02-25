@@ -11,8 +11,8 @@ export default defineConfig({
       edgeUrl: process.env.SITECORE_EDGE_URL || process.env.NEXT_PUBLIC_SITECORE_EDGE_URL,
     },
     local: {
-      apiKey: process.env.SITECORE_API_KEY || process.env.NEXT_PUBLIC_SITECORE_API_KEY,
-      apiHost: process.env.SITECORE_API_HOST || process.env.NEXT_PUBLIC_SITECORE_API_HOST,
+      apiKey: process.env.NEXT_PUBLIC_SITECORE_API_KEY,
+      apiHost: process.env.NEXT_PUBLIC_SITECORE_API_HOST,
     },
   },
   defaultSite: process.env.SITECORE_SITE_NAME || 'sitecore-headless',
