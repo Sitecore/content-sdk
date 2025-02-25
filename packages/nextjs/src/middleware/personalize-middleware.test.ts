@@ -43,7 +43,6 @@ describe('PersonalizeMiddleware', () => {
     contextId: '0000-0000-0000',
     clientContextId: '0000-0000-0000',
     edgeUrl: 'https://foo.bar',
-    path: '',
     sites: [],
   };
 

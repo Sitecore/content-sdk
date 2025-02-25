@@ -86,7 +86,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
-      debug.redirects('skipped (personalize middleware is disabled globally)');
+      debug.personalize('skipped (personalize middleware is disabled globally)');
       return res;
     }
     try {

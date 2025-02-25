@@ -9,13 +9,13 @@ import { SitecoreConfig, SitecoreConfigInput } from './models';
 export const getFallbackConfig = (): SitecoreConfig => ({
   api: {
     edge: {
-      contextId: 'context-id-missing',
-      clientContextId: 'context-id-missing',
+      contextId: '',
+      clientContextId: '',
       edgeUrl: SITECORE_EDGE_URL_DEFAULT,
     },
     local: {
-      apiKey: 'key-missing',
-      apiHost: 'host-not-specified',
+      apiKey: '',
+      apiHost: '',
       path: '/sitecore/api/graph/edge',
     },
   },
@@ -46,10 +46,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
   defaultSite: 'sitecore-headless',
   defaultLanguage: 'en',
   layout: {
-    formatLayoutQuery: (siteName, itemPath, locale) =>
-      `layout(site:"${siteName}", routePath:"${itemPath}"${
-        locale ? `, language:"${locale}"` : ''
-      })`,
+    formatLayoutQuery: null,
   },
   dictionary: {
     caching: {
@@ -80,10 +77,11 @@ const deepMerge = (base: SitecoreConfigInput, override: SitecoreConfigInput) => 
     redirects: { ...base.redirects, ...override.redirects },
     dictionary: { ...base.dictionary, ...override.dictionary },
   };
-
-  if (result.api.edge?.contextId && !result.api.edge.clientContextId) {
-    result.api.edge.clientContextId = result.api.edge.contextId;
+  // fallback in case only one context provided
+  if (result.api.edge?.clientContextId && !result.api.edge.contextId) {
+    result.api.edge.contextId = result.api.edge.clientContextId;
   }
+
   return result;
 };
 
@@ -92,16 +90,22 @@ const validateConfig = (config: SitecoreConfigInput) => {
     !config.api?.edge?.contextId &&
     (!config?.api?.local?.apiHost || !config?.api?.local?.apiKey)
   ) {
-    throw new Error(
-      'Configuration error: either context ID or API key and host must be specified in sitecore.config'
-    );
+    // consider client-side usecase
+    if (!config.api?.edge?.clientContextId) {
+      throw new Error(
+        'Configuration error: either context ID or API key and host must be specified in sitecore.config'
+      );
+    }
+  }
+  if (!config.defaultSite) {
+    throw new Error('Configuration error: defaultSite value should be defined in sitecore.config');
   }
 };
 
 /**
- * Accepts a SitecoreConfigInput object and returns full runtime sitecore configuration
+ * Accepts a SitecoreConfigInput object and returns full sitecore configuration
  * @param {SitecoreConfigInput} config override values to be written over default config settings
- * @returns {SitecoreConfig} full runtime sitecore configuration to use in application
+ * @returns {SitecoreConfig} full sitecore configuration to use in application
  */
 export const defineConfig = (config: SitecoreConfigInput) => {
   validateConfig(config);

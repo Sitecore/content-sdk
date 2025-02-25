@@ -30,8 +30,8 @@ const BYOCInit = (): JSX.Element | null => {
   const sitecoreContext = React.useContext(SitecoreContextReactContext).context;
   // Set context properties to be available within BYOC components
   FEAAS.setContextProperties({
-    sitecoreEdgeUrl: config.api.edge?.contextId,
-    sitecoreEdgeContextId: config.api.edge?.edgeUrl,
+    sitecoreEdgeUrl: config.api.edge?.edgeUrl,
+    sitecoreEdgeContextId: config.api.edge?.contextId,
     pageState: sitecoreContext?.pageState || LayoutServicePageState.Normal,
     siteName: sitecoreContext?.site?.name || config.defaultSite,
     eventsSDK: Events,

@@ -1,5 +1,8 @@
 import { RetryStrategy } from '../models';
 
+/**
+ * Utility type to make every property in a type required
+ */
 export type DeepRequired<T> = Required<
   {
     [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
@@ -26,7 +29,7 @@ export type SitecoreConfigInput = {
       edgeUrl?: string;
     };
     /**
-     * API endpoint (legacy) credentials for Sitecore connection. Can be used for local deploy
+     * API endpoint credentials for connection to local Sitecore instance
      */
     local?: {
       apiKey?: string;
@@ -34,7 +37,7 @@ export type SitecoreConfigInput = {
       path?: string;
     };
   };
-  defaultSite: string;
+  defaultSite?: string;
   defaultLanguage: string;
   /**
    * Editing secret required to support Sitecore editing and preview functionality.
@@ -53,10 +56,15 @@ export type SitecoreConfigInput = {
   };
   layout?: {
     /**
-     * Customize GraphQL Layout Service request query
-     * Default: layout(site:"${siteName}", routePath:"${itemPath}", language:"${locale}"`
+     * Override default layout query for Layout Service
+     * @param {string} siteName
+     * @param {string} itemPath
+     * @param {string} [locale]
+     * @returns {string} custom layout query
+     * Layout query
+     * layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")
      */
-    formatLayoutQuery?: (siteName: string, itemPath: string, locale?: string) => string;
+    formatLayoutQuery?: ((siteName: string, itemPath: string, locale?: string) => string) | null;
   };
   dictionary?: {
     /**
@@ -84,11 +92,11 @@ export type SitecoreConfigInput = {
     /**
      * Configuration for your Sitecore Experience Edge endpoint
      */
-    edgeTimeout: number;
+    edgeTimeout?: number;
     /**
      * Configuration for your Sitecore CDP endpoint
      */
-    cdpTimeout: number;
+    cdpTimeout?: number;
     /**
      * Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
      */

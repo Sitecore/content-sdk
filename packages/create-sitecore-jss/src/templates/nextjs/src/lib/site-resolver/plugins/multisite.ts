@@ -1,8 +1,5 @@
 ﻿import { SiteInfo } from '@sitecore-content-sdk/nextjs/site';
 import { SiteResolverPlugin } from '..';
-// TODO: retrieve sites from sitecoreConfig when moving this logic to packages
-// import { sitecoreConfig } from '@sitecore-content-sdk/nextjs/config';
-// sitecoreConfig.sites
 import siteCollection from 'temp/sites';
 
 class MultisitePlugin implements SiteResolverPlugin {

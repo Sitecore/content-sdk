@@ -34,7 +34,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
-      debug.redirects('skipped (multisite middleware is disabled globally)');
+      debug.multisite('skipped (multisite middleware is disabled globally)');
       return res;
     }
     try {
@@ -103,6 +103,6 @@ export class MultisiteMiddleware extends MiddlewareBase {
 
   protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
     // ignore files
-    return !this.config.enabled || req.nextUrl.pathname.includes('.') || super.disabled(req, res);
+    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
   }
 }

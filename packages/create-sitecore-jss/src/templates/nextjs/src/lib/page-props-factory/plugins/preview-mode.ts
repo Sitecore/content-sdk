@@ -22,7 +22,7 @@ class PreviewModePlugin implements Plugin {
 
     if (isComponentLibraryPreviewData(context.previewData)) {
       if (!config.api.local) {
-        throw new Error('Component Librarty requires Sitecore apiHost and apiKey to be provided');
+        throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
       }
       const { itemId, componentUid, site, language, renderingId, dataSourceId, version } =
         context.previewData;
@@ -31,7 +31,6 @@ class PreviewModePlugin implements Plugin {
         apiHost: config.api.local?.apiHost,
         apiKey: config.api.local?.apiKey,
         siteName: site,
-        configurationName: 'jss',
       });
 
       const componentData = await componentService.fetchComponentData({

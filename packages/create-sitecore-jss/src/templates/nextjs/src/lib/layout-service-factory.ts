@@ -10,7 +10,6 @@ export class LayoutServiceFactory {
    * @returns {LayoutService} service instance
    */
   create(siteName: string): LayoutService {
-    // providing config values directly as a stopgap, until factory is migrated to package
     return new GraphQLLayoutService({
       siteName,
       clientFactory,

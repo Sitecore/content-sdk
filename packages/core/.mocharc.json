@@ -1,5 +1,4 @@
 {
     "$schema": "https://json.schemastore.org/mocharc.json",
-    "node-option": ["import=tsx"],
-    "require": ["tsconfig-paths/register", "dotenv/config"]
+    "node-option": ["import=tsx"]
 }

@@ -77,13 +77,6 @@ describe('define-config', () => {
     expect(config.dictionary.caching.timeout).to.equal(fallbackConfig.dictionary.caching.timeout);
   });
 
-  it('should contain default layout service query delegate', () => {
-    const config = defineConfig(mockConfig);
-    expect(config.layout.formatLayoutQuery('test-site', 'test-route', 'uk-UA')).to.equal(
-      'layout(site:"test-site", routePath:"test-route", language:"uk-UA")'
-    );
-  });
-
   it('should throw when both api.edge and api.local sets are missing', () => {
     const failingConfig = {
       ...mockConfig,
