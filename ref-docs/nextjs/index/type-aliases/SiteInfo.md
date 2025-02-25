@@ -8,7 +8,7 @@
 
 > **SiteInfo**: `object`
 
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:4
+Defined in: core/types/site/models.d.ts:1
 
 ## Type declaration
 

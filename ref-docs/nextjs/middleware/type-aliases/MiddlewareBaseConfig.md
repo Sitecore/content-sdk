@@ -8,7 +8,7 @@
 
 > **MiddlewareBaseConfig**: `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:5](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L5)
+Defined in: [nextjs/src/middleware/middleware.ts:5](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/nextjs/src/middleware/middleware.ts#L5)
 
 ## Type declaration
 
@@ -41,8 +41,8 @@ function, determines if middleware should be turned off, based on cookie, header
 
 `boolean`
 
-### siteResolver
+### sites
 
-> **siteResolver**: [`SiteResolver`](../../index/classes/SiteResolver.md)
+> **sites**: [`SiteInfo`](../../index/type-aliases/SiteInfo.md)[]
 
 Site resolution implementation by name/hostname

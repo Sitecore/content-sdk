@@ -8,7 +8,6 @@
 
 ## Classes
 
-- [DictionaryServiceBase](classes/DictionaryServiceBase.md)
 - [GraphQLDictionaryService](classes/GraphQLDictionaryService.md)
 
 ## Interfaces

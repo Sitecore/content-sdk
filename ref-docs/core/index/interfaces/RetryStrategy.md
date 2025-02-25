@@ -6,7 +6,7 @@
 
 # Interface: RetryStrategy
 
-Defined in: [packages/core/src/graphql-request-client.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/graphql-request-client.ts#L43)
+Defined in: [packages/core/src/models.ts:25](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/models.ts#L25)
 
 Defines the strategy for retrying GraphQL requests based on errors and attempts.
 
@@ -16,7 +16,7 @@ Defines the strategy for retrying GraphQL requests based on errors and attempts.
 
 > **getDelay**(`error`, `attempt`): `number`
 
-Defined in: [packages/core/src/graphql-request-client.ts:58](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/graphql-request-client.ts#L58)
+Defined in: [packages/core/src/models.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/models.ts#L40)
 
 Calculates the delay (in milliseconds) before the next retry based on the given error and attempt count.
 
@@ -24,7 +24,7 @@ Calculates the delay (in milliseconds) before the next retry based on the given 
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `error` | [`GraphQLClientError`](../../graphql/type-aliases/GraphQLClientError.md) | The error received from the GraphQL request. |
+| `error` | [`GenericGraphQLClientError`](../type-aliases/GenericGraphQLClientError.md) | The error received from the GraphQL request. |
 | `attempt` | `number` | The current attempt number. |
 
 #### Returns
@@ -39,7 +39,7 @@ The delay in milliseconds before the next retry.
 
 > **shouldRetry**(`error`, `attempt`, `retries`): `boolean`
 
-Defined in: [packages/core/src/graphql-request-client.ts:51](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/graphql-request-client.ts#L51)
+Defined in: [packages/core/src/models.ts:33](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/models.ts#L33)
 
 Determines whether a request should be retried based on the given error and attempt count.
 
@@ -47,7 +47,7 @@ Determines whether a request should be retried based on the given error and atte
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `error` | [`GraphQLClientError`](../../graphql/type-aliases/GraphQLClientError.md) | The error received from the GraphQL request. |
+| `error` | [`GenericGraphQLClientError`](../type-aliases/GenericGraphQLClientError.md) | The error received from the GraphQL request. |
 | `attempt` | `number` | The current attempt number. |
 | `retries` | `number` | The number of retries configured. |
 

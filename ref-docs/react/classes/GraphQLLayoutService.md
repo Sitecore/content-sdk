@@ -6,7 +6,7 @@
 
 # Class: GraphQLLayoutService
 
-Defined in: packages/core/types/layout/graphql-layout-service.d.ts:31
+Defined in: packages/core/types/layout/graphql-layout-service.d.ts:22
 
 Service that fetch layout data using Sitecore's GraphQL API.
 
@@ -24,7 +24,7 @@ GraphQLRequestClient
 
 > **new GraphQLLayoutService**(`serviceConfig`): [`GraphQLLayoutService`](GraphQLLayoutService.md)
 
-Defined in: packages/core/types/layout/graphql-layout-service.d.ts:38
+Defined in: packages/core/types/layout/graphql-layout-service.d.ts:29
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -48,7 +48,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > **serviceConfig**: `GraphQLLayoutServiceConfig`
 
-Defined in: packages/core/types/layout/graphql-layout-service.d.ts:32
+Defined in: packages/core/types/layout/graphql-layout-service.d.ts:23
 
 ## Methods
 
@@ -56,7 +56,7 @@ Defined in: packages/core/types/layout/graphql-layout-service.d.ts:32
 
 > **fetchLayoutData**(`itemPath`, `language`?): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
-Defined in: packages/core/types/layout/graphql-layout-service.d.ts:45
+Defined in: packages/core/types/layout/graphql-layout-service.d.ts:36
 
 Fetch layout data for an item.
 
@@ -83,7 +83,7 @@ layout service data
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: packages/core/types/layout/graphql-layout-service.d.ts:50
+Defined in: packages/core/types/layout/graphql-layout-service.d.ts:41
 
 Gets a GraphQL client that can make requests to the API.
 
@@ -99,7 +99,7 @@ implementation
 
 > `protected` **getLayoutQuery**(`itemPath`, `language`?): `string`
 
-Defined in: packages/core/types/layout/graphql-layout-service.d.ts:57
+Defined in: packages/core/types/layout/graphql-layout-service.d.ts:48
 
 Returns GraphQL Layout query
 

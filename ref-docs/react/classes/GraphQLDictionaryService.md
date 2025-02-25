@@ -6,7 +6,7 @@
 
 # Class: GraphQLDictionaryService
 
-Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:65
+Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:76
 
 Service that fetch dictionary data using Sitecore's GraphQL API.
 
@@ -14,9 +14,10 @@ Service that fetch dictionary data using Sitecore's GraphQL API.
 
 SearchQueryService<DictionaryQueryResult>
 
-## Extends
+## Implements
 
-- `DictionaryServiceBase`
+- [`DictionaryService`](../interfaces/DictionaryService.md)
+- [`CacheClient`](../interfaces/CacheClient.md)\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
 ## Constructors
 
@@ -24,7 +25,7 @@ SearchQueryService<DictionaryQueryResult>
 
 > **new GraphQLDictionaryService**(`options`): [`GraphQLDictionaryService`](GraphQLDictionaryService.md)
 
-Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:72
+Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:84
 
 Creates an instance of graphQL dictionary service with the provided options
 
@@ -38,21 +39,13 @@ Creates an instance of graphQL dictionary service with the provided options
 
 [`GraphQLDictionaryService`](GraphQLDictionaryService.md)
 
-#### Overrides
-
-`DictionaryServiceBase.constructor`
-
 ## Properties
 
 ### options
 
 > **options**: `GraphQLDictionaryServiceConfig`
 
-Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:66
-
-#### Overrides
-
-`DictionaryServiceBase.options`
+Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:77
 
 ## Methods
 
@@ -60,7 +53,7 @@ Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:66
 
 > **fetchDictionaryData**(`language`): `Promise`\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:79
+Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:91
 
 Fetches dictionary data for internalization. Uses search query by default
 
@@ -80,9 +73,9 @@ dictionary phrases
 
 if the app root was not found for the specified site and language.
 
-#### Overrides
+#### Implementation of
 
-`DictionaryServiceBase.fetchDictionaryData`
+[`DictionaryService`](../interfaces/DictionaryService.md).[`fetchDictionaryData`](../interfaces/DictionaryService.md#fetchdictionarydata)
 
 ***
 
@@ -90,7 +83,7 @@ if the app root was not found for the specified site and language.
 
 > **fetchWithSiteQuery**(`language`): `Promise`\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:86
+Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:98
 
 Fetches dictionary data with site query
 This is the default behavior for XMCloud deployments. Uses `siteQuery` to retrieve data.
@@ -113,7 +106,7 @@ dictionary phrases
 
 > `protected` **getCacheClient**(): [`CacheClient`](../interfaces/CacheClient.md)\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: packages/core/types/i18n/dictionary-service.d.ts:49
+Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:119
 
 Gets a cache client that can cache data. Uses memory-cache as the default
 library for caching (@see MemoryCacheClient). Override this method if you
@@ -125,17 +118,13 @@ want to use something else.
 
 implementation
 
-#### Inherited from
-
-`DictionaryServiceBase.getCacheClient`
-
 ***
 
 ### getCacheValue()
 
 > **getCacheValue**(`key`): [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: packages/core/types/i18n/dictionary-service.d.ts:42
+Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:112
 
 Retrieves a
 
@@ -156,9 +145,9 @@ The
  - DictionaryPhrases value from the cache.
  - DictionaryPhrases value, or null if the specified key is not found in the cache.
 
-#### Inherited from
+#### Implementation of
 
-`DictionaryServiceBase.getCacheValue`
+[`CacheClient`](../interfaces/CacheClient.md).[`getCacheValue`](../interfaces/CacheClient.md#getcachevalue)
 
 ***
 
@@ -166,7 +155,7 @@ The
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:93
+Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:126
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -184,7 +173,7 @@ implementation
 
 > **setCacheValue**(`key`, `value`): [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: packages/core/types/i18n/dictionary-service.d.ts:36
+Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:106
 
 Caches a
 
@@ -209,6 +198,6 @@ DictionaryPhrases value for the specified cache key.
 
 CacheClient<DictionaryPhrases>
 
-#### Inherited from
+#### Implementation of
 
-`DictionaryServiceBase.setCacheValue`
+[`CacheClient`](../interfaces/CacheClient.md).[`setCacheValue`](../interfaces/CacheClient.md#setcachevalue)

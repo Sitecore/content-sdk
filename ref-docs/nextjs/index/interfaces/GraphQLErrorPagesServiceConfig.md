@@ -39,7 +39,7 @@ The language
 
 > `optional` **retries**: `number`
 
-Defined in: core/types/graphql-request-client.d.ts:75
+Defined in: core/types/graphql-request-client.d.ts:53
 
 Number of retries for client. Will use the specified `retryStrategy`.
 
@@ -53,7 +53,7 @@ Number of retries for client. Will use the specified `retryStrategy`.
 
 > `optional` **retryStrategy**: [`RetryStrategy`](../../graphql/interfaces/RetryStrategy.md)
 
-Defined in: core/types/graphql-request-client.d.ts:80
+Defined in: core/types/graphql-request-client.d.ts:58
 
 Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.

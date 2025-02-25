@@ -8,7 +8,7 @@
 
 > **GraphQLRequestClientFactoryConfig**: `object`
 
-Defined in: core/types/graphql-request-client.d.ts:96
+Defined in: core/types/graphql-request-client.d.ts:74
 
 Configuration type for
 

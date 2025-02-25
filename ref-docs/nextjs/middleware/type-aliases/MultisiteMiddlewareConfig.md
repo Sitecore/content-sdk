@@ -6,24 +6,6 @@
 
 # Type Alias: MultisiteMiddlewareConfig
 
-> **MultisiteMiddlewareConfig**: [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `object`
+> **MultisiteMiddlewareConfig**: [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `SitecoreConfig`\[`"multisite"`\]
 
-Defined in: [nextjs/src/middleware/multisite-middleware.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/multisite-middleware.ts#L21)
-
-## Type declaration
-
-### useCookieResolution()?
-
-> `optional` **useCookieResolution**: (`req`) => `boolean`
-
-Function used to determine if site should be resolved from sc_site cookie when present
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `req` | `NextRequest` |
-
-#### Returns
-
-`boolean`
+Defined in: [nextjs/src/middleware/multisite-middleware.ts:22](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/nextjs/src/middleware/multisite-middleware.ts#L22)

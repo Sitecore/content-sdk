@@ -6,6 +6,7 @@
 
 ## Modules
 
+- [config](config/README.md)
 - [editing](editing/README.md)
 - [graphql](graphql/README.md)
 - [i18n](i18n/README.md)

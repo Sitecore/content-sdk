@@ -6,7 +6,7 @@
 
 # Interface: RetryStrategy
 
-Defined in: core/types/graphql-request-client.d.ts:35
+Defined in: core/types/models.d.ts:23
 
 Defines the strategy for retrying GraphQL requests based on errors and attempts.
 
@@ -16,7 +16,7 @@ Defines the strategy for retrying GraphQL requests based on errors and attempts.
 
 > **getDelay**(`error`, `attempt`): `number`
 
-Defined in: core/types/graphql-request-client.d.ts:50
+Defined in: core/types/models.d.ts:38
 
 Calculates the delay (in milliseconds) before the next retry based on the given error and attempt count.
 
@@ -24,7 +24,7 @@ Calculates the delay (in milliseconds) before the next retry based on the given 
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `error` | [`GraphQLClientError`](../type-aliases/GraphQLClientError.md) | The error received from the GraphQL request. |
+| `error` | `GenericGraphQLClientError` | The error received from the GraphQL request. |
 | `attempt` | `number` | The current attempt number. |
 
 #### Returns
@@ -39,7 +39,7 @@ The delay in milliseconds before the next retry.
 
 > **shouldRetry**(`error`, `attempt`, `retries`): `boolean`
 
-Defined in: core/types/graphql-request-client.d.ts:43
+Defined in: core/types/models.d.ts:31
 
 Determines whether a request should be retried based on the given error and attempt count.
 
@@ -47,7 +47,7 @@ Determines whether a request should be retried based on the given error and atte
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `error` | [`GraphQLClientError`](../type-aliases/GraphQLClientError.md) | The error received from the GraphQL request. |
+| `error` | `GenericGraphQLClientError` | The error received from the GraphQL request. |
 | `attempt` | `number` | The current attempt number. |
 | `retries` | `number` | The number of retries configured. |
 

@@ -29,6 +29,7 @@
 ## Type Aliases
 
 - [Debugger](type-aliases/Debugger.md)
+- [GenericGraphQLClientError](type-aliases/GenericGraphQLClientError.md)
 - [GraphQLRequestClientConfig](type-aliases/GraphQLRequestClientConfig.md)
 - [GraphQLRequestClientFactory](type-aliases/GraphQLRequestClientFactory.md)
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
@@ -42,4 +43,5 @@
 
 ## Functions
 
+- [defineConfig](functions/defineConfig.md)
 - [enableDebug](functions/enableDebug.md)

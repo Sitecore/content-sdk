@@ -6,7 +6,7 @@
 
 # Interface: GraphQLDictionaryServiceConfig
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:10
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:25
 
 Configuration options for
 
@@ -64,7 +64,7 @@ Cache timeout (sec)
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../graphql/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:20
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:35
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -75,7 +75,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > `optional` **dictionaryEntryTemplateId**: `string`
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:25
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:40
 
 Optional. The template ID to use when searching for dictionary entries.
 
@@ -91,7 +91,7 @@ Optional. The template ID to use when searching for dictionary entries.
 
 > `optional` **jssAppTemplateId**: `string`
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:30
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:45
 
 Optional. The template ID of a JSS App to use when searching for the appRootId.
 
@@ -129,7 +129,7 @@ Optional. How many result items to fetch in each GraphQL call. This is needed fo
 
 > `optional` **retries**: `number`
 
-Defined in: core/types/graphql-request-client.d.ts:75
+Defined in: core/types/graphql-request-client.d.ts:53
 
 Number of retries for client. Will use the specified `retryStrategy`.
 
@@ -143,7 +143,7 @@ Number of retries for client. Will use the specified `retryStrategy`.
 
 > `optional` **retryStrategy**: [`RetryStrategy`](../../graphql/interfaces/RetryStrategy.md)
 
-Defined in: core/types/graphql-request-client.d.ts:80
+Defined in: core/types/graphql-request-client.d.ts:58
 
 Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
@@ -172,7 +172,7 @@ Optional. The ID of the search root item. Fetch items that have this item as an 
 
 > **siteName**: `string`
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:15
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:30
 
 The name of the current Sitecore site. This is used to to determine the search query root
 in cases where one is not specified by the caller.
@@ -190,13 +190,3 @@ Optional. Sitecore template ID(s). Fetch items that inherit from this template(s
 #### Inherited from
 
 `Omit.templates`
-
-***
-
-### useSiteQuery?
-
-> `optional` **useSiteQuery**: `boolean`
-
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:34
-
-Optional. Use site query for dictionary fetch instead of search query (XM Cloud only)

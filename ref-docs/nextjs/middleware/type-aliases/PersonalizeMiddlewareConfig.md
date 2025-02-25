@@ -6,26 +6,12 @@
 
 # Type Alias: PersonalizeMiddlewareConfig
 
-> **PersonalizeMiddlewareConfig**: [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `object`
+> **PersonalizeMiddlewareConfig**: [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:39](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/personalize-middleware.ts#L39)
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:39](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/nextjs/src/middleware/personalize-middleware.ts#L39)
 
 ## Type declaration
 
-### cdpConfig
+### clientFactory
 
-> **cdpConfig**: `CdpServiceConfig`
-
-Configuration for your Sitecore CDP endpoint
-
-### edgeConfig
-
-> **edgeConfig**: `Omit`\<`GraphQLPersonalizeServiceConfig`, `"fetch"`\>
-
-Configuration for your Sitecore Experience Edge endpoint
-
-### scope?
-
-> `optional` **scope**: `string`
-
-Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
+> **clientFactory**: [`GraphQLRequestClientFactory`](../../graphql/type-aliases/GraphQLRequestClientFactory.md)

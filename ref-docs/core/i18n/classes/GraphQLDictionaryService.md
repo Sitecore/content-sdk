@@ -6,7 +6,7 @@
 
 # Class: GraphQLDictionaryService
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:102](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/i18n/graphql-dictionary-service.ts#L102)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:114](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L114)
 
 Service that fetch dictionary data using Sitecore's GraphQL API.
 
@@ -14,9 +14,10 @@ Service that fetch dictionary data using Sitecore's GraphQL API.
 
 SearchQueryService<DictionaryQueryResult>
 
-## Extends
+## Implements
 
-- [`DictionaryServiceBase`](DictionaryServiceBase.md)
+- [`DictionaryService`](../interfaces/DictionaryService.md)
+- [`CacheClient`](../../index/interfaces/CacheClient.md)\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
 ## Constructors
 
@@ -24,7 +25,7 @@ SearchQueryService<DictionaryQueryResult>
 
 > **new GraphQLDictionaryService**(`options`): [`GraphQLDictionaryService`](GraphQLDictionaryService.md)
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:109](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/i18n/graphql-dictionary-service.ts#L109)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:121](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L121)
 
 Creates an instance of graphQL dictionary service with the provided options
 
@@ -38,23 +39,15 @@ Creates an instance of graphQL dictionary service with the provided options
 
 [`GraphQLDictionaryService`](GraphQLDictionaryService.md)
 
-#### Overrides
-
-[`DictionaryServiceBase`](DictionaryServiceBase.md).[`constructor`](DictionaryServiceBase.md#constructors)
-
 ## Properties
 
 ### options
 
 > **options**: [`GraphQLDictionaryServiceConfig`](../interfaces/GraphQLDictionaryServiceConfig.md)
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:109](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/i18n/graphql-dictionary-service.ts#L109)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:121](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L121)
 
 instance
-
-#### Inherited from
-
-[`DictionaryServiceBase`](DictionaryServiceBase.md).[`options`](DictionaryServiceBase.md#options-1)
 
 ## Methods
 
@@ -62,7 +55,7 @@ instance
 
 > **fetchDictionaryData**(`language`): `Promise`\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:120](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/i18n/graphql-dictionary-service.ts#L120)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:132](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L132)
 
 Fetches dictionary data for internalization. Uses search query by default
 
@@ -82,9 +75,9 @@ dictionary phrases
 
 if the app root was not found for the specified site and language.
 
-#### Overrides
+#### Implementation of
 
-[`DictionaryServiceBase`](DictionaryServiceBase.md).[`fetchDictionaryData`](DictionaryServiceBase.md#fetchdictionarydata)
+[`DictionaryService`](../interfaces/DictionaryService.md).[`fetchDictionaryData`](../interfaces/DictionaryService.md#fetchdictionarydata)
 
 ***
 
@@ -92,7 +85,7 @@ if the app root was not found for the specified site and language.
 
 > **fetchWithSiteQuery**(`language`): `Promise`\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:140](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/i18n/graphql-dictionary-service.ts#L140)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:152](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L152)
 
 Fetches dictionary data with site query
 This is the default behavior for XMCloud deployments. Uses `siteQuery` to retrieve data.
@@ -115,7 +108,7 @@ dictionary phrases
 
 > `protected` **getCacheClient**(): [`CacheClient`](../../index/interfaces/CacheClient.md)\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:62](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/i18n/dictionary-service.ts#L62)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:218](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L218)
 
 Gets a cache client that can cache data. Uses memory-cache as the default
 library for caching (@see MemoryCacheClient). Override this method if you
@@ -127,17 +120,13 @@ want to use something else.
 
 implementation
 
-#### Inherited from
-
-[`DictionaryServiceBase`](DictionaryServiceBase.md).[`getCacheClient`](DictionaryServiceBase.md#getcacheclient)
-
 ***
 
 ### getCacheValue()
 
 > **getCacheValue**(`key`): `null` \| [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:52](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/i18n/dictionary-service.ts#L52)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:208](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L208)
 
 Retrieves a
 
@@ -158,9 +147,9 @@ The
  - DictionaryPhrases value from the cache.
  - DictionaryPhrases value, or null if the specified key is not found in the cache.
 
-#### Inherited from
+#### Implementation of
 
-[`DictionaryServiceBase`](DictionaryServiceBase.md).[`getCacheValue`](DictionaryServiceBase.md#getcachevalue)
+[`CacheClient`](../../index/interfaces/CacheClient.md).[`getCacheValue`](../../index/interfaces/CacheClient.md#getcachevalue)
 
 ***
 
@@ -168,7 +157,7 @@ The
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:186](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/i18n/graphql-dictionary-service.ts#L186)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:228](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L228)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -186,7 +175,7 @@ implementation
 
 > **setCacheValue**(`key`, `value`): [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/i18n/dictionary-service.ts#L43)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:199](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L199)
 
 Caches a
 
@@ -211,6 +200,6 @@ DictionaryPhrases value for the specified cache key.
 
 CacheClient<DictionaryPhrases>
 
-#### Inherited from
+#### Implementation of
 
-[`DictionaryServiceBase`](DictionaryServiceBase.md).[`setCacheValue`](DictionaryServiceBase.md#setcachevalue)
+[`CacheClient`](../../index/interfaces/CacheClient.md).[`setCacheValue`](../../index/interfaces/CacheClient.md#setcachevalue)

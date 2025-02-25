@@ -6,7 +6,7 @@
 
 # Class: GraphQLSiteInfoService
 
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:41
+Defined in: core/types/site/graphql-siteinfo-service.d.ts:24
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: core/types/site/graphql-siteinfo-service.d.ts:41
 
 > **new GraphQLSiteInfoService**(`config`): [`GraphQLSiteInfoService`](GraphQLSiteInfoService.md)
 
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:49
+Defined in: core/types/site/graphql-siteinfo-service.d.ts:32
 
 Creates an instance of graphQL service to retrieve site configuration list from Sitecore
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL service to retrieve site configuration list from 
 
 > **get** `protected` **siteQuery**(): `string`
 
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:53
+Defined in: core/types/site/graphql-siteinfo-service.d.ts:36
 
 site query is available on XM Cloud and XP 10.4+
 
@@ -50,7 +50,7 @@ site query is available on XM Cloud and XP 10.4+
 
 > **fetchSiteInfo**(): `Promise`\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
 
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:54
+Defined in: core/types/site/graphql-siteinfo-service.d.ts:37
 
 #### Returns
 
@@ -62,7 +62,7 @@ Defined in: core/types/site/graphql-siteinfo-service.d.ts:54
 
 > `protected` **fetchWithSiteQuery**(): `Promise`\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
 
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:55
+Defined in: core/types/site/graphql-siteinfo-service.d.ts:38
 
 #### Returns
 
@@ -74,7 +74,7 @@ Defined in: core/types/site/graphql-siteinfo-service.d.ts:55
 
 > `protected` **getCacheClient**(): [`CacheClient`](../interfaces/CacheClient.md)\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
 
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:61
+Defined in: core/types/site/graphql-siteinfo-service.d.ts:44
 
 Gets cache client implementation
 Override this method if custom cache needs to be used
@@ -91,7 +91,7 @@ CacheClient instance
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:68
+Defined in: core/types/site/graphql-siteinfo-service.d.ts:51
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

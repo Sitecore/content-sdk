@@ -8,4 +8,4 @@
 
 > **Debugger**: `debug.Debugger`
 
-Defined in: [packages/core/src/debug.ts:6](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/debug.ts#L6)
+Defined in: [packages/core/src/debug.ts:6](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/debug.ts#L6)
