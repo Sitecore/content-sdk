@@ -15,7 +15,7 @@ export default defineConfig({
       apiHost: process.env.NEXT_PUBLIC_SITECORE_API_HOST,
     },
   },
-  defaultSite: process.env.SITECORE_SITE_NAME || 'sitecore-headless',
+  defaultSite: process.env.NEXT_PUBLIC_SITECORE_SITE_NAME || 'sitecore-headless',
   defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
   editingSecret: process.env.JSS_EDITING_SECRET,
   redirects: {
