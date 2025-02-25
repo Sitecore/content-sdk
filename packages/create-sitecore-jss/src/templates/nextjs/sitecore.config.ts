@@ -18,15 +18,12 @@ export default defineConfig({
   defaultSite: process.env.NEXT_PUBLIC_SITECORE_SITE_NAME || 'sitecore-headless',
   defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
   editingSecret: process.env.JSS_EDITING_SECRET,
-  redirects: {
-    enabled: process.env.NODE_ENV !== 'development',
-  },
+  redirects: {},
   multisite: {
     enabled: true,
     useCookieResolution: () => process.env.VERCEL_ENV === 'preview',
   },
   personalize: {
-    enabled: process.env.NODE_ENV !== 'development',
     scope: process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,
     edgeTimeout: parseInt(process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT || '0', 10),
     cdpTimeout: parseInt(process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT || '0', 10),

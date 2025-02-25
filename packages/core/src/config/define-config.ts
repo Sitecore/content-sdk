@@ -36,7 +36,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
     useCookieResolution: () => false,
   },
   personalize: {
-    enabled: true,
+    enabled: process.env.NODE_ENV !== 'development',
     edgeTimeout: 400,
     cdpTimeout: 400,
     scope: undefined,

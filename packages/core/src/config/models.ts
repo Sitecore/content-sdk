@@ -76,7 +76,7 @@ export type SitecoreConfigInput = {
     };
   };
   multisite: {
-    enabled: boolean;
+    enabled?: boolean;
     /**
      * Fallback hostname in case `host` header is not present
      * @default localhost
@@ -88,7 +88,7 @@ export type SitecoreConfigInput = {
     useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
   };
   personalize: {
-    enabled: boolean;
+    enabled?: boolean;
     /**
      * Configuration for your Sitecore Experience Edge endpoint
      */
@@ -111,7 +111,7 @@ export type SitecoreConfigInput = {
     currency?: string | undefined;
   };
   redirects: {
-    enabled: boolean;
+    enabled?: boolean;
     /**
      * These are all the locales you support in your application.
      * These should match those in your next.config.js (i18n.locales).
