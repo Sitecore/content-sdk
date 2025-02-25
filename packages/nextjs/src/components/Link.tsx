@@ -1,6 +1,6 @@
 ﻿import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import NextLink from 'next/link';
+import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import {
   Link as ReactLink,
   LinkFieldValue,
@@ -15,6 +15,10 @@ export type LinkProps = ReactLinkProps & {
    * @default /^\//g
    */
   internalLinkMatcher?: RegExp;
+  /**
+   * Next.js Link prefetch.
+   */
+  prefetch?: NextLinkProps['prefetch'];
 };
 
 /**
@@ -61,9 +65,15 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
             title={value.title}
             target={value.target}
             className={value.class}
+            prefetch={props.prefetch}
             {...htmlLinkProps}
             ref={ref}
-            {...(process.env.TEST ? { 'data-nextjs-link': true } : {})}
+            {...(process.env.TEST
+              ? {
+                  'data-nextjs-link': true,
+                  'data-nextjs-prefetch': props.prefetch,
+                }
+              : {})}
           >
             {text}
             {children}
@@ -72,9 +82,10 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       }
     }
 
-    // prevent passing internalLinkMatcher as it is an invalid DOM element prop
+    // prevent passing internalLinkMatcher or prefetch as it is an invalid DOM element prop
     const reactLinkProps = { ...props };
     delete reactLinkProps.internalLinkMatcher;
+    delete reactLinkProps.prefetch;
 
     return (
       <ReactLink

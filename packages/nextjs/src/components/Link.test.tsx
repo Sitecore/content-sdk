@@ -159,6 +159,26 @@ describe('<Link />', () => {
     expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
   });
 
+  it('should render with prefetch prop provided', () => {
+    const field = {
+      href: '/lorem',
+      text: 'ipsum',
+    };
+    const c = render(
+      <Page>
+        <Link field={field} prefetch={false} />
+      </Page>
+    );
+
+    const link = c.container.querySelector('a');
+
+    expect(link?.outerHTML).to.contain(field.href);
+    expect(link?.outerHTML).to.contain(field.text);
+
+    expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
+    expect(link?.getAttribute('data-nextjs-prefetch')).to.equal('false');
+  });
+
   it('should render other attributes with other props provided', () => {
     const field = {
       value: {
