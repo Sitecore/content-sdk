@@ -43,7 +43,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
     channel: 'WEB',
     currency: 'USD',
   },
-  defaultSite: 'sitecore-headless',
+  defaultSite: '',
   defaultLanguage: 'en',
   layout: {
     formatLayoutQuery: null,
