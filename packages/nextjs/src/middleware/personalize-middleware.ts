@@ -79,6 +79,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
     this.personalizeService = new GraphQLPersonalizeService({
       clientFactory: this.config.clientFactory,
+      timeout: this.config.edgeTimeout,
       scope: this.config.scope,
       fetch: fetch,
     });

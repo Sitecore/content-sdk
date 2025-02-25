@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsMiddleware } from './redirects-middleware';
+import { defaultConfig } from 'next/dist/server/config-shared';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -349,6 +350,27 @@ describe('RedirectsMiddleware', () => {
       });
 
       validateDebugLog('skipped (redirects middleware is disabled)');
+
+      expect(finalRes).to.deep.equal(res);
+
+      nextStub.restore();
+    });
+
+    it('should honor global "enabled" prop', async () => {
+      const res = createResponse({
+        url: 'http://localhost:3000',
+      });
+      const nextStub = sinon
+        .stub(NextResponse, 'next')
+        .callsFake(() => (res as unknown) as NextResponse);
+
+      const props = {
+        enabled: false,
+      };
+      const req = createRequest();
+      const { middleware } = createMiddleware(props);
+      const finalRes = await middleware.handle(req, res);
+      validateDebugLog('skipped (redirects middleware is disabled globally)');
 
       expect(finalRes).to.deep.equal(res);
 

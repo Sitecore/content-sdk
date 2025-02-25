@@ -144,14 +144,20 @@ describe('MultisiteMiddleware', () => {
         });
 
         const finalRes = await middleware.handle(req, res);
+        const isDisabledGlobally = middleware['config'].enabled === false;
 
-        validateDebugLog('multisite middleware start: %o', {
-          pathname,
-          language: 'en',
-          hostname: 'foo.net',
-        });
+        if (!isDisabledGlobally) {
+          validateDebugLog('multisite middleware start: %o', {
+            pathname,
+            language: 'en',
+            hostname: 'foo.net',
+          });
+        }
 
-        validateDebugLog('skipped (multisite middleware is disabled)');
+        const message = isDisabledGlobally
+          ? 'skipped (multisite middleware is disabled globally)'
+          : 'skipped (multisite middleware is disabled)';
+        validateDebugLog(message);
 
         expect(finalRes).to.deep.equal(res);
 

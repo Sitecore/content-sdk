@@ -316,7 +316,7 @@ describe('PersonalizeMiddleware', () => {
     });
     describe('disabled', () => {
       const res = createResponse();
-      const test = async (pathname: string, middleware) => {
+      const test = async (pathname: string, middleware: PersonalizeMiddleware) => {
         const req = createRequest({
           nextUrl: {
             pathname,
@@ -325,13 +325,19 @@ describe('PersonalizeMiddleware', () => {
         const finalRes = await middleware.handle(req, res);
         const headers = {};
         req.headers.forEach((value, key) => (headers[key] = value));
-        validateDebugLog('personalize middleware start: %o', {
-          hostname: 'foo.net',
-          pathname,
-          language: 'en',
-          headers,
-        });
-        validateDebugLog('skipped (personalize middleware is disabled)');
+        const isDisabledGlobally = middleware['config'].enabled === false;
+        if (!isDisabledGlobally) {
+          validateDebugLog('personalize middleware start: %o', {
+            hostname: 'foo.net',
+            pathname,
+            language: 'en',
+            headers,
+          });
+        }
+        const message = isDisabledGlobally
+          ? 'skipped (personalize middleware is disabled globally)'
+          : 'skipped (personalize middleware is disabled)';
+        validateDebugLog(message);
         expect(finalRes).to.deep.equal(res);
         debugSpy.resetHistory();
       };
@@ -346,6 +352,16 @@ describe('PersonalizeMiddleware', () => {
         const disabled = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
         const { middleware } = createMiddleware({
           config: { ...defaultConfig, disabled },
+        });
+        await test('/src/image.png', middleware);
+        await test('/api/layout/render', middleware);
+        await test('/sitecore/render', middleware);
+        await test('/_next/webpack', middleware);
+        await test('/crazypath/luna', middleware);
+      });
+      it('should be disable when "enable" prop is false', async () => {
+        const { middleware } = createMiddleware({
+          config: { ...defaultConfig, enabled: false },
         });
         await test('/src/image.png', middleware);
         await test('/api/layout/render', middleware);
@@ -848,6 +864,31 @@ describe('PersonalizeMiddleware', () => {
           sinon.match.any
         )
       ).to.be.true;
+      expect(finalRes).to.deep.equal(res);
+      nextRewriteStub.restore();
+    });
+
+    it('configured timeouts are used', async () => {
+      const pageId = 'item-id';
+      const edgeTimeout = 1000;
+      const cdpTimeout = 1000;
+      const req = createRequest();
+      const res = createResponse();
+      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const personalizeStub = sinon.stub().returns(Promise.resolve({ variantId: undefined }));
+      const { middleware, personalize } = createMiddleware({
+        config: { ...defaultConfig, edgeTimeout, cdpTimeout },
+        personalizeInfo: {
+          pageId,
+          variantIds: ['variant1'],
+        },
+        personalizeStub,
+      });
+      const finalRes = await middleware.handle(req, res);
+
+      expect(middleware['personalizeService']['config'].timeout).to.equal(edgeTimeout);
+      expect(personalize.calledWith(sinon.match({ timeout: cdpTimeout }), sinon.match.any)).to.be
+        .true;
       expect(finalRes).to.deep.equal(res);
       nextRewriteStub.restore();
     });
