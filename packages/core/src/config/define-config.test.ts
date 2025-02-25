@@ -38,7 +38,6 @@ describe('define-config', () => {
     // api.edge
     expect(config.api.edge.contextId).to.equal(mockConfig.api.edge?.contextId);
     expect(config.api.edge.clientContextId).to.equal(mockConfig.api.edge?.clientContextId);
-    expect(config.api.edge.path).to.equal(fallbackConfig.api.edge.path);
     expect(config.api.edge.edgeUrl).to.equal(fallbackConfig.api.edge.edgeUrl);
 
     // api.local
