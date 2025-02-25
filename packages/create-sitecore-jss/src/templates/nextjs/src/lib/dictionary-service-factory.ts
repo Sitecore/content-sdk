@@ -1,8 +1,6 @@
-﻿import {
-  DictionaryService,
-  GraphQLDictionaryService,
-} from '@sitecore-content-sdk/nextjs';
+﻿import { DictionaryService, GraphQLDictionaryService } from '@sitecore-content-sdk/nextjs';
 import clientFactory from 'lib/graphql-client-factory';
+import sitecoreConfig from 'sitecore.config';
 
 /**
  * Factory responsible for creating a DictionaryService instance
@@ -26,8 +24,10 @@ export class DictionaryServiceFactory {
         By default it uses the `DefaultRetryStrategy` with exponential back-off factor of 2 and handles error codes 429,
         502, 503, 504, 520, 521, 522, 523, 524, 'ECONNRESET', 'ETIMEDOUT' and 'EPROTO' . You can use this class or your own implementation of `RetryStrategy`.
       */
-      retries: (process.env.GRAPH_QL_SERVICE_RETRIES &&
-        parseInt(process.env.GRAPH_QL_SERVICE_RETRIES, 10)) as number,
+      retries: sitecoreConfig.retries.count,
+      retryStrategy: sitecoreConfig.retries.retryStrategy,
+      cacheEnabled: sitecoreConfig.dictionary.caching.enabled,
+      cacheTimeout: sitecoreConfig.dictionary.caching.timeout,
     });
   }
 }

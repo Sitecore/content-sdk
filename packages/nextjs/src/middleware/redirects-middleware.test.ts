@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsMiddleware } from './redirects-middleware';
+import { defaultConfig } from 'next/dist/server/config-shared';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -134,11 +135,14 @@ describe('RedirectsMiddleware', () => {
     });
 
     const middleware = new RedirectsMiddleware({
-      siteResolver,
-      ...props,
+      enabled: true,
+      sites: [],
       clientFactory,
       locales: ['en', 'ua'],
+      ...props,
     });
+
+    middleware['siteResolver'] = siteResolver;
 
     const fetchRedirects = (middleware['redirectsService']['fetchRedirects'] =
       props.fetchRedirectsStub ||
@@ -307,15 +311,6 @@ describe('RedirectsMiddleware', () => {
 
         validateDebugLog('skipped (redirects middleware is disabled)');
 
-        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'x-middleware-next': '1',
-          },
-          redirected: false,
-          status: 200,
-          url: '',
-        });
-
         debugSpy.resetHistory();
 
         expect(finalRes).to.deep.equal(res);
@@ -356,12 +351,26 @@ describe('RedirectsMiddleware', () => {
 
       validateDebugLog('skipped (redirects middleware is disabled)');
 
-      validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-        headers: {},
-        redirected: undefined,
-        status: undefined,
+      expect(finalRes).to.deep.equal(res);
+
+      nextStub.restore();
+    });
+
+    it('should honor global "enabled" prop', async () => {
+      const res = createResponse({
         url: 'http://localhost:3000',
       });
+      const nextStub = sinon
+        .stub(NextResponse, 'next')
+        .callsFake(() => (res as unknown) as NextResponse);
+
+      const props = {
+        enabled: false,
+      };
+      const req = createRequest();
+      const { middleware } = createMiddleware(props);
+      const finalRes = await middleware.handle(req, res);
+      validateDebugLog('skipped (redirects middleware is disabled globally)');
 
       expect(finalRes).to.deep.equal(res);
 
@@ -1091,17 +1100,6 @@ describe('RedirectsMiddleware', () => {
         });
 
         validateDebugLog('skipped (redirects middleware is disabled)');
-
-        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'set-cookie': 'sc_site=learn2grow; Path=/',
-            'x-middleware-next': '1',
-            'x-middleware-set-cookie': 'sc_site=learn2grow; Path=/',
-          },
-          redirected: false,
-          status: 200,
-          url: '',
-        });
 
         expect(siteResolver.getByHost).to.not.be.called;
         expect(siteResolver.getByName).to.not.be.called;

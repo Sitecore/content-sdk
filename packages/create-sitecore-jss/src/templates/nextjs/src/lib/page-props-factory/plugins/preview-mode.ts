@@ -3,6 +3,7 @@ import {
   SiteInfo,
   personalizeLayout,
   getGroomedVariantIds,
+  RestComponentLayoutService,
 } from '@sitecore-content-sdk/nextjs';
 import {
   EditingPreviewData,
@@ -11,8 +12,7 @@ import {
 import { SitecorePageProps } from 'lib/page-props';
 import { graphQLEditingService } from 'lib/graphql-editing-service';
 import { Plugin } from '..';
-import { RestComponentLayoutService } from '@sitecore-content-sdk/nextjs';
-import config from 'temp/config';
+import config from 'sitecore.config';
 
 class PreviewModePlugin implements Plugin {
   order = 1;
@@ -21,21 +21,16 @@ class PreviewModePlugin implements Plugin {
     if (!context.preview || !context.previewData) return props;
 
     if (isComponentLibraryPreviewData(context.previewData)) {
-      const {
-        itemId,
-        componentUid,
-        site,
-        language,
-        renderingId,
-        dataSourceId,
-        version,
-      } = context.previewData;
+      if (!config.api.local) {
+        throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
+      }
+      const { itemId, componentUid, site, language, renderingId, dataSourceId, version } =
+        context.previewData;
 
       const componentService = new RestComponentLayoutService({
-        apiHost: config.sitecoreApiHost,
-        apiKey: config.sitecoreApiKey,
+        apiHost: config.api.local?.apiHost,
+        apiKey: config.api.local?.apiKey,
         siteName: site,
-        configurationName: config.layoutServiceConfigurationName,
       });
 
       const componentData = await componentService.fetchComponentData({
@@ -69,14 +64,8 @@ class PreviewModePlugin implements Plugin {
     }
 
     // If we're in Pages preview (editing) mode, prefetch the editing data
-    const {
-      site,
-      itemId,
-      language,
-      version,
-      variantIds,
-      layoutKind,
-    } = context.previewData as EditingPreviewData;
+    const { site, itemId, language, version, variantIds, layoutKind } =
+      context.previewData as EditingPreviewData;
 
     const data = await graphQLEditingService.fetchEditingData({
       siteName: site,

@@ -17,7 +17,7 @@ export type MiddlewareBaseConfig = {
   /**
    * Site resolution implementation by name/hostname
    */
-  siteResolver: SiteResolver;
+  sites: SiteInfo[];
 };
 
 /**
@@ -40,9 +40,11 @@ export abstract class MiddlewareBase extends Middleware {
   protected SITE_SYMBOL = 'sc_site';
   protected REWRITE_HEADER_NAME = 'x-sc-rewrite';
   protected defaultHostname: string;
+  protected siteResolver: SiteResolver;
 
   constructor(protected config: MiddlewareBaseConfig) {
     super();
+    this.siteResolver = new SiteResolver(config.sites);
     this.defaultHostname = config.defaultHostname || 'localhost';
   }
 
@@ -119,11 +121,11 @@ export abstract class MiddlewareBase extends Middleware {
   protected getSite(req: NextRequest, res?: NextResponse): SiteInfo {
     const siteNameCookie = res?.cookies.get(this.SITE_SYMBOL)?.value;
 
-    if (siteNameCookie) return this.config.siteResolver.getByName(siteNameCookie);
+    if (siteNameCookie) return this.siteResolver.getByName(siteNameCookie);
 
     const hostname = this.getHostHeader(req) || this.defaultHostname;
 
-    return this.config.siteResolver.getByHost(hostname);
+    return this.siteResolver.getByHost(hostname);
   }
 
   /**

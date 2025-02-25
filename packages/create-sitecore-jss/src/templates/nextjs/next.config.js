@@ -1,4 +1,3 @@
-const jssConfig = require('./src/temp/config');
 const plugins = require('./src/temp/next-config-plugins') || {};
 
 /**
@@ -14,7 +13,7 @@ const nextConfig = {
     locales: ['en'],
     // This is the locale that will be used when visiting a non-locale
     // prefixed path e.g. `/about`.
-    defaultLocale: jssConfig.defaultLanguage,
+    defaultLocale: process.env.DEFAULT_LANGUAGE || 'en',
   },
 
   // Enable React Strict Mode

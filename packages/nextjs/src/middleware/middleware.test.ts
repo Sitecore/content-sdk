@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import chaiString from 'chai-string';
 import { defineMiddleware, Middleware, MiddlewareBase } from './middleware';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
-import { SiteResolver } from '@sitecore-content-sdk/core/site';
+import { SiteResolver } from '../site';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -67,14 +67,14 @@ describe('MiddlewareBase', () => {
 
   describe('defaultHostname', () => {
     it('should set default hostname', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
 
       expect(middleware['defaultHostname']).to.equal('localhost');
     });
 
     it('should set custom hostname', () => {
       const middleware = new SampleMiddleware({
-        siteResolver: new MockSiteResolver([]),
+        sites: [],
         defaultHostname: 'foo',
       });
 
@@ -84,7 +84,7 @@ describe('MiddlewareBase', () => {
 
   describe('isPreview', () => {
     it('should return true prerender bypass cookie is provided', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq({
         cookieValues: {
           __prerender_bypass: true,
@@ -95,7 +95,7 @@ describe('MiddlewareBase', () => {
     });
 
     it('should return true when preview data cookie is provided', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq({
         cookieValues: {
           __next_preview_data: true,
@@ -106,7 +106,7 @@ describe('MiddlewareBase', () => {
     });
 
     it('should return false when required cookie is not provided', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq();
 
       expect(middleware['isPreview'](req)).to.equal(false);
@@ -115,7 +115,7 @@ describe('MiddlewareBase', () => {
 
   describe('isPrefetch', () => {
     it('should return true when purpose header is prefetch', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq({
         headerValues: {
           purpose: 'prefetch',
@@ -126,7 +126,7 @@ describe('MiddlewareBase', () => {
     });
 
     it('should return true when Next-Router-Prefetch header is 1', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq({
         headerValues: {
           'Next-Router-Prefetch': '1',
@@ -137,7 +137,7 @@ describe('MiddlewareBase', () => {
     });
 
     it('should return false when required header is not provided', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq();
 
       expect(middleware['isPrefetch'](req)).to.equal(false);
@@ -146,7 +146,7 @@ describe('MiddlewareBase', () => {
 
   describe('disabled', () => {
     it('default', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
 
       expect(
         middleware['disabled'](
@@ -182,7 +182,7 @@ describe('MiddlewareBase', () => {
 
     it('custom function', () => {
       const middleware = new SampleMiddleware({
-        siteResolver: new MockSiteResolver([]),
+        sites: [],
         disabled(req: NextRequest) {
           const path = req.nextUrl.pathname;
           return path === 'foo';
@@ -213,7 +213,7 @@ describe('MiddlewareBase', () => {
   });
 
   it('extractDebugHeaders', () => {
-    const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+    const middleware = new SampleMiddleware({ sites: [] });
 
     const headers = new Headers({});
     headers.set('foo', 'net');
@@ -227,7 +227,7 @@ describe('MiddlewareBase', () => {
 
   describe('getHostHeader', () => {
     it('should return default hostname when header is not present', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq({
         headerValues: {
           foo: 'one',
@@ -238,7 +238,7 @@ describe('MiddlewareBase', () => {
     });
 
     it('should return host header', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq({
         headerValues: {
           foo: 'one',
@@ -252,7 +252,7 @@ describe('MiddlewareBase', () => {
 
   describe('getLanguage', () => {
     it('should return defined language', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq({
         nextUrl: {
           locale: 'be',
@@ -264,7 +264,7 @@ describe('MiddlewareBase', () => {
     });
 
     it('should return defined default language', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq({
         nextUrl: {
           defaultLocale: 'fr',
@@ -275,7 +275,7 @@ describe('MiddlewareBase', () => {
     });
 
     it('should return fallback language', () => {
-      const middleware = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+      const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq();
 
       expect(middleware['getLanguage'](req)).to.equal('en');
@@ -290,11 +290,11 @@ describe('MiddlewareBase', () => {
           sc_site: 'xxx',
         },
       });
-      const siteResolver = new MockSiteResolver([]);
-      const middleware = new SampleMiddleware({ siteResolver });
+      const middleware = new SampleMiddleware({ sites: [] });
+      middleware['siteResolver'] = new MockSiteResolver([]);
 
       expect(middleware['getSite'](req, res).name).to.equal('xxx');
-      expect(siteResolver.getByName).to.be.calledWith('xxx');
+      expect(middleware['siteResolver'].getByName).to.be.calledWith('xxx');
     });
   });
 
@@ -305,31 +305,31 @@ describe('MiddlewareBase', () => {
       },
     });
     const res = createRes();
-    const siteResolver = new MockSiteResolver([]);
-    const middleware = new SampleMiddleware({ siteResolver });
+    const middleware = new SampleMiddleware({ sites: [] });
+    middleware['siteResolver'] = new MockSiteResolver([]);
 
     expect(middleware['getSite'](req, res).hostName).to.equal('xxx.net');
-    expect(siteResolver.getByHost).to.be.calledWith('xxx.net');
+    expect(middleware['siteResolver'].getByHost).to.be.calledWith('xxx.net');
   });
 
   it('should get site by default host', () => {
     const req = createReq();
     const res = createRes();
-    const siteResolver = new MockSiteResolver([]);
-    const middleware = new SampleMiddleware({ siteResolver });
+    const middleware = new SampleMiddleware({ sites: [] });
+    middleware['siteResolver'] = new MockSiteResolver([]);
 
     expect(middleware['getSite'](req, res).hostName).to.equal('localhost');
-    expect(siteResolver.getByHost).to.be.calledWith('localhost');
+    expect(middleware['siteResolver'].getByHost).to.be.calledWith('localhost');
   });
 
   it('should get site by custom default host', () => {
     const req = createReq();
     const res = createRes();
-    const siteResolver = new MockSiteResolver([]);
-    const middleware = new SampleMiddleware({ siteResolver, defaultHostname: 'yyy.net' });
+    const middleware = new SampleMiddleware({ sites: [], defaultHostname: 'yyy.net' });
+    middleware['siteResolver'] = new MockSiteResolver([]);
 
     expect(middleware['getSite'](req, res).hostName).to.equal('yyy.net');
-    expect(siteResolver.getByHost).to.be.calledWith('yyy.net');
+    expect(middleware['siteResolver'].getByHost).to.be.calledWith('yyy.net');
   });
 });
 
@@ -347,7 +347,7 @@ describe('defineMiddleware', () => {
     }
 
     const middleware1 = new SampleMiddleware({
-      siteResolver: new MockSiteResolver([]),
+      sites: [],
     });
     const middleware2: Middleware = {
       handle: (_req, res) => {
@@ -384,7 +384,7 @@ describe('defineMiddleware', () => {
       }
     }
 
-    const middleware1 = new SampleMiddleware({ siteResolver: new MockSiteResolver([]) });
+    const middleware1 = new SampleMiddleware({ sites: [] });
     const middleware2: Middleware = {
       handle: (_req, res) => {
         res.headers.set('m2', 'true');

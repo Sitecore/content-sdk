@@ -8,7 +8,7 @@ import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { GraphQLRequestClient, debug } from '@sitecore-content-sdk/core';
 import { SiteResolver } from '@sitecore-content-sdk/core/site';
 import { CdpHelper } from '@sitecore-content-sdk/core/personalize';
-import { PersonalizeMiddleware } from './personalize-middleware';
+import { PersonalizeMiddleware, PersonalizeMiddlewareConfig } from './personalize-middleware';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -32,6 +32,20 @@ describe('PersonalizeMiddleware', () => {
   const variantIds = ['variant-1', 'variant-2'];
   const defaultLang = 'en';
   const referrer = 'http://localhost:3000';
+
+  const defaultConfig: Omit<PersonalizeMiddlewareConfig, 'clientFactory'> = {
+    enabled: true,
+    edgeTimeout: 400,
+    cdpTimeout: 400,
+    scope: undefined,
+    channel: undefined,
+    currency: undefined,
+    contextId: '0000-0000-0000',
+    clientContextId: '0000-0000-0000',
+    edgeUrl: 'https://foo.bar',
+    sites: [],
+  };
+
   const createRequest = (props: any = {}) => {
     const req = {
       ...props,
@@ -138,11 +152,9 @@ describe('PersonalizeMiddleware', () => {
   const createMiddleware = (
     props: {
       [key: string]: unknown;
+      config?: Omit<PersonalizeMiddlewareConfig, 'clientFactory'>;
       language?: string;
       siteResolver?: SiteResolver;
-      edgeConfig?: any;
-      cdpConfig?: any;
-      scope?: string;
       variantId?: string;
       personalizeInfo?: {
         pageId: string;
@@ -151,20 +163,16 @@ describe('PersonalizeMiddleware', () => {
       getPersonalizeInfoStub?: sinon.SinonStub;
       personalizeStub?: sinon.SinonStub;
       handleCookieStub?: sinon.SinonStub;
-    } = {}
+    } = { config: defaultConfig }
   ) => {
-    const cdpConfig = {
-      sitecoreEdgeContextId: '0000-0000-0000',
-      sitecoreEdgeUrl: 'https://foo.bar',
-      ...(props?.cdpConfig || {}),
-    };
     const clientFactory = GraphQLRequestClient.createClientFactory({
       apiKey: 'edge-api-key',
       endpoint: 'http://edge-endpoint/api/graph/edge',
     });
-    const edgeConfig = {
+    const personalizeConfig = {
+      ...defaultConfig,
       clientFactory,
-      ...(props?.edgeConfig || {}),
+      ...(props?.config || {}),
     };
 
     class MockSiteResolver extends SiteResolver {
@@ -183,11 +191,10 @@ describe('PersonalizeMiddleware', () => {
 
     const siteResolver: SiteResolver = props.siteResolver || new MockSiteResolver([]);
     const middleware = new PersonalizeMiddleware({
-      siteResolver,
       ...props,
-      cdpConfig,
-      edgeConfig,
+      ...personalizeConfig,
     });
+    middleware['siteResolver'] = siteResolver;
 
     const initPersonalizeServer = (middleware['initPersonalizeServer'] = sinon.stub());
 
@@ -309,7 +316,7 @@ describe('PersonalizeMiddleware', () => {
     });
     describe('disabled', () => {
       const res = createResponse();
-      const test = async (pathname: string, middleware) => {
+      const test = async (pathname: string, middleware: PersonalizeMiddleware) => {
         const req = createRequest({
           nextUrl: {
             pathname,
@@ -318,13 +325,19 @@ describe('PersonalizeMiddleware', () => {
         const finalRes = await middleware.handle(req, res);
         const headers = {};
         req.headers.forEach((value, key) => (headers[key] = value));
-        validateDebugLog('personalize middleware start: %o', {
-          hostname: 'foo.net',
-          pathname,
-          language: 'en',
-          headers,
-        });
-        validateDebugLog('skipped (personalize middleware is disabled)');
+        const isDisabledGlobally = middleware['config'].enabled === false;
+        if (!isDisabledGlobally) {
+          validateDebugLog('personalize middleware start: %o', {
+            hostname: 'foo.net',
+            pathname,
+            language: 'en',
+            headers,
+          });
+        }
+        const message = isDisabledGlobally
+          ? 'skipped (personalize middleware is disabled globally)'
+          : 'skipped (personalize middleware is disabled)';
+        validateDebugLog(message);
         expect(finalRes).to.deep.equal(res);
         debugSpy.resetHistory();
       };
@@ -338,7 +351,17 @@ describe('PersonalizeMiddleware', () => {
       it('should apply both default and custom rules when custom disabled function provided', async () => {
         const disabled = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
         const { middleware } = createMiddleware({
-          disabled,
+          config: { ...defaultConfig, disabled },
+        });
+        await test('/src/image.png', middleware);
+        await test('/api/layout/render', middleware);
+        await test('/sitecore/render', middleware);
+        await test('/_next/webpack', middleware);
+        await test('/crazypath/luna', middleware);
+      });
+      it('should be disable when "enable" prop is false', async () => {
+        const { middleware } = createMiddleware({
+          config: { ...defaultConfig, enabled: false },
         });
         await test('/src/image.png', middleware);
         await test('/api/layout/render', middleware);
@@ -825,7 +848,7 @@ describe('PersonalizeMiddleware', () => {
       const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const personalizeStub = sinon.stub().returns(Promise.resolve({ variantId: undefined }));
       const { middleware, getPersonalizeInfo, personalize } = createMiddleware({
-        scope,
+        config: { ...defaultConfig, scope },
         personalizeInfo: {
           pageId,
           variantIds: ['variant1'],
@@ -841,6 +864,31 @@ describe('PersonalizeMiddleware', () => {
           sinon.match.any
         )
       ).to.be.true;
+      expect(finalRes).to.deep.equal(res);
+      nextRewriteStub.restore();
+    });
+
+    it('configured timeouts are used', async () => {
+      const pageId = 'item-id';
+      const edgeTimeout = 1000;
+      const cdpTimeout = 1000;
+      const req = createRequest();
+      const res = createResponse();
+      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const personalizeStub = sinon.stub().returns(Promise.resolve({ variantId: undefined }));
+      const { middleware, personalize } = createMiddleware({
+        config: { ...defaultConfig, edgeTimeout, cdpTimeout },
+        personalizeInfo: {
+          pageId,
+          variantIds: ['variant1'],
+        },
+        personalizeStub,
+      });
+      const finalRes = await middleware.handle(req, res);
+
+      expect(middleware['personalizeService']['config'].timeout).to.equal(edgeTimeout);
+      expect(personalize.calledWith(sinon.match({ timeout: cdpTimeout }), sinon.match.any)).to.be
+        .true;
       expect(finalRes).to.deep.equal(res);
       nextRewriteStub.restore();
     });

@@ -3,7 +3,7 @@ import * as FEAAS from '@sitecore-feaas/clientside/react';
 import * as Events from '@sitecore-cloudsdk/events/browser';
 import '@sitecore/components/context';
 import dynamic from 'next/dynamic';
-import config from 'temp/config';
+import config from 'sitecore.config';
 import {
   LayoutServicePageState,
   SitecoreContextReactContext,
@@ -30,10 +30,10 @@ const BYOCInit = (): JSX.Element | null => {
   const sitecoreContext = React.useContext(SitecoreContextReactContext).context;
   // Set context properties to be available within BYOC components
   FEAAS.setContextProperties({
-    sitecoreEdgeUrl: config.sitecoreEdgeUrl,
-    sitecoreEdgeContextId: config.sitecoreEdgeContextId,
+    sitecoreEdgeUrl: config.api.edge?.edgeUrl,
+    sitecoreEdgeContextId: config.api.edge?.contextId,
     pageState: sitecoreContext?.pageState || LayoutServicePageState.Normal,
-    siteName: sitecoreContext?.site?.name || config.sitecoreSiteName,
+    siteName: sitecoreContext?.site?.name || config.defaultSite,
     eventsSDK: Events,
   });
 

@@ -25,11 +25,9 @@ export {
   GraphQLErrorPagesServiceConfig,
 } from './graphql-error-pages-service';
 
-export {
-  SiteInfo,
-  GraphQLSiteInfoService,
-  GraphQLSiteInfoServiceConfig,
-} from './graphql-siteinfo-service';
+export { GraphQLSiteInfoService, GraphQLSiteInfoServiceConfig } from './graphql-siteinfo-service';
+
+export { SiteInfo } from './models';
 
 export { getSiteRewrite, getSiteRewriteData, normalizeSiteRewrite, SiteRewriteData } from './utils';
 export { SiteResolver } from './site-resolver';

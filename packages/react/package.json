@@ -12,7 +12,7 @@
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
     "lint": "eslint \"./src/**/*.tsx\" \"./src/**/*.ts\"",
-    "test": "mocha --require ts-node/register/transpile-only --require ./src/tests/jsdom-setup.ts \"./src/**/*.test.ts\" \"./src/**/*.test.tsx\" --exit",
+    "test": "mocha --require ./test/setup.js \"./src/**/*.test.ts\" \"./src/**/*.test.tsx\" --exit",
     "prepublishOnly": "npm run build",
     "coverage": "nyc npm test",
     "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/react src/index.ts --githubPages false"

@@ -3,7 +3,7 @@ import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import { getSiteRewriteData } from '@sitecore-content-sdk/nextjs';
 import { Plugin } from '..';
 import { siteResolver } from 'lib/site-resolver';
-import config from 'temp/config';
+import config from 'sitecore.config';
 
 class SitePlugin implements Plugin {
   order = 0;
@@ -19,7 +19,7 @@ class SitePlugin implements Plugin {
         : context.params.path ?? '/';
 
     // Get site name (from path)
-    const siteData = getSiteRewriteData(path, config.sitecoreSiteName);
+    const siteData = getSiteRewriteData(path, config.defaultSite);
 
     // Resolve site by name
     props.site = siteResolver.getByName(siteData.siteName);

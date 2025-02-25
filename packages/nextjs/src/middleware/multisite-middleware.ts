@@ -2,6 +2,7 @@
 import { getSiteRewrite } from '@sitecore-content-sdk/core/site';
 import { debug } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
+import { SitecoreConfig } from '../config';
 
 export type CookieAttributes = {
   /**
@@ -18,12 +19,7 @@ export type CookieAttributes = {
   sameSite?: true | false | 'lax' | 'strict' | 'none' | undefined;
 };
 
-export type MultisiteMiddlewareConfig = MiddlewareBaseConfig & {
-  /**
-   * Function used to determine if site should be resolved from sc_site cookie when present
-   */
-  useCookieResolution?: (req: NextRequest) => boolean;
-};
+export type MultisiteMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['multisite'];
 
 /**
  * Middleware / handler for multisite support
@@ -37,6 +33,10 @@ export class MultisiteMiddleware extends MiddlewareBase {
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+    if (!this.config.enabled) {
+      debug.multisite('skipped (multisite middleware is disabled globally)');
+      return res;
+    }
     try {
       const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req);
@@ -67,7 +67,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
         (this.config.useCookieResolution &&
           this.config.useCookieResolution(req) &&
           req.cookies.get(this.SITE_SYMBOL)?.value) ||
-        this.config.siteResolver.getByHost(hostname).name;
+        this.siteResolver.getByHost(hostname).name;
 
       // Rewrite to site specific path
       const rewritePath = getSiteRewrite(pathname, {

@@ -1,5 +1,6 @@
-export { DictionaryPhrases, DictionaryService, DictionaryServiceBase } from './dictionary-service';
 export {
+  DictionaryService,
+  DictionaryPhrases,
   GraphQLDictionaryServiceConfig,
   GraphQLDictionaryService,
 } from './graphql-dictionary-service';

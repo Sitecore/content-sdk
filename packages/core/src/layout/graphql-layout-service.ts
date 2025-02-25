@@ -6,31 +6,25 @@ import {
   GraphQLRequestClientConfig,
 } from '../graphql-request-client';
 import debug from '../debug';
+import { SitecoreConfig } from '../config';
 
 export const GRAPHQL_LAYOUT_QUERY_NAME = 'JssLayoutQuery';
 
-export interface GraphQLLayoutServiceConfig
-  extends Pick<GraphQLRequestClientConfig, 'retries' | 'retryStrategy'> {
-  /**
-   * The JSS application name
-   */
-  siteName: string;
-  /**
-   * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
-   * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
-   */
-  clientFactory: GraphQLRequestClientFactory;
-  /**
-   * Override default layout query
-   * @param {string} siteName
-   * @param {string} itemPath
-   * @param {string} [locale]
-   * @returns {string} custom layout query
-   * Layout query
-   * layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")
-   */
-  formatLayoutQuery?: (siteName: string, itemPath: string, locale?: string) => string;
-}
+export type GraphQLLayoutServiceConfig = Pick<
+  GraphQLRequestClientConfig,
+  'retries' | 'retryStrategy'
+> &
+  Partial<SitecoreConfig['layout']> & {
+    /**
+     * The JSS application name
+     */
+    siteName: string;
+    /**
+     * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
+     * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
+     */
+    clientFactory: GraphQLRequestClientFactory;
+  };
 
 /**
  * Service that fetch layout data using Sitecore's GraphQL API.
