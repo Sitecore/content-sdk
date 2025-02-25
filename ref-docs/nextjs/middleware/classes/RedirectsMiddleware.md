@@ -6,7 +6,7 @@
 
 # Class: RedirectsMiddleware
 
-Defined in: [nextjs/src/middleware/redirects-middleware.ts:42](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/redirects-middleware.ts#L42)
+Defined in: [nextjs/src/middleware/redirects-middleware.ts:42](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/redirects-middleware.ts#L42)
 
 Middleware / handler fetches all redirects from Sitecore instance by grapqhl service
 compares with current url and redirects to target url
@@ -21,7 +21,7 @@ compares with current url and redirects to target url
 
 > **new RedirectsMiddleware**(`config`?): [`RedirectsMiddleware`](RedirectsMiddleware.md)
 
-Defined in: [nextjs/src/middleware/redirects-middleware.ts:49](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/redirects-middleware.ts#L49)
+Defined in: [nextjs/src/middleware/redirects-middleware.ts:49](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/redirects-middleware.ts#L49)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [nextjs/src/middleware/redirects-middleware.ts:49](https://github.co
 
 > `protected` **config**: [`RedirectsMiddlewareConfig`](../type-aliases/RedirectsMiddlewareConfig.md)
 
-Defined in: [nextjs/src/middleware/redirects-middleware.ts:49](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/redirects-middleware.ts#L49)
+Defined in: [nextjs/src/middleware/redirects-middleware.ts:49](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/redirects-middleware.ts#L49)
 
 redirects middleware config
 
@@ -57,7 +57,7 @@ redirects middleware config
 
 > `protected` **defaultHostname**: `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:42](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L42)
+Defined in: [nextjs/src/middleware/middleware.ts:42](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L42)
 
 #### Inherited from
 
@@ -69,7 +69,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:42](https://github.com/Sitecore
 
 > `protected` **REWRITE\_HEADER\_NAME**: `string` = `'x-sc-rewrite'`
 
-Defined in: [nextjs/src/middleware/middleware.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L41)
+Defined in: [nextjs/src/middleware/middleware.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L41)
 
 #### Inherited from
 
@@ -81,7 +81,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:41](https://github.com/Sitecore
 
 > `protected` **SITE\_SYMBOL**: `string` = `'sc_site'`
 
-Defined in: [nextjs/src/middleware/middleware.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L40)
+Defined in: [nextjs/src/middleware/middleware.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L40)
 
 #### Inherited from
 
@@ -93,7 +93,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:40](https://github.com/Sitecore
 
 > `protected` **disabled**(`req`, `res`): `undefined` \| `boolean`
 
-Defined in: [nextjs/src/middleware/middleware.ts:72](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L72)
+Defined in: [nextjs/src/middleware/middleware.ts:72](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L72)
 
 #### Parameters
 
@@ -116,7 +116,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:72](https://github.com/Sitecore
 
 > `protected` **extractDebugHeaders**(`incomingHeaders`): `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:89](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L89)
+Defined in: [nextjs/src/middleware/middleware.ts:89](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L89)
 
 Safely extract all headers for debug logging
 Necessary to avoid middleware issue https://github.com/vercel/next.js/issues/39765
@@ -143,7 +143,7 @@ Object with headers as key/value pairs
 
 > `protected` **getHostHeader**(`req`): `undefined` \| `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:108](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L108)
+Defined in: [nextjs/src/middleware/middleware.ts:108](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L108)
 
 Extract 'host' header
 
@@ -167,7 +167,7 @@ Extract 'host' header
 
 > `protected` **getLanguage**(`req`): `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:100](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L100)
+Defined in: [nextjs/src/middleware/middleware.ts:100](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L100)
 
 Provides used language
 
@@ -193,7 +193,7 @@ language
 
 > `protected` **getSite**(`req`, `res`?): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
-Defined in: [nextjs/src/middleware/middleware.ts:119](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L119)
+Defined in: [nextjs/src/middleware/middleware.ts:119](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L119)
 
 Get site information.
 Can not be used in **Preview** mode, since site will not be resolved
@@ -221,7 +221,7 @@ site information
 
 > **handle**(`req`, `res`): `Promise`\<`NextResponse`\>
 
-Defined in: [nextjs/src/middleware/redirects-middleware.ts:58](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/redirects-middleware.ts#L58)
+Defined in: [nextjs/src/middleware/redirects-middleware.ts:58](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/redirects-middleware.ts#L58)
 
 Handler method to execute middleware logic
 
@@ -246,7 +246,7 @@ Handler method to execute middleware logic
 
 > `protected` **isPrefetch**(`req`): `boolean`
 
-Defined in: [nextjs/src/middleware/middleware.ts:65](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L65)
+Defined in: [nextjs/src/middleware/middleware.ts:65](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L65)
 
 Determines if the request is a Next.js (next/link) prefetch request
 
@@ -272,7 +272,7 @@ is prefetch
 
 > `protected` **isPreview**(`req`): `boolean`
 
-Defined in: [nextjs/src/middleware/middleware.ts:54](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L54)
+Defined in: [nextjs/src/middleware/middleware.ts:54](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L54)
 
 Determines if mode is preview
 
@@ -298,7 +298,7 @@ is preview
 
 > `protected` **rewrite**(`rewritePath`, `req`, `res`): `NextResponse`
 
-Defined in: [nextjs/src/middleware/middleware.ts:135](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/middleware/middleware.ts#L135)
+Defined in: [nextjs/src/middleware/middleware.ts:135](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/middleware/middleware.ts#L135)
 
 Create a rewrite response
 

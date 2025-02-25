@@ -8,7 +8,7 @@
 
 > **LinkProps**: `ReactLinkProps` & `object`
 
-Defined in: [nextjs/src/components/Link.tsx:12](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/nextjs/src/components/Link.tsx#L12)
+Defined in: [nextjs/src/components/Link.tsx:12](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/nextjs/src/components/Link.tsx#L12)
 
 ## Type declaration
 
@@ -23,3 +23,9 @@ If `href` match with `internalLinkMatcher` regexp, then it's internal link and N
 ```ts
 /^//g
 ```
+
+### prefetch?
+
+> `optional` **prefetch**: `NextLinkProps`\[`"prefetch"`\]
+
+Next.js Link prefetch.

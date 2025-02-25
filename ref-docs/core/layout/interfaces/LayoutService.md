@@ -6,7 +6,7 @@
 
 # Interface: LayoutService
 
-Defined in: [packages/core/src/layout/layout-service.ts:4](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/core/src/layout/layout-service.ts#L4)
+Defined in: [packages/core/src/layout/layout-service.ts:4](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/layout/layout-service.ts#L4)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [packages/core/src/layout/layout-service.ts:4](https://github.com/Si
 
 > **fetchLayoutData**(`itemPath`, `language`?, `req`?, `res`?): `Promise`\<[`LayoutServiceData`](LayoutServiceData.md)\>
 
-Defined in: [packages/core/src/layout/layout-service.ts:13](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/core/src/layout/layout-service.ts#L13)
+Defined in: [packages/core/src/layout/layout-service.ts:13](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/layout/layout-service.ts#L13)
 
 Fetch layout data for an item.
 

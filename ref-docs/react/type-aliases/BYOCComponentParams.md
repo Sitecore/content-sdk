@@ -8,7 +8,7 @@
 
 > **BYOCComponentParams**: `object`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:26](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/react/src/components/BYOCComponent.tsx#L26)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:26](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/react/src/components/BYOCComponent.tsx#L26)
 
 Data from rendering params on Sitecore's BYOC rendering
 

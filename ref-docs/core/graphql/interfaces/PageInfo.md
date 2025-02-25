@@ -6,7 +6,7 @@
 
 # Interface: PageInfo
 
-Defined in: [packages/core/src/graphql/search-service.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/core/src/graphql/search-service.ts#L7)
+Defined in: [packages/core/src/graphql/search-service.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/graphql/search-service.ts#L7)
 
 Data needed to paginate results
 
@@ -16,7 +16,7 @@ Data needed to paginate results
 
 > **endCursor**: `string`
 
-Defined in: [packages/core/src/graphql/search-service.ts:11](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/core/src/graphql/search-service.ts#L11)
+Defined in: [packages/core/src/graphql/search-service.ts:11](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/graphql/search-service.ts#L11)
 
 string token that can be used to fetch the next page of results
 
@@ -26,6 +26,6 @@ string token that can be used to fetch the next page of results
 
 > **hasNext**: `boolean`
 
-Defined in: [packages/core/src/graphql/search-service.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/7a47a67fd74bc6693c5676ead90b40a2c3227877/packages/core/src/graphql/search-service.ts#L15)
+Defined in: [packages/core/src/graphql/search-service.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/9249852e679f8a82eeff2dd39bb5b46c85431c25/packages/core/src/graphql/search-service.ts#L15)
 
 a value that indicates whether more pages of results are available
