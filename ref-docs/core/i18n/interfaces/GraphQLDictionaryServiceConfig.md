@@ -6,7 +6,7 @@
 
 # Interface: GraphQLDictionaryServiceConfig
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:61](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L61)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:61](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/i18n/graphql-dictionary-service.ts#L61)
 
 Configuration options for
 
@@ -24,7 +24,7 @@ GraphQLDictionaryService instances
 
 > `optional` **cacheEnabled**: `boolean`
 
-Defined in: [packages/core/src/cache-client.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/cache-client.ts#L40)
+Defined in: [packages/core/src/cache-client.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/cache-client.ts#L40)
 
 Enable/disable caching mechanism
 
@@ -44,7 +44,7 @@ true
 
 > `optional` **cacheTimeout**: `number`
 
-Defined in: [packages/core/src/cache-client.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/cache-client.ts#L45)
+Defined in: [packages/core/src/cache-client.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/cache-client.ts#L45)
 
 Cache timeout (sec)
 
@@ -64,7 +64,7 @@ Cache timeout (sec)
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:75](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L75)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:75](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/i18n/graphql-dictionary-service.ts#L75)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -75,7 +75,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > `optional` **dictionaryEntryTemplateId**: `string`
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:81](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L81)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:81](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/i18n/graphql-dictionary-service.ts#L81)
 
 Optional. The template ID to use when searching for dictionary entries.
 
@@ -91,7 +91,7 @@ Optional. The template ID to use when searching for dictionary entries.
 
 > `optional` **jssAppTemplateId**: `string`
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:87](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L87)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:87](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/i18n/graphql-dictionary-service.ts#L87)
 
 Optional. The template ID of a JSS App to use when searching for the appRootId.
 
@@ -107,7 +107,7 @@ Optional. The template ID of a JSS App to use when searching for the appRootId.
 
 > `optional` **pageSize**: `number`
 
-Defined in: [packages/core/src/graphql/search-service.ts:61](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/graphql/search-service.ts#L61)
+Defined in: [packages/core/src/graphql/search-service.ts:61](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/graphql/search-service.ts#L61)
 
 common variable for all GraphQL queries
 it will be used for every type of query to regulate result batch size
@@ -129,7 +129,7 @@ Optional. How many result items to fetch in each GraphQL call. This is needed fo
 
 > `optional` **retries**: `number`
 
-Defined in: [packages/core/src/graphql-request-client.ts:62](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/graphql-request-client.ts#L62)
+Defined in: [packages/core/src/graphql-request-client.ts:62](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/graphql-request-client.ts#L62)
 
 Number of retries for client. Will use the specified `retryStrategy`.
 
@@ -143,7 +143,7 @@ Number of retries for client. Will use the specified `retryStrategy`.
 
 > `optional` **retryStrategy**: [`RetryStrategy`](../../index/interfaces/RetryStrategy.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:67](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/graphql-request-client.ts#L67)
+Defined in: [packages/core/src/graphql-request-client.ts:67](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/graphql-request-client.ts#L67)
 
 Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
@@ -158,7 +158,7 @@ back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
 
 > `optional` **rootItemId**: `string`
 
-Defined in: [packages/core/src/graphql/search-service.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/graphql/search-service.ts#L48)
+Defined in: [packages/core/src/graphql/search-service.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/graphql/search-service.ts#L48)
 
 Optional. The ID of the search root item. Fetch items that have this item as an ancestor.
 
@@ -172,7 +172,7 @@ Optional. The ID of the search root item. Fetch items that have this item as an 
 
 > **siteName**: `string`
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:69](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/i18n/graphql-dictionary-service.ts#L69)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:69](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/i18n/graphql-dictionary-service.ts#L69)
 
 The name of the current Sitecore site. This is used to to determine the search query root
 in cases where one is not specified by the caller.
@@ -183,7 +183,7 @@ in cases where one is not specified by the caller.
 
 > `optional` **templates**: `string`
 
-Defined in: [packages/core/src/graphql/search-service.ts:53](https://github.com/Sitecore/xmc-jss-dev/blob/6619215c196ddf4b0e5218da4ae20a7b80c4f154/packages/core/src/graphql/search-service.ts#L53)
+Defined in: [packages/core/src/graphql/search-service.ts:53](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/graphql/search-service.ts#L53)
 
 Optional. Sitecore template ID(s). Fetch items that inherit from this template(s).
 
