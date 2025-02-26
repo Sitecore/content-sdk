@@ -39,7 +39,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
     enabled: process.env.NODE_ENV !== 'development',
     edgeTimeout: 400,
     cdpTimeout: 400,
-    scope: undefined,
+    scope: '',
     channel: 'WEB',
     currency: 'USD',
   },
@@ -62,7 +62,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
  * @param {SitecoreConfig} override override sitecore config object
  * @returns merged SitecoreConfig object
  */
-const deepMerge = (base: SitecoreConfigInput, override: SitecoreConfigInput) => {
+const deepMerge = (base: SitecoreConfig, override: SitecoreConfigInput) => {
   const result = {
     ...base,
     ...override,

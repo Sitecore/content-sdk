@@ -274,6 +274,13 @@ describe('MiddlewareBase', () => {
       expect(middleware['getLanguage'](req)).to.equal('fr');
     });
 
+    it('should use fallback language from config when present', () => {
+      const middleware = new SampleMiddleware({ sites: [], defaultLanguage: 'es-ES' });
+      const req = createReq();
+
+      expect(middleware['getLanguage'](req)).to.equal('es-ES');
+    });
+
     it('should return fallback language', () => {
       const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq();

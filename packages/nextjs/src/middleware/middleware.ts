@@ -15,6 +15,11 @@ export type MiddlewareBaseConfig = {
    */
   defaultHostname?: string;
   /**
+   * Fallback language in locale cannot be extracted from request URL
+   * @default 'en'
+   */
+  defaultLanguage?: string;
+  /**
    * Site resolution implementation by name/hostname
    */
   sites: SiteInfo[];
@@ -100,7 +105,7 @@ export abstract class MiddlewareBase extends Middleware {
    * @returns {string} language
    */
   protected getLanguage(req: NextRequest) {
-    return req.nextUrl.locale || req.nextUrl.defaultLocale || 'en';
+    return req.nextUrl.locale || req.nextUrl.defaultLocale || this.config.defaultLanguage || 'en';
   }
 
   /**

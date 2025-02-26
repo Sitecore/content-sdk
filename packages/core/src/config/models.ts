@@ -23,7 +23,7 @@ export type SitecoreConfigInput = {
      */
     edge?: {
       // for now contextID will take the role of both server and client IDs
-      contextId?: string;
+      contextId: string;
       // clientContextId will be utilized when we know more specifics about it
       clientContextId?: string;
       edgeUrl?: string;
@@ -32,13 +32,16 @@ export type SitecoreConfigInput = {
      * API endpoint credentials for connection to local Sitecore instance
      */
     local?: {
-      apiKey?: string;
-      apiHost?: string;
+      apiKey: string;
+      apiHost: string;
       path?: string;
     };
   };
-  defaultSite?: string;
   defaultLanguage: string;
+  /**
+   * Represents the default/fallback site name
+   */
+  defaultSite?: string;
   /**
    * Editing secret required to support Sitecore editing and preview functionality.
    */
@@ -75,7 +78,11 @@ export type SitecoreConfigInput = {
       timeout?: number;
     };
   };
-  multisite: {
+  multisite?: {
+    /**
+     * Enable multisite middleware
+     * @default true
+     */
     enabled?: boolean;
     /**
      * Fallback hostname in case `host` header is not present
@@ -87,7 +94,11 @@ export type SitecoreConfigInput = {
      */
     useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
   };
-  personalize: {
+  personalize?: {
+    /**
+     * Enable personalize middleware
+     * @default process.env.NODE_ENV !== 'development'
+     */
     enabled?: boolean;
     /**
      * Configuration for your Sitecore Experience Edge endpoint
@@ -100,17 +111,21 @@ export type SitecoreConfigInput = {
     /**
      * Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
      */
-    scope: string | undefined;
+    scope?: string;
     /**
      * The Sitecore CDP channel to use for events. Uses 'WEB' by default.
      */
-    channel?: string | undefined;
+    channel?: string;
     /**
      * Currency for CDP request. Uses 'USA' as default.
      */
-    currency?: string | undefined;
+    currency?: string;
   };
-  redirects: {
+  redirects?: {
+    /**
+     * Enable redirects middleware
+     * @default process.env.NODE_ENV !== 'development'
+     */
     enabled?: boolean;
     /**
      * These are all the locales you support in your application.
