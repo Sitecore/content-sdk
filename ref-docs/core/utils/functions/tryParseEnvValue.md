@@ -8,7 +8,7 @@
 
 > **tryParseEnvValue**\<`T`\>(`envValue`, `defaultValue`): `T`
 
-Defined in: [packages/core/src/utils/env.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/utils/env.ts#L7)
+Defined in: [packages/core/src/utils/env.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/061dc26bfb1145b183edd384dc843a42a29206eb/packages/core/src/utils/env.ts#L7)
 
 Method to parse JSON-formatted environment variables
 

@@ -8,7 +8,7 @@
 
 > **RichTextProps**: `ReactRichTextProps` & `object`
 
-Defined in: [nextjs/src/components/RichText.tsx:10](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/nextjs/src/components/RichText.tsx#L10)
+Defined in: [nextjs/src/components/RichText.tsx:10](https://github.com/Sitecore/xmc-jss-dev/blob/061dc26bfb1145b183edd384dc843a42a29206eb/packages/nextjs/src/components/RichText.tsx#L10)
 
 ## Type declaration
 
@@ -26,10 +26,13 @@ Selector which should be used in order to prefetch it and attach event listeners
 
 ### prefetchLinks?
 
-> `optional` **prefetchLinks**: `boolean`
+> `optional` **prefetchLinks**: `boolean` \| `"hover"`
 
 Controls the prefetch of internal links. This can be beneficial if you have RichText fields
 with large numbers of internal links in them.
+- `true` (default): The full route & its data will be prefetched.
+- `hover`: Prefetching will happen on hover.
+- `false`: Prefetching will not happen.
 
 #### Default
 
