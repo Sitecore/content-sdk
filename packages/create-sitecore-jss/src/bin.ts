@@ -75,7 +75,7 @@ export const main = async (args: ParsedArgs) => {
     const allTemplates = getAllTemplates();
     if (!template || !allTemplates.includes(template)) {
       if (args.yes) {
-        throw new RangeError(`No or unknown template provided: '${template}'`);
+        throw new Error(`No or unknown template provided: '${template}'`);
       }
 
       if (template) {

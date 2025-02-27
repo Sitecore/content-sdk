@@ -232,7 +232,7 @@ describe('bin', () => {
       });
 
       await main(args).catch((error) => {
-        expect(error).to.be.instanceOf(RangeError);
+        expect(error).to.be.instanceOf(Error);
       });
     });
 
@@ -248,7 +248,7 @@ describe('bin', () => {
       });
 
       await main(args).catch((error) => {
-        expect(error).to.be.instanceOf(RangeError);
+        expect(error).to.be.instanceOf(Error);
       });
     });
 
@@ -471,7 +471,7 @@ describe('bin', () => {
       });
       await main(args);
 
-      expect(consoleLogStub).to.have.been.calledWith(chalk.red('An error occurred: ', error));
+      expect(consoleLogStub).to.have.been.calledWith(chalk.red('An error occurred:', error));
       expect(processExitStub).to.have.been.calledWith(1);
     });
   });
