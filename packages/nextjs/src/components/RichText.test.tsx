@@ -348,7 +348,7 @@ describe('RichText', () => {
     expect(router.prefetch).callCount(0);
   });
 
-    it('should call prefetch when prefetchLinks is set to hover', () => {
+  it('should call prefetch when prefetchLinks is set to hover', () => {
     const app = document.createElement('main');
 
     document.body.appendChild(app);
