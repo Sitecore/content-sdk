@@ -6,4 +6,5 @@
   GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
   getEdgeProxyContentUrl,
-} from '@sitecore-content-sdk/core/graphql';
+} from '@sitecore-content-sdk/core/client';
+export { SitecoreNextjsClient as SitecoreClient, NextjsPage } from './sitecore-nextjs-client';

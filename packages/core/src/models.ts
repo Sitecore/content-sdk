@@ -39,3 +39,14 @@ export interface RetryStrategy {
    */
   getDelay(error: GenericGraphQLClientError, attempt: number): number;
 }
+
+// TODO: maybe find a better place for this
+/**
+ * Object model of a sitemap's site page item.
+ */
+export type StaticPath = {
+  params: {
+    path: string[];
+  };
+  locale?: string;
+};

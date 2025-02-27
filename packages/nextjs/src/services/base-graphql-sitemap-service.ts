@@ -2,8 +2,8 @@
   GraphQLClient,
   GraphQLRequestClientFactory,
   PageInfo,
-} from '@sitecore-content-sdk/core/graphql';
-import { debug } from '@sitecore-content-sdk/core';
+} from '@sitecore-content-sdk/core/client';
+import { debug, StaticPath } from '@sitecore-content-sdk/core';
 import { getPersonalizedRewrite } from '@sitecore-content-sdk/core/personalize';
 
 /** @private */
@@ -143,16 +143,6 @@ export interface BaseGraphQLSitemapServiceConfig
    */
   clientFactory: GraphQLRequestClientFactory;
 }
-
-/**
- * Object model of a site page item.
- */
-export type StaticPath = {
-  params: {
-    path: string[];
-  };
-  locale?: string;
-};
 
 /**
  * Service that fetches the list of site pages using Sitecore's GraphQL API.

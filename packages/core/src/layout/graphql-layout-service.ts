@@ -1,63 +1,40 @@
-import { LayoutServiceBase } from './layout-service';
+import { GraphQLServiceConfig, LayoutServiceBase } from './layout-service';
 import { LayoutServiceData } from './models';
-import {
-  GraphQLClient,
-  GraphQLRequestClientFactory,
-  GraphQLRequestClientConfig,
-} from '../graphql-request-client';
 import debug from '../debug';
 import { SitecoreConfig } from '../config';
 
 export const GRAPHQL_LAYOUT_QUERY_NAME = 'JssLayoutQuery';
-
-export type GraphQLLayoutServiceConfig = Pick<
-  GraphQLRequestClientConfig,
-  'retries' | 'retryStrategy'
-> &
-  Partial<SitecoreConfig['layout']> & {
-    /**
-     * The JSS application name
-     */
-    siteName: string;
-    /**
-     * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
-     * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
-     */
-    clientFactory: GraphQLRequestClientFactory;
-  };
-
+// TODO: refactor more
+export type GraphQLLayoutServiceConfig = GraphQLServiceConfig & Partial<SitecoreConfig['layout']>;
 /**
  * Service that fetch layout data using Sitecore's GraphQL API.
  * @augments LayoutServiceBase
  * @mixes GraphQLRequestClient
  */
 export class GraphQLLayoutService extends LayoutServiceBase {
-  private graphQLClient: GraphQLClient;
-
   /**
    * Fetch layout data using the Sitecore GraphQL endpoint.
    * @param {GraphQLLayoutServiceConfig} serviceConfig configuration
    */
   constructor(public serviceConfig: GraphQLLayoutServiceConfig) {
-    super();
-    this.graphQLClient = this.getGraphQLClient();
+    super(serviceConfig);
   }
 
   /**
    * Fetch layout data for an item.
    * @param {string} itemPath item path to fetch layout data for.
    * @param {string} [language] the language to fetch layout data for.
+   * @param {string} [site] site name to fetch data for.
    * @returns {Promise<LayoutServiceData>} layout service data
    */
-  async fetchLayoutData(itemPath: string, language?: string): Promise<LayoutServiceData> {
-    const query = this.getLayoutQuery(itemPath, language);
-
-    debug.layout(
-      'fetching layout data for %s %s %s',
-      itemPath,
-      language,
-      this.serviceConfig.siteName
-    );
+  async fetchLayoutData(
+    itemPath: string,
+    language?: string,
+    site?: string
+  ): Promise<LayoutServiceData> {
+    site = site || this.serviceConfig.defaultSite;
+    const query = this.getLayoutQuery(itemPath, site, language);
+    debug.layout('fetching layout data for %s %s %s', itemPath, language, site);
     const data = await this.graphQLClient.request<{
       layout: { item: { rendered: LayoutServiceData } };
     }>(query);
@@ -71,33 +48,18 @@ export class GraphQLLayoutService extends LayoutServiceBase {
   }
 
   /**
-   * Gets a GraphQL client that can make requests to the API.
-   * @returns {GraphQLClient} implementation
-   */
-  protected getGraphQLClient(): GraphQLClient {
-    if (!this.serviceConfig.clientFactory) {
-      throw new Error('clientFactory needs to be provided when initializing GraphQL client.');
-    }
-
-    return this.serviceConfig.clientFactory({
-      debugger: debug.layout,
-      retries: this.serviceConfig.retries,
-      retryStrategy: this.serviceConfig.retryStrategy,
-    });
-  }
-
-  /**
    * Returns GraphQL Layout query
    * @param {string} itemPath page route
+   * @param {string} [site] site name
    * @param {string} [language] language
    * @returns {string} GraphQL query
    */
-  protected getLayoutQuery(itemPath: string, language?: string): string {
+  protected getLayoutQuery(itemPath: string, site: string, language?: string) {
     const languageVariable = language ? `, language:"${language}"` : '';
 
     const layoutQuery = this.serviceConfig.formatLayoutQuery
-      ? this.serviceConfig.formatLayoutQuery(this.serviceConfig.siteName, itemPath, language)
-      : `layout(site:"${this.serviceConfig.siteName}", routePath:"${itemPath}"${languageVariable})`;
+      ? this.serviceConfig.formatLayoutQuery(site, itemPath, language)
+      : `layout(site:"${site}", routePath:"${itemPath}"${languageVariable})`;
 
     return `query ${GRAPHQL_LAYOUT_QUERY_NAME} {
       ${layoutQuery}{

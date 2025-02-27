@@ -1,4 +1,4 @@
-import { GraphQLClient } from '../graphql';
+import { GraphQLClient } from '../client';
 import debug from '../debug';
 import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';

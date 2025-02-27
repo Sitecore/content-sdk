@@ -1,13 +1,10 @@
-import {
-  GraphQLClient,
-  GraphQLRequestClientConfig,
-  GraphQLRequestClientFactory,
-} from '../graphql-request-client';
+import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
-import { PageInfo, SearchQueryVariables } from '../graphql';
-import { siteNameError, languageError } from '../graphql/app-root-query';
+import { PageInfo, SearchQueryVariables } from '../client';
+import { siteNameError, languageError } from '../client/app-root-query';
 import debug from '../debug';
-
+import { SitecoreConfig } from '../config';
+// TODO: refactor more
 /** @private */
 export const queryError =
   'Valid value for rootItemId not provided and failed to auto-resolve app root item.';
@@ -61,13 +58,7 @@ export interface DictionaryService {
 export interface GraphQLDictionaryServiceConfig
   extends Omit<SearchQueryVariables, 'language'>,
     CacheOptions,
-    Pick<GraphQLRequestClientConfig, 'retries' | 'retryStrategy'> {
-  /**
-   * The name of the current Sitecore site. This is used to to determine the search query root
-   * in cases where one is not specified by the caller.
-   */
-  siteName: string;
-
+    Pick<SitecoreConfig, 'retries' | 'defaultSite'> {
   /**
    * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
    * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -130,10 +121,14 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
    * @throws {Error} if the app root was not found for the specified site and language.
    */
   async fetchDictionaryData(language: string): Promise<DictionaryPhrases> {
-    const cacheKey = this.options.siteName + language;
+    const cacheKey = this.options.defaultSite + language;
     const cachedValue = this.getCacheValue(cacheKey);
     if (cachedValue) {
-      debug.dictionary('using cached dictionary data for %s %s', language, this.options.siteName);
+      debug.dictionary(
+        'using cached dictionary data for %s %s',
+        language,
+        this.options.defaultSite
+      );
       return cachedValue;
     }
 
@@ -151,12 +146,12 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
    */
   async fetchWithSiteQuery(language: string): Promise<DictionaryPhrases> {
     const phrases: DictionaryPhrases = {};
-    debug.dictionary('fetching dictionary data for %s %s', language, this.options.siteName);
+    debug.dictionary('fetching dictionary data for %s %s', language, this.options.defaultSite);
     let results: { key: string; value: string }[] = [];
     let hasNext = true;
     let after = '';
 
-    if (!this.options.siteName) {
+    if (!this.options.defaultSite) {
       throw new RangeError(siteNameError);
     }
 
@@ -168,7 +163,7 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
       const fetchResponse = await this.graphQLClient.request<DictionarySiteQueryResponse>(
         siteQuery,
         {
-          siteName: this.options.siteName,
+          siteName: this.options.defaultSite,
           language,
           pageSize: this.options.pageSize,
           after,
@@ -231,8 +226,8 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
     }
     return this.options.clientFactory({
       debugger: debug.dictionary,
-      retries: this.options.retries,
-      retryStrategy: this.options.retryStrategy,
+      retries: this.options.retries.count,
+      retryStrategy: this.options.retries.retryStrategy,
     });
   }
 }

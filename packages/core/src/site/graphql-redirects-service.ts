@@ -1,4 +1,4 @@
-import { GraphQLClient } from '../graphql';
+import { GraphQLClient } from '../client';
 import { siteNameError } from '../constants';
 import debug from '../debug';
 import { MemoryCacheClient, CacheOptions, CacheClient } from '../cache-client';

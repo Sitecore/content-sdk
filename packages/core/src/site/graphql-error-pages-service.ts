@@ -1,4 +1,4 @@
-import { GraphQLClient, GraphQLRequestClientConfig } from '../graphql';
+import { GraphQLClient, GraphQLRequestClientConfig } from '../client';
 import { siteNameError } from '../constants';
 import debug from '../debug';
 import { LayoutServiceData } from '../layout';

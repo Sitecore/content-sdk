@@ -4,7 +4,7 @@ import { expect, spy, use } from 'chai';
 import spies from 'chai-spies';
 import nock from 'nock';
 import { GraphQLSiteInfoService, GraphQLSiteInfoResult } from './graphql-siteinfo-service';
-import { GraphQLRequestClient } from '../graphql';
+import { GraphQLRequestClient } from '../client';
 import debugApi from 'debug';
 import debug from '../debug';
 

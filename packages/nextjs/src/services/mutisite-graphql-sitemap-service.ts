@@ -4,8 +4,8 @@ import {
   BaseGraphQLSitemapServiceConfig,
   languageError,
   RouteListQueryResult,
-  StaticPath,
 } from './base-graphql-sitemap-service';
+import { StaticPath } from '@sitecore-content-sdk/core';
 
 export const sitesError = 'The list of sites cannot be empty';
 

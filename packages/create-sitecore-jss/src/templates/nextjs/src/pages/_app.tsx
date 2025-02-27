@@ -1,11 +1,10 @@
 import type { AppProps } from 'next/app';
 import { I18nProvider } from 'next-localization';
-import { SitecorePageProps } from 'lib/page-props';
 import Bootstrap from 'src/Bootstrap';
-
 import 'assets/main.scss';
+import { NextjsPage } from '@sitecore-content-sdk/nextjs/client';
 
-function App({ Component, pageProps }: AppProps<SitecorePageProps>): JSX.Element {
+function App({ Component, pageProps }: AppProps<NextjsPage>): JSX.Element {
   const { dictionary, ...rest } = pageProps;
 
   return (

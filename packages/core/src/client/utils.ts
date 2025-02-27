@@ -1,16 +1,13 @@
-﻿import {
-  GraphQLRequestClientFactoryConfig,
-  GraphQLRequestClient,
-  getEdgeProxyContentUrl,
-} from '@sitecore-content-sdk/nextjs/client';
-import { SitecoreConfig } from '@sitecore-content-sdk/nextjs/config';
+import { GraphQLRequestClient, GraphQLRequestClientFactoryConfig } from '../graphql-request-client';
+import { getEdgeProxyContentUrl } from './graphql-edge-proxy';
+import { SitecoreClientInit } from './models';
 
 /**
  * Creates a new GraphQLRequestClientFactory instance
  * @param config jss config
  * @returns GraphQLRequestClientFactory instance
  */
-export const createGraphQLClientFactory = (config: SitecoreConfig) => {
+export const createGraphQLClientFactory = (config: SitecoreClientInit) => {
   let clientConfig: GraphQLRequestClientFactoryConfig;
   if (config.api.edge.contextId) {
     clientConfig = {

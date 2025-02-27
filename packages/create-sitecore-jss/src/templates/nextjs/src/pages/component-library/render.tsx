@@ -5,46 +5,52 @@ import {
   ComponentPropsContext,
   SitecoreContext,
 } from '@sitecore-content-sdk/nextjs';
-import { SitecorePageProps } from 'lib/page-props';
-import { sitecorePagePropsFactory } from 'lib/page-props-factory';
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
+import { NextjsPage } from '@sitecore-content-sdk/nextjs/client';
+import client from 'lib/sitecore-client';
 
-const FEAASRender = ({
+const ComponentLibrary = ({
   notFound,
   componentProps,
-  layoutData,
+  layout,
   headLinks,
-}: SitecorePageProps): JSX.Element => {
+}: NextjsPage): JSX.Element => {
   if (notFound) {
     return <NotFound />;
   }
   return (
-    <ComponentPropsContext value={componentProps}>
+    <ComponentPropsContext value={componentProps || {}}>
       <SitecoreContext
         componentFactory={componentBuilder.getComponentFactory()}
-        layoutData={layoutData}
+        layoutData={layout}
       >
         <Head>
           <title>Sitecore Component Library</title>
           <link rel="icon" href="/favicon.ico" />
-          {headLinks.map(headLink => (
+          {headLinks.map((headLink) => (
             <link rel={headLink.rel} key={headLink.href} href={headLink.href} />
           ))}
         </Head>
-        <ComponentLibraryLayout {...layoutData} />
+        <ComponentLibraryLayout {...layout} />
       </SitecoreContext>
     </ComponentPropsContext>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async context => {
-  const props = await sitecorePagePropsFactory.create(context);
-  return {
-    props,
-    // not found when page not requested through editing render api or notFound set in page-props
-    notFound: props.notFound || !context.preview,
-  };
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  if (context.preview) {
+    const props = await client.getPreview(context.previewData);
+    return {
+      props,
+      notFound: props.notFound,
+    };
+  } else {
+    return {
+      // not found when page not requested through editing render api or notFound set in page-props
+      notFound: true,
+    };
+  }
 };
 
-export default FEAASRender;
+export default ComponentLibrary;

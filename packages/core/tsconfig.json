@@ -18,7 +18,7 @@
     "layout.d.ts",
     "media.d.ts",
     "utils.d.ts",
-    "graphql.d.ts",
+    "client.d.ts",
     "i18n.d.ts",
     "site.d.ts",
     "personalize.d.ts",

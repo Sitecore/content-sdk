@@ -1,5 +1,5 @@
 import debug from '../debug';
-import { PageInfo } from '../graphql';
+import { PageInfo } from '../client';
 import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases } from '../i18n';
 import { LayoutServiceData } from '../layout';
