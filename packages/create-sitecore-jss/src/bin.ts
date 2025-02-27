@@ -115,7 +115,7 @@ export const main = async (args: ParsedArgs) => {
 
     await initialize(template, { ...args, destination, template });
   } catch (error) {
-    console.log(chalk.red('An error occurred: ', error));
+    console.log(chalk.red('An error occurred:', error));
     process.exit(1);
   }
 };
