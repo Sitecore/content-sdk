@@ -45,6 +45,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
   }
 
   async getPreview(previewData: PreviewData) {
+    // TODO: break up into getPreview and getComponentLibrary
     if (isComponentLibraryPreviewData(previewData)) {
       if (!this.initOptions.api.local) {
         throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');

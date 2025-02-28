@@ -88,16 +88,38 @@ export const getStaticProps: GetStaticProps = async (context) => {
 // This function gets called at request time on server-side.
 export const getServerSideProps: GetServerSideProps = async (context) => {
 <% } -%>
-  const props = await sitecorePagePropsFactory.create(context);
-
-  return {
-    props,
-<% if (prerender === 'SSG') { -%>
-    // Next.js will attempt to re-generate the page:
-    // - When a request comes in
-    // - At most once every 5 seconds
-    revalidate: 5, // In seconds
-<% } -%>
+  if (context.preview) {
+    const props = await client.getPreview(context.previewData);
+    return {
+      props,
+      <% if (prerender === 'SSG') { -%>
+        // Next.js will attempt to re-generate the page:
+        // - When a request comes in
+        // - At most once every 5 seconds
+        revalidate: 5, // In seconds
+    <% } -%>
+      notFound: props.notFound,
+    };
+  } else {
+    const path =
+      context.params === undefined
+        ? '/'
+        : Array.isArray(context.params.path)
+        ? context.params.path.join('/')
+        : context.params.path ?? '/';
+    const props = await client.getPage(path, context.locale);
+    return {
+      props,
+      <% if (prerender === 'SSG') { -%>
+        // Next.js will attempt to re-generate the page:
+        // - When a request comes in
+        // - At most once every 5 seconds
+        revalidate: 5, // In seconds
+    <% } -%>
+      componentProps: client.getComponentData(props.layout, context),
+      notFound: props.notFound,
+    };
+  }
     notFound: props.notFound, // Returns custom 404 page with a status code of 404 when true
   };
 };
