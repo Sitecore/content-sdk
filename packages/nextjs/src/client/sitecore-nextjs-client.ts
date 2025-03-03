@@ -44,6 +44,8 @@ export class SitecoreNextjsClient extends SitecoreClient {
     return page;
   }
 
+  // TODO: make framework agnostic, move to core
+  // TODO: map PreviewData to some general type
   async getPreview(previewData: PreviewData) {
     // TODO: break up into getPreview and getComponentLibrary
     if (isComponentLibraryPreviewData(previewData)) {
@@ -128,6 +130,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
     return page;
   }
 
+  // TODO: consider making generic and moving to core
   async getComponentData(
     layoutData: LayoutServiceData,
     context: GetServerSidePropsContext | GetStaticPropsContext
