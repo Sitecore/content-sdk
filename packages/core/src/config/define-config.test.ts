@@ -89,6 +89,35 @@ describe('define-config', () => {
     );
   });
 
+  it('should apply default config values when personalize timeouts are falsy', () => {
+    const zeroTimeoutConfig = {
+      ...mockConfig,
+      personalize: {
+        cdpTimeout: 0,
+        edgeTimeout: 0,
+      },
+    };
+    const fallbackConfig = getFallbackConfig();
+
+    let config = defineConfig(zeroTimeoutConfig);
+
+    expect(config.personalize.edgeTimeout).to.equal(fallbackConfig.personalize.edgeTimeout);
+    expect(config.personalize.cdpTimeout).to.equal(fallbackConfig.personalize.cdpTimeout);
+
+    const undefinedTimeoutConfig = {
+      ...mockConfig,
+      personalize: {
+        cdpTimeout: undefined,
+        edgeTimeout: undefined,
+      },
+    };
+
+    config = defineConfig(undefinedTimeoutConfig);
+
+    expect(config.personalize.edgeTimeout).to.equal(fallbackConfig.personalize.edgeTimeout);
+    expect(config.personalize.cdpTimeout).to.equal(fallbackConfig.personalize.cdpTimeout);
+  });
+
   it('should throw when api.edge is empty and api.local is partially empty', () => {
     const failingConfig = {
       ...mockConfig,

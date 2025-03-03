@@ -77,10 +77,10 @@ const deepMerge = (base: SitecoreConfig, override: SitecoreConfigInput) => {
     redirects: { ...base.redirects, ...override.redirects },
     dictionary: { ...base.dictionary, ...override.dictionary },
   };
-  if (Number.isNaN(result.personalize.cdpTimeout)) {
+  if (Number.isNaN(result.personalize.cdpTimeout) || !result.personalize.cdpTimeout) {
     result.personalize.cdpTimeout = base.personalize.cdpTimeout;
   }
-  if (Number.isNaN(result.personalize.edgeTimeout)) {
+  if (Number.isNaN(result.personalize.edgeTimeout) || !result.personalize.edgeTimeout) {
     result.personalize.edgeTimeout = base.personalize.edgeTimeout;
   }
   // fallback in case only one context provided

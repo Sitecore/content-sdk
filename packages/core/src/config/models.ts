@@ -37,38 +37,52 @@ export type SitecoreConfigInput = {
       path?: string;
     };
   };
+  /**
+   * Default locale that your site will be loaded in, unless language is specified in request
+   */
   defaultLanguage: string;
   /**
-   * Represents the default/fallback site name
+   * Represents the default/fallback site name to be loaded when request does not match a site,
+   * or multisite functionality is disabled
    */
   defaultSite?: string;
   /**
    * Editing secret required to support Sitecore editing and preview functionality.
    */
   editingSecret?: string;
+  /**
+   * Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
+   */
   retries?: {
     /**
      * Number of retries for graphql client. Will use the specified `retryStrategy`.
+     * @default 3
      */
     count?: number;
     /**
-     * Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
+     * Retry strategy for the client. By default, uses exponential
      * back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
+     * @default DefaultRetryStrategy
      */
     retryStrategy?: RetryStrategy;
   };
+  /**
+   * Settings for Layout Service
+   */
   layout?: {
     /**
-     * Override default layout query for Layout Service
-     * @param {string} siteName
-     * @param {string} itemPath
-     * @param {string} [locale]
+     * Override the first part of graphQL query for Layout Service (excluding the fields part)
+     * @param {string} siteName your site name
+     * @param {string} itemPath full path to Sitecore item/route
+     * @param {string} [locale] item/route language
      * @returns {string} custom layout query
-     * Layout query
-     * layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")
+     * @default 'layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")'
      */
-    formatLayoutQuery?: ((siteName: string, itemPath: string, locale?: string) => string) | null;
+    formatLayoutQuery?: (siteName: string, itemPath: string, locale?: string) => string;
   };
+  /**
+   * Settings for Dictionary Service
+   */
   dictionary?: {
     /**
      * configure local memory caching for Dictionary Service requests
@@ -78,6 +92,9 @@ export type SitecoreConfigInput = {
       timeout?: number;
     };
   };
+  /**
+   * Settings for multisite middleware and functionaliry
+   */
   multisite?: {
     /**
      * Enable multisite middleware
@@ -94,6 +111,9 @@ export type SitecoreConfigInput = {
      */
     useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
   };
+  /**
+   * Setting for personalize middleware
+   */
   personalize?: {
     /**
      * Enable personalize middleware
@@ -121,6 +141,9 @@ export type SitecoreConfigInput = {
      */
     currency?: string;
   };
+  /**
+   * Settings for redirects middleware
+   */
   redirects?: {
     /**
      * Enable redirects middleware

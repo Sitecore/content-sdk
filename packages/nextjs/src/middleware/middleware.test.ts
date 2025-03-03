@@ -144,7 +144,7 @@ describe('MiddlewareBase', () => {
     });
   });
 
-  describe('disabled', () => {
+  describe('disabled / skip', () => {
     it('default', () => {
       const middleware = new SampleMiddleware({ sites: [] });
 
@@ -183,7 +183,7 @@ describe('MiddlewareBase', () => {
     it('custom function', () => {
       const middleware = new SampleMiddleware({
         sites: [],
-        disabled(req: NextRequest) {
+        skip(req: NextRequest) {
           const path = req.nextUrl.pathname;
           return path === 'foo';
         },
