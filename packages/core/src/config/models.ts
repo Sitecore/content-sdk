@@ -78,7 +78,7 @@ export type SitecoreConfigInput = {
      * @returns {string} custom layout query
      * @default 'layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")'
      */
-    formatLayoutQuery?: (siteName: string, itemPath: string, locale?: string) => string;
+    formatLayoutQuery?: ((siteName: string, itemPath: string, locale?: string) => string) | null;
   };
   /**
    * Settings for Dictionary Service
