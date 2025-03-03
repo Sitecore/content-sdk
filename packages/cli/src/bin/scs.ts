@@ -2,6 +2,7 @@
 
 import resolve from 'resolve';
 import processEnv from '../utils/process-env';
+import * as commands from './../scripts';
 
 /**
  * Resolves and executes the locally installed version of the JSS CLI.
@@ -14,5 +15,5 @@ resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (_, projectLoca
   // Since we are in context of a project, load its environment variables
   processEnv(process.cwd());
 
-  cli();
+  cli(commands);
 });

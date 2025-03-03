@@ -125,3 +125,14 @@ export type SitecoreConfigInput = {
  * Every property should be populated, either from sitecore.config or built-in fallback values
  */
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
+
+export type SitecoreCliConfigInpout = {
+  build?: {
+    commands?: Array<(config: Record<string, any>) => Promise<void>>;
+  };
+  // scaffold {
+
+  // }
+};
+
+export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInpout>;
