@@ -8,21 +8,38 @@ import { getMetadata } from '../editing/metadata';
   Generates the /src/temp/metadata.json file which contains application
   configuration metadata that is used for Sitecore XM Cloud integration.
 */
+
+/**
+ * Configuration options for generating metadata.
+ */
+export type GenerateMetadataConfig = {
+  /**
+   * Optional path where the generated metadata will be saved.
+   * If not provided, the default 'src/temp/metadata.json' will be used.
+   */
+  destinationPath?: string;
+};
+
 /**
  * Generate application metadata
+ * @param {GenerateMetadataConfig} config - Optional configuration for generating metadata.
+ * If not provided, the default 'src/temp/metadata.json' will be used.
+ * @returns {Promise<void>} A promise that resolves when the metadata generation is complete.
  */
-export function generateMetadata(): void {
-  console.log('Generating metadata');
-  const metadata: Metadata = getMetadata();
-  writeMetadata(metadata);
-}
+export const generateMetadata = async (config?: GenerateMetadataConfig) => {
+  return async () => {
+    const metadata: Metadata = getMetadata();
+    writeMetadata(metadata, config?.destinationPath ?? 'src/temp/metadata.json');
+  };
+};
 
 /**
  * Writes the metadata object to disk.
  * @param {Metadata} metadata metadata to write.
+ * @param {string} destinationPath path to write the metadata to.
  */
-function writeMetadata(metadata: Metadata): void {
-  const filePath = path.resolve('src/temp/metadata.json');
+function writeMetadata(metadata: Metadata, destinationPath: string): void {
+  const filePath = path.resolve(destinationPath);
   console.log(`Writing metadata to ${filePath}`);
   fs.writeFileSync(filePath, JSON.stringify(metadata, null, 2), { encoding: 'utf8' });
 }

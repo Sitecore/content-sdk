@@ -16,6 +16,10 @@ export const builder = {
   },
 };
 
+/**
+ * Handler for the build command.
+ * @param {any} argv - The arguments passed to the command.
+ */
 export async function handler(argv: any) {
   // console.log('hey hey from build');
   console.log(argv.config);

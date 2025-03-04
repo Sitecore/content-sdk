@@ -126,13 +126,45 @@ export type SitecoreConfigInput = {
  */
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
 
+/**
+ * Type to be used as cli config input in sitecore.cli.config
+ */
 export type SitecoreCliConfigInpout = {
   build?: {
-    commands?: Array<(config: Record<string, any>) => Promise<void>>;
+    // commands: Promise<() => Promise<void>>[];
+    commands?: Promise<(config?: Record<string, any>) => Promise<void>>[];
   };
-  // scaffold {
-
-  // }
+  scaffold?: {
+    templates?: ScaffoldTemplate[];
+  };
 };
 
+/**
+ * Final sitecore cli config type used required by the cli
+ */
 export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInpout>;
+
+/**
+ * Scaffold template type
+ */
+/**
+ * Represents a scaffold template used for generating components.
+ */
+export type ScaffoldTemplate = {
+  /**
+   * Name of the template.
+   */
+  name: string;
+  /**
+   * Function to generate the component file contents based on the component name.
+   * @param componentName - The name of the component.
+   * @returns The generated conent as a string.
+   */
+  generateTemplate: (componentName: string) => string;
+  /**
+   * Optional function to get the next steps to be shown by the cli after generating the component.
+   * @param componentOutputPath - The output path of the generated component.
+   * @returns An array of strings representing the next steps.
+   */
+  getNextSteps?: (componentOutputPath: string) => string[];
+};

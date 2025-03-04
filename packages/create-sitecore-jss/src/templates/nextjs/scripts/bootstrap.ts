@@ -14,10 +14,3 @@ import './generate-plugins';
   COMPONENT BUILDER GENERATION
 */
 import './generate-component-builder';
-
-/*
-  META DATA GENERATION
-*/
-import './generate-metadata';
-
-import './fetch-sites';

@@ -1,20 +1,26 @@
-// import { SitecoreCliConfig, SitecoreCliConfigInpout } from './models';
-// import { generateSites } from '../tools';
+import { SitecoreCliConfig, SitecoreCliConfigInpout } from './models';
 
-// export const getFallbackCliConfig = (): SitecoreCliConfig => ({
-//   build: {
-//     commands: [
-//       generateSites({
-//         sourcePath: 'src',
-//       }),
-//     ],
-//   },
-// });
+const validateConfig = (cliConfig: SitecoreCliConfigInpout) => {
+  if (!cliConfig.build?.commands?.length) {
+    throw new Error('Configuration error: build commands should be defined in sitecore.cli.config');
+  }
 
-// export const defineConfig = (cliConfig: SitecoreCliConfigInpout) => {
-//   if (!cliConfig?.build?.commands) {
-//     return getFallbackConfig();
-//   }
+  if (!cliConfig.scaffold?.templates?.length) {
+    throw new Error(
+      'Configuration error: scaffold templates should be defined in sitecore.cli.config'
+    );
+  }
+};
 
-//   return deepMerge(getFallbackCliConfig(), cliConfig) as SitecoreCliConfig;
-// };
+/**
+ * Accepts a SitecoreCliConfigInpout object and returns sitecore cli configuration, updated with required default values
+ * @param {SitecoreCliConfigInpout} cliConfig the cli configuration provided by the appication
+ * @returns {SitecoreCliConfig} full sitecore cli configuration to use with cli
+ */
+export const defineCliConfig = (cliConfig: SitecoreCliConfigInpout): SitecoreCliConfig => {
+  validateConfig(cliConfig);
+  console.log('hi from define config in core packages');
+  console.log(cliConfig.scaffold?.templates);
+  //   console.log('cliConfig from define cli', cliConfig);
+  return cliConfig as SitecoreCliConfig;
+};

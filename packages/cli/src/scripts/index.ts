@@ -2,5 +2,6 @@
 // e.g. setup, deploy
 
 import * as build from './build';
+import * as scaffold from './scaffold';
 
-export { build };
+export { build, scaffold };
