@@ -47,11 +47,11 @@ export function scaffoldFile(filePath: string, fileContent: string): string | nu
 export function scaffoldComponent(
   outputFilePath: string,
   componentName: string,
-  templateNameArg: string,
+  templateNameArg: string | undefined,
   templates: ScaffoldTemplate[],
   byoc: boolean
 ): void {
-  const templateName = templateNameArg ?? byoc ? 'byoc' : 'default';
+  const templateName = templateNameArg ?? (byoc ? 'byoc' : 'default');
   const template = templates.filter((t) => t.name === templateName)[0];
 
   if (!template) {

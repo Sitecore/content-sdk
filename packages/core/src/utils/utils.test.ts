@@ -16,7 +16,6 @@ import {
 import fs from 'fs';
 import sinon from 'sinon';
 import path from 'path';
-import Sinon from 'sinon';
 
 // must make TypeScript happy with `global` variable modification
 interface CustomWindow {
@@ -358,8 +357,8 @@ describe('utils', () => {
   });
 
   describe('ensurePathExists', () => {
-    let mkdirSyncStub: Sinon.SinonStub;
-    let existsSyncStub: Sinon.SinonStub;
+    let mkdirSyncStub: sinon.SinonStub;
+    let existsSyncStub: sinon.SinonStub;
 
     beforeEach(() => {
       mkdirSyncStub = sinon.stub(fs, 'mkdirSync');
