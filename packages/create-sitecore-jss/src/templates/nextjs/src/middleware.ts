@@ -35,7 +35,7 @@ const redirects = new RedirectsMiddleware({
   // Certain paths are ignored by default (e.g. Next.js API routes), but you may wish to disable more.
   // By default it is disabled while in development mode.
   // This is an important performance consideration since Next.js Edge middleware runs on every request.
-  skip: () => process.env.NODE_ENV === 'development',
+  skip: () => false,
 });
 
 const personalize = new PersonalizeMiddleware({
@@ -51,7 +51,7 @@ const personalize = new PersonalizeMiddleware({
   // Certain paths are ignored by default (e.g. Next.js API routes), but you may wish to disable more.
   // By default it is disabled while in development mode.
   // This is an important performance consideration since Next.js Edge middleware runs on every request.
-  skip: () => process.env.NODE_ENV === 'development',
+  skip: () => false,
 });
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
