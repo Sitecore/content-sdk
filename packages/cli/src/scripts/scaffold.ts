@@ -1,36 +1,50 @@
 import path from 'path';
 import { scaffoldComponent } from '@sitecore-content-sdk/core/tools';
 import loadCliConfig from '../utils/load-config';
+import { Argv } from 'yargs';
 
-/* eslint-disable prettier/prettier */
-export const command = 'scaffold';
+/**
+ * @param {Argv} yargs
+ */
+export function builder(yargs: Argv) {
+  return yargs.command(
+    'scaffold <componentName>',
+    'Scaffolds a new component. Use `scs scaffold --help` for available options.',
+    args,
+    handler
+  );
+}
 
-export const describe = 'Scaffold a new component';
-
-export const builder = {
-  config: {
-    requiresArg: true,
-    type: 'string',
-    describe: 'Path to the Sitecore cli config',
-    default: './sitecore.cli.config.ts',
-  },
-  componentName: {
-    requiresArg: true,
-    type: 'string',
-    describe: 'Name of the component to scaffold',
-  },
-  templateName: {
-    requiresArg: false,
-    type: 'string',
-    describe: 'Name of the template that will be used to scaffold the component.',
-  },
-  byoc: {
-    requiresArgs: false,
-    type: 'boolean',
-    describe: 'If true, scaffolds a byoc component.',
-    default: false,
-  },
-};
+/**
+ * @param {Argv} yargs
+ */
+export function args(yargs: Argv) {
+  return yargs
+    .positional('componentName', {
+      requiresArg: true,
+      positional: true,
+      type: 'string',
+      describe: 'Name of the component to scaffold',
+    })
+    .option('config', {
+      requiresArg: true,
+      type: 'string',
+      describe: 'Path to the Sitecore cli config',
+      default: './sitecore.cli.config.ts',
+    })
+    .option('templateName', {
+      requiresArg: false,
+      type: 'string',
+      describe:
+        'Name of the template that will be used to scaffold the component. Can be configured in the cli.config.',
+    })
+    .option('byoc', {
+      requiresArgs: false,
+      type: 'boolean',
+      describe: 'If true, scaffolds a byoc component.',
+      default: false,
+    });
+}
 
 /**
  * Handler for the scaffold command.
