@@ -43,7 +43,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
     channel: 'WEB',
     currency: 'USD',
   },
-  defaultSite: '',
+  defaultSite: '~not-set~',
   defaultLanguage: 'en',
   layout: {
     formatLayoutQuery: null,
@@ -102,9 +102,6 @@ const validateConfig = (config: SitecoreConfigInput) => {
         'Configuration error: either context ID or API key and host must be specified in sitecore.config'
       );
     }
-  }
-  if (!config.defaultSite) {
-    throw new Error('Configuration error: defaultSite value should be defined in sitecore.config');
   }
 };
 

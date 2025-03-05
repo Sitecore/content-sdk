@@ -65,7 +65,7 @@ export type SitecoreConfigInput = {
   /**
    * Your default site name. When using the multisite feature this variable defines the fallback site.
    */
-  defaultSite?: string;
+  defaultSite: string | undefined;
   /**
    * Editing secret required to support Sitecore editing and preview functionality.
    */
