@@ -117,7 +117,7 @@ export type SitecoreConfigInput = {
    */
   multisite?: {
     /**
-     * Enable multisite middleware
+     * Enable multisite
      * @default true
      */
     enabled?: boolean;
@@ -172,7 +172,7 @@ export type SitecoreConfigInput = {
     enabled?: boolean;
     /**
      * These are all the locales you support in your application.
-     * These should match those in your next.config.js (i18n.locales).
+     * These should match those in framework-specific configuration of your app.
      */
     locales?: string[];
   };
