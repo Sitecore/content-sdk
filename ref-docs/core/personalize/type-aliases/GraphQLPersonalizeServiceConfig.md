@@ -8,7 +8,7 @@
 
 > **GraphQLPersonalizeServiceConfig**: [`CacheOptions`](../../index/interfaces/CacheOptions.md) & `object`
 
-Defined in: [packages/core/src/personalize/graphql-personalize-service.ts:6](https://github.com/Sitecore/xmc-jss-dev/blob/f4a8fa660d68db3c8a3a184bf4bb6c838e2b1802/packages/core/src/personalize/graphql-personalize-service.ts#L6)
+Defined in: [packages/core/src/personalize/graphql-personalize-service.ts:6](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/personalize/graphql-personalize-service.ts#L6)
 
 ## Type declaration
 

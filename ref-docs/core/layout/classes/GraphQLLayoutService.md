@@ -6,7 +6,7 @@
 
 # Class: GraphQLLayoutService
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/f4a8fa660d68db3c8a3a184bf4bb6c838e2b1802/packages/core/src/layout/graphql-layout-service.ts#L34)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/layout/graphql-layout-service.ts#L34)
 
 Service that fetch layout data using Sitecore's GraphQL API.
 
@@ -24,7 +24,7 @@ GraphQLRequestClient
 
 > **new GraphQLLayoutService**(`serviceConfig`): [`GraphQLLayoutService`](GraphQLLayoutService.md)
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/f4a8fa660d68db3c8a3a184bf4bb6c838e2b1802/packages/core/src/layout/graphql-layout-service.ts#L41)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/layout/graphql-layout-service.ts#L41)
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -48,7 +48,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > **serviceConfig**: [`GraphQLLayoutServiceConfig`](../type-aliases/GraphQLLayoutServiceConfig.md)
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/f4a8fa660d68db3c8a3a184bf4bb6c838e2b1802/packages/core/src/layout/graphql-layout-service.ts#L41)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/layout/graphql-layout-service.ts#L41)
 
 configuration
 
@@ -58,7 +58,7 @@ configuration
 
 > **fetchLayoutData**(`itemPath`, `language`?): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:52](https://github.com/Sitecore/xmc-jss-dev/blob/f4a8fa660d68db3c8a3a184bf4bb6c838e2b1802/packages/core/src/layout/graphql-layout-service.ts#L52)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:52](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/layout/graphql-layout-service.ts#L52)
 
 Fetch layout data for an item.
 
@@ -85,7 +85,7 @@ layout service data
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:77](https://github.com/Sitecore/xmc-jss-dev/blob/f4a8fa660d68db3c8a3a184bf4bb6c838e2b1802/packages/core/src/layout/graphql-layout-service.ts#L77)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:77](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/layout/graphql-layout-service.ts#L77)
 
 Gets a GraphQL client that can make requests to the API.
 
@@ -101,7 +101,7 @@ implementation
 
 > `protected` **getLayoutQuery**(`itemPath`, `language`?): `string`
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:95](https://github.com/Sitecore/xmc-jss-dev/blob/f4a8fa660d68db3c8a3a184bf4bb6c838e2b1802/packages/core/src/layout/graphql-layout-service.ts#L95)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:95](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/layout/graphql-layout-service.ts#L95)
 
 Returns GraphQL Layout query
 
