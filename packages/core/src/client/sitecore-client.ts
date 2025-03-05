@@ -1,9 +1,21 @@
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases, GraphQLDictionaryService } from '../i18n';
-import { getComponentLibraryStylesheetLinks, getContentStylesheetLink, GraphQLLayoutService, LayoutServiceData } from '../layout';
-import { HTMLLink, StaticPath } from '../models';
+import {
+  getComponentLibraryStylesheetLinks,
+  getContentStylesheetLink,
+  GraphQLLayoutService,
+  LayoutServiceData,
+} from '../layout';
+import { HTMLLink } from '../models';
 import { normalizePersonalizedRewrite } from '../personalize';
-import { ErrorPages, getSiteRewriteData, normalizeSiteRewrite, SiteInfo, SiteResolver } from '../site';
+import {
+  ErrorPages,
+  getSiteRewriteData,
+  normalizeSiteRewrite,
+  SiteInfo,
+  SiteResolver,
+  GraphQLErrorPagesService,
+} from '../site';
 import { FetchOptions, Page, SitecoreClientInit } from './models';
 import { createGraphQLClientFactory } from './utils';
 
@@ -20,12 +32,11 @@ export abstract class BaseSitecoreClient {
     locale?: string,
     options?: FetchOptions
   ): Promise<DictionaryPhrases>;
-  abstract getPagePaths(locales?: string[], options?: FetchOptions): Promise<StaticPath[]>;
   abstract getErrorPages(
     site: string,
     locale?: string,
     options?: FetchOptions
-  ): Promise<ErrorPages>;
+  ): Promise<ErrorPages | null>;
 }
 // TODO: consider the below
 /**
@@ -51,6 +62,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   protected dictionaryService: GraphQLDictionaryService;
   protected siteResolver: SiteResolver;
   protected clientFactory: GraphQLRequestClientFactory;
+  protected errorPagesService: GraphQLErrorPagesService;
 
   constructor(protected initOptions: SitecoreClientInit) {
     this.clientFactory = createGraphQLClientFactory(initOptions);
@@ -79,6 +91,12 @@ export class SitecoreClient implements BaseSitecoreClient {
       cacheEnabled: initOptions.dictionary.caching.enabled,
       cacheTimeout: initOptions.dictionary.caching.timeout,
     });
+    this.errorPagesService = new GraphQLErrorPagesService({
+      siteName: initOptions.defaultSite,
+      language: initOptions.defaultLanguage,
+      clientFactory: this.clientFactory,
+      retries: initOptions.retries.count,
+    });
   }
 
   normalizePath(path: string) {
@@ -105,7 +123,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     const normalPath = this.normalizePath(path);
 
     // Use context locale if Next.js i18n is configured, otherwise use default site language
-    locale = locale ?? siteInfo.language;
+    locale = locale ?? .language;
 
     // Fetch layout data, passing on req/res for SSR
     const layout = await this.layoutService.fetchLayoutData(normalPath, locale, siteInfo.name);
@@ -125,7 +143,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       };
     } else {
       // Fetch dictionary data if layout data was present
-      const dictionary = await this.dictionaryService.fetchDictionaryData(locale);
+      const dictionary = await this.getDictionary(locale);
       // Initialize links to be inserted on the page
       const headLinks = this.getHeadLinks(layout);
       return {
@@ -157,16 +175,35 @@ export class SitecoreClient implements BaseSitecoreClient {
     return headLinks;
   }
 
-  getDictionary(site: string, locale?: string, options?: FetchOptions): Promise<DictionaryPhrases> {
-    console.log('%s', site, locale, options);
-    throw 'Unimplemented';
+  /**
+   * Retrieves dictionary phrases for a given site and locale.
+   * @param {string} site - The name of the site for which to fetch dictionary data.
+   * @param {string} [locale] - The locale for which to fetch dictionary data. Defaults to the site's default language if not provided.
+   * @param {FetchOptions} [options] - Additional fetch options.
+   * @returns {Promise<DictionaryPhrases>} A promise that resolves to the dictionary phrases.
+   */
+  async getDictionary(
+    site: string,
+    locale?: string,
+    options?: FetchOptions
+  ): Promise<DictionaryPhrases> {
+    console.log(options);
+    return await this.dictionaryService.fetchDictionaryData(site, locale);
   }
-  getPagePaths(locales?: string[], options?: FetchOptions): Promise<StaticPath[]> {
-    console.log('%s', locales, options);
-    throw 'Unimplemented';
-  }
-  getErrorPages(site: string, locale?: string, options?: FetchOptions): Promise<ErrorPages> {
-    console.log('%s', site, locale, options);
-    throw 'Unimplemented';
+
+  /**
+   * Retrieves error pages for a given site and locale.
+   * @param {string} site - The name of the site for which to fetch error pages.
+   * @param {string} [locale] - The locale for which to fetch error pages. Defaults to the site's default language if not provided.
+   * @param {FetchOptions} [options] - Additional fetch options.
+   * @returns {Promise<ErrorPages | null>} A promise that resolves to the error pages or null if not found.
+   */
+  async getErrorPages(
+    site: string,
+    locale?: string,
+    options?: FetchOptions
+  ): Promise<ErrorPages | null> {
+    console.log(options);
+    return await this.errorPagesService.fetchErrorPages(site, locale);
   }
 }

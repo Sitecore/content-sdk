@@ -1,16 +1,11 @@
 ﻿import Head from 'next/head';
-import {
-  GraphQLErrorPagesService,
-  SitecoreContext,
-  ErrorPages,
-} from '@sitecore-content-sdk/nextjs';
+import { SitecoreContext, ErrorPages } from '@sitecore-content-sdk/nextjs';
 import Layout from 'src/Layout';
 import { componentBuilder } from 'temp/componentBuilder';
 import { GetStaticProps } from 'next';
 import config from 'sitecore.config';
-import { siteResolver } from 'lib/site-resolver';
-import clientFactory from 'lib/graphql-client-factory';
 import { NextjsPage } from '@sitecore-content-sdk/nextjs/client';
+import client from 'lib/sitecore-client';
 
 /**
  * Rendered in case if we have 500 error
@@ -43,22 +38,15 @@ const Custom500 = (props: NextjsPage): JSX.Element => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const site = siteResolver.getByName(config.defaultSite);
-  const errorPagesService = new GraphQLErrorPagesService({
-    clientFactory,
-    siteName: site.name,
-    language: context.locale || context.defaultLocale || config.defaultLanguage,
-    retries:
-      (process.env.GRAPH_QL_SERVICE_RETRIES &&
-        parseInt(process.env.GRAPH_QL_SERVICE_RETRIES, 10)) ||
-      0,
-  });
+export const getStaticProps: GetStaticProps = async context => {
   let resultErrorPages: ErrorPages | null = null;
 
   if (process.env.DISABLE_SSG_FETCH?.toLowerCase() !== 'true') {
     try {
-      resultErrorPages = await errorPagesService.fetchErrorPages();
+      resultErrorPages = await client.getErrorPages(
+        config.defaultSite,
+        context.locale || context.defaultLocale || config.defaultLanguage
+      );
     } catch (error) {
       console.log('Error occurred while fetching error pages');
       console.log(error);
