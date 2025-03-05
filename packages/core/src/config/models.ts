@@ -23,27 +23,47 @@ export type SitecoreConfigInput = {
      */
     edge?: {
       // for now contextID will take the role of both server and client IDs
+      /**
+       * A unified identifier used to connect and retrieve data from XM Cloud instance
+       */
       contextId: string;
       // clientContextId will be utilized when we know more specifics about it
+      /**
+       * Optional identifier used to connect and retrieve data from XM Cloud instance in client-side functionality
+       */
       clientContextId?: string;
+      /**
+       * XM Cloud endpoint that the app will communicate and retrieve data from
+       * @default https://edge-platform.sitecorecloud.io
+       */
       edgeUrl?: string;
     };
     /**
      * API endpoint credentials for connection to local Sitecore instance
      */
     local?: {
+      /**
+       * Sitecore API key identifier used to connect to the GraphQL endpoint
+       */
       apiKey: string;
+      /**
+       * Sitecore API hostname that the app will connect and retrieve data from
+       */
       apiHost: string;
+      /**
+       * GraphQL endpoint path, will be appended to apiHost to form full enpoint URL ($apiHost/$path)
+       * @default /sitecore/api/graph/edge
+       */
       path?: string;
     };
   };
   /**
-   * Default locale that your site will be loaded in, unless language is specified in request
+   * The default and fallback locale for your site.
+   * Ensure it aligns with the framework-specific settings used in your application.
    */
   defaultLanguage: string;
   /**
-   * Represents the default/fallback site name to be loaded when request does not match a site,
-   * or multisite functionality is disabled
+   * Your default site name. When using the multisite feature this variable defines the fallback site.
    */
   defaultSite?: string;
   /**
@@ -93,7 +113,7 @@ export type SitecoreConfigInput = {
     };
   };
   /**
-   * Settings for multisite middleware and functionaliry
+   * Settings for multisite functionaliry
    */
   multisite?: {
     /**
@@ -112,7 +132,7 @@ export type SitecoreConfigInput = {
     useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
   };
   /**
-   * Setting for personalize middleware
+   * Setting for personalize functionality
    */
   personalize?: {
     /**
@@ -142,7 +162,7 @@ export type SitecoreConfigInput = {
     currency?: string;
   };
   /**
-   * Settings for redirects middleware
+   * Settings for redirects functionality
    */
   redirects?: {
     /**
