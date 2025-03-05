@@ -9,6 +9,7 @@ import Layout from 'src/Layout';
 import {
   SitecoreContext,
   ComponentPropsContext,
+  StaticPath
 } from '@sitecore-content-sdk/nextjs';
 import { handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
 import { SitecorePageProps } from 'lib/page-props';
