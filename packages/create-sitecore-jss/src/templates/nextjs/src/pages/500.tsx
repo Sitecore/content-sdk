@@ -8,7 +8,7 @@ import { SitecorePageProps } from 'lib/page-props';
 import Layout from 'src/Layout';
 import { componentBuilder } from 'temp/componentBuilder';
 import { GetStaticProps } from 'next';
-import config from 'sitecore.config';
+import scConfig from 'sitecore.config';
 import { siteResolver } from 'lib/site-resolver';
 import clientFactory from 'lib/graphql-client-factory';
 
@@ -44,11 +44,11 @@ const Custom500 = (props: SitecorePageProps): JSX.Element => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const site = siteResolver.getByName(config.defaultSite);
+  const site = siteResolver.getByName(scConfig.defaultSite);
   const errorPagesService = new GraphQLErrorPagesService({
     clientFactory,
     siteName: site.name,
-    language: context.locale || context.defaultLocale || config.defaultLanguage,
+    language: context.locale || context.defaultLocale || scConfig.defaultLanguage,
     retries:
       (process.env.GRAPH_QL_SERVICE_RETRIES &&
         parseInt(process.env.GRAPH_QL_SERVICE_RETRIES, 10)) ||
