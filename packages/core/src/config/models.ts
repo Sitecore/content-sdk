@@ -137,7 +137,7 @@ export type SitecoreCliConfigInpout = {
     /**
      * List of commands to run during the build process
      */
-    commands?: Array<(config?: Record<string, any>) => Promise<void>>;
+    commands?: Array<(config?: Record<string, any>) => () => Promise<void>>;
   };
   /**
    * Configuration for the scaffold cli command

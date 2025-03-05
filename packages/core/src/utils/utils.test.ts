@@ -11,7 +11,12 @@ import {
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
   mergeURLSearchParams,
+  ensurePathExists,
 } from './utils';
+import fs from 'fs';
+import sinon from 'sinon';
+import path from 'path';
+import Sinon from 'sinon';
 
 // must make TypeScript happy with `global` variable modification
 interface CustomWindow {
@@ -349,6 +354,36 @@ describe('utils', () => {
       const input = 'abc.*??ghi';
       const expected = 'abc.*?\\?ghi';
       expect(escapeNonSpecialQuestionMarks(input)).to.equal(expected);
+    });
+  });
+
+  describe('ensurePathExists', () => {
+    let mkdirSyncStub: Sinon.SinonStub;
+    let existsSyncStub: Sinon.SinonStub;
+
+    beforeEach(() => {
+      mkdirSyncStub = sinon.stub(fs, 'mkdirSync');
+    });
+
+    afterEach(() => {
+      mkdirSyncStub.restore();
+      existsSyncStub.restore();
+    });
+
+    it('should create directory if it does not exist', () => {
+      const filePath = 'path/to/file.txt';
+      existsSyncStub = sinon.stub(fs, 'existsSync').returns(false);
+
+      ensurePathExists(filePath);
+      expect(mkdirSyncStub.calledWith(path.dirname(filePath), { recursive: true })).to.be.true;
+    });
+
+    it('should not create directory if it exists', () => {
+      const filePath = 'path/to/file.txt';
+      existsSyncStub = sinon.stub(fs, 'existsSync').returns(true);
+
+      ensurePathExists(filePath);
+      expect(mkdirSyncStub.calledWith(path.dirname(filePath), { recursive: true })).to.be.false;
     });
   });
 });
