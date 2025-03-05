@@ -30,7 +30,6 @@ export function args(yargs: Argv) {
       requiresArg: true,
       type: 'string',
       describe: 'Path to the Sitecore cli config',
-      default: './sitecore.cli.config.ts',
     })
     .option('templateName', {
       requiresArg: false,

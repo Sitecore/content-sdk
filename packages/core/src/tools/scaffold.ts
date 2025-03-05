@@ -51,7 +51,6 @@ export function scaffoldComponent(
   templates: ScaffoldTemplate[],
   byoc: boolean
 ): void {
-  console.log('scaffolding component');
   const templateName = templateNameArg ?? byoc ? 'byoc' : 'default';
   const template = templates.filter((t) => t.name === templateName)[0];
 

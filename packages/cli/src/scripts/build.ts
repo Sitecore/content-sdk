@@ -11,7 +11,6 @@ export const builder = {
     requiresArg: true,
     type: 'string',
     describe: 'Path to the Sitecore cli config',
-    default: './sitecore.cli.config.ts',
   },
 };
 
