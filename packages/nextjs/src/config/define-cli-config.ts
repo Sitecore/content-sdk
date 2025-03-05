@@ -14,7 +14,6 @@ import * as defaultTemplate from '../components/templates/default-component';
  */
 export const defineCliConfig = (cliConfig: SitecoreCliConfigInpout): SitecoreCliConfig => {
   addDefaultScaffoldTemplates(cliConfig);
-  console.log('hi from define config in nextjs packages');
   return defineCliConfigCore(cliConfig);
 };
 

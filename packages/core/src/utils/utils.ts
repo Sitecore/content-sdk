@@ -2,6 +2,8 @@ import { ClientError } from 'graphql-request';
 import { IncomingMessage, OutgoingMessage } from 'http';
 import { ParsedUrlQueryInput } from 'querystring';
 import isServer from './is-server';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Omit properties from T that are in K. This is a simplified version of TypeScript's built-in `Omit` utility type.
@@ -257,4 +259,17 @@ export const mergeURLSearchParams = (params1: URLSearchParams, params2: URLSearc
   }
 
   return merged.toString();
+};
+
+
+/**
+ * Ensures that the directory path for the given file path exists.
+ * If the directory does not exist, it will be created recursively.
+ * @param {string} filePath - The file path for which to ensure the directory exists.
+ */
+export const ensurePathExists = (filePath: string) => {
+  const outputDir = path.dirname(filePath);
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
 };

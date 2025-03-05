@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Metadata } from '../editing';
 import { getMetadata } from '../editing/metadata';
+import { ensurePathExists } from '../utils/utils';
 
 /*
   METADATA GENERATION
@@ -26,10 +27,10 @@ export type GenerateMetadataConfig = {
  * If not provided, the default 'src/temp/metadata.json' will be used.
  * @returns {Promise<void>} A promise that resolves when the metadata generation is complete.
  */
-export const generateMetadata = async (config?: GenerateMetadataConfig) => {
+export const generateMetadata = (config?: GenerateMetadataConfig): (() => Promise<void>) => {
   return async () => {
     const metadata: Metadata = getMetadata();
-    writeMetadata(metadata, config?.destinationPath ?? 'src/temp/metadata.json');
+    writeMetadata(metadata, config?.destinationPath ?? '.sitecore/metadata.json');
   };
 };
 
@@ -40,6 +41,9 @@ export const generateMetadata = async (config?: GenerateMetadataConfig) => {
  */
 function writeMetadata(metadata: Metadata, destinationPath: string): void {
   const filePath = path.resolve(destinationPath);
+
+  ensurePathExists(filePath);
+
   console.log(`Writing metadata to ${filePath}`);
   fs.writeFileSync(filePath, JSON.stringify(metadata, null, 2), { encoding: 'utf8' });
 }

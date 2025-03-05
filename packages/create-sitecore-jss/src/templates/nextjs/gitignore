@@ -19,3 +19,6 @@
 
 # vercel
 .vercel
+
+# sitecore temp files
+.sitecore

@@ -19,8 +19,5 @@ const validateConfig = (cliConfig: SitecoreCliConfigInpout) => {
  */
 export const defineCliConfig = (cliConfig: SitecoreCliConfigInpout): SitecoreCliConfig => {
   validateConfig(cliConfig);
-  console.log('hi from define config in core packages');
-  console.log(cliConfig.scaffold?.templates);
-  //   console.log('cliConfig from define cli', cliConfig);
   return cliConfig as SitecoreCliConfig;
 };

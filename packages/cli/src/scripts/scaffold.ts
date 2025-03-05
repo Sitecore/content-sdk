@@ -1,7 +1,6 @@
 import path from 'path';
 import { scaffoldComponent } from '@sitecore-content-sdk/core/tools';
-
-const tsx = require('tsx/cjs/api');
+import loadCliConfig from '../utils/load-config';
 
 /* eslint-disable prettier/prettier */
 export const command = 'scaffold';
@@ -50,18 +49,19 @@ export function handler(argv: any) {
 dashes, or underscores. If specifying a path, it must be relative to src/components`;
   }
 
+  const cliConfig = loadCliConfig(argv.config);
+
   const componentPath = regExResult[1];
   const componentName = regExResult[2];
   const filename = `${componentName}.tsx`;
   const componentRoot = componentPath.startsWith('src/') ? '' : 'src/components';
   const outputFilePath = path.join(componentRoot, componentPath, filename);
-  const cliConfig = tsx.require(path.resolve(process.cwd(), argv.config), __filename);
 
   scaffoldComponent(
     outputFilePath,
     componentName,
     argv.templateName,
-    cliConfig.default.scaffold.templates,
+    cliConfig.scaffold.templates,
     argv.byoc
   );
 }
