@@ -118,6 +118,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   async getPage(path: string, locale?: string, options?: FetchOptions): Promise<Page> {
     // TODO: utilize fetch options
     console.log(options);
+    // TODO: explore this more, implement framework agnostic re: path rewrites
     const siteInfo = this.resolveSite([path].join(''));
     // Get normalized Sitecore item path
     const normalPath = this.normalizePath(path);

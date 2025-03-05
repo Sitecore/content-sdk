@@ -12,8 +12,8 @@ import {
 } from '@sitecore-content-sdk/nextjs';
 import { handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
 import { SitecorePageProps } from 'lib/page-props';
-import { componentBuilder } from 'temp/componentBuilder';
 import client from 'lib/sitecore-client';
+import { componentBuilder } from 'temp/componentBuilder';
 
 
 const SitecorePage = ({ notFound, componentProps, layoutData, headLinks }: SitecorePageProps): JSX.Element => {
@@ -83,37 +83,26 @@ export const getStaticProps: GetStaticProps = async (context) => {
 // This function gets called at request time on server-side.
 export const getServerSideProps: GetServerSideProps = async (context) => {
 <% } -%>
-  if (context.preview) {
-    const props = await client.getPreview(context.previewData);
-    return {
-      props,
-      <% if (prerender === 'SSG') { -%>
-        // Next.js will attempt to re-generate the page:
-        // - When a request comes in
-        // - At most once every 5 seconds
-        revalidate: 5, // In seconds
+const path =
+    context.params === undefined
+      ? '/'
+      : Array.isArray(context.params.path)
+      ? context.params.path.join('/')
+      : context.params.path ?? '/';
+  const props = context.preview
+    ? await client.getPreview(context.previewData)
+    : await client.getPage(path, context.locale);
+  return {
+    props,
+    <% if (prerender === 'SSG') { -%>
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 5 seconds
+    revalidate: 5, // In seconds
     <% } -%>
-      notFound: props.notFound,
-    };
-  } else {
-    const path =
-      context.params === undefined
-        ? '/'
-        : Array.isArray(context.params.path)
-        ? context.params.path.join('/')
-        : context.params.path ?? '/';
-    const props = await client.getPage(path, context.locale);
-    return {
-      props,
-      <% if (prerender === 'SSG') { -%>
-        // Next.js will attempt to re-generate the page:
-        // - When a request comes in
-        // - At most once every 5 seconds
-        revalidate: 5, // In seconds
-    <% } -%>
-      componentProps: client.getComponentData(props.layout, context),
-      notFound: props.notFound,
-    };
+    // dictionary: props.layout ? await client.getDictionary(): undefined
+    componentProps: client.getComponentData(props.layout, context),
+    notFound: props.notFound, // Returns custom 404 page with a status code of 404 when true
   };
 };
 
