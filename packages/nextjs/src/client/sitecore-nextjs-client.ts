@@ -17,6 +17,8 @@ import { SiteInfo } from '../site';
 import { getGroomedVariantIds, personalizeLayout } from '@sitecore-content-sdk/core/personalize';
 import { ComponentPropsService } from '../services/component-props-service';
 import { ModuleFactory } from '../sharedTypes/module-factory';
+import { StaticPath } from '@sitecore-content-sdk/core';
+import { MultisiteGraphQLSitemapService } from '../services/mutisite-graphql-sitemap-service';
 
 export type SitecoreNexjtsClientInit = SitecoreClientInit & {
   moduleFactory: ModuleFactory;
@@ -29,10 +31,15 @@ export type NextjsPage = Page & {
 export class SitecoreNextjsClient extends SitecoreClient {
   protected editingService: GraphQLEditingService;
   protected componentPropsService: ComponentPropsService;
+  private graphqlSitemapService: MultisiteGraphQLSitemapService;
   constructor(protected initOptions: SitecoreNexjtsClientInit) {
     super(initOptions);
     this.editingService = new GraphQLEditingService({ clientFactory: this.clientFactory });
     this.componentPropsService = new ComponentPropsService();
+    this.graphqlSitemapService = new MultisiteGraphQLSitemapService({
+      clientFactory: this.clientFactory,
+      sites: [...new Set(this.siteResolver.sites.map((site: SiteInfo) => site.name))],
+    });
   }
 
   async getPage(path: string, locale?: string, options?: FetchOptions): Promise<Page> {
@@ -164,6 +171,24 @@ export class SitecoreNextjsClient extends SitecoreClient {
     }
 
     return componentProps;
+  }
+
+  /**
+   * Retrieves the static paths for pages based on the given languages and export mode.
+   * @param {string[]} [languages] - An optional array of language codes to generate paths for.
+   * @param {boolean} [exportMode] - Whether to fetch paths for export mode (true) or SSG mode (false).
+   * @param {FetchOptions} [options] - Additional fetch options (currently unused but logged).
+   * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
+   */
+  getPagePaths(
+    languages?: string[],
+    exportMode?: boolean,
+    options?: FetchOptions
+  ): Promise<StaticPath[]> {
+    console.log(options);
+    return exportMode
+      ? this.graphqlSitemapService.fetchExportSitemap(this.initOptions.defaultLanguage)
+      : this.graphqlSitemapService.fetchSSGSitemap(languages || []);
   }
 
   /**
