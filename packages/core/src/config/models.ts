@@ -130,11 +130,22 @@ export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
  * Type to be used as cli config input in sitecore.cli.config
  */
 export type SitecoreCliConfigInpout = {
+  /**
+   * Configuration for the build cli command
+   */
   build?: {
-    // commands: Promise<() => Promise<void>>[];
-    commands?: Promise<(config?: Record<string, any>) => Promise<void>>[];
+    /**
+     * List of commands to run during the build process
+     */
+    commands?: Array<(config?: Record<string, any>) => Promise<void>>;
   };
+  /**
+   * Configuration for the scaffold cli command
+   */
   scaffold?: {
+    /**
+     * List of scaffold templates that can be used for generating components
+     */
     templates?: ScaffoldTemplate[];
   };
 };
