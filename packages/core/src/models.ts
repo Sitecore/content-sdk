@@ -2,7 +2,6 @@ import { GraphQLClient } from './graphql-request-client';
 import { GraphQLRequestClientFactory } from './graphql-request-client';
 import debug from './debug';
 import { SitecoreConfig } from './config';
-import { GraphQLClient as Client } from 'graphql-request';
 
 /**
  * Html <link> tag data model
@@ -68,7 +67,6 @@ export type GraphQLServiceConfig = Pick<SitecoreConfig, 'retries' | 'defaultSite
    * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
    */
   clientFactory: GraphQLRequestClientFactory;
-  graphQLClient?: Client;
   /**
    * Optional debug logger override
    */

@@ -12,3 +12,4 @@ export { RetryStrategy } from '../models';
 export { getEdgeProxyContentUrl, getEdgeProxyFormsUrl } from './graphql-edge-proxy';
 export { SitecoreClient } from './sitecore-client';
 export { SitecoreClientInit, Page, FetchOptions, PageInfo } from './models';
+export { createGraphQLClientFactory } from './utils';

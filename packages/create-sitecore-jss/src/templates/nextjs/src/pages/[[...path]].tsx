@@ -9,18 +9,13 @@ import Layout from 'src/Layout';
 import {
   SitecoreContext,
   ComponentPropsContext,
-  <% if (prerender === 'SSG') { -%>
-  StaticPath,
-  <% } -%>
+  StaticPath
 } from '@sitecore-content-sdk/nextjs';
 import { handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
 import { SitecorePageProps } from 'lib/page-props';
 import client from 'lib/sitecore-client';
 import { componentBuilder } from 'temp/componentBuilder';
-<% if (prerender === 'SSG') { -%>
-import { sitemapFetcher } from 'lib/sitemap-fetcher';
 
-<% } -%>
 
 const SitecorePage = ({ notFound, componentProps, layoutData, headLinks }: SitecorePageProps): JSX.Element => {
   useEffect(() => {
@@ -64,8 +59,9 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 
   if (process.env.NODE_ENV !== 'development' && process.env.DISABLE_SSG_FETCH?.toLowerCase() !== 'true') {
     try {
+      const exportMode = process.env.EXPORT_MODE === 'true';
       // Note: Next.js runs export in production mode
-      paths = await sitemapFetcher.fetch(context);
+      paths = await client.getPagePaths(context?.locales || [], exportMode);
     } catch (error) {
       console.log('Error occurred while fetching static paths');
       console.log(error);

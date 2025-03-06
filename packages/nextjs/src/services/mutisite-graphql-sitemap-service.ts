@@ -1,4 +1,4 @@
-﻿import { getSiteRewrite } from '@sitecore-content-sdk/core/site';
+﻿import { getSiteRewrite, SiteInfo } from '@sitecore-content-sdk/core/site';
 import {
   BaseGraphQLSitemapService,
   BaseGraphQLSitemapServiceConfig,
@@ -16,7 +16,7 @@ export interface MultisiteGraphQLSitemapServiceConfig extends BaseGraphQLSitemap
   /**
    * Names of the configured sites
    */
-  sites: string[];
+  sites: SiteInfo[];
 }
 
 /**
@@ -59,7 +59,7 @@ export class MultisiteGraphQLSitemapService extends BaseGraphQLSitemapService {
 
     // Fetch paths for each site
     for (let i = 0; i < sites.length; i++) {
-      const siteName = sites[i];
+      const siteName = sites[i].name;
 
       // Fetch paths using all locales
       paths.push(...(await this.getTranformedPaths(siteName, languages, formatStaticPath)));

@@ -1,4 +1,5 @@
 import {
+  createGraphQLClientFactory,
   FetchOptions,
   Page,
   SitecoreClient,
@@ -9,6 +10,8 @@ import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
 import { ModuleFactory } from '../sharedTypes/module-factory';
+import { StaticPath } from '@sitecore-content-sdk/core';
+import { MultisiteGraphQLSitemapService } from '../services/mutisite-graphql-sitemap-service';
 
 export type SitecoreNexjtsClientInit = SitecoreClientInit & {
   moduleFactory: ModuleFactory;
@@ -20,9 +23,14 @@ export type NextjsPage = Page & {
 
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
+  private graphqlSitemapService: MultisiteGraphQLSitemapService;
   constructor(protected initOptions: SitecoreNexjtsClientInit) {
     super(initOptions);
     this.componentPropsService = new ComponentPropsService();
+    this.graphqlSitemapService = new MultisiteGraphQLSitemapService({
+      clientFactory: this.clientFactory,
+      sites: this.siteResolver.sites,
+    });
   }
 
   async getPage(path: string, locale?: string, options?: FetchOptions): Promise<Page> {
@@ -63,5 +71,37 @@ export class SitecoreNextjsClient extends SitecoreClient {
     }
 
     return componentProps;
+  }
+
+  /**
+   * Retrieves the static paths for pages based on the given languages.
+   * @param {string[]} [languages] - An optional array of language codes to generate paths for.
+   * @param {FetchOptions} [options] - Additional fetch options.
+   * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
+   */
+  async getPagePaths(languages?: string[], options?: FetchOptions): Promise<StaticPath[]> {
+    const sitePathsService = options
+      ? new MultisiteGraphQLSitemapService({
+          sites: this.siteResolver.sites,
+          clientFactory: createGraphQLClientFactory(options),
+        })
+      : this.graphqlSitemapService;
+    return await sitePathsService.fetchSSGSitemap(languages || []);
+  }
+
+  /**
+   * Retrieves the static paths nextjs export mode.
+   * @param {string} [language] - Language to export site paths in.
+   * @param {FetchOptions} [options] - Additional fetch options.
+   * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
+   */
+  async getExportSitemap(language?: string, options?: FetchOptions): Promise<StaticPath[]> {
+    const sitePathsService = options
+      ? new MultisiteGraphQLSitemapService({
+          sites: this.siteResolver.sites,
+          clientFactory: createGraphQLClientFactory(options),
+        })
+      : this.graphqlSitemapService;
+    return await sitePathsService.fetchExportSitemap(language || this.initOptions.defaultLanguage);
   }
 }

@@ -48,8 +48,9 @@ export interface DictionaryService {
   /**
    * Fetch dictionary data for a language.
    * @param {string} language the language to be used to fetch the dictionary
+   * @param {string} site site name to fetch data for.
    */
-  fetchDictionaryData(language: string): Promise<DictionaryPhrases>;
+  fetchDictionaryData(language: string, site?: string): Promise<DictionaryPhrases>;
 }
 
 /**
@@ -123,10 +124,12 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
   /**
    * Fetches dictionary data for internalization. Uses search query by default
    * @param {string} language the language to fetch
+   * @param {string} site site name to fetch data for.
    * @returns {Promise<DictionaryPhrases>} dictionary phrases
    * @throws {Error} if the app root was not found for the specified site and language.
    */
-  async fetchDictionaryData(language: string): Promise<DictionaryPhrases> {
+  async fetchDictionaryData(language: string, site?: string): Promise<DictionaryPhrases> {
+    site = site || this.options.defaultSite;
     const cacheKey = this.options.defaultSite + language;
     const cachedValue = this.getCacheValue(cacheKey);
     if (cachedValue) {
@@ -138,7 +141,7 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
       return cachedValue;
     }
 
-    const phrases = await this.fetchWithSiteQuery(language);
+    const phrases = await this.fetchWithSiteQuery(site, language);
 
     this.setCacheValue(cacheKey, phrases);
     return phrases;
@@ -147,17 +150,18 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
   /**
    * Fetches dictionary data with site query
    * This is the default behavior for XMCloud deployments. Uses `siteQuery` to retrieve data.
+   * @param {string} site  the site to fetch
    * @param {string} language the language to fetch
    * @returns {Promise<DictionaryPhrases>} dictionary phrases
    */
-  async fetchWithSiteQuery(language: string): Promise<DictionaryPhrases> {
+  async fetchWithSiteQuery(site: string, language: string): Promise<DictionaryPhrases> {
     const phrases: DictionaryPhrases = {};
-    debug.dictionary('fetching dictionary data for %s %s', language, this.options.defaultSite);
+    debug.dictionary('fetching dictionary data for %s %s', language, site);
     let results: { key: string; value: string }[] = [];
     let hasNext = true;
     let after = '';
 
-    if (!this.options.defaultSite) {
+    if (!site) {
       throw new RangeError(siteNameError);
     }
 

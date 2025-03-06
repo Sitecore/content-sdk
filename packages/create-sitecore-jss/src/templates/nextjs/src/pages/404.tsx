@@ -1,15 +1,10 @@
 import config from 'sitecore.config';
-import {
-  GraphQLErrorPagesService,
-  SitecoreContext,
-  ErrorPages,
-} from '@sitecore-content-sdk/nextjs';
+import { SitecoreContext, ErrorPages } from '@sitecore-content-sdk/nextjs';
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
 import Layout from 'src/Layout';
 import { GetStaticProps } from 'next';
-import { siteResolver } from 'lib/site-resolver';
-import clientFactory from 'lib/graphql-client-factory';
+import client from 'lib/sitecore-client';
 import { NextjsPage } from '@sitecore-content-sdk/nextjs/client';
 
 const Custom404 = (props: NextjsPage): JSX.Element => {
@@ -27,22 +22,15 @@ const Custom404 = (props: NextjsPage): JSX.Element => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const site = siteResolver.getByName(config.defaultSite);
-  const errorPagesService = new GraphQLErrorPagesService({
-    clientFactory,
-    siteName: site.name,
-    language: context.locale || config.defaultLanguage,
-    retries:
-      (process.env.GRAPH_QL_SERVICE_RETRIES &&
-        parseInt(process.env.GRAPH_QL_SERVICE_RETRIES, 10)) ||
-      0,
-  });
+export const getStaticProps: GetStaticProps = async context => {
   let resultErrorPages: ErrorPages | null = null;
 
   if (process.env.DISABLE_SSG_FETCH?.toLowerCase() !== 'true') {
     try {
-      resultErrorPages = await errorPagesService.fetchErrorPages();
+      resultErrorPages = await client.getErrorPages(
+        config.defaultSite,
+        context.locale || context.defaultLocale || config.defaultLanguage
+      );
     } catch (error) {
       console.log('Error occurred while fetching error pages');
       console.log(error);
@@ -52,7 +40,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       headLinks: [],
-      layoutData: resultErrorPages?.notFoundPage?.rendered || null,
+      layoutData: resultErrorPages?.serverErrorPage?.rendered || null,
     },
   };
 };

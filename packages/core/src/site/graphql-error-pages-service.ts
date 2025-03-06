@@ -1,8 +1,9 @@
-import { GraphQLClient, GraphQLRequestClientConfig } from '../client';
+import { GraphQLClient } from '../client';
 import { siteNameError } from '../constants';
 import debug from '../debug';
 import { LayoutServiceData } from '../layout';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
+import { GraphQLServiceConfig } from '../models';
 
 // The default query for request error handling
 const defaultQuery = /* GraphQL */ `
@@ -24,12 +25,7 @@ const defaultQuery = /* GraphQL */ `
   }
 `;
 
-export interface GraphQLErrorPagesServiceConfig
-  extends Pick<GraphQLRequestClientConfig, 'retries' | 'retryStrategy'> {
-  /**
-   * The JSS application name
-   */
-  siteName: string;
+export interface GraphQLErrorPagesServiceConfig extends GraphQLServiceConfig {
   /**
    * The language
    */
@@ -78,12 +74,14 @@ export class GraphQLErrorPagesService {
 
   /**
    * Fetch list of error pages for the site
+   * @param {string} site  The site name
+   * @param {string} locale  The language
    * @returns {ErrorPages} list of url's error pages
    * @throws {Error} if the siteName is empty.
    */
-  async fetchErrorPages(): Promise<ErrorPages | null> {
-    const siteName: string = this.options.siteName;
-    const language: string = this.options.language;
+  async fetchErrorPages(site?: string, locale?: string): Promise<ErrorPages | null> {
+    const siteName: string = site || this.options.defaultSite;
+    const language: string = locale || this.options.language;
 
     if (!siteName) {
       throw new Error(siteNameError);
@@ -112,8 +110,8 @@ export class GraphQLErrorPagesService {
 
     return this.options.clientFactory({
       debugger: debug.errorpages,
-      retries: this.options.retries,
-      retryStrategy: this.options.retryStrategy,
+      retries: this.options.retries.count,
+      retryStrategy: this.options.retries.retryStrategy,
     });
   }
 }
