@@ -14,7 +14,6 @@ export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/e
 export {
   getContentStylesheetLink,
   getComponentLibraryStylesheetLinks,
-  LayoutService,
   LayoutServiceData,
   LayoutServicePageState,
   LayoutServiceContext,

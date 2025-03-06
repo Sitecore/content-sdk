@@ -3,13 +3,14 @@ import parse from 'url-parse';
 import { DocumentNode } from 'graphql';
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './utils/timeout-promise';
-import { GenericGraphQLClientError, RetryStrategy } from './models';
+import { FetchOptions, GenericGraphQLClientError, RetryStrategy } from './models';
 import { DefaultRetryStrategy } from './retries';
 
 /**
  * Options for configuring a GraphQL request.
  */
-interface RequestOptions {
+interface RequestOptions extends FetchOptions {
+  variables?: { [key: string]: unknown };
   headers?: Record<string, string>;
 }
 
@@ -40,10 +41,10 @@ export type GraphQLClientError = Partial<ClientError> & GenericGraphQLClientErro
  * Minimum configuration options for classes that implement @see GraphQLClient
  */
 export type GraphQLRequestClientConfig = {
-  /**
+    /**
    * The API key to use for authentication. This will be added as an 'sc_apikey' header.
    */
-  apiKey?: string;
+    apiKey?: string;
   /**
    * Override debugger for logging. Uses 'core:http' by default.
    */
@@ -111,7 +112,6 @@ export class GraphQLRequestClient implements GraphQLClient {
     if (clientConfig.apiKey) {
       this.headers.sc_apikey = clientConfig.apiKey;
     }
-
     if (clientConfig.headers) {
       this.headers = { ...this.headers, ...clientConfig.headers };
     }
@@ -154,14 +154,13 @@ export class GraphQLRequestClient implements GraphQLClient {
    * @param {object} [variables] graphql variables
    * @param {RequestOptions} [options] Options for configuring a GraphQL request.
    */
-  async request<T>(
-    query: string | DocumentNode,
-    variables?: { [key: string]: unknown },
-    options?: RequestOptions
-  ): Promise<T> {
+  async request<T>(query: string | DocumentNode, options?: RequestOptions): Promise<T> {
     let attempt = 1;
 
     const retryer = async (): Promise<T> => {
+      const variables = options?.variables;
+      const retries = options?.retries || this.retries;
+      const retryStrategy = options?.retryStrategy || this.retryStrategy;
       // Note we don't have access to raw request/response with graphql-request
       // but we should log whatever we have.
       this.debug('request: %o', {
@@ -187,10 +186,10 @@ export class GraphQLRequestClient implements GraphQLClient {
           this.abortTimeout?.clear();
           this.debug('response error: %o', error.response || error.message || error);
           const status = error.response?.status || error.code;
-          const shouldRetry = this.retryStrategy.shouldRetry(error, attempt, this.retries);
+          const shouldRetry = retryStrategy.shouldRetry(error, attempt, retries);
 
           if (shouldRetry) {
-            const delayMs = this.retryStrategy.getDelay(error, attempt);
+            const delayMs = retryStrategy.getDelay(error, attempt);
             this.debug('Error: %s. Retrying in %dms (attempt %d).', status, delayMs, attempt);
 
             attempt++;

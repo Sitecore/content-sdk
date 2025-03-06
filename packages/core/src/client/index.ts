@@ -7,15 +7,8 @@ export {
   GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
 } from '../graphql-request-client';
-export {
-  SearchQueryResult,
-  SearchQueryVariables,
-  SearchServiceConfig,
-  SearchQueryService,
-  PageInfo,
-} from './search-service';
 export { DefaultRetryStrategy } from '../retries';
 export { RetryStrategy } from '../models';
 export { getEdgeProxyContentUrl, getEdgeProxyFormsUrl } from './graphql-edge-proxy';
 export { SitecoreClient } from './sitecore-client';
-export { SitecoreClientInit, Page, FetchOptions } from './models';
+export { SitecoreClientInit, Page, FetchOptions, PageInfo } from './models';

@@ -16,7 +16,12 @@ export {
   ComponentLayoutRequestParams,
 } from './rest-component-layout-service';
 export { EditingRenderQueryParams, RenderComponentQueryParams } from './models';
-export { LayoutKind, MetadataKind } from './models';
+export {
+  LayoutKind,
+  MetadataKind,
+  EditingPreviewData,
+  ComponentLibraryRenderPreviewData,
+} from './models';
 export {
   addComponentUpdateHandler,
   ComponentLibraryStatus,

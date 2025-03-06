@@ -1,28 +1,28 @@
 import { GraphQLRequestClient, GraphQLRequestClientFactoryConfig } from '../graphql-request-client';
 import { getEdgeProxyContentUrl } from './graphql-edge-proxy';
-import { SitecoreClientInit } from './models';
+import { FetchOptions } from './models';
 
 /**
  * Creates a new GraphQLRequestClientFactory instance
- * @param config jss config
+ * @param {FetchOptions} options jss config
  * @returns GraphQLRequestClientFactory instance
  */
-export const createGraphQLClientFactory = (config: SitecoreClientInit) => {
+export const createGraphQLClientFactory = (options: FetchOptions) => {
   let clientConfig: GraphQLRequestClientFactoryConfig;
-  if (config.api.edge.contextId) {
+  if (options.api?.edge?.contextId) {
     clientConfig = {
-      endpoint: getEdgeProxyContentUrl(config.api.edge.contextId, config.api.edge.edgeUrl),
+      endpoint: getEdgeProxyContentUrl(options.api.edge.contextId, options.api.edge.edgeUrl),
     };
-  } else if (config.api.local.apiKey && config.api.local.apiHost) {
+  } else if (options.api?.local?.apiKey && options.api?.local?.apiHost) {
     clientConfig = {
-      endpoint: `${config.api.local.apiHost}${config.api.local.path}`,
-      apiKey: config.api.local.apiKey,
+      endpoint: `${options.api.local.apiHost}${options.api.local.path}`,
+      apiKey: options.api.local.apiKey,
     };
   } else {
     throw new Error(
-      'Please configure either your sitecoreEdgeContextId, or your graphQLEndpoint and sitecoreApiKey.'
+      'Please configure and use either your sitecoreEdgeContextId, or your graphQLEndpoint and sitecoreApiKey.'
     );
   }
 
-  return GraphQLRequestClient.createClientFactory(clientConfig);
+  return GraphQLRequestClient.createClientFactory({ ...clientConfig, ...options });
 };

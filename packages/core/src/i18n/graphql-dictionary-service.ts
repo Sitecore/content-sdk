@@ -1,6 +1,6 @@
 import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
-import { PageInfo, SearchQueryVariables } from '../client';
+import { PageInfo } from '../client';
 import { siteNameError, languageError } from '../client/app-root-query';
 import debug from '../debug';
 import { SitecoreConfig } from '../config';
@@ -56,8 +56,7 @@ export interface DictionaryService {
  * Configuration options for @see GraphQLDictionaryService instances
  */
 export interface GraphQLDictionaryServiceConfig
-  extends Omit<SearchQueryVariables, 'language'>,
-    CacheOptions,
+  extends CacheOptions,
     Pick<SitecoreConfig, 'retries' | 'defaultSite'> {
   /**
    * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
@@ -76,6 +75,13 @@ export interface GraphQLDictionaryServiceConfig
    * @default '061cba1554744b918a0617903b102b82' (/sitecore/templates/Foundation/JavaScript Services/App)
    */
   jssAppTemplateId?: string;
+  /**
+   * common variable for all GraphQL queries
+   * it will be used for every type of query to regulate result batch size
+   * Optional. How many result items to fetch in each GraphQL call. This is needed for pagination.
+   * @default 10
+   */
+  pageSize?: number;
 }
 
 /**

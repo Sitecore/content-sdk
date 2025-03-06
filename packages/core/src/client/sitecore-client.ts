@@ -1,62 +1,67 @@
+import {
+  ComponentLibraryRenderPreviewData,
+  EditingPreviewData,
+  GraphQLEditingService,
+  RestComponentLayoutService,
+} from '../editing';
+import * as pathUtil from 'path';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases, GraphQLDictionaryService } from '../i18n';
-import { getComponentLibraryStylesheetLinks, getContentStylesheetLink, GraphQLLayoutService, LayoutServiceData } from '../layout';
+import {
+  getComponentLibraryStylesheetLinks,
+  getContentStylesheetLink,
+  GraphQLLayoutService,
+  LayoutServiceData,
+} from '../layout';
 import { HTMLLink, StaticPath } from '../models';
-import { normalizePersonalizedRewrite } from '../personalize';
-import { ErrorPages, getSiteRewriteData, normalizeSiteRewrite, SiteInfo, SiteResolver } from '../site';
+import {
+  getGroomedVariantIds,
+  normalizePersonalizedRewrite,
+  personalizeLayout,
+} from '../personalize';
+import {
+  ErrorPages,
+  getSiteRewriteData,
+  normalizeSiteRewrite,
+  SiteInfo,
+  SiteResolver,
+} from '../site';
 import { FetchOptions, Page, SitecoreClientInit } from './models';
 import { createGraphQLClientFactory } from './utils';
 
-// contract for the sitecore client
-export abstract class BaseSitecoreClient {
-  abstract resolveSite(path: string | string[] | undefined): SiteInfo;
-  abstract getPage(
+/**
+ * contract for the Sitecore Client implementations
+ */
+export interface BaseSitecoreClient {
+  resolveSite(path: string | string[]): SiteInfo;
+  getPage(
     path: string | string[] | undefined,
     locale?: string,
     options?: FetchOptions
   ): Promise<Page | null>;
-  abstract getDictionary(
-    site: string,
-    locale?: string,
-    options?: FetchOptions
-  ): Promise<DictionaryPhrases>;
-  abstract getPagePaths(locales?: string[], options?: FetchOptions): Promise<StaticPath[]>;
-  abstract getErrorPages(
-    site: string,
-    locale?: string,
-    options?: FetchOptions
-  ): Promise<ErrorPages>;
+  getDictionary(site: string, locale?: string, options?: FetchOptions): Promise<DictionaryPhrases>;
+  getPagePaths(locales?: string[], options?: FetchOptions): Promise<StaticPath[]>;
+  getErrorPages(site: string, locale?: string, options?: FetchOptions): Promise<ErrorPages>;
+  getPreview(previewData: EditingPreviewData, options?: FetchOptions): Promise<Page | null>;
 }
-// TODO: consider the below
-/**
- * // Data fetcher that is responsible for all XMCloud connections
- * // Will be initialized OOB
- * // or customers can provide custom one with custom credentials and pass it into:
- *  - SitecoreClient constructor
- *  - individual methods of SitecoreClient
- * class DataFetcher {
- *  constructor(private api: SitecoreConfig['api']) {
- *   // check for edge/local details. Similar to clientFactory
- *  }
- *  fetch<TInput,TOutput>(query) {
- *    // connect to XMCloud, get data
- *    // Service classes will call this and then transform response data as needed
- *  }
- * }
- */
 
 // this is a generic content client, can be used by any framework
 export class SitecoreClient implements BaseSitecoreClient {
   protected layoutService: GraphQLLayoutService;
   protected dictionaryService: GraphQLDictionaryService;
   protected siteResolver: SiteResolver;
+  protected editingService: GraphQLEditingService;
   protected clientFactory: GraphQLRequestClientFactory;
 
   constructor(protected initOptions: SitecoreClientInit) {
-    this.clientFactory = createGraphQLClientFactory(initOptions);
+    const graphQLOptions: FetchOptions = {
+      retries: initOptions.retries.count,
+      retryStrategy: initOptions.retries.retryStrategy,
+    };
+    this.clientFactory = createGraphQLClientFactory(graphQLOptions);
     this.siteResolver = new SiteResolver(initOptions.sites);
+    this.editingService = new GraphQLEditingService({ clientFactory: this.clientFactory });
     const baseServiceOptions = {
-      // TODO: consider reworking services to not depend on siteName
       defaultSite: initOptions.defaultSite,
       clientFactory: this.clientFactory,
       /*
@@ -82,14 +87,13 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   normalizePath(path: string) {
-    // TODO: chaining call instead
     return normalizeSiteRewrite(normalizePersonalizedRewrite(path));
   }
 
-  // TODO: use type string | string[] | undefined here
-  resolveSite(path: string): SiteInfo {
+  resolveSite(path: string | string[]): SiteInfo {
+    const resolvedPath = pathUtil.join(...path);
     // Get site name (from path)
-    const siteData = getSiteRewriteData(path, this.initOptions.defaultSite);
+    const siteData = getSiteRewriteData(resolvedPath, this.initOptions.defaultSite);
 
     // Resolve site by name
     const site = this.siteResolver.getByName(siteData.siteName);
@@ -98,8 +102,12 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   // TODO: allow getPage to return null when notFound
   async getPage(path: string, locale?: string, options?: FetchOptions): Promise<Page> {
-    // TODO: utilize fetch options
-    console.log(options);
+    const layoutService = options
+      ? new GraphQLLayoutService({
+          ...this.initOptions,
+          clientFactory: createGraphQLClientFactory(options),
+        })
+      : this.layoutService;
     // TODO: explore this more, implement framework agnostic re: path rewrites
     const siteInfo = this.resolveSite([path].join(''));
     // Get normalized Sitecore item path
@@ -109,7 +117,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     locale = locale ?? siteInfo.language;
 
     // Fetch layout data, passing on req/res for SSR
-    const layout = await this.layoutService.fetchLayoutData(normalPath, locale, siteInfo.name);
+    const layout = await layoutService.fetchLayoutData(normalPath, locale, siteInfo.name);
     let notFound = false;
     if (!layout.sitecore.route) {
       // A missing route value signifies an invalid path, so set notFound.
@@ -125,14 +133,11 @@ export class SitecoreClient implements BaseSitecoreClient {
         headLinks: [],
       };
     } else {
-      // Fetch dictionary data if layout data was present
-      const dictionary = await this.dictionaryService.fetchDictionaryData(locale);
       // Initialize links to be inserted on the page
       const headLinks = this.getHeadLinks(layout);
       return {
         layout,
         notFound,
-        dictionary,
         site: siteInfo,
         locale,
         headLinks,
@@ -169,5 +174,104 @@ export class SitecoreClient implements BaseSitecoreClient {
   getErrorPages(site: string, locale?: string, options?: FetchOptions): Promise<ErrorPages> {
     console.log('%s', site, locale, options);
     throw 'Unimplemented';
+  }
+
+  async getPreview(previewData: EditingPreviewData, options?: FetchOptions) {
+    const editingService = options
+      ? new GraphQLEditingService({
+          ...this.initOptions,
+          clientFactory: createGraphQLClientFactory(options),
+        })
+      : this.editingService;
+    // If we're in Pages preview (editing) mode, prefetch the editing data
+    const {
+      site,
+      itemId,
+      language,
+      version,
+      variantIds,
+      layoutKind,
+    } = previewData as EditingPreviewData;
+
+    const data = await editingService.fetchEditingData({
+      siteName: site,
+      itemId,
+      language,
+      version,
+      layoutKind,
+    });
+
+    if (!data) {
+      throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}`);
+    }
+    const page = {
+      locale: language,
+      layout: data.layoutData,
+      headLinks: this.getHeadLinks(data.layoutData),
+      dictionary: data.dictionary,
+      site: data.layoutData.sitecore.context.site as SiteInfo,
+    } as Page;
+    const personalizeData = getGroomedVariantIds(variantIds);
+    personalizeLayout(page.layout, personalizeData.variantId, personalizeData.componentVariantIds);
+
+    return page;
+  }
+
+  async getComponentLibraryData(
+    componentLibData: ComponentLibraryRenderPreviewData,
+    options?: FetchOptions
+  ) {
+    if (!this.initOptions.api.local) {
+      throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
+    }
+    const editingService = options
+      ? new GraphQLEditingService({
+          ...this.initOptions,
+          clientFactory: createGraphQLClientFactory(options),
+        })
+      : this.editingService;
+    const {
+      itemId,
+      componentUid,
+      site,
+      language,
+      renderingId,
+      dataSourceId,
+      version,
+    } = componentLibData;
+
+    const componentService = new RestComponentLayoutService({
+      apiHost: this.initOptions.api.local?.apiHost,
+      apiKey: this.initOptions.api.local?.apiKey,
+      siteName: site,
+    });
+
+    const componentData = await componentService.fetchComponentData({
+      siteName: site,
+      itemId,
+      language,
+      componentUid,
+      renderingId,
+      dataSourceId,
+      version,
+    });
+
+    const dictionaryData = await editingService.fetchDictionaryData({
+      siteName: site,
+      language,
+    });
+
+    if (!componentData) {
+      throw new Error(
+        `Unable to fetch editing data for preview ${JSON.stringify(componentLibData)}`
+      );
+    }
+    const page = {
+      locale: componentLibData.language,
+      layout: componentData,
+      headLinks: this.getHeadLinks(componentData),
+      dictionary: dictionaryData,
+    } as Page;
+    return page;
   }
 }

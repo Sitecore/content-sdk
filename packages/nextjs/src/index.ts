@@ -14,7 +14,6 @@
 } from '@sitecore-content-sdk/core';
 
 export {
-  LayoutService,
   LayoutServiceData,
   LayoutServicePageState,
   LayoutServiceContext,

@@ -1,3 +1,9 @@
+import { GraphQLClient } from './graphql-request-client';
+import { GraphQLRequestClientFactory } from './graphql-request-client';
+import debug from './debug';
+import { SitecoreConfig } from './config';
+import { GraphQLClient as Client } from 'graphql-request';
+
 /**
  * Html <link> tag data model
  */
@@ -50,3 +56,53 @@ export type StaticPath = {
   };
   locale?: string;
 };
+
+export type FetchOptions = {
+  retries?: number;
+  retryStrategy?: RetryStrategy;
+};
+
+export type GraphQLServiceConfig = Pick<SitecoreConfig, 'retries' | 'defaultSite'> & {
+  /**
+   * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
+   * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
+   */
+  clientFactory: GraphQLRequestClientFactory;
+  graphQLClient?: Client;
+  /**
+   * Optional debug logger override
+   */
+  debugger?: debug.Debugger;
+};
+
+/**
+ * Base abstraction to implement custom layout service
+ */
+export abstract class SitecoreServiceBase {
+  protected graphQLClient: GraphQLClient;
+
+  /**
+   * Fetch layout data using the Sitecore GraphQL endpoint.
+   * @param {GraphQLLayoutServiceConfig} serviceConfig configuration
+   */
+  constructor(public serviceConfig: GraphQLServiceConfig) {
+    this.graphQLClient = this.getGraphQLClient();
+  }
+
+  /**
+   * Gets a GraphQL client that can make requests to the API.
+   * @param {Debugger} [debuglog] debug stream to write debug messages to
+   * @returns {GraphQLClient} implementation
+   */
+  protected getGraphQLClient(): GraphQLClient {
+    if (!this.serviceConfig.clientFactory) {
+      throw new Error('clientFactory needs to be provided when initializing GraphQL client.');
+    }
+
+    return this.serviceConfig.clientFactory({
+      debugger: this.serviceConfig.debugger || debug.http,
+      retries: this.serviceConfig.retries.count,
+      retryStrategy: this.serviceConfig.retries.retryStrategy,
+    });
+  }
+}
