@@ -8,7 +8,7 @@
 
 > **scaffoldFile**(`filePath`, `fileContent`): `string` \| `null`
 
-Defined in: [dev-tools/src/templating/scaffold.ts:22](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/dev-tools/src/templating/scaffold.ts#L22)
+Defined in: [dev-tools/src/templating/scaffold.ts:22](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/dev-tools/src/templating/scaffold.ts#L22)
 
 Creates a file relative to the specified path if the file doesn't exist.
 Creates directories as needed.

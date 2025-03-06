@@ -169,6 +169,7 @@ export class GraphQLRequestClient implements GraphQLClient {
         headers: { ...this.headers, ...options?.headers },
         query,
         variables,
+        timeout: this.timeout,
       });
       const startTimestamp = Date.now();
       const fetchWithOptionalTimeout = [this.client.request(query, variables, options?.headers)];

@@ -23,49 +23,86 @@ export type SitecoreConfigInput = {
      */
     edge?: {
       // for now contextID will take the role of both server and client IDs
-      contextId?: string;
+      /**
+       * A unified identifier used to connect and retrieve data from XM Cloud instance
+       */
+      contextId: string;
       // clientContextId will be utilized when we know more specifics about it
+      /**
+       * Optional identifier used to connect and retrieve data from XM Cloud instance in client-side functionality
+       */
       clientContextId?: string;
+      /**
+       * XM Cloud endpoint that the app will communicate and retrieve data from
+       * @default https://edge-platform.sitecorecloud.io
+       */
       edgeUrl?: string;
     };
     /**
      * API endpoint credentials for connection to local Sitecore instance
      */
     local?: {
-      apiKey?: string;
-      apiHost?: string;
+      /**
+       * Sitecore API key identifier used to connect to the GraphQL endpoint
+       */
+      apiKey: string;
+      /**
+       * Sitecore API hostname that the app will connect and retrieve data from
+       */
+      apiHost: string;
+      /**
+       * GraphQL endpoint path, will be appended to apiHost to form full enpoint URL ($apiHost/$path)
+       * @default /sitecore/api/graph/edge
+       */
       path?: string;
     };
   };
-  defaultSite?: string;
+  /**
+   * The default and fallback locale for your site.
+   * Ensure it aligns with the framework-specific settings used in your application.
+   */
   defaultLanguage: string;
+  /**
+   * Your default site name. When using the multisite feature this variable defines the fallback site.
+   */
+  defaultSite?: string;
   /**
    * Editing secret required to support Sitecore editing and preview functionality.
    */
   editingSecret?: string;
+  /**
+   * Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
+   */
   retries?: {
     /**
      * Number of retries for graphql client. Will use the specified `retryStrategy`.
+     * @default 3
      */
     count?: number;
     /**
-     * Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
+     * Retry strategy for the client. By default, uses exponential
      * back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
+     * @default DefaultRetryStrategy
      */
     retryStrategy?: RetryStrategy;
   };
+  /**
+   * Settings for Layout Service
+   */
   layout?: {
     /**
-     * Override default layout query for Layout Service
-     * @param {string} siteName
-     * @param {string} itemPath
-     * @param {string} [locale]
+     * Override the first part of graphQL query for Layout Service (excluding the fields part)
+     * @param {string} siteName your site name
+     * @param {string} itemPath full path to Sitecore item/route
+     * @param {string} [locale] item/route language
      * @returns {string} custom layout query
-     * Layout query
-     * layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")
+     * @default 'layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")'
      */
     formatLayoutQuery?: ((siteName: string, itemPath: string, locale?: string) => string) | null;
   };
+  /**
+   * Settings for Dictionary Service
+   */
   dictionary?: {
     /**
      * configure local memory caching for Dictionary Service requests
@@ -75,7 +112,14 @@ export type SitecoreConfigInput = {
       timeout?: number;
     };
   };
-  multisite: {
+  /**
+   * Settings for multisite functionaliry
+   */
+  multisite?: {
+    /**
+     * Enable multisite
+     * @default true
+     */
     enabled?: boolean;
     /**
      * Fallback hostname in case `host` header is not present
@@ -87,7 +131,14 @@ export type SitecoreConfigInput = {
      */
     useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
   };
-  personalize: {
+  /**
+   * Setting for personalize functionality
+   */
+  personalize?: {
+    /**
+     * Enable personalize middleware
+     * @default process.env.NODE_ENV !== 'development'
+     */
     enabled?: boolean;
     /**
      * Configuration for your Sitecore Experience Edge endpoint
@@ -100,21 +151,28 @@ export type SitecoreConfigInput = {
     /**
      * Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
      */
-    scope: string | undefined;
+    scope?: string;
     /**
      * The Sitecore CDP channel to use for events. Uses 'WEB' by default.
      */
-    channel?: string | undefined;
+    channel?: string;
     /**
      * Currency for CDP request. Uses 'USA' as default.
      */
-    currency?: string | undefined;
+    currency?: string;
   };
-  redirects: {
+  /**
+   * Settings for redirects functionality
+   */
+  redirects?: {
+    /**
+     * Enable redirects middleware
+     * @default process.env.NODE_ENV !== 'development'
+     */
     enabled?: boolean;
     /**
      * These are all the locales you support in your application.
-     * These should match those in your next.config.js (i18n.locales).
+     * These should match those in framework-specific configuration of your app.
      */
     locales?: string[];
   };

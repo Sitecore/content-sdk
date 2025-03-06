@@ -133,7 +133,7 @@ describe('MultisiteMiddleware', () => {
   });
 
   describe('request skipped', () => {
-    describe('disabled', () => {
+    describe('disabled / skip', () => {
       const res = createResponse();
 
       const test = async (pathname: string, middleware) => {
@@ -174,10 +174,10 @@ describe('MultisiteMiddleware', () => {
       });
 
       it('should apply both default and custom rules when custom disabled function provided', async () => {
-        const disabled = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
+        const skip = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
 
         const { middleware } = createMiddleware({
-          config: { ...defaultConfig, disabled },
+          config: { ...defaultConfig, skip },
         });
 
         await test('/src/image.png', middleware);
