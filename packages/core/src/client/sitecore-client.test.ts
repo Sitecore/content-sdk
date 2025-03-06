@@ -425,7 +425,6 @@ describe('SitecoreClient', () => {
         dictionary: { key1: 'value1', key2: 'value2' },
       };
 
-      // We need to mock the fetchEditingData method to avoid real network requests
       editingServiceStub.fetchEditingData
         .withArgs({
           siteName: previewData.site,
@@ -438,15 +437,12 @@ describe('SitecoreClient', () => {
 
       sinon.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
-      // Create a simple stub for getServiceInstance that just returns the service
-      // This avoids the need to mock GraphQLClient creation
       const getServiceInstanceStub = sinon
         .stub(sitecoreClient as any, 'getServiceInstance')
         .callsFake((service) => service);
 
       await sitecoreClient.getPreview(previewData, fetchOptions);
 
-      // Verify the fetch call was made with the custom options
       expect(
         editingServiceStub.fetchEditingData.calledWith({
           siteName: previewData.site,
