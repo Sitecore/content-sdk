@@ -48,7 +48,9 @@ describe('scaffold command', () => {
     try {
       handler(argv);
     } catch (error) {
-      expect(error).to.equal('Component name is required. Usage: scs scaffold <ComponentName>');
+      expect(error.message).to.equal(
+        'Component name is required. Usage: scs scaffold <ComponentName>'
+      );
     }
   });
 
@@ -57,7 +59,7 @@ describe('scaffold command', () => {
     try {
       handler(argv);
     } catch (error) {
-      expect(error).to.equal(
+      expect(error.message).to.equal(
         `Component name should start with an uppercase letter and contain only letters, numbers,
 dashes, or underscores. If specifying a path, it must be relative to src/components`
       );
