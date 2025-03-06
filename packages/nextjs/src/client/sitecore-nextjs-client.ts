@@ -2,6 +2,7 @@ import {
   createGraphQLClientFactory,
   FetchOptions,
   Page,
+  RouteOptions,
   SitecoreClient,
   SitecoreClientInit,
 } from '@sitecore-content-sdk/core/client';
@@ -13,6 +14,9 @@ import { ModuleFactory } from '../sharedTypes/module-factory';
 import { StaticPath } from '@sitecore-content-sdk/core';
 import { MultisiteGraphQLSitemapService } from '../services/mutisite-graphql-sitemap-service';
 import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
+import { SiteInfo } from '../site';
+import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
+import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/core/personalize';
 
 export type SitecoreNexjtsClientInit = SitecoreClientInit & {
   moduleFactory: ModuleFactory;
@@ -20,6 +24,7 @@ export type SitecoreNexjtsClientInit = SitecoreClientInit & {
 
 export type NextjsPage = Page & {
   componentProps?: ComponentPropsCollection;
+  notFound?: boolean;
 };
 
 export class SitecoreNextjsClient extends SitecoreClient {
@@ -34,15 +39,39 @@ export class SitecoreNextjsClient extends SitecoreClient {
     });
   }
 
-  async getPage(path: string, locale?: string, options?: FetchOptions): Promise<NextjsPage> {
-    return super.getPage(path, locale, options);
+  // since path rewrite we rely on is only working in nextjs
+  resolveSiteFromPath(path: string | string[]): SiteInfo {
+    const resolvedPath = typeof path === 'string' ? path : this.parsePath(path);
+    // Get site name (from path rewritten in middleware)
+    const siteData = getSiteRewriteData(resolvedPath, this.initOptions.defaultSite);
+
+    // Resolve site by name
+    const site = this.siteResolver.getByName(siteData.siteName);
+    return site;
+  }
+  /**
+   * Normalizes a nextjs path that could have been rewritten
+   * @param {string | string[]} path nextjs path
+   * @returns path string without nextjs prefixes
+   */
+  parsePath(path: string | string[]) {
+    return normalizeSiteRewrite(normalizePersonalizedRewrite(super.parsePath(path)));
+  }
+
+  async getPage(
+    path: string | string[],
+    routeOptions?: RouteOptions,
+    options?: FetchOptions
+  ): Promise<NextjsPage | null> {
+    const site = routeOptions?.site || this.resolveSiteFromPath(path).name;
+    const resolvedPath = this.parsePath(path);
+    return super.getPage(resolvedPath, { locale: routeOptions?.locale, site }, options);
   }
 
   async getPreview(previewData: PreviewData, options?: FetchOptions): Promise<NextjsPage> {
     return super.getPreview(previewData as EditingPreviewData, options);
   }
 
-  // TODO: consider making generic and moving to core
   async getComponentData(
     layoutData: LayoutServiceData,
     context: GetServerSidePropsContext | GetStaticPropsContext

@@ -27,10 +27,10 @@ export const getStaticProps: GetStaticProps = async context => {
 
   if (process.env.DISABLE_SSG_FETCH?.toLowerCase() !== 'true') {
     try {
-      resultErrorPages = await client.getErrorPages(
-        config.defaultSite,
-        context.locale || context.defaultLocale || config.defaultLanguage
-      );
+      resultErrorPages = await client.getErrorPages({
+        site: config.defaultSite,
+        locale: context.locale || context.defaultLocale || config.defaultLanguage,
+      });
     } catch (error) {
       console.log('Error occurred while fetching error pages');
       console.log(error);

@@ -14,19 +14,8 @@ import {
   LayoutServiceData,
 } from '../layout';
 import { HTMLLink } from '../models';
-import {
-  getGroomedVariantIds,
-  normalizePersonalizedRewrite,
-  personalizeLayout,
-} from '../personalize';
-import {
-  ErrorPages,
-  getSiteRewriteData,
-  normalizeSiteRewrite,
-  SiteInfo,
-  SiteResolver,
-  GraphQLErrorPagesService,
-} from '../site';
+import { getGroomedVariantIds, personalizeLayout } from '../personalize';
+import { ErrorPages, SiteInfo, SiteResolver, GraphQLErrorPagesService } from '../site';
 import { FetchOptions, Page, SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 
@@ -34,19 +23,30 @@ import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
  * contract for the Sitecore Client implementations
  */
 export interface BaseSitecoreClient {
-  resolveSite(path: string | string[]): SiteInfo;
+  resolveSite(hostname: string): SiteInfo;
   getPage(
-    path: string | string[] | undefined,
-    locale?: string,
-    options?: FetchOptions
+    path: string | string[],
+    routeOptions?: RouteOptions,
+    fetchOptions?: FetchOptions
   ): Promise<Page | null>;
-  getDictionary(site?: string, locale?: string, options?: FetchOptions): Promise<DictionaryPhrases>;
-  getErrorPages(site: string, locale?: string, options?: FetchOptions): Promise<ErrorPages | null>;
+  getDictionary(
+    routeOptions?: RouteOptions,
+    fetchOptions?: FetchOptions
+  ): Promise<DictionaryPhrases>;
+  getErrorPages(
+    routeOptions?: RouteOptions,
+    fetchOptions?: FetchOptions
+  ): Promise<ErrorPages | null>;
   getPreview(
     previewData: EditingPreviewData | undefined,
-    options?: FetchOptions
+    fetchOptions?: FetchOptions
   ): Promise<Page | null>;
 }
+
+export type RouteOptions = {
+  site?: string;
+  locale?: string;
+};
 
 // this is a generic content client, can be used by any framework
 export class SitecoreClient implements BaseSitecoreClient {
@@ -63,9 +63,11 @@ export class SitecoreClient implements BaseSitecoreClient {
       retries: initOptions.retries.count,
       retryStrategy: initOptions.retries.retryStrategy,
     };
+
     this.clientFactory = createGraphQLClientFactory(graphQLOptions);
     this.siteResolver = new SiteResolver(initOptions.sites);
     this.editingService = new GraphQLEditingService({ clientFactory: this.clientFactory });
+
     const baseServiceOptions = {
       defaultSite: initOptions.defaultSite,
       clientFactory: this.clientFactory,
@@ -96,57 +98,41 @@ export class SitecoreClient implements BaseSitecoreClient {
     });
   }
 
-  normalizePath(path: string) {
-    return normalizeSiteRewrite(normalizePersonalizedRewrite(path));
-  }
-
-  resolveSite(path: string | string[]): SiteInfo {
-    const resolvedPath = pathUtil.join(...path);
-    // Get site name (from path)
-    const siteData = getSiteRewriteData(resolvedPath, this.initOptions.defaultSite);
-
+  resolveSite(hostname: string): SiteInfo {
     // Resolve site by name
-    const site = this.siteResolver.getByName(siteData.siteName);
+    const site = this.siteResolver.getByHost(hostname);
     return site;
   }
 
-  // TODO: allow getPage to return null when notFound
-  async getPage(path: string, locale?: string, options?: FetchOptions): Promise<Page> {
-    const layoutService = options
+  parsePath(path: string | string[]) {
+    return typeof path === 'string' ? path : pathUtil.join(...path);
+  }
+
+  async getPage(
+    path: string | string[],
+    routeOptions?: RouteOptions,
+    fetchOptions?: FetchOptions
+  ): Promise<Page | null> {
+    const computedPath = typeof path === 'string' ? path : this.parsePath(path);
+    const layoutService = fetchOptions
       ? new GraphQLLayoutService({
           ...this.initOptions,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
         })
       : this.layoutService;
-    // TODO: explore this more, implement framework agnostic re: path rewrites
-    const siteInfo = this.resolveSite([path].join(''));
-    // Get normalized Sitecore item path
-    const normalPath = this.normalizePath(path);
 
-    locale = locale ?? this.initOptions.defaultLanguage;
-
+    const locale = routeOptions?.locale ?? this.initOptions.defaultLanguage;
+    const siteName = routeOptions?.site ?? this.initOptions.defaultSite;
     // Fetch layout data, passing on req/res for SSR
-    const layout = await layoutService.fetchLayoutData(normalPath, locale, siteInfo.name);
-    let notFound = false;
+    const layout = await layoutService.fetchLayoutData(computedPath, locale, siteName);
     if (!layout.sitecore.route) {
-      // A missing route value signifies an invalid path, so set notFound.
-      // Our page routes will return this in getStatic/ServerSideProps,
-      // which will trigger our custom 404 page with proper 404 status code.
-      // You could perform additional logging here to track these if desired.
-      notFound = true;
-      return {
-        layout,
-        notFound,
-        site: siteInfo,
-        locale,
-        headLinks: [],
-      };
+      return null;
     } else {
+      const siteInfo = this.siteResolver.getByName(siteName);
       // Initialize links to be inserted on the page
       const headLinks = this.getHeadLinks(layout);
       return {
         layout,
-        notFound,
         site: siteInfo,
         locale,
         headLinks,
@@ -174,58 +160,56 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves dictionary phrases for a given site and locale.
-   * @param {string} site - The name of the site for which to fetch dictionary data.
-   * @param {string} [locale] - The locale for which to fetch dictionary data. Defaults to the site's default language if not provided.
-   * @param {FetchOptions} [options] - Additional fetch options.
+   * @param {RouteOptions} routeOptions - Route options containing language and site name to load dictionary for
+   * @param {FetchOptions} [fetchOptions] - Additional fetch fetchOptions.
    * @returns {Promise<DictionaryPhrases>} A promise that resolves to the dictionary phrases.
    */
   async getDictionary(
-    site?: string,
-    locale?: string,
-    options?: FetchOptions
+    routeOptions?: RouteOptions,
+    fetchOptions?: FetchOptions
   ): Promise<DictionaryPhrases> {
-    const dictionaryService = options
+    const dictionaryService = fetchOptions
       ? new GraphQLDictionaryService({
           ...this.initOptions,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
         })
       : this.dictionaryService;
     return await dictionaryService.fetchDictionaryData(
-      locale || this.initOptions.defaultLanguage,
-      site || this.initOptions.defaultSite
+      routeOptions?.locale || this.initOptions.defaultLanguage,
+      routeOptions?.site || this.initOptions.defaultSite
     );
   }
 
   /**
    * Retrieves error pages for a given site and locale.
-   * @param {string} site - The name of the site for which to fetch error pages.
-   * @param {string} [locale] - The locale for which to fetch error pages. Defaults to the site's default language if not provided.
-   * @param {FetchOptions} [options] - Additional fetch options.
+   * @param {RouteOptions} routeOptions - Route options containing language and site name to load error pages
+   * @param {FetchOptions} [fetchOptions] - Additional fetch fetchOptions.
    * @returns {Promise<ErrorPages | null>} A promise that resolves to the error pages or null if not found.
    */
   async getErrorPages(
-    site: string,
-    locale?: string,
-    options?: FetchOptions
+    routeOptions?: RouteOptions,
+    fetchOptions?: FetchOptions
   ): Promise<ErrorPages | null> {
-    const errorPagesService = options
+    const locale = routeOptions?.locale || this.initOptions.defaultLanguage;
+    const site = routeOptions?.site || this.initOptions.defaultSite;
+    const errorPagesService = fetchOptions
       ? new GraphQLErrorPagesService({
           ...this.initOptions,
-          language: locale || this.initOptions.defaultLanguage,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
+          language: locale,
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
         })
       : this.errorPagesService;
     return await errorPagesService.fetchErrorPages(site, locale);
   }
 
-  async getPreview(previewData: EditingPreviewData | undefined, options?: FetchOptions) {
+  async getPreview(previewData: EditingPreviewData | undefined, fetchOptions?: FetchOptions) {
     if (!previewData) {
       console.error('Preview data missing');
     }
-    const editingService = options
+    const editingService = fetchOptions
       ? new GraphQLEditingService({
           ...this.initOptions,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
         })
       : this.editingService;
     // If we're in Pages preview (editing) mode, prefetch the editing data
@@ -264,15 +248,15 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   async getComponentLibraryData(
     componentLibData: ComponentLibraryRenderPreviewData,
-    options?: FetchOptions
+    fetchOptions?: FetchOptions
   ) {
     if (!this.initOptions.api.local) {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
-    const editingService = options
+    const editingService = fetchOptions
       ? new GraphQLEditingService({
           ...this.initOptions,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
         })
       : this.editingService;
     const {

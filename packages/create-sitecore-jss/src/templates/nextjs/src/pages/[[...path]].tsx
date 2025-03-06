@@ -94,24 +94,29 @@ const path =
       : Array.isArray(context.params.path)
       ? context.params.path.join('/')
       : context.params.path ?? '/';
-  const props = context.preview
+  const page = context.preview
     ? await client.getPreview(context.previewData)
-    : await client.getPage(path, context.locale);
-  props.dictionary = props.layout
-    ? await client.getDictionary(props.site?.name, props.locale)
-    : undefined;
-  props.componentProps = props.layout
-    ? await client.getComponentData(props.layout, context)
-    : undefined;
+    : await client.getPage(path, { locale: context.locale });
+  if (page) {
+    page.dictionary = page.layout
+      ? await client.getDictionary({ site: page.site?.name, locale: page.locale })
+      : undefined;
+    page.componentProps = page.layout
+      ? await client.getComponentData(page.layout, context)
+      : undefined;
+  }
   return {
-    props,
+    props: page || {},
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 5 seconds
     <% if (prerender === 'SSG') { -%>
       // Next.js will attempt to re-generate the page:
       // - When a request comes in
       // - At most once every 5 seconds
       revalidate: 5, // In seconds
       <% } -%>
-    notFound: props.notFound, // Returns custom 404 page with a status code of 404 when true
+    notFound: !page,
   };
 };
 

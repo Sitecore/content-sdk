@@ -45,7 +45,6 @@ export interface RetryStrategy {
   getDelay(error: GenericGraphQLClientError, attempt: number): number;
 }
 
-// TODO: maybe find a better place for this
 /**
  * Object model of a sitemap's site page item.
  */
@@ -89,7 +88,6 @@ export abstract class SitecoreServiceBase {
 
   /**
    * Gets a GraphQL client that can make requests to the API.
-   * @param {Debugger} [debuglog] debug stream to write debug messages to
    * @returns {GraphQLClient} implementation
    */
   protected getGraphQLClient(): GraphQLClient {

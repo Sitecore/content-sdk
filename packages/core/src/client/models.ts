@@ -36,7 +36,6 @@ export type Page = {
   locale: string;
   dictionary?: DictionaryPhrases;
   headLinks: HTMLLink[];
-  notFound?: boolean;
 };
 
 export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' | 'personalize'> & {
