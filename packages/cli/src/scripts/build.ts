@@ -1,7 +1,4 @@
-// import path from 'path';
 import loadCliConfig from '../utils/load-config';
-
-/* eslint-disable prettier/prettier */
 export const command = 'build';
 
 export const describe = 'Handles build time automation';
@@ -21,7 +18,9 @@ export const builder = {
 export async function handler(argv: any) {
   const cliConfig = loadCliConfig(argv.config);
 
-  cliConfig.build.commands.forEach((command: any) => {
-    command();
-  });
+  if (cliConfig.build && Array.isArray(cliConfig.build.commands)) {
+    cliConfig.build.commands.forEach((command: any) => {
+      command();
+    });
+  }
 }

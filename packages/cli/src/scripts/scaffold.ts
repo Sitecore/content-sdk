@@ -38,7 +38,7 @@ export function args(yargs: Argv) {
         'Name of the template that will be used to scaffold the component. Can be configured in the cli.config.',
     })
     .option('byoc', {
-      requiresArgs: false,
+      requiresArg: false,
       type: 'boolean',
       describe: 'If true, scaffolds a byoc component.',
       default: false,
@@ -51,15 +51,15 @@ export function args(yargs: Argv) {
  */
 export function handler(argv: any) {
   if (!argv.componentName) {
-    throw 'Component name was not passed. Usage: scs scaffold <ComponentName>';
+    throw new Error('Component name is required. Usage: scs scaffold <ComponentName>');
   }
 
   const nameParamFormat = new RegExp(/^((?:[\w\-]+\/)*)([A-Z][\w-]+)$/);
   const regExResult = nameParamFormat.exec(argv.componentName);
 
   if (regExResult === null) {
-    throw `Component name should start with an uppercase letter and contain only letters, numbers,
-dashes, or underscores. If specifying a path, it must be relative to src/components`;
+    throw new Error(`Component name should start with an uppercase letter and contain only letters, numbers,
+dashes, or underscores. If specifying a path, it must be relative to src/components`);
   }
 
   const cliConfig = loadCliConfig(argv.config);

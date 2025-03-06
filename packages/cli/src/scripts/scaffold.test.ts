@@ -48,7 +48,7 @@ describe('scaffold command', () => {
     try {
       handler(argv);
     } catch (error) {
-      expect(error).to.equal('Component name was not passed. Usage: scs scaffold <ComponentName>');
+      expect(error).to.equal('Component name is required. Usage: scs scaffold <ComponentName>');
     }
   });
 
