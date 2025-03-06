@@ -24,7 +24,7 @@ export type GenerateSitesConfig = {
 
   /**
    * Optional path where the generated sites will be saved.
-   * If not provided, the default 'src/temp/sites.js' will be used.
+   * If not provided, the default '.sitecore/sites.json' will be used.
    */
   destinationPath?: string;
 };
@@ -33,7 +33,7 @@ export type GenerateSitesConfig = {
  * Generates site information and writes it to a specified destination path.
  * @param {GenerateSitesConfig} config - The configuration for generating site info.
  * @param {GraphQLSiteInfoService} config.siteInfoService - The service used to fetch site information.
- * @param {string} config.destinationPath - The optional path where the generated sites file will be written. Defaults to 'src/temp/sites.js'.
+ * @param {string} config.destinationPath - The optional path where the generated sites file will be written. Defaults to '.sitecore/sites.json'.
  * @returns {Promise<Function>} - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
  */
 export const generateSites = ({
@@ -45,11 +45,6 @@ export const generateSites = ({
   return async () => {
     let sites: SiteInfo[] = [];
     const sitesFilePath = path.resolve(destinationPath ?? '.sitecore/sites.json');
-
-    const outputDir = path.dirname(sitesFilePath);
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir, { recursive: true });
-    }
 
     if (multiSiteEnabled) {
       try {

@@ -14,7 +14,7 @@ const validateConfig = (cliConfig: SitecoreCliConfigInput) => {
 
 /**
  * Accepts a SitecoreCliConfigInput object and returns sitecore cli configuration, updated with required default values
- * @param {SitecoreCliConfigInput} cliConfig the cli configuration provided by the appication
+ * @param {SitecoreCliConfigInput} cliConfig the cli configuration provided by the application
  * @returns {SitecoreCliConfig} full sitecore cli configuration to use with cli
  */
 export const defineCliConfig = (cliConfig: SitecoreCliConfigInput): SitecoreCliConfig => {

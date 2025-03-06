@@ -52,10 +52,10 @@ export function scaffoldComponent(
   byoc: boolean
 ): void {
   const templateName = templateNameArg ?? (byoc ? 'byoc' : 'default');
-  const template = templates.filter((t) => t.name === templateName)[0];
+  const template = templates.find((t) => t.name === templateName);
 
   if (!template) {
-    throw `Template ${templateName} not found.`;
+    throw new Error(`Template ${templateName} not found.`);
   }
 
   const componentOutputPath = scaffoldFile(
