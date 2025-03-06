@@ -112,12 +112,12 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   // TODO: allow getPage to return null when notFound
   async getPage(path: string, locale?: string, options?: FetchOptions): Promise<Page> {
-    const layoutService = options
-      ? new GraphQLLayoutService({
-          ...this.initOptions,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
-        })
-      : this.layoutService;
+    const layoutService = this.getServiceInstance(
+      this.layoutService,
+      GraphQLLayoutService,
+      options
+    );
+
     // TODO: explore this more, implement framework agnostic re: path rewrites
     const siteInfo = this.resolveSite([path].join(''));
     // Get normalized Sitecore item path
@@ -184,12 +184,11 @@ export class SitecoreClient implements BaseSitecoreClient {
     locale?: string,
     options?: FetchOptions
   ): Promise<DictionaryPhrases> {
-    const dictionaryService = options
-      ? new GraphQLDictionaryService({
-          ...this.initOptions,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
-        })
-      : this.dictionaryService;
+    const dictionaryService = this.getServiceInstance(
+      this.dictionaryService,
+      GraphQLDictionaryService,
+      options
+    );
     return await dictionaryService.fetchDictionaryData(
       locale || this.initOptions.defaultLanguage,
       site || this.initOptions.defaultSite
@@ -208,13 +207,11 @@ export class SitecoreClient implements BaseSitecoreClient {
     locale?: string,
     options?: FetchOptions
   ): Promise<ErrorPages | null> {
-    const errorPagesService = options
-      ? new GraphQLErrorPagesService({
-          ...this.initOptions,
-          language: locale || this.initOptions.defaultLanguage,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
-        })
-      : this.errorPagesService;
+    const errorPagesService = this.getServiceInstance(
+      this.errorPagesService,
+      GraphQLErrorPagesService,
+      options
+    );
     return await errorPagesService.fetchErrorPages(site, locale);
   }
 
@@ -222,12 +219,12 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!previewData) {
       console.error('Preview data missing');
     }
-    const editingService = options
-      ? new GraphQLEditingService({
-          ...this.initOptions,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
-        })
-      : this.editingService;
+
+    const editingService = this.getServiceInstance(
+      this.editingService,
+      GraphQLEditingService,
+      options
+    );
     // If we're in Pages preview (editing) mode, prefetch the editing data
     const {
       site,
@@ -269,12 +266,12 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!this.initOptions.api.local) {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
-    const editingService = options
-      ? new GraphQLEditingService({
-          ...this.initOptions,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
-        })
-      : this.editingService;
+    const editingService = this.getServiceInstance(
+      this.editingService,
+      GraphQLEditingService,
+      options
+    );
+
     const {
       itemId,
       componentUid,
@@ -318,5 +315,26 @@ export class SitecoreClient implements BaseSitecoreClient {
       dictionary: dictionaryData,
     } as Page;
     return page;
+  }
+
+  /**
+   * Returns an instance of the requested service.
+   * If `fetchOptions` are provided, a new instance is created; otherwise, the default instance is used.
+   * @param {T} defaultInstance - The default instance of the service to use if no fetch options are provided.
+   * @param {new (config: any) => T} ServiceConstructor - The constructor for the service class.
+   * @param {FetchOptions} [fetchOptions] - Optional fetch options to create a new instance.
+   * @returns {T} An instance of the requested service.
+   */
+  private getServiceInstance<T>(
+    defaultInstance: T,
+    ServiceConstructor: new (config: any) => T,
+    fetchOptions?: FetchOptions
+  ): T {
+    return fetchOptions
+      ? new ServiceConstructor({
+          ...this.initOptions,
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
+        })
+      : defaultInstance;
   }
 }
