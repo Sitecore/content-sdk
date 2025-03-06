@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { defineCliConfig } from './define-cli-config';
-import { SitecoreCliConfigInpout, SitecoreCliConfig } from '@sitecore-content-sdk/core/config';
+import { SitecoreCliConfigInput, SitecoreCliConfig } from '@sitecore-content-sdk/core/config';
 import chalk from 'chalk';
 
 describe('defineCliConfig', () => {
@@ -39,7 +39,7 @@ describe('defineCliConfig', () => {
   };
 
   it('should add default and byoc scaffold templates', () => {
-    const inputConfig: SitecoreCliConfigInpout = {
+    const inputConfig: SitecoreCliConfigInput = {
       build: {
         commands: [
           () => {
@@ -63,7 +63,7 @@ describe('defineCliConfig', () => {
   });
 
   it('should initialize scaffold object if not present', () => {
-    const inputConfig: SitecoreCliConfigInpout = {
+    const inputConfig: SitecoreCliConfigInput = {
       build: {
         commands: [
           () => {

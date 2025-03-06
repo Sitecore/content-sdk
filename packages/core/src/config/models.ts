@@ -129,7 +129,7 @@ export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
 /**
  * Type to be used as cli config input in sitecore.cli.config
  */
-export type SitecoreCliConfigInpout = {
+export type SitecoreCliConfigInput = {
   /**
    * Configuration for the build cli command
    */
@@ -153,7 +153,7 @@ export type SitecoreCliConfigInpout = {
 /**
  * Final sitecore cli config type used required by the cli
  */
-export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInpout>;
+export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;
 
 /**
  * Scaffold template type
@@ -169,7 +169,7 @@ export type ScaffoldTemplate = {
   /**
    * Function to generate the component file contents based on the component name.
    * @param componentName - The name of the component.
-   * @returns The generated conent as a string.
+   * @returns The generated content as a string.
    */
   generateTemplate: (componentName: string) => string;
   /**

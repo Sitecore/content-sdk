@@ -2,7 +2,7 @@ export {
   SitecoreConfig,
   SitecoreConfigInput,
   SitecoreCliConfig,
-  SitecoreCliConfigInpout,
+  SitecoreCliConfigInput,
   ScaffoldTemplate,
 } from './models';
 export { defineConfig } from './define-config';

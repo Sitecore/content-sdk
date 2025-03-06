@@ -1,6 +1,6 @@
-import { SitecoreCliConfig, SitecoreCliConfigInpout } from './models';
+import { SitecoreCliConfig, SitecoreCliConfigInput } from './models';
 
-const validateConfig = (cliConfig: SitecoreCliConfigInpout) => {
+const validateConfig = (cliConfig: SitecoreCliConfigInput) => {
   if (!cliConfig.build?.commands?.length) {
     throw new Error('Configuration error: build commands should be defined in sitecore.cli.config');
   }
@@ -13,11 +13,11 @@ const validateConfig = (cliConfig: SitecoreCliConfigInpout) => {
 };
 
 /**
- * Accepts a SitecoreCliConfigInpout object and returns sitecore cli configuration, updated with required default values
- * @param {SitecoreCliConfigInpout} cliConfig the cli configuration provided by the appication
+ * Accepts a SitecoreCliConfigInput object and returns sitecore cli configuration, updated with required default values
+ * @param {SitecoreCliConfigInput} cliConfig the cli configuration provided by the appication
  * @returns {SitecoreCliConfig} full sitecore cli configuration to use with cli
  */
-export const defineCliConfig = (cliConfig: SitecoreCliConfigInpout): SitecoreCliConfig => {
+export const defineCliConfig = (cliConfig: SitecoreCliConfigInput): SitecoreCliConfig => {
   validateConfig(cliConfig);
   return cliConfig as SitecoreCliConfig;
 };

@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import { defineCliConfig } from './define-cli-config';
-import { SitecoreCliConfigInpout } from './models';
+import { SitecoreCliConfigInput } from './models';
 
 describe('defineCliConfig', () => {
   it('should return the cliConfig if it is valid', () => {
-    const validConfig: SitecoreCliConfigInpout = {
+    const validConfig: SitecoreCliConfigInput = {
       build: {
         commands: [
           () => {
@@ -24,7 +24,7 @@ describe('defineCliConfig', () => {
   });
 
   it('should throw an error if build commands are not defined', () => {
-    const invalidConfig: SitecoreCliConfigInpout = {
+    const invalidConfig: SitecoreCliConfigInput = {
       build: {
         commands: [],
       },
@@ -39,7 +39,7 @@ describe('defineCliConfig', () => {
   });
 
   it('should throw an error if scaffold templates are not defined', () => {
-    const invalidConfig: SitecoreCliConfigInpout = {
+    const invalidConfig: SitecoreCliConfigInput = {
       build: {
         commands: [
           () => {
