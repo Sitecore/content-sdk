@@ -88,8 +88,10 @@ export class GraphQLErrorPagesService {
     }
 
     return (<Promise<ErrorPagesQueryResult>>this.graphQLClient.request(this.query, {
-      siteName,
-      language,
+      variables: {
+        siteName,
+        language,
+      },
     }))
       .then((result: ErrorPagesQueryResult) =>
         result.site.siteInfo ? result.site.siteInfo.errorHandling : null

@@ -6,12 +6,13 @@ import {
   SitecoreClientInit,
 } from '@sitecore-content-sdk/core/client';
 import { ComponentPropsCollection, ComponentPropsError } from '../sharedTypes/component-props';
-import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
+import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
 import { ModuleFactory } from '../sharedTypes/module-factory';
 import { StaticPath } from '@sitecore-content-sdk/core';
 import { MultisiteGraphQLSitemapService } from '../services/mutisite-graphql-sitemap-service';
+import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
 
 export type SitecoreNexjtsClientInit = SitecoreClientInit & {
   moduleFactory: ModuleFactory;
@@ -33,13 +34,12 @@ export class SitecoreNextjsClient extends SitecoreClient {
     });
   }
 
-  async getPage(path: string, locale?: string, options?: FetchOptions): Promise<Page> {
-    const page = (await super.getPage(path, locale, options)) as NextjsPage;
-    if (!page.notFound) {
-      // TODO: find a way to not use nextjs context here
-      page.componentProps = {};
-    }
-    return page;
+  async getPage(path: string, locale?: string, options?: FetchOptions): Promise<NextjsPage> {
+    return super.getPage(path, locale, options);
+  }
+
+  async getPreview(previewData: PreviewData, options?: FetchOptions): Promise<NextjsPage> {
+    return super.getPreview(previewData as EditingPreviewData, options);
   }
 
   // TODO: consider making generic and moving to core
@@ -83,7 +83,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
     const sitePathsService = options
       ? new MultisiteGraphQLSitemapService({
           sites: this.siteResolver.sites,
-          clientFactory: createGraphQLClientFactory(options),
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
         })
       : this.graphqlSitemapService;
     return await sitePathsService.fetchSSGSitemap(languages || []);
@@ -99,7 +99,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
     const sitePathsService = options
       ? new MultisiteGraphQLSitemapService({
           sites: this.siteResolver.sites,
-          clientFactory: createGraphQLClientFactory(options),
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
         })
       : this.graphqlSitemapService;
     return await sitePathsService.fetchExportSitemap(language || this.initOptions.defaultLanguage);

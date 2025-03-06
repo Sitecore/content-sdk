@@ -28,7 +28,7 @@ import {
   GraphQLErrorPagesService,
 } from '../site';
 import { FetchOptions, Page, SitecoreClientInit } from './models';
-import { createGraphQLClientFactory } from './utils';
+import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 
 /**
  * contract for the Sitecore Client implementations
@@ -40,9 +40,12 @@ export interface BaseSitecoreClient {
     locale?: string,
     options?: FetchOptions
   ): Promise<Page | null>;
-  getDictionary(site: string, locale?: string, options?: FetchOptions): Promise<DictionaryPhrases>;
+  getDictionary(site?: string, locale?: string, options?: FetchOptions): Promise<DictionaryPhrases>;
   getErrorPages(site: string, locale?: string, options?: FetchOptions): Promise<ErrorPages | null>;
-  getPreview(previewData: EditingPreviewData, options?: FetchOptions): Promise<Page | null>;
+  getPreview(
+    previewData: EditingPreviewData | undefined,
+    options?: FetchOptions
+  ): Promise<Page | null>;
 }
 
 // this is a generic content client, can be used by any framework
@@ -55,7 +58,8 @@ export class SitecoreClient implements BaseSitecoreClient {
   protected errorPagesService: GraphQLErrorPagesService;
 
   constructor(protected initOptions: SitecoreClientInit) {
-    const graphQLOptions: FetchOptions = {
+    const graphQLOptions: GraphQLClientOptions = {
+      api: this.initOptions.api,
       retries: initOptions.retries.count,
       retryStrategy: initOptions.retries.retryStrategy,
     };
@@ -111,7 +115,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     const layoutService = options
       ? new GraphQLLayoutService({
           ...this.initOptions,
-          clientFactory: createGraphQLClientFactory(options),
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
         })
       : this.layoutService;
     // TODO: explore this more, implement framework agnostic re: path rewrites
@@ -176,12 +180,20 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @returns {Promise<DictionaryPhrases>} A promise that resolves to the dictionary phrases.
    */
   async getDictionary(
-    site: string,
+    site?: string,
     locale?: string,
     options?: FetchOptions
   ): Promise<DictionaryPhrases> {
-    console.log(options);
-    return await this.dictionaryService.fetchDictionaryData(site, locale);
+    const dictionaryService = options
+      ? new GraphQLDictionaryService({
+          ...this.initOptions,
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
+        })
+      : this.dictionaryService;
+    return await dictionaryService.fetchDictionaryData(
+      locale || this.initOptions.defaultLanguage,
+      site || this.initOptions.defaultSite
+    );
   }
 
   /**
@@ -200,17 +212,20 @@ export class SitecoreClient implements BaseSitecoreClient {
       ? new GraphQLErrorPagesService({
           ...this.initOptions,
           language: locale || this.initOptions.defaultLanguage,
-          clientFactory: createGraphQLClientFactory(options),
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
         })
       : this.errorPagesService;
     return await errorPagesService.fetchErrorPages(site, locale);
   }
 
-  async getPreview(previewData: EditingPreviewData, options?: FetchOptions) {
+  async getPreview(previewData: EditingPreviewData | undefined, options?: FetchOptions) {
+    if (!previewData) {
+      console.error('Preview data missing');
+    }
     const editingService = options
       ? new GraphQLEditingService({
           ...this.initOptions,
-          clientFactory: createGraphQLClientFactory(options),
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
         })
       : this.editingService;
     // If we're in Pages preview (editing) mode, prefetch the editing data
@@ -257,7 +272,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     const editingService = options
       ? new GraphQLEditingService({
           ...this.initOptions,
-          clientFactory: createGraphQLClientFactory(options),
+          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
         })
       : this.editingService;
     const {

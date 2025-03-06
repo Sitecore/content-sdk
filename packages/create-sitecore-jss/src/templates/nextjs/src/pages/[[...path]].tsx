@@ -9,34 +9,36 @@ import Layout from 'src/Layout';
 import {
   SitecoreContext,
   ComponentPropsContext,
+  <% if (prerender === 'SSG') { -%>
   StaticPath
+  <% } -%>
 } from '@sitecore-content-sdk/nextjs';
 import { handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
-import { SitecorePageProps } from 'lib/page-props';
+import { NextjsPage } from '@sitecore-content-sdk/nextjs/client';
 import client from 'lib/sitecore-client';
 import { componentBuilder } from 'temp/componentBuilder';
 
 
-const SitecorePage = ({ notFound, componentProps, layoutData, headLinks }: SitecorePageProps): JSX.Element => {
+const SitecorePage = ({ notFound, componentProps, layout, headLinks }: NextjsPage): JSX.Element => {
   useEffect(() => {
     // Since Sitecore Editor does not support Fast Refresh, need to refresh editor chromes after Fast Refresh finished
     handleEditorFastRefresh();
   }, []);
 
-  if (notFound || !layoutData.sitecore.route) {
+  if (notFound || !layout.sitecore.route) {
     // Shouldn't hit this (as long as 'notFound' is being returned below), but just to be safe
     return <NotFound />;
   }
 
-  const isEditing = layoutData.sitecore.context.pageEditing;
+  const isEditing = layout.sitecore.context.pageEditing;
 
   return (
-    <ComponentPropsContext value={componentProps}>
+    <ComponentPropsContext value={componentProps || {}}>
       <SitecoreContext
         componentFactory={componentBuilder.getComponentFactory({ isEditing })}
-        layoutData={layoutData}
+        layoutData={layout}
       >
-        <Layout layoutData={layoutData} headLinks={headLinks} />
+        <Layout layoutData={layout} headLinks={headLinks} />
       </SitecoreContext>
     </ComponentPropsContext>
   );
@@ -61,7 +63,9 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
     try {
       const exportMode = process.env.EXPORT_MODE === 'true';
       // Note: Next.js runs export in production mode
-      paths = await client.getPagePaths(context?.locales || [], exportMode);
+      paths = exportMode
+      ? await client.getExportSitemap(context.defaultLocale)
+      : await client.getPagePaths(context?.locales || []);
     } catch (error) {
       console.log('Error occurred while fetching static paths');
       console.log(error);
@@ -93,16 +97,20 @@ const path =
   const props = context.preview
     ? await client.getPreview(context.previewData)
     : await client.getPage(path, context.locale);
+  props.dictionary = props.layout
+    ? await client.getDictionary(props.site?.name, props.locale)
+    : undefined;
+  props.componentProps = props.layout
+    ? await client.getComponentData(props.layout, context)
+    : undefined;
   return {
     props,
     <% if (prerender === 'SSG') { -%>
-    // Next.js will attempt to re-generate the page:
-    // - When a request comes in
-    // - At most once every 5 seconds
-    revalidate: 5, // In seconds
-    <% } -%>
-    // dictionary: props.layout ? await client.getDictionary(): undefined
-    componentProps: client.getComponentData(props.layout, context),
+      // Next.js will attempt to re-generate the page:
+      // - When a request comes in
+      // - At most once every 5 seconds
+      revalidate: 5, // In seconds
+      <% } -%>
     notFound: props.notFound, // Returns custom 404 page with a status code of 404 when true
   };
 };

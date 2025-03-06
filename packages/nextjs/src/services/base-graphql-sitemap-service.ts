@@ -282,7 +282,7 @@ export abstract class BaseGraphQLSitemapService {
       const fetchResponse = await this.graphQLClient.request<
         SiteRouteQueryResult<RouteListQueryResult>
       >(this.query, {
-        ...args,
+        variables: args,
         after,
       });
 

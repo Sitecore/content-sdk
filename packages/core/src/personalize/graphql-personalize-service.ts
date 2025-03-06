@@ -92,9 +92,11 @@ export class GraphQLPersonalizeService {
     if (!data) {
       try {
         data = await this.graphQLClient.request<PersonalizeQueryResult>(this.query, {
-          siteName,
-          itemPath,
-          language,
+          variables: {
+            siteName,
+            itemPath,
+            language,
+          },
         });
         this.cache.setCacheValue(cacheKey, data);
       } catch (error) {

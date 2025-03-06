@@ -62,7 +62,9 @@ export class GraphQLRobotsService {
     }
 
     const robotsResult: Promise<RobotsQueryResult> = this.graphQLClient.request(this.query, {
-      siteName,
+      variables: {
+        siteName,
+      },
     });
     try {
       return robotsResult.then((result: RobotsQueryResult) => {

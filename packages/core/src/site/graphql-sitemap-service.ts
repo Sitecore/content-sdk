@@ -64,7 +64,9 @@ export class GraphQLSitemapXmlService {
     }
 
     const sitemapResult: Promise<SitemapQueryResult> = this.graphQLClient.request(this.query, {
-      siteName,
+      variables: {
+        siteName,
+      },
     });
     try {
       return sitemapResult.then((result: SitemapQueryResult) => result.site.siteInfo.sitemap);
