@@ -215,9 +215,13 @@ export class SitecoreClient implements BaseSitecoreClient {
     return await errorPagesService.fetchErrorPages(site, locale);
   }
 
-  async getPreview(previewData: EditingPreviewData | undefined, options?: FetchOptions) {
+  async getPreview(
+    previewData: EditingPreviewData | undefined,
+    options?: FetchOptions
+  ): Promise<Page | null> {
     if (!previewData) {
       console.error('Preview data missing');
+      return null;
     }
 
     const editingService = this.getServiceInstance(
