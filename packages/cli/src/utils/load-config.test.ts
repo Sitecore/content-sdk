@@ -45,10 +45,11 @@ describe('loadCliConfig', () => {
 
   it('should throw an error if the configuration file does not exist', () => {
     const invalidConfig = './invalid-config.ts';
-    tsxRequireStub.throws(new Error());
+    const errorMessage = 'cannot find cli config';
+    tsxRequireStub.throws(new Error(errorMessage));
 
     expect(() => loadCliConfig(invalidConfig)).to.throw(
-      `cli configuration not found in ${invalidConfig}. Please ensure the file exists at the specified location.`
+      `Error while trying to load the cli configuration from ${invalidConfig}. Error message: ${errorMessage}`
     );
   });
 });

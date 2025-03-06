@@ -14,7 +14,7 @@ export default function loadCliConfig(configFile: string): any {
   try {
     cliConfig = tsx.require(path.resolve(process.cwd(), configFile), __filename);
   } catch (e) {
-    throw `cli configuration not found in ${configFile}. Please ensure the file exists at the specified location.`;
+    throw `Error while trying to load the cli configuration from ${configFile}. Error message: ${e.message}`;
   }
 
   return cliConfig.default;
