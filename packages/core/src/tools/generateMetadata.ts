@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Metadata } from '../editing';
 import { getMetadata } from '../editing/metadata';
-import { ensurePathExists } from '../utils/utils';
+import { ensurePathExists } from '../utils/ensurePath';
 
 /*
   METADATA GENERATION

@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 
 import { SiteInfo, GraphQLSiteInfoService } from '../site';
-import { ensurePathExists } from '../utils/utils';
+import { ensurePathExists } from '../utils/ensurePath';
 
 /**
  * Configuration object for generating sites.
