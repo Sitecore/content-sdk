@@ -20,35 +20,6 @@ class TestService extends GraphQLSitemapService {
   }
 }
 
-// todo: should throw error if no app root found
-/*
-it('should return null if no app root found', async () => {
-  nock(endpoint, {
-    reqheaders: {
-      sc_apikey: apiKey,
-    },
-  })
-    .post('/', /GetSiteRoot/gi)
-    .reply(200, {
-      data: {
-        layout: {
-          homePage: {
-            rootItem: [],
-          },
-        },
-      },
-    });
-
-  const client = new GraphQLRequestClient({
-    endpoint,
-    apiKey,
-  });
-
-  await getAppRootId(client, 'siteName', 'language').catch((error) => {
-    expect(error.message).to.equal('Error fetching Sitecore site root item');
-  });
-});
-*/
 describe('GraphQLSitemapService', () => {
   const endpoint = 'http://site';
   const apiKey = 'some-api-key';

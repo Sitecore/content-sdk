@@ -1,8 +1,6 @@
 import { Debugger } from 'debug';
 import { SitecoreConfig, SitecoreConfigInput } from '../config';
-import { DictionaryPhrases } from '../i18n';
-import { LayoutServiceData } from '../layout';
-import { HTMLLink, RetryStrategy } from '../models';
+import { RetryStrategy } from '../models';
 import { SiteInfo } from '../site';
 
 export type FetchOptions = Partial<Pick<SitecoreConfigInput, 'api'>> & {
@@ -26,16 +24,6 @@ export type FetchOptions = Partial<Pick<SitecoreConfigInput, 'api'>> & {
    * Override debugger for logging. Uses 'core:http' by default.
    */
   debugger?: Debugger;
-};
-
-// The same type returned from getPage and getPreviewPage
-// represent a Page model returned from edge
-export type Page = {
-  layout: LayoutServiceData;
-  site?: SiteInfo;
-  locale: string;
-  dictionary?: DictionaryPhrases;
-  headLinks: HTMLLink[];
 };
 
 export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' | 'personalize'> & {

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import { getAppRootId, siteNameError, languageError } from './app-root-query';
+import { siteNameError, languageError } from './constants';
 import { GraphQLRequestClient } from '../graphql-request-client';
 import appRootQueryResponse from '../test-data/mockAppRootQueryResponse.json';
 import nock from 'nock';

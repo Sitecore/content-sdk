@@ -16,8 +16,18 @@ import {
 import { HTMLLink } from '../models';
 import { getGroomedVariantIds, personalizeLayout } from '../personalize';
 import { ErrorPages, SiteInfo, SiteResolver, GraphQLErrorPagesService } from '../site';
-import { FetchOptions, Page, SitecoreClientInit } from './models';
+import { FetchOptions, SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
+
+// The same type returned from getPage and getPreviewPage
+// represent a Page model returned from edge
+export type Page = {
+  layout: LayoutServiceData;
+  site?: SiteInfo;
+  locale: string;
+  dictionary?: DictionaryPhrases;
+  headLinks: HTMLLink[];
+};
 
 /**
  * contract for the Sitecore Client implementations
@@ -99,7 +109,6 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   resolveSite(hostname: string): SiteInfo {
-    // Resolve site by name
     const site = this.siteResolver.getByHost(hostname);
     return site;
   }

@@ -1,12 +1,12 @@
-import { GraphQLServiceConfig } from './layout-service';
 import { LayoutServiceData } from './models';
 import debug from '../debug';
-import { SitecoreConfig } from '../config';
-import { SitecoreServiceBase } from '../models';
+import { SitecoreConfigInput } from '../config';
+import { SitecoreServiceBase, GraphQLServiceConfig } from '../models';
 
 export const GRAPHQL_LAYOUT_QUERY_NAME = 'JssLayoutQuery';
 // TODO: refactor more
-export type GraphQLLayoutServiceConfig = GraphQLServiceConfig & Partial<SitecoreConfig['layout']>;
+export type GraphQLLayoutServiceConfig = GraphQLServiceConfig &
+  Partial<SitecoreConfigInput['layout']>;
 /**
  * Service that fetch layout data using Sitecore's GraphQL API.
  * @augments LayoutServiceBase

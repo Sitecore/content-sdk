@@ -17,9 +17,8 @@ class TestService extends GraphQLDictionaryService {
 
 describe('GraphQLDictionaryService', () => {
   const endpoint = 'http://site';
-  const siteName = 'site-name';
+  const defaultSite = 'site-name';
   const apiKey = 'api-key';
-  const rootItemId = '{GUID}';
   const clientFactory = GraphQLRequestClient.createClientFactory({
     endpoint,
     apiKey,
@@ -36,8 +35,7 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      siteName,
-      rootItemId,
+      defaultSite,
       cacheEnabled: true,
       cacheTimeout: 2,
     });
@@ -52,8 +50,7 @@ describe('GraphQLDictionaryService', () => {
   it('should provide a default GraphQL client', () => {
     const service = new TestService({
       clientFactory,
-      siteName,
-      rootItemId,
+      defaultSite,
       cacheEnabled: false,
     });
 
@@ -70,10 +67,12 @@ describe('GraphQLDictionaryService', () => {
     const mockServiceConfig = {
       siteName: 'supersite',
       clientFactory: clientFactorySpy,
-      retries: 3,
-      retryStrategy: {
-        getDelay: () => 1000,
-        shouldRetry: () => true,
+      retries: {
+        count: 3,
+        retryStrategy: {
+          getDelay: () => 1000,
+          shouldRetry: () => true,
+        },
       },
     };
 
@@ -83,8 +82,8 @@ describe('GraphQLDictionaryService', () => {
 
     const calledWithArgs = clientFactorySpy.firstCall.args[0];
     expect(calledWithArgs.debugger).to.exist;
-    expect(calledWithArgs.retries).to.equal(mockServiceConfig.retries);
-    expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retryStrategy);
+    expect(calledWithArgs.retries).to.equal(mockServiceConfig.retries.count);
+    expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retries.retryStrategy);
   });
 
   it('should fetch dictionary phrases using clientFactory', async () => {
@@ -93,10 +92,9 @@ describe('GraphQLDictionaryService', () => {
       .reply(200, dictionarySiteQueryResponse.singlepage);
 
     const service = new GraphQLDictionaryService({
-      siteName,
+      defaultSite,
       cacheEnabled: false,
       clientFactory,
-      useSiteQuery: true,
     });
     const result = await service.fetchDictionaryData('en');
     expect(result.foo).to.equal('foo');
@@ -115,10 +113,9 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      siteName,
+      defaultSite,
       cacheEnabled: false,
       pageSize: undefined,
-      useSiteQuery: true,
     });
     const result = await service.fetchDictionaryData('en');
     expect(result).to.have.all.keys('foo', 'bar');
@@ -138,10 +135,9 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      siteName,
+      defaultSite,
       cacheEnabled: false,
       pageSize: customPageSize,
-      useSiteQuery: true,
     });
     const result = await service.fetchDictionaryData('en');
     expect(result).to.have.all.keys('foo', 'bar', 'baz');
@@ -156,7 +152,7 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      siteName,
+      defaultSite,
       cacheEnabled: false,
       useSiteQuery: true,
     });
@@ -180,9 +176,8 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      siteName,
+      defaultSite,
       cacheEnabled: false,
-      useSiteQuery: true,
     });
 
     const result = await service.fetchDictionaryData('en');
@@ -192,9 +187,8 @@ describe('GraphQLDictionaryService', () => {
   it('should throw error if siteName is not provided', async () => {
     const service = new GraphQLDictionaryService({
       clientFactory,
-      siteName: '',
+      defaultSite: '',
       cacheEnabled: false,
-      useSiteQuery: true,
     });
 
     await service.fetchDictionaryData('en').catch((error) => {
@@ -205,9 +199,8 @@ describe('GraphQLDictionaryService', () => {
   it('should throw error if language is not provided', async () => {
     const service = new GraphQLDictionaryService({
       clientFactory,
-      siteName,
+      defaultSite,
       cacheEnabled: false,
-      useSiteQuery: true,
     });
 
     await service.fetchDictionaryData('').catch((error) => {

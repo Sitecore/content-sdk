@@ -88,10 +88,8 @@ export class GraphQLErrorPagesService {
     }
 
     return (<Promise<ErrorPagesQueryResult>>this.graphQLClient.request(this.query, {
-      variables: {
-        siteName,
-        language,
-      },
+      siteName,
+      language,
     }))
       .then((result: ErrorPagesQueryResult) =>
         result.site.siteInfo ? result.site.siteInfo.errorHandling : null
@@ -112,8 +110,8 @@ export class GraphQLErrorPagesService {
 
     return this.options.clientFactory({
       debugger: debug.errorpages,
-      retries: this.options.retries.count,
-      retryStrategy: this.options.retries.retryStrategy,
+      retries: this.options.retries?.count,
+      retryStrategy: this.options.retries?.retryStrategy,
     });
   }
 }

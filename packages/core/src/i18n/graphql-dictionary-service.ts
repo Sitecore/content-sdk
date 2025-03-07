@@ -1,9 +1,9 @@
 import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
 import { PageInfo } from '../client';
-import { siteNameError, languageError } from '../client/app-root-query';
+import { siteNameError, languageError } from '../client/constants';
 import debug from '../debug';
-import { SitecoreConfig } from '../config';
+import { GraphQLServiceConfig } from '../models';
 // TODO: refactor more
 /** @private */
 export const queryError =
@@ -56,9 +56,7 @@ export interface DictionaryService {
 /**
  * Configuration options for @see GraphQLDictionaryService instances
  */
-export interface GraphQLDictionaryServiceConfig
-  extends CacheOptions,
-    Pick<SitecoreConfig, 'retries' | 'defaultSite'> {
+export interface GraphQLDictionaryServiceConfig extends CacheOptions, GraphQLServiceConfig {
   /**
    * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
    * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -170,12 +168,10 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
       const fetchResponse = await this.graphQLClient.request<DictionarySiteQueryResponse>(
         siteQuery,
         {
-          variables: {
-            siteName: site,
-            language,
-            pageSize: this.options.pageSize,
-            after,
-          },
+          siteName: site,
+          language,
+          pageSize: this.options.pageSize,
+          after,
         }
       );
 
@@ -235,8 +231,8 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
     }
     return this.options.clientFactory({
       debugger: debug.dictionary,
-      retries: this.options.retries.count,
-      retryStrategy: this.options.retries.retryStrategy,
+      retries: this.options.retries?.count,
+      retryStrategy: this.options.retries?.retryStrategy,
     });
   }
 }

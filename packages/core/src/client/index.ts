@@ -1,4 +1,3 @@
-export { getAppRootId, AppRootQueryResult } from './app-root-query';
 export {
   GraphQLClientError,
   GraphQLClient,
@@ -10,6 +9,6 @@ export {
 export { DefaultRetryStrategy } from '../retries';
 export { RetryStrategy } from '../models';
 export { getEdgeProxyContentUrl, getEdgeProxyFormsUrl } from './graphql-edge-proxy';
-export { SitecoreClient, RouteOptions } from './sitecore-client';
-export { SitecoreClientInit, Page, FetchOptions, PageInfo } from './models';
+export { SitecoreClient, Page, RouteOptions } from './sitecore-client';
+export { SitecoreClientInit, FetchOptions, PageInfo } from './models';
 export { createGraphQLClientFactory } from './utils';

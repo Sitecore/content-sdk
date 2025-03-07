@@ -60,7 +60,7 @@ describe('GraphQLLayoutService', () => {
     });
 
     const service = new GraphQLLayoutService({
-      siteName: 'supersite',
+      defaultSite: 'supersite',
       clientFactory,
     });
 
@@ -115,7 +115,7 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      siteName: 'supersite',
+      defaultSite: 'supersite',
     });
 
     const data = await service.fetchLayoutData('/styleguide');
@@ -169,7 +169,7 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      siteName: 'supersite',
+      defaultSite: 'supersite',
       formatLayoutQuery: (siteName, itemPath, locale) =>
         `layout111(site:"${siteName}",route:"${itemPath}",language:"${locale || 'en'}")`,
     });
@@ -206,7 +206,7 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      siteName: 'supersite',
+      defaultSite: 'supersite',
     });
 
     const data = await service.fetchLayoutData('/styleguide', 'da-DK');
@@ -235,7 +235,7 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      siteName: 'supersite',
+      defaultSite: 'supersite',
     });
 
     await service.fetchLayoutData('/styleguide', 'da-DK').catch((error) => {
@@ -247,12 +247,14 @@ describe('GraphQLLayoutService', () => {
   it('should call clientFactory with the correct arguments', () => {
     const clientFactorySpy: SinonSpy = sinon.spy();
     const mockServiceConfig = {
-      siteName: 'supersite',
+      defaultSite: 'supersite',
       clientFactory: clientFactorySpy,
-      retries: 3,
-      retryStrategy: {
-        getDelay: () => 1000,
-        shouldRetry: () => true,
+      retries: {
+        count: 3,
+        retryStrategy: {
+          getDelay: () => 1000,
+          shouldRetry: () => true,
+        },
       },
     };
 
@@ -262,7 +264,7 @@ describe('GraphQLLayoutService', () => {
 
     const calledWithArgs = clientFactorySpy.firstCall.args[0];
     expect(calledWithArgs.debugger).to.exist;
-    expect(calledWithArgs.retries).to.equal(mockServiceConfig.retries);
-    expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retryStrategy);
+    expect(calledWithArgs.retries).to.equal(mockServiceConfig.retries.count);
+    expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retries.retryStrategy);
   });
 });

@@ -215,11 +215,9 @@ export class GraphQLEditingService {
       const data = await this.graphQLClient.request<GraphQLDictionaryQueryResponse>(
         dictionaryQuery,
         {
-          variables: {
-            siteName,
-            language,
-            after,
-          },
+          siteName,
+          language,
+          after,
         }
       );
 

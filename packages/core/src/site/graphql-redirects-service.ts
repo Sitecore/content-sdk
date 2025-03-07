@@ -88,9 +88,7 @@ export class GraphQLRedirectsService {
 
     if (!data) {
       data = await this.graphQLClient.request<RedirectsQueryResult>(this.query, {
-        variables: {
-          siteName,
-        },
+        siteName,
       });
       this.cache.setCacheValue(cacheKey, data);
     }

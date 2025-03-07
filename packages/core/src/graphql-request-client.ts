@@ -21,8 +21,7 @@ export interface GraphQLClient {
   /**
    * Execute graphql request
    * @param {string | DocumentNode} query graphql query
-   * @param {object} [variables] graphql variables
-   * @param {RequestOptions} [options] options for configuring a GraphQL request.
+   * @param {RequestOptions} [options] options and variables for configuring a GraphQL request.
    */
   request<T>(
     query: string | DocumentNode,
@@ -41,10 +40,10 @@ export type GraphQLClientError = Partial<ClientError> & GenericGraphQLClientErro
  * Minimum configuration options for classes that implement @see GraphQLClient
  */
 export type GraphQLRequestClientConfig = {
-    /**
+  /**
    * The API key to use for authentication. This will be added as an 'sc_apikey' header.
    */
-    apiKey?: string;
+  apiKey?: string;
   /**
    * Override debugger for logging. Uses 'core:http' by default.
    */
@@ -151,14 +150,16 @@ export class GraphQLRequestClient implements GraphQLClient {
   /**
    * Execute graphql request
    * @param {string | DocumentNode} query graphql query
-   * @param {object} [variables] graphql variables
    * @param {RequestOptions} [options] Options for configuring a GraphQL request.
    */
-  async request<T>(query: string | DocumentNode, options?: RequestOptions): Promise<T> {
+  async request<T>(
+    query: string | DocumentNode,
+    variables?: { [key: string]: unknown },
+    options?: RequestOptions
+  ): Promise<T> {
     let attempt = 1;
 
     const retryer = async (): Promise<T> => {
-      const variables = options?.variables;
       const retries = options?.retries || this.retries;
       const retryStrategy = options?.retryStrategy || this.retryStrategy;
       // Note we don't have access to raw request/response with graphql-request

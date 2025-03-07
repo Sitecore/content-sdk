@@ -20,7 +20,7 @@ describe('GraphQLErrorPagesService', () => {
     endpoint,
     apiKey,
   });
-  const siteName = 'site-name';
+  const defaultSite = 'site-name';
   const language = 'en';
   const mockErrorPages = {
     notFoundPagePath: '/notFoundPage',
@@ -60,7 +60,7 @@ describe('GraphQLErrorPagesService', () => {
 
       const service = new GraphQLErrorPagesService({
         clientFactory,
-        siteName: '',
+        defaultSite: '',
         language,
       });
       await service.fetchErrorPages().catch((error: Error) => {
@@ -75,7 +75,7 @@ describe('GraphQLErrorPagesService', () => {
 
       const service = new GraphQLErrorPagesService({
         clientFactory,
-        siteName,
+        defaultSite,
         language,
       });
       const errorPages = await service.fetchErrorPages();
@@ -94,7 +94,7 @@ describe('GraphQLErrorPagesService', () => {
       });
 
       const service = new GraphQLErrorPagesService({
-        siteName,
+        defaultSite,
         language,
         clientFactory,
       });
@@ -111,7 +111,7 @@ describe('GraphQLErrorPagesService', () => {
 
       const service = new GraphQLErrorPagesService({
         clientFactory,
-        siteName,
+        defaultSite,
         language,
       });
       const errorPages = await service.fetchErrorPages();
@@ -125,13 +125,15 @@ describe('GraphQLErrorPagesService', () => {
   it('should call clientFactory with the correct arguments', () => {
     const clientFactorySpy: SinonSpy = sinon.spy();
     const mockServiceConfig = {
-      siteName: 'supersite',
+      defaultSite: 'supersite',
       language,
       clientFactory: clientFactorySpy,
-      retries: 3,
-      retryStrategy: {
-        getDelay: () => 1000,
-        shouldRetry: () => true,
+      retries: {
+        count: 3,
+        retryStrategy: {
+          getDelay: () => 1000,
+          shouldRetry: () => true,
+        },
       },
     };
 
@@ -141,7 +143,7 @@ describe('GraphQLErrorPagesService', () => {
 
     const calledWithArgs = clientFactorySpy.firstCall.args[0];
     expect(calledWithArgs.debugger).to.exist;
-    expect(calledWithArgs.retries).to.equal(mockServiceConfig.retries);
-    expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retryStrategy);
+    expect(calledWithArgs.retries).to.equal(mockServiceConfig.retries.count);
+    expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retries.retryStrategy);
   });
 });

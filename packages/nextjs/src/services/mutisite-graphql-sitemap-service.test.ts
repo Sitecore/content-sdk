@@ -21,7 +21,8 @@ class TestService extends MultisiteGraphQLSitemapService {
 describe('MultisiteGraphQLSitemapService', () => {
   const endpoint = 'http://site';
   const apiKey = 'some-api-key';
-  const sites = ['site-name'];
+  const defaultSiteDeets = { hostName: 'tes.com', language: 'en' };
+  const sites = [{ name: 'site-name', ...defaultSiteDeets }];
   const clientFactory = GraphQLRequestClient.createClientFactory({
     endpoint,
     apiKey,
@@ -233,13 +234,16 @@ describe('MultisiteGraphQLSitemapService', () => {
       });
 
       it('should return aggregated paths for multiple sites with no personalization', async () => {
-        const multipleSites = ['site1', 'site2'];
+        const multipleSites = [
+          { name: 'site1', ...defaultSiteDeets },
+          { name: 'site2', ...defaultSiteDeets },
+        ];
         const lang = 'ua';
 
         nock(endpoint)
           .persist()
           .post('/', (body) => {
-            return body.variables.siteName === multipleSites[0];
+            return body.variables.siteName === multipleSites[0].name;
           })
           .reply(200, {
             data: {
@@ -273,7 +277,7 @@ describe('MultisiteGraphQLSitemapService', () => {
         nock(endpoint)
           .persist()
           .post('/', (body) => {
-            return body.variables.siteName === multipleSites[1];
+            return body.variables.siteName === multipleSites[1].name;
           })
           .reply(200, {
             data: {
@@ -346,7 +350,10 @@ describe('MultisiteGraphQLSitemapService', () => {
       });
 
       it('should return aggregated paths for multiple sites and personalized sites', async () => {
-        const multipleSites = ['site1', 'site2'];
+        const multipleSites = [
+          { name: 'site1', ...defaultSiteDeets },
+          { name: 'site2', ...defaultSiteDeets },
+        ];
         const lang = 'ua';
 
         nock(endpoint)
@@ -356,7 +363,7 @@ describe('MultisiteGraphQLSitemapService', () => {
         nock(endpoint)
           .persist()
           .post('/', (body) => {
-            return body.variables.siteName === multipleSites[1];
+            return body.variables.siteName === multipleSites[1].name;
           })
           .reply(200, {
             data: {
@@ -650,7 +657,7 @@ describe('MultisiteGraphQLSitemapService', () => {
         const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
         nock(endpoint)
           .post('/', (body) => {
-            return body.variables.siteName === sites[0];
+            return body.variables.siteName === sites[0].name;
           })
           .reply(200, {
             data: {
@@ -660,7 +667,7 @@ describe('MultisiteGraphQLSitemapService', () => {
             },
           });
         await service.fetchSSGSitemap(['en']).catch((error: RangeError) => {
-          expect(error.message).to.equal(getSiteEmptyError(sites[0]));
+          expect(error.message).to.equal(getSiteEmptyError(sites[0].name));
         });
       });
 
@@ -799,7 +806,7 @@ describe('MultisiteGraphQLSitemapService', () => {
     const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
     nock(endpoint)
       .post('/', (body) => {
-        return body.variables.siteName === sites[0];
+        return body.variables.siteName === sites[0].name;
       })
       .reply(200, {
         data: {
@@ -809,7 +816,7 @@ describe('MultisiteGraphQLSitemapService', () => {
         },
       });
     await service.fetchExportSitemap('en').catch((error: RangeError) => {
-      expect(error.message).to.equal(getSiteEmptyError(sites[0]));
+      expect(error.message).to.equal(getSiteEmptyError(sites[0].name));
     });
   });
 

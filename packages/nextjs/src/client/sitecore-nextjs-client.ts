@@ -68,7 +68,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
     return super.getPage(resolvedPath, { locale: routeOptions?.locale, site }, options);
   }
 
-  async getPreview(previewData: PreviewData, options?: FetchOptions): Promise<NextjsPage> {
+  async getPreview(previewData: PreviewData, options?: FetchOptions): Promise<NextjsPage | null> {
     return super.getPreview(previewData as EditingPreviewData, options);
   }
 
