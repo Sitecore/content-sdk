@@ -1,10 +1,9 @@
-import { createGraphQLClientFactory } from 'lib/graphql-client-factory/create';
 import { GraphQLSiteInfoService, SiteInfo } from '@sitecore-content-sdk/nextjs';
+import { createGraphQLClientFactory } from '@sitecore-content-sdk/nextjs/client';
 import config from 'sitecore.config';
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
-import { SitecoreConfig } from '@sitecore-content-sdk/nextjs/config';
 
 //TODO: better async logic
 fetchSites();
@@ -15,7 +14,7 @@ async function fetchSites() {
   console.log('Fetching site information');
   try {
     const siteInfoService = new GraphQLSiteInfoService({
-      clientFactory: createGraphQLClientFactory(config as SitecoreConfig),
+      clientFactory: createGraphQLClientFactory({ api: config.api }),
     });
     sites = await siteInfoService.fetchSiteInfo();
   } catch (error) {

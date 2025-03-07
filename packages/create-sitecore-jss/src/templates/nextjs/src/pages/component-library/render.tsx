@@ -40,10 +40,10 @@ const ComponentLibrary = ({
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if (context.preview) {
-    const props = await client.getPreview(context.previewData);
+    const page = await client.getPreview(context.previewData);
     return {
-      props,
-      notFound: props.notFound,
+      props: page || {},
+      notFound: !page,
     };
   } else {
     return {
