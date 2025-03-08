@@ -1,14 +1,17 @@
 ﻿import {
+  FetchOptions,
   GraphQLClient,
   GraphQLRequestClientFactory,
   PageInfo,
 } from '@sitecore-content-sdk/core/client';
 import { debug, StaticPath } from '@sitecore-content-sdk/core';
 import { getPersonalizedRewrite } from '@sitecore-content-sdk/core/personalize';
+import { getSiteRewrite, SiteInfo } from '@sitecore-content-sdk/core/site';
 
 /** @private */
 export const languageError = 'The list of languages cannot be empty';
 export const siteError = 'The service needs a site name';
+export const sitesError = 'The list of sites cannot be empty';
 
 /**
  * @param {string} siteName to inject into error text
@@ -71,7 +74,7 @@ query ${usesPersonalize ? 'PersonalizeSitemapQuery' : 'DefaultSitemapQuery'}(
  */
 interface SiteRouteQueryVariables {
   /**
-   * Required. The name of the site being queried.
+   * Required. Name of a site to fetch sitemap for
    */
   siteName: string;
   /**
@@ -142,6 +145,7 @@ export interface BaseGraphQLSitemapServiceConfig
    * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
    */
   clientFactory: GraphQLRequestClientFactory;
+  sites: SiteInfo[];
 }
 
 /**
@@ -176,29 +180,11 @@ export abstract class BaseGraphQLSitemapService {
   }
 
   /**
-   * Fetch sitemap which could be used for generation of static pages during `next export`.
-   * The `locale` parameter will be used in the item query, but since i18n is not supported,
-   * the output paths will not include a `language` property.
-   * @param {string} locale which application supports
-   * @returns an array of @see StaticPath objects
-   */
-  async fetchExportSitemap(locale: string): Promise<StaticPath[]> {
-    const formatPath = (path: string[]) => ({
-      params: {
-        path,
-      },
-    });
-
-    return this.fetchSitemap([locale], formatPath);
-  }
-
-  // TODO: make use of fetchOptions here without much prop drill
-  /**
    * Fetch sitemap which could be used for generation of static pages using SSG mode
    * @param {string[]} locales locales which application supports
    * @returns an array of @see StaticPath objects
    */
-  async fetchSSGSitemap(locales: string[]): Promise<StaticPath[]> {
+  async fetchSSGSitemap(locales: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
     const formatPath = (path: string[], locale: string) => ({
       params: {
         path,
@@ -206,34 +192,7 @@ export abstract class BaseGraphQLSitemapService {
       locale,
     });
 
-    return this.fetchSitemap(locales, formatPath);
-  }
-
-  protected async getTranformedPaths(
-    siteName: string,
-    languages: string[],
-    formatStaticPath: (path: string[], language: string) => StaticPath
-  ) {
-    const paths = new Array<StaticPath>();
-
-    for (const language of languages) {
-      if (language === '') {
-        throw new RangeError(languageEmptyError);
-      }
-
-      debug.sitemap('fetching sitemap data for %s %s', language, siteName);
-
-      const results = await this.fetchLanguageSitePaths(language, siteName);
-      const transformedPaths = await this.transformLanguageSitePaths(
-        results,
-        formatStaticPath,
-        language
-      );
-
-      paths.push(...transformedPaths);
-    }
-
-    return paths;
+    return this.fetchSitemap(locales, formatPath, fetchOptions);
   }
 
   protected async transformLanguageSitePaths(
@@ -264,41 +223,6 @@ export abstract class BaseGraphQLSitemapService {
     return aggregatedPaths;
   }
 
-  protected async fetchLanguageSitePaths(
-    language: string,
-    siteName: string
-  ): Promise<RouteListQueryResult[]> {
-    const args: SiteRouteQueryVariables = {
-      siteName: siteName,
-      language: language,
-      pageSize: this.options.pageSize,
-      includedPaths: this.options.includedPaths,
-      excludedPaths: this.options.excludedPaths,
-    };
-    let results: RouteListQueryResult[] = [];
-    let hasNext = true;
-    let after = '';
-
-    while (hasNext) {
-      const fetchResponse = await this.graphQLClient.request<
-        SiteRouteQueryResult<RouteListQueryResult>
-      >(this.query, {
-        ...args,
-        after,
-      });
-
-      if (!fetchResponse?.site?.siteInfo) {
-        throw new RangeError(getSiteEmptyError(siteName));
-      } else {
-        results = results.concat(fetchResponse.site.siteInfo.routes?.results);
-        hasNext = fetchResponse.site.siteInfo.routes?.pageInfo.hasNext;
-        after = fetchResponse.site.siteInfo.routes?.pageInfo.endCursor;
-      }
-    }
-
-    return results;
-  }
-
   /**
    * Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
    * library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -316,7 +240,7 @@ export abstract class BaseGraphQLSitemapService {
   }
 
   /**
-   * Fetch a flat list of all pages that belong to the specificed site and have a
+   * Fetch a flat list of all pages that belong to all the requested sites and have a
    * version in the specified language(s).
    * @param {string[]} languages Fetch pages that have versions in this language(s).
    * @param {Function} formatStaticPath Function for transforming the raw search results into (@see StaticPath) types.
@@ -324,8 +248,88 @@ export abstract class BaseGraphQLSitemapService {
    * @throws {RangeError} if the list of languages is empty.
    * @throws {RangeError} if the any of the languages is an empty string.
    */
-  protected abstract fetchSitemap(
+  protected async fetchSitemap(
     languages: string[],
-    formatStaticPath: (path: string[], language: string) => StaticPath
-  ): Promise<StaticPath[]>;
+    formatStaticPath: (path: string[], language: string) => StaticPath,
+    fetchOptions
+  ): Promise<StaticPath[]> {
+    const paths = new Array<StaticPath>();
+    if (!languages.length) {
+      throw new RangeError(languageError);
+    }
+    // Get all sites
+    const sites = this.options.sites;
+    if (!sites || !sites.length) {
+      throw new RangeError(sitesError);
+    }
+
+    // Fetch paths for each site
+    for (let i = 0; i < sites.length; i++) {
+      for (const language of languages) {
+        const siteName = sites[i].name;
+        // Fetch paths using all locales
+        const sitePaths = await this.fetchLanguageSitePaths(language, siteName, fetchOptions);
+        const transformedPaths = await this.transformLanguageSitePaths(
+          sitePaths,
+          formatStaticPath,
+          language
+        );
+
+        paths.push(...transformedPaths);
+      }
+    }
+
+    return ([] as StaticPath[]).concat(...paths);
+  }
+
+  /**
+   * Fetch and return site paths for multisite implementation, with prefixes included
+   * @param {string} language path language
+   * @param {string} siteName site name
+   * @returns modified paths
+   */
+  protected async fetchLanguageSitePaths(
+    language: string,
+    siteName: string,
+    fetchOptions: FetchOptions
+  ): Promise<RouteListQueryResult[]> {
+    const args: SiteRouteQueryVariables = {
+      siteName: siteName,
+      language: language,
+      pageSize: this.options.pageSize,
+      includedPaths: this.options.includedPaths,
+      excludedPaths: this.options.excludedPaths,
+    };
+    let results: RouteListQueryResult[] = [];
+    let hasNext = true;
+    let after = '';
+    debug.sitemap('fetching sitemap data for %s %s', language, siteName);
+    while (hasNext) {
+      const fetchResponse = await this.graphQLClient.request<
+        SiteRouteQueryResult<RouteListQueryResult>
+      >(
+        this.query,
+        {
+          ...args,
+          after,
+        },
+        fetchOptions
+      );
+
+      if (!fetchResponse?.site?.siteInfo) {
+        throw new RangeError(getSiteEmptyError(siteName));
+      } else {
+        results = results.concat(fetchResponse.site.siteInfo.routes?.results);
+        hasNext = fetchResponse.site.siteInfo.routes?.pageInfo.hasNext;
+        after = fetchResponse.site.siteInfo.routes?.pageInfo.endCursor;
+      }
+    }
+    results.forEach((item) => {
+      if (item) {
+        item.path = getSiteRewrite(item.path, { siteName: siteName });
+      }
+    });
+
+    return results;
+  }
 }
