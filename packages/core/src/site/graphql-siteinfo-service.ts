@@ -1,4 +1,4 @@
-import { GraphQLClient } from '../client';
+import { FetchOptions, GraphQLClient } from '../client';
 import debug from '../debug';
 import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
@@ -63,7 +63,7 @@ export class GraphQLSiteInfoService {
     return siteQuery;
   }
 
-  async fetchSiteInfo(): Promise<SiteInfo[]> {
+  async fetchSiteInfo(fetchOptions?: FetchOptions): Promise<SiteInfo[]> {
     const cachedResult = this.cache.getCacheValue(this.getCacheKey());
     if (cachedResult) {
       return cachedResult;
@@ -73,15 +73,8 @@ export class GraphQLSiteInfoService {
       return [];
     }
 
-    const results: SiteInfo[] = await this.fetchWithSiteQuery();
-
-    this.cache.setCacheValue(this.getCacheKey(), results);
-    return results;
-  }
-
-  protected async fetchWithSiteQuery(): Promise<SiteInfo[]> {
-    const response = await this.graphQLClient.request<GraphQLSiteInfoResponse>(this.siteQuery);
-    const result = response?.site?.siteInfoCollection?.reduce<SiteInfo[]>((result, current) => {
+    const response = await this.graphQLClient.request<GraphQLSiteInfoResponse>(this.siteQuery, {}, fetchOptions);
+    const results = response?.site?.siteInfoCollection?.reduce<SiteInfo[]>((result, current) => {
       // filter out built in website
       current.name !== 'website' &&
         result.push({
@@ -92,7 +85,8 @@ export class GraphQLSiteInfoService {
       return result;
     }, []);
 
-    return result;
+    this.cache.setCacheValue(this.getCacheKey(), results);
+    return results;
   }
 
   /**

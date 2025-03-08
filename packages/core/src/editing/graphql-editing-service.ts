@@ -4,6 +4,7 @@ import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-c
 import { DictionaryPhrases } from '../i18n';
 import { LayoutServiceData } from '../layout';
 import { LayoutKind } from './models';
+import { FetchOptions } from '../models';
 
 /**
  * The dictionary query default page size.
@@ -94,6 +95,14 @@ export interface GraphQLEditingServiceConfig {
   clientFactory: GraphQLRequestClientFactory;
 }
 
+export type EditingOptions = {
+  siteName: string;
+  itemId: string;
+  language: string;
+  version?: string;
+  layoutKind?: LayoutKind;
+};
+
 /**
  * Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
  * Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
@@ -119,19 +128,10 @@ export class GraphQLEditingService {
    * @param {LayoutKind} [variables.layoutKind] - The final or shared layout variant.
    * @returns {Promise} The layout data and dictionary phrases.
    */
-  async fetchEditingData({
-    siteName,
-    itemId,
-    language,
-    version,
-    layoutKind = LayoutKind.Final,
-  }: {
-    siteName: string;
-    itemId: string;
-    language: string;
-    version?: string;
-    layoutKind?: LayoutKind;
-  }) {
+  async fetchEditingData(
+    { siteName, itemId, language, version, layoutKind = LayoutKind.Final }: EditingOptions,
+    fetchOptions?: FetchOptions
+  ) {
     debug.editing(
       'fetching editing data for %s %s %s %s',
       siteName,
@@ -162,6 +162,7 @@ export class GraphQLEditingService {
         language,
       },
       {
+        ...fetchOptions,
         headers: {
           sc_layoutKind: layoutKind,
         },

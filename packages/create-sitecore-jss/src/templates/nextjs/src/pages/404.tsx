@@ -1,13 +1,12 @@
 import config from 'sitecore.config';
-import { SitecoreContext, ErrorPages } from '@sitecore-content-sdk/nextjs';
+import { SitecoreContext, ErrorPages, SitecorePageProps } from '@sitecore-content-sdk/nextjs';
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
 import Layout from 'src/Layout';
 import { GetStaticProps } from 'next';
 import client from 'lib/sitecore-client';
-import { NextjsPage } from '@sitecore-content-sdk/nextjs/client';
 
-const Custom404 = (props: NextjsPage): JSX.Element => {
+const Custom404 = (props: SitecorePageProps): JSX.Element => {
   if (!(props && props.layout)) {
     return <NotFound />;
   }

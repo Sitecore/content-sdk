@@ -57,6 +57,8 @@ export {
   GetServerSideComponentProps,
 } from './sharedTypes/component-props';
 
+export { SitecorePageProps } from './sharedTypes/sitecore-page-props';
+
 export { ModuleFactory, Module } from './sharedTypes/module-factory';
 
 export { ComponentPropsService } from './services/component-props-service';

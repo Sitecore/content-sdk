@@ -1,9 +1,9 @@
-import { GraphQLClient } from '../client';
+import { FetchOptions, GraphQLClient } from '../client';
 import { siteNameError } from '../constants';
 import debug from '../debug';
 import { LayoutServiceData } from '../layout';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
-import { GraphQLServiceConfig } from '../models';
+import { GraphQLServiceConfig } from '../sitecore-service-base';
 
 // The default query for request error handling
 const defaultQuery = /* GraphQL */ `
@@ -79,7 +79,11 @@ export class GraphQLErrorPagesService {
    * @returns {ErrorPages} list of url's error pages
    * @throws {Error} if the siteName is empty.
    */
-  async fetchErrorPages(site?: string, locale?: string): Promise<ErrorPages | null> {
+  async fetchErrorPages(
+    site?: string,
+    locale?: string,
+    fetchOptions?: FetchOptions
+  ): Promise<ErrorPages | null> {
     const siteName: string = site || this.options.defaultSite;
     const language: string = locale || this.options.language;
 
@@ -87,10 +91,14 @@ export class GraphQLErrorPagesService {
       throw new Error(siteNameError);
     }
 
-    return (<Promise<ErrorPagesQueryResult>>this.graphQLClient.request(this.query, {
-      siteName,
-      language,
-    }))
+    return (<Promise<ErrorPagesQueryResult>>this.graphQLClient.request(
+      this.query,
+      {
+        siteName,
+        language,
+      },
+      fetchOptions
+    ))
       .then((result: ErrorPagesQueryResult) =>
         result.site.siteInfo ? result.site.siteInfo.errorHandling : null
       )

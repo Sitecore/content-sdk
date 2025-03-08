@@ -3,8 +3,8 @@ import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
 import { PageInfo } from '../client';
 import { siteNameError, languageError } from '../client/constants';
 import debug from '../debug';
-import { GraphQLServiceConfig } from '../models';
-// TODO: refactor more
+import { GraphQLServiceConfig } from '../sitecore-service-base';
+import { FetchOptions } from '../models';
 /** @private */
 export const queryError =
   'Valid value for rootItemId not provided and failed to auto-resolve app root item.';
@@ -34,6 +34,26 @@ const siteQuery = /* GraphQL */ `
   }
 `;
 
+export interface DictionaryQueryVariables {
+  /**
+   * Optional. The ID of the search root item. Fetch items that have this item as an ancestor.
+   */
+  rootItemId?: string;
+
+  /**
+   * Optional. Sitecore template ID(s). Fetch items that inherit from this template(s).
+   */
+  templates?: string;
+
+  /**
+   * common variable for all GraphQL queries
+   * it will be used for every type of query to regulate result batch size
+   * Optional. How many result items to fetch in each GraphQL call. This is needed for pagination.
+   * @default 10
+   */
+  pageSize?: number;
+}
+
 /**
  * Object model for Sitecore dictionary phrases
  */
@@ -50,7 +70,11 @@ export interface DictionaryService {
    * @param {string} language the language to be used to fetch the dictionary
    * @param {string} site site name to fetch data for.
    */
-  fetchDictionaryData(language: string, site?: string): Promise<DictionaryPhrases>;
+  fetchDictionaryData(
+    language: string,
+    site?: string,
+    fetchOptions?: FetchOptions
+  ): Promise<DictionaryPhrases>;
 }
 
 /**
@@ -126,7 +150,11 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
    * @returns {Promise<DictionaryPhrases>} dictionary phrases
    * @throws {Error} if the app root was not found for the specified site and language.
    */
-  async fetchDictionaryData(language: string, site?: string): Promise<DictionaryPhrases> {
+  async fetchDictionaryData(
+    language: string,
+    site?: string,
+    fetchOptions?: FetchOptions
+  ): Promise<DictionaryPhrases> {
     site = site || this.options.defaultSite;
 
     const cacheKey = site + language;
@@ -136,20 +164,6 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
       return cachedValue;
     }
 
-    const phrases = await this.fetchWithSiteQuery(site, language);
-
-    this.setCacheValue(cacheKey, phrases);
-    return phrases;
-  }
-
-  /**
-   * Fetches dictionary data with site query
-   * This is the default behavior for XMCloud deployments. Uses `siteQuery` to retrieve data.
-   * @param {string} site  the site to fetch
-   * @param {string} language the language to fetch
-   * @returns {Promise<DictionaryPhrases>} dictionary phrases
-   */
-  async fetchWithSiteQuery(site: string, language: string): Promise<DictionaryPhrases> {
     const phrases: DictionaryPhrases = {};
     debug.dictionary('fetching dictionary data for %s %s', language, site);
     let results: { key: string; value: string }[] = [];
@@ -172,7 +186,8 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
           language,
           pageSize: this.options.pageSize,
           after,
-        }
+        },
+        fetchOptions
       );
 
       if (fetchResponse?.site?.siteInfo?.dictionary) {
@@ -186,6 +201,7 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
 
     results.forEach((item) => (phrases[item.key] = item.value));
 
+    this.setCacheValue(cacheKey, phrases);
     return phrases;
   }
 

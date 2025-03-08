@@ -1,10 +1,9 @@
 ﻿import Head from 'next/head';
-import { SitecoreContext, ErrorPages } from '@sitecore-content-sdk/nextjs';
+import { SitecoreContext, ErrorPages, SitecorePageProps } from '@sitecore-content-sdk/nextjs';
 import Layout from 'src/Layout';
 import { componentBuilder } from 'temp/componentBuilder';
 import { GetStaticProps } from 'next';
 import config from 'sitecore.config';
-import { NextjsPage } from '@sitecore-content-sdk/nextjs/client';
 import client from 'lib/sitecore-client';
 
 /**
@@ -23,7 +22,7 @@ const ServerError = (): JSX.Element => (
   </>
 );
 
-const Custom500 = (props: NextjsPage): JSX.Element => {
+const Custom500 = (props: SitecorePageProps): JSX.Element => {
   if (!(props && props.layout)) {
     return <ServerError />;
   }

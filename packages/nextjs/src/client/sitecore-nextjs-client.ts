@@ -16,9 +16,9 @@ import { MultisiteGraphQLSitemapService } from '../services/mutisite-graphql-sit
 import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
 import { SiteInfo } from '../site';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
-import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/core/personalize';
+import { getPersonalizedRewriteData, normalizePersonalizedRewrite, personalizeLayout } from '@sitecore-content-sdk/core/personalize';
 
-export type SitecoreNexjtsClientInit = SitecoreClientInit & {
+export type SitecoreNextjsClientInit = SitecoreClientInit & {
   moduleFactory: ModuleFactory;
 };
 
@@ -30,7 +30,7 @@ export type NextjsPage = Page & {
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
   private graphqlSitemapService: MultisiteGraphQLSitemapService;
-  constructor(protected initOptions: SitecoreNexjtsClientInit) {
+  constructor(protected initOptions: SitecoreNextjsClientInit) {
     super(initOptions);
     this.componentPropsService = new ComponentPropsService();
     this.graphqlSitemapService = new MultisiteGraphQLSitemapService({
@@ -41,7 +41,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
 
   // since path rewrite we rely on is only working in nextjs
   resolveSiteFromPath(path: string | string[]): SiteInfo {
-    const resolvedPath = typeof path === 'string' ? path : this.parsePath(path);
+    const resolvedPath = this.parsePath(path);
     // Get site name (from path rewritten in middleware)
     const siteData = getSiteRewriteData(resolvedPath, this.initOptions.defaultSite);
 
@@ -65,7 +65,20 @@ export class SitecoreNextjsClient extends SitecoreClient {
   ): Promise<NextjsPage | null> {
     const site = routeOptions?.site || this.resolveSiteFromPath(path).name;
     const resolvedPath = this.parsePath(path);
-    return super.getPage(resolvedPath, { locale: routeOptions?.locale, site }, options);
+    const page = await super.getPage(resolvedPath, { locale: routeOptions?.locale, site }, options);
+    if (page) {
+      // Get variant(s) for personalization (from path), must ensure path is of type strin
+      const personalizeData = getPersonalizedRewriteData(super.parsePath(path));
+
+      // Modify layoutData to use specific variant(s) instead of default
+      // This will also set the variantId on the Sitecore context so that it is accessible here
+      personalizeLayout(
+        page.layout,
+        personalizeData.variantId,
+        personalizeData.componentVariantIds
+      );
+    }
+    return page;
   }
 
   async getPreview(previewData: PreviewData, options?: FetchOptions): Promise<NextjsPage | null> {
@@ -116,21 +129,5 @@ export class SitecoreNextjsClient extends SitecoreClient {
         })
       : this.graphqlSitemapService;
     return await sitePathsService.fetchSSGSitemap(languages || []);
-  }
-
-  /**
-   * Retrieves the static paths nextjs export mode.
-   * @param {string} [language] - Language to export site paths in.
-   * @param {FetchOptions} [options] - Additional fetch options.
-   * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
-   */
-  async getExportSitemap(language?: string, options?: FetchOptions): Promise<StaticPath[]> {
-    const sitePathsService = options
-      ? new MultisiteGraphQLSitemapService({
-          sites: this.siteResolver.sites,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
-        })
-      : this.graphqlSitemapService;
-    return await sitePathsService.fetchExportSitemap(language || this.initOptions.defaultLanguage);
   }
 }

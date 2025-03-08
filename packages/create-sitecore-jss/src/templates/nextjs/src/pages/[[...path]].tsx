@@ -9,17 +9,17 @@ import Layout from 'src/Layout';
 import {
   SitecoreContext,
   ComponentPropsContext,
+  SitecorePageProps,
   <% if (prerender === 'SSG') { -%>
   StaticPath
   <% } -%>
 } from '@sitecore-content-sdk/nextjs';
 import { handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
-import { NextjsPage } from '@sitecore-content-sdk/nextjs/client';
 import client from 'lib/sitecore-client';
 import { componentBuilder } from 'temp/componentBuilder';
 
 
-const SitecorePage = ({ notFound, componentProps, layout, headLinks }: NextjsPage): JSX.Element => {
+const SitecorePage = ({ notFound, componentProps, layout, headLinks }: SitecorePageProps): JSX.Element => {
   useEffect(() => {
     // Since Sitecore Editor does not support Fast Refresh, need to refresh editor chromes after Fast Refresh finished
     handleEditorFastRefresh();
@@ -61,11 +61,7 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 
   if (process.env.NODE_ENV !== 'development' && process.env.DISABLE_SSG_FETCH?.toLowerCase() !== 'true') {
     try {
-      const exportMode = process.env.EXPORT_MODE === 'true';
-      // Note: Next.js runs export in production mode
-      paths = exportMode
-      ? await client.getExportSitemap(context.defaultLocale)
-      : await client.getPagePaths(context?.locales || []);
+      paths = await client.getPagePaths(context?.locales || []);
     } catch (error) {
       console.log('Error occurred while fetching static paths');
       console.log(error);
@@ -88,6 +84,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 // This function gets called at request time on server-side.
 export const getServerSideProps: GetServerSideProps = async (context) => {
 <% } -%>
+let props = {};
 const path =
     context.params === undefined
       ? '/'
@@ -98,15 +95,14 @@ const path =
     ? await client.getPreview(context.previewData)
     : await client.getPage(path, { locale: context.locale });
   if (page) {
-    page.dictionary = page.layout
-      ? await client.getDictionary({ site: page.site?.name, locale: page.locale })
-      : undefined;
-    page.componentProps = page.layout
-      ? await client.getComponentData(page.layout, context)
-      : undefined;
+    props = {
+      ...page,
+      dictionary: await client.getDictionary({ site: page.site?.name, locale: page.locale }),
+      componentProps: await client.getComponentData(page.layout, context),
+    }
   }
   return {
-    props: page || {},
+    props,
     // Next.js will attempt to re-generate the page:
     // - When a request comes in
     // - At most once every 5 seconds

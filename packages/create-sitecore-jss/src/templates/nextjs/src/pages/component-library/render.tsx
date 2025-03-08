@@ -4,10 +4,10 @@ import {
   ComponentLibraryLayout,
   ComponentPropsContext,
   SitecoreContext,
+  SitecorePageProps,
 } from '@sitecore-content-sdk/nextjs';
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
-import { NextjsPage } from '@sitecore-content-sdk/nextjs/client';
 import client from 'lib/sitecore-client';
 
 const ComponentLibrary = ({
@@ -15,7 +15,7 @@ const ComponentLibrary = ({
   componentProps,
   layout,
   headLinks,
-}: NextjsPage): JSX.Element => {
+}: SitecorePageProps): JSX.Element => {
   if (notFound) {
     return <NotFound />;
   }

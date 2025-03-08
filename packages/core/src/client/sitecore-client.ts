@@ -13,10 +13,10 @@ import {
   GraphQLLayoutService,
   LayoutServiceData,
 } from '../layout';
-import { HTMLLink } from '../models';
+import { HTMLLink, FetchOptions } from '../models';
 import { getGroomedVariantIds, personalizeLayout } from '../personalize';
 import { ErrorPages, SiteInfo, SiteResolver, GraphQLErrorPagesService } from '../site';
-import { FetchOptions, SitecoreClientInit } from './models';
+import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 
 // The same type returned from getPage and getPreviewPage
@@ -25,7 +25,6 @@ export type Page = {
   layout: LayoutServiceData;
   site?: SiteInfo;
   locale: string;
-  dictionary?: DictionaryPhrases;
   headLinks: HTMLLink[];
 };
 
@@ -122,16 +121,18 @@ export class SitecoreClient implements BaseSitecoreClient {
     routeOptions?: RouteOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null> {
-    const computedPath = typeof path === 'string' ? path : this.parsePath(path);
-    const layoutService = this.getServiceInstance(
-      this.layoutService,
-      GraphQLLayoutService,
-      fetchOptions
-    );
+    const computedPath = this.parsePath(path);
     const locale = routeOptions?.locale ?? this.initOptions.defaultLanguage;
     const siteName = routeOptions?.site ?? this.initOptions.defaultSite;
     // Fetch layout data, passing on req/res for SSR
-    const layout = await layoutService.fetchLayoutData(computedPath, locale, siteName);
+    const layout = await this.layoutService.fetchLayoutData(
+      computedPath,
+      {
+        locale,
+        site: siteName,
+      },
+      fetchOptions
+    );
     if (!layout.sitecore.route) {
       return null;
     } else {
@@ -175,14 +176,10 @@ export class SitecoreClient implements BaseSitecoreClient {
     routeOptions?: RouteOptions,
     fetchOptions?: FetchOptions
   ): Promise<DictionaryPhrases> {
-    const dictionaryService = this.getServiceInstance(
-      this.dictionaryService,
-      GraphQLDictionaryService,
-      fetchOptions
-    );
-    return await dictionaryService.fetchDictionaryData(
+    return await this.dictionaryService.fetchDictionaryData(
       routeOptions?.locale || this.initOptions.defaultLanguage,
-      routeOptions?.site || this.initOptions.defaultSite
+      routeOptions?.site || this.initOptions.defaultSite,
+      fetchOptions
     );
   }
 
@@ -198,12 +195,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   ): Promise<ErrorPages | null> {
     const locale = routeOptions?.locale || this.initOptions.defaultLanguage;
     const site = routeOptions?.site || this.initOptions.defaultSite;
-    const errorPagesService = this.getServiceInstance(
-      this.errorPagesService,
-      GraphQLErrorPagesService,
-      fetchOptions
-    );
-    return await errorPagesService.fetchErrorPages(site, locale);
+    return await this.errorPagesService.fetchErrorPages(site, locale, fetchOptions);
   }
 
   async getPreview(
@@ -214,11 +206,6 @@ export class SitecoreClient implements BaseSitecoreClient {
       console.error('Preview data missing');
       return null;
     }
-    const editingService = this.getServiceInstance(
-      this.editingService,
-      GraphQLEditingService,
-      fetchOptions
-    );
     // If we're in Pages preview (editing) mode, prefetch the editing data
     const {
       site,
@@ -229,13 +216,16 @@ export class SitecoreClient implements BaseSitecoreClient {
       layoutKind,
     } = previewData as EditingPreviewData;
 
-    const data = await editingService.fetchEditingData({
-      siteName: site,
-      itemId,
-      language,
-      version,
-      layoutKind,
-    });
+    const data = await this.editingService.fetchEditingData(
+      {
+        siteName: site,
+        itemId,
+        language,
+        version,
+        layoutKind,
+      },
+      fetchOptions
+    );
 
     if (!data) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}`);

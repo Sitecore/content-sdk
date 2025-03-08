@@ -1,7 +1,5 @@
-import { GraphQLClient } from './graphql-request-client';
-import { GraphQLRequestClientFactory } from './graphql-request-client';
-import debug from './debug';
-import { SitecoreConfigInput } from './config';
+import { Debugger } from "debug";
+import { SitecoreConfigInput } from "./config";
 
 /**
  * Html <link> tag data model
@@ -55,51 +53,39 @@ export type StaticPath = {
   locale?: string;
 };
 
-export type FetchOptions = {
-  retries?: number;
-  retryStrategy?: RetryStrategy;
-};
-
-export type GraphQLServiceConfig = Pick<SitecoreConfigInput, 'retries'> &
-  Required<Pick<SitecoreConfigInput, 'defaultSite'>> & {
-    /**
-     * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
-     * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
-     */
-    clientFactory: GraphQLRequestClientFactory;
-    /**
-     * Optional debug logger override
-     */
-    debugger?: debug.Debugger;
-  };
-
 /**
- * Base abstraction to implement custom layout service
+ * Data needed to paginate results in graphql
  */
-export abstract class SitecoreServiceBase {
-  protected graphQLClient: GraphQLClient;
-
+export interface PageInfo {
   /**
-   * Fetch layout data using the Sitecore GraphQL endpoint.
-   * @param {GraphQLLayoutServiceConfig} serviceConfig configuration
+   * string token that can be used to fetch the next page of results
    */
-  constructor(public serviceConfig: GraphQLServiceConfig) {
-    this.graphQLClient = this.getGraphQLClient();
-  }
-
+  endCursor: string;
   /**
-   * Gets a GraphQL client that can make requests to the API.
-   * @returns {GraphQLClient} implementation
+   * a value that indicates whether more pages of results are available
    */
-  protected getGraphQLClient(): GraphQLClient {
-    if (!this.serviceConfig.clientFactory) {
-      throw new Error('clientFactory needs to be provided when initializing GraphQL client.');
-    }
-
-    return this.serviceConfig.clientFactory({
-      debugger: this.serviceConfig.debugger || debug.http,
-      retries: this.serviceConfig.retries?.count,
-      retryStrategy: this.serviceConfig.retries?.retryStrategy,
-    });
-  }
+  hasNext: boolean;
 }
+
+export type FetchOptions = Partial<Pick<SitecoreConfigInput, 'api'>> & {
+  /**
+   * Number of retries GraphQL client will attempt on request error
+   */
+  retries?: number;
+  /**
+   * Retry strategy instance
+   */
+  retryStrategy?: RetryStrategy;
+  /**
+   * Override to replace default nodeJS fetch implementation
+   */
+  fetch?: typeof fetch;
+  /**
+   * Custom headers to be sent with each request.
+   */
+  headers?: Record<string, string>;
+  /**
+   * Override debugger for logging. Uses 'core:http' by default.
+   */
+  debugger?: Debugger;
+};

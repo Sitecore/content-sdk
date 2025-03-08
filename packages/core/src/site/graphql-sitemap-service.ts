@@ -1,4 +1,4 @@
-import { GraphQLClient } from '../client';
+import { FetchOptions, GraphQLClient } from '../client';
 import { siteNameError } from '../constants';
 import debug from '../debug';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
@@ -56,16 +56,20 @@ export class GraphQLSitemapXmlService {
    * @returns {string[]} list of sitemap paths
    * @throws {Error} if the siteName is empty.
    */
-  async fetchSitemaps(): Promise<string[]> {
+  async fetchSitemaps(fetchOptions?: FetchOptions): Promise<string[]> {
     const siteName: string = this.options.siteName;
 
     if (!siteName) {
       throw new Error(siteNameError);
     }
 
-    const sitemapResult: Promise<SitemapQueryResult> = this.graphQLClient.request(this.query, {
-      siteName,
-    });
+    const sitemapResult: Promise<SitemapQueryResult> = this.graphQLClient.request(
+      this.query,
+      {
+        siteName,
+      },
+      fetchOptions
+    );
     try {
       return sitemapResult.then((result: SitemapQueryResult) => result.site.siteInfo.sitemap);
     } catch (e) {

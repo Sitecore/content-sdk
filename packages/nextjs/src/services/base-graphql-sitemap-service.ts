@@ -192,6 +192,7 @@ export abstract class BaseGraphQLSitemapService {
     return this.fetchSitemap([locale], formatPath);
   }
 
+  // TODO: make use of fetchOptions here without much prop drill
   /**
    * Fetch sitemap which could be used for generation of static pages using SSG mode
    * @param {string[]} locales locales which application supports

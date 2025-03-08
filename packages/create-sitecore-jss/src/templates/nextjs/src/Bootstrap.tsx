@@ -2,14 +2,13 @@
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
-import { LayoutServicePageState } from '@sitecore-content-sdk/nextjs';
-import { NextjsPage } from '@sitecore-content-sdk/nextjs/client';
+import { LayoutServicePageState, SitecorePageProps } from '@sitecore-content-sdk/nextjs';
 
 /**
  * The Bootstrap component is the entry point for performing any initialization logic
  * that needs to happen early in the application's lifecycle.
  */
-const Bootstrap = (props: NextjsPage): JSX.Element | null => {
+const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
   // Browser ClientSDK init allows for page view events to be tracked
   useEffect(() => {
     const pageState = props.layout?.sitecore?.context.pageState;
