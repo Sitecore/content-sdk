@@ -126,6 +126,7 @@ export class GraphQLEditingService {
    * @param {string} variables.language - The language to fetch layout data for.
    * @param {string} [variables.version] - The version of the item (optional).
    * @param {LayoutKind} [variables.layoutKind] - The final or shared layout variant.
+   * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {Promise} The layout data and dictionary phrases.
    */
   async fetchEditingData(

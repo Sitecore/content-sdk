@@ -64,7 +64,7 @@ describe('GraphQLLayoutService', () => {
       clientFactory,
     });
 
-    const data = await service.fetchLayoutData('/styleguide', 'da-DK');
+    const data = await service.fetchLayoutData('/styleguide', { locale: 'da-DK' });
 
     expect(data).to.deep.equal({
       sitecore: {
@@ -209,7 +209,7 @@ describe('GraphQLLayoutService', () => {
       defaultSite: 'supersite',
     });
 
-    const data = await service.fetchLayoutData('/styleguide', 'da-DK');
+    const data = await service.fetchLayoutData('/styleguide', { locale: 'da-DK' });
 
     expect(data).to.deep.equal({
       sitecore: {
@@ -238,7 +238,7 @@ describe('GraphQLLayoutService', () => {
       defaultSite: 'supersite',
     });
 
-    await service.fetchLayoutData('/styleguide', 'da-DK').catch((error) => {
+    await service.fetchLayoutData('/styleguide', { locale: 'da-DK' }).catch((error) => {
       expect(error.response.status).to.equal(401);
       expect(error.response.error).to.equal('whoops');
     });

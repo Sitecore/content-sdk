@@ -1,57 +1,98 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
 import { SitecoreClient } from './sitecore-client';
-import { GraphQLErrorPagesService } from '../site';
-import { GraphQLLayoutService, LayoutServicePageState } from '../layout';
-import { GraphQLEditingService, RestComponentLayoutService } from '../editing';
-import { SiteResolver } from '../site';
-import { GraphQLDictionaryService } from '../i18n';
 import { LayoutKind } from '../../editing';
 import { LayoutServiceData } from '../../layout';
+import { DefaultRetryStrategy } from '../retries';
+import { LayoutServicePageState } from '../layout';
+import * as personalizeTools from '../personalize/layout-personalizer';
+import * as personalizeUtils from '../personalize/utils';
 
-xdescribe('SitecoreClient', () => {
+describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
-  let sitecoreClient: SitecoreClient;
-  let initOptions: any;
-  let layoutServiceStub = sandbox.createStubInstance(GraphQLLayoutService);
-  let dictionaryServiceStub = sandbox.createStubInstance(GraphQLDictionaryService);
-  let errorPagesServiceStub = sandbox.createStubInstance(GraphQLErrorPagesService);
-  let editingServiceStub = sandbox.createStubInstance(GraphQLEditingService);
-  let siteResolverStub = sandbox.createStubInstance(SiteResolver);
+  const defaultSiteDeets = { hostName: 'http://unit.test', language: 'ua' };
+  const defaultInitOptions = {
+    api: {
+      edge: {
+        contextId: 'test-context-id',
+        clientContextId: 'client-context-id',
+        edgeUrl: 'https://edge.example.com',
+      },
+      local: {
+        apiHost: 'http://local.example.com',
+        apiKey: 'test-api-key',
+        path: '/api/graph/test',
+      },
+    },
+    editingSecret: '********-****',
+    retries: { count: 3, retryStrategy: sinon.createStubInstance(DefaultRetryStrategy) },
+    sites: [
+      { name: 'default-site', ...defaultSiteDeets },
+      { name: 'other-site', ...defaultSiteDeets },
+    ],
+    defaultSite: 'default-site',
+    defaultLanguage: 'en',
+    layout: { formatLayoutQuery: sandbox.stub() },
+    dictionary: { caching: { enabled: true, timeout: 60000 } },
+  };
+
+  let sitecoreClient = new SitecoreClient(defaultInitOptions);
+
+  let layoutServiceStub = {
+    fetchLayoutData: sandbox.stub(),
+  };
+  let dictionaryServiceStub = {
+    fetchDictionaryData: sandbox.stub(),
+  };
+  let errorPagesServiceStub = {
+    fetchErrorPages: sandbox.stub(),
+  };
+  let editingServiceStub = {
+    fetchEditingData: sandbox.stub(),
+    fetchDictionaryData: sandbox.stub(),
+  };
+  let siteResolverStub = {
+    getByHost: sandbox.stub(),
+    getByName: sandbox.stub(),
+  };
+  let restComponentServiceStub = {
+    fetchComponentData: sandbox.stub(),
+  };
 
   afterEach(() => {
     sandbox.restore();
   });
 
   beforeEach(() => {
-    initOptions = {
-      api: {
-        edge: { contextId: 'test-context-id', edgeUrl: 'https://edge.example.com' },
-        local: { apiHost: 'http://local.example.com', apiKey: 'test-api-key' },
-      },
-      retries: { count: 3, retryStrategy: sinon.stub() },
-      sites: [{ name: 'default-site' }, { name: 'other-site' }],
-      defaultSite: 'default-site',
-      defaultLanguage: 'en',
-      layout: { formatLayoutQuery: sinon.stub() },
-      dictionary: { caching: { enabled: true, timeout: 60000 } },
+    layoutServiceStub = {
+      fetchLayoutData: sandbox.stub(),
+    };
+    dictionaryServiceStub = {
+      fetchDictionaryData: sandbox.stub(),
+    };
+    errorPagesServiceStub = {
+      fetchErrorPages: sandbox.stub(),
+    };
+    editingServiceStub = {
+      fetchEditingData: sandbox.stub(),
+      fetchDictionaryData: sandbox.stub(),
+    };
+    siteResolverStub = {
+      getByHost: sandbox.stub(),
+      getByName: sandbox.stub(),
+    };
+    restComponentServiceStub = {
+      fetchComponentData: sandbox.stub(),
     };
 
-    // Create stubs
-    layoutServiceStub = sandbox.createStubInstance(GraphQLLayoutService);
-    dictionaryServiceStub = sandbox.createStubInstance(GraphQLDictionaryService);
-    errorPagesServiceStub = sandbox.createStubInstance(GraphQLErrorPagesService);
-    editingServiceStub = sandbox.createStubInstance(GraphQLEditingService);
-    siteResolverStub = sandbox.createStubInstance(SiteResolver);
-
-    // Create client
-    sitecoreClient = new SitecoreClient(initOptions);
+    sitecoreClient = new SitecoreClient(defaultInitOptions);
 
     (sitecoreClient as any).layoutService = layoutServiceStub;
     (sitecoreClient as any).dictionaryService = dictionaryServiceStub;
     (sitecoreClient as any).errorPagesService = errorPagesServiceStub;
     (sitecoreClient as any).editingService = editingServiceStub;
     (sitecoreClient as any).siteResolver = siteResolverStub;
+    (sitecoreClient as any).componentService = restComponentServiceStub;
   });
 
   describe('resolveSite', () => {
@@ -59,7 +100,7 @@ xdescribe('SitecoreClient', () => {
       const hostname = 'http://unit.test';
       const expectedSiteInfo = { name: 'test', hostName: hostname, language: 'es-ES' };
       // eslint-disable-next-line
-      sinon.stub(sitecoreClient['siteResolver'], 'getByHost').returns(expectedSiteInfo);
+      siteResolverStub.getByHost.returns(expectedSiteInfo);
       expect(sitecoreClient.resolveSite(hostname)).to.deep.equal(expectedSiteInfo);
     });
   });
@@ -82,11 +123,10 @@ xdescribe('SitecoreClient', () => {
           context: { site: siteInfo },
         },
       };
-
       siteResolverStub.getByName.returns(siteInfo);
-      sinon.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
-      layoutServiceStub.fetchLayoutData.resolves(layoutData);
-      sinon
+      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
+      layoutServiceStub.fetchLayoutData.returns(layoutData);
+      sandbox
         .stub(sitecoreClient, 'getHeadLinks')
         .returns([{ rel: 'stylesheet', href: '/test.css' }]);
 
@@ -94,17 +134,19 @@ xdescribe('SitecoreClient', () => {
 
       expect(result).to.deep.include({
         layout: layoutData,
-        notFound: false,
         site: siteInfo,
         locale: locale,
       });
       expect(result?.headLinks).to.have.lengthOf(1);
       expect(
-        layoutServiceStub.fetchLayoutData.calledWith('/normalized/path', locale, siteInfo.name)
+        layoutServiceStub.fetchLayoutData.calledWithMatch(path, {
+          locale,
+          site: siteInfo.name,
+        })
       ).to.be.true;
     });
 
-    it('should return notFound when route does not exist', async () => {
+    it('should return null when route does not exist', async () => {
       const path = '/test/non-existent';
       const siteInfo = {
         name: 'default-site',
@@ -119,16 +161,12 @@ xdescribe('SitecoreClient', () => {
       };
 
       siteResolverStub.getByName.returns(siteInfo);
-      sinon.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.resolves(layoutData);
 
       const result = await sitecoreClient.getPage(path);
 
-      expect(result).to.deep.include({
-        layout: layoutData,
-        notFound: true,
-        site: siteInfo,
-      });
+      expect(result).to.be.null;
     });
 
     it('should use default language when locale not specified', async () => {
@@ -149,18 +187,17 @@ xdescribe('SitecoreClient', () => {
       };
 
       siteResolverStub.getByName.returns(siteInfo);
-      sinon.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.resolves(layoutData);
-      sinon.stub(sitecoreClient, 'getHeadLinks').returns([]);
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       await sitecoreClient.getPage(path);
 
       expect(
-        layoutServiceStub.fetchLayoutData.calledWith(
-          '/normalized/path',
-          initOptions.defaultLanguage,
-          siteInfo.name
-        )
+        layoutServiceStub.fetchLayoutData.calledWithMatch(path, {
+          locale: defaultInitOptions.defaultLanguage,
+          site: siteInfo.name,
+        })
       ).to.be.true;
     });
   });
@@ -192,8 +229,8 @@ xdescribe('SitecoreClient', () => {
       expect(result).to.deep.equal(dictionaryData);
       expect(
         dictionaryServiceStub.fetchDictionaryData.calledWith(
-          initOptions.defaultLanguage,
-          initOptions.defaultSite
+          defaultInitOptions.defaultLanguage,
+          defaultInitOptions.defaultSite
         )
       ).to.be.true;
     });
@@ -237,11 +274,9 @@ xdescribe('SitecoreClient', () => {
       };
       const dictionaryData = { key: 'value' };
 
-      const restComponentServiceStub = sinon.createStubInstance(RestComponentLayoutService);
-      sinon.stub(global, 'RestComponentLayoutService').returns(restComponentServiceStub);
       restComponentServiceStub.fetchComponentData.resolves(componentData);
       editingServiceStub.fetchDictionaryData.resolves(dictionaryData);
-      sinon.stub(sitecoreClient, 'getHeadLinks').returns([]);
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       const result = await sitecoreClient.getComponentLibraryData(componentLibData);
 
@@ -296,7 +331,7 @@ xdescribe('SitecoreClient', () => {
         pageState: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
-        variantIds: ['variant1', 'variant2'],
+        variantIds: ['variant1', 'comp_variant2'],
         layoutKind: LayoutKind.Final,
       };
 
@@ -311,18 +346,15 @@ xdescribe('SitecoreClient', () => {
       };
 
       editingServiceStub.fetchEditingData.resolves(editingData);
-      sinon
+      sandbox
         .stub(sitecoreClient, 'getHeadLinks')
         .returns([{ rel: 'stylesheet', href: '/test.css' }]);
 
-      const personalizeStub = sinon.stub();
-      const getGroomedVariantIdsStub = sinon.stub().returns({
-        variantId: 'variant1',
-        componentVariantIds: { component1: 'variant1' },
-      });
+      const personalizeSpy = sandbox.spy(personalizeTools, 'personalizeLayout');
+      const getGroomedVariantIdsSpy = sandbox.spy(personalizeUtils, 'getGroomedVariantIds');
 
-      sinon.replace(require('../personalize'), 'getGroomedVariantIds', getGroomedVariantIdsStub);
-      sinon.replace(require('../personalize'), 'personalizeLayout', personalizeStub);
+      // sandbox.replace(require('../personalize'), 'getGroomedVariantIds', getGroomedVariantIdsStub);
+      // sandbox.replace(require('../personalize'), 'personalizeLayout', personalizeStub);
 
       const result = await sitecoreClient.getPreview(previewData);
 
@@ -345,14 +377,13 @@ xdescribe('SitecoreClient', () => {
         })
       ).to.be.true;
 
-      expect(getGroomedVariantIdsStub.calledWith(previewData.variantIds)).to.be.true;
-      expect(
-        personalizeStub.calledWith(editingData.layoutData, 'variant1', { component1: 'variant1' })
-      ).to.be.true;
+      expect(getGroomedVariantIdsSpy.calledWith(previewData.variantIds)).to.be.true;
+      expect(personalizeSpy.calledWith(editingData.layoutData, 'variant1', ['comp_variant1'])).to.be
+        .true;
     });
 
     it('should log error when preview data is missing', async () => {
-      const consoleErrorStub = sinon.stub(console, 'error');
+      const consoleErrorStub = sandbox.stub(console, 'error');
 
       await sitecoreClient.getPreview(undefined);
 
@@ -423,7 +454,7 @@ xdescribe('SitecoreClient', () => {
         })
         .resolves(editingData);
 
-      sinon.stub(sitecoreClient, 'getHeadLinks').returns([]);
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       const getServiceInstanceStub = sinon
         .stub(sitecoreClient as any, 'getServiceInstance')

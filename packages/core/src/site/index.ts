@@ -29,5 +29,11 @@ export { GraphQLSiteInfoService, GraphQLSiteInfoServiceConfig } from './graphql-
 
 export { SiteInfo } from './models';
 
-export { getSiteRewrite, getSiteRewriteData, normalizeSiteRewrite, SiteRewriteData } from './utils';
+export {
+  getSiteRewrite,
+  getSiteRewriteData,
+  normalizeSiteRewrite,
+  SiteRewriteData,
+  SITE_PREFIX,
+} from './utils';
 export { SiteResolver } from './site-resolver';

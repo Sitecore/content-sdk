@@ -34,6 +34,9 @@ const siteQuery = /* GraphQL */ `
   }
 `;
 
+/**
+ * Query variables for dictionary graphql query
+ */
 export interface DictionaryQueryVariables {
   /**
    * Optional. The ID of the search root item. Fetch items that have this item as an ancestor.
@@ -147,6 +150,7 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
    * Fetches dictionary data for internalization. Uses search query by default
    * @param {string} language the language to fetch
    * @param {string} site site name to fetch data for.
+   * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {Promise<DictionaryPhrases>} dictionary phrases
    * @throws {Error} if the app root was not found for the specified site and language.
    */

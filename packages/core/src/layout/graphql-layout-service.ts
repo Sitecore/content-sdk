@@ -27,8 +27,8 @@ export class GraphQLLayoutService extends LayoutServiceBase {
   /**
    * Fetch layout data for an item.
    * @param {string} itemPath item path to fetch layout data for.
-   * @param {string} [language] the language to fetch layout data for.
-   * @param {string} [site] site name to fetch data for.
+   * @param {RouteOptions} [routeOptions] Request options like language and site to retrieve data for
+   * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {Promise<LayoutServiceData>} layout service data
    */
   async fetchLayoutData(

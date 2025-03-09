@@ -12,4 +12,5 @@ export {
   PersonalizedRewriteData,
   CdpHelper,
   DEFAULT_VARIANT,
+  VARIANT_PREFIX,
 } from './utils';

@@ -85,10 +85,25 @@ export class SitecoreNextjsClient extends SitecoreClient {
     return page;
   }
 
-  async getPreview(previewData: PreviewData, options?: FetchOptions): Promise<NextjsPage | null> {
-    return super.getPreview(previewData as EditingPreviewData, options);
+  /**
+   * Retrieves preview page and layout details
+   * @param {PreviewData} previewData - The editing preview data for metadata mode.
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   */
+  async getPreview(
+    previewData: PreviewData,
+    fetchOptions?: FetchOptions
+  ): Promise<NextjsPage | null> {
+    return super.getPreview(previewData as EditingPreviewData, fetchOptions);
   }
 
+  /**
+   * Parses components from nextjs component factory and layoutData, executes getServerProps/getStaticProps methods
+   * and returns resulting props from components
+   * @param {LayoutServiceData} layoutData layout data to parse compnents from 
+   * @param {PreviewData} context Nextjs preview data
+   * @returns {ComponentPropsCollection} component props
+   */
   async getComponentData(
     layoutData: LayoutServiceData,
     context: GetServerSidePropsContext | GetStaticPropsContext
