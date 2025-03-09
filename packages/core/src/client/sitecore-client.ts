@@ -350,16 +350,13 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @param {new (config: any) => T} ServiceConstructor - The constructor for the service class.
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   * @returns {T} An instance of the requested service.
    */
-  private getServiceInstance<T>(
-    defaultInstance: T,
+  protected getServiceInstance<T>(
     ServiceConstructor: new (config: any) => T,
     fetchOptions?: FetchOptions
   ): T {
-    return fetchOptions
-      ? new ServiceConstructor({
+    return new ServiceConstructor({
           ...this.initOptions,
           clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
-        })
-      : defaultInstance;
+        });
   }
 }
