@@ -21,8 +21,6 @@ export function getSiteEmptyError(siteName: string) {
   return `Site "${siteName}" does not exist or site item tree is missing`;
 }
 
-const languageEmptyError = 'The language must be a non-empty string';
-
 /**
  * GQL query made dynamic based whether personalization is enabled or not
  * @param {boolean} usesPersonalize flag to detrmine which variation of a query to run
@@ -132,7 +130,7 @@ export type RouteListQueryResult = {
 /**
  * Configuration options for @see GraphQLSitemapService instances
  */
-export interface BaseGraphQLSitemapServiceConfig
+export interface GraphQLSitemapServiceConfig
   extends Omit<SiteRouteQueryVariables, 'language' | 'siteName'> {
   /**
    * A flag for whether to include personalized routes in service output.
@@ -154,14 +152,14 @@ export interface BaseGraphQLSitemapServiceConfig
  * This list is used for SSG and Export functionality.
  * @mixes SearchQueryService<PageListQueryResult>
  */
-export abstract class BaseGraphQLSitemapService {
+export class GraphQLSitemapService {
   private _graphQLClient: GraphQLClient;
 
   /**
    * Creates an instance of graphQL sitemap service with the provided options
    * @param {GraphQLSitemapServiceConfig} options instance
    */
-  constructor(public options: BaseGraphQLSitemapServiceConfig) {
+  constructor(public options: GraphQLSitemapServiceConfig) {
     this._graphQLClient = this.getGraphQLClient();
   }
 
@@ -180,19 +178,48 @@ export abstract class BaseGraphQLSitemapService {
   }
 
   /**
-   * Fetch sitemap which could be used for generation of static pages using SSG mode
-   * @param {string[]} locales locales which application supports
-   * @returns an array of @see StaticPath objects
+   * Fetch a flat list of all pages that belong to all the requested sites and have a
+   * version in the specified language(s).
+   * @param {string[]} languages Fetch pages that have versions in this language(s).
+   * @param {FetchOptions} fetchOptions Options to override graphQL client details like retries and fetch implementation
+   * @returns list of pages
+   * @throws {RangeError} if the list of languages is empty.
+   * @throws {RangeError} if the any of the languages is an empty string.
    */
-  async fetchSSGSitemap(locales: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
+  async fetchSitemap(languages: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
     const formatPath = (path: string[], locale: string) => ({
       params: {
         path,
       },
       locale,
     });
+    const paths = new Array<StaticPath>();
+    if (!languages.length) {
+      throw new RangeError(languageError);
+    }
+    // Get all sites
+    const sites = this.options.sites;
+    if (!sites || !sites.length) {
+      throw new RangeError(sitesError);
+    }
 
-    return this.fetchSitemap(locales, formatPath, fetchOptions);
+    // Fetch paths for each site
+    for (let i = 0; i < sites.length; i++) {
+      for (const language of languages) {
+        const siteName = sites[i].name;
+        // Fetch paths using all locales
+        const sitePaths = await this.fetchLanguageSitePaths(language, siteName, fetchOptions);
+        const transformedPaths = await this.transformLanguageSitePaths(
+          sitePaths,
+          formatPath,
+          language
+        );
+
+        paths.push(...transformedPaths);
+      }
+    }
+
+    return ([] as StaticPath[]).concat(...paths);
   }
 
   protected async transformLanguageSitePaths(
@@ -240,58 +267,16 @@ export abstract class BaseGraphQLSitemapService {
   }
 
   /**
-   * Fetch a flat list of all pages that belong to all the requested sites and have a
-   * version in the specified language(s).
-   * @param {string[]} languages Fetch pages that have versions in this language(s).
-   * @param {Function} formatStaticPath Function for transforming the raw search results into (@see StaticPath) types.
-   * @returns list of pages
-   * @throws {RangeError} if the list of languages is empty.
-   * @throws {RangeError} if the any of the languages is an empty string.
-   */
-  protected async fetchSitemap(
-    languages: string[],
-    formatStaticPath: (path: string[], language: string) => StaticPath,
-    fetchOptions
-  ): Promise<StaticPath[]> {
-    const paths = new Array<StaticPath>();
-    if (!languages.length) {
-      throw new RangeError(languageError);
-    }
-    // Get all sites
-    const sites = this.options.sites;
-    if (!sites || !sites.length) {
-      throw new RangeError(sitesError);
-    }
-
-    // Fetch paths for each site
-    for (let i = 0; i < sites.length; i++) {
-      for (const language of languages) {
-        const siteName = sites[i].name;
-        // Fetch paths using all locales
-        const sitePaths = await this.fetchLanguageSitePaths(language, siteName, fetchOptions);
-        const transformedPaths = await this.transformLanguageSitePaths(
-          sitePaths,
-          formatStaticPath,
-          language
-        );
-
-        paths.push(...transformedPaths);
-      }
-    }
-
-    return ([] as StaticPath[]).concat(...paths);
-  }
-
-  /**
    * Fetch and return site paths for multisite implementation, with prefixes included
    * @param {string} language path language
    * @param {string} siteName site name
+   * @param {FetchOptions} fetchOptions Options to override graphQL client details like retries and fetch implementation
    * @returns modified paths
    */
   protected async fetchLanguageSitePaths(
     language: string,
     siteName: string,
-    fetchOptions: FetchOptions
+    fetchOptions?: FetchOptions
   ): Promise<RouteListQueryResult[]> {
     const args: SiteRouteQueryVariables = {
       siteName: siteName,

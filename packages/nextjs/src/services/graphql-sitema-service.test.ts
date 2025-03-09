@@ -1,24 +1,21 @@
 ﻿import { expect } from 'chai';
 import nock from 'nock';
-import {
-  MultisiteGraphQLSitemapService,
-  MultisiteGraphQLSitemapServiceConfig,
-} from './mutisite-graphql-sitemap-service';
+import { GraphQLSitemapService, GraphQLSitemapServiceConfig } from './graphql-sitemap-service';
 import { getSiteEmptyError, languageError } from './graphql-sitemap-service';
 import sitemapDefaultQueryResult from '../test-data/sitemapDefaultQueryResult.json';
 import sitemapPersonalizeQueryResult from '../test-data/sitemapPersonalizeQueryResult.json';
 import sitemapServiceMultisiteResult from '../test-data/sitemapServiceMultisiteResult';
 import { GraphQLClient, GraphQLRequestClient } from '@sitecore-content-sdk/core/client';
 
-class TestService extends MultisiteGraphQLSitemapService {
+class TestService extends GraphQLSitemapService {
   public client: GraphQLClient;
-  constructor(options: MultisiteGraphQLSitemapServiceConfig) {
+  constructor(options: GraphQLSitemapServiceConfig) {
     super(options);
     this.client = this.getGraphQLClient();
   }
 }
 
-describe('MultisiteGraphQLSitemapService', () => {
+describe('GraphQLSitemapService', () => {
   const endpoint = 'http://site';
   const apiKey = 'some-api-key';
   const defaultSiteDeets = { hostName: 'tes.com', language: 'en' };
@@ -61,8 +58,8 @@ describe('MultisiteGraphQLSitemapService', () => {
     it('should work when 1 language is requested', async () => {
       mockPathsRequest();
 
-      const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-      const sitemap = await service.fetchSSGSitemap(['ua']);
+      const service = new GraphQLSitemapService({ clientFactory, sites });
+      const sitemap = await service.fetchSitemap(['ua']);
       expect(sitemap).to.deep.equal(sitemapServiceMultisiteResult);
 
       return expect(nock.isDone()).to.be.true;
@@ -127,13 +124,13 @@ describe('MultisiteGraphQLSitemapService', () => {
           },
         });
 
-      const service = new MultisiteGraphQLSitemapService({
+      const service = new GraphQLSitemapService({
         clientFactory,
         sites,
         includedPaths,
         excludedPaths,
       });
-      const sitemap = await service.fetchSSGSitemap(['en']);
+      const sitemap = await service.fetchSitemap(['en']);
 
       return expect(sitemap).to.deep.equal([
         {
@@ -149,8 +146,8 @@ describe('MultisiteGraphQLSitemapService', () => {
       it('should work when 1 language is requested', async () => {
         mockPathsRequest();
 
-        const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-        const sitemap = await service.fetchSSGSitemap(['ua']);
+        const service = new GraphQLSitemapService({ clientFactory, sites });
+        const sitemap = await service.fetchSitemap(['ua']);
         expect(sitemap).to.deep.equal(sitemapServiceMultisiteResult);
 
         return expect(nock.isDone()).to.be.true;
@@ -215,13 +212,13 @@ describe('MultisiteGraphQLSitemapService', () => {
             },
           });
 
-        const service = new MultisiteGraphQLSitemapService({
+        const service = new GraphQLSitemapService({
           clientFactory,
           sites,
           includedPaths,
           excludedPaths,
         });
-        const sitemap = await service.fetchSSGSitemap(['en']);
+        const sitemap = await service.fetchSitemap(['en']);
 
         return expect(sitemap).to.deep.equal([
           {
@@ -302,11 +299,11 @@ describe('MultisiteGraphQLSitemapService', () => {
             },
           });
 
-        const service = new MultisiteGraphQLSitemapService({
+        const service = new GraphQLSitemapService({
           clientFactory,
           sites: multipleSites,
         });
-        const sitemap = await service.fetchSSGSitemap([lang]);
+        const sitemap = await service.fetchSitemap([lang]);
 
         expect(sitemap).to.deep.equal([
           {
@@ -394,12 +391,12 @@ describe('MultisiteGraphQLSitemapService', () => {
             },
           });
 
-        const service = new MultisiteGraphQLSitemapService({
+        const service = new GraphQLSitemapService({
           clientFactory,
           sites: multipleSites,
           includePersonalizedRoutes: true,
         });
-        const sitemap = await service.fetchSSGSitemap([lang]);
+        const sitemap = await service.fetchSitemap([lang]);
 
         expect(sitemap).to.deep.equal([
           {
@@ -536,8 +533,8 @@ describe('MultisiteGraphQLSitemapService', () => {
             },
           });
 
-        const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-        const sitemap = await service.fetchSSGSitemap([lang1, lang2]);
+        const service = new GraphQLSitemapService({ clientFactory, sites });
+        const sitemap = await service.fetchSitemap([lang1, lang2]);
 
         expect(sitemap).to.deep.equal([
           {
@@ -625,8 +622,8 @@ describe('MultisiteGraphQLSitemapService', () => {
             },
           });
 
-        const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-        const sitemap = await service.fetchSSGSitemap([lang]);
+        const service = new GraphQLSitemapService({ clientFactory, sites });
+        const sitemap = await service.fetchSitemap([lang]);
 
         expect(sitemap).to.deep.equal([
           {
@@ -647,14 +644,14 @@ describe('MultisiteGraphQLSitemapService', () => {
       });
 
       it('should throw error if valid language is not provided', async () => {
-        const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-        await service.fetchSSGSitemap([]).catch((error: RangeError) => {
+        const service = new GraphQLSitemapService({ clientFactory, sites });
+        await service.fetchSitemap([]).catch((error: RangeError) => {
           expect(error.message).to.equal(languageError);
         });
       });
 
       it('should throw error if query returns nothing for a provided site name', async () => {
-        const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
+        const service = new GraphQLSitemapService({ clientFactory, sites });
         nock(endpoint)
           .post('/', (body) => {
             return body.variables.siteName === sites[0].name;
@@ -666,20 +663,9 @@ describe('MultisiteGraphQLSitemapService', () => {
               },
             },
           });
-        await service.fetchSSGSitemap(['en']).catch((error: RangeError) => {
+        await service.fetchSitemap(['en']).catch((error: RangeError) => {
           expect(error.message).to.equal(getSiteEmptyError(sites[0].name));
         });
-      });
-
-      it('should throw error if empty language is provided', async () => {
-        mockPathsRequest();
-
-        const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-        await service.fetchExportSitemap('').catch((error: RangeError) => {
-          expect(error.message).to.equal('The language must be a non-empty string');
-        });
-
-        return expect(nock.isDone()).to.be.false;
       });
 
       it('should use a custom pageSize, if provided', async () => {
@@ -689,12 +675,12 @@ describe('MultisiteGraphQLSitemapService', () => {
           .post('/', (body) => body.variables.pageSize === customPageSize)
           .reply(200, sitemapDefaultQueryResult);
 
-        const service = new MultisiteGraphQLSitemapService({
+        const service = new GraphQLSitemapService({
           clientFactory,
           sites,
           pageSize: customPageSize,
         });
-        const sitemap = await service.fetchSSGSitemap(['ua']);
+        const sitemap = await service.fetchSitemap(['ua']);
 
         expect(sitemap).to.deep.equal(sitemapServiceMultisiteResult);
         return expect(nock.isDone()).to.be.true;
@@ -709,12 +695,12 @@ describe('MultisiteGraphQLSitemapService', () => {
           )
           .reply(200, sitemapDefaultQueryResult);
 
-        const service = new MultisiteGraphQLSitemapService({
+        const service = new GraphQLSitemapService({
           clientFactory,
           sites,
           pageSize: undefined,
         });
-        const sitemap = await service.fetchSSGSitemap(['ua']);
+        const sitemap = await service.fetchSitemap(['ua']);
 
         expect(sitemap).to.deep.equal(sitemapServiceMultisiteResult);
         return expect(nock.isDone()).to.be.true;
@@ -723,8 +709,8 @@ describe('MultisiteGraphQLSitemapService', () => {
       it('should work if sitemap has 0 pages', async () => {
         mockPathsRequest([]);
 
-        const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-        const sitemap = await service.fetchSSGSitemap(['ua']);
+        const service = new GraphQLSitemapService({ clientFactory, sites });
+        const sitemap = await service.fetchSitemap(['ua']);
         expect(sitemap).to.deep.equal([]);
         return expect(nock.isDone()).to.be.true;
       });
@@ -734,89 +720,13 @@ describe('MultisiteGraphQLSitemapService', () => {
           .post('/', /DefaultSitemapQuery/gi)
           .reply(500, 'Error 😥');
 
-        const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-        await service.fetchSSGSitemap(['ua']).catch((error: RangeError) => {
+        const service = new GraphQLSitemapService({ clientFactory, sites });
+        await service.fetchSitemap(['ua']).catch((error: RangeError) => {
           expect(error.message).to.contain('SitemapQuery');
           expect(error.message).to.contain('Error 😥');
         });
         return expect(nock.isDone()).to.be.true;
       });
-    });
-  });
-
-  const expectedMultisiteExportSitemap = [
-    {
-      params: {
-        path: ['_site_site-name'],
-      },
-    },
-    {
-      params: {
-        path: ['_site_site-name', 'x1'],
-      },
-    },
-    {
-      params: {
-        path: ['_site_site-name', 'y1', 'y2', 'y3', 'y4'],
-      },
-    },
-    {
-      params: {
-        path: ['_site_site-name', 'y1', 'y2'],
-      },
-    },
-  ];
-
-  describe('Fetch sitemap in export mode', () => {
-    it('should fetch multisite sitemap', async () => {
-      mockPathsRequest();
-      const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-      const sitemap = await service.fetchExportSitemap('ua');
-      expect(sitemap).to.deep.equal(expectedMultisiteExportSitemap);
-      return expect(nock.isDone()).to.be.true;
-    });
-    it('should work if endpoint returns 0 pages', async () => {
-      mockPathsRequest([]);
-      const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-      const sitemap = await service.fetchExportSitemap('ua');
-      expect(sitemap).to.deep.equal([]);
-      return expect(nock.isDone()).to.be.true;
-    });
-    it('should throw error if SitemapQuery fails', async () => {
-      nock(endpoint)
-        .post('/', /DefaultSitemapQuery/gi)
-        .reply(500, 'Error 😥');
-      const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-      await service.fetchExportSitemap('ua').catch((error: RangeError) => {
-        expect(error.message).to.contain('SitemapQuery');
-        expect(error.message).to.contain('Error 😥');
-      });
-      return expect(nock.isDone()).to.be.true;
-    });
-    it('should throw error if language is not provided', async () => {
-      mockPathsRequest();
-      const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-      await service.fetchExportSitemap('').catch((error: RangeError) => {
-        expect(error.message).to.equal('The language must be a non-empty string');
-      });
-      return expect(nock.isDone()).to.be.false;
-    });
-  });
-  it('should throw error if query returns nothing for a provided site name', async () => {
-    const service = new MultisiteGraphQLSitemapService({ clientFactory, sites });
-    nock(endpoint)
-      .post('/', (body) => {
-        return body.variables.siteName === sites[0].name;
-      })
-      .reply(200, {
-        data: {
-          site: {
-            siteInfo: null,
-          },
-        },
-      });
-    await service.fetchExportSitemap('en').catch((error: RangeError) => {
-      expect(error.message).to.equal(getSiteEmptyError(sites[0].name));
     });
   });
 

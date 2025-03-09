@@ -5,7 +5,7 @@ import { SitecoreNextjsClient } from './sitecore-nextjs-client';
 import { GraphQLDictionaryService } from '@sitecore-content-sdk/core/i18n';
 import { GraphQLErrorPagesService, SiteResolver } from '@sitecore-content-sdk/core/site';
 import { GraphQLEditingService } from '@sitecore-content-sdk/core/editing';
-import { MultisiteGraphQLSitemapService } from '../services/mutisite-graphql-sitemap-service';
+import { GraphQLSitemapService } from '../services/graphql-sitemap-service';
 import { ComponentPropsService } from '../services/component-props-service';
 
 xdescribe('SitecoreClient', () => {
@@ -16,7 +16,7 @@ xdescribe('SitecoreClient', () => {
   let errorPagesServiceStub: sinon.SinonStubbedInstance<GraphQLErrorPagesService>;
   let editingServiceStub: sinon.SinonStubbedInstance<GraphQLEditingService>;
   let siteResolverStub: sinon.SinonStubbedInstance<SiteResolver>;
-  let graphqlSitemapServiceStub: sinon.SinonStubbedInstance<MultisiteGraphQLSitemapService>;
+  let graphqlSitemapServiceStub: sinon.SinonStubbedInstance<GraphQLSitemapService>;
   let componentPropsServiceStub: sinon.SinonStubbedInstance<ComponentPropsService>;
 
   beforeEach(() => {
@@ -39,7 +39,7 @@ xdescribe('SitecoreClient', () => {
     errorPagesServiceStub = sinon.createStubInstance(GraphQLErrorPagesService);
     editingServiceStub = sinon.createStubInstance(GraphQLEditingService);
     siteResolverStub = sinon.createStubInstance(SiteResolver);
-    graphqlSitemapServiceStub = sinon.createStubInstance(MultisiteGraphQLSitemapService);
+    graphqlSitemapServiceStub = sinon.createStubInstance(GraphQLSitemapService);
     componentPropsServiceStub = sinon.createStubInstance(ComponentPropsService);
 
     // Create client
@@ -80,19 +80,11 @@ xdescribe('SitecoreClient', () => {
     });
   });
 
-  describe('getPage', () => {
+  describe('getPage', () => {});
 
-  });
+  describe('parsePath', () => {});
 
-  describe('parsePath', () => {
+  describe('getComponentData', () => {});
 
-  });
-
-  describe('getComponentData', () => {
-
-  });
-
-  describe('getPagePaths', () => {
-
-  });
+  describe('getPagePaths', () => {});
 });

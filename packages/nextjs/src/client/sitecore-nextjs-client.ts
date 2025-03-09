@@ -12,11 +12,15 @@ import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
 import { ModuleFactory } from '../sharedTypes/module-factory';
 import { StaticPath } from '@sitecore-content-sdk/core';
-import { MultisiteGraphQLSitemapService } from '../services/mutisite-graphql-sitemap-service';
+import { GraphQLSitemapService } from '../services/graphql-sitemap-service';
 import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
 import { SiteInfo } from '../site';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
-import { getPersonalizedRewriteData, normalizePersonalizedRewrite, personalizeLayout } from '@sitecore-content-sdk/core/personalize';
+import {
+  getPersonalizedRewriteData,
+  normalizePersonalizedRewrite,
+  personalizeLayout,
+} from '@sitecore-content-sdk/core/personalize';
 
 export type SitecoreNextjsClientInit = SitecoreClientInit & {
   moduleFactory: ModuleFactory;
@@ -29,11 +33,11 @@ export type NextjsPage = Page & {
 
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
-  private graphqlSitemapService: MultisiteGraphQLSitemapService;
+  private graphqlSitemapService: GraphQLSitemapService;
   constructor(protected initOptions: SitecoreNextjsClientInit) {
     super(initOptions);
     this.componentPropsService = new ComponentPropsService();
-    this.graphqlSitemapService = new MultisiteGraphQLSitemapService({
+    this.graphqlSitemapService = new GraphQLSitemapService({
       clientFactory: this.clientFactory,
       sites: this.siteResolver.sites,
     });
@@ -123,11 +127,11 @@ export class SitecoreNextjsClient extends SitecoreClient {
    */
   async getPagePaths(languages?: string[], options?: FetchOptions): Promise<StaticPath[]> {
     const sitePathsService = options
-      ? new MultisiteGraphQLSitemapService({
+      ? new GraphQLSitemapService({
           sites: this.siteResolver.sites,
           clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
         })
       : this.graphqlSitemapService;
-    return await sitePathsService.fetchSSGSitemap(languages || []);
+    return await sitePathsService.fetchSitemap(languages || []);
   }
 }

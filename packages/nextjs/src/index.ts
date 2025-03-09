@@ -68,10 +68,7 @@ export {
   GraphQLSitemapServiceConfig,
 } from './services/graphql-sitemap-service';
 
-export {
-  MultisiteGraphQLSitemapService,
-  MultisiteGraphQLSitemapServiceConfig,
-} from './services/mutisite-graphql-sitemap-service';
+export { StaticPath } from '@sitecore-content-sdk/core';
 
 export {
   GraphQLSitemapXmlService,
@@ -90,8 +87,6 @@ export {
   getSiteRewriteData,
   normalizeSiteRewrite,
 } from '@sitecore-content-sdk/core/site';
-
-export { StaticPath } from './services/graphql-sitemap-service';
 
 export {
   ComponentPropsReactContext,
