@@ -31,8 +31,8 @@ export async function handler(argv: BuildArgs) {
   const cliConfig = loadCliConfig(argv.config);
 
   if (cliConfig.build && Array.isArray(cliConfig.build.commands)) {
-    cliConfig.build.commands.forEach((command: any) => {
-      command();
+    cliConfig.build.commands.forEach(async (command: () => Promise<void>) => {
+      await command();
     });
   }
 }
