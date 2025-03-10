@@ -39,19 +39,16 @@ export function scaffoldFile(filePath: string, fileContent: string): string | nu
  * Scaffolds a new component based on the provided template.
  * @param {string} outputFilePath - The file path where the component will be created.
  * @param {string} componentName - The name of the component to be created.
- * @param {string} templateNameArg - The name of the template to use for scaffolding. If not provided, defaults to 'byoc' if `byoc` is true, otherwise 'default'.
+ * @param {string} templateName - The name of the template to use for scaffolding. If not provided, defaults to 'byoc' if `byoc` is true, otherwise 'default'.
  * @param {ScaffoldTemplate[]} templates - An array of template objects, each containing a name, a template function, and a getNextSteps function.
- * @param {boolean} byoc - A boolean flag indicating whether to use the 'byoc' template.
  * @throws Will throw an error if the specified template is not found.
  */
 export function scaffoldComponent(
   outputFilePath: string,
   componentName: string,
-  templateNameArg: string | undefined,
-  templates: ScaffoldTemplate[],
-  byoc: boolean
+  templateName: string,
+  templates: ScaffoldTemplate[]
 ): void {
-  const templateName = templateNameArg ?? (byoc ? 'byoc' : 'default');
   const template = templates.find((t) => t.name === templateName);
 
   if (!template) {

@@ -5,14 +5,16 @@ import fs from 'fs';
 import { SiteInfo, GraphQLSiteInfoService } from '../site';
 import { ensurePathExists } from '../utils/ensurePath';
 
+const DEFAULT_SITES_DIST_PATH = '.sitecore/sites.json';
+
 /**
  * Configuration object for generating sites.
  */
 export type GenerateSitesConfig = {
   /**
-   * Indicates if multi-site generation is enabled.
+   * Indicates if multisite support is enabled.
    */
-  multiSiteEnabled: boolean;
+  multisiteEnabled: boolean;
   /**
    * The default site name.
    */
@@ -37,16 +39,16 @@ export type GenerateSitesConfig = {
  * @returns {Promise<Function>} - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
  */
 export const generateSites = ({
-  multiSiteEnabled,
+  multisiteEnabled,
   defaultSite,
   siteInfoService,
   destinationPath,
 }: GenerateSitesConfig): (() => Promise<void>) => {
   return async () => {
     let sites: SiteInfo[] = [];
-    const sitesFilePath = path.resolve(destinationPath ?? '.sitecore/sites.json');
+    const sitesFilePath = path.resolve(destinationPath ?? DEFAULT_SITES_DIST_PATH);
 
-    if (multiSiteEnabled) {
+    if (multisiteEnabled) {
       try {
         console.log('Fetching site information');
         sites = await siteInfoService.fetchSiteInfo();

@@ -6,7 +6,7 @@ import { ensurePathExists } from '../utils/ensurePath';
 
 /*
   METADATA GENERATION
-  Generates the /src/temp/metadata.json file which contains application
+  Generates the .sitecore/metadata.json file which contains application
   configuration metadata that is used for Sitecore XM Cloud integration.
 */
 
@@ -16,7 +16,7 @@ import { ensurePathExists } from '../utils/ensurePath';
 export type GenerateMetadataConfig = {
   /**
    * Optional path where the generated metadata will be saved.
-   * If not provided, the default 'src/temp/metadata.json' will be used.
+   * If not provided, the default '.sitecore/metadata.json' will be used.
    */
   destinationPath?: string;
 };
@@ -24,7 +24,7 @@ export type GenerateMetadataConfig = {
 /**
  * Generate application metadata
  * @param {GenerateMetadataConfig} config - Optional configuration for generating metadata.
- * If not provided, the default 'src/temp/metadata.json' will be used.
+ * If not provided, the default '.sitecore/metadata.json' will be used.
  * @returns {Promise<void>} A promise that resolves when the metadata generation is complete.
  */
 export const generateMetadata = (config?: GenerateMetadataConfig): (() => Promise<void>) => {

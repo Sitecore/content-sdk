@@ -2,12 +2,13 @@ import path from 'path';
 import { scaffoldComponent } from '@sitecore-content-sdk/core/tools';
 import loadCliConfig from '../utils/load-config';
 import { Argv } from 'yargs';
+import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
 
 /**
  * @param {Argv} yargs
  */
-export function builder(yargs: Argv) {
-  return yargs.command(
+export function builder(yargs: Argv<ScaffoldArgs>) {
+  return yargs.command<ScaffoldArgs>(
     'scaffold <componentName>',
     'Scaffolds a new component. Use `scs scaffold --help` for available options.',
     args,
@@ -18,18 +19,20 @@ export function builder(yargs: Argv) {
 /**
  * @param {Argv} yargs
  */
-export function args(yargs: Argv) {
+export function args(yargs: Argv<ScaffoldArgs>) {
   return yargs
     .positional('componentName', {
       requiresArg: true,
       positional: true,
       type: 'string',
-      describe: 'Name of the component to scaffold',
+      describe: `Name of the component to scaffold. Component name should start with an uppercase letter and contain only letters, numbers,
+dashes, or underscores. It can also contain slashes to indicate a subfolder. Example: MyComponent or MyFolder/MyComponent. If no subfolder is specified, the component will be created under 'src/components'.`,
     })
     .option('config', {
-      requiresArg: true,
+      requiresArg: false,
       type: 'string',
-      describe: 'Path to the Sitecore cli config',
+      describe:
+        'Path to the `sitecore.cli.config` file. Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats',
     })
     .option('templateName', {
       requiresArg: false,
@@ -46,10 +49,33 @@ export function args(yargs: Argv) {
 }
 
 /**
- * Handler for the scaffold command.
- * @param {any} argv - The arguments passed to the command.
+ * Arguments for the scaffold command.
  */
-export function handler(argv: any) {
+export type ScaffoldArgs = {
+  /**
+   * The name of the component to be scaffolded.
+   */
+  componentName: string;
+  /**
+   * Path to the `sitecore.cli.config` file.
+   * Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats.
+   */
+  config?: string;
+  /**
+   * The name of the template to use for scaffolding.
+   */
+  templateName?: string;
+  /**
+   * Indicates whether to scaffold a BYOC type component.
+   */
+  byoc?: boolean;
+};
+
+/**
+ * Handler for the scaffold command.
+ * @param {ScaffoldArgs} argv - The arguments passed to the command.
+ */
+export function handler(argv: ScaffoldArgs) {
   if (!argv.componentName) {
     throw new Error('Component name is required. Usage: scs scaffold <ComponentName>');
   }
@@ -59,7 +85,7 @@ export function handler(argv: any) {
 
   if (regExResult === null) {
     throw new Error(`Component name should start with an uppercase letter and contain only letters, numbers,
-dashes, or underscores. If specifying a path, it must be relative to src/components`);
+dashes, or underscores. It can also contain slashes to indicate a subfolder`);
   }
 
   const cliConfig = loadCliConfig(argv.config);
@@ -67,14 +93,9 @@ dashes, or underscores. If specifying a path, it must be relative to src/compone
   const componentPath = regExResult[1];
   const componentName = regExResult[2];
   const filename = `${componentName}.tsx`;
-  const componentRoot = componentPath.startsWith('src/') ? '' : 'src/components';
-  const outputFilePath = path.join(componentRoot, componentPath, filename);
+  const outputFilePath = path.join(componentPath || 'src/components', filename);
+  const templateName =
+    argv.templateName ?? (argv.byoc ? ComponentTemplateType.BYOC : ComponentTemplateType.DEFAULT);
 
-  scaffoldComponent(
-    outputFilePath,
-    componentName,
-    argv.templateName,
-    cliConfig.scaffold.templates,
-    argv.byoc
-  );
+  scaffoldComponent(outputFilePath, componentName, templateName, cliConfig.scaffold.templates);
 }

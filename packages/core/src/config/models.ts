@@ -189,7 +189,7 @@ export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
  */
 export type SitecoreCliConfigInput = {
   /**
-   * Configuration for the build cli command
+   * Configuration for the `scs build` cli command
    */
   build?: {
     /**
@@ -198,7 +198,7 @@ export type SitecoreCliConfigInput = {
     commands?: Array<() => Promise<void>>;
   };
   /**
-   * Configuration for the scaffold cli command
+   * Configuration for the `scs scaffold` cli command
    */
   scaffold?: {
     /**
@@ -237,3 +237,11 @@ export type ScaffoldTemplate = {
    */
   getNextSteps?: (componentOutputPath: string) => string[];
 };
+
+/**
+ * Enumeration of the default component templates.
+ */
+export enum ComponentTemplateType {
+  BYOC = 'byoc',
+  DEFAULT = 'default',
+}
