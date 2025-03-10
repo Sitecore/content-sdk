@@ -258,3 +258,4 @@ export const mergeURLSearchParams = (params1: URLSearchParams, params2: URLSearc
 
   return merged.toString();
 };
+

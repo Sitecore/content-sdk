@@ -1,4 +1,4 @@
-﻿import { Metadata } from '@sitecore-content-sdk/core/editing';
+﻿import { Metadata } from './';
 import { execSync } from 'child_process';
 
 type Package = {

@@ -23,6 +23,7 @@
     "site.d.ts",
     "client.d.ts",
     "utils.d.ts",
+    "tools.d.ts",
     "src/tests/*",
     "src/test-data/*",
     "**/*.test.ts",

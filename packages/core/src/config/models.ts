@@ -183,3 +183,65 @@ export type SitecoreConfigInput = {
  * Every property should be populated, either from sitecore.config or built-in fallback values
  */
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
+
+/**
+ * Type to be used as cli config input in sitecore.cli.config
+ */
+export type SitecoreCliConfigInput = {
+  /**
+   * Configuration for the `scs build` cli command
+   */
+  build?: {
+    /**
+     * List of commands to run during the build process
+     */
+    commands?: Array<() => Promise<void>>;
+  };
+  /**
+   * Configuration for the `scs scaffold` cli command
+   */
+  scaffold?: {
+    /**
+     * List of scaffold templates that can be used for generating components
+     */
+    templates?: ScaffoldTemplate[];
+  };
+};
+
+/**
+ * Final sitecore cli config type used required by the cli
+ */
+export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;
+
+/**
+ * Scaffold template type
+ */
+/**
+ * Represents a scaffold template used for generating components.
+ */
+export type ScaffoldTemplate = {
+  /**
+   * Name of the template.
+   */
+  name: string;
+  /**
+   * Function to generate the component file contents based on the component name.
+   * @param componentName - The name of the component.
+   * @returns The generated content as a string.
+   */
+  generateTemplate: (componentName: string) => string;
+  /**
+   * Optional function to get the next steps to be shown by the cli after generating the component.
+   * @param componentOutputPath - The output path of the generated component.
+   * @returns An array of strings representing the next steps.
+   */
+  getNextSteps?: (componentOutputPath: string) => string[];
+};
+
+/**
+ * Enumeration of the default component templates.
+ */
+export enum ComponentTemplateType {
+  BYOC = 'byoc',
+  DEFAULT = 'default',
+}
