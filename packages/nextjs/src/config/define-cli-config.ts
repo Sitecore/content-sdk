@@ -4,11 +4,12 @@ import {
   SitecoreCliConfig,
 } from '@sitecore-content-sdk/core/config';
 
-import * as byocTemplate from '../components/templates/byoc-component';
-import * as defaultTemplate from '../components/templates/default-component';
+import * as byocTemplate from '../tools/templating/byoc-component';
+import * as defaultTemplate from '../tools/templating/default-component';
 
 /**
- * Accepts a SitecoreCliConfigInput object and returns sitecore cli configuration, updated with required default values
+ * Accepts a `SitecoreCliConfigInput` object and returns the Sitecore Content SDK CLI configuration from the specified file,
+ * updated with the required default values.
  * @param {SitecoreCliConfigInput} cliConfig the cli configuration provided by the application
  * @returns {SitecoreCliConfig} full sitecore cli configuration to use with cli
  */
@@ -18,8 +19,8 @@ export const defineCliConfig = (cliConfig: SitecoreCliConfigInput): SitecoreCliC
 };
 
 /**
- * Adds default scaffold templates to the Sitecore CLI configuration.
- * @param {SitecoreCliConfigInput} cliConfig - The Sitecore CLI configuration object
+ * Adds default scaffold templates to the CLI configuration.
+ * @param {SitecoreCliConfigInput} cliConfig - The CLI configuration object
  */
 function addDefaultScaffoldTemplates(cliConfig: SitecoreCliConfigInput) {
   if (!cliConfig.scaffold) {

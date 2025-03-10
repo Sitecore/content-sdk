@@ -1,7 +1,7 @@
 /**
- * Generates React boilerplate for a component under `src/components`
+ * Next.js BYOC component boilerplate
  * @param {string} componentName - the component name
- * @returns component src boilerplate as a string
+ * @returns component generated template
  */
 export const generateTemplate = (componentName: string): string => {
   return `import React from 'react';

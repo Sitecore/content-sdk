@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 
 /**
- * Generates React boilerplate for a component under `src/components`
- * @param {string}componentName - the component name
- * @returns component src boilerplate as a string
+ * Next.js component boilerplate
+ * @param {string} componentName - the component name
+ * @returns component generated template
  */
 export const generateTemplate = (componentName: string): string => {
   return `import React from 'react';
