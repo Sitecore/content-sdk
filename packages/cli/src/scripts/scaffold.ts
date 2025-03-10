@@ -25,7 +25,8 @@ export function args(yargs: Argv) {
       requiresArg: true,
       positional: true,
       type: 'string',
-      describe: 'Name of the component to scaffold',
+      describe: `Name of the component to scaffold. Component name should start with an uppercase letter and contain only letters, numbers,
+dashes, or underscores. It can also contain slashes to indicate a subfolder. Example: MyComponent or MyFolder/MyComponent. If no subfolder is specified, the component will be created under 'src/components'.`,
     })
     .option('config', {
       requiresArg: false,
@@ -84,7 +85,7 @@ export function handler(argv: any) {
 
   if (regExResult === null) {
     throw new Error(`Component name should start with an uppercase letter and contain only letters, numbers,
-dashes, or underscores. If specifying a path, it must be relative to src/components`);
+dashes, or underscores. It can also contain slashes to indicate a subfolder`);
   }
 
   const cliConfig = loadCliConfig(argv.config);
@@ -92,8 +93,7 @@ dashes, or underscores. If specifying a path, it must be relative to src/compone
   const componentPath = regExResult[1];
   const componentName = regExResult[2];
   const filename = `${componentName}.tsx`;
-  const componentRoot = componentPath.startsWith('src/') ? '' : 'src/components';
-  const outputFilePath = path.join(componentRoot, componentPath, filename);
+  const outputFilePath = path.join(componentPath || 'src/components', filename);
   const templateName =
     argv.templateName ?? (argv.byoc ? ComponentTemplateType.BYOC : ComponentTemplateType.DEFAULT);
 

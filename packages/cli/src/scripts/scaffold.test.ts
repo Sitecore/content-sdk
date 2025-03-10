@@ -73,7 +73,7 @@ describe('scaffold command', () => {
     } catch (error) {
       expect(error.message).to.equal(
         `Component name should start with an uppercase letter and contain only letters, numbers,
-dashes, or underscores. If specifying a path, it must be relative to src/components`
+dashes, or underscores. It can also contain slashes to indicate a subfolder`
       );
     }
   });
@@ -141,14 +141,14 @@ dashes, or underscores. If specifying a path, it must be relative to src/compone
     ).to.be.true;
   });
 
-  it('should handle component paths correctly', async () => {
+  it('should handle passing component subfolder', async () => {
     const argv = {
       componentName: 'path/to/ValidComponentName',
       config: './some-config.ts',
       templateName: 'template',
       byoc: true,
     };
-    const expectedOutputFilePath = path.join('src/components', 'path/to', 'ValidComponentName.tsx');
+    const expectedOutputFilePath = path.join('path/to', 'ValidComponentName.tsx');
     handler(argv);
     expect(
       scaffoldComponentStub.calledOnceWith(

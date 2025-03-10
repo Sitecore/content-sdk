@@ -1,3 +1,5 @@
+import chalk from 'chalk';
+
 /**
  * Next.js BYOC component boilerplate
  * @param {string} componentName - the component name
@@ -57,10 +59,9 @@ export const getNextSteps = (componentOutputPath: string): string[] => {
   nextSteps.push(
     '* Modify component registration through FEAAS.External.registerComponent if needed'
   );
-  if (!(componentOutputPath as string).includes('src\\components')) {
-    nextSteps.push(
-      '* Ensure component availability by importing it in your app through src\\byoc or registering it properly'
-    );
+
+  if (componentOutputPath) {
+    nextSteps.push(`* Implement the component in ${chalk.green(componentOutputPath)}`);
   }
 
   return nextSteps;

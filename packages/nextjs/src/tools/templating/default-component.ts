@@ -39,11 +39,6 @@ export const getNextSteps = (componentOutputPath: string): string[] => {
   if (componentOutputPath) {
     nextSteps.push(`* Implement the React component in ${chalk.green(componentOutputPath)}`);
   }
-  if (!(componentOutputPath as string).includes('src\\components')) {
-    nextSteps.push(
-      '* Component has been created outside src\\components. Ensure it is registered properly.'
-    );
-  }
 
   return nextSteps;
 };
