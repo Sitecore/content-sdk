@@ -5,7 +5,7 @@ import {
   PersonalizeMiddleware,
   RedirectsMiddleware,
 } from '@sitecore-content-sdk/nextjs/middleware';
-import sites from 'temp/sites';
+import sites from '.sitecore/sites.json';
 import clientFactory from 'lib/graphql-client-factory';
 import scConfig from 'sitecore.config';
 

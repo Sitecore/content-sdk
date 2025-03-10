@@ -23,6 +23,7 @@
     "site.d.ts",
     "graphql.d.ts",
     "utils.d.ts",
+    "tools.d.ts",
     "src/tests/*",
     "src/test-data/*",
     "**/*.test.ts",
