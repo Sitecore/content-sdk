@@ -1,15 +1,9 @@
 import chalk from 'chalk';
 
 /**
-<<<<<<<< HEAD:packages/nextjs/src/components/templates/byoc-component.ts
- * Generates React boilerplate for a component under `src/components`
- * @param {string} componentName - the component name
- * @returns component src boilerplate as a string
-========
  * Next.js BYOC component boilerplate
  * @param {string} componentName - the component name
  * @returns component generated template
->>>>>>>> dev:packages/nextjs/src/tools/templating/byoc-component.ts
  */
 export const generateTemplate = (componentName: string): string => {
   return `import React from 'react';
@@ -65,16 +59,9 @@ export const getNextSteps = (componentOutputPath: string): string[] => {
   nextSteps.push(
     '* Modify component registration through FEAAS.External.registerComponent if needed'
   );
-<<<<<<<< HEAD:packages/nextjs/src/components/templates/byoc-component.ts
-  if (!(componentOutputPath as string).includes('src\\components')) {
-    nextSteps.push(
-      '* Ensure component availability by importing it in your app through src\\byoc or registering it properly'
-    );
-========
 
   if (componentOutputPath) {
     nextSteps.push(`* Implement the component in ${chalk.green(componentOutputPath)}`);
->>>>>>>> dev:packages/nextjs/src/tools/templating/byoc-component.ts
   }
 
   return nextSteps;
