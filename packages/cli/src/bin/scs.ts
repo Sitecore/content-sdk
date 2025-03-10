@@ -17,7 +17,7 @@ resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (error, project
     // Not erroring here because we might use this in future for scaffolding.
     cli = require('../cli').default;
     console.warn(
-      'JSS CLI is running in global mode because it was not installed in the local node_modules folder.'
+      'Sitecore Content SDK CLI is running in global mode because it was not installed in the local node_modules folder.'
     );
   } else {
     // No error implies a projectLocalCli, which will load whatever
