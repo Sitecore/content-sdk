@@ -95,7 +95,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       const language = this.getLanguage(req);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
-      const timeout = this.config.cdpTimeout;
+      const cdpTimeout = this.config.cdpTimeout;
 
       debug.personalize('personalize middleware start: %o', {
         pathname,
@@ -165,7 +165,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
               variantIds: execution.variantIds,
               params,
               language,
-              timeout,
+              timeout: cdpTimeout,
             },
             req
           ).then((personalization) => {

@@ -8,7 +8,7 @@
 
 > **MiddlewareBaseConfig**: `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:5](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/nextjs/src/middleware/middleware.ts#L5)
+Defined in: [nextjs/src/middleware/middleware.ts:5](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/nextjs/src/middleware/middleware.ts#L5)
 
 ## Type declaration
 
@@ -24,11 +24,29 @@ Fallback hostname in case `host` header is not present
 localhost
 ```
 
-### disabled()?
+### defaultLanguage?
 
-> `optional` **disabled**: (`req`, `res`) => `boolean`
+> `optional` **defaultLanguage**: `string`
 
-function, determines if middleware should be turned off, based on cookie, header, or other considerations
+Fallback language in locale cannot be extracted from request URL
+
+#### Default
+
+```ts
+'en'
+```
+
+### sites
+
+> **sites**: [`SiteInfo`](../../index/type-aliases/SiteInfo.md)[]
+
+Site resolution implementation by name/hostname
+
+### skip()?
+
+> `optional` **skip**: (`req`, `res`) => `boolean`
+
+function, determines if middleware execution should be skipped, based on cookie, header, or other considerations
 
 #### Parameters
 
@@ -40,9 +58,3 @@ function, determines if middleware should be turned off, based on cookie, header
 #### Returns
 
 `boolean`
-
-### sites
-
-> **sites**: [`SiteInfo`](../../index/type-aliases/SiteInfo.md)[]
-
-Site resolution implementation by name/hostname

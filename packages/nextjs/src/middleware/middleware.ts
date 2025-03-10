@@ -4,16 +4,21 @@ import { NextRequest, NextFetchEvent, NextResponse } from 'next/server';
 
 export type MiddlewareBaseConfig = {
   /**
-   * function, determines if middleware should be turned off, based on cookie, header, or other considerations
+   * function, determines if middleware execution should be skipped, based on cookie, header, or other considerations
    * @param {NextRequest} req request object from middleware handler
    * @param {NextResponse} res response object from middleware handler
    */
-  disabled?: (req: NextRequest, res: NextResponse) => boolean;
+  skip?: (req: NextRequest, res: NextResponse) => boolean;
   /**
    * Fallback hostname in case `host` header is not present
    * @default localhost
    */
   defaultHostname?: string;
+  /**
+   * Fallback language in locale cannot be extracted from request URL
+   * @default 'en'
+   */
+  defaultLanguage?: string;
   /**
    * Site resolution implementation by name/hostname
    */
@@ -78,7 +83,7 @@ export abstract class MiddlewareBase extends Middleware {
       pathname.startsWith('/api/') || // Ignore Next.js API calls
       pathname.startsWith('/sitecore/') || // Ignore Sitecore API calls
       pathname.startsWith('/_next') || // Ignore next service calls
-      (this.config.disabled && this.config.disabled(req, res))
+      (this.config.skip && this.config.skip(req, res))
     );
   }
 
@@ -100,7 +105,7 @@ export abstract class MiddlewareBase extends Middleware {
    * @returns {string} language
    */
   protected getLanguage(req: NextRequest) {
-    return req.nextUrl.locale || req.nextUrl.defaultLocale || 'en';
+    return req.nextUrl.locale || req.nextUrl.defaultLocale || this.config.defaultLanguage || 'en';
   }
 
   /**

@@ -14,7 +14,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsMiddleware } from './redirects-middleware';
-import { defaultConfig } from 'next/dist/server/config-shared';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -316,10 +315,10 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes).to.deep.equal(res);
       };
 
-      const disabled = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
+      const skip = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
 
       const { middleware } = createMiddleware({
-        disabled,
+        skip,
       });
 
       await test('/api/layout/render', middleware);
@@ -328,7 +327,7 @@ describe('RedirectsMiddleware', () => {
       await test('/crazypath/luna', middleware);
     });
 
-    it('should return next response if disabled is true', async () => {
+    it('should return next response if disabled/skip is true', async () => {
       const res = createResponse({
         url: 'http://localhost:3000',
       });
@@ -337,7 +336,7 @@ describe('RedirectsMiddleware', () => {
         .callsFake(() => (res as unknown) as NextResponse);
 
       const props = {
-        disabled: (req) => req?.nextUrl.pathname === '/styleguide' && req.nextUrl.locale === 'en',
+        skip: (req) => req?.nextUrl.pathname === '/styleguide' && req.nextUrl.locale === 'en',
       };
       const req = createRequest();
       const { middleware } = createMiddleware(props);
@@ -1067,7 +1066,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.cookies.get('sc_site')?.value).to.equal(site);
       });
 
-      it('should preserve site name from response data when provided, if handler is disabled', async () => {
+      it('should preserve site name from response data when provided, if handler is disabled / skipped', async () => {
         const res = NextResponse.next();
         const site = 'learn2grow';
         res.cookies.set('sc_site', site);
@@ -1088,7 +1087,7 @@ describe('RedirectsMiddleware', () => {
           redirectType: 'default',
           isQueryStringPreserved: true,
           locale: 'en',
-          disabled: () => true,
+          skip: () => true,
         });
 
         const finalRes = await middleware.handle(req, res);

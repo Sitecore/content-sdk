@@ -314,7 +314,7 @@ describe('PersonalizeMiddleware', () => {
         expect(finalRes).to.deep.equal(res);
       });
     });
-    describe('disabled', () => {
+    describe('disabled / skip', () => {
       const res = createResponse();
       const test = async (pathname: string, middleware: PersonalizeMiddleware) => {
         const req = createRequest({
@@ -348,10 +348,10 @@ describe('PersonalizeMiddleware', () => {
         await test('/sitecore/render', middleware);
         await test('/_next/webpack', middleware);
       });
-      it('should apply both default and custom rules when custom disabled function provided', async () => {
-        const disabled = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
+      it('should apply both default and custom rules when custom skip function provided', async () => {
+        const skip = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
         const { middleware } = createMiddleware({
-          config: { ...defaultConfig, disabled },
+          config: { ...defaultConfig, skip },
         });
         await test('/src/image.png', middleware);
         await test('/api/layout/render', middleware);

@@ -144,7 +144,7 @@ describe('MiddlewareBase', () => {
     });
   });
 
-  describe('disabled', () => {
+  describe('disabled / skip', () => {
     it('default', () => {
       const middleware = new SampleMiddleware({ sites: [] });
 
@@ -183,7 +183,7 @@ describe('MiddlewareBase', () => {
     it('custom function', () => {
       const middleware = new SampleMiddleware({
         sites: [],
-        disabled(req: NextRequest) {
+        skip(req: NextRequest) {
           const path = req.nextUrl.pathname;
           return path === 'foo';
         },
@@ -272,6 +272,13 @@ describe('MiddlewareBase', () => {
       });
 
       expect(middleware['getLanguage'](req)).to.equal('fr');
+    });
+
+    it('should use fallback language from config when present', () => {
+      const middleware = new SampleMiddleware({ sites: [], defaultLanguage: 'es-ES' });
+      const req = createReq();
+
+      expect(middleware['getLanguage'](req)).to.equal('es-ES');
     });
 
     it('should return fallback language', () => {

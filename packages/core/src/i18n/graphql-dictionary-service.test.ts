@@ -207,4 +207,49 @@ describe('GraphQLDictionaryService', () => {
       expect(error.message).to.equal('The language must be a non-empty string');
     });
   });
+
+  it('should pass fetchOptions to the GraphQL client', async () => {
+    const fetchOptions = {
+      retries: 3,
+      retryStrategy: {
+        shouldRetry: () => true,
+        getDelay: () => 1000,
+      },
+      fetch: globalThis.fetch,
+      headers: {
+        Authorization: 'Bearer test-token',
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const requestMock = sinon.stub().resolves({
+      site: {
+        siteInfo: {
+          dictionary: {
+            results: [
+              { key: 'hello', value: 'Hello' },
+              { key: 'world', value: 'World' },
+            ],
+            pageInfo: {
+              hasNext: false,
+              endCursor: '',
+            },
+          },
+        },
+      },
+    });
+
+    sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
+
+    const service = new GraphQLDictionaryService({
+      clientFactory,
+      defaultSite,
+      cacheEnabled: false,
+    });
+
+    await service.fetchDictionaryData('en', defaultSite, fetchOptions);
+
+    expect(requestMock.calledOnce).to.be.true;
+    expect(requestMock.firstCall.args[2]).to.deep.equal(fetchOptions);
+  });
 });

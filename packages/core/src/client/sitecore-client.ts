@@ -139,7 +139,7 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @param {string | string[]} path string or string array path
    * @returns {string} string path
    */
-  parsePath(path: string | string[]) {
+  parsePath(path: string | string[]): string {
     return typeof path === 'string' ? path : pathUtil.join(...path);
   }
 
@@ -187,7 +187,7 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @param {LayoutServiceData} layoutData layout data for the page
    * @returns {HTMLLink[]} list of head links
    */
-  getHeadLinks(layoutData: LayoutServiceData) {
+  getHeadLinks(layoutData: LayoutServiceData): HTMLLink[] {
     const headLinks: HTMLLink[] = [];
     const contentStyles = getContentStylesheetLink(
       layoutData,
@@ -294,7 +294,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   async getComponentLibraryData(
     componentLibData: ComponentLibraryRenderPreviewData,
     fetchOptions?: FetchOptions
-  ) {
+  ): Promise<Page> {
     if (!this.initOptions.api.local) {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
@@ -319,11 +319,13 @@ export class SitecoreClient implements BaseSitecoreClient {
       version,
     });
 
-    const dictionaryData = await this.editingService.fetchDictionaryData({
-      siteName: site,
-      language,
-      fetchOptions,
-    });
+    const dictionaryData = await this.editingService.fetchDictionaryData(
+      {
+        siteName: site,
+        language,
+      },
+      fetchOptions
+    );
 
     if (!componentData) {
       throw new Error(
@@ -342,7 +344,6 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Returns an instance of the requested service.
    * If `fetchOptions` are provided, a new instance is created; otherwise, the default instance is used.
-   * @param {T} defaultInstance - The default instance of the service to use if no fetch options are provided.
    * @param {new (config: any) => T} ServiceConstructor - The constructor for the service class.
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   * @returns {T} An instance of the requested service.
    */
