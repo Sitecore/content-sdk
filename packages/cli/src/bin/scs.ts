@@ -5,7 +5,7 @@ import processEnv from '../utils/process-env';
 import * as commands from './../scripts';
 
 /**
- * Resolves and executes the locally installed version of the sitecore-content-sdk (sds) CLI.
+ * Resolves and executes the locally installed version of the sitecore-content-sdk (scs) CLI.
  */
 resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (error, projectLocalCli) => {
   let cli;
