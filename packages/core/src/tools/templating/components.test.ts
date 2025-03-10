@@ -2,7 +2,8 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import * as utils from './utils';
-import { getComponentList } from './components';
+// import { getComponentList } from './components';
+import proxyquire from 'proxyquire';
 
 describe('components', () => {
   afterEach(() => {
@@ -14,7 +15,7 @@ describe('components', () => {
       sinon.restore();
     });
 
-    it('should return list of components', () => {
+    it('should return list of components', async () => {
       const items = [
         {
           path: 'src/components/Foo',
@@ -29,9 +30,14 @@ describe('components', () => {
       ];
 
       const logStub = sinon.stub(console, 'debug');
-      const getItemsStub = sinon.stub(utils, 'getItems').returns(items);
+      const getItemsStub = sinon.stub();
+      const componentsModule = proxyquire('./components', {
+        './utils': { getItems: getItemsStub },
+      });
+      const getComponentList = componentsModule.getComponentList;
+      getItemsStub.resolves(items);
 
-      expect(getComponentList('src/components')).to.deep.equal(items);
+      expect(await getComponentList('src/components')).to.deep.equal(items);
       expect(getItemsStub.called).to.be.true;
 
       const getItemsStubArgs = getItemsStub.getCall(0).args[0];
