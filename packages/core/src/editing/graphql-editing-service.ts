@@ -150,7 +150,7 @@ export class GraphQLEditingService {
       throw new RangeError('The language must be a non-empty string');
     }
 
-    let dictionaryResults: { key: string; value: string }[] = [];
+    let initDictionary: { key: string; value: string }[] = [];
     let hasNext = true;
     let after = '';
 
@@ -171,7 +171,7 @@ export class GraphQLEditingService {
     );
 
     if (editingData?.site?.siteInfo?.dictionary) {
-      dictionaryResults = editingData.site.siteInfo.dictionary.results;
+      initDictionary = editingData.site.siteInfo.dictionary.results;
       hasNext = editingData.site.siteInfo.dictionary.pageInfo.hasNext;
       after = editingData.site.siteInfo.dictionary.pageInfo.endCursor;
     } else {
@@ -179,10 +179,14 @@ export class GraphQLEditingService {
     }
 
     const dictionary = await this.fetchDictionaryData(
-      { siteName, language },
-      dictionaryResults,
-      hasNext,
-      after
+      {
+        siteName,
+        language,
+        initDictionary,
+        hasNext,
+        after,
+      },
+      fetchOptions
     );
 
     return {
@@ -200,18 +204,23 @@ export class GraphQLEditingService {
     {
       siteName,
       language,
+      initDictionary,
+      hasNext,
+      after,
     }: {
       siteName: string;
       language: string;
+      hasNext?: boolean;
+      initDictionary?: {
+        key: string;
+        value: string;
+      }[];
+      after?: string;
     },
-    initDictionary: {
-      key: string;
-      value: string;
-    }[] = [],
-    hasNext = true,
-    after?: string
+    fetchOptions?: FetchOptions
   ) {
-    let dictionaryResults = initDictionary;
+    hasNext = hasNext !== undefined ? hasNext : true;
+    let dictionaryResults = initDictionary || [];
     const dictionary: DictionaryPhrases = {};
     while (hasNext) {
       const data = await this.graphQLClient.request<GraphQLDictionaryQueryResponse>(
@@ -220,7 +229,8 @@ export class GraphQLEditingService {
           siteName,
           language,
           after,
-        }
+        },
+        fetchOptions
       );
 
       if (data?.site?.siteInfo?.dictionary) {

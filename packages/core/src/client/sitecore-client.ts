@@ -298,11 +298,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!this.initOptions.api.local) {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
-    const editingService = this.getServiceInstance(
-      this.editingService,
-      GraphQLEditingService,
-      fetchOptions
-    );
 
     const {
       itemId,
@@ -324,9 +319,10 @@ export class SitecoreClient implements BaseSitecoreClient {
       version,
     });
 
-    const dictionaryData = await editingService.fetchDictionaryData({
+    const dictionaryData = await this.editingService.fetchDictionaryData({
       siteName: site,
       language,
+      fetchOptions,
     });
 
     if (!componentData) {
@@ -355,8 +351,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     fetchOptions?: FetchOptions
   ): T {
     return new ServiceConstructor({
-          ...this.initOptions,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
-        });
+      ...this.initOptions,
+      clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
+    });
   }
 }
