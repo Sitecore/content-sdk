@@ -1,6 +1,6 @@
 import config from './sitecore.config';
 import { defineCliConfig } from '@sitecore-content-sdk/nextjs/config';
-import { createGraphQLClientFactory } from './src/lib/graphql-client-factory/create';
+import { createGraphQLClientFactory } from '@sitecore-content-sdk/nextjs/client';
 import { GraphQLSiteInfoService } from '@sitecore-content-sdk/nextjs';
 import { generateSites, generateMetadata } from '@sitecore-content-sdk/nextjs/tools';
 
@@ -16,7 +16,11 @@ export default defineCliConfig({
           hostName: '*',
         },
         siteInfoService: new GraphQLSiteInfoService({
-          clientFactory: createGraphQLClientFactory(config),
+          clientFactory: createGraphQLClientFactory({
+            api: config.api,
+            retries: config.retries.count,
+            retryStrategy: config.retries.retryStrategy,
+          }),
         }),
       }),
     ],
