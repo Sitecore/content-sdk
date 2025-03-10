@@ -7,8 +7,8 @@ import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
 /**
  * @param {Argv} yargs
  */
-export function builder(yargs: Argv) {
-  return yargs.command(
+export function builder(yargs: Argv<ScaffoldArgs>) {
+  return yargs.command<ScaffoldArgs>(
     'scaffold <componentName>',
     'Scaffolds a new component. Use `scs scaffold --help` for available options.',
     args,
@@ -19,7 +19,7 @@ export function builder(yargs: Argv) {
 /**
  * @param {Argv} yargs
  */
-export function args(yargs: Argv) {
+export function args(yargs: Argv<ScaffoldArgs>) {
   return yargs
     .positional('componentName', {
       requiresArg: true,
@@ -51,7 +51,7 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder. Exa
 /**
  * Arguments for the scaffold command.
  */
-export type ScaffoldArgs = Argv<ScaffoldArgs> & {
+export type ScaffoldArgs = {
   /**
    * The name of the component to be scaffolded.
    */
@@ -73,9 +73,9 @@ export type ScaffoldArgs = Argv<ScaffoldArgs> & {
 
 /**
  * Handler for the scaffold command.
- * @param {any} argv - The arguments passed to the command.
+ * @param {ScaffoldArgs} argv - The arguments passed to the command.
  */
-export function handler(argv: any) {
+export function handler(argv: ScaffoldArgs) {
   if (!argv.componentName) {
     throw new Error('Component name is required. Usage: scs scaffold <ComponentName>');
   }
