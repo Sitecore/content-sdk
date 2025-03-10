@@ -629,8 +629,16 @@ describe('SitecoreClient', () => {
       };
 
       const fetchOptions = {
-        headers: { 'Component-Mode': 'library' },
-        next: { tags: ['component-library'] },
+        retries: 3,
+        retryStrategy: {
+          shouldRetry: () => true,
+          getDelay: () => 1000,
+        },
+        fetch: globalThis.fetch,
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       };
 
       const componentData = {

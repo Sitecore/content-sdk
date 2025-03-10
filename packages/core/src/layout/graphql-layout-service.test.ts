@@ -267,4 +267,51 @@ describe('GraphQLLayoutService', () => {
     expect(calledWithArgs.retries).to.equal(mockServiceConfig.retries.count);
     expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retries.retryStrategy);
   });
+
+  it('should pass fetchOptions to the GraphQL client', async () => {
+    const fetchOptions = {
+      retries: 3,
+      retryStrategy: {
+        shouldRetry: () => true,
+        getDelay: () => 1000,
+      },
+      fetch: globalThis.fetch,
+      headers: {
+        Authorization: 'Bearer test-token',
+        'Content-Type': 'application/json',
+      },
+    };
+    const itemPath = '/home';
+    const routeOptions = { site: 'example-site', locale: 'en' };
+
+    const requestMock = sinon.stub().resolves({
+      layout: {
+        item: {
+          rendered: {
+            sitecore: {
+              context: { pageEditing: false, language: 'en' },
+              route: null,
+            },
+          },
+        },
+      },
+    });
+
+    sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
+
+    const clientFactory: GraphQLRequestClientFactory = GraphQLRequestClient.createClientFactory({
+      apiKey,
+      endpoint: 'https://bar.com/graphql',
+    });
+
+    const service = new GraphQLLayoutService({
+      defaultSite: 'supersite',
+      clientFactory,
+    });
+
+    await service.fetchLayoutData(itemPath, routeOptions, fetchOptions);
+
+    expect(requestMock.calledOnce).to.be.true;
+    expect(requestMock.firstCall.args[2]).to.deep.equal(fetchOptions);
+  });
 });
