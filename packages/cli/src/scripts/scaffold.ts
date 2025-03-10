@@ -2,6 +2,7 @@ import path from 'path';
 import { scaffoldComponent } from '@sitecore-content-sdk/core/tools';
 import loadCliConfig from '../utils/load-config';
 import { Argv } from 'yargs';
+import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
 
 /**
  * @param {Argv} yargs
@@ -93,7 +94,8 @@ dashes, or underscores. If specifying a path, it must be relative to src/compone
   const filename = `${componentName}.tsx`;
   const componentRoot = componentPath.startsWith('src/') ? '' : 'src/components';
   const outputFilePath = path.join(componentRoot, componentPath, filename);
-  const templateName = argv.templateName ?? (argv.byoc ? 'byoc' : 'default');
+  const templateName =
+    argv.templateName ?? (argv.byoc ? ComponentTemplateType.BYOC : ComponentTemplateType.DEFAULT);
 
   scaffoldComponent(outputFilePath, componentName, templateName, cliConfig.scaffold.templates);
 }

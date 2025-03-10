@@ -1,28 +1,33 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import path from 'path';
+import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
 import * as loadConfigModule from '../utils/load-config';
 import proxyquire from 'proxyquire';
+import { SitecoreCliConfig } from '@sitecore-content-sdk/core/src/config';
 
 describe('scaffold command', () => {
   let loadCliConfigStub: sinon.SinonStub;
   let scaffoldComponentStub: sinon.SinonStub;
   let handler: any;
 
-  const mockConfig = {
+  const mockConfig: SitecoreCliConfig = {
+    build: {
+      commands: [sinon.stub(), sinon.stub()],
+    },
     scaffold: {
       templates: [
         {
-          name: 'default',
+          name: ComponentTemplateType.DEFAULT,
           generateTemplate: (componentName: string) => {
             return componentName;
           },
           getNextSteps: () => ['next step 1', 'next step 2'],
         },
         {
-          name: 'byoc',
+          name: ComponentTemplateType.BYOC,
           generateTemplate: (componentName: string) => {
-            return 'byoc ' + componentName;
+            return `${ComponentTemplateType.BYOC} ${componentName}`;
           },
           getNextSteps: () => ['byoc next step 1', 'byoc next step 2'],
         },
@@ -91,7 +96,7 @@ dashes, or underscores. If specifying a path, it must be relative to src/compone
       scaffoldComponentStub.calledOnceWith(
         expectedOutputFilePath,
         'ValidComponentName',
-        'default',
+        ComponentTemplateType.DEFAULT,
         mockConfig.scaffold.templates
       )
     ).to.be.true;
@@ -110,7 +115,7 @@ dashes, or underscores. If specifying a path, it must be relative to src/compone
       scaffoldComponentStub.calledOnceWith(
         expectedOutputFilePath,
         'ValidComponentName',
-        'byoc',
+        ComponentTemplateType.BYOC,
         mockConfig.scaffold.templates
       )
     ).to.be.true;

@@ -1,11 +1,15 @@
 import { expect } from 'chai';
 import { defineCliConfig } from './define-cli-config';
-import { SitecoreCliConfigInput, SitecoreCliConfig } from '@sitecore-content-sdk/core/config';
+import {
+  SitecoreCliConfigInput,
+  SitecoreCliConfig,
+  ComponentTemplateType,
+} from '@sitecore-content-sdk/core/config';
 import chalk from 'chalk';
 
 describe('defineCliConfig', () => {
   const validateDefaultTemplates = (result: SitecoreCliConfig) => {
-    expect(result.scaffold.templates[0].name).to.equal('default');
+    expect(result.scaffold.templates[0].name).to.equal(ComponentTemplateType.DEFAULT);
     const defaultTemplate = result.scaffold.templates[0].generateTemplate('ComponentName');
     expect(defaultTemplate).to.contain(
       // eslint-disable-next-line quotes
@@ -19,7 +23,7 @@ describe('defineCliConfig', () => {
       );
     }
 
-    expect(result.scaffold.templates[1].name).to.equal('byoc');
+    expect(result.scaffold.templates[1].name).to.equal(ComponentTemplateType.BYOC);
     const byocTemplate = result.scaffold.templates[1].generateTemplate('ByocComponentName');
     expect(byocTemplate).to.contain(
       // eslint-disable-next-line quotes

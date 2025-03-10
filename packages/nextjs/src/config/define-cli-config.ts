@@ -2,6 +2,7 @@ import {
   defineCliConfig as defineCliConfigCore,
   SitecoreCliConfigInput,
   SitecoreCliConfig,
+  ComponentTemplateType,
 } from '@sitecore-content-sdk/core/config';
 
 import * as byocTemplate from '../tools/templating/byoc-component';
@@ -33,12 +34,12 @@ function addDefaultScaffoldTemplates(cliConfig: SitecoreCliConfigInput) {
 
   cliConfig.scaffold.templates.unshift(
     {
-      name: 'default',
+      name: ComponentTemplateType.DEFAULT,
       generateTemplate: defaultTemplate.generateTemplate,
       getNextSteps: defaultTemplate.getNextSteps,
     },
     {
-      name: 'byoc',
+      name: ComponentTemplateType.BYOC,
       generateTemplate: byocTemplate.generateTemplate,
       getNextSteps: byocTemplate.getNextSteps,
     }
