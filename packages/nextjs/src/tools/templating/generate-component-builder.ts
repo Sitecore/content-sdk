@@ -1,8 +1,12 @@
 import path from 'path';
 import fs from 'fs';
 import { getComponentBuilderTemplate } from './templates/component-builder';
-import { ComponentFile, PackageDefinition, getComponentList } from '../components';
-import { watchItems } from '../utils';
+import {
+  ComponentFile,
+  PackageDefinition,
+  getComponentList,
+} from '@sitecore-content-sdk/core/tools';
+import { watchItems } from './utils';
 
 // Default destination path for component builder
 const defaultComponentBuilderOutputPath = 'src/temp/componentBuilder.ts';
