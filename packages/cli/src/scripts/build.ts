@@ -7,7 +7,7 @@ export const builder = {
   config: {
     requiresArg: true,
     type: 'string',
-    describe: 'Path to the Sitecore cli config',
+    describe: 'Path to the `sitecore.cli.config` file. Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats.',
   },
 };
 
