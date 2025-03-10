@@ -200,6 +200,52 @@ describe('SitecoreClient', () => {
         })
       ).to.be.true;
     });
+
+    it('should pass fetchOptions to layoutService when calling getPage', async () => {
+      const path = '/test/path';
+      const locale = 'en-US';
+      const fetchOptions = {
+        retries: 3,
+        retryStrategy: {
+          shouldRetry: () => true,
+          getDelay: () => 1000,
+        },
+        fetch: globalThis.fetch,
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const siteInfo = {
+        name: 'default-site',
+        hostName: 'example.com',
+        language: 'en',
+      };
+
+      const layoutData = {
+        sitecore: {
+          route: { placeholders: {} },
+          context: { site: siteInfo },
+        },
+      };
+
+      siteResolverStub.getByName.returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
+
+      layoutServiceStub.fetchLayoutData.resolves(layoutData);
+
+      await sitecoreClient.getPage(path, { locale }, fetchOptions);
+
+      expect(
+        layoutServiceStub.fetchLayoutData.calledWith(
+          path,
+          { locale, site: siteInfo.name },
+          fetchOptions
+        )
+      ).to.be.true;
+    });
   });
 
   describe('getDictionary', () => {
@@ -234,6 +280,31 @@ describe('SitecoreClient', () => {
         )
       ).to.be.true;
     });
+
+    it('should pass fetchOptions to dictionaryService when calling getDictionary', async () => {
+      const locale = 'fr-FR';
+      const site = 'test-site';
+      const fetchOptions = {
+        retries: 3,
+        retryStrategy: {
+          shouldRetry: () => true,
+          getDelay: () => 1000,
+        },
+        fetch: globalThis.fetch,
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      };
+      const dictionaryData = { key1: 'value1', key2: 'value2' };
+
+      dictionaryServiceStub.fetchDictionaryData.resolves(dictionaryData);
+
+      await sitecoreClient.getDictionary({ locale, site }, fetchOptions);
+
+      expect(dictionaryServiceStub.fetchDictionaryData.calledWith(locale, site, fetchOptions)).to.be
+        .true;
+    });
   });
 
   describe('getErrorPages', () => {
@@ -254,72 +325,36 @@ describe('SitecoreClient', () => {
       expect(result).to.deep.equal(mockErrorPages);
       expect(errorPagesServiceStub.fetchErrorPages.calledWith(site, locale)).to.be.true;
     });
-  });
 
-  describe('getComponentLibraryData', () => {
-    it('should fetch component library data', async () => {
-      const componentLibData = {
-        itemId: 'item-id',
-        componentUid: 'comp-uid',
-        site: 'test-site',
-        language: 'en',
-        renderingId: 'rendering-id',
-        dataSourceId: 'datasource-id',
-        version: '1',
-        pageState: LayoutServicePageState.Normal,
+    it('should pass fetchOptions to errorPagesService when calling getErrorPages', async () => {
+      const site = 'test-site';
+      const locale = 'fr-FR';
+      const fetchOptions = {
+        retries: 3,
+        retryStrategy: {
+          shouldRetry: () => true,
+          getDelay: () => 1000,
+        },
+        fetch: globalThis.fetch,
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       };
 
-      const componentData = {
-        sitecore: { route: { name: 'home', placeholders: {} }, context: {} },
-      };
-      const dictionaryData = { key: 'value' };
-
-      restComponentServiceStub.fetchComponentData.resolves(componentData);
-      editingServiceStub.fetchDictionaryData.resolves(dictionaryData);
-      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
-
-      const result = await sitecoreClient.getComponentLibraryData(componentLibData);
-
-      expect(result).to.deep.include({
-        locale: componentLibData.language,
-        layout: componentData,
-        dictionary: dictionaryData,
-      });
-
-      expect(
-        editingServiceStub.fetchDictionaryData.calledWith({
-          siteName: componentLibData.site,
-          language: componentLibData.language,
-        })
-      ).to.be.true;
-
-      if (typeof global.RestComponentLayoutService === 'function') {
-        (global.RestComponentLayoutService as any).restore();
-      }
-    });
-
-    it('should throw error when local API settings are missing', async () => {
-      const componentLibData = {
-        itemId: 'item-id',
-        componentUid: 'comp-uid',
-        site: 'test-site',
-        language: 'en',
-        renderingId: 'rendering-id',
-        dataSourceId: 'datasource-id',
-        version: '1',
-        pageState: LayoutServicePageState.Normal,
+      const mockErrorPages = {
+        notFoundPagePath: '/notFoundPage',
+        notFoundPage: { rendered: {} as LayoutServiceData },
+        serverErrorPagePath: '/serverErrorPage',
+        serverErrorPage: { rendered: {} as LayoutServiceData },
       };
 
-      (sitecoreClient as any).initOptions.api.local = null;
+      errorPagesServiceStub.fetchErrorPages.resolves(mockErrorPages);
 
-      try {
-        await sitecoreClient.getComponentLibraryData(componentLibData);
-        expect.fail('Should have thrown an error');
-      } catch (error) {
-        expect((error as Error).message).to.include(
-          'Component Library requires Sitecore apiHost and apiKey'
-        );
-      }
+      await sitecoreClient.getErrorPages({ site, locale }, fetchOptions);
+
+      expect(errorPagesServiceStub.fetchErrorPages.calledWith(site, locale, fetchOptions)).to.be
+        .true;
     });
   });
 
@@ -473,6 +508,163 @@ describe('SitecoreClient', () => {
       ).to.be.true;
 
       getServiceInstanceStub.restore();
+    });
+  });
+
+  describe('getComponentLibraryData', () => {
+    it('should fetch component library data', async () => {
+      const componentLibData = {
+        itemId: 'item-id',
+        componentUid: 'comp-uid',
+        site: 'test-site',
+        language: 'en',
+        renderingId: 'rendering-id',
+        dataSourceId: 'datasource-id',
+        version: '1',
+        pageState: LayoutServicePageState.Normal,
+      };
+
+      const componentData = {
+        sitecore: {
+          route: { name: 'home', placeholders: {} },
+          context: {
+            site: {
+              name: 'test-site',
+              hostName: 'example.com',
+              language: 'en',
+            },
+          },
+        },
+      };
+      const dictionaryData = { key: 'value' };
+
+      const getServiceInstanceStub = sandbox
+        .stub(sitecoreClient as any, 'getServiceInstance')
+        .callsFake((service) => service);
+
+      restComponentServiceStub.fetchComponentData.resolves(componentData);
+
+      editingServiceStub.fetchDictionaryData
+        .withArgs({ siteName: componentLibData.site, language: componentLibData.language })
+        .resolves(dictionaryData);
+
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
+
+      const result = await sitecoreClient.getComponentLibraryData(componentLibData);
+
+      expect(result).to.deep.include({
+        locale: componentLibData.language,
+        layout: componentData,
+        dictionary: dictionaryData,
+      });
+
+      expect(
+        editingServiceStub.fetchDictionaryData.calledWith({
+          siteName: componentLibData.site,
+          language: componentLibData.language,
+        })
+      ).to.be.true;
+
+      expect(
+        restComponentServiceStub.fetchComponentData.calledWith({
+          itemId: componentLibData.itemId,
+          componentUid: componentLibData.componentUid,
+          site: componentLibData.site,
+          language: componentLibData.language,
+          renderingId: componentLibData.renderingId,
+          dataSourceId: componentLibData.dataSourceId,
+          version: componentLibData.version,
+          pageState: componentLibData.pageState,
+        })
+      ).to.be.true;
+
+      // Clean up
+      getServiceInstanceStub.restore();
+    });
+
+    it('should throw error when local API settings are missing', async () => {
+      const componentLibData = {
+        itemId: 'item-id',
+        componentUid: 'comp-uid',
+        site: 'test-site',
+        language: 'en',
+        renderingId: 'rendering-id',
+        dataSourceId: 'datasource-id',
+        version: '1',
+        pageState: LayoutServicePageState.Normal,
+      };
+
+      // Create a deep copy of the options to avoid modifying the original
+      const modifiedClient = new SitecoreClient({
+        ...JSON.parse(JSON.stringify(defaultInitOptions)),
+        api: {
+          ...JSON.parse(JSON.stringify(defaultInitOptions.api)),
+          local: null,
+        },
+      });
+
+      (modifiedClient as any).editingService = editingServiceStub;
+      (modifiedClient as any).restComponentService = restComponentServiceStub;
+
+      try {
+        await modifiedClient.getComponentLibraryData(componentLibData);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect((error as Error).message).to.include(
+          'Component Library requires Sitecore apiHost and apiKey'
+        );
+      }
+    });
+
+    it('should pass fetchOptions to both editingService and componentService when calling getComponentLibraryData', async () => {
+      const componentLibData = {
+        itemId: 'item-id',
+        componentUid: 'comp-uid',
+        site: 'test-site',
+        language: 'en',
+        renderingId: 'rendering-id',
+        dataSourceId: 'datasource-id',
+        version: '1',
+        pageState: LayoutServicePageState.Normal,
+      };
+
+      const fetchOptions = {
+        headers: { 'Component-Mode': 'library' },
+        next: { tags: ['component-library'] },
+      };
+
+      const componentData = {
+        sitecore: {
+          route: { name: 'home', placeholders: {} },
+          context: {
+            site: {
+              name: 'test-site',
+              hostName: 'example.com',
+              language: 'en',
+            },
+          },
+        },
+      };
+      const dictionaryData = { key: 'value' };
+
+      const getServiceInstanceStub = sandbox
+        .stub(sitecoreClient as any, 'getServiceInstance')
+        .returns(editingServiceStub);
+
+      restComponentServiceStub.fetchComponentData.resolves(componentData);
+      editingServiceStub.fetchDictionaryData.resolves(dictionaryData);
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
+
+      await sitecoreClient.getComponentLibraryData(componentLibData, fetchOptions);
+
+      expect(getServiceInstanceStub.calledWith(editingServiceStub, fetchOptions)).to.be.true;
+
+      expect(
+        editingServiceStub.fetchDictionaryData.calledWith({
+          siteName: componentLibData.site,
+          language: componentLibData.language,
+        })
+      ).to.be.true;
     });
   });
 });

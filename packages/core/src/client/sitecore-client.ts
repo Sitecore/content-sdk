@@ -139,7 +139,7 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @param {string | string[]} path string or string array path
    * @returns {string} string path
    */
-  parsePath(path: string | string[]) {
+  parsePath(path: string | string[]): string {
     return typeof path === 'string' ? path : pathUtil.join(...path);
   }
 
@@ -187,7 +187,7 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @param {LayoutServiceData} layoutData layout data for the page
    * @returns {HTMLLink[]} list of head links
    */
-  getHeadLinks(layoutData: LayoutServiceData) {
+  getHeadLinks(layoutData: LayoutServiceData): HTMLLink[] {
     const headLinks: HTMLLink[] = [];
     const contentStyles = getContentStylesheetLink(
       layoutData,
@@ -294,7 +294,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   async getComponentLibraryData(
     componentLibData: ComponentLibraryRenderPreviewData,
     fetchOptions?: FetchOptions
-  ) {
+  ): Promise<Page> {
     if (!this.initOptions.api.local) {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
