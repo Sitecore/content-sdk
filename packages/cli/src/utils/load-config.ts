@@ -6,7 +6,7 @@ const tsx = require('tsx/cjs/api');
 
 /**
  * Loads Sitecore Content SDK CLI configuration from the specified file.
- * @param {string} configFile - The path to the configuration file.
+ * @param {string} [configFile] - The path to the configuration file.
  * @returns {SitecoreCliConfig} The default export from the configuration file.
  * @throws Will throw an error if the configuration file does not exist or does not have a default export.
  */
