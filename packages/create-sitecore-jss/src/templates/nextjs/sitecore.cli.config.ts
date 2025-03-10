@@ -3,9 +3,8 @@ import { defineCliConfig } from '@sitecore-content-sdk/nextjs/config';
 import { createGraphQLClientFactory } from './src/lib/graphql-client-factory/create';
 import { GraphQLSiteInfoService } from '@sitecore-content-sdk/nextjs';
 import { generateSites, generateMetadata } from '@sitecore-content-sdk/nextjs/tools';
-import { SitecoreCliConfigInput } from '../../packages/core/types/config/models';
 
-const cliConfig: SitecoreCliConfigInput = {
+export default defineCliConfig({
   build: {
     commands: [
       generateMetadata(),
@@ -22,6 +21,4 @@ const cliConfig: SitecoreCliConfigInput = {
       }),
     ],
   },
-};
-
-export default defineCliConfig(cliConfig);
+});
