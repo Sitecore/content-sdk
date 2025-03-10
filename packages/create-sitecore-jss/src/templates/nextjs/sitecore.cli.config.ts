@@ -9,7 +9,7 @@ export default defineCliConfig({
     commands: [
       generateMetadata(),
       generateSites({
-        multiSiteEnabled: config.multisite.enabled,
+        multisiteEnabled: config.multisite.enabled,
         defaultSite: {
           name: config.defaultSite,
           language: config.defaultLanguage,
