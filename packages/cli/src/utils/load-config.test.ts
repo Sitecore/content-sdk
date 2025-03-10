@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import path from 'path';
 import loadCliConfig from './load-config';
+import fs from 'fs';
 
 const tsx = require('tsx/cjs/api');
 
@@ -17,13 +18,28 @@ describe('loadCliConfig', () => {
     sinon.restore();
   });
 
-  it('should load the default configuration file if no configFile is provided', () => {
+  it('should load the default .ts configuration file if no configFile is provided', () => {
+    sinon.stub(fs, 'existsSync').returns(true);
     tsxRequireStub.returns(mockConfigExport);
     const config = loadCliConfig('');
 
     expect(
       tsxRequireStub.calledOnceWith(
         path.resolve(process.cwd(), './sitecore.cli.config.ts'),
+        path.resolve(__dirname, './load-config.ts')
+      )
+    ).to.be.true;
+    expect(config).to.deep.equal(mockConfigExport.default);
+  });
+
+  it('should load the default .js configuration file if no configFile is provided and the .ts is missing', () => {
+    sinon.stub(fs, 'existsSync').returns(false);
+    tsxRequireStub.returns(mockConfigExport);
+    const config = loadCliConfig('');
+
+    expect(
+      tsxRequireStub.calledOnceWith(
+        path.resolve(process.cwd(), './sitecore.cli.config.js'),
         path.resolve(__dirname, './load-config.ts')
       )
     ).to.be.true;
