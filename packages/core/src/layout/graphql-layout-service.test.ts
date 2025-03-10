@@ -19,6 +19,7 @@ describe('GraphQLLayoutService', () => {
 
   afterEach(() => {
     nock.cleanAll();
+    sinon.restore();
   });
 
   it('should fetch layout data using clientFactory', async () => {

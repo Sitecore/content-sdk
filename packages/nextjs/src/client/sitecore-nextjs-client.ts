@@ -1,5 +1,4 @@
 import {
-  createGraphQLClientFactory,
   FetchOptions,
   Page,
   RouteOptions,
@@ -33,11 +32,11 @@ export type NextjsPage = Page & {
 
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
-  private graphqlSitemapService: GraphQLSitemapService;
+  private sitemapService: GraphQLSitemapService;
   constructor(protected initOptions: SitecoreNextjsClientInit) {
     super(initOptions);
     this.componentPropsService = new ComponentPropsService();
-    this.graphqlSitemapService = new GraphQLSitemapService({
+    this.sitemapService = new GraphQLSitemapService({
       clientFactory: this.clientFactory,
       sites: this.siteResolver.sites,
     });
@@ -45,7 +44,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
 
   // since path rewrite we rely on is only working in nextjs
   resolveSiteFromPath(path: string | string[]): SiteInfo {
-    const resolvedPath = this.parsePath(path);
+    const resolvedPath = super.parsePath(path);
     // Get site name (from path rewritten in middleware)
     const siteData = getSiteRewriteData(resolvedPath, this.initOptions.defaultSite);
 
@@ -59,7 +58,8 @@ export class SitecoreNextjsClient extends SitecoreClient {
    * @returns path string without nextjs prefixes
    */
   parsePath(path: string | string[]) {
-    return normalizeSiteRewrite(normalizePersonalizedRewrite(super.parsePath(path)));
+    const basePath = super.parsePath(path);
+    return normalizeSiteRewrite(normalizePersonalizedRewrite(basePath));
   }
 
   async getPage(
@@ -137,16 +137,10 @@ export class SitecoreNextjsClient extends SitecoreClient {
   /**
    * Retrieves the static paths for pages based on the given languages.
    * @param {string[]} [languages] - An optional array of language codes to generate paths for.
-   * @param {FetchOptions} [options] - Additional fetch options.
+   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
    * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
    */
-  async getPagePaths(languages?: string[], options?: FetchOptions): Promise<StaticPath[]> {
-    const sitePathsService = options
-      ? new GraphQLSitemapService({
-          sites: this.siteResolver.sites,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...options }),
-        })
-      : this.graphqlSitemapService;
-    return await sitePathsService.fetchSitemap(languages || []);
+  async getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
+    return await this.sitemapService.fetchSitemap(languages || [], fetchOptions);
   }
 }

@@ -26,6 +26,7 @@ describe('GraphQLDictionaryService', () => {
 
   afterEach(() => {
     nock.cleanAll();
+    sinon.restore();
   });
 
   it('should use cache', async () => {

@@ -5,8 +5,7 @@ import { LayoutKind } from '../../editing';
 import { LayoutServiceData } from '../../layout';
 import { DefaultRetryStrategy } from '../retries';
 import { LayoutServicePageState } from '../layout';
-import * as personalizeTools from '../personalize/layout-personalizer';
-import * as personalizeUtils from '../personalize/utils';
+import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 
 describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
@@ -93,6 +92,23 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).editingService = editingServiceStub;
     (sitecoreClient as any).siteResolver = siteResolverStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
+  });
+
+  describe('parsePath', () => {
+    it('should return path as string, when input is array', () => {
+      const test = ['my', 'path'];
+      expect(sitecoreClient.parsePath(test)).to.equal('/my/path');
+    });
+
+    it('should return path and ensure prefix slash, when input is string', () => {
+      const test = 'my/path';
+      expect(sitecoreClient.parsePath(test)).to.equal('/my/path');
+    });
+
+    it('should return path as string and clear extra slashes, when input is array', () => {
+      const test = ['/', 'my', '/', '/path/'];
+      expect(sitecoreClient.parsePath(test)).to.equal('/my/path');
+    });
   });
 
   describe('resolveSite', () => {
@@ -385,12 +401,6 @@ describe('SitecoreClient', () => {
         .stub(sitecoreClient, 'getHeadLinks')
         .returns([{ rel: 'stylesheet', href: '/test.css' }]);
 
-      const personalizeSpy = sandbox.spy(personalizeTools, 'personalizeLayout');
-      const getGroomedVariantIdsSpy = sandbox.spy(personalizeUtils, 'getGroomedVariantIds');
-
-      // sandbox.replace(require('../personalize'), 'getGroomedVariantIds', getGroomedVariantIdsStub);
-      // sandbox.replace(require('../personalize'), 'personalizeLayout', personalizeStub);
-
       const result = await sitecoreClient.getPreview(previewData);
 
       expect(result).to.deep.include({
@@ -411,10 +421,35 @@ describe('SitecoreClient', () => {
           layoutKind: previewData.layoutKind,
         })
       ).to.be.true;
+    });
 
-      expect(getGroomedVariantIdsSpy.calledWith(previewData.variantIds)).to.be.true;
-      expect(personalizeSpy.calledWith(editingData.layoutData, 'variant1', ['comp_variant1'])).to.be
-        .true;
+    it('should apply personalization', async () => {
+      const variant = 'test';
+      const testLayoutData = structuredClone(layoutData);
+      const componentVariantIds = ['mountain_bike_audience', 'another_variant', 'third_variant'];
+      const previewData = {
+        site: 'default-site',
+        itemId: 'test-item-id',
+        pageState: LayoutServicePageState.Edit,
+        language: 'en',
+        version: '1',
+        variantIds: [variant, ...componentVariantIds],
+        layoutKind: LayoutKind.Final,
+      };
+
+      const editingData = {
+        layoutData: testLayoutData,
+        dictionary: { key1: 'value1', key2: 'value2' },
+      };
+
+      editingServiceStub.fetchEditingData.resolves(editingData);
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
+
+      const result = await sitecoreClient.getPreview(previewData);
+
+      expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
+        'jss-main': [...componentsWithExperiencesArray],
+      });
     });
 
     it('should log error when preview data is missing', async () => {
@@ -538,10 +573,6 @@ describe('SitecoreClient', () => {
       };
       const dictionaryData = { key: 'value' };
 
-      const getServiceInstanceStub = sandbox
-        .stub(sitecoreClient as any, 'getServiceInstance')
-        .callsFake((service) => service);
-
       restComponentServiceStub.fetchComponentData.resolves(componentData);
 
       editingServiceStub.fetchDictionaryData
@@ -559,7 +590,7 @@ describe('SitecoreClient', () => {
       });
 
       expect(
-        editingServiceStub.fetchDictionaryData.calledWith({
+        editingServiceStub.fetchDictionaryData.calledWithMatch({
           siteName: componentLibData.site,
           language: componentLibData.language,
         })
@@ -569,17 +600,13 @@ describe('SitecoreClient', () => {
         restComponentServiceStub.fetchComponentData.calledWith({
           itemId: componentLibData.itemId,
           componentUid: componentLibData.componentUid,
-          site: componentLibData.site,
+          siteName: componentLibData.site,
           language: componentLibData.language,
           renderingId: componentLibData.renderingId,
           dataSourceId: componentLibData.dataSourceId,
           version: componentLibData.version,
-          pageState: componentLibData.pageState,
         })
       ).to.be.true;
-
-      // Clean up
-      getServiceInstanceStub.restore();
     });
 
     it('should throw error when local API settings are missing', async () => {
@@ -655,23 +682,20 @@ describe('SitecoreClient', () => {
       };
       const dictionaryData = { key: 'value' };
 
-      const getServiceInstanceStub = sandbox
-        .stub(sitecoreClient as any, 'getServiceInstance')
-        .returns(editingServiceStub);
-
       restComponentServiceStub.fetchComponentData.resolves(componentData);
       editingServiceStub.fetchDictionaryData.resolves(dictionaryData);
       sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       await sitecoreClient.getComponentLibraryData(componentLibData, fetchOptions);
 
-      expect(getServiceInstanceStub.calledWith(editingServiceStub, fetchOptions)).to.be.true;
-
       expect(
-        editingServiceStub.fetchDictionaryData.calledWith({
-          siteName: componentLibData.site,
-          language: componentLibData.language,
-        })
+        editingServiceStub.fetchDictionaryData.calledWith(
+          {
+            siteName: componentLibData.site,
+            language: componentLibData.language,
+          },
+          fetchOptions
+        )
       ).to.be.true;
     });
   });

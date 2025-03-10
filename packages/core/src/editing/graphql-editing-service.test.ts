@@ -19,7 +19,7 @@ import debug from '../debug';
 
 use(spies);
 
-describe.only('GraphQLEditingService', () => {
+describe('GraphQLEditingService', () => {
   const hostname = 'http://site';
   const endpointPath = '/?sitecoreContextId=context-id';
   const siteName = 'site-name';
@@ -58,6 +58,7 @@ describe.only('GraphQLEditingService', () => {
 
   afterEach(() => {
     nock.cleanAll();
+    sinon.restore();
   });
 
   it('should fetch editing data', async () => {
@@ -356,29 +357,74 @@ describe.only('GraphQLEditingService', () => {
     spy.restore(clientFactorySpy);
   });
 
-  it('should request dictionary from scratch when fetchDictionaryData called on its own', async () => {
-    nock(hostname, { reqheaders: { sc_editMode: 'true' } })
-      .post(endpointPath, /DictionaryQuery/gi)
-      .reply(200, mockEditingServiceDictionaryResponse.pageOne);
+  describe('fetchDictionaryData', () => {
+    it('should request dictionary from scratch when fetchDictionaryData called on its own', async () => {
+      nock(hostname, { reqheaders: { sc_editMode: 'true' } })
+        .post(endpointPath, /DictionaryQuery/gi)
+        .reply(200, mockEditingServiceDictionaryResponse.pageOne);
 
-    nock(hostname, { reqheaders: { sc_editMode: 'true' } })
-      .post(endpointPath, /DictionaryQuery/gi)
-      .reply(200, mockEditingServiceDictionaryResponse.pageTwo);
+      nock(hostname, { reqheaders: { sc_editMode: 'true' } })
+        .post(endpointPath, /DictionaryQuery/gi)
+        .reply(200, mockEditingServiceDictionaryResponse.pageTwo);
 
-    const service = new GraphQLEditingService({
-      clientFactory: clientFactory,
+      const service = new GraphQLEditingService({
+        clientFactory: clientFactory,
+      });
+
+      const result = await service.fetchDictionaryData({
+        language,
+        siteName,
+      });
+
+      expect(result).to.deep.equal({
+        'foo-one': 'foo-one-phrase',
+        'bar-one': 'bar-one-phrase',
+        'foo-two': 'foo-two-phrase',
+        'bar-two': 'bar-two-phrase',
+      });
     });
 
-    const result = await service.fetchDictionaryData({
-      language,
-      siteName,
-    });
+    it('should pass fetchOptions to the GraphQL client', async () => {
+      const fetchOptions = {
+        retries: 3,
+        retryStrategy: {
+          shouldRetry: () => true,
+          getDelay: () => 1000,
+        },
+        fetch: globalThis.fetch,
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      };
+      const requestMock = sinon.stub().resolves({
+        layout: {
+          item: {
+            rendered: {
+              sitecore: {
+                context: { pageEditing: false, language: 'en' },
+                route: null,
+              },
+            },
+          },
+        },
+      });
 
-    expect(result).to.deep.equal({
-      'foo-one': 'foo-one-phrase',
-      'bar-one': 'bar-one-phrase',
-      'foo-two': 'foo-two-phrase',
-      'bar-two': 'bar-two-phrase',
+      sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
+
+      const service = new GraphQLEditingService({
+        clientFactory: clientFactory,
+      });
+
+      await service.fetchDictionaryData(
+        {
+          language,
+          siteName,
+        },
+        fetchOptions
+      );
+      expect(requestMock.calledOnce).to.be.true;
+      expect(requestMock.firstCall.args[2]).to.deep.equal(fetchOptions);
     });
   });
 

@@ -4,7 +4,6 @@ import {
   GraphQLEditingService,
   RestComponentLayoutService,
 } from '../editing';
-import * as pathUtil from 'path';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases, GraphQLDictionaryService } from '../i18n';
 import {
@@ -14,7 +13,8 @@ import {
   LayoutServiceData,
 } from '../layout';
 import { HTMLLink, FetchOptions } from '../models';
-import { getGroomedVariantIds, personalizeLayout } from '../personalize';
+import { getGroomedVariantIds } from '../personalize/utils';
+import { personalizeLayout } from '../personalize/layout-personalizer';
 import { ErrorPages, SiteInfo, SiteResolver, GraphQLErrorPagesService } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
@@ -140,7 +140,15 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @returns {string} string path
    */
   parsePath(path: string | string[]): string {
-    return typeof path === 'string' ? path : pathUtil.join(...path);
+    // join array path, while clearing extra slashes and ensure first slash
+    return typeof path === 'string'
+      ? path.startsWith('/')
+        ? path
+        : `/${path}`
+      : `/${path
+          .filter((part) => part !== '/')
+          .map((part) => part.replace(/^\/+/, '').replace(/\/+$/, ''))
+          .join('/')}`;
   }
 
   /**

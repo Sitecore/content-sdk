@@ -3,12 +3,13 @@ import sinon from 'sinon';
 import { SitecoreNextjsClient } from './sitecore-nextjs-client';
 import { ComponentBuilder } from '../ComponentBuilder';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
-import * as personalizeTools from '@sitecore-content-sdk/core/personalize';
+import * as siteTools from '@sitecore-content-sdk/core/site';
 import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
 import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
 import { GetServerSidePropsContext } from 'next';
+import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 
-xdescribe('SitecoreClient', () => {
+describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
   const builder = new ComponentBuilder({ components: new Map() });
   const moduleFactory = builder.getModuleFactory();
@@ -105,8 +106,7 @@ xdescribe('SitecoreClient', () => {
     it('should resolve site correctly with string path', () => {
       const path = '/some/path';
       const siteInfo = { name: 'default-site', hostName: '*', language: 'en' };
-      const getSiteRewriteDataStub = sinon.stub().returns({ siteName: 'default-site' });
-      sinon.replace(require('../site'), 'getSiteRewriteData', getSiteRewriteDataStub);
+      sandbox.stub(siteTools, 'getSiteRewriteData').returns({ siteName: 'default-site' });
       siteResolverStub.getByName.returns(siteInfo);
 
       const result = sitecoreClient.resolveSiteFromPath(path);
@@ -116,10 +116,8 @@ xdescribe('SitecoreClient', () => {
     });
 
     it('should resolve site correctly with array path', () => {
-      const path = ['/some', 'path'];
+      const path = [`${SITE_PREFIX}other-site`, '/some', 'path'];
       const siteInfo = { name: 'other-site', hostName: '*', language: 'en' };
-      const getSiteRewriteDataStub = sinon.stub().returns({ siteName: 'other-site' });
-      sinon.replace(require('../site'), 'getSiteRewriteData', getSiteRewriteDataStub);
       siteResolverStub.getByName.returns(siteInfo);
 
       const result = sitecoreClient.resolveSiteFromPath(path);
@@ -130,47 +128,26 @@ xdescribe('SitecoreClient', () => {
   });
 
   describe('getPage', () => {
-    it('should return personalized page', async () => {
-      const path = `${VARIANT_PREFIX}variant1/test/path`;
+    it('should personalize page layout when variants present in path', async () => {
+      const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}mountain_bike_audience/test/path`;
       const locale = 'en-US';
+      const testLayoutData = structuredClone(layoutData);
+
       const siteInfo = {
         name: 'default-site',
         hostName: 'example.com',
         language: 'en',
       };
-      const layoutData = {
-        sitecore: {
-          route: {
-            name: 'home',
-            placeholders: {},
-          },
-          context: { site: siteInfo },
-        },
-      };
-      const variantIds = ['variant1'];
       siteResolverStub.getByName.returns(siteInfo);
       sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
-      layoutServiceStub.fetchLayoutData.returns(layoutData);
-      sandbox
-        .stub(sitecoreClient, 'getHeadLinks')
-        .returns([{ rel: 'stylesheet', href: '/test.css' }]);
-
-      const personalizeSpy = sandbox.spy(personalizeTools, 'personalizeLayout');
-      const getGroomedVariantIdsSpy = sandbox.spy(personalizeTools, 'getGroomedVariantIds');
-
-      // sandbox.replace(require('../personalize'), 'getGroomedVariantIds', getGroomedVariantIdsStub);
-      // sandbox.replace(require('../personalize'), 'personalizeLayout', personalizeStub);
+      layoutServiceStub.fetchLayoutData.returns(testLayoutData);
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       const result = await sitecoreClient.getPage(path, { locale });
 
-      expect(result?.layout).to.deep.include({
-        // TODO: add layout
+      expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
+        'jss-main': [...componentsWithExperiencesArray],
       });
-      expect(result?.headLinks).to.have.lengthOf(1);
-
-      expect(getGroomedVariantIdsSpy.calledWith(variantIds)).to.be.true;
-      // TODO: add layout
-      // expect(personalizeSpy.calledWithMatch('variant1')).to.be.true;
     });
   });
 
@@ -179,27 +156,19 @@ xdescribe('SitecoreClient', () => {
       it('should return string path when accepting string[] path', () => {
         const path = ['/some', 'path'];
         const expectedPath = '/some/path';
-        const normalizeSiteRewriteStub = sinon.stub().returns(expectedPath);
-        const normalizePersonalizedRewriteStub = sinon.stub().returns(expectedPath);
 
         const result = sitecoreClient.parsePath(path);
 
         expect(result).to.equal(expectedPath);
-        expect(normalizeSiteRewriteStub.calledOnce).to.be.true;
-        expect(normalizePersonalizedRewriteStub.calledOnce).to.be.true;
       });
 
       it('should strip site and variant prefixes from path', () => {
         const path = `/${SITE_PREFIX}site1/${VARIANT_PREFIX}variant1/some/path`;
         const expectedPath = '/some/path';
-        const normalizeSiteRewriteStub = sinon.stub().returns(expectedPath);
-        const normalizePersonalizedRewriteStub = sinon.stub().returns(expectedPath);
 
         const result = sitecoreClient.parsePath(path);
 
         expect(result).to.equal(expectedPath);
-        expect(normalizeSiteRewriteStub.calledOnce).to.be.true;
-        expect(normalizePersonalizedRewriteStub.calledOnce).to.be.true;
       });
     });
   });
@@ -231,17 +200,17 @@ xdescribe('SitecoreClient', () => {
       };
 
       const mockComponent = {
-        getServerSideProps: sinon.stub().resolves({ props: { data: 'test-data' } }),
+        getServerSideProps: sandbox.stub().resolves({ props: { data: 'test-data' } }),
       };
 
-      const moduleFactoryStub = sinon.stub().returns(mockComponent);
+      const moduleFactoryStub = sandbox.stub().returns(mockComponent);
       // eslint-disable-next-line
       sitecoreClient['initOptions'].moduleFactory = moduleFactoryStub;
 
       const result = await sitecoreClient.getComponentData(layoutData, context);
 
       expect(result).to.deep.equal({
-        'test-uid': { data: 'test-data' },
+        'test-uid': { props: { data: 'test-data' } },
       });
       expect(mockComponent.getServerSideProps.calledOnce).to.be.true;
     });
@@ -254,6 +223,7 @@ xdescribe('SitecoreClient', () => {
         { params: { path: ['home'] }, locale: 'en' },
         { params: { path: ['accueil'] }, locale: 'fr' },
       ];
+      sitemapServiceStub.fetchSitemap.resolves([]);
       sitemapServiceStub.fetchSitemap.withArgs(languages).resolves(expectedPaths);
 
       const result = await sitecoreClient.getPagePaths(languages);
