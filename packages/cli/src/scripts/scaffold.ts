@@ -27,7 +27,7 @@ export function args(yargs: Argv) {
       describe: 'Name of the component to scaffold',
     })
     .option('config', {
-      requiresArg: true,
+      requiresArg: false,
       type: 'string',
       describe: 'Path to the Sitecore cli config',
     })
@@ -44,6 +44,29 @@ export function args(yargs: Argv) {
       default: false,
     });
 }
+
+/**
+ * Arguments for the scaffold command.
+ */
+export type ScaffoldArgs = Argv<ScaffoldArgs> & {
+  /**
+   * The name of the component to be scaffolded.
+   */
+  componentName: string;
+  /**
+   * Path to the `sitecore.cli.config` file.
+   * Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats.
+   */
+  config?: string;
+  /**
+   * The name of the template to use for scaffolding.
+   */
+  templateName?: string;
+  /**
+   * Indicates whether to scaffold a BYOC type component.
+   */
+  byoc?: boolean;
+};
 
 /**
  * Handler for the scaffold command.
@@ -69,12 +92,7 @@ dashes, or underscores. If specifying a path, it must be relative to src/compone
   const filename = `${componentName}.tsx`;
   const componentRoot = componentPath.startsWith('src/') ? '' : 'src/components';
   const outputFilePath = path.join(componentRoot, componentPath, filename);
+  const templateName = argv.templateName ?? (argv.byoc ? 'byoc' : 'default');
 
-  scaffoldComponent(
-    outputFilePath,
-    componentName,
-    argv.templateName,
-    cliConfig.scaffold.templates,
-    argv.byoc
-  );
+  scaffoldComponent(outputFilePath, componentName, templateName, cliConfig.scaffold.templates);
 }

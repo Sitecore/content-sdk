@@ -111,11 +111,10 @@ describe('scaffold', () => {
     it('should scaffold component with default template', () => {
       const outputFilePath = 'output/path';
       const componentName = 'MyComponent';
-      const templateNameArg = undefined;
-      const byoc = false;
+      const templateName = 'default';
       const template = templates.filter((t) => t.name === 'default')[0];
       existsStub.withArgs(outputFilePath).returns(false);
-      scaffoldComponent(outputFilePath, componentName, templateNameArg, templates, byoc);
+      scaffoldComponent(outputFilePath, componentName, templateName, templates);
 
       expect(template.generateTemplate.calledWith(componentName)).to.be.true;
       expect(writeFileStub.calledWith(outputFilePath, template.generateTemplate(), 'utf8')).to.be
@@ -129,12 +128,11 @@ describe('scaffold', () => {
     it('should scaffold component with byoc template', () => {
       const outputFilePath = 'output/path';
       const componentName = 'MyByocComponent';
-      const templateNameArg = undefined;
-      const byoc = true;
+      const templateName = 'byoc';
       const template = templates.filter((t) => t.name === 'byoc')[0];
       existsStub.withArgs(outputFilePath).returns(false);
 
-      scaffoldComponent(outputFilePath, componentName, templateNameArg, templates, byoc);
+      scaffoldComponent(outputFilePath, componentName, templateName, templates);
 
       expect(template.generateTemplate.calledWith(componentName)).to.be.true;
       expect(writeFileStub.calledWith(outputFilePath, template.generateTemplate(), 'utf8')).to.be
@@ -148,12 +146,11 @@ describe('scaffold', () => {
     it('should scaffold component with custom template', () => {
       const outputFilePath = 'output/path';
       const componentName = 'MyCustomComponent';
-      const templateNameArg = 'customTemplate';
-      const template = templates.filter((t) => t.name === templateNameArg)[0];
-      const byoc = false;
+      const templateName = 'customTemplate';
+      const template = templates.filter((t) => t.name === templateName)[0];
       existsStub.withArgs(outputFilePath).returns(false);
 
-      scaffoldComponent(outputFilePath, componentName, templateNameArg, templates, byoc);
+      scaffoldComponent(outputFilePath, componentName, templateName, templates);
 
       expect(template.generateTemplate.calledWith(componentName)).to.be.true;
       expect(writeFileStub.calledWith(outputFilePath, template.generateTemplate(), 'utf8')).to.be
@@ -167,12 +164,11 @@ describe('scaffold', () => {
     it('should throw an error if template is not found', () => {
       const outputFilePath = 'output/path';
       const componentName = 'MyComponent';
-      const templateNameArg = 'nonexistent';
-      const byoc = false;
+      const templateName = 'nonexistent';
 
       expect(() =>
-        scaffoldComponent(outputFilePath, componentName, templateNameArg, templates, byoc)
-      ).to.throw(`Template ${templateNameArg} not found.`);
+        scaffoldComponent(outputFilePath, componentName, templateName, templates)
+      ).to.throw(`Template ${templateName} not found.`);
     });
   });
 });

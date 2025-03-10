@@ -26,6 +26,13 @@ describe('scaffold command', () => {
           },
           getNextSteps: () => ['byoc next step 1', 'byoc next step 2'],
         },
+        {
+          name: 'customTemplate',
+          generateTemplate: (componentName: string) => {
+            return 'customTemplate ' + componentName;
+          },
+          getNextSteps: () => ['customTemplate next step 1', 'customTemplate next step 2'],
+        },
       ],
     },
   };
@@ -72,10 +79,47 @@ dashes, or underscores. If specifying a path, it must be relative to src/compone
     expect(loadCliConfigStub.calledOnceWith(argv.config)).to.be.true;
   });
 
-  it('should call scaffoldComponent with correct arguments', async () => {
+  it('should call scaffoldComponent with default template if template name not provided and byoc flag is missing', async () => {
     const argv = {
       componentName: 'ValidComponentName',
-      templateName: 'default',
+    };
+    const expectedOutputFilePath = path.join('src/components', 'ValidComponentName.tsx');
+
+    handler(argv);
+
+    expect(
+      scaffoldComponentStub.calledOnceWith(
+        expectedOutputFilePath,
+        'ValidComponentName',
+        'default',
+        mockConfig.scaffold.templates
+      )
+    ).to.be.true;
+  });
+
+  it('should call scaffoldComponent with byoc template if template name not provided and byoc flag is passed', async () => {
+    const argv = {
+      componentName: 'ValidComponentName',
+      byoc: true,
+    };
+    const expectedOutputFilePath = path.join('src/components', 'ValidComponentName.tsx');
+
+    handler(argv);
+
+    expect(
+      scaffoldComponentStub.calledOnceWith(
+        expectedOutputFilePath,
+        'ValidComponentName',
+        'byoc',
+        mockConfig.scaffold.templates
+      )
+    ).to.be.true;
+  });
+
+  it('should call scaffoldComponent with template Name if provided', async () => {
+    const argv = {
+      componentName: 'ValidComponentName',
+      templateName: 'customTemplate',
       byoc: true,
     };
     const expectedOutputFilePath = path.join('src/components', 'ValidComponentName.tsx');
@@ -87,8 +131,7 @@ dashes, or underscores. If specifying a path, it must be relative to src/compone
         expectedOutputFilePath,
         'ValidComponentName',
         argv.templateName,
-        mockConfig.scaffold.templates,
-        argv.byoc
+        mockConfig.scaffold.templates
       )
     ).to.be.true;
   });
@@ -107,8 +150,7 @@ dashes, or underscores. If specifying a path, it must be relative to src/compone
         expectedOutputFilePath,
         'ValidComponentName',
         argv.templateName,
-        mockConfig.scaffold.templates,
-        argv.byoc
+        mockConfig.scaffold.templates
       )
     ).to.be.true;
   });

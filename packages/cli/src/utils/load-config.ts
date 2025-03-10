@@ -1,3 +1,4 @@
+import { SitecoreCliConfig } from '@sitecore-content-sdk/core/types/config';
 import path from 'path';
 const tsx = require('tsx/cjs/api');
 
@@ -7,7 +8,7 @@ const tsx = require('tsx/cjs/api');
  * @returns {any} The default export from the configuration file.
  * @throws Will throw an error if the configuration file does not exist or does not have a default export.
  */
-export default function loadCliConfig(configFile: string): any {
+export default function loadCliConfig(configFile?: string): SitecoreCliConfig {
   configFile = configFile || './sitecore.cli.config.ts';
   let cliConfig;
 
