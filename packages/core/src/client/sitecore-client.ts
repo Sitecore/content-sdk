@@ -298,11 +298,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!this.initOptions.api.local) {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
-    const editingService = this.getServiceInstance(
-      this.editingService,
-      GraphQLEditingService,
-      fetchOptions
-    );
+    const editingService = this.getServiceInstance(GraphQLEditingService, fetchOptions);
 
     const {
       itemId,
@@ -346,7 +342,6 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Returns an instance of the requested service.
    * If `fetchOptions` are provided, a new instance is created; otherwise, the default instance is used.
-   * @param {T} defaultInstance - The default instance of the service to use if no fetch options are provided.
    * @param {new (config: any) => T} ServiceConstructor - The constructor for the service class.
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   * @returns {T} An instance of the requested service.
    */
@@ -355,8 +350,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     fetchOptions?: FetchOptions
   ): T {
     return new ServiceConstructor({
-          ...this.initOptions,
-          clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
-        });
+      ...this.initOptions,
+      clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
+    });
   }
 }

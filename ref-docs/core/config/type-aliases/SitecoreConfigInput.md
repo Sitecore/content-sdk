@@ -8,7 +8,7 @@
 
 > **SitecoreConfigInput**: `object`
 
-Defined in: [packages/core/src/config/models.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/88c5c2640d5ef72e74febf33dccec61ab7a6e74d/packages/core/src/config/models.ts#L15)
+Defined in: [packages/core/src/config/models.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/config/models.ts#L15)
 
 Type to be used as config input in sitecore.config
 
@@ -31,13 +31,25 @@ Edge endpoint credentials for Sitecore connection. Will be used to connect to Sa
 
 > `optional` **clientContextId**: `string`
 
-#### api.edge.contextId?
+Optional identifier used to connect and retrieve data from XM Cloud instance in client-side functionality
 
-> `optional` **contextId**: `string`
+#### api.edge.contextId
+
+> **contextId**: `string`
+
+A unified identifier used to connect and retrieve data from XM Cloud instance
 
 #### api.edge.edgeUrl?
 
 > `optional` **edgeUrl**: `string`
+
+XM Cloud endpoint that the app will communicate and retrieve data from
+
+##### Default
+
+```ts
+https://edge-platform.sitecorecloud.io
+```
 
 #### api.local?
 
@@ -45,29 +57,48 @@ Edge endpoint credentials for Sitecore connection. Will be used to connect to Sa
 
 API endpoint credentials for connection to local Sitecore instance
 
-#### api.local.apiHost?
+#### api.local.apiHost
 
-> `optional` **apiHost**: `string`
+> **apiHost**: `string`
 
-#### api.local.apiKey?
+Sitecore API hostname that the app will connect and retrieve data from
 
-> `optional` **apiKey**: `string`
+#### api.local.apiKey
+
+> **apiKey**: `string`
+
+Sitecore API key identifier used to connect to the GraphQL endpoint
 
 #### api.local.path?
 
 > `optional` **path**: `string`
 
+GraphQL endpoint path, will be appended to apiHost to form full enpoint URL ($apiHost/$path)
+
+##### Default
+
+```ts
+/sitecore/api/graph/edge
+```
+
 ### defaultLanguage
 
 > **defaultLanguage**: `string`
+
+The default and fallback locale for your site.
+Ensure it aligns with the framework-specific settings used in your application.
 
 ### defaultSite?
 
 > `optional` **defaultSite**: `string`
 
+Your default site name. When using the multisite feature this variable defines the fallback site.
+
 ### dictionary?
 
 > `optional` **dictionary**: `object`
+
+Settings for Dictionary Service
 
 #### dictionary.caching?
 
@@ -93,27 +124,41 @@ Editing secret required to support Sitecore editing and preview functionality.
 
 > `optional` **layout**: `object`
 
+Settings for Layout Service
+
 #### layout.formatLayoutQuery?
 
 > `optional` **formatLayoutQuery**: (`siteName`, `itemPath`, `locale`?) => `string` \| `null`
 
-Override default layout query for Layout Service
+Override the first part of graphQL query for Layout Service (excluding the fields part)
 
 ##### Param
 
-##### Param
+your site name
 
 ##### Param
+
+full path to Sitecore item/route
+
+##### Param
+
+item/route language
 
 ##### Returns
 
 custom layout query
-Layout query
-layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")
 
-### multisite
+##### Default
 
-> **multisite**: `object`
+```ts
+'layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")'
+```
+
+### multisite?
+
+> `optional` **multisite**: `object`
+
+Settings for multisite functionaliry
 
 #### multisite.defaultHostname?
 
@@ -130,6 +175,14 @@ localhost
 #### multisite.enabled?
 
 > `optional` **enabled**: `boolean`
+
+Enable multisite
+
+##### Default
+
+```ts
+true
+```
 
 #### multisite.useCookieResolution()?
 
@@ -148,9 +201,11 @@ Function used to determine if site should be resolved from sc_site cookie when p
 
 `boolean`
 
-### personalize
+### personalize?
 
-> **personalize**: `object`
+> `optional` **personalize**: `object`
+
+Setting for personalize functionality
 
 #### personalize.cdpTimeout?
 
@@ -180,30 +235,50 @@ Configuration for your Sitecore Experience Edge endpoint
 
 > `optional` **enabled**: `boolean`
 
-#### personalize.scope
+Enable personalize middleware
 
-> **scope**: `string` \| `undefined`
+##### Default
+
+```ts
+process.env.NODE_ENV !== 'development'
+```
+
+#### personalize.scope?
+
+> `optional` **scope**: `string`
 
 Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
 
-### redirects
+### redirects?
 
-> **redirects**: `object`
+> `optional` **redirects**: `object`
+
+Settings for redirects functionality
 
 #### redirects.enabled?
 
 > `optional` **enabled**: `boolean`
+
+Enable redirects middleware
+
+##### Default
+
+```ts
+process.env.NODE_ENV !== 'development'
+```
 
 #### redirects.locales?
 
 > `optional` **locales**: `string`[]
 
 These are all the locales you support in your application.
-These should match those in your next.config.js (i18n.locales).
+These should match those in framework-specific configuration of your app.
 
 ### retries?
 
 > `optional` **retries**: `object`
+
+Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
 
 #### retries.count?
 
@@ -211,9 +286,21 @@ These should match those in your next.config.js (i18n.locales).
 
 Number of retries for graphql client. Will use the specified `retryStrategy`.
 
+##### Default
+
+```ts
+3
+```
+
 #### retries.retryStrategy?
 
 > `optional` **retryStrategy**: [`RetryStrategy`](../../index/interfaces/RetryStrategy.md)
 
-Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
+Retry strategy for the client. By default, uses exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
+
+##### Default
+
+```ts
+DefaultRetryStrategy
+```
