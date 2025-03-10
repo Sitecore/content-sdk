@@ -29,7 +29,8 @@ export function args(yargs: Argv) {
     .option('config', {
       requiresArg: false,
       type: 'string',
-      describe: 'Path to the `sitecore.cli.config` file. Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats',
+      describe:
+        'Path to the `sitecore.cli.config` file. Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats',
     })
     .option('templateName', {
       requiresArg: false,
