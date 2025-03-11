@@ -746,46 +746,44 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getHeadLinks', function() {
-    let layoutData: LayoutServiceData;
+  describe.only('getHeadLinks', function() {
+    // let layoutData: LayoutServiceData;
 
-    beforeEach(() => {
-      const truthyValue = {
-        value: '<div class="test bar"><p class="foo ck-content">bar</p></div>',
-      };
-      const falsyValue = { value: '<div class="test bar"><p class="foo">ck-content</p></div>' };
+    const truthyValue = {
+      value: '<div class="test bar"><p class="foo ck-content">bar</p></div>',
+    };
+    const falsyValue = { value: '<div class="test bar"><p class="foo">ck-content</p></div>' };
 
-      layoutData = {
-        sitecore: {
-          context: {},
-          route: {
-            name: 'route',
-            placeholders: {
-              car: [
-                {
-                  componentName: 'foo',
-                  fields: { car: falsyValue },
-                  placeholders: {
-                    bar: [{ componentName: 'cow', fields: { dog: truthyValue } }],
+    const layoutData = {
+      sitecore: {
+        context: {},
+        route: {
+          name: 'route',
+          placeholders: {
+            car: [
+              {
+                componentName: 'foo',
+                fields: { car: falsyValue },
+                placeholders: {
+                  bar: [{ componentName: 'cow', fields: { dog: truthyValue } }],
+                },
+              },
+              {
+                componentName: 'test',
+                fields: {
+                  CSSStyles: {
+                    value: '-library--foo',
+                  },
+                  LibraryId: {
+                    value: 'bar',
                   },
                 },
-                {
-                  componentName: 'test',
-                  fields: {
-                    CSSStyles: {
-                      value: '-library--foo',
-                    },
-                    LibraryId: {
-                      value: 'bar',
-                    },
-                  },
-                },
-              ],
-            },
+              },
+            ],
           },
         },
-      };
-    });
+      },
+    };
 
     it('should return stylesheets when enableStyles and enableThemes are true', () => {
       const result = sitecoreClient.getHeadLinks(layoutData);

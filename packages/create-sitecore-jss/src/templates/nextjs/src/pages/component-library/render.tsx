@@ -25,7 +25,7 @@ const ComponentLibrary = ({ notFound, componentProps, layout }: SitecorePageProp
           <title>Sitecore Component Library</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <SitecoreStyles layoutData={layoutData} />
+        <SitecoreStyles layoutData={layout} />
         <ComponentLibraryLayout {...layout} />
       </SitecoreContext>
     </ComponentPropsContext>
