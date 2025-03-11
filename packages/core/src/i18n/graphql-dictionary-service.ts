@@ -1,13 +1,10 @@
-import {
-  GraphQLClient,
-  GraphQLRequestClientConfig,
-  GraphQLRequestClientFactory,
-} from '../graphql-request-client';
+import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
-import { PageInfo, SearchQueryVariables } from '../graphql';
-import { siteNameError, languageError } from '../graphql/app-root-query';
+import { PageInfo } from '../client';
+import { siteNameError, languageError } from '../client/constants';
 import debug from '../debug';
-
+import { GraphQLServiceConfig } from '../sitecore-service-base';
+import { FetchOptions } from '../models';
 /** @private */
 export const queryError =
   'Valid value for rootItemId not provided and failed to auto-resolve app root item.';
@@ -38,6 +35,29 @@ const siteQuery = /* GraphQL */ `
 `;
 
 /**
+ * Query variables for dictionary graphql query
+ */
+export interface DictionaryQueryVariables {
+  /**
+   * Optional. The ID of the search root item. Fetch items that have this item as an ancestor.
+   */
+  rootItemId?: string;
+
+  /**
+   * Optional. Sitecore template ID(s). Fetch items that inherit from this template(s).
+   */
+  templates?: string;
+
+  /**
+   * common variable for all GraphQL queries
+   * it will be used for every type of query to regulate result batch size
+   * Optional. How many result items to fetch in each GraphQL call. This is needed for pagination.
+   * @default 10
+   */
+  pageSize?: number;
+}
+
+/**
  * Object model for Sitecore dictionary phrases
  */
 export interface DictionaryPhrases {
@@ -51,23 +71,19 @@ export interface DictionaryService {
   /**
    * Fetch dictionary data for a language.
    * @param {string} language the language to be used to fetch the dictionary
+   * @param {string} site site name to fetch data for.
    */
-  fetchDictionaryData(language: string): Promise<DictionaryPhrases>;
+  fetchDictionaryData(
+    language: string,
+    site?: string,
+    fetchOptions?: FetchOptions
+  ): Promise<DictionaryPhrases>;
 }
 
 /**
  * Configuration options for @see GraphQLDictionaryService instances
  */
-export interface GraphQLDictionaryServiceConfig
-  extends Omit<SearchQueryVariables, 'language'>,
-    CacheOptions,
-    Pick<GraphQLRequestClientConfig, 'retries' | 'retryStrategy'> {
-  /**
-   * The name of the current Sitecore site. This is used to to determine the search query root
-   * in cases where one is not specified by the caller.
-   */
-  siteName: string;
-
+export interface GraphQLDictionaryServiceConfig extends CacheOptions, GraphQLServiceConfig {
   /**
    * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
    * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -85,6 +101,13 @@ export interface GraphQLDictionaryServiceConfig
    * @default '061cba1554744b918a0617903b102b82' (/sitecore/templates/Foundation/JavaScript Services/App)
    */
   jssAppTemplateId?: string;
+  /**
+   * common variable for all GraphQL queries
+   * it will be used for every type of query to regulate result batch size
+   * Optional. How many result items to fetch in each GraphQL call. This is needed for pagination.
+   * @default 10
+   */
+  pageSize?: number;
 }
 
 /**
@@ -126,37 +149,30 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
   /**
    * Fetches dictionary data for internalization. Uses search query by default
    * @param {string} language the language to fetch
+   * @param {string} site site name to fetch data for.
+   * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {Promise<DictionaryPhrases>} dictionary phrases
    * @throws {Error} if the app root was not found for the specified site and language.
    */
-  async fetchDictionaryData(language: string): Promise<DictionaryPhrases> {
-    const cacheKey = this.options.siteName + language;
+  async fetchDictionaryData(
+    language: string,
+    site: string,
+    fetchOptions?: FetchOptions
+  ): Promise<DictionaryPhrases> {
+    const cacheKey = site + language;
     const cachedValue = this.getCacheValue(cacheKey);
     if (cachedValue) {
-      debug.dictionary('using cached dictionary data for %s %s', language, this.options.siteName);
+      debug.dictionary('using cached dictionary data for %s %s', language, site);
       return cachedValue;
     }
 
-    const phrases = await this.fetchWithSiteQuery(language);
-
-    this.setCacheValue(cacheKey, phrases);
-    return phrases;
-  }
-
-  /**
-   * Fetches dictionary data with site query
-   * This is the default behavior for XMCloud deployments. Uses `siteQuery` to retrieve data.
-   * @param {string} language the language to fetch
-   * @returns {Promise<DictionaryPhrases>} dictionary phrases
-   */
-  async fetchWithSiteQuery(language: string): Promise<DictionaryPhrases> {
     const phrases: DictionaryPhrases = {};
-    debug.dictionary('fetching dictionary data for %s %s', language, this.options.siteName);
+    debug.dictionary('fetching dictionary data for %s %s', language, site);
     let results: { key: string; value: string }[] = [];
     let hasNext = true;
     let after = '';
 
-    if (!this.options.siteName) {
+    if (!site) {
       throw new RangeError(siteNameError);
     }
 
@@ -168,11 +184,12 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
       const fetchResponse = await this.graphQLClient.request<DictionarySiteQueryResponse>(
         siteQuery,
         {
-          siteName: this.options.siteName,
+          siteName: site,
           language,
           pageSize: this.options.pageSize,
           after,
-        }
+        },
+        fetchOptions
       );
 
       if (fetchResponse?.site?.siteInfo?.dictionary) {
@@ -186,6 +203,7 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
 
     results.forEach((item) => (phrases[item.key] = item.value));
 
+    this.setCacheValue(cacheKey, phrases);
     return phrases;
   }
 
@@ -231,8 +249,8 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
     }
     return this.options.clientFactory({
       debugger: debug.dictionary,
-      retries: this.options.retries,
-      retryStrategy: this.options.retryStrategy,
+      retries: this.options.retries?.count,
+      retryStrategy: this.options.retries?.retryStrategy,
     });
   }
 }

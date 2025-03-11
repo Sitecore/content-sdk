@@ -1,18 +1,19 @@
 ﻿import type { NextApiRequest, NextApiResponse } from 'next';
 import { GraphQLRobotsService } from '@sitecore-content-sdk/nextjs';
-import { siteResolver } from 'lib/site-resolver';
-import clientFactory from 'lib/graphql-client-factory';
+import scConfig from 'sitecore.config';
+import scClient from 'lib/sitecore-client';
+import { createGraphQLClientFactory } from '@sitecore-content-sdk/nextjs/client';
 
 const robotsApi = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   res.setHeader('Content-Type', 'text/plain');
 
   // Resolve site based on hostname
   const hostName = req.headers['host']?.split(':')[0] || 'localhost';
-  const site = siteResolver.getByHost(hostName);
+  const site = scClient.resolveSite(hostName);
 
   // create robots graphql service
   const robotsService = new GraphQLRobotsService({
-    clientFactory,
+    clientFactory: createGraphQLClientFactory({ api: scConfig.api }),
     siteName: site.name,
   });
 

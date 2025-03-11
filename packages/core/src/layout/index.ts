@@ -16,6 +16,7 @@ export {
   EditMode,
   FieldMetadata,
   RenderingType,
+  RouteOptions,
   EDITING_COMPONENT_PLACEHOLDER,
   EDITING_COMPONENT_ID,
 } from './models';
@@ -30,8 +31,6 @@ export {
 } from './utils';
 
 export { getContentStylesheetLink } from './content-styles';
-
-export { LayoutService } from './layout-service';
 
 export {
   GraphQLLayoutService,

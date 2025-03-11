@@ -11,6 +11,7 @@ use(spies);
 describe('GraphQLLayoutService', () => {
   const apiKey = '0FBFF61E-267A-43E3-9252-B77E71CEE4BA';
   const endpoint = 'http://sctest/graphql';
+  const site = 'supersite';
 
   const clientFactory = GraphQLRequestClient.createClientFactory({
     endpoint,
@@ -19,6 +20,7 @@ describe('GraphQLLayoutService', () => {
 
   afterEach(() => {
     nock.cleanAll();
+    sinon.restore();
   });
 
   it('should fetch layout data using clientFactory', async () => {
@@ -60,11 +62,10 @@ describe('GraphQLLayoutService', () => {
     });
 
     const service = new GraphQLLayoutService({
-      siteName: 'supersite',
       clientFactory,
     });
 
-    const data = await service.fetchLayoutData('/styleguide', 'da-DK');
+    const data = await service.fetchLayoutData('/styleguide', { locale: 'da-DK', site });
 
     expect(data).to.deep.equal({
       sitecore: {
@@ -115,10 +116,9 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      siteName: 'supersite',
     });
 
-    const data = await service.fetchLayoutData('/styleguide');
+    const data = await service.fetchLayoutData('/styleguide', { site });
 
     expect(data).to.deep.equal({
       sitecore: {
@@ -169,12 +169,11 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      siteName: 'supersite',
       formatLayoutQuery: (siteName, itemPath, locale) =>
         `layout111(site:"${siteName}",route:"${itemPath}",language:"${locale || 'en'}")`,
     });
 
-    const data = await service.fetchLayoutData('/styleguide');
+    const data = await service.fetchLayoutData('/styleguide', { site });
 
     expect(data).to.deep.equal({
       sitecore: {
@@ -206,10 +205,9 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      siteName: 'supersite',
     });
 
-    const data = await service.fetchLayoutData('/styleguide', 'da-DK');
+    const data = await service.fetchLayoutData('/styleguide', { locale: 'da-DK', site });
 
     expect(data).to.deep.equal({
       sitecore: {
@@ -235,10 +233,9 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      siteName: 'supersite',
     });
 
-    await service.fetchLayoutData('/styleguide', 'da-DK').catch((error) => {
+    await service.fetchLayoutData('/styleguide', { locale: 'da-DK', site }).catch((error) => {
       expect(error.response.status).to.equal(401);
       expect(error.response.error).to.equal('whoops');
     });
@@ -247,12 +244,14 @@ describe('GraphQLLayoutService', () => {
   it('should call clientFactory with the correct arguments', () => {
     const clientFactorySpy: SinonSpy = sinon.spy();
     const mockServiceConfig = {
-      siteName: 'supersite',
+      defaultSite: 'supersite',
       clientFactory: clientFactorySpy,
-      retries: 3,
-      retryStrategy: {
-        getDelay: () => 1000,
-        shouldRetry: () => true,
+      retries: {
+        count: 3,
+        retryStrategy: {
+          getDelay: () => 1000,
+          shouldRetry: () => true,
+        },
       },
     };
 
@@ -262,7 +261,53 @@ describe('GraphQLLayoutService', () => {
 
     const calledWithArgs = clientFactorySpy.firstCall.args[0];
     expect(calledWithArgs.debugger).to.exist;
-    expect(calledWithArgs.retries).to.equal(mockServiceConfig.retries);
-    expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retryStrategy);
+    expect(calledWithArgs.retries).to.equal(mockServiceConfig.retries.count);
+    expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retries.retryStrategy);
+  });
+
+  it('should pass fetchOptions to the GraphQL client', async () => {
+    const fetchOptions = {
+      retries: 3,
+      retryStrategy: {
+        shouldRetry: () => true,
+        getDelay: () => 1000,
+      },
+      fetch: globalThis.fetch,
+      headers: {
+        Authorization: 'Bearer test-token',
+        'Content-Type': 'application/json',
+      },
+    };
+    const itemPath = '/home';
+    const routeOptions = { site: 'example-site', locale: 'en' };
+
+    const requestMock = sinon.stub().resolves({
+      layout: {
+        item: {
+          rendered: {
+            sitecore: {
+              context: { pageEditing: false, language: 'en' },
+              route: null,
+            },
+          },
+        },
+      },
+    });
+
+    sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
+
+    const clientFactory: GraphQLRequestClientFactory = GraphQLRequestClient.createClientFactory({
+      apiKey,
+      endpoint: 'https://bar.com/graphql',
+    });
+
+    const service = new GraphQLLayoutService({
+      clientFactory,
+    });
+
+    await service.fetchLayoutData(itemPath, routeOptions, fetchOptions);
+
+    expect(requestMock.calledOnce).to.be.true;
+    expect(requestMock.firstCall.args[2]).to.deep.equal(fetchOptions);
   });
 });

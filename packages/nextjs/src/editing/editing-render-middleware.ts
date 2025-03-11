@@ -5,7 +5,8 @@ import {
   QUERY_PARAM_EDITING_SECRET,
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
-  LayoutKind,
+  ComponentLibraryRenderPreviewData,
+  EditingPreviewData,
 } from '@sitecore-content-sdk/core/editing';
 import { getJssEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
@@ -32,35 +33,6 @@ export type EditingRenderMiddlewareConfig = {
 export type EditingNextApiRequest = NextApiRequest & {
   query: EditingRenderQueryParams;
 };
-
-/**
- * Data for Next.js Preview (Editing) Mode.
- */
-export type EditingPreviewData = {
-  site: string;
-  itemId: string;
-  language: string;
-  pageState: Exclude<LayoutServicePageState, 'Normal'>;
-  variantIds: string[];
-  version?: string;
-  layoutKind?: LayoutKind;
-};
-
-/**
- * Data for Component Library rendering mode
- */
-export interface ComponentLibraryRenderPreviewData {
-  site: string;
-  itemId: string;
-  renderingId: string;
-  componentUid: string;
-  language: string;
-  pageState: LayoutServicePageState;
-  mode?: 'library';
-  variant?: string;
-  version?: string;
-  dataSourceId?: string;
-}
 
 /**
  * Type guard for Component Library mode

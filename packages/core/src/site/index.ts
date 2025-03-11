@@ -17,7 +17,7 @@ export {
   SitemapQueryResult,
   GraphQLSitemapXmlService,
   GraphQLSitemapXmlServiceConfig,
-} from './graphql-sitemap-service';
+} from './graphql-sitemap-xml-service';
 
 export {
   ErrorPages,
@@ -26,8 +26,15 @@ export {
 } from './graphql-error-pages-service';
 
 export { GraphQLSiteInfoService, GraphQLSiteInfoServiceConfig } from './graphql-siteinfo-service';
+export { GraphQLSitePathService, GraphQLSitePathServiceConfig } from './graphql-sitepath-service';
 
 export { SiteInfo } from './models';
 
-export { getSiteRewrite, getSiteRewriteData, normalizeSiteRewrite, SiteRewriteData } from './utils';
+export {
+  getSiteRewrite,
+  getSiteRewriteData,
+  normalizeSiteRewrite,
+  SiteRewriteData,
+  SITE_PREFIX,
+} from './utils';
 export { SiteResolver } from './site-resolver';
