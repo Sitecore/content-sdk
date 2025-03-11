@@ -93,7 +93,11 @@ const path = extractPath(context);
     props = {
       ...page,
       dictionary: await client.getDictionary({ site: page.site?.name, locale: page.locale }),
-      componentProps: await client.getComponentData(page.layout, context),
+      componentProps: await client.getComponentData(
+        page.layout,
+        context,
+        componentBuilder.getModuleFactory()
+      ),
     }
   }
   return {

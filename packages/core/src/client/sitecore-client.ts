@@ -42,6 +42,10 @@ export type Page = {
    * Route locale
    */
   locale: string;
+  /**
+   * Head links for extra Sitecore scripts and styles to be loaded on a page
+   */
+  headLinks: HTMLLink[];
 };
 
 export type PageOptions = Partial<RouteOptions> & {
@@ -169,6 +173,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     } else {
       const siteInfo = this.siteResolver.getByName(site);
       // Initialize links to be inserted on the page
+      const headLinks = this.getHeadLinks(layout);
       if (pageOptions?.personalize?.variantId) {
         // Modify layoutData to use specific variant(s) instead of default
         // This will also set the variantId on the Sitecore context so that it is accessible here
@@ -182,6 +187,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         layout,
         site: siteInfo,
         locale,
+        headLinks,
       };
     }
   }
@@ -189,23 +195,33 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Get head links for extra Sitecore scripts and styles to be loaded on a page
    * @param {LayoutServiceData} layoutData layout data for the page
+   * @param {object} [options] options to enable/disable styles and themes
+   * @param {boolean} [options.enableStyles] Flag to enable/disable fetching of global content styles. `true` by default
+   * @param {boolean} [options.enableThemes] Flag to enable/disable fetching of component themes. `true` by default
    * @returns {HTMLLink[]} list of head links
    */
-  getHeadLinks(layoutData: LayoutServiceData): HTMLLink[] {
+  getHeadLinks(
+    layoutData: LayoutServiceData,
+    { enableStyles = true, enableThemes = true } = {}
+  ): HTMLLink[] {
     const headLinks: HTMLLink[] = [];
-    const contentStyles = getContentStylesheetLink(
-      layoutData,
-      this.initOptions.api.edge.contextId,
-      this.initOptions.api.edge.edgeUrl
-    );
+    const contentStyles = enableStyles
+      ? getContentStylesheetLink(
+          layoutData,
+          this.initOptions.api.edge.contextId,
+          this.initOptions.api.edge.edgeUrl
+        )
+      : null;
     if (contentStyles) headLinks.push(contentStyles);
-    headLinks.push(
-      ...getComponentLibraryStylesheetLinks(
-        layoutData,
-        this.initOptions.api.edge.contextId,
-        this.initOptions.api.edge.edgeUrl
-      )
-    );
+    if (enableThemes) {
+      headLinks.push(
+        ...getComponentLibraryStylesheetLinks(
+          layoutData,
+          this.initOptions.api.edge.contextId,
+          this.initOptions.api.edge.edgeUrl
+        )
+      );
+    }
     return headLinks;
   }
 
