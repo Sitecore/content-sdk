@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import * as utils from './utils';
-// import { getComponentList } from './components';
 import proxyquire from 'proxyquire';
 
 describe('components', () => {
@@ -15,7 +13,7 @@ describe('components', () => {
       sinon.restore();
     });
 
-    it('should return list of components', async () => {
+    it('should return list of components', () => {
       const items = [
         {
           path: 'src/components/Foo',
@@ -35,9 +33,9 @@ describe('components', () => {
         './utils': { getItems: getItemsStub },
       });
       const getComponentList = componentsModule.getComponentList;
-      getItemsStub.resolves(items);
+      getItemsStub.returns(items);
 
-      expect(await getComponentList('src/components')).to.deep.equal(items);
+      expect(getComponentList('src/components')).to.deep.equal(items);
       expect(getItemsStub.called).to.be.true;
 
       const getItemsStubArgs = getItemsStub.getCall(0).args[0];
