@@ -95,3 +95,7 @@ export {
   DefaultEmptyFieldEditingComponentText,
   DefaultEmptyFieldEditingComponentImage,
 } from './components/DefaultEmptyFieldEditingComponents';
+export {
+  GraphQLSitePathService,
+  GraphQLSitePathServiceConfig,
+} from '@sitecore-content-sdk/core/site';

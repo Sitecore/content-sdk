@@ -58,6 +58,10 @@ describe('SitecoreClient', () => {
     fetchComponentData: sandbox.stub(),
   };
 
+  let sitePathServiceStub = {
+    fetchSiteRoutes: sandbox.stub(),
+  };
+
   afterEach(() => {
     sandbox.restore();
   });
@@ -84,6 +88,10 @@ describe('SitecoreClient', () => {
       fetchComponentData: sandbox.stub(),
     };
 
+    sitePathServiceStub = {
+      fetchSiteRoutes: sandbox.stub(),
+    };
+
     sitecoreClient = new SitecoreClient(defaultInitOptions);
 
     (sitecoreClient as any).layoutService = layoutServiceStub;
@@ -92,6 +100,7 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).editingService = editingServiceStub;
     (sitecoreClient as any).siteResolver = siteResolverStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
+    (sitecoreClient as any).sitePathService = sitePathServiceStub;
   });
 
   describe('parsePath', () => {
@@ -180,7 +189,7 @@ describe('SitecoreClient', () => {
       sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.resolves(layoutData);
 
-      const result = await sitecoreClient.getPage(path);
+      const result = await sitecoreClient.getPage(path, {});
 
       expect(result).to.be.null;
     });
@@ -371,6 +380,22 @@ describe('SitecoreClient', () => {
 
       expect(errorPagesServiceStub.fetchErrorPages.calledWith(site, locale, fetchOptions)).to.be
         .true;
+    });
+  });
+
+  describe('getPagePaths', () => {
+    it('should return page paths', async () => {
+      const languages = ['en', 'fr'];
+      const expectedPaths = [
+        { params: { path: ['home'] }, locale: 'en' },
+        { params: { path: ['accueil'] }, locale: 'fr' },
+      ];
+      sitePathServiceStub.fetchSiteRoutes.resolves([]);
+      sitePathServiceStub.fetchSiteRoutes.withArgs(languages).resolves(expectedPaths);
+
+      const result = await sitecoreClient.getPagePaths(languages);
+
+      expect(result).to.deep.equal(expectedPaths);
     });
   });
 

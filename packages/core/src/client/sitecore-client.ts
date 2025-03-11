@@ -13,24 +13,43 @@ import {
   LayoutServiceData,
   RouteOptions,
 } from '../layout';
-import { HTMLLink, FetchOptions } from '../models';
+import { HTMLLink, FetchOptions, StaticPath } from '../models';
 import { getGroomedVariantIds } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
-import { ErrorPages, SiteInfo, SiteResolver, GraphQLErrorPagesService } from '../site';
+import {
+  ErrorPages,
+  SiteInfo,
+  SiteResolver,
+  GraphQLErrorPagesService,
+  GraphQLSitePathService,
+} from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 
-// The same type returned from getPage and getPreviewPage
-// represent a Page model returned from edge
+/**
+ * Represent a Page model returned from Edge endpoint
+ */
 export type Page = {
+  /**
+   * Layout details and props for the page
+   */
   layout: LayoutServiceData;
+  /**
+   * Site info for current page / route
+   */
   site?: SiteInfo;
+  /**
+   * Route locale
+   */
   locale: string;
+  /**
+   * Head links for extra Sitecore scripts and styles to be loaded on a page
+   */
   headLinks: HTMLLink[];
 };
 
 /**
- * contract for the Sitecore Client implementations
+ * Contract for the Sitecore Client implementations
  */
 export interface BaseSitecoreClient {
   resolveSite(hostname: string): SiteInfo;
@@ -51,6 +70,7 @@ export interface BaseSitecoreClient {
     previewData: EditingPreviewData | undefined,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
+  getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
 }
 
 /**
@@ -65,6 +85,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   protected clientFactory: GraphQLRequestClientFactory;
   protected errorPagesService: GraphQLErrorPagesService;
   protected componentService: RestComponentLayoutService;
+  protected sitePathService: GraphQLSitePathService;
 
   /**
    * Init SitecoreClient
@@ -80,6 +101,10 @@ export class SitecoreClient implements BaseSitecoreClient {
     this.clientFactory = createGraphQLClientFactory(graphQLOptions);
     this.siteResolver = new SiteResolver(initOptions.sites);
     this.editingService = new GraphQLEditingService({ clientFactory: this.clientFactory });
+    this.sitePathService = new GraphQLSitePathService({
+      clientFactory: this.clientFactory,
+      sites: this.siteResolver.sites,
+    });
 
     const baseServiceOptions = {
       defaultSite: initOptions.defaultSite,
@@ -153,25 +178,25 @@ export class SitecoreClient implements BaseSitecoreClient {
    */
   async getPage(
     path: string | string[],
-    routeOptions?: RouteOptions,
+    routeOptions?: Partial<RouteOptions>,
     fetchOptions?: FetchOptions
   ): Promise<Page | null> {
     const computedPath = this.parsePath(path);
     const locale = routeOptions?.locale ?? this.initOptions.defaultLanguage;
-    const siteName = routeOptions?.site ?? this.initOptions.defaultSite;
+    const site = routeOptions?.site ?? this.initOptions.defaultSite;
     // Fetch layout data, passing on req/res for SSR
     const layout = await this.layoutService.fetchLayoutData(
       computedPath,
       {
         locale,
-        site: siteName,
+        site,
       },
       fetchOptions
     );
     if (!layout.sitecore.route) {
       return null;
     } else {
-      const siteInfo = this.siteResolver.getByName(siteName);
+      const siteInfo = this.siteResolver.getByName(site);
       // Initialize links to be inserted on the page
       const headLinks = this.getHeadLinks(layout);
       return {
@@ -212,14 +237,12 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   * @returns {DictionaryPhrases} A promise that resolves to the dictionary phrases.
    */
   async getDictionary(
-    routeOptions?: RouteOptions,
+    routeOptions?: Partial<RouteOptions>,
     fetchOptions?: FetchOptions
   ): Promise<DictionaryPhrases> {
-    return await this.dictionaryService.fetchDictionaryData(
-      routeOptions?.locale || this.initOptions.defaultLanguage,
-      routeOptions?.site || this.initOptions.defaultSite,
-      fetchOptions
-    );
+    const locale = routeOptions?.locale || this.initOptions.defaultLanguage;
+    const site = routeOptions?.site || this.initOptions.defaultSite;
+    return await this.dictionaryService.fetchDictionaryData(locale, site, fetchOptions);
   }
 
   /**
@@ -340,6 +363,16 @@ export class SitecoreClient implements BaseSitecoreClient {
       dictionary: dictionaryData,
     } as Page;
     return page;
+  }
+
+  /**
+   * Retrieves the static paths for pages based on the given languages.
+   * @param {string[]} [languages] - An optional array of language codes to generate paths for.
+   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
+   * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
+   */
+  async getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
+    return this.sitePathService.fetchSiteRoutes(languages || [], fetchOptions);
   }
 
   /**

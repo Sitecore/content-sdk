@@ -62,9 +62,6 @@ describe('SitecoreClient', () => {
   let restComponentServiceStub = {
     fetchComponentData: sandbox.stub(),
   };
-  let sitemapServiceStub = {
-    fetchSitemap: sandbox.stub(),
-  };
 
   beforeEach(() => {
     layoutServiceStub = {
@@ -87,9 +84,6 @@ describe('SitecoreClient', () => {
     restComponentServiceStub = {
       fetchComponentData: sandbox.stub(),
     };
-    sitemapServiceStub = {
-      fetchSitemap: sandbox.stub(),
-    };
 
     sitecoreClient = new SitecoreNextjsClient(defaultInitOptions);
 
@@ -99,7 +93,6 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).editingService = editingServiceStub;
     (sitecoreClient as any).siteResolver = siteResolverStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
-    (sitecoreClient as any).sitemapService = sitemapServiceStub;
   });
 
   describe('resolveSiteFromPath', () => {
@@ -213,22 +206,6 @@ describe('SitecoreClient', () => {
         'test-uid': { props: { data: 'test-data' } },
       });
       expect(mockComponent.getServerSideProps.calledOnce).to.be.true;
-    });
-  });
-
-  describe('getPagePaths', () => {
-    it('should return page paths', async () => {
-      const languages = ['en', 'fr'];
-      const expectedPaths = [
-        { params: { path: ['home'] }, locale: 'en' },
-        { params: { path: ['accueil'] }, locale: 'fr' },
-      ];
-      sitemapServiceStub.fetchSitemap.resolves([]);
-      sitemapServiceStub.fetchSitemap.withArgs(languages).resolves(expectedPaths);
-
-      const result = await sitecoreClient.getPagePaths(languages);
-
-      expect(result).to.deep.equal(expectedPaths);
     });
   });
 });
