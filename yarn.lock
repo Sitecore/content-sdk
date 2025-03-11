@@ -2331,7 +2331,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/core": 0.1.0-beta.13
+    "@sitecore-content-sdk/core": 0.1.0-beta.14
     "@types/chai": ^4.2.4
     "@types/mocha": ^10.0.10
     "@types/node": ^22.13.0
@@ -2360,7 +2360,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/core@0.1.0-beta.13, @sitecore-content-sdk/core@workspace:packages/core":
+"@sitecore-content-sdk/core@0.1.0-beta.14, @sitecore-content-sdk/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
@@ -2434,13 +2434,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/dev-tools@0.1.0-beta.13, @sitecore-content-sdk/dev-tools@workspace:packages/dev-tools":
+"@sitecore-content-sdk/dev-tools@0.1.0-beta.14, @sitecore-content-sdk/dev-tools@workspace:packages/dev-tools":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/dev-tools@workspace:packages/dev-tools"
   dependencies:
     "@babel/parser": ^7.24.0
     "@babel/register": ^7.25.9
-    "@sitecore-content-sdk/core": 0.1.0-beta.13
+    "@sitecore-content-sdk/core": 0.1.0-beta.14
     "@types/chai": ^4.3.4
     "@types/glob": ^8.1.0
     "@types/mocha": ^10.0.10
@@ -2470,9 +2470,9 @@ __metadata:
   dependencies:
     "@sitecore-cloudsdk/core": ^0.4.2
     "@sitecore-cloudsdk/personalize": ^0.4.2
-    "@sitecore-content-sdk/core": 0.1.0-beta.13
-    "@sitecore-content-sdk/dev-tools": 0.1.0-beta.13
-    "@sitecore-content-sdk/react": 0.1.0-beta.13
+    "@sitecore-content-sdk/core": 0.1.0-beta.14
+    "@sitecore-content-sdk/dev-tools": 0.1.0-beta.14
+    "@sitecore-content-sdk/react": 0.1.0-beta.14
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.2.0
     "@types/chai": ^4.3.4
@@ -2517,11 +2517,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/react@0.1.0-beta.13, @sitecore-content-sdk/react@workspace:packages/react":
+"@sitecore-content-sdk/react@0.1.0-beta.14, @sitecore-content-sdk/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
-    "@sitecore-content-sdk/core": 0.1.0-beta.13
+    "@sitecore-content-sdk/core": 0.1.0-beta.14
     "@sitecore-feaas/clientside": ^0.5.19
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.1.0
