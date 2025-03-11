@@ -6,7 +6,7 @@
 
 # Class: ~~SearchQueryService\<T\>~~
 
-Defined in: [packages/core/src/graphql/search-service.ts:87](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/graphql/search-service.ts#L87)
+Defined in: [packages/core/src/graphql/search-service.ts:87](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/graphql/search-service.ts#L87)
 
 ## Deprecated
 
@@ -28,7 +28,7 @@ This class is meant to be extended or used as a mixin; it's not meant to be used
 
 > **new SearchQueryService**\<`T`\>(`client`): [`SearchQueryService`](SearchQueryService.md)\<`T`\>
 
-Defined in: [packages/core/src/graphql/search-service.ts:92](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/graphql/search-service.ts#L92)
+Defined in: [packages/core/src/graphql/search-service.ts:92](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/graphql/search-service.ts#L92)
 
 Creates an instance of search query service.
 
@@ -48,7 +48,7 @@ Creates an instance of search query service.
 
 > `protected` **client**: [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/graphql/search-service.ts:92](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/graphql/search-service.ts#L92)
+Defined in: [packages/core/src/graphql/search-service.ts:92](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/graphql/search-service.ts#L92)
 
 that fetches data from a GraphQL endpoint.
 
@@ -58,7 +58,7 @@ that fetches data from a GraphQL endpoint.
 
 > **fetch**(`query`, `args`): `Promise`\<`T`[]\>
 
-Defined in: [packages/core/src/graphql/search-service.ts:105](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/graphql/search-service.ts#L105)
+Defined in: [packages/core/src/graphql/search-service.ts:105](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/graphql/search-service.ts#L105)
 
 1. Validates mandatory search query arguments
 2. Executes search query with pagination

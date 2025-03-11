@@ -6,7 +6,7 @@
 
 # Interface: CacheClient\<T\>
 
-Defined in: [packages/core/src/cache-client.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/cache-client.ts#L7)
+Defined in: [packages/core/src/cache-client.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/cache-client.ts#L7)
 
 An interface for cache clients.
 
@@ -22,7 +22,7 @@ An interface for cache clients.
 
 > **getCacheValue**(`key`): `null` \| `T`
 
-Defined in: [packages/core/src/cache-client.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/cache-client.ts#L21)
+Defined in: [packages/core/src/cache-client.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/cache-client.ts#L21)
 
 Retrieves a value from the cache.
 
@@ -44,7 +44,7 @@ The cache value as {T}, or null if the specified key was not found in the cache.
 
 > **setCacheValue**(`key`, `value`): `T`
 
-Defined in: [packages/core/src/cache-client.ts:14](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/cache-client.ts#L14)
+Defined in: [packages/core/src/cache-client.ts:14](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/cache-client.ts#L14)
 
 Adds a value to the cache for the specified cache key.
 

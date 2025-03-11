@@ -19,5 +19,3 @@
 
 - [generatePlugins](functions/generatePlugins.md)
 - [getComponentList](functions/getComponentList.md)
-- [getMetadata](functions/getMetadata.md)
-- [scaffoldFile](functions/scaffoldFile.md)
