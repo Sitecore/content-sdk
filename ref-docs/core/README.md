@@ -15,4 +15,5 @@
 - [media](media/README.md)
 - [personalize](personalize/README.md)
 - [site](site/README.md)
+- [tools](tools/README.md)
 - [utils](utils/README.md)

@@ -8,7 +8,7 @@
 
 > **addComponentUpdateHandler**(`rootComponent`, `successCallback`?): `undefined` \| () => `void`
 
-Defined in: [packages/core/src/editing/component-library.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/editing/component-library.ts#L45)
+Defined in: [packages/core/src/editing/component-library.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/editing/component-library.ts#L45)
 
 Adds the browser-side event handler for 'component:update' message used in Component Library
 The event should update a component on page by uid, with fields and params from event args

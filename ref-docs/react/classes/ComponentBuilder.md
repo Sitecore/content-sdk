@@ -6,7 +6,7 @@
 
 # Class: ComponentBuilder
 
-Defined in: [packages/react/src/ComponentBuilder.ts:17](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/react/src/ComponentBuilder.ts#L17)
+Defined in: [packages/react/src/ComponentBuilder.ts:17](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/react/src/ComponentBuilder.ts#L17)
 
 React implementation of component builder class for building components based on the configuration.
 
@@ -16,7 +16,7 @@ React implementation of component builder class for building components based on
 
 > **new ComponentBuilder**(`config`): [`ComponentBuilder`](ComponentBuilder.md)
 
-Defined in: [packages/react/src/ComponentBuilder.ts:23](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/react/src/ComponentBuilder.ts#L23)
+Defined in: [packages/react/src/ComponentBuilder.ts:23](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/react/src/ComponentBuilder.ts#L23)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [packages/react/src/ComponentBuilder.ts:23](https://github.com/Sitec
 
 > `protected` **components**: `Map`\<`string`, `ComponentType`\>
 
-Defined in: [packages/react/src/ComponentBuilder.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/react/src/ComponentBuilder.ts#L21)
+Defined in: [packages/react/src/ComponentBuilder.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/react/src/ComponentBuilder.ts#L21)
 
 List of components to be stored
 
@@ -44,7 +44,7 @@ List of components to be stored
 
 > `protected` **config**: [`ComponentBuilderConfig`](../type-aliases/ComponentBuilderConfig.md)\<`ComponentType`\>
 
-Defined in: [packages/react/src/ComponentBuilder.ts:23](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/react/src/ComponentBuilder.ts#L23)
+Defined in: [packages/react/src/ComponentBuilder.ts:23](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/react/src/ComponentBuilder.ts#L23)
 
 ## Methods
 
@@ -52,7 +52,7 @@ Defined in: [packages/react/src/ComponentBuilder.ts:23](https://github.com/Sitec
 
 > **getComponentFactory**(): [`ComponentFactory`](../type-aliases/ComponentFactory.md)
 
-Defined in: [packages/react/src/ComponentBuilder.ts:31](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/react/src/ComponentBuilder.ts#L31)
+Defined in: [packages/react/src/ComponentBuilder.ts:31](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/react/src/ComponentBuilder.ts#L31)
 
 Creates a new instance of component factory
 

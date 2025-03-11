@@ -8,7 +8,7 @@
 
 > **RobotsQueryResult**: `object`
 
-Defined in: [packages/core/src/site/graphql-robots-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-robots-service.ts#L32)
+Defined in: [packages/core/src/site/graphql-robots-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/site/graphql-robots-service.ts#L32)
 
 The schema of data returned in response to robots.txt request
 

@@ -8,7 +8,7 @@
 
 > **SitecoreConfigInput**: `object`
 
-Defined in: [packages/core/src/config/models.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/config/models.ts#L15)
+Defined in: [packages/core/src/config/models.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/config/models.ts#L15)
 
 Type to be used as config input in sitecore.config
 
