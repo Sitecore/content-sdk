@@ -8,7 +8,7 @@
 
 > **ComponentBuilderConfig**\<`ComponentType`\>: `object`
 
-Defined in: [packages/react/src/ComponentBuilder.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/react/src/ComponentBuilder.ts#L7)
+Defined in: [packages/react/src/ComponentBuilder.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/react/src/ComponentBuilder.ts#L7)
 
 Configuration for ComponentBuilder
 

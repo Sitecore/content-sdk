@@ -13,11 +13,13 @@
 - [GraphQLRobotsService](classes/GraphQLRobotsService.md)
 - [GraphQLSiteInfoService](classes/GraphQLSiteInfoService.md)
 - [GraphQLSitemapXmlService](classes/GraphQLSitemapXmlService.md)
+- [GraphQLSitePathService](classes/GraphQLSitePathService.md)
 - [SiteResolver](classes/SiteResolver.md)
 
 ## Interfaces
 
 - [GraphQLErrorPagesServiceConfig](interfaces/GraphQLErrorPagesServiceConfig.md)
+- [GraphQLSitePathServiceConfig](interfaces/GraphQLSitePathServiceConfig.md)
 
 ## Type Aliases
 
@@ -38,6 +40,7 @@
 - [REDIRECT\_TYPE\_301](variables/REDIRECT_TYPE_301.md)
 - [REDIRECT\_TYPE\_302](variables/REDIRECT_TYPE_302.md)
 - [REDIRECT\_TYPE\_SERVER\_TRANSFER](variables/REDIRECT_TYPE_SERVER_TRANSFER.md)
+- [SITE\_PREFIX](variables/SITE_PREFIX.md)
 
 ## Functions
 

@@ -6,7 +6,7 @@
 
 # Interface: GraphQLDictionaryServiceConfig
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:25
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:48
 
 Configuration options for
 
@@ -16,7 +16,7 @@ GraphQLDictionaryService instances
 
 ## Extends
 
-- `Omit`\<`SearchQueryVariables`, `"language"`\>.[`CacheOptions`](CacheOptions.md).`Pick`\<`GraphQLRequestClientConfig`, `"retries"` \| `"retryStrategy"`\>
+- [`CacheOptions`](CacheOptions.md).`GraphQLServiceConfig`
 
 ## Properties
 
@@ -62,12 +62,30 @@ Cache timeout (sec)
 
 ### clientFactory
 
-> **clientFactory**: [`GraphQLRequestClientFactory`](../../graphql/type-aliases/GraphQLRequestClientFactory.md)
+> **clientFactory**: `GraphQLRequestClientFactory`
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:35
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:53
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
+
+#### Overrides
+
+`GraphQLServiceConfig.clientFactory`
+
+***
+
+### debugger?
+
+> `optional` **debugger**: `Debugger`
+
+Defined in: core/types/sitecore-service-base.d.ts:12
+
+Optional debug logger override
+
+#### Inherited from
+
+`GraphQLServiceConfig.debugger`
 
 ***
 
@@ -75,7 +93,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > `optional` **dictionaryEntryTemplateId**: `string`
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:40
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:58
 
 Optional. The template ID to use when searching for dictionary entries.
 
@@ -91,7 +109,7 @@ Optional. The template ID to use when searching for dictionary entries.
 
 > `optional` **jssAppTemplateId**: `string`
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:45
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:63
 
 Optional. The template ID of a JSS App to use when searching for the appRootId.
 
@@ -107,7 +125,7 @@ Optional. The template ID of a JSS App to use when searching for the appRootId.
 
 > `optional` **pageSize**: `number`
 
-Defined in: core/types/graphql/search-service.d.ts:52
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:70
 
 common variable for all GraphQL queries
 it will be used for every type of query to regulate result batch size
@@ -119,74 +137,41 @@ Optional. How many result items to fetch in each GraphQL call. This is needed fo
 10
 ```
 
-#### Inherited from
-
-`Omit.pageSize`
-
 ***
 
 ### retries?
 
-> `optional` **retries**: `number`
+> `optional` **retries**: `object`
 
-Defined in: core/types/graphql-request-client.d.ts:53
+Defined in: core/types/config/models.d.ts:70
 
-Number of retries for client. Will use the specified `retryStrategy`.
+Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
 
-#### Inherited from
+#### count?
 
-`Pick.retries`
+> `optional` **count**: `number`
 
-***
+Number of retries for graphql client. Will use the specified `retryStrategy`.
 
-### retryStrategy?
+##### Default
 
-> `optional` **retryStrategy**: [`RetryStrategy`](../../graphql/interfaces/RetryStrategy.md)
+```ts
+3
+```
 
-Defined in: core/types/graphql-request-client.d.ts:58
+#### retryStrategy?
 
-Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
+> `optional` **retryStrategy**: `RetryStrategy`
+
+Retry strategy for the client. By default, uses exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
 
-#### Inherited from
+##### Default
 
-`Pick.retryStrategy`
-
-***
-
-### rootItemId?
-
-> `optional` **rootItemId**: `string`
-
-Defined in: core/types/graphql/search-service.d.ts:41
-
-Optional. The ID of the search root item. Fetch items that have this item as an ancestor.
+```ts
+DefaultRetryStrategy
+```
 
 #### Inherited from
 
-`Omit.rootItemId`
-
-***
-
-### siteName
-
-> **siteName**: `string`
-
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:30
-
-The name of the current Sitecore site. This is used to to determine the search query root
-in cases where one is not specified by the caller.
-
-***
-
-### templates?
-
-> `optional` **templates**: `string`
-
-Defined in: core/types/graphql/search-service.d.ts:45
-
-Optional. Sitecore template ID(s). Fetch items that inherit from this template(s).
-
-#### Inherited from
-
-`Omit.templates`
+`GraphQLServiceConfig.retries`

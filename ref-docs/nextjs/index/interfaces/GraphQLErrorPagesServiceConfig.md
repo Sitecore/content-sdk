@@ -6,22 +6,40 @@
 
 # Interface: GraphQLErrorPagesServiceConfig
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:4
+Defined in: core/types/site/graphql-error-pages-service.d.ts:5
 
 ## Extends
 
-- `Pick`\<`GraphQLRequestClientConfig`, `"retries"` \| `"retryStrategy"`\>
+- `GraphQLServiceConfig`
 
 ## Properties
 
 ### clientFactory
 
-> **clientFactory**: [`GraphQLRequestClientFactory`](../../graphql/type-aliases/GraphQLRequestClientFactory.md)
+> **clientFactory**: `GraphQLRequestClientFactory`
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:17
+Defined in: core/types/site/graphql-error-pages-service.d.ts:14
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
+
+#### Overrides
+
+`GraphQLServiceConfig.clientFactory`
+
+***
+
+### debugger?
+
+> `optional` **debugger**: `Debugger`
+
+Defined in: core/types/sitecore-service-base.d.ts:12
+
+Optional debug logger override
+
+#### Inherited from
+
+`GraphQLServiceConfig.debugger`
 
 ***
 
@@ -29,7 +47,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > **language**: `string`
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:12
+Defined in: core/types/site/graphql-error-pages-service.d.ts:9
 
 The language
 
@@ -37,37 +55,37 @@ The language
 
 ### retries?
 
-> `optional` **retries**: `number`
+> `optional` **retries**: `object`
 
-Defined in: core/types/graphql-request-client.d.ts:53
+Defined in: core/types/config/models.d.ts:70
 
-Number of retries for client. Will use the specified `retryStrategy`.
+Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
 
-#### Inherited from
+#### count?
 
-`Pick.retries`
+> `optional` **count**: `number`
 
-***
+Number of retries for graphql client. Will use the specified `retryStrategy`.
 
-### retryStrategy?
+##### Default
 
-> `optional` **retryStrategy**: [`RetryStrategy`](../../graphql/interfaces/RetryStrategy.md)
+```ts
+3
+```
 
-Defined in: core/types/graphql-request-client.d.ts:58
+#### retryStrategy?
 
-Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
+> `optional` **retryStrategy**: `RetryStrategy`
+
+Retry strategy for the client. By default, uses exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
 
+##### Default
+
+```ts
+DefaultRetryStrategy
+```
+
 #### Inherited from
 
-`Pick.retryStrategy`
-
-***
-
-### siteName
-
-> **siteName**: `string`
-
-Defined in: core/types/site/graphql-error-pages-service.d.ts:8
-
-The JSS application name
+`GraphQLServiceConfig.retries`

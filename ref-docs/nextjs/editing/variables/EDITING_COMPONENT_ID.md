@@ -8,6 +8,6 @@
 
 > `const` **EDITING\_COMPONENT\_ID**: `"editing-component"` = `"editing-component"`
 
-Defined in: core/types/layout/models.d.ts:145
+Defined in: core/types/layout/models.d.ts:152
 
 Id of wrapper for component rendering

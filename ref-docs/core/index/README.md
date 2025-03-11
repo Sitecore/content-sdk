@@ -36,6 +36,7 @@
 - [HTMLLink](type-aliases/HTMLLink.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
 - [NativeDataFetcherError](type-aliases/NativeDataFetcherError.md)
+- [StaticPath](type-aliases/StaticPath.md)
 
 ## Variables
 

@@ -48,21 +48,15 @@ site query is available on XM Cloud and XP 10.4+
 
 ### fetchSiteInfo()
 
-> **fetchSiteInfo**(): `Promise`\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
+> **fetchSiteInfo**(`fetchOptions`?): `Promise`\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
 
 Defined in: core/types/site/graphql-siteinfo-service.d.ts:37
 
-#### Returns
+#### Parameters
 
-`Promise`\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
-
-***
-
-### fetchWithSiteQuery()
-
-> `protected` **fetchWithSiteQuery**(): `Promise`\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
-
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:38
+| Parameter | Type |
+| ------ | ------ |
+| `fetchOptions`? | `FetchOptions` |
 
 #### Returns
 
@@ -74,7 +68,7 @@ Defined in: core/types/site/graphql-siteinfo-service.d.ts:38
 
 > `protected` **getCacheClient**(): [`CacheClient`](../interfaces/CacheClient.md)\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
 
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:44
+Defined in: core/types/site/graphql-siteinfo-service.d.ts:43
 
 Gets cache client implementation
 Override this method if custom cache needs to be used
@@ -91,7 +85,7 @@ CacheClient instance
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/site/graphql-siteinfo-service.d.ts:51
+Defined in: core/types/site/graphql-siteinfo-service.d.ts:50
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

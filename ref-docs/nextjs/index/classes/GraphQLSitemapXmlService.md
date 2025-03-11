@@ -6,7 +6,7 @@
 
 # Class: GraphQLSitemapXmlService
 
-Defined in: core/types/site/graphql-sitemap-service.d.ts:27
+Defined in: core/types/site/graphql-sitemap-xml-service.d.ts:27
 
 Service that fetch the sitemaps data using Sitecore's GraphQL API.
 
@@ -16,7 +16,7 @@ Service that fetch the sitemaps data using Sitecore's GraphQL API.
 
 > **new GraphQLSitemapXmlService**(`options`): [`GraphQLSitemapXmlService`](GraphQLSitemapXmlService.md)
 
-Defined in: core/types/site/graphql-sitemap-service.d.ts:34
+Defined in: core/types/site/graphql-sitemap-xml-service.d.ts:34
 
 Creates an instance of graphQL sitemaps service with the provided options
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL sitemaps service with the provided options
 
 > **options**: [`GraphQLSitemapXmlServiceConfig`](../type-aliases/GraphQLSitemapXmlServiceConfig.md)
 
-Defined in: core/types/site/graphql-sitemap-service.d.ts:28
+Defined in: core/types/site/graphql-sitemap-xml-service.d.ts:28
 
 ## Accessors
 
@@ -46,7 +46,7 @@ Defined in: core/types/site/graphql-sitemap-service.d.ts:28
 
 > **get** `protected` **query**(): `string`
 
-Defined in: core/types/site/graphql-sitemap-service.d.ts:35
+Defined in: core/types/site/graphql-sitemap-xml-service.d.ts:35
 
 ##### Returns
 
@@ -56,11 +56,17 @@ Defined in: core/types/site/graphql-sitemap-service.d.ts:35
 
 ### fetchSitemaps()
 
-> **fetchSitemaps**(): `Promise`\<`string`[]\>
+> **fetchSitemaps**(`fetchOptions`?): `Promise`\<`string`[]\>
 
-Defined in: core/types/site/graphql-sitemap-service.d.ts:41
+Defined in: core/types/site/graphql-sitemap-xml-service.d.ts:42
 
 Fetch list of sitemaps for the site
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `fetchOptions`? | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -78,7 +84,7 @@ if the siteName is empty.
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/site/graphql-sitemap-service.d.ts:54
+Defined in: core/types/site/graphql-sitemap-xml-service.d.ts:55
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -96,7 +102,7 @@ implementation
 
 > **getSitemap**(`id`): `Promise`\<`undefined` \| `string`\>
 
-Defined in: core/types/site/graphql-sitemap-service.d.ts:47
+Defined in: core/types/site/graphql-sitemap-xml-service.d.ts:48
 
 Get sitemap file path for sitemap id
 
