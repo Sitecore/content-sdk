@@ -746,9 +746,7 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe.only('getHeadLinks', function() {
-    // let layoutData: LayoutServiceData;
-
+  describe('getHeadLinks', function() {
     const truthyValue = {
       value: '<div class="test bar"><p class="foo ck-content">bar</p></div>',
     };
