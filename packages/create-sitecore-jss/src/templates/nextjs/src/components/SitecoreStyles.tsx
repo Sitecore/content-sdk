@@ -22,7 +22,7 @@ const SitecoreStyles = ({
 
   return (
     <Head>
-      {headLinks.map(({ rel, href }) => (
+      {headLinks.map(({ rel, href }: HTMLLink) => (
         <link rel={rel} key={href} href={href} />
       ))}
     </Head>
