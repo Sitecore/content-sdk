@@ -1,7 +1,6 @@
 import {
   FetchOptions,
   Page,
-  RouteOptions,
   SitecoreClient,
   SitecoreClientInit,
 } from '@sitecore-content-sdk/core/client';
@@ -10,15 +9,12 @@ import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'n
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
 import { ModuleFactory } from '../sharedTypes/module-factory';
-import { StaticPath } from '@sitecore-content-sdk/core';
-import { GraphQLSitemapService } from '../services/graphql-sitemap-service';
 import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
 import { SiteInfo } from '../site';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
 import {
   getPersonalizedRewriteData,
   normalizePersonalizedRewrite,
-  personalizeLayout,
 } from '@sitecore-content-sdk/core/personalize';
 
 export type SitecoreNextjsClientInit = SitecoreClientInit & {
@@ -32,14 +28,9 @@ export type NextjsPage = Page & {
 
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
-  private sitemapService: GraphQLSitemapService;
   constructor(protected initOptions: SitecoreNextjsClientInit) {
     super(initOptions);
     this.componentPropsService = new ComponentPropsService();
-    this.sitemapService = new GraphQLSitemapService({
-      clientFactory: this.clientFactory,
-      sites: this.siteResolver.sites,
-    });
   }
 
   // since path rewrite we rely on is only working in nextjs
@@ -64,24 +55,25 @@ export class SitecoreNextjsClient extends SitecoreClient {
 
   async getPage(
     path: string | string[],
-    routeOptions?: RouteOptions,
+    {
+      locale,
+      site,
+    }: {
+      locale?: string;
+      site?: string;
+    },
     options?: FetchOptions
   ): Promise<NextjsPage | null> {
-    const site = routeOptions?.site || this.resolveSiteFromPath(path).name;
+    site = site || this.resolveSiteFromPath(path).name;
     const resolvedPath = this.parsePath(path);
-    const page = await super.getPage(resolvedPath, { locale: routeOptions?.locale, site }, options);
-    if (page) {
-      // Get variant(s) for personalization (from path), must ensure path is of type strin
-      const personalizeData = getPersonalizedRewriteData(super.parsePath(path));
+    // Get variant(s) for personalization (from path), must ensure path is of type string
+    const personalizeData = getPersonalizedRewriteData(super.parsePath(path));
+    const page = await super.getPage(
+      resolvedPath,
+      { locale, site, personalize: personalizeData },
+      options
+    );
 
-      // Modify layoutData to use specific variant(s) instead of default
-      // This will also set the variantId on the Sitecore context so that it is accessible here
-      personalizeLayout(
-        page.layout,
-        personalizeData.variantId,
-        personalizeData.componentVariantIds
-      );
-    }
     return page;
   }
 
@@ -132,15 +124,5 @@ export class SitecoreNextjsClient extends SitecoreClient {
     }
 
     return componentProps;
-  }
-
-  /**
-   * Retrieves the static paths for pages based on the given languages.
-   * @param {string[]} [languages] - An optional array of language codes to generate paths for.
-   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
-   * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
-   */
-  async getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
-    return await this.sitemapService.fetchSitemap(languages || [], fetchOptions);
   }
 }

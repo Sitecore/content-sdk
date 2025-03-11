@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import nock from 'nock';
-import { GraphQLSitemapXmlService } from './graphql-sitemap-service';
+import { GraphQLSitemapXmlService } from './graphql-sitemap-xml-service';
 import { siteNameError } from '../constants';
 import { GraphQLRequestClient } from '../graphql-request-client';
 

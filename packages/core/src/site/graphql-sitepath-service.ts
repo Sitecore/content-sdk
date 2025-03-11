@@ -1,12 +1,8 @@
-﻿import {
-  FetchOptions,
-  GraphQLClient,
-  GraphQLRequestClientFactory,
-  PageInfo,
-} from '@sitecore-content-sdk/core/client';
-import { debug, StaticPath } from '@sitecore-content-sdk/core';
-import { getPersonalizedRewrite } from '@sitecore-content-sdk/core/personalize';
-import { getSiteRewrite, SiteInfo } from '@sitecore-content-sdk/core/site';
+﻿import { FetchOptions, GraphQLClient, GraphQLRequestClientFactory, PageInfo } from '../client';
+import { StaticPath } from '../models';
+import debug from '../debug';
+import { getPersonalizedRewrite } from '../personalize';
+import { getSiteRewrite, SiteInfo } from '../site';
 
 /** @private */
 export const languageError = 'The list of languages cannot be empty';
@@ -128,9 +124,9 @@ export type RouteListQueryResult = {
 };
 
 /**
- * Configuration options for @see GraphQLSitemapService instances
+ * Configuration options for @see GraphQLSitePathService instances
  */
-export interface GraphQLSitemapServiceConfig
+export interface GraphQLSitePathServiceConfig
   extends Omit<SiteRouteQueryVariables, 'language' | 'siteName'> {
   /**
    * A flag for whether to include personalized routes in service output.
@@ -152,14 +148,14 @@ export interface GraphQLSitemapServiceConfig
  * This list is used for SSG and Export functionality.
  * @mixes SearchQueryService<PageListQueryResult>
  */
-export class GraphQLSitemapService {
+export class GraphQLSitePathService {
   private _graphQLClient: GraphQLClient;
 
   /**
    * Creates an instance of graphQL sitemap service with the provided options
-   * @param {GraphQLSitemapServiceConfig} options instance
+   * @param {GraphQLSitePathServiceConfig} options instance
    */
-  constructor(public options: GraphQLSitemapServiceConfig) {
+  constructor(public options: GraphQLSitePathServiceConfig) {
     this._graphQLClient = this.getGraphQLClient();
   }
 
@@ -186,7 +182,7 @@ export class GraphQLSitemapService {
    * @throws {RangeError} if the list of languages is empty.
    * @throws {RangeError} if the any of the languages is an empty string.
    */
-  async fetchSitemap(languages: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
+  async fetchSiteRoutes(languages: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
     const formatPath = (path: string[], locale: string) => ({
       params: {
         path,

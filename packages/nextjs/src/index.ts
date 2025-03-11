@@ -64,9 +64,9 @@ export { ModuleFactory, Module } from './sharedTypes/module-factory';
 export { ComponentPropsService } from './services/component-props-service';
 
 export {
-  GraphQLSitemapService,
-  GraphQLSitemapServiceConfig,
-} from './services/graphql-sitemap-service';
+  GraphQLSitePathService,
+  GraphQLSitePathServiceConfig,
+} from '@sitecore-content-sdk/core/site';
 
 export { StaticPath } from '@sitecore-content-sdk/core';
 
