@@ -48,7 +48,7 @@ export type Page = {
   headLinks: HTMLLink[];
 };
 
-type PageOptions = Partial<RouteOptions> & {
+export type PageOptions = Partial<RouteOptions> & {
   personalize?: PersonalizedRewriteData;
 };
 

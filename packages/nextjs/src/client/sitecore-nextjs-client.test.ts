@@ -6,6 +6,7 @@ import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
 import * as siteTools from '@sitecore-content-sdk/core/site';
 import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
 import { GetServerSidePropsContext } from 'next';
+import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
 
 describe('SitecoreClient', () => {
@@ -92,6 +93,55 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).editingService = editingServiceStub;
     (sitecoreClient as any).siteResolver = siteResolverStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
+  });
+
+  describe('getPage', () => {
+    it('should personalize page layout when variants present in path', async () => {
+      const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}mountain_bike_audience/test/path`;
+      const locale = 'en-US';
+      const testLayoutData = structuredClone(layoutData);
+
+      const siteInfo = {
+        name: 'default-site',
+        hostName: 'example.com',
+        language: 'en',
+      };
+      siteResolverStub.getByName.returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
+      layoutServiceStub.fetchLayoutData.returns(testLayoutData);
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
+
+      const result = await sitecoreClient.getPage(path, { locale });
+
+      expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
+        'jss-main': [...componentsWithExperiencesArray],
+      });
+    });
+
+    it('should use personalize details passed in page options over variants present in path', async () => {
+      const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}sand_bike_audience/test/path`;
+      const locale = 'en-US';
+      const testLayoutData = structuredClone(layoutData);
+
+      const siteInfo = {
+        name: 'default-site',
+        hostName: 'example.com',
+        language: 'en',
+      };
+      siteResolverStub.getByName.returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
+      layoutServiceStub.fetchLayoutData.returns(testLayoutData);
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
+
+      const result = await sitecoreClient.getPage(path, {
+        locale,
+        personalize: { variantId: 'variant2', componentVariantIds: ['mountain_bike_audience'] },
+      });
+
+      expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
+        'jss-main': [...componentsWithExperiencesArray],
+      });
+    });
   });
 
   describe('resolveSiteFromPath', () => {
