@@ -62,7 +62,10 @@ export interface BaseSitecoreClient {
     pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
-  getDictionary(pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<DictionaryPhrases>;
+  getDictionary(
+    routeOptions?: RouteOptions,
+    fetchOptions?: FetchOptions
+  ): Promise<DictionaryPhrases>;
   getErrorPages(
     routeOptions?: RouteOptions,
     fetchOptions?: FetchOptions
@@ -243,22 +246,24 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves dictionary phrases for a given site and locale.
-   * @param {PageOptions} pageOptions - Route options containing language and site name to load dictionary for
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   * @returns {DictionaryPhrases} A promise that resolves to the dictionary phrases.
+   * @param {RouteOptions} [routeOptions] - Route options containing language and site name to load dictionary for
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   
+   * @returns {DictionaryPhrases} A promise that resolves to the dictionary phrases.
    */
   async getDictionary(
-    pageOptions?: PageOptions,
+    routeOptions?: Partial<RouteOptions>,
     fetchOptions?: FetchOptions
   ): Promise<DictionaryPhrases> {
-    const locale = pageOptions?.locale || this.initOptions.defaultLanguage;
-    const site = pageOptions?.site || this.initOptions.defaultSite;
+    const locale = routeOptions?.locale || this.initOptions.defaultLanguage;
+    const site = routeOptions?.site || this.initOptions.defaultSite;
     return await this.dictionaryService.fetchDictionaryData(locale, site, fetchOptions);
   }
 
   /**
    * Retrieves error pages for a given site and locale.
    * @param {RouteOptions} routeOptions - Route options containing language and site name to load error pages
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   * @returns {ErrorPages | null} A promise that resolves to the error pages or null if not found.
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @returns {ErrorPages | null} A promise that resolves to the error pages or null if not found.
    */
   async getErrorPages(
     routeOptions?: RouteOptions,
@@ -323,7 +328,8 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Get component library page details for Component Library mode of your app
    * @param {ComponentLibraryRenderPreviewData} componentLibData preview data set in 'library' mode of the app
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   * @returns {Page} preview page for Component Library
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @returns {Page} preview page for Component Library
    */
   async getComponentLibraryData(
     componentLibData: ComponentLibraryRenderPreviewData,
@@ -389,7 +395,8 @@ export class SitecoreClient implements BaseSitecoreClient {
    * Returns an instance of the requested service.
    * If `fetchOptions` are provided, a new instance is created; otherwise, the default instance is used.
    * @param {new (config: any) => T} ServiceConstructor - The constructor for the service class.
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   * @returns {T} An instance of the requested service.
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   
+   * @returns {T} An instance of the requested service.
    */
   protected getServiceInstance<T>(
     ServiceConstructor: new (config: any) => T,
