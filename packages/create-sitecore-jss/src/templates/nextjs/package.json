@@ -39,7 +39,6 @@
   },
   "devDependencies": {
     "@sitecore-content-sdk/cli": "<%- version %>",
-    "@sitecore-content-sdk/dev-tools": "<%- version %>",
     "@types/node": "^22.9.0",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.0.5",
