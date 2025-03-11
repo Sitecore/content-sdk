@@ -18,10 +18,6 @@ import {
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/core/personalize';
 
-export type SitecoreNextjsClientInit = SitecoreClientInit & {
-  moduleFactory: ModuleFactory;
-};
-
 export type NextjsPage = Page & {
   componentProps?: ComponentPropsCollection;
   notFound?: boolean;
@@ -29,7 +25,7 @@ export type NextjsPage = Page & {
 
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
-  constructor(protected initOptions: SitecoreNextjsClientInit) {
+  constructor(protected initOptions: SitecoreClientInit) {
     super(initOptions);
     this.componentPropsService = new ComponentPropsService();
   }
@@ -89,11 +85,13 @@ export class SitecoreNextjsClient extends SitecoreClient {
    * and returns resulting props from components
    * @param {LayoutServiceData} layoutData layout data to parse compnents from
    * @param {PreviewData} context Nextjs preview data
+   * @param {ModuleFactory} moduleFactory module factory to use for component parsing
    * @returns {ComponentPropsCollection} component props
    */
   async getComponentData(
     layoutData: LayoutServiceData,
-    context: GetServerSidePropsContext | GetStaticPropsContext
+    context: GetServerSidePropsContext | GetStaticPropsContext,
+    moduleFactory: ModuleFactory
   ): Promise<ComponentPropsCollection> {
     let componentProps: ComponentPropsCollection = {};
     if (!layoutData.sitecore.route) return componentProps;
@@ -101,7 +99,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
     componentProps = await this.componentPropsService.fetchComponentProps({
       layoutData: layoutData,
       context,
-      moduleFactory: this.initOptions.moduleFactory,
+      moduleFactory,
     });
 
     const errors = Object.keys(componentProps)

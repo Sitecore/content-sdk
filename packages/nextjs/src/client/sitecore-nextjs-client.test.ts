@@ -37,7 +37,6 @@ describe('SitecoreClient', () => {
     defaultLanguage: 'en',
     layout: { formatLayoutQuery: sandbox.stub() },
     dictionary: { caching: { enabled: true, timeout: 60000 } },
-    moduleFactory,
   };
 
   let sitecoreClient = new SitecoreNextjsClient(defaultInitOptions);
@@ -220,10 +219,8 @@ describe('SitecoreClient', () => {
       };
 
       const moduleFactoryStub = sandbox.stub().returns(mockComponent);
-      // eslint-disable-next-line
-      sitecoreClient['initOptions'].moduleFactory = moduleFactoryStub;
 
-      const result = await sitecoreClient.getComponentData(layoutData, context);
+      const result = await sitecoreClient.getComponentData(layoutData, context, moduleFactoryStub);
 
       expect(result).to.deep.equal({
         'test-uid': { props: { data: 'test-data' } },
