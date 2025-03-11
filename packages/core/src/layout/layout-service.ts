@@ -1,6 +1,5 @@
-import * as models from './models';
+import { RouteOptions, LayoutServiceData } from './models';
 import { SitecoreServiceBase } from '../sitecore-service-base';
-import { RouteOptions } from '../client';
 import { FetchOptions } from '../models';
 
 /**
@@ -11,5 +10,5 @@ export abstract class LayoutServiceBase extends SitecoreServiceBase {
     itemPath: string,
     routeOptions: RouteOptions,
     fetchOptions: FetchOptions
-  ): Promise<models.LayoutServiceData>;
+  ): Promise<LayoutServiceData>;
 }

@@ -11,6 +11,7 @@ import {
   getContentStylesheetLink,
   GraphQLLayoutService,
   LayoutServiceData,
+  RouteOptions,
 } from '../layout';
 import { HTMLLink, FetchOptions } from '../models';
 import { getGroomedVariantIds } from '../personalize/utils';
@@ -51,14 +52,6 @@ export interface BaseSitecoreClient {
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
 }
-
-/**
- * Contract for additional route options when requesting layout data
- */
-export type RouteOptions = {
-  site?: string;
-  locale?: string;
-};
 
 /**
  * This is a generic content client that can be used by any framework.

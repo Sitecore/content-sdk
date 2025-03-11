@@ -74,18 +74,17 @@ export class GraphQLErrorPagesService {
 
   /**
    * Fetch list of error pages for the site
-   * @param {string} site  The site name
+   * @param {string} siteName  The site name
    * @param {string} locale  The language
    * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {ErrorPages} list of url's error pages
    * @throws {Error} if the siteName is empty.
    */
   async fetchErrorPages(
-    site?: string,
+    siteName: string,
     locale?: string,
     fetchOptions?: FetchOptions
   ): Promise<ErrorPages | null> {
-    const siteName: string = site || this.options.defaultSite;
     const language: string = locale || this.options.language;
 
     if (!siteName) {

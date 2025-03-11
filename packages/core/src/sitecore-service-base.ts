@@ -2,18 +2,17 @@ import { GraphQLClient, GraphQLRequestClientFactory } from './graphql-request-cl
 import { SitecoreConfigInput } from './config';
 import debug from './debug';
 
-export type GraphQLServiceConfig = Pick<SitecoreConfigInput, 'retries'> &
-  Required<Pick<SitecoreConfigInput, 'defaultSite'>> & {
-    /**
-     * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
-     * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
-     */
-    clientFactory: GraphQLRequestClientFactory;
-    /**
-     * Optional debug logger override
-     */
-    debugger?: debug.Debugger;
-  };
+export type GraphQLServiceConfig = Pick<SitecoreConfigInput, 'retries'> & {
+  /**
+   * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
+   * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
+   */
+  clientFactory: GraphQLRequestClientFactory;
+  /**
+   * Optional debug logger override
+   */
+  debugger?: debug.Debugger;
+};
 
 /**
  * Base abstraction to implement custom layout service

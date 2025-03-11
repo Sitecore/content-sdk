@@ -156,11 +156,9 @@ export class GraphQLDictionaryService implements DictionaryService, CacheClient<
    */
   async fetchDictionaryData(
     language: string,
-    site?: string,
+    site: string,
     fetchOptions?: FetchOptions
   ): Promise<DictionaryPhrases> {
-    site = site || this.options.defaultSite;
-
     const cacheKey = site + language;
     const cachedValue = this.getCacheValue(cacheKey);
     if (cachedValue) {

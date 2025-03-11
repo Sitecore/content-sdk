@@ -1,9 +1,8 @@
-import { LayoutServiceData } from './models';
+import { LayoutServiceData, RouteOptions } from './models';
 import debug from '../debug';
 import { SitecoreConfigInput } from '../config';
 import { GraphQLServiceConfig } from '../sitecore-service-base';
 import { LayoutServiceBase } from './layout-service';
-import { RouteOptions } from '../client';
 import { FetchOptions } from '../models';
 
 export const GRAPHQL_LAYOUT_QUERY_NAME = 'JssLayoutQuery';
@@ -33,10 +32,10 @@ export class GraphQLLayoutService extends LayoutServiceBase {
    */
   async fetchLayoutData(
     itemPath: string,
-    routeOptions?: RouteOptions,
+    routeOptions: RouteOptions,
     fetchOptions?: FetchOptions
   ): Promise<LayoutServiceData> {
-    const site = routeOptions?.site || this.serviceConfig.defaultSite;
+    const site = routeOptions.site;
     const query = this.getLayoutQuery(itemPath, site, routeOptions?.locale);
     debug.layout('fetching layout data for %s %s %s', itemPath, routeOptions?.locale, site);
     const data = await this.graphQLClient.request<{

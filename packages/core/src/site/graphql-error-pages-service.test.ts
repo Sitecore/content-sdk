@@ -60,10 +60,9 @@ describe('GraphQLErrorPagesService', () => {
 
       const service = new GraphQLErrorPagesService({
         clientFactory,
-        defaultSite: '',
         language,
       });
-      await service.fetchErrorPages().catch((error: Error) => {
+      await service.fetchErrorPages('').catch((error: Error) => {
         expect(error.message).to.equal(siteNameError);
       });
 
@@ -75,10 +74,9 @@ describe('GraphQLErrorPagesService', () => {
 
       const service = new GraphQLErrorPagesService({
         clientFactory,
-        defaultSite,
         language,
       });
-      const errorPages = await service.fetchErrorPages();
+      const errorPages = await service.fetchErrorPages(defaultSite);
 
       expect(errorPages).to.deep.equal(mockErrorPages);
 
@@ -94,12 +92,11 @@ describe('GraphQLErrorPagesService', () => {
       });
 
       const service = new GraphQLErrorPagesService({
-        defaultSite,
         language,
         clientFactory,
       });
 
-      const errorPages = await service.fetchErrorPages();
+      const errorPages = await service.fetchErrorPages(defaultSite);
 
       expect(errorPages).to.deep.equal(mockErrorPages);
 
@@ -111,10 +108,9 @@ describe('GraphQLErrorPagesService', () => {
 
       const service = new GraphQLErrorPagesService({
         clientFactory,
-        defaultSite,
         language,
       });
-      const errorPages = await service.fetchErrorPages();
+      const errorPages = await service.fetchErrorPages(defaultSite);
 
       // eslint-disable-next-line no-unused-expressions
       expect(errorPages).to.be.null;

@@ -16,6 +16,7 @@ export {
   EditMode,
   FieldMetadata,
   RenderingType,
+  RouteOptions,
   EDITING_COMPONENT_PLACEHOLDER,
   EDITING_COMPONENT_ID,
 } from './models';

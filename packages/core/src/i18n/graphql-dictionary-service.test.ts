@@ -36,22 +36,20 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      defaultSite,
       cacheEnabled: true,
       cacheTimeout: 2,
     });
 
-    const result1 = await service.fetchDictionaryData('en');
+    const result1 = await service.fetchDictionaryData('en', defaultSite);
     expect(result1).to.have.all.keys('foo', 'bar');
 
-    const result2 = await service.fetchDictionaryData('en');
+    const result2 = await service.fetchDictionaryData('en', defaultSite);
     expect(result2).to.have.all.keys('foo', 'bar');
   });
 
   it('should provide a default GraphQL client', () => {
     const service = new TestService({
       clientFactory,
-      defaultSite,
       cacheEnabled: false,
     });
 
@@ -93,11 +91,10 @@ describe('GraphQLDictionaryService', () => {
       .reply(200, dictionarySiteQueryResponse.singlepage);
 
     const service = new GraphQLDictionaryService({
-      defaultSite,
       cacheEnabled: false,
       clientFactory,
     });
-    const result = await service.fetchDictionaryData('en');
+    const result = await service.fetchDictionaryData('en', defaultSite);
     expect(result.foo).to.equal('foo');
     expect(result.bar).to.equal('bar');
   });
@@ -114,11 +111,10 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      defaultSite,
       cacheEnabled: false,
       pageSize: undefined,
     });
-    const result = await service.fetchDictionaryData('en');
+    const result = await service.fetchDictionaryData('en', defaultSite);
     expect(result).to.have.all.keys('foo', 'bar');
   });
 
@@ -136,11 +132,10 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      defaultSite,
       cacheEnabled: false,
       pageSize: customPageSize,
     });
-    const result = await service.fetchDictionaryData('en');
+    const result = await service.fetchDictionaryData('en', defaultSite);
     expect(result).to.have.all.keys('foo', 'bar', 'baz');
   });
 
@@ -153,12 +148,10 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      defaultSite,
       cacheEnabled: false,
-      useSiteQuery: true,
     });
 
-    await service.fetchDictionaryData('en').catch((error) => {
+    await service.fetchDictionaryData('en', defaultSite).catch((error) => {
       expect(error.response.status).to.equal(401);
       expect(error.response.error).to.equal('whoops');
     });
@@ -177,22 +170,20 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      defaultSite,
       cacheEnabled: false,
     });
 
-    const result = await service.fetchDictionaryData('en');
+    const result = await service.fetchDictionaryData('en', defaultSite);
     expect(result).to.deep.equal({});
   });
 
   it('should throw error if siteName is not provided', async () => {
     const service = new GraphQLDictionaryService({
       clientFactory,
-      defaultSite: '',
       cacheEnabled: false,
     });
 
-    await service.fetchDictionaryData('en').catch((error) => {
+    await service.fetchDictionaryData('en', '').catch((error) => {
       expect(error.message).to.equal('The site name must be a non-empty string');
     });
   });
@@ -200,11 +191,10 @@ describe('GraphQLDictionaryService', () => {
   it('should throw error if language is not provided', async () => {
     const service = new GraphQLDictionaryService({
       clientFactory,
-      defaultSite,
       cacheEnabled: false,
     });
 
-    await service.fetchDictionaryData('').catch((error) => {
+    await service.fetchDictionaryData('', defaultSite).catch((error) => {
       expect(error.message).to.equal('The language must be a non-empty string');
     });
   });
@@ -244,7 +234,6 @@ describe('GraphQLDictionaryService', () => {
 
     const service = new GraphQLDictionaryService({
       clientFactory,
-      defaultSite,
       cacheEnabled: false,
     });
 

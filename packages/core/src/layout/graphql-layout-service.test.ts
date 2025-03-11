@@ -11,6 +11,7 @@ use(spies);
 describe('GraphQLLayoutService', () => {
   const apiKey = '0FBFF61E-267A-43E3-9252-B77E71CEE4BA';
   const endpoint = 'http://sctest/graphql';
+  const site = 'supersite';
 
   const clientFactory = GraphQLRequestClient.createClientFactory({
     endpoint,
@@ -61,11 +62,10 @@ describe('GraphQLLayoutService', () => {
     });
 
     const service = new GraphQLLayoutService({
-      defaultSite: 'supersite',
       clientFactory,
     });
 
-    const data = await service.fetchLayoutData('/styleguide', { locale: 'da-DK' });
+    const data = await service.fetchLayoutData('/styleguide', { locale: 'da-DK', site });
 
     expect(data).to.deep.equal({
       sitecore: {
@@ -116,10 +116,9 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      defaultSite: 'supersite',
     });
 
-    const data = await service.fetchLayoutData('/styleguide');
+    const data = await service.fetchLayoutData('/styleguide', { site });
 
     expect(data).to.deep.equal({
       sitecore: {
@@ -170,12 +169,11 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      defaultSite: 'supersite',
       formatLayoutQuery: (siteName, itemPath, locale) =>
         `layout111(site:"${siteName}",route:"${itemPath}",language:"${locale || 'en'}")`,
     });
 
-    const data = await service.fetchLayoutData('/styleguide');
+    const data = await service.fetchLayoutData('/styleguide', { site });
 
     expect(data).to.deep.equal({
       sitecore: {
@@ -207,10 +205,9 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      defaultSite: 'supersite',
     });
 
-    const data = await service.fetchLayoutData('/styleguide', { locale: 'da-DK' });
+    const data = await service.fetchLayoutData('/styleguide', { locale: 'da-DK', site });
 
     expect(data).to.deep.equal({
       sitecore: {
@@ -236,10 +233,9 @@ describe('GraphQLLayoutService', () => {
 
     const service = new GraphQLLayoutService({
       clientFactory,
-      defaultSite: 'supersite',
     });
 
-    await service.fetchLayoutData('/styleguide', { locale: 'da-DK' }).catch((error) => {
+    await service.fetchLayoutData('/styleguide', { locale: 'da-DK', site }).catch((error) => {
       expect(error.response.status).to.equal(401);
       expect(error.response.error).to.equal('whoops');
     });
@@ -306,7 +302,6 @@ describe('GraphQLLayoutService', () => {
     });
 
     const service = new GraphQLLayoutService({
-      defaultSite: 'supersite',
       clientFactory,
     });
 
