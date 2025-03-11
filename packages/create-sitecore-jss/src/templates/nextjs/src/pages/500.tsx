@@ -32,7 +32,7 @@ const Custom500 = (props: SitecorePageProps): JSX.Element => {
       componentFactory={componentBuilder.getComponentFactory()}
       layoutData={props.layout}
     >
-      <Layout layoutData={props.layout} headLinks={props.headLinks} />
+      <Layout layoutData={props.layout} />
     </SitecoreContext>
   );
 };
@@ -54,7 +54,6 @@ export const getStaticProps: GetStaticProps = async context => {
 
   return {
     props: {
-      headLinks: [],
       layoutData: resultErrorPages?.serverErrorPage?.rendered || null,
     },
   };

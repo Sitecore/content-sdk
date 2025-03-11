@@ -1,8 +1,7 @@
-﻿import { useSitecoreContext } from '@sitecore-jss/next/site';
-import Head from 'next/head';
+﻿import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import client from 'lib/sitecore-client';
-import { HeadLink } from '@sitecore-jss/core';
+import { LayoutServiceData, HTMLLink } from '@sitecore-content-sdk/nextjs';
 
 /**
  * SitecoreStyles component
@@ -15,8 +14,14 @@ import { HeadLink } from '@sitecore-jss/core';
  * @param {boolean} [props.enableStyles=true] - Flag to enable or disable component themes.
  * @returns {JSX.Element | null} The rendered `<Head>` element with styles, or `null` if no styles should be applied.
  */
-const SitecoreStyles = ({ layoutData, enableStyles = true }) => {
-  const [headLinks, setHeadLinks] = useState<HeadLink[]>([]);
+const SitecoreStyles = ({
+  layoutData,
+  enableStyles = true,
+}: {
+  layoutData: LayoutServiceData;
+  enableStyles?: boolean;
+}) => {
+  const [headLinks, setHeadLinks] = useState<HTMLLink[]>([]);
 
   useEffect(() => {
     if (layoutData) {

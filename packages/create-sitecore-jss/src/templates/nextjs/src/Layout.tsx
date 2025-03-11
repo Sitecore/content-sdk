@@ -3,13 +3,12 @@
  */
 import React from 'react';
 import Head from 'next/head';
-import { Placeholder, LayoutServiceData, Field, HTMLLink } from '@sitecore-content-sdk/nextjs';
+import { Placeholder, LayoutServiceData, Field } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/SitecoreStyles';
 
 interface LayoutProps {
   layoutData: LayoutServiceData;
-  headLinks: HTMLLink[];
 }
 
 interface RouteFields {

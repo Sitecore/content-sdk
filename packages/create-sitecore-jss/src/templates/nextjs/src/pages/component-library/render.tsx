@@ -9,13 +9,9 @@ import {
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
 import client from 'lib/sitecore-client';
+import SitecoreStyles from 'src/components/SitecoreStyles';
 
-const ComponentLibrary = ({
-  notFound,
-  componentProps,
-  layout,
-  headLinks,
-}: SitecorePageProps): JSX.Element => {
+const ComponentLibrary = ({ notFound, componentProps, layout }: SitecorePageProps): JSX.Element => {
   if (notFound) {
     return <NotFound />;
   }
@@ -28,17 +24,15 @@ const ComponentLibrary = ({
         <Head>
           <title>Sitecore Component Library</title>
           <link rel="icon" href="/favicon.ico" />
-          {headLinks.map((headLink) => (
-            <link rel={headLink.rel} key={headLink.href} href={headLink.href} />
-          ))}
         </Head>
+        <SitecoreStyles layoutData={layoutData} />
         <ComponentLibraryLayout {...layout} />
       </SitecoreContext>
     </ComponentPropsContext>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async context => {
   if (context.preview) {
     const page = await client.getPreview(context.previewData);
     return {
