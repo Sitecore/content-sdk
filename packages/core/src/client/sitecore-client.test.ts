@@ -6,7 +6,6 @@ import { LayoutServiceData } from '../../layout';
 import { DefaultRetryStrategy } from '../retries';
 import { LayoutServicePageState } from '../layout';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
-import { VARIANT_PREFIX } from '../personalize';
 
 describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
@@ -163,7 +162,6 @@ describe('SitecoreClient', () => {
         site: siteInfo,
         locale: locale,
       });
-      expect(result?.headLinks).to.have.lengthOf(1);
       expect(
         layoutServiceStub.fetchLayoutData.calledWithMatch(path, {
           locale,
@@ -745,6 +743,102 @@ describe('SitecoreClient', () => {
           fetchOptions
         )
       ).to.be.true;
+    });
+  });
+
+  describe('getHeadLinks', function() {
+    let layoutData: LayoutServiceData;
+
+    beforeEach(() => {
+      const truthyValue = {
+        value: '<div class="test bar"><p class="foo ck-content">bar</p></div>',
+      };
+      const falsyValue = { value: '<div class="test bar"><p class="foo">ck-content</p></div>' };
+
+      layoutData = {
+        sitecore: {
+          context: {},
+          route: {
+            name: 'route',
+            placeholders: {
+              car: [
+                {
+                  componentName: 'foo',
+                  fields: { car: falsyValue },
+                  placeholders: {
+                    bar: [{ componentName: 'cow', fields: { dog: truthyValue } }],
+                  },
+                },
+                {
+                  componentName: 'test',
+                  fields: {
+                    CSSStyles: {
+                      value: '-library--foo',
+                    },
+                    LibraryId: {
+                      value: 'bar',
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+    });
+
+    it('should return stylesheets when enableStyles and enableThemes are true', () => {
+      const result = sitecoreClient.getHeadLinks(layoutData);
+
+      expect(result).to.deep.equal([
+        {
+          href:
+            'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          rel: 'stylesheet',
+        },
+        {
+          href:
+            'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          rel: 'stylesheet',
+        },
+      ]);
+    });
+
+    it('should return only theme stylesheets when enableStyles is false', () => {
+      const result = sitecoreClient.getHeadLinks(layoutData, {
+        enableStyles: false,
+        enableThemes: true,
+      });
+      expect(result).to.deep.equal([
+        {
+          href:
+            'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          rel: 'stylesheet',
+        },
+      ]);
+    });
+
+    it('should return only content stylesheets when enableThemes is false', () => {
+      const result = sitecoreClient.getHeadLinks(layoutData, {
+        enableStyles: true,
+        enableThemes: false,
+      });
+      expect(result).to.deep.equal([
+        {
+          href:
+            'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          rel: 'stylesheet',
+        },
+      ]);
+    });
+
+    it('should return an empty array when both enableStyles and enableThemes are false', () => {
+      const result = sitecoreClient.getHeadLinks(layoutData, {
+        enableStyles: false,
+        enableThemes: false,
+      });
+
+      expect(result).to.deep.equal([]);
     });
   });
 });

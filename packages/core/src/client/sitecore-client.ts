@@ -187,35 +187,30 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
-   * Get head links for extra Sitecore scripts and styles to be loaded on a page
-   * @param {LayoutServiceData} layoutData layout data for the page
-   * @param {object} [options] options to enable/disable styles and themes
-   * @param {boolean} [options.enableStyles] Flag to enable/disable fetching of global content styles. `true` by default
-   * @param {boolean} [options.enableThemes] Flag to enable/disable fetching of component themes. `true` by default
-   * @returns {HTMLLink[]} list of head links
+   * Retrieves the head `<link>` elements for Sitecore styles and themes.
+   * @param {LayoutServiceData} layoutData - The layout data containing styles and themes.
+   * @param {object} [options] - Optional configuration for enabling styles and themes.
+   * @param {boolean} [options.enableStyles] - Whether to include content styles.
+   * @param {boolean} [options.enableThemes] - Whether to include theme styles.
+   * @returns {HTMLLink[]} An array of `<link>` elements for stylesheets.
    */
   getHeadLinks(
     layoutData: LayoutServiceData,
-    { enableStyles = true, enableThemes = true } = {}
+    options: { enableStyles?: boolean; enableThemes?: boolean } = {}
   ): HTMLLink[] {
+    const { enableStyles = true, enableThemes = true } = options;
+    const { contextId, edgeUrl } = this.initOptions.api.edge;
     const headLinks: HTMLLink[] = [];
-    const contentStyles = enableStyles
-      ? getContentStylesheetLink(
-          layoutData,
-          this.initOptions.api.edge.contextId,
-          this.initOptions.api.edge.edgeUrl
-        )
-      : null;
-    if (contentStyles) headLinks.push(contentStyles);
-    if (enableThemes) {
-      headLinks.push(
-        ...getComponentLibraryStylesheetLinks(
-          layoutData,
-          this.initOptions.api.edge.contextId,
-          this.initOptions.api.edge.edgeUrl
-        )
-      );
+
+    if (enableStyles) {
+      const contentStyles = getContentStylesheetLink(layoutData, contextId, edgeUrl);
+      if (contentStyles) headLinks.push(contentStyles);
     }
+
+    if (enableThemes) {
+      headLinks.push(...getComponentLibraryStylesheetLinks(layoutData, contextId, edgeUrl));
+    }
+
     return headLinks;
   }
 
