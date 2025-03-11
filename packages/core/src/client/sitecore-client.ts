@@ -14,7 +14,7 @@ import {
   RouteOptions,
 } from '../layout';
 import { HTMLLink, FetchOptions, StaticPath } from '../models';
-import { getGroomedVariantIds } from '../personalize/utils';
+import { getGroomedVariantIds, PersonalizedRewriteData } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
 import {
   ErrorPages,
@@ -48,6 +48,10 @@ export type Page = {
   headLinks: HTMLLink[];
 };
 
+type PageOptions = Partial<RouteOptions> & {
+  personalize?: PersonalizedRewriteData;
+};
+
 /**
  * Contract for the Sitecore Client implementations
  */
@@ -55,13 +59,10 @@ export interface BaseSitecoreClient {
   resolveSite(hostname: string): SiteInfo;
   getPage(
     path: string | string[],
-    routeOptions?: RouteOptions,
+    pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
-  getDictionary(
-    routeOptions?: RouteOptions,
-    fetchOptions?: FetchOptions
-  ): Promise<DictionaryPhrases>;
+  getDictionary(pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<DictionaryPhrases>;
   getErrorPages(
     routeOptions?: RouteOptions,
     fetchOptions?: FetchOptions
@@ -172,18 +173,18 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Get page details for a route, with layout and other details
    * @param {string} path route path
-   * @param {RouteOptions} [routeOptions] site and language details for route
+   * @param {PageOptions} [pageOptions] site, language and personalization variant details for route
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
    * @returns {Page | null} page details
    */
   async getPage(
     path: string | string[],
-    routeOptions?: Partial<RouteOptions>,
+    pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null> {
     const computedPath = this.parsePath(path);
-    const locale = routeOptions?.locale ?? this.initOptions.defaultLanguage;
-    const site = routeOptions?.site ?? this.initOptions.defaultSite;
+    const locale = pageOptions?.locale ?? this.initOptions.defaultLanguage;
+    const site = pageOptions?.site ?? this.initOptions.defaultSite;
     // Fetch layout data, passing on req/res for SSR
     const layout = await this.layoutService.fetchLayoutData(
       computedPath,
@@ -199,6 +200,15 @@ export class SitecoreClient implements BaseSitecoreClient {
       const siteInfo = this.siteResolver.getByName(site);
       // Initialize links to be inserted on the page
       const headLinks = this.getHeadLinks(layout);
+      if (pageOptions?.personalize?.variantId) {
+        // Modify layoutData to use specific variant(s) instead of default
+        // This will also set the variantId on the Sitecore context so that it is accessible here
+        personalizeLayout(
+          layout,
+          pageOptions.personalize.variantId,
+          pageOptions.personalize.componentVariantIds
+        );
+      }
       return {
         layout,
         site: siteInfo,
@@ -233,15 +243,15 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves dictionary phrases for a given site and locale.
-   * @param {RouteOptions} routeOptions - Route options containing language and site name to load dictionary for
+   * @param {PageOptions} pageOptions - Route options containing language and site name to load dictionary for
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   * @returns {DictionaryPhrases} A promise that resolves to the dictionary phrases.
    */
   async getDictionary(
-    routeOptions?: Partial<RouteOptions>,
+    pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<DictionaryPhrases> {
-    const locale = routeOptions?.locale || this.initOptions.defaultLanguage;
-    const site = routeOptions?.site || this.initOptions.defaultSite;
+    const locale = pageOptions?.locale || this.initOptions.defaultLanguage;
+    const site = pageOptions?.site || this.initOptions.defaultSite;
     return await this.dictionaryService.fetchDictionaryData(locale, site, fetchOptions);
   }
 

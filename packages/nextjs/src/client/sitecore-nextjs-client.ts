@@ -15,7 +15,6 @@ import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/
 import {
   getPersonalizedRewriteData,
   normalizePersonalizedRewrite,
-  personalizeLayout,
 } from '@sitecore-content-sdk/core/personalize';
 
 export type SitecoreNextjsClientInit = SitecoreClientInit & {
@@ -67,19 +66,14 @@ export class SitecoreNextjsClient extends SitecoreClient {
   ): Promise<NextjsPage | null> {
     site = site || this.resolveSiteFromPath(path).name;
     const resolvedPath = this.parsePath(path);
-    const page = await super.getPage(resolvedPath, { locale, site }, options);
-    if (page) {
-      // Get variant(s) for personalization (from path), must ensure path is of type strin
-      const personalizeData = getPersonalizedRewriteData(super.parsePath(path));
+    // Get variant(s) for personalization (from path), must ensure path is of type string
+    const personalizeData = getPersonalizedRewriteData(super.parsePath(path));
+    const page = await super.getPage(
+      resolvedPath,
+      { locale, site, personalize: personalizeData },
+      options
+    );
 
-      // Modify layoutData to use specific variant(s) instead of default
-      // This will also set the variantId on the Sitecore context so that it is accessible here
-      personalizeLayout(
-        page.layout,
-        personalizeData.variantId,
-        personalizeData.componentVariantIds
-      );
-    }
     return page;
   }
 
