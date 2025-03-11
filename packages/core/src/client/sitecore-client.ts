@@ -44,7 +44,7 @@ export type Page = {
   locale: string;
 };
 
-type PageOptions = Partial<RouteOptions> & {
+export type PageOptions = Partial<RouteOptions> & {
   personalize?: PersonalizedRewriteData;
 };
 

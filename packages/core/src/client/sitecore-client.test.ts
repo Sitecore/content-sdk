@@ -8,7 +8,7 @@ import { LayoutServicePageState } from '../layout';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 import { VARIANT_PREFIX } from '../personalize';
 
-describe.only('SitecoreClient', () => {
+describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
   const defaultSiteDeets = { hostName: 'http://unit.test', language: 'ua' };
   const defaultInitOptions = {
@@ -227,8 +227,8 @@ describe.only('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should personalize page layout when variants present in path', async () => {
-      const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}mountain_bike_audience/test/path`;
+    it('should personalize page layout when variants are passed in page options', async () => {
+      const path = '/test/path';
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
 
@@ -242,9 +242,10 @@ describe.only('SitecoreClient', () => {
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
       sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
-      const result = await sitecoreClient.getPage(path, { locale });
-
-      console.log([...componentsWithExperiencesArray]);
+      const result = await sitecoreClient.getPage(path, {
+        locale,
+        personalize: { variantId: 'variant1', componentVariantIds: ['mountain_bike_audience'] },
+      });
 
       expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
         'jss-main': [...componentsWithExperiencesArray],

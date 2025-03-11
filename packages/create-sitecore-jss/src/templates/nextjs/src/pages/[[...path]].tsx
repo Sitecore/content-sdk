@@ -14,7 +14,7 @@ import {
   StaticPath
   <% } -%>
 } from '@sitecore-content-sdk/nextjs';
-import { handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
+import { extractPath, handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
 import client from 'lib/sitecore-client';
 import { componentBuilder } from 'temp/componentBuilder';
 
@@ -85,12 +85,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
 <% } -%>
 let props = {};
-const path =
-    context.params === undefined
-      ? '/'
-      : Array.isArray(context.params.path)
-      ? context.params.path.join('/')
-      : context.params.path ?? '/';
+const path = extractPath(context);
   const page = context.preview
     ? await client.getPreview(context.previewData)
     : await client.getPage(path, { locale: context.locale });
