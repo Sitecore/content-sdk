@@ -13,7 +13,7 @@ import {
   LayoutServiceData,
   RouteOptions,
 } from '../layout';
-import { HTMLLink, FetchOptions } from '../models';
+import { HTMLLink, FetchOptions, RetryStrategy } from '../models';
 import { getGroomedVariantIds } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
 import { ErrorPages, SiteInfo, SiteResolver, GraphQLErrorPagesService } from '../site';
@@ -53,6 +53,15 @@ export interface BaseSitecoreClient {
   ): Promise<Page | null>;
 }
 
+export interface BaseServiceOptions {
+  defaultSite: string;
+  clientFactory: GraphQLRequestClientFactory;
+  retries: {
+    count: number;
+    retryStrategy: RetryStrategy;
+  };
+}
+
 /**
  * This is a generic content client that can be used by any framework.
  * Use it to retrieve pages, preview data, dictionary and other data
@@ -71,50 +80,19 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @param {SitecoreClientInit} initOptions initOptions for the client, containing site and Sitecore connection details
    */
   constructor(protected initOptions: SitecoreClientInit) {
-    const graphQLOptions: GraphQLClientOptions = {
-      api: this.initOptions.api,
-      retries: initOptions.retries.count,
-      retryStrategy: initOptions.retries.retryStrategy,
-    };
+    this.clientFactory = this.getClientFactory();
+    this.siteResolver = this.getSiteResolver();
 
-    this.clientFactory = createGraphQLClientFactory(graphQLOptions);
+    const baseServiceOptions = this.getBaseServiceOptions();
+
+    this.layoutService = this.getLayoutService(baseServiceOptions);
+    this.dictionaryService = this.getDictionaryService(baseServiceOptions);
+    this.editingService = this.getEditingService();
+    this.errorPagesService = this.getErrorPagesService();
+    this.componentService = this.getComponentService();
+
     this.siteResolver = new SiteResolver(initOptions.sites);
     this.editingService = new GraphQLEditingService({ clientFactory: this.clientFactory });
-
-    const baseServiceOptions = {
-      defaultSite: initOptions.defaultSite,
-      clientFactory: this.clientFactory,
-      /*
-          GraphQL endpoint may reach its rate limit with the amount of requests it receives and throw a rate limit error.
-          GraphQL Dictionary and Layout Services can handle rate limit errors from server and attempt a retry on requests.
-          For this, specify the number of 'retries' the GraphQL client will attempt.
-          By default it is set to 3. You can disable it by configuring it to 0 for this service.
-          Additionally, you have the flexibility to customize the retry strategy by passing a 'retryStrategy'.
-          By default it uses the `DefaultRetryStrategy` with exponential back-off factor of 2 and handles error codes 429,
-          502, 503, 504, 520, 521, 522, 523, 524, 'ECONNRESET', 'ETIMEDOUT' and 'EPROTO' . You can use this class or your own implementation of `RetryStrategy`.
-        */
-      retries: initOptions.retries,
-    };
-    this.layoutService = new GraphQLLayoutService({
-      ...baseServiceOptions,
-      formatLayoutQuery: initOptions.layout.formatLayoutQuery,
-    });
-    this.dictionaryService = new GraphQLDictionaryService({
-      ...baseServiceOptions,
-      cacheEnabled: initOptions.dictionary.caching.enabled,
-      cacheTimeout: initOptions.dictionary.caching.timeout,
-    });
-    this.errorPagesService = new GraphQLErrorPagesService({
-      ...this.initOptions,
-      language: initOptions.defaultLanguage,
-      clientFactory: this.clientFactory,
-    });
-
-    this.componentService = new RestComponentLayoutService({
-      apiHost: this.initOptions.api.local?.apiHost,
-      apiKey: this.initOptions.api.local?.apiKey,
-      siteName: this.initOptions.defaultSite,
-    });
   }
 
   /**
@@ -343,18 +321,63 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
-   * Returns an instance of the requested service.
-   * If `fetchOptions` are provided, a new instance is created; otherwise, the default instance is used.
-   * @param {new (config: any) => T} ServiceConstructor - The constructor for the service class.
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)   * @returns {T} An instance of the requested service.
+   * Factory methods for creating dependencies
+   * Subclasses can override these to provide custom implementations.
    */
-  protected getServiceInstance<T>(
-    ServiceConstructor: new (config: any) => T,
-    fetchOptions?: FetchOptions
-  ): T {
-    return new ServiceConstructor({
+
+  protected getBaseServiceOptions(): BaseServiceOptions {
+    return {
+      defaultSite: this.initOptions.defaultSite,
+      clientFactory: this.clientFactory,
+      retries: this.initOptions.retries,
+    };
+  }
+
+  protected getClientFactory(): GraphQLRequestClientFactory {
+    const graphQLOptions: GraphQLClientOptions = {
+      api: this.initOptions.api,
+      retries: this.initOptions.retries.count,
+      retryStrategy: this.initOptions.retries.retryStrategy,
+    };
+    return createGraphQLClientFactory(graphQLOptions);
+  }
+
+  protected getSiteResolver(): SiteResolver {
+    return new SiteResolver(this.initOptions.sites);
+  }
+
+  protected getLayoutService(baseOptions: BaseServiceOptions): GraphQLLayoutService {
+    return new GraphQLLayoutService({
+      ...baseOptions,
+      formatLayoutQuery: this.initOptions.layout.formatLayoutQuery,
+    });
+  }
+
+  protected getDictionaryService(baseOptions: BaseServiceOptions): GraphQLDictionaryService {
+    return new GraphQLDictionaryService({
+      ...baseOptions,
+      cacheEnabled: this.initOptions.dictionary.caching.enabled,
+      cacheTimeout: this.initOptions.dictionary.caching.timeout,
+    });
+  }
+
+  protected getEditingService(): GraphQLEditingService {
+    return new GraphQLEditingService({ clientFactory: this.clientFactory });
+  }
+
+  protected getErrorPagesService(): GraphQLErrorPagesService {
+    return new GraphQLErrorPagesService({
       ...this.initOptions,
-      clientFactory: createGraphQLClientFactory({ api: this.initOptions.api, ...fetchOptions }),
+      language: this.initOptions.defaultLanguage,
+      clientFactory: this.clientFactory,
+    });
+  }
+
+  protected getComponentService(): RestComponentLayoutService {
+    return new RestComponentLayoutService({
+      apiHost: this.initOptions.api.local?.apiHost,
+      apiKey: this.initOptions.api.local?.apiKey,
+      siteName: this.initOptions.defaultSite,
     });
   }
 }

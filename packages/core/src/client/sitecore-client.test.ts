@@ -7,7 +7,7 @@ import { DefaultRetryStrategy } from '../retries';
 import { LayoutServicePageState } from '../layout';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 
-describe('SitecoreClient', () => {
+describe.only('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
   const defaultSiteDeets = { hostName: 'http://unit.test', language: 'ua' };
   const defaultInitOptions = {
@@ -526,23 +526,20 @@ describe('SitecoreClient', () => {
 
       sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
-      const getServiceInstanceStub = sinon
-        .stub(sitecoreClient as any, 'getServiceInstance')
-        .callsFake((service) => service);
-
       await sitecoreClient.getPreview(previewData, fetchOptions);
 
       expect(
-        editingServiceStub.fetchEditingData.calledWith({
-          siteName: previewData.site,
-          itemId: previewData.itemId,
-          language: previewData.language,
-          version: previewData.version,
-          layoutKind: previewData.layoutKind,
-        })
+        editingServiceStub.fetchEditingData.calledWith(
+          {
+            siteName: previewData.site,
+            itemId: previewData.itemId,
+            language: previewData.language,
+            version: previewData.version,
+            layoutKind: previewData.layoutKind,
+          },
+          fetchOptions
+        )
       ).to.be.true;
-
-      getServiceInstanceStub.restore();
     });
   });
 
