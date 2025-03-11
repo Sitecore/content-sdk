@@ -1,5 +1,4 @@
 ﻿import Head from 'next/head';
-import { useEffect, useState } from 'react';
 import client from 'lib/sitecore-client';
 import { LayoutServiceData, HTMLLink } from '@sitecore-content-sdk/nextjs';
 
@@ -21,14 +20,7 @@ const SitecoreStyles = ({
   layoutData: LayoutServiceData;
   enableStyles?: boolean;
 }) => {
-  const [headLinks, setHeadLinks] = useState<HTMLLink[]>([]);
-
-  useEffect(() => {
-    if (layoutData) {
-      const links = client.getHeadLinks(layoutData);
-      setHeadLinks(links);
-    }
-  }, [layoutData]);
+  const headLinks = client.getHeadLinks(layoutData);
 
   if (!headLinks || headLinks.length === 0 || !enableStyles) {
     return null;
