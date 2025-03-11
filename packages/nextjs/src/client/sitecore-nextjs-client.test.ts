@@ -4,10 +4,9 @@ import { SitecoreNextjsClient } from './sitecore-nextjs-client';
 import { ComponentBuilder } from '../ComponentBuilder';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
 import * as siteTools from '@sitecore-content-sdk/core/site';
-import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
 import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
 import { GetServerSidePropsContext } from 'next';
-import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
+import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
 
 describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
@@ -120,49 +119,23 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getPage', () => {
-    it('should personalize page layout when variants present in path', async () => {
-      const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}mountain_bike_audience/test/path`;
-      const locale = 'en-US';
-      const testLayoutData = structuredClone(layoutData);
-
-      const siteInfo = {
-        name: 'default-site',
-        hostName: 'example.com',
-        language: 'en',
-      };
-      siteResolverStub.getByName.returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
-      layoutServiceStub.fetchLayoutData.returns(testLayoutData);
-      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
-
-      const result = await sitecoreClient.getPage(path, { locale });
-
-      expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
-        'jss-main': [...componentsWithExperiencesArray],
-      });
-    });
-  });
-
   describe('parsePath', () => {
-    describe('parsePath', () => {
-      it('should return string path when accepting string[] path', () => {
-        const path = ['/some', 'path'];
-        const expectedPath = '/some/path';
+    it('should return string path when accepting string[] path', () => {
+      const path = ['/some', 'path'];
+      const expectedPath = '/some/path';
 
-        const result = sitecoreClient.parsePath(path);
+      const result = sitecoreClient.parsePath(path);
 
-        expect(result).to.equal(expectedPath);
-      });
+      expect(result).to.equal(expectedPath);
+    });
 
-      it('should strip site and variant prefixes from path', () => {
-        const path = `/${SITE_PREFIX}site1/${VARIANT_PREFIX}variant1/some/path`;
-        const expectedPath = '/some/path';
+    it('should strip site and variant prefixes from path', () => {
+      const path = `/${SITE_PREFIX}site1/${VARIANT_PREFIX}variant1/some/path`;
+      const expectedPath = '/some/path';
 
-        const result = sitecoreClient.parsePath(path);
+      const result = sitecoreClient.parsePath(path);
 
-        expect(result).to.equal(expectedPath);
-      });
+      expect(result).to.equal(expectedPath);
     });
   });
 

@@ -6,6 +6,7 @@ import { LayoutServiceData } from '../../layout';
 import { DefaultRetryStrategy } from '../retries';
 import { LayoutServicePageState } from '../layout';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
+import { VARIANT_PREFIX } from '../personalize';
 
 describe.only('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
@@ -224,6 +225,30 @@ describe.only('SitecoreClient', () => {
           site: siteInfo.name,
         })
       ).to.be.true;
+    });
+
+    it('should personalize page layout when variants present in path', async () => {
+      const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}mountain_bike_audience/test/path`;
+      const locale = 'en-US';
+      const testLayoutData = structuredClone(layoutData);
+
+      const siteInfo = {
+        name: 'default-site',
+        hostName: 'example.com',
+        language: 'en',
+      };
+      siteResolverStub.getByName.returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
+      layoutServiceStub.fetchLayoutData.returns(testLayoutData);
+      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
+
+      const result = await sitecoreClient.getPage(path, { locale });
+
+      console.log([...componentsWithExperiencesArray]);
+
+      expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
+        'jss-main': [...componentsWithExperiencesArray],
+      });
     });
 
     it('should pass fetchOptions to layoutService when calling getPage', async () => {

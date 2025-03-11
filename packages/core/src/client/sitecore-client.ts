@@ -62,10 +62,7 @@ export interface BaseSitecoreClient {
     pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
-  getDictionary(
-    routeOptions?: RouteOptions,
-    fetchOptions?: FetchOptions
-  ): Promise<DictionaryPhrases>;
+  getDictionary(pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<DictionaryPhrases>;
   getErrorPages(
     routeOptions?: RouteOptions,
     fetchOptions?: FetchOptions
@@ -116,7 +113,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     this.errorPagesService = this.getErrorPagesService();
     this.componentService = this.getComponentService();
     this.sitePathService = this.getSitePathService();
-
     this.siteResolver = new SiteResolver(initOptions.sites);
     this.editingService = new GraphQLEditingService({ clientFactory: this.clientFactory });
   }
