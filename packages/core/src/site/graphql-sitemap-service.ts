@@ -54,6 +54,7 @@ export class GraphQLSitemapXmlService {
   /**
    * Fetch list of sitemaps for the site
    * @returns {string[]} list of sitemap paths
+   * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @throws {Error} if the siteName is empty.
    */
   async fetchSitemaps(fetchOptions?: FetchOptions): Promise<string[]> {

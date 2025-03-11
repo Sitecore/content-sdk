@@ -1,5 +1,5 @@
-import { Debugger } from "debug";
-import { SitecoreConfigInput } from "./config";
+import { Debugger } from 'debug';
+import { SitecoreConfigInput } from './config';
 
 /**
  * Html <link> tag data model

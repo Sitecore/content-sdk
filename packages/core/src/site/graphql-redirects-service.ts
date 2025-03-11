@@ -76,6 +76,7 @@ export class GraphQLRedirectsService {
    * Fetch an array of redirects from API
    * @param {string} siteName site name
    * @returns Promise<RedirectInfo[]>
+   * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @throws {Error} if the siteName is empty.
    */
   async fetchRedirects(siteName: string, fetchOptions?: FetchOptions): Promise<RedirectInfo[]> {

@@ -73,7 +73,11 @@ export class GraphQLSiteInfoService {
       return [];
     }
 
-    const response = await this.graphQLClient.request<GraphQLSiteInfoResponse>(this.siteQuery, {}, fetchOptions);
+    const response = await this.graphQLClient.request<GraphQLSiteInfoResponse>(
+      this.siteQuery,
+      {},
+      fetchOptions
+    );
     const results = response?.site?.siteInfoCollection?.reduce<SiteInfo[]>((result, current) => {
       // filter out built in website
       current.name !== 'website' &&

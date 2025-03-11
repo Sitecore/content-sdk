@@ -100,7 +100,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
   /**
    * Parses components from nextjs component factory and layoutData, executes getServerProps/getStaticProps methods
    * and returns resulting props from components
-   * @param {LayoutServiceData} layoutData layout data to parse compnents from 
+   * @param {LayoutServiceData} layoutData layout data to parse compnents from
    * @param {PreviewData} context Nextjs preview data
    * @returns {ComponentPropsCollection} component props
    */
