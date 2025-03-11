@@ -19,7 +19,7 @@ import client from 'lib/sitecore-client';
 import { componentBuilder } from 'temp/componentBuilder';
 
 
-const SitecorePage = ({ notFound, componentProps, layout, headLinks }: SitecorePageProps): JSX.Element => {
+const SitecorePage = ({ notFound, componentProps, layout }: SitecorePageProps): JSX.Element => {
   useEffect(() => {
     // Since Sitecore Editor does not support Fast Refresh, need to refresh editor chromes after Fast Refresh finished
     handleEditorFastRefresh();
@@ -38,7 +38,7 @@ const SitecorePage = ({ notFound, componentProps, layout, headLinks }: SitecoreP
         componentFactory={componentBuilder.getComponentFactory({ isEditing })}
         layoutData={layout}
       >
-        <Layout layoutData={layout} headLinks={headLinks} />
+        <Layout layoutData={layout} />
       </SitecoreContext>
     </ComponentPropsContext>
   );

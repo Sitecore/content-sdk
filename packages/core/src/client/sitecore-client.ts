@@ -42,10 +42,6 @@ export type Page = {
    * Route locale
    */
   locale: string;
-  /**
-   * Head links for extra Sitecore scripts and styles to be loaded on a page
-   */
-  headLinks: HTMLLink[];
 };
 
 type PageOptions = Partial<RouteOptions> & {
@@ -173,7 +169,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     } else {
       const siteInfo = this.siteResolver.getByName(site);
       // Initialize links to be inserted on the page
-      const headLinks = this.getHeadLinks(layout);
       if (pageOptions?.personalize?.variantId) {
         // Modify layoutData to use specific variant(s) instead of default
         // This will also set the variantId on the Sitecore context so that it is accessible here
@@ -187,7 +182,6 @@ export class SitecoreClient implements BaseSitecoreClient {
         layout,
         site: siteInfo,
         locale,
-        headLinks,
       };
     }
   }
