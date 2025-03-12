@@ -8,7 +8,7 @@
 
 > **EditingRenderMiddlewareConfig**: `object`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:19](https://github.com/Sitecore/xmc-jss-dev/blob/35056f84fa747509971da5c424c6da14ea501376/packages/nextjs/src/editing/editing-render-middleware.ts#L19)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:19](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/nextjs/src/editing/editing-render-middleware.ts#L19)
 
 Configuration for the Editing Render Middleware.
 

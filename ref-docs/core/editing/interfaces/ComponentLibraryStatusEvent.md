@@ -6,7 +6,7 @@
 
 # Interface: ComponentLibraryStatusEvent
 
-Defined in: [packages/core/src/editing/component-library.ts:11](https://github.com/Sitecore/xmc-jss-dev/blob/35056f84fa747509971da5c424c6da14ea501376/packages/core/src/editing/component-library.ts#L11)
+Defined in: [packages/core/src/editing/component-library.ts:11](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/editing/component-library.ts#L11)
 
 Represents an event indicating the status of a component in the library.
 
@@ -16,7 +16,7 @@ Represents an event indicating the status of a component in the library.
 
 > **message**: `object`
 
-Defined in: [packages/core/src/editing/component-library.ts:13](https://github.com/Sitecore/xmc-jss-dev/blob/35056f84fa747509971da5c424c6da14ea501376/packages/core/src/editing/component-library.ts#L13)
+Defined in: [packages/core/src/editing/component-library.ts:13](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/editing/component-library.ts#L13)
 
 #### status
 
@@ -32,4 +32,4 @@ Defined in: [packages/core/src/editing/component-library.ts:13](https://github.c
 
 > **name**: `"component:status"`
 
-Defined in: [packages/core/src/editing/component-library.ts:12](https://github.com/Sitecore/xmc-jss-dev/blob/35056f84fa747509971da5c424c6da14ea501376/packages/core/src/editing/component-library.ts#L12)
+Defined in: [packages/core/src/editing/component-library.ts:12](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/editing/component-library.ts#L12)

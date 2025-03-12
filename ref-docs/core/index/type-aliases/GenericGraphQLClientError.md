@@ -8,7 +8,7 @@
 
 > **GenericGraphQLClientError**: `Partial`\<`Error`\> & `object`
 
-Defined in: [packages/core/src/models.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/35056f84fa747509971da5c424c6da14ea501376/packages/core/src/models.ts#L15)
+Defined in: [packages/core/src/models.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/models.ts#L15)
 
 This type represents errors that can occur in a GraphQL client.
 In cases where an error status was sent back from the server (`!response.ok`), the `response` will be populated with details. In cases where a response was never received, the `code` can be populated with the error code (e.g. Node's 'ECONNRESET', 'ETIMEDOUT', etc).
