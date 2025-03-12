@@ -20,7 +20,7 @@
     "middleware.d.ts",
     "editing.d.ts",
     "monitoring.d.ts",
-    "nextjs-component-props-loader.d.ts",
+    "component-props-loader.d.ts",
     "site.d.ts",
     "graphql.d.ts",
     "utils.d.ts",
