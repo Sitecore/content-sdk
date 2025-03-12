@@ -8,7 +8,7 @@
 
 > **Text**(`props`, `deprecatedLegacyContext`?): `ReactNode`
 
-Defined in: [packages/react/src/components/Text.tsx:27](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/react/src/components/Text.tsx#L27)
+Defined in: [packages/react/src/components/Text.tsx:27](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/react/src/components/Text.tsx#L27)
 
 ## Parameters
 

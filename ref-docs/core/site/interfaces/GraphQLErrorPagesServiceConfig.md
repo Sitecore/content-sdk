@@ -6,7 +6,7 @@
 
 # Interface: GraphQLErrorPagesServiceConfig
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/site/graphql-error-pages-service.ts#L28)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/core/src/site/graphql-error-pages-service.ts#L28)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/core/src/site/graphql-error-pages-service.ts:28](https://g
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:37](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/site/graphql-error-pages-service.ts#L37)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:37](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/core/src/site/graphql-error-pages-service.ts#L37)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -33,7 +33,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > `optional` **debugger**: `Debugger`
 
-Defined in: [packages/core/src/sitecore-service-base.ts:14](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/sitecore-service-base.ts#L14)
+Defined in: [packages/core/src/sitecore-service-base.ts:14](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/core/src/sitecore-service-base.ts#L14)
 
 Optional debug logger override
 
@@ -47,7 +47,7 @@ Optional debug logger override
 
 > **language**: `string`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/site/graphql-error-pages-service.ts#L32)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/core/src/site/graphql-error-pages-service.ts#L32)
 
 The language
 
@@ -57,7 +57,7 @@ The language
 
 > `optional` **retries**: `object`
 
-Defined in: [packages/core/src/config/models.ts:76](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/config/models.ts#L76)
+Defined in: [packages/core/src/config/models.ts:76](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/core/src/config/models.ts#L76)
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
 
