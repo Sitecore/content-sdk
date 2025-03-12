@@ -8,7 +8,7 @@
 
 > **generateMetadata**(`config`?): () => `Promise`\<`void`\>
 
-Defined in: [packages/core/src/tools/generateMetadata.ts:30](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/tools/generateMetadata.ts#L30)
+Defined in: [packages/core/src/tools/generateMetadata.ts:30](https://github.com/Sitecore/xmc-jss-dev/blob/720101351f0fb188079de6af083055c123c9442b/packages/core/src/tools/generateMetadata.ts#L30)
 
 Generate application metadata
 

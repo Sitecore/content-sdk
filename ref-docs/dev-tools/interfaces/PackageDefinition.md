@@ -6,7 +6,7 @@
 
 # Interface: PackageDefinition
 
-Defined in: [dev-tools/src/templating/components.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/dev-tools/src/templating/components.ts#L15)
+Defined in: [dev-tools/src/templating/components.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/720101351f0fb188079de6af083055c123c9442b/packages/dev-tools/src/templating/components.ts#L15)
 
 Describes a package and components to be imported
 
@@ -16,7 +16,7 @@ Describes a package and components to be imported
 
 > **components**: `object`[]
 
-Defined in: [dev-tools/src/templating/components.ts:17](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/dev-tools/src/templating/components.ts#L17)
+Defined in: [dev-tools/src/templating/components.ts:17](https://github.com/Sitecore/xmc-jss-dev/blob/720101351f0fb188079de6af083055c123c9442b/packages/dev-tools/src/templating/components.ts#L17)
 
 #### componentName
 
@@ -32,4 +32,4 @@ Defined in: [dev-tools/src/templating/components.ts:17](https://github.com/Sitec
 
 > **name**: `string`
 
-Defined in: [dev-tools/src/templating/components.ts:16](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/dev-tools/src/templating/components.ts#L16)
+Defined in: [dev-tools/src/templating/components.ts:16](https://github.com/Sitecore/xmc-jss-dev/blob/720101351f0fb188079de6af083055c123c9442b/packages/dev-tools/src/templating/components.ts#L16)

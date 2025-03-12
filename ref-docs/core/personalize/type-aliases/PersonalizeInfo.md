@@ -8,7 +8,7 @@
 
 > **PersonalizeInfo**: `object`
 
-Defined in: [packages/core/src/personalize/graphql-personalize-service.ts:30](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/personalize/graphql-personalize-service.ts#L30)
+Defined in: [packages/core/src/personalize/graphql-personalize-service.ts:30](https://github.com/Sitecore/xmc-jss-dev/blob/720101351f0fb188079de6af083055c123c9442b/packages/core/src/personalize/graphql-personalize-service.ts#L30)
 
 Object model of personlize info
 
