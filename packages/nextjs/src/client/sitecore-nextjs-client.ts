@@ -27,7 +27,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
   constructor(protected initOptions: SitecoreClientInit) {
     super(initOptions);
-    this.componentPropsService = new ComponentPropsService();
+    this.componentPropsService = this.getComponentPropsService();
   }
 
   // since path rewrite we rely on is only working in nextjs
@@ -122,5 +122,9 @@ export class SitecoreNextjsClient extends SitecoreClient {
     }
 
     return componentProps;
+  }
+
+  protected getComponentPropsService(): ComponentPropsService {
+    return new ComponentPropsService();
   }
 }

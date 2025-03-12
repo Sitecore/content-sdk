@@ -157,8 +157,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     this.errorPagesService = this.getErrorPagesService();
     this.componentService = this.getComponentService();
     this.sitePathService = this.getSitePathService();
-    this.siteResolver = new SiteResolver(initOptions.sites);
-    this.editingService = new GraphQLEditingService({ clientFactory: this.clientFactory });
   }
 
   /**
@@ -333,7 +331,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     const page = {
       locale: language,
       layout: data.layoutData,
-      headLinks: this.getHeadLinks(data.layoutData),
       dictionary: data.dictionary,
       site: data.layoutData.sitecore.context.site as SiteInfo,
     } as Page;
@@ -393,7 +390,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     const page = {
       locale: componentLibData.language,
       layout: componentData,
-      headLinks: this.getHeadLinks(componentData),
       dictionary: dictionaryData,
     } as Page;
     return page;
