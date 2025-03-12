@@ -8,7 +8,7 @@
 
 > **StaticPath**: `object`
 
-Defined in: [packages/core/src/models.ts:49](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/models.ts#L49)
+Defined in: [packages/core/src/models.ts:49](https://github.com/Sitecore/xmc-jss-dev/blob/f62fda45ad3407dd6bbe9ef6536a99934293651e/packages/core/src/models.ts#L49)
 
 Object model of a sitemap's site page item.
 
