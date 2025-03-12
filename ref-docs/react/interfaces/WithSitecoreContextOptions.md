@@ -6,7 +6,7 @@
 
 # Interface: WithSitecoreContextOptions
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:5](https://github.com/Sitecore/xmc-jss-dev/blob/720101351f0fb188079de6af083055c123c9442b/packages/react/src/enhancers/withSitecoreContext.tsx#L5)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:5](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/react/src/enhancers/withSitecoreContext.tsx#L5)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:5](https://git
 
 > `optional` **updatable**: `boolean`
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:6](https://github.com/Sitecore/xmc-jss-dev/blob/720101351f0fb188079de6af083055c123c9442b/packages/react/src/enhancers/withSitecoreContext.tsx#L6)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:6](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/react/src/enhancers/withSitecoreContext.tsx#L6)

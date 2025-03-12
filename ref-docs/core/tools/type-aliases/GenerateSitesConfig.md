@@ -8,7 +8,7 @@
 
 > **GenerateSitesConfig**: `object`
 
-Defined in: [packages/core/src/tools/generateSites.ts:13](https://github.com/Sitecore/xmc-jss-dev/blob/720101351f0fb188079de6af083055c123c9442b/packages/core/src/tools/generateSites.ts#L13)
+Defined in: [packages/core/src/tools/generateSites.ts:13](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/core/src/tools/generateSites.ts#L13)
 
 Configuration object for generating sites.
 

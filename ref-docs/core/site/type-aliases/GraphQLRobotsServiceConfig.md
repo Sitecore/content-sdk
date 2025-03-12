@@ -8,7 +8,7 @@
 
 > **GraphQLRobotsServiceConfig**: `object`
 
-Defined in: [packages/core/src/site/graphql-robots-service.ts:17](https://github.com/Sitecore/xmc-jss-dev/blob/720101351f0fb188079de6af083055c123c9442b/packages/core/src/site/graphql-robots-service.ts#L17)
+Defined in: [packages/core/src/site/graphql-robots-service.ts:17](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/core/src/site/graphql-robots-service.ts#L17)
 
 ## Type declaration
 
