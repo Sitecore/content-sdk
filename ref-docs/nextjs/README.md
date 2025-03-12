@@ -7,7 +7,6 @@
 ## Modules
 
 - [editing](editing/README.md)
-- [graphql](graphql/README.md)
 - [index](index/README.md)
 - [middleware](middleware/README.md)
 - [monitoring](monitoring/README.md)

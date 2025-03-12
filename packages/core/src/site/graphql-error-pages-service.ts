@@ -1,8 +1,9 @@
-import { GraphQLClient, GraphQLRequestClientConfig } from '../graphql';
+import { FetchOptions, GraphQLClient } from '../client';
 import { siteNameError } from '../constants';
 import debug from '../debug';
 import { LayoutServiceData } from '../layout';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
+import { GraphQLServiceConfig } from '../sitecore-service-base';
 
 // The default query for request error handling
 const defaultQuery = /* GraphQL */ `
@@ -24,12 +25,7 @@ const defaultQuery = /* GraphQL */ `
   }
 `;
 
-export interface GraphQLErrorPagesServiceConfig
-  extends Pick<GraphQLRequestClientConfig, 'retries' | 'retryStrategy'> {
-  /**
-   * The JSS application name
-   */
-  siteName: string;
+export interface GraphQLErrorPagesServiceConfig extends GraphQLServiceConfig {
   /**
    * The language
    */
@@ -78,21 +74,31 @@ export class GraphQLErrorPagesService {
 
   /**
    * Fetch list of error pages for the site
+   * @param {string} siteName  The site name
+   * @param {string} locale  The language
+   * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {ErrorPages} list of url's error pages
    * @throws {Error} if the siteName is empty.
    */
-  async fetchErrorPages(): Promise<ErrorPages | null> {
-    const siteName: string = this.options.siteName;
-    const language: string = this.options.language;
+  async fetchErrorPages(
+    siteName: string,
+    locale?: string,
+    fetchOptions?: FetchOptions
+  ): Promise<ErrorPages | null> {
+    const language: string = locale || this.options.language;
 
     if (!siteName) {
       throw new Error(siteNameError);
     }
 
-    return (<Promise<ErrorPagesQueryResult>>this.graphQLClient.request(this.query, {
-      siteName,
-      language,
-    }))
+    return (<Promise<ErrorPagesQueryResult>>this.graphQLClient.request(
+      this.query,
+      {
+        siteName,
+        language,
+      },
+      fetchOptions
+    ))
       .then((result: ErrorPagesQueryResult) =>
         result.site.siteInfo ? result.site.siteInfo.errorHandling : null
       )
@@ -112,8 +118,8 @@ export class GraphQLErrorPagesService {
 
     return this.options.clientFactory({
       debugger: debug.errorpages,
-      retries: this.options.retries,
-      retryStrategy: this.options.retryStrategy,
+      retries: this.options.retries?.count,
+      retryStrategy: this.options.retries?.retryStrategy,
     });
   }
 }

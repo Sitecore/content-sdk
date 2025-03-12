@@ -8,7 +8,7 @@
 
 > **ErrorPages**: `object`
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:22
+Defined in: core/types/site/graphql-error-pages-service.d.ts:19
 
 Object model of Error Pages result
 

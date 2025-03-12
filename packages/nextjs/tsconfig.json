@@ -22,7 +22,7 @@
     "monitoring.d.ts",
     "component-props-loader.d.ts",
     "site.d.ts",
-    "graphql.d.ts",
+    "client.d.ts",
     "utils.d.ts",
     "tools.d.ts",
     "src/tests/*",

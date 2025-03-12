@@ -20,6 +20,7 @@
 ## Variables
 
 - [DEFAULT\_VARIANT](variables/DEFAULT_VARIANT.md)
+- [VARIANT\_PREFIX](variables/VARIANT_PREFIX.md)
 
 ## Functions
 

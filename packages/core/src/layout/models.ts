@@ -152,6 +152,14 @@ export enum RenderingType {
 }
 
 /**
+ * Contract for additional route options when requesting layout data
+ */
+export type RouteOptions = {
+  site: string;
+  locale?: string;
+};
+
+/**
  * Static placeholder name used for component rendering
  */
 export const EDITING_COMPONENT_PLACEHOLDER = 'editing-componentmode-placeholder';

@@ -8,6 +8,7 @@
 
 ## Functions
 
+- [extractPath](functions/extractPath.md)
 - [handleEditorFastRefresh](functions/handleEditorFastRefresh.md)
 - [isEditorActive](functions/isEditorActive.md)
 - [resetEditorChromes](functions/resetEditorChromes.md)

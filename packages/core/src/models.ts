@@ -1,3 +1,6 @@
+import { Debugger } from 'debug';
+import { SitecoreConfigInput } from './config';
+
 /**
  * Html <link> tag data model
  */
@@ -39,3 +42,50 @@ export interface RetryStrategy {
    */
   getDelay(error: GenericGraphQLClientError, attempt: number): number;
 }
+
+/**
+ * Object model of a sitemap's site page item.
+ */
+export type StaticPath = {
+  params: {
+    path: string[];
+  };
+  locale?: string;
+};
+
+/**
+ * Data needed to paginate results in graphql
+ */
+export interface PageInfo {
+  /**
+   * string token that can be used to fetch the next page of results
+   */
+  endCursor: string;
+  /**
+   * a value that indicates whether more pages of results are available
+   */
+  hasNext: boolean;
+}
+
+export type FetchOptions = Partial<Pick<SitecoreConfigInput, 'api'>> & {
+  /**
+   * Number of retries GraphQL client will attempt on request error
+   */
+  retries?: number;
+  /**
+   * Retry strategy instance
+   */
+  retryStrategy?: RetryStrategy;
+  /**
+   * Override to replace default nodeJS fetch implementation
+   */
+  fetch?: typeof fetch;
+  /**
+   * Custom headers to be sent with each request.
+   */
+  headers?: Record<string, string>;
+  /**
+   * Override debugger for logging. Uses 'core:http' by default.
+   */
+  debugger?: Debugger;
+};

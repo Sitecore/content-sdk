@@ -24,7 +24,6 @@
 ## Type Aliases
 
 - [EditingConfigMiddlewareConfig](type-aliases/EditingConfigMiddlewareConfig.md)
-- [EditingPreviewData](type-aliases/EditingPreviewData.md)
 - [EditingRenderMiddlewareConfig](type-aliases/EditingRenderMiddlewareConfig.md)
 
 ## Variables

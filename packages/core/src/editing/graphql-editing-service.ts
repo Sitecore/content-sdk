@@ -1,9 +1,10 @@
 import debug from '../debug';
-import { PageInfo } from '../graphql';
+import { PageInfo } from '../client';
 import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases } from '../i18n';
 import { LayoutServiceData } from '../layout';
 import { LayoutKind } from './models';
+import { FetchOptions } from '../models';
 
 /**
  * The dictionary query default page size.
@@ -94,6 +95,14 @@ export interface GraphQLEditingServiceConfig {
   clientFactory: GraphQLRequestClientFactory;
 }
 
+export type EditingOptions = {
+  siteName: string;
+  itemId: string;
+  language: string;
+  version?: string;
+  layoutKind?: LayoutKind;
+};
+
 /**
  * Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
  * Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
@@ -117,21 +126,13 @@ export class GraphQLEditingService {
    * @param {string} variables.language - The language to fetch layout data for.
    * @param {string} [variables.version] - The version of the item (optional).
    * @param {LayoutKind} [variables.layoutKind] - The final or shared layout variant.
+   * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {Promise} The layout data and dictionary phrases.
    */
-  async fetchEditingData({
-    siteName,
-    itemId,
-    language,
-    version,
-    layoutKind = LayoutKind.Final,
-  }: {
-    siteName: string;
-    itemId: string;
-    language: string;
-    version?: string;
-    layoutKind?: LayoutKind;
-  }) {
+  async fetchEditingData(
+    { siteName, itemId, language, version, layoutKind = LayoutKind.Final }: EditingOptions,
+    fetchOptions?: FetchOptions
+  ) {
     debug.editing(
       'fetching editing data for %s %s %s %s',
       siteName,
@@ -149,7 +150,7 @@ export class GraphQLEditingService {
       throw new RangeError('The language must be a non-empty string');
     }
 
-    let dictionaryResults: { key: string; value: string }[] = [];
+    let initDictionary: { key: string; value: string }[] = [];
     let hasNext = true;
     let after = '';
 
@@ -162,6 +163,7 @@ export class GraphQLEditingService {
         language,
       },
       {
+        ...fetchOptions,
         headers: {
           sc_layoutKind: layoutKind,
         },
@@ -169,7 +171,7 @@ export class GraphQLEditingService {
     );
 
     if (editingData?.site?.siteInfo?.dictionary) {
-      dictionaryResults = editingData.site.siteInfo.dictionary.results;
+      initDictionary = editingData.site.siteInfo.dictionary.results;
       hasNext = editingData.site.siteInfo.dictionary.pageInfo.hasNext;
       after = editingData.site.siteInfo.dictionary.pageInfo.endCursor;
     } else {
@@ -177,10 +179,14 @@ export class GraphQLEditingService {
     }
 
     const dictionary = await this.fetchDictionaryData(
-      { siteName, language },
-      dictionaryResults,
-      hasNext,
-      after
+      {
+        siteName,
+        language,
+        initDictionary,
+        hasNext,
+        after,
+      },
+      fetchOptions
     );
 
     return {
@@ -198,18 +204,23 @@ export class GraphQLEditingService {
     {
       siteName,
       language,
+      initDictionary,
+      hasNext,
+      after,
     }: {
       siteName: string;
       language: string;
+      hasNext?: boolean;
+      initDictionary?: {
+        key: string;
+        value: string;
+      }[];
+      after?: string;
     },
-    initDictionary: {
-      key: string;
-      value: string;
-    }[] = [],
-    hasNext = true,
-    after?: string
+    fetchOptions?: FetchOptions
   ) {
-    let dictionaryResults = initDictionary;
+    hasNext = hasNext !== undefined ? hasNext : true;
+    let dictionaryResults = initDictionary || [];
     const dictionary: DictionaryPhrases = {};
     while (hasNext) {
       const data = await this.graphQLClient.request<GraphQLDictionaryQueryResponse>(
@@ -218,7 +229,8 @@ export class GraphQLEditingService {
           siteName,
           language,
           after,
-        }
+        },
+        fetchOptions
       );
 
       if (data?.site?.siteInfo?.dictionary) {

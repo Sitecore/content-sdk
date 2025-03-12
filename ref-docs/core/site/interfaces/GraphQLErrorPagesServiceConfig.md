@@ -6,11 +6,11 @@
 
 # Interface: GraphQLErrorPagesServiceConfig
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:27](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/site/graphql-error-pages-service.ts#L27)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/site/graphql-error-pages-service.ts#L28)
 
 ## Extends
 
-- `Pick`\<[`GraphQLRequestClientConfig`](../../index/type-aliases/GraphQLRequestClientConfig.md), `"retries"` \| `"retryStrategy"`\>
+- `GraphQLServiceConfig`
 
 ## Properties
 
@@ -18,10 +18,28 @@ Defined in: [packages/core/src/site/graphql-error-pages-service.ts:27](https://g
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/site/graphql-error-pages-service.ts#L41)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:37](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/site/graphql-error-pages-service.ts#L37)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
+
+#### Overrides
+
+`GraphQLServiceConfig.clientFactory`
+
+***
+
+### debugger?
+
+> `optional` **debugger**: `Debugger`
+
+Defined in: [packages/core/src/sitecore-service-base.ts:14](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/sitecore-service-base.ts#L14)
+
+Optional debug logger override
+
+#### Inherited from
+
+`GraphQLServiceConfig.debugger`
 
 ***
 
@@ -29,7 +47,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > **language**: `string`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:36](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/site/graphql-error-pages-service.ts#L36)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/site/graphql-error-pages-service.ts#L32)
 
 The language
 
@@ -37,37 +55,37 @@ The language
 
 ### retries?
 
-> `optional` **retries**: `number`
+> `optional` **retries**: `object`
 
-Defined in: [packages/core/src/graphql-request-client.ts:62](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/graphql-request-client.ts#L62)
+Defined in: [packages/core/src/config/models.ts:76](https://github.com/Sitecore/xmc-jss-dev/blob/6e5665d172771ee08cfda4cf96a47c6e72fabf54/packages/core/src/config/models.ts#L76)
 
-Number of retries for client. Will use the specified `retryStrategy`.
+Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
 
-#### Inherited from
+#### count?
 
-`Pick.retries`
+> `optional` **count**: `number`
 
-***
+Number of retries for graphql client. Will use the specified `retryStrategy`.
 
-### retryStrategy?
+##### Default
+
+```ts
+3
+```
+
+#### retryStrategy?
 
 > `optional` **retryStrategy**: [`RetryStrategy`](../../index/interfaces/RetryStrategy.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:67](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/graphql-request-client.ts#L67)
-
-Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
+Retry strategy for the client. By default, uses exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
+
+##### Default
+
+```ts
+DefaultRetryStrategy
+```
 
 #### Inherited from
 
-`Pick.retryStrategy`
-
-***
-
-### siteName
-
-> **siteName**: `string`
-
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/b61df9eebcfba1bdf753510a061ce22b4c35f004/packages/core/src/site/graphql-error-pages-service.ts#L32)
-
-The JSS application name
+`GraphQLServiceConfig.retries`

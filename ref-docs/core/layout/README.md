@@ -24,7 +24,6 @@
 - [Field](interfaces/Field.md)
 - [FieldMetadata](interfaces/FieldMetadata.md)
 - [Item](interfaces/Item.md)
-- [LayoutService](interfaces/LayoutService.md)
 - [LayoutServiceContext](interfaces/LayoutServiceContext.md)
 - [LayoutServiceContextData](interfaces/LayoutServiceContextData.md)
 - [LayoutServiceData](interfaces/LayoutServiceData.md)
@@ -36,6 +35,7 @@
 - [GenericFieldValue](type-aliases/GenericFieldValue.md)
 - [GraphQLLayoutServiceConfig](type-aliases/GraphQLLayoutServiceConfig.md)
 - [PlaceholdersData](type-aliases/PlaceholdersData.md)
+- [RouteOptions](type-aliases/RouteOptions.md)
 
 ## Variables
 

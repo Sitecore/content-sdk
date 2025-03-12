@@ -1,4 +1,4 @@
-import { GraphQLClient } from '../graphql';
+import { FetchOptions, GraphQLClient } from '../client';
 import { siteNameError } from '../constants';
 import debug from '../debug';
 import { MemoryCacheClient, CacheOptions, CacheClient } from '../cache-client';
@@ -76,9 +76,10 @@ export class GraphQLRedirectsService {
    * Fetch an array of redirects from API
    * @param {string} siteName site name
    * @returns Promise<RedirectInfo[]>
+   * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @throws {Error} if the siteName is empty.
    */
-  async fetchRedirects(siteName: string): Promise<RedirectInfo[]> {
+  async fetchRedirects(siteName: string, fetchOptions?: FetchOptions): Promise<RedirectInfo[]> {
     if (!siteName) {
       throw new Error(siteNameError);
     }
@@ -87,9 +88,13 @@ export class GraphQLRedirectsService {
     let data = this.cache.getCacheValue(cacheKey);
 
     if (!data) {
-      data = await this.graphQLClient.request<RedirectsQueryResult>(this.query, {
-        siteName,
-      });
+      data = await this.graphQLClient.request<RedirectsQueryResult>(
+        this.query,
+        {
+          siteName,
+        },
+        fetchOptions
+      );
       this.cache.setCacheValue(cacheKey, data);
     }
 
