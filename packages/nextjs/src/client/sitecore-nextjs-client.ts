@@ -59,12 +59,12 @@ export class SitecoreNextjsClient extends SitecoreClient {
     // Get variant(s) for personalization (from path), must ensure path is of type string
     const personalizeData =
       pageOptions.personalize || getPersonalizedRewriteData(super.parsePath(path));
-    const site = this.resolveSiteFromPath(path);
+    const site = pageOptions.site || this.resolveSiteFromPath(path).name;
     const page = await super.getPage(
       resolvedPath,
       {
         locale: pageOptions.locale,
-        site: pageOptions.site || site.name,
+        site,
         personalize: personalizeData,
       },
       options
