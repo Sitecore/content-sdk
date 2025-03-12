@@ -8,7 +8,7 @@
 
 > **RouteOptions**: `object`
 
-Defined in: [packages/core/src/layout/models.ts:157](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/core/src/layout/models.ts#L157)
+Defined in: [packages/core/src/layout/models.ts:157](https://github.com/Sitecore/xmc-jss-dev/blob/35056f84fa747509971da5c424c6da14ea501376/packages/core/src/layout/models.ts#L157)
 
 Contract for additional route options when requesting layout data
 

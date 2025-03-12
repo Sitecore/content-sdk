@@ -8,7 +8,7 @@
 
 > **DateField**(`props`, `deprecatedLegacyContext`?): `ReactNode`
 
-Defined in: [packages/react/src/components/Date.tsx:24](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/react/src/components/Date.tsx#L24)
+Defined in: [packages/react/src/components/Date.tsx:24](https://github.com/Sitecore/xmc-jss-dev/blob/35056f84fa747509971da5c424c6da14ea501376/packages/react/src/components/Date.tsx#L24)
 
 ## Parameters
 

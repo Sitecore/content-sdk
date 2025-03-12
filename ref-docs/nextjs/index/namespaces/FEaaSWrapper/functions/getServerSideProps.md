@@ -8,7 +8,7 @@
 
 > **getServerSideProps**(`rendering`, `layoutData`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [nextjs/src/components/FEaaSWrapper.tsx:38](https://github.com/Sitecore/xmc-jss-dev/blob/692b154f482187bff433276bee9671bda23cfd11/packages/nextjs/src/components/FEaaSWrapper.tsx#L38)
+Defined in: [nextjs/src/components/FEaaSWrapper.tsx:38](https://github.com/Sitecore/xmc-jss-dev/blob/35056f84fa747509971da5c424c6da14ea501376/packages/nextjs/src/components/FEaaSWrapper.tsx#L38)
 
 Will be called during SSR
 
