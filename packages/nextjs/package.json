@@ -73,6 +73,7 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
+    "@babel/parser": "^7.26.10",
     "@sitecore-content-sdk/core": "0.1.0-beta.18",
     "@sitecore-content-sdk/react": "0.1.0-beta.18",
     "@vercel/kv": "^3.0.0",
