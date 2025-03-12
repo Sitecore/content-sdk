@@ -20,6 +20,7 @@
     "middleware.d.ts",
     "editing.d.ts",
     "monitoring.d.ts",
+    "component-props-loader.d.ts",
     "site.d.ts",
     "client.d.ts",
     "utils.d.ts",

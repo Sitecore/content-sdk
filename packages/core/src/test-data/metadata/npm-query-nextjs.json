@@ -67,12 +67,7 @@
     "description": "",
     "types": "types/index.d.ts",
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "files": [
-      "dist",
-      "types",
-      "/*.js",
-      "/*.d.ts"
-    ],
+    "files": ["dist", "types", "/*.js", "/*.d.ts"],
     "_id": "@sitecore-content-sdk/core@22.2.0-canary.69",
     "pkgid": "core@npm:@sitecore-content-sdk/core@22.2.0-canary.69",
     "location": "../../packages/core",
@@ -152,7 +147,7 @@
       "url": "https://github.com/sitecore/jss/issues"
     },
     "dependencies": {
-      "@sitecore-content-sdk/dev-tools": "22.2.0-canary.69",
+      "@sitecore-content-sdk/nextjs": "22.2.0-canary.69",
       "chalk": "^4.1.2",
       "cross-spawn": "^7.0.3",
       "dotenv": "^16.0.3",
@@ -183,10 +178,7 @@
       "typescript": "~4.9.4"
     },
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "files": [
-      "dist",
-      "types"
-    ],
+    "files": ["dist", "types"],
     "_id": "@sitecore-content-sdk/cli@22.2.0-canary.69",
     "pkgid": "cli@npm:@sitecore-content-sdk/cli@22.2.0-canary.69",
     "location": "../../packages/cli",
@@ -195,7 +187,7 @@
     "resolved": null,
     "from": [],
     "to": [
-      "../../packages/cli/node_modules/@sitecore-content-sdk/dev-tools",
+      "../../packages/cli/node_modules/@sitecore-content-sdk/nextjs",
       "../../packages/cli/node_modules/chalk",
       "../../packages/cli/node_modules/cross-spawn",
       "../../packages/cli/node_modules/dotenv",
@@ -230,7 +222,7 @@
     "queryContext": {}
   },
   {
-    "name": "@sitecore-content-sdk/dev-tools",
+    "name": "@sitecore-content-sdk/nextjs",
     "version": "22.2.0-canary.69",
     "description": "Utilities to assist in the development and deployment of Sitecore JSS apps.",
     "main": "dist/cjs/index.js",
@@ -244,7 +236,7 @@
       "test": "mocha --require ts-node/register -r tsconfig-paths/register  \"./src/**/metadata.test.ts\" -g \"new test\"",
       "prepublishOnly": "npm run build",
       "coverage": "nyc npm test",
-      "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --readme none --out ../../ref-docs/dev-tools src/index.ts --githubPages false"
+      "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --readme none --out ../../ref-docs/nextjs src/index.ts --githubPages false"
     },
     "engines": {
       "node": ">=20"
@@ -318,69 +310,64 @@
     },
     "types": "types/index.d.ts",
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "files": [
-      "dist",
-      "types",
-      "/*.js",
-      "/*.d.ts"
-    ],
-    "_id": "@sitecore-content-sdk/dev-tools@22.2.0-canary.69",
-    "pkgid": "dev-tools@npm:@sitecore-content-sdk/dev-tools@22.2.0-canary.69",
-    "location": "../../packages/dev-tools",
-    "path": "C:\\workspace\\jss\\packages\\dev-tools",
-    "realpath": "C:\\workspace\\jss\\packages\\dev-tools",
+    "files": ["dist", "types", "/*.js", "/*.d.ts"],
+    "_id": "@sitecore-content-sdk/nextjs@22.2.0-canary.69",
+    "pkgid": "nextjs@npm:@sitecore-content-sdk/nextjs@22.2.0-canary.69",
+    "location": "../../packages/nextjs",
+    "path": "C:\\workspace\\jss\\packages\\nextjs",
+    "realpath": "C:\\workspace\\jss\\packages\\nextjs",
     "resolved": null,
     "from": [],
     "to": [
-      "../../packages/dev-tools/node_modules/@babel/parser",
-      "../../packages/dev-tools/node_modules/@sitecore-content-sdk/core",
-      "../../packages/dev-tools/node_modules/axios",
-      "../../packages/dev-tools/node_modules/chalk",
-      "../../packages/dev-tools/node_modules/chokidar",
-      "../../packages/dev-tools/node_modules/del",
-      "../../packages/dev-tools/node_modules/express",
-      "../../packages/dev-tools/node_modules/form-data",
-      "../../packages/dev-tools/node_modules/fs-extra",
-      "../../packages/dev-tools/node_modules/glob",
-      "../../packages/dev-tools/node_modules/import-fresh",
-      "../../packages/dev-tools/node_modules/joi",
-      "../../packages/dev-tools/node_modules/js-yaml",
-      "../../packages/dev-tools/node_modules/jszip",
-      "../../packages/dev-tools/node_modules/module-alias",
-      "../../packages/dev-tools/node_modules/readline-sync",
-      "../../packages/dev-tools/node_modules/recast",
-      "../../packages/dev-tools/node_modules/resolve",
-      "../../packages/dev-tools/node_modules/url-join",
-      "../../packages/dev-tools/node_modules/uuid",
-      "../../packages/dev-tools/node_modules/yargs",
-      "../../packages/dev-tools/node_modules/@babel/core",
-      "../../packages/dev-tools/node_modules/@babel/register",
-      "../../packages/dev-tools/node_modules/@types/chai",
-      "../../packages/dev-tools/node_modules/@types/chokidar",
-      "../../packages/dev-tools/node_modules/@types/del",
-      "../../packages/dev-tools/node_modules/@types/express",
-      "../../packages/dev-tools/node_modules/@types/fs-extra",
-      "../../packages/dev-tools/node_modules/@types/glob",
-      "../../packages/dev-tools/node_modules/@types/js-yaml",
-      "../../packages/dev-tools/node_modules/@types/mocha",
-      "../../packages/dev-tools/node_modules/@types/node",
-      "../../packages/dev-tools/node_modules/@types/readline-sync",
-      "../../packages/dev-tools/node_modules/@types/resolve",
-      "../../packages/dev-tools/node_modules/@types/sinon",
-      "../../packages/dev-tools/node_modules/@types/url-join",
-      "../../packages/dev-tools/node_modules/@types/uuid",
-      "../../packages/dev-tools/node_modules/@types/yargs",
-      "../../packages/dev-tools/node_modules/chai",
-      "../../packages/dev-tools/node_modules/cross-env",
-      "../../packages/dev-tools/node_modules/del-cli",
-      "../../packages/dev-tools/node_modules/eslint",
-      "../../packages/dev-tools/node_modules/mocha",
-      "../../packages/dev-tools/node_modules/nock",
-      "../../packages/dev-tools/node_modules/nyc",
-      "../../packages/dev-tools/node_modules/sinon",
-      "../../packages/dev-tools/node_modules/ts-node",
-      "../../packages/dev-tools/node_modules/tsconfig-paths",
-      "../../packages/dev-tools/node_modules/typescript"
+      "../../packages/nextjs/node_modules/@babel/parser",
+      "../../packages/nextjs/node_modules/@sitecore-content-sdk/core",
+      "../../packages/nextjs/node_modules/axios",
+      "../../packages/nextjs/node_modules/chalk",
+      "../../packages/nextjs/node_modules/chokidar",
+      "../../packages/nextjs/node_modules/del",
+      "../../packages/nextjs/node_modules/express",
+      "../../packages/nextjs/node_modules/form-data",
+      "../../packages/nextjs/node_modules/fs-extra",
+      "../../packages/nextjs/node_modules/glob",
+      "../../packages/nextjs/node_modules/import-fresh",
+      "../../packages/nextjs/node_modules/joi",
+      "../../packages/nextjs/node_modules/js-yaml",
+      "../../packages/nextjs/node_modules/jszip",
+      "../../packages/nextjs/node_modules/module-alias",
+      "../../packages/nextjs/node_modules/readline-sync",
+      "../../packages/nextjs/node_modules/recast",
+      "../../packages/nextjs/node_modules/resolve",
+      "../../packages/nextjs/node_modules/url-join",
+      "../../packages/nextjs/node_modules/uuid",
+      "../../packages/nextjs/node_modules/yargs",
+      "../../packages/nextjs/node_modules/@babel/core",
+      "../../packages/nextjs/node_modules/@babel/register",
+      "../../packages/nextjs/node_modules/@types/chai",
+      "../../packages/nextjs/node_modules/@types/chokidar",
+      "../../packages/nextjs/node_modules/@types/del",
+      "../../packages/nextjs/node_modules/@types/express",
+      "../../packages/nextjs/node_modules/@types/fs-extra",
+      "../../packages/nextjs/node_modules/@types/glob",
+      "../../packages/nextjs/node_modules/@types/js-yaml",
+      "../../packages/nextjs/node_modules/@types/mocha",
+      "../../packages/nextjs/node_modules/@types/node",
+      "../../packages/nextjs/node_modules/@types/readline-sync",
+      "../../packages/nextjs/node_modules/@types/resolve",
+      "../../packages/nextjs/node_modules/@types/sinon",
+      "../../packages/nextjs/node_modules/@types/url-join",
+      "../../packages/nextjs/node_modules/@types/uuid",
+      "../../packages/nextjs/node_modules/@types/yargs",
+      "../../packages/nextjs/node_modules/chai",
+      "../../packages/nextjs/node_modules/cross-env",
+      "../../packages/nextjs/node_modules/del-cli",
+      "../../packages/nextjs/node_modules/eslint",
+      "../../packages/nextjs/node_modules/mocha",
+      "../../packages/nextjs/node_modules/nock",
+      "../../packages/nextjs/node_modules/nyc",
+      "../../packages/nextjs/node_modules/sinon",
+      "../../packages/nextjs/node_modules/ts-node",
+      "../../packages/nextjs/node_modules/tsconfig-paths",
+      "../../packages/nextjs/node_modules/typescript"
     ],
     "dev": false,
     "inBundle": false,
@@ -463,7 +450,7 @@
     },
     "dependencies": {
       "@sitecore-content-sdk/core": "22.2.0-canary.69",
-      "@sitecore-content-sdk/dev-tools": "22.2.0-canary.69",
+      "@sitecore-content-sdk/nextjs": "22.2.0-canary.69",
       "@sitecore-content-sdk/react": "22.2.0-canary.69",
       "@vercel/kv": "^0.2.1",
       "prop-types": "^15.8.1",
@@ -473,12 +460,7 @@
     "description": "",
     "types": "types/index.d.ts",
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "files": [
-      "dist",
-      "types",
-      "/*.js",
-      "/*.d.ts"
-    ],
+    "files": ["dist", "types", "/*.js", "/*.d.ts"],
     "_id": "@sitecore-content-sdk/nextjs@22.2.0-canary.69",
     "pkgid": "nextjs@npm:@sitecore-content-sdk/nextjs@22.2.0-canary.69",
     "location": "../../packages/nextjs",
@@ -488,7 +470,7 @@
     "from": [],
     "to": [
       "../../packages/nextjs/node_modules/@sitecore-content-sdk/core",
-      "../../packages/nextjs/node_modules/@sitecore-content-sdk/dev-tools",
+      "../../packages/nextjs/node_modules/@sitecore-content-sdk/nextjs",
       "../../packages/nextjs/node_modules/@sitecore-content-sdk/react",
       "../../packages/nextjs/node_modules/@vercel/kv",
       "../../packages/nextjs/node_modules/prop-types",
@@ -561,10 +543,7 @@
       "build:cjs": "tsc -b tsconfig.cjs.json",
       "build:es": "tsc -b ."
     },
-    "files": [
-      "dist",
-      "README.md"
-    ],
+    "files": ["dist", "README.md"],
     "engines": {
       "node": ">=18"
     },
@@ -577,9 +556,7 @@
     "path": "C:\\workspace\\jss\\packages\\nextjs\\node_modules\\@sitecore-cloudsdk\\core",
     "realpath": "C:\\workspace\\jss\\packages\\nextjs\\node_modules\\@sitecore-cloudsdk\\core",
     "resolved": null,
-    "from": [
-      "../../packages/nextjs/node_modules/@sitecore-cloudsdk/personalize"
-    ],
+    "from": ["../../packages/nextjs/node_modules/@sitecore-cloudsdk/personalize"],
     "to": [
       "../../packages/nextjs/node_modules/@sitecore-cloudsdk/utils",
       "../../packages/nextjs/node_modules/debug"
@@ -635,9 +612,7 @@
     "path": "C:\\workspace\\jss\\packages\\nextjs\\node_modules\\@sitecore-cloudsdk\\personalize",
     "realpath": "C:\\workspace\\jss\\packages\\nextjs\\node_modules\\@sitecore-cloudsdk\\personalize",
     "resolved": null,
-    "from": [
-      "../../packages/nextjs"
-    ],
+    "from": ["../../packages/nextjs"],
     "to": [
       "../../packages/nextjs/node_modules/@sitecore-cloudsdk/core",
       "../../packages/nextjs/node_modules/@sitecore-cloudsdk/utils"
@@ -670,10 +645,7 @@
       "build:cjs": "tsc -b tsconfig.cjs.json",
       "build:es": "tsc -b ."
     },
-    "files": [
-      "dist",
-      "README.md"
-    ],
+    "files": ["dist", "README.md"],
     "engines": {
       "node": ">=18"
     },
@@ -765,10 +737,7 @@
     "description": "",
     "types": "types/index.d.ts",
     "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-    "files": [
-      "dist",
-      "types"
-    ],
+    "files": ["dist", "types"],
     "_id": "@sitecore-content-sdk/react@22.2.0-canary.69",
     "pkgid": "react@npm:@sitecore-content-sdk/react@22.2.0-canary.69",
     "location": "../../packages/react",
@@ -912,9 +881,7 @@
     "path": "C:\\workspace\\jss\\packages\\react\\node_modules\\@sitecore-feaas\\clientside",
     "realpath": "C:\\workspace\\jss\\packages\\react\\node_modules\\@sitecore-feaas\\clientside",
     "resolved": null,
-    "from": [
-      "../../packages/react"
-    ],
+    "from": ["../../packages/react"],
     "to": [
       "../../packages/react/node_modules/react-dom",
       "../../packages/react/node_modules/@sitecore/byoc"
@@ -985,9 +952,7 @@
     "path": "C:\\workspace\\jss\\packages\\react\\node_modules\\@sitecore\\byoc",
     "realpath": "C:\\workspace\\jss\\packages\\react\\node_modules\\@sitecore\\byoc",
     "resolved": null,
-    "from": [
-      "../../packages/react/node_modules/@sitecore-feaas/clientside"
-    ],
+    "from": ["../../packages/react/node_modules/@sitecore-feaas/clientside"],
     "to": [
       "../../packages/react/node_modules/@rjsf/utils",
       "../../packages/react/node_modules/json-schema"
@@ -1024,10 +989,7 @@
       "build:cjs": "tsc -b tsconfig.cjs.json",
       "build:es": "tsc -b ."
     },
-    "files": [
-      "dist",
-      "README.md"
-    ],
+    "files": ["dist", "README.md"],
     "engines": {
       "node": ">=18"
     },
@@ -1040,13 +1002,8 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\core",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\core",
     "resolved": null,
-    "from": [
-      "node_modules/@sitecore-cloudsdk/events"
-    ],
-    "to": [
-      "node_modules/@sitecore-cloudsdk/utils",
-      "node_modules/debug"
-    ],
+    "from": ["node_modules/@sitecore-cloudsdk/events"],
+    "to": ["node_modules/@sitecore-cloudsdk/utils", "node_modules/debug"],
     "dev": false,
     "inBundle": false,
     "deduped": false,
@@ -1098,13 +1055,8 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\events",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\events",
     "resolved": null,
-    "from": [
-      ""
-    ],
-    "to": [
-      "node_modules/@sitecore-cloudsdk/core",
-      "node_modules/@sitecore-cloudsdk/utils"
-    ],
+    "from": [""],
+    "to": ["node_modules/@sitecore-cloudsdk/core", "node_modules/@sitecore-cloudsdk/utils"],
     "dev": false,
     "inBundle": false,
     "deduped": false,
@@ -1133,10 +1085,7 @@
       "build:cjs": "tsc -b tsconfig.cjs.json",
       "build:es": "tsc -b ."
     },
-    "files": [
-      "dist",
-      "README.md"
-    ],
+    "files": ["dist", "README.md"],
     "engines": {
       "node": ">=18"
     },
@@ -1146,10 +1095,7 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\utils",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-cloudsdk\\utils",
     "resolved": null,
-    "from": [
-      "node_modules/@sitecore-cloudsdk/events",
-      "node_modules/@sitecore-cloudsdk/core"
-    ],
+    "from": ["node_modules/@sitecore-cloudsdk/events", "node_modules/@sitecore-cloudsdk/core"],
     "to": [],
     "dev": false,
     "inBundle": false,
@@ -1253,13 +1199,8 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-feaas\\clientside",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore-feaas\\clientside",
     "resolved": null,
-    "from": [
-      ""
-    ],
-    "to": [
-      "node_modules/react-dom",
-      "node_modules/@sitecore/byoc"
-    ],
+    "from": [""],
+    "to": ["node_modules/react-dom", "node_modules/@sitecore/byoc"],
     "dev": false,
     "inBundle": false,
     "deduped": false,
@@ -1333,14 +1274,8 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore\\byoc",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore\\byoc",
     "resolved": null,
-    "from": [
-      "node_modules/@sitecore/components",
-      "node_modules/@sitecore-feaas/clientside"
-    ],
-    "to": [
-      "node_modules/@rjsf/utils",
-      "node_modules/json-schema"
-    ],
+    "from": ["node_modules/@sitecore/components", "node_modules/@sitecore-feaas/clientside"],
+    "to": ["node_modules/@rjsf/utils", "node_modules/json-schema"],
     "dev": false,
     "inBundle": false,
     "deduped": false,
@@ -1413,12 +1348,8 @@
     "path": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore\\components",
     "realpath": "C:\\workspace\\jss\\samples\\next-new-app\\node_modules\\@sitecore\\components",
     "resolved": null,
-    "from": [
-      ""
-    ],
-    "to": [
-      "node_modules/@sitecore/byoc"
-    ],
+    "from": [""],
+    "to": ["node_modules/@sitecore/byoc"],
     "dev": false,
     "inBundle": false,
     "deduped": false,

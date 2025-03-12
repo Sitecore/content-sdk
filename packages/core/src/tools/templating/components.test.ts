@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import * as utils from './utils';
-import { getComponentList } from './components';
+import proxyquire from 'proxyquire';
 
 describe('components', () => {
   afterEach(() => {
@@ -29,7 +28,12 @@ describe('components', () => {
       ];
 
       const logStub = sinon.stub(console, 'debug');
-      const getItemsStub = sinon.stub(utils, 'getItems').returns(items);
+      const getItemsStub = sinon.stub();
+      const componentsModule = proxyquire('./components', {
+        './utils': { getItems: getItemsStub },
+      });
+      const getComponentList = componentsModule.getComponentList;
+      getItemsStub.returns(items);
 
       expect(getComponentList('src/components')).to.deep.equal(items);
       expect(getItemsStub.called).to.be.true;

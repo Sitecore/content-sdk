@@ -1,5 +1,5 @@
 ﻿/* eslint-disable quotes */
-import { ComponentFile, PackageDefinition } from '../../components';
+import { ComponentFile, PackageDefinition } from '@sitecore-content-sdk/core/tools';
 
 const isLazyLoadingModule = (componentPath: string) => componentPath.includes('.dynamic');
 

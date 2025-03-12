@@ -8,7 +8,7 @@ const componentPropsPlugin = (nextConfig = {}) => {
         // Add a loader to strip out getServerSideProps and getStaticProps from components in the client bundle
         config.module.rules.unshift({
           test: /src\\components\\.*\.tsx$/,
-          use: ['@sitecore-content-sdk\\dev-tools\\nextjs-component-props-loader'],
+          use: ['@sitecore-content-sdk\\nextjs\\component-props-loader'],
         });
       }
 

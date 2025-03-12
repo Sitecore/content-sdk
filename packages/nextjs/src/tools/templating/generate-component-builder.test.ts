@@ -4,10 +4,10 @@ import fs from 'fs';
 import path from 'path';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import * as componentUtils from '../components';
-import * as commonUtils from '../utils';
+import { ComponentFile } from '@sitecore-content-sdk/core/tools';
+import * as commonUtils from './utils';
 import { generateComponentBuilder } from './generate-component-builder';
-import { ComponentFile } from '../components';
+import proxyquire from 'proxyquire';
 
 describe('generate-component-builder', () => {
   afterEach(() => {
@@ -23,7 +23,11 @@ describe('generate-component-builder', () => {
       const componentsPath = 'src/components';
       const outputPath = 'src/foo/componentBuilder.ts';
       const writeFileStub = sinon.stub(fs, 'writeFileSync');
-      const getComponentStub = sinon.stub(componentUtils, 'getComponentList');
+      const getComponentListStub = sinon.stub();
+      const componentBuilderModule = proxyquire('./generate-component-builder', {
+        '@sitecore-content-sdk/core/tools': { getComponentList: getComponentListStub },
+      });
+
       const components: ComponentFile[] = [
         {
           path: 'bar',
@@ -31,7 +35,7 @@ describe('generate-component-builder', () => {
           componentName: 'BarComponent',
         },
       ];
-      getComponentStub.withArgs(componentsPath).returns(components);
+      getComponentListStub.withArgs(componentsPath).returns(components);
       sinon.stub(path, 'resolve').callsFake((path) => path);
       const expectedOutput = [
         '/* eslint-disable */\n' +
@@ -57,7 +61,7 @@ describe('generate-component-builder', () => {
           'export const moduleFactory = componentBuilder.getModuleFactory();\n',
       ].join('');
 
-      generateComponentBuilder({
+      componentBuilderModule.generateComponentBuilder({
         componentRootPath: componentsPath,
         componentBuilderOutputPath: outputPath,
         packages: [
@@ -93,7 +97,10 @@ describe('generate-component-builder', () => {
       const componentsPath = 'src/components';
       const outputPath = 'src/foo/componentBuilder.ts';
       const writeFileStub = sinon.stub(fs, 'writeFileSync');
-      const getComponentStub = sinon.stub(componentUtils, 'getComponentList');
+      const getComponentListStub = sinon.stub();
+      const componentBuilderModule = proxyquire('./generate-component-builder', {
+        '@sitecore-content-sdk/core/tools': { getComponentList: getComponentListStub },
+      });
       const components: ComponentFile[] = [
         {
           path: 'bar',
@@ -106,7 +113,7 @@ describe('generate-component-builder', () => {
           componentName: 'CarComponent',
         },
       ];
-      getComponentStub.withArgs(componentsPath).returns(components);
+      getComponentListStub.withArgs(componentsPath).returns(components);
       sinon.stub(path, 'resolve').callsFake((path) => path);
       const expectedOutput = [
         '/* eslint-disable */\n' +
@@ -142,7 +149,7 @@ describe('generate-component-builder', () => {
           'export const moduleFactory = componentBuilder.getModuleFactory();\n',
       ].join('');
 
-      generateComponentBuilder({
+      componentBuilderModule.generateComponentBuilder({
         componentRootPath: componentsPath,
         componentBuilderOutputPath: outputPath,
         packages: [
