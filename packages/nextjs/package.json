@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "0.1.0-beta.14",
+  "version": "0.1.0-beta.15",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -72,9 +72,9 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "0.1.0-beta.14",
-    "@sitecore-content-sdk/dev-tools": "0.1.0-beta.14",
-    "@sitecore-content-sdk/react": "0.1.0-beta.14",
+    "@sitecore-content-sdk/core": "0.1.0-beta.15",
+    "@sitecore-content-sdk/dev-tools": "0.1.0-beta.15",
+    "@sitecore-content-sdk/react": "0.1.0-beta.15",
     "@vercel/kv": "^3.0.0",
     "prop-types": "^15.8.1",
     "regex-parser": "^2.3.0",
