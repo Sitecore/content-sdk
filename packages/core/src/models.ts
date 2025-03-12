@@ -1,5 +1,4 @@
 import { Debugger } from 'debug';
-import { SitecoreConfigInput } from './config';
 
 /**
  * Html <link> tag data model
@@ -67,7 +66,7 @@ export interface PageInfo {
   hasNext: boolean;
 }
 
-export type FetchOptions = Partial<Pick<SitecoreConfigInput, 'api'>> & {
+export type FetchOptions = {
   /**
    * Number of retries GraphQL client will attempt on request error
    */
