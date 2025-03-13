@@ -6,7 +6,7 @@
 
 # Class: ComponentBuilder
 
-Defined in: [nextjs/src/ComponentBuilder.ts:37](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/nextjs/src/ComponentBuilder.ts#L37)
+Defined in: [nextjs/src/ComponentBuilder.ts:37](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/nextjs/src/ComponentBuilder.ts#L37)
 
 Nextjs implementation of component builder class for building components based on the configuration.
 
@@ -16,7 +16,7 @@ Nextjs implementation of component builder class for building components based o
 
 > **new ComponentBuilder**(`config`): [`ComponentBuilder`](ComponentBuilder.md)
 
-Defined in: [nextjs/src/ComponentBuilder.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/nextjs/src/ComponentBuilder.ts#L48)
+Defined in: [nextjs/src/ComponentBuilder.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/nextjs/src/ComponentBuilder.ts#L48)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [nextjs/src/ComponentBuilder.ts:48](https://github.com/Sitecore/xmc-
 
 > `protected` **components**: `Map`\<`string`, `Component`\>
 
-Defined in: [nextjs/src/ComponentBuilder.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/nextjs/src/ComponentBuilder.ts#L41)
+Defined in: [nextjs/src/ComponentBuilder.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/nextjs/src/ComponentBuilder.ts#L41)
 
 List of components to be stored
 
@@ -44,7 +44,7 @@ List of components to be stored
 
 > `protected` **config**: [`ComponentBuilderConfig`](../type-aliases/ComponentBuilderConfig.md)\<`Component`\>
 
-Defined in: [nextjs/src/ComponentBuilder.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/nextjs/src/ComponentBuilder.ts#L48)
+Defined in: [nextjs/src/ComponentBuilder.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/nextjs/src/ComponentBuilder.ts#L48)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [nextjs/src/ComponentBuilder.ts:48](https://github.com/Sitecore/xmc-
 
 > `protected` **DEFAULT\_EXPORT\_NAME**: `string` = `'Default'`
 
-Defined in: [nextjs/src/ComponentBuilder.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/nextjs/src/ComponentBuilder.ts#L46)
+Defined in: [nextjs/src/ComponentBuilder.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/nextjs/src/ComponentBuilder.ts#L46)
 
 SXA uses custom default export name
 
@@ -62,7 +62,7 @@ SXA uses custom default export name
 
 > **getComponentFactory**(`config`?): [`ComponentFactory`](../type-aliases/ComponentFactory.md)
 
-Defined in: [nextjs/src/ComponentBuilder.ts:80](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/nextjs/src/ComponentBuilder.ts#L80)
+Defined in: [nextjs/src/ComponentBuilder.ts:80](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/nextjs/src/ComponentBuilder.ts#L80)
 
 Creates a new instance of component factory
 Component can be imported dynamically or statically.
@@ -85,7 +85,7 @@ Component factory implementation
 
 > **getModuleFactory**(): [`ModuleFactory`](../type-aliases/ModuleFactory.md)
 
-Defined in: [nextjs/src/ComponentBuilder.ts:58](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/nextjs/src/ComponentBuilder.ts#L58)
+Defined in: [nextjs/src/ComponentBuilder.ts:58](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/nextjs/src/ComponentBuilder.ts#L58)
 
 Creates a new instance of module factory
 Module factory provides a module (file) including all exports.

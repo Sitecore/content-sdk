@@ -6,7 +6,7 @@
 
 # Interface: ComponentUpdateEventArgs
 
-Defined in: [packages/core/src/editing/utils.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/editing/utils.ts#L40)
+Defined in: [packages/core/src/editing/utils.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/core/src/editing/utils.ts#L40)
 
 Event args for Component Library `update` event
 
@@ -16,7 +16,7 @@ Event args for Component Library `update` event
 
 > `optional` **details**: `object`
 
-Defined in: [packages/core/src/editing/utils.ts:42](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/editing/utils.ts#L42)
+Defined in: [packages/core/src/editing/utils.ts:42](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/core/src/editing/utils.ts#L42)
 
 #### fields?
 
@@ -36,4 +36,4 @@ Defined in: [packages/core/src/editing/utils.ts:42](https://github.com/Sitecore/
 
 > **name**: `string`
 
-Defined in: [packages/core/src/editing/utils.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/editing/utils.ts#L41)
+Defined in: [packages/core/src/editing/utils.ts:41](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/core/src/editing/utils.ts#L41)

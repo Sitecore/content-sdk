@@ -8,7 +8,7 @@
 
 > **getComponentLibraryStylesheetLinks**(`layoutData`, `sitecoreEdgeContextId`, `sitecoreEdgeUrl`?): [`HTMLLink`](../../index/type-aliases/HTMLLink.md)[]
 
-Defined in: [packages/core/src/layout/themes.ts:18](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/layout/themes.ts#L18)
+Defined in: [packages/core/src/layout/themes.ts:18](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/core/src/layout/themes.ts#L18)
 
 Walks through rendering tree and returns list of links of all FEAAS, BYOC or SXA Component Library Stylesheets that are used
 

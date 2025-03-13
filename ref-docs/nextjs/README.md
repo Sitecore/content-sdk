@@ -6,6 +6,7 @@
 
 ## Modules
 
+- [client](client/README.md)
 - [editing](editing/README.md)
 - [index](index/README.md)
 - [middleware](middleware/README.md)

@@ -22,7 +22,7 @@ the default value to return if the field is not defined
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`): `T` \| `undefined`
 
-Defined in: [packages/core/src/layout/utils.ts:10](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/layout/utils.ts#L10)
+Defined in: [packages/core/src/layout/utils.ts:10](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/core/src/layout/utils.ts#L10)
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.
@@ -64,7 +64,7 @@ the default value to return if the field is not defined
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`, `defaultValue`): `T`
 
-Defined in: [packages/core/src/layout/utils.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/layout/utils.ts#L15)
+Defined in: [packages/core/src/layout/utils.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/core/src/layout/utils.ts#L15)
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.

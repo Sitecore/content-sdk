@@ -6,7 +6,7 @@
 
 # Enumeration: LayoutKind
 
-Defined in: [packages/core/src/editing/models.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/editing/models.ts#L43)
+Defined in: [packages/core/src/editing/models.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/core/src/editing/models.ts#L43)
 
 Represents the Editing Layout variant.
 - shared - shared layout
@@ -18,7 +18,7 @@ Represents the Editing Layout variant.
 
 > **Final**: `"final"`
 
-Defined in: [packages/core/src/editing/models.ts:44](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/editing/models.ts#L44)
+Defined in: [packages/core/src/editing/models.ts:44](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/core/src/editing/models.ts#L44)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [packages/core/src/editing/models.ts:44](https://github.com/Sitecore
 
 > **Shared**: `"shared"`
 
-Defined in: [packages/core/src/editing/models.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/a6b3d5b2c7726b1cbe6e3e80168fe00fbf6c98fd/packages/core/src/editing/models.ts#L45)
+Defined in: [packages/core/src/editing/models.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/core/src/editing/models.ts#L45)

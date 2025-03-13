@@ -62,7 +62,7 @@ Cache timeout (sec)
 
 ### clientFactory
 
-> **clientFactory**: `GraphQLRequestClientFactory`
+> **clientFactory**: [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
 Defined in: core/types/i18n/graphql-dictionary-service.d.ts:53
 
@@ -161,7 +161,7 @@ Number of retries for graphql client. Will use the specified `retryStrategy`.
 
 #### retryStrategy?
 
-> `optional` **retryStrategy**: `RetryStrategy`
+> `optional` **retryStrategy**: [`RetryStrategy`](../../client/interfaces/RetryStrategy.md)
 
 Retry strategy for the client. By default, uses exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.

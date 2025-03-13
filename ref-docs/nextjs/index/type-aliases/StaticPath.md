@@ -8,7 +8,7 @@
 
 > **StaticPath**: `object`
 
-Defined in: core/types/models.d.ts:45
+Defined in: core/types/models.d.ts:44
 
 Object model of a sitemap's site page item.
 

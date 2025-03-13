@@ -22,7 +22,7 @@ GraphQLSitePathService instances
 
 ### clientFactory
 
-> **clientFactory**: `GraphQLRequestClientFactory`
+> **clientFactory**: [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
 Defined in: core/types/site/graphql-sitepath-service.d.ts:83
 
