@@ -8,7 +8,7 @@
 
 > **ModuleFactory**: (`componentName`) => [`Module`](Module.md) \| `Promise`\<[`Module`](Module.md)\> \| `null`
 
-Defined in: [nextjs/src/sharedTypes/module-factory.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/2587fa13814e20ee230863406a92229f2eebdb43/packages/nextjs/src/sharedTypes/module-factory.ts#L34)
+Defined in: [nextjs/src/sharedTypes/module-factory.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/d07a33c8b422ee631653078fdc40402026b03dec/packages/nextjs/src/sharedTypes/module-factory.ts#L34)
 
 Represents a module factory
 

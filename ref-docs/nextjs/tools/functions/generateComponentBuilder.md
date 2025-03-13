@@ -8,7 +8,7 @@
 
 > **generateComponentBuilder**(`settings`?): `void`
 
-Defined in: [nextjs/src/tools/templating/generate-component-builder.ts:24](https://github.com/Sitecore/xmc-jss-dev/blob/2587fa13814e20ee230863406a92229f2eebdb43/packages/nextjs/src/tools/templating/generate-component-builder.ts#L24)
+Defined in: [nextjs/src/tools/templating/generate-component-builder.ts:24](https://github.com/Sitecore/xmc-jss-dev/blob/d07a33c8b422ee631653078fdc40402026b03dec/packages/nextjs/src/tools/templating/generate-component-builder.ts#L24)
 
 Generate component builder based on provided settings
 

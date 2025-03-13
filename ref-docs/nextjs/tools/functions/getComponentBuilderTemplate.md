@@ -8,7 +8,7 @@
 
 > **getComponentBuilderTemplate**(`components`): `string`
 
-Defined in: [nextjs/src/tools/templating/templates/component-builder.ts:14](https://github.com/Sitecore/xmc-jss-dev/blob/2587fa13814e20ee230863406a92229f2eebdb43/packages/nextjs/src/tools/templating/templates/component-builder.ts#L14)
+Defined in: [nextjs/src/tools/templating/templates/component-builder.ts:14](https://github.com/Sitecore/xmc-jss-dev/blob/d07a33c8b422ee631653078fdc40402026b03dec/packages/nextjs/src/tools/templating/templates/component-builder.ts#L14)
 
 Generate component builder template
 
