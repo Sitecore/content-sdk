@@ -8,7 +8,7 @@
 
 > **Link**(`props`): `ReactNode`
 
-Defined in: [nextjs/src/components/Link.tsx:29](https://github.com/Sitecore/xmc-jss-dev/blob/7e7ce097833cac399aa150e6b63dca7210e4ee25/packages/nextjs/src/components/Link.tsx#L29)
+Defined in: [nextjs/src/components/Link.tsx:29](https://github.com/Sitecore/xmc-jss-dev/blob/2587fa13814e20ee230863406a92229f2eebdb43/packages/nextjs/src/components/Link.tsx#L29)
 
 ## Parameters
 
