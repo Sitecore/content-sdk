@@ -8,7 +8,7 @@
 
 > **Module**: `object` & `object`
 
-Defined in: [nextjs/src/sharedTypes/module-factory.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/171a564b4cd6bd5a7eef15aa45c0e2689d16cb88/packages/nextjs/src/sharedTypes/module-factory.ts#L7)
+Defined in: [nextjs/src/sharedTypes/module-factory.ts:7](https://github.com/Sitecore/xmc-jss-dev/blob/7e7ce097833cac399aa150e6b63dca7210e4ee25/packages/nextjs/src/sharedTypes/module-factory.ts#L7)
 
 Represents a module (file)
 
