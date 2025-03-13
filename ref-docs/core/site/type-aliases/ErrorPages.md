@@ -8,7 +8,7 @@
 
 > **ErrorPages**: `object`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/d07a33c8b422ee631653078fdc40402026b03dec/packages/core/src/site/graphql-error-pages-service.ts#L43)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/core/src/site/graphql-error-pages-service.ts#L43)
 
 Object model of Error Pages result
 
