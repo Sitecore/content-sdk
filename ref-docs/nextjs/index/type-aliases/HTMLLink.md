@@ -8,6 +8,6 @@
 
 > **HTMLLink**: `object` & `Pick`\<`HTMLLinkElement`, `"rel"` \| `"href"`\>
 
-Defined in: core/types/models.d.ts:6
+Defined in: core/types/models.d.ts:5
 
 Html <link> tag data model

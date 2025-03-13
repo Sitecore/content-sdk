@@ -8,7 +8,7 @@
 
 > **scaffoldComponent**(`outputFilePath`, `componentName`, `templateName`, `templates`): `void`
 
-Defined in: [packages/core/src/tools/scaffold.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/f62fda45ad3407dd6bbe9ef6536a99934293651e/packages/core/src/tools/scaffold.ts#L46)
+Defined in: [packages/core/src/tools/scaffold.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/7e7ce097833cac399aa150e6b63dca7210e4ee25/packages/core/src/tools/scaffold.ts#L46)
 
 Scaffolds a new component based on the provided template.
 

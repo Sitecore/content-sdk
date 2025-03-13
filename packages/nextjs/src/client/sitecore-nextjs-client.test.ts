@@ -141,6 +141,57 @@ describe('SitecoreClient', () => {
         'jss-main': [...componentsWithExperiencesArray],
       });
     });
+
+    it('should pass site from path to base getPage method', async () => {
+      const path = `${SITE_PREFIX}mysite/test/path`;
+      const locale = 'en-US';
+      const testLayoutData = structuredClone(layoutData);
+
+      const siteInfo = {
+        name: 'mysite',
+        hostName: 'example.com',
+        language: 'en',
+      };
+      siteResolverStub.getByName.returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'parsePath').returns('/test/path');
+      layoutServiceStub.fetchLayoutData.returns(testLayoutData);
+
+      await sitecoreClient.getPage(path, {
+        locale,
+      });
+
+      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch('/test/path', {
+        locale,
+        site: 'mysite',
+      });
+    });
+
+    it('should use site passed in page options over site parsed from path', async () => {
+      const path = `${SITE_PREFIX}mysite/test/path`;
+      const locale = 'en-US';
+      const testLayoutData = structuredClone(layoutData);
+
+      const siteInfo = {
+        name: 'mysite',
+        hostName: 'example.com',
+        language: 'en',
+      };
+      siteResolverStub.getByName.returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
+      sandbox.stub(sitecoreClient, 'parsePath').returns('/test/path');
+      layoutServiceStub.fetchLayoutData.returns(testLayoutData);
+
+      await sitecoreClient.getPage(path, {
+        locale,
+        site: 'other-site',
+      });
+
+      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch('/test/path', {
+        locale,
+        site: 'other-site',
+      });
+    });
   });
 
   describe('resolveSiteFromPath', () => {

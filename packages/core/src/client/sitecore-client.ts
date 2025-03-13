@@ -52,22 +52,70 @@ export type PageOptions = Partial<RouteOptions> & {
  * Contract for the Sitecore Client implementations
  */
 export interface BaseSitecoreClient {
+  /**
+   * Resolves site by request hostaname
+   * @param {string} hostname incoming request host name
+   * @returns {SiteInfo} site details including name, language and hostname
+   */
   resolveSite(hostname: string): SiteInfo;
+  /**
+   * Retrieves page layoutData and returns page details like language, layoutData and site info for current request
+   * @param {string} path current request path
+   * @param {PageOptions} pageOptions additional overrides like language, site name and personalization variants
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @returns {Page | null} page details when page layout is found and null when not
+   */
   getPage(
     path: string | string[],
     pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
-  getDictionary(pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<DictionaryPhrases>;
+  /**
+   * Get dictionary data for a given site and locale.
+   * Can retrieve dictionary phrases for default site and language when page options not provided
+   * @param {RouteOptions} [routeOptions] language and site to load dictionary data for
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   */
+  getDictionary(
+    routeOptions?: Partial<RouteOptions>,
+    fetchOptions?: FetchOptions
+  ): Promise<DictionaryPhrases>;
+  /**
+   * Get error pages configured by SXA for a given site and locale
+   * @param {RouteOptions} [routeOptions] language and site to load error pages for
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   */
   getErrorPages(
     routeOptions?: RouteOptions,
     fetchOptions?: FetchOptions
   ): Promise<ErrorPages | null>;
+  /**
+   * Get preview layout details based on details from EditingPreviewData input
+   * @param {EditingPreviewData | undefined} previewData preview details like route, site, language etc used to retrieve preview page and layout
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   */
   getPreview(
     previewData: EditingPreviewData | undefined,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
+  /**
+   * Get route paths for all pages in the site. Can be used for static site generation.
+   * @param {string[]} [languages] languages to fetch routes in
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   */
   getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
+  /**
+   * Retrieves the links to be loaded in app's <head> element for each page.
+   * @param {LayoutServiceData} layoutData - The layout data containing styles and themes.
+   * @param {object} [options] - Optional configuration for enabling styles and themes.
+   * @param {boolean} [options.enableStyles] - Whether to include content styles.
+   * @param {boolean} [options.enableThemes] - Whether to include theme styles.
+   * @returns {HTMLLink[]} An array of `<link>` elements.
+   */
+  getHeadLinks(
+    layoutData: LayoutServiceData,
+    options: { enableStyles?: boolean; enableThemes?: boolean }
+  ): HTMLLink[];
 }
 
 export interface BaseServiceOptions {
@@ -109,8 +157,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     this.errorPagesService = this.getErrorPagesService();
     this.componentService = this.getComponentService();
     this.sitePathService = this.getSitePathService();
-    this.siteResolver = new SiteResolver(initOptions.sites);
-    this.editingService = new GraphQLEditingService({ clientFactory: this.clientFactory });
   }
 
   /**
@@ -216,16 +262,16 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves dictionary phrases for a given site and locale.
-   * @param {PageOptions} pageOptions - Route options containing language and site name to load dictionary for
+   * @param {RouteOptions} routeOptions - Route options containing language and site name to load dictionary for
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
    * @returns {DictionaryPhrases} A promise that resolves to the dictionary phrases.
    */
   async getDictionary(
-    pageOptions?: PageOptions,
+    routeOptions?: Partial<RouteOptions>,
     fetchOptions?: FetchOptions
   ): Promise<DictionaryPhrases> {
-    const locale = pageOptions?.locale || this.initOptions.defaultLanguage;
-    const site = pageOptions?.site || this.initOptions.defaultSite;
+    const locale = routeOptions?.locale || this.initOptions.defaultLanguage;
+    const site = routeOptions?.site || this.initOptions.defaultSite;
     return await this.dictionaryService.fetchDictionaryData(locale, site, fetchOptions);
   }
 
@@ -285,7 +331,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     const page = {
       locale: language,
       layout: data.layoutData,
-      headLinks: this.getHeadLinks(data.layoutData),
       dictionary: data.dictionary,
       site: data.layoutData.sitecore.context.site as SiteInfo,
     } as Page;
@@ -345,7 +390,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     const page = {
       locale: componentLibData.language,
       layout: componentData,
-      headLinks: this.getHeadLinks(componentData),
       dictionary: dictionaryData,
     } as Page;
     return page;

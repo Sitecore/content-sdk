@@ -6,7 +6,7 @@
 
 # Interface: SitecoreContextState
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:14](https://github.com/Sitecore/xmc-jss-dev/blob/f62fda45ad3407dd6bbe9ef6536a99934293651e/packages/react/src/components/SitecoreContext.tsx#L14)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:14](https://github.com/Sitecore/xmc-jss-dev/blob/7e7ce097833cac399aa150e6b63dca7210e4ee25/packages/react/src/components/SitecoreContext.tsx#L14)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:14](https://githu
 
 > **context**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:16](https://github.com/Sitecore/xmc-jss-dev/blob/f62fda45ad3407dd6bbe9ef6536a99934293651e/packages/react/src/components/SitecoreContext.tsx#L16)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:16](https://github.com/Sitecore/xmc-jss-dev/blob/7e7ce097833cac399aa150e6b63dca7210e4ee25/packages/react/src/components/SitecoreContext.tsx#L16)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:16](https://githu
 
 > **setContext**: (`value`) => `void`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:15](https://github.com/Sitecore/xmc-jss-dev/blob/f62fda45ad3407dd6bbe9ef6536a99934293651e/packages/react/src/components/SitecoreContext.tsx#L15)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:15](https://github.com/Sitecore/xmc-jss-dev/blob/7e7ce097833cac399aa150e6b63dca7210e4ee25/packages/react/src/components/SitecoreContext.tsx#L15)
 
 #### Parameters
 

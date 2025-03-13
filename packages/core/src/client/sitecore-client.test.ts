@@ -151,9 +151,6 @@ describe('SitecoreClient', () => {
       siteResolverStub.getByName.returns(siteInfo);
       sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.returns(layoutData);
-      sandbox
-        .stub(sitecoreClient, 'getHeadLinks')
-        .returns([{ rel: 'stylesheet', href: '/test.css' }]);
 
       const result = await sitecoreClient.getPage(path, { locale });
 
@@ -213,7 +210,6 @@ describe('SitecoreClient', () => {
       siteResolverStub.getByName.returns(siteInfo);
       sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.resolves(layoutData);
-      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       await sitecoreClient.getPage(path);
 
@@ -238,7 +234,6 @@ describe('SitecoreClient', () => {
       siteResolverStub.getByName.returns(siteInfo);
       sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
-      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       const result = await sitecoreClient.getPage(path, {
         locale,
@@ -281,7 +276,6 @@ describe('SitecoreClient', () => {
 
       siteResolverStub.getByName.returns(siteInfo);
       sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       layoutServiceStub.fetchLayoutData.resolves(layoutData);
 
@@ -446,9 +440,6 @@ describe('SitecoreClient', () => {
       };
 
       editingServiceStub.fetchEditingData.resolves(editingData);
-      sandbox
-        .stub(sitecoreClient, 'getHeadLinks')
-        .returns([{ rel: 'stylesheet', href: '/test.css' }]);
 
       const result = await sitecoreClient.getPreview(previewData);
 
@@ -458,7 +449,6 @@ describe('SitecoreClient', () => {
         dictionary: editingData.dictionary,
         site: editingData.layoutData.sitecore.context.site,
       });
-      expect(result?.headLinks).to.have.lengthOf(1);
 
       expect(editingServiceStub.fetchEditingData.calledOnce).to.be.true;
       expect(
@@ -492,7 +482,6 @@ describe('SitecoreClient', () => {
       };
 
       editingServiceStub.fetchEditingData.resolves(editingData);
-      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       const result = await sitecoreClient.getPreview(previewData);
 
@@ -573,8 +562,6 @@ describe('SitecoreClient', () => {
         })
         .resolves(editingData);
 
-      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
-
       await sitecoreClient.getPreview(previewData, fetchOptions);
 
       expect(
@@ -624,8 +611,6 @@ describe('SitecoreClient', () => {
       editingServiceStub.fetchDictionaryData
         .withArgs({ siteName: componentLibData.site, language: componentLibData.language })
         .resolves(dictionaryData);
-
-      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       const result = await sitecoreClient.getComponentLibraryData(componentLibData);
 
@@ -730,7 +715,6 @@ describe('SitecoreClient', () => {
 
       restComponentServiceStub.fetchComponentData.resolves(componentData);
       editingServiceStub.fetchDictionaryData.resolves(dictionaryData);
-      sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
       await sitecoreClient.getComponentLibraryData(componentLibData, fetchOptions);
 

@@ -6,6 +6,7 @@
 
 ## Modules
 
+- [client](client/README.md)
 - [config](config/README.md)
 - [editing](editing/README.md)
 - [i18n](i18n/README.md)

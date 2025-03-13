@@ -27,7 +27,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
   constructor(protected initOptions: SitecoreClientInit) {
     super(initOptions);
-    this.componentPropsService = new ComponentPropsService();
+    this.componentPropsService = this.getComponentPropsService();
   }
 
   // since path rewrite we rely on is only working in nextjs
@@ -59,9 +59,14 @@ export class SitecoreNextjsClient extends SitecoreClient {
     // Get variant(s) for personalization (from path), must ensure path is of type string
     const personalizeData =
       pageOptions.personalize || getPersonalizedRewriteData(super.parsePath(path));
+    const site = pageOptions.site || this.resolveSiteFromPath(path).name;
     const page = await super.getPage(
       resolvedPath,
-      { locale: pageOptions.locale, site: pageOptions.site, personalize: personalizeData },
+      {
+        locale: pageOptions.locale,
+        site,
+        personalize: personalizeData,
+      },
       options
     );
 
@@ -117,5 +122,9 @@ export class SitecoreNextjsClient extends SitecoreClient {
     }
 
     return componentProps;
+  }
+
+  protected getComponentPropsService(): ComponentPropsService {
+    return new ComponentPropsService();
   }
 }

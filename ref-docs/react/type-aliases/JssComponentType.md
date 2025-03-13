@@ -8,7 +8,7 @@
 
 > **JssComponentType**: `ComponentType` & `object`
 
-Defined in: [packages/react/src/components/sharedTypes.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/f62fda45ad3407dd6bbe9ef6536a99934293651e/packages/react/src/components/sharedTypes.ts#L15)
+Defined in: [packages/react/src/components/sharedTypes.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/7e7ce097833cac399aa150e6b63dca7210e4ee25/packages/react/src/components/sharedTypes.ts#L15)
 
 Component type returned from component builder / factory
 
