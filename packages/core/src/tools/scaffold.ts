@@ -37,14 +37,14 @@ export function scaffoldFile(filePath: string, fileContent: string): string | nu
 
 /**
  * Scaffolds a new component based on the provided template.
- * @param {string} outputFilePath - The file path where the component will be created.
+ * @param {string} outputFolderPath - The file path where the component will be created.
  * @param {string} componentName - The name of the component to be created.
  * @param {string} templateName - The name of the template to use for scaffolding. If not provided, defaults to 'byoc' if `byoc` is true, otherwise 'default'.
  * @param {ScaffoldTemplate[]} templates - An array of template objects, each containing a name, a template function, and a getNextSteps function.
  * @throws Will throw an error if the specified template is not found.
  */
 export function scaffoldComponent(
-  outputFilePath: string,
+  outputFolderPath: string,
   componentName: string,
   templateName: string,
   templates: ScaffoldTemplate[]
@@ -55,6 +55,7 @@ export function scaffoldComponent(
     throw new Error(`Template ${templateName} not found.`);
   }
 
+  const outputFilePath = path.join(outputFolderPath, `${componentName}.${template.fileExtension}`);
   const componentOutputPath = scaffoldFile(
     outputFilePath,
     template.generateTemplate(componentName)

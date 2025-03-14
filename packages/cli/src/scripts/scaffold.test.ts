@@ -19,6 +19,7 @@ describe('scaffold command', () => {
       templates: [
         {
           name: ComponentTemplateType.DEFAULT,
+          fileExtension: 'tsx',
           generateTemplate: (componentName: string) => {
             return componentName;
           },
@@ -26,6 +27,7 @@ describe('scaffold command', () => {
         },
         {
           name: ComponentTemplateType.BYOC,
+          fileExtension: 'tsx',
           generateTemplate: (componentName: string) => {
             return `${ComponentTemplateType.BYOC} ${componentName}`;
           },
@@ -33,6 +35,7 @@ describe('scaffold command', () => {
         },
         {
           name: 'customTemplate',
+          fileExtension: 'tsx',
           generateTemplate: (componentName: string) => {
             return 'customTemplate ' + componentName;
           },
@@ -88,13 +91,13 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     const argv = {
       componentName: 'ValidComponentName',
     };
-    const expectedOutputFilePath = path.join('src/components', 'ValidComponentName.tsx');
+    const expectedOutputFFolderPath = 'src/components';
 
     handler(argv);
 
     expect(
       scaffoldComponentStub.calledOnceWith(
-        expectedOutputFilePath,
+        expectedOutputFFolderPath,
         'ValidComponentName',
         ComponentTemplateType.DEFAULT,
         mockConfig.scaffold.templates
@@ -107,13 +110,13 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
       componentName: 'ValidComponentName',
       byoc: true,
     };
-    const expectedOutputFilePath = path.join('src/components', 'ValidComponentName.tsx');
+    const expectedOutputFFolderPath = 'src/components';
 
     handler(argv);
 
     expect(
       scaffoldComponentStub.calledOnceWith(
-        expectedOutputFilePath,
+        expectedOutputFFolderPath,
         'ValidComponentName',
         ComponentTemplateType.BYOC,
         mockConfig.scaffold.templates
@@ -127,13 +130,13 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
       templateName: 'customTemplate',
       byoc: true,
     };
-    const expectedOutputFilePath = path.join('src/components', 'ValidComponentName.tsx');
+    const expectedOutputFFolderPath = 'src/components';
 
     handler(argv);
 
     expect(
       scaffoldComponentStub.calledOnceWith(
-        expectedOutputFilePath,
+        expectedOutputFFolderPath,
         'ValidComponentName',
         argv.templateName,
         mockConfig.scaffold.templates
@@ -148,7 +151,7 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
       templateName: 'template',
       byoc: true,
     };
-    const expectedOutputFilePath = path.join('path/to', 'ValidComponentName.tsx');
+    const expectedOutputFilePath = 'path/to/';
     handler(argv);
     expect(
       scaffoldComponentStub.calledOnceWith(

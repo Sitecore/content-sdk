@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import { generateTemplate, getNextSteps } from './byoc-component';
+import { byocTemplate } from './byoc-component';
 import chalk from 'chalk';
 
 describe('byoc-component', () => {
   describe('generateTemplate', () => {
     it('should generate a template with the given component name', () => {
       const componentName = 'TestComponent';
-      const template = generateTemplate(componentName);
+      const template = byocTemplate.generateTemplate(componentName);
       expect(template).to.include(`interface ${componentName}Props`);
       expect(template).to.include(`<p>${componentName} Component</p>`);
       expect(template).to.include(`FEAAS.External.registerComponent(${componentName}`);
@@ -15,7 +15,7 @@ describe('byoc-component', () => {
 
   describe('getNextSteps', () => {
     it('should return an array with a step to modify component registration', () => {
-      const nextSteps = getNextSteps('');
+      const nextSteps = byocTemplate.getNextSteps && byocTemplate.getNextSteps('');
       expect(nextSteps)
         .to.be.an('array')
         .that.includes(
@@ -25,7 +25,7 @@ describe('byoc-component', () => {
 
     it('should return an array with next steps if componentOutputPath is provided', () => {
       const componentOutputPath = 'src/components/TestComponent.tsx';
-      const nextSteps = getNextSteps(componentOutputPath);
+      const nextSteps = byocTemplate.getNextSteps && byocTemplate.getNextSteps(componentOutputPath);
       expect(nextSteps)
         .to.be.an('array')
         .that.includes(

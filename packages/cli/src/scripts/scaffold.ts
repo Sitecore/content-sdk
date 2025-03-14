@@ -1,4 +1,3 @@
-import path from 'path';
 import { scaffoldComponent } from '@sitecore-content-sdk/core/tools';
 import loadCliConfig from '../utils/load-config';
 import { Argv } from 'yargs';
@@ -92,10 +91,9 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`);
 
   const componentPath = regExResult[1];
   const componentName = regExResult[2];
-  const filename = `${componentName}.tsx`;
-  const outputFilePath = path.join(componentPath || 'src/components', filename);
+  const outputFolder = componentPath || 'src/components';
   const templateName =
     argv.templateName ?? (argv.byoc ? ComponentTemplateType.BYOC : ComponentTemplateType.DEFAULT);
 
-  scaffoldComponent(outputFilePath, componentName, templateName, cliConfig.scaffold.templates);
+  scaffoldComponent(outputFolder, componentName, templateName, cliConfig.scaffold.templates);
 }

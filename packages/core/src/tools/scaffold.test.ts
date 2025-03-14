@@ -93,32 +93,40 @@ describe('scaffold', () => {
     const templates = [
       {
         name: 'default',
+        fileExtension: 'tsx',
         generateTemplate: sinon.stub().returns('default template content'),
         getNextSteps: sinon.stub().returns(['Step 1', 'Step 2']),
       },
       {
         name: 'byoc',
+        fileExtension: 'tsx',
         generateTemplate: sinon.stub().returns('byoc template content'),
         getNextSteps: sinon.stub().returns(['BYOC Step 1', 'BYOC Step 2']),
       },
       {
         name: 'customTemplate',
+        fileExtension: 'tsx',
         generateTemplate: sinon.stub().returns('custom template content'),
         getNextSteps: sinon.stub().returns(['custom Step 1', 'custom Step 2']),
       },
     ];
 
     it('should scaffold component with default template', () => {
-      const outputFilePath = 'output/path';
+      const outputFolderPath = 'output/path';
       const componentName = 'MyComponent';
       const templateName = 'default';
       const template = templates.filter((t) => t.name === 'default')[0];
-      existsStub.withArgs(outputFilePath).returns(false);
-      scaffoldComponent(outputFilePath, componentName, templateName, templates);
+      existsStub.withArgs(outputFolderPath).returns(false);
+      scaffoldComponent(outputFolderPath, componentName, templateName, templates);
 
       expect(template.generateTemplate.calledWith(componentName)).to.be.true;
-      expect(writeFileStub.calledWith(outputFilePath, template.generateTemplate(), 'utf8')).to.be
-        .true;
+      expect(
+        writeFileStub.calledWith(
+          path.join(outputFolderPath, `${componentName}.${template.fileExtension}`),
+          template.generateTemplate(),
+          'utf8'
+        )
+      ).to.be.true;
       expect(consoleLogStub.calledWithMatch(`Scaffolding of ${componentName} complete.`)).to.be
         .true;
       expect(consoleLogStub.calledWithMatch(template.getNextSteps()[0])).to.be.true;
@@ -126,17 +134,22 @@ describe('scaffold', () => {
     });
 
     it('should scaffold component with byoc template', () => {
-      const outputFilePath = 'output/path';
+      const outputFolderPath = 'output/path';
       const componentName = 'MyByocComponent';
       const templateName = 'byoc';
       const template = templates.filter((t) => t.name === 'byoc')[0];
-      existsStub.withArgs(outputFilePath).returns(false);
+      existsStub.withArgs(outputFolderPath).returns(false);
 
-      scaffoldComponent(outputFilePath, componentName, templateName, templates);
+      scaffoldComponent(outputFolderPath, componentName, templateName, templates);
 
       expect(template.generateTemplate.calledWith(componentName)).to.be.true;
-      expect(writeFileStub.calledWith(outputFilePath, template.generateTemplate(), 'utf8')).to.be
-        .true;
+      expect(
+        writeFileStub.calledWith(
+          path.join(outputFolderPath, `${componentName}.${template.fileExtension}`),
+          template.generateTemplate(),
+          'utf8'
+        )
+      ).to.be.true;
       expect(consoleLogStub.calledWithMatch(`Scaffolding of ${componentName} complete.`)).to.be.be
         .true;
       expect(consoleLogStub.calledWithMatch(template.getNextSteps()[0])).to.be.true;
@@ -144,17 +157,22 @@ describe('scaffold', () => {
     });
 
     it('should scaffold component with custom template', () => {
-      const outputFilePath = 'output/path';
+      const outputFolderPath = 'output/path';
       const componentName = 'MyCustomComponent';
       const templateName = 'customTemplate';
       const template = templates.filter((t) => t.name === templateName)[0];
-      existsStub.withArgs(outputFilePath).returns(false);
+      existsStub.withArgs(outputFolderPath).returns(false);
 
-      scaffoldComponent(outputFilePath, componentName, templateName, templates);
+      scaffoldComponent(outputFolderPath, componentName, templateName, templates);
 
       expect(template.generateTemplate.calledWith(componentName)).to.be.true;
-      expect(writeFileStub.calledWith(outputFilePath, template.generateTemplate(), 'utf8')).to.be
-        .true;
+      expect(
+        writeFileStub.calledWith(
+          path.join(outputFolderPath, `${componentName}.${template.fileExtension}`),
+          template.generateTemplate(),
+          'utf8'
+        )
+      ).to.be.true;
       expect(consoleLogStub.calledWithMatch(`Scaffolding of ${componentName} complete.`)).to.be.be
         .true;
       expect(consoleLogStub.calledWithMatch(template.getNextSteps()[0])).to.be.true;

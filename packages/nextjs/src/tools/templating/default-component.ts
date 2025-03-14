@@ -1,11 +1,13 @@
 import chalk from 'chalk';
+import { ScaffoldTemplate, ComponentTemplateType } from '@sitecore-content-sdk/core/config';
+import { COMPONENT_FILE_EXTENSION } from './utils';
 
 /**
  * Next.js component boilerplate
  * @param {string} componentName - the component name
  * @returns component generated template
  */
-export const generateTemplate = (componentName: string): string => {
+const generateTemplate = (componentName: string): string => {
   return `import React from 'react';
 import { ComponentParams, ComponentRendering } from '@sitecore-content-sdk/nextjs';
 
@@ -33,7 +35,7 @@ export const Default = (props: ${componentName}Props): JSX.Element => {
  * @param {string} componentOutputPath - The file path where the component file is generated.
  * @returns {string[]} An array of strings, each representing a next step.
  */
-export const getNextSteps = (componentOutputPath: string): string[] => {
+const getNextSteps = (componentOutputPath: string): string[] => {
   const nextSteps = [];
 
   if (componentOutputPath) {
@@ -41,4 +43,11 @@ export const getNextSteps = (componentOutputPath: string): string[] => {
   }
 
   return nextSteps;
+};
+
+export const defaultTemplate: ScaffoldTemplate = {
+  name: ComponentTemplateType.DEFAULT,
+  fileExtension: COMPONENT_FILE_EXTENSION,
+  generateTemplate,
+  getNextSteps,
 };
