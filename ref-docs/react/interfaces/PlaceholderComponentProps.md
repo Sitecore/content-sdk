@@ -6,7 +6,7 @@
 
 # Interface: PlaceholderComponentProps
 
-Defined in: [packages/react/src/components/Placeholder.tsx:8](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/Placeholder.tsx#L8)
+Defined in: [packages/react/src/components/Placeholder.tsx:8](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/Placeholder.tsx#L8)
 
 ## Extends
 
@@ -22,7 +22,7 @@ Defined in: [packages/react/src/components/Placeholder.tsx:8](https://github.com
 
 > `optional` **componentFactory**: [`ComponentFactory`](../type-aliases/ComponentFactory.md)
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:43](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L43)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:43](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L43)
 
 A factory function that will receive a componentName and return an instance of a React component.
 When rendered within a <SitecoreContext> component, defaults to the context componentFactory.
@@ -37,7 +37,7 @@ When rendered within a <SitecoreContext> component, defaults to the context comp
 
 > `optional` **componentLoadingMessage**: `string`
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:88](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L88)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:88](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L88)
 
 The message that gets displayed while component is loading
 
@@ -51,7 +51,7 @@ The message that gets displayed while component is loading
 
 > `optional` **errorComponent**: `ComponentClass`\<`ErrorComponentProps`\> \| `FC`\<`ErrorComponentProps`\>
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:80](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L80)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:80](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L80)
 
 A component that is rendered in place of the placeholder when an error occurs rendering
 the placeholder
@@ -66,7 +66,7 @@ the placeholder
 
 > `optional` **fields**: `object`
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:48](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L48)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:48](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L48)
 
 An object of field names/values that are aggregated and propagated through the component tree created by a placeholder.
 Any component or placeholder rendered by a placeholder will have access to this data via `props.fields`.
@@ -85,7 +85,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 > `optional` **hiddenRenderingComponent**: `ComponentClass`\<`unknown`\> \| `FC`\<`unknown`\>
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:74](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L74)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:74](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L74)
 
 A component that is rendered in place of any components that are hidden
 
@@ -99,7 +99,7 @@ A component that is rendered in place of any components that are hidden
 
 > `optional` **missingComponentComponent**: `ComponentClass`\<`unknown`\> \| `FC`\<`unknown`\>
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:69](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L69)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:69](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L69)
 
 A component that is rendered in place of any components that are in this placeholder,
 but do not have a definition in the componentFactory (i.e. don't have a React implementation)
@@ -114,7 +114,7 @@ but do not have a definition in the componentFactory (i.e. don't have a React im
 
 > `optional` **modifyComponentProps**: (`componentProps`) => `ComponentProps`
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:64](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L64)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:64](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L64)
 
 Modify final props of component (before render) provided by rendering data.
 Can be used in case when you need to insert additional data into the component.
@@ -141,7 +141,7 @@ modified or initial props
 
 > **name**: `string`
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:36](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L36)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:36](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L36)
 
 Name of the placeholder to render.
 
@@ -155,7 +155,7 @@ Name of the placeholder to render.
 
 > `optional` **params**: `object`
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:55](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L55)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:55](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L55)
 
 An object of rendering parameter names/values that are aggregated and propagated through the component tree created by a placeholder.
 Any component or placeholder rendered by a placeholder will have access to this data via `props.params`.
@@ -174,7 +174,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 > `optional` **render**: (`components`, `data`, `props`) => `ReactNode`
 
-Defined in: [packages/react/src/components/Placeholder.tsx:17](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/Placeholder.tsx#L17)
+Defined in: [packages/react/src/components/Placeholder.tsx:17](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/Placeholder.tsx#L17)
 
 Render props function that enables control over the rendering of the components in the placeholder.
 Useful for techniques like wrapping each child in a wrapper component.
@@ -197,7 +197,7 @@ Useful for techniques like wrapping each child in a wrapper component.
 
 > `optional` **renderEach**: (`component`, `index`) => `ReactNode`
 
-Defined in: [packages/react/src/components/Placeholder.tsx:27](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/Placeholder.tsx#L27)
+Defined in: [packages/react/src/components/Placeholder.tsx:27](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/Placeholder.tsx#L27)
 
 Render props function that is called for each non-system component added to the placeholder.
 Mutually exclusive with `render`.
@@ -219,7 +219,7 @@ Mutually exclusive with `render`.
 
 > `optional` **renderEmpty**: (`components`) => `ReactNode`
 
-Defined in: [packages/react/src/components/Placeholder.tsx:12](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/Placeholder.tsx#L12)
+Defined in: [packages/react/src/components/Placeholder.tsx:12](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/Placeholder.tsx#L12)
 
 Render props function that is called when the placeholder contains no content components.
 
@@ -239,7 +239,7 @@ Render props function that is called when the placeholder contains no content co
 
 > **rendering**: [`ComponentRendering`](ComponentRendering.md) \| [`RouteData`](RouteData.md)
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:38](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L38)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:38](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L38)
 
 Rendering data to be used when rendering the placeholder.
 
@@ -253,7 +253,7 @@ Rendering data to be used when rendering the placeholder.
 
 > **sitecoreContext**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: [packages/react/src/components/PlaceholderCommon.tsx:84](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/react/src/components/PlaceholderCommon.tsx#L84)
+Defined in: [packages/react/src/components/PlaceholderCommon.tsx:84](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/react/src/components/PlaceholderCommon.tsx#L84)
 
 Context data from the Sitecore Layout Service
 

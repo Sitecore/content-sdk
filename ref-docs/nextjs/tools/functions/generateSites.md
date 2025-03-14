@@ -8,7 +8,7 @@
 
 > **generateSites**(`config`): () => `Promise`\<`void`\>
 
-Defined in: core/types/tools/generateSites.d.ts:31
+Defined in: core/types/tools/generateSites.d.ts:23
 
 Generates site information and writes it to a specified destination path.
 

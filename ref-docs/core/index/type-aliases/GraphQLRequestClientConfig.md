@@ -8,7 +8,7 @@
 
 > **GraphQLRequestClientConfig**: `object`
 
-Defined in: [packages/core/src/graphql-request-client.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/core/src/graphql-request-client.ts#L34)
+Defined in: [packages/core/src/graphql-request-client.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/core/src/graphql-request-client.ts#L34)
 
 Minimum configuration options for classes that implement
 

@@ -8,17 +8,11 @@
 
 > **GenerateSitesConfig**: `object`
 
-Defined in: [packages/core/src/tools/generateSites.ts:13](https://github.com/Sitecore/xmc-jss-dev/blob/07cd028140c85e97f7ece01b765c9bb0efa691ad/packages/core/src/tools/generateSites.ts#L13)
+Defined in: [packages/core/src/tools/generateSites.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/core/src/tools/generateSites.ts#L15)
 
 Configuration object for generating sites.
 
 ## Type declaration
-
-### defaultSite
-
-> **defaultSite**: [`SiteInfo`](../../site/type-aliases/SiteInfo.md)
-
-The default site name.
 
 ### destinationPath?
 
@@ -27,14 +21,8 @@ The default site name.
 Optional path where the generated sites will be saved.
 If not provided, the default '.sitecore/sites.json' will be used.
 
-### multisiteEnabled
+### scConfig
 
-> **multisiteEnabled**: `boolean`
+> **scConfig**: [`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md)
 
-Indicates if multisite support is enabled.
-
-### siteInfoService
-
-> **siteInfoService**: [`GraphQLSiteInfoService`](../../site/classes/GraphQLSiteInfoService.md)
-
-The SiteInfo service.
+The Sitecore configuration used at build and run time.
