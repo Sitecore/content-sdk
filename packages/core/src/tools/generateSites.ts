@@ -4,6 +4,8 @@ import fs from 'fs';
 
 import { SiteInfo, GraphQLSiteInfoService } from '../site';
 import { ensurePathExists } from '../utils/ensurePath';
+import { SitecoreConfig } from '../config';
+import { createGraphQLClientFactory } from '../client';
 
 const DEFAULT_SITES_DIST_PATH = '.sitecore/sites.json';
 
@@ -12,17 +14,9 @@ const DEFAULT_SITES_DIST_PATH = '.sitecore/sites.json';
  */
 export type GenerateSitesConfig = {
   /**
-   * Indicates if multisite support is enabled.
+   * The Sitecore configuration used at build and run time.
    */
-  multisiteEnabled: boolean;
-  /**
-   * The default site name.
-   */
-  defaultSite: SiteInfo;
-  /**
-   * The SiteInfo service.
-   */
-  siteInfoService: GraphQLSiteInfoService;
+  scConfig: SitecoreConfig;
 
   /**
    * Optional path where the generated sites will be saved.
@@ -34,22 +28,28 @@ export type GenerateSitesConfig = {
 /**
  * Generates site information and writes it to a specified destination path.
  * @param {GenerateSitesConfig} config - The configuration for generating site info.
- * @param {GraphQLSiteInfoService} config.siteInfoService - The service used to fetch site information.
+ * @param {GraphQLSiteInfoService} config.scConfig - The Sitecore configuration used at build and run time.
  * @param {string} config.destinationPath - The optional path where the generated sites file will be written. Defaults to '.sitecore/sites.json'.
  * @returns {Promise<Function>} - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
  */
 export const generateSites = ({
-  multisiteEnabled,
-  defaultSite,
-  siteInfoService,
+  scConfig,
   destinationPath,
 }: GenerateSitesConfig): (() => Promise<void>) => {
   return async () => {
     let sites: SiteInfo[] = [];
     const sitesFilePath = path.resolve(destinationPath ?? DEFAULT_SITES_DIST_PATH);
 
-    if (multisiteEnabled) {
+    if (scConfig.multisite.enabled) {
       try {
+        const siteInfoService = new GraphQLSiteInfoService({
+          clientFactory: createGraphQLClientFactory({
+            api: scConfig.api,
+            retries: scConfig.retries.count,
+            retryStrategy: scConfig.retries.retryStrategy,
+          }),
+        });
+
         console.log('Fetching site information');
         sites = await siteInfoService.fetchSiteInfo();
       } catch (error) {
@@ -58,6 +58,12 @@ export const generateSites = ({
       }
     }
 
+    // Add default site to the list
+    const defaultSite: SiteInfo = {
+      name: scConfig.defaultSite,
+      hostName: scConfig.multisite.defaultHostname,
+      language: scConfig.defaultLanguage,
+    };
     sites.unshift(defaultSite);
 
     ensurePathExists(sitesFilePath);

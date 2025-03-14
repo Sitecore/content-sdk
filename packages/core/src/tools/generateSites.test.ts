@@ -5,6 +5,7 @@ import fs from 'fs';
 import chalk from 'chalk';
 import { GenerateSitesConfig } from './generateSites';
 import { SiteInfo, GraphQLSiteInfoService } from '../site';
+import { SitecoreConfigInput, defineConfig } from '../config';
 import proxyquire from 'proxyquire';
 
 const defaultSite: SiteInfo = {
@@ -13,8 +14,22 @@ const defaultSite: SiteInfo = {
   language: 'en',
 };
 
+const mockConfig: SitecoreConfigInput = {
+  api: {
+    edge: {
+      contextId: 'context-id',
+      clientContextId: 'client-id',
+    },
+  },
+  defaultSite: defaultSite.name,
+  defaultLanguage: defaultSite.language,
+  multisite: {
+    enabled: true,
+    defaultHostname: defaultSite.hostName,
+  },
+};
+
 describe('generateSites', () => {
-  let siteInfoServiceStub: sinon.SinonStubbedInstance<GraphQLSiteInfoService>;
   let ensurePathExistsStub: sinon.SinonStub;
   let fsWriteFileSyncStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
@@ -22,7 +37,6 @@ describe('generateSites', () => {
   let generateSites: any;
 
   beforeEach(() => {
-    siteInfoServiceStub = sinon.createStubInstance(GraphQLSiteInfoService);
     ensurePathExistsStub = sinon.stub();
     fsWriteFileSyncStub = sinon.stub(fs, 'writeFileSync');
     consoleLogStub = sinon.stub(console, 'log');
@@ -39,10 +53,9 @@ describe('generateSites', () => {
   });
 
   it('should write site info to the default path when destinationPath is not provided', async () => {
+    const scConfig = defineConfig(mockConfig);
     const config: GenerateSitesConfig = {
-      multisiteEnabled: false,
-      defaultSite,
-      siteInfoService: siteInfoServiceStub,
+      scConfig,
     };
 
     const generate = generateSites(config);
@@ -59,17 +72,17 @@ describe('generateSites', () => {
   });
 
   it('should write site info to the provided destinationPath', async () => {
+    const destinationPath = 'custom/path/sites.json';
+    const scConfig = defineConfig(mockConfig);
     const config: GenerateSitesConfig = {
-      multisiteEnabled: false,
-      defaultSite,
-      siteInfoService: siteInfoServiceStub,
-      destinationPath: 'custom/path/sites.json',
+      scConfig,
+      destinationPath: destinationPath,
     };
 
     const generate = generateSites(config);
     await generate();
 
-    const expectedPath = path.resolve('custom/path/sites.json');
+    const expectedPath = path.resolve(destinationPath);
     expect(ensurePathExistsStub.calledWith(expectedPath)).to.be.true;
     expect(
       fsWriteFileSyncStub.calledWith(expectedPath, JSON.stringify([defaultSite], null, 2), {
@@ -84,12 +97,12 @@ describe('generateSites', () => {
       { name: 'site1', hostName: 'site1.com', language: 'de/DE' },
       { name: 'site2', hostName: 'site2.com', language: 'da/DK' },
     ];
-    siteInfoServiceStub.fetchSiteInfo.resolves(fetchedSites);
 
+    sinon.stub(GraphQLSiteInfoService.prototype, 'fetchSiteInfo').resolves(fetchedSites);
+
+    const scConfig = defineConfig(mockConfig);
     const config: GenerateSitesConfig = {
-      multisiteEnabled: true,
-      defaultSite,
-      siteInfoService: siteInfoServiceStub,
+      scConfig,
     };
 
     const generate = generateSites(config);
@@ -108,12 +121,11 @@ describe('generateSites', () => {
   });
 
   it('should log an error when fetching site information fails', async () => {
-    siteInfoServiceStub.fetchSiteInfo.rejects(new Error('Fetch error'));
+    sinon.stub(GraphQLSiteInfoService.prototype, 'fetchSiteInfo').rejects(new Error('Fetch error'));
+    const scConfig = defineConfig(mockConfig);
 
     const config: GenerateSitesConfig = {
-      multisiteEnabled: true,
-      defaultSite,
-      siteInfoService: siteInfoServiceStub,
+      scConfig,
     };
 
     const generate = generateSites(config);
