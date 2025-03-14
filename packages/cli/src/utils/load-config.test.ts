@@ -3,15 +3,18 @@ import sinon from 'sinon';
 import path from 'path';
 import loadCliConfig from './load-config';
 import fs from 'fs';
+import * as processEnv from './process-env';
 
 const tsx = require('tsx/cjs/api');
 
 describe('loadCliConfig', () => {
   let tsxRequireStub: sinon.SinonStub;
   const mockConfigExport = { default: { build: { commmands: [], scaffold: {} } } };
+  let processEnvStub: sinon.SinonStub;
 
   beforeEach(() => {
     tsxRequireStub = sinon.stub(tsx, 'require');
+    processEnvStub = sinon.stub(processEnv, 'default');
   });
 
   afterEach(() => {
@@ -30,6 +33,7 @@ describe('loadCliConfig', () => {
       )
     ).to.be.true;
     expect(config).to.deep.equal(mockConfigExport.default);
+    expect(processEnvStub.notCalled).to.be.true;
   });
 
   it('should load the default .js configuration file if no configFile is provided and the .ts is missing', () => {
@@ -44,9 +48,10 @@ describe('loadCliConfig', () => {
       )
     ).to.be.true;
     expect(config).to.deep.equal(mockConfigExport.default);
+    expect(processEnvStub.notCalled).to.be.true;
   });
 
-  it('should load the specified configuration file', () => {
+  it('should load the specified configuration file from same directory', () => {
     tsxRequireStub.returns(mockConfigExport);
     const config = loadCliConfig('./some-config.ts');
 
@@ -57,6 +62,25 @@ describe('loadCliConfig', () => {
       )
     ).to.be.true;
     expect(config).to.deep.equal(mockConfigExport.default);
+    expect(processEnvStub.notCalled).to.be.true;
+  });
+
+  it('should load the specified configuration file from different directory, and load env vars from there', () => {
+    tsxRequireStub.returns(mockConfigExport);
+    const config = loadCliConfig('./some-dr/some-config.ts');
+
+    expect(
+      tsxRequireStub.calledOnceWith(
+        path.resolve(process.cwd(), './some-dr/some-config.ts'),
+        path.resolve(__dirname, './load-config.ts')
+      )
+    ).to.be.true;
+    expect(config).to.deep.equal(mockConfigExport.default);
+    expect(
+      processEnvStub.calledWith(
+        path.dirname(path.resolve(process.cwd(), './some-dr/some-config.ts'))
+      )
+    ).to.be.true;
   });
 
   it('should throw an error if the configuration file does not exist', () => {
