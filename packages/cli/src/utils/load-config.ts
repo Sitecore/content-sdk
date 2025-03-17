@@ -1,6 +1,7 @@
 import { SitecoreCliConfig } from '@sitecore-content-sdk/core/types/config';
 import path from 'path';
 import fs from 'fs';
+import processEnv from './process-env';
 
 const tsx = require('tsx/cjs/api');
 
@@ -16,6 +17,14 @@ export default function loadCliConfig(configFile?: string): SitecoreCliConfig {
     configFile = './sitecore.cli.config.ts';
     if (!fs.existsSync(path.resolve(process.cwd(), configFile))) {
       configFile = './sitecore.cli.config.js';
+    }
+  } else {
+    // configuration file/filepath has been provided
+    // the env variables have been already loaded from the current working directory, however the current command may be running outside of a context of a project
+    // if so try loading the env vars from the directory of the provided config file
+    const configFileDirectory = path.dirname(path.resolve(process.cwd(), configFile));
+    if (process.cwd() !== configFileDirectory) {
+      processEnv(configFileDirectory);
     }
   }
 
