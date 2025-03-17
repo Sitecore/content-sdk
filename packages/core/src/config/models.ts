@@ -225,6 +225,10 @@ export type ScaffoldTemplate = {
    */
   name: string;
   /**
+   * File extension for the generated component.
+   */
+  fileExtension: string;
+  /**
    * Function to generate the component file contents based on the component name.
    * @param componentName - The name of the component.
    * @returns The generated content as a string.

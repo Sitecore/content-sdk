@@ -1,11 +1,13 @@
 import chalk from 'chalk';
+import { ScaffoldTemplate, ComponentTemplateType } from '@sitecore-content-sdk/core/config';
+import { COMPONENT_FILE_EXTENSION } from './utils';
 
 /**
  * Next.js BYOC component boilerplate
  * @param {string} componentName - the component name
  * @returns component generated template
  */
-export const generateTemplate = (componentName: string): string => {
+const generateTemplate = (componentName: string): string => {
   return `import React from 'react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 
@@ -53,7 +55,7 @@ FEAAS.External.registerComponent(${componentName}, {
  * @param {string} componentOutputPath - The file path where the component file is generated.
  * @returns {string[]} An array of strings, each representing a next step.
  */
-export const getNextSteps = (componentOutputPath: string): string[] => {
+const getNextSteps = (componentOutputPath: string): string[] => {
   const nextSteps = [];
 
   nextSteps.push(
@@ -65,4 +67,11 @@ export const getNextSteps = (componentOutputPath: string): string[] => {
   }
 
   return nextSteps;
+};
+
+export const byocTemplate: ScaffoldTemplate = {
+  name: ComponentTemplateType.BYOC,
+  fileExtension: COMPONENT_FILE_EXTENSION,
+  generateTemplate,
+  getNextSteps,
 };

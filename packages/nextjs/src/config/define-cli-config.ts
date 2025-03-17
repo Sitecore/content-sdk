@@ -2,11 +2,10 @@ import {
   defineCliConfig as defineCliConfigCore,
   SitecoreCliConfigInput,
   SitecoreCliConfig,
-  ComponentTemplateType,
 } from '@sitecore-content-sdk/core/config';
 
-import * as byocTemplate from '../tools/templating/byoc-component';
-import * as defaultTemplate from '../tools/templating/default-component';
+import { byocTemplate } from '../tools/templating/byoc-component';
+import { defaultTemplate } from '../tools/templating/default-component';
 
 /**
  * Accepts a `SitecoreCliConfigInput` object and returns the Sitecore Content SDK CLI configuration from the specified file,
@@ -32,16 +31,5 @@ function addDefaultScaffoldTemplates(cliConfig: SitecoreCliConfigInput) {
     cliConfig.scaffold.templates = [];
   }
 
-  cliConfig.scaffold.templates.unshift(
-    {
-      name: ComponentTemplateType.DEFAULT,
-      generateTemplate: defaultTemplate.generateTemplate,
-      getNextSteps: defaultTemplate.getNextSteps,
-    },
-    {
-      name: ComponentTemplateType.BYOC,
-      generateTemplate: byocTemplate.generateTemplate,
-      getNextSteps: byocTemplate.getNextSteps,
-    }
-  );
+  cliConfig.scaffold.templates.unshift(defaultTemplate, byocTemplate);
 }
