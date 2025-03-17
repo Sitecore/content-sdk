@@ -6,9 +6,9 @@
 
 # Function: scaffoldComponent()
 
-> **scaffoldComponent**(`outputFilePath`, `componentName`, `templateName`, `templates`): `void`
+> **scaffoldComponent**(`outputFolderPath`, `componentName`, `templateName`, `templates`): `void`
 
-Defined in: [packages/core/src/tools/scaffold.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/core/src/tools/scaffold.ts#L46)
+Defined in: [packages/core/src/tools/scaffold.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/tools/scaffold.ts#L46)
 
 Scaffolds a new component based on the provided template.
 
@@ -16,7 +16,7 @@ Scaffolds a new component based on the provided template.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `outputFilePath` | `string` | The file path where the component will be created. |
+| `outputFolderPath` | `string` | The file path where the component will be created. |
 | `componentName` | `string` | The name of the component to be created. |
 | `templateName` | `string` | The name of the template to use for scaffolding. If not provided, defaults to 'byoc' if `byoc` is true, otherwise 'default'. |
 | `templates` | [`ScaffoldTemplate`](../../config/type-aliases/ScaffoldTemplate.md)[] | An array of template objects, each containing a name, a template function, and a getNextSteps function. |

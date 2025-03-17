@@ -8,7 +8,7 @@
 
 > **isComponentLibraryPreviewData**(`data`): `data is ComponentLibraryRenderPreviewData`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/3310bf85cd80a18385c6608a4a61e0c1446ff89e/packages/nextjs/src/editing/editing-render-middleware.ts#L43)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/nextjs/src/editing/editing-render-middleware.ts#L43)
 
 Type guard for Component Library mode
 
