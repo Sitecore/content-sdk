@@ -6,7 +6,7 @@
 
 # Interface: RenderComponentQueryParams
 
-Defined in: [packages/core/src/editing/models.ts:25](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/editing/models.ts#L25)
+Defined in: [packages/core/src/editing/models.ts:25](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/editing/models.ts#L25)
 
 Query parameters appended for Component Library functionaity.
 Used when a single component is rendered in Pages.
@@ -21,7 +21,7 @@ Used when a single component is rendered in Pages.
 
 > **mode**: `"library"`
 
-Defined in: [packages/core/src/editing/models.ts:33](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/editing/models.ts#L33)
+Defined in: [packages/core/src/editing/models.ts:33](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/editing/models.ts#L33)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [packages/core/src/editing/models.ts:33](https://github.com/Sitecore
 
 > **sc\_itemid**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:29](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/editing/models.ts#L29)
+Defined in: [packages/core/src/editing/models.ts:29](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/editing/models.ts#L29)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/core/src/editing/models.ts:29](https://github.com/Sitecore
 
 > **sc\_lang**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/editing/models.ts#L28)
+Defined in: [packages/core/src/editing/models.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/editing/models.ts#L28)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [packages/core/src/editing/models.ts:28](https://github.com/Sitecore
 
 > **sc\_renderingId**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:30](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/editing/models.ts#L30)
+Defined in: [packages/core/src/editing/models.ts:30](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/editing/models.ts#L30)
 
 ***
 
@@ -53,7 +53,7 @@ Defined in: [packages/core/src/editing/models.ts:30](https://github.com/Sitecore
 
 > **sc\_site**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/editing/models.ts#L32)
+Defined in: [packages/core/src/editing/models.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/editing/models.ts#L32)
 
 ***
 
@@ -61,7 +61,7 @@ Defined in: [packages/core/src/editing/models.ts:32](https://github.com/Sitecore
 
 > **sc\_uid**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:31](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/editing/models.ts#L31)
+Defined in: [packages/core/src/editing/models.ts:31](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/editing/models.ts#L31)
 
 ***
 
@@ -69,7 +69,7 @@ Defined in: [packages/core/src/editing/models.ts:31](https://github.com/Sitecore
 
 > `optional` **sc\_variant**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/editing/models.ts#L34)
+Defined in: [packages/core/src/editing/models.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/editing/models.ts#L34)
 
 ***
 
@@ -77,7 +77,7 @@ Defined in: [packages/core/src/editing/models.ts:34](https://github.com/Sitecore
 
 > `optional` **sc\_version**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:35](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/editing/models.ts#L35)
+Defined in: [packages/core/src/editing/models.ts:35](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/editing/models.ts#L35)
 
 ***
 
@@ -85,4 +85,4 @@ Defined in: [packages/core/src/editing/models.ts:35](https://github.com/Sitecore
 
 > **secret**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:27](https://github.com/Sitecore/xmc-jss-dev/blob/ee74fbe95e0fc8de46ce468c8a36831db55f7aeb/packages/core/src/editing/models.ts#L27)
+Defined in: [packages/core/src/editing/models.ts:27](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/editing/models.ts#L27)
