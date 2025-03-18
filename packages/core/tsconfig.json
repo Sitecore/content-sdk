@@ -15,6 +15,7 @@
     "dist",
     "config.d.ts",
     "editing.d.ts",
+    "form.d.ts",
     "layout.d.ts",
     "media.d.ts",
     "utils.d.ts",

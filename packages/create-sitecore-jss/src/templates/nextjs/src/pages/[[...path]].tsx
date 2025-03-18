@@ -17,6 +17,7 @@ import { handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
 import { SitecorePageProps } from 'lib/page-props';
 import { sitecorePagePropsFactory } from 'lib/page-props-factory';
 import { componentBuilder } from 'temp/componentBuilder';
+import scConfig from 'sitecore.config';
 <% if (prerender === 'SSG') { -%>
 import { sitemapFetcher } from 'lib/sitemap-fetcher';
 
@@ -40,6 +41,7 @@ const SitecorePage = ({ notFound, componentProps, layoutData, headLinks }: Sitec
       <SitecoreContext
         componentFactory={componentBuilder.getComponentFactory({ isEditing })}
         layoutData={layoutData}
+        api={scConfig.api}
       >
         <Layout layoutData={layoutData} headLinks={headLinks} />
       </SitecoreContext>
