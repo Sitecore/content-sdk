@@ -2362,7 +2362,7 @@ __metadata:
     typescript: ~5.7.3
     yargs: ^17.7.2
   bin:
-    scs: ./dist/cjs/bin/scs.js
+    sitecore-tools: ./dist/cjs/bin/sitecore-tools.js
   languageName: unknown
   linkType: soft
 

@@ -19,7 +19,7 @@ export default async function cli(commands?: {
 }) {
   let appCommands: Argv = yargs.usage('$0 <command>');
 
-  appCommands = appCommands.scriptName('scs');
+  appCommands = appCommands.scriptName('sitecore-tools');
 
   // Register commands if available
   if (commands && Object.keys(commands).length > 0) {
