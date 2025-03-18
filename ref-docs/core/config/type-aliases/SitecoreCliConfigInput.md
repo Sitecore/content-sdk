@@ -8,7 +8,7 @@
 
 > **SitecoreCliConfigInput**: `object`
 
-Defined in: [packages/core/src/config/models.ts:190](https://github.com/Sitecore/xmc-jss-dev/blob/0ec01b23b6deeac59e8196222f94c2a9866d7b4b/packages/core/src/config/models.ts#L190)
+Defined in: [packages/core/src/config/models.ts:190](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/config/models.ts#L190)
 
 Type to be used as cli config input in sitecore.cli.config
 
@@ -18,7 +18,7 @@ Type to be used as cli config input in sitecore.cli.config
 
 > `optional` **build**: `object`
 
-Configuration for the `scs build` cli command
+Configuration for the `sitecore-tools build` cli command
 
 #### build.commands?
 
@@ -34,7 +34,7 @@ List of commands to run during the build process
 
 > `optional` **scaffold**: `object`
 
-Configuration for the `scs scaffold` cli command
+Configuration for the `sitecore-tools scaffold` cli command
 
 #### scaffold.templates?
 
