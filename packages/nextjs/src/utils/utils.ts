@@ -1,4 +1,5 @@
 ﻿import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
+import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 
 /**
  * Since Sitecore editors do not support Fast Refresh:
@@ -43,4 +44,12 @@ export const getJssEditingSecret = (): string => {
     throw new Error('The JSS_EDITING_SECRET environment variable is missing or invalid.');
   }
   return secret;
+};
+
+export const extractPath = (context: GetStaticPropsContext | GetServerSidePropsContext) => {
+  return context.params === undefined
+    ? '/'
+    : Array.isArray(context.params.path)
+    ? context.params.path.join('/')
+    : context.params.path ?? '/';
 };

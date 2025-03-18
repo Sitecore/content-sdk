@@ -6,7 +6,7 @@
 
 # Class: GraphQLEditingService
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:50
+Defined in: core/types/editing/graphql-editing-service.d.ts:58
 
 Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
 Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
@@ -17,7 +17,7 @@ Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
 
 > **new GraphQLEditingService**(`serviceConfig`): [`GraphQLEditingService`](GraphQLEditingService.md)
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:57
+Defined in: core/types/editing/graphql-editing-service.d.ts:65
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -37,26 +37,27 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > **serviceConfig**: `GraphQLEditingServiceConfig`
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:51
+Defined in: core/types/editing/graphql-editing-service.d.ts:59
 
 ## Methods
 
 ### fetchDictionaryData()
 
-> **fetchDictionaryData**(`__namedParameters`, `initDictionary`?, `hasNext`?, `after`?): `Promise`\<[`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md)\>
+> **fetchDictionaryData**(`__namedParameters`, `fetchOptions`?): `Promise`\<[`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md)\>
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:78
+Defined in: core/types/editing/graphql-editing-service.d.ts:81
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `__namedParameters` | \{ `language`: `string`; `siteName`: `string`; \} |
-| `__namedParameters.language` | `string` |
+| `__namedParameters` | \{ `after`: `string`; `hasNext`: `boolean`; `initDictionary`: `object`[]; `language`: `string`; `siteName`: `string`; \} |
+| `__namedParameters.after`? | `string` |
+| `__namedParameters.hasNext`? | `boolean` |
+| `__namedParameters.initDictionary`? | `object`[] |
+| `__namedParameters.language`? | `string` |
 | `__namedParameters.siteName`? | `string` |
-| `initDictionary`? | `object`[] |
-| `hasNext`? | `boolean` |
-| `after`? | `string` |
+| `fetchOptions`? | `FetchOptions` |
 
 #### Returns
 
@@ -66,9 +67,9 @@ Defined in: core/types/editing/graphql-editing-service.d.ts:78
 
 ### fetchEditingData()
 
-> **fetchEditingData**(`variables`): `Promise`\<\{ `dictionary`: [`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md); `layoutData`: [`LayoutServiceData`](../../index/interfaces/LayoutServiceData.md); \}\>
+> **fetchEditingData**(`variables`, `fetchOptions`?): `Promise`\<\{ `dictionary`: [`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md); `layoutData`: [`LayoutServiceData`](../../index/interfaces/LayoutServiceData.md); \}\>
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:68
+Defined in: core/types/editing/graphql-editing-service.d.ts:77
 
 Fetches editing data. Provides the layout data and dictionary phrases
 
@@ -76,12 +77,8 @@ Fetches editing data. Provides the layout data and dictionary phrases
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `variables` | \{ `itemId`: `string`; `language`: `string`; `layoutKind`: `LayoutKind`; `siteName`: `string`; `version`: `string`; \} | The parameters for fetching editing data. |
-| `variables.itemId` | `string` | The item id (path) to fetch layout data for. |
-| `variables.language` | `string` | The language to fetch layout data for. |
-| `variables.layoutKind`? | `LayoutKind` | The final or shared layout variant. |
-| `variables.siteName` | `string` | The site name. |
-| `variables.version`? | `string` | The version of the item (optional). |
+| `variables` | `EditingOptions` | The parameters for fetching editing data. |
+| `fetchOptions`? | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -95,7 +92,7 @@ The layout data and dictionary phrases.
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:89
+Defined in: core/types/editing/graphql-editing-service.d.ts:95
 
 Gets a GraphQL client that can make requests to the API.
 

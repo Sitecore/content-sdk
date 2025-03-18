@@ -8,9 +8,9 @@
 
 > **StaticPath**: `object`
 
-Defined in: [nextjs/src/services/graphql-sitemap-service.ts:31](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/nextjs/src/services/graphql-sitemap-service.ts#L31)
+Defined in: core/types/models.d.ts:44
 
-Object model of a site page item.
+Object model of a sitemap's site page item.
 
 ## Type declaration
 

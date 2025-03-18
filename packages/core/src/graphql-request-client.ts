@@ -3,15 +3,8 @@ import parse from 'url-parse';
 import { DocumentNode } from 'graphql';
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './utils/timeout-promise';
-import { GenericGraphQLClientError, RetryStrategy } from './models';
+import { GenericGraphQLClientError, RetryStrategy, FetchOptions } from './models';
 import { DefaultRetryStrategy } from './retries';
-
-/**
- * Options for configuring a GraphQL request.
- */
-interface RequestOptions {
-  headers?: Record<string, string>;
-}
 
 /**
  * An interface for GraphQL clients for Sitecore APIs
@@ -20,13 +13,12 @@ export interface GraphQLClient {
   /**
    * Execute graphql request
    * @param {string | DocumentNode} query graphql query
-   * @param {object} [variables] graphql variables
-   * @param {RequestOptions} [options] options for configuring a GraphQL request.
+   * @param {RequestOptions} [options] options and variables for configuring a GraphQL request.
    */
   request<T>(
     query: string | DocumentNode,
     variables?: { [key: string]: unknown },
-    options?: RequestOptions
+    options?: FetchOptions
   ): Promise<T>;
 }
 
@@ -111,7 +103,6 @@ export class GraphQLRequestClient implements GraphQLClient {
     if (clientConfig.apiKey) {
       this.headers.sc_apikey = clientConfig.apiKey;
     }
-
     if (clientConfig.headers) {
       this.headers = { ...this.headers, ...clientConfig.headers };
     }
@@ -151,20 +142,22 @@ export class GraphQLRequestClient implements GraphQLClient {
   /**
    * Execute graphql request
    * @param {string | DocumentNode} query graphql query
-   * @param {object} [variables] graphql variables
    * @param {RequestOptions} [options] Options for configuring a GraphQL request.
    */
   async request<T>(
     query: string | DocumentNode,
     variables?: { [key: string]: unknown },
-    options?: RequestOptions
+    options?: FetchOptions
   ): Promise<T> {
     let attempt = 1;
 
     const retryer = async (): Promise<T> => {
+      const retries = options?.retries || this.retries;
+      const retryStrategy = options?.retryStrategy || this.retryStrategy;
+      const debug = options?.debugger || this.debug;
       // Note we don't have access to raw request/response with graphql-request
       // but we should log whatever we have.
-      this.debug('request: %o', {
+      debug('request: %o', {
         url: this.endpoint,
         headers: { ...this.headers, ...options?.headers },
         query,
@@ -172,7 +165,8 @@ export class GraphQLRequestClient implements GraphQLClient {
         timeout: this.timeout,
       });
       const startTimestamp = Date.now();
-      const fetchWithOptionalTimeout = [this.client.request(query, variables, options?.headers)];
+      const headers = { ...this.headers, ...options?.headers };
+      const fetchWithOptionalTimeout = [this.client.request(query, variables, headers)];
       if (this.timeout) {
         this.abortTimeout = new TimeoutPromise(this.timeout);
         fetchWithOptionalTimeout.push(this.abortTimeout.start);
@@ -186,13 +180,13 @@ export class GraphQLRequestClient implements GraphQLClient {
         },
         async (error: GraphQLClientError) => {
           this.abortTimeout?.clear();
-          this.debug('response error: %o', error.response || error.message || error);
+          debug('response error: %o', error.response || error.message || error);
           const status = error.response?.status || error.code;
-          const shouldRetry = this.retryStrategy.shouldRetry(error, attempt, this.retries);
+          const shouldRetry = retryStrategy.shouldRetry(error, attempt, retries);
 
           if (shouldRetry) {
-            const delayMs = this.retryStrategy.getDelay(error, attempt);
-            this.debug('Error: %s. Retrying in %dms (attempt %d).', status, delayMs, attempt);
+            const delayMs = retryStrategy.getDelay(error, attempt);
+            debug('Error: %s. Retrying in %dms (attempt %d).', status, delayMs, attempt);
 
             attempt++;
             return new Promise((resolve) => setTimeout(resolve, delayMs)).then(retryer);

@@ -1,17 +1,10 @@
 ﻿import Head from 'next/head';
-import {
-  GraphQLErrorPagesService,
-  SitecoreContext,
-  ErrorPages,
-} from '@sitecore-content-sdk/nextjs';
-import { SitecorePageProps } from 'lib/page-props';
+import { SitecoreContext, ErrorPages, SitecorePageProps } from '@sitecore-content-sdk/nextjs';
 import Layout from 'src/Layout';
 import { componentBuilder } from 'temp/componentBuilder';
 import { GetStaticProps } from 'next';
-import scConfig from 'sitecore.config';
-import { siteResolver } from 'lib/site-resolver';
-import clientFactory from 'lib/graphql-client-factory';
 import sitecoreConfig from 'sitecore.config';
+import client from 'lib/sitecore-client';
 
 /**
  * Rendered in case if we have 500 error
@@ -30,7 +23,7 @@ const ServerError = (): JSX.Element => (
 );
 
 const Custom500 = (props: SitecorePageProps): JSX.Element => {
-  if (!(props && props.layoutData)) {
+  if (!(props && props.layout)) {
     return <ServerError />;
   }
 
@@ -38,29 +31,22 @@ const Custom500 = (props: SitecorePageProps): JSX.Element => {
     <SitecoreContext
       api={sitecoreConfig.api}
       componentFactory={componentBuilder.getComponentFactory()}
-      layoutData={props.layoutData}
+      layoutData={props.layout}
     >
-      <Layout layoutData={props.layoutData} headLinks={props.headLinks} />
+      <Layout layoutData={props.layout} />
     </SitecoreContext>
   );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const site = siteResolver.getByName(scConfig.defaultSite);
-  const errorPagesService = new GraphQLErrorPagesService({
-    clientFactory,
-    siteName: site.name,
-    language: context.locale || context.defaultLocale || scConfig.defaultLanguage,
-    retries:
-      (process.env.GRAPH_QL_SERVICE_RETRIES &&
-        parseInt(process.env.GRAPH_QL_SERVICE_RETRIES, 10)) ||
-      0,
-  });
+export const getStaticProps: GetStaticProps = async context => {
   let resultErrorPages: ErrorPages | null = null;
 
   if (process.env.DISABLE_SSG_FETCH?.toLowerCase() !== 'true') {
     try {
-      resultErrorPages = await errorPagesService.fetchErrorPages();
+      resultErrorPages = await client.getErrorPages({
+        site: sitecoreConfig.defaultSite,
+        locale: context.locale || context.defaultLocale || sitecoreConfig.defaultLanguage,
+      });
     } catch (error) {
       console.log('Error occurred while fetching error pages');
       console.log(error);
@@ -69,7 +55,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   return {
     props: {
-      headLinks: [],
       layoutData: resultErrorPages?.serverErrorPage?.rendered || null,
     },
   };

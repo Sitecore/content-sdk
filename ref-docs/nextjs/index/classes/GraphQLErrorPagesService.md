@@ -6,7 +6,7 @@
 
 # Class: GraphQLErrorPagesService
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:35
+Defined in: core/types/site/graphql-error-pages-service.d.ts:32
 
 Service that fetch the error pages data using Sitecore's GraphQL API.
 
@@ -16,7 +16,7 @@ Service that fetch the error pages data using Sitecore's GraphQL API.
 
 > **new GraphQLErrorPagesService**(`options`): [`GraphQLErrorPagesService`](GraphQLErrorPagesService.md)
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:42
+Defined in: core/types/site/graphql-error-pages-service.d.ts:39
 
 Creates an instance of graphQL error pages service with the provided options
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL error pages service with the provided options
 
 > **options**: [`GraphQLErrorPagesServiceConfig`](../interfaces/GraphQLErrorPagesServiceConfig.md)
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:36
+Defined in: core/types/site/graphql-error-pages-service.d.ts:33
 
 ## Accessors
 
@@ -46,7 +46,7 @@ Defined in: core/types/site/graphql-error-pages-service.d.ts:36
 
 > **get** `protected` **query**(): `string`
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:43
+Defined in: core/types/site/graphql-error-pages-service.d.ts:40
 
 ##### Returns
 
@@ -56,11 +56,19 @@ Defined in: core/types/site/graphql-error-pages-service.d.ts:43
 
 ### fetchErrorPages()
 
-> **fetchErrorPages**(): `Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
+> **fetchErrorPages**(`siteName`, `locale`?, `fetchOptions`?): `Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
 
 Defined in: core/types/site/graphql-error-pages-service.d.ts:49
 
 Fetch list of error pages for the site
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `siteName` | `string` | The site name |
+| `locale`? | `string` | The language |
+| `fetchOptions`? | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 

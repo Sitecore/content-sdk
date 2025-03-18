@@ -4,49 +4,49 @@ import {
   ComponentLibraryLayout,
   ComponentPropsContext,
   SitecoreContext,
+  SitecorePageProps,
 } from '@sitecore-content-sdk/nextjs';
-import { SitecorePageProps } from 'lib/page-props';
-import { sitecorePagePropsFactory } from 'lib/page-props-factory';
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
 import scConfig from 'sitecore.config';
+import client from 'lib/sitecore-client';
+import SitecoreStyles from 'src/components/SitecoreStyles';
 
-const FEAASRender = ({
-  notFound,
-  componentProps,
-  layoutData,
-  headLinks,
-}: SitecorePageProps): JSX.Element => {
+const ComponentLibrary = ({ notFound, componentProps, layout }: SitecorePageProps): JSX.Element => {
   if (notFound) {
     return <NotFound />;
   }
   return (
-    <ComponentPropsContext value={componentProps}>
+    <ComponentPropsContext value={componentProps || {}}>
       <SitecoreContext
         api={scConfig.api}
         componentFactory={componentBuilder.getComponentFactory()}
-        layoutData={layoutData}
+        layoutData={layout}
       >
         <Head>
           <title>Sitecore Component Library</title>
           <link rel="icon" href="/favicon.ico" />
-          {headLinks.map(headLink => (
-            <link rel={headLink.rel} key={headLink.href} href={headLink.href} />
-          ))}
         </Head>
-        <ComponentLibraryLayout {...layoutData} />
+        <SitecoreStyles layoutData={layout} />
+        <ComponentLibraryLayout {...layout} />
       </SitecoreContext>
     </ComponentPropsContext>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const props = await sitecorePagePropsFactory.create(context);
-  return {
-    props,
-    // not found when page not requested through editing render api or notFound set in page-props
-    notFound: props.notFound || !context.preview,
-  };
+  if (context.preview) {
+    const page = await client.getPreview(context.previewData);
+    return {
+      props: page || {},
+      notFound: !page,
+    };
+  } else {
+    return {
+      // not found when page not requested through editing render api or notFound set in page-props
+      notFound: true,
+    };
+  }
 };
 
-export default FEAASRender;
+export default ComponentLibrary;

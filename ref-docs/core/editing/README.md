@@ -21,11 +21,16 @@
 ## Interfaces
 
 - [ComponentLayoutRequestParams](interfaces/ComponentLayoutRequestParams.md)
+- [ComponentLibraryRenderPreviewData](interfaces/ComponentLibraryRenderPreviewData.md)
 - [ComponentLibraryStatusEvent](interfaces/ComponentLibraryStatusEvent.md)
 - [ComponentUpdateEventArgs](interfaces/ComponentUpdateEventArgs.md)
 - [EditingRenderQueryParams](interfaces/EditingRenderQueryParams.md)
 - [Metadata](interfaces/Metadata.md)
 - [RenderComponentQueryParams](interfaces/RenderComponentQueryParams.md)
+
+## Type Aliases
+
+- [EditingPreviewData](type-aliases/EditingPreviewData.md)
 
 ## Variables
 

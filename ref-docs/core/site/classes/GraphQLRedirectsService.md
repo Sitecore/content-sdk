@@ -6,7 +6,7 @@
 
 # Class: GraphQLRedirectsService
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:58](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-redirects-service.ts#L58)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:58](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-redirects-service.ts#L58)
 
 The GraphQLRedirectsService class is used to query the JSS redirects using Graphql endpoint
 
@@ -16,7 +16,7 @@ The GraphQLRedirectsService class is used to query the JSS redirects using Graph
 
 > **new GraphQLRedirectsService**(`options`): [`GraphQLRedirectsService`](GraphQLRedirectsService.md)
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:66](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-redirects-service.ts#L66)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:66](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-redirects-service.ts#L66)
 
 Creates an instance of graphQL redirects service with the provided options
 
@@ -38,7 +38,7 @@ Creates an instance of graphQL redirects service with the provided options
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:71](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-redirects-service.ts#L71)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:71](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-redirects-service.ts#L71)
 
 ##### Returns
 
@@ -48,9 +48,9 @@ Defined in: [packages/core/src/site/graphql-redirects-service.ts:71](https://git
 
 ### fetchRedirects()
 
-> **fetchRedirects**(`siteName`): `Promise`\<[`RedirectInfo`](../type-aliases/RedirectInfo.md)[]\>
+> **fetchRedirects**(`siteName`, `fetchOptions`?): `Promise`\<[`RedirectInfo`](../type-aliases/RedirectInfo.md)[]\>
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:81](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-redirects-service.ts#L81)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:82](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-redirects-service.ts#L82)
 
 Fetch an array of redirects from API
 
@@ -59,6 +59,7 @@ Fetch an array of redirects from API
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `siteName` | `string` | site name |
+| `fetchOptions`? | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -76,7 +77,7 @@ if the siteName is empty.
 
 > `protected` **getCacheClient**(): [`CacheClient`](../../index/interfaces/CacheClient.md)\<[`RedirectsQueryResult`](../type-aliases/RedirectsQueryResult.md)\>
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:121](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-redirects-service.ts#L121)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:126](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-redirects-service.ts#L126)
 
 Gets cache client implementation
 Override this method if custom cache needs to be used
@@ -93,7 +94,7 @@ CacheClient instance
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:105](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-redirects-service.ts#L105)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:110](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-redirects-service.ts#L110)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

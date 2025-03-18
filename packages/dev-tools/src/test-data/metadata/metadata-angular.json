@@ -1,9 +1,0 @@
-﻿{
-  "packages": {
-    "@sitecore-content-sdk/angular": "22.2.0-canary.69",
-    "@sitecore-content-sdk/angular-schematics": "22.2.0-canary.69",
-    "@sitecore-content-sdk/cli": "22.2.0-canary.69",
-    "@sitecore-content-sdk/dev-tools": "22.2.0-canary.69",
-    "@sitecore-content-sdk/core": "22.2.0-canary.69"
-  }
-}

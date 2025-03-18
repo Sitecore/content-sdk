@@ -54,3 +54,32 @@ export enum MetadataKind {
   Open = 'open',
   Close = 'close',
 }
+
+/**
+ * Data for Preview (Editing) Mode.
+ */
+export type EditingPreviewData = {
+  site: string;
+  itemId: string;
+  language: string;
+  pageState: Exclude<LayoutServicePageState, 'Normal'>;
+  variantIds: string[];
+  version?: string;
+  layoutKind?: LayoutKind;
+};
+
+/**
+ * Data for Component Library rendering mode
+ */
+export interface ComponentLibraryRenderPreviewData {
+  site: string;
+  itemId: string;
+  renderingId: string;
+  componentUid: string;
+  language: string;
+  pageState: LayoutServicePageState;
+  mode?: 'library';
+  variant?: string;
+  version?: string;
+  dataSourceId?: string;
+}

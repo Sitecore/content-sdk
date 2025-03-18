@@ -1,31 +1,14 @@
-import * as models from './models';
-import { IncomingMessage, ServerResponse } from 'http';
-
-export interface LayoutService {
-  /**
-   * Fetch layout data for an item.
-   * @param {string} itemPath
-   * @param {string} [language]
-   * @param {IncomingMessage} [req] Request instance
-   * @param {ServerResponse} [res] Response instance
-   * @returns {Promise<LayoutServiceData>} layout data
-   */
-  fetchLayoutData(
-    itemPath: string,
-    language?: string,
-    req?: IncomingMessage,
-    res?: ServerResponse
-  ): Promise<models.LayoutServiceData>;
-}
+import { RouteOptions, LayoutServiceData } from './models';
+import { SitecoreServiceBase } from '../sitecore-service-base';
+import { FetchOptions } from '../models';
 
 /**
  * Base abstraction to implement custom layout service
  */
-export abstract class LayoutServiceBase implements LayoutService {
+export abstract class LayoutServiceBase extends SitecoreServiceBase {
   abstract fetchLayoutData(
     itemPath: string,
-    language?: string,
-    req?: IncomingMessage,
-    res?: ServerResponse
-  ): Promise<models.LayoutServiceData>;
+    routeOptions: RouteOptions,
+    fetchOptions: FetchOptions
+  ): Promise<LayoutServiceData>;
 }

@@ -29,76 +29,37 @@ type FetchFunctionFactory<NextContext> = (
 ) => Promise<ComponentPropsFetchFunction<NextContext> | undefined>;
 
 export class ComponentPropsService {
-  /**
-   * SSR mode
-   * Fetch component props using getServerSideProps function
-   * @param {FetchComponentPropsArguments<GetServerSidePropsContext>} params fetch params
-   * @returns {Promise<ComponentPropsCollection>} props
-   */
-  async fetchServerSideComponentProps(
-    params: FetchComponentPropsArguments<GetServerSidePropsContext>
+  async fetchComponentProps(
+    params: FetchComponentPropsArguments<GetServerSidePropsContext | GetStaticPropsContext>
   ): Promise<ComponentPropsCollection> {
-    const { moduleFactory, layoutData, context } = params;
+    const { layoutData, context, moduleFactory } = params;
+    if (this.isServerSidePropsContext(context)) {
+      const fetchFunctionFactory = async (componentName: string) => {
+        const module = await moduleFactory(componentName);
 
-    const fetchFunctionFactory = async (componentName: string) => {
-      const module = await moduleFactory(componentName);
+        return module?.getServerSideProps;
+      };
+      const requests = await this.collectRequests({
+        placeholders: layoutData.sitecore.route?.placeholders,
+        fetchFunctionFactory,
+        layoutData,
+        context,
+      });
+      return await this.execRequests(requests);
+    } else {
+      const fetchFunctionFactory = async (componentName: string) => {
+        const module = await moduleFactory(componentName);
 
-      return module?.getServerSideProps;
-    };
-
-    return this.fetchComponentProps<GetServerSidePropsContext>(
-      fetchFunctionFactory,
-      layoutData,
-      context
-    );
-  }
-
-  /**
-   * SSG mode
-   * Fetch component props using getStaticProps function
-   * @param {FetchComponentPropsArguments<GetStaticPropsContext>} params fetch arguments
-   * @returns {Promise<ComponentPropsCollection>} props
-   */
-  async fetchStaticComponentProps(
-    params: FetchComponentPropsArguments<GetStaticPropsContext>
-  ): Promise<ComponentPropsCollection> {
-    const { moduleFactory, layoutData, context } = params;
-
-    const fetchFunctionFactory = async (componentName: string) => {
-      const module = await moduleFactory(componentName);
-
-      return module?.getStaticProps;
-    };
-
-    return this.fetchComponentProps<GetStaticPropsContext>(
-      fetchFunctionFactory,
-      layoutData,
-      context
-    );
-  }
-
-  /**
-   * Traverse Layout Service data tree and call side effects on component level.
-   * Side effect function can be: getStaticProps (SSG) or getServerSideProps (SSR)
-   * @param {FetchFunctionFactory<NextContext>} fetchFunctionFactory fetch function factory
-   * @param {LayoutServiceData} layoutData layout data
-   * @param {NextContext} context next context
-   * @returns {Promise<ComponentPropsCollection>} component props
-   */
-  protected async fetchComponentProps<NextContext>(
-    fetchFunctionFactory: FetchFunctionFactory<NextContext>,
-    layoutData: LayoutServiceData,
-    context: NextContext
-  ): Promise<ComponentPropsCollection> {
-    // Array of side effect functions
-    const requests = await this.collectRequests({
-      placeholders: layoutData.sitecore.route?.placeholders,
-      fetchFunctionFactory,
-      layoutData,
-      context,
-    });
-
-    return await this.execRequests(requests);
+        return module?.getStaticProps;
+      };
+      const requests = await this.collectRequests({
+        placeholders: layoutData.sitecore.route?.placeholders,
+        fetchFunctionFactory,
+        layoutData,
+        context,
+      });
+      return await this.execRequests(requests);
+    }
   }
 
   /**
@@ -224,5 +185,16 @@ export class ComponentPropsService {
     });
 
     return allComponentRenderings;
+  }
+
+  // TODO: remove when unifying server/static component props
+  /**
+   * Determines whether context is GetServerSidePropsContext (SSR) or GetStaticPropsContext (SSG)
+   * @param {GetServerSidePropsContext | GetStaticPropsContext} context
+   */
+  private isServerSidePropsContext(
+    context: GetServerSidePropsContext | GetStaticPropsContext
+  ): context is GetServerSidePropsContext {
+    return (<GetServerSidePropsContext>context).req !== undefined;
   }
 }

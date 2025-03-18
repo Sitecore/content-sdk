@@ -69,7 +69,7 @@ describe('ComponentPropsService', () => {
   const fetchFn = (expectedData: unknown, err?: string | { message: string }) =>
     spy(() => (err ? Promise.reject(err) : Promise.resolve(expectedData)));
 
-  it('fetchServerSideComponentProps', async () => {
+  it('fetchComponentProps in SSR', async () => {
     const ssrModules: {
       [componentName: string]: { getServerSideProps: GetServerSideComponentProps };
     } = {
@@ -96,7 +96,7 @@ describe('ComponentPropsService', () => {
 
     const ssrModuleFactory = (componentName: string) => ssrModules[componentName];
 
-    const result = await service.fetchServerSideComponentProps({
+    const result = await service.fetchComponentProps({
       moduleFactory: ssrModuleFactory as ModuleFactory,
       context: ssrContext,
       layoutData,
@@ -115,7 +115,7 @@ describe('ComponentPropsService', () => {
     });
   });
 
-  it('fetchServerSideComponentProps using lazy loading module', async () => {
+  it('fetchComponentProps in SSR using lazy loading module', async () => {
     const ssrModules: {
       [componentName: string]: { getServerSideProps: GetServerSideComponentProps };
     } = {
@@ -148,7 +148,7 @@ describe('ComponentPropsService', () => {
       });
     };
 
-    const result = await service.fetchServerSideComponentProps({
+    const result = await service.fetchComponentProps({
       moduleFactory: ssrModuleFactory,
       context: ssrContext,
       layoutData,
@@ -167,7 +167,7 @@ describe('ComponentPropsService', () => {
     });
   });
 
-  it('fetchStaticComponentProps using lazy loading module', async () => {
+  it('fetchComponentProps in SSG using lazy loading module', async () => {
     const ssgModules: { [componentName: string]: { getStaticProps: GetStaticComponentProps } } = {
       namex11: {
         getStaticProps: fetchFn('x11StaticData'),
@@ -191,7 +191,7 @@ describe('ComponentPropsService', () => {
       });
     };
 
-    const result = await service.fetchStaticComponentProps({
+    const result = await service.fetchComponentProps({
       moduleFactory: ssgModuleFactory as ModuleFactory,
       context,
       layoutData,
@@ -210,7 +210,7 @@ describe('ComponentPropsService', () => {
     });
   });
 
-  it('fetchStaticComponentProps', async () => {
+  it('fetchComponentProps in SSG', async () => {
     const ssgModules: { [componentName: string]: { getStaticProps: GetStaticComponentProps } } = {
       namex11: {
         getStaticProps: fetchFn('x11StaticData'),
@@ -228,7 +228,7 @@ describe('ComponentPropsService', () => {
 
     const ssgModuleFactory = (componentName: string) => ssgModules[componentName];
 
-    const result = await service.fetchStaticComponentProps({
+    const result = await service.fetchComponentProps({
       moduleFactory: ssgModuleFactory as ModuleFactory,
       context,
       layoutData,

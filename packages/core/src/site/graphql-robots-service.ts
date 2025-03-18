@@ -1,4 +1,4 @@
-import { GraphQLClient } from '../graphql';
+import { GraphQLClient } from '../client';
 import { siteNameError } from '../constants';
 import debug from '../debug';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';

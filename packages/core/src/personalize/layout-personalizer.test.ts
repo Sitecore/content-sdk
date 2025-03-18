@@ -51,7 +51,6 @@ describe('layout-personalizer', () => {
         const variant = 'test';
         const testLayoutData = structuredClone(layoutData);
         const result = personalizeLayout(testLayoutData, variant, componentVariantIds);
-        console.log(JSON.stringify(result));
         expect(result).to.be.deep.equal({ 'jss-main': [...componentsWithExperiencesArray] });
       });
     });

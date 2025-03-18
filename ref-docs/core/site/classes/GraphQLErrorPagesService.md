@@ -6,7 +6,7 @@
 
 # Class: GraphQLErrorPagesService
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:64](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-error-pages-service.ts#L64)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:60](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-error-pages-service.ts#L60)
 
 Service that fetch the error pages data using Sitecore's GraphQL API.
 
@@ -16,7 +16,7 @@ Service that fetch the error pages data using Sitecore's GraphQL API.
 
 > **new GraphQLErrorPagesService**(`options`): [`GraphQLErrorPagesService`](GraphQLErrorPagesService.md)
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:71](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-error-pages-service.ts#L71)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:67](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-error-pages-service.ts#L67)
 
 Creates an instance of graphQL error pages service with the provided options
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL error pages service with the provided options
 
 > **options**: [`GraphQLErrorPagesServiceConfig`](../interfaces/GraphQLErrorPagesServiceConfig.md)
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:71](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-error-pages-service.ts#L71)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:67](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-error-pages-service.ts#L67)
 
 instance
 
@@ -48,7 +48,7 @@ instance
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:75](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-error-pages-service.ts#L75)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:71](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-error-pages-service.ts#L71)
 
 ##### Returns
 
@@ -58,11 +58,19 @@ Defined in: [packages/core/src/site/graphql-error-pages-service.ts:75](https://g
 
 ### fetchErrorPages()
 
-> **fetchErrorPages**(): `Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
+> **fetchErrorPages**(`siteName`, `locale`?, `fetchOptions`?): `Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:84](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-error-pages-service.ts#L84)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:83](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-error-pages-service.ts#L83)
 
 Fetch list of error pages for the site
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `siteName` | `string` | The site name |
+| `locale`? | `string` | The language |
+| `fetchOptions`? | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -80,7 +88,7 @@ if the siteName is empty.
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:108](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-error-pages-service.ts#L108)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:114](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-error-pages-service.ts#L114)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

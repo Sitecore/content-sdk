@@ -4,7 +4,7 @@ import {
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/core/editing';
 import { debug } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/dev-tools';
+import { Metadata } from '@sitecore-content-sdk/core/editing';
 import { enforceCors } from '@sitecore-content-sdk/core/utils';
 import { EditMode } from '@sitecore-content-sdk/core/layout';
 import { getJssEditingSecret } from '../utils/utils';

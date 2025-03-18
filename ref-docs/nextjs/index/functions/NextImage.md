@@ -8,7 +8,7 @@
 
 > **NextImage**(`props`, `deprecatedLegacyContext`?): `ReactNode`
 
-Defined in: [nextjs/src/components/NextImage.tsx:17](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/nextjs/src/components/NextImage.tsx#L17)
+Defined in: [nextjs/src/components/NextImage.tsx:17](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/nextjs/src/components/NextImage.tsx#L17)
 
 ## Parameters
 

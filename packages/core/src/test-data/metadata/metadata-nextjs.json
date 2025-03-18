@@ -1,0 +1,16 @@
+﻿{
+  "packages": {
+    "@sitecore-cloudsdk/events": "0.3.1",
+    "@sitecore-feaas/clientside": "0.5.18",
+    "@sitecore-content-sdk/nextjs": "22.2.0-canary.69",
+    "@sitecore/components": "1.1.11",
+    "@sitecore-content-sdk/cli": "22.2.0-canary.69",
+    "@sitecore-content-sdk/nextjs": "22.2.0-canary.69",
+    "@sitecore-content-sdk/core": "22.2.0-canary.69",
+    "@sitecore-content-sdk/react": "22.2.0-canary.69",
+    "@sitecore-cloudsdk/personalize": "0.3.1",
+    "@sitecore-cloudsdk/utils": "0.3.1",
+    "@sitecore-cloudsdk/core": "0.3.1",
+    "@sitecore/byoc": "0.2.15"
+  }
+}

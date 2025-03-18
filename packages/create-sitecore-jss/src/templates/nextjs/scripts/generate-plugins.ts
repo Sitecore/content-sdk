@@ -1,8 +1,4 @@
-﻿import {
-  generatePlugins,
-  ModuleType,
-  PluginDefinition,
-} from '@sitecore-content-sdk/dev-tools';
+﻿import { generatePlugins, ModuleType, PluginDefinition } from '@sitecore-content-sdk/nextjs/tools';
 
 /*
   PLUGINS GENERATION

@@ -84,6 +84,8 @@ export class GraphQLPersonalizeService {
     language: string,
     siteName: string
   ): Promise<PersonalizeInfo | undefined> {
+    // while other graphql services can use fetchOptions, personalize is more sensitive
+    // we don't allow retries in it since we need to be fast
     debug.personalize('fetching personalize info for %s %s %s', siteName, itemPath, language);
 
     const cacheKey = this.getCacheKey(itemPath, language, siteName);

@@ -14,7 +14,6 @@ export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/e
 export {
   getContentStylesheetLink,
   getComponentLibraryStylesheetLinks,
-  LayoutService,
   LayoutServiceData,
   LayoutServicePageState,
   LayoutServiceContext,
@@ -41,7 +40,7 @@ export {
   DefaultRetryStrategy,
   GraphQLRequestClientFactoryConfig,
   GraphQLRequestClient,
-} from '@sitecore-content-sdk/core/graphql';
+} from '@sitecore-content-sdk/core/client';
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export { Form } from './components/Form';
 export { ComponentFactory, JssComponentType } from './components/sharedTypes';
@@ -97,3 +96,7 @@ export {
   DefaultEmptyFieldEditingComponentText,
   DefaultEmptyFieldEditingComponentImage,
 } from './components/DefaultEmptyFieldEditingComponents';
+export {
+  GraphQLSitePathService,
+  GraphQLSitePathServiceConfig,
+} from '@sitecore-content-sdk/core/site';

@@ -6,7 +6,7 @@
 
 # Class: GraphQLSitemapXmlService
 
-Defined in: [packages/core/src/site/graphql-sitemap-service.ts:39](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-sitemap-service.ts#L39)
+Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:39](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-sitemap-xml-service.ts#L39)
 
 Service that fetch the sitemaps data using Sitecore's GraphQL API.
 
@@ -16,7 +16,7 @@ Service that fetch the sitemaps data using Sitecore's GraphQL API.
 
 > **new GraphQLSitemapXmlService**(`options`): [`GraphQLSitemapXmlService`](GraphQLSitemapXmlService.md)
 
-Defined in: [packages/core/src/site/graphql-sitemap-service.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-sitemap-service.ts#L46)
+Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-sitemap-xml-service.ts#L46)
 
 Creates an instance of graphQL sitemaps service with the provided options
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL sitemaps service with the provided options
 
 > **options**: [`GraphQLSitemapXmlServiceConfig`](../type-aliases/GraphQLSitemapXmlServiceConfig.md)
 
-Defined in: [packages/core/src/site/graphql-sitemap-service.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-sitemap-service.ts#L46)
+Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-sitemap-xml-service.ts#L46)
 
 instance
 
@@ -48,7 +48,7 @@ instance
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [packages/core/src/site/graphql-sitemap-service.ts:50](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-sitemap-service.ts#L50)
+Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:50](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-sitemap-xml-service.ts#L50)
 
 ##### Returns
 
@@ -58,11 +58,17 @@ Defined in: [packages/core/src/site/graphql-sitemap-service.ts:50](https://githu
 
 ### fetchSitemaps()
 
-> **fetchSitemaps**(): `Promise`\<`string`[]\>
+> **fetchSitemaps**(`fetchOptions`?): `Promise`\<`string`[]\>
 
-Defined in: [packages/core/src/site/graphql-sitemap-service.ts:59](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-sitemap-service.ts#L59)
+Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:60](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-sitemap-xml-service.ts#L60)
 
 Fetch list of sitemaps for the site
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `fetchOptions`? | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -80,7 +86,7 @@ if the siteName is empty.
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/site/graphql-sitemap-service.ts:94](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-sitemap-service.ts#L94)
+Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:99](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-sitemap-xml-service.ts#L99)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -98,7 +104,7 @@ implementation
 
 > **getSitemap**(`id`): `Promise`\<`undefined` \| `string`\>
 
-Defined in: [packages/core/src/site/graphql-sitemap-service.ts:81](https://github.com/Sitecore/xmc-jss-dev/blob/28923ef088ac4be62069deb221a0ddc7386ea85e/packages/core/src/site/graphql-sitemap-service.ts#L81)
+Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:86](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/site/graphql-sitemap-xml-service.ts#L86)
 
 Get sitemap file path for sitemap id
 
