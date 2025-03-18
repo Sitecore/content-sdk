@@ -1,11 +1,6 @@
 import chokidar from 'chokidar';
 
 /**
- * The file extension for nextjs components
- */
-export const COMPONENT_FILE_EXTENSION = 'tsx';
-
-/**
  * Run watch mode, watching on @var paths
  * @param {string[]} paths paths to watch by chokidar
  * @param {Function<void>} cb callback to run on file change
