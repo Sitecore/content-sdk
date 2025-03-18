@@ -18,7 +18,6 @@ import { extractPath, handleEditorFastRefresh } from '@sitecore-content-sdk/next
 import client from 'lib/sitecore-client';
 import { componentBuilder } from 'temp/componentBuilder';
 import scConfig from 'sitecore.config';
-<% if (prerender === 'SSG') { -%>
 
 
 const SitecorePage = ({ notFound, componentProps, layout }: SitecorePageProps): JSX.Element => {

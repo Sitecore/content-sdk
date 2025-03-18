@@ -3,7 +3,7 @@ import { SitecoreContext, ErrorPages, SitecorePageProps } from '@sitecore-conten
 import Layout from 'src/Layout';
 import { componentBuilder } from 'temp/componentBuilder';
 import { GetStaticProps } from 'next';
-import sitecoreConfig from 'sitecore.config';
+import scConfig from 'sitecore.config';
 import client from 'lib/sitecore-client';
 
 /**
@@ -29,7 +29,7 @@ const Custom500 = (props: SitecorePageProps): JSX.Element => {
 
   return (
     <SitecoreContext
-      api={sitecoreConfig.api}
+      api={scConfig.api}
       componentFactory={componentBuilder.getComponentFactory()}
       layoutData={props.layout}
     >
@@ -44,8 +44,8 @@ export const getStaticProps: GetStaticProps = async context => {
   if (process.env.DISABLE_SSG_FETCH?.toLowerCase() !== 'true') {
     try {
       resultErrorPages = await client.getErrorPages({
-        site: sitecoreConfig.defaultSite,
-        locale: context.locale || context.defaultLocale || sitecoreConfig.defaultLanguage,
+        site: scConfig.defaultSite,
+        locale: context.locale || context.defaultLocale || scConfig.defaultLanguage,
       });
     } catch (error) {
       console.log('Error occurred while fetching error pages');

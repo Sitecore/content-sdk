@@ -4,7 +4,7 @@ import spies from 'chai-spies';
 import { JSDOM } from 'jsdom';
 import proxyquire from 'proxyquire';
 import { executeScriptElements, loadForm, subscribeToFormSubmitEvent } from './form';
-import { getEdgeProxyFormsUrl } from '../graphql';
+import { getEdgeProxyFormsUrl } from '../client';
 import sinon from 'sinon';
 
 use(spies);

@@ -1,5 +1,5 @@
 import { form } from '@sitecore-cloudsdk/events/browser';
-import { getEdgeProxyFormsUrl } from '../graphql';
+import { getEdgeProxyFormsUrl } from '../client';
 import debug from '../debug';
 
 /**
