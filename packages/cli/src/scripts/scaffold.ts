@@ -9,7 +9,7 @@ import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
 export function builder(yargs: Argv<ScaffoldArgs>) {
   return yargs.command<ScaffoldArgs>(
     'scaffold <componentName>',
-    'Scaffolds a new component. Use `scs scaffold --help` for available options.',
+    'Scaffolds a new component. Use `sitecore-tools scaffold --help` for available options.',
     args,
     handler
   );
@@ -76,7 +76,7 @@ export type ScaffoldArgs = {
  */
 export function handler(argv: ScaffoldArgs) {
   if (!argv.componentName) {
-    throw new Error('Component name is required. Usage: scs scaffold <ComponentName>');
+    throw new Error('Component name is required. Usage: sitecore-tools scaffold <ComponentName>');
   }
 
   const nameParamFormat = new RegExp(/^((?:[\w\-]+\/)*)([A-Z][\w-]+)$/);

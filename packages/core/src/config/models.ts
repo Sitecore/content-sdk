@@ -189,7 +189,7 @@ export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
  */
 export type SitecoreCliConfigInput = {
   /**
-   * Configuration for the `scs build` cli command
+   * Configuration for the `sitecore-tools build` cli command
    */
   build?: {
     /**
@@ -198,7 +198,7 @@ export type SitecoreCliConfigInput = {
     commands?: Array<() => Promise<void>>;
   };
   /**
-   * Configuration for the `scs scaffold` cli command
+   * Configuration for the `sitecore-tools scaffold` cli command
    */
   scaffold?: {
     /**

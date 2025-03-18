@@ -13,7 +13,7 @@
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
     "lint": "eslint \"./src/**/*.ts\"",
-    "scs": "node ./dist/cjs/bin/scs.js",
+    "sitecore-tools": "node ./dist/cjs/bin/sitecore-tools.js",
     "test": "mocha --require ts-node/register/transpile-only \"./src/**/*.test.ts\"",
     "coverage": "nyc --require ts-node/register/transpile-only npm test"
   },
@@ -22,7 +22,7 @@
   },
   "preferGlobal": true,
   "bin": {
-    "scs": "./dist/cjs/bin/scs.js"
+    "sitecore-tools": "./dist/cjs/bin/sitecore-tools.js"
   },
   "author": {
     "name": "Sitecore Corporation",

@@ -64,7 +64,7 @@ describe('scaffold command', () => {
       handler(argv);
     } catch (error) {
       expect(error.message).to.equal(
-        'Component name is required. Usage: scs scaffold <ComponentName>'
+        'Component name is required. Usage: sitecore-tools scaffold <ComponentName>'
       );
     }
   });
