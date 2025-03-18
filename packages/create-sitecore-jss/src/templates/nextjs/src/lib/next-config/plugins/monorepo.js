@@ -1,4 +1,7 @@
-﻿/**
+﻿const path = require('path');
+const CWD = process.cwd();
+
+/**
  * @param {import('next').NextConfig} nextConfig
  */
 const monorepoPlugin = (nextConfig = {}) => {
@@ -7,6 +10,10 @@ const monorepoPlugin = (nextConfig = {}) => {
       if (options.isServer) {
         config.externals = ['react', 'vertx', ...config.externals];
       }
+
+      config.resolve.alias['@sitecore-cloudsdk/events'] = path.resolve(
+        CWD, './node_modules/@sitecore-cloudsdk/events'
+      );
 
       // Overload the Webpack config if it was already overloaded
       if (typeof nextConfig.webpack === 'function') {

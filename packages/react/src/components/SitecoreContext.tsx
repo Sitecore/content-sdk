@@ -3,9 +3,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
 import { ComponentFactory } from './sharedTypes';
+import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { LayoutServiceContext, LayoutServiceData, RouteData } from '../index';
+import { constants } from '@sitecore-content-sdk/core';
 
 export interface SitecoreContextProps {
+  api: SitecoreConfig['api'];
   componentFactory: ComponentFactory;
   layoutData?: LayoutServiceData;
   children: React.ReactNode;
@@ -14,6 +17,7 @@ export interface SitecoreContextProps {
 export interface SitecoreContextState {
   setContext: (value: SitecoreContextValue | LayoutServiceData) => void;
   context: SitecoreContextValue;
+  api?: SitecoreContextProps['api'];
 }
 
 export const SitecoreContextReactContext = React.createContext<SitecoreContextState>(
@@ -47,9 +51,22 @@ export class SitecoreContext extends React.Component<SitecoreContextProps, Sitec
 
     const context: SitecoreContextValue = this.constructContext(props.layoutData);
 
+    let api = props.api;
+
+    if (props.api?.edge?.contextId && !props.api?.edge?.edgeUrl) {
+      api = {
+        ...props.api,
+        edge: {
+          ...props.api.edge,
+          edgeUrl: constants.SITECORE_EDGE_URL_DEFAULT,
+        },
+      };
+    }
+
     this.state = {
       context,
       setContext: this.setContext,
+      api,
     };
   }
 

@@ -125,6 +125,7 @@ export {
   BYOCComponent,
   BYOCComponentProps,
   getComponentLibraryStylesheetLinks,
+  Form,
   File,
   FileField,
   RichTextField,

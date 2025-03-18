@@ -4,6 +4,7 @@ import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
 import Layout from 'src/Layout';
 import { GetStaticProps } from 'next';
+import scConfig from 'sitecore.config';
 import client from 'lib/sitecore-client';
 
 const Custom404 = (props: SitecorePageProps): JSX.Element => {
@@ -13,6 +14,7 @@ const Custom404 = (props: SitecorePageProps): JSX.Element => {
 
   return (
     <SitecoreContext
+      api={scConfig.api}
       componentFactory={componentBuilder.getComponentFactory()}
       layoutData={props.layout}
     >

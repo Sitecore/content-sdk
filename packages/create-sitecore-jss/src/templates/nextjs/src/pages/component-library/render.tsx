@@ -8,6 +8,7 @@ import {
 } from '@sitecore-content-sdk/nextjs';
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
+import scConfig from 'sitecore.config';
 import client from 'lib/sitecore-client';
 import SitecoreStyles from 'src/components/SitecoreStyles';
 
@@ -18,6 +19,7 @@ const ComponentLibrary = ({ notFound, componentProps, layout }: SitecorePageProp
   return (
     <ComponentPropsContext value={componentProps || {}}>
       <SitecoreContext
+        api={scConfig.api}
         componentFactory={componentBuilder.getComponentFactory()}
         layoutData={layout}
       >
