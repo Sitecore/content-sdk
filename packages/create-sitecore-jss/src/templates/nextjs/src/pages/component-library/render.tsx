@@ -9,6 +9,7 @@ import { SitecorePageProps } from 'lib/page-props';
 import { sitecorePagePropsFactory } from 'lib/page-props-factory';
 import NotFound from 'src/NotFound';
 import { componentBuilder } from 'temp/componentBuilder';
+import scConfig from 'sitecore.config';
 
 const FEAASRender = ({
   notFound,
@@ -22,6 +23,7 @@ const FEAASRender = ({
   return (
     <ComponentPropsContext value={componentProps}>
       <SitecoreContext
+        api={scConfig.api}
         componentFactory={componentBuilder.getComponentFactory()}
         layoutData={layoutData}
       >

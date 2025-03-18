@@ -11,6 +11,7 @@ import Layout from 'src/Layout';
 import { GetStaticProps } from 'next';
 import { siteResolver } from 'lib/site-resolver';
 import clientFactory from 'lib/graphql-client-factory';
+import sitecoreConfig from 'sitecore.config';
 
 const Custom404 = (props: SitecorePageProps): JSX.Element => {
   if (!(props && props.layoutData)) {
@@ -19,6 +20,7 @@ const Custom404 = (props: SitecorePageProps): JSX.Element => {
 
   return (
     <SitecoreContext
+      api={sitecoreConfig.api}
       componentFactory={componentBuilder.getComponentFactory()}
       layoutData={props.layoutData}
     >

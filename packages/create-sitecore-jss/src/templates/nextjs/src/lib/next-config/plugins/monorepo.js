@@ -1,4 +1,7 @@
-﻿/**
+﻿const path = require('path');
+const CWD = process.cwd();
+
+/**
  * @param {import('next').NextConfig} nextConfig
  */
 const monorepoPlugin = (nextConfig = {}) => {

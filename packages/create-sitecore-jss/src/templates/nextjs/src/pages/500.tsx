@@ -11,6 +11,7 @@ import { GetStaticProps } from 'next';
 import scConfig from 'sitecore.config';
 import { siteResolver } from 'lib/site-resolver';
 import clientFactory from 'lib/graphql-client-factory';
+import sitecoreConfig from 'sitecore.config';
 
 /**
  * Rendered in case if we have 500 error
@@ -35,6 +36,7 @@ const Custom500 = (props: SitecorePageProps): JSX.Element => {
 
   return (
     <SitecoreContext
+      api={sitecoreConfig.api}
       componentFactory={componentBuilder.getComponentFactory()}
       layoutData={props.layoutData}
     >
