@@ -15,6 +15,7 @@ import {
   <% } -%>
 } from '@sitecore-content-sdk/nextjs';
 import { extractPath, handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
+import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import client from 'lib/sitecore-client';
 import { componentBuilder } from 'temp/componentBuilder';
 import scConfig from 'sitecore.config';
@@ -86,11 +87,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
 // This function gets called at request time on server-side.
 export const getServerSideProps: GetServerSideProps = async (context) => {
 <% } -%>
-let props = {};
-const path = extractPath(context);
-  const page = context.preview
-    ? await client.getPreview(context.previewData)
-    : await client.getPage(path, { locale: context.locale });
+  let props = {};
+  const path = extractPath(context);
+  let page;
+
+  if (context.preview && isDesignLibraryPreviewData(context.previewData)) {
+    page = await client.getDesignLibraryData(context.previewData);
+  } else {
+    page = context.preview
+      ? await client.getPreview(context.previewData)
+      : await client.getPage(path, { locale: context.locale });
+  }
   if (page) {
     props = {
       ...page,

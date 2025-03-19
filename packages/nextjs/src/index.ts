@@ -149,4 +149,5 @@ export {
   withFieldMetadata,
   withEmptyFieldEditingComponent,
   EditingScripts,
+  Form,
 } from '@sitecore-content-sdk/react';
