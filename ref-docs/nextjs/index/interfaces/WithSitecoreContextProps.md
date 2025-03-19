@@ -10,6 +10,14 @@ Defined in: react/types/enhancers/withSitecoreContext.d.ts:7
 
 ## Properties
 
+### api?
+
+> `optional` **api**: `Required`\<\{ `edge`: `Required`\<`undefined` \| \{ `clientContextId`: `string`; `contextId`: `string`; `edgeUrl`: `string`; \}\>; `local`: `Required`\<`undefined` \| \{ `apiHost`: `string`; `apiKey`: `string`; `path`: `string`; \}\>; \}\>
+
+Defined in: react/types/enhancers/withSitecoreContext.d.ts:9
+
+***
+
 ### sitecoreContext
 
 > **sitecoreContext**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
@@ -22,4 +30,4 @@ Defined in: react/types/enhancers/withSitecoreContext.d.ts:8
 
 > `optional` **updateSitecoreContext**: `false` \| (`value`) => `void`
 
-Defined in: react/types/enhancers/withSitecoreContext.d.ts:9
+Defined in: react/types/enhancers/withSitecoreContext.d.ts:10

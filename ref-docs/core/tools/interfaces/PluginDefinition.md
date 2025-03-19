@@ -6,7 +6,7 @@
 
 # Interface: PluginDefinition
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:24](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/tools/templating/plugins.ts#L24)
+Defined in: [packages/core/src/tools/templating/plugins.ts:24](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/core/src/tools/templating/plugins.ts#L24)
 
 Definition to be used for plugin registration during bootstrap
 
@@ -16,7 +16,7 @@ Definition to be used for plugin registration during bootstrap
 
 > **distPath**: `string`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/tools/templating/plugins.ts#L28)
+Defined in: [packages/core/src/tools/templating/plugins.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/core/src/tools/templating/plugins.ts#L28)
 
 destination path to compile plugins to
 
@@ -26,7 +26,7 @@ destination path to compile plugins to
 
 > **moduleType**: [`ModuleType`](../enumerations/ModuleType.md)
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:36](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/tools/templating/plugins.ts#L36)
+Defined in: [packages/core/src/tools/templating/plugins.ts:36](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/core/src/tools/templating/plugins.ts#L36)
 
 CJS or ESM - which type to compile plugins to
 
@@ -36,7 +36,7 @@ CJS or ESM - which type to compile plugins to
 
 > `optional` **relative**: `boolean`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/tools/templating/plugins.ts#L40)
+Defined in: [packages/core/src/tools/templating/plugins.ts:40](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/core/src/tools/templating/plugins.ts#L40)
 
 whether to use relative or absolute paths in the generated file. By default, absolute paths are used.
 
@@ -46,7 +46,7 @@ whether to use relative or absolute paths in the generated file. By default, abs
 
 > **rootPath**: `string`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/tools/templating/plugins.ts#L32)
+Defined in: [packages/core/src/tools/templating/plugins.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/core/src/tools/templating/plugins.ts#L32)
 
 source path for where the plugins are defined
 
@@ -56,6 +56,6 @@ source path for where the plugins are defined
 
 > `optional` **silent**: `boolean`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:44](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/tools/templating/plugins.ts#L44)
+Defined in: [packages/core/src/tools/templating/plugins.ts:44](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/core/src/tools/templating/plugins.ts#L44)
 
 whether to suppress console output

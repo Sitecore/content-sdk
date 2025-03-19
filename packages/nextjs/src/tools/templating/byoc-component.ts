@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { ScaffoldTemplate, ComponentTemplateType } from '@sitecore-content-sdk/core/config';
-import { COMPONENT_FILE_EXTENSION } from './utils';
+import { COMPONENT_FILE_EXTENSION } from './constants';
 
 /**
  * Next.js BYOC component boilerplate

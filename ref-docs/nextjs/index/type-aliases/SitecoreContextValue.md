@@ -8,7 +8,7 @@
 
 > **SitecoreContextValue**: [`LayoutServiceContext`](../interfaces/LayoutServiceContext.md) & `object`
 
-Defined in: react/types/components/SitecoreContext.d.ts:16
+Defined in: react/types/components/SitecoreContext.d.ts:19
 
 ## Type declaration
 

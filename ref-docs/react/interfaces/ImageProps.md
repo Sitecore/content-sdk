@@ -6,7 +6,7 @@
 
 # Interface: ImageProps
 
-Defined in: [packages/react/src/components/Image.tsx:40](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/react/src/components/Image.tsx#L40)
+Defined in: [packages/react/src/components/Image.tsx:40](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L40)
 
 ## Extends
 
@@ -22,7 +22,7 @@ Defined in: [packages/react/src/components/Image.tsx:40](https://github.com/Site
 
 > `optional` **editable**: `boolean`
 
-Defined in: [packages/react/src/components/sharedTypes.ts:29](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/react/src/components/sharedTypes.ts#L29)
+Defined in: [packages/react/src/components/sharedTypes.ts:29](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/sharedTypes.ts#L29)
 
 Can be used to explicitly disable inline editing.
 
@@ -42,7 +42,7 @@ true
 
 > `optional` **emptyFieldEditingComponent**: `ComponentClass`\<`unknown`\> \| `FC`\<`unknown`\>
 
-Defined in: [packages/react/src/components/sharedTypes.ts:33](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/react/src/components/sharedTypes.ts#L33)
+Defined in: [packages/react/src/components/sharedTypes.ts:33](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/sharedTypes.ts#L33)
 
 Custom element to render in Pages in edit mode if field value is empty
 
@@ -56,7 +56,7 @@ Custom element to render in Pages in edit mode if field value is empty
 
 > `optional` **field**: [`ImageFieldValue`](ImageFieldValue.md) \| [`ImageField`](ImageField.md) & `FieldMetadata`
 
-Defined in: [packages/react/src/components/Image.tsx:43](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/react/src/components/Image.tsx#L43)
+Defined in: [packages/react/src/components/Image.tsx:43](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L43)
 
 Image field data (consistent with other field types)
 
@@ -66,7 +66,7 @@ Image field data (consistent with other field types)
 
 > `optional` **imageParams**: `object`
 
-Defined in: [packages/react/src/components/Image.tsx:48](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/react/src/components/Image.tsx#L48)
+Defined in: [packages/react/src/components/Image.tsx:48](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L48)
 
 Parameters that will be attached to Sitecore media URLs
 
@@ -80,7 +80,7 @@ Parameters that will be attached to Sitecore media URLs
 
 > `optional` **mediaUrlPrefix**: `RegExp`
 
-Defined in: [packages/react/src/components/Image.tsx:61](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/react/src/components/Image.tsx#L61)
+Defined in: [packages/react/src/components/Image.tsx:61](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L61)
 
 Custom regexp that finds media URL prefix that will be replaced by `/-/jssmedia` or `/~/jssmedia`.
 
@@ -98,4 +98,4 @@ Custom regexp that finds media URL prefix that will be replaced by `/-/jssmedia`
 
 > `optional` **srcSet**: [`ImageSizeParameters`](ImageSizeParameters.md)[]
 
-Defined in: [packages/react/src/components/Image.tsx:52](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/react/src/components/Image.tsx#L52)
+Defined in: [packages/react/src/components/Image.tsx:52](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L52)

@@ -8,4 +8,4 @@
 
 > `const` **SitecoreContextReactContext**: `React.Context`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\>
 
-Defined in: react/types/components/SitecoreContext.d.ts:14
+Defined in: react/types/components/SitecoreContext.d.ts:17
