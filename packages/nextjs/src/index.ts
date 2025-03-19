@@ -32,6 +32,7 @@ export {
   ComponentParams,
   getContentStylesheetLink,
   EditMode,
+  RenderingType,
 } from '@sitecore-content-sdk/core/layout';
 export { RestComponentLayoutService } from '@sitecore-content-sdk/core/editing';
 export { mediaApi } from '@sitecore-content-sdk/core/media';

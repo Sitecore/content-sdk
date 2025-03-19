@@ -4,7 +4,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { fireEvent, render } from '@testing-library/react';
-import { ComponentLibraryLayout } from './ComponentLibraryLayout';
+import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../test-data/component-editing-data';
 import { ComponentFactory } from './sharedTypes';
 import { SitecoreContext } from './SitecoreContext';
@@ -12,12 +12,12 @@ import { RichText } from './RichText';
 import { Text } from './Text';
 import { Placeholder } from '..';
 import {
-  ComponentLibraryStatus,
+  DesignLibraryStatus,
   ComponentUpdateEventArgs,
-  getComponentLibraryStatusEvent,
+  getDesignLibraryStatusEvent,
 } from '@sitecore-content-sdk/core/editing';
 
-describe('<ComponentLibraryLayout />', () => {
+describe('<DesignLibrary />', () => {
   const postMessageSpy = sinon.spy(global.window, 'postMessage');
 
   const componentFactory: ComponentFactory = (componentName: string) => {
@@ -70,7 +70,7 @@ describe('<ComponentLibraryLayout />', () => {
     // don't wrap the content in divs
     const rendered = render(
       <SitecoreContext componentFactory={componentFactory}>
-        <ComponentLibraryLayout {...basicPage.layoutData} />
+        <DesignLibrary {...basicPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
     );
@@ -88,7 +88,7 @@ describe('<ComponentLibraryLayout />', () => {
     const placeholderPage = getTestLayoutData(true);
     const rendered = render(
       <SitecoreContext componentFactory={componentFactory} layoutData={placeholderPage.layoutData}>
-        <ComponentLibraryLayout {...placeholderPage.layoutData} />
+        <DesignLibrary {...placeholderPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
     );
@@ -109,13 +109,13 @@ describe('<ComponentLibraryLayout />', () => {
 
   it('should fire component:ready event', () => {
     const basicPage = getTestLayoutData();
-    const expectedReadyMessage = getComponentLibraryStatusEvent(
-      ComponentLibraryStatus.READY,
+    const expectedReadyMessage = getDesignLibraryStatusEvent(
+      DesignLibraryStatus.READY,
       'test-content'
     );
     const rendered = render(
       <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
-        <ComponentLibraryLayout {...basicPage.layoutData} />
+        <DesignLibrary {...basicPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
     );
@@ -140,7 +140,7 @@ describe('<ComponentLibraryLayout />', () => {
     const basicPage = getTestLayoutData();
     const rendered = render(
       <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
-        <ComponentLibraryLayout {...basicPage.layoutData} />
+        <DesignLibrary {...basicPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
     );
@@ -174,7 +174,7 @@ describe('<ComponentLibraryLayout />', () => {
     const placeholderPage = getTestLayoutData(true);
     const rendered = render(
       <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
-        <ComponentLibraryLayout {...placeholderPage.layoutData} />
+        <DesignLibrary {...placeholderPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
     );
@@ -214,7 +214,7 @@ describe('<ComponentLibraryLayout />', () => {
     const basicPage = getTestLayoutData();
     const rendered = render(
       <SitecoreContext componentFactory={componentFactory}>
-        <ComponentLibraryLayout {...basicPage.layoutData} />
+        <DesignLibrary {...basicPage.layoutData} />
       </SitecoreContext>
     );
 
@@ -229,7 +229,7 @@ describe('<ComponentLibraryLayout />', () => {
         .some((call) =>
           JSON.stringify(call.args[0]).includes(
             JSON.stringify(
-              getComponentLibraryStatusEvent(ComponentLibraryStatus.RENDERED, 'test-content')
+              getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
             )
           )
         )
