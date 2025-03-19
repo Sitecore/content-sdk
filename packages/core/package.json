@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/core",
-  "version": "0.1.0-beta.27",
+  "version": "0.1.0-beta.28",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
