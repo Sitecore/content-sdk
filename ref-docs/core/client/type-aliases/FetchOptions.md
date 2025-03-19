@@ -8,7 +8,7 @@
 
 > **FetchOptions**: `object`
 
-Defined in: [packages/core/src/models.ts:69](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/core/src/models.ts#L69)
+Defined in: [packages/core/src/models.ts:69](https://github.com/Sitecore/xmc-jss-dev/blob/38628169543edbbaa7aaf11b37732422ca68db02/packages/core/src/models.ts#L69)
 
 ## Type declaration
 

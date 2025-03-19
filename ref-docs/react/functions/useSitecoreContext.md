@@ -6,9 +6,9 @@
 
 # Function: useSitecoreContext()
 
-> **useSitecoreContext**(`options`?): `object`
+> **useSitecoreContext**(`options`?): [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md)
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:65](https://github.com/Sitecore/xmc-jss-dev/blob/2e6668e53da88ec1fae89d8114202dfa302a9374/packages/react/src/enhancers/withSitecoreContext.tsx#L65)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:71](https://github.com/Sitecore/xmc-jss-dev/blob/38628169543edbbaa7aaf11b37732422ca68db02/packages/react/src/enhancers/withSitecoreContext.tsx#L71)
 
 This hook grants acсess to the current Sitecore page context
 by default JSS includes the following properties in this context:
@@ -24,27 +24,9 @@ by default JSS includes the following properties in this context:
 
 ## Returns
 
-`object`
+[`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md)
 
 { sitecoreContext, updateSitecoreContext }
-
-### sitecoreContext
-
-> **sitecoreContext**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md) = `reactContext.context`
-
-### updateSitecoreContext()
-
-> **updateSitecoreContext**: (`value`) => `void`
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `value` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) \| [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md) |
-
-#### Returns
-
-`void`
 
 ## See
 

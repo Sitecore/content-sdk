@@ -8,7 +8,7 @@
 
 > **withSitecoreContext**(`options`?): \<`ComponentProps`\>(`Component`) => (`props`) => `React.JSX.Element`
 
-Defined in: react/types/enhancers/withSitecoreContext.d.ts:15
+Defined in: react/types/enhancers/withSitecoreContext.d.ts:16
 
 ## Parameters
 

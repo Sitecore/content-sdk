@@ -6,7 +6,7 @@
 
 # Class: SitecoreContext
 
-Defined in: react/types/components/SitecoreContext.d.ts:20
+Defined in: react/types/components/SitecoreContext.d.ts:23
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:20
 
 > **new SitecoreContext**(`props`): [`SitecoreContext`](SitecoreContext.md)
 
-Defined in: react/types/components/SitecoreContext.d.ts:32
+Defined in: react/types/components/SitecoreContext.d.ts:35
 
 #### Parameters
 
@@ -104,7 +104,7 @@ Defined in: react/node\_modules/@types/react/index.d.ts:1040
 
 > **setContext**: (`value`) => `void`
 
-Defined in: react/types/components/SitecoreContext.d.ts:40
+Defined in: react/types/components/SitecoreContext.d.ts:43
 
 Update context state. Value can be
 
@@ -169,7 +169,7 @@ class Foo extends React.Component {
 
 > `static` **displayName**: `string`
 
-Defined in: react/types/components/SitecoreContext.d.ts:31
+Defined in: react/types/components/SitecoreContext.d.ts:34
 
 ***
 
@@ -177,7 +177,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:31
 
 > `static` **propTypes**: `object`
 
-Defined in: react/types/components/SitecoreContext.d.ts:21
+Defined in: react/types/components/SitecoreContext.d.ts:24
 
 #### children
 
@@ -241,7 +241,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: react/types/components/SitecoreContext.d.ts:34
+Defined in: react/types/components/SitecoreContext.d.ts:37
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -401,7 +401,7 @@ this from being invoked.
 
 > **constructContext**(`layoutData`?): [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: react/types/components/SitecoreContext.d.ts:33
+Defined in: react/types/components/SitecoreContext.d.ts:36
 
 #### Parameters
 
@@ -471,7 +471,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: react/types/components/SitecoreContext.d.ts:41
+Defined in: react/types/components/SitecoreContext.d.ts:44
 
 #### Returns
 
