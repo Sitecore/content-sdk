@@ -5,7 +5,7 @@ import {
   updateComponentHandler,
   getComponentLibraryStatusEvent,
   ComponentLibraryStatus,
-} from './component-library';
+} from './design-library';
 import testComponent from '../test-data/component-editing-data';
 
 describe('component library utils', () => {

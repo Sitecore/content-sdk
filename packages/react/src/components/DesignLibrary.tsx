@@ -7,13 +7,13 @@ import {
   LayoutServiceData,
 } from '@sitecore-content-sdk/core/layout';
 import {
-  ComponentLibraryStatus,
-  getComponentLibraryStatusEvent,
+  DesignLibraryStatus,
+  getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
 } from '@sitecore-content-sdk/core/editing';
 import { EditingScripts } from './EditingScripts';
 
-export const ComponentLibraryLayout = (layoutData: LayoutServiceData): JSX.Element => {
+export const DesignLibrary = (layoutData: LayoutServiceData): JSX.Element => {
   const { route } = layoutData.sitecore;
   const [renderKey, setRenderKey] = useState(0);
   const [rootUpdate, setRootUpdate] = useState(null);
@@ -33,7 +33,7 @@ export const ComponentLibraryLayout = (layoutData: LayoutServiceData): JSX.Eleme
     if (!componentReady) {
       componentReady = true;
       window.top.postMessage(
-        getComponentLibraryStatusEvent(ComponentLibraryStatus.READY, rootComponent.uid),
+        getDesignLibraryStatusEvent(DesignLibraryStatus.READY, rootComponent.uid),
         '*'
       );
     }
@@ -52,7 +52,7 @@ export const ComponentLibraryLayout = (layoutData: LayoutServiceData): JSX.Eleme
     }
 
     window.top.postMessage(
-      getComponentLibraryStatusEvent(ComponentLibraryStatus.RENDERED, rootComponent.uid),
+      getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, rootComponent.uid),
       '*'
     );
   }, [renderKey, rootComponent.uid]);

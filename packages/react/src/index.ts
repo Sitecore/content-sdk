@@ -13,7 +13,7 @@ export { EnhancedOmit } from '@sitecore-content-sdk/core/utils';
 export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
 export {
   getContentStylesheetLink,
-  getComponentLibraryStylesheetLinks,
+  getDesignLibraryStylesheetLinks,
   LayoutServiceData,
   LayoutServicePageState,
   LayoutServiceContext,
@@ -61,7 +61,7 @@ export {
   fetchFEaaSComponentServerProps,
 } from './components/FEaaSComponent';
 export { FEaaSWrapper } from './components/FEaaSWrapper';
-export { ComponentLibraryLayout } from './components/ComponentLibraryLayout';
+export { DesignLibrary } from './components/DesignLibrary';
 export {
   BYOCComponent,
   BYOCComponentParams,

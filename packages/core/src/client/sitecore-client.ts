@@ -1,5 +1,5 @@
 import {
-  ComponentLibraryRenderPreviewData,
+  DesignLibraryRenderPreviewData,
   EditingPreviewData,
   GraphQLEditingService,
   RestComponentLayoutService,
@@ -7,7 +7,7 @@ import {
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases, GraphQLDictionaryService } from '../i18n';
 import {
-  getComponentLibraryStylesheetLinks,
+  getDesignLibraryStylesheetLinks,
   getContentStylesheetLink,
   GraphQLLayoutService,
   LayoutServiceData,
@@ -254,7 +254,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     }
 
     if (enableThemes) {
-      headLinks.push(...getComponentLibraryStylesheetLinks(layoutData, contextId, edgeUrl));
+      headLinks.push(...getDesignLibraryStylesheetLinks(layoutData, contextId, edgeUrl));
     }
 
     return headLinks;
@@ -341,13 +341,13 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
-   * Get component library page details for Component Library mode of your app
-   * @param {ComponentLibraryRenderPreviewData} componentLibData preview data set in 'library' mode of the app
+   * Get design library page details for Design Library mode of your app
+   * @param {DesignLibraryRenderPreviewData} designLibData preview data set in 'library' mode of the app
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
-   * @returns {Page} preview page for Component Library
+   * @returns {Page} preview page for Design Library
    */
-  async getComponentLibraryData(
-    componentLibData: ComponentLibraryRenderPreviewData,
+  async getDesignLibraryData(
+    designLibData: DesignLibraryRenderPreviewData,
     fetchOptions?: FetchOptions
   ): Promise<Page> {
     if (!this.initOptions.api.local) {
@@ -362,7 +362,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       renderingId,
       dataSourceId,
       version,
-    } = componentLibData;
+    } = designLibData;
 
     const componentData = await this.componentService.fetchComponentData({
       siteName: site,
@@ -383,12 +383,10 @@ export class SitecoreClient implements BaseSitecoreClient {
     );
 
     if (!componentData) {
-      throw new Error(
-        `Unable to fetch editing data for preview ${JSON.stringify(componentLibData)}`
-      );
+      throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(designLibData)}`);
     }
     const page = {
-      locale: componentLibData.language,
+      locale: designLibData.language,
       layout: componentData,
       dictionary: dictionaryData,
     } as Page;

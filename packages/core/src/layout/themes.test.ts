@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import { getComponentLibraryStylesheetLinks, getStylesheetUrl } from './themes';
+import { getDesignLibraryStylesheetLinks, getStylesheetUrl } from './themes';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { ComponentRendering } from '.';
 
 describe('themes', () => {
   const sitecoreEdgeContextId = 'test';
 
-  describe('getComponentLibraryStylesheetLinks', () => {
+  describe('getDesignLibraryStylesheetLinks', () => {
     const setBasicLayoutData = (component: ComponentRendering) => {
       return {
         sitecore: {
@@ -23,7 +23,7 @@ describe('themes', () => {
 
     it('should return empty array route data is not provided', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           {
             sitecore: {
               context: {},
@@ -37,7 +37,7 @@ describe('themes', () => {
 
     it('should return links using CSSStyles field', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           setBasicLayoutData({
             componentName: 'test',
             fields: {
@@ -58,7 +58,7 @@ describe('themes', () => {
 
     it('should return links using Styles field', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           setBasicLayoutData({
             componentName: 'test',
             fields: {
@@ -79,7 +79,7 @@ describe('themes', () => {
 
     it('should return links using LibraryId field', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           setBasicLayoutData({
             componentName: 'test',
             fields: {
@@ -97,7 +97,7 @@ describe('themes', () => {
 
     it('should return links using CSSStyles param', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           setBasicLayoutData({
             componentName: 'styled',
             params: {
@@ -113,7 +113,7 @@ describe('themes', () => {
 
     it('should return links using Styles param', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           setBasicLayoutData({
             componentName: 'styled',
             params: {
@@ -129,7 +129,7 @@ describe('themes', () => {
 
     it('should return links using LibraryId param', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           setBasicLayoutData({
             componentName: 'styled',
             params: {
@@ -145,7 +145,7 @@ describe('themes', () => {
 
     it('should return prefer params over fields', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           setBasicLayoutData({
             componentName: 'styled',
             params: {
@@ -164,7 +164,7 @@ describe('themes', () => {
       ]);
 
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           setBasicLayoutData({
             componentName: 'styled',
             params: {
@@ -185,7 +185,7 @@ describe('themes', () => {
 
     it('should return links using non-prod edge url', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           setBasicLayoutData({
             componentName: 'test',
             fields: {
@@ -211,7 +211,7 @@ describe('themes', () => {
 
     it('should return empty links array when required fields are not provided', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           {
             sitecore: {
               context: {},
@@ -229,7 +229,7 @@ describe('themes', () => {
 
     it('should return empty links array when required params are not provided', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           setBasicLayoutData({
             componentName: 'styled',
             params: {},
@@ -241,7 +241,7 @@ describe('themes', () => {
 
     it('should traverse nested nodes and return only unique links', () => {
       expect(
-        getComponentLibraryStylesheetLinks(
+        getDesignLibraryStylesheetLinks(
           {
             sitecore: {
               context: {},

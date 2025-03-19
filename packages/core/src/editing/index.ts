@@ -20,11 +20,11 @@ export {
   LayoutKind,
   MetadataKind,
   EditingPreviewData,
-  ComponentLibraryRenderPreviewData,
+  DesignLibraryRenderPreviewData,
 } from './models';
 export {
   addComponentUpdateHandler,
-  ComponentLibraryStatus,
-  ComponentLibraryStatusEvent,
-  getComponentLibraryStatusEvent,
-} from './component-library';
+  DesignLibraryStatus,
+  DesignLibraryStatusEvent,
+  getDesignLibraryStatusEvent,
+} from './design-library';

@@ -45,7 +45,7 @@ export type RestLayoutServiceConfig = {
 };
 
 /**
- * Params for requesting component data from service in Component Library mode
+ * Params for requesting component data from service in Design Library mode
  */
 export interface ComponentLayoutRequestParams {
   /**
@@ -84,7 +84,7 @@ export interface ComponentLayoutRequestParams {
 }
 
 /**
- * REST service that enables Component Library functioality
+ * REST service that enables Design Library functioality
  * Makes a request to /sitecore/api/layout/component in 'library' mode in Pages.
  * Returns layoutData for one single rendered component
  */

@@ -69,9 +69,9 @@ export type EditingPreviewData = {
 };
 
 /**
- * Data for Component Library rendering mode
+ * Data for Design Library rendering mode
  */
-export interface ComponentLibraryRenderPreviewData {
+export interface DesignLibraryRenderPreviewData {
   site: string;
   itemId: string;
   renderingId: string;
