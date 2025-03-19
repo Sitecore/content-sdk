@@ -2,7 +2,7 @@
 export {
   EditingRenderMiddleware,
   EditingRenderMiddlewareConfig,
-  isComponentLibraryPreviewData,
+  isDesignLibraryPreviewData,
 } from './editing-render-middleware';
 export { FEAASRenderMiddleware, FEAASRenderMiddlewareConfig } from './feaas-render-middleware';
 export {

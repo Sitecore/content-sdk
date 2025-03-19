@@ -579,7 +579,7 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getComponentLibraryData', () => {
+  describe('getDesignLibraryData', () => {
     it('should fetch component library data', async () => {
       const componentLibData = {
         itemId: 'item-id',
@@ -612,7 +612,7 @@ describe('SitecoreClient', () => {
         .withArgs({ siteName: componentLibData.site, language: componentLibData.language })
         .resolves(dictionaryData);
 
-      const result = await sitecoreClient.getComponentLibraryData(componentLibData);
+      const result = await sitecoreClient.getDesignLibraryData(componentLibData);
 
       expect(result).to.deep.include({
         locale: componentLibData.language,
@@ -665,7 +665,7 @@ describe('SitecoreClient', () => {
       (modifiedClient as any).restComponentService = restComponentServiceStub;
 
       try {
-        await modifiedClient.getComponentLibraryData(componentLibData);
+        await modifiedClient.getDesignLibraryData(componentLibData);
         expect.fail('Should have thrown an error');
       } catch (error) {
         expect((error as Error).message).to.include(
@@ -674,7 +674,7 @@ describe('SitecoreClient', () => {
       }
     });
 
-    it('should pass fetchOptions to both editingService and componentService when calling getComponentLibraryData', async () => {
+    it('should pass fetchOptions to both editingService and componentService when calling getDesignLibraryData', async () => {
       const componentLibData = {
         itemId: 'item-id',
         componentUid: 'comp-uid',
@@ -716,7 +716,7 @@ describe('SitecoreClient', () => {
       restComponentServiceStub.fetchComponentData.resolves(componentData);
       editingServiceStub.fetchDictionaryData.resolves(dictionaryData);
 
-      await sitecoreClient.getComponentLibraryData(componentLibData, fetchOptions);
+      await sitecoreClient.getDesignLibraryData(componentLibData, fetchOptions);
 
       expect(
         editingServiceStub.fetchDictionaryData.calledWith(

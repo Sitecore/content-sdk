@@ -32,6 +32,7 @@ export {
   ComponentParams,
   getContentStylesheetLink,
   EditMode,
+  RenderingType,
 } from '@sitecore-content-sdk/core/layout';
 export { RestComponentLayoutService } from '@sitecore-content-sdk/core/editing';
 export { mediaApi } from '@sitecore-content-sdk/core/media';
@@ -124,12 +125,11 @@ export {
   BYOCComponentParams,
   BYOCComponent,
   BYOCComponentProps,
-  getComponentLibraryStylesheetLinks,
-  Form,
+  getDesignLibraryStylesheetLinks,
   File,
   FileField,
   RichTextField,
-  ComponentLibraryLayout,
+  DesignLibrary,
   DefaultEmptyFieldEditingComponentImage,
   DefaultEmptyFieldEditingComponentText,
   PlaceholderComponentProps,
@@ -149,4 +149,5 @@ export {
   withFieldMetadata,
   withEmptyFieldEditingComponent,
   EditingScripts,
+  Form,
 } from '@sitecore-content-sdk/react';

@@ -5,7 +5,7 @@ import {
   QUERY_PARAM_EDITING_SECRET,
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
-  ComponentLibraryRenderPreviewData,
+  DesignLibraryRenderPreviewData,
   EditingPreviewData,
 } from '@sitecore-content-sdk/core/editing';
 import { getJssEditingSecret } from '../utils/utils';
@@ -35,19 +35,19 @@ export type EditingNextApiRequest = NextApiRequest & {
 };
 
 /**
- * Type guard for Component Library mode
+ * Type guard for Design Library mode
  * @param {object} data preview data to check
  * @returns true if the data is EditingPreviewData
  * @see EditingPreviewData
  */
-export const isComponentLibraryPreviewData = (
+export const isDesignLibraryPreviewData = (
   data: unknown
-): data is ComponentLibraryRenderPreviewData => {
+): data is DesignLibraryRenderPreviewData => {
   return (
     typeof data === 'object' &&
     data !== null &&
     'mode' in data &&
-    (data as ComponentLibraryRenderPreviewData).mode === 'library'
+    (data as DesignLibraryRenderPreviewData).mode === 'library'
   );
 };
 
@@ -161,8 +161,6 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     }
 
     if (mode === 'library') {
-      // dedicated route and layout to SSR component library
-      query.route = '/component-library/render';
       res.setPreviewData(
         {
           itemId: query.sc_itemid,
@@ -174,7 +172,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           mode: 'library',
           dataSourceId: query.sc_datasourceId,
           version: query.sc_version,
-        } as ComponentLibraryRenderPreviewData,
+        } as DesignLibraryRenderPreviewData,
         {
           maxAge: 3,
         }

@@ -2,7 +2,7 @@
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
-import { LayoutServicePageState, SitecorePageProps } from '@sitecore-content-sdk/nextjs';
+import { LayoutServicePageState, SitecorePageProps, RenderingType } from '@sitecore-content-sdk/nextjs';
 
 /**
  * The Bootstrap component is the entry point for performing any initialization logic
@@ -15,7 +15,7 @@ const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
     const renderingType = props.layout?.sitecore?.context.renderingType;
     if (process.env.NODE_ENV === 'development')
       console.debug('Browser Events SDK is not initialized in development environment');
-    else if (pageState !== LayoutServicePageState.Normal || renderingType === 'component')
+    else if (pageState !== LayoutServicePageState.Normal || renderingType === RenderingType.Component)
       console.debug('Browser Events SDK is not initialized in edit and preview modes');
     else {
       if (config.api.edge?.clientContextId) {
