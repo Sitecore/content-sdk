@@ -17,6 +17,7 @@
 
 - [EditMode](enumerations/EditMode.md)
 - [LayoutServicePageState](enumerations/LayoutServicePageState.md)
+- [RenderingType](enumerations/RenderingType.md)
 
 ## Classes
 
@@ -112,11 +113,11 @@
 
 ## Functions
 
-- [ComponentLibraryLayout](functions/ComponentLibraryLayout.md)
 - [ComponentPropsContext](functions/ComponentPropsContext.md)
 - [DateField](functions/DateField.md)
 - [DefaultEmptyFieldEditingComponentImage](functions/DefaultEmptyFieldEditingComponentImage.md)
 - [DefaultEmptyFieldEditingComponentText](functions/DefaultEmptyFieldEditingComponentText.md)
+- [DesignLibrary](functions/DesignLibrary.md)
 - [EditingScripts](functions/EditingScripts.md)
 - [enableDebug](functions/enableDebug.md)
 - [FEaaSComponent](functions/FEaaSComponent.md)
@@ -124,8 +125,8 @@
 - [File](functions/File.md)
 - [Form](functions/Form.md)
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
-- [getComponentLibraryStylesheetLinks](functions/getComponentLibraryStylesheetLinks.md)
 - [getContentStylesheetLink](functions/getContentStylesheetLink.md)
+- [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getFieldValue](functions/getFieldValue.md)
 - [getGroomedVariantIds](functions/getGroomedVariantIds.md)
 - [getPersonalizedRewrite](functions/getPersonalizedRewrite.md)

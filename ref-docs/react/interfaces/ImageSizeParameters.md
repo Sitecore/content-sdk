@@ -6,7 +6,7 @@
 
 # Interface: ImageSizeParameters
 
-Defined in: [packages/react/src/components/Image.tsx:22](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L22)
+Defined in: [packages/react/src/components/Image.tsx:22](https://github.com/Sitecore/xmc-jss-dev/blob/9f11d51024ae44bd51bebc8f1ec4b1146771174b/packages/react/src/components/Image.tsx#L22)
 
 ## Indexable
 
@@ -18,7 +18,7 @@ Defined in: [packages/react/src/components/Image.tsx:22](https://github.com/Site
 
 > `optional` **as**: `0` \| `1`
 
-Defined in: [packages/react/src/components/Image.tsx:35](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L35)
+Defined in: [packages/react/src/components/Image.tsx:35](https://github.com/Sitecore/xmc-jss-dev/blob/9f11d51024ae44bd51bebc8f1ec4b1146771174b/packages/react/src/components/Image.tsx#L35)
 
 Allow stretch
 
@@ -28,7 +28,7 @@ Allow stretch
 
 > `optional` **h**: `number`
 
-Defined in: [packages/react/src/components/Image.tsx:27](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L27)
+Defined in: [packages/react/src/components/Image.tsx:27](https://github.com/Sitecore/xmc-jss-dev/blob/9f11d51024ae44bd51bebc8f1ec4b1146771174b/packages/react/src/components/Image.tsx#L27)
 
 Fixed height of the image
 
@@ -38,7 +38,7 @@ Fixed height of the image
 
 > `optional` **iar**: `0` \| `1`
 
-Defined in: [packages/react/src/components/Image.tsx:33](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L33)
+Defined in: [packages/react/src/components/Image.tsx:33](https://github.com/Sitecore/xmc-jss-dev/blob/9f11d51024ae44bd51bebc8f1ec4b1146771174b/packages/react/src/components/Image.tsx#L33)
 
 Ignore aspect ratio
 
@@ -48,7 +48,7 @@ Ignore aspect ratio
 
 > `optional` **mh**: `number`
 
-Defined in: [packages/react/src/components/Image.tsx:31](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L31)
+Defined in: [packages/react/src/components/Image.tsx:31](https://github.com/Sitecore/xmc-jss-dev/blob/9f11d51024ae44bd51bebc8f1ec4b1146771174b/packages/react/src/components/Image.tsx#L31)
 
 Max height of the image
 
@@ -58,7 +58,7 @@ Max height of the image
 
 > `optional` **mw**: `number`
 
-Defined in: [packages/react/src/components/Image.tsx:29](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L29)
+Defined in: [packages/react/src/components/Image.tsx:29](https://github.com/Sitecore/xmc-jss-dev/blob/9f11d51024ae44bd51bebc8f1ec4b1146771174b/packages/react/src/components/Image.tsx#L29)
 
 Max width of the image
 
@@ -68,7 +68,7 @@ Max width of the image
 
 > `optional` **sc**: `number`
 
-Defined in: [packages/react/src/components/Image.tsx:37](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L37)
+Defined in: [packages/react/src/components/Image.tsx:37](https://github.com/Sitecore/xmc-jss-dev/blob/9f11d51024ae44bd51bebc8f1ec4b1146771174b/packages/react/src/components/Image.tsx#L37)
 
 Image scale. Defaults to 1.0
 
@@ -78,6 +78,6 @@ Image scale. Defaults to 1.0
 
 > `optional` **w**: `number`
 
-Defined in: [packages/react/src/components/Image.tsx:25](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/Image.tsx#L25)
+Defined in: [packages/react/src/components/Image.tsx:25](https://github.com/Sitecore/xmc-jss-dev/blob/9f11d51024ae44bd51bebc8f1ec4b1146771174b/packages/react/src/components/Image.tsx#L25)
 
 Fixed width of the image

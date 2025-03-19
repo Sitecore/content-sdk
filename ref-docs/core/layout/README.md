@@ -47,8 +47,8 @@
 ## Functions
 
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
-- [getComponentLibraryStylesheetLinks](functions/getComponentLibraryStylesheetLinks.md)
 - [getContentStylesheetLink](functions/getContentStylesheetLink.md)
+- [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getDynamicPlaceholderPattern](functions/getDynamicPlaceholderPattern.md)
 - [getFieldValue](functions/getFieldValue.md)
 - [isDynamicPlaceholder](functions/isDynamicPlaceholder.md)

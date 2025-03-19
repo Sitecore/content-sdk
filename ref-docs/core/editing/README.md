@@ -8,7 +8,7 @@
 
 ## Enumerations
 
-- [ComponentLibraryStatus](enumerations/ComponentLibraryStatus.md)
+- [DesignLibraryStatus](enumerations/DesignLibraryStatus.md)
 - [LayoutKind](enumerations/LayoutKind.md)
 - [MetadataKind](enumerations/MetadataKind.md)
 
@@ -21,9 +21,9 @@
 ## Interfaces
 
 - [ComponentLayoutRequestParams](interfaces/ComponentLayoutRequestParams.md)
-- [ComponentLibraryRenderPreviewData](interfaces/ComponentLibraryRenderPreviewData.md)
-- [ComponentLibraryStatusEvent](interfaces/ComponentLibraryStatusEvent.md)
 - [ComponentUpdateEventArgs](interfaces/ComponentUpdateEventArgs.md)
+- [DesignLibraryRenderPreviewData](interfaces/DesignLibraryRenderPreviewData.md)
+- [DesignLibraryStatusEvent](interfaces/DesignLibraryStatusEvent.md)
 - [EditingRenderQueryParams](interfaces/EditingRenderQueryParams.md)
 - [Metadata](interfaces/Metadata.md)
 - [RenderComponentQueryParams](interfaces/RenderComponentQueryParams.md)
@@ -42,7 +42,7 @@
 ## Functions
 
 - [addComponentUpdateHandler](functions/addComponentUpdateHandler.md)
-- [getComponentLibraryStatusEvent](functions/getComponentLibraryStatusEvent.md)
+- [getDesignLibraryStatusEvent](functions/getDesignLibraryStatusEvent.md)
 - [getJssPagesClientData](functions/getJssPagesClientData.md)
 - [isEditorActive](functions/isEditorActive.md)
 - [resetEditorChromes](functions/resetEditorChromes.md)

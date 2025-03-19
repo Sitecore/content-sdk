@@ -6,10 +6,6 @@
 
 # editing
 
-## Enumerations
-
-- [RenderingType](enumerations/RenderingType.md)
-
 ## Classes
 
 - [EditingConfigMiddleware](classes/EditingConfigMiddleware.md)
@@ -33,4 +29,10 @@
 
 ## Functions
 
-- [isComponentLibraryPreviewData](functions/isComponentLibraryPreviewData.md)
+- [isDesignLibraryPreviewData](functions/isDesignLibraryPreviewData.md)
+
+## References
+
+### RenderingType
+
+Re-exports [RenderingType](../index/enumerations/RenderingType.md)

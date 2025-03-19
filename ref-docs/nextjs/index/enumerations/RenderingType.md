@@ -2,7 +2,7 @@
 
 ***
 
-[@sitecore-content-sdk/nextjs](../../README.md) / [editing](../README.md) / RenderingType
+[@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / RenderingType
 
 # Enumeration: RenderingType
 

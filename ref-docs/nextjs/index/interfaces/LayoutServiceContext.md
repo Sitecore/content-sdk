@@ -66,7 +66,7 @@ Defined in: core/types/layout/models.d.ts:32
 
 ### renderingType?
 
-> `optional` **renderingType**: [`Component`](../../editing/enumerations/RenderingType.md#component)
+> `optional` **renderingType**: [`Component`](../enumerations/RenderingType.md#component)
 
 Defined in: core/types/layout/models.d.ts:37
 
