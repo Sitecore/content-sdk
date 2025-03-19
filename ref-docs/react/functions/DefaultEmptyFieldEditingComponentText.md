@@ -8,7 +8,7 @@
 
 > **DefaultEmptyFieldEditingComponentText**(`props`, `deprecatedLegacyContext`?): `ReactNode`
 
-Defined in: [packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx:3](https://github.com/Sitecore/xmc-jss-dev/blob/38628169543edbbaa7aaf11b37732422ca68db02/packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx#L3)
+Defined in: [packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx:3](https://github.com/Sitecore/xmc-jss-dev/blob/d118c3d87d535fa4161627b881481e84f583140c/packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx#L3)
 
 ## Parameters
 
