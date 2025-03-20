@@ -59,6 +59,10 @@ export const promptDestination = async (prompt: string, defaultDestination: stri
 };
 
 export const main = async (args: ParsedArgs) => {
+  // ensure monorepo arg is defined for both yarn watch and npx calls
+  if (!args.monorepo) {
+    args.monorepo = false;
+  }
   let template: string = '';
 
   // check if template was provided

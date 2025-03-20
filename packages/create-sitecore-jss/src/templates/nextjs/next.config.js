@@ -1,4 +1,5 @@
-const plugins = require('./src/temp/next-config-plugins') || {};
+const path = require('path');
+const SassAlias = require('sass-alias');
 
 /**
  * @type {import('next').NextConfig}
@@ -47,11 +48,66 @@ const nextConfig = {
         source: '/healthz',
         destination: '/api/healthz',
       },
+      // robots route
+      {
+        source: '/robots.txt',
+        destination: '/api/robots',
+      },
+      // sitemap route
+      {
+        source: '/sitemap:id([\\w-]{0,}).xml',
+        destination: '/api/sitemap'
+      },
+      // feaas api route
+      {
+        source: '/feaas-render',
+        destination: '/api/editing/feaas/render',
+      },
     ];
+  },
+
+  webpack: (config, options) => {
+    if (!options.isServer) {
+      // Add a loader to strip out getServerSideProps and getStaticProps from components in the client bundle
+      config.module.rules.unshift({
+        test: /src\\components\\.*\.tsx$/,
+        use: ['@sitecore-content-sdk\\nextjs\\component-props-loader'],
+      });
+    } else {
+      // Force use of CommonJS on the server for FEAAS SDK since JSS also uses CommonJS entrypoint to FEAAS SDK.
+      // This prevents issues arising due to FEAAS SDK's dual CommonJS/ES module support on the server (via conditional exports).
+      // See https://nodejs.org/api/packages.html#dual-package-hazard.
+      config.externals = [
+        {
+          '@sitecore-feaas/clientside/react': 'commonjs @sitecore-feaas/clientside/react',
+          '@sitecore/byoc': 'commonjs @sitecore/byoc',
+          '@sitecore/byoc/react': 'commonjs @sitecore/byoc/react',
+        },
+        ...config.externals,
+      ];
+    }
+    <% if (monorepo) { -%>
+    // monorepo configuration start
+    if (options.isServer) {
+      config.externals = ['react', 'vertx', ...config.externals];
+    }
+
+    config.resolve.alias['@sitecore-cloudsdk/events'] = path.resolve(
+      process.cwd(), './node_modules/@sitecore-cloudsdk/events'
+    );
+    // monorepo configuration end
+    <% } -%>
+
+    return config;
+  },
+
+  // Add sass settings for SXA themes and styles
+  sassOptions: {
+    importer: new SassAlias({
+      '@sass': path.join(process.cwd(), './src/assets', 'sass'),
+      '@fontawesome': path.join(process.cwd(), './node_modules', 'font-awesome'),
+    }).getImporter(),
   },
 };
 
-module.exports = () => {
-  // Run the base config through any configured plugins
-  return Object.values(plugins).reduce((acc, plugin) => plugin(acc), nextConfig);
-};
+module.exports = nextConfig;
