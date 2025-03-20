@@ -93,13 +93,13 @@ export class RedirectsMiddleware extends MiddlewareBase {
         // Find the redirect from result of RedirectService
         const existsRedirect = await this.getExistsRedirect(req, site.name);
 
-        debug.redirects('Matched redirect rule: %o', { existsRedirect });
-
         if (!existsRedirect) {
           debug.redirects('skipped (redirect does not exist)');
 
           return res;
         }
+
+        debug.redirects('Matched redirect rule: %o', { existsRedirect });
 
         // Find context site language and replace token
         if (
@@ -203,31 +203,45 @@ export class RedirectsMiddleware extends MiddlewareBase {
     req: NextRequest,
     siteName: string
   ): Promise<RedirectResult | undefined> {
-    const { pathname: targetURL, search: targetQS = '' } = this.normalizeUrl(req.nextUrl.clone());
+    const { pathname: incomingURL, search: incomingQS = '' } = this.normalizeUrl(
+      req.nextUrl.clone()
+    );
     const locale = this.getLanguage(req);
-    const normalizedPath = targetURL.replace(/\/*$/gi, '');
+    const normalizedPath = incomingURL.replace(/\/*$/gi, '');
     const redirects = await this.redirectsService.fetchRedirects(siteName);
     const language = this.getLanguage(req);
     const modifyRedirects = structuredClone(redirects);
     let matchedQueryString: string | undefined;
+    const localePath = `/${locale.toLowerCase()}${normalizedPath}`;
 
     return modifyRedirects.length
       ? modifyRedirects.find((redirect: RedirectResult) => {
+          // process static URL (non-regex) rules
           if (isRegexOrUrl(redirect.pattern) === 'url') {
-            const [patternPath, patternQS] = redirect.pattern.endsWith('/')
+            const urlArray = redirect.pattern.endsWith('/')
               ? redirect.pattern.slice(0, -1).split('?')
               : redirect.pattern.split('?');
+            const patternQS = urlArray[1];
+            let patternPath = urlArray[0];
+            // nextjs routes are case-sensitive, but locales should be compared case-insensitively
+            const patternParts = patternPath.split('/');
+            const maybeLocale = patternParts[1].toLowerCase();
+            // case insensitive lookup of locales
+            if (new RegExp(this.locales.join('|'), 'i').test(maybeLocale)) {
+              patternPath = patternPath.replace(`/${patternParts[1]}`, `/${maybeLocale}`);
+            }
 
             return (
-              (patternPath === normalizedPath || patternPath === `/${locale}${normalizedPath}`) &&
+              (patternPath === localePath || patternPath === normalizedPath) &&
               (!patternQS ||
                 areURLSearchParamsEqual(
                   new URLSearchParams(patternQS),
-                  new URLSearchParams(targetQS)
+                  new URLSearchParams(incomingQS)
                 ))
             );
           }
 
+          // process regex rules
           // Modify the redirect pattern to ignore the language prefix in the path
           // And escapes non-special "?" characters in a string or regex.
           redirect.pattern = escapeNonSpecialQuestionMarks(
@@ -243,10 +257,10 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
           // Redirect pattern matches the full incoming URL with query string present
           matchedQueryString = [
-            regexParser(redirect.pattern).test(`${normalizedPath}${targetQS}`),
-            regexParser(redirect.pattern).test(`/${locale}${normalizedPath}${targetQS}`),
+            regexParser(redirect.pattern).test(`/${localePath}${incomingQS}`),
+            regexParser(redirect.pattern).test(`${normalizedPath}${incomingQS}`),
           ].some(Boolean)
-            ? targetQS
+            ? incomingQS
             : undefined;
 
           // Save the matched query string (if found) into the redirect object
@@ -254,8 +268,8 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
           return (
             !!(
-              regexParser(redirect.pattern).test(targetURL) ||
-              regexParser(redirect.pattern).test(`/${req.nextUrl.locale}${targetURL}`) ||
+              regexParser(redirect.pattern).test(`/${req.nextUrl.locale}${incomingURL}`) ||
+              regexParser(redirect.pattern).test(incomingURL) ||
               matchedQueryString
             ) && (redirect.locale ? redirect.locale.toLowerCase() === locale.toLowerCase() : true)
           );
