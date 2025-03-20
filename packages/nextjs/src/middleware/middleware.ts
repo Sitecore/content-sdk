@@ -2,6 +2,8 @@
 import { debug } from '@sitecore-content-sdk/core';
 import { NextRequest, NextFetchEvent, NextResponse } from 'next/server';
 
+export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
+
 export type MiddlewareBaseConfig = {
   /**
    * function, determines if middleware execution should be skipped, based on cookie, header, or other considerations
@@ -43,7 +45,6 @@ export abstract class Middleware {
  */
 export abstract class MiddlewareBase extends Middleware {
   protected SITE_SYMBOL = 'sc_site';
-  protected REWRITE_HEADER_NAME = 'x-sc-rewrite';
   protected defaultHostname: string;
   protected siteResolver: SiteResolver;
 
@@ -138,16 +139,23 @@ export abstract class MiddlewareBase extends Middleware {
    * @param {string} rewritePath the destionation path
    * @param {NextRequest} req the current request
    * @param {NextResponse} res the current response
+   * @param {boolean} [skipHeader] don't write 'x-sc-rewrite' header
    */
-  protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse): NextResponse {
+  protected rewrite(
+    rewritePath: string,
+    req: NextRequest,
+    res: NextResponse,
+    skipHeader?: boolean
+  ): NextResponse {
     // Note an absolute URL is required: https://nextjs.org/docs/messages/middleware-relative-urls
     const rewriteUrl = req.nextUrl.clone();
     rewriteUrl.pathname = rewritePath;
-
     const response = NextResponse.rewrite(rewriteUrl, res);
 
     // Share rewrite path with following executed middlewares
-    response.headers.set(this.REWRITE_HEADER_NAME, rewritePath);
+    if (!skipHeader) {
+      response.headers.set(REWRITE_HEADER_NAME, rewritePath);
+    }
 
     return response;
   }

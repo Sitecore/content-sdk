@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsMiddleware } from './redirects-middleware';
+import { REWRITE_HEADER_NAME } from './middleware';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -500,9 +501,7 @@ describe('RedirectsMiddleware', () => {
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'x-sc-rewrite': 'http://localhost:3000/found',
-          },
+          headers: {},
           redirected: undefined,
           status: 200,
           url,
@@ -554,9 +553,7 @@ describe('RedirectsMiddleware', () => {
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'x-sc-rewrite': 'http://localhost:3000/found?abc=def',
-          },
+          headers: {},
           redirected: undefined,
           status: 200,
           url,
@@ -690,6 +687,58 @@ describe('RedirectsMiddleware', () => {
           {
             pattern: 'not-found',
             target: '/found?abc=def',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+          headers: {},
+          redirected: undefined,
+          status: 301,
+          url,
+        });
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        // eslint-disable-next-line no-unused-expressions
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes).to.deep.equal(res);
+        expect(finalRes.status).to.equal(res.status);
+      });
+
+      it('should redirect without QS, when url has query string, pattern doesnt and query string not preserved', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/found',
+          pathname: '/found',
+          origin: 'http://localhost:3000',
+          locale: 'en',
+          search: '',
+          clone: cloneUrl,
+        };
+        setupRedirectStub(301);
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/not-found',
+              search: '?abc=def',
+              href: 'http://localhost:3000/not-found?abc=def',
+              locale: 'en',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 301,
+        });
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            pattern: 'not-found',
+            target: '/found',
             redirectType: REDIRECT_TYPE_301,
             isQueryStringPreserved: false,
             locale: 'en',
@@ -955,9 +1004,7 @@ describe('RedirectsMiddleware', () => {
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'x-sc-rewrite': 'http://localhost:3000/found',
-          },
+          headers: {},
           redirected: undefined,
           status: 200,
           url,
@@ -1311,7 +1358,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should remove x-middleware-next/x-middleware-rewrite headers and redirect 301', async () => {
+      it('should remove rewrite headers and redirect 301', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1337,6 +1384,7 @@ describe('RedirectsMiddleware', () => {
         setupRedirectStub(301);
         res.headers.set('x-middleware-next', '1');
         res.headers.set('x-middleware-rewrite', '1');
+        res.headers.set(REWRITE_HEADER_NAME, 1);
 
         const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
           {
@@ -1360,6 +1408,7 @@ describe('RedirectsMiddleware', () => {
         // Check that the headers were not removed
         expect(finalRes.headers.has('x-middleware-next')).to.equal(false);
         expect(finalRes.headers.has('x-middleware-rewrite')).to.equal(false);
+        expect(finalRes.headers.has(REWRITE_HEADER_NAME)).to.equal(false);
 
         expect(siteResolver.getByHost).to.be.calledWith(hostname);
         // eslint-disable-next-line no-unused-expressions
@@ -1576,7 +1625,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should return a 302 redirect', async () => {
+      it('should clean redirect headers and return a 302 redirectt', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1602,6 +1651,9 @@ describe('RedirectsMiddleware', () => {
           status: 302,
         });
         setupRedirectStub(302);
+        res.headers.set('x-middleware-next', '1');
+        res.headers.set('x-middleware-rewrite', '1');
+        res.headers.set(REWRITE_HEADER_NAME, 1);
 
         const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
           {
@@ -1621,6 +1673,10 @@ describe('RedirectsMiddleware', () => {
           status: 302,
           url,
         });
+
+        expect(finalRes.headers.has('x-middleware-next')).to.equal(false);
+        expect(finalRes.headers.has('x-middleware-rewrite')).to.equal(false);
+        expect(finalRes.headers.has(REWRITE_HEADER_NAME)).to.equal(false);
 
         expect(siteResolver.getByHost).to.be.calledWith(hostname);
         // eslint-disable-next-line no-unused-expressions
