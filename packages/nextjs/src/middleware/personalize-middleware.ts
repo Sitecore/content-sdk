@@ -7,7 +7,7 @@ import {
   DEFAULT_VARIANT,
 } from '@sitecore-content-sdk/core/personalize';
 import { debug, GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
-import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
+import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { SitecoreConfig } from '../config';
@@ -187,7 +187,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       }
 
       // Path can be rewritten by previously executed middleware
-      const basePath = res?.headers.get('x-sc-rewrite') || pathname;
+      const basePath = res?.headers.get(REWRITE_HEADER_NAME) || pathname;
 
       // Rewrite to persononalized path
       const rewritePath = getPersonalizedRewrite(basePath, identifiedVariantIds);
