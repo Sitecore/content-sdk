@@ -50,7 +50,7 @@ export const traversePlaceholder = (components: Array<ComponentRendering>, confi
 };
 
 export const traverseField = (field: Field | Item | Item[] | undefined, config: Config) => {
-  if (!field || config.loadStyles) return;
+  if (!field || typeof field !== 'object' || config.loadStyles) return;
 
   if ('value' in field && typeof field.value === 'string') {
     config.loadStyles = CLASS_REGEXP.test(field.value);
