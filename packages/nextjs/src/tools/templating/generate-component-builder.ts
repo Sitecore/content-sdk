@@ -15,57 +15,70 @@ const defaultComponentRootPath = 'src/components';
 /**
  * Generate component builder based on provided settings
  * @param {object} [settings] settings for component builder generation
- * @param {string} [settings.componentRootPath] path to components root
+ * @param {string} [settings.componentRootPaths] paths to components root
  * @param {string} [settings.componentBuilderOutputPath] path to component builder output
  * @param {PackageDefinition[]} [settings.packages] list of packages to include in component builder
  * @param {ComponentFile[]} [settings.components] list of components to include in component builder
  * @param {boolean} [settings.watch] whether to watch for changes to component builder sources
  */
 export function generateComponentBuilder({
-  componentRootPath = defaultComponentRootPath,
+  componentRootPaths = [defaultComponentRootPath],
   componentBuilderOutputPath = defaultComponentBuilderOutputPath,
   packages = [],
   components = [],
   watch,
 }: {
-  componentRootPath?: string;
+  componentRootPaths?: string[];
   componentBuilderOutputPath?: string;
   packages?: PackageDefinition[];
   components?: ComponentFile[];
   watch?: boolean;
 } = {}) {
-  if (watch) {
-    watchComponentBuilder({ componentRootPath, componentBuilderOutputPath, packages, components });
-  } else {
-    writeComponentBuilder({ componentRootPath, componentBuilderOutputPath, packages, components });
-  }
+  return async () => {
+    if (watch) {
+      watchComponentBuilder({
+        componentRootPaths,
+        componentBuilderOutputPath,
+        packages,
+        components,
+      });
+    } else {
+      writeComponentBuilder({
+        componentRootPaths,
+        componentBuilderOutputPath,
+        packages,
+        components,
+      });
+    }
+  };
 }
 
+// TODO: cleanup/remove
 /**
  * Watch for changes to component builder sources
  * @param {object} settings settings for component builder generation
- * @param {string} settings.componentRootPath path to components root
+ * @param {string[]} settings.componentRootPaths path to components root
  * @param {string} settings.componentBuilderOutputPath path to component builder output
  * @param {PackageDefinition[]} settings.packages list of packages to include in component builder
  * @param {ComponentFile[]} settings.components list of components to include in component builder
  */
 export function watchComponentBuilder({
-  componentRootPath,
+  componentRootPaths,
   componentBuilderOutputPath,
   packages,
   components,
 }: {
-  componentRootPath: string;
+  componentRootPaths: string[];
   componentBuilderOutputPath: string;
   packages: PackageDefinition[];
   components: ComponentFile[];
 }) {
-  console.log(`Watching for changes to component builder sources in ${componentRootPath}...`);
+  console.log(`Watching for changes to component builder sources in ${componentRootPaths}...`);
 
   watchItems(
-    [componentRootPath],
+    componentRootPaths,
     writeComponentBuilder.bind(null, {
-      componentRootPath,
+      componentRootPaths,
       componentBuilderOutputPath,
       packages,
       components,
@@ -76,18 +89,18 @@ export function watchComponentBuilder({
 /**
  * Write component builder to file
  * @param {object} settings settings for component builder generation
- * @param {string} settings.componentRootPath path to components root
+ * @param {string[]} settings.componentRootPaths path to components root
  * @param {string} settings.componentBuilderOutputPath path to component builder output
  * @param {PackageDefinition[]} settings.packages list of packages to include in component builder
  * @param {ComponentFile[]} settings.components list of components to include in component builder
  */
 export function writeComponentBuilder({
-  componentRootPath,
+  componentRootPaths,
   componentBuilderOutputPath,
   packages,
   components,
 }: {
-  componentRootPath: string;
+  componentRootPaths: string[];
   componentBuilderOutputPath: string;
   packages: PackageDefinition[];
   components: ComponentFile[];
@@ -95,7 +108,7 @@ export function writeComponentBuilder({
   const items: (ComponentFile | PackageDefinition)[] = [
     ...packages,
     ...components,
-    ...getComponentList(componentRootPath),
+    ...getComponentList(componentRootPaths),
   ];
 
   const componentBuilderPath = path.resolve(componentBuilderOutputPath);
