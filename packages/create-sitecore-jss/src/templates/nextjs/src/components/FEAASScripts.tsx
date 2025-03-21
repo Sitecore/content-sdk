@@ -13,8 +13,8 @@ const FEAASScripts = (): JSX.Element => {
   const shouldOptimize = (src: string) => {
     if (src.startsWith('http')) {
       const url = new URL(src);
-      const domains: string[] = nextConfig().images?.domains || [];
-      const remotePatterns = nextConfig().images?.remotePatterns || [];
+      const domains: string[] = nextConfig.images?.domains || [];
+      const remotePatterns = nextConfig.images?.remotePatterns || [];
       return (
         domains.some((domain) => url.hostname === domain) ||
         remotePatterns.some(

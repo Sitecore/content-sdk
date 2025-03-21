@@ -125,7 +125,10 @@ describe('bin', () => {
 
       await main(args);
       expect(inquirerPromptStub).to.not.have.been.called;
-      expect(initializeStub).to.have.been.calledOnceWith(expectedTemplate, {
+      expect(initializeStub).to.have.been.calledOnce;
+      const initializeArgs = initializeStub.getCall(0).args;
+      expect(initializeArgs[0]).to.deep.equal(expectedTemplate);
+      expect(initializeArgs[1]).to.deep.equal({
         ...args,
         destination: args.destination,
         template: expectedTemplate,

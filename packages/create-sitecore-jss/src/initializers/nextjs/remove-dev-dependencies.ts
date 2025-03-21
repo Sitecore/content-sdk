@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import { openJsonFile, writeJsonFile } from '../../common';
 
@@ -9,11 +8,5 @@ export const removeDevDependencies = (projectPath: string) => {
   if (pkg?.devDependencies['next-transpile-modules']) {
     delete pkg.devDependencies['next-transpile-modules'];
     writeJsonFile(pkg, packagePath);
-  }
-
-  // remove monorepo next.config.js plugin
-  const monorepoPlugin = path.join(projectPath, 'src/lib/next-config/plugins/monorepo.js');
-  if (fs.existsSync(monorepoPlugin)) {
-    fs.unlinkSync(monorepoPlugin);
   }
 };
