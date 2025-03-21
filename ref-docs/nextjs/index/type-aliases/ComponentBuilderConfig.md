@@ -8,7 +8,7 @@
 
 > **ComponentBuilderConfig**\<`Component`\>: `object`
 
-Defined in: [nextjs/src/ComponentBuilder.ts:20](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/nextjs/src/ComponentBuilder.ts#L20)
+Defined in: [nextjs/src/ComponentBuilder.ts:20](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/ComponentBuilder.ts#L20)
 
 Configuration for ComponentBuilder
 

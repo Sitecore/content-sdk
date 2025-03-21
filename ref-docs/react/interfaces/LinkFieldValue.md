@@ -6,7 +6,7 @@
 
 # Interface: LinkFieldValue
 
-Defined in: [packages/react/src/components/Link.tsx:9](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/react/src/components/Link.tsx#L9)
+Defined in: [packages/react/src/components/Link.tsx:9](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/react/src/components/Link.tsx#L9)
 
 ## Indexable
 
@@ -18,7 +18,7 @@ Defined in: [packages/react/src/components/Link.tsx:9](https://github.com/Siteco
 
 > `optional` **anchor**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:17](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/react/src/components/Link.tsx#L17)
+Defined in: [packages/react/src/components/Link.tsx:17](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/react/src/components/Link.tsx#L17)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/react/src/components/Link.tsx:17](https://github.com/Sitec
 
 > `optional` **class**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:13](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/react/src/components/Link.tsx#L13)
+Defined in: [packages/react/src/components/Link.tsx:13](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/react/src/components/Link.tsx#L13)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/react/src/components/Link.tsx:13](https://github.com/Sitec
 
 > `optional` **className**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:12](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/react/src/components/Link.tsx#L12)
+Defined in: [packages/react/src/components/Link.tsx:12](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/react/src/components/Link.tsx#L12)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/react/src/components/Link.tsx:12](https://github.com/Sitec
 
 > `optional` **href**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:11](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/react/src/components/Link.tsx#L11)
+Defined in: [packages/react/src/components/Link.tsx:11](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/react/src/components/Link.tsx#L11)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [packages/react/src/components/Link.tsx:11](https://github.com/Sitec
 
 > `optional` **linktype**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:19](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/react/src/components/Link.tsx#L19)
+Defined in: [packages/react/src/components/Link.tsx:19](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/react/src/components/Link.tsx#L19)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [packages/react/src/components/Link.tsx:19](https://github.com/Sitec
 
 > `optional` **querystring**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:18](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/react/src/components/Link.tsx#L18)
+Defined in: [packages/react/src/components/Link.tsx:18](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/react/src/components/Link.tsx#L18)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [packages/react/src/components/Link.tsx:18](https://github.com/Sitec
 
 > `optional` **target**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:15](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/react/src/components/Link.tsx#L15)
+Defined in: [packages/react/src/components/Link.tsx:15](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/react/src/components/Link.tsx#L15)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [packages/react/src/components/Link.tsx:15](https://github.com/Sitec
 
 > `optional` **text**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:16](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/react/src/components/Link.tsx#L16)
+Defined in: [packages/react/src/components/Link.tsx:16](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/react/src/components/Link.tsx#L16)
 
 ***
 
@@ -82,4 +82,4 @@ Defined in: [packages/react/src/components/Link.tsx:16](https://github.com/Sitec
 
 > `optional` **title**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:14](https://github.com/Sitecore/xmc-jss-dev/blob/24bfb351cb3f21ca109885aec5c8f4d4d5e46084/packages/react/src/components/Link.tsx#L14)
+Defined in: [packages/react/src/components/Link.tsx:14](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/react/src/components/Link.tsx#L14)
