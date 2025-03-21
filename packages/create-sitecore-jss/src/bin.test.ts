@@ -135,29 +135,6 @@ describe('bin', () => {
       });
     });
 
-    it('should ensure monorepo arg is defined', async () => {
-      getAllTemplatesStub.returns(['foo', 'bar']);
-      fsExistsSyncStub.returns(false);
-      fsReaddirSyncStub.returns([]);
-
-      const args = mockArgs({
-        template: 'foo',
-        destination: 'test\\path',
-        monorepo: undefined,
-      });
-      const expectedTemplate = 'foo';
-
-      await main(args);
-      expect(initializeStub).to.have.been.calledOnce;
-      const initializeArgs = initializeStub.getCall(0).args;
-      expect(initializeArgs[1]).to.deep.equal({
-        ...args,
-        destination: args.destination,
-        template: expectedTemplate,
-      });
-      expect(initializeArgs[1].monorepo).to.equal(false);
-    });
-
     it('should accept template as positional parameter', async () => {
       getAllTemplatesStub.returns(['foo', 'bar']);
       fsExistsSyncStub.returns(false);

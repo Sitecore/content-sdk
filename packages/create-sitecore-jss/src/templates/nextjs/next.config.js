@@ -86,7 +86,7 @@ const nextConfig = {
         ...config.externals,
       ];
     }
-    <% if (monorepo) { -%>
+    <%_ if (helper.isDev) { -%>
     // monorepo configuration start
     if (options.isServer) {
       config.externals = ['react', 'vertx', ...config.externals];
