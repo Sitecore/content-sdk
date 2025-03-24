@@ -64,7 +64,6 @@ describe('SitecoreClient', () => {
 
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
-  // let dataFetcherStub: sinon.SinonStub;
   let sitemapServiceStub: {
     getSitemap: sinon.SinonStub;
     fetchSitemaps: sinon.SinonStub;
@@ -109,7 +108,6 @@ describe('SitecoreClient', () => {
       }),
     };
 
-    // dataFetcherStub = sandbox.stub(NativeDataFetcher.prototype, 'fetch');
     sitemapServiceStub = {
       getSitemap: sandbox.stub(),
       fetchSitemaps: sandbox.stub(),
