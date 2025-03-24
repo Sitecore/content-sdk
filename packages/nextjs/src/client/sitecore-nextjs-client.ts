@@ -6,17 +6,28 @@ import {
   SitecoreClientInit,
 } from '@sitecore-content-sdk/core/client';
 import { ComponentPropsCollection, ComponentPropsError } from '../sharedTypes/component-props';
-import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next';
+import {
+  GetServerSidePropsContext,
+  GetStaticPropsContext,
+  NextApiRequest,
+  NextApiResponse,
+  PreviewData,
+} from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
 import { ModuleFactory } from '../sharedTypes/module-factory';
 import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
 import { SiteInfo } from '../site';
-import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
+import {
+  getSiteRewriteData,
+  GraphQLSitemapXmlService,
+  normalizeSiteRewrite,
+} from '@sitecore-content-sdk/core/site';
 import {
   getPersonalizedRewriteData,
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/core/personalize';
+import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 
 export type NextjsPage = Page & {
   componentProps?: ComponentPropsCollection;
@@ -25,9 +36,11 @@ export type NextjsPage = Page & {
 
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
+  protected sitemapXmlService: GraphQLSitemapXmlService;
   constructor(protected initOptions: SitecoreClientInit) {
     super(initOptions);
     this.componentPropsService = this.getComponentPropsService();
+    this.sitemapXmlService = this.getGraphqlSitemapXMLService();
   }
 
   // since path rewrite we rely on is only working in nextjs
@@ -124,7 +137,80 @@ export class SitecoreNextjsClient extends SitecoreClient {
     return componentProps;
   }
 
+  /**
+   * Generates a sitemap XML response for the given request
+   * @param {NextApiRequest} req - The Next.js API request object
+   * @param {NextApiResponse} res - The Next.js API response object
+   * @param {string} [id] - Optional sitemap ID (for sitemap-{n}.xml requests)
+   * @returns {Promise<NextApiResponse | void>} - Promise that resolves with:
+   *   - XML response for specific sitemap when id is provided
+   *   - Sitemap index when no id is provided
+   *   - 404 redirect if sitemap is not found or fetch fails
+   */
+  public async getSitemap(
+    req: NextApiRequest,
+    res: NextApiResponse,
+    id?: string
+  ): Promise<NextApiResponse | void> {
+    const ABSOLUTE_URL_REGEXP = '^(?:[a-z]+:)?//';
+
+    // The id is present if url has sitemap-{n}.xml type.
+    // The id can be null if it's index sitemap.xml request
+    const sitemapPath = await this.sitemapXmlService.getSitemap(id as string);
+
+    // regular sitemap
+    if (sitemapPath) {
+      const isAbsoluteUrl = sitemapPath.match(ABSOLUTE_URL_REGEXP);
+      const sitemapUrl = isAbsoluteUrl
+        ? sitemapPath
+        : `${this.initOptions.api.local.apiHost}${sitemapPath}`;
+      res.setHeader('Content-Type', 'text/xml;charset=utf-8');
+
+      try {
+        const fetcher = new NativeDataFetcher();
+        const xmlResponse = await fetcher.fetch<string>(sitemapUrl);
+
+        return res.send(xmlResponse.data);
+      } catch (error) {
+        return res.redirect('/404');
+      }
+    }
+
+    // index /sitemap.xml that includes links to all sitemaps
+    const sitemaps = await this.sitemapXmlService.fetchSitemaps();
+
+    if (!sitemaps.length) {
+      return res.redirect('/404');
+    }
+
+    const reqtHost = req.headers.host;
+    const reqProtocol = req.headers['x-forwarded-proto'] || 'https';
+    const SitemapLinks = sitemaps
+      .map((item: string) => {
+        const parseUrl = item.split('/');
+        const lastSegment = parseUrl[parseUrl.length - 1];
+
+        return `<sitemap>
+          <loc>${reqProtocol}://${reqtHost}/${lastSegment}</loc>
+        </sitemap>`;
+      })
+      .join('');
+
+    res.setHeader('Content-Type', 'text/xml;charset=utf-8');
+
+    return res.send(`
+    <sitemapindex xmlns="http://sitemaps.org/schemas/sitemap/0.9" encoding="UTF-8">${SitemapLinks}</sitemapindex>
+    `);
+  }
+
   protected getComponentPropsService(): ComponentPropsService {
     return new ComponentPropsService();
+  }
+
+  protected getGraphqlSitemapXMLService(): GraphQLSitemapXmlService {
+    return new GraphQLSitemapXmlService({
+      clientFactory: this.clientFactory,
+      siteName: this.initOptions.defaultSite,
+    });
   }
 }
