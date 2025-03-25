@@ -32,8 +32,6 @@ const SitecorePage = ({ notFound, componentProps, layout }: SitecorePageProps): 
     return <NotFound />;
   }
 
-  const isEditing = layout.sitecore.context.pageEditing;
-
   return (
     <ComponentPropsContext value={componentProps || {}}>
       <SitecoreContext
