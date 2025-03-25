@@ -6,7 +6,7 @@
 
 # Class: SitecoreClient
 
-Defined in: [packages/core/src/client/sitecore-client.ts:134](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L134)
+Defined in: [packages/core/src/client/sitecore-client.ts:154](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L154)
 
 This is a generic content client that can be used by any framework.
 Use it to retrieve pages, preview data, dictionary and other data
@@ -21,7 +21,7 @@ Use it to retrieve pages, preview data, dictionary and other data
 
 > **new SitecoreClient**(`initOptions`): [`SitecoreClient`](SitecoreClient.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:148](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L148)
+Defined in: [packages/core/src/client/sitecore-client.ts:169](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L169)
 
 Init SitecoreClient
 
@@ -41,7 +41,7 @@ Init SitecoreClient
 
 > `protected` **clientFactory**: [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:139](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L139)
+Defined in: [packages/core/src/client/sitecore-client.ts:159](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L159)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:139](https://github.com
 
 > `protected` **componentService**: [`RestComponentLayoutService`](../../editing/classes/RestComponentLayoutService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:141](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L141)
+Defined in: [packages/core/src/client/sitecore-client.ts:161](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L161)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:141](https://github.com
 
 > `protected` **dictionaryService**: [`GraphQLDictionaryService`](../../i18n/classes/GraphQLDictionaryService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:136](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L136)
+Defined in: [packages/core/src/client/sitecore-client.ts:156](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L156)
 
 ***
 
@@ -65,7 +65,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:136](https://github.com
 
 > `protected` **editingService**: [`GraphQLEditingService`](../../editing/classes/GraphQLEditingService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:138](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L138)
+Defined in: [packages/core/src/client/sitecore-client.ts:158](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L158)
 
 ***
 
@@ -73,7 +73,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:138](https://github.com
 
 > `protected` **errorPagesService**: [`GraphQLErrorPagesService`](../../site/classes/GraphQLErrorPagesService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:140](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L140)
+Defined in: [packages/core/src/client/sitecore-client.ts:160](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L160)
 
 ***
 
@@ -81,7 +81,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:140](https://github.com
 
 > `protected` **initOptions**: [`SitecoreClientInit`](../type-aliases/SitecoreClientInit.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:148](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L148)
+Defined in: [packages/core/src/client/sitecore-client.ts:169](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L169)
 
 initOptions for the client, containing site and Sitecore connection details
 
@@ -91,7 +91,15 @@ initOptions for the client, containing site and Sitecore connection details
 
 > `protected` **layoutService**: [`GraphQLLayoutService`](../../layout/classes/GraphQLLayoutService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:135](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L135)
+Defined in: [packages/core/src/client/sitecore-client.ts:155](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L155)
+
+***
+
+### sitemapXmlService
+
+> `protected` **sitemapXmlService**: [`GraphQLSitemapXmlService`](../../site/classes/GraphQLSitemapXmlService.md)
+
+Defined in: [packages/core/src/client/sitecore-client.ts:163](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L163)
 
 ***
 
@@ -99,7 +107,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:135](https://github.com
 
 > `protected` **sitePathService**: [`GraphQLSitePathService`](../../site/classes/GraphQLSitePathService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:142](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L142)
+Defined in: [packages/core/src/client/sitecore-client.ts:162](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L162)
 
 ***
 
@@ -107,7 +115,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:142](https://github.com
 
 > `protected` **siteResolver**: [`SiteResolver`](../../site/classes/SiteResolver.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:137](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L137)
+Defined in: [packages/core/src/client/sitecore-client.ts:157](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L157)
 
 ## Methods
 
@@ -115,10 +123,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:137](https://github.com
 
 > `protected` **getBaseServiceOptions**(): `BaseServiceOptions`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:411](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L411)
-
-Factory methods for creating dependencies
-Subclasses can override these to provide custom implementations.
+Defined in: [packages/core/src/client/sitecore-client.ts:488](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L488)
 
 #### Returns
 
@@ -130,7 +135,7 @@ Subclasses can override these to provide custom implementations.
 
 > `protected` **getClientFactory**(): [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:419](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L419)
+Defined in: [packages/core/src/client/sitecore-client.ts:496](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L496)
 
 #### Returns
 
@@ -142,7 +147,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:419](https://github.com
 
 > `protected` **getComponentService**(): [`RestComponentLayoutService`](../../editing/classes/RestComponentLayoutService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:459](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L459)
+Defined in: [packages/core/src/client/sitecore-client.ts:536](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L536)
 
 #### Returns
 
@@ -154,7 +159,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:459](https://github.com
 
 > **getDesignLibraryData**(`designLibData`, `fetchOptions`?): `Promise`\<[`Page`](../type-aliases/Page.md)\>
 
-Defined in: [packages/core/src/client/sitecore-client.ts:349](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L349)
+Defined in: [packages/core/src/client/sitecore-client.ts:371](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L371)
 
 Get design library page details for Design Library mode of your app
 
@@ -177,7 +182,7 @@ preview page for Design Library
 
 > **getDictionary**(`routeOptions`?, `fetchOptions`?): `Promise`\<[`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/client/sitecore-client.ts:269](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L269)
+Defined in: [packages/core/src/client/sitecore-client.ts:291](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L291)
 
 Retrieves dictionary phrases for a given site and locale.
 
@@ -204,7 +209,7 @@ A promise that resolves to the dictionary phrases.
 
 > `protected` **getDictionaryService**(`baseOptions`): [`GraphQLDictionaryService`](../../i18n/classes/GraphQLDictionaryService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:439](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L439)
+Defined in: [packages/core/src/client/sitecore-client.ts:516](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L516)
 
 #### Parameters
 
@@ -222,7 +227,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:439](https://github.com
 
 > `protected` **getEditingService**(): [`GraphQLEditingService`](../../editing/classes/GraphQLEditingService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:447](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L447)
+Defined in: [packages/core/src/client/sitecore-client.ts:524](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L524)
 
 #### Returns
 
@@ -234,7 +239,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:447](https://github.com
 
 > **getErrorPages**(`routeOptions`?, `fetchOptions`?): `Promise`\<`null` \| [`ErrorPages`](../../site/type-aliases/ErrorPages.md)\>
 
-Defined in: [packages/core/src/client/sitecore-client.ts:284](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L284)
+Defined in: [packages/core/src/client/sitecore-client.ts:306](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L306)
 
 Retrieves error pages for a given site and locale.
 
@@ -261,7 +266,7 @@ A promise that resolves to the error pages or null if not found.
 
 > `protected` **getErrorPagesService**(): [`GraphQLErrorPagesService`](../../site/classes/GraphQLErrorPagesService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:451](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L451)
+Defined in: [packages/core/src/client/sitecore-client.ts:528](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L528)
 
 #### Returns
 
@@ -269,11 +274,26 @@ Defined in: [packages/core/src/client/sitecore-client.ts:451](https://github.com
 
 ***
 
+### getGraphqlSitemapXMLService()
+
+> `protected` **getGraphqlSitemapXMLService**(): [`GraphQLSitemapXmlService`](../../site/classes/GraphQLSitemapXmlService.md)
+
+Defined in: [packages/core/src/client/sitecore-client.ts:481](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L481)
+
+Factory methods for creating dependencies
+Subclasses can override these to provide custom implementations.
+
+#### Returns
+
+[`GraphQLSitemapXmlService`](../../site/classes/GraphQLSitemapXmlService.md)
+
+***
+
 ### getHeadLinks()
 
 > **getHeadLinks**(`layoutData`, `options`?): [`HTMLLink`](../../index/type-aliases/HTMLLink.md)[]
 
-Defined in: [packages/core/src/client/sitecore-client.ts:243](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L243)
+Defined in: [packages/core/src/client/sitecore-client.ts:265](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L265)
 
 Retrieves the head `<link>` elements for Sitecore styles and themes.
 
@@ -302,7 +322,7 @@ An array of `<link>` elements for stylesheets.
 
 > `protected` **getLayoutService**(`baseOptions`): [`GraphQLLayoutService`](../../layout/classes/GraphQLLayoutService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:432](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L432)
+Defined in: [packages/core/src/client/sitecore-client.ts:509](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L509)
 
 #### Parameters
 
@@ -320,7 +340,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:432](https://github.com
 
 > **getPage**(`path`, `pageOptions`?, `fetchOptions`?): `Promise`\<`null` \| [`Page`](../type-aliases/Page.md)\>
 
-Defined in: [packages/core/src/client/sitecore-client.ts:196](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L196)
+Defined in: [packages/core/src/client/sitecore-client.ts:218](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L218)
 
 Get page details for a route, with layout and other details
 
@@ -348,7 +368,7 @@ page details
 
 > **getPagePaths**(`languages`?, `fetchOptions`?): `Promise`\<[`StaticPath`](../../index/type-aliases/StaticPath.md)[]\>
 
-Defined in: [packages/core/src/client/sitecore-client.ts:402](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L402)
+Defined in: [packages/core/src/client/sitecore-client.ts:424](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L424)
 
 Retrieves the static paths for pages based on the given languages.
 
@@ -375,7 +395,7 @@ A promise that resolves to an array of static paths.
 
 > **getPreview**(`previewData`, `fetchOptions`?): `Promise`\<`null` \| [`Page`](../type-aliases/Page.md)\>
 
-Defined in: [packages/core/src/client/sitecore-client.ts:299](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L299)
+Defined in: [packages/core/src/client/sitecore-client.ts:321](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L321)
 
 Retrieves preview page and layout details
 
@@ -398,11 +418,42 @@ preview page details
 
 ***
 
+### getSiteMap()
+
+> **getSiteMap**(`reqOptions`, `fetchOptions`?): `Promise`\<`string`\>
+
+Defined in: [packages/core/src/client/sitecore-client.ts:435](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L435)
+
+Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `reqOptions` | [`SitemapXmlOptions`](../type-aliases/SitemapXmlOptions.md) | Options for sitemap retrieval |
+| `fetchOptions`? | [`FetchOptions`](../type-aliases/FetchOptions.md) | Additional fetch options. |
+
+#### Returns
+
+`Promise`\<`string`\>
+
+Promise resolving to the sitemap XML content as string
+
+#### Throws
+
+Throws 'REDIRECT_404' if requested sitemap is not found
+
+#### Implementation of
+
+`BaseSitecoreClient.getSiteMap`
+
+***
+
 ### getSitePathService()
 
 > `protected` **getSitePathService**(): [`GraphQLSitePathService`](../../site/classes/GraphQLSitePathService.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:467](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L467)
+Defined in: [packages/core/src/client/sitecore-client.ts:544](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L544)
 
 #### Returns
 
@@ -414,7 +465,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:467](https://github.com
 
 > `protected` **getSiteResolver**(): [`SiteResolver`](../../site/classes/SiteResolver.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:428](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L428)
+Defined in: [packages/core/src/client/sitecore-client.ts:505](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L505)
 
 #### Returns
 
@@ -426,7 +477,7 @@ Defined in: [packages/core/src/client/sitecore-client.ts:428](https://github.com
 
 > **parsePath**(`path`): `string`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:177](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L177)
+Defined in: [packages/core/src/client/sitecore-client.ts:199](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L199)
 
 Normalize path regardless of type
 
@@ -448,7 +499,7 @@ string path
 
 > **resolveSite**(`hostname`): [`SiteInfo`](../../site/type-aliases/SiteInfo.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:167](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/core/src/client/sitecore-client.ts#L167)
+Defined in: [packages/core/src/client/sitecore-client.ts:189](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/client/sitecore-client.ts#L189)
 
 Resolve site by hostname
 

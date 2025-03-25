@@ -21,6 +21,7 @@
 - [Page](type-aliases/Page.md)
 - [PageOptions](type-aliases/PageOptions.md)
 - [SitecoreClientInit](type-aliases/SitecoreClientInit.md)
+- [SitemapXmlOptions](type-aliases/SitemapXmlOptions.md)
 
 ## Functions
 

@@ -6,7 +6,7 @@
 
 # Class: SitecoreClient
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:26](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/client/sitecore-nextjs-client.ts#L26)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:26](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/client/sitecore-nextjs-client.ts#L26)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:26](https://github.com/
 
 > **new SitecoreClient**(`initOptions`): [`SitecoreClient`](SitecoreClient.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/client/sitecore-nextjs-client.ts#L28)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/client/sitecore-nextjs-client.ts#L28)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:28](https://github.com/
 
 > `protected` **clientFactory**: [`GraphQLRequestClientFactory`](../type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:103
+Defined in: core/types/client/sitecore-client.d.ts:120
 
 #### Inherited from
 
@@ -52,7 +52,7 @@ Defined in: core/types/client/sitecore-client.d.ts:103
 
 > `protected` **componentPropsService**: [`ComponentPropsService`](../../index/classes/ComponentPropsService.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:27](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/client/sitecore-nextjs-client.ts#L27)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:27](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/client/sitecore-nextjs-client.ts#L27)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:27](https://github.com/
 
 > `protected` **componentService**: [`RestComponentLayoutService`](../../index/classes/RestComponentLayoutService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:105
+Defined in: core/types/client/sitecore-client.d.ts:122
 
 #### Inherited from
 
@@ -72,7 +72,7 @@ Defined in: core/types/client/sitecore-client.d.ts:105
 
 > `protected` **dictionaryService**: [`GraphQLDictionaryService`](../../index/classes/GraphQLDictionaryService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:100
+Defined in: core/types/client/sitecore-client.d.ts:117
 
 #### Inherited from
 
@@ -84,7 +84,7 @@ Defined in: core/types/client/sitecore-client.d.ts:100
 
 > `protected` **editingService**: [`GraphQLEditingService`](../../editing/classes/GraphQLEditingService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:102
+Defined in: core/types/client/sitecore-client.d.ts:119
 
 #### Inherited from
 
@@ -96,7 +96,7 @@ Defined in: core/types/client/sitecore-client.d.ts:102
 
 > `protected` **errorPagesService**: [`GraphQLErrorPagesService`](../../index/classes/GraphQLErrorPagesService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:104
+Defined in: core/types/client/sitecore-client.d.ts:121
 
 #### Inherited from
 
@@ -108,7 +108,7 @@ Defined in: core/types/client/sitecore-client.d.ts:104
 
 > `protected` **initOptions**: [`SitecoreClientInit`](../type-aliases/SitecoreClientInit.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/client/sitecore-nextjs-client.ts#L28)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/client/sitecore-nextjs-client.ts#L28)
 
 #### Inherited from
 
@@ -120,7 +120,7 @@ Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:28](https://github.com/
 
 > `protected` **layoutService**: [`GraphQLLayoutService`](../../index/classes/GraphQLLayoutService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:99
+Defined in: core/types/client/sitecore-client.d.ts:116
 
 #### Inherited from
 
@@ -128,11 +128,23 @@ Defined in: core/types/client/sitecore-client.d.ts:99
 
 ***
 
+### sitemapXmlService
+
+> `protected` **sitemapXmlService**: [`GraphQLSitemapXmlService`](../../index/classes/GraphQLSitemapXmlService.md)
+
+Defined in: core/types/client/sitecore-client.d.ts:124
+
+#### Inherited from
+
+`SitecoreClient.sitemapXmlService`
+
+***
+
 ### sitePathService
 
 > `protected` **sitePathService**: [`GraphQLSitePathService`](../../index/classes/GraphQLSitePathService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:106
+Defined in: core/types/client/sitecore-client.d.ts:123
 
 #### Inherited from
 
@@ -144,7 +156,7 @@ Defined in: core/types/client/sitecore-client.d.ts:106
 
 > `protected` **siteResolver**: [`SiteResolver`](../../index/classes/SiteResolver.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:101
+Defined in: core/types/client/sitecore-client.d.ts:118
 
 #### Inherited from
 
@@ -156,10 +168,7 @@ Defined in: core/types/client/sitecore-client.d.ts:101
 
 > `protected` **getBaseServiceOptions**(): `BaseServiceOptions`
 
-Defined in: core/types/client/sitecore-client.d.ts:183
-
-Factory methods for creating dependencies
-Subclasses can override these to provide custom implementations.
+Defined in: core/types/client/sitecore-client.d.ts:210
 
 #### Returns
 
@@ -175,7 +184,7 @@ Subclasses can override these to provide custom implementations.
 
 > `protected` **getClientFactory**(): [`GraphQLRequestClientFactory`](../type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:184
+Defined in: core/types/client/sitecore-client.d.ts:211
 
 #### Returns
 
@@ -191,7 +200,7 @@ Defined in: core/types/client/sitecore-client.d.ts:184
 
 > **getComponentData**(`layoutData`, `context`, `moduleFactory`): `Promise`\<[`ComponentPropsCollection`](../../index/type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:96](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/client/sitecore-nextjs-client.ts#L96)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:96](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/client/sitecore-nextjs-client.ts#L96)
 
 Parses components from nextjs component factory and layoutData, executes getServerProps/getStaticProps methods
 and returns resulting props from components
@@ -216,7 +225,7 @@ component props
 
 > `protected` **getComponentPropsService**(): [`ComponentPropsService`](../../index/classes/ComponentPropsService.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:127](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/client/sitecore-nextjs-client.ts#L127)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:127](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/client/sitecore-nextjs-client.ts#L127)
 
 #### Returns
 
@@ -228,7 +237,7 @@ Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:127](https://github.com
 
 > `protected` **getComponentService**(): [`RestComponentLayoutService`](../../index/classes/RestComponentLayoutService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:190
+Defined in: core/types/client/sitecore-client.d.ts:217
 
 #### Returns
 
@@ -244,7 +253,7 @@ Defined in: core/types/client/sitecore-client.d.ts:190
 
 > **getDesignLibraryData**(`designLibData`, `fetchOptions`?): `Promise`\<`Page`\>
 
-Defined in: core/types/client/sitecore-client.d.ts:171
+Defined in: core/types/client/sitecore-client.d.ts:189
 
 Get design library page details for Design Library mode of your app
 
@@ -271,7 +280,7 @@ preview page for Design Library
 
 > **getDictionary**(`routeOptions`?, `fetchOptions`?): `Promise`\<[`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md)\>
 
-Defined in: core/types/client/sitecore-client.d.ts:150
+Defined in: core/types/client/sitecore-client.d.ts:168
 
 Retrieves dictionary phrases for a given site and locale.
 
@@ -298,7 +307,7 @@ A promise that resolves to the dictionary phrases.
 
 > `protected` **getDictionaryService**(`baseOptions`): [`GraphQLDictionaryService`](../../index/classes/GraphQLDictionaryService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:187
+Defined in: core/types/client/sitecore-client.d.ts:214
 
 #### Parameters
 
@@ -320,7 +329,7 @@ Defined in: core/types/client/sitecore-client.d.ts:187
 
 > `protected` **getEditingService**(): [`GraphQLEditingService`](../../editing/classes/GraphQLEditingService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:188
+Defined in: core/types/client/sitecore-client.d.ts:215
 
 #### Returns
 
@@ -336,7 +345,7 @@ Defined in: core/types/client/sitecore-client.d.ts:188
 
 > **getErrorPages**(`routeOptions`?, `fetchOptions`?): `Promise`\<`null` \| [`ErrorPages`](../../index/type-aliases/ErrorPages.md)\>
 
-Defined in: core/types/client/sitecore-client.d.ts:157
+Defined in: core/types/client/sitecore-client.d.ts:175
 
 Retrieves error pages for a given site and locale.
 
@@ -363,7 +372,7 @@ A promise that resolves to the error pages or null if not found.
 
 > `protected` **getErrorPagesService**(): [`GraphQLErrorPagesService`](../../index/classes/GraphQLErrorPagesService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:189
+Defined in: core/types/client/sitecore-client.d.ts:216
 
 #### Returns
 
@@ -375,11 +384,30 @@ Defined in: core/types/client/sitecore-client.d.ts:189
 
 ***
 
+### getGraphqlSitemapXMLService()
+
+> `protected` **getGraphqlSitemapXMLService**(): [`GraphQLSitemapXmlService`](../../index/classes/GraphQLSitemapXmlService.md)
+
+Defined in: core/types/client/sitecore-client.d.ts:209
+
+Factory methods for creating dependencies
+Subclasses can override these to provide custom implementations.
+
+#### Returns
+
+[`GraphQLSitemapXmlService`](../../index/classes/GraphQLSitemapXmlService.md)
+
+#### Inherited from
+
+`SitecoreClient.getGraphqlSitemapXMLService`
+
+***
+
 ### getHeadLinks()
 
 > **getHeadLinks**(`layoutData`, `options`?): [`HTMLLink`](../../index/type-aliases/HTMLLink.md)[]
 
-Defined in: core/types/client/sitecore-client.d.ts:140
+Defined in: core/types/client/sitecore-client.d.ts:158
 
 Retrieves the head `<link>` elements for Sitecore styles and themes.
 
@@ -408,7 +436,7 @@ An array of `<link>` elements for stylesheets.
 
 > `protected` **getLayoutService**(`baseOptions`): [`GraphQLLayoutService`](../../index/classes/GraphQLLayoutService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:186
+Defined in: core/types/client/sitecore-client.d.ts:213
 
 #### Parameters
 
@@ -430,7 +458,7 @@ Defined in: core/types/client/sitecore-client.d.ts:186
 
 > **getPage**(`path`, `pageOptions`, `options`?): `Promise`\<`null` \| [`NextjsPage`](../type-aliases/NextjsPage.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:53](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/client/sitecore-nextjs-client.ts#L53)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:53](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/client/sitecore-nextjs-client.ts#L53)
 
 Get page details for a route, with layout and other details
 
@@ -458,7 +486,7 @@ page details
 
 > **getPagePaths**(`languages`?, `fetchOptions`?): `Promise`\<[`StaticPath`](../../index/type-aliases/StaticPath.md)[]\>
 
-Defined in: core/types/client/sitecore-client.d.ts:178
+Defined in: core/types/client/sitecore-client.d.ts:196
 
 Retrieves the static paths for pages based on the given languages.
 
@@ -485,7 +513,7 @@ A promise that resolves to an array of static paths.
 
 > **getPreview**(`previewData`, `fetchOptions`?): `Promise`\<`null` \| [`NextjsPage`](../type-aliases/NextjsPage.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:81](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/client/sitecore-nextjs-client.ts#L81)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:81](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/client/sitecore-nextjs-client.ts#L81)
 
 Retrieves preview page and layout details
 
@@ -506,11 +534,42 @@ Retrieves preview page and layout details
 
 ***
 
+### getSiteMap()
+
+> **getSiteMap**(`reqOptions`, `fetchOptions`?): `Promise`\<`string`\>
+
+Defined in: core/types/client/sitecore-client.d.ts:204
+
+Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `reqOptions` | [`SitemapXmlOptions`](../../index/type-aliases/SitemapXmlOptions.md) | Options for sitemap retrieval |
+| `fetchOptions`? | `FetchOptions` | Additional fetch options. |
+
+#### Returns
+
+`Promise`\<`string`\>
+
+Promise resolving to the sitemap XML content as string
+
+#### Throws
+
+Throws 'REDIRECT_404' if requested sitemap is not found
+
+#### Inherited from
+
+`SitecoreClient.getSiteMap`
+
+***
+
 ### getSitePathService()
 
 > `protected` **getSitePathService**(): [`GraphQLSitePathService`](../../index/classes/GraphQLSitePathService.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:191
+Defined in: core/types/client/sitecore-client.d.ts:218
 
 #### Returns
 
@@ -526,7 +585,7 @@ Defined in: core/types/client/sitecore-client.d.ts:191
 
 > `protected` **getSiteResolver**(): [`SiteResolver`](../../index/classes/SiteResolver.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:185
+Defined in: core/types/client/sitecore-client.d.ts:212
 
 #### Returns
 
@@ -542,7 +601,7 @@ Defined in: core/types/client/sitecore-client.d.ts:185
 
 > **parsePath**(`path`): `string`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/client/sitecore-nextjs-client.ts#L48)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/client/sitecore-nextjs-client.ts#L48)
 
 Normalizes a nextjs path that could have been rewritten
 
@@ -568,7 +627,7 @@ path string without nextjs prefixes
 
 > **resolveSite**(`hostname`): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
-Defined in: core/types/client/sitecore-client.d.ts:117
+Defined in: core/types/client/sitecore-client.d.ts:135
 
 Resolve site by hostname
 
@@ -594,7 +653,7 @@ site details matching the hostname
 
 > **resolveSiteFromPath**(`path`): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/3977926a625263337e3b7cdaaa92a610ea43e8f1/packages/nextjs/src/client/sitecore-nextjs-client.ts#L34)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/client/sitecore-nextjs-client.ts#L34)
 
 #### Parameters
 

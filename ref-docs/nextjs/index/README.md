@@ -102,6 +102,7 @@
 - [SitecoreContextValue](type-aliases/SitecoreContextValue.md)
 - [SitecorePageProps](type-aliases/SitecorePageProps.md)
 - [SiteInfo](type-aliases/SiteInfo.md)
+- [SitemapXmlOptions](type-aliases/SitemapXmlOptions.md)
 - [StaticPath](type-aliases/StaticPath.md)
 - [WithSitecoreContextHocProps](type-aliases/WithSitecoreContextHocProps.md)
 
