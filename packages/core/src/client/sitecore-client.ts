@@ -26,7 +26,6 @@ import {
 } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
-import { IncomingMessage } from 'http';
 import { NativeDataFetcher } from '../native-fetcher';
 
 /**
@@ -49,6 +48,18 @@ export type Page = {
 
 export type PageOptions = Partial<RouteOptions> & {
   personalize?: PersonalizedRewriteData;
+};
+
+/**
+ * Request options for the getSiteMap method
+ */
+export type SitemapXmlOptions = {
+  /** The hostname from the request (e.g., 'example.com') */
+  reqHost: string;
+  /** The protocol from request headers (e.g., 'https' or 'http') */
+  reqProtocol: string | string[];
+  /** Optional sitemap identifier when requesting a specific sitemap */
+  id?: string;
 };
 
 /**
@@ -121,12 +132,10 @@ export interface BaseSitecoreClient {
   ): HTMLLink[];
   /**
    * Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
-   * @param {IncomingMessage} req - Incoming request containing headers (host/protocol info)
-   * @param {string} id - Optional sitemap identifier (for specific sitemap requests)
-   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
+   * @param { SitemapRequestConfig} reqOptions - Configuration for sitemap retrieval
    * @returns {Promise<string>} Promise resolving to the sitemap XML content as string
    */
-  getSiteMap(req: IncomingMessage, id?: string, fetchOptions?: FetchOptions): Promise<string>;
+  getSiteMap(reqOptions: SitemapXmlOptions): Promise<string>;
 }
 
 export interface BaseServiceOptions {
@@ -418,18 +427,14 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
-   * @param {IncomingMessage} req - Incoming request containing headers (host/protocol info)
-   * @param {string} id - Optional sitemap identifier (for specific sitemap requests)
+   * @param {SitemapXmlOptions} reqOptions - Options for sitemap retrieval
    * @param {FetchOptions} [fetchOptions] - Additional fetch options.
    * @returns {Promise<string>} Promise resolving to the sitemap XML content as string
    * @throws {Error} Throws 'REDIRECT_404' if requested sitemap is not found
    */
-  async getSiteMap(
-    req: IncomingMessage,
-    id?: string,
-    fetchOptions?: FetchOptions
-  ): Promise<string> {
+  async getSiteMap(reqOptions: SitemapXmlOptions, fetchOptions?: FetchOptions): Promise<string> {
     const ABSOLUTE_URL_REGEXP = '^(?:[a-z]+:)?//';
+    const { reqHost, reqProtocol, id } = reqOptions;
 
     // Get specific sitemap
     const sitemapPath = await this.sitemapXmlService.getSitemap(id as string);
@@ -454,9 +459,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!sitemaps.length) {
       throw new Error('REDIRECT_404');
     }
-
-    const reqHost = req.headers.host;
-    const reqProtocol = req.headers['x-forwarded-proto'] || 'https';
 
     return `<?xml version="1.0" encoding="UTF-8"?>
       <sitemapindex xmlns="http://sitemaps.org/schemas/sitemap/0.9">

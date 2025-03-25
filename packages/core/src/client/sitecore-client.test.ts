@@ -8,7 +8,6 @@ import { DefaultRetryStrategy } from '../retries';
 import { LayoutServicePageState } from '../layout';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 import { NativeDataFetcher } from '../native-fetcher';
-import { IncomingMessage, ServerResponse } from 'http';
 
 chai.use(sinonChai);
 
@@ -67,7 +66,6 @@ describe('SitecoreClient', () => {
     fetchSiteRoutes: sandbox.stub(),
   };
 
-  let req: Partial<IncomingMessage>;
   let sitemapXmlServiceStub: any;
 
   afterEach(() => {
@@ -98,13 +96,6 @@ describe('SitecoreClient', () => {
 
     sitePathServiceStub = {
       fetchSiteRoutes: sandbox.stub(),
-    };
-
-    req = {
-      headers: {
-        host: 'example.com',
-        'x-forwarded-proto': 'https',
-      },
     };
 
     // Create stubs for the dependencies
@@ -845,7 +836,13 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getSiteMapData', () => {
+  describe('getSiteMap', () => {
+    const defaultReqConfig = {
+      reqHost: 'example.com',
+      reqProtocol: 'https',
+      id: undefined,
+    };
+
     it('should fetch and return sitemap', async () => {
       const sitemapId = '1';
       const sitemapPath = '/sitemap-1.xml';
@@ -857,7 +854,7 @@ describe('SitecoreClient', () => {
         .withArgs(`${defaultInitOptions.api.local.apiHost}${sitemapPath}`)
         .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
 
-      const result = await sitecoreClient.getSiteMap(req as IncomingMessage, sitemapId);
+      const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig, id: sitemapId });
 
       expect(sitemapXmlServiceStub.getSitemap.calledWith(sitemapId)).to.be.true;
       expect(dataFetcherStub.calledWith(`${defaultInitOptions.api.local.apiHost}${sitemapPath}`)).to
@@ -875,7 +872,7 @@ describe('SitecoreClient', () => {
         .stub(NativeDataFetcher.prototype, 'fetch')
         .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
 
-      const result = await sitecoreClient.getSiteMap(req as IncomingMessage, sitemapId);
+      const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig, id: sitemapId });
 
       const wasCalledWithAbsoluteUrl = dataFetcherStub
         .getCalls()
@@ -895,7 +892,7 @@ describe('SitecoreClient', () => {
         .rejects(new Error('Failed to fetch sitemap'));
 
       try {
-        await sitecoreClient.getSiteMap(req as IncomingMessage, sitemapId);
+        await sitecoreClient.getSiteMap({ ...defaultReqConfig, id: sitemapId });
         expect.fail('Should have thrown an error');
       } catch (error) {
         expect((error as Error).message).to.equal('REDIRECT_404');
@@ -908,7 +905,7 @@ describe('SitecoreClient', () => {
       sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
       sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
 
-      const result = await sitecoreClient.getSiteMap(req as IncomingMessage);
+      const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig });
 
       expect(sitemapXmlServiceStub.fetchSitemaps.calledOnce).to.be.true;
       expect(result).to.include('<?xml version="1.0" encoding="UTF-8"?>');
@@ -922,7 +919,7 @@ describe('SitecoreClient', () => {
       sitemapXmlServiceStub.fetchSitemaps.resolves([]);
 
       try {
-        await sitecoreClient.getSiteMap(req as IncomingMessage);
+        await sitecoreClient.getSiteMap({ ...defaultReqConfig });
         expect.fail('Should have thrown an error');
       } catch (error) {
         expect((error as Error).message).to.equal('REDIRECT_404');
@@ -930,18 +927,14 @@ describe('SitecoreClient', () => {
     });
 
     it('should use HTTP protocol when specified in x-forwarded-proto header', async () => {
-      const httpReq = {
-        headers: {
-          host: 'example.com',
-          'x-forwarded-proto': 'http',
-        },
-      };
-
       const sitemaps = ['/sitemap-1.xml'];
       sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
       sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
 
-      const result = await sitecoreClient.getSiteMap((httpReq as unknown) as IncomingMessage);
+      const result = await sitecoreClient.getSiteMap({
+        reqHost: 'example.com',
+        reqProtocol: 'http',
+      });
 
       expect(result).to.include('<loc>http://example.com/sitemap-1.xml</loc>');
     });
@@ -956,7 +949,7 @@ describe('SitecoreClient', () => {
       sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
       sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
 
-      await sitecoreClient.getSiteMap(req as IncomingMessage, undefined, fetchOptions);
+      await sitecoreClient.getSiteMap(defaultReqConfig, fetchOptions);
 
       expect(sitemapXmlServiceStub.fetchSitemaps.calledWith(fetchOptions)).to.be.true;
     });
@@ -966,7 +959,7 @@ describe('SitecoreClient', () => {
       sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
       sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
 
-      const result = await sitecoreClient.getSiteMap(req as IncomingMessage);
+      const result = await sitecoreClient.getSiteMap(defaultReqConfig);
 
       expect(result).to.include(
         '<loc>https://example.com/sitemap-1.xml?param1=value&amp;param2=value</loc>'
