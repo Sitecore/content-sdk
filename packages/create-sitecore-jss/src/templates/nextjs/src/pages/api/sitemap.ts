@@ -5,13 +5,17 @@ const sitemapApi = async (req: NextApiRequest, res: NextApiResponse): Promise<vo
   const { id } = req.query;
 
   try {
-    await scClient.getSiteMap(req, res, id as string);
+    const xmlContent = await scClient.getSiteMap(req, id as string);
+    
+    res.setHeader('Content-Type', 'text/xml;charset=utf-8');
+    res.send(xmlContent);
+    
   } catch (error) {
     if (error instanceof Error && error.message === 'REDIRECT_404') {
       res.redirect('/404');
-      return;
+    } else {
+      res.status(500).end('Internal Server Error');
     }
-    res.status(500).end('Internal Server Error');
   }
 };
 

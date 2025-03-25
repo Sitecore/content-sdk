@@ -26,7 +26,7 @@ import {
 } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage } from 'http';
 import { NativeDataFetcher } from '../native-fetcher';
 
 /**
@@ -122,17 +122,11 @@ export interface BaseSitecoreClient {
   /**
    * Retrieves and serves sitemap XML content, either a specific sitemap or the sitemap index.
    * @param {IncomingMessage} req - The incoming HTTP request object containing headers and other request information
-   * @param {ServerResponse} res - The server response object used to send the XML response
    * @param {string} [id] - Optional sitemap identifier (for sitemap-{n}.xml requests)
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
    * @returns {Promise<ServerResponse|void>} Resolves with the response object when complete or void
    */
-  getSiteMap(
-    req: IncomingMessage,
-    res: ServerResponse,
-    id?: string,
-    fetchOptions?: FetchOptions
-  ): Promise<ServerResponse | void>;
+  getSiteMap(req: IncomingMessage, id?: string, fetchOptions?: FetchOptions): Promise<string>;
 }
 
 export interface BaseServiceOptions {
@@ -425,19 +419,18 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Retrieves and serves sitemap XML content, either a specific sitemap or the sitemap index.
    * @param {IncomingMessage} req - The incoming HTTP request object containing headers and other request information
-   * @param {ServerResponse} res - The server response object used to send the XML response
    * @param {string} [id] - Optional sitemap identifier (for sitemap-{n}.xml requests)
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
    * @returns {Promise<ServerResponse|void>} Resolves with the response object when complete or void
    */
   async getSiteMap(
     req: IncomingMessage,
-    res: ServerResponse,
     id?: string,
     fetchOptions?: FetchOptions
-  ): Promise<ServerResponse | void> {
+  ): Promise<string> {
     const ABSOLUTE_URL_REGEXP = '^(?:[a-z]+:)?//';
 
+    // Get specific sitemap
     const sitemapPath = await this.sitemapXmlService.getSitemap(id as string);
 
     if (sitemapPath) {
@@ -445,43 +438,36 @@ export class SitecoreClient implements BaseSitecoreClient {
       const sitemapUrl = isAbsoluteUrl
         ? sitemapPath
         : `${this.initOptions.api.local.apiHost}${sitemapPath}`;
-      res.setHeader('Content-Type', 'text/xml;charset=utf-8');
 
       try {
         const fetcher = new NativeDataFetcher();
         const xmlResponse = await fetcher.fetch<string>(sitemapUrl);
-        return res.end(xmlResponse.data);
+        return xmlResponse.data;
       } catch (error) {
         throw new Error('REDIRECT_404');
       }
     }
 
+    // Get sitemap index
     const sitemaps = await this.sitemapXmlService.fetchSitemaps(fetchOptions);
-
     if (!sitemaps.length) {
       throw new Error('REDIRECT_404');
     }
 
-    const reqtHost = req.headers.host;
+    const reqHost = req.headers.host;
     const reqProtocol = req.headers['x-forwarded-proto'] || 'https';
-    const SitemapLinks = sitemaps
-      .map((item: string) => {
-        const parseUrl = item.split('/');
-        const lastSegment = parseUrl[parseUrl.length - 1];
-        const escapedUrl = `${reqProtocol}://${reqtHost}/${lastSegment}`.replace(/&/g, '&amp;');
 
-        return `<sitemap>
-        <loc>${escapedUrl}</loc>
-      </sitemap>`;
-      })
-      .join('');
-
-    res.setHeader('Content-Type', 'text/xml;charset=utf-8');
-
-    return res.end(`<?xml version="1.0" encoding="UTF-8"?>
+    return `<?xml version="1.0" encoding="UTF-8"?>
       <sitemapindex xmlns="http://sitemaps.org/schemas/sitemap/0.9">
-      ${SitemapLinks}
-      </sitemapindex>`);
+      ${sitemaps
+        .map((item: string) => {
+          const parseUrl = item.split('/');
+          const lastSegment = parseUrl[parseUrl.length - 1];
+          const escapedUrl = `${reqProtocol}://${reqHost}/${lastSegment}`.replace(/&/g, '&amp;');
+          return `<sitemap><loc>${escapedUrl}</loc></sitemap>`;
+        })
+        .join('')}
+      </sitemapindex>`;
   }
 
   /**
