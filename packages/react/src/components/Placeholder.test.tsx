@@ -30,54 +30,49 @@ import { MissingComponent, MissingComponentProps } from './MissingComponent';
 import { Placeholder } from './Placeholder';
 import { ComponentProps } from './PlaceholderCommon';
 import { SitecoreContext } from './SitecoreContext';
-import { ComponentFactory } from './sharedTypes';
 
-const componentFactory: ComponentFactory = (componentName: string) => {
-  const components = new Map<string, React.FC>();
+const componentMap = new Map<string, React.FC>();
 
-  // pass otherProps to page-content to test property cascading through the Placeholder
+// pass otherProps to page-content to test property cascading through the Placeholder
 
-  const Home: React.FC<{ [prop: string]: unknown; rendering?: RouteData | ComponentRendering }> = ({
-    rendering,
-    render,
-    renderEach,
-    renderEmpty,
-    ...otherProps
-  }) => (
-    <div className="home-mock">
-      <Placeholder name="page-header" rendering={rendering} />
-      <Placeholder name="page-content" rendering={rendering} {...otherProps} />
-    </div>
-  );
-  Home.propTypes = {
-    placeholders: PropTypes.object,
-  };
-
-  components.set('Home', Home);
-
-  const DownloadCallout: React.FC<{
-    [prop: string]: unknown;
-    fields?: { message?: { value?: string } };
-    extraDiv?: boolean;
-  }> = (props) => (
-    <div className="download-callout-mock">
-      {props.fields.message ? props.fields.message.value : ''}
-      {props.extraDiv ? <div className="extra">extra!</div> : null}
-    </div>
-  );
-  DownloadCallout.propTypes = {
-    fields: PropTypes.shape({
-      message: PropTypes.shape({
-        value: PropTypes.string,
-      }),
-    }).isRequired,
-  };
-
-  components.set('DownloadCallout', DownloadCallout);
-  components.set('Jumbotron', () => <div className="jumbotron-mock" />);
-
-  return components.get(componentName) || null;
+const Home: React.FC<{ [prop: string]: unknown; rendering?: RouteData | ComponentRendering }> = ({
+  rendering,
+  render,
+  renderEach,
+  renderEmpty,
+  ...otherProps
+}) => (
+  <div className="home-mock">
+    <Placeholder name="page-header" rendering={rendering} />
+    <Placeholder name="page-content" rendering={rendering} {...otherProps} />
+  </div>
+);
+Home.propTypes = {
+  placeholders: PropTypes.object,
 };
+
+componentMap.set('Home', Home);
+
+const DownloadCallout: React.FC<{
+  [prop: string]: unknown;
+  fields?: { message?: { value?: string } };
+  extraDiv?: boolean;
+}> = (props) => (
+  <div className="download-callout-mock">
+    {props.fields.message ? props.fields.message.value : ''}
+    {props.extraDiv ? <div className="extra">extra!</div> : null}
+  </div>
+);
+DownloadCallout.propTypes = {
+  fields: PropTypes.shape({
+    message: PropTypes.shape({
+      value: PropTypes.string,
+    }),
+  }).isRequired,
+};
+
+componentMap.set('DownloadCallout', DownloadCallout);
+componentMap.set('Jumbotron', () => <div className="jumbotron-mock" />);
 
 describe('<Placeholder />', () => {
   const testData = [
@@ -95,7 +90,7 @@ describe('<Placeholder />', () => {
         const phKey = 'page-content';
 
         const renderedComponent = render(
-          <SitecoreContext componentFactory={componentFactory}>
+          <SitecoreContext componentMap={componentMap}>
             <Placeholder name={phKey} rendering={component} />
           </SitecoreContext>
         );
@@ -110,7 +105,7 @@ describe('<Placeholder />', () => {
         const phKey = 'main';
 
         const renderedComponent = render(
-          <SitecoreContext componentFactory={componentFactory}>
+          <SitecoreContext componentMap={componentMap}>
             <Placeholder name={phKey} rendering={component} />
           </SitecoreContext>
         );
@@ -125,7 +120,7 @@ describe('<Placeholder />', () => {
         const phKey = 'main';
 
         const renderedComponent = render(
-          <SitecoreContext componentFactory={componentFactory}>
+          <SitecoreContext componentMap={componentMap}>
             <Placeholder
               name={phKey}
               rendering={component}
@@ -142,7 +137,7 @@ describe('<Placeholder />', () => {
         const phKey = 'main';
 
         const renderedComponent = render(
-          <SitecoreContext componentFactory={componentFactory}>
+          <SitecoreContext componentMap={componentMap}>
             <Placeholder
               name={phKey}
               rendering={component}
@@ -159,7 +154,7 @@ describe('<Placeholder />', () => {
         const phKey = 'mainEmpty';
 
         const renderedComponent = render(
-          <SitecoreContext componentFactory={componentFactory}>
+          <SitecoreContext componentMap={componentMap}>
             <Placeholder name={phKey} rendering={component} render={() => null} />
           </SitecoreContext>
         );
@@ -184,7 +179,7 @@ describe('<Placeholder />', () => {
       const phKey = 'main';
 
       const renderedComponent = render(
-        <SitecoreContext componentFactory={componentFactory}>
+        <SitecoreContext componentMap={componentMap}>
           <Placeholder
             name={phKey}
             rendering={myComponent}
@@ -208,7 +203,7 @@ describe('<Placeholder />', () => {
         .fields.message;
 
       const renderedComponent = render(
-        <SitecoreContext componentFactory={componentFactory}>
+        <SitecoreContext componentMap={componentMap}>
           <Placeholder name={phKey} rendering={component} />
         </SitecoreContext>
       );
@@ -238,7 +233,7 @@ describe('<Placeholder />', () => {
       };
 
       const renderedComponent = render(
-        <SitecoreContext componentFactory={componentFactory}>
+        <SitecoreContext componentMap={componentMap}>
           <Placeholder
             name={phKey}
             rendering={component}
@@ -258,22 +253,16 @@ describe('<Placeholder />', () => {
 });
 
 describe('SXA rendering variants', () => {
-  const componentFactory: ComponentFactory = (componentName: string, exportName?: string) => {
-    const components = new Map();
+  const componentMap = new Map();
 
-    components.set('RichText', SxaRichText);
-
-    if (exportName) return components.get(componentName)[exportName];
-
-    return components.get(componentName) || null;
-  };
+  componentMap.set('RichText', SxaRichText);
 
   it('should render', () => {
     const component = sxaRenderingVariantData.sitecore.route as RouteData;
     const phKey = 'main';
 
     const renderedComponent = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreContext>
     );
@@ -299,7 +288,7 @@ describe('SXA rendering variants', () => {
     const phKey = 'container-1';
 
     const renderedComponent = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreContext>
     );
@@ -321,7 +310,7 @@ describe('SXA rendering variants', () => {
     const phKey = 'richText';
 
     const renderedComponent = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreContext>
     );
@@ -335,7 +324,7 @@ describe('SXA rendering variants', () => {
     const phKey = 'dynamic-1-{*}';
 
     const renderedComponent = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreContext>
     );
@@ -357,7 +346,7 @@ describe('SXA rendering variants', () => {
     const phKey = 'main-second';
 
     const renderedComponent = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreContext>
     );
@@ -376,7 +365,7 @@ describe('SXA rendering variants', () => {
     const phKey = 'column-1-{*}';
 
     const renderedComponent = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreContext>
     );
@@ -412,7 +401,7 @@ describe('BYOC fallback', () => {
     ));
 
     const renderedComponent = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreContext>
     );
@@ -446,7 +435,7 @@ describe('FEaaS fallback', () => {
     ));
 
     const renderedComponent = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreContext>
     );
@@ -472,7 +461,7 @@ it('should render null for unknown placeholder', () => {
   const phKey = 'unknown';
 
   const renderedComponent = render(
-    <SitecoreContext componentFactory={componentFactory}>
+    <SitecoreContext componentMap={componentMap}>
       <Placeholder name={phKey} rendering={route} />
     </SitecoreContext>
   );
@@ -480,21 +469,18 @@ it('should render null for unknown placeholder', () => {
 });
 
 it('should render error message on error', () => {
-  const componentFactory: ComponentFactory = (componentName: string) => {
-    const components = new Map<string, React.FC>();
+  const components = new Map<string, React.FC>();
 
-    const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
-      <div className="home-mock">
-        <Placeholder name="main" rendering={rendering} />
-      </div>
-    );
+  const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
+    <div className="home-mock">
+      <Placeholder name="main" rendering={rendering} />
+    </div>
+  );
 
-    components.set('Home', Home);
-    components.set('ThrowError', () => {
-      throw Error('an error occured');
-    });
-    return components.get(componentName) || null;
-  };
+  components.set('Home', Home);
+  components.set('ThrowError', () => {
+    throw Error('an error occured');
+  });
 
   const route = ({
     placeholders: {
@@ -508,7 +494,7 @@ it('should render error message on error', () => {
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreContext componentFactory={componentFactory}>
+    <SitecoreContext componentMap={components}>
       <Placeholder name={phKey} rendering={route} />
     </SitecoreContext>
   );
@@ -518,23 +504,19 @@ it('should render error message on error', () => {
 });
 
 it('should render error message on error, only for the errored component', () => {
-  const componentFactory: ComponentFactory = (componentName: string) => {
-    const components = new Map<string, React.FC>();
+  const components = new Map<string, React.FC>();
 
-    const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
-      <div className="home-mock">
-        <Placeholder name="main" rendering={rendering} />
-      </div>
-    );
+  const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
+    <div className="home-mock">
+      <Placeholder name="main" rendering={rendering} />
+    </div>
+  );
 
-    components.set('Home', Home);
-    components.set('ThrowError', () => {
-      throw Error('an error occured');
-    });
-    components.set('Foo', () => <div className="foo-class">foo</div>);
-
-    return components.get(componentName) || null;
-  };
+  components.set('Home', Home);
+  components.set('ThrowError', () => {
+    throw Error('an error occured');
+  });
+  components.set('Foo', () => <div className="foo-class">foo</div>);
 
   const route = ({
     placeholders: {
@@ -551,7 +533,7 @@ it('should render error message on error, only for the errored component', () =>
   const phKey = 'main';
 
   const renderedComponent = render(
-    <Placeholder name={phKey} rendering={route} componentFactory={componentFactory} />
+    <Placeholder name={phKey} rendering={route} componentMap={components} />
   );
   expect(renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length).to.equal(
     1
@@ -560,23 +542,20 @@ it('should render error message on error, only for the errored component', () =>
 });
 
 it('should render custom errorComponent on error, if provided', () => {
-  const componentFactory: ComponentFactory = (componentName: string) => {
-    const components = new Map<string, React.FC<{ [key: string]: unknown }>>();
+  const components = new Map<string, React.FC<{ [key: string]: unknown }>>();
 
-    const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
-      <div className="home-mock">
-        <SitecoreContext componentFactory={componentFactory}>
-          <Placeholder name="main" rendering={rendering} />
-        </SitecoreContext>
-      </div>
-    );
+  const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
+    <div className="home-mock">
+      <SitecoreContext componentMap={componentMap}>
+        <Placeholder name="main" rendering={rendering} />
+      </SitecoreContext>
+    </div>
+  );
 
-    components.set('Home', Home);
-    components.set('ThrowError', () => {
-      throw Error('an error occured');
-    });
-    return components.get(componentName) || null;
-  };
+  components.set('Home', Home);
+  components.set('ThrowError', () => {
+    throw Error('an error occured');
+  });
 
   const CustomError: React.FC = () => <div className="custom-error">Custom Error</div>;
 
@@ -592,7 +571,7 @@ it('should render custom errorComponent on error, if provided', () => {
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreContext componentFactory={componentFactory}>
+    <SitecoreContext componentMap={components}>
       <Placeholder name={phKey} rendering={route} errorComponent={CustomError} />
     </SitecoreContext>
   );
@@ -618,7 +597,7 @@ it('should render MissingComponent for unknown rendering', () => {
   );
 
   const renderedComponent = render(
-    <SitecoreContext componentFactory={componentFactory}>
+    <SitecoreContext componentMap={componentMap}>
       <Placeholder
         name={phKey}
         rendering={route}
@@ -655,7 +634,7 @@ it('should render nothing for rendering without a name', () => {
 
   const renderedComponent = render(
     <div className="empty-test">
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={componentMap}>
         <Placeholder name={phKey} rendering={route} />
       </SitecoreContext>
     </div>
@@ -676,7 +655,7 @@ it('should render HiddenRendering when rendering is hidden', () => {
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreContext componentFactory={componentFactory}>
+    <SitecoreContext componentMap={componentMap}>
       <Placeholder name={phKey} rendering={route} />
     </SitecoreContext>
   );
@@ -705,7 +684,7 @@ it('should render custom HiddenRendering when rendering is hidden', () => {
   );
 
   const renderedComponent = render(
-    <SitecoreContext componentFactory={componentFactory}>
+    <SitecoreContext componentMap={componentMap}>
       <Placeholder
         name={phKey}
         rendering={route}
@@ -729,22 +708,18 @@ describe('PlaceholderMetadata', () => {
     layoutDataWithUnknownComponent,
   } = metadataData;
 
-  const componentFactory: ComponentFactory = (componentName: string) => {
-    const components = new Map<string, React.FC>();
+  const componentMap = new Map<string, React.FC>();
 
-    components.set('Header', () => (
-      <div className="header-wrapper">
-        <Placeholder name="logo" rendering={layoutData.sitecore.route.placeholders.main[0]} />
-      </div>
-    ));
-    components.set('Logo', () => <div className="Logo-mock" />);
-
-    return components.get(componentName) || null;
-  };
+  componentMap.set('Header', () => (
+    <div className="header-wrapper">
+      <Placeholder name="logo" rendering={layoutData.sitecore.route.placeholders.main[0]} />
+    </div>
+  ));
+  componentMap.set('Logo', () => <div className="Logo-mock" />);
 
   it('should render <PlaceholderMetadata> with nested placeholder components', () => {
     const wrapper = render(
-      <SitecoreContext componentFactory={componentFactory} layoutData={layoutData}>
+      <SitecoreContext componentMap={componentMap} layoutData={layoutData}>
         <Placeholder name="main" rendering={layoutData.sitecore.route} />
       </SitecoreContext>,
       { container: document.body }
@@ -771,10 +746,7 @@ describe('PlaceholderMetadata', () => {
 
   it('should render code blocks even if placeholder is empty', () => {
     const wrapper = render(
-      <SitecoreContext
-        componentFactory={componentFactory}
-        layoutData={layoutDataWithEmptyPlaceholder}
-      >
+      <SitecoreContext componentMap={componentMap} layoutData={layoutDataWithEmptyPlaceholder}>
         <Placeholder name="main" rendering={layoutDataWithEmptyPlaceholder.sitecore.route} />
       </SitecoreContext>,
       { container: document.body }
@@ -792,10 +764,7 @@ describe('PlaceholderMetadata', () => {
 
   it('should render missing component with code blocks if component is not registered', () => {
     const wrapper = render(
-      <SitecoreContext
-        componentFactory={componentFactory}
-        layoutData={layoutDataWithUnknownComponent}
-      >
+      <SitecoreContext componentMap={componentMap} layoutData={layoutDataWithUnknownComponent}>
         <Placeholder name="main" rendering={layoutDataWithUnknownComponent.sitecore.route} />
       </SitecoreContext>
     );
@@ -815,7 +784,7 @@ describe('PlaceholderMetadata', () => {
     const phKey = 'container-1';
     const layoutData = layoutDataForNestedDynamicPlaceholder('container-{*}');
     const wrapper = render(
-      <SitecoreContext componentFactory={componentFactory} layoutData={layoutData}>
+      <SitecoreContext componentMap={componentMap} layoutData={layoutData}>
         <Placeholder name={phKey} rendering={layoutData.sitecore.route} />
       </SitecoreContext>
     );
@@ -842,7 +811,7 @@ describe('PlaceholderMetadata', () => {
     const phKey = 'container-1-2';
     const layoutData = layoutDataForNestedDynamicPlaceholder('container-1-{*}');
     const wrapper = render(
-      <SitecoreContext componentFactory={componentFactory} layoutData={layoutData}>
+      <SitecoreContext componentMap={componentMap} layoutData={layoutData}>
         <Placeholder name={phKey} rendering={layoutData.sitecore.route} />
       </SitecoreContext>
     );

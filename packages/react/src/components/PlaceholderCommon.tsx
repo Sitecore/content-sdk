@@ -1,7 +1,12 @@
 ﻿import React, { ComponentType } from 'react';
 import PropTypes, { Requireable } from 'prop-types';
 import { MissingComponent } from './MissingComponent';
-import { BaseModule, DEFAULT_EXPORT_NAME, JssComponentType } from './sharedTypes';
+import {
+  ReactJssModule,
+  DEFAULT_EXPORT_NAME,
+  ExtendedComponentType,
+  ReactJssComponent,
+} from './sharedTypes';
 import {
   ComponentRendering,
   RouteData,
@@ -40,7 +45,7 @@ export interface PlaceholderProps {
    * A factory function that will receive a componentName and return an instance of a React component.
    * When rendered within a <SitecoreContext> component, defaults to the context componentFactory.
    */
-  componentMap?: Map<string, BaseModule | JssComponentType>;
+  componentMap?: Map<string, ReactJssComponent>;
   /**
    * An object of field names/values that are aggregated and propagated through the component tree created by a placeholder.
    * Any component or placeholder rendered by a placeholder will have access to this data via `props.fields`.
@@ -272,7 +277,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
               errorComponent={this.props.errorComponent}
               componentLoadingMessage={this.props.componentLoadingMessage}
               type={type}
-              isDynamic={(component as JssComponentType).render?.preload ? true : false}
+              isDynamic={(component as ExtendedComponentType).render?.preload ? true : false}
               {...rendered.props}
             >
               {rendered}
@@ -326,13 +331,13 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     if (!component) return null;
 
     if (exportName && exportName !== DEFAULT_EXPORT_NAME) {
-      return (component as BaseModule)[exportName];
+      return (component as ReactJssModule)[exportName];
     }
 
     return (
-      (component as BaseModule).Default ||
-      (component as BaseModule).default ||
-      (component as JssComponentType)
+      (component as ReactJssModule).Default ||
+      (component as ReactJssModule).default ||
+      (component as ExtendedComponentType)
     );
   }
 }

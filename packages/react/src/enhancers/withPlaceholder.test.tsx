@@ -11,7 +11,6 @@ import { withPlaceholder } from '../enhancers/withPlaceholder';
 import { SitecoreContext } from '../components/SitecoreContext';
 import { PlaceholderProps } from '../components/PlaceholderCommon';
 import PropTypes from 'prop-types';
-import { ComponentFactory } from '../components/sharedTypes';
 import {
   ComponentRendering,
   LayoutServiceData,
@@ -68,25 +67,21 @@ const delay = (timeout, promise?) => {
   }).then(() => promise);
 };
 
-const componentFactory: ComponentFactory = (componentName: string) => {
-  const components = new Map<string, React.FC<any>>();
+const componentMap = new Map<string, React.FC<any>>();
 
-  components.set('DownloadCallout', DownloadCallout);
-  components.set('Jumbotron', () => <div className="jumbotron-mock"></div>);
-  components.set('BrokenComponent', () => {
-    throw new Error('BrokenComponent error');
-  });
-  components.set(
-    'DynamicComponent',
-    React.lazy(() =>
-      delay(500, () => {
-        throw new Error('DynamicComponent error');
-      })
-    )
-  );
-
-  return components.get(componentName) || null;
-};
+componentMap.set('DownloadCallout', DownloadCallout);
+componentMap.set('Jumbotron', () => <div className="jumbotron-mock"></div>);
+componentMap.set('BrokenComponent', () => {
+  throw new Error('BrokenComponent error');
+});
+componentMap.set(
+  'DynamicComponent',
+  React.lazy(() =>
+    delay(500, () => {
+      throw new Error('DynamicComponent error');
+    })
+  )
+);
 
 const testData = [{ label: 'Dev data', data: normalModeDevData }];
 
@@ -107,7 +102,7 @@ describe('withPlaceholder HOC', () => {
       const renderedComponent = render(
         <SitecoreContext
           layoutData={(normalModeDevData as unknown) as LayoutServiceData}
-          componentFactory={componentFactory}
+          componentMap={componentMap}
         >
           <Element {...props} />
         </SitecoreContext>
@@ -128,7 +123,7 @@ describe('withPlaceholder HOC', () => {
       const renderedComponent = render(
         <SitecoreContext
           layoutData={(normalModeDevData as unknown) as LayoutServiceData}
-          componentFactory={componentFactory}
+          componentMap={componentMap}
         >
           <Element {...props} />
         </SitecoreContext>
@@ -148,7 +143,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreContext layoutData={normalModeDevData} componentFactory={componentFactory}>
+        <SitecoreContext layoutData={normalModeDevData} componentMap={componentMap}>
           <Element {...props} />
         </SitecoreContext>
       );
@@ -179,7 +174,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreContext layoutData={normalModeDevData} componentFactory={componentFactory}>
+        <SitecoreContext layoutData={normalModeDevData} componentMap={componentMap}>
           <Element {...props} />
         </SitecoreContext>
       );
@@ -211,7 +206,7 @@ describe('withPlaceholder HOC', () => {
         const renderedComponent = render(
           <SitecoreContext
             layoutData={dataSet.data as LayoutServiceData}
-            componentFactory={componentFactory}
+            componentMap={componentMap}
           >
             <Element {...props} />
           </SitecoreContext>
@@ -238,7 +233,7 @@ describe('withPlaceholder HOC', () => {
         const renderedComponent = render(
           <SitecoreContext
             layoutData={dataSet.data as LayoutServiceData}
-            componentFactory={componentFactory}
+            componentMap={componentMap}
           >
             <Element {...props} />
           </SitecoreContext>
@@ -271,7 +266,7 @@ describe('withPlaceholder HOC', () => {
         const renderedComponent = render(
           <SitecoreContext
             layoutData={dataSet.data as LayoutServiceData}
-            componentFactory={componentFactory}
+            componentMap={componentMap}
           >
             <Element {...props} />
           </SitecoreContext>
@@ -292,21 +287,17 @@ describe('withPlaceholder HOC', () => {
       layoutDataWithUnknownComponent,
     } = metadataData;
 
-    const componentFactory: ComponentFactory = (componentName: string) => {
-      const components = new Map<string, React.FC>();
+    const componentMap = new Map<string, React.FC>();
 
-      components.set('Header', () => (
-        <div className="header-wrapper">
-          <Placeholder
-            name="logo"
-            rendering={metadataData.layoutData.sitecore.route.placeholders.main[0]}
-          />
-        </div>
-      ));
-      components.set('Logo', () => <div className="Logo-mock" />);
-
-      return components.get(componentName) || null;
-    };
+    componentMap.set('Header', () => (
+      <div className="header-wrapper">
+        <Placeholder
+          name="logo"
+          rendering={metadataData.layoutData.sitecore.route.placeholders.main[0]}
+        />
+      </div>
+    ));
+    componentMap.set('Logo', () => <div className="Logo-mock" />);
 
     it('should render a placeholder with given key', () => {
       const component = layoutData.sitecore.route;
@@ -317,7 +308,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreContext layoutData={layoutData} componentFactory={componentFactory}>
+        <SitecoreContext layoutData={layoutData} componentMap={componentMap}>
           <Element {...props} />
         </SitecoreContext>
       );
@@ -353,7 +344,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKeyAndProp)(Home);
       const renderedComponent = render(
-        <SitecoreContext layoutData={layoutData} componentFactory={componentFactory}>
+        <SitecoreContext layoutData={layoutData} componentMap={componentMap}>
           <Element {...props} />
         </SitecoreContext>
       );
@@ -386,10 +377,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreContext
-          layoutData={layoutDataWithEmptyPlaceholder}
-          componentFactory={componentFactory}
-        >
+        <SitecoreContext layoutData={layoutDataWithEmptyPlaceholder} componentMap={componentMap}>
           <Element {...props} />
         </SitecoreContext>
       );
@@ -413,10 +401,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreContext
-          layoutData={layoutDataWithUnknownComponent}
-          componentFactory={componentFactory}
-        >
+        <SitecoreContext layoutData={layoutDataWithUnknownComponent} componentMap={componentMap}>
           <Element {...props} />
         </SitecoreContext>
       );
@@ -444,7 +429,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreContext layoutData={layoutData} componentFactory={componentFactory}>
+        <SitecoreContext layoutData={layoutData} componentMap={componentMap}>
           <Element {...props} />
         </SitecoreContext>
       );
@@ -477,7 +462,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreContext layoutData={layoutData} componentFactory={componentFactory}>
+        <SitecoreContext layoutData={layoutData} componentMap={componentMap}>
           <Element {...props} />
         </SitecoreContext>
       );

@@ -1,5 +1,4 @@
 export { default as isServer } from './is-server';
-export { ComponentMap, BaseComponentModule, getComponentForRendering } from './get-components';
 export {
   resolveUrl,
   isAbsoluteUrl,

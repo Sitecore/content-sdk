@@ -10,6 +10,8 @@ import {
 } from '../sharedTypes/component-props';
 import { ComponentPropsService } from './component-props-service';
 import { spy } from 'sinon';
+import { ComponentMap } from '@sitecore-content-sdk/react';
+import { NextjsComponent } from '../../types';
 
 describe('ComponentPropsService', () => {
   const service = new ComponentPropsService();
@@ -70,22 +72,32 @@ describe('ComponentPropsService', () => {
     spy(() => (err ? Promise.reject(err) : Promise.resolve(expectedData)));
 
   it('fetchComponentProps in SSR', async () => {
-    const ssrModules: {
-      [componentName: string]: { getServerSideProps: GetServerSideComponentProps };
-    } = {
-      namex11: {
-        getServerSideProps: fetchFn('x11SSRData'),
-      },
-      namex14: {
-        getServerSideProps: fetchFn('x14SSRData', 'whoops'),
-      },
-      MyCustomComponent: {
-        getServerSideProps: fetchFn('myCustomComponentSSRData'),
-      },
-      namex24: {
-        getServerSideProps: fetchFn('x24SSRData'),
-      },
-    };
+    const ssrComponentMap = new Map<string, unknown>([
+      [
+        'namex11',
+        {
+          getServerSideProps: fetchFn('x11SSRData'),
+        },
+      ],
+      [
+        'namex14',
+        {
+          getServerSideProps: fetchFn('x14SSRData', 'whoops'),
+        },
+      ],
+      [
+        'MyCustomComponent',
+        {
+          getServerSideProps: fetchFn('myCustomComponentSSRData'),
+        },
+      ],
+      [
+        'namex24',
+        {
+          getServerSideProps: fetchFn('x24SSRData'),
+        },
+      ],
+    ]);
 
     const ssrContext = {
       req: {} as IncomingMessage & { cookies: { [key: string]: string } },
@@ -94,10 +106,8 @@ describe('ComponentPropsService', () => {
       resolvedUrl: '',
     };
 
-    const ssrModuleFactory = (componentName: string) => ssrModules[componentName];
-
     const result = await service.fetchComponentProps({
-      moduleFactory: ssrModuleFactory as ModuleFactory,
+      components: (ssrComponentMap as unknown) as ComponentMap<NextjsComponent>,
       context: ssrContext,
       layoutData,
     });
@@ -116,22 +126,34 @@ describe('ComponentPropsService', () => {
   });
 
   it('fetchComponentProps in SSR using lazy loading module', async () => {
-    const ssrModules: {
-      [componentName: string]: { getServerSideProps: GetServerSideComponentProps };
-    } = {
-      namex11: {
-        getServerSideProps: fetchFn('x11SSRData'),
-      },
-      namex14: {
-        getServerSideProps: fetchFn('x14SSRData', 'whoops'),
-      },
-      MyCustomComponent: {
-        getServerSideProps: fetchFn('myCustomComponentSSRData'),
-      },
-      namex24: {
-        getServerSideProps: fetchFn('x24SSRData'),
-      },
-    };
+    const ssrComponentMap = (new Map<string, unknown>([
+      [
+        'namex11',
+        {
+          getServerSideProps: fetchFn('x11SSRData'),
+        },
+      ],
+      [
+        'namex14',
+        {
+          module: async () => ({
+            getServerSideProps: fetchFn('x14SSRData', 'whoops'),
+          }),
+        },
+      ],
+      [
+        'MyCustomComponent',
+        {
+          getServerSideProps: fetchFn('myCustomComponentSSRData'),
+        },
+      ],
+      [
+        'namex24',
+        {
+          getServerSideProps: fetchFn('x24SSRData'),
+        },
+      ],
+    ]) as unknown) as ComponentMap<NextjsComponent>;
 
     const ssrContext = {
       req: {} as IncomingMessage & { cookies: { [key: string]: string } },
@@ -140,16 +162,8 @@ describe('ComponentPropsService', () => {
       resolvedUrl: '',
     };
 
-    const ssrModuleFactory = (componentName: string) => {
-      return new Promise<Module>((res) => {
-        setTimeout(() => {
-          res(ssrModules[componentName] as Module);
-        }, 200);
-      });
-    };
-
     const result = await service.fetchComponentProps({
-      moduleFactory: ssrModuleFactory,
+      components: ssrComponentMap,
       context: ssrContext,
       layoutData,
     });
@@ -168,31 +182,37 @@ describe('ComponentPropsService', () => {
   });
 
   it('fetchComponentProps in SSG using lazy loading module', async () => {
-    const ssgModules: { [componentName: string]: { getStaticProps: GetStaticComponentProps } } = {
-      namex11: {
-        getStaticProps: fetchFn('x11StaticData'),
-      },
-      namex14: {
-        getStaticProps: fetchFn('x14StaticData', 'whoops'),
-      },
-      MyCustomComponent: {
-        getStaticProps: fetchFn('myCustomComponentStaticData'),
-      },
-      namex24: {
-        getStaticProps: fetchFn('x24StaticData'),
-      },
-    };
-
-    const ssgModuleFactory = (componentName: string) => {
-      return new Promise<{ getStaticProps: GetStaticComponentProps }>((res) => {
-        setTimeout(() => {
-          res(ssgModules[componentName]);
-        }, 200);
-      });
-    };
+    const ssgComponentMap = (new Map<string, unknown>([
+      [
+        'namex11',
+        {
+          getStaticProps: fetchFn('x11StaticData'),
+        },
+      ],
+      [
+        'namex14',
+        {
+          module: async () => ({
+            getStaticProps: fetchFn('x14SSRData', 'whoops'),
+          }),
+        },
+      ],
+      [
+        'MyCustomComponent',
+        {
+          getStaticProps: fetchFn('myCustomComponentStaticData'),
+        },
+      ],
+      [
+        'namex24',
+        {
+          getStaticProps: fetchFn('x24StaticData'),
+        },
+      ],
+    ]) as unknown) as ComponentMap<NextjsComponent>;
 
     const result = await service.fetchComponentProps({
-      moduleFactory: ssgModuleFactory as ModuleFactory,
+      components: ssgComponentMap,
       context,
       layoutData,
     });
@@ -211,25 +231,35 @@ describe('ComponentPropsService', () => {
   });
 
   it('fetchComponentProps in SSG', async () => {
-    const ssgModules: { [componentName: string]: { getStaticProps: GetStaticComponentProps } } = {
-      namex11: {
-        getStaticProps: fetchFn('x11StaticData'),
-      },
-      namex14: {
-        getStaticProps: fetchFn('x14StaticData', 'whoops'),
-      },
-      MyCustomComponent: {
-        getStaticProps: fetchFn('myCustomComponentStaticData'),
-      },
-      namex24: {
-        getStaticProps: fetchFn('x24StaticData'),
-      },
-    };
-
-    const ssgModuleFactory = (componentName: string) => ssgModules[componentName];
+    const ssgComponentMap = (new Map<string, unknown>([
+      [
+        'namex11',
+        {
+          getStaticProps: fetchFn('x11StaticData'),
+        },
+      ],
+      [
+        'namex14',
+        {
+          getStaticProps: fetchFn('x14StaticData', 'whoops'),
+        },
+      ],
+      [
+        'MyCustomComponent',
+        {
+          getStaticProps: fetchFn('myCustomComponentStaticData'),
+        },
+      ],
+      [
+        'namex24',
+        {
+          getStaticProps: fetchFn('x24StaticData'),
+        },
+      ],
+    ]) as unknown) as ComponentMap<NextjsComponent>;
 
     const result = await service.fetchComponentProps({
-      moduleFactory: ssgModuleFactory as ModuleFactory,
+      components: ssgComponentMap,
       context,
       layoutData,
     });

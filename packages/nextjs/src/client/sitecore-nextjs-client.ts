@@ -5,7 +5,11 @@ import {
   SitecoreClient,
   SitecoreClientInit,
 } from '@sitecore-content-sdk/core/client';
-import { ComponentPropsCollection, ComponentPropsError } from '../sharedTypes/component-props';
+import {
+  ComponentPropsCollection,
+  ComponentPropsError,
+  NextjsComponent,
+} from '../sharedTypes/component-props';
 import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
@@ -17,8 +21,6 @@ import {
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/core/personalize';
 import { ComponentMap } from '@sitecore-content-sdk/react';
-import { getModuleFactory } from '../utils';
-import { NextjsComponent } from '../utils/module-factory';
 
 export type NextjsPage = Page & {
   componentProps?: ComponentPropsCollection;
@@ -102,12 +104,11 @@ export class SitecoreNextjsClient extends SitecoreClient {
   ): Promise<ComponentPropsCollection> {
     let componentProps: ComponentPropsCollection = {};
     if (!layoutData.sitecore.route) return componentProps;
-    const moduleFactory = getModuleFactory(components);
     // Retrieve component props using side-effects defined on components level
     componentProps = await this.componentPropsService.fetchComponentProps({
       layoutData: layoutData,
       context,
-      moduleFactory,
+      components,
     });
 
     const errors = Object.keys(componentProps)

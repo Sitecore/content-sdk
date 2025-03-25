@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { expect } from 'chai';
 import { SitecoreContext } from './SitecoreContext';
-import { ComponentFactory } from './sharedTypes';
+import { ComponentMap } from './sharedTypes';
 import { WithSitecoreContextProps, withSitecoreContext } from '../enhancers/withSitecoreContext';
 import { LayoutServiceData } from '../index';
 import { render } from '@testing-library/react';
