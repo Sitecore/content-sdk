@@ -845,7 +845,7 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe.only('getSiteMapData', () => {
+  describe('getSiteMapData', () => {
     it('should fetch and return sitemap', async () => {
       const sitemapId = '1';
       const sitemapPath = '/sitemap-1.xml';
