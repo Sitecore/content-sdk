@@ -84,14 +84,6 @@ describe('SitecoreClient', () => {
       fetchComponentData: sandbox.stub(),
     };
 
-    req = {
-      headers: {
-        host: 'example.com',
-        'x-forwarded-proto': 'https',
-      },
-      query: {},
-    };
-
     sitecoreClient = new SitecoreNextjsClient(defaultInitOptions);
 
     (sitecoreClient as any).layoutService = layoutServiceStub;
