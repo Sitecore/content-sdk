@@ -22,9 +22,12 @@ import {
   SiteResolver,
   GraphQLErrorPagesService,
   GraphQLSitePathService,
+  GraphQLSitemapXmlService,
 } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
+import { IncomingMessage, ServerResponse } from 'http';
+import { NativeDataFetcher } from '../native-fetcher';
 
 /**
  * Represent a Page model returned from Edge endpoint
@@ -116,6 +119,20 @@ export interface BaseSitecoreClient {
     layoutData: LayoutServiceData,
     options: { enableStyles?: boolean; enableThemes?: boolean }
   ): HTMLLink[];
+  /**
+   * Retrieves and serves sitemap XML content, either a specific sitemap or the sitemap index.
+   * @param {IncomingMessage} req - The incoming HTTP request object containing headers and other request information
+   * @param {ServerResponse} res - The server response object used to send the XML response
+   * @param {string} [id] - Optional sitemap identifier (for sitemap-{n}.xml requests)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @returns {Promise<ServerResponse|void>} Resolves with the response object when complete or void
+   */
+  getSiteMap(
+    req: IncomingMessage,
+    res: ServerResponse,
+    id?: string,
+    fetchOptions?: FetchOptions
+  ): Promise<ServerResponse | void>;
 }
 
 export interface BaseServiceOptions {
@@ -140,6 +157,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   protected errorPagesService: GraphQLErrorPagesService;
   protected componentService: RestComponentLayoutService;
   protected sitePathService: GraphQLSitePathService;
+  protected sitemapXmlService: GraphQLSitemapXmlService;
 
   /**
    * Init SitecoreClient
@@ -148,6 +166,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   constructor(protected initOptions: SitecoreClientInit) {
     this.clientFactory = this.getClientFactory();
     this.siteResolver = this.getSiteResolver();
+    this.sitemapXmlService = this.getGraphqlSitemapXMLService();
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
@@ -404,9 +423,78 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
+   * Retrieves and serves sitemap XML content, either a specific sitemap or the sitemap index.
+   * @param {IncomingMessage} req - The incoming HTTP request object containing headers and other request information
+   * @param {ServerResponse} res - The server response object used to send the XML response
+   * @param {string} [id] - Optional sitemap identifier (for sitemap-{n}.xml requests)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @returns {Promise<ServerResponse|void>} Resolves with the response object when complete or void
+   */
+  async getSiteMap(
+    req: IncomingMessage,
+    res: ServerResponse,
+    id?: string,
+    fetchOptions?: FetchOptions
+  ): Promise<ServerResponse | void> {
+    const ABSOLUTE_URL_REGEXP = '^(?:[a-z]+:)?//';
+
+    const sitemapPath = await this.sitemapXmlService.getSitemap(id as string);
+
+    if (sitemapPath) {
+      const isAbsoluteUrl = sitemapPath.match(ABSOLUTE_URL_REGEXP);
+      const sitemapUrl = isAbsoluteUrl
+        ? sitemapPath
+        : `${this.initOptions.api.local.apiHost}${sitemapPath}`;
+      res.setHeader('Content-Type', 'text/xml;charset=utf-8');
+
+      try {
+        const fetcher = new NativeDataFetcher();
+        const xmlResponse = await fetcher.fetch<string>(sitemapUrl);
+        return res.end(xmlResponse.data);
+      } catch (error) {
+        throw new Error('REDIRECT_404');
+      }
+    }
+
+    const sitemaps = await this.sitemapXmlService.fetchSitemaps(fetchOptions);
+
+    if (!sitemaps.length) {
+      throw new Error('REDIRECT_404');
+    }
+
+    const reqtHost = req.headers.host;
+    const reqProtocol = req.headers['x-forwarded-proto'] || 'https';
+    const SitemapLinks = sitemaps
+      .map((item: string) => {
+        const parseUrl = item.split('/');
+        const lastSegment = parseUrl[parseUrl.length - 1];
+        const escapedUrl = `${reqProtocol}://${reqtHost}/${lastSegment}`.replace(/&/g, '&amp;');
+
+        return `<sitemap>
+        <loc>${escapedUrl}</loc>
+      </sitemap>`;
+      })
+      .join('');
+
+    res.setHeader('Content-Type', 'text/xml;charset=utf-8');
+
+    return res.end(`<?xml version="1.0" encoding="UTF-8"?>
+      <sitemapindex xmlns="http://sitemaps.org/schemas/sitemap/0.9">
+      ${SitemapLinks}
+      </sitemapindex>`);
+  }
+
+  /**
    * Factory methods for creating dependencies
    * Subclasses can override these to provide custom implementations.
    */
+
+  protected getGraphqlSitemapXMLService(): GraphQLSitemapXmlService {
+    return new GraphQLSitemapXmlService({
+      clientFactory: this.clientFactory,
+      siteName: this.initOptions.defaultSite,
+    });
+  }
 
   protected getBaseServiceOptions(): BaseServiceOptions {
     return {

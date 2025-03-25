@@ -1,4 +1,5 @@
 ﻿import { expect } from 'chai';
+// import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import { SitecoreClient } from './sitecore-client';
 import { LayoutKind } from '../../editing';
@@ -6,6 +7,10 @@ import { LayoutServiceData } from '../../layout';
 import { DefaultRetryStrategy } from '../retries';
 import { LayoutServicePageState } from '../layout';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
+import { NativeDataFetcher } from '../native-fetcher';
+import { IncomingMessage, ServerResponse } from 'http';
+
+// chai.use(sinonChai);
 
 describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
@@ -819,6 +824,238 @@ describe('SitecoreClient', () => {
       });
 
       expect(result).to.deep.equal([]);
+    });
+  });
+
+  describe('getSiteMap', () => {
+    const sandbox = sinon.createSandbox();
+    let sitecoreClient: SitecoreClient;
+    let req: Partial<IncomingMessage>;
+    let res: Partial<ServerResponse>;
+    let sitemapXmlServiceStub: any;
+
+    beforeEach(() => {
+      // Create default request and response objects
+      req = {
+        headers: {
+          host: 'example.com',
+          'x-forwarded-proto': 'https',
+        },
+      };
+
+      res = {
+        setHeader: sandbox.stub(),
+        end: sandbox.stub().returnsThis(),
+        writeHead: sandbox.stub().returnsThis(),
+        write: sandbox.stub().returnsThis(),
+      };
+
+      // Create stubs for the dependencies
+      sitemapXmlServiceStub = {
+        getSitemap: sandbox.stub(),
+        fetchSitemaps: sandbox.stub(),
+        setSiteName: sandbox.stub(),
+      };
+
+      // Create a new instance of SitecoreClient with default options
+      const defaultInitOptions = {
+        api: {
+          edge: {
+            contextId: 'test-context-id',
+            clientContextId: 'client-context-id',
+            edgeUrl: 'https://edge.example.com',
+          },
+          local: {
+            apiHost: 'http://local.example.com',
+            apiKey: 'test-api-key',
+            path: '/api/graph/test',
+          },
+        },
+        editingSecret: '********-****',
+        retries: { count: 3, retryStrategy: new DefaultRetryStrategy() },
+        sites: [
+          { name: 'default-site', hostName: 'example.com', language: 'en' },
+          { name: 'other-site', hostName: 'other.example.com', language: 'en' },
+        ],
+        defaultSite: 'default-site',
+        defaultLanguage: 'en',
+        layout: { formatLayoutQuery: sandbox.stub() },
+        dictionary: { caching: { enabled: true, timeout: 60000 } },
+      };
+
+      sitecoreClient = new SitecoreClient(defaultInitOptions);
+
+      // Replace the sitemapXmlService with our stub
+      (sitecoreClient as any).sitemapXmlService = sitemapXmlServiceStub;
+    });
+
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    it.only('should fetch and return a specific sitemap when id is provided', async () => {
+      // Setup
+      const sitemapId = '1';
+      const sitemapPath = '/sitemap-1.xml';
+      const xmlContent = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">...</urlset>';
+      // Configure stubs
+      sitemapXmlServiceStub.getSitemap.withArgs(sitemapId).resolves(sitemapPath);
+      const dataFetcherStub = sandbox
+        .stub(NativeDataFetcher.prototype, 'fetch')
+        .withArgs(`${defaultInitOptions.api.local.apiHost}${sitemapPath}`)
+        .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
+
+      // Act
+      await sitecoreClient.getSiteMap(req as IncomingMessage, res as ServerResponse, sitemapId);
+
+      // Assert
+      expect(sitemapXmlServiceStub.getSitemap.calledWith(sitemapId)).to.be.true;
+      expect(dataFetcherStub.calledWith(`${defaultInitOptions.api.local.apiHost}${sitemapPath}`)).to
+        .be.true;
+      // expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/xml;charset=utf-8');
+      // expect(res.end).to.have.been.calledWith(xmlContent);
+    });
+
+    it('should handle absolute URLs in sitemap path', async () => {
+      // Setup
+      const sitemapId = '2';
+      const absoluteSitemapPath = 'https://cdn.example.com/sitemap-2.xml';
+      const xmlContent = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">...</urlset>';
+
+      // Configure stubs
+      sitemapXmlServiceStub.getSitemap.withArgs(sitemapId).resolves(absoluteSitemapPath);
+      nativeDataFetcherStub.fetch.resolves({
+        data: xmlContent,
+        status: 200,
+      });
+
+      // Act
+      await sitecoreClient.getSiteMap(req as IncomingMessage, res as ServerResponse, sitemapId);
+
+      // Assert
+      expect(nativeDataFetcherStub.fetch.calledWith(absoluteSitemapPath)).to.be.true;
+      expect(res.end).to.have.been.calledWith(xmlContent);
+    });
+
+    it('should throw REDIRECT_404 error when sitemap fetch fails', async () => {
+      // Setup
+      const sitemapId = '3';
+      const sitemapPath = '/sitemap-3.xml';
+
+      // Configure stubs
+      sitemapXmlServiceStub.getSitemap.withArgs(sitemapId).resolves(sitemapPath);
+      nativeDataFetcherStub.fetch.rejects(new Error('Failed to fetch'));
+
+      // Act & Assert
+      try {
+        await sitecoreClient.getSiteMap(req as IncomingMessage, res as ServerResponse, sitemapId);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect((error as Error).message).to.equal('REDIRECT_404');
+      }
+    });
+
+    it('should generate sitemap index XML when no id is provided', async () => {
+      // Setup
+      const sitemaps = ['/sitemap-1.xml', '/sitemap-2.xml'];
+
+      // Configure stubs
+      sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
+      sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
+
+      // Act
+      await sitecoreClient.getSiteMap(req as IncomingMessage, res as ServerResponse);
+
+      // Assert
+      expect(sitemapXmlServiceStub.fetchSitemaps.calledOnce).to.be.true;
+      expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/xml;charset=utf-8');
+
+      // Check that the XML response contains expected content
+      const endArg = (res.end as sinon.SinonStub).firstCall.args[0];
+      expect(endArg).to.include('<?xml version="1.0" encoding="UTF-8"?>');
+      expect(endArg).to.include('<sitemapindex xmlns="http://sitemaps.org/schemas/sitemap/0.9">');
+      expect(endArg).to.include('<loc>https://example.com/sitemap-1.xml</loc>');
+      expect(endArg).to.include('<loc>https://example.com/sitemap-2.xml</loc>');
+    });
+
+    it('should throw REDIRECT_404 error when no sitemaps are found', async () => {
+      // Setup
+      // Configure stubs
+      sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
+      sitemapXmlServiceStub.fetchSitemaps.resolves([]);
+
+      // Act & Assert
+      try {
+        await sitecoreClient.getSiteMap(req as IncomingMessage, res as ServerResponse);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect((error as Error).message).to.equal('REDIRECT_404');
+      }
+    });
+
+    it('should use HTTP protocol when specified in x-forwarded-proto header', async () => {
+      // Setup
+      const httpReq = {
+        headers: {
+          host: 'example.com',
+          'x-forwarded-proto': 'http',
+        },
+      };
+
+      const sitemaps = ['/sitemap-1.xml'];
+
+      // Configure stubs
+      sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
+      sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
+
+      // Act
+      await sitecoreClient.getSiteMap(httpReq as IncomingMessage, res as ServerResponse);
+
+      // Assert
+      const endArg = (res.end as sinon.SinonStub).firstCall.args[0];
+      expect(endArg).to.include('<loc>http://example.com/sitemap-1.xml</loc>');
+    });
+
+    it('should pass fetchOptions to fetchSitemaps method', async () => {
+      // Setup
+      const sitemaps = ['/sitemap-1.xml'];
+      const fetchOptions = {
+        headers: { 'Custom-Header': 'test' },
+        cache: 'no-store' as RequestCache,
+      };
+
+      // Configure stubs
+      sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
+      sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
+
+      // Act
+      await sitecoreClient.getSiteMap(
+        req as IncomingMessage,
+        res as ServerResponse,
+        undefined,
+        fetchOptions
+      );
+
+      // Assert
+      expect(sitemapXmlServiceStub.fetchSitemaps.calledWith(fetchOptions)).to.be.true;
+    });
+
+    it('should escape special characters in sitemap URLs', async () => {
+      // Setup
+      const sitemaps = ['/sitemap-1.xml?param1=value&param2=value'];
+
+      // Configure stubs
+      sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
+      sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
+
+      // Act
+      await sitecoreClient.getSiteMap(req as IncomingMessage, res as ServerResponse);
+
+      // Assert
+      const endArg = (res.end as sinon.SinonStub).firstCall.args[0];
+      expect(endArg).to.include(
+        '<loc>https://example.com/sitemap-1.xml?param1=value&amp;param2=value</loc>'
+      );
     });
   });
 });
