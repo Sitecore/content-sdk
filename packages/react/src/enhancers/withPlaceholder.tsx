@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
 import { PlaceholderProps, PlaceholderCommon } from '../components/PlaceholderCommon';
-import { withComponentFactory } from './withComponentFactory';
+import { withComponentMap } from './withComponentMap';
 import { withSitecoreContext } from './withSitecoreContext';
 
 export interface WithPlaceholderOptions {
@@ -115,6 +115,6 @@ export function withPlaceholder(
       }
     }
 
-    return withSitecoreContext()(withComponentFactory(WithPlaceholder));
+    return withSitecoreContext()(withComponentMap(WithPlaceholder));
   };
 }

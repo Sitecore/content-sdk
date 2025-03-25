@@ -105,10 +105,8 @@ import * as BYOCWrapper from './components/BYOCWrapper';
 export { FEaaSWrapper };
 export { BYOCWrapper };
 
-export { ComponentBuilder, ComponentBuilderConfig } from './ComponentBuilder';
-
 export {
-  ComponentFactory,
+  ComponentMap,
   Image,
   ImageField,
   ImageFieldValue,

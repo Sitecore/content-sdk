@@ -2,14 +2,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
-import { ComponentFactory } from './sharedTypes';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { LayoutServiceContext, LayoutServiceData, RouteData } from '../index';
 import { constants } from '@sitecore-content-sdk/core';
+import { ComponentMap } from './sharedTypes';
 
 export interface SitecoreContextProps {
   api: SitecoreConfig['api'];
-  componentFactory: ComponentFactory;
+  componentMap: ComponentMap;
   layoutData?: LayoutServiceData;
   children: React.ReactNode;
 }
@@ -23,9 +23,7 @@ export interface SitecoreContextState {
 export const SitecoreContextReactContext = React.createContext<SitecoreContextState>(
   {} as SitecoreContextState
 );
-export const ComponentFactoryReactContext = React.createContext<ComponentFactory>(
-  {} as ComponentFactory
-);
+export const ComponentFactoryReactContext = React.createContext<ComponentMap>({} as ComponentMap);
 
 export type SitecoreContextValue = LayoutServiceContext & {
   itemId?: string;
@@ -109,7 +107,7 @@ export class SitecoreContext extends React.Component<SitecoreContextProps, Sitec
 
   render() {
     return (
-      <ComponentFactoryReactContext.Provider value={this.props.componentFactory}>
+      <ComponentFactoryReactContext.Provider value={this.props.componentMap}>
         <SitecoreContextReactContext.Provider value={this.state}>
           {this.props.children}
         </SitecoreContextReactContext.Provider>

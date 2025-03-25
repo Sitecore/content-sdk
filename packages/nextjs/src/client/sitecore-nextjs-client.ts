@@ -9,7 +9,6 @@ import { ComponentPropsCollection, ComponentPropsError } from '../sharedTypes/co
 import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
-import { ModuleFactory } from '../sharedTypes/module-factory';
 import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
 import { SiteInfo } from '../site';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
@@ -17,6 +16,9 @@ import {
   getPersonalizedRewriteData,
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/core/personalize';
+import { ComponentMap } from '@sitecore-content-sdk/react';
+import { getModuleFactory } from '../utils';
+import { NextjsComponent } from '../utils/module-factory';
 
 export type NextjsPage = Page & {
   componentProps?: ComponentPropsCollection;
@@ -90,16 +92,17 @@ export class SitecoreNextjsClient extends SitecoreClient {
    * and returns resulting props from components
    * @param {LayoutServiceData} layoutData layout data to parse compnents from
    * @param {PreviewData} context Nextjs preview data
-   * @param {ModuleFactory} moduleFactory module factory to use for component parsing
+   * @param {ComponentMap<NextjsComponent>} components component map to get props for
    * @returns {ComponentPropsCollection} component props
    */
   async getComponentData(
     layoutData: LayoutServiceData,
     context: GetServerSidePropsContext | GetStaticPropsContext,
-    moduleFactory: ModuleFactory
+    components: ComponentMap<NextjsComponent>
   ): Promise<ComponentPropsCollection> {
     let componentProps: ComponentPropsCollection = {};
     if (!layoutData.sitecore.route) return componentProps;
+    const moduleFactory = getModuleFactory(components);
     // Retrieve component props using side-effects defined on components level
     componentProps = await this.componentPropsService.fetchComponentProps({
       layoutData: layoutData,

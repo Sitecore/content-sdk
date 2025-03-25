@@ -1,7 +1,7 @@
 ﻿import React, { ComponentType } from 'react';
 import PropTypes, { Requireable } from 'prop-types';
 import { MissingComponent } from './MissingComponent';
-import { ComponentFactory, JssComponentType } from './sharedTypes';
+import { BaseModule, DEFAULT_EXPORT_NAME, JssComponentType } from './sharedTypes';
 import {
   ComponentRendering,
   RouteData,
@@ -40,7 +40,7 @@ export interface PlaceholderProps {
    * A factory function that will receive a componentName and return an instance of a React component.
    * When rendered within a <SitecoreContext> component, defaults to the context componentFactory.
    */
-  componentFactory?: ComponentFactory;
+  componentMap?: Map<string, BaseModule | JssComponentType>;
   /**
    * An object of field names/values that are aggregated and propagated through the component tree created by a placeholder.
    * Any component or placeholder rendered by a placeholder will have access to this data via `props.fields`.
@@ -309,23 +309,30 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
   }
 
   getComponentForRendering(renderingDefinition: ComponentRendering): ComponentType | null {
-    const componentFactory = this.props.componentFactory;
+    const componentMap = this.props.componentMap;
 
-    if (!componentFactory || typeof componentFactory !== 'function') {
+    if (!componentMap || componentMap.size === 0) {
       console.warn(
         `No componentFactory was available to service request for component ${renderingDefinition}`
       );
       return null;
     }
 
-    // Render SXA Rendering Variant
-    if (renderingDefinition.params?.FieldNames) {
-      return componentFactory(
-        renderingDefinition.componentName,
-        renderingDefinition.params.FieldNames
-      );
+    // Render SXA Rendering Variant if available
+    const exportName = renderingDefinition.params?.FieldNames;
+
+    const component = componentMap.get(renderingDefinition.componentName);
+
+    if (!component) return null;
+
+    if (exportName && exportName !== DEFAULT_EXPORT_NAME) {
+      return (component as BaseModule)[exportName];
     }
 
-    return componentFactory(renderingDefinition.componentName);
+    return (
+      (component as BaseModule).Default ||
+      (component as BaseModule).default ||
+      (component as JssComponentType)
+    );
   }
 }

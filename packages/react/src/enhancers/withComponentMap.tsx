@@ -1,31 +1,31 @@
 import React from 'react';
 import { ComponentFactoryReactContext } from '../components/SitecoreContext';
-import { ComponentFactory } from '../components/sharedTypes';
 import { useContext } from 'react';
+import { ComponentMap } from '../components/sharedTypes';
 
-export interface ComponentFactoryProps {
-  componentFactory?: ComponentFactory;
+export interface ComponentMapProps {
+  componentMap?: ComponentMap;
 }
 
 /**
  * @param {React.ComponentClass<T> | React.FC<T>} Component
  */
-export function withComponentFactory<T extends ComponentFactoryProps>(
+export function withComponentMap<T extends ComponentMapProps>(
   Component: React.ComponentClass<T> | React.FC<T>
 ) {
   /**
    * @param {T} props - props to pass to the wrapped component
    * @returns {JSX.Element} - the rendered component
    */
-  function WithComponentFactory(props: T): JSX.Element {
+  function WithComponentMap(props: T): JSX.Element {
     const context = useContext(ComponentFactoryReactContext);
 
-    return <Component {...props} componentFactory={props.componentFactory || context} />;
+    return <Component {...props} componentMap={props.componentMap || context} />;
   }
 
-  WithComponentFactory.displayName = `withComponentFactory(${Component.displayName ||
+  WithComponentMap.displayName = `withComponentMap(${Component.displayName ||
     Component.name ||
     'Anonymous'})`;
 
-  return WithComponentFactory;
+  return WithComponentMap;
 }

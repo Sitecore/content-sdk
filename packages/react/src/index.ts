@@ -43,7 +43,7 @@ export {
 } from '@sitecore-content-sdk/core/client';
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export { Form } from './components/Form';
-export { ComponentFactory, JssComponentType } from './components/sharedTypes';
+export { JssComponentType, BaseModule, ComponentMap } from './components/sharedTypes';
 export { Placeholder, PlaceholderComponentProps } from './components/Placeholder';
 export {
   Image,
@@ -88,7 +88,6 @@ export {
 export { withEditorChromes } from './enhancers/withEditorChromes';
 export { withPlaceholder } from './enhancers/withPlaceholder';
 export { withDatasourceCheck } from './enhancers/withDatasourceCheck';
-export { ComponentBuilder, ComponentBuilderConfig } from './ComponentBuilder';
 export { withFieldMetadata } from './enhancers/withFieldMetadata';
 export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditingComponent';
 export { EditingScripts } from './components/EditingScripts';

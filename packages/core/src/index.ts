@@ -19,6 +19,12 @@ export {
   NativeDataFetcherError,
   NativeDataFetcherResponse,
 } from './native-fetcher';
-export { HTMLLink, RetryStrategy, GenericGraphQLClientError, StaticPath } from './models';
+export {
+  HTMLLink,
+  RetryStrategy,
+  GenericGraphQLClientError,
+  StaticPath,
+  BaseComponentModule,
+} from './models';
 export { constants };
 export { defineConfig } from './config';

@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { PlaceholderCommon, PlaceholderProps } from './PlaceholderCommon';
-import { withComponentFactory } from '../enhancers/withComponentFactory';
+import { withComponentMap } from '../enhancers/withComponentMap';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PagesEditor } from '@sitecore-content-sdk/core/editing';
 import { withSitecoreContext } from '../enhancers/withSitecoreContext';
@@ -104,6 +104,6 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
   }
 }
 
-const PlaceholderWithComponentFactory = withComponentFactory(PlaceholderComponent);
+const PlaceholderWithComponentFactory = withComponentMap(PlaceholderComponent);
 
 export const Placeholder = withSitecoreContext()(PlaceholderWithComponentFactory);
