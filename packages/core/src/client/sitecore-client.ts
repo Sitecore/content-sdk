@@ -120,11 +120,11 @@ export interface BaseSitecoreClient {
     options: { enableStyles?: boolean; enableThemes?: boolean }
   ): HTMLLink[];
   /**
-   * Retrieves and serves sitemap XML content, either a specific sitemap or the sitemap index.
-   * @param {IncomingMessage} req - The incoming HTTP request object containing headers and other request information
-   * @param {string} [id] - Optional sitemap identifier (for sitemap-{n}.xml requests)
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
-   * @returns {Promise<ServerResponse|void>} Resolves with the response object when complete or void
+   * Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
+   * @param {IncomingMessage} req - Incoming request containing headers (host/protocol info)
+   * @param {string} id - Optional sitemap identifier (for specific sitemap requests)
+   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
+   * @returns {Promise<string>} Promise resolving to the sitemap XML content as string
    */
   getSiteMap(req: IncomingMessage, id?: string, fetchOptions?: FetchOptions): Promise<string>;
 }
@@ -417,11 +417,12 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
-   * Retrieves and serves sitemap XML content, either a specific sitemap or the sitemap index.
-   * @param {IncomingMessage} req - The incoming HTTP request object containing headers and other request information
-   * @param {string} [id] - Optional sitemap identifier (for sitemap-{n}.xml requests)
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
-   * @returns {Promise<ServerResponse|void>} Resolves with the response object when complete or void
+   * Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
+   * @param {IncomingMessage} req - Incoming request containing headers (host/protocol info)
+   * @param {string} id - Optional sitemap identifier (for specific sitemap requests)
+   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
+   * @returns {Promise<string>} Promise resolving to the sitemap XML content as string
+   * @throws {Error} Throws 'REDIRECT_404' if requested sitemap is not found
    */
   async getSiteMap(
     req: IncomingMessage,
