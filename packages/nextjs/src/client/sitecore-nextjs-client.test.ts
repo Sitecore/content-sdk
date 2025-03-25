@@ -311,7 +311,7 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe.only('getSitemap', () => {
+  describe('getSitemap', () => {
     it('should return XML for specific sitemap when id is provided', async () => {
       const mockSitemapId = '1';
       const mockSitemapPath = '/sitemap-1.xml';
