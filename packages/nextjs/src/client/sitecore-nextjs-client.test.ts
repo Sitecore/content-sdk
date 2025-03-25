@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { SitecoreNextjsClient } from './sitecore-nextjs-client';
 import { ComponentBuilder } from '../ComponentBuilder';
-import { DefaultRetryStrategy, NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
 import * as siteTools from '@sitecore-content-sdk/core/site';
 import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
-import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
+import { GetServerSidePropsContext } from 'next';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
 
@@ -62,14 +62,6 @@ describe('SitecoreClient', () => {
     fetchComponentData: sandbox.stub(),
   };
 
-  let req: Partial<NextApiRequest>;
-  let res: Partial<NextApiResponse>;
-  let sitemapServiceStub: {
-    getSitemap: sinon.SinonStub;
-    fetchSitemaps: sinon.SinonStub;
-    setSiteName: sinon.SinonStub;
-  };
-
   beforeEach(() => {
     layoutServiceStub = {
       fetchLayoutData: sandbox.stub(),
@@ -100,20 +92,6 @@ describe('SitecoreClient', () => {
       query: {},
     };
 
-    res = {
-      setHeader: sandbox.stub(),
-      send: sandbox.stub(),
-      redirect: sandbox.stub().callsFake(() => {
-        return res as NextApiResponse;
-      }),
-    };
-
-    sitemapServiceStub = {
-      getSitemap: sandbox.stub(),
-      fetchSitemaps: sandbox.stub(),
-      setSiteName: sandbox.stub(),
-    };
-
     sitecoreClient = new SitecoreNextjsClient(defaultInitOptions);
 
     (sitecoreClient as any).layoutService = layoutServiceStub;
@@ -122,7 +100,6 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).editingService = editingServiceStub;
     (sitecoreClient as any).siteResolver = siteResolverStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
-    (sitecoreClient as any).sitemapXmlService = sitemapServiceStub;
   });
 
   describe('getPage', () => {
