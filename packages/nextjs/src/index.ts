@@ -13,6 +13,8 @@
   MemoryCacheClient,
 } from '@sitecore-content-sdk/core';
 
+export { SitemapXmlOptions } from '@sitecore-content-sdk/core/client';
+
 export {
   LayoutServiceData,
   LayoutServicePageState,
