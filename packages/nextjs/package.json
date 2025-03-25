@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "0.1.0-beta.32",
+  "version": "0.1.0-beta.33",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -75,8 +75,8 @@
   },
   "dependencies": {
     "@babel/parser": "^7.26.10",
-    "@sitecore-content-sdk/core": "0.1.0-beta.32",
-    "@sitecore-content-sdk/react": "0.1.0-beta.32",
+    "@sitecore-content-sdk/core": "0.1.0-beta.33",
+    "@sitecore-content-sdk/react": "0.1.0-beta.33",
     "@vercel/kv": "^3.0.0",
     "prop-types": "^15.8.1",
     "recast": "^0.23.11",
