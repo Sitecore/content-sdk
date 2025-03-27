@@ -6,6 +6,7 @@ import {
   DEFAULT_EXPORT_NAME,
   ExtendedComponentType,
   ReactJssComponent,
+  ComponentMap,
 } from './sharedTypes';
 import {
   ComponentRendering,
@@ -42,10 +43,10 @@ export interface PlaceholderProps {
   /** Rendering data to be used when rendering the placeholder. */
   rendering: ComponentRendering | RouteData;
   /**
-   * A factory function that will receive a componentName and return an instance of a React component.
-   * When rendered within a <SitecoreContext> component, defaults to the context componentFactory.
+   * Component Map will be used to map Sitecore component names to app implementation
+   * When rendered within a <SitecoreContext> component, defaults to the context componentMap.
    */
-  componentMap?: Map<string, ReactJssComponent>;
+  componentMap?: ComponentMap;
   /**
    * An object of field names/values that are aggregated and propagated through the component tree created by a placeholder.
    * Any component or placeholder rendered by a placeholder will have access to this data via `props.fields`.
@@ -69,7 +70,7 @@ export interface PlaceholderProps {
   modifyComponentProps?: (componentProps: ComponentProps) => ComponentProps;
   /**
    * A component that is rendered in place of any components that are in this placeholder,
-   * but do not have a definition in the componentFactory (i.e. don't have a React implementation)
+   * but do not have a definition in the componentMap (i.e. don't have a React implementation)
    */
   missingComponentComponent?: React.ComponentClass<unknown> | React.FC<unknown>;
 
@@ -222,7 +223,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
           component = this.getComponentForRendering(componentRendering);
         }
 
-        // Fallback/defaults for Sitecore Component renderings (in case not defined in component factory)
+        // Fallback/defaults for Sitecore Component renderings (in case not defined in component map)
         if (!component) {
           if (componentRendering.componentName === FEAAS_COMPONENT_RENDERING_NAME) {
             component = FEaaSComponent;
@@ -237,7 +238,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
 
         if (!component) {
           console.error(
-            `Placeholder ${name} contains unknown component ${componentRendering.componentName}. Ensure that a React component exists for it, and that it is registered in your componentFactory.js.`
+            `Placeholder ${name} contains unknown component ${componentRendering.componentName}. Ensure that a React component exists for it, and that it is registered in your lib/component-map.ts.`
           );
 
           component = missingComponentComponent ?? MissingComponent;
@@ -318,7 +319,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
 
     if (!componentMap || componentMap.size === 0) {
       console.warn(
-        `No componentFactory was available to service request for component ${renderingDefinition}`
+        `No components were available in component map to service request for component ${renderingDefinition}`
       );
       return null;
     }

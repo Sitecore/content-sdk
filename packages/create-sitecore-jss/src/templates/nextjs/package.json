@@ -72,7 +72,7 @@
     "next:start": "next start",
     "sitecore-tools:build": "sitecore-tools build",
     "start:connected": "cross-env NODE_ENV=development npm-run-all --serial sitecore-tools:build --parallel next:dev start:watch-components",
-    "start:production": "cross-env-shell NODE_ENV=production npm-run-all --serial sitecore-tools:build next:build next:start",
+    "start:production": "cross-env-shell NODE_ENV=production npm-run-all --serial build next:start",
     "start:watch-components": "ts-node --project tsconfig.scripts.json scripts/generate-component-builder/index.ts --watch"
   }
 }

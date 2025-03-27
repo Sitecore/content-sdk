@@ -54,8 +54,6 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
   render() {
     const childProps: PlaceholderComponentProps = { ...this.props };
 
-    delete childProps.componentFactory;
-
     if (this.state.error) {
       if (childProps.errorComponent) {
         return <childProps.errorComponent error={this.state.error} />;

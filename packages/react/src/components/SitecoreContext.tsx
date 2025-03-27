@@ -23,7 +23,7 @@ export interface SitecoreContextState {
 export const SitecoreContextReactContext = React.createContext<SitecoreContextState>(
   {} as SitecoreContextState
 );
-export const ComponentFactoryReactContext = React.createContext<ComponentMap>({} as ComponentMap);
+export const ComponentMapReactContext = React.createContext<ComponentMap>(new Map());
 
 export type SitecoreContextValue = LayoutServiceContext & {
   itemId?: string;
@@ -33,7 +33,7 @@ export type SitecoreContextValue = LayoutServiceContext & {
 export class SitecoreContext extends React.Component<SitecoreContextProps, SitecoreContextState> {
   static propTypes = {
     children: PropTypes.any.isRequired,
-    componentFactory: PropTypes.func,
+    componentMap: PropTypes.array,
     layoutData: PropTypes.shape({
       sitecore: PropTypes.shape({
         context: PropTypes.any,

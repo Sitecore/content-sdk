@@ -25,7 +25,6 @@ describe('SitecoreContext', () => {
   const NestedComponentWithContext = withSitecoreContext()(NestedComponent);
 
   const components = new Map();
-  const mockComponentFactory: ComponentFactory = (name) => components.get(name);
 
   const mockLayoutData: LayoutServiceData = {
     sitecore: {
@@ -48,7 +47,7 @@ describe('SitecoreContext', () => {
 
   it('should set default context', () => {
     render(
-      <SitecoreContext componentFactory={mockComponentFactory}>
+      <SitecoreContext componentMap={components}>
         <NestedComponentWithContext />
       </SitecoreContext>
     );
@@ -60,7 +59,7 @@ describe('SitecoreContext', () => {
 
   it('should update state when new context as prop received', () => {
     const component = render(
-      <SitecoreContext componentFactory={mockComponentFactory}>
+      <SitecoreContext componentMap={components}>
         <NestedComponentWithContext />
       </SitecoreContext>
     );
@@ -70,7 +69,7 @@ describe('SitecoreContext', () => {
     });
 
     component.rerender(
-      <SitecoreContext componentFactory={mockComponentFactory} layoutData={mockLayoutData}>
+      <SitecoreContext componentMap={components} layoutData={mockLayoutData}>
         <NestedComponentWithContext />
       </SitecoreContext>
     );

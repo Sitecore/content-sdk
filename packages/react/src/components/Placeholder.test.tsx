@@ -384,7 +384,7 @@ describe('BYOC fallback', () => {
   let byocComponentStub;
   let byocWrapperStub;
 
-  const componentFactory: ComponentFactory = (_componentName: string, _exportName?: string) => null;
+  const componentMap = new Map();
 
   it('should render', () => {
     const component = byocWrapperData.sitecore.route as RouteData;
@@ -418,7 +418,7 @@ describe('FEaaS fallback', () => {
   let feaasComponentStub;
   let feaasWrapperStub;
 
-  const componentFactory: ComponentFactory = (_componentName: string, _exportName?: string) => null;
+  const componentMap = new Map();
 
   it('should render', () => {
     const component = feaasWrapperData.sitecore.route as RouteData;
@@ -609,14 +609,11 @@ it('should render MissingComponent for unknown rendering', () => {
 });
 
 it('should render nothing for rendering without a name', () => {
-  const componentFactory: ComponentFactory = (componentName: string) => {
-    const components = new Map<string, React.FC<{ [key: string]: unknown }>>();
+  const componentMap = new Map<string, React.FC<{ [key: string]: unknown }>>();
 
-    const Home: React.FC<{ rendering?: RouteData }> = () => <div className="home-mock"></div>;
+  const Home: React.FC<{ rendering?: RouteData }> = () => <div className="home-mock"></div>;
 
-    components.set('Home', Home);
-    return components.get(componentName) || null;
-  };
+  componentMap.set('Home', Home);
 
   const route: any = {
     placeholders: {
