@@ -107,11 +107,11 @@ export class SitecoreContext extends React.Component<SitecoreContextProps, Sitec
 
   render() {
     return (
-      <ComponentFactoryReactContext.Provider value={this.props.componentMap}>
+      <ComponentMapReactContext.Provider value={this.props.componentMap}>
         <SitecoreContextReactContext.Provider value={this.state}>
           {this.props.children}
         </SitecoreContextReactContext.Provider>
-      </ComponentFactoryReactContext.Provider>
+      </ComponentMapReactContext.Provider>
     );
   }
 }

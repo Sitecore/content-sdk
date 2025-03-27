@@ -102,6 +102,6 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
   }
 }
 
-const PlaceholderWithComponentFactory = withComponentMap(PlaceholderComponent);
+const PlaceholderWithComponentMap = withComponentMap(PlaceholderComponent);
 
-export const Placeholder = withSitecoreContext()(PlaceholderWithComponentFactory);
+export const Placeholder = withSitecoreContext()(PlaceholderWithComponentMap);
