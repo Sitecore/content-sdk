@@ -5,11 +5,12 @@ import { ComponentType } from 'react';
  */
 export const DEFAULT_EXPORT_NAME = 'Default';
 
-export type ReactJssModule = {
-  /**
-   * Custom exports
-   */
-  [key: string]: ComponentType;
+/**
+ * React component import with account for custom exports
+ */
+export type ReactJssComponent = ComponentType | ReactModule;
+
+export type ReactModule = {
   /**
    * Default module export
    */
@@ -18,20 +19,25 @@ export type ReactJssModule = {
    * Default non-standard export
    */
   default?: ComponentType;
+  /**
+   * Optional dynamic import for lazy components - allows component props retrieval
+   */
+  dynamicModule?: () => Promise<ReactJssComponent>;
+} & {
+  /**
+   * Custom exports
+   */
+  [key: string]: ComponentType;
 };
 
 /**
  * Component type returned from component builder / factory
  */
-export type ExtendedComponentType = ComponentType & {
+export type LazyComponentType = ComponentType & {
   // all elements created with nextjs dynamic() will have a separate render prop
   // react elements will not have it - so it's optional here
   render?: { [key: string]: unknown };
 };
-
-export type ReactJssComponent<TModule extends ReactJssModule = ReactJssModule> =
-  | TModule
-  | ExtendedComponentType;
 
 export type ComponentMap<TComponent extends ReactJssComponent = ReactJssComponent> = Map<
   string,

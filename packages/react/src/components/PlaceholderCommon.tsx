@@ -1,13 +1,7 @@
 ﻿import React, { ComponentType } from 'react';
 import PropTypes, { Requireable } from 'prop-types';
 import { MissingComponent } from './MissingComponent';
-import {
-  ReactJssModule,
-  DEFAULT_EXPORT_NAME,
-  ExtendedComponentType,
-  ReactJssComponent,
-  ComponentMap,
-} from './sharedTypes';
+import { DEFAULT_EXPORT_NAME, ComponentMap, LazyComponentType, ReactModule } from './sharedTypes';
 import {
   ComponentRendering,
   RouteData,
@@ -278,7 +272,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
               errorComponent={this.props.errorComponent}
               componentLoadingMessage={this.props.componentLoadingMessage}
               type={type}
-              isDynamic={(component as ExtendedComponentType).render?.preload ? true : false}
+              isDynamic={(component as LazyComponentType).render?.preload ? true : false}
               {...rendered.props}
             >
               {rendered}
@@ -332,13 +326,13 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     if (!component) return null;
 
     if (exportName && exportName !== DEFAULT_EXPORT_NAME) {
-      return (component as ReactJssModule)[exportName];
+      return (component as ReactModule)[exportName];
     }
 
     return (
-      (component as ReactJssModule).Default ||
-      (component as ReactJssModule).default ||
-      (component as ExtendedComponentType)
+      (component as ReactModule).default ||
+      (component as ReactModule).Default ||
+      (component as ComponentType)
     );
   }
 }

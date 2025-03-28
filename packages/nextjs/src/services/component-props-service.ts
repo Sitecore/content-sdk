@@ -8,11 +8,10 @@ import {
 import {
   ComponentPropsCollection,
   ComponentPropsFetchFunction,
-  LazyModule,
   NextjsComponent,
-  NextjsModule,
 } from '../sharedTypes/component-props';
 import { ComponentMap } from '@sitecore-content-sdk/react';
+import { ReactModule } from '@sitecore-content-sdk/react/types/components/sharedTypes';
 
 export type FetchComponentPropsArguments<NextContext> = {
   layoutData: LayoutServiceData;
@@ -38,7 +37,7 @@ export class ComponentPropsService {
     const { layoutData, context, components } = params;
     if (this.isServerSidePropsContext(context)) {
       const fetchFunctionFactory = async (componentName: string) =>
-        ((await this.getModule(components, componentName)) as NextjsModule)?.getServerSideProps;
+        (await this.getModule(components, componentName))?.getServerSideProps;
       const requests = await this.collectRequests({
         placeholders: layoutData.sitecore.route?.placeholders,
         fetchFunctionFactory,
@@ -48,7 +47,7 @@ export class ComponentPropsService {
       return await this.execRequests(requests);
     } else {
       const fetchFunctionFactory = async (componentName: string) =>
-        ((await this.getModule(components, componentName)) as NextjsModule)?.getStaticProps;
+        (await this.getModule(components, componentName))?.getStaticProps;
 
       const requests = await this.collectRequests({
         placeholders: layoutData.sitecore.route?.placeholders,
@@ -201,9 +200,9 @@ export class ComponentPropsService {
 
     if (!component) return null;
 
-    const module = ((component as unknown) as LazyModule).module
-      ? await ((component as unknown) as LazyModule).module()
+    const module = (component as ReactModule).dynamicModule
+      ? await (component as ReactModule)?.dynamicModule?.()
       : component;
-    return module;
+    return module as NextjsComponent;
   }
 }

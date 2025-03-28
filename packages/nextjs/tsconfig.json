@@ -16,6 +16,7 @@
     "typings",
     "dist",
     "context.d.ts",
+    "components.d.ts",
     "config.d.ts",
     "middleware.d.ts",
     "editing.d.ts",

@@ -33,7 +33,7 @@ export type SitecoreContextValue = LayoutServiceContext & {
 export class SitecoreContext extends React.Component<SitecoreContextProps, SitecoreContextState> {
   static propTypes = {
     children: PropTypes.any.isRequired,
-    componentMap: PropTypes.array,
+    componentMap: PropTypes.instanceOf(Map),
     layoutData: PropTypes.shape({
       sitecore: PropTypes.shape({
         context: PropTypes.any,

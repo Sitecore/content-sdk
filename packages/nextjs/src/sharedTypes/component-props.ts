@@ -1,10 +1,6 @@
 ﻿import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import { ComponentRendering, LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import {
-  ExtendedComponentType,
-  ReactJssModule,
-  ReactJssComponent,
-} from '@sitecore-content-sdk/react';
+import { ReactJssComponent } from '@sitecore-content-sdk/react';
 
 export type ComponentPropsError = { error: string; componentName: string };
 
@@ -35,9 +31,9 @@ export type GetServerSideComponentProps = ComponentPropsFetchFunction<GetServerS
 export type GetStaticComponentProps = ComponentPropsFetchFunction<GetStaticPropsContext>;
 
 /**
- * Represents a module (file)
+ * Represents a nextjs component import
  */
-export type NextjsModule = ReactJssModule & {
+export type NextjsComponent = ReactJssComponent & {
   /**
    * function for component level data fetching in SSR mode
    */
@@ -47,16 +43,3 @@ export type NextjsModule = ReactJssModule & {
    */
   getStaticProps?: GetStaticComponentProps;
 };
-
-/**
- * Represents a component that can be imported dynamically
- */
-export type LazyModule = {
-  module: () => Promise<NextjsModule>;
-  element: (isEditing?: boolean) => ExtendedComponentType;
-};
-
-/**
- * Component is a module or a nextjs lazy module
- */
-export type NextjsComponent = ReactJssComponent<NextjsModule>;
