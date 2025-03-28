@@ -13,4 +13,4 @@ import * as FEaaSWrapper from './FEaaSWrapper';
 import * as BYOCWrapper from './BYOCWrapper';
 export { FEaaSWrapper };
 export { BYOCWrapper };
-export { dynamicWithComponentProps } from './utils';
+export { dynamicComponent } from './utils';

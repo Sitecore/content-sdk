@@ -12,6 +12,10 @@ export type ReactJssComponent = ComponentType | ReactModule;
 
 export type ReactModule = {
   /**
+   * Custom exports
+   */
+  [key: string]: unknown;
+  /**
    * Default module export
    */
   Default?: ComponentType;
@@ -19,15 +23,11 @@ export type ReactModule = {
    * Default non-standard export
    */
   default?: ComponentType;
+} & {
   /**
    * Optional dynamic import for lazy components - allows component props retrieval
    */
   dynamicModule?: () => Promise<ReactJssComponent>;
-} & {
-  /**
-   * Custom exports
-   */
-  [key: string]: ComponentType;
 };
 
 /**

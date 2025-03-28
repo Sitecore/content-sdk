@@ -326,7 +326,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     if (!component) return null;
 
     if (exportName && exportName !== DEFAULT_EXPORT_NAME) {
-      return (component as ReactModule)[exportName];
+      return (component as ReactModule)[exportName] as ComponentType;
     }
 
     return (
