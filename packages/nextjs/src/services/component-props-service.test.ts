@@ -136,7 +136,7 @@ describe('ComponentPropsService', () => {
       [
         'namex14',
         {
-          module: async () => ({
+          dynamicModule: async () => ({
             getServerSideProps: fetchFn('x14SSRData', 'whoops'),
           }),
         },
@@ -192,7 +192,7 @@ describe('ComponentPropsService', () => {
       [
         'namex14',
         {
-          module: async () => ({
+          dynamicModule: async () => ({
             getStaticProps: fetchFn('x14SSRData', 'whoops'),
           }),
         },

@@ -21,7 +21,7 @@ import * as SitecoreStyles from 'src/components/SitecoreStyles';
 import * as Title from 'src/components/Title';
 
 // Components must be registered with to match the string key with component name in Sitecore
-export const components = new Map<string, unknown>([
+export const componentMap = new Map<string, unknown>([
   ['BYOCWrapper', BYOCWrapper],
   ['FEaaSWrapper', FEaaSWrapper],
   ['Form', Form],
@@ -42,4 +42,4 @@ export const components = new Map<string, unknown>([
   ['Title', Title],
 ]);
 
-export default components as ComponentMap;
+export default componentMap as ComponentMap;
