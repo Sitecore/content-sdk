@@ -195,7 +195,7 @@ export type SitecoreCliConfigInput = {
     /**
      * List of commands to run during the build process
      */
-    commands?: Array<() => Promise<void> | void>;
+    commands?: Array<() => Promise<void>>;
   };
   /**
    * Configuration for the `sitecore-tools scaffold` cli command
