@@ -1,6 +1,5 @@
 ﻿import { NextApiRequest, NextApiResponse } from 'next';
 import { debug } from '@sitecore-content-sdk/core';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import {
   QUERY_PARAM_EDITING_SECRET,
   EDITING_ALLOWED_ORIGINS,
@@ -8,6 +7,7 @@ import {
   DesignLibraryRenderPreviewData,
   EditingPreviewData,
 } from '@sitecore-content-sdk/core/editing';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { getJssEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { enforceCors, getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
@@ -168,7 +168,6 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           renderingId: query.sc_renderingId,
           language: query.sc_lang,
           site: query.sc_site,
-          pageState: LayoutServicePageState.Normal,
           mode: 'library',
           dataSourceId: query.sc_datasourceId,
           version: query.sc_version,
@@ -186,7 +185,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           // for sc_variantId we may employ multiple variants (page-layout + component level)
           variantIds: query.sc_variant?.split(',') || [DEFAULT_VARIANT],
           version: query.sc_version,
-          pageState: query.mode,
+          mode: query.mode,
           layoutKind: query.sc_layoutKind,
         } as EditingPreviewData,
         // Cache the preview data for 3 seconds to ensure the page is rendered with the correct preview data not the cached one
@@ -220,6 +219,10 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       });
 
       res.setHeader('Set-Cookie', modifiedCookies);
+    }
+
+    if (mode === LayoutServicePageState.Preview) {
+      res.
     }
 
     const route = this.config?.resolvePageUrl?.(query.route) || query.route;

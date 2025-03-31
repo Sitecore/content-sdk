@@ -1,5 +1,5 @@
 ﻿import { NextResponse, NextRequest } from 'next/server';
-import { getSiteRewrite } from '@sitecore-content-sdk/core/site';
+import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/core/site';
 import { debug } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
 import { SitecoreConfig } from '../config';
@@ -63,10 +63,10 @@ export class MultisiteMiddleware extends MiddlewareBase {
 
       // Site name can be forced by query string parameter or cookie
       const siteName =
-        req.nextUrl.searchParams.get(this.SITE_SYMBOL) ||
+        req.nextUrl.searchParams.get(SITE_KEY) ||
         (this.config.useCookieResolution &&
           this.config.useCookieResolution(req) &&
-          req.cookies.get(this.SITE_SYMBOL)?.value) ||
+          req.cookies.get(SITE_KEY)?.value) ||
         this.siteResolver.getByHost(hostname).name;
 
       // Rewrite to site specific path
@@ -84,7 +84,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
       } as CookieAttributes;
 
       // Share site name with the following executed middlewares
-      response.cookies.set(this.SITE_SYMBOL, siteName, defaultCookieAttributes);
+      response.cookies.set(SITE_KEY, siteName, defaultCookieAttributes);
 
       debug.multisite('multisite middleware end in %dms: %o', Date.now() - startTimestamp, {
         rewritePath,

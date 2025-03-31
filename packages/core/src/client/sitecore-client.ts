@@ -334,6 +334,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       version,
       variantIds,
       layoutKind,
+      mode,
     } = previewData as EditingPreviewData;
 
     const data = await this.editingService.fetchEditingData(
@@ -343,6 +344,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         language,
         version,
         layoutKind,
+        mode,
       },
       fetchOptions
     );

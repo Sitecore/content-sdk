@@ -1,4 +1,4 @@
-﻿import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
+﻿import { SITE_KEY, SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
 import { debug } from '@sitecore-content-sdk/core';
 import { NextRequest, NextFetchEvent, NextResponse } from 'next/server';
 
@@ -44,7 +44,6 @@ export abstract class Middleware {
  * Base middleware class with common methods
  */
 export abstract class MiddlewareBase extends Middleware {
-  protected SITE_SYMBOL = 'sc_site';
   protected defaultHostname: string;
   protected siteResolver: SiteResolver;
 
@@ -125,7 +124,7 @@ export abstract class MiddlewareBase extends Middleware {
    * @returns {SiteInfo} site information
    */
   protected getSite(req: NextRequest, res?: NextResponse): SiteInfo {
-    const siteNameCookie = res?.cookies.get(this.SITE_SYMBOL)?.value;
+    const siteNameCookie = res?.cookies.get(SITE_KEY)?.value;
 
     if (siteNameCookie) return this.siteResolver.getByName(siteNameCookie);
 
