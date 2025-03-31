@@ -30,17 +30,12 @@ export class SiteResolver {
   /**
    * Resolve site by site name
    * @param {string} siteName the site name
-   * @returns {SiteInfo} the resolved site
-   * @throws {Error} if a matching site is not found
+   * @returns {SiteInfo} the resolved site or undefined if not found
    */
-  public getByName = (siteName: string): SiteInfo => {
+  public getByName = (siteName: string) => {
     const siteInfo = this.sites.find(
       (info) => info.name.toLocaleLowerCase() === siteName.toLocaleLowerCase()
     );
-
-    if (!siteInfo) {
-      throw new Error(`Could not resolve site for name ${siteName}`);
-    }
 
     return siteInfo;
   };

@@ -11,7 +11,6 @@ import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
 import { ModuleFactory } from '../sharedTypes/module-factory';
 import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
-import { SiteInfo } from '../site';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
 import {
   getPersonalizedRewriteData,
@@ -30,15 +29,24 @@ export class SitecoreNextjsClient extends SitecoreClient {
     this.componentPropsService = this.getComponentPropsService();
   }
 
-  // since path rewrite we rely on is only working in nextjs
-  resolveSiteFromPath(path: string | string[]): SiteInfo {
+  /**
+   * Resolves site based on the provided path
+   * @param {string | string[]} path path to resolve site from
+   * @returns resolved site, or default site info if not found
+   */
+  resolveSiteFromPath(path: string | string[]) {
     const resolvedPath = super.parsePath(path);
     // Get site name (from path rewritten in middleware)
     const siteData = getSiteRewriteData(resolvedPath, this.initOptions.defaultSite);
 
     // Resolve site by name
-    const site = this.siteResolver.getByName(siteData.siteName);
-    return site;
+    return (
+      this.siteResolver.getByName(siteData.siteName) || {
+        name: siteData.siteName,
+        hostName: '',
+        language: '',
+      }
+    );
   }
   /**
    * Normalizes a nextjs path that could have been rewritten
@@ -59,7 +67,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
     // Get variant(s) for personalization (from path), must ensure path is of type string
     const personalizeData =
       pageOptions.personalize || getPersonalizedRewriteData(super.parsePath(path));
-    const site = pageOptions.site || this.resolveSiteFromPath(path).name;
+    const site = pageOptions.site || this.resolveSiteFromPath(path)?.name;
     const page = await super.getPage(
       resolvedPath,
       {

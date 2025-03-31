@@ -10,6 +10,7 @@ export {
   QUERY_PARAM_EDITING_SECRET,
   PAGES_EDITING_MARKER,
   ComponentUpdateEventArgs,
+  PREVIEW_KEY,
 } from './utils';
 export {
   RestComponentLayoutService,

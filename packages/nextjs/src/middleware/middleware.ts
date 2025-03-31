@@ -117,18 +117,29 @@ export abstract class MiddlewareBase extends Middleware {
   }
 
   /**
-   * Get site information.
-   * Can not be used in **Preview** mode, since site will not be resolved
+   * Get site information. If site name is stored in cookie, use it, otherwise resolve by hostname
+   * - If site can't be resolved by site name cookie use default site info based on provided parameters
+   * - If site can't be resolved by hostname throw an error
    * @param {NextRequest} req request
    * @param {NextResponse} [res] response
    * @returns {SiteInfo} site information
    */
   protected getSite(req: NextRequest, res?: NextResponse): SiteInfo {
     const siteNameCookie = res?.cookies.get(SITE_KEY)?.value;
-
-    if (siteNameCookie) return this.siteResolver.getByName(siteNameCookie);
-
     const hostname = this.getHostHeader(req) || this.defaultHostname;
+
+    if (siteNameCookie) {
+      // Usually we should be able to resolve site by cookie
+      // in case of Sitecore Preview mode, there can be a case that new site was created
+      // but it's not present in the sitemap, so we fallback to default site info
+      return (
+        this.siteResolver.getByName(siteNameCookie) || {
+          name: siteNameCookie,
+          language: this.getLanguage(req),
+          hostName: '*',
+        }
+      );
+    }
 
     return this.siteResolver.getByHost(hostname);
   }
