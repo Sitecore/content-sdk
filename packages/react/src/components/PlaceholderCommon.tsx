@@ -232,7 +232,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
 
         if (!component) {
           console.error(
-            `Placeholder ${name} contains unknown component ${componentRendering.componentName}. Ensure that a React component exists for it, and that it is registered in your lib/component-map.ts.`
+            `Placeholder ${name} contains unknown component ${componentRendering.componentName}. Ensure that a React component exists for it, and that it is registered in your component-map file.`
           );
 
           component = missingComponentComponent ?? MissingComponent;

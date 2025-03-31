@@ -3,15 +3,10 @@ import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { expect } from 'chai';
 import { IncomingMessage, ServerResponse } from 'http';
 import { ParsedUrlQuery } from 'querystring';
-import { ModuleFactory, Module } from '../sharedTypes/component-module';
-import {
-  GetServerSideComponentProps,
-  GetStaticComponentProps,
-} from '../sharedTypes/component-props';
 import { ComponentPropsService } from './component-props-service';
 import { spy } from 'sinon';
 import { ComponentMap } from '@sitecore-content-sdk/react';
-import { NextjsComponent } from '../../types';
+import { NextjsJssComponent } from '../../types';
 
 describe('ComponentPropsService', () => {
   const service = new ComponentPropsService();
@@ -107,7 +102,7 @@ describe('ComponentPropsService', () => {
     };
 
     const result = await service.fetchComponentProps({
-      components: (ssrComponentMap as unknown) as ComponentMap<NextjsComponent>,
+      components: (ssrComponentMap as unknown) as ComponentMap<NextjsJssComponent>,
       context: ssrContext,
       layoutData,
     });
@@ -153,7 +148,7 @@ describe('ComponentPropsService', () => {
           getServerSideProps: fetchFn('x24SSRData'),
         },
       ],
-    ]) as unknown) as ComponentMap<NextjsComponent>;
+    ]) as unknown) as ComponentMap<NextjsJssComponent>;
 
     const ssrContext = {
       req: {} as IncomingMessage & { cookies: { [key: string]: string } },
@@ -209,7 +204,7 @@ describe('ComponentPropsService', () => {
           getStaticProps: fetchFn('x24StaticData'),
         },
       ],
-    ]) as unknown) as ComponentMap<NextjsComponent>;
+    ]) as unknown) as ComponentMap<NextjsJssComponent>;
 
     const result = await service.fetchComponentProps({
       components: ssgComponentMap,
@@ -256,7 +251,7 @@ describe('ComponentPropsService', () => {
           getStaticProps: fetchFn('x24StaticData'),
         },
       ],
-    ]) as unknown) as ComponentMap<NextjsComponent>;
+    ]) as unknown) as ComponentMap<NextjsJssComponent>;
 
     const result = await service.fetchComponentProps({
       components: ssgComponentMap,

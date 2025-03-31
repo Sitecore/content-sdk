@@ -8,7 +8,7 @@ import {
 import {
   ComponentPropsCollection,
   ComponentPropsError,
-  NextjsComponent,
+  NextjsJssComponent,
 } from '../sharedTypes/component-props';
 import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
@@ -94,13 +94,13 @@ export class SitecoreNextjsClient extends SitecoreClient {
    * and returns resulting props from components
    * @param {LayoutServiceData} layoutData layout data to parse compnents from
    * @param {PreviewData} context Nextjs preview data
-   * @param {ComponentMap<NextjsComponent>} components component map to get props for
+   * @param {ComponentMap<NextjsJssComponent>} components component map to get props for
    * @returns {ComponentPropsCollection} component props
    */
   async getComponentData(
     layoutData: LayoutServiceData,
     context: GetServerSidePropsContext | GetStaticPropsContext,
-    components: ComponentMap<NextjsComponent>
+    components: ComponentMap<NextjsJssComponent>
   ): Promise<ComponentPropsCollection> {
     let componentProps: ComponentPropsCollection = {};
     if (!layoutData.sitecore.route) return componentProps;

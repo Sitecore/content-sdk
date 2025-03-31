@@ -9,13 +9,13 @@ import { enforceCors } from '@sitecore-content-sdk/core/utils';
 import { EditMode } from '@sitecore-content-sdk/core/layout';
 import { getJssEditingSecret } from '../utils/utils';
 import { ComponentMap } from '@sitecore-content-sdk/react';
-import { NextjsComponent } from '../sharedTypes/component-props';
+import { NextjsJssComponent } from '../sharedTypes/component-props';
 
 export type EditingConfigMiddlewareConfig = {
   /**
    * Components available in the application
    */
-  components: ComponentMap<NextjsComponent>;
+  components: ComponentMap<NextjsJssComponent>;
   /**
    * Application metadata
    */

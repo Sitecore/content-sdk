@@ -33,7 +33,7 @@ export type GetStaticComponentProps = ComponentPropsFetchFunction<GetStaticProps
 /**
  * Represents a nextjs component import
  */
-export type NextjsComponent = ReactJssComponent & {
+export type NextjsJssComponent = ReactJssComponent & {
   /**
    * function for component level data fetching in SSR mode
    */

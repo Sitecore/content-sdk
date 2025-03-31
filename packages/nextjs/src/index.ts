@@ -56,7 +56,7 @@ export {
   ComponentPropsError,
   GetStaticComponentProps,
   GetServerSideComponentProps,
-  NextjsComponent,
+  NextjsJssComponent,
 } from './sharedTypes/component-props';
 
 export { SitecorePageProps } from './sharedTypes/sitecore-page-props';

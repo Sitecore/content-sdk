@@ -8,7 +8,7 @@ import {
 import {
   ComponentPropsCollection,
   ComponentPropsFetchFunction,
-  NextjsComponent,
+  NextjsJssComponent,
 } from '../sharedTypes/component-props';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { ReactModule } from '@sitecore-content-sdk/react/types/components/sharedTypes';
@@ -16,7 +16,7 @@ import { ReactModule } from '@sitecore-content-sdk/react/types/components/shared
 export type FetchComponentPropsArguments<NextContext> = {
   layoutData: LayoutServiceData;
   context: NextContext;
-  components: ComponentMap<NextjsComponent>;
+  components: ComponentMap<NextjsJssComponent>;
 };
 
 export type ComponentPropsRequest<NextContext> = {
@@ -195,7 +195,7 @@ export class ComponentPropsService {
     return (<GetServerSidePropsContext>context).req !== undefined;
   }
 
-  private async getModule(components: ComponentMap<NextjsComponent>, componentName: string) {
+  private async getModule(components: ComponentMap<NextjsJssComponent>, componentName: string) {
     const component = components.get(componentName);
 
     if (!component) return null;
@@ -203,6 +203,6 @@ export class ComponentPropsService {
     const module = (component as ReactModule).dynamicModule
       ? await (component as ReactModule)?.dynamicModule?.()
       : component;
-    return module as NextjsComponent;
+    return module as NextjsJssComponent;
   }
 }

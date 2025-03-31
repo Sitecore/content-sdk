@@ -58,6 +58,8 @@ export function withPlaceholder(
       render() {
         let childProps: PlaceholderProps = { ...this.props };
 
+        delete childProps.componentMap;
+
         if (options && options.propsTransformer) {
           childProps = options.propsTransformer(childProps);
         }
