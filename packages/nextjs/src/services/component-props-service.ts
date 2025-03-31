@@ -11,7 +11,6 @@ import {
   NextjsJssComponent,
 } from '../sharedTypes/component-props';
 import { ComponentMap } from '@sitecore-content-sdk/react';
-import { ReactModule } from '@sitecore-content-sdk/react/types/components/sharedTypes';
 
 export type FetchComponentPropsArguments<NextContext> = {
   layoutData: LayoutServiceData;
@@ -200,9 +199,7 @@ export class ComponentPropsService {
 
     if (!component) return null;
 
-    const module = (component as ReactModule).dynamicModule
-      ? await (component as ReactModule)?.dynamicModule?.()
-      : component;
+    const module = component.dynamicModule ? await component?.dynamicModule?.() : component;
     return module as NextjsJssComponent;
   }
 }

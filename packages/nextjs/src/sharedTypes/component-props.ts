@@ -42,4 +42,8 @@ export type NextjsJssComponent = ReactJssComponent & {
    * function for component level data fetching in SSG mode
    */
   getStaticProps?: GetStaticComponentProps;
+  /**
+   * Optional dynamic import for lazy components - allows component props retrieval
+   */
+  dynamicModule?: () => Promise<ReactJssComponent>;
 };

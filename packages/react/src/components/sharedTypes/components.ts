@@ -23,11 +23,6 @@ export type ReactModule = {
    * Default non-standard export
    */
   default?: ComponentType;
-} & {
-  /**
-   * Optional dynamic import for lazy components - allows component props retrieval
-   */
-  dynamicModule?: () => Promise<ReactJssComponent>;
 };
 
 /**
