@@ -435,12 +435,16 @@ export class SitecoreClient implements BaseSitecoreClient {
   async getSiteMap(reqOptions: SitemapXmlOptions, fetchOptions?: FetchOptions): Promise<string> {
     const { reqHost, reqProtocol, id, siteName } = reqOptions;
 
+    // create sitemap graphql service
     const sitemapXmlService = this.getGraphqlSitemapXMLService(
       siteName || this.initOptions.defaultSite
     );
 
+    // The id is present if url has sitemap-{n}.xml type.
+    // The id can be null if it's index sitemap.xml request
     const sitemapPath = await sitemapXmlService.getSitemap(id as string);
 
+    // regular sitemap
     if (sitemapPath) {
       try {
         const fetcher = new NativeDataFetcher();
@@ -451,7 +455,9 @@ export class SitecoreClient implements BaseSitecoreClient {
       }
     }
 
+    // index /sitemap.xml that includes links to all sitemaps
     const sitemaps = await sitemapXmlService.fetchSitemaps(fetchOptions);
+
     if (!sitemaps.length) {
       throw new Error('REDIRECT_404');
     }
