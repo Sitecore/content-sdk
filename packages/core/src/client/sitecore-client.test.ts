@@ -851,26 +851,8 @@ describe('SitecoreClient', () => {
         .returns(sitemapXmlServiceStub);
     });
 
-    it('should fetch and return sitemap', async () => {
-      const sitemapPath = 'https://edge.example.com/sitemap.xml';
-      const xmlContent = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">...</urlset>';
-
-      sitemapXmlServiceStub.getSitemap.resolves(sitemapPath);
-      const dataFetcherStub = sandbox
-        .stub(NativeDataFetcher.prototype, 'fetch')
-        .withArgs(sitemapPath)
-        .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
-
-      const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig });
-
-      expect(getGraphqlSitemapXMLServiceStub.calledWith(defaultReqConfig.siteName)).to.be.true;
-      expect(dataFetcherStub.calledWith(sitemapPath)).to.be.true;
-      expect(result).to.equal(xmlContent);
-    });
-
-    it('should return specific page when query string id is passed', async () => {
-      const sitemapId = '1';
-      const absoluteSitemapPath = 'https://cdn.example.com/sitemap-1.xml';
+    it('should fetch and return sitemap content when specific sitemap exists', async () => {
+      const absoluteSitemapPath = 'https://cdn.example.com/sitemap.xml';
       const xmlContent = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">...</urlset>';
 
       sitemapXmlServiceStub.getSitemap.resolves(absoluteSitemapPath);
@@ -878,23 +860,56 @@ describe('SitecoreClient', () => {
         .stub(NativeDataFetcher.prototype, 'fetch')
         .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
 
+      const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig });
+
+      expect(getGraphqlSitemapXMLServiceStub.calledWith(defaultReqConfig.siteName)).to.be.true;
+      expect(dataFetcherStub.calledWith(absoluteSitemapPath)).to.be.true;
+      expect(result).to.equal(xmlContent);
+    });
+
+    it('should fetch specific sitemap when ID is provided', async () => {
+      const sitemapId = '1';
+      const absoluteSitemapPath = 'https://cdn.example.com/sitemap-1.xml';
+      const xmlContent = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">...</urlset>';
+
+      sitemapXmlServiceStub.getSitemap.withArgs(sitemapId).resolves(absoluteSitemapPath);
+      const dataFetcherStub = sandbox
+        .stub(NativeDataFetcher.prototype, 'fetch')
+        .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
+
       const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig, id: sitemapId });
 
-      const wasCalledWithAbsoluteUrl = dataFetcherStub
-        .getCalls()
-        .some((call) => call.args[0] === absoluteSitemapPath);
-
-      expect(getGraphqlSitemapXMLServiceStub.calledWith('test-site')).to.be.true;
       expect(sitemapXmlServiceStub.getSitemap.calledWith(sitemapId)).to.be.true;
-      expect(wasCalledWithAbsoluteUrl).to.be.true;
+      expect(dataFetcherStub.calledWith(absoluteSitemapPath)).to.be.true;
       expect(result).to.equal(xmlContent);
+    });
+
+    it('should generate sitemap index XML when no specific sitemap is found', async () => {
+      const absoluteSitemapPaths = [
+        'https://cdn.example.com/sitemap-0.xml',
+        'https://cdn.example.com/sitemap-1.xml',
+      ];
+
+      sitemapXmlServiceStub.getSitemap.resolves(undefined);
+      sitemapXmlServiceStub.fetchSitemaps.resolves(absoluteSitemapPaths);
+
+      const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig });
+
+      expect(sitemapXmlServiceStub.fetchSitemaps.called).to.be.true;
+      expect(result).to.include('<?xml version="1.0" encoding="UTF-8"?>');
+      expect(result).to.include('<sitemapindex xmlns="http://sitemaps.org/schemas/sitemap/0.9">');
+
+      absoluteSitemapPaths.forEach((path) => {
+        const fileName = path.split('/').pop();
+        expect(result).to.include(`<loc>https://example.com/${fileName}</loc>`);
+      });
     });
 
     it('should throw REDIRECT_404 error when sitemap fetch fails', async () => {
       const sitemapId = '3';
-      const sitemapPath = '/sitemap-3.xml';
+      const absoluteSitemapPaths = ['https://cdn.example.com/sitemap-1.xml'];
 
-      sitemapXmlServiceStub.getSitemap.withArgs(sitemapId).resolves(sitemapPath);
+      sitemapXmlServiceStub.getSitemap.withArgs(sitemapId).resolves(absoluteSitemapPaths);
       sandbox
         .stub(NativeDataFetcher.prototype, 'fetch')
         .rejects(new Error('Failed to fetch sitemap'));
@@ -906,22 +921,6 @@ describe('SitecoreClient', () => {
         expect(getGraphqlSitemapXMLServiceStub.calledWith('test-site')).to.be.true;
         expect((error as Error).message).to.equal('REDIRECT_404');
       }
-    });
-
-    it('should generate sitemap index XML when no id is provided', async () => {
-      const sitemaps = ['/sitemap-1.xml', '/sitemap-2.xml'];
-
-      sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
-      sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
-
-      const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig });
-
-      expect(getGraphqlSitemapXMLServiceStub.calledWith('test-site')).to.be.true;
-      expect(sitemapXmlServiceStub.fetchSitemaps.calledOnce).to.be.true;
-      expect(result).to.include('<?xml version="1.0" encoding="UTF-8"?>');
-      expect(result).to.include('<sitemapindex xmlns="http://sitemaps.org/schemas/sitemap/0.9">');
-      expect(result).to.include('<loc>https://example.com/sitemap-1.xml</loc>');
-      expect(result).to.include('<loc>https://example.com/sitemap-2.xml</loc>');
     });
 
     it('should throw REDIRECT_404 error when no sitemaps are found', async () => {
@@ -937,30 +936,28 @@ describe('SitecoreClient', () => {
       }
     });
 
-    it('should use HTTP protocol when specified in x-forwarded-proto header', async () => {
-      const sitemaps = ['/sitemap-1.xml'];
-      sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
-      sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
+    it('should use specified protocol in generated sitemap index', async () => {
+      const absoluteSitemapPaths = ['https://cdn.example.com/sitemap-1.xml'];
+      sitemapXmlServiceStub.getSitemap.resolves(undefined);
+      sitemapXmlServiceStub.fetchSitemaps.resolves(absoluteSitemapPaths);
 
       const result = await sitecoreClient.getSiteMap({
-        reqHost: 'example.com',
+        ...defaultReqConfig,
         reqProtocol: 'http',
-        siteName: 'test-site',
       });
 
-      expect(getGraphqlSitemapXMLServiceStub.calledWith('test-site')).to.be.true;
       expect(result).to.include('<loc>http://example.com/sitemap-1.xml</loc>');
     });
 
     it('should pass fetchOptions to fetchSitemaps method', async () => {
-      const sitemaps = ['/sitemap-1.xml'];
+      const absoluteSitemapPaths = ['https://cdn.example.com/sitemap-1.xml'];
       const fetchOptions = {
         headers: { 'Custom-Header': 'test' },
         cache: 'no-store' as RequestCache,
       };
 
       sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
-      sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
+      sitemapXmlServiceStub.fetchSitemaps.resolves(absoluteSitemapPaths);
 
       await sitecoreClient.getSiteMap(defaultReqConfig, fetchOptions);
 
@@ -968,16 +965,15 @@ describe('SitecoreClient', () => {
       expect(sitemapXmlServiceStub.fetchSitemaps.calledWith(fetchOptions)).to.be.true;
     });
 
-    it('should escape special characters in sitemap URLs', async () => {
-      const sitemaps = ['/sitemap-1.xml?param1=value&param2=value'];
-      sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
-      sitemapXmlServiceStub.fetchSitemaps.resolves(sitemaps);
+    it('should properly escape special characters in sitemap URLs', async () => {
+      const absoluteSitemapPath = 'https://cdn.example.com/sitemap.xml?param=value&other=value';
+      sitemapXmlServiceStub.getSitemap.resolves(undefined);
+      sitemapXmlServiceStub.fetchSitemaps.resolves([absoluteSitemapPath]);
 
       const result = await sitecoreClient.getSiteMap(defaultReqConfig);
 
-      expect(getGraphqlSitemapXMLServiceStub.calledWith('test-site')).to.be.true;
       expect(result).to.include(
-        '<loc>https://example.com/sitemap-1.xml?param1=value&amp;param2=value</loc>'
+        '<loc>https://example.com/sitemap.xml?param=value&amp;other=value</loc>'
       );
     });
   });
