@@ -8,7 +8,7 @@
 
 > **EditingPreviewData**: `object`
 
-Defined in: [packages/core/src/editing/models.ts:61](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/editing/models.ts#L61)
+Defined in: [packages/core/src/editing/models.ts:61](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/core/src/editing/models.ts#L61)
 
 Data for Preview (Editing) Mode.
 
