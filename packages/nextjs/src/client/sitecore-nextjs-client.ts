@@ -5,11 +5,14 @@ import {
   SitecoreClient,
   SitecoreClientInit,
 } from '@sitecore-content-sdk/core/client';
-import { ComponentPropsCollection, ComponentPropsError } from '../sharedTypes/component-props';
+import {
+  ComponentPropsCollection,
+  ComponentPropsError,
+  NextjsJssComponent,
+} from '../sharedTypes/component-props';
 import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
-import { ModuleFactory } from '../sharedTypes/module-factory';
 import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
 import { SiteInfo } from '../site';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
@@ -17,6 +20,7 @@ import {
   getPersonalizedRewriteData,
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/core/personalize';
+import { ComponentMap } from '@sitecore-content-sdk/react';
 
 export type NextjsPage = Page & {
   componentProps?: ComponentPropsCollection;
@@ -86,17 +90,17 @@ export class SitecoreNextjsClient extends SitecoreClient {
   }
 
   /**
-   * Parses components from nextjs component factory and layoutData, executes getServerProps/getStaticProps methods
+   * Parses components from nextjs component map and layoutData, executes getServerProps/getStaticProps methods
    * and returns resulting props from components
    * @param {LayoutServiceData} layoutData layout data to parse compnents from
    * @param {PreviewData} context Nextjs preview data
-   * @param {ModuleFactory} moduleFactory module factory to use for component parsing
+   * @param {ComponentMap<NextjsJssComponent>} components component map to get props for
    * @returns {ComponentPropsCollection} component props
    */
   async getComponentData(
     layoutData: LayoutServiceData,
     context: GetServerSidePropsContext | GetStaticPropsContext,
-    moduleFactory: ModuleFactory
+    components: ComponentMap<NextjsJssComponent>
   ): Promise<ComponentPropsCollection> {
     let componentProps: ComponentPropsCollection = {};
     if (!layoutData.sitecore.route) return componentProps;
@@ -104,7 +108,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
     componentProps = await this.componentPropsService.fetchComponentProps({
       layoutData: layoutData,
       context,
-      moduleFactory,
+      components,
     });
 
     const errors = Object.keys(componentProps)

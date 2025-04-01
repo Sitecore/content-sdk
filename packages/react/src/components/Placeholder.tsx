@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { PlaceholderCommon, PlaceholderProps } from './PlaceholderCommon';
-import { withComponentFactory } from '../enhancers/withComponentFactory';
+import { withComponentMap } from '../enhancers/withComponentMap';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PagesEditor } from '@sitecore-content-sdk/core/editing';
 import { withSitecoreContext } from '../enhancers/withSitecoreContext';
@@ -54,7 +54,7 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
   render() {
     const childProps: PlaceholderComponentProps = { ...this.props };
 
-    delete childProps.componentFactory;
+    delete childProps.componentMap;
 
     if (this.state.error) {
       if (childProps.errorComponent) {
@@ -104,6 +104,6 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
   }
 }
 
-const PlaceholderWithComponentFactory = withComponentFactory(PlaceholderComponent);
+const PlaceholderWithComponentMap = withComponentMap(PlaceholderComponent);
 
-export const Placeholder = withSitecoreContext()(PlaceholderWithComponentFactory);
+export const Placeholder = withSitecoreContext()(PlaceholderWithComponentMap);

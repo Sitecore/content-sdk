@@ -58,11 +58,10 @@ export {
   ComponentPropsError,
   GetStaticComponentProps,
   GetServerSideComponentProps,
+  NextjsJssComponent,
 } from './sharedTypes/component-props';
 
 export { SitecorePageProps } from './sharedTypes/sitecore-page-props';
-
-export { ModuleFactory, Module } from './sharedTypes/module-factory';
 
 export { ComponentPropsService } from './services/component-props-service';
 
@@ -107,10 +106,8 @@ import * as BYOCWrapper from './components/BYOCWrapper';
 export { FEaaSWrapper };
 export { BYOCWrapper };
 
-export { ComponentBuilder, ComponentBuilderConfig } from './ComponentBuilder';
-
 export {
-  ComponentFactory,
+  ComponentMap,
   Image,
   ImageField,
   ImageFieldValue,
