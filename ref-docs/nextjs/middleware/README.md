@@ -13,6 +13,7 @@
 - [MultisiteMiddleware](classes/MultisiteMiddleware.md)
 - [PersonalizeMiddleware](classes/PersonalizeMiddleware.md)
 - [RedirectsMiddleware](classes/RedirectsMiddleware.md)
+- [SitemapMiddleware](classes/SitemapMiddleware.md)
 
 ## Type Aliases
 

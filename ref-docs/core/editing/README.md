@@ -42,6 +42,7 @@
 ## Functions
 
 - [addComponentUpdateHandler](functions/addComponentUpdateHandler.md)
+- [getDesignLibraryScriptLink](functions/getDesignLibraryScriptLink.md)
 - [getDesignLibraryStatusEvent](functions/getDesignLibraryStatusEvent.md)
 - [getJssPagesClientData](functions/getJssPagesClientData.md)
 - [isEditorActive](functions/isEditorActive.md)
