@@ -2,11 +2,18 @@
 import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import { LayoutServiceData, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import {
+  LayoutServiceData,
+  LayoutServicePageState,
+  RenderingType,
+} from '@sitecore-content-sdk/core/layout';
 import { EditingScripts } from './EditingScripts';
 import { SitecoreContext } from './SitecoreContext';
 import { ComponentFactory } from './sharedTypes';
-import { getJssPagesClientData } from '@sitecore-content-sdk/core/editing';
+import {
+  getJssPagesClientData,
+  getDesignLibraryScriptLink,
+} from '@sitecore-content-sdk/core/editing';
 
 describe('<EditingScripts />', () => {
   const mockComponentFactory: ComponentFactory = () => null;
@@ -16,16 +23,19 @@ describe('<EditingScripts />', () => {
     pageEditing,
     clientData,
     clientScripts,
+    renderingType,
   }: {
     pageEditing: boolean;
     pageState?: LayoutServicePageState;
     clientData?: Record<string, Record<string, unknown>>;
     clientScripts?: string[];
+    renderingType?: RenderingType;
   }): LayoutServiceData => ({
     sitecore: {
       context: {
         pageState,
         pageEditing,
+        renderingType,
         site: {
           name: 'JssTestWeb',
         },
@@ -144,6 +154,52 @@ describe('<EditingScripts />', () => {
         expect(component.container.querySelector(`#${id}`)).to.not.be.null;
       });
       expect(scripts.querySelectorAll('script')).to.have.length(ids.length);
+    });
+  });
+
+  describe('Design Library scripts', () => {
+    it('should render Design Library script when rendering type is component', () => {
+      const layoutData = getLayoutData({
+        pageEditing: false,
+        pageState: LayoutServicePageState.Normal,
+        renderingType: RenderingType.Component,
+        clientData: {},
+        clientScripts: [],
+      });
+
+      const component = render(
+        <SitecoreContext componentFactory={mockComponentFactory} layoutData={layoutData}>
+          <EditingScripts />
+        </SitecoreContext>
+      );
+
+      const scripts = component.baseElement;
+      expect(scripts.querySelectorAll('script')).to.have.length(1);
+      const script1 = scripts?.querySelectorAll('script')[0];
+      expect(script1.getAttribute('src')).to.equal(getDesignLibraryScriptLink());
+    });
+
+    it('should render Design Library script with custom design library url when rendering type is component', () => {
+      const layoutData = getLayoutData({
+        pageEditing: false,
+        pageState: LayoutServicePageState.Normal,
+        renderingType: RenderingType.Component,
+        clientData: {},
+        clientScripts: [],
+      });
+
+      const stagingEdgeUrl = 'http://edge-staging';
+
+      const component = render(
+        <SitecoreContext componentFactory={mockComponentFactory} layoutData={layoutData}>
+          <EditingScripts sitecoreEdgeUrl={stagingEdgeUrl} />
+        </SitecoreContext>
+      );
+
+      const scripts = component.baseElement;
+      expect(scripts.querySelectorAll('script')).to.have.length(1);
+      const script1 = scripts?.querySelectorAll('script')[0];
+      expect(script1.getAttribute('src')).to.equal(getDesignLibraryScriptLink(stagingEdgeUrl));
     });
   });
 });
