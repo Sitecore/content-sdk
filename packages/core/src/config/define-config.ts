@@ -103,9 +103,6 @@ const validateConfig = (config: SitecoreConfigInput) => {
       );
     }
   }
-  if (!config.defaultSite) {
-    throw new Error('Configuration error: defaultSite value should be defined in sitecore.config');
-  }
 };
 
 /**
