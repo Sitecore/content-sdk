@@ -19,7 +19,7 @@ See Branching overview below - We use `dev` for our current development.
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device.
 2. Create a new branch e.g. `git switch -c feature/my-jss-feature`
-3. When you're happy with your changes, open a Pull Request targeting the `dev` branch of the `sitecore/jss` repository. You may add the JSS Dev Reviewers group as Reviewers for potentially expedited initial PR review.
+3. When you're happy with your changes, open a Pull Request targeting the `dev` branch of the `sitecore/content-sdk` repository. You may add the Sitecore Content SDK Dev Reviewers group as Reviewers for potentially expedited initial PR review.
 4. Note: CI will run lint for all packages, as well as tests for all packages. Please make sure these pass or your PR can not be merged.
 
 ## Setting up
@@ -28,7 +28,7 @@ In your fork from the root of the monorepo:
 
 - `yarn install` - this will install Lerna at the root, packages and will link them and allow the remaining scripts to be called.
 - (optional) `yarn install-git-hooks` - installs a pre-push hook that will lint all packages before a `git-push`. Opt out per-push with the `--no-verify` flag.
-- `yarn build` - will build all JSS packages.
+- `yarn build` - will build all Sitecore Content SDK packages.
 
 In our terms `workspace` - it's a sample or package.
 
@@ -49,17 +49,16 @@ yarn workspaces focus
 yarn workspaces foreach -Rt --no-private run build
 ```
 
-- `yarn reset` - will clean all `node_modules`, re-install dependencies and link them, and then build all JSS packages.
+- `yarn reset` - will clean all `node_modules`, re-install dependencies and link them, and then build all Sitecore Content SDK packages.
 
 ## Developing sample
 
-For the creation of the samples we are using `initializers` approach. 
+For the creation of the samples we are using `initializers` approach.
 
 - `initializer` - the process for handling the creation of the appropriate template. See [initializers](https://github.com/Sitecore/jss/tree/dev/packages/create-sitecore-jss/src/initializers).
-- `template` - the sample populated by [ejs](https://ejs.co/) tokens. See [templates](https://github.com/Sitecore/jss/tree/dev/packages/create-sitecore-jss/src/templates). Templates can be for e.g. *nextjs*.
+- `template` - the sample populated by [ejs](https://ejs.co/) tokens. See [templates](https://github.com/Sitecore/jss/tree/dev/packages/create-sitecore-jss/src/templates). Templates can be for e.g. _nextjs_.
 
-
-If you want to use [*create-sitecore-jss*](https://github.com/Sitecore/jss/tree/dev/packages/create-sitecore-jss) from your local repository, run:
+If you want to use [_create-sitecore-jss_](https://github.com/Sitecore/jss/tree/dev/packages/create-sitecore-jss) from your local repository, run:
 
 ```
 cd ./packages/create-sitecore-jss
@@ -67,12 +66,13 @@ npm i -g
 ```
 
 To start developing the sample you have to do next:
-* Copy [watch.json.example](https://github.com/Sitecore/jss/blob/dev/packages/create-sitecore-jss/watch.json.example) file and name it **watch.json**. You have to set up appropriate arguments for the sample which you want to start to develop. Monorepo symlinking will work if you specify a `destination` under the source root `samples`  directory (i.e. `<root>\samples\<my-app>`).
-* Run `yarn watch`. A new sample will be created in the specified `destination` path. You can modify any file related to your sample under `src/templates` folder, and changed files will be automatically copied into your sample.
+
+- Copy [watch.json.example](https://github.com/Sitecore/jss/blob/dev/packages/create-sitecore-jss/watch.json.example) file and name it **watch.json**. You have to set up appropriate arguments for the sample which you want to start to develop. Monorepo symlinking will work if you specify a `destination` under the source root `samples` directory (i.e. `<root>\samples\<my-app>`).
+- Run `yarn watch`. A new sample will be created in the specified `destination` path. You can modify any file related to your sample under `src/templates` folder, and changed files will be automatically copied into your sample.
 
 ## Linting and Code Style guidelines
 
-The monorepo includes a top level `.eslintrc` file that each package inherits. In order to avoid linting errors and adhere to our style guidelines while developing, it is strongly recommended to install the vs code extension  [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint), and use it as the document formatter. Formatting the document with this plugin will fix formatting issues and avoid linting errors.
+The monorepo includes a top level `.eslintrc` file that each package inherits. In order to avoid linting errors and adhere to our style guidelines while developing, it is strongly recommended to install the vs code extension [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint), and use it as the document formatter. Formatting the document with this plugin will fix formatting issues and avoid linting errors.
 
 To lint manually, the following commands are available from the root of the monorepo, you may also install the git-hook which will run these commands as a pre-push hook:
 
@@ -91,7 +91,7 @@ yarn lint
 Some linting errors may be fixed automatically using the `--fix` flag. You may do this from the root, however you will need `--` twice before the flag in order to pass the argument to the inner command
 
 ```shell
-yarn lint-packages -- -- --fix 
+yarn lint-packages -- -- --fix
 ```
 
 In addition to linting rules, there are a few coding guidelines worth mentioning here that will cause less friction when trying to get a PR merged.
@@ -117,7 +117,7 @@ yarn test
 
 # Troubleshooting
 
-Problem: Build of package or sample fails with the following error: `cannot find module ...`
+Problem: Build of package or sample fails with the following error: `cannot find module ...`
 
 Solution: If dependencies in a package change, you may need to install said dependencies.
 From the root of the monorepo:
@@ -134,7 +134,6 @@ yarn reset
 
 # Branching overview
 
-* `master `- latest released version
-* `dev `- latest changes for the next release
-* `release `branches - all major released versions
-
+- `master`- latest released version
+- `dev`- latest changes for the next release
+- `release`branches - all major released versions

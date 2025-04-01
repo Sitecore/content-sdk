@@ -1,9 +1,5 @@
-# Sitecore JavaScript Rendering SDK CLI Tools
+# Sitecore Content SDK CLI Tools
 
-This module is provided as a part of Sitecore JavaScript Rendering SDK (JSS). It contains the JSS command line interface.
+This module is provided as a part of Sitecore Contents SDK. It contains the Sitecore Content SDK command line interface.
 
-<!---
-@TODO: Update to next version docs before release
--->
-
-[Documentation (XM Cloud)](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-javascript-rendering-sdk-cli-tools.html)
+[Documentation Sitecore Content SDK CLI](https://doc.sitecore.com/xmc/en/developers/content-sdk/cli-commands-and-configuration.html)

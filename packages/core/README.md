@@ -1,10 +1,10 @@
-# Sitecore JavaScript Rendering SDK
+# Sitecore Content SDK CLI Tools
+
+This module is provided as a part of Sitecore Content SDK. It contains the core Sitecore Content SDK APIs (layout service) and utilities.
 
 <!---
-@TODO: Update naming when decided
+@TODO: Update link with appropriate page when avaiable
 -->
-
-This module is provided as a part of Sitecore JavaScript Rendering SDK. It contains the core JSS APIs (layout service) and utilities.
 
 [Documentation (XM Cloud)](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-javascript-rendering-sdks--jss-.html)
 

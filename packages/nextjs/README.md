@@ -1,9 +1,10 @@
-# Sitecore JavaScript Rendering SDK for Next.js
+# Sitecore Content SDK for Next.js
+
+This module is provided as a part of Sitecore Content SDK. It contains Next.js components and integration for Sitecore Content SDK.
 
 <!---
-@TODO: use new name when decided
+@TODO: Update link with appropriate page when avaiable
 -->
-This module is provided as a part of Sitecore JavaScript Rendering SDK. It contains Next.js components and integration for JSS.
 
 [Documentation (XM Cloud)](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-javascript-rendering-sdk--jss--for-next-js.html)
 

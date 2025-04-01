@@ -27,7 +27,7 @@
   "license": "Apache-2.0",
   "homepage": "https://jss.sitecore.com",
   "bugs": {
-    "url": "https://github.com/sitecore/jss/issues"
+    "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
     "@sitecore-feaas/clientside": "^0.5.19",

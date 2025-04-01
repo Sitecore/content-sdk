@@ -15,10 +15,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sitecore/jss.git"
+    "url": "git+https://github.com/sitecore/content-sdk.git"
   },
   "bugs": {
-    "url": "https://github.com/sitecore/jss/issues"
+    "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "license": "Apache-2.0",
   "dependencies": {
