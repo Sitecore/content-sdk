@@ -6,7 +6,6 @@ import { expect } from 'chai';
 import { fireEvent, render } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../test-data/component-editing-data';
-import { ComponentFactory } from './sharedTypes';
 import { SitecoreContext } from './SitecoreContext';
 import { RichText } from './RichText';
 import { Text } from './Text';
@@ -19,34 +18,29 @@ import {
 
 describe('<DesignLibrary />', () => {
   const postMessageSpy = sinon.spy(global.window, 'postMessage');
+  const components = new Map<string, React.FC>();
 
-  const componentFactory: ComponentFactory = (componentName: string) => {
-    const components = new Map<string, React.FC>();
+  const ContentBlock: React.FC<{
+    [prop: string]: unknown;
+    fields?: { content: { value: string }; heading: { value: string } };
+  }> = (props) => (
+    <div className="test">
+      <RichText field={props.fields?.content} />
+      <Placeholder name="inner" rendering={props.rendering} />
+    </div>
+  );
 
-    const ContentBlock: React.FC<{
-      [prop: string]: unknown;
-      fields?: { content: { value: string }; heading: { value: string } };
-    }> = (props) => (
-      <div className="test">
-        <RichText field={props.fields?.content} />
-        <Placeholder name="inner" rendering={props.rendering} />
-      </div>
-    );
+  const InnerBlock: React.FC<{
+    [prop: string]: unknown;
+    fields?: { text: { value: string } };
+  }> = (props) => (
+    <div className="inner">
+      <Text field={props.fields?.text} />
+    </div>
+  );
 
-    const InnerBlock: React.FC<{
-      [prop: string]: unknown;
-      fields?: { text: { value: string } };
-    }> = (props) => (
-      <div className="inner">
-        <Text field={props.fields?.text} />
-      </div>
-    );
-
-    components.set('ContentBlock', ContentBlock);
-    components.set('InnerBlock', InnerBlock);
-
-    return components.get(componentName) || null;
-  };
+  components.set('ContentBlock', ContentBlock);
+  components.set('InnerBlock', InnerBlock);
 
   // eslint-disable-next-line jsdoc/require-jsdoc
   async function sendUpdateEvent(
@@ -69,7 +63,7 @@ describe('<DesignLibrary />', () => {
     const basicPage = getTestLayoutData();
     // don't wrap the content in divs
     const rendered = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={components}>
         <DesignLibrary {...basicPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
@@ -87,7 +81,7 @@ describe('<DesignLibrary />', () => {
   it('should render component with placeholders', () => {
     const placeholderPage = getTestLayoutData(true);
     const rendered = render(
-      <SitecoreContext componentFactory={componentFactory} layoutData={placeholderPage.layoutData}>
+      <SitecoreContext componentMap={components} layoutData={placeholderPage.layoutData}>
         <DesignLibrary {...placeholderPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
@@ -114,7 +108,7 @@ describe('<DesignLibrary />', () => {
       'test-content'
     );
     const rendered = render(
-      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
+      <SitecoreContext componentMap={components} layoutData={basicPage.layoutData}>
         <DesignLibrary {...basicPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
@@ -139,7 +133,7 @@ describe('<DesignLibrary />', () => {
   it('should update root component', async () => {
     const basicPage = getTestLayoutData();
     const rendered = render(
-      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
+      <SitecoreContext componentMap={components} layoutData={basicPage.layoutData}>
         <DesignLibrary {...basicPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
@@ -173,7 +167,7 @@ describe('<DesignLibrary />', () => {
     const basicPage = getTestLayoutData();
     const placeholderPage = getTestLayoutData(true);
     const rendered = render(
-      <SitecoreContext componentFactory={componentFactory} layoutData={basicPage.layoutData}>
+      <SitecoreContext componentMap={components} layoutData={basicPage.layoutData}>
         <DesignLibrary {...placeholderPage.layoutData} />
       </SitecoreContext>,
       { container: document.body }
@@ -213,7 +207,7 @@ describe('<DesignLibrary />', () => {
   it('should send render event when component is updated', async () => {
     const basicPage = getTestLayoutData();
     const rendered = render(
-      <SitecoreContext componentFactory={componentFactory}>
+      <SitecoreContext componentMap={components}>
         <DesignLibrary {...basicPage.layoutData} />
       </SitecoreContext>
     );

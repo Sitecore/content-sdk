@@ -1,5 +1,5 @@
 ﻿import { EditingConfigMiddleware } from '@sitecore-content-sdk/nextjs/editing';
-import { components } from 'temp/componentBuilder';
+import components from 'lib/component-map';
 import metadata from '.sitecore/metadata.json';
 
 /**

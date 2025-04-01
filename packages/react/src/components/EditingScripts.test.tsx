@@ -5,11 +5,10 @@ import { render } from '@testing-library/react';
 import { LayoutServiceData, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { EditingScripts } from './EditingScripts';
 import { SitecoreContext } from './SitecoreContext';
-import { ComponentFactory } from './sharedTypes';
 import { getJssPagesClientData } from '@sitecore-content-sdk/core/editing';
 
 describe('<EditingScripts />', () => {
-  const mockComponentFactory: ComponentFactory = () => null;
+  const mockComponentMap = new Map();
 
   const getLayoutData = ({
     pageState,
@@ -58,7 +57,7 @@ describe('<EditingScripts />', () => {
     });
 
     const component = render(
-      <SitecoreContext componentFactory={mockComponentFactory} layoutData={layoutData}>
+      <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
         <EditingScripts />
       </SitecoreContext>,
       { container: document.body }
@@ -75,7 +74,7 @@ describe('<EditingScripts />', () => {
     });
 
     const component = render(
-      <SitecoreContext componentFactory={mockComponentFactory} layoutData={layoutData}>
+      <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
         <EditingScripts />
       </SitecoreContext>,
       { container: document.body }
@@ -93,7 +92,7 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreContext componentFactory={mockComponentFactory} layoutData={layoutData}>
+        <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
           <EditingScripts />
         </SitecoreContext>
       );
@@ -133,7 +132,7 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreContext componentFactory={mockComponentFactory} layoutData={layoutData}>
+        <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
           <EditingScripts />
         </SitecoreContext>
       );

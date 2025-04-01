@@ -1,5 +1,6 @@
-﻿import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
+import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import { ComponentRendering, LayoutServiceData } from '@sitecore-content-sdk/core/layout';
+import { ReactJssComponent } from '@sitecore-content-sdk/react';
 
 export type ComponentPropsError = { error: string; componentName: string };
 
@@ -28,3 +29,21 @@ export type GetServerSideComponentProps = ComponentPropsFetchFunction<GetServerS
  * Shape of getStaticProps function on component level
  */
 export type GetStaticComponentProps = ComponentPropsFetchFunction<GetStaticPropsContext>;
+
+/**
+ * Represents a nextjs component import
+ */
+export type NextjsJssComponent = ReactJssComponent & {
+  /**
+   * function for component level data fetching in SSR mode
+   */
+  getServerSideProps?: GetServerSideComponentProps;
+  /**
+   * function for component level data fetching in SSG mode
+   */
+  getStaticProps?: GetStaticComponentProps;
+  /**
+   * Optional dynamic import for lazy components - allows component props retrieval
+   */
+  dynamicModule?: () => Promise<ReactJssComponent>;
+};
