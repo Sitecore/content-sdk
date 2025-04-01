@@ -8,7 +8,7 @@
 
 > **SitecoreConfigInput**: `object`
 
-Defined in: [packages/core/src/config/models.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/config/models.ts#L15)
+Defined in: [packages/core/src/config/models.ts:15](https://github.com/Sitecore/content-sdk/blob/49730513e5708f82afd41a071847a7598aa586bb/packages/core/src/config/models.ts#L15)
 
 Type to be used as config input in sitecore.config
 
@@ -93,6 +93,12 @@ Ensure it aligns with the framework-specific settings used in your application.
 > `optional` **defaultSite**: `string`
 
 Your default site name. When using the multisite feature this variable defines the fallback site.
+
+#### Default
+
+```ts
+empty string
+```
 
 ### dictionary?
 
