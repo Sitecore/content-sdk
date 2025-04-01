@@ -15,6 +15,7 @@ import {
   DesignLibraryStatus,
   ComponentUpdateEventArgs,
   getDesignLibraryStatusEvent,
+  getDesignLibraryScriptLink,
 } from '@sitecore-content-sdk/core/editing';
 
 describe('<DesignLibrary />', () => {
@@ -93,7 +94,8 @@ describe('<DesignLibrary />', () => {
       { container: document.body }
     );
 
-    expect(rendered.baseElement.innerHTML).to.equal(
+    expect(rendered.baseElement.innerHTML).to.contain(`${getDesignLibraryScriptLink()}?cb=`);
+    expect(rendered.baseElement.innerHTML).to.contain(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -120,7 +122,8 @@ describe('<DesignLibrary />', () => {
       { container: document.body }
     );
 
-    expect(rendered.baseElement.innerHTML).to.equal(
+    expect(rendered.baseElement.innerHTML).to.contain(`${getDesignLibraryScriptLink()}?cb=`);
+    expect(rendered.baseElement.innerHTML).to.contain(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -145,7 +148,8 @@ describe('<DesignLibrary />', () => {
       { container: document.body }
     );
 
-    expect(rendered.baseElement.innerHTML).to.equal(
+    expect(rendered.baseElement.innerHTML).to.contain(`${getDesignLibraryScriptLink()}?cb=`);
+    expect(rendered.baseElement.innerHTML).to.contain(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -159,7 +163,7 @@ describe('<DesignLibrary />', () => {
       fields: { content: { value: 'new content!' } },
     });
 
-    expect(rendered.baseElement.innerHTML).to.equal(
+    expect(rendered.baseElement.innerHTML).to.contain(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -178,7 +182,9 @@ describe('<DesignLibrary />', () => {
       </SitecoreContext>,
       { container: document.body }
     );
-    expect(rendered.baseElement.innerHTML).to.equal(
+
+    expect(rendered.baseElement.innerHTML).to.contain(`${getDesignLibraryScriptLink()}?cb=`);
+    expect(rendered.baseElement.innerHTML).to.contain(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
@@ -196,7 +202,7 @@ describe('<DesignLibrary />', () => {
       fields: { text: { value: 'new inner content!' } },
     });
 
-    expect(rendered.baseElement.innerHTML).to.equal(
+    expect(rendered.baseElement.innerHTML).to.contain(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',

@@ -176,7 +176,7 @@ describe('<EditingScripts />', () => {
       const scripts = component.baseElement;
       expect(scripts.querySelectorAll('script')).to.have.length(1);
       const script1 = scripts?.querySelectorAll('script')[0];
-      expect(script1.getAttribute('src')).to.equal(getDesignLibraryScriptLink());
+      expect(script1.getAttribute('src')).to.contain(`${getDesignLibraryScriptLink()}?cb=`);
     });
 
     it('should render Design Library script with custom design library url when rendering type is component', () => {
@@ -199,7 +199,9 @@ describe('<EditingScripts />', () => {
       const scripts = component.baseElement;
       expect(scripts.querySelectorAll('script')).to.have.length(1);
       const script1 = scripts?.querySelectorAll('script')[0];
-      expect(script1.getAttribute('src')).to.equal(getDesignLibraryScriptLink(stagingEdgeUrl));
+      expect(script1.getAttribute('src')).to.contain(
+        `${getDesignLibraryScriptLink(stagingEdgeUrl)}?cb=`
+      );
     });
   });
 });
