@@ -156,6 +156,8 @@ export class GraphQLEditingService {
     let hasNext = true;
     let after = '';
 
+    const editModeHeader = mode === 'edit' ? 'true' : 'false';
+
     const editingData = await this.graphQLClient.request<GraphQLEditingQueryResponse>(
       query,
       {
@@ -168,7 +170,7 @@ export class GraphQLEditingService {
         ...fetchOptions,
         headers: {
           sc_layoutKind: layoutKind,
-          sc_editMode: mode === 'edit' ? 'true' : 'false',
+          sc_editMode: editModeHeader,
         },
       }
     );

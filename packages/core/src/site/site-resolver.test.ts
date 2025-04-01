@@ -170,21 +170,17 @@ describe('SiteResolver', () => {
   });
 
   describe('getByName', () => {
-    it('should throw when sites info is empty', () => {
+    it('should return undefined when sites info is empty', () => {
       const resolver = new SiteResolver([]);
-      expect(() => {
-        resolver.getByName('foo');
-      }).to.throw(Error, 'Could not resolve site for name foo');
+      expect(resolver.getByName('foo')).to.be.undefined;
     });
 
-    it('should throw when there is no appropriate site info', () => {
+    it('should return undefined when there is no appropriate site info', () => {
       const resolver = new SiteResolver([
         { hostName: 'bar.com', language: '', name: 'bar' },
         { hostName: 'var.com', language: '', name: 'var' },
       ]);
-      expect(() => {
-        resolver.getByName('foo');
-      }).to.throw(Error, 'Could not resolve site for name foo');
+      expect(resolver.getByName('foo')).to.be.undefined;
     });
 
     it('should return site', () => {

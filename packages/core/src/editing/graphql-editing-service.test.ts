@@ -16,6 +16,7 @@ import {
 } from '../test-data/mockEditingServiceResponse';
 import { LayoutKind } from './models';
 import debug from '../debug';
+import { LayoutServicePageState } from '../layout';
 
 use(spies);
 
@@ -79,15 +80,13 @@ describe('GraphQLEditingService', () => {
       version,
       itemId,
       siteName,
+      mode: LayoutServicePageState.Edit,
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
     expect(
       clientFactorySpy.calledWith({
         debugger: debug.editing,
-        headers: {
-          sc_editMode: 'true',
-        },
       })
     ).to.be.true;
     expect(clientFactorySpy.returnValues[0].request).to.be.called.exactly(1);
@@ -102,6 +101,62 @@ describe('GraphQLEditingService', () => {
       {
         headers: {
           sc_layoutKind: 'final',
+          sc_editMode: 'true',
+        },
+      }
+    );
+
+    expect(result).to.deep.equal({
+      layoutData: layoutDataResponse,
+      dictionary: {
+        foo: 'foo-phrase',
+        bar: 'bar-phrase',
+      },
+    });
+
+    spy.restore(clientFactorySpy);
+  });
+
+  it('should fetch preview data', async () => {
+    nock(hostname, { reqheaders: { sc_editMode: 'false' } })
+      .post(endpointPath, /EditingQuery/gi)
+      .reply(200, editingData);
+
+    const clientFactorySpy = sinon.spy(clientFactory);
+
+    const service = new GraphQLEditingService({
+      clientFactory: clientFactorySpy,
+    });
+
+    spy.on(clientFactorySpy.returnValues[0], 'request');
+
+    const result = await service.fetchEditingData({
+      language,
+      version,
+      itemId,
+      siteName,
+      mode: LayoutServicePageState.Preview,
+    });
+
+    expect(clientFactorySpy.calledOnce).to.be.true;
+    expect(
+      clientFactorySpy.calledWith({
+        debugger: debug.editing,
+      })
+    ).to.be.true;
+    expect(clientFactorySpy.returnValues[0].request).to.be.called.exactly(1);
+    expect(clientFactorySpy.returnValues[0].request).to.be.called.with(
+      query,
+      {
+        language,
+        version,
+        itemId,
+        siteName,
+      },
+      {
+        headers: {
+          sc_layoutKind: 'final',
+          sc_editMode: 'false',
         },
       }
     );
@@ -144,15 +199,13 @@ describe('GraphQLEditingService', () => {
       version,
       itemId,
       siteName,
+      mode: LayoutServicePageState.Edit,
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
     expect(
       clientFactorySpy.calledWith({
         debugger: debug.editing,
-        headers: {
-          sc_editMode: 'true',
-        },
       })
     ).to.be.true;
     expect(clientFactorySpy.returnValues[0].request).to.be.called.exactly(1);
@@ -167,6 +220,7 @@ describe('GraphQLEditingService', () => {
       {
         headers: {
           sc_layoutKind: 'final',
+          sc_editMode: 'true',
         },
       }
     );
@@ -201,24 +255,31 @@ describe('GraphQLEditingService', () => {
       language,
       itemId,
       siteName,
+      mode: LayoutServicePageState.Edit,
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
     expect(
       clientFactorySpy.calledWith({
         debugger: debug.editing,
-        headers: {
-          sc_editMode: 'true',
-        },
       })
     ).to.be.true;
     expect(clientFactorySpy.returnValues[0].request).to.be.called.exactly(1);
-    expect(clientFactorySpy.returnValues[0].request).to.be.called.with(query, {
-      language,
-      itemId,
-      siteName,
-      version: undefined,
-    });
+    expect(clientFactorySpy.returnValues[0].request).to.be.called.with(
+      query,
+      {
+        language,
+        itemId,
+        siteName,
+        version: undefined,
+      },
+      {
+        headers: {
+          sc_layoutKind: 'final',
+          sc_editMode: 'true',
+        },
+      }
+    );
 
     expect(result).to.deep.equal({
       layoutData: layoutDataResponse,
@@ -250,6 +311,7 @@ describe('GraphQLEditingService', () => {
       itemId,
       siteName,
       layoutKind: LayoutKind.Shared,
+      mode: LayoutServicePageState.Edit,
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
@@ -265,6 +327,7 @@ describe('GraphQLEditingService', () => {
       {
         headers: {
           sc_layoutKind: 'shared',
+          sc_editMode: 'true',
         },
       }
     );
@@ -285,11 +348,11 @@ describe('GraphQLEditingService', () => {
       .post(endpointPath, /EditingQuery/gi)
       .reply(200, mockEditingServiceResponse(true));
 
-    nock(hostname, { reqheaders: { sc_editMode: 'true' } })
+    nock(hostname)
       .post(endpointPath, /DictionaryQuery/gi)
       .reply(200, mockEditingServiceDictionaryResponse.pageOne);
 
-    nock(hostname, { reqheaders: { sc_editMode: 'true' } })
+    nock(hostname)
       .post(endpointPath, /DictionaryQuery/gi)
       .reply(200, mockEditingServiceDictionaryResponse.pageTwo);
 
@@ -306,15 +369,13 @@ describe('GraphQLEditingService', () => {
       version,
       itemId,
       siteName,
+      mode: LayoutServicePageState.Edit,
     });
 
     expect(clientFactorySpy.called).to.be.true;
     expect(
       clientFactorySpy.calledWith({
         debugger: debug.editing,
-        headers: {
-          sc_editMode: 'true',
-        },
       })
     ).to.be.true;
 
@@ -359,11 +420,11 @@ describe('GraphQLEditingService', () => {
 
   describe('fetchDictionaryData', () => {
     it('should request dictionary from scratch when fetchDictionaryData called on its own', async () => {
-      nock(hostname, { reqheaders: { sc_editMode: 'true' } })
+      nock(hostname)
         .post(endpointPath, /DictionaryQuery/gi)
         .reply(200, mockEditingServiceDictionaryResponse.pageOne);
 
-      nock(hostname, { reqheaders: { sc_editMode: 'true' } })
+      nock(hostname)
         .post(endpointPath, /DictionaryQuery/gi)
         .reply(200, mockEditingServiceDictionaryResponse.pageTwo);
 
@@ -450,24 +511,31 @@ describe('GraphQLEditingService', () => {
       version,
       itemId,
       siteName,
+      mode: LayoutServicePageState.Edit,
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
     expect(
       clientFactorySpy.calledWith({
         debugger: debug.editing,
-        headers: {
-          sc_editMode: 'true',
-        },
       })
     ).to.be.true;
     expect(clientFactorySpy.returnValues[0].request).to.be.called.exactly(1);
-    expect(clientFactorySpy.returnValues[0].request).to.be.called.with(query, {
-      language,
-      version,
-      itemId,
-      siteName,
-    });
+    expect(clientFactorySpy.returnValues[0].request).to.be.called.with(
+      query,
+      {
+        language,
+        version,
+        itemId,
+        siteName,
+      },
+      {
+        headers: {
+          sc_layoutKind: 'final',
+          sc_editMode: 'true',
+        },
+      }
+    );
 
     expect(result).to.deep.equal({
       layoutData: layoutDataResponse,
@@ -486,6 +554,7 @@ describe('GraphQLEditingService', () => {
         version,
         itemId,
         siteName,
+        mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
       expect(error.message).to.equal(
@@ -509,6 +578,7 @@ describe('GraphQLEditingService', () => {
         version,
         itemId,
         siteName,
+        mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
       expect(error.response.error).to.equal('Internal server error');
@@ -526,6 +596,7 @@ describe('GraphQLEditingService', () => {
         version,
         itemId,
         siteName: '',
+        mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
       expect(error.message).to.equal('The site name must be a non-empty string');
@@ -543,6 +614,7 @@ describe('GraphQLEditingService', () => {
         version,
         itemId,
         siteName,
+        mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
       expect(error.message).to.equal('The language must be a non-empty string');
@@ -568,6 +640,7 @@ describe('GraphQLEditingService', () => {
       language: 'en',
       version: '1',
       layoutKind: LayoutKind.Final,
+      mode: LayoutServicePageState.Edit,
     };
 
     const requestMock = sinon.stub().resolves({
@@ -601,6 +674,7 @@ describe('GraphQLEditingService', () => {
     expect(requestMock.firstCall.args[2]).to.deep.equal({
       ...fetchOptions,
       headers: {
+        sc_editMode: 'true',
         sc_layoutKind: LayoutKind.Final,
       },
     });

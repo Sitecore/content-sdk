@@ -217,6 +217,16 @@ describe('SitecoreClient', () => {
       expect(result).to.equal(siteInfo);
       expect(siteResolverStub.getByName.calledWith('other-site')).to.be.true;
     });
+
+    it('should resolve default site info when site not found', () => {
+      const path = [`${SITE_PREFIX}other-site`, '/some', 'path'];
+      siteResolverStub.getByName.returns(undefined);
+
+      const result = sitecoreClient.resolveSiteFromPath(path);
+
+      expect(result).to.deep.equal({ name: 'other-site', hostName: '', language: '' });
+      expect(siteResolverStub.getByName.calledWith('other-site')).to.be.true;
+    });
   });
 
   describe('parsePath', () => {

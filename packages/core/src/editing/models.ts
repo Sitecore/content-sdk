@@ -77,7 +77,6 @@ export interface DesignLibraryRenderPreviewData {
   renderingId: string;
   componentUid: string;
   language: string;
-  pageState: LayoutServicePageState;
   mode?: 'library';
   variant?: string;
   version?: string;

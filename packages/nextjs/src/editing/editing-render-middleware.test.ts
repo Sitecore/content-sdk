@@ -213,7 +213,7 @@ describe('EditingRenderMiddleware', () => {
       language: 'en',
       variantIds: ['dev'],
       version: 'latest',
-      pageState: 'edit',
+      mode: 'edit',
       layoutKind: 'shared',
     });
 
@@ -250,7 +250,7 @@ describe('EditingRenderMiddleware', () => {
       language: 'en',
       variantIds: ['id-1', 'id-2', 'id-3'],
       version: undefined,
-      pageState: 'edit',
+      mode: 'edit',
       layoutKind: undefined,
     });
   });
@@ -278,7 +278,7 @@ describe('EditingRenderMiddleware', () => {
       language: 'en',
       variantIds: ['_default'],
       version: undefined,
-      pageState: 'edit',
+      mode: 'edit',
       layoutKind: undefined,
     });
 
@@ -310,7 +310,7 @@ describe('EditingRenderMiddleware', () => {
       language: 'en',
       variantIds: ['dev'],
       version: 'latest',
-      pageState: 'edit',
+      mode: 'edit',
       layoutKind: 'shared',
     });
 
@@ -398,7 +398,6 @@ describe('EditingRenderMiddleware', () => {
         renderingId: query.sc_renderingId,
         language: query.sc_lang,
         site: query.sc_site,
-        pageState: 'normal',
         mode: 'library',
         dataSourceId: query.sc_datasourceId,
         version: query.sc_version,
@@ -429,6 +428,59 @@ describe('EditingRenderMiddleware', () => {
         html:
           '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
       });
+    });
+  });
+
+  describe('Sitecore Preview handling', () => {
+    const query = {
+      mode: 'preview',
+      route: '/styleguide',
+      sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+      sc_lang: 'en',
+      sc_site: 'website',
+      sc_variant: 'dev',
+      sc_version: 'latest',
+      secret: secret,
+      sc_layoutKind: 'final',
+    } as EditingRenderQueryParams;
+
+    it('should handle request', async () => {
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
+
+      await handler(req, res);
+
+      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
+        site: 'website',
+        itemId: '{11111111-1111-1111-1111-111111111111}',
+        language: 'en',
+        variantIds: ['dev'],
+        version: 'latest',
+        mode: 'preview',
+        layoutKind: 'final',
+      });
+
+      expect(res.setHeader).to.have.been.calledWith('Access-Control-Allow-Origin', allowedOrigin);
+      expect(res.setHeader).to.have.been.calledWith(
+        'Access-Control-Allow-Methods',
+        'GET, POST, OPTIONS, DELETE, PUT, PATCH'
+      );
+      expect(res.setHeader).to.have.been.calledWith('Set-Cookie', [
+        '__prerender_bypass=1122334455; Path=/; SameSite=None; Secure',
+        '__next_preview_data=6677889900; Path=/; SameSite=None; Secure',
+        'sc_site=website; Path=/; HttpOnly; SameSite=None; Secure',
+        'sc_preview=true; Path=/; HttpOnly; SameSite=None; Secure',
+      ]);
+
+      expect(res.redirect).to.have.been.calledOnce;
+      expect(res.redirect).to.have.been.calledWith('/styleguide');
+      expect(res.setHeader).to.have.been.calledWith(
+        'Content-Security-Policy',
+        `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
+      );
     });
   });
 });
