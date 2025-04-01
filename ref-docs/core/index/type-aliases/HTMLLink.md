@@ -8,6 +8,6 @@
 
 > **HTMLLink**: `object` & `Pick`\<`HTMLLinkElement`, `"rel"` \| `"href"`\>
 
-Defined in: [packages/core/src/models.ts:6](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/core/src/models.ts#L6)
+Defined in: [packages/core/src/models.ts:6](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/models.ts#L6)
 
 Html <link> tag data model

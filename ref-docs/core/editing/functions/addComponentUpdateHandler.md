@@ -8,7 +8,7 @@
 
 > **addComponentUpdateHandler**(`rootComponent`, `successCallback`?): `undefined` \| () => `void`
 
-Defined in: [packages/core/src/editing/design-library.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/core/src/editing/design-library.ts#L45)
+Defined in: [packages/core/src/editing/design-library.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/editing/design-library.ts#L45)
 
 Adds the browser-side event handler for 'component:update' message used in Design Library
 The event should update a component on page by uid, with fields and params from event args

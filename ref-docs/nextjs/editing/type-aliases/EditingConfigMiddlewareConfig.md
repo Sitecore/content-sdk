@@ -8,13 +8,13 @@
 
 > **EditingConfigMiddlewareConfig**: `object`
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:12](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/editing/editing-config-middleware.ts#L12)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:14](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/editing/editing-config-middleware.ts#L14)
 
 ## Type declaration
 
 ### components
 
-> **components**: `string`[] \| `Map`\<`string`, `unknown`\>
+> **components**: [`ComponentMap`](../../index/type-aliases/ComponentMap.md)\<[`NextjsJssComponent`](../../index/type-aliases/NextjsJssComponent.md)\>
 
 Components available in the application
 
