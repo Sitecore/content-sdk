@@ -6,7 +6,7 @@
 
 # Class: GraphQLDictionaryService
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:137](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/i18n/graphql-dictionary-service.ts#L137)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:137](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/i18n/graphql-dictionary-service.ts#L137)
 
 Service that fetch dictionary data using Sitecore's GraphQL API.
 
@@ -25,7 +25,7 @@ SearchQueryService<DictionaryQueryResult>
 
 > **new GraphQLDictionaryService**(`options`): [`GraphQLDictionaryService`](GraphQLDictionaryService.md)
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:144](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/i18n/graphql-dictionary-service.ts#L144)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:144](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/i18n/graphql-dictionary-service.ts#L144)
 
 Creates an instance of graphQL dictionary service with the provided options
 
@@ -45,7 +45,7 @@ Creates an instance of graphQL dictionary service with the provided options
 
 > **options**: [`GraphQLDictionaryServiceConfig`](../interfaces/GraphQLDictionaryServiceConfig.md)
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:144](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/i18n/graphql-dictionary-service.ts#L144)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:144](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/i18n/graphql-dictionary-service.ts#L144)
 
 instance
 
@@ -55,7 +55,7 @@ instance
 
 > **fetchDictionaryData**(`language`, `site`, `fetchOptions`?): `Promise`\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:157](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/i18n/graphql-dictionary-service.ts#L157)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:157](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/i18n/graphql-dictionary-service.ts#L157)
 
 Fetches dictionary data for internalization. Uses search query by default
 
@@ -87,7 +87,7 @@ if the app root was not found for the specified site and language.
 
 > `protected` **getCacheClient**(): [`CacheClient`](../../index/interfaces/CacheClient.md)\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:236](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/i18n/graphql-dictionary-service.ts#L236)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:236](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/i18n/graphql-dictionary-service.ts#L236)
 
 Gets a cache client that can cache data. Uses memory-cache as the default
 library for caching (@see MemoryCacheClient). Override this method if you
@@ -105,7 +105,7 @@ implementation
 
 > **getCacheValue**(`key`): `null` \| [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:226](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/i18n/graphql-dictionary-service.ts#L226)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:226](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/i18n/graphql-dictionary-service.ts#L226)
 
 Retrieves a
 
@@ -136,7 +136,7 @@ The
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:246](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/i18n/graphql-dictionary-service.ts#L246)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:246](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/i18n/graphql-dictionary-service.ts#L246)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -154,7 +154,7 @@ implementation
 
 > **setCacheValue**(`key`, `value`): [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:217](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/i18n/graphql-dictionary-service.ts#L217)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:217](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/i18n/graphql-dictionary-service.ts#L217)
 
 Caches a
 

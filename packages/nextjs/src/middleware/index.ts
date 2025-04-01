@@ -3,3 +3,4 @@ export { MiddlewareBase, MiddlewareBaseConfig, Middleware, defineMiddleware } fr
 export { RedirectsMiddleware, RedirectsMiddlewareConfig } from './redirects-middleware';
 export { PersonalizeMiddleware, PersonalizeMiddlewareConfig } from './personalize-middleware';
 export { MultisiteMiddleware, MultisiteMiddlewareConfig } from './multisite-middleware';
+export { SitemapMiddleware } from './sitemap-middleware';

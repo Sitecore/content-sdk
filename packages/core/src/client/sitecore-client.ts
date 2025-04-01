@@ -60,6 +60,8 @@ export type SitemapXmlOptions = {
   reqProtocol: string | string[];
   /** Optional sitemap identifier when requesting a specific sitemap */
   id?: string;
+  /** The site name to resolve the sitemap for */
+  siteName?: string;
 };
 
 /**
@@ -160,7 +162,6 @@ export class SitecoreClient implements BaseSitecoreClient {
   protected errorPagesService: GraphQLErrorPagesService;
   protected componentService: RestComponentLayoutService;
   protected sitePathService: GraphQLSitePathService;
-  protected sitemapXmlService: GraphQLSitemapXmlService;
 
   /**
    * Init SitecoreClient
@@ -169,7 +170,6 @@ export class SitecoreClient implements BaseSitecoreClient {
   constructor(protected initOptions: SitecoreClientInit) {
     this.clientFactory = this.getClientFactory();
     this.siteResolver = this.getSiteResolver();
-    this.sitemapXmlService = this.getGraphqlSitemapXMLService();
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
@@ -433,29 +433,31 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @throws {Error} Throws 'REDIRECT_404' if requested sitemap is not found
    */
   async getSiteMap(reqOptions: SitemapXmlOptions, fetchOptions?: FetchOptions): Promise<string> {
-    const ABSOLUTE_URL_REGEXP = '^(?:[a-z]+:)?//';
-    const { reqHost, reqProtocol, id } = reqOptions;
+    const { reqHost, reqProtocol, id, siteName } = reqOptions;
 
-    // Get specific sitemap
-    const sitemapPath = await this.sitemapXmlService.getSitemap(id as string);
+    // create sitemap graphql service
+    const sitemapXmlService = this.getGraphqlSitemapXMLService(
+      siteName || this.initOptions.defaultSite
+    );
 
+    // The id is present if url has sitemap-{n}.xml type.
+    // The id can be null if it's index sitemap.xml request
+    const sitemapPath = await sitemapXmlService.getSitemap(id as string);
+
+    // regular sitemap
     if (sitemapPath) {
-      const isAbsoluteUrl = sitemapPath.match(ABSOLUTE_URL_REGEXP);
-      const sitemapUrl = isAbsoluteUrl
-        ? sitemapPath
-        : `${this.initOptions.api.local.apiHost}${sitemapPath}`;
-
       try {
         const fetcher = new NativeDataFetcher();
-        const xmlResponse = await fetcher.fetch<string>(sitemapUrl);
+        const xmlResponse = await fetcher.fetch<string>(sitemapPath);
         return xmlResponse.data;
       } catch (error) {
         throw new Error('REDIRECT_404');
       }
     }
 
-    // Get sitemap index
-    const sitemaps = await this.sitemapXmlService.fetchSitemaps(fetchOptions);
+    // index /sitemap.xml that includes links to all sitemaps
+    const sitemaps = await sitemapXmlService.fetchSitemaps(fetchOptions);
+
     if (!sitemaps.length) {
       throw new Error('REDIRECT_404');
     }
@@ -478,10 +480,10 @@ export class SitecoreClient implements BaseSitecoreClient {
    * Subclasses can override these to provide custom implementations.
    */
 
-  protected getGraphqlSitemapXMLService(): GraphQLSitemapXmlService {
+  protected getGraphqlSitemapXMLService(siteName: string): GraphQLSitemapXmlService {
     return new GraphQLSitemapXmlService({
       clientFactory: this.clientFactory,
-      siteName: this.initOptions.defaultSite,
+      siteName,
     });
   }
 

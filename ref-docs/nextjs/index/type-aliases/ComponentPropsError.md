@@ -8,7 +8,7 @@
 
 > **ComponentPropsError**: `object`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:4](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/nextjs/src/sharedTypes/component-props.ts#L4)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/sharedTypes/component-props.ts#L5)
 
 ## Type declaration
 

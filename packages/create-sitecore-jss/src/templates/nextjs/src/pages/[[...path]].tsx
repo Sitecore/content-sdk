@@ -17,7 +17,7 @@ import {
 import { extractPath, handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import client from 'lib/sitecore-client';
-import { componentBuilder } from 'temp/componentBuilder';
+import components from 'lib/component-map';
 import scConfig from 'sitecore.config';
 
 
@@ -32,12 +32,10 @@ const SitecorePage = ({ notFound, componentProps, layout }: SitecorePageProps): 
     return <NotFound />;
   }
 
-  const isEditing = layout.sitecore.context.pageEditing;
-
   return (
     <ComponentPropsContext value={componentProps || {}}>
       <SitecoreContext
-        componentFactory={componentBuilder.getComponentFactory({ isEditing })}
+        componentMap={components}
         layoutData={layout}
         api={scConfig.api}
       >
@@ -102,11 +100,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props = {
       ...page,
       dictionary: await client.getDictionary({ site: page.site?.name, locale: page.locale }),
-      componentProps: await client.getComponentData(
-        page.layout,
-        context,
-        componentBuilder.getModuleFactory()
-      ),
+      componentProps: await client.getComponentData(page.layout, context, components),
     }
   }
   return {

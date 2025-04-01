@@ -8,13 +8,14 @@ import {
 import {
   ComponentPropsCollection,
   ComponentPropsFetchFunction,
+  NextjsJssComponent,
 } from '../sharedTypes/component-props';
-import { ModuleFactory } from '../sharedTypes/module-factory';
+import { ComponentMap } from '@sitecore-content-sdk/react';
 
 export type FetchComponentPropsArguments<NextContext> = {
   layoutData: LayoutServiceData;
   context: NextContext;
-  moduleFactory: ModuleFactory;
+  components: ComponentMap<NextjsJssComponent>;
 };
 
 export type ComponentPropsRequest<NextContext> = {
@@ -32,13 +33,10 @@ export class ComponentPropsService {
   async fetchComponentProps(
     params: FetchComponentPropsArguments<GetServerSidePropsContext | GetStaticPropsContext>
   ): Promise<ComponentPropsCollection> {
-    const { layoutData, context, moduleFactory } = params;
+    const { layoutData, context, components } = params;
     if (this.isServerSidePropsContext(context)) {
-      const fetchFunctionFactory = async (componentName: string) => {
-        const module = await moduleFactory(componentName);
-
-        return module?.getServerSideProps;
-      };
+      const fetchFunctionFactory = async (componentName: string) =>
+        (await this.getModule(components, componentName))?.getServerSideProps;
       const requests = await this.collectRequests({
         placeholders: layoutData.sitecore.route?.placeholders,
         fetchFunctionFactory,
@@ -47,11 +45,9 @@ export class ComponentPropsService {
       });
       return await this.execRequests(requests);
     } else {
-      const fetchFunctionFactory = async (componentName: string) => {
-        const module = await moduleFactory(componentName);
+      const fetchFunctionFactory = async (componentName: string) =>
+        (await this.getModule(components, componentName))?.getStaticProps;
 
-        return module?.getStaticProps;
-      };
       const requests = await this.collectRequests({
         placeholders: layoutData.sitecore.route?.placeholders,
         fetchFunctionFactory,
@@ -196,5 +192,14 @@ export class ComponentPropsService {
     context: GetServerSidePropsContext | GetStaticPropsContext
   ): context is GetServerSidePropsContext {
     return (<GetServerSidePropsContext>context).req !== undefined;
+  }
+
+  private async getModule(components: ComponentMap<NextjsJssComponent>, componentName: string) {
+    const component = components.get(componentName);
+
+    if (!component) return null;
+
+    const module = component.dynamicModule ? await component?.dynamicModule?.() : component;
+    return module as NextjsJssComponent;
   }
 }

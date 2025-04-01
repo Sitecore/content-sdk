@@ -22,9 +22,7 @@
 
 ## Functions
 
-- [generateComponentBuilder](functions/generateComponentBuilder.md)
 - [generateMetadata](functions/generateMetadata.md)
 - [generatePlugins](functions/generatePlugins.md)
 - [generateSites](functions/generateSites.md)
-- [getComponentBuilderTemplate](functions/getComponentBuilderTemplate.md)
 - [getComponentList](functions/getComponentList.md)

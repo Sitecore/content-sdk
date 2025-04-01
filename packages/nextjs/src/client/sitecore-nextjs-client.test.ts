@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { SitecoreNextjsClient } from './sitecore-nextjs-client';
-import { ComponentBuilder } from '../ComponentBuilder';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
 import * as siteTools from '@sitecore-content-sdk/core/site';
 import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
@@ -11,8 +10,6 @@ import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
 
 describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
-  const builder = new ComponentBuilder({ components: new Map() });
-  const moduleFactory = builder.getModuleFactory();
   const defaultSiteDeets = { hostName: 'http://unit.test', language: 'ua' };
   const defaultInitOptions = {
     api: {
@@ -269,9 +266,9 @@ describe('SitecoreClient', () => {
         getServerSideProps: sandbox.stub().resolves({ props: { data: 'test-data' } }),
       };
 
-      const moduleFactoryStub = sandbox.stub().returns(mockComponent);
+      const componentMap = new Map([['TestComponent', mockComponent]]);
 
-      const result = await sitecoreClient.getComponentData(layoutData, context, moduleFactoryStub);
+      const result = await sitecoreClient.getComponentData(layoutData, context, componentMap);
 
       expect(result).to.deep.equal({
         'test-uid': { props: { data: 'test-data' } },

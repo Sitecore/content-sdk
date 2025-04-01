@@ -1,7 +1,7 @@
 ﻿import React, { ComponentType } from 'react';
 import PropTypes, { Requireable } from 'prop-types';
 import { MissingComponent } from './MissingComponent';
-import { ComponentFactory, JssComponentType } from './sharedTypes';
+import { DEFAULT_EXPORT_NAME, ComponentMap, LazyComponentType, ReactModule } from './sharedTypes';
 import {
   ComponentRendering,
   RouteData,
@@ -37,10 +37,10 @@ export interface PlaceholderProps {
   /** Rendering data to be used when rendering the placeholder. */
   rendering: ComponentRendering | RouteData;
   /**
-   * A factory function that will receive a componentName and return an instance of a React component.
-   * When rendered within a <SitecoreContext> component, defaults to the context componentFactory.
+   * Component Map will be used to map Sitecore component names to app implementation
+   * When rendered within a <SitecoreContext> component, defaults to the context componentMap.
    */
-  componentFactory?: ComponentFactory;
+  componentMap?: ComponentMap;
   /**
    * An object of field names/values that are aggregated and propagated through the component tree created by a placeholder.
    * Any component or placeholder rendered by a placeholder will have access to this data via `props.fields`.
@@ -64,7 +64,7 @@ export interface PlaceholderProps {
   modifyComponentProps?: (componentProps: ComponentProps) => ComponentProps;
   /**
    * A component that is rendered in place of any components that are in this placeholder,
-   * but do not have a definition in the componentFactory (i.e. don't have a React implementation)
+   * but do not have a definition in the componentMap (i.e. don't have a React implementation)
    */
   missingComponentComponent?: React.ComponentClass<unknown> | React.FC<unknown>;
 
@@ -217,7 +217,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
           component = this.getComponentForRendering(componentRendering);
         }
 
-        // Fallback/defaults for Sitecore Component renderings (in case not defined in component factory)
+        // Fallback/defaults for Sitecore Component renderings (in case not defined in component map)
         if (!component) {
           if (componentRendering.componentName === FEAAS_COMPONENT_RENDERING_NAME) {
             component = FEaaSComponent;
@@ -232,7 +232,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
 
         if (!component) {
           console.error(
-            `Placeholder ${name} contains unknown component ${componentRendering.componentName}. Ensure that a React component exists for it, and that it is registered in your componentFactory.js.`
+            `Placeholder ${name} contains unknown component ${componentRendering.componentName}. Ensure that a React component exists for it, and that it is registered in your component-map file.`
           );
 
           component = missingComponentComponent ?? MissingComponent;
@@ -272,7 +272,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
               errorComponent={this.props.errorComponent}
               componentLoadingMessage={this.props.componentLoadingMessage}
               type={type}
-              isDynamic={(component as JssComponentType).render?.preload ? true : false}
+              isDynamic={(component as LazyComponentType).render?.preload ? true : false}
               {...rendered.props}
             >
               {rendered}
@@ -309,23 +309,30 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
   }
 
   getComponentForRendering(renderingDefinition: ComponentRendering): ComponentType | null {
-    const componentFactory = this.props.componentFactory;
+    const componentMap = this.props.componentMap;
 
-    if (!componentFactory || typeof componentFactory !== 'function') {
+    if (!componentMap || componentMap.size === 0) {
       console.warn(
-        `No componentFactory was available to service request for component ${renderingDefinition}`
+        `No components were available in component map to service request for component ${renderingDefinition}`
       );
       return null;
     }
 
-    // Render SXA Rendering Variant
-    if (renderingDefinition.params?.FieldNames) {
-      return componentFactory(
-        renderingDefinition.componentName,
-        renderingDefinition.params.FieldNames
-      );
+    // Render SXA Rendering Variant if available
+    const exportName = renderingDefinition.params?.FieldNames;
+
+    const component = componentMap.get(renderingDefinition.componentName);
+
+    if (!component) return null;
+
+    if (exportName && exportName !== DEFAULT_EXPORT_NAME) {
+      return (component as ReactModule)[exportName] as ComponentType;
     }
 
-    return componentFactory(renderingDefinition.componentName);
+    return (
+      (component as ReactModule).default ||
+      (component as ReactModule).Default ||
+      (component as ComponentType)
+    );
   }
 }

@@ -8,12 +8,14 @@ import { Metadata } from '@sitecore-content-sdk/core/editing';
 import { enforceCors } from '@sitecore-content-sdk/core/utils';
 import { EditMode } from '@sitecore-content-sdk/core/layout';
 import { getJssEditingSecret } from '../utils/utils';
+import { ComponentMap } from '@sitecore-content-sdk/react';
+import { NextjsJssComponent } from '../sharedTypes/component-props';
 
 export type EditingConfigMiddlewareConfig = {
   /**
    * Components available in the application
    */
-  components: string[] | Map<string, unknown>;
+  components: ComponentMap<NextjsJssComponent>;
   /**
    * Application metadata
    */
@@ -64,9 +66,7 @@ export class EditingConfigMiddleware {
       return res.status(204).send(null);
     }
 
-    const components = Array.isArray(this.config.components)
-      ? this.config.components
-      : Array.from(this.config.components.keys());
+    const components = Array.from(this.config.components.keys());
 
     return res.status(200).json({
       components,

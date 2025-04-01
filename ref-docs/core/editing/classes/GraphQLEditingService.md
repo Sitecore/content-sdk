@@ -6,7 +6,7 @@
 
 # Class: GraphQLEditingService
 
-Defined in: [packages/core/src/editing/graphql-editing-service.ts:110](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/editing/graphql-editing-service.ts#L110)
+Defined in: [packages/core/src/editing/graphql-editing-service.ts:110](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/editing/graphql-editing-service.ts#L110)
 
 Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
 Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
@@ -17,7 +17,7 @@ Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
 
 > **new GraphQLEditingService**(`serviceConfig`): [`GraphQLEditingService`](GraphQLEditingService.md)
 
-Defined in: [packages/core/src/editing/graphql-editing-service.ts:117](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/editing/graphql-editing-service.ts#L117)
+Defined in: [packages/core/src/editing/graphql-editing-service.ts:117](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/editing/graphql-editing-service.ts#L117)
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -37,7 +37,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > **serviceConfig**: `GraphQLEditingServiceConfig`
 
-Defined in: [packages/core/src/editing/graphql-editing-service.ts:117](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/editing/graphql-editing-service.ts#L117)
+Defined in: [packages/core/src/editing/graphql-editing-service.ts:117](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/editing/graphql-editing-service.ts#L117)
 
 configuration
 
@@ -47,7 +47,7 @@ configuration
 
 > **fetchDictionaryData**(`__namedParameters`, `fetchOptions`?): `Promise`\<[`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/editing/graphql-editing-service.ts:203](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/editing/graphql-editing-service.ts#L203)
+Defined in: [packages/core/src/editing/graphql-editing-service.ts:203](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/editing/graphql-editing-service.ts#L203)
 
 #### Parameters
 
@@ -71,7 +71,7 @@ Defined in: [packages/core/src/editing/graphql-editing-service.ts:203](https://g
 
 > **fetchEditingData**(`variables`, `fetchOptions`?): `Promise`\<\{ `dictionary`: [`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md); `layoutData`: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md); \}\>
 
-Defined in: [packages/core/src/editing/graphql-editing-service.ts:132](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/editing/graphql-editing-service.ts#L132)
+Defined in: [packages/core/src/editing/graphql-editing-service.ts:132](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/editing/graphql-editing-service.ts#L132)
 
 Fetches editing data. Provides the layout data and dictionary phrases
 
@@ -94,7 +94,7 @@ The layout data and dictionary phrases.
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/editing/graphql-editing-service.ts:252](https://github.com/Sitecore/xmc-jss-dev/blob/643e3fe82af3b30800fd4ecaa7f98eb7f13d1ef6/packages/core/src/editing/graphql-editing-service.ts#L252)
+Defined in: [packages/core/src/editing/graphql-editing-service.ts:252](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/core/src/editing/graphql-editing-service.ts#L252)
 
 Gets a GraphQL client that can make requests to the API.
 

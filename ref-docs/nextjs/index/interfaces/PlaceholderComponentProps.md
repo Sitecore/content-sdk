@@ -18,21 +18,6 @@ Defined in: react/types/components/Placeholder.d.ts:4
 
 ## Properties
 
-### componentFactory?
-
-> `optional` **componentFactory**: [`ComponentFactory`](../type-aliases/ComponentFactory.md)
-
-Defined in: react/types/components/PlaceholderCommon.d.ts:24
-
-A factory function that will receive a componentName and return an instance of a React component.
-When rendered within a <SitecoreContext> component, defaults to the context componentFactory.
-
-#### Inherited from
-
-`PlaceholderProps.componentFactory`
-
-***
-
 ### componentLoadingMessage?
 
 > `optional` **componentLoadingMessage**: `string`
@@ -44,6 +29,21 @@ The message that gets displayed while component is loading
 #### Inherited from
 
 `PlaceholderProps.componentLoadingMessage`
+
+***
+
+### componentMap?
+
+> `optional` **componentMap**: [`ComponentMap`](../type-aliases/ComponentMap.md)
+
+Defined in: react/types/components/PlaceholderCommon.d.ts:24
+
+Component Map will be used to map Sitecore component names to app implementation
+When rendered within a <SitecoreContext> component, defaults to the context componentMap.
+
+#### Inherited from
+
+`PlaceholderProps.componentMap`
 
 ***
 
@@ -102,7 +102,7 @@ A component that is rendered in place of any components that are hidden
 Defined in: react/types/components/PlaceholderCommon.d.ts:50
 
 A component that is rendered in place of any components that are in this placeholder,
-but do not have a definition in the componentFactory (i.e. don't have a React implementation)
+but do not have a definition in the componentMap (i.e. don't have a React implementation)
 
 #### Inherited from
 

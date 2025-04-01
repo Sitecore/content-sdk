@@ -2,14 +2,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
-import { ComponentFactory } from './sharedTypes';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { LayoutServiceContext, LayoutServiceData, RouteData } from '../index';
 import { constants } from '@sitecore-content-sdk/core';
+import { ComponentMap } from './sharedTypes';
 
 export interface SitecoreContextProps {
   api: SitecoreConfig['api'];
-  componentFactory: ComponentFactory;
+  componentMap: ComponentMap;
   layoutData?: LayoutServiceData;
   children: React.ReactNode;
 }
@@ -23,9 +23,7 @@ export interface SitecoreContextState {
 export const SitecoreContextReactContext = React.createContext<SitecoreContextState>(
   {} as SitecoreContextState
 );
-export const ComponentFactoryReactContext = React.createContext<ComponentFactory>(
-  {} as ComponentFactory
-);
+export const ComponentMapReactContext = React.createContext<ComponentMap>(new Map());
 
 export type SitecoreContextValue = LayoutServiceContext & {
   itemId?: string;
@@ -35,7 +33,7 @@ export type SitecoreContextValue = LayoutServiceContext & {
 export class SitecoreContext extends React.Component<SitecoreContextProps, SitecoreContextState> {
   static propTypes = {
     children: PropTypes.any.isRequired,
-    componentFactory: PropTypes.func,
+    componentMap: PropTypes.instanceOf(Map),
     layoutData: PropTypes.shape({
       sitecore: PropTypes.shape({
         context: PropTypes.any,
@@ -109,11 +107,11 @@ export class SitecoreContext extends React.Component<SitecoreContextProps, Sitec
 
   render() {
     return (
-      <ComponentFactoryReactContext.Provider value={this.props.componentFactory}>
+      <ComponentMapReactContext.Provider value={this.props.componentMap}>
         <SitecoreContextReactContext.Provider value={this.state}>
           {this.props.children}
         </SitecoreContextReactContext.Provider>
-      </ComponentFactoryReactContext.Provider>
+      </ComponentMapReactContext.Provider>
     );
   }
 }

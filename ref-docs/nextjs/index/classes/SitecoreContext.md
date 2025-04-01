@@ -40,7 +40,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:35
 
 > **context**: `unknown`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1013
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1013
 
 If using the new style context, re-declare this in your class to be the
 `React.ContextType` of your `static contextType`.
@@ -70,7 +70,7 @@ declare context: React.ContextType<typeof MyContext>
 
 > `readonly` **props**: `Readonly`\<`SitecoreContextProps`\>
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1033
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1033
 
 #### Inherited from
 
@@ -82,7 +82,7 @@ Defined in: react/node\_modules/@types/react/index.d.ts:1033
 
 > **refs**: `object`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1040
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1040
 
 #### Index Signature
 
@@ -124,7 +124,7 @@ Update context state. Value can be
 
 > **state**: `Readonly`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\>
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1034
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1034
 
 #### Inherited from
 
@@ -136,7 +136,7 @@ Defined in: react/node\_modules/@types/react/index.d.ts:1034
 
 > `static` `optional` **contextType**: `Context`\<`any`\>
 
-Defined in: react/node\_modules/@types/react/index.d.ts:995
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:995
 
 If set, `this.context` will be set at runtime to the current value of the given Context.
 
@@ -183,9 +183,9 @@ Defined in: react/types/components/SitecoreContext.d.ts:24
 
 > **children**: `Validator`\<`any`\>
 
-#### componentFactory
+#### componentMap
 
-> **componentFactory**: `Requireable`\<(...`args`) => `any`\>
+> **componentMap**: `Requireable`\<`Map`\<`unknown`, `unknown`\>\>
 
 #### layoutData
 
@@ -197,7 +197,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:24
 
 > `optional` **componentDidCatch**(`error`, `errorInfo`): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1397
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1397
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
@@ -223,7 +223,7 @@ the entire component tree to unmount.
 
 > `optional` **componentDidMount**(): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1376
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1376
 
 Called immediately after a component is mounted. Setting state here will trigger re-rendering.
 
@@ -267,7 +267,7 @@ The snapshot is only present if [getSnapshotBeforeUpdate](SitecoreContext.md#get
 
 > `optional` **componentWillMount**(): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1455
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1455
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -299,7 +299,7 @@ this from being invoked.
 
 > `optional` **componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1486
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1486
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -341,7 +341,7 @@ this from being invoked.
 
 > `optional` **componentWillUnmount**(): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1392
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1392
 
 Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
 cancelled network requests, or cleaning up any DOM elements created in `componentDidMount`.
@@ -360,7 +360,7 @@ cancelled network requests, or cleaning up any DOM elements created in `componen
 
 > `optional` **componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1518
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1518
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -419,7 +419,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:36
 
 > **forceUpdate**(`callback`?): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1030
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1030
 
 #### Parameters
 
@@ -441,7 +441,7 @@ Defined in: react/node\_modules/@types/react/index.d.ts:1030
 
 > `optional` **getSnapshotBeforeUpdate**(`prevProps`, `prevState`): `any`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1433
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1433
 
 Runs before React applies the result of Component.render render to the document, and
 returns an object to be given to [componentDidUpdate](SitecoreContext.md#componentdidupdate). Useful for saving
@@ -487,7 +487,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:44
 
 > **setState**\<`K`\>(`state`, `callback`?): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1025
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1025
 
 #### Type Parameters
 
@@ -516,7 +516,7 @@ Defined in: react/node\_modules/@types/react/index.d.ts:1025
 
 > `optional` **shouldComponentUpdate**(`nextProps`, `nextState`, `nextContext`): `boolean`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1387
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1387
 
 Called to determine whether the change in props and state should trigger a re-render.
 
@@ -549,7 +549,7 @@ and `componentDidUpdate` will not be called.
 
 > `optional` **UNSAFE\_componentWillMount**(): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1470
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1470
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -583,7 +583,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1504
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1504
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -627,7 +627,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: react/node\_modules/@types/react/index.d.ts:1534
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1534
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 

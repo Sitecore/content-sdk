@@ -9,4 +9,3 @@ export {
   generatePlugins,
   ModuleType,
 } from '@sitecore-content-sdk/core/tools';
-export * from './templating';
