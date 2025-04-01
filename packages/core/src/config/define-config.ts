@@ -32,7 +32,6 @@ export const getFallbackConfig = (): SitecoreConfig => ({
   },
   multisite: {
     enabled: true,
-    defaultHostname: '',
     useCookieResolution: () => false,
   },
   personalize: {

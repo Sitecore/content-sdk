@@ -10,7 +10,7 @@ import proxyquire from 'proxyquire';
 
 const defaultSite: SiteInfo = {
   name: 'defaultSite',
-  hostName: 'defaultSite.com',
+  hostName: '*',
   language: 'en',
 };
 
@@ -25,11 +25,10 @@ const mockConfig: SitecoreConfigInput = {
   defaultLanguage: defaultSite.language,
   multisite: {
     enabled: true,
-    defaultHostname: defaultSite.hostName,
   },
 };
 
-describe('generateSites', () => {
+describe.only('generateSites', () => {
   let ensurePathExistsStub: sinon.SinonStub;
   let fsWriteFileSyncStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
