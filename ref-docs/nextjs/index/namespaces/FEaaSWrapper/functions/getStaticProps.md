@@ -8,7 +8,7 @@
 
 > **getStaticProps**(`rendering`, `layoutData`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [nextjs/src/components/FEaaSWrapper.tsx:23](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/components/FEaaSWrapper.tsx#L23)
+Defined in: [nextjs/src/components/FEaaSWrapper.tsx:23](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/components/FEaaSWrapper.tsx#L23)
 
 Will be called during SSG
 

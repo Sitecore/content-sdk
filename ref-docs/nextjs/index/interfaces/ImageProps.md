@@ -22,7 +22,7 @@ Defined in: react/types/components/Image.d.ts:28
 
 > `optional` **editable**: `boolean`
 
-Defined in: react/types/components/sharedTypes.d.ts:23
+Defined in: react/types/components/sharedTypes/props.d.ts:9
 
 Can be used to explicitly disable inline editing.
 
@@ -42,7 +42,7 @@ true
 
 > `optional` **emptyFieldEditingComponent**: `ComponentClass`\<`unknown`\> \| `FC`\<`unknown`\>
 
-Defined in: react/types/components/sharedTypes.d.ts:27
+Defined in: react/types/components/sharedTypes/props.d.ts:13
 
 Custom element to render in Pages in edit mode if field value is empty
 

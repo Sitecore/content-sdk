@@ -6,7 +6,7 @@
 
 # Class: SitecoreClient
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:26](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/client/sitecore-nextjs-client.ts#L26)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:30](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/client/sitecore-nextjs-client.ts#L30)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:26](https://github.com/
 
 > **new SitecoreClient**(`initOptions`): [`SitecoreClient`](SitecoreClient.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/client/sitecore-nextjs-client.ts#L28)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/client/sitecore-nextjs-client.ts#L32)
 
 #### Parameters
 
@@ -52,7 +52,7 @@ Defined in: core/types/client/sitecore-client.d.ts:120
 
 > `protected` **componentPropsService**: [`ComponentPropsService`](../../index/classes/ComponentPropsService.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:27](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/client/sitecore-nextjs-client.ts#L27)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:31](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/client/sitecore-nextjs-client.ts#L31)
 
 ***
 
@@ -108,7 +108,7 @@ Defined in: core/types/client/sitecore-client.d.ts:121
 
 > `protected` **initOptions**: [`SitecoreClientInit`](../type-aliases/SitecoreClientInit.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:28](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/client/sitecore-nextjs-client.ts#L28)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/client/sitecore-nextjs-client.ts#L32)
 
 #### Inherited from
 
@@ -198,11 +198,11 @@ Defined in: core/types/client/sitecore-client.d.ts:211
 
 ### getComponentData()
 
-> **getComponentData**(`layoutData`, `context`, `moduleFactory`): `Promise`\<[`ComponentPropsCollection`](../../index/type-aliases/ComponentPropsCollection.md)\>
+> **getComponentData**(`layoutData`, `context`, `components`): `Promise`\<[`ComponentPropsCollection`](../../index/type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:96](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/client/sitecore-nextjs-client.ts#L96)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:100](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/client/sitecore-nextjs-client.ts#L100)
 
-Parses components from nextjs component factory and layoutData, executes getServerProps/getStaticProps methods
+Parses components from nextjs component map and layoutData, executes getServerProps/getStaticProps methods
 and returns resulting props from components
 
 #### Parameters
@@ -211,7 +211,7 @@ and returns resulting props from components
 | ------ | ------ | ------ |
 | `layoutData` | [`LayoutServiceData`](../../index/interfaces/LayoutServiceData.md) | layout data to parse compnents from |
 | `context` | `GetServerSidePropsContext` \| `GetStaticPropsContext` | Nextjs preview data |
-| `moduleFactory` | [`ModuleFactory`](../../index/type-aliases/ModuleFactory.md) | module factory to use for component parsing |
+| `components` | [`ComponentMap`](../../index/type-aliases/ComponentMap.md)\<[`NextjsJssComponent`](../../index/type-aliases/NextjsJssComponent.md)\> | component map to get props for |
 
 #### Returns
 
@@ -225,7 +225,7 @@ component props
 
 > `protected` **getComponentPropsService**(): [`ComponentPropsService`](../../index/classes/ComponentPropsService.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:127](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/client/sitecore-nextjs-client.ts#L127)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:131](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/client/sitecore-nextjs-client.ts#L131)
 
 #### Returns
 
@@ -458,7 +458,7 @@ Defined in: core/types/client/sitecore-client.d.ts:213
 
 > **getPage**(`path`, `pageOptions`, `options`?): `Promise`\<`null` \| [`NextjsPage`](../type-aliases/NextjsPage.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:53](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/client/sitecore-nextjs-client.ts#L53)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:57](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/client/sitecore-nextjs-client.ts#L57)
 
 Get page details for a route, with layout and other details
 
@@ -513,7 +513,7 @@ A promise that resolves to an array of static paths.
 
 > **getPreview**(`previewData`, `fetchOptions`?): `Promise`\<`null` \| [`NextjsPage`](../type-aliases/NextjsPage.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:81](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/client/sitecore-nextjs-client.ts#L81)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:85](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/client/sitecore-nextjs-client.ts#L85)
 
 Retrieves preview page and layout details
 
@@ -601,7 +601,7 @@ Defined in: core/types/client/sitecore-client.d.ts:212
 
 > **parsePath**(`path`): `string`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/client/sitecore-nextjs-client.ts#L48)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:52](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/client/sitecore-nextjs-client.ts#L52)
 
 Normalizes a nextjs path that could have been rewritten
 
@@ -653,7 +653,7 @@ site details matching the hostname
 
 > **resolveSiteFromPath**(`path`): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/dfe05bf848bf53c7c66dabdbf3217e55f8de497c/packages/nextjs/src/client/sitecore-nextjs-client.ts#L34)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:38](https://github.com/Sitecore/xmc-jss-dev/blob/2d716c1b15bc7f650cb9eb490f393fec3b1f4809/packages/nextjs/src/client/sitecore-nextjs-client.ts#L38)
 
 #### Parameters
 

@@ -18,7 +18,6 @@
 
 - [BYOCComponent](classes/BYOCComponent.md)
 - [ClientError](classes/ClientError.md)
-- [ComponentBuilder](classes/ComponentBuilder.md)
 - [DefaultRetryStrategy](classes/DefaultRetryStrategy.md)
 - [GraphQLDictionaryService](classes/GraphQLDictionaryService.md)
 - [GraphQLLayoutService](classes/GraphQLLayoutService.md)
@@ -66,16 +65,16 @@
 
 - [BYOCComponentParams](type-aliases/BYOCComponentParams.md)
 - [BYOCComponentProps](type-aliases/BYOCComponentProps.md)
-- [ComponentBuilderConfig](type-aliases/ComponentBuilderConfig.md)
-- [ComponentFactory](type-aliases/ComponentFactory.md)
+- [ComponentMap](type-aliases/ComponentMap.md)
 - [EnhancedOmit](type-aliases/EnhancedOmit.md)
 - [FEaaSComponentParams](type-aliases/FEaaSComponentParams.md)
 - [FEaaSComponentProps](type-aliases/FEaaSComponentProps.md)
 - [GraphQLClientError](type-aliases/GraphQLClientError.md)
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
-- [JssComponentType](type-aliases/JssComponentType.md)
 - [LinkProps](type-aliases/LinkProps.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
+- [ReactJssComponent](type-aliases/ReactJssComponent.md)
+- [ReactModule](type-aliases/ReactModule.md)
 - [SitecoreContextValue](type-aliases/SitecoreContextValue.md)
 - [WithSitecoreContextHocProps](type-aliases/WithSitecoreContextHocProps.md)
 
