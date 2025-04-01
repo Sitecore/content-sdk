@@ -64,6 +64,7 @@ export type SitecoreConfigInput = {
   defaultLanguage: string;
   /**
    * Your default site name. When using the multisite feature this variable defines the fallback site.
+   * @default empty string
    */
   defaultSite?: string;
   /**
