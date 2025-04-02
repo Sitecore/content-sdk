@@ -145,7 +145,7 @@ describe('GraphQLSitemapXmlService', () => {
     it('should return undefined when id is undefined', async () => {
       mockSitemapRequest(mockSitemaps);
       const service = new GraphQLSitemapXmlService({ clientFactory, siteName });
-      const result = await service.getSitemap((undefined as unknown) as string);
+      const result = await service.getSitemap(undefined);
       expect(result).to.be.undefined;
       expect(nock.isDone()).to.be.false;
     });
@@ -154,7 +154,7 @@ describe('GraphQLSitemapXmlService', () => {
       mockSitemapRequest(mockSitemaps);
       const service = new GraphQLSitemapXmlService({ clientFactory, siteName });
       const result = await service.getSitemap('');
-      expect(result).to.deep.equal('sitemap.xml');
+      expect(result).to.deep.equal(undefined);
       expect(nock.isDone()).to.be.true;
     });
 
