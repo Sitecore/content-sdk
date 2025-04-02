@@ -1,5 +1,5 @@
 // Below are built-in components that are available in the app, it's recommended to keep them as is
-import { BYOCWrapper, ComponentMap, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
+import { BYOCWrapper, NextjsJssComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
 import { Form } from '@sitecore-content-sdk/nextjs';
 // end of built-in components
 
@@ -21,7 +21,7 @@ import * as SitecoreStyles from 'src/components/SitecoreStyles';
 import * as Title from 'src/components/Title';
 
 // Components must be registered with to match the string key with component name in Sitecore
-export const componentMap = new Map<string, unknown>([
+export const componentMap = new Map<string, NextjsJssComponent>([
   ['BYOCWrapper', BYOCWrapper],
   ['FEaaSWrapper', FEaaSWrapper],
   ['Form', Form],
@@ -42,4 +42,4 @@ export const componentMap = new Map<string, unknown>([
   ['Title', Title],
 ]);
 
-export default componentMap as ComponentMap;
+export default componentMap;
