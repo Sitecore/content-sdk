@@ -8,7 +8,7 @@
 
 > **ScaffoldTemplate**: `object`
 
-Defined in: [packages/core/src/config/models.ts:223](https://github.com/Sitecore/content-sdk/blob/0368ee89b256e5717d28a2086597ae659abd51a0/packages/core/src/config/models.ts#L223)
+Defined in: [packages/core/src/config/models.ts:218](https://github.com/Sitecore/content-sdk/blob/7a8762cba8d2433002de71e21a5ba27c55dcfe57/packages/core/src/config/models.ts#L218)
 
 Represents a scaffold template used for generating components.
 
