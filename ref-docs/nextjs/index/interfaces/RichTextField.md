@@ -18,7 +18,7 @@ Defined in: react/types/components/RichText.d.ts:5
 
 > `optional` **metadata**: `object`
 
-Defined in: core/types/layout/models.d.ts:108
+Defined in: core/types/layout/models.d.ts:107
 
 #### Index Signature
 

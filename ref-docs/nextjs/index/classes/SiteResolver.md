@@ -58,9 +58,9 @@ if a matching site is not found
 
 ### getByName()
 
-> **getByName**: (`siteName`) => [`SiteInfo`](../type-aliases/SiteInfo.md)
+> **getByName**: (`siteName`) => `undefined` \| [`SiteInfo`](../type-aliases/SiteInfo.md)
 
-Defined in: core/types/site/site-resolver.d.ts:24
+Defined in: core/types/site/site-resolver.d.ts:23
 
 Resolve site by site name
 
@@ -72,13 +72,9 @@ Resolve site by site name
 
 #### Returns
 
-[`SiteInfo`](../type-aliases/SiteInfo.md)
+`undefined` \| [`SiteInfo`](../type-aliases/SiteInfo.md)
 
-the resolved site
-
-#### Throws
-
-if a matching site is not found
+the resolved site or undefined if not found
 
 ***
 
@@ -86,7 +82,7 @@ if a matching site is not found
 
 > `protected` **getHostMap**: () => `Map`\<`string`, [`SiteInfo`](../type-aliases/SiteInfo.md)\>
 
-Defined in: core/types/site/site-resolver.d.ts:25
+Defined in: core/types/site/site-resolver.d.ts:24
 
 #### Returns
 
@@ -106,7 +102,7 @@ Defined in: core/types/site/site-resolver.d.ts:6
 
 > `protected` **matchesPattern**(`hostname`, `pattern`): `boolean`
 
-Defined in: core/types/site/site-resolver.d.ts:26
+Defined in: core/types/site/site-resolver.d.ts:25
 
 #### Parameters
 
