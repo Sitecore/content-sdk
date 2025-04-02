@@ -2,7 +2,7 @@ import debug from '../debug';
 import { PageInfo } from '../client';
 import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases } from '../i18n';
-import { LayoutServiceData } from '../layout';
+import { LayoutServiceData, LayoutServicePageState } from '../layout';
 import { LayoutKind } from './models';
 import { FetchOptions } from '../models';
 
@@ -101,6 +101,7 @@ export type EditingOptions = {
   language: string;
   version?: string;
   layoutKind?: LayoutKind;
+  mode: Exclude<LayoutServicePageState, 'Normal'>;
 };
 
 /**
@@ -124,13 +125,14 @@ export class GraphQLEditingService {
    * @param {string} variables.siteName - The site name.
    * @param {string} variables.itemId - The item id (path) to fetch layout data for.
    * @param {string} variables.language - The language to fetch layout data for.
+   * @param {string} variables.mode - The editing mode to fetch layout data for.
    * @param {string} [variables.version] - The version of the item (optional).
    * @param {LayoutKind} [variables.layoutKind] - The final or shared layout variant.
    * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {Promise} The layout data and dictionary phrases.
    */
   async fetchEditingData(
-    { siteName, itemId, language, version, layoutKind = LayoutKind.Final }: EditingOptions,
+    { siteName, itemId, language, version, layoutKind = LayoutKind.Final, mode }: EditingOptions,
     fetchOptions?: FetchOptions
   ) {
     debug.editing(
@@ -154,6 +156,8 @@ export class GraphQLEditingService {
     let hasNext = true;
     let after = '';
 
+    const editModeHeader = mode === 'edit' ? 'true' : 'false';
+
     const editingData = await this.graphQLClient.request<GraphQLEditingQueryResponse>(
       query,
       {
@@ -166,6 +170,7 @@ export class GraphQLEditingService {
         ...fetchOptions,
         headers: {
           sc_layoutKind: layoutKind,
+          sc_editMode: editModeHeader,
         },
       }
     );
@@ -256,9 +261,6 @@ export class GraphQLEditingService {
 
     return this.serviceConfig.clientFactory({
       debugger: debug.editing,
-      headers: {
-        sc_editMode: 'true',
-      },
     });
   }
 }

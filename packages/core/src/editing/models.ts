@@ -62,7 +62,7 @@ export type EditingPreviewData = {
   site: string;
   itemId: string;
   language: string;
-  pageState: Exclude<LayoutServicePageState, 'Normal'>;
+  mode: Exclude<LayoutServicePageState, 'Normal'>;
   variantIds: string[];
   version?: string;
   layoutKind?: LayoutKind;
@@ -77,7 +77,6 @@ export interface DesignLibraryRenderPreviewData {
   renderingId: string;
   componentUid: string;
   language: string;
-  pageState: LayoutServicePageState;
   mode?: 'library';
   variant?: string;
   version?: string;

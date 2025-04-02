@@ -235,7 +235,9 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!layout.sitecore.route) {
       return null;
     } else {
-      const siteInfo = this.siteResolver.getByName(site);
+      const siteInfo =
+        this.siteResolver.getByName(site) || (layout.sitecore.context.site as SiteInfo);
+
       // Initialize links to be inserted on the page
       if (pageOptions?.personalize?.variantId) {
         // Modify layoutData to use specific variant(s) instead of default
@@ -246,6 +248,7 @@ export class SitecoreClient implements BaseSitecoreClient {
           pageOptions.personalize.componentVariantIds
         );
       }
+
       return {
         layout,
         site: siteInfo,
@@ -334,6 +337,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       version,
       variantIds,
       layoutKind,
+      mode,
     } = previewData as EditingPreviewData;
 
     const data = await this.editingService.fetchEditingData(
@@ -343,6 +347,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         language,
         version,
         layoutKind,
+        mode,
       },
       fetchOptions
     );

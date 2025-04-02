@@ -1,17 +1,19 @@
 ﻿import { NextApiRequest, NextApiResponse } from 'next';
 import { debug } from '@sitecore-content-sdk/core';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import {
   QUERY_PARAM_EDITING_SECRET,
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
   DesignLibraryRenderPreviewData,
   EditingPreviewData,
+  PREVIEW_KEY,
 } from '@sitecore-content-sdk/core/editing';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { getJssEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { enforceCors, getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';
+import { SITE_KEY } from '@sitecore-content-sdk/core/site';
 
 /**
  * Configuration for the Editing Render Middleware.
@@ -168,7 +170,6 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           renderingId: query.sc_renderingId,
           language: query.sc_lang,
           site: query.sc_site,
-          pageState: LayoutServicePageState.Normal,
           mode: 'library',
           dataSourceId: query.sc_datasourceId,
           version: query.sc_version,
@@ -186,7 +187,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           // for sc_variantId we may employ multiple variants (page-layout + component level)
           variantIds: query.sc_variant?.split(',') || [DEFAULT_VARIANT],
           version: query.sc_version,
-          pageState: query.mode,
+          mode: query.mode,
           layoutKind: query.sc_layoutKind,
         } as EditingPreviewData,
         // Cache the preview data for 3 seconds to ensure the page is rendered with the correct preview data not the cached one
@@ -218,6 +219,14 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         }
         return cookie;
       });
+
+      // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
+      if (mode === LayoutServicePageState.Preview) {
+        const previewSite = `${SITE_KEY}=${query.sc_site}; Path=/; HttpOnly; SameSite=None; Secure`;
+        const previewCookie = `${PREVIEW_KEY}=true; Path=/; HttpOnly; SameSite=None; Secure`;
+
+        modifiedCookies.push(previewSite, previewCookie);
+      }
 
       res.setHeader('Set-Cookie', modifiedCookies);
     }
