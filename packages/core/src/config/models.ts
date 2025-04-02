@@ -123,11 +123,6 @@ export type SitecoreConfigInput = {
      */
     enabled?: boolean;
     /**
-     * Fallback hostname in case `host` header is not present
-     * @default localhost
-     */
-    defaultHostname?: string;
-    /**
      * Function used to determine if site should be resolved from sc_site cookie when present
      */
     useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;

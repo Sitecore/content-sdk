@@ -61,7 +61,7 @@ export const generateSites = ({
     // Add default site to the list
     const defaultSite: SiteInfo = {
       name: scConfig.defaultSite,
-      hostName: scConfig.multisite.defaultHostname,
+      hostName: '*',
       language: scConfig.defaultLanguage,
     };
     sites.unshift(defaultSite);

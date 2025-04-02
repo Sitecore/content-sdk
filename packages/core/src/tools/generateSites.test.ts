@@ -10,7 +10,7 @@ import proxyquire from 'proxyquire';
 
 const defaultSite: SiteInfo = {
   name: 'defaultSite',
-  hostName: 'defaultSite.com',
+  hostName: '*',
   language: 'en',
 };
 
@@ -25,7 +25,6 @@ const mockConfig: SitecoreConfigInput = {
   defaultLanguage: defaultSite.language,
   multisite: {
     enabled: true,
-    defaultHostname: defaultSite.hostName,
   },
 };
 
