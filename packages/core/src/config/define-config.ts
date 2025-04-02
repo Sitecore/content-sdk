@@ -32,7 +32,6 @@ export const getFallbackConfig = (): SitecoreConfig => ({
   },
   multisite: {
     enabled: true,
-    defaultHostname: '',
     useCookieResolution: () => false,
   },
   personalize: {
@@ -102,9 +101,6 @@ const validateConfig = (config: SitecoreConfigInput) => {
         'Configuration error: either context ID or API key and host must be specified in sitecore.config'
       );
     }
-  }
-  if (!config.defaultSite) {
-    throw new Error('Configuration error: defaultSite value should be defined in sitecore.config');
   }
 };
 

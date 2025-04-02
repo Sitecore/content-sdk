@@ -96,7 +96,7 @@ steps:
 - script: |
     git config user.email builds@sitecore.com
     git config user.name "Automated Build"
-    git remote set-url origin https://$GITHUB_PAT_ENV@github.com/Sitecore/xmc-jss-dev.git
+    git remote set-url origin https://$GITHUB_PAT_ENV@github.com/Sitecore/content-sdk.git
     git fetch --all
     git checkout $(branchName)
   displayName: 'apply git configuration'

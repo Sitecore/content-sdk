@@ -6,7 +6,7 @@
 
 # Interface: Field\<T\>
 
-Defined in: packages/core/types/layout/models.d.ts:101
+Defined in: packages/core/types/layout/models.d.ts:100
 
 ## Extends
 
@@ -24,7 +24,7 @@ Defined in: packages/core/types/layout/models.d.ts:101
 
 > `optional` **metadata**: `object`
 
-Defined in: packages/core/types/layout/models.d.ts:108
+Defined in: packages/core/types/layout/models.d.ts:107
 
 #### Index Signature
 
@@ -40,4 +40,4 @@ Defined in: packages/core/types/layout/models.d.ts:108
 
 > **value**: `T`
 
-Defined in: packages/core/types/layout/models.d.ts:102
+Defined in: packages/core/types/layout/models.d.ts:101

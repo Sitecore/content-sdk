@@ -64,6 +64,7 @@ export type SitecoreConfigInput = {
   defaultLanguage: string;
   /**
    * Your default site name. When using the multisite feature this variable defines the fallback site.
+   * @default empty string
    */
   defaultSite?: string;
   /**
@@ -121,11 +122,6 @@ export type SitecoreConfigInput = {
      * @default true
      */
     enabled?: boolean;
-    /**
-     * Fallback hostname in case `host` header is not present
-     * @default localhost
-     */
-    defaultHostname?: string;
     /**
      * Function used to determine if site should be resolved from sc_site cookie when present
      */

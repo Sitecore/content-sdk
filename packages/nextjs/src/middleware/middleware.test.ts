@@ -303,6 +303,28 @@ describe('MiddlewareBase', () => {
       expect(middleware['getSite'](req, res).name).to.equal('xxx');
       expect(middleware['siteResolver'].getByName).to.be.calledWith('xxx');
     });
+
+    it('should get default site info when site cookie is provided', () => {
+      class MockSiteResolver extends SiteResolver {
+        getByName = sinon.stub().callsFake((_siteName: string) => undefined);
+      }
+
+      const req = createReq();
+      const res = createRes({
+        cookies: {
+          sc_site: 'xxx',
+        },
+      });
+      const middleware = new SampleMiddleware({ sites: [] });
+      middleware['siteResolver'] = new MockSiteResolver([]);
+
+      expect(middleware['getSite'](req, res)).deep.equal({
+        name: 'xxx',
+        language: 'en',
+        hostName: '*',
+      });
+      expect(middleware['siteResolver'].getByName).to.be.calledWith('xxx');
+    });
   });
 
   it('should get site by host header', () => {

@@ -40,6 +40,7 @@
 - [REDIRECT\_TYPE\_301](variables/REDIRECT_TYPE_301.md)
 - [REDIRECT\_TYPE\_302](variables/REDIRECT_TYPE_302.md)
 - [REDIRECT\_TYPE\_SERVER\_TRANSFER](variables/REDIRECT_TYPE_SERVER_TRANSFER.md)
+- [SITE\_KEY](variables/SITE_KEY.md)
 - [SITE\_PREFIX](variables/SITE_PREFIX.md)
 
 ## Functions

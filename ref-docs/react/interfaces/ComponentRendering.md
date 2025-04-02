@@ -6,7 +6,7 @@
 
 # Interface: ComponentRendering\<T\>
 
-Defined in: packages/core/types/layout/models.d.ts:85
+Defined in: packages/core/types/layout/models.d.ts:84
 
 Definition of a component instance within a placeholder on a route
 
@@ -22,7 +22,7 @@ Definition of a component instance within a placeholder on a route
 
 > **componentName**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:86
+Defined in: packages/core/types/layout/models.d.ts:85
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/core/types/layout/models.d.ts:86
 
 > `optional` **dataSource**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:87
+Defined in: packages/core/types/layout/models.d.ts:86
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/core/types/layout/models.d.ts:87
 
 > `optional` **fields**: `T`
 
-Defined in: packages/core/types/layout/models.d.ts:90
+Defined in: packages/core/types/layout/models.d.ts:89
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/core/types/layout/models.d.ts:90
 
 > `optional` **params**: [`ComponentParams`](ComponentParams.md)
 
-Defined in: packages/core/types/layout/models.d.ts:91
+Defined in: packages/core/types/layout/models.d.ts:90
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/core/types/layout/models.d.ts:91
 
 > `optional` **placeholders**: `PlaceholdersData`\<`string`\>
 
-Defined in: packages/core/types/layout/models.d.ts:89
+Defined in: packages/core/types/layout/models.d.ts:88
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: packages/core/types/layout/models.d.ts:89
 
 > `optional` **uid**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:88
+Defined in: packages/core/types/layout/models.d.ts:87

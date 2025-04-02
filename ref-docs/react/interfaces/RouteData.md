@@ -6,7 +6,7 @@
 
 # Interface: RouteData\<Fields\>
 
-Defined in: packages/core/types/layout/models.d.ts:50
+Defined in: packages/core/types/layout/models.d.ts:49
 
 Shape of route data returned from Sitecore Layout Service
 
@@ -22,7 +22,7 @@ Shape of route data returned from Sitecore Layout Service
 
 > `optional` **databaseName**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:54
+Defined in: packages/core/types/layout/models.d.ts:53
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/core/types/layout/models.d.ts:54
 
 > `optional` **deviceId**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:55
+Defined in: packages/core/types/layout/models.d.ts:54
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/core/types/layout/models.d.ts:55
 
 > `optional` **displayName**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:52
+Defined in: packages/core/types/layout/models.d.ts:51
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/core/types/layout/models.d.ts:52
 
 > `optional` **fields**: `Fields`
 
-Defined in: packages/core/types/layout/models.d.ts:53
+Defined in: packages/core/types/layout/models.d.ts:52
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/core/types/layout/models.d.ts:53
 
 > `optional` **itemId**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:62
+Defined in: packages/core/types/layout/models.d.ts:61
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/core/types/layout/models.d.ts:62
 
 > `optional` **itemLanguage**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:56
+Defined in: packages/core/types/layout/models.d.ts:55
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/core/types/layout/models.d.ts:56
 
 > `optional` **itemVersion**: `number`
 
-Defined in: packages/core/types/layout/models.d.ts:57
+Defined in: packages/core/types/layout/models.d.ts:56
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/core/types/layout/models.d.ts:57
 
 > `optional` **layoutId**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:58
+Defined in: packages/core/types/layout/models.d.ts:57
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/core/types/layout/models.d.ts:58
 
 > **name**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:51
+Defined in: packages/core/types/layout/models.d.ts:50
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: packages/core/types/layout/models.d.ts:51
 
 > **placeholders**: `PlaceholdersData`\<`string`\>
 
-Defined in: packages/core/types/layout/models.d.ts:61
+Defined in: packages/core/types/layout/models.d.ts:60
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: packages/core/types/layout/models.d.ts:61
 
 > `optional` **templateId**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:59
+Defined in: packages/core/types/layout/models.d.ts:58
 
 ***
 
@@ -110,4 +110,4 @@ Defined in: packages/core/types/layout/models.d.ts:59
 
 > `optional` **templateName**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:60
+Defined in: packages/core/types/layout/models.d.ts:59
