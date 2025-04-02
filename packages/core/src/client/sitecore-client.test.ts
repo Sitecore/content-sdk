@@ -162,7 +162,41 @@ describe('SitecoreClient', () => {
         },
       };
       siteResolverStub.getByName.returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
+      layoutServiceStub.fetchLayoutData.returns(layoutData);
+
+      const result = await sitecoreClient.getPage(path, { locale });
+
+      expect(result).to.deep.include({
+        layout: layoutData,
+        site: siteInfo,
+        locale: locale,
+      });
+      expect(
+        layoutServiceStub.fetchLayoutData.calledWithMatch(path, {
+          locale,
+          site: siteInfo.name,
+        })
+      ).to.be.true;
+    });
+
+    it('should return page data when site is not resolved', async () => {
+      const path = '/test/path';
+      const locale = 'en-US';
+      const siteInfo = {
+        name: 'default-site',
+        hostName: 'example.com',
+        language: 'en',
+      };
+      const layoutData = {
+        sitecore: {
+          route: {
+            name: 'home',
+            placeholders: {},
+          },
+          context: { site: siteInfo },
+        },
+      };
+      siteResolverStub.getByName.returns(undefined);
       layoutServiceStub.fetchLayoutData.returns(layoutData);
 
       const result = await sitecoreClient.getPage(path, { locale });
@@ -435,7 +469,7 @@ describe('SitecoreClient', () => {
       const previewData = {
         site: 'default-site',
         itemId: 'test-item-id',
-        pageState: LayoutServicePageState.Edit,
+        mode: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
         variantIds: ['variant1', 'comp_variant2'],
@@ -471,6 +505,7 @@ describe('SitecoreClient', () => {
           language: previewData.language,
           version: previewData.version,
           layoutKind: previewData.layoutKind,
+          mode: previewData.mode,
         })
       ).to.be.true;
     });
@@ -517,7 +552,7 @@ describe('SitecoreClient', () => {
       const previewData = {
         site: 'default-site',
         itemId: 'test-item-id',
-        pageState: LayoutServicePageState.Edit,
+        mode: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
         variantIds: [],
@@ -538,7 +573,7 @@ describe('SitecoreClient', () => {
       const previewData = {
         site: 'default-site',
         itemId: 'test-item-id',
-        pageState: LayoutServicePageState.Edit,
+        mode: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
         variantIds: [],
@@ -572,6 +607,7 @@ describe('SitecoreClient', () => {
           language: previewData.language,
           version: previewData.version,
           layoutKind: previewData.layoutKind,
+          mode: previewData.mode,
         })
         .resolves(editingData);
 
@@ -585,6 +621,7 @@ describe('SitecoreClient', () => {
             language: previewData.language,
             version: previewData.version,
             layoutKind: previewData.layoutKind,
+            mode: previewData.mode,
           },
           fetchOptions
         )

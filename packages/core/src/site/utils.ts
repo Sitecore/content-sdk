@@ -1,5 +1,10 @@
 export const SITE_PREFIX = '_site_';
 
+/**
+ * Site key for cookie and query string parameter access
+ */
+export const SITE_KEY = 'sc_site';
+
 export type SiteRewriteData = {
   siteName: string;
 };

@@ -12,6 +12,11 @@ export const DEFAULT_PLACEHOLDER_UID = '00000000-0000-0000-0000-000000000000';
 export const QUERY_PARAM_EDITING_SECRET = 'secret';
 
 /**
+ * Key to identify whether the app is running in Sitecore Preview mode
+ */
+export const PREVIEW_KEY = 'sc_preview';
+
+/**
  * ID to be used as a marker for a script rendered in XMC Pages
  * Should identify app is in XM Cloud Pages editing mode
  */

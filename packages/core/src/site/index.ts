@@ -36,5 +36,6 @@ export {
   normalizeSiteRewrite,
   SiteRewriteData,
   SITE_PREFIX,
+  SITE_KEY,
 } from './utils';
 export { SiteResolver } from './site-resolver';

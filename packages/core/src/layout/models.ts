@@ -9,7 +9,6 @@ export interface LayoutServiceData {
 
 /**
  * Layout Service page state enum
- * library mode would render a single component
  */
 export enum LayoutServicePageState {
   Preview = 'preview',
