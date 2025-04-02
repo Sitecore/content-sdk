@@ -16,7 +16,7 @@ Creates a new GraphQLRequestClientFactory instance
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `options` | `GraphQLClientOptions` | jss config |
+| `options` | `GraphQLClientOptions` | content sdk config |
 
 ## Returns
 

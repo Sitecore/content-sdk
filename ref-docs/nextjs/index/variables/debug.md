@@ -10,7 +10,7 @@
 
 Defined in: core/types/debug.d.ts:12
 
-Default Sitecore JSS 'debug' module debuggers. Uses namespace prefix 'core:'.
+Default Sitecore Content SDK 'debug' module debuggers. Uses namespace prefix 'core:'.
 See [https://www.npmjs.com/package/debug](https://www.npmjs.com/package/debug) for details.
 
 ## Type declaration
