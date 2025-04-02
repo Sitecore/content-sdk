@@ -17,7 +17,7 @@ To develop a Sitecore Content SDK application, you need:
 - An operating system supported by Node (Mac, Windows, Linux).
 - Node. We recommend using the latest long-term support (LTS) release.
 
-> To run a Sitecore Content SDK application in production or develop using Sitecore data you need to connect your application to a Sitecore XM CLoud instance..
+> To run a Sitecore Content SDK application in production or develop using Sitecore data you need to connect your application to a Sitecore XM Cloud instance.
 
 ### Getting started with the latest version of Sitecore Content SDK
 
