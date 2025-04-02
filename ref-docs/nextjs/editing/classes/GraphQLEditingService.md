@@ -6,7 +6,7 @@
 
 # Class: GraphQLEditingService
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:58
+Defined in: core/types/editing/graphql-editing-service.d.ts:59
 
 Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
 Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
@@ -17,7 +17,7 @@ Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
 
 > **new GraphQLEditingService**(`serviceConfig`): [`GraphQLEditingService`](GraphQLEditingService.md)
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:65
+Defined in: core/types/editing/graphql-editing-service.d.ts:66
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -37,7 +37,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > **serviceConfig**: `GraphQLEditingServiceConfig`
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:59
+Defined in: core/types/editing/graphql-editing-service.d.ts:60
 
 ## Methods
 
@@ -45,7 +45,7 @@ Defined in: core/types/editing/graphql-editing-service.d.ts:59
 
 > **fetchDictionaryData**(`__namedParameters`, `fetchOptions`?): `Promise`\<[`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md)\>
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:81
+Defined in: core/types/editing/graphql-editing-service.d.ts:83
 
 #### Parameters
 
@@ -69,7 +69,7 @@ Defined in: core/types/editing/graphql-editing-service.d.ts:81
 
 > **fetchEditingData**(`variables`, `fetchOptions`?): `Promise`\<\{ `dictionary`: [`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md); `layoutData`: [`LayoutServiceData`](../../index/interfaces/LayoutServiceData.md); \}\>
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:77
+Defined in: core/types/editing/graphql-editing-service.d.ts:79
 
 Fetches editing data. Provides the layout data and dictionary phrases
 
@@ -92,7 +92,7 @@ The layout data and dictionary phrases.
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/editing/graphql-editing-service.d.ts:95
+Defined in: core/types/editing/graphql-editing-service.d.ts:97
 
 Gets a GraphQL client that can make requests to the API.
 

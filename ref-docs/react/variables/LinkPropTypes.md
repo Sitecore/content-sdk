@@ -8,7 +8,7 @@
 
 > `const` **LinkPropTypes**: `object`
 
-Defined in: [packages/react/src/components/Link.tsx:92](https://github.com/Sitecore/content-sdk/blob/1a28b6590a0f8ef4d9e897f057f47abb01976998/packages/react/src/components/Link.tsx#L92)
+Defined in: [packages/react/src/components/Link.tsx:92](https://github.com/Sitecore/content-sdk/blob/6011964d1f248a508bbfba336ef2d9fbb216116e/packages/react/src/components/Link.tsx#L92)
 
 ## Type declaration
 

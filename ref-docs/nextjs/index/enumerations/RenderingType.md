@@ -6,7 +6,7 @@
 
 # Enumeration: RenderingType
 
-Defined in: core/types/layout/models.d.ts:135
+Defined in: core/types/layout/models.d.ts:134
 
 Editing rendering type
 
@@ -16,4 +16,4 @@ Editing rendering type
 
 > **Component**: `"component"`
 
-Defined in: core/types/layout/models.d.ts:136
+Defined in: core/types/layout/models.d.ts:135

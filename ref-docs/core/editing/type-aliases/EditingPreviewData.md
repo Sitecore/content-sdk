@@ -8,7 +8,7 @@
 
 > **EditingPreviewData**: `object`
 
-Defined in: [packages/core/src/editing/models.ts:61](https://github.com/Sitecore/content-sdk/blob/1a28b6590a0f8ef4d9e897f057f47abb01976998/packages/core/src/editing/models.ts#L61)
+Defined in: [packages/core/src/editing/models.ts:61](https://github.com/Sitecore/content-sdk/blob/6011964d1f248a508bbfba336ef2d9fbb216116e/packages/core/src/editing/models.ts#L61)
 
 Data for Preview (Editing) Mode.
 
@@ -26,9 +26,9 @@ Data for Preview (Editing) Mode.
 
 > `optional` **layoutKind**: [`LayoutKind`](../enumerations/LayoutKind.md)
 
-### pageState
+### mode
 
-> **pageState**: `Exclude`\<[`LayoutServicePageState`](../../layout/enumerations/LayoutServicePageState.md), `"Normal"`\>
+> **mode**: `Exclude`\<[`LayoutServicePageState`](../../layout/enumerations/LayoutServicePageState.md), `"Normal"`\>
 
 ### site
 

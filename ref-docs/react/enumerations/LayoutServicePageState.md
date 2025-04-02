@@ -6,10 +6,9 @@
 
 # Enumeration: LayoutServicePageState
 
-Defined in: packages/core/types/layout/models.d.ts:13
+Defined in: packages/core/types/layout/models.d.ts:12
 
 Layout Service page state enum
-library mode would render a single component
 
 ## Enumeration Members
 
@@ -17,7 +16,7 @@ library mode would render a single component
 
 > **Edit**: `"edit"`
 
-Defined in: packages/core/types/layout/models.d.ts:15
+Defined in: packages/core/types/layout/models.d.ts:14
 
 ***
 
@@ -25,7 +24,7 @@ Defined in: packages/core/types/layout/models.d.ts:15
 
 > **Normal**: `"normal"`
 
-Defined in: packages/core/types/layout/models.d.ts:16
+Defined in: packages/core/types/layout/models.d.ts:15
 
 ***
 
@@ -33,4 +32,4 @@ Defined in: packages/core/types/layout/models.d.ts:16
 
 > **Preview**: `"preview"`
 
-Defined in: packages/core/types/layout/models.d.ts:14
+Defined in: packages/core/types/layout/models.d.ts:13

@@ -8,7 +8,7 @@
 
 > **isServer**(): `boolean`
 
-Defined in: [packages/core/src/utils/is-server.ts:5](https://github.com/Sitecore/content-sdk/blob/1a28b6590a0f8ef4d9e897f057f47abb01976998/packages/core/src/utils/is-server.ts#L5)
+Defined in: [packages/core/src/utils/is-server.ts:5](https://github.com/Sitecore/content-sdk/blob/6011964d1f248a508bbfba336ef2d9fbb216116e/packages/core/src/utils/is-server.ts#L5)
 
 Determines whether the current execution context is server-side
 
