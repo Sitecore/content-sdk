@@ -6,7 +6,7 @@
 
 # Class: RestComponentLayoutService
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:91](https://github.com/Sitecore/content-sdk/blob/51f6d86287f95a06b40045498aa7037d8b684c67/packages/core/src/editing/rest-component-layout-service.ts#L91)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:91](https://github.com/Sitecore/content-sdk/blob/bc4d59e76288877091ea87e0b1f0d7300950e831/packages/core/src/editing/rest-component-layout-service.ts#L91)
 
 REST service that enables Design Library functioality
 Makes a request to /sitecore/api/layout/component in 'library' mode in Pages.
@@ -18,7 +18,7 @@ Returns layoutData for one single rendered component
 
 > **new RestComponentLayoutService**(`config`): [`RestComponentLayoutService`](RestComponentLayoutService.md)
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:92](https://github.com/Sitecore/content-sdk/blob/51f6d86287f95a06b40045498aa7037d8b684c67/packages/core/src/editing/rest-component-layout-service.ts#L92)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:92](https://github.com/Sitecore/content-sdk/blob/bc4d59e76288877091ea87e0b1f0d7300950e831/packages/core/src/editing/rest-component-layout-service.ts#L92)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [packages/core/src/editing/rest-component-layout-service.ts:92](http
 
 > **fetchComponentData**(`params`, `req`?, `res`?): `Promise`\<[`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)\>
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:94](https://github.com/Sitecore/content-sdk/blob/51f6d86287f95a06b40045498aa7037d8b684c67/packages/core/src/editing/rest-component-layout-service.ts#L94)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:94](https://github.com/Sitecore/content-sdk/blob/bc4d59e76288877091ea87e0b1f0d7300950e831/packages/core/src/editing/rest-component-layout-service.ts#L94)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: [packages/core/src/editing/rest-component-layout-service.ts:94](http
 
 > `protected` **getComponentFetchParams**(`params`): `any`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:160](https://github.com/Sitecore/content-sdk/blob/51f6d86287f95a06b40045498aa7037d8b684c67/packages/core/src/editing/rest-component-layout-service.ts#L160)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:160](https://github.com/Sitecore/content-sdk/blob/bc4d59e76288877091ea87e0b1f0d7300950e831/packages/core/src/editing/rest-component-layout-service.ts#L160)
 
 #### Parameters
 
@@ -74,7 +74,7 @@ Defined in: [packages/core/src/editing/rest-component-layout-service.ts:160](htt
 
 > `protected` **getDefaultFetcher**\<`T`\>(`req`?): (`url`, `data`?) => `Promise`\<[`NativeDataFetcherResponse`](../../index/interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:143](https://github.com/Sitecore/content-sdk/blob/51f6d86287f95a06b40045498aa7037d8b684c67/packages/core/src/editing/rest-component-layout-service.ts#L143)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:143](https://github.com/Sitecore/content-sdk/blob/bc4d59e76288877091ea87e0b1f0d7300950e831/packages/core/src/editing/rest-component-layout-service.ts#L143)
 
 Provides default
 
@@ -117,7 +117,7 @@ NativeDataFetcher data fetcher
 
 > `protected` **getFetcher**(`req`?, `res`?): `HttpDataFetcher`\<[`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)\> \| (`url`, `data`?) => `Promise`\<[`NativeDataFetcherResponse`](../../index/interfaces/NativeDataFetcherResponse.md)\<[`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)\>\>
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:121](https://github.com/Sitecore/content-sdk/blob/51f6d86287f95a06b40045498aa7037d8b684c67/packages/core/src/editing/rest-component-layout-service.ts#L121)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:121](https://github.com/Sitecore/content-sdk/blob/bc4d59e76288877091ea87e0b1f0d7300950e831/packages/core/src/editing/rest-component-layout-service.ts#L121)
 
 #### Parameters
 
@@ -136,7 +136,7 @@ Defined in: [packages/core/src/editing/rest-component-layout-service.ts:121](htt
 
 > `protected` **resolveLayoutServiceUrl**(`apiType`): `string`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:132](https://github.com/Sitecore/content-sdk/blob/51f6d86287f95a06b40045498aa7037d8b684c67/packages/core/src/editing/rest-component-layout-service.ts#L132)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:132](https://github.com/Sitecore/content-sdk/blob/bc4d59e76288877091ea87e0b1f0d7300950e831/packages/core/src/editing/rest-component-layout-service.ts#L132)
 
 Resolves layout service url
 
