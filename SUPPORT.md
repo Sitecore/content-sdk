@@ -4,7 +4,7 @@ If you're looking for support for Sitecore Content SDK there are a lot of option
 
 ### Documentation
 
-https://jss.sitecore.com
+https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html
 
 ### Questions or help
 
@@ -17,7 +17,7 @@ https://jss.sitecore.com
 
 ### Issues / bugs / feature requests
 
-Open an issue via GitHub: https://github.com/Sitecore/jss/issues
+Open an issue via GitHub: https://github.com/Sitecore/content-sdk/issues
 
 Please use one of the provided templates when opening an issue, it will greatly increase your chances of a prompt response.
 

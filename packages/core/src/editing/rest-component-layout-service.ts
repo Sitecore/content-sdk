@@ -29,7 +29,7 @@ export type RestLayoutServiceConfig = {
   /**
    * Enables/disables analytics tracking for the Layout Service invocation (default is true).
    * More than likely, this would be set to false for SSG/hybrid implementations, and the
-   * JSS tracker would instead be used on the client-side: {@link https://jss.sitecore.com/docs/fundamentals/services/tracking}
+   * JSS tracker would instead be used on the client-side
    * @default true
    */
   tracking?: boolean;

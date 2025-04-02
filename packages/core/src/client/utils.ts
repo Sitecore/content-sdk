@@ -7,7 +7,7 @@ export type GraphQLClientOptions = Pick<SitecoreConfigInput, 'api'> & FetchOptio
 
 /**
  * Creates a new GraphQLRequestClientFactory instance
- * @param {GraphQLClientOptions} options jss config
+ * @param {GraphQLClientOptions} options content sdk config
  * @returns GraphQLRequestClientFactory instance
  */
 export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {

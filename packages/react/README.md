@@ -6,6 +6,6 @@ This module is provided as a part of Sitecore Content SDK. It contains React com
 @TODO: Update link with appropriate page when avaiable
 -->
 
-[Documentation (XM Cloud)](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-javascript-rendering-sdk--jss--for-next-js.html)
+[Documentation](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-javascript-rendering-sdk--jss--for-next-js.html)
 
 [API reference documentation](/ref-docs/react/)
