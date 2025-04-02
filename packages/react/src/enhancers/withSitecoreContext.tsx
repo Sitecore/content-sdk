@@ -53,7 +53,6 @@ export function withSitecoreContext(options?: WithSitecoreContextOptions) {
  * - pageEditing - Provided by Layout Service, a boolean indicating whether the route is being accessed via the Sitecore Editor.
  * - pageState - Like pageEditing, but a string: normal, preview or edit.
  * - site - Provided by Layout Service, an object containing the name of the current Sitecore site context.
- * @see https://jss.sitecore.com/docs/techniques/extending-layout-service/layoutservice-extending-context
  * @param {WithSitecoreContextOptions} [options] hook options
  * @example
  * const EditMode = () => {

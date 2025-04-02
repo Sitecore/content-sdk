@@ -23,12 +23,12 @@
     },
     "repository": {
       "type": "git",
-      "url": "https://github.com/Sitecore/jss"
+      "url": "https://github.com/Sitecore/content-sdk"
     },
     "license": "Apache-2.0",
     "homepage": "https://jss.sitecore.com",
     "bugs": {
-      "url": "https://github.com/sitecore/jss/issues"
+      "url": "https://github.com/sitecore/content-sdk/issues"
     },
     "devDependencies": {
       "@types/chai": "^4.2.3",

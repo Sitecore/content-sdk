@@ -1,7 +1,7 @@
 {
   "name": "@sitecore-content-sdk/create-sitecore-jss",
   "version": "0.1.0-beta.40",
-  "description": "Sitecore JSS initializer",
+  "description": "Sitecore Content SDK initializer",
   "bin": "./dist/index.js",
   "publishConfig": {
     "access": "public",
@@ -20,14 +20,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Sitecore/jss.git",
+    "url": "https://github.com/Sitecore/content-sdk.git",
     "directory": "packages/create-sitecore-jss"
   },
-  "homepage": "https://jss.sitecore.com",
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html",
   "author": "Sitecore Corporation",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/Sitecore/jss/issues"
+    "url": "https://github.com/Sitecore/content-sdk/issues"
   },
   "files": [
     "dist"

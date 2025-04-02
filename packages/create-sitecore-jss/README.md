@@ -1,9 +1,5 @@
-# Sitecore JavaScript Rendering SDK Initializers
+# Sitecore Content SDK Initializer
 
-This module is provided as a part of Sitecore JavaScript Rendering SDK (JSS). It contains initializers / templates for JSS sample applications.
+This module is provided as a part of Sitecore Content SDK. It contains templates for Sitecore Content SDK sample applications.
 
-<!---
-@TODO: Update to next version docs before release
--->
-
-[Documentation (XM Cloud)](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-javascript-rendering-sdks--jss-.html)
+[Documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html)

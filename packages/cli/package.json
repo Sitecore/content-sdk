@@ -1,7 +1,7 @@
 {
   "name": "@sitecore-content-sdk/cli",
   "version": "0.1.0-beta.40",
-  "description": "Sitecore JSS command-line",
+  "description": "Sitecore Content SDK CLI",
   "main": "dist/cjs/cli.js",
   "module": "dist/esm/cli.js",
   "sideEffects": false,
@@ -26,12 +26,12 @@
   },
   "author": {
     "name": "Sitecore Corporation",
-    "url": "https://jss.sitecore.com"
+    "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html"
   },
   "license": "Apache-2.0",
-  "homepage": "https://jss.sitecore.com",
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html",
   "bugs": {
-    "url": "https://github.com/sitecore/jss/issues"
+    "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
     "@sitecore-content-sdk/core": "0.1.0-beta.40",

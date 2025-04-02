@@ -154,7 +154,7 @@ describe('GraphQLRequestClient', () => {
       new GraphQLRequestClient(endpoint, { debugger: debug.layout });
     } catch (error) {
       expect(error.toString()).to.equal(
-        `Error: Invalid GraphQL endpoint '${endpoint}'. Verify that 'layoutServiceHost' property in 'scjssconfig.json' file or appropriate environment variable is set`
+        `Error: Invalid GraphQL endpoint '${endpoint}'. Verify that appropriate environment variable is set`
       );
     }
   });

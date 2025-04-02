@@ -1,10 +1,11 @@
-# Sitecore JavaScript Rendering SDK for React
+# Sitecore Content SDK for React
 
-This module is provided as a part of Sitecore JavaScript Rendering SDK (JSS). It contains React components and integration for JSS.
+This module is provided as a part of Sitecore Content SDK. It contains React components and integration for Sitecore Content SDK.
 
 <!---
-@TODO: use new name when decided
+@TODO: Update link with appropriate page when avaiable
 -->
-[Documentation (XM Cloud)](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-javascript-rendering-sdk--jss--for-next-js.html)
+
+[Documentation](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-javascript-rendering-sdk--jss--for-next-js.html)
 
 [API reference documentation](/ref-docs/react/)

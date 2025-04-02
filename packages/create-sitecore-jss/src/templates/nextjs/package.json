@@ -11,14 +11,14 @@
   },
   "author": {
     "name": "Sitecore Corporation",
-    "url": "https://jss.sitecore.com"
+    "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sitecore/jss.git"
+    "url": "git+https://github.com/sitecore/content-sdk.git"
   },
   "bugs": {
-    "url": "https://github.com/sitecore/jss/issues"
+    "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "license": "Apache-2.0",
   "dependencies": {

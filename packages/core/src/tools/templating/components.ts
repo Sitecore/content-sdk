@@ -38,7 +38,7 @@ export function getComponentList(path: string): ComponentFile[] {
       componentName: name,
       moduleName: name.replace(/[^\w]+/g, ''),
     }),
-    cb: (name) => console.debug(`Registering JSS component ${name}`),
+    cb: (name) => console.debug(`Registering Content SDK component ${name}`),
   });
 
   return components;

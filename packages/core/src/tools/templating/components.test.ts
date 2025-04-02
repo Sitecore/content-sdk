@@ -48,7 +48,7 @@ describe('components', () => {
 
       getItemsStubArgs.cb!('FooBar');
 
-      expect(logStub.calledOnceWith('Registering JSS component FooBar')).to.be.true;
+      expect(logStub.calledOnceWith('Registering Content SDK component FooBar')).to.be.true;
     });
   });
 });

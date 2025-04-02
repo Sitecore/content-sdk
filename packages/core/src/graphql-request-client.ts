@@ -109,7 +109,7 @@ export class GraphQLRequestClient implements GraphQLClient {
 
     if (!endpoint || !parse(endpoint).hostname) {
       throw new Error(
-        `Invalid GraphQL endpoint '${endpoint}'. Verify that 'layoutServiceHost' property in 'scjssconfig.json' file or appropriate environment variable is set`
+        `Invalid GraphQL endpoint '${endpoint}'. Verify that appropriate environment variable is set`
       );
     }
 
