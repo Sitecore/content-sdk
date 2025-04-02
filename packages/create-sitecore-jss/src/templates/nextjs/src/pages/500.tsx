@@ -51,7 +51,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   return {
     props: {
-      layoutData: resultErrorPages?.serverErrorPage?.rendered || null,
+      layout: resultErrorPages?.serverErrorPage?.rendered || null,
     },
   };
 };
