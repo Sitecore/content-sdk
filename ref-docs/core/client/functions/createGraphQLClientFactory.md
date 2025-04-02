@@ -8,7 +8,7 @@
 
 > **createGraphQLClientFactory**(`options`): [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/client/utils.ts:13](https://github.com/Sitecore/content-sdk/blob/6011964d1f248a508bbfba336ef2d9fbb216116e/packages/core/src/client/utils.ts#L13)
+Defined in: [packages/core/src/client/utils.ts:13](https://github.com/Sitecore/content-sdk/blob/0368ee89b256e5717d28a2086597ae659abd51a0/packages/core/src/client/utils.ts#L13)
 
 Creates a new GraphQLRequestClientFactory instance
 

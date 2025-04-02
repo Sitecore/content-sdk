@@ -6,7 +6,7 @@
 
 # Interface: PageInfo
 
-Defined in: [packages/core/src/models.ts:58](https://github.com/Sitecore/content-sdk/blob/6011964d1f248a508bbfba336ef2d9fbb216116e/packages/core/src/models.ts#L58)
+Defined in: [packages/core/src/models.ts:58](https://github.com/Sitecore/content-sdk/blob/0368ee89b256e5717d28a2086597ae659abd51a0/packages/core/src/models.ts#L58)
 
 Data needed to paginate results in graphql
 
@@ -16,7 +16,7 @@ Data needed to paginate results in graphql
 
 > **endCursor**: `string`
 
-Defined in: [packages/core/src/models.ts:62](https://github.com/Sitecore/content-sdk/blob/6011964d1f248a508bbfba336ef2d9fbb216116e/packages/core/src/models.ts#L62)
+Defined in: [packages/core/src/models.ts:62](https://github.com/Sitecore/content-sdk/blob/0368ee89b256e5717d28a2086597ae659abd51a0/packages/core/src/models.ts#L62)
 
 string token that can be used to fetch the next page of results
 
@@ -26,6 +26,6 @@ string token that can be used to fetch the next page of results
 
 > **hasNext**: `boolean`
 
-Defined in: [packages/core/src/models.ts:66](https://github.com/Sitecore/content-sdk/blob/6011964d1f248a508bbfba336ef2d9fbb216116e/packages/core/src/models.ts#L66)
+Defined in: [packages/core/src/models.ts:66](https://github.com/Sitecore/content-sdk/blob/0368ee89b256e5717d28a2086597ae659abd51a0/packages/core/src/models.ts#L66)
 
 a value that indicates whether more pages of results are available

@@ -8,7 +8,7 @@
 
 > **getChildPlaceholder**(`rendering`, `placeholderName`): [`ComponentRendering`](../interfaces/ComponentRendering.md)[]
 
-Defined in: [packages/core/src/layout/utils.ts:60](https://github.com/Sitecore/content-sdk/blob/6011964d1f248a508bbfba336ef2d9fbb216116e/packages/core/src/layout/utils.ts#L60)
+Defined in: [packages/core/src/layout/utils.ts:60](https://github.com/Sitecore/content-sdk/blob/0368ee89b256e5717d28a2086597ae659abd51a0/packages/core/src/layout/utils.ts#L60)
 
 Gets rendering definitions in a given child placeholder under a current rendering.
 

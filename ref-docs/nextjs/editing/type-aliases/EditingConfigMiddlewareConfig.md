@@ -8,7 +8,7 @@
 
 > **EditingConfigMiddlewareConfig**: `object`
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:14](https://github.com/Sitecore/content-sdk/blob/6011964d1f248a508bbfba336ef2d9fbb216116e/packages/nextjs/src/editing/editing-config-middleware.ts#L14)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:14](https://github.com/Sitecore/content-sdk/blob/0368ee89b256e5717d28a2086597ae659abd51a0/packages/nextjs/src/editing/editing-config-middleware.ts#L14)
 
 ## Type declaration
 
