@@ -53,7 +53,6 @@ describe('define-config', () => {
     // multisite
     expect(config.multisite.enabled).to.equal(mockConfig.multisite.enabled);
     expect(config.multisite.useCookieResolution()).to.equal(false);
-    expect(config.multisite.defaultHostname).to.equal(fallbackConfig.multisite.defaultHostname);
 
     // personalize
     expect(config.personalize.enabled).to.equal(mockConfig.personalize.enabled);

@@ -28,7 +28,7 @@ const mockConfig: SitecoreConfigInput = {
   },
 };
 
-describe.only('generateSites', () => {
+describe('generateSites', () => {
   let ensurePathExistsStub: sinon.SinonStub;
   let fsWriteFileSyncStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
