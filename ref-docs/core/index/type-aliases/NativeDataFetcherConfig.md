@@ -8,4 +8,4 @@
 
 > **NativeDataFetcherConfig**: `NativeDataFetcherOptions` & `RequestInit`
 
-Defined in: [packages/core/src/native-fetcher.ts:52](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/core/src/native-fetcher.ts#L52)
+Defined in: [packages/core/src/native-fetcher.ts:52](https://github.com/Sitecore/content-sdk/blob/0f8983961033e3434ebcac616164ddf8d484be81/packages/core/src/native-fetcher.ts#L52)
