@@ -1,6 +1,7 @@
 import { ComponentRendering, LayoutServiceData, RouteData, getFieldValue } from '.';
 import { HTMLLink } from '../models';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
+import { normalizeUrl } from '../utils/normalize-url';
 
 /**
  * Pattern for library ids
@@ -37,7 +38,9 @@ export const getStylesheetUrl = (
   sitecoreEdgeContextId: string,
   sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT
 ) => {
-  return `${sitecoreEdgeUrl}/v1/files/components/styles/${id}.css?sitecoreContextId=${sitecoreEdgeContextId}`;
+  return `${normalizeUrl(
+    sitecoreEdgeUrl
+  )}/v1/files/components/styles/${id}.css?sitecoreContextId=${sitecoreEdgeContextId}`;
 };
 
 /**

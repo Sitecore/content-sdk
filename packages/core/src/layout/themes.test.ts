@@ -77,6 +77,29 @@ describe('themes', () => {
       ]);
     });
 
+    it('should handle trailing slash in sitecoreEdgeUrl when generating links', () => {
+      const sitecoreEdgeUrlWithSlash = 'https://edge-platform.sitecorecloud.io/';
+      expect(
+        getDesignLibraryStylesheetLinks(
+          setBasicLayoutData({
+            componentName: 'test',
+            fields: {
+              LibraryId: {
+                value: 'bar',
+              },
+            },
+          }),
+          sitecoreEdgeContextId,
+          sitecoreEdgeUrlWithSlash
+        )
+      ).to.deep.equal([
+        {
+          href: getStylesheetUrl('bar', sitecoreEdgeContextId, sitecoreEdgeUrlWithSlash),
+          rel: 'stylesheet',
+        },
+      ]);
+    });
+
     it('should return links using LibraryId field', () => {
       expect(
         getDesignLibraryStylesheetLinks(
