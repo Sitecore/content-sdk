@@ -6,7 +6,7 @@
 
 # Enumeration: ModuleType
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:8](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/core/src/tools/templating/plugins.ts#L8)
+Defined in: [packages/core/src/tools/templating/plugins.ts:8](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/core/src/tools/templating/plugins.ts#L8)
 
 Identifies the format of the module to be compiled
 
@@ -16,7 +16,7 @@ Identifies the format of the module to be compiled
 
 > **CJS**: `0`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:9](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/core/src/tools/templating/plugins.ts#L9)
+Defined in: [packages/core/src/tools/templating/plugins.ts:9](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/core/src/tools/templating/plugins.ts#L9)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/core/src/tools/templating/plugins.ts:9](https://github.com
 
 > **ESM**: `1`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:10](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/core/src/tools/templating/plugins.ts#L10)
+Defined in: [packages/core/src/tools/templating/plugins.ts:10](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/core/src/tools/templating/plugins.ts#L10)

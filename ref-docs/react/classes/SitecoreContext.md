@@ -6,7 +6,7 @@
 
 # Class: SitecoreContext
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/react/src/components/SitecoreContext.tsx#L33)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/react/src/components/SitecoreContext.tsx#L33)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:33](https://githu
 
 > **new SitecoreContext**(`props`): [`SitecoreContext`](SitecoreContext.md)
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:47](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/react/src/components/SitecoreContext.tsx#L47)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:47](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/react/src/components/SitecoreContext.tsx#L47)
 
 #### Parameters
 
@@ -149,7 +149,7 @@ class Foo extends React.Component {
 
 > `static` **displayName**: `string` = `'SitecoreContext'`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:45](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/react/src/components/SitecoreContext.tsx#L45)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:45](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/react/src/components/SitecoreContext.tsx#L45)
 
 ***
 
@@ -157,7 +157,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:45](https://githu
 
 > `static` **propTypes**: `object`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:34](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/react/src/components/SitecoreContext.tsx#L34)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:34](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/react/src/components/SitecoreContext.tsx#L34)
 
 #### children
 
@@ -221,7 +221,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:85](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/react/src/components/SitecoreContext.tsx#L85)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:85](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/react/src/components/SitecoreContext.tsx#L85)
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -381,7 +381,7 @@ this from being invoked.
 
 > **constructContext**(`layoutData`?): [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:71](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/react/src/components/SitecoreContext.tsx#L71)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:71](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/react/src/components/SitecoreContext.tsx#L71)
 
 #### Parameters
 
@@ -451,7 +451,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:108](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/react/src/components/SitecoreContext.tsx#L108)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:108](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/react/src/components/SitecoreContext.tsx#L108)
 
 #### Returns
 
@@ -467,7 +467,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:108](https://gith
 
 > **setContext**(`value`): `void`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:100](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/react/src/components/SitecoreContext.tsx#L100)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:100](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/react/src/components/SitecoreContext.tsx#L100)
 
 Update context state. Value can be
 

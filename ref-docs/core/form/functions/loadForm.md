@@ -8,7 +8,7 @@
 
 > **loadForm**(`contextId`, `formId`, `edgeUrl`?): `Promise`\<`string`\>
 
-Defined in: [packages/core/src/form/form.ts:11](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/core/src/form/form.ts#L11)
+Defined in: [packages/core/src/form/form.ts:11](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/core/src/form/form.ts#L11)
 
 Fetches the form markup from the Sitecore Edge service and renders it in the component's template.
 

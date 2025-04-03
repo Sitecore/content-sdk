@@ -8,7 +8,7 @@
 
 > **getServerSideProps**(`rendering`, `layoutData`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [nextjs/src/components/BYOCWrapper.tsx:33](https://github.com/Sitecore/content-sdk/blob/5668fc9a4560f7c5a529d356ffb07c3d7cb82d73/packages/nextjs/src/components/BYOCWrapper.tsx#L33)
+Defined in: [nextjs/src/components/BYOCWrapper.tsx:33](https://github.com/Sitecore/content-sdk/blob/0d1933830661df0273ddb41b92f4a0934e861521/packages/nextjs/src/components/BYOCWrapper.tsx#L33)
 
 Will be called during SSR
 
