@@ -8,7 +8,7 @@
 
 > **PersonalizeMiddlewareConfig**: [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/4103c5589d5589e11cd6164ccfd2c9755e694a65/packages/nextjs/src/middleware/personalize-middleware.ts#L39)
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/d66d73920955c32f18807cacf98f4ede97be14bd/packages/nextjs/src/middleware/personalize-middleware.ts#L39)
 
 ## Type declaration
 
