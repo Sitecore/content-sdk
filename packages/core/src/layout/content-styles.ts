@@ -1,6 +1,7 @@
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { ComponentRendering, Field, Item, LayoutServiceData, RouteData } from './index';
 import { HTMLLink } from '../models';
+import { normalizeUrl } from '../utils/normalize-url';
 
 /**
  * Regular expression to check if the content styles are used in the field value
@@ -39,7 +40,9 @@ export const getContentStylesheetUrl = (
   sitecoreEdgeContextId: string,
   sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT
 ): string =>
-  `${sitecoreEdgeUrl}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`;
+  `${normalizeUrl(
+    sitecoreEdgeUrl
+  )}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`;
 
 export const traversePlaceholder = (components: Array<ComponentRendering>, config: Config) => {
   if (config.loadStyles) return;

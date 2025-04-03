@@ -1,5 +1,6 @@
 import { ComponentRendering, Field, GenericFieldValue } from '../layout/models';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
+import { normalizeUrl } from '../utils/normalize-url';
 
 /**
  * Event to be sent when report status to design library
@@ -151,5 +152,5 @@ export function getDesignLibraryStatusEvent(
  * @returns The full URL to the design library script.
  */
 export function getDesignLibraryScriptLink(sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT): string {
-  return `${sitecoreEdgeUrl}/v1/files/designlibrary/lib/rh-lib-script.js`;
+  return `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/designlibrary/lib/rh-lib-script.js`;
 }

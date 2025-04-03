@@ -1,7 +1,5 @@
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-
-const normalizeUrl = (url: string) => (url.endsWith('/') ? url.slice(0, -1) : url);
-
+import { normalizeUrl } from '../utils/normalize-url';
 /**
  * Generates a URL for accessing Sitecore Edge Platform Content using the provided endpoint and context ID.
  * @param {string} sitecoreEdgeContextId - The unique context id.

@@ -174,6 +174,14 @@ describe('component library utils', () => {
       );
     });
 
+    it('should handle trailing slash in sitecoreEdgeUrl', () => {
+      const customUrlWithSlash = 'https://custom-designlibrary.com/';
+      const scriptLink = getDesignLibraryScriptLink(customUrlWithSlash);
+      expect(scriptLink).to.equal(
+        'https://custom-designlibrary.com/v1/files/designlibrary/lib/rh-lib-script.js'
+      );
+    });
+
     it('should return the correct script link when a custom URL is provided', () => {
       const customUrl = 'https://custom-designlibrary.com';
       const scriptLink = getDesignLibraryScriptLink(customUrl);
