@@ -8,7 +8,7 @@
 
 > **FetchOptions**: `object`
 
-Defined in: [packages/core/src/models.ts:69](https://github.com/Sitecore/content-sdk/blob/4103c5589d5589e11cd6164ccfd2c9755e694a65/packages/core/src/models.ts#L69)
+Defined in: [packages/core/src/models.ts:69](https://github.com/Sitecore/content-sdk/blob/7431276a7299d7d9f331859c62da70341d8eed40/packages/core/src/models.ts#L69)
 
 ## Type declaration
 
