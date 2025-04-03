@@ -4,7 +4,7 @@ If you're looking for support for Sitecore Content SDK there are a lot of option
 
 ### Documentation
 
-https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html
+https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html
 
 ### Questions or help
 

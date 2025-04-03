@@ -47,7 +47,7 @@ export const nextSteps = async (appName: string, nextStepsText?: string) => {
   }
   console.log('* Enable source control (i.e. git init) (optional)');
   console.log(
-    '* Check out the JSS documentation at https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html'
+    '* Check out the JSS documentation at https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html'
   );
   console.log();
   console.log(chalk.green('Enjoy!'));
