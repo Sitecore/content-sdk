@@ -13,13 +13,43 @@ import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 describe('content-styles', () => {
   const truthyValue = { value: '<div class="test bar"><p class="foo ck-content">bar</p></div>' };
   const falsyValue = { value: '<div class="test bar"><p class="foo">ck-content</p></div>' };
-  const sitecoreEdgeContextId = ' 7qwerty';
+  const sitecoreEdgeContextId = '{7qwerty}';
 
   describe('getContentStylesheetLink', () => {
     it('should return null when route data is empty', () => {
       expect(
         getContentStylesheetLink({ sitecore: { context: {}, route: null } }, sitecoreEdgeContextId)
       ).to.be.null;
+    });
+
+    it('should handle trailing slash in sitecoreEdgeUrl', () => {
+      const layoutData: LayoutServiceData = {
+        sitecore: {
+          context: {},
+          route: {
+            name: 'route',
+            placeholders: {
+              car: [
+                {
+                  componentName: 'foo',
+                  fields: { car: falsyValue },
+                  placeholders: {
+                    bar: [{ componentName: 'cow', fields: { dog: truthyValue } }],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      const sitecoreEdgeUrl = 'https://foo.bar/';
+      expect(
+        getContentStylesheetLink(layoutData, sitecoreEdgeContextId, sitecoreEdgeUrl)
+      ).to.deep.equal({
+        href: `https://foo.bar/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`,
+        rel: 'stylesheet',
+      });
     });
 
     it('should set "loadStyles: false" when layout does not have a ck-content class', () => {
