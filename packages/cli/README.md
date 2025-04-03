@@ -1,4 +1,4 @@
-# Sitecore Content SDK CLI Tools
+# Sitecore Content SDK CLI
 
 This module is provided as a part of Sitecore Contents SDK. It contains the Sitecore Content SDK command line interface.
 
