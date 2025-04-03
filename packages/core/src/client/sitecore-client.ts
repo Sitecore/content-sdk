@@ -454,6 +454,9 @@ export class SitecoreClient implements BaseSitecoreClient {
       try {
         const fetcher = new NativeDataFetcher();
         const xmlResponse = await fetcher.fetch<string>(sitemapPath);
+        if (!xmlResponse.data) {
+          throw new Error('REDIRECT_404');
+        }
         return xmlResponse.data;
       } catch (error) {
         throw new Error('REDIRECT_404');
