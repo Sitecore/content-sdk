@@ -8,4 +8,4 @@
 
 > `const` **REDIRECT\_TYPE\_301**: `"REDIRECT_301"` = `'REDIRECT_301'`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:7](https://github.com/Sitecore/content-sdk/blob/8b95896c4f9d2f6a2c452ee63406a9f69e9ab407/packages/core/src/site/graphql-redirects-service.ts#L7)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:7](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/site/graphql-redirects-service.ts#L7)

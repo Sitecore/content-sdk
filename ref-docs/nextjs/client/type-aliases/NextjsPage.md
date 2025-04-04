@@ -8,7 +8,7 @@
 
 > **NextjsPage**: `Page` & `object`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:24](https://github.com/Sitecore/content-sdk/blob/8b95896c4f9d2f6a2c452ee63406a9f69e9ab407/packages/nextjs/src/client/sitecore-nextjs-client.ts#L24)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:24](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/nextjs/src/client/sitecore-nextjs-client.ts#L24)
 
 ## Type declaration
 

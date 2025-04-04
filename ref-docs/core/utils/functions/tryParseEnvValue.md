@@ -8,7 +8,7 @@
 
 > **tryParseEnvValue**\<`T`\>(`envValue`, `defaultValue`): `T`
 
-Defined in: [packages/core/src/utils/env.ts:7](https://github.com/Sitecore/content-sdk/blob/8b95896c4f9d2f6a2c452ee63406a9f69e9ab407/packages/core/src/utils/env.ts#L7)
+Defined in: [packages/core/src/utils/env.ts:7](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/utils/env.ts#L7)
 
 Method to parse JSON-formatted environment variables
 

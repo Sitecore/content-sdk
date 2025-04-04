@@ -8,7 +8,7 @@
 
 > **RouteOptions**: `object`
 
-Defined in: [packages/core/src/layout/models.ts:156](https://github.com/Sitecore/content-sdk/blob/8b95896c4f9d2f6a2c452ee63406a9f69e9ab407/packages/core/src/layout/models.ts#L156)
+Defined in: [packages/core/src/layout/models.ts:156](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/layout/models.ts#L156)
 
 Contract for additional route options when requesting layout data
 

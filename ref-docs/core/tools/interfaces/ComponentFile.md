@@ -6,7 +6,7 @@
 
 # Interface: ComponentFile
 
-Defined in: [packages/core/src/tools/templating/components.ts:6](https://github.com/Sitecore/content-sdk/blob/8b95896c4f9d2f6a2c452ee63406a9f69e9ab407/packages/core/src/tools/templating/components.ts#L6)
+Defined in: [packages/core/src/tools/templating/components.ts:6](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/tools/templating/components.ts#L6)
 
 Describes a file that represents a component definition
 
@@ -16,7 +16,7 @@ Describes a file that represents a component definition
 
 > **componentName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:9](https://github.com/Sitecore/content-sdk/blob/8b95896c4f9d2f6a2c452ee63406a9f69e9ab407/packages/core/src/tools/templating/components.ts#L9)
+Defined in: [packages/core/src/tools/templating/components.ts:9](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/tools/templating/components.ts#L9)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/core/src/tools/templating/components.ts:9](https://github.
 
 > **moduleName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:8](https://github.com/Sitecore/content-sdk/blob/8b95896c4f9d2f6a2c452ee63406a9f69e9ab407/packages/core/src/tools/templating/components.ts#L8)
+Defined in: [packages/core/src/tools/templating/components.ts:8](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/tools/templating/components.ts#L8)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [packages/core/src/tools/templating/components.ts:8](https://github.
 
 > **path**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:7](https://github.com/Sitecore/content-sdk/blob/8b95896c4f9d2f6a2c452ee63406a9f69e9ab407/packages/core/src/tools/templating/components.ts#L7)
+Defined in: [packages/core/src/tools/templating/components.ts:7](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/tools/templating/components.ts#L7)
