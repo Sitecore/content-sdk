@@ -33,9 +33,10 @@ export default function loadCliConfig(configFile?: string): SitecoreCliConfig {
   try {
     cliConfig = tsx.require(path.resolve(process.cwd(), configFile), __filename);
   } catch (e) {
-    throw `Error while trying to load the cli configuration from ${configFile}. Error message: ${
-      (e as Error).message
-    }`;
+    throw `Error while trying to load the cli configuration from ${path.resolve(
+      process.cwd(),
+      configFile
+    )}. Error message: ${(e as Error).message}`;
   }
 
   return cliConfig.default;
