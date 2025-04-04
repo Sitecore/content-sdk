@@ -1,6 +1,6 @@
 # Sitecore Content SDK
 
-⚠️ **Disclaimer:** This project is currently under development and not suitable for use at the moment. Updates and improvements are ongoing, and it is not ready for production or implementation purposes.
+⚠️ **Disclaimer:** This project is actively under development, with ongoing updates and improvements. While it is still evolving and not yet production-ready, contributions and feedback are welcome as we work toward a stable release.
 
 [![Build Status](https://dev.azure.com/sitecore-devex/headless-javascript/_apis/build/status/Sitecore.jss?branchName=dev)](https://dev.azure.com/sitecore-devex/headless-javascript/_build/latest?definitionId=8&branchName=dev) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
