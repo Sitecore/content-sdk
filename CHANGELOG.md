@@ -15,3 +15,7 @@ Our versioning strategy is as follows:
 - Major: may include breaking changes in core packages (e.g. major architectural changes, major features)
 
 ## Unreleased
+
+### 🐛 Bug Fixes
+
+* `[react]` Extend `withDatasourceCheck` logic to handle empty datasource in DesignLibrary mode ([#62](https://github.com/Sitecore/content-sdk/pull/62))
