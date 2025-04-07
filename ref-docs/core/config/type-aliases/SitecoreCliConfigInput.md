@@ -8,7 +8,7 @@
 
 > **SitecoreCliConfigInput**: `object`
 
-Defined in: [packages/core/src/config/models.ts:186](https://github.com/Sitecore/content-sdk/blob/5647269998b9306151914ae421806dad763f924a/packages/core/src/config/models.ts#L186)
+Defined in: [packages/core/src/config/models.ts:186](https://github.com/Sitecore/content-sdk/blob/5b197312cebb88f1513fcaccee123ae68a0c0c68/packages/core/src/config/models.ts#L186)
 
 Type to be used as cli config input in sitecore.cli.config
 

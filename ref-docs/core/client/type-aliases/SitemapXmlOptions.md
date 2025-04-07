@@ -8,7 +8,7 @@
 
 > **SitemapXmlOptions**: `object`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:56](https://github.com/Sitecore/content-sdk/blob/5647269998b9306151914ae421806dad763f924a/packages/core/src/client/sitecore-client.ts#L56)
+Defined in: [packages/core/src/client/sitecore-client.ts:56](https://github.com/Sitecore/content-sdk/blob/5b197312cebb88f1513fcaccee123ae68a0c0c68/packages/core/src/client/sitecore-client.ts#L56)
 
 Request options for the getSiteMap method
 
