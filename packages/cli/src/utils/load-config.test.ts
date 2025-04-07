@@ -89,7 +89,10 @@ describe('loadCliConfig', () => {
     tsxRequireStub.throws(new Error(errorMessage));
 
     expect(() => loadCliConfig(invalidConfig)).to.throw(
-      `Error while trying to load the cli configuration from ${invalidConfig}. Error message: ${errorMessage}`
+      `Error while trying to load the cli configuration from ${path.resolve(
+        process.cwd(),
+        invalidConfig
+      )}. Error message: ${errorMessage}`
     );
   });
 });
