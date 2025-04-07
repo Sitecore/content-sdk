@@ -15,3 +15,7 @@ Our versioning strategy is as follows:
 - Major: may include breaking changes in core packages (e.g. major architectural changes, major features)
 
 ## Unreleased
+
+### Bug Fixes
+
+- Ensure sitecore.config always uses local .env values, for the sake of global Content SDK CLI ([#60](https://github.com/Sitecore/content-sdk/pull/60))
