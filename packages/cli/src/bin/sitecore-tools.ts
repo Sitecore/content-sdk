@@ -14,19 +14,21 @@ resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (error, project
     // library from a package.json. Instead, include it from a relative
     // path to this script file (which is likely a globally installed
     // npm package).
-    // Not erroring here because we might use this in future for scaffolding.
+    // Not erroring here because cli can be used in global mode.
     cli = require('../cli').default;
     console.warn(
       'Sitecore Content SDK CLI is running in global mode because it was not installed in the local node_modules folder.'
     );
   } else {
     // No error implies a projectLocalCli, which will load whatever
-    // version of jss-cli you have installed in a local package.json
+    // version of content sdk cli you have installed in a local package.json
     cli = require(projectLocalCli as string).default;
-
-    // Since we are in context of a project, load its environment variables
-    processEnv(process.cwd());
   }
+
+  // load environment variables from current working directory
+  // if the current working directory is not an app project root .env file will be missing and nothing will be loaded
+  // in that case loading environment variables will be handled by the actual cli command
+  processEnv(process.cwd());
 
   cli(commands);
 });
