@@ -13,7 +13,7 @@
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
     "lint": "eslint \"./src/**/*.ts\"",
-    "sitecore-tools": "node ./dist/cjs/bin/sitecore-tools.js",
+    "sitecore-tools": "node ./dist/cjs/bin/scs.js",
     "test": "mocha --require ts-node/register/transpile-only \"./src/**/*.test.ts\"",
     "coverage": "nyc --require ts-node/register/transpile-only npm test"
   },
@@ -37,6 +37,7 @@
     "@sitecore-content-sdk/core": "0.1.0-beta.33",
     "dotenv": "^16.4.7",
     "dotenv-expand": "^12.0.1",
+    "keytar": "^7.9.0",
     "resolve": "^1.22.10",
     "tmp": "^0.2.3",
     "tsx": "^4.19.3",
