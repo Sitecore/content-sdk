@@ -16,6 +16,11 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🛠 Breaking Changes
+
+* `[core]` SXA Form can't fire CloudSDK events due to initialization error ([#63](https://github.com/Sitecore/content-sdk/pull/63)):
+  * Form utilities have been moved from `@sitecore-content-sdk/core/form` to the root of `@sitecore-content-sdk/core`. Update your imports to reflect this change if you are referencing these utilities.
+
 ### 🐛 Bug Fixes
 
 * `[react]` Extend `withDatasourceCheck` logic to handle empty datasource in DesignLibrary mode ([#62](https://github.com/Sitecore/content-sdk/pull/62))
