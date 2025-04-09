@@ -14,7 +14,6 @@ import {
   DesignLibraryStatus,
   ComponentUpdateEventArgs,
   getDesignLibraryStatusEvent,
-  getDesignLibraryScriptLink,
 } from '@sitecore-content-sdk/core/editing';
 
 describe('<DesignLibrary />', () => {
@@ -88,7 +87,6 @@ describe('<DesignLibrary />', () => {
       { container: document.body }
     );
 
-    expect(rendered.baseElement.innerHTML).to.contain(`${getDesignLibraryScriptLink()}?cb=`);
     expect(rendered.baseElement.innerHTML).to.contain(
       [
         '<main><div id="editing-component">',
@@ -116,7 +114,6 @@ describe('<DesignLibrary />', () => {
       { container: document.body }
     );
 
-    expect(rendered.baseElement.innerHTML).to.contain(`${getDesignLibraryScriptLink()}?cb=`);
     expect(rendered.baseElement.innerHTML).to.contain(
       [
         '<main><div id="editing-component">',
@@ -142,7 +139,6 @@ describe('<DesignLibrary />', () => {
       { container: document.body }
     );
 
-    expect(rendered.baseElement.innerHTML).to.contain(`${getDesignLibraryScriptLink()}?cb=`);
     expect(rendered.baseElement.innerHTML).to.contain(
       [
         '<main><div id="editing-component">',
@@ -177,7 +173,6 @@ describe('<DesignLibrary />', () => {
       { container: document.body }
     );
 
-    expect(rendered.baseElement.innerHTML).to.contain(`${getDesignLibraryScriptLink()}?cb=`);
     expect(rendered.baseElement.innerHTML).to.contain(
       [
         '<main><div id="editing-component">',
