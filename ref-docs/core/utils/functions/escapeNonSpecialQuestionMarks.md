@@ -8,7 +8,7 @@
 
 > **escapeNonSpecialQuestionMarks**(`input`): `string`
 
-Defined in: [packages/core/src/utils/utils.ts:204](https://github.com/Sitecore/xmc-jss-dev/blob/4ce11b2e66350058dfba252d10945c5c8009d3d8/packages/core/src/utils/utils.ts#L204)
+Defined in: [packages/core/src/utils/utils.ts:204](https://github.com/Sitecore/content-sdk/blob/b152c3f4a50979a3ba0fb00ad2bfcb4012268c4d/packages/core/src/utils/utils.ts#L204)
 
 Escapes non-special "?" characters in a string or regex.
 - For regular strings, it escapes all unescaped "?" characters by adding a backslash (`\`).

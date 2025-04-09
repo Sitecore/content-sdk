@@ -6,7 +6,7 @@
 
 # Interface: DesignLibraryStatusEvent
 
-Defined in: [packages/core/src/editing/design-library.ts:13](https://github.com/Sitecore/xmc-jss-dev/blob/4ce11b2e66350058dfba252d10945c5c8009d3d8/packages/core/src/editing/design-library.ts#L13)
+Defined in: [packages/core/src/editing/design-library.ts:13](https://github.com/Sitecore/content-sdk/blob/b152c3f4a50979a3ba0fb00ad2bfcb4012268c4d/packages/core/src/editing/design-library.ts#L13)
 
 Represents an event indicating the status of a component in the library.
 
@@ -16,7 +16,7 @@ Represents an event indicating the status of a component in the library.
 
 > **message**: `object`
 
-Defined in: [packages/core/src/editing/design-library.ts:15](https://github.com/Sitecore/xmc-jss-dev/blob/4ce11b2e66350058dfba252d10945c5c8009d3d8/packages/core/src/editing/design-library.ts#L15)
+Defined in: [packages/core/src/editing/design-library.ts:15](https://github.com/Sitecore/content-sdk/blob/b152c3f4a50979a3ba0fb00ad2bfcb4012268c4d/packages/core/src/editing/design-library.ts#L15)
 
 #### status
 
@@ -32,4 +32,4 @@ Defined in: [packages/core/src/editing/design-library.ts:15](https://github.com/
 
 > **name**: `"component:status"`
 
-Defined in: [packages/core/src/editing/design-library.ts:14](https://github.com/Sitecore/xmc-jss-dev/blob/4ce11b2e66350058dfba252d10945c5c8009d3d8/packages/core/src/editing/design-library.ts#L14)
+Defined in: [packages/core/src/editing/design-library.ts:14](https://github.com/Sitecore/content-sdk/blob/b152c3f4a50979a3ba0fb00ad2bfcb4012268c4d/packages/core/src/editing/design-library.ts#L14)
