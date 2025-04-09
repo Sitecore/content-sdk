@@ -1,8 +1,8 @@
-[**@sitecore-content-sdk/core**](../README.md)
+[**@sitecore-content-sdk/core**](../../../README.md)
 
 ***
 
-[@sitecore-content-sdk/core](../README.md) / form
+[@sitecore-content-sdk/core](../../../README.md) / [index](../../README.md) / form
 
 # form
 
