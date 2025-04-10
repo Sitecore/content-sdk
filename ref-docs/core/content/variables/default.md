@@ -8,4 +8,4 @@
 
 > **default**: `object`
 
-Defined in: [packages/core/src/content/index.ts:1](https://github.com/Sitecore/xmc-jss-dev/blob/39399fadad9bd49cf6ff57350ea22ef2e8814453/packages/core/src/content/index.ts#L1)
+Defined in: [packages/core/src/content/index.ts:1](https://github.com/Sitecore/content-sdk/blob/a00b062a2ee4ebc6a389a9fef916f3305844d144/packages/core/src/content/index.ts#L1)

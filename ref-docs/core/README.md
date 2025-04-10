@@ -8,6 +8,7 @@
 
 - [client](client/README.md)
 - [config](config/README.md)
+- [content](content/README.md)
 - [editing](editing/README.md)
 - [i18n](i18n/README.md)
 - [index](index/README.md)
