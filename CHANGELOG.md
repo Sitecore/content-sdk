@@ -23,7 +23,7 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
-* `[core]` Fix for lookbehind regex. (not supported on ios 16) [#2057](https://github.com/Sitecore/jss/issues/2057)
+* `[core]` Fix for lookbehind regex. (not supported on ios 16) [#67](https://github.com/Sitecore/content-sdk/pull/67)
 * `[nextjs]` Render "unoptimized" Next Image in component rendering mode ([#66](https://github.com/Sitecore/content-sdk/pull/66))
 * `[react]` Extend `withDatasourceCheck` logic to handle empty datasource in DesignLibrary mode ([#62](https://github.com/Sitecore/content-sdk/pull/62))
 * `[cli]` Process env variables in both cli global and local mode by default. ([#61](https://github.com/Sitecore/content-sdk/pull/61))
