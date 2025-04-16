@@ -65,7 +65,7 @@ export class ContentClient {
       url: url || process.env.SITECORE_CS_URL,
       tenant: tenant || process.env.SITECORE_CS_TENANT || '',
       environment: environment || process.env.SITECORE_CS_ENVIRONMENT || 'main',
-      preview: preview || process?.env?.SITECORE_CS_PREVIEW === 'true',
+      preview: preview || process.env.SITECORE_CS_PREVIEW === 'true',
       token: token || process.env.SITECORE_CS_TOKEN || '',
     };
 
