@@ -6,6 +6,14 @@
 
 # content
 
-## Variables
+## Classes
 
-- [default](variables/default.md)
+- [ContentClient](classes/ContentClient.md)
+
+## Interfaces
+
+- [ContentClientOptions](interfaces/ContentClientOptions.md)
+
+## Functions
+
+- [getContentUrl](functions/getContentUrl.md)
