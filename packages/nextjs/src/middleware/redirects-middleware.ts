@@ -314,10 +314,10 @@ export class RedirectsMiddleware extends MiddlewareBase {
       })
       .join('&');
 
-    const newUrl = new URL(`${url.pathname}?${newQueryString}`, url.origin);
+    const newUrl = new URL(`${url.pathname.toLowerCase()}?${newQueryString}`, url.origin);
 
     url.search = newUrl.search;
-    url.pathname = newUrl.pathname;
+    url.pathname = newUrl.pathname.toLowerCase();
     url.href = newUrl.href;
 
     return url;
