@@ -1,10 +1,8 @@
 /* eslint-disable dot-notation */
 import { expect } from 'chai';
 import sinon from 'sinon';
-// import debug from '../debug';
 import { ContentClient } from './content-client';
 import { GraphQLRequestClient } from '../graphql-request-client';
-import 'mocha';
 
 describe('content-client', () => {
   describe('constructor', () => {
@@ -26,7 +24,6 @@ describe('content-client', () => {
       expect(client.graphqlClient['headers']).to.deep.equal({
         Authorization: 'Bearer test-token',
       });
-      // expect(client.graphqlClient['debug']).to.deep.equal(debug.content);
     });
   });
 
