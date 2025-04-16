@@ -8,7 +8,7 @@
 
 > **EditingPreviewData**: `object`
 
-Defined in: [packages/core/src/editing/models.ts:61](https://github.com/Sitecore/content-sdk/blob/39534de24e6d35c4a13d616ed7b962afdb07fc72/packages/core/src/editing/models.ts#L61)
+Defined in: [packages/core/src/editing/models.ts:61](https://github.com/Sitecore/content-sdk/blob/8c45c5a4d77502417a7ac54d5a26d90faede3b66/packages/core/src/editing/models.ts#L61)
 
 Data for Preview (Editing) Mode.
 

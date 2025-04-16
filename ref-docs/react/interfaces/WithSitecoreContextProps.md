@@ -6,7 +6,7 @@
 
 # Interface: WithSitecoreContextProps
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:14](https://github.com/Sitecore/content-sdk/blob/39534de24e6d35c4a13d616ed7b962afdb07fc72/packages/react/src/enhancers/withSitecoreContext.tsx#L14)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:14](https://github.com/Sitecore/content-sdk/blob/8c45c5a4d77502417a7ac54d5a26d90faede3b66/packages/react/src/enhancers/withSitecoreContext.tsx#L14)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:14](https://gi
 
 > `optional` **api**: `Required`\<\{ `edge`: `Required`\<\{ `clientContextId`: `string`; `contextId`: `string`; `edgeUrl`: `string`; \}\>; `local`: `Required`\<\{ `apiHost`: `string`; `apiKey`: `string`; `path`: `string`; \}\>; \}\>
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:16](https://github.com/Sitecore/content-sdk/blob/39534de24e6d35c4a13d616ed7b962afdb07fc72/packages/react/src/enhancers/withSitecoreContext.tsx#L16)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:16](https://github.com/Sitecore/content-sdk/blob/8c45c5a4d77502417a7ac54d5a26d90faede3b66/packages/react/src/enhancers/withSitecoreContext.tsx#L16)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:16](https://gi
 
 > **sitecoreContext**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:15](https://github.com/Sitecore/content-sdk/blob/39534de24e6d35c4a13d616ed7b962afdb07fc72/packages/react/src/enhancers/withSitecoreContext.tsx#L15)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:15](https://github.com/Sitecore/content-sdk/blob/8c45c5a4d77502417a7ac54d5a26d90faede3b66/packages/react/src/enhancers/withSitecoreContext.tsx#L15)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:15](https://gi
 
 > `optional` **updateSitecoreContext**: `false` \| (`value`) => `void`
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:17](https://github.com/Sitecore/content-sdk/blob/39534de24e6d35c4a13d616ed7b962afdb07fc72/packages/react/src/enhancers/withSitecoreContext.tsx#L17)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:17](https://github.com/Sitecore/content-sdk/blob/8c45c5a4d77502417a7ac54d5a26d90faede3b66/packages/react/src/enhancers/withSitecoreContext.tsx#L17)
