@@ -15,7 +15,7 @@ export interface ContentClientOptions {
   /** The environment name. */
   environment: string;
   /** Indicates if preview mode is enabled. */
-  preview: boolean;
+  preview?: boolean;
   /** The authentication token. */
   token: string;
 }
@@ -27,7 +27,7 @@ export class ContentClient {
   endpoint: string;
   graphqlClient: GraphQLRequestClient;
 
-  constructor({ url, tenant, environment, preview, token }: ContentClientOptions) {
+  constructor({ url, tenant, environment, preview = false, token }: ContentClientOptions) {
     this.endpoint = getContentUrl({
       environment,
       preview,
