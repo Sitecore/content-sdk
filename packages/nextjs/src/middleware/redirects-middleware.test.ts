@@ -1797,7 +1797,6 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      
       it('should redirect regardless of case in pattern and target', async () => {
         // Set up a clone function (used by both req and res)
         const cloneUrl = () => Object.assign({}, req.nextUrl);
