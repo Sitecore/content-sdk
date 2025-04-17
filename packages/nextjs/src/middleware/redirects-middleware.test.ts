@@ -1798,7 +1798,7 @@ describe('RedirectsMiddleware', () => {
       });
 
 
-      // Tests cases for case-insensitive redirects
+      // Test cases for case-insensitive redirects
       it('should redirect regardless of case in pattern and target', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
