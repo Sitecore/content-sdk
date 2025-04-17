@@ -1797,7 +1797,6 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-
       // Test cases for case-insensitive redirects
       it('should redirect regardless of case in pattern and target', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
@@ -1810,7 +1809,7 @@ describe('RedirectsMiddleware', () => {
           clone: cloneUrl,
         };
         setupRedirectStub(301);
-      
+
         const { res, req } = createTestRequestResponse({
           response: { url },
           request: {
@@ -1824,7 +1823,7 @@ describe('RedirectsMiddleware', () => {
           },
           status: 301,
         });
-      
+
         const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
           {
             pattern: '/about', // Lowercase pattern
@@ -1836,14 +1835,14 @@ describe('RedirectsMiddleware', () => {
           req,
           res
         );
-      
+
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
           headers: {},
           redirected: undefined,
           status: 301,
           url,
         });
-      
+
         expect(siteResolver.getByHost).to.be.calledWith(hostname);
         // eslint-disable-next-line no-unused-expressions
         expect(fetchRedirects.called).to.be.true;
