@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "0.2.0-canary.12",
+  "version": "0.2.0-canary.13",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -75,8 +75,8 @@
   },
   "dependencies": {
     "@babel/parser": "^7.26.10",
-    "@sitecore-content-sdk/core": "0.2.0-canary.12",
-    "@sitecore-content-sdk/react": "0.2.0-canary.12",
+    "@sitecore-content-sdk/core": "0.2.0-canary.13",
+    "@sitecore-content-sdk/react": "0.2.0-canary.13",
     "@vercel/kv": "^3.0.0",
     "prop-types": "^15.8.1",
     "recast": "^0.23.11",
