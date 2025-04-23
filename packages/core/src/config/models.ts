@@ -56,6 +56,27 @@ export type SitecoreConfigInput = {
        */
       path?: string;
     };
+    /**
+     * Settings for M2M authentication used in Content Service CLI
+     */
+    m2m?: {
+      /**
+       * Client ID used to authenticate with Sitecore XM Cloud M2M API
+       */
+      clientId: string;
+      /**
+       * Client secret used to authenticate with Sitecore XM Cloud M2M API
+       */
+      clientSecret: string;
+      /**
+       * Endpoint for M2M authentication. Default: https://auth.sitecorecloud.io/oauth/token
+       */
+      endpoint?: string;
+      /**
+       * Audience to authenticate with. Default: https://api.sitecorecloud.io
+       */
+      audience?: string;
+    };
   };
   /**
    * The default and fallback locale for your site.
@@ -201,6 +222,12 @@ export type SitecoreCliConfigInput = {
      * List of scaffold templates that can be used for generating components
      */
     templates?: ScaffoldTemplate[];
+  };
+  extractCode?: {
+    /**
+     * List of commands to run during the build process
+     */
+    commands?: Array<void | Promise<void>>;
   };
 };
 
