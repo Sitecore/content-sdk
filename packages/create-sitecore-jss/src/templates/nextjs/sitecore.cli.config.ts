@@ -1,13 +1,13 @@
+import ts from 'typescript';
 import config from './sitecore.config';
-import tsConfig from './tsconfig.json';
 import { defineCliConfig } from '@sitecore-content-sdk/nextjs/config';
 import {
   generateSites,
   generateMetadata,
-  validateConsent,
-  validateBuildContext,
   extractComponents,
 } from '@sitecore-content-sdk/nextjs/tools';
+
+const tsConfig = ts.readConfigFile('./tsconfig.json', ts.sys.readFile);
 
 export default defineCliConfig({
   build: {
@@ -16,16 +16,11 @@ export default defineCliConfig({
       generateSites({
         scConfig: config,
       }),
-    ],
-  },
-  extractCode: {
-    commands: [
-      validateConsent(),
-      validateBuildContext(),
-      extractComponents({
-        scConfig: config,
-        compilerOptions: tsConfig.compilerOptions,
-      }),
+      () =>
+        extractComponents({
+          scConfig: config,
+          compilerOptions: tsConfig.config?.compilerOptions,
+        }),
     ],
   },
 });

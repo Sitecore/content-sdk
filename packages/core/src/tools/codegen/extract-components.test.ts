@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import chalk from 'chalk';
 import { extractComponents } from './extract-components';
-import * as cliUtils from './utils';
-import * as authUtils from '../auth/fetch-bearer-token';
 import { getFallbackConfig } from '../../config/define-config';
-import proxyquire from 'proxyquire';
+import nock from 'nock';
+import { SITECORE_EDGE_URL_DEFAULT } from '../../constants';
+import path from 'path';
 
 describe('extract-components', () => {
   const sandbox = sinon.createSandbox();
@@ -48,22 +48,16 @@ describe('extract-components', () => {
     delete process.env.BuildMetadata_BuildId;
   });
 
-  // TODO: fix proxyquire and mocks here (why do they never work?)
-
   it('should log when bearer is empty', async () => {
     const consoleErrorStub = sandbox.stub(console, 'error');
-    const resolveImportFilesStub = sandbox.stub().resolves(['/path/to/component.ts']);
-    const fetchBearerTokenStub = sandbox.stub().resolves('');
-    proxyquire('./extract-components', {
-      './utils': {
-        ...cliUtils,
-        resolveComponentImportFiles: resolveImportFilesStub,
-      },
-      '../auth/fetch-bearer-token': {
-        ...authUtils,
-        fetchBearerToken: fetchBearerTokenStub,
-      },
-    });
+    const fetchBearerTokenStub = sandbox.stub();
+
+    nock('https://auth.sitecorecloud.io')
+      .post('/oauth/token')
+      .reply(200, function(_, __, cb) {
+        fetchBearerTokenStub();
+        return cb(null, {});
+      });
 
     await extractComponents(mockArgs);
 
@@ -73,53 +67,86 @@ describe('extract-components', () => {
     );
   });
 
-  xit('should catch exceptions from resolveImportFiles call', async () => {
+  it('should catch exceptions from resolveImportFiles call', async () => {
+    const args = {
+      ...mockArgs,
+      appFolder: './src/tools/codegen/test-data/extract-components/no-componentBuilder',
+    };
+    const fetchBearerTokenSpy = sandbox.stub();
+
+    nock('https://auth.sitecorecloud.io')
+      .post('/oauth/token')
+      .reply(200, function(_, __, cb) {
+        fetchBearerTokenSpy();
+        return cb(null, {
+          access_token: 'test-token',
+          expires_in: 3600,
+          token_type: 'Bearer',
+        });
+      });
     const consoleErrorStub = sandbox.stub(console, 'error');
-    const resolveImportFilesStub = sandbox.stub().throws(new Error('oopsie'));
-    const fetchBearerTokenStub = sandbox.stub().resolves('test-token');
-    proxyquire('./extract-components', {
-      './utils': {
-        ...cliUtils,
-        resolveComponentImportFiles: resolveImportFilesStub,
-      },
-      '../auth/fetch-bearer-token': {
-        ...authUtils,
-        fetchBearerToken: fetchBearerTokenStub,
-      },
-    });
 
-    await extractComponents(mockArgs);
+    await extractComponents(args);
 
+    expect(fetchBearerTokenSpy.calledOnce).to.be.true;
     expect(consoleErrorStub.calledOnce).to.be.true;
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
-      chalk.red('Error during component extraction: Error: oopsie')
+      chalk.red(
+        'Error during component extraction: ReferenceError: Failed to find file C:\\Work\\xmc-jss-dev-2\\packages\\core\\src\\tools\\codegen\\test-data\\extract-components\\no-componentBuilder\\src\\lib\\componentMap.ts'
+      )
     );
   });
 
-  xit('should call sendCode for each component path', async () => {
-    const componentMap = new Map([
-      ['component1', '/path/to/component1.ts'],
-      ['component2', '/path/to/component2.ts'],
-    ]);
-    const sendCodeStub = sandbox.stub().resolves();
-    const fetchBearerTokenStub = sandbox.stub().resolves('test-token');
-    const resolveImportFilesStub = sandbox.stub().resolves(componentMap);
+  it('should call sendCode for each component path', async () => {
+    const args = {
+      ...mockArgs,
+      appFolder: './src/tools/codegen/test-data/extract-components/regular-imports',
+    };
+    const fetchBearerTokenSpy = sandbox.stub();
 
-    proxyquire('./extract-components', {
-      './utils': {
-        ...cliUtils,
-        resolveComponentImportFiles: resolveImportFilesStub,
-        sendCode: sendCodeStub,
-      },
-      '../auth/fetch-bearer-token': {
-        ...authUtils,
-        fetchBearerToken: fetchBearerTokenStub,
-      },
-    });
+    nock('https://auth.sitecorecloud.io')
+      .post('/oauth/token')
+      .reply(200, function(_, __, cb) {
+        fetchBearerTokenSpy();
+        return cb(null, {
+          access_token: 'test-token',
+          expires_in: 3600,
+          token_type: 'Bearer',
+        });
+      });
+    // const consoleErrorStub = sandbox.stub(console, 'error');
 
-    await extractComponents(mockArgs);
+    const consoleLogStub = sandbox.stub(console, 'log');
 
-    expect(resolveImportFilesStub.calledOnce).to.be.true;
-    expect(sendCodeStub.callCount).to.equal(2);
+    nock(SITECORE_EDGE_URL_DEFAULT)
+      .post('/api/v1/mesh')
+      .reply(200)
+      .persist();
+
+    const component1Path = path.resolve(
+      process.cwd(),
+      './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
+    );
+
+    const component2Path = path.resolve(
+      process.cwd(),
+      './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
+    );
+
+    await extractComponents(args);
+
+    expect(fetchBearerTokenSpy.calledOnce).to.be.true;
+
+    // expect(consoleErrorStub.called).to.be.false;
+
+    expect(consoleLogStub.callCount).to.equal(2);
+
+    expect(consoleLogStub.getCall(0).args[0]).to.equal(
+      chalk.green(`Code from ${component1Path} extracted and sent to mesh endpoint`)
+    );
+
+    expect(consoleLogStub.getCall(1).args[0]).to.equal(
+      chalk.green(`Code from ${component2Path} extracted and sent to mesh endpoint`)
+    );
   });
 });

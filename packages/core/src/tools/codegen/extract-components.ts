@@ -1,7 +1,12 @@
 import chalk from 'chalk';
 import path from 'path';
 import { fetchBearerToken } from '../auth/fetch-bearer-token';
-import { resolveComponentImportFiles, sendCode } from './utils';
+import {
+  resolveComponentImportFiles,
+  sendCode,
+  validateConsent,
+  validateDeployContext,
+} from './utils';
 import { SitecoreConfig } from '../../config';
 
 export type ExtactComponentsArgs = {
@@ -18,6 +23,14 @@ export type ExtactComponentsArgs = {
  * @param {ExtactComponentsArgs} args - Arguments for extracting components
  */
 export async function extractComponents(args: ExtactComponentsArgs) {
+  if (!validateConsent()) {
+    console.log(chalk.yellow('Skipping code extraction, consent not given'));
+    return;
+  }
+  if (!validateDeployContext()) {
+    console.log(chalk.yellow('Skipping code extraction, not in deploy context'));
+    return;
+  }
   const basePath = args.appFolder ? resolveAppPath(args.appFolder) : process.cwd();
   try {
     const bearer = await fetchBearerToken(args.scConfig.api.m2m);
@@ -41,7 +54,7 @@ export async function extractComponents(args: ExtactComponentsArgs) {
       })
     );
 
-    Promise.all(codeDispatches);
+    await Promise.all(codeDispatches);
   } catch (error) {
     console.error(chalk.red('Error during component extraction:', error));
   }

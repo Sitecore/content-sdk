@@ -129,6 +129,13 @@ describe('codegen-utils', () => {
             './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
           ),
         ],
+        [
+          'TestComponent2',
+          path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
+          ),
+        ],
       ]);
     });
 
@@ -209,7 +216,7 @@ describe('codegen-utils', () => {
     });
   });
 
-  describe('validateBuildContext', () => {
+  describe('validateDeployContext', () => {
     afterEach(() => {
       delete process.env.NETLIFY;
       delete process.env.VERCEL;
@@ -223,7 +230,7 @@ describe('codegen-utils', () => {
       process.env.NETLIFY = 'true';
       process.env.BUILD_ID = '12345';
 
-      const result = codegenUtils.validateBuildContext();
+      const result = codegenUtils.validateDeployContext();
 
       expect(result).to.be.true;
     });
@@ -231,35 +238,29 @@ describe('codegen-utils', () => {
     it('should return true when in Vercel build context', () => {
       process.env.VERCEL = 'true';
 
-      const result = codegenUtils.validateBuildContext();
+      const result = codegenUtils.validateDeployContext();
 
       expect(result).to.be.true;
     });
 
-    it('should throw when in Vercel runtime', () => {
+    it('should return false in Vercel runtime', () => {
       process.env.VERCEL = 'true';
       process.env.VERCEL_REGION = 'region';
 
-      expect(() => codegenUtils.validateBuildContext()).to.throw(
-        Error,
-        'Skipping code extraction, not in build context'
-      );
+      expect(codegenUtils.validateDeployContext()).to.be.false;
     });
 
     it('should return true when in Sitecore build context', () => {
       process.env.SITECORE = 'true';
       process.env.BuildMetadata_BuildId = '12345';
 
-      const result = codegenUtils.validateBuildContext();
+      const result = codegenUtils.validateDeployContext();
 
       expect(result).to.be.true;
     });
 
-    it('should throw an error when not in a recognized build context', () => {
-      expect(() => codegenUtils.validateBuildContext()).to.throw(
-        Error,
-        'Skipping code extraction, not in build context'
-      );
+    it('should return false when not in a recognized build context', () => {
+      expect(codegenUtils.validateDeployContext()).to.be.false;
     });
   });
 
@@ -268,17 +269,14 @@ describe('codegen-utils', () => {
       delete process.env.EXTRACT_CONSENT;
     });
 
-    it('should throw an error when EXTRACT_CONSENT is not set', () => {
-      expect(() => codegenUtils.validateConsent()).to.throw(
-        Error,
-        'Skipping code extraction, EXTRACT_CONSENT is not set'
-      );
+    it('should return false when EXTRACT_CONSENT is not set', () => {
+      expect(codegenUtils.validateConsent()).to.be.false;
     });
 
-    it('should not throw an error when EXTRACT_CONSENT is set', () => {
+    it('should return true when EXTRACT_CONSENT is set', () => {
       process.env.EXTRACT_CONSENT = 'true';
 
-      expect(() => codegenUtils.validateConsent()).not.to.throw();
+      expect(codegenUtils.validateConsent()).to.be.true;
     });
   });
 });

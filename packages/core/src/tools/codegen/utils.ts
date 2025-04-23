@@ -6,22 +6,24 @@ import { SITECORE_EDGE_URL_DEFAULT } from '../../constants';
 
 export const validateConsent = () => {
   if (!process.env.EXTRACT_CONSENT) {
-    throw new Error('Skipping code extraction, EXTRACT_CONSENT is not set');
+    console.log(chalk.yellow('EXTRACT_CONSENT is not set'));
+    return false;
   }
+  return true;
 };
 
-export const validateBuildContext = () => {
+export const validateDeployContext = () => {
   if (process.env.NETLIFY && process.env.BUILD_ID) {
-    return;
+    return true;
   }
   // workaround, Vercel does not have variables that are only accessible at build time
   if (process.env.VERCEL && !process.env.VERCEL_REGION) {
-    return;
+    return true;
   }
   if (process.env.SITECORE && process.env.BuildMetadata_BuildId) {
-    return;
+    return true;
   }
-  throw new Error('Skipping code extraction, not in build context');
+  return false;
 };
 
 export const resolveComponentImportFiles = (
@@ -62,7 +64,6 @@ export const resolveComponentImportFiles = (
             return importStatement.match(matcher) !== null;
           });
           if (componentImport) {
-            console.log(`${componentKey} - ${componentImport}`);
             const componentValue = importNodesMap[componentImport];
             componentImportsMap.set(componentKey, componentValue);
           }

@@ -3,7 +3,9 @@
 // See scripts/generate-component-builder/index.ts to modify the generation of this file.
 
 import * as TestComponent from '../components/TestComponent';
+import * as TestComponent2 from '../components/TestComponent2';
 
 export const components = new Map([
     ['TestComponent', TestComponent],
+    ['Component1', TestComponent2],
 ]);
