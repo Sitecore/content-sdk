@@ -94,7 +94,7 @@ describe('extract-components', () => {
     expect(consoleErrorStub.calledOnce).to.be.true;
     const expectedPath = path.resolve(
       process.cwd(),
-      '.\\src\\tools\\codegen\\test-data\\extract-components\\no-componentBuilder\\src\\lib\\componentMap.ts'
+      './src/tools/codegen/test-data/extract-components/no-componentBuilder/src/lib/componentMap.ts'
     );
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
       chalk.red(
