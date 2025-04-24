@@ -24,6 +24,12 @@ describe('codegen-utils', () => {
       const token = 'test-token';
       const fileContent = 'export const test = () => {};';
 
+      const file = {
+        name: componentName,
+        path: componentPath,
+        type: codegenUtils.ExtractedFileType.Component,
+      };
+
       sandbox
         .stub(fs, 'existsSync')
         .withArgs(componentPath)
@@ -34,13 +40,24 @@ describe('codegen-utils', () => {
         .returns(fileContent);
 
       nock(meshEndpoint)
-        .post('/api/v1/mesh', JSON.stringify({ componentName: componentName, code: fileContent }))
+        .post(
+          '/api/v1/mesh',
+          JSON.stringify({
+            name: file.name,
+            content: fileContent,
+            labels: {
+              properties: {
+                type: file.type,
+              },
+            },
+          })
+        )
         .matchHeader('Authorization', `Bearer ${token}`)
         .reply(200);
 
       const consoleLogStub = sandbox.spy(console, 'log');
 
-      await codegenUtils.sendCode({ componentName, componentPath, token });
+      await codegenUtils.sendCode({ file, token });
 
       expect(consoleLogStub.called).to.be.true;
       expect(consoleLogStub.firstCall.args[0]).to.equal(
@@ -52,6 +69,12 @@ describe('codegen-utils', () => {
       const componentPath = '/path/to/nonexistent-component.ts';
       const token = 'test-token';
 
+      const file = {
+        name: componentName,
+        path: componentPath,
+        type: codegenUtils.ExtractedFileType.Component,
+      };
+
       sandbox
         .stub(fs, 'existsSync')
         .withArgs(componentPath)
@@ -59,7 +82,7 @@ describe('codegen-utils', () => {
 
       const consoleErrorStub = sandbox.stub(console, 'error');
 
-      await codegenUtils.sendCode({ componentName, componentPath, token });
+      await codegenUtils.sendCode({ file, token });
 
       expect(consoleErrorStub.calledOnce).to.be.true;
       expect(consoleErrorStub.firstCall.args[0]).to.equal(
@@ -71,6 +94,11 @@ describe('codegen-utils', () => {
       const componentPath = '/path/to/component.ts';
       const token = 'test-token';
       const fileContent = 'export const test = () => {};';
+      const file = {
+        name: componentName,
+        path: componentPath,
+        type: codegenUtils.ExtractedFileType.Component,
+      };
 
       sandbox
         .stub(fs, 'existsSync')
@@ -82,13 +110,24 @@ describe('codegen-utils', () => {
         .returns(fileContent);
 
       nock(meshEndpoint)
-        .post('/api/v1/mesh', JSON.stringify({ componentName: componentName, code: fileContent }))
+        .post(
+          '/api/v1/mesh',
+          JSON.stringify({
+            name: file.name,
+            content: fileContent,
+            labels: {
+              properties: {
+                type: file.type,
+              },
+            },
+          })
+        )
         .matchHeader('Authorization', `Bearer ${token}`)
         .reply(500, 'Internal Server Error');
 
       const consoleErrorStub = sandbox.stub(console, 'error');
 
-      await codegenUtils.sendCode({ componentName, componentPath, token });
+      await codegenUtils.sendCode({ file, token });
 
       expect(consoleErrorStub.calledOnce).to.be.true;
       expect(consoleErrorStub.firstCall.args[0]).to.equal(
@@ -98,7 +137,7 @@ describe('codegen-utils', () => {
   });
 
   describe('resolveComponentImportFiles', () => {
-    it('should throw when src/temp/componentBuilder.ts is not found', () => {
+    it('should throw when src/lib/componentMap.ts is not found', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/no-componentBuilder';
       const appRoot = process.cwd();
       const expectedPath = path.resolve(
@@ -111,7 +150,7 @@ describe('codegen-utils', () => {
       );
     });
 
-    it('should return imports with absolute paths from componentBuilder.ts', () => {
+    it('should return JS imports with absolute paths from componentMap.ts', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/regular-imports';
       const tsConfig = ts.readConfigFile(
         path.resolve(process.cwd(), appPath, 'tsconfig.json'),
@@ -139,7 +178,63 @@ describe('codegen-utils', () => {
       ]);
     });
 
-    it('should return imports with absolute paths from componentBuilder.ts with named imports', () => {
+    it('should return imports with absolute paths from componentMap.ts', () => {
+      const appPath = './src/tools/codegen/test-data/extract-components/js-imports';
+      const tsConfig = ts.readConfigFile(
+        path.resolve(process.cwd(), appPath, 'tsconfig.json'),
+        ts.sys.readFile
+      );
+      const imports = codegenUtils.resolveComponentImportFiles(
+        appPath,
+        tsConfig.config!.compilerOptions
+      );
+      expect(Array.from(imports)).to.deep.equal([
+        [
+          'TestComponent',
+          path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/extract-components/js-imports/src/components/TestComponent.jsx'
+          ),
+        ],
+        [
+          'TestComponent2',
+          path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/extract-components/js-imports/src/components/TestComponent2.jsx'
+          ),
+        ],
+      ]);
+    });
+
+    it('should return imports with absolute paths when component map is initialized with values and set with values', () => {
+      const appPath = './src/tools/codegen/test-data/extract-components/custom-component-map';
+      const tsConfig = ts.readConfigFile(
+        path.resolve(process.cwd(), appPath, 'tsconfig.json'),
+        ts.sys.readFile
+      );
+      const imports = codegenUtils.resolveComponentImportFiles(
+        appPath,
+        tsConfig.config!.compilerOptions
+      );
+      expect(Array.from(imports)).to.deep.equal([
+        [
+          'TestComponent',
+          path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/extract-components/custom-component-map/src/components/TestComponent.tsx'
+          ),
+        ],
+        [
+          'TestComponent2',
+          path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/extract-components/custom-component-map/src/components/TestComponent2.tsx'
+          ),
+        ],
+      ]);
+    });
+
+    it('should return imports with absolute paths from componentMap.ts with named imports', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/named-imports';
       const tsConfig = ts.readConfigFile(
         path.resolve(process.cwd(), appPath, 'tsconfig.json'),
@@ -174,7 +269,7 @@ describe('codegen-utils', () => {
       ]);
     });
 
-    it('should return imports with absolute paths from componentBuilder.ts when paths aliases are used', () => {
+    it('should return imports with absolute paths from componentMap.ts when paths aliases are used', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/with-path-aliases';
       const tsConfig = ts.readConfigFile(
         path.resolve(process.cwd(), appPath, 'tsconfig.json'),

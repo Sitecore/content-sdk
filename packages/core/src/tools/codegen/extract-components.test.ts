@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import chalk from 'chalk';
+import fs from 'fs';
 import { extractComponents } from './extract-components';
 import { getFallbackConfig } from '../../config/define-config';
 import nock from 'nock';
@@ -39,6 +40,7 @@ describe('extract-components', () => {
     process.env.EXTRACT_CONSENT = 'true';
     process.env.SITECORE = 'true';
     process.env.BuildMetadata_BuildId = '0451';
+    sandbox.stub(fs, 'existsSync').returns(true);
   });
 
   afterEach(() => {
@@ -90,9 +92,14 @@ describe('extract-components', () => {
 
     expect(fetchBearerTokenSpy.calledOnce).to.be.true;
     expect(consoleErrorStub.calledOnce).to.be.true;
+    const expectedPath = path.resolve(
+      process.cwd(),
+      '.\\src\\tools\\codegen\\test-data\\extract-components\\no-componentBuilder\\src\\lib\\componentMap.ts'
+    );
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
       chalk.red(
-        'Error during component extraction: ReferenceError: Failed to find file C:\\Work\\xmc-jss-dev-2\\packages\\core\\src\\tools\\codegen\\test-data\\extract-components\\no-componentBuilder\\src\\lib\\componentMap.ts'
+        'Error during component extraction: ReferenceError: Failed to find file',
+        expectedPath
       )
     );
   });
