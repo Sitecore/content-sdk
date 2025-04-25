@@ -121,7 +121,6 @@ describe('extract-components', () => {
           token_type: 'Bearer',
         });
       });
-    // const consoleErrorStub = sandbox.stub(console, 'error');
 
     const consoleLogStub = sandbox.stub(console, 'log');
 
@@ -143,8 +142,6 @@ describe('extract-components', () => {
     await extractComponents(args);
 
     expect(fetchBearerTokenSpy.calledOnce).to.be.true;
-
-    // expect(consoleErrorStub.called).to.be.false;
 
     expect(consoleLogStub.callCount).to.equal(2);
 

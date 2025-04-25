@@ -58,7 +58,7 @@ export const validateDeployContext = () => {
  * and their respective import strings
  * @param {string} appPath path to the JSS app root
  * @param {object} compilerOptions compiler options from tsconfig.json
- * @param {string} componentMapPath path to the app's component map file
+ * @param {string} componentMapPath path to the app's component map file. Default: 'src/lib/componentMap.ts'
  * @returns map of component names and their respective import strings
  */
 export const resolveComponentImportFiles = (
@@ -66,11 +66,13 @@ export const resolveComponentImportFiles = (
   compilerOptions: {
     [key: string]: unknown;
   },
-  componentMapPath: string = 'src/lib/componentMap.ts'
+  componentMapPath: string = './src/lib/componentMap.ts'
 ) => {
   appPath = path.isAbsolute(appPath) ? appPath : path.resolve(process.cwd(), appPath);
 
-  const componentMapFullPath = path.resolve(appPath, componentMapPath);
+  const componentMapFullPath = path.isAbsolute(componentMapPath)
+    ? componentMapPath
+    : path.resolve(appPath, componentMapPath);
 
   const cliCompilerOptions = {
     ...compilerOptions,

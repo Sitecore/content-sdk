@@ -178,6 +178,36 @@ describe('codegen-utils', () => {
       ]);
     });
 
+    it('should handle custom componentMap path and parse js', () => {
+      const appPath = './src/tools/codegen/test-data/extract-components/regular-imports';
+      const mapPath = './src/non-standard-path/componentMap.js';
+      const tsConfig = ts.readConfigFile(
+        path.resolve(process.cwd(), appPath, 'tsconfig.json'),
+        ts.sys.readFile
+      );
+      const imports = codegenUtils.resolveComponentImportFiles(
+        appPath,
+        tsConfig.config!.compilerOptions,
+        mapPath
+      );
+      expect(Array.from(imports)).to.deep.equal([
+        [
+          'OtherComponent1',
+          path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
+          ),
+        ],
+        [
+          'OtherComponent2',
+          path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
+          ),
+        ],
+      ]);
+    });
+
     it('should return imports with absolute paths from componentMap.ts', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/js-imports';
       const tsConfig = ts.readConfigFile(
