@@ -58,7 +58,7 @@ export const validateDeployContext = () => {
  * and their respective import strings
  * @param {string} appPath path to the JSS app root
  * @param {object} compilerOptions compiler options from tsconfig.json
- * @param {string} componentMapPath path to the app's component map file. Default: 'src/lib/componentMap.ts'
+ * @param {string} [componentMapPath] path to the app's component map file. Default: 'src/lib/componentMap.ts'
  * @returns map of component names and their respective import strings
  */
 export const resolveComponentImportFiles = (
