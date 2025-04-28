@@ -61,7 +61,8 @@ describe('extract-components', () => {
         return cb(null, {});
       });
 
-    await extractComponents(mockArgs);
+    const extractComponentsCall = extractComponents(mockArgs);
+    await extractComponentsCall();
 
     expect(consoleErrorStub.calledOnce).to.be.true;
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
@@ -87,8 +88,8 @@ describe('extract-components', () => {
         });
       });
     const consoleErrorStub = sandbox.stub(console, 'error');
-
-    await extractComponents(args);
+    const extractComponentsCall = extractComponents(args);
+    await extractComponentsCall();
 
     expect(fetchBearerTokenSpy.calledOnce).to.be.true;
     expect(consoleErrorStub.calledOnce).to.be.true;
@@ -139,7 +140,8 @@ describe('extract-components', () => {
       './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
     );
 
-    await extractComponents(args);
+    const extractComponentsCall = extractComponents(args);
+    await extractComponentsCall();
 
     expect(fetchBearerTokenSpy.calledOnce).to.be.true;
 

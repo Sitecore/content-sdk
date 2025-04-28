@@ -24,49 +24,51 @@ export type ExtractComponentsConfig = {
  * Extracts components from the app folder and sends them to XMCloud.
  * @param {ExtractComponentsConfig} args - Arguments for extracting components
  */
-export async function extractComponents(args: ExtractComponentsConfig) {
-  if (!validateDeployContext()) {
-    console.log(chalk.yellow('Skipping code extraction, not in deploy context'));
-    return;
-  }
-  if (!validateConsent()) {
-    console.log(chalk.yellow('Skipping code extraction, consent not given'));
-    return;
-  }
-  const basePath = args.appFolder ? resolveAppPath(args.appFolder) : process.cwd();
-  if (!fs.existsSync(path.join(basePath, 'package.json'))) {
-    console.error(chalk.red('No app folder found at ', basePath));
-    return;
-  }
-  try {
-    const bearer = await fetchBearerToken(args.scConfig.api.m2m);
-    if (!bearer) {
-      console.error(chalk.red('Failed to get bearer token, aborting code extraction'));
+export const extractComponents = (args: ExtractComponentsConfig) => {
+  return async () => {
+    if (!validateDeployContext()) {
+      console.log(chalk.yellow('Skipping code extraction, not in deploy context'));
       return;
     }
+    if (!validateConsent()) {
+      console.log(chalk.yellow('Skipping code extraction, consent not given'));
+      return;
+    }
+    const basePath = args.appFolder ? resolveAppPath(args.appFolder) : process.cwd();
+    if (!fs.existsSync(path.join(basePath, 'package.json'))) {
+      console.error(chalk.red('No app folder found at ', basePath));
+      return;
+    }
+    try {
+      const bearer = await fetchBearerToken(args.scConfig.api.m2m);
+      if (!bearer) {
+        console.error(chalk.red('Failed to get bearer token, aborting code extraction'));
+        return;
+      }
 
-    const componentPaths = await resolveComponentImportFiles(
-      basePath,
-      args.compilerOptions,
-      args.componentMapPath
-    );
+      const componentPaths = await resolveComponentImportFiles(
+        basePath,
+        args.compilerOptions,
+        args.componentMapPath
+      );
 
-    const codeDispatches = Array.from(componentPaths, (mapEntry) =>
-      sendCode({
-        file: {
-          name: mapEntry[0],
-          path: mapEntry[1],
-          type: ExtractedFileType.Component,
-        },
-        token: bearer,
-        edgeUrl: args.scConfig.api.edge.edgeUrl,
-      })
-    );
+      const codeDispatches = Array.from(componentPaths, (mapEntry) =>
+        sendCode({
+          file: {
+            name: mapEntry[0],
+            path: mapEntry[1],
+            type: ExtractedFileType.Component,
+          },
+          token: bearer,
+          edgeUrl: args.scConfig.api.edge.edgeUrl,
+        })
+      );
 
-    await Promise.all(codeDispatches);
-  } catch (error) {
-    console.error(chalk.red('Error during component extraction:', error));
-  }
+      await Promise.all(codeDispatches);
+    } catch (error) {
+      console.error(chalk.red('Error during component extraction:', error));
+    }
+  };
 }
 
 const resolveAppPath = (appFolder: string) => {

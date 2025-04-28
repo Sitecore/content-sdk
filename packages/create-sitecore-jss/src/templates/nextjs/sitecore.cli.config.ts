@@ -16,11 +16,10 @@ export default defineCliConfig({
       generateSites({
         scConfig: config,
       }),
-      () =>
-        extractComponents({
+      extractComponents({
           scConfig: config,
           compilerOptions: tsConfig.config?.compilerOptions,
-        }),
+      }),
     ],
   },
 });
