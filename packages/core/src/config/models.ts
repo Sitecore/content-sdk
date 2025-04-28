@@ -63,11 +63,11 @@ export type SitecoreConfigInput = {
       /**
        * Client ID used to authenticate with Sitecore XM Cloud M2M API
        */
-      clientId: string;
+      clientId?: string;
       /**
        * Client secret used to authenticate with Sitecore XM Cloud M2M API
        */
-      clientSecret: string;
+      clientSecret?: string;
       /**
        * Endpoint for M2M authentication. Default: https://auth.sitecorecloud.io/oauth/token
        */
@@ -222,12 +222,6 @@ export type SitecoreCliConfigInput = {
      * List of scaffold templates that can be used for generating components
      */
     templates?: ScaffoldTemplate[];
-  };
-  extractCode?: {
-    /**
-     * List of commands to run during the build process
-     */
-    commands?: Array<void | Promise<void>>;
   };
 };
 
