@@ -11,7 +11,7 @@ import {
 } from './utils';
 import { SitecoreConfig } from '../../config';
 
-export type ExtractComponentsArgs = {
+export type ExtractComponentsConfig = {
   scConfig: SitecoreConfig;
   compilerOptions: {
     [key: string]: unknown;
@@ -22,9 +22,9 @@ export type ExtractComponentsArgs = {
 
 /**
  * Extracts components from the app folder and sends them to XMCloud.
- * @param {ExtractComponentsArgs} args - Arguments for extracting components
+ * @param {ExtractComponentsConfig} args - Arguments for extracting components
  */
-export async function extractComponents(args: ExtractComponentsArgs) {
+export async function extractComponents(args: ExtractComponentsConfig) {
   if (!validateDeployContext()) {
     console.log(chalk.yellow('Skipping code extraction, not in deploy context'));
     return;
