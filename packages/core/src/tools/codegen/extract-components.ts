@@ -22,7 +22,7 @@ export type ExtractComponentsConfig = {
 
 /**
  * Extracts components from the app folder and sends them to XMCloud.
- * @param {ExtractComponentsConfig} args - Arguments for extracting components
+ * @param {ExtractComponentsConfig} config - Config for components extraction
  */
 export const extractComponents = (args: ExtractComponentsConfig) => {
   return async () => {
