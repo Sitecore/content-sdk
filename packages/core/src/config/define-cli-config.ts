@@ -1,3 +1,4 @@
+import { DEFAULT_SITECORE_AUTH_AUDIENCE, DEFAULT_SITECORE_AUTH_ENDPOINT } from '../constants';
 import { SitecoreCliConfig, SitecoreCliConfigInput } from './models';
 
 const validateConfig = (cliConfig: SitecoreCliConfigInput) => {
@@ -19,5 +20,15 @@ const validateConfig = (cliConfig: SitecoreCliConfigInput) => {
  */
 export const defineCliConfig = (cliConfig: SitecoreCliConfigInput): SitecoreCliConfig => {
   validateConfig(cliConfig);
-  return cliConfig as SitecoreCliConfig;
+  return {
+    ...cliConfig,
+    api: {
+      auth: {
+        clientId: '',
+        clientSecret: '',
+        endpoint: DEFAULT_SITECORE_AUTH_ENDPOINT,
+        audience: DEFAULT_SITECORE_AUTH_AUDIENCE,
+      },
+    },
+  } as SitecoreCliConfig;
 };

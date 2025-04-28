@@ -27,6 +27,5 @@
     "feaas.d.ts",
     "src/**/*.test.ts",
     "src/test-data/*",
-    "src/tools/codegen/test-data/*"
   ]
 }

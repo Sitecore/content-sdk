@@ -5,7 +5,7 @@ import * as path from 'path';
 import nock from 'nock';
 import fs from 'fs';
 import * as codegenUtils from './utils';
-import * as constants from '../../constants';
+import { constants } from '@sitecore-content-sdk/core';
 import * as ts from 'typescript';
 
 describe('codegen-utils', () => {
@@ -137,12 +137,25 @@ describe('codegen-utils', () => {
   });
 
   describe('resolveComponentImportFiles', () => {
+    it('should throw when tsconfig.json is not found under baseApp path', () => {
+      const appPath = './path/to/app/that/not/exist';
+
+      expect(() => codegenUtils.resolveComponentImportFiles(appPath)).to.throw(
+        Error,
+        // eslint-disable-next-line
+        `Error reading tsconfig.json from JSS app root: Cannot read file '${path.resolve(
+          process.cwd(),
+          './path/to/app/that/not/exist/tsconfig.json'
+        )}'`
+      );
+    });
+
     it('should throw when src/lib/componentMap.ts is not found', () => {
-      const appPath = './src/tools/codegen/test-data/extract-components/no-componentBuilder';
+      const appPath = './src/codegen/test-data/extract-components/no-componentBuilder';
       const appRoot = process.cwd();
       const expectedPath = path.resolve(
         appRoot,
-        './src/tools/codegen/test-data/extract-components/no-componentBuilder/src/lib/componentMap.ts'
+        './src/codegen/test-data/extract-components/no-componentBuilder/src/lib/componentMap.ts'
       );
       expect(() => codegenUtils.resolveComponentImportFiles(appPath, {})).to.throw(
         ReferenceError,
@@ -151,7 +164,7 @@ describe('codegen-utils', () => {
     });
 
     it('should return JS imports with absolute paths from componentMap.ts', () => {
-      const appPath = './src/tools/codegen/test-data/extract-components/regular-imports';
+      const appPath = './src/codegen/test-data/extract-components/regular-imports';
       const tsConfig = ts.readConfigFile(
         path.resolve(process.cwd(), appPath, 'tsconfig.json'),
         ts.sys.readFile
@@ -165,21 +178,21 @@ describe('codegen-utils', () => {
           'TestComponent',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
+            './src/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
           ),
         ],
         [
           'TestComponent2',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
+            './src/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
           ),
         ],
       ]);
     });
 
     it('should handle custom componentMap path and parse js', () => {
-      const appPath = './src/tools/codegen/test-data/extract-components/regular-imports';
+      const appPath = './src/codegen/test-data/extract-components/regular-imports';
       const mapPath = './src/non-standard-path/componentMap.js';
       const tsConfig = ts.readConfigFile(
         path.resolve(process.cwd(), appPath, 'tsconfig.json'),
@@ -195,21 +208,21 @@ describe('codegen-utils', () => {
           'OtherComponent1',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
+            './src/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
           ),
         ],
         [
           'OtherComponent2',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
+            './src/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
           ),
         ],
       ]);
     });
 
     it('should return imports with absolute paths from componentMap.ts', () => {
-      const appPath = './src/tools/codegen/test-data/extract-components/js-imports';
+      const appPath = './src/codegen/test-data/extract-components/js-imports';
       const tsConfig = ts.readConfigFile(
         path.resolve(process.cwd(), appPath, 'tsconfig.json'),
         ts.sys.readFile
@@ -223,21 +236,21 @@ describe('codegen-utils', () => {
           'TestComponent',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/js-imports/src/components/TestComponent.jsx'
+            './src/codegen/test-data/extract-components/js-imports/src/components/TestComponent.jsx'
           ),
         ],
         [
           'TestComponent2',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/js-imports/src/components/TestComponent2.jsx'
+            './src/codegen/test-data/extract-components/js-imports/src/components/TestComponent2.jsx'
           ),
         ],
       ]);
     });
 
     it('should return imports with absolute paths when component map is initialized with values and set with values', () => {
-      const appPath = './src/tools/codegen/test-data/extract-components/custom-component-map';
+      const appPath = './src/codegen/test-data/extract-components/custom-component-map';
       const tsConfig = ts.readConfigFile(
         path.resolve(process.cwd(), appPath, 'tsconfig.json'),
         ts.sys.readFile
@@ -251,21 +264,21 @@ describe('codegen-utils', () => {
           'TestComponent',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/custom-component-map/src/components/TestComponent.tsx'
+            './src/codegen/test-data/extract-components/custom-component-map/src/components/TestComponent.tsx'
           ),
         ],
         [
           'TestComponent2',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/custom-component-map/src/components/TestComponent2.tsx'
+            './src/codegen/test-data/extract-components/custom-component-map/src/components/TestComponent2.tsx'
           ),
         ],
       ]);
     });
 
     it('should return imports with absolute paths from componentMap.ts with named imports', () => {
-      const appPath = './src/tools/codegen/test-data/extract-components/named-imports';
+      const appPath = './src/codegen/test-data/extract-components/named-imports';
       const tsConfig = ts.readConfigFile(
         path.resolve(process.cwd(), appPath, 'tsconfig.json'),
         ts.sys.readFile
@@ -279,28 +292,28 @@ describe('codegen-utils', () => {
           'TestComponent',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/named-imports/src/components/TestComponent.tsx'
+            './src/codegen/test-data/extract-components/named-imports/src/components/TestComponent.tsx'
           ),
         ],
         [
           'Component1',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/named-imports/src/components/TestComponent2.tsx'
+            './src/codegen/test-data/extract-components/named-imports/src/components/TestComponent2.tsx'
           ),
         ],
         [
           'Component2',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/named-imports/src/components/TestComponent2.tsx'
+            './src/codegen/test-data/extract-components/named-imports/src/components/TestComponent2.tsx'
           ),
         ],
       ]);
     });
 
     it('should return imports with absolute paths from componentMap.ts when paths aliases are used', () => {
-      const appPath = './src/tools/codegen/test-data/extract-components/with-path-aliases';
+      const appPath = './src/codegen/test-data/extract-components/with-path-aliases';
       const tsConfig = ts.readConfigFile(
         path.resolve(process.cwd(), appPath, 'tsconfig.json'),
         ts.sys.readFile
@@ -315,14 +328,14 @@ describe('codegen-utils', () => {
           'TestComponent',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/with-path-aliases/src/components/TestComponent.tsx'
+            './src/codegen/test-data/extract-components/with-path-aliases/src/components/TestComponent.tsx'
           ),
         ],
       ]);
     });
 
     it('should ignore imports starting with "node:" and containing "node_modules"', () => {
-      const appPath = './src/tools/codegen/test-data/extract-components/node-modules-imports';
+      const appPath = './src/codegen/test-data/extract-components/node-modules-imports';
       const tsConfig = ts.readConfigFile(path.resolve(appPath, 'tsconfig.json'), ts.sys.readFile);
       const imports = codegenUtils.resolveComponentImportFiles(
         appPath,
@@ -334,7 +347,7 @@ describe('codegen-utils', () => {
           'TestComponent',
           path.resolve(
             process.cwd(),
-            './src/tools/codegen/test-data/extract-components/node-modules-imports/src/components/TestComponent.tsx'
+            './src/codegen/test-data/extract-components/node-modules-imports/src/components/TestComponent.tsx'
           ),
         ],
       ]);

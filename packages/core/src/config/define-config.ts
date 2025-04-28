@@ -1,8 +1,4 @@
-import {
-  DEFAULT_M2M_AUDIENCE,
-  DEFAULT_M2M_ENDPOINT,
-  SITECORE_EDGE_URL_DEFAULT,
-} from '../constants';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { DefaultRetryStrategy } from '../retries';
 import { SitecoreConfig, SitecoreConfigInput } from './models';
 
@@ -21,12 +17,6 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       apiKey: '',
       apiHost: '',
       path: '/sitecore/api/graph/edge',
-    },
-    m2m: {
-      clientId: '',
-      clientSecret: '',
-      endpoint: DEFAULT_M2M_ENDPOINT,
-      audience: DEFAULT_M2M_AUDIENCE,
     },
   },
   editingSecret: 'editing-secret-missing',

@@ -4,13 +4,19 @@ import { SitecoreCliConfigInput } from './models';
 
 describe('defineCliConfig', () => {
   it('should return the cliConfig if it is valid', () => {
-    const validConfig: SitecoreCliConfigInput = {
+    const validDefaultConfig: SitecoreCliConfigInput = {
+      api: {
+        auth: {
+          audience: 'https://api.sitecorecloud.io',
+          clientId: '',
+          clientSecret: '',
+          endpoint: 'https://auth.sitecorecloud.io/oauth/token',
+        },
+      },
       build: {
         commands: [
-          () => {
-            return async () => {
-              Promise.resolve('test');
-            };
+          async () => {
+            Promise.resolve('test');
           },
         ],
       },
@@ -19,8 +25,8 @@ describe('defineCliConfig', () => {
       },
     };
 
-    const result = defineCliConfig(validConfig);
-    expect(result).to.deep.equal(validConfig);
+    const result = defineCliConfig(validDefaultConfig);
+    expect(result).to.deep.equal(validDefaultConfig);
   });
 
   it('should throw an error if build commands are not defined', () => {

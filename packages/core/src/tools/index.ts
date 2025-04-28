@@ -4,4 +4,3 @@ export { scaffoldComponent } from './scaffold';
 export * from './templating';
 
 export { fetchBearerToken } from './auth/fetch-bearer-token';
-export { extractComponents } from './codegen/extract-components';

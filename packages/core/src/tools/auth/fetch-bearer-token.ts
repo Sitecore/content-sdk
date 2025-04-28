@@ -1,19 +1,24 @@
 import chalk from 'chalk';
-import { DEFAULT_M2M_AUDIENCE, DEFAULT_M2M_ENDPOINT } from '../../constants';
+import { DEFAULT_SITECORE_AUTH_AUDIENCE, DEFAULT_SITECORE_AUTH_ENDPOINT } from '../../constants';
 
-export const fetchBearerToken = async ({
-  clientId,
-  clientSecret,
-  audience,
-  endpoint,
-}: {
+export type FetchBearerTokenOptions = {
   clientId: string;
   clientSecret: string;
   audience?: string;
   endpoint?: string;
-}) => {
-  audience = audience || DEFAULT_M2M_AUDIENCE;
-  endpoint = endpoint || DEFAULT_M2M_ENDPOINT;
+};
+
+/**
+ * Connects to M2M endpoint and fetches the bearer token
+ * Uses client_id and client_secret from environment variables
+ * @param {FetchBearerTokenOptions} options client id, secret, and other parameters for connection to m2m endpoint
+ * @returns {string} bearer token string
+ */
+export const fetchBearerToken = async (options: FetchBearerTokenOptions) => {
+  const { clientId, clientSecret } = options;
+
+  const audience = options.audience || DEFAULT_SITECORE_AUTH_AUDIENCE;
+  const endpoint = options.endpoint || DEFAULT_SITECORE_AUTH_ENDPOINT;
 
   try {
     // TODO:adjust when M2M endpoint is live
@@ -32,7 +37,7 @@ export const fetchBearerToken = async ({
     const jsonResponse = await authenticateResponse.json();
     return jsonResponse.access_token;
   } catch (error) {
-    console.error(chalk.red('Error authenticating with M2M token endpoint:', error));
+    console.error(chalk.red('Error authenticating with Sitecore Auth endpoint:', error));
     return null;
   }
 };

@@ -13,7 +13,7 @@ describe('fetchBearerToken', () => {
     nock.cleanAll();
   });
 
-  it('should send POST request to M2M_ENDPOINT url', async () => {
+  it('should send POST request to SITECORE_AUTH_ENDPOINT url', async () => {
     nock('https://auth.sitecorecloud.io')
       .post('/oauth/token')
       .reply(200, {
@@ -75,7 +75,7 @@ describe('fetchBearerToken', () => {
     expect(token).to.equal('correct-token');
   });
 
-  it('should log when request to M2M_ENDPOINT fails', async () => {
+  it('should log when request to SITECORE_AUTH_ENDPOINT fails', async () => {
     nock('https://auth.sitecorecloud.io')
       .post('/oauth/token')
       .reply(503, 'Service Unavailable');

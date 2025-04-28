@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
-import { SITECORE_EDGE_URL_DEFAULT } from '../../constants';
+import { constants } from '@sitecore-content-sdk/core';
 
 /**
  * Description properties for the files sent to the mesh endpoint
@@ -57,25 +57,26 @@ export const validateDeployContext = () => {
  * Parses the componentBuilder.ts file and returns a map of component names
  * and their respective import strings
  * @param {string} appPath path to the JSS app root
- * @param {object} compilerOptions compiler options from tsconfig.json
  * @param {string} [componentMapPath] path to the app's component map file. Default: 'src/lib/componentMap.ts'
  * @returns map of component names and their respective import strings
  */
 export const resolveComponentImportFiles = (
   appPath: string,
-  compilerOptions: {
-    [key: string]: unknown;
-  },
   componentMapPath: string = './src/lib/componentMap.ts'
 ) => {
   appPath = path.isAbsolute(appPath) ? appPath : path.resolve(process.cwd(), appPath);
+  const tsConfig = ts.readConfigFile(path.resolve(appPath, 'tsconfig.json'), ts.sys.readFile);
+
+  if (tsConfig.error) {
+    throw new Error(`Error reading tsconfig.json from JSS app root: ${tsConfig.error.messageText}`);
+  }
 
   const componentMapFullPath = path.isAbsolute(componentMapPath)
     ? componentMapPath
     : path.resolve(appPath, componentMapPath);
 
   const cliCompilerOptions = {
-    ...compilerOptions,
+    ...tsConfig.config.compilerOptions,
     baseUrl: appPath,
   };
 
@@ -212,7 +213,7 @@ export const sendCode = async ({
   token: string;
   edgeUrl?: string;
 }) => {
-  const meshEndpoint = `${edgeUrl || SITECORE_EDGE_URL_DEFAULT}/api/v1/mesh`;
+  const meshEndpoint = `${edgeUrl || constants.SITECORE_EDGE_URL_DEFAULT}/api/v1/mesh`;
   if (!fs.existsSync(file.path)) {
     console.error(chalk.red(`Component file not found: ${file.path}`));
     return;

@@ -3,14 +3,22 @@ import sinon from 'sinon';
 import chalk from 'chalk';
 import fs from 'fs';
 import { extractComponents } from './extract-components';
-import { getFallbackConfig } from '../../config/define-config';
+import { defineConfig } from '@sitecore-content-sdk/core/config';
 import nock from 'nock';
-import { SITECORE_EDGE_URL_DEFAULT } from '../../constants';
+import { constants } from '@sitecore-content-sdk/core';
 import path from 'path';
 
 describe('extract-components', () => {
   const sandbox = sinon.createSandbox();
-  const defaultConfig = getFallbackConfig();
+  const defaultConfig = defineConfig({
+    api: {
+      edge: {
+        contextId: '12345',
+      },
+      local: undefined,
+    },
+    defaultLanguage: '',
+  });
 
   const mockArgs = {
     scConfig: {
@@ -19,11 +27,6 @@ describe('extract-components', () => {
         ...defaultConfig.api,
         edge: {
           ...defaultConfig.api.edge,
-        },
-        m2m: {
-          ...defaultConfig.api.m2m,
-          clientId: 'test-client-id',
-          secret: 'test-client-secret',
         },
       },
     },
@@ -40,6 +43,8 @@ describe('extract-components', () => {
     process.env.EXTRACT_CONSENT = 'true';
     process.env.SITECORE = 'true';
     process.env.BuildMetadata_BuildId = '0451';
+    process.env.SITECORE_AUTH_CLIENT_ID = 'test-client-id';
+    process.env.SITECORE_AUTH_CLIENT_SECRET = 'test-client-secret';
     sandbox.stub(fs, 'existsSync').returns(true);
   });
 
@@ -73,7 +78,7 @@ describe('extract-components', () => {
   it('should catch exceptions from resolveImportFiles call', async () => {
     const args = {
       ...mockArgs,
-      appFolder: './src/tools/codegen/test-data/extract-components/no-componentBuilder',
+      appFolder: './src/codegen/test-data/extract-components/no-componentBuilder',
     };
     const fetchBearerTokenSpy = sandbox.stub();
 
@@ -95,7 +100,7 @@ describe('extract-components', () => {
     expect(consoleErrorStub.calledOnce).to.be.true;
     const expectedPath = path.resolve(
       process.cwd(),
-      './src/tools/codegen/test-data/extract-components/no-componentBuilder/src/lib/componentMap.ts'
+      './src/codegen/test-data/extract-components/no-componentBuilder/src/lib/componentMap.ts'
     );
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
       chalk.red(
@@ -108,7 +113,7 @@ describe('extract-components', () => {
   it('should call sendCode for each component path', async () => {
     const args = {
       ...mockArgs,
-      appFolder: './src/tools/codegen/test-data/extract-components/regular-imports',
+      appFolder: './src/codegen/test-data/extract-components/regular-imports',
     };
     const fetchBearerTokenSpy = sandbox.stub();
 
@@ -125,19 +130,19 @@ describe('extract-components', () => {
 
     const consoleLogStub = sandbox.stub(console, 'log');
 
-    nock(SITECORE_EDGE_URL_DEFAULT)
+    nock(constants.SITECORE_EDGE_URL_DEFAULT)
       .post('/api/v1/mesh')
       .reply(200)
       .persist();
 
     const component1Path = path.resolve(
       process.cwd(),
-      './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
+      './src/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
     );
 
     const component2Path = path.resolve(
       process.cwd(),
-      './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
+      './src/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
     );
 
     const extractComponentsCall = extractComponents(args);
