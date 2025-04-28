@@ -8,5 +8,4 @@ export {
   PluginDefinition,
   generatePlugins,
   ModuleType,
-  extractComponents,
 } from '@sitecore-content-sdk/core/tools';
