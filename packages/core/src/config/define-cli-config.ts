@@ -22,13 +22,5 @@ export const defineCliConfig = (cliConfig: SitecoreCliConfigInput): SitecoreCliC
   validateConfig(cliConfig);
   return {
     ...cliConfig,
-    api: {
-      auth: {
-        clientId: '',
-        clientSecret: '',
-        endpoint: DEFAULT_SITECORE_AUTH_ENDPOINT,
-        audience: DEFAULT_SITECORE_AUTH_AUDIENCE,
-      },
-    },
   } as SitecoreCliConfig;
 };

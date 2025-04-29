@@ -5,14 +5,6 @@ import { SitecoreCliConfigInput } from './models';
 describe('defineCliConfig', () => {
   it('should return the cliConfig if it is valid', () => {
     const validDefaultConfig: SitecoreCliConfigInput = {
-      api: {
-        auth: {
-          audience: 'https://api.sitecorecloud.io',
-          clientId: '',
-          clientSecret: '',
-          endpoint: 'https://auth.sitecorecloud.io/oauth/token',
-        },
-      },
       build: {
         commands: [
           async () => {
