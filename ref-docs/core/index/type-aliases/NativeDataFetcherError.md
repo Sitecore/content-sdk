@@ -8,7 +8,7 @@
 
 > **NativeDataFetcherError**: `Error` & `object`
 
-Defined in: [packages/core/src/native-fetcher.ts:37](https://github.com/Sitecore/content-sdk/blob/5bc116da920fde9f8041d59ca699b8295cfc834e/packages/core/src/native-fetcher.ts#L37)
+Defined in: [packages/core/src/native-fetcher.ts:37](https://github.com/Sitecore/content-sdk/blob/591e0cbea958c4e9b863cd1fc5e710f569024ec1/packages/core/src/native-fetcher.ts#L37)
 
 Native fetcher error type to include response text and status
 

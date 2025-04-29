@@ -8,7 +8,7 @@
 
 > **SitecoreClientInit**: `Omit`\<[`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md), `"multisite"` \| `"redirects"` \| `"personalize"`\> & `object`
 
-Defined in: [packages/core/src/client/models.ts:4](https://github.com/Sitecore/content-sdk/blob/5bc116da920fde9f8041d59ca699b8295cfc834e/packages/core/src/client/models.ts#L4)
+Defined in: [packages/core/src/client/models.ts:4](https://github.com/Sitecore/content-sdk/blob/591e0cbea958c4e9b863cd1fc5e710f569024ec1/packages/core/src/client/models.ts#L4)
 
 ## Type declaration
 

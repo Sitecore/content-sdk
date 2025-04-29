@@ -8,7 +8,7 @@
 
 > **FEaaSComponentParams**: `object`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:11](https://github.com/Sitecore/content-sdk/blob/5bc116da920fde9f8041d59ca699b8295cfc834e/packages/react/src/components/FEaaSComponent.tsx#L11)
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:11](https://github.com/Sitecore/content-sdk/blob/591e0cbea958c4e9b863cd1fc5e710f569024ec1/packages/react/src/components/FEaaSComponent.tsx#L11)
 
 Params from a Sitecore FEaaS rendering
 
