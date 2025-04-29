@@ -69,7 +69,13 @@
     "@sitecore-cloudsdk/personalize": "^0.5.1",
     "next": "^15.3.2",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "typescript": "~5.7.3"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@babel/parser": "^7.27.2",
