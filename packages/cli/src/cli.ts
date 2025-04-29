@@ -55,7 +55,7 @@ export default async function cli(commands?: {
         process.exit(1);
       },
     })
-    .demandCommand(1, 'You need at least one command before moving on')
+    .demandCommand(1, 'You need to specify a command to run')
     .strict();
 
   await appCommands.argv;
