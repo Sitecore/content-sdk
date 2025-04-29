@@ -28,6 +28,7 @@
     "src/tests/*",
     "src/test-data/*",
     "**/*.test.ts",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "src/tools/codegen/test-data/*",
   ]
 }
