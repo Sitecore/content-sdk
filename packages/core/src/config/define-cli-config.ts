@@ -20,7 +20,5 @@ const validateConfig = (cliConfig: SitecoreCliConfigInput) => {
  */
 export const defineCliConfig = (cliConfig: SitecoreCliConfigInput): SitecoreCliConfig => {
   validateConfig(cliConfig);
-  return {
-    ...cliConfig,
-  } as SitecoreCliConfig;
+  return cliConfig as SitecoreCliConfig;
 };
