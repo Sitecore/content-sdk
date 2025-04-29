@@ -56,5 +56,3 @@ export default async function cli(commands?: {
 
   await appCommands.argv;
 }
-
-export { extractComponents } from './codegen/extract-components';

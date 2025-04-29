@@ -16,12 +16,6 @@ export default defineConfig({
       apiKey: process.env.NEXT_PUBLIC_SITECORE_API_KEY || '',
       apiHost: process.env.NEXT_PUBLIC_SITECORE_API_HOST || '',
     },
-    m2m: {
-      clientId: process.env.SITECORE_AUTH_CLIENT_ID || '',
-      clientSecret: process.env.SITECORE_AUTH_CLIENT_SECRET || '',
-      endpoint: process.env.SITECORE_AUTH_ENDPOINT,
-      audience: process.env.SITECORE_AUTH_AUDIENCE,
-    },
   },
   defaultSite: process.env.NEXT_PUBLIC_SITECORE_SITE_NAME,
   defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',

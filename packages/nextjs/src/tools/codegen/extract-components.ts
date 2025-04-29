@@ -1,6 +1,4 @@
 import chalk from 'chalk';
-import path from 'path';
-import fs from 'fs';
 import {
   ExtractedFileType,
   resolveComponentImportFiles,
@@ -14,7 +12,6 @@ import { fetchBearerToken } from '@sitecore-content-sdk/core/tools';
 
 export type ExtractComponentsConfig = {
   scConfig: SitecoreConfig;
-  appFolder?: string;
   componentMapPath?: string;
 };
 
@@ -23,12 +20,11 @@ export type ExtractComponentsConfig = {
  * @param {ExtractComponentsConfig} args - Config for components extraction
  */
 export const extractComponents = (args: ExtractComponentsConfig) => {
-  // TODO: use values from CLI config, when CLI logic allows commands to read it
   const authParams = {
     clientId: process.env.SITECORE_AUTH_CLIENT_ID || '',
     clientSecret: process.env.SITECORE_AUTH_CLIENT_SECRET || '',
-    endpoint: constants.DEFAULT_SITECORE_AUTH_ENDPOINT,
-    audience: constants.DEFAULT_SITECORE_AUTH_AUDIENCE,
+    endpoint: process.env.SITECORE_AUTH_ENDPOINT || constants.DEFAULT_SITECORE_AUTH_ENDPOINT,
+    audience: process.env.SITECORE_AUTH_AUDIENCE || constants.DEFAULT_SITECORE_AUTH_AUDIENCE,
   };
   return async () => {
     if (!validateDeployContext()) {
@@ -39,11 +35,8 @@ export const extractComponents = (args: ExtractComponentsConfig) => {
       console.log(chalk.yellow('Skipping code extraction, consent not given'));
       return;
     }
-    const basePath = args.appFolder ? resolveAppPath(args.appFolder) : process.cwd();
-    if (!fs.existsSync(path.join(basePath, 'package.json'))) {
-      console.error(chalk.red('No app folder found at ', basePath));
-      return;
-    }
+    const basePath = process.cwd();
+
     try {
       const bearer = await fetchBearerToken(authParams);
       if (!bearer) {
@@ -70,9 +63,4 @@ export const extractComponents = (args: ExtractComponentsConfig) => {
       console.error(chalk.red('Error during component extraction:', error));
     }
   };
-};
-
-const resolveAppPath = (appFolder: string) => {
-  if (path.isAbsolute(appFolder)) return appFolder;
-  return path.resolve(process.cwd(), appFolder);
 };
