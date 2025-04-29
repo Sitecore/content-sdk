@@ -1,4 +1,3 @@
-import { DEFAULT_SITECORE_AUTH_AUDIENCE, DEFAULT_SITECORE_AUTH_ENDPOINT } from '../constants';
 import { SitecoreCliConfig, SitecoreCliConfigInput } from './models';
 
 const validateConfig = (cliConfig: SitecoreCliConfigInput) => {
