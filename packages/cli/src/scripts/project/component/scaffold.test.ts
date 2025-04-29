@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
-import * as loadConfigModule from '../../../utils/load-config';
-import proxyquire from 'proxyquire';
 import { SitecoreCliConfig } from '@sitecore-content-sdk/core/src/config';
+import proxyquire from 'proxyquire';
+import * as loadConfigModule from '../../../utils/load-config';
 
 describe('scaffold command', () => {
   let loadCliConfigStub: sinon.SinonStub;
