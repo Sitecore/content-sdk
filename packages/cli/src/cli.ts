@@ -42,17 +42,21 @@ export default async function cli(commands?: {
     }
   }
 
-  appCommands.command({
-    command: '*',
-    handler: (argv) => {
-      if (argv._.length > 0) {
-        console.error(`Command not found: "${argv._[0]}". Use --help to see available commands.`);
-      } else {
-        console.error('No command provided. Use --help to see available commands.');
-      }
-      process.exit(1);
-    },
-  });
+  appCommands
+    .command({
+      command: '*',
+      handler: (argv) => {
+        if (argv._.length > 0) {
+          console.error(`Command not found: "${argv._[0]}"`);
+        } else {
+          console.error('No command provided');
+        }
+        yargs.showHelp();
+        process.exit(1);
+      },
+    })
+    .demandCommand(1, 'You need at least one command before moving on')
+    .strict();
 
   await appCommands.argv;
 }
