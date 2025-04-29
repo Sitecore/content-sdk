@@ -1,8 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import path from 'path';
 import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
-import * as loadConfigModule from '../utils/load-config';
+import * as loadConfigModule from '../../../utils/load-config';
 import proxyquire from 'proxyquire';
 import { SitecoreCliConfig } from '@sitecore-content-sdk/core/src/config';
 
@@ -91,13 +90,13 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     const argv = {
       componentName: 'ValidComponentName',
     };
-    const expectedOutputFFolderPath = 'src/components';
+    const expectedOutputFolderPath = 'src/components';
 
     handler(argv);
 
     expect(
       scaffoldComponentStub.calledOnceWith(
-        expectedOutputFFolderPath,
+        expectedOutputFolderPath,
         'ValidComponentName',
         ComponentTemplateType.DEFAULT,
         mockConfig.scaffold.templates
@@ -110,13 +109,13 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
       componentName: 'ValidComponentName',
       byoc: true,
     };
-    const expectedOutputFFolderPath = 'src/components';
+    const expectedOutputFolderPath = 'src/components';
 
     handler(argv);
 
     expect(
       scaffoldComponentStub.calledOnceWith(
-        expectedOutputFFolderPath,
+        expectedOutputFolderPath,
         'ValidComponentName',
         ComponentTemplateType.BYOC,
         mockConfig.scaffold.templates
