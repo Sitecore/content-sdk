@@ -22,6 +22,7 @@
 
 ## Functions
 
+- [fetchBearerToken](functions/fetchBearerToken.md)
 - [generateMetadata](functions/generateMetadata.md)
 - [generatePlugins](functions/generatePlugins.md)
 - [generateSites](functions/generateSites.md)

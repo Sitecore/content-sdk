@@ -8,7 +8,7 @@
 
 > **SitemapQueryResult**: `object`
 
-Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:34](https://github.com/Sitecore/content-sdk/blob/591e0cbea958c4e9b863cd1fc5e710f569024ec1/packages/core/src/site/graphql-sitemap-xml-service.ts#L34)
+Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:34](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/core/src/site/graphql-sitemap-xml-service.ts#L34)
 
 The schema of data returned in response to sitemaps request
 

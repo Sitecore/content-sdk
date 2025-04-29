@@ -6,7 +6,7 @@
 
 # Class: `abstract` Middleware
 
-Defined in: [nextjs/src/middleware/middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/591e0cbea958c4e9b863cd1fc5e710f569024ec1/packages/nextjs/src/middleware/middleware.ts#L33)
+Defined in: [nextjs/src/middleware/middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/nextjs/src/middleware/middleware.ts#L33)
 
 Middleware class to be extended by all middleware implementations
 
@@ -30,7 +30,7 @@ Middleware class to be extended by all middleware implementations
 
 > `abstract` **handle**(`req`, `res`, `ev`): `Promise`\<`NextResponse`\>
 
-Defined in: [nextjs/src/middleware/middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/591e0cbea958c4e9b863cd1fc5e710f569024ec1/packages/nextjs/src/middleware/middleware.ts#L40)
+Defined in: [nextjs/src/middleware/middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/nextjs/src/middleware/middleware.ts#L40)
 
 Handler method to execute middleware logic
 
