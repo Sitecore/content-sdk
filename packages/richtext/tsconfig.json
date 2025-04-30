@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "CommonJS",
+    "jsx": "react",
+    "skipLibCheck": true,
+    "outDir": "dist/cjs",
+    "types": ["node"],
+    "typeRoots": ["node_modules/@types"],
+    "declarationDir": "./types"
+  },
+  "exclude": [
+    "node_modules",
+    "types",
+    "typings",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "dist",
+  ]
+}
