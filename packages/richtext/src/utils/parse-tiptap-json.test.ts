@@ -1,11 +1,11 @@
 import { expect } from 'chai';
-import { parseTiptapJSON } from './parse-json';
-export { Node as TipTapNode, mergeAttributes } from '@tiptap/core';
+import { parseTiptapJSON } from './parse-tiptap-json';
 import sinon from 'sinon';
 import Document from '@tiptap/extension-document';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import { debug } from '@sitecore-content-sdk/core';
+import { Node, mergeAttributes } from '@tiptap/core';
 
 describe('parseTiptapJSON', () => {
   const sandbox = sinon.createSandbox();
@@ -31,47 +31,47 @@ describe('parseTiptapJSON', () => {
   });
 
   it('should parse JSON into HTML with custom extensions', () => {
-    const CustomNode = TipTapNode.create({
-      name: 'customNode',
+    const CustomView = Node.create<{ HTMLAttributes: Record<string, any> }>({
+      name: 'customView',
       group: 'block',
-      atom: true,
+      content: 'inline*',
+      addOptions() {
+        return {
+          HTMLAttributes: {},
+        };
+      },
       addAttributes() {
         return {
           color: {
             default: 'pink',
+            renderHTML: (attributes) => {
+              return {
+                style: `color: ${attributes.color}`,
+              };
+            },
           },
         };
       },
       parseHTML() {
         return [
           {
-            tag: 'node-view',
+            tag: 'p',
           },
         ];
       },
       renderHTML({ HTMLAttributes }) {
-        return ['node-view', mergeAttributes(HTMLAttributes)];
-      },
-      addNodeView() {
-        return ({ node }) => {
-          const dom = document.createElement('div');
-          dom.classList.add('node-view');
-          const span = document.createElement('span');
-          span.setAttribute('style', `color: ${node.attrs.color}`);
-          span.innerHTML = node.attrs.text;
-          dom.append(span);
-          return {
-            dom,
-          };
-        };
+        return ['p', mergeAttributes(HTMLAttributes, this.options.HTMLAttributes), 0];
       },
     });
 
     const jsonContent = [
-      { type: 'customNode', color: 'green', text: 'On the server, or the browser' },
+      {
+        type: 'customView',
+        content: [{ type: 'text', text: 'On the server, or the browser' }],
+      },
     ];
-    const result = parseTiptapJSON(jsonContent, [CustomNode]);
-    expect(result).to.equal('<span style="color: pink">On the server, or the browser</span>');
+    const result = parseTiptapJSON(jsonContent, [CustomView]);
+    expect(result).to.equal('<p style="color: pink">On the server, or the browser</p>');
   });
 
   it('should log error and return empty when parsing fails', () => {
