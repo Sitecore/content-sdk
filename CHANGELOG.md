@@ -19,6 +19,7 @@ Our versioning strategy is as follows:
 ### 🎉 New Features & Improvements
 
 * `[cli]` Introduce "project" subcommands ([#73](https://github.com/Sitecore/content-sdk/pull/73))
+* `[template/nextjs]` Clean package.json scripts ([#75](https://github.com/Sitecore/content-sdk/pull/75))
 
 ### 🛠 Breaking Changes
 
