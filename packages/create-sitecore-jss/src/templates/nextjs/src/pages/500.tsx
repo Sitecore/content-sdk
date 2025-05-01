@@ -5,6 +5,7 @@ import { GetStaticProps } from 'next';
 import scConfig from 'sitecore.config';
 import client from 'lib/sitecore-client';
 import components from 'lib/component-map';
+import { JSX } from 'react';
 
 /**
  * Rendered in case if we have 500 error
