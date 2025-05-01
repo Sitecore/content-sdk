@@ -1,5 +1,5 @@
 import { scaffoldComponent } from '@sitecore-content-sdk/core/tools';
-import loadCliConfig from '../../../utils/load-config';
+import loadCliConfig from '../utils/load-config';
 import { Argv } from 'yargs';
 import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
 
@@ -9,7 +9,7 @@ import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
 export function builder(yargs: Argv<ScaffoldArgs>) {
   return yargs.command<ScaffoldArgs>(
     'scaffold <componentName>',
-    'Scaffolds a new component',
+    'Scaffolds a new component. Use `sitecore-tools scaffold --help` for available options.',
     args,
     handler
   );

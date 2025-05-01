@@ -1,8 +1,7 @@
-import loadCliConfig from '../../utils/load-config';
-
+import loadCliConfig from '../utils/load-config';
 export const command = 'build';
 
-export const describe = 'Performs build time automation';
+export const describe = 'Handles build time automation';
 
 export const builder = {
   config: {

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import * as loadConfigModule from '../../utils/load-config';
+import * as loadConfigModule from '../utils/load-config';
 import { handler } from './build';
 
 describe('build command', () => {

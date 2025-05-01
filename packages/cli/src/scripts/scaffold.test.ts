@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
+import path from 'path';
 import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
-import { SitecoreCliConfig } from '@sitecore-content-sdk/core/src/config';
+import * as loadConfigModule from '../utils/load-config';
 import proxyquire from 'proxyquire';
-import * as loadConfigModule from '../../../utils/load-config';
+import { SitecoreCliConfig } from '@sitecore-content-sdk/core/src/config';
 
 describe('scaffold command', () => {
   let loadCliConfigStub: sinon.SinonStub;
@@ -90,13 +91,13 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     const argv = {
       componentName: 'ValidComponentName',
     };
-    const expectedOutputFolderPath = 'src/components';
+    const expectedOutputFFolderPath = 'src/components';
 
     handler(argv);
 
     expect(
       scaffoldComponentStub.calledOnceWith(
-        expectedOutputFolderPath,
+        expectedOutputFFolderPath,
         'ValidComponentName',
         ComponentTemplateType.DEFAULT,
         mockConfig.scaffold.templates
@@ -109,13 +110,13 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
       componentName: 'ValidComponentName',
       byoc: true,
     };
-    const expectedOutputFolderPath = 'src/components';
+    const expectedOutputFFolderPath = 'src/components';
 
     handler(argv);
 
     expect(
       scaffoldComponentStub.calledOnceWith(
-        expectedOutputFolderPath,
+        expectedOutputFFolderPath,
         'ValidComponentName',
         ComponentTemplateType.BYOC,
         mockConfig.scaffold.templates
