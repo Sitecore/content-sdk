@@ -28,8 +28,6 @@ export interface PlaceholderComponentProps extends PlaceholderProps {
 }
 
 class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> {
-  static propTypes = PlaceholderCommon.propTypes;
-
   isEmpty = false;
 
   constructor(props: PlaceholderComponentProps) {

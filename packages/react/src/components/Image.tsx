@@ -1,5 +1,4 @@
 ﻿import { mediaApi } from '@sitecore-content-sdk/core/media';
-import PropTypes, { Requireable } from 'prop-types';
 import React from 'react';
 import { addClassName } from '../utils';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
@@ -128,25 +127,5 @@ export const Image: React.FC<ImageProps> = withFieldMetadata<ImageProps>(
     { defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentImage }
   )
 );
-
-Image.propTypes = {
-  field: PropTypes.oneOfType([
-    PropTypes.shape({
-      src: PropTypes.string,
-    }),
-    PropTypes.shape({
-      value: PropTypes.object,
-    }),
-  ]),
-  editable: PropTypes.bool,
-  mediaUrlPrefix: PropTypes.instanceOf(RegExp),
-  imageParams: PropTypes.objectOf(
-    PropTypes.oneOfType([PropTypes.number.isRequired, PropTypes.string.isRequired]).isRequired
-  ),
-  emptyFieldEditingComponent: PropTypes.oneOfType([
-    PropTypes.object as Requireable<React.ComponentClass<unknown>>,
-    PropTypes.func as Requireable<React.FC<unknown>>,
-  ]),
-};
 
 Image.displayName = 'Image';

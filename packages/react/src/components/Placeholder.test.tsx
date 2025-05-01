@@ -5,7 +5,6 @@
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { spy, stub } from 'sinon';
 import {
@@ -47,9 +46,6 @@ const Home: React.FC<{ [prop: string]: unknown; rendering?: RouteData | Componen
     <Placeholder name="page-content" rendering={rendering} {...otherProps} />
   </div>
 );
-Home.propTypes = {
-  placeholders: PropTypes.object,
-};
 
 componentMap.set('Home', Home);
 
@@ -63,13 +59,6 @@ const DownloadCallout: React.FC<{
     {props.extraDiv ? <div className="extra">extra!</div> : null}
   </div>
 );
-DownloadCallout.propTypes = {
-  fields: PropTypes.shape({
-    message: PropTypes.shape({
-      value: PropTypes.string,
-    }),
-  }).isRequired,
-};
 
 componentMap.set('DownloadCallout', DownloadCallout);
 componentMap.set('Jumbotron', () => <div className="jumbotron-mock" />);

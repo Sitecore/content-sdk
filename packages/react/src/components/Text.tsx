@@ -2,7 +2,6 @@
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
-import PropTypes, { Requireable } from 'prop-types';
 import { EditableFieldProps } from './sharedTypes';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 
@@ -84,19 +83,5 @@ export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
     { defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentText }
   )
 );
-
-Text.propTypes = {
-  field: PropTypes.shape({
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    metadata: PropTypes.objectOf(PropTypes.any),
-  }),
-  tag: PropTypes.string,
-  editable: PropTypes.bool,
-  encode: PropTypes.bool,
-  emptyFieldEditingComponent: PropTypes.oneOfType([
-    PropTypes.object as Requireable<React.ComponentClass<unknown>>,
-    PropTypes.func as Requireable<React.FC<unknown>>,
-  ]),
-};
 
 Text.displayName = 'Text';
