@@ -6,7 +6,7 @@
 
 # Class: ContentClient
 
-Defined in: [packages/core/src/content/content-client.ts:26](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/core/src/content/content-client.ts#L26)
+Defined in: [packages/core/src/content/content-client.ts:26](https://github.com/Sitecore/content-sdk/blob/880f142d9fdbe55821a8f0891666579cd3fd361e/packages/core/src/content/content-client.ts#L26)
 
 Class representing a client for interacting with the Content API.
 
@@ -16,7 +16,7 @@ Class representing a client for interacting with the Content API.
 
 > **new ContentClient**(`__namedParameters`): [`ContentClient`](ContentClient.md)
 
-Defined in: [packages/core/src/content/content-client.ts:30](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/core/src/content/content-client.ts#L30)
+Defined in: [packages/core/src/content/content-client.ts:30](https://github.com/Sitecore/content-sdk/blob/880f142d9fdbe55821a8f0891666579cd3fd361e/packages/core/src/content/content-client.ts#L30)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/content/content-client.ts:30](https://github.com/
 
 > **endpoint**: `string`
 
-Defined in: [packages/core/src/content/content-client.ts:27](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/core/src/content/content-client.ts#L27)
+Defined in: [packages/core/src/content/content-client.ts:27](https://github.com/Sitecore/content-sdk/blob/880f142d9fdbe55821a8f0891666579cd3fd361e/packages/core/src/content/content-client.ts#L27)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/core/src/content/content-client.ts:27](https://github.com/
 
 > **graphqlClient**: [`GraphQLRequestClient`](../../index/classes/GraphQLRequestClient.md)
 
-Defined in: [packages/core/src/content/content-client.ts:28](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/core/src/content/content-client.ts#L28)
+Defined in: [packages/core/src/content/content-client.ts:28](https://github.com/Sitecore/content-sdk/blob/880f142d9fdbe55821a8f0891666579cd3fd361e/packages/core/src/content/content-client.ts#L28)
 
 ## Methods
 
@@ -50,7 +50,7 @@ Defined in: [packages/core/src/content/content-client.ts:28](https://github.com/
 
 > **get**\<`T`\>(`query`, `variables`, `options`): `Promise`\<`T`\>
 
-Defined in: [packages/core/src/content/content-client.ts:94](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/core/src/content/content-client.ts#L94)
+Defined in: [packages/core/src/content/content-client.ts:94](https://github.com/Sitecore/content-sdk/blob/880f142d9fdbe55821a8f0891666579cd3fd361e/packages/core/src/content/content-client.ts#L94)
 
 Execute graphql request
 
@@ -80,7 +80,7 @@ response data
 
 > `static` **createClient**(`options`?): [`ContentClient`](ContentClient.md)
 
-Defined in: [packages/core/src/content/content-client.ts:57](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/core/src/content/content-client.ts#L57)
+Defined in: [packages/core/src/content/content-client.ts:57](https://github.com/Sitecore/content-sdk/blob/880f142d9fdbe55821a8f0891666579cd3fd361e/packages/core/src/content/content-client.ts#L57)
 
 Factory method for creating a ContentClient instance. This method allows you to create a client with the values populated from environment variables or provided as arguments.
 
