@@ -55,11 +55,16 @@
         "@tiptap/core": "^2.11.7",
         "@tiptap/html": "^2.11.7",
         "@tiptap/starter-kit": "^2.11.7",
-        "react": "^18.2.0",
         "typescript": "~5.7.3"
     },
     "peerDependenciesMeta": {
-        "typescript": {
+        "@tiptap/core": {
+            "optional": true
+        },
+        "@tiptap/htm": {
+            "optional": true
+        },
+        "@tiptap/starter-kit": {
             "optional": true
         }
     },
@@ -67,8 +72,7 @@
         "@sitecore-content-sdk/core": "0.2.0-canary.15",
         "@tiptap/core": "^2.11.7",
         "@tiptap/html": "^2.11.7",
-        "@tiptap/starter-kit": "^2.11.7",
-        "react": "^18.2.0"
+        "@tiptap/starter-kit": "^2.11.7"
     },
     "description": "",
     "types": "types/index.d.ts",
