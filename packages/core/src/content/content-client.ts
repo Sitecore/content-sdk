@@ -6,7 +6,6 @@ import debug from '../debug';
 import {
   GET_LOCALE_QUERY,
   GET_LOCALES_QUERY,
-  Locale,
   LocaleQueryResponse,
   LocalesQueryResponse,
 } from './locales';
