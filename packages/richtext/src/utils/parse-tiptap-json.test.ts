@@ -1,11 +1,9 @@
 import { expect } from 'chai';
 import { parseTiptapJSON } from './parse-tiptap-json';
 import sinon from 'sinon';
-import Document from '@tiptap/extension-document';
-import Paragraph from '@tiptap/extension-paragraph';
-import Text from '@tiptap/extension-text';
 import { debug } from '@sitecore-content-sdk/core';
 import { Node, mergeAttributes } from '@tiptap/core';
+import StarterKit from '@tiptap/starter-kit';
 
 describe('parseTiptapJSON', () => {
   const sandbox = sinon.createSandbox();
@@ -22,11 +20,13 @@ describe('parseTiptapJSON', () => {
     expect(result).to.equal('<p>On the server, or the browser</p>');
   });
 
-  it('should parse JSON into HTML with duplicate extensions', () => {
+  it('should parse JSON into HTML with duplicate StarterKit extension', () => {
+    const consoleStub = sandbox.stub(console, 'warn');
     const jsonContent = [
       { type: 'paragraph', content: [{ type: 'text', text: 'On the server, or the browser' }] },
     ];
-    const result = parseTiptapJSON(jsonContent, [Document, Paragraph, Text]);
+    const result = parseTiptapJSON(jsonContent, [StarterKit]);
+    expect(consoleStub.callCount).to.equal(0);
     expect(result).to.equal('<p>On the server, or the browser</p>');
   });
 

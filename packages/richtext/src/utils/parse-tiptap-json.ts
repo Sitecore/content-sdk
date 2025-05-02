@@ -1,15 +1,11 @@
 import { generateHTML } from '@tiptap/html';
-import { JSONContent, Node } from '@tiptap/core';
-import Document from '@tiptap/extension-document';
-import Paragraph from '@tiptap/extension-paragraph';
-import Text from '@tiptap/extension-text';
+import { JSONContent, Extensions } from '@tiptap/core';
 import { debug } from '@sitecore-content-sdk/core';
+import StarterKit from '@tiptap/starter-kit';
 
-export const parseTiptapJSON = (content: JSONContent[], extensions: Node[] = []) => {
-  // default extensions required to render tiptap content
-  const defaultExtensions = [Document, Paragraph, Text];
-  // all extensions, with duplicate ones removed
-  const nonDuplicateExtensions = Array.from(new Set([...defaultExtensions, ...extensions]));
+export const parseTiptapJSON = (content: JSONContent[], extensions: Extensions = []) => {
+  // prevent warns when StarterKit is passed in extensions
+  const nonDuplicateExtensions = Array.from(new Set([StarterKit, ...extensions]));
   let result = '';
   try {
     result = generateHTML(

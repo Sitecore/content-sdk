@@ -30,10 +30,6 @@
         "url": "https://github.com/sitecore/content-sdk/issues"
     },
     "devDependencies": {
-        "@tiptap/extension-bold": "^2.11.7",
-        "@tiptap/extension-document": "^2.11.7",
-        "@tiptap/extension-paragraph": "^2.11.7",
-        "@tiptap/extension-text": "^2.11.7",
         "@types/chai": "^4.3.4",
         "@types/chai-as-promised": "^7.1.5",
         "@types/chai-string": "^1.4.2",
@@ -52,13 +48,13 @@
         "mocha": "^11.1.0",
         "sinon": "^19.0.2",
         "sinon-chai": "^3.7.0",
-        "ts-node": "^10.9.1",
         "tsx": "^4.19.2",
         "typescript": "~5.7.3"
     },
     "peerDependencies": {
         "@tiptap/core": "^2.11.7",
         "@tiptap/html": "^2.11.7",
+        "@tiptap/starter-kit": "^2.11.7",
         "react": "^18.2.0",
         "typescript": "~5.7.3"
     },
@@ -71,6 +67,7 @@
         "@sitecore-content-sdk/core": "0.2.0-canary.15",
         "@tiptap/core": "^2.11.7",
         "@tiptap/html": "^2.11.7",
+        "@tiptap/starter-kit": "^2.11.7",
         "react": "^18.2.0"
     },
     "description": "",
