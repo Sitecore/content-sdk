@@ -58,20 +58,17 @@
     "graphql": "~16.10.0",
     "npm-run-all2": "~7.0.2",
     "prettier": "^2.8.3",
-    "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.2",
     "typescript": "~5.4.0"
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production npm-run-all --serial sitecore-tools:build next:build",
-    "graphql:update": "ts-node --project tsconfig.scripts.json ./scripts/fetch-graphql-introspection-data.ts",
-    "install-pre-push-hook": "ts-node --project tsconfig.scripts.json ./scripts/install-pre-push-hook.ts",
     "lint": "eslint ./src/**/*.tsx ./src/**/*.ts ./scripts/**/*.ts",
     "next:build": "next build",
     "next:dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "next:start": "next start",
-    "sitecore-tools:build": "sitecore-tools build",
-    "start:connected": "cross-env NODE_ENV=development npm-run-all --serial sitecore-tools:build next:dev",
-    "start:production": "cross-env-shell NODE_ENV=production npm-run-all --serial build next:start"
+    "sitecore-tools:build": "sitecore-tools project build",
+    "dev": "cross-env NODE_ENV=development npm-run-all --serial sitecore-tools:build next:dev",
+    "start": "cross-env-shell NODE_ENV=production npm-run-all --serial build next:start"
   }
 }
