@@ -2,7 +2,7 @@
  * Represents the response structure for a query that retrieves a locale.
  */
 export interface LocaleQueryResponse {
-  locale: Locale;
+  locale: Locale | null;
 }
 
 /**
@@ -14,7 +14,6 @@ export interface LocalesQueryResponse {
 
 /**
  * Represents a locale with an id and a label.
- *
  * @typedef Locale
  * @property {string} id - The unique identifier for the locale.
  * @property {string} label - The display name or label for the locale.
