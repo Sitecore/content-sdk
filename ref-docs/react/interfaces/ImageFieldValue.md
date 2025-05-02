@@ -6,7 +6,7 @@
 
 # Interface: ImageFieldValue
 
-Defined in: [packages/react/src/components/Image.tsx:12](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/react/src/components/Image.tsx#L12)
+Defined in: [packages/react/src/components/Image.tsx:12](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/Image.tsx#L12)
 
 ## Indexable
 
@@ -18,4 +18,4 @@ Defined in: [packages/react/src/components/Image.tsx:12](https://github.com/Site
 
 > `optional` **src**: `string`
 
-Defined in: [packages/react/src/components/Image.tsx:14](https://github.com/Sitecore/content-sdk/blob/555890424c1f07db5900a1ddbb27057acbd86408/packages/react/src/components/Image.tsx#L14)
+Defined in: [packages/react/src/components/Image.tsx:14](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/Image.tsx#L14)
