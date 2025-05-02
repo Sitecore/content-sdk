@@ -6,7 +6,7 @@
 
 # Interface: LayoutServiceContextData
 
-Defined in: [packages/core/src/layout/models.ts:47](https://github.com/Sitecore/content-sdk/blob/880f142d9fdbe55821a8f0891666579cd3fd361e/packages/core/src/layout/models.ts#L47)
+Defined in: [packages/core/src/layout/models.ts:47](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/core/src/layout/models.ts#L47)
 
 Context information from the Sitecore Layout Service
 
@@ -16,4 +16,4 @@ Context information from the Sitecore Layout Service
 
 > **context**: [`LayoutServiceContext`](LayoutServiceContext.md)
 
-Defined in: [packages/core/src/layout/models.ts:48](https://github.com/Sitecore/content-sdk/blob/880f142d9fdbe55821a8f0891666579cd3fd361e/packages/core/src/layout/models.ts#L48)
+Defined in: [packages/core/src/layout/models.ts:48](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/core/src/layout/models.ts#L48)

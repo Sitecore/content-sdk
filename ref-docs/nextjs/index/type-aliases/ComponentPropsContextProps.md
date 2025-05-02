@@ -8,7 +8,7 @@
 
 > **ComponentPropsContextProps**: `object`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:26](https://github.com/Sitecore/content-sdk/blob/880f142d9fdbe55821a8f0891666579cd3fd361e/packages/nextjs/src/components/ComponentPropsContext.tsx#L26)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:26](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/nextjs/src/components/ComponentPropsContext.tsx#L26)
 
 ## Type declaration
 

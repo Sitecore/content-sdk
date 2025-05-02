@@ -8,7 +8,7 @@
 
 > **GraphQLRedirectsServiceConfig**: [`CacheOptions`](../../index/interfaces/CacheOptions.md) & `object`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:36](https://github.com/Sitecore/content-sdk/blob/880f142d9fdbe55821a8f0891666579cd3fd361e/packages/core/src/site/graphql-redirects-service.ts#L36)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:36](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/core/src/site/graphql-redirects-service.ts#L36)
 
 ## Type declaration
 
