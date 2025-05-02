@@ -6,6 +6,7 @@ import debug from '../debug';
 import {
   GET_LOCALE_QUERY,
   GET_LOCALES_QUERY,
+  Locale,
   LocaleQueryResponse,
   LocalesQueryResponse,
 } from './locales';
@@ -113,7 +114,7 @@ export class ContentClient {
    * @param id - The unique identifier of the locale item.
    * @returns A promise that resolves to the locale information associated with the specified locale ID.
    */
-  async getLocale(id: string) {
+  async getLocale(id: string): Promise<Locale | null> {
     debug.content('Getting locale for id: %s', id);
 
     const response = await this.get<LocaleQueryResponse>(GET_LOCALE_QUERY, { id });

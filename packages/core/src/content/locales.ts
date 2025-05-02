@@ -31,7 +31,7 @@ export type Locale = {
  * @returns {string} The GraphQL query string.
  */
 export const GET_LOCALE_QUERY = `
-  query ($id: ID!) {
+  query GetLocaleById ($id: ID!) {
     locale(id: $id) {
       id
       label
@@ -45,7 +45,7 @@ export const GET_LOCALE_QUERY = `
  * @returns {string} The GraphQL query string.
  */
 export const GET_LOCALES_QUERY = `
-  query {
+  query GetAllLocales{
     manyLocale {
       id
       label
