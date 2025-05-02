@@ -33,7 +33,7 @@
     "@sitecore-cloudsdk/core": "^0.5.0",
     "@sitecore-cloudsdk/personalize": "^0.5.0",
     "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.2.0",
+    "@testing-library/react": "^16.3.0",
     "@types/chai": "^4.3.4",
     "@types/chai-as-promised": "^7.1.5",
     "@types/chai-string": "^1.4.2",
@@ -50,7 +50,7 @@
     "cross-fetch": "^4.1.0",
     "del-cli": "^6.0.0",
     "eslint": "^8.56.0",
-    "eslint-plugin-react": "^7.32.1",
+    "eslint-plugin-react": "^7.37.5",
     "jsdom": "^26.0.0",
     "mocha": "^11.1.0",
     "next": "^15.1.17",
@@ -69,8 +69,8 @@
     "@sitecore-cloudsdk/events": "^0.5.0",
     "@sitecore-cloudsdk/personalize": "^0.5.0",
     "next": "^14.2.18",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "typescript": "~5.7.3"
   },
   "peerDependenciesMeta": {
