@@ -2717,6 +2717,7 @@ __metadata:
     jsdom: ^26.0.0
     mocha: ^11.1.0
     nyc: ^17.1.0
+    prop-types: ^15.8.1
     react: ^19.1.0
     react-dom: ^19.1.0
     sinon: ^19.0.2
