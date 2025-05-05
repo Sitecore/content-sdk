@@ -8,7 +8,7 @@
 
 > **fetchBearerToken**(`options`): `Promise`\<`any`\>
 
-Defined in: [packages/core/src/tools/auth/fetch-bearer-token.ts:17](https://github.com/Sitecore/xmc-jss-dev/blob/97e870c37a4bc96e6471d0cd6656dbba66f8bd94/packages/core/src/tools/auth/fetch-bearer-token.ts#L17)
+Defined in: [packages/core/src/tools/auth/fetch-bearer-token.ts:17](https://github.com/Sitecore/content-sdk/blob/0c0a9bff83d1c4b91fb4a1f2c6d4b3a96ae0bcaf/packages/core/src/tools/auth/fetch-bearer-token.ts#L17)
 
 Connects to M2M endpoint and fetches the bearer token
 Uses client_id and client_secret from environment variables
