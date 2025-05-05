@@ -8,7 +8,7 @@
 
 > **SitecoreContextReactContext**(`props`): `ReactNode`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:22](https://github.com/Sitecore/content-sdk/blob/0c0a9bff83d1c4b91fb4a1f2c6d4b3a96ae0bcaf/packages/react/src/components/SitecoreContext.tsx#L22)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:22](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/react/src/components/SitecoreContext.tsx#L22)
 
 ## Parameters
 

@@ -6,7 +6,7 @@
 
 # Class: ContentClient
 
-Defined in: [packages/core/src/content/content-client.ts:32](https://github.com/Sitecore/content-sdk/blob/0c0a9bff83d1c4b91fb4a1f2c6d4b3a96ae0bcaf/packages/core/src/content/content-client.ts#L32)
+Defined in: [packages/core/src/content/content-client.ts:32](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/core/src/content/content-client.ts#L32)
 
 Class representing a client for interacting with the Content API.
 
@@ -16,7 +16,7 @@ Class representing a client for interacting with the Content API.
 
 > **new ContentClient**(`__namedParameters`): [`ContentClient`](ContentClient.md)
 
-Defined in: [packages/core/src/content/content-client.ts:36](https://github.com/Sitecore/content-sdk/blob/0c0a9bff83d1c4b91fb4a1f2c6d4b3a96ae0bcaf/packages/core/src/content/content-client.ts#L36)
+Defined in: [packages/core/src/content/content-client.ts:36](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/core/src/content/content-client.ts#L36)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/content/content-client.ts:36](https://github.com/
 
 > **endpoint**: `string`
 
-Defined in: [packages/core/src/content/content-client.ts:33](https://github.com/Sitecore/content-sdk/blob/0c0a9bff83d1c4b91fb4a1f2c6d4b3a96ae0bcaf/packages/core/src/content/content-client.ts#L33)
+Defined in: [packages/core/src/content/content-client.ts:33](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/core/src/content/content-client.ts#L33)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/core/src/content/content-client.ts:33](https://github.com/
 
 > **graphqlClient**: [`GraphQLRequestClient`](../../index/classes/GraphQLRequestClient.md)
 
-Defined in: [packages/core/src/content/content-client.ts:34](https://github.com/Sitecore/content-sdk/blob/0c0a9bff83d1c4b91fb4a1f2c6d4b3a96ae0bcaf/packages/core/src/content/content-client.ts#L34)
+Defined in: [packages/core/src/content/content-client.ts:34](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/core/src/content/content-client.ts#L34)
 
 ## Methods
 
@@ -50,7 +50,7 @@ Defined in: [packages/core/src/content/content-client.ts:34](https://github.com/
 
 > **get**\<`T`\>(`query`, `variables`, `options`): `Promise`\<`T`\>
 
-Defined in: [packages/core/src/content/content-client.ts:100](https://github.com/Sitecore/content-sdk/blob/0c0a9bff83d1c4b91fb4a1f2c6d4b3a96ae0bcaf/packages/core/src/content/content-client.ts#L100)
+Defined in: [packages/core/src/content/content-client.ts:100](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/core/src/content/content-client.ts#L100)
 
 Execute graphql request
 
@@ -80,7 +80,7 @@ response data
 
 > **getLocale**(`id`): `Promise`\<`null` \| [`Locale`](../type-aliases/Locale.md)\>
 
-Defined in: [packages/core/src/content/content-client.ts:116](https://github.com/Sitecore/content-sdk/blob/0c0a9bff83d1c4b91fb4a1f2c6d4b3a96ae0bcaf/packages/core/src/content/content-client.ts#L116)
+Defined in: [packages/core/src/content/content-client.ts:116](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/core/src/content/content-client.ts#L116)
 
 Retrieves the locale information for a given locale ID.
 
@@ -102,7 +102,7 @@ A promise that resolves to the locale information associated with the specified 
 
 > **getLocales**(): `Promise`\<[`Locale`](../type-aliases/Locale.md)[]\>
 
-Defined in: [packages/core/src/content/content-client.ts:128](https://github.com/Sitecore/content-sdk/blob/0c0a9bff83d1c4b91fb4a1f2c6d4b3a96ae0bcaf/packages/core/src/content/content-client.ts#L128)
+Defined in: [packages/core/src/content/content-client.ts:128](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/core/src/content/content-client.ts#L128)
 
 Retrieves all available locales from the content service.
 
@@ -118,7 +118,7 @@ A promise that resolves to an array of locales.
 
 > `static` **createClient**(`options`?): [`ContentClient`](ContentClient.md)
 
-Defined in: [packages/core/src/content/content-client.ts:63](https://github.com/Sitecore/content-sdk/blob/0c0a9bff83d1c4b91fb4a1f2c6d4b3a96ae0bcaf/packages/core/src/content/content-client.ts#L63)
+Defined in: [packages/core/src/content/content-client.ts:63](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/core/src/content/content-client.ts#L63)
 
 Factory method for creating a ContentClient instance. This method allows you to create a client with the values populated from environment variables or provided as arguments.
 
