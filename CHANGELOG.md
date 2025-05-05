@@ -2,17 +2,13 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-Major versions of this project may include breaking changes in core packages but also denote compatibility with Sitecore Platform versions.
+Major versions of this project will include breaking changes in core packages and align with Sitecore seasonal releases though not strictly bound to them.
 
 Our versioning strategy is as follows:
 
-<!--
-@TODO: adjust for new versioning
--->
-
 - Patch: no breaking changes (e.g. bug fixes, minor improvements)
-- Minor: may include breaking changes in framework packages (e.g. framework upgrades, new features, improvements)
-- Major: may include breaking changes in core packages (e.g. major architectural changes, major features)
+- Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
+- Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
 ## Unreleased
 
@@ -25,6 +21,7 @@ Our versioning strategy is as follows:
 
 * `[core]` SXA Form can't fire CloudSDK events due to initialization error ([#63](https://github.com/Sitecore/content-sdk/pull/63)):
   * Form utilities have been moved from `@sitecore-content-sdk/core/form` to the root of `@sitecore-content-sdk/core`. Update your imports to reflect this change if you are referencing these utilities.
+* `[nextjs]` Update React to version 19 and Next JS to version 15 ([#76](https://github.com/Sitecore/content-sdk/pull/76))
 
 ### 🐛 Bug Fixes
 

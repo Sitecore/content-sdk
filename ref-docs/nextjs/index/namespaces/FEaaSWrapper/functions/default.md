@@ -8,7 +8,7 @@
 
 > **default**(`props`): `Element`
 
-Defined in: react/types/components/FEaaSWrapper.d.ts:3
+Defined in: react/types/components/FEaaSWrapper.d.ts:4
 
 ## Parameters
 

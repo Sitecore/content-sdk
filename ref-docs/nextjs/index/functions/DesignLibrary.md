@@ -8,7 +8,7 @@
 
 > **DesignLibrary**(`layoutData`): `Element`
 
-Defined in: react/types/components/DesignLibrary.d.ts:2
+Defined in: react/types/components/DesignLibrary.d.ts:3
 
 ## Parameters
 

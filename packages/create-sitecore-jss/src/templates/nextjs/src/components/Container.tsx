@@ -3,7 +3,7 @@
   ComponentRendering,
   Placeholder,
 } from '@sitecore-content-sdk/nextjs';
-import React from 'react';
+import React, { JSX } from 'react';
 
 interface ComponentProps {
   rendering: ComponentRendering & { params: ComponentParams };

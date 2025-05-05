@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import BYOC from 'src/byoc';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
+import { JSX } from 'react';
 
 /**
  * The FEAASRender page is responsible for:

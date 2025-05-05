@@ -8,7 +8,7 @@
 
 > **FEaaSComponentParams**: `object`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:7
+Defined in: react/types/components/FEaaSComponent.d.ts:8
 
 Params from a Sitecore FEaaS rendering
 
