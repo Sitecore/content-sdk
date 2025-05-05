@@ -89,7 +89,7 @@ const nextConfig = {
     <%_ if (helper.isDev) { -%>
     // monorepo configuration start
     if (options.isServer) {
-      config.externals = ['react', 'vertx', ...config.externals];
+      config.externals = ['vertx', ...config.externals];
     }
 
     config.resolve.alias['@sitecore-cloudsdk/events'] = path.resolve(
