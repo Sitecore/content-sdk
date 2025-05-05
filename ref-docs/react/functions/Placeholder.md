@@ -8,7 +8,7 @@
 
 > **Placeholder**(`props`): `Element`
 
-Defined in: [packages/react/src/components/Placeholder.tsx:107](https://github.com/Sitecore/content-sdk/blob/05a4e1364ff83949860742eef6624dc0ba9e2c01/packages/react/src/components/Placeholder.tsx#L107)
+Defined in: [packages/react/src/components/Placeholder.tsx:107](https://github.com/Sitecore/xmc-jss-dev/blob/97e870c37a4bc96e6471d0cd6656dbba66f8bd94/packages/react/src/components/Placeholder.tsx#L107)
 
 ## Parameters
 
