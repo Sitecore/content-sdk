@@ -6,7 +6,7 @@
 
 # Interface: DateFieldProps
 
-Defined in: [packages/react/src/components/Date.tsx:9](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/react/src/components/Date.tsx#L9)
+Defined in: [packages/react/src/components/Date.tsx:9](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/Date.tsx#L9)
 
 ## Extends
 
@@ -22,7 +22,7 @@ Defined in: [packages/react/src/components/Date.tsx:9](https://github.com/Siteco
 
 > `optional` **editable**: `boolean`
 
-Defined in: [packages/react/src/components/sharedTypes/props.ts:9](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/react/src/components/sharedTypes/props.ts#L9)
+Defined in: [packages/react/src/components/sharedTypes/props.ts:9](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/sharedTypes/props.ts#L9)
 
 Can be used to explicitly disable inline editing.
 
@@ -42,7 +42,7 @@ true
 
 > `optional` **emptyFieldEditingComponent**: `ComponentClass`\<`unknown`\> \| `FC`\<`unknown`\>
 
-Defined in: [packages/react/src/components/sharedTypes/props.ts:13](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/react/src/components/sharedTypes/props.ts#L13)
+Defined in: [packages/react/src/components/sharedTypes/props.ts:13](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/sharedTypes/props.ts#L13)
 
 Custom element to render in Pages in edit mode if field value is empty
 
@@ -56,7 +56,7 @@ Custom element to render in Pages in edit mode if field value is empty
 
 > **field**: `FieldMetadata` & `object`
 
-Defined in: [packages/react/src/components/Date.tsx:12](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/react/src/components/Date.tsx#L12)
+Defined in: [packages/react/src/components/Date.tsx:12](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/Date.tsx#L12)
 
 #### Type declaration
 
@@ -70,7 +70,7 @@ Defined in: [packages/react/src/components/Date.tsx:12](https://github.com/Sitec
 
 > `optional` **render**: (`date`) => `ReactNode`
 
-Defined in: [packages/react/src/components/Date.tsx:20](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/react/src/components/Date.tsx#L20)
+Defined in: [packages/react/src/components/Date.tsx:20](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/Date.tsx#L20)
 
 #### Parameters
 
@@ -88,6 +88,6 @@ Defined in: [packages/react/src/components/Date.tsx:20](https://github.com/Sitec
 
 > `optional` **tag**: `string`
 
-Defined in: [packages/react/src/components/Date.tsx:18](https://github.com/Sitecore/content-sdk/blob/cd9c0186a1ca632e03848e7eccc9c082c9a03341/packages/react/src/components/Date.tsx#L18)
+Defined in: [packages/react/src/components/Date.tsx:18](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/Date.tsx#L18)
 
 The HTML element that will wrap the contents of the field.
