@@ -1,4 +1,5 @@
 ﻿/* eslint-disable no-unused-expressions */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
