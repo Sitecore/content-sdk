@@ -6,17 +6,16 @@
 
 # Function: Text()
 
-> **Text**(`props`, `deprecatedLegacyContext`?): `ReactNode`
+> **Text**(`props`): `ReactNode` \| `Promise`\<`ReactNode`\>
 
-Defined in: [packages/react/src/components/Text.tsx:27](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/react/src/components/Text.tsx#L27)
+Defined in: [packages/react/src/components/Text.tsx:26](https://github.com/Sitecore/content-sdk/blob/d77d1405286fef707263e879400fbc0f6f058aeb/packages/react/src/components/Text.tsx#L26)
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `props` | `TextProps` | - |
-| `deprecatedLegacyContext`? | `any` | **Deprecated** **See** [React Docs](https://legacy.reactjs.org/docs/legacy-context.html#referencing-context-in-lifecycle-methods) |
+| Parameter | Type |
+| ------ | ------ |
+| `props` | `TextProps` |
 
 ## Returns
 
-`ReactNode`
+`ReactNode` \| `Promise`\<`ReactNode`\>

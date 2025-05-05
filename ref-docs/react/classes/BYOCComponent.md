@@ -6,7 +6,7 @@
 
 # Class: BYOCComponent
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:92](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/react/src/components/BYOCComponent.tsx#L92)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:92](https://github.com/Sitecore/content-sdk/blob/d77d1405286fef707263e879400fbc0f6f058aeb/packages/react/src/components/BYOCComponent.tsx#L92)
 
 BYOCComponent facilitate the rendering of external components. It manages potential errors,
 missing components, and customization of error messages or alternative rendering components.
@@ -25,7 +25,7 @@ component props
 
 > **new BYOCComponent**(`props`): [`BYOCComponent`](BYOCComponent.md)
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:95](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/react/src/components/BYOCComponent.tsx#L95)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:95](https://github.com/Sitecore/content-sdk/blob/d77d1405286fef707263e879400fbc0f6f058aeb/packages/react/src/components/BYOCComponent.tsx#L95)
 
 #### Parameters
 
@@ -47,7 +47,7 @@ Defined in: [packages/react/src/components/BYOCComponent.tsx:95](https://github.
 
 > **context**: `unknown`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1013
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:945
 
 If using the new style context, re-declare this in your class to be the
 `React.ContextType` of your `static contextType`.
@@ -77,7 +77,7 @@ declare context: React.ContextType<typeof MyContext>
 
 > `readonly` **props**: `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\>
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1033
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:961
 
 #### Inherited from
 
@@ -85,33 +85,11 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:1033
 
 ***
 
-### ~~refs~~
-
-> **refs**: `object`
-
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1040
-
-#### Index Signature
-
-\[`key`: `string`\]: `ReactInstance`
-
-#### Deprecated
-
-#### See
-
-[Legacy React Docs](https://legacy.reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs)
-
-#### Inherited from
-
-`React.Component.refs`
-
-***
-
 ### state
 
 > **state**: `Readonly`\<\{ `error`: `Error`; \}\>
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:93](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/react/src/components/BYOCComponent.tsx#L93)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:93](https://github.com/Sitecore/content-sdk/blob/d77d1405286fef707263e879400fbc0f6f058aeb/packages/react/src/components/BYOCComponent.tsx#L93)
 
 #### Overrides
 
@@ -123,7 +101,7 @@ Defined in: [packages/react/src/components/BYOCComponent.tsx:93](https://github.
 
 > `static` `optional` **contextType**: `Context`\<`any`\>
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:995
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:921
 
 If set, `this.context` will be set at runtime to the current value of the given Context.
 
@@ -150,13 +128,31 @@ class Foo extends React.Component {
 
 `React.Component.contextType`
 
+***
+
+### ~~propTypes?~~
+
+> `static` `optional` **propTypes**: `any`
+
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:927
+
+Ignored by React.
+
+#### Deprecated
+
+Only kept in types for backwards compatibility. Will be removed in a future major release.
+
+#### Inherited from
+
+`React.Component.propTypes`
+
 ## Methods
 
 ### componentDidCatch()
 
 > **componentDidCatch**(`error`): `void`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:105](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/react/src/components/BYOCComponent.tsx#L105)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:105](https://github.com/Sitecore/content-sdk/blob/d77d1405286fef707263e879400fbc0f6f058aeb/packages/react/src/components/BYOCComponent.tsx#L105)
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
@@ -181,7 +177,7 @@ the entire component tree to unmount.
 
 > `optional` **componentDidMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1376
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1173
 
 Called immediately after a component is mounted. Setting state here will trigger re-rendering.
 
@@ -199,7 +195,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > `optional` **componentDidUpdate**(`prevProps`, `prevState`, `snapshot`?): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1439
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1236
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -227,7 +223,7 @@ The snapshot is only present if [getSnapshotBeforeUpdate](BYOCComponent.md#getsn
 
 > `optional` **componentWillMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1455
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1252
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -259,7 +255,7 @@ this from being invoked.
 
 > `optional` **componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1486
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1283
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -301,7 +297,7 @@ this from being invoked.
 
 > `optional` **componentWillUnmount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1392
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1189
 
 Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
 cancelled network requests, or cleaning up any DOM elements created in `componentDidMount`.
@@ -320,7 +316,7 @@ cancelled network requests, or cleaning up any DOM elements created in `componen
 
 > `optional` **componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1518
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1315
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -361,7 +357,7 @@ this from being invoked.
 
 > **forceUpdate**(`callback`?): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1030
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:958
 
 #### Parameters
 
@@ -383,7 +379,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:1030
 
 > `optional` **getSnapshotBeforeUpdate**(`prevProps`, `prevState`): `any`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1433
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1230
 
 Runs before React applies the result of Component.render render to the document, and
 returns an object to be given to [componentDidUpdate](BYOCComponent.md#componentdidupdate). Useful for saving
@@ -413,7 +409,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:109](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/react/src/components/BYOCComponent.tsx#L109)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:109](https://github.com/Sitecore/content-sdk/blob/d77d1405286fef707263e879400fbc0f6f058aeb/packages/react/src/components/BYOCComponent.tsx#L109)
 
 #### Returns
 
@@ -429,7 +425,7 @@ Defined in: [packages/react/src/components/BYOCComponent.tsx:109](https://github
 
 > **setState**\<`K`\>(`state`, `callback`?): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1025
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:953
 
 #### Type Parameters
 
@@ -458,7 +454,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:1025
 
 > `optional` **shouldComponentUpdate**(`nextProps`, `nextState`, `nextContext`): `boolean`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1387
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1184
 
 Called to determine whether the change in props and state should trigger a re-render.
 
@@ -491,7 +487,7 @@ and `componentDidUpdate` will not be called.
 
 > `optional` **UNSAFE\_componentWillMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1470
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1267
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -525,7 +521,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1504
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1301
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -569,7 +565,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1534
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1331
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -612,7 +608,7 @@ this from being invoked.
 
 > `static` **getDerivedStateFromError**(`error`): `object`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:100](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/react/src/components/BYOCComponent.tsx#L100)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:100](https://github.com/Sitecore/content-sdk/blob/d77d1405286fef707263e879400fbc0f6f058aeb/packages/react/src/components/BYOCComponent.tsx#L100)
 
 #### Parameters
 

@@ -6,17 +6,16 @@
 
 # Function: Link()
 
-> **Link**(`props`, `deprecatedLegacyContext`?): `ReactNode`
+> **Link**(`props`): `ReactNode` \| `Promise`\<`ReactNode`\>
 
-Defined in: [packages/react/src/components/Link.tsx:38](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/react/src/components/Link.tsx#L38)
+Defined in: [packages/react/src/components/Link.tsx:37](https://github.com/Sitecore/content-sdk/blob/d77d1405286fef707263e879400fbc0f6f058aeb/packages/react/src/components/Link.tsx#L37)
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `props` | [`LinkProps`](../type-aliases/LinkProps.md) | - |
-| `deprecatedLegacyContext`? | `any` | **Deprecated** **See** [React Docs](https://legacy.reactjs.org/docs/legacy-context.html#referencing-context-in-lifecycle-methods) |
+| Parameter | Type |
+| ------ | ------ |
+| `props` | [`LinkProps`](../type-aliases/LinkProps.md) |
 
 ## Returns
 
-`ReactNode`
+`ReactNode` \| `Promise`\<`ReactNode`\>

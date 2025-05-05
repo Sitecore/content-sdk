@@ -8,7 +8,7 @@
 
 > **isAbsoluteUrl**(`url`): `boolean`
 
-Defined in: [packages/core/src/utils/utils.ts:59](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/core/src/utils/utils.ts#L59)
+Defined in: [packages/core/src/utils/utils.ts:59](https://github.com/Sitecore/content-sdk/blob/d77d1405286fef707263e879400fbc0f6f058aeb/packages/core/src/utils/utils.ts#L59)
 
 ## Parameters
 
