@@ -8,7 +8,7 @@
 
 > **Locale**: `object`
 
-Defined in: [packages/core/src/content/locales.ts:21](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/core/src/content/locales.ts#L21)
+Defined in: [packages/core/src/content/locales.ts:18](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/core/src/content/locales.ts#L18)
 
 Represents a locale with an id and a label.
 
@@ -18,6 +18,10 @@ Represents a locale with an id and a label.
 
 > **id**: `string`
 
+The unique identifier for the locale.
+
 ### label
 
 > **label**: `string`
+
+The display name or label for the locale.

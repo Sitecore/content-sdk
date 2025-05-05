@@ -8,6 +8,6 @@
 
 > **HTMLLink**: `object` & `Pick`\<`HTMLLinkElement`, `"rel"` \| `"href"`\>
 
-Defined in: [packages/core/src/models.ts:6](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/core/src/models.ts#L6)
+Defined in: [packages/core/src/models.ts:6](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/core/src/models.ts#L6)
 
 Html <link> tag data model
