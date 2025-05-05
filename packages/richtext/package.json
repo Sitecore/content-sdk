@@ -1,6 +1,6 @@
 {
     "name": "@sitecore-content-sdk/richtext",
-    "version": "0.2.0-canary.15",
+    "version": "0.2.0-canary.18",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
     "sideEffects": false,
@@ -62,7 +62,7 @@
         "@tiptap/core": {
             "optional": true
         },
-        "@tiptap/htm": {
+        "@tiptap/html": {
             "optional": true
         },
         "@tiptap/starter-kit": {
@@ -70,7 +70,7 @@
         }
     },
     "dependencies": {
-        "@sitecore-content-sdk/core": "0.2.0-canary.15",
+        "@sitecore-content-sdk/core": "0.2.0-canary.18",
         "@tiptap/core": "^2.11.7",
         "@tiptap/html": "^2.11.7",
         "@tiptap/starter-kit": "^2.11.7"

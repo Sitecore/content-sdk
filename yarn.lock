@@ -2417,23 +2417,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/core@npm:0.2.0-canary.15":
-  version: 0.2.0-canary.15
-  resolution: "@sitecore-content-sdk/core@npm:0.2.0-canary.15"
-  dependencies:
-    chalk: ^4.1.2
-    debug: ^4.4.0
-    graphql: ^16.10.0
-    graphql-request: ^6.1.0
-    memory-cache: ^0.2.0
-    sinon-chai: ^4.0.0
-    url-parse: ^1.5.10
-  peerDependencies:
-    "@sitecore-cloudsdk/events": ^0.5.0
-  checksum: 0943de7845df20591e67cef04c34e4544b7d0a29eb133cdd7c40800914a427d2055b932d4272b197556d4fd75a655aee091372af0037af1da1b92ffb4fe9efb9
-  languageName: node
-  linkType: hard
-
 "@sitecore-content-sdk/create-sitecore-jss@workspace:packages/create-sitecore-jss":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/create-sitecore-jss@workspace:packages/create-sitecore-jss"
@@ -2579,7 +2562,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/richtext@workspace:packages/richtext"
   dependencies:
-    "@sitecore-content-sdk/core": 0.2.0-canary.15
+    "@sitecore-content-sdk/core": 0.2.0-canary.18
     "@tiptap/core": ^2.11.7
     "@tiptap/html": ^2.11.7
     "@tiptap/starter-kit": ^2.11.7
@@ -2612,7 +2595,7 @@ __metadata:
   peerDependenciesMeta:
     "@tiptap/core":
       optional: true
-    "@tiptap/htm":
+    "@tiptap/html":
       optional: true
     "@tiptap/starter-kit":
       optional: true
