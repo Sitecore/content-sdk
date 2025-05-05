@@ -8,7 +8,7 @@
 
 > **ComponentPropsReactContext**(`props`): `ReactNode`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:7](https://github.com/Sitecore/content-sdk/blob/d77d1405286fef707263e879400fbc0f6f058aeb/packages/nextjs/src/components/ComponentPropsContext.tsx#L7)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:7](https://github.com/Sitecore/content-sdk/blob/05a4e1364ff83949860742eef6624dc0ba9e2c01/packages/nextjs/src/components/ComponentPropsContext.tsx#L7)
 
 Component props context which we are using in order to store data fetched on components level (getStaticProps/getServerSideProps)
 
