@@ -39,7 +39,6 @@ export const GET_LOCALE_QUERY = `
 
 /**
  * GraphQL query to retrieve all available locales.
- *
  */
 export const GET_LOCALES_QUERY = `
   query GetAllLocales{
