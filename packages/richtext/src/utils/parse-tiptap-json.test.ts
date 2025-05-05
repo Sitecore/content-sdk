@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { expect } from 'chai';
 import { parseTiptapJSON } from './parse-tiptap-json';
 import sinon from 'sinon';

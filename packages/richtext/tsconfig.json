@@ -5,8 +5,8 @@
     "module": "ESNext",
     "jsx": "react",
     "skipLibCheck": true,
-    "outDir": "dist/cjs",
-    "types": ["node"],
+    "outDir": "dist/esm",
+    "types": ["node", "mocha"],
     "typeRoots": ["node_modules/@types"],
     "declarationDir": "./types"
   },
