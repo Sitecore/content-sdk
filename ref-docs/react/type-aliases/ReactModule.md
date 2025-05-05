@@ -8,7 +8,7 @@
 
 > **ReactModule**: `object`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:13](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/sharedTypes/components.ts#L13)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:13](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/react/src/components/sharedTypes/components.ts#L13)
 
 ## Type declaration
 

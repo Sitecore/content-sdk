@@ -6,7 +6,7 @@
 
 # Interface: LocalesQueryResponse
 
-Defined in: [packages/core/src/content/locales.ts:11](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/core/src/content/locales.ts#L11)
+Defined in: [packages/core/src/content/locales.ts:11](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/core/src/content/locales.ts#L11)
 
 Represents the response structure for a query that retrieves multiple locales.
 
@@ -16,4 +16,4 @@ Represents the response structure for a query that retrieves multiple locales.
 
 > **manyLocale**: [`Locale`](../type-aliases/Locale.md)[]
 
-Defined in: [packages/core/src/content/locales.ts:12](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/core/src/content/locales.ts#L12)
+Defined in: [packages/core/src/content/locales.ts:12](https://github.com/Sitecore/content-sdk/blob/e346e3250dedeb104a27d68e38615673b07a225a/packages/core/src/content/locales.ts#L12)
