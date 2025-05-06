@@ -1,4 +1,5 @@
 @use "@sass/abstracts/mixins";
+@use "@sass/abstracts/vars/colors";
 @use "variables";
 
 footer {
@@ -13,11 +14,11 @@ footer {
     font-size: variables.$text-size-14;
 
     a {
-      color: mixins.$text-white;
+      color: colors.$text-white;
     }
 
     p, span {
-      color: mixins.$text-white;
+      color: colors.$text-white;
     }
   }
 

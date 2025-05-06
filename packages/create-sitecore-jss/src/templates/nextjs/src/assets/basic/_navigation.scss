@@ -1,4 +1,4 @@
-@use "@sass/abstracts/vars";
+@use "@sass/abstracts/vars/colors";
 @use "variables";
 @use "@sass/abstracts/mixins";
 
@@ -63,7 +63,7 @@ $hamburger-margin: 18px;
       bottom: 0;
       right: 0;
       left: 0;
-      background-color: mixins.$bg-black-active;
+      background-color: colors.$bg-black-active;
       z-index: 1;
 
       * {
@@ -91,7 +91,7 @@ $hamburger-margin: 18px;
             font-size: variables.$text-size-30;
             line-height: 90px;
             >span {
-              color: mixins.$text-white;
+              color: colors.$text-white;
             }
           }
         }
@@ -113,7 +113,7 @@ $hamburger-margin: 18px;
           .menu-humburger {
             &::before {
               content: "\00d7";
-              color: mixins.$text-basic-active;
+              color: colors.$text-basic-active;
               font-size: variables.$text-size-48;
               position: fixed;
               top: 0;
@@ -140,8 +140,8 @@ $hamburger-margin: 18px;
           margin-right: $hamburger-margin;
           margin-top: calc($hamburger-margin + ($hamburger-margin / 2)) + 8px;
           display: block;
-          border-top: 6px solid mixins.$bg-black;
-          border-bottom: 6px solid mixins.$bg-black;
+          border-top: 6px solid colors.$bg-black;
+          border-bottom: 6px solid colors.$bg-black;
           float: right;
           z-index: 99;
           cursor: pointer;

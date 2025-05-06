@@ -1,4 +1,4 @@
-@use "@sass/abstracts/vars";
+@use "@sass/abstracts/vars/margins";
 @use "@sass/abstracts/mixins";
 
 .sxa-bordered {
@@ -14,7 +14,7 @@
 .row-splitter {
     box-sizing: border-box;
     .sxa-bordered {
-        padding: mixins.$default-padding !important;
+        padding: margins.$default-padding !important;
         >.component,
         .scEmptyPlaceholder {
             @include mixins.border-basic();

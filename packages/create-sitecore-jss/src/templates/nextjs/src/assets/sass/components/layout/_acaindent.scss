@@ -1,5 +1,5 @@
-@use "@sass/abstracts/vars";
+@use "@sass/abstracts/vars/margins";
 
 .alan-indent {
-    margin: 0 $extralarge-margin;
+    margin: 0 margins.$extralarge-margin;
 }

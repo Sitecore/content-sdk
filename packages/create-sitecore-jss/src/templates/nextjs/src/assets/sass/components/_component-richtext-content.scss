@@ -1,9 +1,9 @@
 @use "sass:meta";
-@use "@sass/abstracts/vars";
+@use "@sass/abstracts/vars/colors";
 @use "@sass/abstracts/mixins";
 
 .content, .rich-text {
-    border: mixins.$rich-content-border;
+    border: colors.$rich-content-border;
     line-height: 1.5;
     font-size: 12px;
     overflow: hidden;

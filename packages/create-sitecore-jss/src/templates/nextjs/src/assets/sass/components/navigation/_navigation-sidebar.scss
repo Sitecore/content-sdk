@@ -1,4 +1,4 @@
-@use "@sass/abstracts/vars";
+@use "@sass/abstracts/vars/margins";
 @use "@sass/abstracts/mixins";
 
 .navigation.navigation-sidebar {
@@ -18,8 +18,8 @@
                 }
             }
             >ul {
-                margin-left: $small-margin;
-                margin-top: $extrasmall-margin;
+                margin-left: margins.$small-margin;
+                margin-top: margins.$extrasmall-margin;
             }
         }
         .rel-level2 {

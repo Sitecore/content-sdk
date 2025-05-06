@@ -1,16 +1,17 @@
 @use "sass:meta";
 @use "@sass/abstracts/mixins";
-@use "@sass/abstracts/vars";
+@use "@sass/abstracts/vars/colors";
+@use "@sass/abstracts/vars/fontSizes";
 
 .navigation {
-  background: mixins.$nav-bg;
+  background: colors.$nav-bg;
   ul {
     padding-left: 0;
   }
   .level0, .level1 {
       >.navigation-title>a {
-          font-size: mixins.$navigation-font-basic;
-          border-color: mixins.$nav-border-root;
+          font-size: fontSizes.$navigation-font-basic;
+          border-color: colors.$nav-border-root;
           border-style: solid;
           border-width: 0 0 2px 0;
           padding-right: 10px;
@@ -21,12 +22,12 @@
       }
   }
   a {
-      color: mixins.$nav-color-root;
+      color: colors.$nav-color-root;
       .lt-ie9 &, .lt-ie9 & span {
-          color: mixins.$nav-color-root;
+          color: colors.$nav-color-root;
       }
       &:focus, &:hover {
-          color: mixins.$nav-color-root-active;
+          color: colors.$nav-color-root-active;
       }
   }
   li {
@@ -37,12 +38,12 @@
           >a {
               padding: 3px 5px 3px 0;
               display: block;
-              color: mixins.$nav-color-root;
+              color: colors.$nav-color-root;
               text-decoration: none;
           }
       }
       >ul a {
-          font-size: mixins.$navigation-font-basic-submenu;
+          font-size: fontSizes.$navigation-font-basic-submenu;
       }
   }
   .submenu>ul {

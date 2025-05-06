@@ -1,5 +1,7 @@
 @use "sass:meta";
-@use 'sass/abstracts/vars';
+@use 'sass/abstracts/vars/fontSizes';
+@use 'sass/abstracts/vars/margins';
+@use 'sass/abstracts/vars/colors';
 @use 'sass/abstracts/mixins';
 
 .title {
@@ -7,10 +9,10 @@
 
   h1,
   .field-title {
-    @include mixins.border-basic(bottom, mixins.$border-basic-color);
-    font-size: mixins.$font-extrabig;
-    margin-bottom: mixins.$small-margin;
-    color: mixins.$title-color;
+    @include mixins.border-basic(bottom, colors.$border-basic-color);
+    font-size: fontSizes.$font-extrabig;
+    margin-bottom: margins.$small-margin;
+    color: colors.$title-color;
     line-height: normal;
     padding-bottom: 10px;
     display: block;
@@ -18,7 +20,7 @@
     cursor: pointer;
 
     &:hover {
-      color: mixins.$title-color-active;
+      color: colors.$title-color-active;
     }
 
     > a,

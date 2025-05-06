@@ -1,16 +1,16 @@
 @use "sass:meta";
-@use "@sass/abstracts/vars";
+@use "@sass/abstracts/vars/colors";
 @use "@sass/abstracts/mixins";
 
 .promo {
-    background: mixins.$promo-bg;
+    background: colors.$promo-bg;
     padding: 15px;
     overflow: hidden;
     box-sizing: border-box;
     >.component-content {
         position: relative;
         @include mixins.clearfix();
-        @include mixins.border-basic(all, mixins.$promo-border);
+        @include mixins.border-basic(all, colors.$promo-border);
 
         >div {
             padding: 5px;

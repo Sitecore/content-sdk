@@ -1,7 +1,7 @@
 @use "@sass/abstracts/vars/fontSizes";
 @use "@sass/abstracts/vars/colors";
 @use "@sass/abstracts/mixins";
-@use '~font-awesome/scss/mixins';
+@use '~font-awesome/scss/mixins' as fa-mixins;
 @use '~font-awesome/scss/variables';
 
 $borderSize: 2px;
@@ -11,7 +11,7 @@ $borderSize: 2px;
   .component-content > nav {
     position: relative;
     ul {
-      @include clearfix();
+      @include mixins.clearfix();
     }
   }
   .rel-level1 {
@@ -33,9 +33,9 @@ $borderSize: 2px;
         position: relative;
         padding-right: 15px;
         &:after {
-          @include fa-icon();
+          @include fa-mixins.fa-icon();
           font-size: 10px;
-          content: $fa-var-chevron-down;
+          content: variables.$fa-var-chevron-down;
           position: absolute;
           transform: translateY(-50%);
           top: 50%;
@@ -81,14 +81,14 @@ $borderSize: 2px;
       }
     }
     &.submenu.active {
-      border-color: $menu-active-color;
+      border-color: colors.$menu-active-color;
     }
   }
   .rel-level2 {
     &:hover,
     &:focus {
       transition: background 0.2s ease-in;
-      background: $nav-bg-submenu-active;
+      background: colors.$nav-bg-submenu-active;
     }
     div > a {
       display: block;
@@ -97,7 +97,7 @@ $borderSize: 2px;
       text-align: center;
       &:hover,
       &:focus {
-        color: $nav-color-submenu;
+        color: colors.$nav-color-submenu;
       }
     }
     &.submenu {
@@ -139,7 +139,7 @@ $borderSize: 2px;
     .rel-level2 {
       float: left;
       padding: 10px;
-      @include border-basic(right, $nav-submenu-item-border, 1px);
+      @include mixins.border-basic(right, colors.$nav-submenu-item-border, 1px);
       flex-grow: 1;
       flex-basis: 23%;
     }
@@ -150,7 +150,7 @@ $borderSize: 2px;
       padding-left: 0;
       width: auto;
       left: auto;
-      @include border-basic(right, $nav-submenu-item-border, 1px);
+      @include mixins.border-basic(right, colors.$nav-submenu-item-border, 1px);
       > li {
         padding: 5px 10px;
       }
@@ -159,8 +159,8 @@ $borderSize: 2px;
       ul {
         li {
           a:before {
-            @include fa-icon();
-            content: $fa-var-chevron-right;
+            @include fa-mixins.fa-icon();
+            content: variables.$fa-var-chevron-right;
             display: block;
             position: absolute;
             left: 0;

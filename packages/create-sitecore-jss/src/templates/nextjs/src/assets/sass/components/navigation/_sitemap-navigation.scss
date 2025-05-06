@@ -1,6 +1,6 @@
-@use 'sass/abstracts/vars';
-@use 'sass/abstracts/mixins';
-@use '~font-awesome/scss/mixins';
+@use '@sass/abstracts/vars';
+@use '@sass/abstracts/mixins';
+@use '~font-awesome/scss/mixins' as fa-mixins;
 @use '~font-awesome/scss/variables';
 
 .navigation.sitemap-navigation {
@@ -8,11 +8,11 @@
     position: relative;
     padding-left: 10px;
     &:before {
-      @include font-size(1.4);
-      @include fa-icon();
+      @include mixins.font-size(1.4);
+      @include fa-mixins.fa-icon();
       transform: translateY(-50%) scale(1, -1);
       position: absolute;
-      content: $fa-var-share;
+      content: variables.$fa-var-share;
       top: 50%;
       left: -8px;
     }

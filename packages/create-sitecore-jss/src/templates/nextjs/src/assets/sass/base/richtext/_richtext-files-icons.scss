@@ -1,4 +1,4 @@
-@use '~font-awesome/scss/mixins';
+@use '~font-awesome/scss/mixins' as faMixins;
 @use '~font-awesome/scss/variables';
 @use "@sass/abstracts/mixins";
 
@@ -13,7 +13,7 @@
     padding: 0;
     position: relative;
     &:before {
-        @include fa-icon();
+        @include faMixins.fa-icon();
         font-size: 16px !important;
         position: absolute;
         display: block;
@@ -24,63 +24,63 @@
     }
 }
 .field-filetypeicon span:before {
-    content: $fa-var-file-o;
+    content: variables.$fa-var-file-o;
 }
 .field-filetypeicon {
     .pdf:before {
-        content: $fa-var-file-pdf-o;
+        content: variables.$fa-var-file-pdf-o;
     }
     .xlsx, .xls {
         &:before {
-            content: $fa-var-file-excel-o;
+            content: variables.$fa-var-file-excel-o;
         }
     }
     .pptx, .ppt {
         &:before {
-            content: $fa-var-file-powerpoint-o;
+            content: variables.$fa-var-file-powerpoint-o;
         }
     }
     .docx, .doc {
         &:before {
-            content: $fa-var-file-word-o;
+            content: variables.$fa-var-file-word-o;
         }
     }
     .bmp, .png, .jpg, .jpeg, .psd, .gif, .tif {
         &:before {
-            content: $fa-var-file-image-o;
+            content: variables.$fa-var-file-image-o;
         }
     }
     .avi, .mp4, .wmv, .mov, .mpg, .mkv, .vp6, .vid, .rv, .webm, .swf, .flv, .m4v, .h264, .mk3d, .gifv, .oggv, .movie, .divx {
         &:before {
-            content: $fa-var-file-video-o;
+            content: variables.$fa-var-file-video-o;
         }
     }
     .mp3, .wma, .wav, .fla, .flac, .ra, .rma, .aif, .aiff, .aa, .aac, .mid, .midi, .aax, .ac3, .au, .ogg, .avr, .m4a, .mp4a, .amz, .mka, .asx, .pcm, .m3u, .xwma {
         &:before {
-            content: $fa-var-file-audio-o;
+            content: variables.$fa-var-file-audio-o;
         }
     }
     .txt:before {
-        content: $fa-var-file-text-o;
+        content: variables.$fa-var-file-text-o;
     }
     .zip, .zipx, .rar, .tar, .gz, .dmg, .iso {
         &:before {
-            content: $fa-var-file-archive-o;
+            content: variables.$fa-var-file-archive-o;
         }
     }
     .css, .js, .py, .git, .py, .cpp, .h, .ini, .config {
         &:before {
-            content: $fa-var-file-code-o;
+            content: variables.$fa-var-file-code-o;
         }
     }
     .exe, .jar, .dll, .bat, .pl, .scr, .msi, .app, .deb, .apk, .jar, .vb, .prg, .sh {
         &:before {
-            content: $fa-var-cogs;
+            content: variables.$fa-var-cogs;
         }
     }
     .com, .net, .org, .edu, .gov, .mil, .html, .htm, .xhtml, .jhtml, .php, .php3, .php4, .php5, .phtmle, .asp, .aspx, .cfm {
         &:before {
-            content: $fa-var-link;
+            content: variables.$fa-var-link;
         }
     }
 }

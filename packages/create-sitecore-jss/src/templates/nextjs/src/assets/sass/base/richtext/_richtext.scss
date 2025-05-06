@@ -1,35 +1,39 @@
+@use "@sass/abstracts/vars/colors";
+@use "@sass/abstracts/vars/fontSizes";
+@use "@sass/abstracts/vars/margins";
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  color: $text-heading-color;
+  color: colors.$text-heading-color;
 }
 h1,
 h2 {
-  margin: $small-margin 0;
+  margin: margins.$small-margin 0;
 }
 h3,
 h4,
 p {
-  margin: $extrasmall-margin 0;
+  margin: margins.$extrasmall-margin 0;
 }
 h5,
 h6 {
-  margin: $extrasmall-margin 0 0;
+  margin: margins.$extrasmall-margin 0 0;
 }
 strong {
   font-weight: 700;
 }
 ul,
 ol {
-  padding-bottom: $extrasmall-margin;
-  padding-top: $extrasmall-margin;
-  margin-left: $small-margin;
+  padding-bottom: margins.$extrasmall-margin;
+  padding-top: margins.$extrasmall-margin;
+  margin-left: margins.$small-margin;
 }
 li {
-  font-size: $font-normal;
+  font-size: fontSizes.$font-normal;
   margin-left: 15px;
 }
 ul {
@@ -45,22 +49,22 @@ ol {
   }
 }
 a {
-  color: $rich-content-link-color;
+  color: colors.$rich-content-link-color;
   text-decoration: underline;
   font-size: 1em;
   &:hover {
-    color: $rich-content-link-color-active;
+    color: colors.$rich-content-link-color-active;
   }
 }
 table {
   height: auto !important;
-  border: 2px solid $border-gray;
+  border: 2px solid colors.$border-gray;
   &,
   tr,
   th,
   td {
-    border: solid 2px $border-gray;
-    background: $bg-basic-color;
+    border: solid 2px colors.$border-gray;
+    background: colors.$bg-basic-color;
     border-collapse: collapse;
     vertical-align: middle;
   }
@@ -70,10 +74,10 @@ table {
     padding: 5px;
   }
   caption {
-    background-color: $bg-light-gray;
+    background-color: colors.$bg-light-gray;
     overflow: hidden;
     padding: 10px;
-    font-size: $font-big;
+    font-size: fontSizes.$font-big;
     font-weight: bold;
     margin-left: 0;
   }
@@ -85,8 +89,8 @@ table {
     border-width: 2px 0 0 2px;
   }
   th {
-    background-color: lighten($bg-light-gray, 5%);
-    font-size: $font-normal;
+    background-color: lighten(colors.$bg-light-gray, 5%);
+    font-size: fontSizes.$font-normal;
     font-weight: bold;
     padding: 7px;
     &:first-child {
