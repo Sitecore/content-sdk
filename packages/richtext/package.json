@@ -55,19 +55,7 @@
     "peerDependencies": {
         "@tiptap/core": "^2.11.7",
         "@tiptap/html": "^2.11.7",
-        "@tiptap/starter-kit": "^2.11.7",
-        "typescript": "~5.7.3"
-    },
-    "peerDependenciesMeta": {
-        "@tiptap/core": {
-            "optional": true
-        },
-        "@tiptap/html": {
-            "optional": true
-        },
-        "@tiptap/starter-kit": {
-            "optional": true
-        }
+        "@tiptap/starter-kit": "^2.11.7"
     },
     "dependencies": {
         "@sitecore-content-sdk/core": "0.2.0-canary.18",

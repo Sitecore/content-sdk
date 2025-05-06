@@ -2591,14 +2591,6 @@ __metadata:
     "@tiptap/core": ^2.11.7
     "@tiptap/html": ^2.11.7
     "@tiptap/starter-kit": ^2.11.7
-    typescript: ~5.7.3
-  peerDependenciesMeta:
-    "@tiptap/core":
-      optional: true
-    "@tiptap/html":
-      optional: true
-    "@tiptap/starter-kit":
-      optional: true
   languageName: unknown
   linkType: soft
 

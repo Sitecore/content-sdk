@@ -1,1 +1,1 @@
-export { parseTiptapJSON } from './utils/parse-tiptap-json';
+export { getRichTextHtml } from './utils/parse-tiptap-json';
