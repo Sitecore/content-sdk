@@ -1,3 +1,5 @@
+@use "abstracts/mixins";
+
 html {
   font-size: 62.5%;
   -webkit-font-smoothing: antialiased;
@@ -7,26 +9,26 @@ html {
 }
 
 body {
-  @include opensans-font-stack();
+  @include mixins.opensans-font-stack();
   position: relative;
   overflow: auto;
-  color: $text-basic;
+  color: mixins.$text-basic;
   font-size: 16px;
   line-height: 1.5;
-  background: $page-bg;
+  background: mixins.$page-bg;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   height: auto !important;
   &.on-page-editor {
-    background: $page-bg-editor !important;
+    background: mixins.$page-bg-editor !important;
   }
 }
 
 a {
-  color: $text-basic;
+  color: mixins.$text-basic;
   cursor: pointer;
   font-size: 0.85em;
   &:hover {
-    color: $text-basic-active;
+    color: mixins.$text-basic-active;
   }
 }
 

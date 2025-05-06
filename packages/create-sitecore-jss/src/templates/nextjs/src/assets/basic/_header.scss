@@ -1,12 +1,12 @@
-@import "@sass/abstracts/vars/colors";
-@import "@sass/abstracts/mixins";
-@import "variables";
+@use "@sass/abstracts/vars/colors";
+@use "@sass/abstracts/mixins";
+@use "variables";
 
 .prod-mode {
   #header {
     display: flex;
 
-    @include respond-to(mobile-large) {
+    @include mixins.respond-to(mobile-large) {
       padding-bottom: 0;
       flex-direction: column-reverse;
     }
@@ -19,7 +19,7 @@ header {
       padding-left: 50px;
 
       h1 {
-        font-size: $text-size-24;
+        font-size: variables.$text-size-24;
         font-weight: 600;
         line-height: 18px;
         padding-top: 40px;
@@ -27,7 +27,7 @@ header {
       }
     }
 
-    @include respond-to(mobile-large) {
+    @include mixins.respond-to(mobile-large) {
       padding-bottom: 0;
       padding-top: 0;
       flex-direction: column-reverse;

@@ -1,26 +1,26 @@
-@import "@sass/abstracts/vars/colors";
-@import "@sass/abstracts/mixins";
+@use "@sass/abstracts/vars/colors";
+@use "@sass/abstracts/mixins";
 
 .button-default, .default {
-    @include default-link-button();
+    @include mixins.default-link-button();
     background: #f6f6f6;
-    color: $text-basic;
+    color: colors.$text-basic;
 }
 .button-success, .success {
-    @include default-link-button();
-    background: $btn-green-light;
-    color: $text-white;
+    @include mixins.default-link-button();
+    background: colors.$btn-green-light;
+    color: colors.$text-white;
     &:hover {
-        color: $text-white;
-        background: $btn-green;
+        color: colors.$text-white;
+        background: colors.$btn-green;
     }
 }
 .button-warning, .warning {
-    @include default-link-button();
-    background: $btn-red;
-    color: $text-white;
+    @include mixins.default-link-button();
+    background: colors.$btn-red;
+    color: colors.$text-white;
     &:hover {
-        color: $text-white;
-        background: $btn-red-active;
+        color: colors.$text-white;
+        background: colors.$btn-red-active;
     }
 }

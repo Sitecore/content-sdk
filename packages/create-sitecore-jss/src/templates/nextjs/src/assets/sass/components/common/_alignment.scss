@@ -1,6 +1,6 @@
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins';
+@use '~bootstrap/scss/functions';
+@use '~bootstrap/scss/variables';
+@use '~bootstrap/scss/mixins';
 
 $breakpoints: sm, md, lg, xl, xxl;
 

@@ -1,5 +1,5 @@
-@import "@sass/abstracts/vars";
-@import "@sass/abstracts/mixins";
+@use "@sass/abstracts/vars";
+@use "@sass/abstracts/mixins";
 
 %cover-bg {
     background-repeat: no-repeat;
@@ -13,14 +13,14 @@
 .fix-background {
     >.component-content {
         @extend %cover-bg;
-        @include fixed-bg(left top);
+        @include mixins.fixed-bg(left top);
     }
 }
 .parallax-background {
     >.component-content {
         @extend %cover-bg;
-        @include fixed-bg(50% 0);
-        @include respond-to(mobile-large) {
+        @include mixins.fixed-bg(50% 0);
+        @include mixins.respond-to(mobile-large) {
             background-attachment: scroll;
         }
     }

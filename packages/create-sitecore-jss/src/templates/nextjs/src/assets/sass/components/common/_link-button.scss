@@ -1,7 +1,8 @@
-@import "@sass/abstracts/mixins";
+@use "sass:meta";
+@use "@sass/abstracts/mixins";
 
 .link-button {
-    @import "@sass/base/links/";
+    @include meta.load-css("@sass/base/links/");
 }
 // Promo button
 .promo.link-button {
@@ -11,6 +12,6 @@
 }
 .link.link-button {
     .is-empty-hint, .field-link span, a {
-        @include default-link-button();
+        @include mixins.default-link-button();
     }
 }

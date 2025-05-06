@@ -1,7 +1,8 @@
-@import '@sass/abstracts/vars';
-@import '@sass/abstracts/mixins';
-@import '~font-awesome/scss/mixins';
-@import '~font-awesome/scss/variables';
+@use "@sass/abstracts/vars/fontSizes";
+@use "@sass/abstracts/vars/colors";
+@use "@sass/abstracts/mixins";
+@use '~font-awesome/scss/mixins';
+@use '~font-awesome/scss/variables';
 
 $borderSize: 2px;
 
@@ -17,14 +18,14 @@ $borderSize: 2px;
     float: left;
     &.active {
       > .navigation-title > a {
-        border-color: $nav-border-root;
+        border-color: colors.$nav-border-root;
       }
     }
     > .navigation-title > a {
       border-width: 2px 0 0 0;
       border-color: transparent;
       &:hover {
-        border-color: $nav-border-root;
+        border-color: colors.$nav-border-root;
       }
     }
     &.submenu {
@@ -49,12 +50,12 @@ $borderSize: 2px;
       z-index: 10;
       position: absolute;
       top: 100%;
-      background: $nav-bg-submenu;
+      background: colors.$nav-bg-submenu;
       margin-left: 0;
       margin-top: -$borderSize;
-      border-top: $borderSize solid $nav-border-submenu;
-      border-left: 1px solid $nav-submenu-item-border;
-      border-bottom: 1px solid $nav-submenu-item-border;
+      border-top: $borderSize solid colors.$nav-border-submenu;
+      border-left: 1px solid colors.$nav-submenu-item-border;
+      border-bottom: 1px solid colors.$nav-submenu-item-border;
     }
     &:active,
     &:hover {
@@ -71,12 +72,12 @@ $borderSize: 2px;
     &.active {
       > .navigation-title > a:link,
       > .navigation-title > a:visited {
-        color: $text-basic-active;
+        color: colors.$text-basic-active;
       }
       > span {
         display: block;
         padding: 10px 20px;
-        color: $text-white;
+        color: colors.$text-white;
       }
     }
     &.submenu.active {
@@ -92,7 +93,7 @@ $borderSize: 2px;
     div > a {
       display: block;
       font-weight: normal;
-      font-size: $navigation-font-basic-submenu;
+      font-size: fontSizes.$navigation-font-basic-submenu;
       text-align: center;
       &:hover,
       &:focus {

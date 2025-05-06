@@ -1,12 +1,14 @@
+@use "@sass/abstracts/mixins";
+
 .component-content {
-  @include respond-to(mobile-large) {
+  @include mixins.respond-to(mobile-large) {
     .row {
       padding: 0;
       margin: 0;
     }
   }
 }
-@include respond-to(mobile-large) {
+@include mixins.respond-to(mobile-large) {
   .row {
     margin: 0;
     padding: 0;
@@ -24,7 +26,7 @@
     background-size: cover;
     height: 800px;
 
-    @include respond-to(mobile-large) {
+    @include mixins.respond-to(mobile-large) {
       height: 300px;
     }
   }

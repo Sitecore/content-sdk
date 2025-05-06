@@ -1,4 +1,4 @@
-@import "vars";
+@use "vars/colors";
 
 /* breakpoints */
 
@@ -76,7 +76,7 @@ $break-mobile-large: 992px;
         }
     }
 }
-@mixin border-basic($position:all, $border-color:$border-gray, $border-width:1px) {
+@mixin border-basic($position:all, $border-color:colors.$border-gray, $border-width:1px) {
     @if($position!=all) {
         border-#{$position}-width: $border-width;
         border-#{$position}-style: solid;
@@ -115,7 +115,7 @@ $break-mobile-large: 992px;
   text-decoration: none;
   font-weight: bold;
   &:hover {
-      color: $text-basic;
-      background: $bg-light-gray;
+      color: colors.$text-basic;
+      background: colors.$bg-light-gray;
   }
 }

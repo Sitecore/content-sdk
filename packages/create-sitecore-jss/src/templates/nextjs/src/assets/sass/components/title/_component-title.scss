@@ -1,15 +1,16 @@
-@import '@sass/abstracts/vars';
-@import '@sass/abstracts/mixins';
+@use "sass:meta";
+@use 'sass/abstracts/vars';
+@use 'sass/abstracts/mixins';
 
 .title {
-  background: $title-bg;
+  background: mixins.$title-bg;
 
   h1,
   .field-title {
-    @include border-basic(bottom, $border-basic-color);
-    font-size: $font-extrabig;
-    margin-bottom: $small-margin;
-    color: $title-color;
+    @include mixins.border-basic(bottom, mixins.$border-basic-color);
+    font-size: mixins.$font-extrabig;
+    margin-bottom: mixins.$small-margin;
+    color: mixins.$title-color;
     line-height: normal;
     padding-bottom: 10px;
     display: block;
@@ -17,7 +18,7 @@
     cursor: pointer;
 
     &:hover {
-      color: $title-color-active;
+      color: mixins.$title-color-active;
     }
 
     > a,
@@ -26,5 +27,5 @@
     }
   }
 
-  @import '@sass/variants/title';
+  @include meta.load-css('sass/variants/title');
 }

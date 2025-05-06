@@ -1,4 +1,4 @@
-@import '@sass/abstracts/mixins';
+@use 'sass/abstracts/mixins';
 
 $size-padding: 8px;
 .container-wrapper {
@@ -9,7 +9,7 @@ $size-padding: 8px;
   position: relative;
   padding: 0 $size-padding;
 
-  @include respond-to(all-mobile) {
+  @include mixins.respond-to(all-mobile) {
     padding: 0;
   }
 }
@@ -22,6 +22,6 @@ $size-padding: 8px;
   }
 
   .component-content {
-    @include clearfix();
+    @include mixins.clearfix();
   }
 }

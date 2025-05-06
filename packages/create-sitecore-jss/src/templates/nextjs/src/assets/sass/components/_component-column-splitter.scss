@@ -1,14 +1,16 @@
-@import '@sass/abstracts/vars';
+@use 'sass/abstracts/vars';
+@use "../abstracts/mixins";
+
 
 .row.column-splitter {
     margin-left: 0;
     margin-right: 0;
-    padding-left: $default-padding * 0.5;
-    padding-right: $default-padding * 0.5;
+    padding-left: mixins.$default-padding * 0.5;
+    padding-right: mixins.$default-padding * 0.5;
     max-width: none;
 
     > div {
-       padding-left: $default-padding;
-       padding-right: $default-padding;
+       padding-left: mixins.$default-padding;
+       padding-right: mixins.$default-padding;
     }
 }

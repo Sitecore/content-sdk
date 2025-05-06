@@ -1,5 +1,5 @@
-@import "@sass/abstracts/vars";
-@import "@sass/abstracts/mixins";
+@use "@sass/abstracts/vars";
+@use "@sass/abstracts/mixins";
 
 .promo.promo-hero {
     position: relative;
@@ -7,7 +7,7 @@
     &.promo-hero-half {
         float: left;
         width: 50%;
-        @include respond-to(all-mobile) {
+        @include mixins.respond-to(all-mobile) {
             float: none;
             width: 100%;
         }
@@ -20,20 +20,20 @@
         left: 0;
         right: 0;
         padding: 20px;
-        color: $promo-hero-text-color;
-        background: $promo-bg-hero;
+        color: mixins.$promo-hero-text-color;
+        background: mixins.$promo-bg-hero;
         >a {
             color: inherit;
             text-decoration: none;
         }
-        @include respond-to(all-mobile) {
+        @include mixins.respond-to(all-mobile) {
             width: 100%;
             margin: 0;
             h1 {
-                @include font-size(2.4);
+                @include mixins.font-size(2.4);
             }
             h2, h3, h4 {
-                @include font-size(2.0);
+                @include mixins.font-size(2.0);
             }
         }
     }

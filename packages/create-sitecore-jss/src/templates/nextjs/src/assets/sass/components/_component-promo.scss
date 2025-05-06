@@ -1,15 +1,16 @@
-@import "@sass/abstracts/vars";
-@import "@sass/abstracts/mixins";
+@use "sass:meta";
+@use "@sass/abstracts/vars";
+@use "@sass/abstracts/mixins";
 
 .promo {
-    background: $promo-bg;
+    background: mixins.$promo-bg;
     padding: 15px;
     overflow: hidden;
     box-sizing: border-box;
     >.component-content {
         position: relative;
-        @include clearfix();
-        @include border-basic(all, $promo-border);
+        @include mixins.clearfix();
+        @include mixins.border-basic(all, mixins.$promo-border);
 
         >div {
             padding: 5px;
@@ -37,6 +38,6 @@
             margin-bottom: 10px;
         }
     }
-    @import "@sass/variants/promo";
-    @import "@sass/base/richtext/richtext";
+    @include meta.load-css("@sass/variants/promo");
+    @include meta.load-css("@sass/base/richtext/richtext");
 }

@@ -1,8 +1,8 @@
-@import "@sass/abstracts/mixins";
-@import "variables";
+@use "@sass/abstracts/mixins";
+@use "variables";
 
 footer {
-  @include respond-to(mobile-large) {
+  @include mixins.respond-to(mobile-large) {
     padding-top: 0;
   }
   .container-dark-background {
@@ -10,21 +10,21 @@ footer {
   }
 
   .contacts {
-    font-size: $text-size-14;
+    font-size: variables.$text-size-14;
 
     a {
-      color: $text-white;
+      color: mixins.$text-white;
     }
 
     p, span {
-      color: $text-white;
+      color: mixins.$text-white;
     }
   }
 
   .indent-inner {
     padding: 65px;
 
-    @include respond-to(mobile-large) {
+    @include mixins.respond-to(mobile-large) {
       padding: 40px 0;
     }
   }

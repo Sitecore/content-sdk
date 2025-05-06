@@ -1,5 +1,7 @@
-@import "@sass/abstracts/vars";
-@import "variables";
+@use "@sass/abstracts/vars";
+@use "variables";
+@use "@sass/abstracts/mixins";
+
 
 $hamburger-width: 28px;
 $hamburger-height: 18px;
@@ -21,14 +23,14 @@ $hamburger-margin: 18px;
     display: none;
   }
   
-  @include respond-to(mobile-large) {
+  @include mixins.respond-to(mobile-large) {
     padding-right: 0;
   }
 
   .component-content {
     display: inline-block;
 
-    @include respond-to(mobile-large) {
+    @include mixins.respond-to(mobile-large) {
       display: none;
     }
     
@@ -46,14 +48,14 @@ $hamburger-margin: 18px;
       >.navigation-title {
         >a {
           border-width: 0;
-          font-size: $text-size-14;
+          font-size: variables.$text-size-14;
           font-weight: 400;
         }
       }
     }
   }
 
-  @include respond-to(mobile-large) {
+  @include mixins.respond-to(mobile-large) {
     .component-content {
       display: none;
       position: fixed;
@@ -61,7 +63,7 @@ $hamburger-margin: 18px;
       bottom: 0;
       right: 0;
       left: 0;
-      background-color: $bg-black-active;
+      background-color: mixins.$bg-black-active;
       z-index: 1;
 
       * {
@@ -86,10 +88,10 @@ $hamburger-margin: 18px;
         margin-left: 0;
         >.navigation-title {
           >a {
-            font-size: $text-size-30;
+            font-size: variables.$text-size-30;
             line-height: 90px;
             >span {
-              color: $text-white;
+              color: mixins.$text-white;
             }
           }
         }
@@ -111,8 +113,8 @@ $hamburger-margin: 18px;
           .menu-humburger {
             &::before {
               content: "\00d7";
-              color: $text-basic-active;
-              font-size: $text-size-48;
+              color: mixins.$text-basic-active;
+              font-size: variables.$text-size-48;
               position: fixed;
               top: 0;
               right: 0;
@@ -138,8 +140,8 @@ $hamburger-margin: 18px;
           margin-right: $hamburger-margin;
           margin-top: calc($hamburger-margin + ($hamburger-margin / 2)) + 8px;
           display: block;
-          border-top: 6px solid $bg-black;
-          border-bottom: 6px solid $bg-black;
+          border-top: 6px solid mixins.$bg-black;
+          border-bottom: 6px solid mixins.$bg-black;
           float: right;
           z-index: 99;
           cursor: pointer;

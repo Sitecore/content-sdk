@@ -1,14 +1,16 @@
-@import '@sass/abstracts/vars';
+@use 'sass/abstracts/vars';
+@use "@sass/abstracts/mixins";
+
 
 .container-gray-background {
-  background: $bg-light-gray;
+  background: mixins.$bg-light-gray;
 }
 .container-clean-background {
-  background: $bg-basic-color;
+  background: mixins.$bg-basic-color;
 }
 .container-dark-background {
-  background: $bg-black-active;
+  background: mixins.$bg-black-active;
 }
 .container-color-background {
-  background: $bg-blue;
+  background: mixins.$bg-blue;
 }

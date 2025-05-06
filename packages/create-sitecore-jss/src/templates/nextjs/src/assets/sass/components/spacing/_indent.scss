@@ -1,13 +1,15 @@
-@import '@sass/abstracts/vars';
+@use 'sass/abstracts/vars';
+@use "@sass/abstracts/mixins";
+
 .indent {
-  margin: 0 $extralarge-margin;
+  margin: 0 mixins.$extralarge-margin;
   &.col-xxl-12, &.col-xl-12, &.col-lg-12, &.col-md-12, &.col-12 {
-    width: calc(100% - ($extralarge-margin * 2));
+    width: calc(100% - (mixins.$extralarge-margin * 2));
   }
 }
 .indent-top {
-  margin-top: $middle-margin;
+  margin-top: mixins.$middle-margin;
 }
 .indent-bottom {
-  margin-bottom: $middle-margin;
+  margin-bottom: mixins.$middle-margin;
 }

@@ -1,31 +1,32 @@
-@import "@sass/abstracts/mixins";
-@import "@sass/abstracts/vars";
-@import '~font-awesome/scss/mixins';
-@import "~font-awesome/scss/variables";
+@use "sass:meta";
+@use "@sass/abstracts/mixins" as abstracts-mixins;
+@use "@sass/abstracts/vars";
+@use '~font-awesome/scss/mixins' as scss-mixins;
+@use "~font-awesome/scss/variables";
 
 .link-list {
-    background: $link-list-bg;
+    background: abstracts-mixins.$link-list-bg;
     h1, h2, h3, h4, h5, h6 {
-        @include border-basic(bottom, $link-list-header-border);
+        @include abstracts-mixins.border-basic(bottom, abstracts-mixins.$link-list-header-border);
     }
     >.component-content {
         ul {
-            background: $link-list-items-bg;
+            background: abstracts-mixins.$link-list-items-bg;
         }
         li {
-            background: $link-list-item-bg;
+            background: abstracts-mixins.$link-list-item-bg;
             display: block;
-            font-size: $font-normal;
+            font-size: abstracts-mixins.$font-normal;
             a {
                 display: inline;
-                color: $link-list-item-color;
+                color: abstracts-mixins.$link-list-item-color;
                 position: relative;
                 padding-left: 10px;
                 font-size: 1em;
                 text-decoration: none;
                 &:before {
-                    @include fa-icon();
-                    content: $fa-var-chevron-right;
+                    @include scss-mixins.fa-icon();
+                    content: variables.$fa-var-chevron-right;
                     position: absolute;
                     left: 0;
                     top: 50%;
@@ -33,13 +34,13 @@
                     font-size: 10px;
                 }
                 &:hover {
-                    color: $link-list-item-color-active;
+                    color: abstracts-mixins.$link-list-item-color-active;
                     text-decoration: none;
-                    border-bottom: 1px solid $link-list-item-border-active;
+                    border-bottom: 1px solid abstracts-mixins.$link-list-item-border-active;
                 }
             }
         }
     }
-    @import "../../base/links";
-    @import "../../variants/link-list";
+    @include meta.load-css("../../base/links");
+    @include meta.load-css("../../variants/link-list");
 }

@@ -1,4 +1,7 @@
-@import "@sass/abstracts/vars";
+@use "@sass/abstracts/vars/fontSizes";
+@use "@sass/abstracts/vars/colors";
+@use "../abstracts/mixins";
+
 
 .image {
     img {
@@ -12,7 +15,7 @@
     span {
         display: block;
         font-style: italic;
-        font-size: $font-small;
-        color: $image-caption-color;
+        font-size: fontSizes.$font-small;
+        color: colors.$image-caption-color;
     }
 }

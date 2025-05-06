@@ -1,7 +1,9 @@
-@import '@sass/abstracts/vars';
+@use '@sass/abstracts/vars/colors';
+@use "@sass/abstracts/mixins";
+
 
 .ui-datepicker-title {
   select {
-    color: $text-basic;
+    color: colors.$text-basic;
   }
 }

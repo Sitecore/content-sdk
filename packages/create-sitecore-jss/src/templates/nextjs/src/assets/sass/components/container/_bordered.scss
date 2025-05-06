@@ -1,11 +1,11 @@
-@import "@sass/abstracts/vars";
-@import "@sass/abstracts/mixins";
+@use "@sass/abstracts/vars";
+@use "@sass/abstracts/mixins";
 
 .sxa-bordered {
     box-sizing: border-box;
     >.component-content {
         padding: 0;
-        @include border-basic();
+        @include mixins.border-basic();
         border-radius: 5px;
     }
 }
@@ -14,10 +14,10 @@
 .row-splitter {
     box-sizing: border-box;
     .sxa-bordered {
-        padding: $default-padding !important;
+        padding: mixins.$default-padding !important;
         >.component,
         .scEmptyPlaceholder {
-            @include border-basic();
+            @include mixins.border-basic();
             border-radius: 5px;
         }
     }
