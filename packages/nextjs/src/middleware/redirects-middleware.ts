@@ -36,7 +36,7 @@ export type RedirectsMiddlewareConfig = Omit<GraphQLRedirectsServiceConfig, 'fet
  * compares with current url and redirects to target url
  */
 export class RedirectsMiddleware extends MiddlewareBase {
-  private redirectsService: GraphQLRedirectsService;
+  protected redirectsService: GraphQLRedirectsService;
   private locales: string[];
 
   /**

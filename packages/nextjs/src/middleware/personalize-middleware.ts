@@ -68,7 +68,7 @@ type PersonalizeExecution = {
  * Middleware / handler to support Sitecore Personalize
  */
 export class PersonalizeMiddleware extends MiddlewareBase {
-  private personalizeService: GraphQLPersonalizeService;
+  protected personalizeService: GraphQLPersonalizeService;
 
   /**
    * @param {PersonalizeMiddlewareConfig} [config] Personalize middleware config
@@ -264,28 +264,6 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     )) as {
       variantId: string;
     };
-  }
-
-  protected getExperienceParams(req: NextRequest): ExperienceParams {
-    const utm = {
-      campaign: req.nextUrl.searchParams.get('utm_campaign') || undefined,
-      content: req.nextUrl.searchParams.get('utm_content') || undefined,
-      medium: req.nextUrl.searchParams.get('utm_medium') || undefined,
-      source: req.nextUrl.searchParams.get('utm_source') || undefined,
-    };
-
-    return {
-      // It's expected that the header name "referer" is actually a misspelling of the word "referrer"
-      // req.referrer is used during fetching to determine the value of the Referer header of the request being made,
-      // used as a fallback
-      referrer: req.headers.get('referer') || req.referrer,
-      utm: utm,
-    };
-  }
-
-  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
-    // ignore files
-    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
   }
 
   /**
