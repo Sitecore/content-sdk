@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { GraphQLRobotsService } from '@sitecore-content-sdk/nextjs';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/nextjs/client';
 import { SitecoreConfig } from '@sitecore-content-sdk/nextjs/config';
@@ -8,7 +8,6 @@ export interface RobotsMiddlewareConfig {
    * Sitecore configuration
    */
   config: SitecoreConfig;
-  
   /**
    * Function to resolve site from hostname
    * @param {string} hostname The hostname to resolve
@@ -60,4 +59,3 @@ export function createRobotsHandler(config: RobotsMiddlewareConfig) {
   const middleware = new RobotsMiddleware(config);
   return middleware.handle;
 }
-
