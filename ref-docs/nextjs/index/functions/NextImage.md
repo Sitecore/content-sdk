@@ -8,7 +8,7 @@
 
 > **NextImage**(`props`): `ReactNode` \| `Promise`\<`ReactNode`\>
 
-Defined in: [nextjs/src/components/NextImage.tsx:20](https://github.com/Sitecore/xmc-jss-dev/blob/99b79b70ecdd8272d2885ff915ba6fc798d5fd0a/packages/nextjs/src/components/NextImage.tsx#L20)
+Defined in: [nextjs/src/components/NextImage.tsx:20](https://github.com/Sitecore/content-sdk/blob/e49f71caefe426fd11712064036a294b40c57595/packages/nextjs/src/components/NextImage.tsx#L20)
 
 ## Parameters
 

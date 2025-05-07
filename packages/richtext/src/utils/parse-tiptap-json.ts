@@ -6,18 +6,16 @@ import StarterKit from '@tiptap/starter-kit';
 /**
  * Parses JSON formatted for Tiptap into HTML
  * @param {JSONContent} content Tiptap-formatted JSON content to be parsed
- * @param {Extensions} extensions Extra Tiptap extensions to process content with, in addition to StarterKit
+ * @param {Extensions} extensions Tiptap extensions to replace the default setup with StarterKit
  * @returns {string} Transformed HTML
  */
-export const getRichTextHtml = (content: JSONContent, extensions: Extensions = []) => {
+export const getRichTextHtml = (content: JSONContent, extensions?: Extensions) => {
   // prevent warns when StarterKit is passed in extensions
-  const nonDuplicateExtensions = Array.from(new Set([StarterKit, ...extensions]));
-  let result = '';
+  extensions = extensions ?? [StarterKit];
   try {
-    result = generateHTML(content, nonDuplicateExtensions);
+    return generateHTML(content, extensions);
   } catch (e) {
     debug.common('TipTap rich text parsing failed. Error: %o', e);
     throw e;
   }
-  return result;
 };
