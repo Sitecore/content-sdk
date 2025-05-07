@@ -32,6 +32,8 @@ export type ExperienceParams = {
     medium: string | undefined;
     content: string | undefined;
   };
+} & {
+  [key: string]: string;
 };
 
 /**
