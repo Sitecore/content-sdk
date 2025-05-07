@@ -12,6 +12,7 @@ describe('RobotsMiddleware', () => {
   let mockConfig: any;
   let mockGraphQLClientFactory: any;
   let mockRobotsService: any;
+  let createGraphQLClientFactoryStub: any;
 
   beforeEach(() => {
     mockReq = {
@@ -32,7 +33,8 @@ describe('RobotsMiddleware', () => {
     });
 
     mockGraphQLClientFactory = {};
-    stub(clientModule, 'createGraphQLClientFactory').returns(mockGraphQLClientFactory);
+    // Properly stub the createGraphQLClientFactory function
+    createGraphQLClientFactoryStub = stub(clientModule, 'createGraphQLClientFactory').returns(mockGraphQLClientFactory);
 
     mockRobotsService = {
       fetchRobots: stub().resolves('User-agent: *\nDisallow: /admin/'),
@@ -43,8 +45,17 @@ describe('RobotsMiddleware', () => {
     mockConfig = {
       config: {
         api: {
-          apiKey: 'test-api-key',
-          endpoint: 'https://test-endpoint.com',
+          // Add proper API configuration to prevent the error
+          edge: {
+            contextId: 'test-context-id',
+            edgeUrl: 'https://edge.sitecorecloud.io'
+          },
+          // Include local config as fallback
+          local: {
+            apiKey: 'test-api-key',
+            apiHost: 'https://test-endpoint.com',
+            path: '/api/graphql/v1'
+          }
         },
       },
       siteResolver: stub().returns({ name: 'test-site' }),
@@ -53,7 +64,8 @@ describe('RobotsMiddleware', () => {
   });
 
   afterEach(() => {
-    (clientModule.createGraphQLClientFactory as any).restore();
+    // Restore the stub properly
+    createGraphQLClientFactoryStub.restore();
     (GraphQLRobotsService.prototype.fetchRobots as any).restore();
   });
 
