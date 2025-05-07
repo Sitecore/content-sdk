@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { GraphQLRobotsService } from '@sitecore-content-sdk/nextjs';
-import { createGraphQLClientFactory } from '@sitecore-content-sdk/nextjs/client';
-import { SitecoreConfig } from '@sitecore-content-sdk/nextjs/config';
+import { GraphQLRobotsService } from '@sitecore-content-sdk/core/site';
+import { createGraphQLClientFactory } from '../client';
+import { SitecoreConfig } from '../config';
 
 export interface RobotsMiddlewareConfig {
   /**
@@ -14,20 +14,22 @@ export interface RobotsMiddlewareConfig {
    * @returns {object} The resolved site information
    */
   siteResolver: (hostname: string) => { name: string };
+  /**
+   * The name of the site to use for the robots.txt file
+   */
+  siteName: string;
 }
 
 /**
  * Middleware for handling robots.txt requests
  */
 export class RobotsMiddleware {
-  private robotsService: GraphQLRobotsService;
+  private config: SitecoreConfig;
   private siteResolver: (hostname: string) => { name: string };
 
-  constructor(protected config: RobotsMiddlewareConfig) {
-    this.robotsService = new GraphQLRobotsService({
-      clientFactory: createGraphQLClientFactory({ api: config.config.api }),
-    });
-    this.siteResolver = config.siteResolver;
+  constructor(protected middlewareConfig: RobotsMiddlewareConfig) {
+    this.config = middlewareConfig.config;
+    this.siteResolver = middlewareConfig.siteResolver;
   }
 
   /**
@@ -43,8 +45,13 @@ export class RobotsMiddleware {
     const hostName = req.headers.host?.split(':')[0] || 'localhost';
     const site = this.siteResolver(hostName);
 
-    // Fetch robots data
-    const robotsResult = await this.robotsService.fetchRobots({ siteName: site.name });
+    // Create GraphQLRobotsService using resolved site name
+    const robotsService = new GraphQLRobotsService({
+      clientFactory: createGraphQLClientFactory({ api: this.config.api }),
+      siteName: site.name,
+    });
+
+    const robotsResult = await robotsService.fetchRobots();
 
     return res.status(200).send(robotsResult);
   };
