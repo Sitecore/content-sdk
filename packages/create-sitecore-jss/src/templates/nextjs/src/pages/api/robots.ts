@@ -1,4 +1,4 @@
-﻿import { createRobotsHandler } from '@sitecore-content-sdk/nextjs';
+﻿import { createRobotsHandler } from '@sitecore-content-sdk/nextjs/robots';
 import scConfig from 'sitecore.config';
 import scClient from 'lib/sitecore-client';
 
