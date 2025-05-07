@@ -107,7 +107,9 @@ const nextConfig = {
       '@sass': path.join(process.cwd(), './src/assets', 'sass'),
       '@fontawesome': path.join(process.cwd(), './node_modules', 'font-awesome'),
     }).getImporter(),
-    quietDeps: true,
+    // temporary measure until new versions of bootstrap and font-awesome released
+    quietDeps: true,    
+    silenceDeprecations: ["import"],
   },
 };
 
