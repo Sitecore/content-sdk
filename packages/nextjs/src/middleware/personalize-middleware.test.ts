@@ -316,6 +316,7 @@ describe('PersonalizeMiddleware', () => {
     });
     describe('disabled / skip', () => {
       const res = createResponse();
+
       const test = async (pathname: string, middleware: PersonalizeMiddleware) => {
         const req = createRequest({
           nextUrl: {
@@ -341,6 +342,7 @@ describe('PersonalizeMiddleware', () => {
         expect(finalRes).to.deep.equal(res);
         debugSpy.resetHistory();
       };
+
       it('default', async () => {
         const { middleware } = createMiddleware();
         await test('/src/image.png', middleware);

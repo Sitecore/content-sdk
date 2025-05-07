@@ -30,7 +30,9 @@ type RedirectResult = RedirectInfo & { matchedQueryString?: string };
  */
 export type RedirectsMiddlewareConfig = Omit<GraphQLRedirectsServiceConfig, 'fetch'> &
   MiddlewareBaseConfig &
-  SitecoreConfig['redirects'];
+  SitecoreConfig['redirects'] & {
+    redirectsService?: GraphQLRedirectsService;
+  };
 /**
  * Middleware / handler fetches all redirects from Sitecore instance by grapqhl service
  * compares with current url and redirects to target url
@@ -46,7 +48,8 @@ export class RedirectsMiddleware extends MiddlewareBase {
     super(config);
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
-    this.redirectsService = new GraphQLRedirectsService({ ...config, fetch: fetch });
+    this.redirectsService =
+      this.config.redirectsService ?? new GraphQLRedirectsService({ ...config, fetch: fetch });
     this.locales = config.locales;
   }
 
@@ -199,7 +202,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
    * @returns Promise<RedirectInfo | undefined>
    * @private
    */
-  private async getExistsRedirect(
+  protected async getExistsRedirect(
     req: NextRequest,
     siteName: string
   ): Promise<RedirectResult | undefined> {
@@ -284,7 +287,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
    * @param {NextURL} url
    * @returns {string} normalize url
    */
-  private normalizeUrl(url: NextURL): NextURL {
+  protected normalizeUrl(url: NextURL): NextURL {
     if (!url.search) {
       return url;
     }
@@ -331,7 +334,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
    * @param {string} statusText The status text of the redirect.
    * @returns {NextResponse<unknown>} The redirect response.
    */
-  private createRedirectResponse(
+  protected createRedirectResponse(
     url: NextURL,
     res: Response | undefined,
     status: number,

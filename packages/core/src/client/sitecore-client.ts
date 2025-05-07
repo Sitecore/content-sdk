@@ -169,16 +169,17 @@ export class SitecoreClient implements BaseSitecoreClient {
    */
   constructor(protected initOptions: SitecoreClientInit) {
     this.clientFactory = this.getClientFactory();
-    this.siteResolver = this.getSiteResolver();
+    this.siteResolver = initOptions.siteResolver ?? this.getSiteResolver();
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
-    this.layoutService = this.getLayoutService(baseServiceOptions);
-    this.dictionaryService = this.getDictionaryService(baseServiceOptions);
-    this.editingService = this.getEditingService();
-    this.errorPagesService = this.getErrorPagesService();
+    this.layoutService = initOptions.layoutService ?? this.getLayoutService(baseServiceOptions);
+    this.dictionaryService =
+      initOptions.dictionaryService ?? this.getDictionaryService(baseServiceOptions);
+    this.editingService = initOptions.editingService ?? this.getEditingService();
+    this.errorPagesService = initOptions.errorPagesService ?? this.getErrorPagesService();
+    this.sitePathService = initOptions.sitePathService ?? this.getSitePathService();
     this.componentService = this.getComponentService();
-    this.sitePathService = this.getSitePathService();
   }
 
   /**
