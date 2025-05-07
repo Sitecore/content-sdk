@@ -27,13 +27,11 @@ export type ExperienceParams = {
   referrer: string;
   utm: {
     [key: string]: string | undefined;
-    campaign: string | undefined;
-    source: string | undefined;
-    medium: string | undefined;
-    content: string | undefined;
+    campaign?: string;
+    source?: string;
+    medium?: string;
+    content?: string;
   };
-} & {
-  [key: string]: string;
 };
 
 /**
@@ -68,22 +66,23 @@ export class PersonalizeMiddleware extends MiddlewareBase {
   }
 
   public getExperienceParams(req: NextRequest): ExperienceParams {
+    const extraParams = this.config.getOverrideExperienceParams
+      ? this.config.getOverrideExperienceParams(req)
+      : { utm: {} };
     const utm = {
       campaign: req.nextUrl.searchParams.get('utm_campaign') || undefined,
       content: req.nextUrl.searchParams.get('utm_content') || undefined,
       medium: req.nextUrl.searchParams.get('utm_medium') || undefined,
       source: req.nextUrl.searchParams.get('utm_source') || undefined,
+      ...extraParams.utm,
     };
-    const extraParams = this.config.getOverrideExperienceParams
-      ? this.config.getOverrideExperienceParams(req)
-      : {};
     return {
       // It's expected that the header name "referer" is actually a misspelling of the word "referrer"
       // req.referrer is used during fetching to determine the value of the Referer header of the request being made,
       // used as a fallback
       referrer: req.headers.get('referer') || req.referrer,
-      utm: utm,
       ...extraParams,
+      utm,
     };
   }
 
