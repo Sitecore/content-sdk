@@ -34,7 +34,9 @@ describe('RobotsMiddleware', () => {
 
     mockGraphQLClientFactory = {};
     // Properly stub the createGraphQLClientFactory function
-    createGraphQLClientFactoryStub = stub(clientModule, 'createGraphQLClientFactory').returns(mockGraphQLClientFactory);
+    createGraphQLClientFactoryStub = stub(clientModule, 'createGraphQLClientFactory').returns(
+      mockGraphQLClientFactory
+    );
 
     mockRobotsService = {
       fetchRobots: stub().resolves('User-agent: *\nDisallow: /admin/'),
@@ -48,14 +50,14 @@ describe('RobotsMiddleware', () => {
           // Add proper API configuration to prevent the error
           edge: {
             contextId: 'test-context-id',
-            edgeUrl: 'https://edge.sitecorecloud.io'
+            edgeUrl: 'https://edge.sitecorecloud.io',
           },
           // Include local config as fallback
           local: {
             apiKey: 'test-api-key',
             apiHost: 'https://test-endpoint.com',
-            path: '/api/graphql/v1'
-          }
+            path: '/api/graphql/v1',
+          },
         },
       },
       siteResolver: stub().returns({ name: 'test-site' }),
