@@ -22,7 +22,7 @@ Defined in: react/types/components/Placeholder.d.ts:4
 
 > `optional` **componentLoadingMessage**: `string`
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:67
+Defined in: react/types/components/PlaceholderCommon.d.ts:66
 
 The message that gets displayed while component is loading
 
@@ -36,7 +36,7 @@ The message that gets displayed while component is loading
 
 > `optional` **componentMap**: [`ComponentMap`](../type-aliases/ComponentMap.md)
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:24
+Defined in: react/types/components/PlaceholderCommon.d.ts:23
 
 Component Map will be used to map Sitecore component names to app implementation
 When rendered within a <SitecoreContext> component, defaults to the context componentMap.
@@ -51,7 +51,7 @@ When rendered within a <SitecoreContext> component, defaults to the context comp
 
 > `optional` **errorComponent**: `ComponentClass`\<`ErrorComponentProps`\> \| `FC`\<`ErrorComponentProps`\>
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:59
+Defined in: react/types/components/PlaceholderCommon.d.ts:58
 
 A component that is rendered in place of the placeholder when an error occurs rendering
 the placeholder
@@ -66,7 +66,7 @@ the placeholder
 
 > `optional` **fields**: `object`
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:29
+Defined in: react/types/components/PlaceholderCommon.d.ts:28
 
 An object of field names/values that are aggregated and propagated through the component tree created by a placeholder.
 Any component or placeholder rendered by a placeholder will have access to this data via `props.fields`.
@@ -85,7 +85,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 > `optional` **hiddenRenderingComponent**: `ComponentClass`\<`unknown`\> \| `FC`\<`unknown`\>
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:54
+Defined in: react/types/components/PlaceholderCommon.d.ts:53
 
 A component that is rendered in place of any components that are hidden
 
@@ -99,7 +99,7 @@ A component that is rendered in place of any components that are hidden
 
 > `optional` **missingComponentComponent**: `ComponentClass`\<`unknown`\> \| `FC`\<`unknown`\>
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:50
+Defined in: react/types/components/PlaceholderCommon.d.ts:49
 
 A component that is rendered in place of any components that are in this placeholder,
 but do not have a definition in the componentMap (i.e. don't have a React implementation)
@@ -114,7 +114,7 @@ but do not have a definition in the componentMap (i.e. don't have a React implem
 
 > `optional` **modifyComponentProps**: (`componentProps`) => `ComponentProps`
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:45
+Defined in: react/types/components/PlaceholderCommon.d.ts:44
 
 Modify final props of component (before render) provided by rendering data.
 Can be used in case when you need to insert additional data into the component.
@@ -141,7 +141,7 @@ modified or initial props
 
 > **name**: `string`
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:17
+Defined in: react/types/components/PlaceholderCommon.d.ts:16
 
 Name of the placeholder to render.
 
@@ -155,7 +155,7 @@ Name of the placeholder to render.
 
 > `optional` **params**: `object`
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:36
+Defined in: react/types/components/PlaceholderCommon.d.ts:35
 
 An object of rendering parameter names/values that are aggregated and propagated through the component tree created by a placeholder.
 Any component or placeholder rendered by a placeholder will have access to this data via `props.params`.
@@ -239,7 +239,7 @@ Render props function that is called when the placeholder contains no content co
 
 > **rendering**: [`ComponentRendering`](ComponentRendering.md) \| [`RouteData`](RouteData.md)
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:19
+Defined in: react/types/components/PlaceholderCommon.d.ts:18
 
 Rendering data to be used when rendering the placeholder.
 
@@ -253,7 +253,7 @@ Rendering data to be used when rendering the placeholder.
 
 > **sitecoreContext**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:63
+Defined in: react/types/components/PlaceholderCommon.d.ts:62
 
 Context data from the Sitecore Layout Service
 

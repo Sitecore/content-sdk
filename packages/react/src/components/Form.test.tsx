@@ -1,8 +1,8 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { expect } from 'chai';
-import proxyquire from 'proxyquire';
 import { SitecoreContext } from './SitecoreContext';
+import { Form, mockFormModule } from './Form';
 import sinon from 'sinon';
 
 describe('Form', () => {
@@ -40,16 +40,6 @@ describe('Form', () => {
     },
   };
 
-  let clock;
-
-  before(() => {
-    clock = sinon.useFakeTimers();
-  });
-
-  after(() => {
-    clock.restore();
-  });
-
   it('should render form', async () => {
     const loadFormSpy = sinon.spy((contextId: string, formId: string, edgeUrl?: string) => {
       expect(contextId).to.equal('context-id');
@@ -65,12 +55,10 @@ describe('Form', () => {
     const subscribeToFormSubmitEventSpy = sinon.spy();
     const executeScriptElementsSpy = sinon.spy();
 
-    const { Form } = proxyquire('./Form', {
-      '@sitecore-content-sdk/core/form': {
-        loadForm: loadFormSpy,
-        subscribeToFormSubmitEvent: subscribeToFormSubmitEventSpy,
-        executeScriptElements: executeScriptElementsSpy,
-      },
+    mockFormModule({
+      loadForm: loadFormSpy,
+      subscribeToFormSubmitEvent: subscribeToFormSubmitEventSpy,
+      executeScriptElements: executeScriptElementsSpy,
     });
 
     const rendered = await render(
@@ -80,19 +68,18 @@ describe('Form', () => {
       { container: document.body }
     );
 
-    // Wait for useEffect to re-run
-    await clock.nextAsync();
+    await waitFor(() => {
+      expect(loadFormSpy.calledOnce).to.be.true;
+      expect(subscribeToFormSubmitEventSpy.calledOnce).to.be.true;
+      expect(executeScriptElementsSpy.calledOnce).to.be.true;
 
-    expect(loadFormSpy.calledOnce).to.be.true;
-    expect(subscribeToFormSubmitEventSpy.calledOnce).to.be.true;
-    expect(executeScriptElementsSpy.calledOnce).to.be.true;
-
-    expect(rendered.container.innerHTML).to.equal(
-      '<div class="form-class" id="form-id">' +
-        '<form id="test-form">\n' +
-        '<script type="javascript">console.log(\'script 1\');</script>\n' +
-        '<script type="javascript">console.log(\'script 2\');</script></form></div>'
-    );
+      expect(rendered.container.innerHTML).to.equal(
+        '<div class="form-class" id="form-id">' +
+          '<form id="test-form">\n' +
+          '<script type="javascript">console.log(\'script 1\');</script>\n' +
+          '<script type="javascript">console.log(\'script 2\');</script></form></div>'
+      );
+    });
   });
 
   it('should render form in edit mode', async () => {
@@ -110,12 +97,10 @@ describe('Form', () => {
     const subscribeToFormSubmitEventSpy = sinon.spy();
     const executeScriptElementsSpy = sinon.spy();
 
-    const { Form } = proxyquire('./Form', {
-      '@sitecore-content-sdk/core/form': {
-        loadForm: loadFormSpy,
-        subscribeToFormSubmitEvent: subscribeToFormSubmitEventSpy,
-        executeScriptElements: executeScriptElementsSpy,
-      },
+    mockFormModule({
+      loadForm: loadFormSpy,
+      subscribeToFormSubmitEvent: subscribeToFormSubmitEventSpy,
+      executeScriptElements: executeScriptElementsSpy,
     });
 
     const rendered = await render(
@@ -124,19 +109,18 @@ describe('Form', () => {
       </SitecoreContext>
     );
 
-    // Wait for useEffect to re-run
-    await clock.nextAsync();
+    await waitFor(() => {
+      expect(loadFormSpy.calledOnce).to.be.true;
+      expect(subscribeToFormSubmitEventSpy.notCalled).to.be.true;
+      expect(executeScriptElementsSpy.calledOnce).to.be.true;
 
-    expect(loadFormSpy.calledOnce).to.be.true;
-    expect(subscribeToFormSubmitEventSpy.notCalled).to.be.true;
-    expect(executeScriptElementsSpy.calledOnce).to.be.true;
-
-    expect(rendered.container.innerHTML).to.equal(
-      '<div class="form-class" id="form-id">' +
-        '<form id="test-form">\n' +
-        '<script type="javascript">console.log(\'script 1\');</script>\n' +
-        '<script type="javascript">console.log(\'script 2\');</script></form></div>'
-    );
+      expect(rendered.container.innerHTML).to.equal(
+        '<div class="form-class" id="form-id">' +
+          '<form id="test-form">\n' +
+          '<script type="javascript">console.log(\'script 1\');</script>\n' +
+          '<script type="javascript">console.log(\'script 2\');</script></form></div>'
+      );
+    });
   });
 
   it('should render empty component when loading fails', async () => {
@@ -153,12 +137,10 @@ describe('Form', () => {
     const subscribeToFormSubmitEventSpy = sinon.spy();
     const executeScriptElementsSpy = sinon.spy();
 
-    const { Form } = proxyquire('./Form', {
-      '@sitecore-content-sdk/core/form': {
-        loadForm: loadFormSpy,
-        subscribeToFormSubmitEvent: subscribeToFormSubmitEventSpy,
-        executeScriptElements: executeScriptElementsSpy,
-      },
+    mockFormModule({
+      loadForm: loadFormSpy,
+      subscribeToFormSubmitEvent: subscribeToFormSubmitEventSpy,
+      executeScriptElements: executeScriptElementsSpy,
     });
 
     const rendered = await render(
@@ -166,11 +148,12 @@ describe('Form', () => {
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreContext>
     );
-
-    expect(loadFormSpy.calledOnce).to.be.true;
-    expect(subscribeToFormSubmitEventSpy.notCalled).to.be.true;
-    expect(executeScriptElementsSpy.notCalled).to.be.true;
-    expect(rendered.container.innerHTML).to.equal('<div class="form-class" id="form-id"></div>');
+    await waitFor(() => {
+      expect(loadFormSpy.calledOnce).to.be.true;
+      expect(subscribeToFormSubmitEventSpy.notCalled).to.be.true;
+      expect(executeScriptElementsSpy.notCalled).to.be.true;
+      expect(rendered.container.innerHTML).to.equal('<div class="form-class" id="form-id"></div>');
+    });
   });
 
   it('should render error message in edit mode when loading fails', async () => {
@@ -187,12 +170,10 @@ describe('Form', () => {
     const subscribeToFormSubmitEventSpy = sinon.spy();
     const executeScriptElementsSpy = sinon.spy();
 
-    const { Form } = proxyquire('./Form', {
-      '@sitecore-content-sdk/core/form': {
-        loadForm: loadFormSpy,
-        subscribeToFormSubmitEvent: subscribeToFormSubmitEventSpy,
-        executeScriptElements: executeScriptElementsSpy,
-      },
+    mockFormModule({
+      loadForm: loadFormSpy,
+      subscribeToFormSubmitEvent: subscribeToFormSubmitEventSpy,
+      executeScriptElements: executeScriptElementsSpy,
     });
 
     const rendered = await render(
@@ -202,19 +183,19 @@ describe('Form', () => {
       { container: document.body }
     );
 
-    // Wait for useEffect to re-run
-    await clock.nextAsync();
-    // react test library doesn't update html otherwise
-    rendered.rerender(
-      <SitecoreContext api={context.api} layoutData={context.layoutData.editing}>
-        <Form rendering={rendering} params={rendering.params} />
-      </SitecoreContext>
-    );
-    expect(loadFormSpy.calledOnce).to.be.true;
-    expect(subscribeToFormSubmitEventSpy.notCalled).to.be.true;
-    expect(executeScriptElementsSpy.notCalled).to.be.true;
-    expect(rendered.baseElement.innerHTML).to.equal(
-      '<div class="sc-jss-placeholder-error">There was a problem loading this section</div>'
-    );
+    await waitFor(() => {
+      // react test library doesn't update html otherwise
+      rendered.rerender(
+        <SitecoreContext api={context.api} layoutData={context.layoutData.editing}>
+          <Form rendering={rendering} params={rendering.params} />
+        </SitecoreContext>
+      );
+      expect(loadFormSpy.calledOnce).to.be.true;
+      expect(subscribeToFormSubmitEventSpy.notCalled).to.be.true;
+      expect(executeScriptElementsSpy.notCalled).to.be.true;
+      expect(rendered.baseElement.innerHTML).to.equal(
+        '<div class="sc-jss-placeholder-error">There was a problem loading this section</div>'
+      );
+    });
   });
 });

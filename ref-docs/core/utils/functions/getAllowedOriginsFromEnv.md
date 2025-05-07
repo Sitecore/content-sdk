@@ -8,7 +8,7 @@
 
 > **getAllowedOriginsFromEnv**(): `string`[]
 
-Defined in: [packages/core/src/utils/utils.ts:100](https://github.com/Sitecore/content-sdk/blob/583ad5957e2a493b98fa21293939a57df8afd235/packages/core/src/utils/utils.ts#L100)
+Defined in: [packages/core/src/utils/utils.ts:100](https://github.com/Sitecore/content-sdk/blob/750ea744c6ba45e5480c921acf549ec48c53b303/packages/core/src/utils/utils.ts#L100)
 
 Gets allowed origins from JSS_ALLOWED_ORIGINS env variable
 

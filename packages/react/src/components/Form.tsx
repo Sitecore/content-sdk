@@ -1,11 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import {
-  executeScriptElements,
-  loadForm,
-  subscribeToFormSubmitEvent,
-} from '@sitecore-content-sdk/core/form';
+import { form } from '@sitecore-content-sdk/core';
 import { useSitecoreContext } from '../enhancers/withSitecoreContext';
+
+let { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
+
+/**
+ * Mock function to replace the form module functions for `testing` purposes.
+ * @param {any} formModule - The form module to mock
+ */
+export const mockFormModule = (formModule: any) => {
+  executeScriptElements = formModule.executeScriptElements;
+  loadForm = formModule.loadForm;
+  subscribeToFormSubmitEvent = formModule.subscribeToFormSubmitEvent;
+};
 
 /**
  * Shape of the Form component rendering data.

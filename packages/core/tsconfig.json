@@ -15,17 +15,17 @@
     "dist",
     "config.d.ts",
     "editing.d.ts",
-    "form.d.ts",
     "layout.d.ts",
     "media.d.ts",
     "utils.d.ts",
     "client.d.ts",
+    "content.d.ts",
     "i18n.d.ts",
     "site.d.ts",
     "tools.d.ts",
     "personalize.d.ts",
     "feaas.d.ts",
     "src/**/*.test.ts",
-    "src/test-data/*"
+    "src/test-data/*",
   ]
 }
