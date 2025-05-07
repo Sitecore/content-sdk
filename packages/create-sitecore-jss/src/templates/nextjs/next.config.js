@@ -109,7 +109,7 @@ const nextConfig = {
     }).getImporter(),
     // temporary measure until new versions of bootstrap and font-awesome released
     quietDeps: true,    
-    silenceDeprecations: ["import"],
+    silenceDeprecations: ["import", "legacy-js-api"],
   },
 };
 
