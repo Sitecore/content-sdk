@@ -8,7 +8,7 @@
 
 > **DesignLibrary**(`layoutData`): `Element`
 
-Defined in: [packages/react/src/components/DesignLibrary.tsx:15](https://github.com/Sitecore/content-sdk/blob/750ea744c6ba45e5480c921acf549ec48c53b303/packages/react/src/components/DesignLibrary.tsx#L15)
+Defined in: [packages/react/src/components/DesignLibrary.tsx:15](https://github.com/Sitecore/content-sdk/blob/96863b97ddb9647bb1294710a50bece847f2befa/packages/react/src/components/DesignLibrary.tsx#L15)
 
 ## Parameters
 

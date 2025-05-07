@@ -6,7 +6,7 @@
 
 # Interface: FileField
 
-Defined in: [packages/react/src/components/File.tsx:11](https://github.com/Sitecore/content-sdk/blob/750ea744c6ba45e5480c921acf549ec48c53b303/packages/react/src/components/File.tsx#L11)
+Defined in: [packages/react/src/components/File.tsx:11](https://github.com/Sitecore/content-sdk/blob/96863b97ddb9647bb1294710a50bece847f2befa/packages/react/src/components/File.tsx#L11)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [packages/react/src/components/File.tsx:11](https://github.com/Sitec
 
 > **value**: `FileFieldValue`
 
-Defined in: [packages/react/src/components/File.tsx:12](https://github.com/Sitecore/content-sdk/blob/750ea744c6ba45e5480c921acf549ec48c53b303/packages/react/src/components/File.tsx#L12)
+Defined in: [packages/react/src/components/File.tsx:12](https://github.com/Sitecore/content-sdk/blob/96863b97ddb9647bb1294710a50bece847f2befa/packages/react/src/components/File.tsx#L12)

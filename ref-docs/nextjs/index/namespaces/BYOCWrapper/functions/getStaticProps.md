@@ -8,7 +8,7 @@
 
 > **getStaticProps**(`rendering`, `layoutData`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [nextjs/src/components/BYOCWrapper.tsx:22](https://github.com/Sitecore/content-sdk/blob/750ea744c6ba45e5480c921acf549ec48c53b303/packages/nextjs/src/components/BYOCWrapper.tsx#L22)
+Defined in: [nextjs/src/components/BYOCWrapper.tsx:22](https://github.com/Sitecore/content-sdk/blob/96863b97ddb9647bb1294710a50bece847f2befa/packages/nextjs/src/components/BYOCWrapper.tsx#L22)
 
 Will be called during SSG
 
