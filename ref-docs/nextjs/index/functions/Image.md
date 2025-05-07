@@ -6,17 +6,16 @@
 
 # Function: Image()
 
-> **Image**(`props`, `deprecatedLegacyContext`?): `ReactNode`
+> **Image**(`props`): `ReactNode` \| `Promise`\<`ReactNode`\>
 
 Defined in: react/types/components/Image.d.ts:48
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `props` | [`ImageProps`](../interfaces/ImageProps.md) | - |
-| `deprecatedLegacyContext`? | `any` | **Deprecated** **See** [React Docs](https://legacy.reactjs.org/docs/legacy-context.html#referencing-context-in-lifecycle-methods) |
+| Parameter | Type |
+| ------ | ------ |
+| `props` | [`ImageProps`](../interfaces/ImageProps.md) |
 
 ## Returns
 
-`ReactNode`
+`ReactNode` \| `Promise`\<`ReactNode`\>

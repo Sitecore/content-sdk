@@ -49,8 +49,6 @@ export function withPlaceholder(
       | React.FunctionComponent<PlaceholderProps>
   ) => {
     class WithPlaceholder extends PlaceholderCommon<PlaceholderProps> {
-      static propTypes = PlaceholderCommon.propTypes;
-
       constructor(props: PlaceholderProps) {
         super(props);
       }

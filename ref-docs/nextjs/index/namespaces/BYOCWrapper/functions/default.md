@@ -8,7 +8,7 @@
 
 > **default**(`props`): `Element`
 
-Defined in: react/types/components/BYOCWrapper.d.ts:6
+Defined in: react/types/components/BYOCWrapper.d.ts:7
 
 TODO: remove when framework agnostic forms implemented
 

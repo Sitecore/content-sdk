@@ -1,5 +1,4 @@
 ﻿import React, { RefAttributes, forwardRef } from 'react';
-import PropTypes, { Requireable } from 'prop-types';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
@@ -88,24 +87,5 @@ export const Link: React.FC<LinkProps> = withFieldMetadata<LinkProps, HTMLAnchor
   ),
   true
 );
-
-export const LinkPropTypes = {
-  field: PropTypes.oneOfType([
-    PropTypes.shape({
-      href: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.oneOf([null]).isRequired]),
-    }),
-    PropTypes.shape({
-      value: PropTypes.object,
-    }),
-  ]).isRequired,
-  editable: PropTypes.bool,
-  showLinkTextWithChildrenPresent: PropTypes.bool,
-  emptyFieldEditingComponent: PropTypes.oneOfType([
-    PropTypes.object as Requireable<React.ComponentClass<unknown>>,
-    PropTypes.func as Requireable<React.FC<unknown>>,
-  ]),
-};
-
-Link.propTypes = LinkPropTypes;
 
 Link.displayName = 'Link';

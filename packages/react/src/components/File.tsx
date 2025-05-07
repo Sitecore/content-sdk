@@ -1,5 +1,4 @@
 ﻿import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 export interface FileFieldValue {
@@ -41,17 +40,6 @@ export const File: React.FC<FileProps> = ({ field, children, ...otherProps }) =>
     href: file.src,
   };
   return React.createElement('a', { ...anchorAttrs, ...otherProps }, linkText, children);
-};
-
-File.propTypes = {
-  field: PropTypes.oneOfType([
-    PropTypes.shape({
-      src: PropTypes.string,
-    }),
-    PropTypes.shape({
-      value: PropTypes.object,
-    }),
-  ]).isRequired,
 };
 
 File.displayName = 'File';

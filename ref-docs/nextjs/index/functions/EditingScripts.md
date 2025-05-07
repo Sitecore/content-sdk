@@ -8,7 +8,7 @@
 
 > **EditingScripts**(`props`): `Element`
 
-Defined in: react/types/components/EditingScripts.d.ts:17
+Defined in: react/types/components/EditingScripts.d.ts:18
 
 Renders client scripts and data for editing/preview mode for Pages.
 Renders script required for the Design Library (when RenderingType is `component`).

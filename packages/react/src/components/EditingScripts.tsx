@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿import React, { JSX } from 'react';
 import { LayoutServicePageState, RenderingType } from '@sitecore-content-sdk/core/layout';
 import { useSitecoreContext } from '../enhancers/withSitecoreContext';
 import { getJssPagesClientData } from '@sitecore-content-sdk/core/editing';

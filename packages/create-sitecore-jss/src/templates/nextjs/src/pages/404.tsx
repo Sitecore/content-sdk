@@ -6,6 +6,7 @@ import { GetStaticProps } from 'next';
 import scConfig from 'sitecore.config';
 import client from 'lib/sitecore-client';
 import components from 'lib/component-map';
+import { JSX } from 'react';
 
 const Custom404 = (props: SitecorePageProps): JSX.Element => {
   if (!(props && props.layout)) {
