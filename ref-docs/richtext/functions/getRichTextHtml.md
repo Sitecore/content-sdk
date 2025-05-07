@@ -8,7 +8,7 @@
 
 > **getRichTextHtml**(`content`, `extensions`?): `string`
 
-Defined in: [parse-tiptap-json.ts:12](https://github.com/Sitecore/content-sdk/blob/bca59cd01abf3eb69a105697f34a68f148c1f42e/packages/richtext/src/utils/parse-tiptap-json.ts#L12)
+Defined in: [parse-tiptap-json.ts:12](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/richtext/src/utils/parse-tiptap-json.ts#L12)
 
 Parses JSON formatted for Tiptap into HTML
 
