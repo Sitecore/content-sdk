@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "jsx": "react",
+    "skipLibCheck": true,
+    "outDir": "dist/esm",
+    "types": ["node", "mocha"],
+    "typeRoots": ["node_modules/@types"],
+    "declarationDir": "./types"
+  },
+  "exclude": [
+    "node_modules",
+    "types",
+    "typings",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "dist",
+  ]
+}

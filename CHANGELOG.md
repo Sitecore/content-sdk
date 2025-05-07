@@ -14,6 +14,9 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* `[all]` XM Cloud Content support
+  * `[richtext]` Added new `richtext` package to enable Content SDK to work with TipTap Rich Text editors ([#85](https://github.com/Sitecore/content-sdk/pull/85))
+
 * `[core]` Introduce get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#75](https://github.com/Sitecore/content-sdk/pull/75))
 * `[cli]` Introduce "project" subcommands ([#73](https://github.com/Sitecore/content-sdk/pull/73))
 
