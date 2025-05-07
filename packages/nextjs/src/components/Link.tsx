@@ -1,12 +1,10 @@
-﻿import React, { forwardRef } from 'react';
-import PropTypes from 'prop-types';
+﻿import React, { forwardRef, JSX } from 'react';
 import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import {
   Link as ReactLink,
   LinkFieldValue,
   LinkField,
   LinkProps as ReactLinkProps,
-  LinkPropTypes,
 } from '@sitecore-content-sdk/react';
 
 export type LinkProps = ReactLinkProps & {
@@ -98,8 +96,3 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
 );
 
 Link.displayName = 'NextLink';
-
-Link.propTypes = {
-  internalLinkMatcher: PropTypes.instanceOf(RegExp),
-  ...LinkPropTypes,
-};

@@ -1,6 +1,6 @@
 {
     "name": "@sitecore-content-sdk/richtext",
-    "version": "0.2.0-canary.18",
+    "version": "0.2.0-canary.23",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
     "sideEffects": false,
@@ -15,7 +15,7 @@
         "test": "mocha \"./src/**/*.test.ts\" --exit",
         "prepublishOnly": "npm run build",
         "coverage": "nyc npm test",
-        "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --githubPages false"
+        "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --out ../../ref-docs/richtext --entryPoints src/index.ts --outputFileStrategy Members --parametersFormat table --readme none --githubPages false"
     },
     "engines": {
         "node": ">=22"
@@ -58,7 +58,7 @@
         "@tiptap/starter-kit": "^2.11.7"
     },
     "dependencies": {
-        "@sitecore-content-sdk/core": "0.2.0-canary.18",
+        "@sitecore-content-sdk/core": "0.2.0-canary.23",
         "@tiptap/core": "^2.11.7",
         "@tiptap/html": "^2.11.7",
         "@tiptap/starter-kit": "^2.11.7"

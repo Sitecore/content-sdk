@@ -131,7 +131,7 @@ describe('<FEaaSComponent />', () => {
       const output = wrapper.baseElement.innerHTML;
       expect(output).to.contain(`<h1 data-path="xm.sampleText">${fields.sampleText.value}</h1>`);
       expect(output).to.contain(
-        `<img data-path-src="xm.sampleImage.src" data-path-alt="xm.sampleImage.alt" src="${fields.sampleImage.value.src}" alt="${fields.sampleImage.value.alt}">`
+        `<img data-path-src="xm.sampleImage.src" data-path-alt="xm.sampleImage.alt" alt="${fields.sampleImage.value.alt}" src="${fields.sampleImage.value.src}">`
       );
       expect(output).to.contain(`<p data-path="xm.sampleNumber">${fields.sampleNumber.value}</p>`);
       expect(output).to.contain(

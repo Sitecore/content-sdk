@@ -6,7 +6,7 @@
 
 # Function: withDatasourceCheck()
 
-> **withDatasourceCheck**(`options`?): \<`ComponentProps`\>(`Component`) => (`props`) => `React.JSX.Element`
+> **withDatasourceCheck**(`options`?): \<`ComponentProps`\>(`Component`) => (`props`) => `JSX.Element`
 
 Defined in: react/types/enhancers/withDatasourceCheck.d.ts:21
 
@@ -49,4 +49,4 @@ The wrapped component, if a datasource is present.
 
 #### Returns
 
-`React.JSX.Element`
+`JSX.Element`
