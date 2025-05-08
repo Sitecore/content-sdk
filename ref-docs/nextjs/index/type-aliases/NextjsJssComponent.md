@@ -26,7 +26,7 @@ Optional dynamic import for lazy components - allows component props retrieval
 
 ### getServerSideProps?
 
-> `optional` **getServerSideProps**: [`GetServerSideComponentProps`](GetServerSideComponentProps.md)
+> `optional` **getServerSideProps**: [`GetComponentProps`](GetComponentProps.md)
 
 function for component level data fetching in SSR mode
 

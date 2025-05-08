@@ -34,28 +34,15 @@ export class ComponentPropsService {
     params: FetchComponentPropsArguments<GetServerSidePropsContext | GetStaticPropsContext>
   ): Promise<ComponentPropsCollection> {
     const { layoutData, context, components } = params;
-    if (this.isServerSidePropsContext(context)) {
-      const fetchFunctionFactory = async (componentName: string) =>
-        (await this.getModule(components, componentName))?.getServerSideProps;
-      const requests = await this.collectRequests({
-        placeholders: layoutData.sitecore.route?.placeholders,
-        fetchFunctionFactory,
-        layoutData,
-        context,
-      });
-      return await this.execRequests(requests);
-    } else {
-      const fetchFunctionFactory = async (componentName: string) =>
-        (await this.getModule(components, componentName))?.getStaticProps;
-
-      const requests = await this.collectRequests({
-        placeholders: layoutData.sitecore.route?.placeholders,
-        fetchFunctionFactory,
-        layoutData,
-        context,
-      });
-      return await this.execRequests(requests);
-    }
+    const fetchFunctionFactory = async (componentName: string) =>
+      (await this.getModule(components, componentName))?.getComponentProps;
+    const requests = await this.collectRequests({
+      placeholders: layoutData.sitecore.route?.placeholders,
+      fetchFunctionFactory,
+      layoutData,
+      context,
+    });
+    return await this.execRequests(requests);
   }
 
   /**
@@ -181,17 +168,6 @@ export class ComponentPropsService {
     });
 
     return allComponentRenderings;
-  }
-
-  // TODO: remove when unifying server/static component props
-  /**
-   * Determines whether context is GetServerSidePropsContext (SSR) or GetStaticPropsContext (SSG)
-   * @param {GetServerSidePropsContext | GetStaticPropsContext} context
-   */
-  private isServerSidePropsContext(
-    context: GetServerSidePropsContext | GetStaticPropsContext
-  ): context is GetServerSidePropsContext {
-    return (<GetServerSidePropsContext>context).req !== undefined;
   }
 
   private async getModule(components: ComponentMap<NextjsJssComponent>, componentName: string) {

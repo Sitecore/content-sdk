@@ -82,7 +82,7 @@
 - [ErrorPages](type-aliases/ErrorPages.md)
 - [FEaaSComponentParams](type-aliases/FEaaSComponentParams.md)
 - [FEaaSComponentProps](type-aliases/FEaaSComponentProps.md)
-- [GetServerSideComponentProps](type-aliases/GetServerSideComponentProps.md)
+- [GetComponentProps](type-aliases/GetComponentProps.md)
 - [GetStaticComponentProps](type-aliases/GetStaticComponentProps.md)
 - [GraphQLLayoutServiceConfig](type-aliases/GraphQLLayoutServiceConfig.md)
 - [GraphQLRobotsServiceConfig](type-aliases/GraphQLRobotsServiceConfig.md)

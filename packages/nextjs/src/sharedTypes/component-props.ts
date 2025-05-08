@@ -21,27 +21,20 @@ export type ComponentPropsFetchFunction<NextContext, FetchedProps = unknown> = {
 };
 
 /**
- * Shape of getServerSideProps function on component level
+ * Common server component props used in both SSG and SSR modes
  */
-export type GetServerSideComponentProps = ComponentPropsFetchFunction<GetServerSidePropsContext>;
-
-/**
- * Shape of getStaticProps function on component level
- */
-export type GetStaticComponentProps = ComponentPropsFetchFunction<GetStaticPropsContext>;
+export type GetComponentProps = ComponentPropsFetchFunction<
+  GetServerSidePropsContext | GetStaticPropsContext
+>;
 
 /**
  * Represents a nextjs component import
  */
 export type NextjsJssComponent = ReactJssComponent & {
   /**
-   * function for component level data fetching in SSR mode
+   * function for component level data fetching in both SSR and SSG
    */
-  getServerSideProps?: GetServerSideComponentProps;
-  /**
-   * function for component level data fetching in SSG mode
-   */
-  getStaticProps?: GetStaticComponentProps;
+  getComponentProps?: GetComponentProps;
   /**
    * Optional dynamic import for lazy components - allows component props retrieval
    */

@@ -247,7 +247,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getComponentData', () => {
-    it('should return componentData when component has getServerSideProps method', async () => {
+    it('should return componentData when component has getComponentsProps method', async () => {
       const context = ({
         params: { path: ['test', 'path'] },
         query: {},
@@ -273,7 +273,7 @@ describe('SitecoreClient', () => {
       };
 
       const mockComponent = {
-        getServerSideProps: sandbox.stub().resolves({ props: { data: 'test-data' } }),
+        getComponentProps: sandbox.stub().resolves({ props: { data: 'test-data' } }),
       };
 
       const componentMap = new Map([['TestComponent', mockComponent]]);
@@ -283,7 +283,7 @@ describe('SitecoreClient', () => {
       expect(result).to.deep.equal({
         'test-uid': { props: { data: 'test-data' } },
       });
-      expect(mockComponent.getServerSideProps.calledOnce).to.be.true;
+      expect(mockComponent.getComponentProps.calledOnce).to.be.true;
     });
   });
 });
