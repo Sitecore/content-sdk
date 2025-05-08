@@ -636,7 +636,7 @@ describe('GraphQLSitePathService', () => {
         .reply(500, 'Error 😥');
 
       const service = new GraphQLSitePathService({ clientFactory, sites });
-      await service.fetchSiteRoutes(['ua']).catch((error) => {
+      await service.fetchSiteRoutes(['ua']).catch((error: RangeError) => {
         expect(error.message).to.contain('SitemapQuery');
         expect(error.message).to.contain('Error 😥');
       });
