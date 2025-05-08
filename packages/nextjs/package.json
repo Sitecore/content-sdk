@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "0.2.0-canary.23",
+  "version": "0.2.0-canary.25",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -76,8 +76,8 @@
     }
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "0.2.0-canary.23",
-    "@sitecore-content-sdk/react": "0.2.0-canary.23",
+    "@sitecore-content-sdk/core": "0.2.0-canary.25",
+    "@sitecore-content-sdk/react": "0.2.0-canary.25",
     "recast": "^0.23.11",
     "regex-parser": "^2.3.1",
     "sync-disk-cache": "^2.1.0"

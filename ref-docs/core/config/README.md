@@ -12,6 +12,7 @@
 
 ## Type Aliases
 
+- [DeepRequired](type-aliases/DeepRequired.md)
 - [ScaffoldTemplate](type-aliases/ScaffoldTemplate.md)
 - [SitecoreCliConfig](type-aliases/SitecoreCliConfig.md)
 - [SitecoreCliConfigInput](type-aliases/SitecoreCliConfigInput.md)
