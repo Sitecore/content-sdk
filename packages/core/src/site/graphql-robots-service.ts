@@ -61,9 +61,13 @@ export class GraphQLRobotsService {
       throw new Error(siteNameError);
     }
 
-    const robotsResult: Promise<RobotsQueryResult> = this.graphQLClient.request(this.query, {
-      siteName,
-    }, fetchOptions);
+    const robotsResult: Promise<RobotsQueryResult> = this.graphQLClient.request(
+      this.query,
+      {
+        siteName,
+      },
+      fetchOptions
+    );
     try {
       return robotsResult.then((result: RobotsQueryResult) => {
         return result?.site?.siteInfo?.robots;
