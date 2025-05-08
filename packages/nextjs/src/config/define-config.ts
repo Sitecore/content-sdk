@@ -4,13 +4,17 @@ import {
   SitecoreConfigInput as SitecoreConfigInputCore,
 } from '@sitecore-content-sdk/core/config';
 
-export const getNextFallbackConfig = (config: SitecoreConfigInput): SitecoreConfigInput => {
+/**
+ * Provides default NextJs initial values from env variables for SitecoreConfig
+ * @returns default nextjs input config
+ */
+export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreConfigInput => {
   return {
     ...config,
     api: {
-      ...config.api,
+      ...config?.api,
       edge: {
-        ...config.api?.edge,
+        ...config?.api?.edge,
         contextId:
           config?.api?.edge?.contextId ||
           process.env.SITECORE_EDGE_CONTEXT_ID ||
@@ -19,36 +23,32 @@ export const getNextFallbackConfig = (config: SitecoreConfigInput): SitecoreConf
         clientContextId:
           config?.api?.edge?.clientContextId || process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
         edgeUrl:
-          process.env.NEXT_PUBLIC_SITECORE_EDGE_URL ||
+          config?.api?.edge?.edgeUrl ||
           process.env.SITECORE_EDGE_URL ||
-          config?.api?.edge?.edgeUrl,
+          process.env.NEXT_PUBLIC_SITECORE_EDGE_URL,
       },
       local: {
-        ...config.api?.local,
+        ...config?.api?.local,
         apiKey: config?.api?.local?.apiKey || process.env.NEXT_PUBLIC_SITECORE_API_KEY || '',
         apiHost: config?.api?.local?.apiHost || process.env.NEXT_PUBLIC_SITECORE_API_HOST || '',
       },
     },
     defaultSite: config?.defaultSite || process.env.NEXT_PUBLIC_SITECORE_SITE_NAME,
-    defaultLanguage: config?.defaultLanguage || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
-    editingSecret: process.env.JSS_EDITING_SECRET,
-    redirects: config?.redirects ?? {},
+    defaultLanguage: config?.defaultLanguage || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
     multisite: {
-      ...config.multisite,
+      ...config?.multisite,
       enabled: config?.multisite?.enabled ?? true,
       useCookieResolution:
         config?.multisite?.useCookieResolution ?? (() => process.env.VERCEL_ENV === 'preview'),
     },
     personalize: {
-      ...config.personalize,
-      scope: config.personalize?.scope || process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,
-      edgeTimeout:
-        config?.personalize?.edgeTimeout ??
-        parseInt(process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT!, 10),
-      cdpTimeout:
-        config?.personalize?.cdpTimeout ??
-        parseInt(process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT!, 10),
+      ...config?.personalize,
+      scope: config?.personalize?.scope || process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,
     },
+    disableStaticPaths:
+      process.env.DISABLE_SSG_FETCH !== undefined
+        ? process.env.DISABLE_SSG_FETCH.toLowerCase() === 'true'
+        : config?.disableStaticPaths ?? false,
   };
 };
 
@@ -79,11 +79,6 @@ export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
  * @param {SitecoreConfigInput} config override values to be written over default config settings
  * @returns {SitecoreConfig} full sitecore configuration to use in application
  */
-export const defineConfig = (config: SitecoreConfigInput) => {
-  config.disableStaticPaths =
-    process.env.DISABLE_SSG_FETCH !== undefined
-      ? process.env.DISABLE_SSG_FETCH.toLowerCase() === 'true'
-      : config.disableStaticPaths ?? false;
-
+export const defineConfig = (config?: SitecoreConfigInput): SitecoreConfig => {
   return defineConfigCore(getNextFallbackConfig(config)) as SitecoreConfig;
 };
