@@ -47,7 +47,7 @@
     "chalk": "^4.1.2",
     "cross-fetch": "^4.1.0",
     "del-cli": "^6.0.0",
-    "eslint": "^9.26.0",
+    "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.37.5",
     "jsdom": "^26.1.0",
     "mocha": "^11.2.2",
