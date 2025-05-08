@@ -566,7 +566,7 @@ describe('GraphQLEditingService', () => {
   it('should throw an error when fetching editing data', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true' } })
       .post(endpointPath, /EditingQuery/gi)
-      .reply(500, 'Internal server error');
+      .reply(500);
 
     const service = new GraphQLEditingService({
       clientFactory,
@@ -581,7 +581,8 @@ describe('GraphQLEditingService', () => {
         mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
-      expect(error.response.error).to.equal('Internal server error');
+      expect(error.message).to.contain('EditingQuery');
+      expect(error.response.status).to.equal(500);
     }
   });
 
@@ -599,6 +600,7 @@ describe('GraphQLEditingService', () => {
         mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
+      console.log(error);
       expect(error.message).to.equal('The site name must be a non-empty string');
     }
   });

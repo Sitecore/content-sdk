@@ -86,8 +86,8 @@ describe('GraphQLRequestClient', () => {
       .reply(200, function() {
         const receivedHeaders = this.req.headers;
 
-        expect(receivedHeaders['sc_apikey']).to.deep.equal([apiKey]);
-        expect(receivedHeaders['custom-header']).to.deep.equal([customHeader]);
+        expect(receivedHeaders['sc_apikey']).to.deep.equal(apiKey);
+        expect(receivedHeaders['custom-header']).to.deep.equal(customHeader);
 
         return {
           data: {

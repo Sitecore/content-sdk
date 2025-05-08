@@ -269,17 +269,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@es-joy/jsdoccomment@npm:~0.46.0":
-  version: 0.46.0
-  resolution: "@es-joy/jsdoccomment@npm:0.46.0"
-  dependencies:
-    comment-parser: 1.4.1
-    esquery: ^1.6.0
-    jsdoc-type-pratt-parser: ~4.0.0
-  checksum: 96010ece493c5add7dcd5c16d86c878d15210506f4d173bcf01062394c284e95e5d2ec4ce03a5aac1285be913745bd7db0887fc6299c63577a0a5cec0a0e4230
-  languageName: node
-  linkType: hard
-
 "@es-joy/jsdoccomment@npm:~0.49.0":
   version: 0.49.0
   resolution: "@es-joy/jsdoccomment@npm:0.49.0"
@@ -1657,65 +1646,65 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/env@npm:15.3.1":
-  version: 15.3.1
-  resolution: "@next/env@npm:15.3.1"
-  checksum: eb24d59257d0d171770b09ae28cd23b6944aecf4b39da85729a09c6604a2f7aaeb973b3ca7234a086ed9da732e3d622e013b113688487add6315e62414b58501
+"@next/env@npm:15.3.2":
+  version: 15.3.2
+  resolution: "@next/env@npm:15.3.2"
+  checksum: 52ab4b18abbf076e392d3c141b403133fda24f262aed87bb0323b5e25100edb78446cc73f8f733ea9d54739abdebbdc57f63f34d858b000eb55fbed1e498bc0b
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:15.3.1":
-  version: 15.3.1
-  resolution: "@next/swc-darwin-arm64@npm:15.3.1"
+"@next/swc-darwin-arm64@npm:15.3.2":
+  version: 15.3.2
+  resolution: "@next/swc-darwin-arm64@npm:15.3.2"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-x64@npm:15.3.1":
-  version: 15.3.1
-  resolution: "@next/swc-darwin-x64@npm:15.3.1"
+"@next/swc-darwin-x64@npm:15.3.2":
+  version: 15.3.2
+  resolution: "@next/swc-darwin-x64@npm:15.3.2"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-gnu@npm:15.3.1":
-  version: 15.3.1
-  resolution: "@next/swc-linux-arm64-gnu@npm:15.3.1"
+"@next/swc-linux-arm64-gnu@npm:15.3.2":
+  version: 15.3.2
+  resolution: "@next/swc-linux-arm64-gnu@npm:15.3.2"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-musl@npm:15.3.1":
-  version: 15.3.1
-  resolution: "@next/swc-linux-arm64-musl@npm:15.3.1"
+"@next/swc-linux-arm64-musl@npm:15.3.2":
+  version: 15.3.2
+  resolution: "@next/swc-linux-arm64-musl@npm:15.3.2"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-gnu@npm:15.3.1":
-  version: 15.3.1
-  resolution: "@next/swc-linux-x64-gnu@npm:15.3.1"
+"@next/swc-linux-x64-gnu@npm:15.3.2":
+  version: 15.3.2
+  resolution: "@next/swc-linux-x64-gnu@npm:15.3.2"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-musl@npm:15.3.1":
-  version: 15.3.1
-  resolution: "@next/swc-linux-x64-musl@npm:15.3.1"
+"@next/swc-linux-x64-musl@npm:15.3.2":
+  version: 15.3.2
+  resolution: "@next/swc-linux-x64-musl@npm:15.3.2"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-arm64-msvc@npm:15.3.1":
-  version: 15.3.1
-  resolution: "@next/swc-win32-arm64-msvc@npm:15.3.1"
+"@next/swc-win32-arm64-msvc@npm:15.3.2":
+  version: 15.3.2
+  resolution: "@next/swc-win32-arm64-msvc@npm:15.3.2"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-x64-msvc@npm:15.3.1":
-  version: 15.3.1
-  resolution: "@next/swc-win32-x64-msvc@npm:15.3.1"
+"@next/swc-win32-x64-msvc@npm:15.3.2":
+  version: 15.3.2
+  resolution: "@next/swc-win32-x64-msvc@npm:15.3.2"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -2397,9 +2386,9 @@ __metadata:
     debug: ^4.4.0
     del-cli: ^6.0.0
     eslint: ^8.56.0
-    eslint-plugin-jsdoc: 48.7.0
+    eslint-plugin-jsdoc: 50.6.11
     graphql: ^16.11.0
-    graphql-request: ^6.1.0
+    graphql-request: ^7.1.2
     jsdom: ^26.1.0
     memory-cache: ^0.2.0
     mocha: ^11.2.2
@@ -2409,7 +2398,7 @@ __metadata:
     sinon: ^20.0.0
     sinon-chai: ^4.0.0
     tslib: ^2.8.1
-    tsx: ^4.19.2
+    tsx: ^4.19.4
     typescript: ~5.7.3
     url-parse: ^1.5.10
   peerDependencies:
@@ -2483,7 +2472,7 @@ __metadata:
     eslint-plugin-react: ^7.37.5
     jsdom: ^26.1.0
     mocha: ^11.2.2
-    next: ^15.3.1
+    next: ^15.3.2
     nock: 14.0.0-beta.7
     nyc: ^17.1.0
     react: ^19.1.0
@@ -4374,15 +4363,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-fetch@npm:^3.1.5":
-  version: 3.2.0
-  resolution: "cross-fetch@npm:3.2.0"
-  dependencies:
-    node-fetch: ^2.7.0
-  checksum: 8ded5ea35f705e81e569e7db244a3f96e05e95996ff51877c89b0c1ec1163c76bb5dad77d0f8fba6bb35a0abacb36403d7271dc586d8b1f636110ee7a8d959fd
-  languageName: node
-  linkType: hard
-
 "cross-fetch@npm:^4.1.0":
   version: 4.1.0
   resolution: "cross-fetch@npm:4.1.0"
@@ -5181,23 +5161,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:48.7.0":
-  version: 48.7.0
-  resolution: "eslint-plugin-jsdoc@npm:48.7.0"
+"eslint-plugin-jsdoc@npm:50.6.11":
+  version: 50.6.11
+  resolution: "eslint-plugin-jsdoc@npm:50.6.11"
   dependencies:
-    "@es-joy/jsdoccomment": ~0.46.0
+    "@es-joy/jsdoccomment": ~0.49.0
     are-docs-informative: ^0.0.2
     comment-parser: 1.4.1
-    debug: ^4.3.5
+    debug: ^4.3.6
     escape-string-regexp: ^4.0.0
+    espree: ^10.1.0
     esquery: ^1.6.0
-    parse-imports: ^2.1.1
-    semver: ^7.6.2
+    parse-imports-exports: ^0.2.4
+    semver: ^7.6.3
     spdx-expression-parse: ^4.0.0
-    synckit: ^0.9.0
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
-  checksum: e51a7985a50c9cc023af0e297b59d9d85af1d7ce707ae382684de8121a9c1c9448de369127306a5ee4d0faf8eaa3e16f09cc5c3f52ddcfaae87922902b370e58
+  checksum: 9d14b312bec7cbaf363d494de36a2e2444ab6a9b875a747e2a092448c1b98f3d177e09ac62f2550c2bb4af23d11c5f4f9c126a595146e0a2d24593293c6f6d3f
   languageName: node
   linkType: hard
 
@@ -6161,15 +6141,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "graphql-request@npm:6.1.0"
+"graphql-request@npm:^7.1.2":
+  version: 7.1.2
+  resolution: "graphql-request@npm:7.1.2"
   dependencies:
     "@graphql-typed-document-node/core": ^3.2.0
-    cross-fetch: ^3.1.5
   peerDependencies:
     graphql: 14 - 16
-  checksum: 6d62630a0169574442320651c1f7626c0c602025c3c46b19e09417c9579bb209306ee63de9793a03be2e1701bb7f13971f8545d99bc6573e340f823af0ad35b2
+  checksum: 1b071bb8625ded9e487f93516a902b652502f781660dc1f1802b6988d2af90927f5b1efecbc2999a59e2f9cf586d7e78d5672e5bb6e7624f3e3eef355af3bb9a
   languageName: node
   linkType: hard
 
@@ -7179,13 +7158,6 @@ __metadata:
   version: 1.1.0
   resolution: "jsbn@npm:1.1.0"
   checksum: 944f924f2bd67ad533b3850eee47603eed0f6ae425fd1ee8c760f477e8c34a05f144c1bd4f5a5dd1963141dc79a2c55f89ccc5ab77d039e7077f3ad196b64965
-  languageName: node
-  linkType: hard
-
-"jsdoc-type-pratt-parser@npm:~4.0.0":
-  version: 4.0.0
-  resolution: "jsdoc-type-pratt-parser@npm:4.0.0"
-  checksum: af0629c9517e484be778d8564440fec8de5b7610e0c9c88a3ba4554321364faf72b46689c8d8845faa12c0718437a9ed97e231977efc0f2d50e8a2dbad807eb3
   languageName: node
   linkType: hard
 
@@ -8225,19 +8197,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^15.3.1":
-  version: 15.3.1
-  resolution: "next@npm:15.3.1"
+"next@npm:^15.3.2":
+  version: 15.3.2
+  resolution: "next@npm:15.3.2"
   dependencies:
-    "@next/env": 15.3.1
-    "@next/swc-darwin-arm64": 15.3.1
-    "@next/swc-darwin-x64": 15.3.1
-    "@next/swc-linux-arm64-gnu": 15.3.1
-    "@next/swc-linux-arm64-musl": 15.3.1
-    "@next/swc-linux-x64-gnu": 15.3.1
-    "@next/swc-linux-x64-musl": 15.3.1
-    "@next/swc-win32-arm64-msvc": 15.3.1
-    "@next/swc-win32-x64-msvc": 15.3.1
+    "@next/env": 15.3.2
+    "@next/swc-darwin-arm64": 15.3.2
+    "@next/swc-darwin-x64": 15.3.2
+    "@next/swc-linux-arm64-gnu": 15.3.2
+    "@next/swc-linux-arm64-musl": 15.3.2
+    "@next/swc-linux-x64-gnu": 15.3.2
+    "@next/swc-linux-x64-musl": 15.3.2
+    "@next/swc-win32-arm64-msvc": 15.3.2
+    "@next/swc-win32-x64-msvc": 15.3.2
     "@swc/counter": 0.1.3
     "@swc/helpers": 0.5.15
     busboy: 1.6.0
@@ -8282,7 +8254,7 @@ __metadata:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: c748e9f2657272b033aa559c42f3d99abe5cb7ae2e22d3a685e16f008aab1a23666b79178b33d1bf075e7663722cbbf3f726169b63e74f6d7a17d7b8a6e476fc
+  checksum: 1f1f535acdfb9158b6faad5e16d359b43ea5d09bdd688eaf1418f77af1cafbfb1c611b7977ab8e1f4bae7d1c01c9f107b3ca5dfb7642a8610588e688576378d6
   languageName: node
   linkType: hard
 
@@ -9075,6 +9047,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"parse-imports-exports@npm:^0.2.4":
+  version: 0.2.4
+  resolution: "parse-imports-exports@npm:0.2.4"
+  dependencies:
+    parse-statements: 1.0.11
+  checksum: c0028aef0ac33c3905928973a0222be027e148ffb8950faaae1d2849526dc5c95aa44a4a619dea0e540529ae74e78414c2e2b6b037520e499e970c1059f0c12d
+  languageName: node
+  linkType: hard
+
 "parse-imports@npm:^2.1.1":
   version: 2.2.1
   resolution: "parse-imports@npm:2.2.1"
@@ -9113,6 +9094,13 @@ __metadata:
   dependencies:
     protocols: ^2.0.0
   checksum: 244b46523a58181d251dda9b888efde35d8afb957436598d948852f416d8c76ddb4f2010f9fc94218b4be3e5c0f716aa0d2026194a781e3b8981924142009302
+  languageName: node
+  linkType: hard
+
+"parse-statements@npm:1.0.11":
+  version: 1.0.11
+  resolution: "parse-statements@npm:1.0.11"
+  checksum: b7281e5b9e949cbed4cebaf56fb2d30495e5caf0e0ef9b8227e4b4010664db693d4bc694d54d04997f65034ebd569246b6ad454d2cdc3ecbaff69b7bc7b9b068
   languageName: node
   linkType: hard
 
@@ -10053,7 +10041,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.6.2, semver@npm:^7.7.1":
+"semver@npm:^7.7.1":
   version: 7.7.1
   resolution: "semver@npm:7.7.1"
   bin:
@@ -10761,7 +10749,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"synckit@npm:^0.9.0, synckit@npm:^0.9.1":
+"synckit@npm:^0.9.1":
   version: 0.9.2
   resolution: "synckit@npm:0.9.2"
   dependencies:
@@ -11033,7 +11021,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:^4.19.2, tsx@npm:^4.19.4":
+"tsx@npm:^4.19.4":
   version: 4.19.4
   resolution: "tsx@npm:4.19.4"
   dependencies:

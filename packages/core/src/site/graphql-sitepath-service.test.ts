@@ -633,12 +633,12 @@ describe('GraphQLSitePathService', () => {
     it('should throw error if SitemapQuery fails', async () => {
       nock(endpoint)
         .post('/', /DefaultSitemapQuery/gi)
-        .reply(500, 'Error 😥');
+        .reply(500);
 
       const service = new GraphQLSitePathService({ clientFactory, sites });
-      await service.fetchSiteRoutes(['ua']).catch((error: RangeError) => {
+      await service.fetchSiteRoutes(['ua']).catch((error) => {
         expect(error.message).to.contain('SitemapQuery');
-        expect(error.message).to.contain('Error 😥');
+        expect(error.response.status).to.equal(500);
       });
       return expect(nock.isDone()).to.be.true;
     });

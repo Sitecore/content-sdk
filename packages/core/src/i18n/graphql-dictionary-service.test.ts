@@ -142,9 +142,7 @@ describe('GraphQLDictionaryService', () => {
   it('should throw when getting http errors', async () => {
     nock(endpoint)
       .post('/')
-      .reply(401, {
-        error: 'whoops',
-      });
+      .reply(401);
 
     const service = new GraphQLDictionaryService({
       clientFactory,
@@ -152,8 +150,8 @@ describe('GraphQLDictionaryService', () => {
     });
 
     await service.fetchDictionaryData('en', defaultSite).catch((error) => {
+      expect(error.message).to.contain('DictionarySiteQuery');
       expect(error.response.status).to.equal(401);
-      expect(error.response.error).to.equal('whoops');
     });
   });
 
