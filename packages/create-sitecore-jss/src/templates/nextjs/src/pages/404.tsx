@@ -23,7 +23,7 @@ const Custom404 = (props: SitecorePageProps): JSX.Element => {
 export const getStaticProps: GetStaticProps = async (context) => {
   let resultErrorPages: ErrorPages | null = null;
 
-  if (process.env.DISABLE_SSG_FETCH?.toLowerCase() !== 'true') {
+  if (!scConfig.disableStaticPaths) {
     try {
       resultErrorPages = await client.getErrorPages({
         site: config.defaultSite,
