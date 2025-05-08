@@ -3,7 +3,6 @@ import { SitecoreClient } from '@sitecore-content-sdk/core/client';
 
 /**
  * Middleware for handling robots.txt requests in a Next.js application.
- * Mirrors the style of SitemapMiddleware.
  */
 export class RobotsMiddleware {
   private client: SitecoreClient;
