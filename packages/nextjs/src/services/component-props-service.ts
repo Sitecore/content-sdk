@@ -35,7 +35,7 @@ export class ComponentPropsService {
   ): Promise<ComponentPropsCollection> {
     const { layoutData, context, components } = params;
     const fetchFunctionFactory = async (componentName: string) =>
-      (await this.getModule(components, componentName))?.getComponentProps;
+      (await this.getModule(components, componentName))?.getComponentServerProps;
     const requests = await this.collectRequests({
       placeholders: layoutData.sitecore.route?.placeholders,
       fetchFunctionFactory,

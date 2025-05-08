@@ -3,7 +3,7 @@
   FEaaSComponentParams,
   fetchFEaaSComponentServerProps,
 } from '@sitecore-content-sdk/react';
-import { GetComponentProps } from '../sharedTypes/component-props';
+import { GetComponentServerProps } from '../sharedTypes/component-props';
 
 /**
  * TODO: remove when framework agnostic forms implemented
@@ -17,7 +17,7 @@ import { GetComponentProps } from '../sharedTypes/component-props';
  * @param {LayoutServiceData} layoutData
  * @returns {GetStaticPropsContext | GetServerSideProps} context
  */
-export const getComponentProps: GetComponentProps = async (rendering, layoutData) => {
+export const getComponentServerProps: GetComponentServerProps = async (rendering, layoutData) => {
   const params: FEaaSComponentParams = rendering.params || {};
   const result = await fetchFEaaSComponentServerProps(
     params,

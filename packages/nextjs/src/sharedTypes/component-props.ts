@@ -23,7 +23,7 @@ export type ComponentPropsFetchFunction<NextContext, FetchedProps = unknown> = {
 /**
  * Common server component props used in both SSG and SSR modes
  */
-export type GetComponentProps = ComponentPropsFetchFunction<
+export type GetComponentServerProps = ComponentPropsFetchFunction<
   GetServerSidePropsContext | GetStaticPropsContext
 >;
 
@@ -34,7 +34,7 @@ export type NextjsJssComponent = ReactJssComponent & {
   /**
    * function for component level data fetching in both SSR and SSG
    */
-  getComponentProps?: GetComponentProps;
+  getComponentServerProps?: GetComponentServerProps;
   /**
    * Optional dynamic import for lazy components - allows component props retrieval
    */

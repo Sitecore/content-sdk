@@ -85,25 +85,25 @@ describe('ComponentPropsService', () => {
       [
         'namex11',
         {
-          getComponentsProps: fetchFn('x11SSRData'),
+          getComponentServerProps: fetchFn('x11SSRData'),
         },
       ],
       [
         'namex14',
         {
-          getComponentsProps: fetchFn('x14SSRData', 'whoops'),
+          getComponentServerProps: fetchFn('x14SSRData', 'whoops'),
         },
       ],
       [
         'MyCustomComponent',
         {
-          getComponentsProps: fetchFn('myCustomComponentSSRData'),
+          getComponentServerProps: fetchFn('myCustomComponentSSRData'),
         },
       ],
       [
         'namex24',
         {
-          getComponentsProps: fetchFn('x24SSRData'),
+          getComponentServerProps: fetchFn('x24SSRData'),
         },
       ],
     ]);
@@ -135,27 +135,27 @@ describe('ComponentPropsService', () => {
       [
         'namex11',
         {
-          getComponentsProps: fetchFn('x11SSRData'),
+          getComponentServerProps: fetchFn('x11SSRData'),
         },
       ],
       [
         'namex14',
         {
           dynamicModule: async () => ({
-            getComponentsProps: fetchFn('x14SSRData', 'whoops'),
+            getComponentServerProps: fetchFn('x14SSRData', 'whoops'),
           }),
         },
       ],
       [
         'MyCustomComponent',
         {
-          getComponentsProps: fetchFn('myCustomComponentSSRData'),
+          getComponentServerProps: fetchFn('myCustomComponentSSRData'),
         },
       ],
       [
         'namex24',
         {
-          getComponentsProps: fetchFn('x24SSRData'),
+          getComponentServerProps: fetchFn('x24SSRData'),
         },
       ],
     ]) as unknown) as ComponentMap<NextjsJssComponent>;
@@ -187,25 +187,25 @@ describe('ComponentPropsService', () => {
       [
         'namex11',
         {
-          getComponentsProps: fetchFn('x11StaticData'),
+          getComponentServerProps: fetchFn('x11StaticData'),
         },
       ],
       [
         'namex14',
         {
-          getComponentsProps: fetchFn('x14StaticData', 'whoops'),
+          getComponentServerProps: fetchFn('x14StaticData', 'whoops'),
         },
       ],
       [
         'MyCustomComponent',
         {
-          getComponentsProps: fetchFn('myCustomComponentStaticData'),
+          getComponentServerProps: fetchFn('myCustomComponentStaticData'),
         },
       ],
       [
         'namex24',
         {
-          getComponentsProps: fetchFn('x24StaticData'),
+          getComponentServerProps: fetchFn('x24StaticData'),
         },
       ],
     ]) as unknown) as ComponentMap<NextjsJssComponent>;
@@ -237,27 +237,27 @@ describe('ComponentPropsService', () => {
       [
         'namex11',
         {
-          getComponentsProps: fetchFn('x11StaticData'),
+          getComponentServerProps: fetchFn('x11StaticData'),
         },
       ],
       [
         'namex14',
         {
           dynamicModule: async () => ({
-            getComponentsProps: fetchFn('x14SSRData', 'whoops'),
+            getComponentServerProps: fetchFn('x14SSRData', 'whoops'),
           }),
         },
       ],
       [
         'MyCustomComponent',
         {
-          getComponentsProps: fetchFn('myCustomComponentStaticData'),
+          getComponentServerProps: fetchFn('myCustomComponentStaticData'),
         },
       ],
       [
         'namex24',
         {
-          getComponentsProps: fetchFn('x24StaticData'),
+          getComponentServerProps: fetchFn('x24StaticData'),
         },
       ],
     ]) as unknown) as ComponentMap<NextjsJssComponent>;

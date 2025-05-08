@@ -273,7 +273,7 @@ describe('SitecoreClient', () => {
       };
 
       const mockComponent = {
-        getComponentProps: sandbox.stub().resolves({ props: { data: 'test-data' } }),
+        getComponentServerProps: sandbox.stub().resolves({ props: { data: 'test-data' } }),
       };
 
       const componentMap = new Map([['TestComponent', mockComponent]]);
@@ -283,7 +283,7 @@ describe('SitecoreClient', () => {
       expect(result).to.deep.equal({
         'test-uid': { props: { data: 'test-data' } },
       });
-      expect(mockComponent.getComponentProps.calledOnce).to.be.true;
+      expect(mockComponent.getComponentServerProps.calledOnce).to.be.true;
     });
   });
 });
