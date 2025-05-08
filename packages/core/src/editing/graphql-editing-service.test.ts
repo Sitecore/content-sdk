@@ -566,7 +566,7 @@ describe('GraphQLEditingService', () => {
   it('should throw an error when fetching editing data', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true' } })
       .post(endpointPath, /EditingQuery/gi)
-      .reply(500);
+      .reply(500, 'Internal server error');
 
     const service = new GraphQLEditingService({
       clientFactory,
@@ -581,8 +581,7 @@ describe('GraphQLEditingService', () => {
         mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
-      expect(error.message).to.contain('EditingQuery');
-      expect(error.response.status).to.equal(500);
+      expect(error.response.error).to.equal('Internal server error');
     }
   });
 

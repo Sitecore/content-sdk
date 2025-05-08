@@ -70,7 +70,7 @@
     "chalk": "^4.1.2",
     "debug": "^4.4.0",
     "graphql": "^16.11.0",
-    "graphql-request": "^7.1.2",
+    "graphql-request": "^6.1.0",
     "memory-cache": "^0.2.0",
     "sinon-chai": "^4.0.0",
     "url-parse": "^1.5.10"
