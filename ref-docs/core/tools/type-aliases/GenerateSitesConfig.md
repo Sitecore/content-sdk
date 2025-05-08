@@ -8,7 +8,7 @@
 
 > **GenerateSitesConfig**: `object`
 
-Defined in: [packages/core/src/tools/generateSites.ts:15](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/tools/generateSites.ts#L15)
+Defined in: [packages/core/src/tools/generateSites.ts:15](https://github.com/Sitecore/content-sdk/blob/16d7bfcebf3663c684474111de6fcfda72223cec/packages/core/src/tools/generateSites.ts#L15)
 
 Configuration object for generating sites.
 

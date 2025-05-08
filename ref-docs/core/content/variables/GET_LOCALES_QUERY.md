@@ -8,6 +8,6 @@
 
 > `const` **GET\_LOCALES\_QUERY**: "\n  query GetAllLocales\{\n    manyLocale \{\n      id\n      label\n    \}\n  \}\n"
 
-Defined in: [packages/core/src/content/locales.ts:43](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/content/locales.ts#L43)
+Defined in: [packages/core/src/content/locales.ts:43](https://github.com/Sitecore/content-sdk/blob/16d7bfcebf3663c684474111de6fcfda72223cec/packages/core/src/content/locales.ts#L43)
 
 GraphQL query to retrieve all available locales.

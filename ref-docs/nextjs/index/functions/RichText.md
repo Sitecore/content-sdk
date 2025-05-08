@@ -8,7 +8,7 @@
 
 > **RichText**(`props`): `Element`
 
-Defined in: [nextjs/src/components/RichText.tsx:28](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/nextjs/src/components/RichText.tsx#L28)
+Defined in: [nextjs/src/components/RichText.tsx:28](https://github.com/Sitecore/content-sdk/blob/16d7bfcebf3663c684474111de6fcfda72223cec/packages/nextjs/src/components/RichText.tsx#L28)
 
 ## Parameters
 

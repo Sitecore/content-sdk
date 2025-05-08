@@ -8,7 +8,7 @@
 
 > **defineConfig**(`config`): `Required`\<\{ `api`: `Required`\<\{ `edge`: `Required`\<`undefined` \| \{ `clientContextId`: `string`; `contextId`: `string`; `edgeUrl`: `string`; \}\>; `local`: `Required`\<`undefined` \| \{ `apiHost`: `string`; `apiKey`: `string`; `path`: `string`; \}\>; \}\>; `defaultLanguage`: `string`; `defaultSite`: `string`; `dictionary`: `Required`\<`undefined` \| \{ `caching`: `Required`\<`undefined` \| \{ `enabled`: `boolean`; `timeout`: `number`; \}\>; \}\>; `editingSecret`: `string`; `layout`: `Required`\<`undefined` \| \{ `formatLayoutQuery`: `null` \| (`siteName`, `itemPath`, `locale`?) => `string`; \}\>; `multisite`: `Required`\<`undefined` \| \{ `enabled`: `boolean`; `useCookieResolution`: (`req`?, `res`?) => `boolean`; \}\>; `personalize`: `Required`\<`undefined` \| \{ `cdpTimeout`: `number`; `channel`: `string`; `currency`: `string`; `edgeTimeout`: `number`; `enabled`: `boolean`; `scope`: `string`; \}\>; `redirects`: `Required`\<`undefined` \| \{ `enabled`: `boolean`; `locales`: `string`[]; \}\>; `retries`: `Required`\<`undefined` \| \{ `count`: `number`; `retryStrategy`: [`RetryStrategy`](../interfaces/RetryStrategy.md); \}\>; \}\>
 
-Defined in: [packages/core/src/config/define-config.ts:112](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/config/define-config.ts#L112)
+Defined in: [packages/core/src/config/define-config.ts:112](https://github.com/Sitecore/content-sdk/blob/16d7bfcebf3663c684474111de6fcfda72223cec/packages/core/src/config/define-config.ts#L112)
 
 Accepts a SitecoreConfigInput object and returns full sitecore configuration
 
