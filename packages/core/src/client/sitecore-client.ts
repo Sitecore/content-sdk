@@ -98,11 +98,11 @@ export interface BaseSitecoreClient {
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
 
-/**
- * Retrieves the robots.txt content for a given site name.
- * @param {RobotsOptions} options - Options for fetching the robots.txt content.
- * @returns {Promise<string>} A promise that resolves to the robots.txt content.
- */
+  /**
+   * Retrieves the robots.txt content for a given site name.
+   * @param {RobotsOptions} options - Options for fetching the robots.txt content.
+   * @returns {Promise<string>} A promise that resolves to the robots.txt content.
+   */
   getRobots(options: { siteName: string }): Promise<string>;
   /*
    * Get dictionary data for a given site and locale.
@@ -502,11 +502,11 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
- * Retrieves the robots.txt content for a given site name.
- * @param {Object} options - Options for fetching the robots.txt content.
- * @returns {Promise<string>} A promise that resolves to the robots.txt content.
- * @throws {Error} If the robots.txt content is not found, throws an error with the message 'REDIRECT_404'.
- */
+   * Retrieves the robots.txt content for a given site name.
+   * @param {Object} options - Options for fetching the robots.txt content.
+   * @returns {Promise<string>} A promise that resolves to the robots.txt content.
+   * @throws {Error} If the robots.txt content is not found, throws an error with the message 'REDIRECT_404'.
+   */
   async getRobots(options: { siteName: string }): Promise<string> {
     const { siteName } = options;
 
