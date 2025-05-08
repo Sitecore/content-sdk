@@ -27,6 +27,7 @@ import {
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { NativeDataFetcher } from '../native-fetcher';
+import { GraphQLRobotsService } from '../site/graphql-robots-service';
 
 /**
  * Represent a Page model returned from Edge endpoint
@@ -64,6 +65,10 @@ export type SitemapXmlOptions = {
   siteName?: string;
 };
 
+export type RobotsOptions = {
+  siteName: string;
+};
+
 /**
  * Contract for the Sitecore Client implementations
  */
@@ -86,7 +91,13 @@ export interface BaseSitecoreClient {
     pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
+
   /**
+   * Retrieves the robots.txt content for a given site name.
+   * @param {RobotsOptions} options - Options for fetching the robots.txt content.
+   */
+  getRobots(options: { siteName: string }): Promise<string>;
+  /*
    * Get dictionary data for a given site and locale.
    * Can retrieve dictionary phrases for default site and language when page options not provided
    * @param {RouteOptions} [routeOptions] language and site to load dictionary data for
@@ -481,6 +492,25 @@ export class SitecoreClient implements BaseSitecoreClient {
         })
         .join('')}
       </sitemapindex>`;
+  }
+
+  async getRobots(options: { siteName: string }): Promise<string> {
+    const { siteName } = options;
+
+    const robotsService = new GraphQLRobotsService({
+      clientFactory: createGraphQLClientFactory({ api: this.initOptions.api }),
+      siteName: siteName || this.initOptions.defaultSite,
+    });
+
+    try {
+      const content = await robotsService.fetchRobots();
+      if (!content) {
+        throw new Error('REDIRECT_404');
+      }
+      return content;
+    } catch (error) {
+      throw new Error('REDIRECT_404');
+    }
   }
 
   /**
