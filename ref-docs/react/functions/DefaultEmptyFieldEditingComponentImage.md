@@ -6,17 +6,16 @@
 
 # Function: DefaultEmptyFieldEditingComponentImage()
 
-> **DefaultEmptyFieldEditingComponentImage**(`props`, `deprecatedLegacyContext`?): `ReactNode`
+> **DefaultEmptyFieldEditingComponentImage**(`props`): `ReactNode` \| `Promise`\<`ReactNode`\>
 
-Defined in: [packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx:7](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx#L7)
+Defined in: [packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx:7](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx#L7)
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `props` | \{\} | - |
-| `deprecatedLegacyContext`? | `any` | **Deprecated** **See** [React Docs](https://legacy.reactjs.org/docs/legacy-context.html#referencing-context-in-lifecycle-methods) |
+| Parameter | Type |
+| ------ | ------ |
+| `props` | \{\} |
 
 ## Returns
 
-`ReactNode`
+`ReactNode` \| `Promise`\<`ReactNode`\>

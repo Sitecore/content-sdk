@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/react",
-  "version": "0.2.0-canary.17",
+  "version": "0.2.0-canary.25",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -38,9 +38,8 @@
     "@types/chai-string": "^1.4.5",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.12.0",
-    "@types/prop-types": "^15.7.14",
-    "@types/react": "^18.2.45",
-    "@types/react-dom": "^18.0.10",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.0.4",
     "@types/sinon": "^17.0.3",
     "@types/sinon-chai": "^4.0.0",
     "chai": "^4.3.7",
@@ -51,8 +50,8 @@
     "jsdom": "^26.0.0",
     "mocha": "^11.1.0",
     "nyc": "^17.1.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "sinon": "^19.0.2",
     "sinon-chai": "^3.7.0",
     "ts-node": "^10.9.1",
@@ -61,11 +60,11 @@
   "peerDependencies": {
     "@sitecore-cloudsdk/events": "^0.5.0",
     "@sitecore-feaas/clientside": "^0.5.19",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "0.2.0-canary.17",
+    "@sitecore-content-sdk/core": "0.2.0-canary.25",
     "fast-deep-equal": "^3.1.3",
     "prop-types": "^15.8.1"
   },

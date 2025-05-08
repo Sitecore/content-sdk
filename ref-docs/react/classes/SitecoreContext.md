@@ -6,7 +6,7 @@
 
 # Class: SitecoreContext
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/SitecoreContext.tsx#L33)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:32](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/SitecoreContext.tsx#L32)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:33](https://githu
 
 > **new SitecoreContext**(`props`): [`SitecoreContext`](SitecoreContext.md)
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:47](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/SitecoreContext.tsx#L47)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:35](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/SitecoreContext.tsx#L35)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:47](https://githu
 
 > **context**: `unknown`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1013
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:945
 
 If using the new style context, re-declare this in your class to be the
 `React.ContextType` of your `static contextType`.
@@ -70,7 +70,7 @@ declare context: React.ContextType<typeof MyContext>
 
 > `readonly` **props**: `Readonly`\<`SitecoreContextProps`\>
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1033
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:961
 
 #### Inherited from
 
@@ -78,33 +78,11 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:1033
 
 ***
 
-### ~~refs~~
-
-> **refs**: `object`
-
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1040
-
-#### Index Signature
-
-\[`key`: `string`\]: `ReactInstance`
-
-#### Deprecated
-
-#### See
-
-[Legacy React Docs](https://legacy.reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs)
-
-#### Inherited from
-
-`React.Component.refs`
-
-***
-
 ### state
 
 > **state**: `Readonly`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\>
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1034
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:962
 
 #### Inherited from
 
@@ -116,7 +94,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:1034
 
 > `static` `optional` **contextType**: `Context`\<`any`\>
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:995
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:921
 
 If set, `this.context` will be set at runtime to the current value of the given Context.
 
@@ -149,27 +127,25 @@ class Foo extends React.Component {
 
 > `static` **displayName**: `string` = `'SitecoreContext'`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:45](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/SitecoreContext.tsx#L45)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/SitecoreContext.tsx#L33)
 
 ***
 
-### propTypes
+### ~~propTypes?~~
 
-> `static` **propTypes**: `object`
+> `static` `optional` **propTypes**: `any`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:34](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/SitecoreContext.tsx#L34)
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:927
 
-#### children
+Ignored by React.
 
-> **children**: `Validator`\<`any`\> = `PropTypes.any.isRequired`
+#### Deprecated
 
-#### componentMap
+Only kept in types for backwards compatibility. Will be removed in a future major release.
 
-> **componentMap**: `Requireable`\<`Map`\<`unknown`, `unknown`\>\>
+#### Inherited from
 
-#### layoutData
-
-> **layoutData**: `Requireable`\<`InferProps`\<\{ `sitecore`: `Requireable`\<`InferProps`\<\{ `context`: `Requireable`\<`any`\>; `route`: `Requireable`\<`any`\>; \}\>\>; \}\>\>
+`React.Component.propTypes`
 
 ## Methods
 
@@ -177,7 +153,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:34](https://githu
 
 > `optional` **componentDidCatch**(`error`, `errorInfo`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1397
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1194
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
@@ -203,7 +179,7 @@ the entire component tree to unmount.
 
 > `optional` **componentDidMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1376
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1173
 
 Called immediately after a component is mounted. Setting state here will trigger re-rendering.
 
@@ -221,7 +197,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:85](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/SitecoreContext.tsx#L85)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:73](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/SitecoreContext.tsx#L73)
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -247,7 +223,7 @@ The snapshot is only present if [getSnapshotBeforeUpdate](SitecoreContext.md#get
 
 > `optional` **componentWillMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1455
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1252
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -279,7 +255,7 @@ this from being invoked.
 
 > `optional` **componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1486
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1283
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -321,7 +297,7 @@ this from being invoked.
 
 > `optional` **componentWillUnmount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1392
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1189
 
 Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
 cancelled network requests, or cleaning up any DOM elements created in `componentDidMount`.
@@ -340,7 +316,7 @@ cancelled network requests, or cleaning up any DOM elements created in `componen
 
 > `optional` **componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1518
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1315
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -381,7 +357,7 @@ this from being invoked.
 
 > **constructContext**(`layoutData`?): [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:71](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/SitecoreContext.tsx#L71)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:59](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/SitecoreContext.tsx#L59)
 
 #### Parameters
 
@@ -399,7 +375,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:71](https://githu
 
 > **forceUpdate**(`callback`?): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1030
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:958
 
 #### Parameters
 
@@ -421,7 +397,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:1030
 
 > `optional` **getSnapshotBeforeUpdate**(`prevProps`, `prevState`): `any`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1433
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1230
 
 Runs before React applies the result of Component.render render to the document, and
 returns an object to be given to [componentDidUpdate](SitecoreContext.md#componentdidupdate). Useful for saving
@@ -451,7 +427,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:108](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/SitecoreContext.tsx#L108)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:96](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/SitecoreContext.tsx#L96)
 
 #### Returns
 
@@ -467,7 +443,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:108](https://gith
 
 > **setContext**(`value`): `void`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:100](https://github.com/Sitecore/content-sdk/blob/470c7bb404154f6c8bab7ab8dcba5e4e665da1cc/packages/react/src/components/SitecoreContext.tsx#L100)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:88](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/SitecoreContext.tsx#L88)
 
 Update context state. Value can be
 
@@ -487,7 +463,7 @@ Update context state. Value can be
 
 > **setState**\<`K`\>(`state`, `callback`?): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1025
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:953
 
 #### Type Parameters
 
@@ -516,7 +492,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:1025
 
 > `optional` **shouldComponentUpdate**(`nextProps`, `nextState`, `nextContext`): `boolean`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1387
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1184
 
 Called to determine whether the change in props and state should trigger a re-render.
 
@@ -549,7 +525,7 @@ and `componentDidUpdate` will not be called.
 
 > `optional` **UNSAFE\_componentWillMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1470
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1267
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -583,7 +559,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1504
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1301
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -627,7 +603,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1534
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1331
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 

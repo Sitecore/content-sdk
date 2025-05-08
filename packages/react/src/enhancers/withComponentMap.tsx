@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { ComponentMapReactContext } from '../components/SitecoreContext';
 import { useContext } from 'react';
 import { ComponentMap } from '../components/sharedTypes';

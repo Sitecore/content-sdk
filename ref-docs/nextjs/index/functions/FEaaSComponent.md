@@ -8,7 +8,7 @@
 
 > **FEaaSComponent**(`props`): `Element`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:55
+Defined in: react/types/components/FEaaSComponent.d.ts:56
 
 ## Parameters
 
