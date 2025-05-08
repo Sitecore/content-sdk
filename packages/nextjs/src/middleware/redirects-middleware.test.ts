@@ -22,6 +22,8 @@ const expect = chai.use(chaiString).expect;
 describe('RedirectsMiddleware', () => {
   let nextRedirectStub, nextRewriteStub;
 
+  const sandbox = sinon.createSandbox();
+
   const debugSpy = spy(debug, 'redirects');
   const validateDebugLog = (message, ...params) =>
     expect(debugSpy.args.find((log) => log[0] === message)).to.deep.equal([message, ...params]);
@@ -115,20 +117,20 @@ describe('RedirectsMiddleware', () => {
       redirectType?: string;
       isQueryStringPreserved?: boolean;
       locale?: string;
-      fetchRedirectsStub?: sinon.SinonStub;
+      fetchRedirectsStub?: sandbox.SinonStub;
       defaultHostname?: string;
       siteResolver?: SiteResolver;
     } = {}
   ) => {
     class MockSiteResolver extends SiteResolver {
       sites = sitesFromConfigFile;
-      getByName = sinon.stub().callsFake((siteName: string) => ({
+      getByName = sandbox.stub().callsFake((siteName: string) => ({
         name: siteName,
         language: props.language || '',
         hostName: hostname,
       }));
 
-      getByHost = sinon.stub().callsFake((hostName: string) => ({
+      getByHost = sandbox.stub().callsFake((hostName: string) => ({
         name: siteName,
         language: props.language || 'da',
         hostName,
@@ -164,13 +166,13 @@ describe('RedirectsMiddleware', () => {
 
     const fetchRedirects = (middleware['redirectsService']['fetchRedirects'] =
       props.fetchRedirectsStub ||
-      sinon.stub().returns(Promise.resolve(Object.keys(props).length ? redirectMaps : [])));
+      sandbox.stub().returns(Promise.resolve(Object.keys(props).length ? redirectMaps : [])));
 
     return { middleware, fetchRedirects, siteResolver };
   };
 
   const setupRedirectStub = (status = 307) => {
-    nextRedirectStub = sinon.stub(NextResponse, 'redirect').callsFake((url, init) => {
+    nextRedirectStub = sandbox.stub(NextResponse, 'redirect').callsFake((url, init) => {
       const statusCode = typeof init === 'number' ? init : init?.status || status;
       const headers = typeof init === 'object' ? init?.headers : {};
       return ({
@@ -183,7 +185,7 @@ describe('RedirectsMiddleware', () => {
   };
 
   const setupRewriteStub = (status = 200, res) => {
-    nextRewriteStub = sinon.stub(NextResponse, 'rewrite').callsFake((url) => {
+    nextRewriteStub = sandbox.stub(NextResponse, 'rewrite').callsFake((url) => {
       return ({
         url,
         status,
@@ -228,6 +230,7 @@ describe('RedirectsMiddleware', () => {
   });
 
   afterEach(() => {
+    sandbox.restore();
     nextRedirectStub?.restore();
     nextRewriteStub?.restore();
   });
@@ -296,6 +299,78 @@ describe('RedirectsMiddleware', () => {
         });
 
         expect(finalRes).to.deep.equal(res);
+      });
+    });
+
+    describe('Extensibility', () => {
+      it('should use custom redirectsService when provided', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/custom-target',
+          pathname: '/custom-target',
+          origin: 'http://localhost:3000',
+          locale: 'en',
+          search: '',
+          clone: cloneUrl,
+        };
+        const { res, req } = createTestRequestResponse({
+          response: {
+            url,
+          },
+          request: {
+            nextUrl: {
+              pathname: '/custom-pattern',
+              href: 'http://localhost:3000/custom-pattern',
+              locale: 'en',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 301,
+        });
+        const customRedirectsService = {
+          fetchRedirects: sandbox.stub().returns(
+            Promise.resolve([
+              {
+                pattern: '/custom-pattern',
+                target: '/custom-target',
+                redirectType: REDIRECT_TYPE_301,
+                isQueryStringPreserved: false,
+              },
+            ])
+          ),
+        };
+
+        setupRedirectStub(301);
+
+        const { middleware } = createMiddleware({
+          redirectsService: customRedirectsService,
+        });
+
+        const finalRes = await middleware.handle(req, res);
+
+        validateDebugLog('redirects middleware start: %o', {
+          hostname: 'foo.net',
+          language: 'en',
+          pathname: '/custom-pattern',
+        });
+
+        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+          headers: {},
+          redirected: undefined,
+          status: 301,
+          url: {
+            href: 'http://localhost:3000/custom-target',
+            pathname: '/custom-target',
+            origin: 'http://localhost:3000',
+            locale: 'en',
+            search: '',
+            clone: cloneUrl,
+          },
+        });
+
+        expect(customRedirectsService.fetchRedirects).to.be.calledOnce;
+        expect(finalRes.status).to.equal(301);
       });
     });
 
@@ -389,7 +464,7 @@ describe('RedirectsMiddleware', () => {
       const res = createResponse({
         url: 'http://localhost:3000/found',
       });
-      const nextStub = sinon.stub(NextResponse, 'next').returns((res as unknown) as NextResponse);
+      const nextStub = sandbox.stub(NextResponse, 'next').returns((res as unknown) as NextResponse);
       const req = createRequest();
       const { middleware, fetchRedirects, siteResolver } = createMiddleware();
       const finalRes = await middleware.handle(req, res);

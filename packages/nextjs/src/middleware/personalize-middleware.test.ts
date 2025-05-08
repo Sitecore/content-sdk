@@ -12,17 +12,18 @@ import { PersonalizeMiddleware, PersonalizeMiddlewareConfig } from './personaliz
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
+const sandbox = sinon.createSandbox();
 
 describe('PersonalizeMiddleware', () => {
   const ua = 'user-agent-string';
-  const userAgentStub = sinon.stub(nextjs, 'userAgent').returns({ ua } as any);
+  const userAgentStub = sandbox.stub(nextjs, 'userAgent').returns({ ua } as any);
   const debugSpy = spy(debug, 'personalize');
   const validateDebugLog = (message, ...params) => {
     expect(debugSpy.args.find((log) => log[0] === message)).to.deep.equal([message, ...params]);
   };
   const validateEndMessageDebugLog = (message, params) => {
     const logParams = debugSpy.args.find((log) => log[0] === message) as Array<unknown>;
-    expect(logParams[2]).to.deep.equal(params);
+    expect(logParams?.[2]).to.deep.equal(params);
   };
 
   const hostname = 'foo.net';
@@ -160,9 +161,9 @@ describe('PersonalizeMiddleware', () => {
         pageId: string;
         variantIds: string[];
       } | null;
-      getPersonalizeInfoStub?: sinon.SinonStub;
-      personalizeStub?: sinon.SinonStub;
-      handleCookieStub?: sinon.SinonStub;
+      getPersonalizeInfoStub?: sandbox.SinonStub;
+      personalizeStub?: sandbox.SinonStub;
+      handleCookieStub?: sandbox.SinonStub;
     } = { config: defaultConfig }
   ) => {
     const clientFactory = GraphQLRequestClient.createClientFactory({
@@ -176,13 +177,13 @@ describe('PersonalizeMiddleware', () => {
     };
 
     class MockSiteResolver extends SiteResolver {
-      getByName = sinon.stub().callsFake((siteName: string) => ({
+      getByName = sandbox.stub().callsFake((siteName: string) => ({
         name: siteName,
         language: props.language || '',
         hostName: hostname,
       }));
 
-      getByHost = sinon.stub().callsFake((hostName: string) => ({
+      getByHost = sandbox.stub().callsFake((hostName: string) => ({
         name: siteName,
         language: props.language || '',
         hostName,
@@ -196,11 +197,11 @@ describe('PersonalizeMiddleware', () => {
     });
     middleware['siteResolver'] = siteResolver;
 
-    const initPersonalizeServer = (middleware['initPersonalizeServer'] = sinon.stub());
+    const initPersonalizeServer = (middleware['initPersonalizeServer'] = sandbox.stub());
 
     const personalize = (middleware['personalize'] =
       props.personalizeStub ||
-      sinon.stub().returns(
+      sandbox.stub().returns(
         Promise.resolve({
           variantId: props.variantId,
         })
@@ -208,7 +209,7 @@ describe('PersonalizeMiddleware', () => {
 
     const getPersonalizeInfo = (middleware['personalizeService']['getPersonalizeInfo'] =
       props.getPersonalizeInfoStub ||
-      sinon.stub().returns(
+      sandbox.stub().returns(
         Promise.resolve(
           props.personalizeInfo === null
             ? undefined
@@ -237,7 +238,123 @@ describe('PersonalizeMiddleware', () => {
   });
 
   afterEach(() => {
+    sandbox.restore();
     userAgentStub.returns({ ua } as any);
+  });
+
+  describe('Extensibility', () => {
+    it('should apply custom experience params from getOverrideExperienceParams, when provided', async () => {
+      const customParams = {
+        referrer: 'http://custom-referrer.com',
+        utm: {
+          campaign: 'custom_campaign',
+          source: 'custom_source',
+          medium: 'custom_medium',
+          content: 'custom_content',
+        },
+      };
+
+      const req = createRequest();
+      const res = createResponse();
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const getOverrideExperienceParamsStub = sandbox.stub().returns(customParams);
+
+      const {
+        middleware,
+        getPersonalizeInfo,
+        initPersonalizeServer,
+        personalize,
+      } = createMiddleware({
+        variantId: 'variant-2',
+        config: {
+          ...defaultConfig,
+          getOverrideExperienceParams: getOverrideExperienceParamsStub,
+        },
+      });
+
+      const finalRes = await middleware.handle(req, res);
+
+      validateDebugLog('personalize middleware start: %o', {
+        headers: {
+          ...req.headers,
+        },
+        hostname: 'foo.net',
+        pathname: '/styleguide',
+        language: 'en',
+      });
+
+      expect(getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be.true;
+      expect(initPersonalizeServer.calledOnce).to.be.true;
+      expect(personalize.calledOnce).to.be.true;
+
+      expect(getOverrideExperienceParamsStub.calledOnceWith(req)).to.be.true;
+      expect(personalize.calledWith(sandbox.match({ params: customParams }), sandbox.match.any)).to
+        .be.true;
+
+      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+        rewritePath: '/_variantId_variant-2/styleguide',
+        headers: {
+          ...res.headers,
+          'x-middleware-cache': 'no-cache',
+          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+        },
+      });
+
+      expect(finalRes).to.deep.equal(res);
+      nextRewriteStub.restore();
+    });
+
+    it('should use custom personalizeService when provided', async () => {
+      const req = createRequest();
+      const res = createResponse();
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const customPersonalizeService = {
+        getPersonalizeInfo: sandbox.stub().returns(
+          Promise.resolve({
+            pageId,
+            variantIds,
+          })
+        ),
+      };
+
+      const { middleware, initPersonalizeServer, personalize } = createMiddleware({
+        config: {
+          ...defaultConfig,
+          personalizeService: customPersonalizeService,
+        },
+        variantId: variantIds[1],
+      });
+
+      const finalRes = await middleware.handle(req, res);
+
+      expect(customPersonalizeService.getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be
+        .true;
+      expect(initPersonalizeServer.calledOnce).to.be.true;
+      expect(personalize.calledOnce).to.be.true;
+
+      validateDebugLog('personalize middleware start: %o', {
+        headers: {
+          ...req.headers,
+        },
+        hostname: 'foo.net',
+        pathname: '/styleguide',
+        language: 'en',
+      });
+
+      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+        rewritePath: '/_variantId_variant-2/styleguide',
+        headers: {
+          ...res.headers,
+          'x-middleware-cache': 'no-cache',
+          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+        },
+      });
+
+      expect(finalRes).to.deep.equal(res);
+      nextRewriteStub.restore();
+    });
   });
 
   describe('request skipped', () => {
@@ -442,7 +559,7 @@ describe('PersonalizeMiddleware', () => {
     it('invalid variant', async () => {
       const req = createRequest();
       const res = createResponse();
-      const handleCookieStub = sinon.stub().resolves();
+      const handleCookieStub = sandbox.stub().resolves();
       const invalidVariant = 'invalid-variant';
       const {
         middleware,
@@ -507,7 +624,7 @@ describe('PersonalizeMiddleware', () => {
         },
       });
       const res = createResponse();
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const {
         middleware,
         getPersonalizeInfo,
@@ -556,7 +673,7 @@ describe('PersonalizeMiddleware', () => {
         },
       });
       const res = createResponse();
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const {
         middleware,
         getPersonalizeInfo,
@@ -595,7 +712,7 @@ describe('PersonalizeMiddleware', () => {
     it('custom response object is not provided', async () => {
       const req = createRequest();
       const res = createResponse();
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const {
         middleware,
         getPersonalizeInfo,
@@ -635,7 +752,7 @@ describe('PersonalizeMiddleware', () => {
       userAgentStub.returns({ ua: '' } as any);
       const req = createRequest({ headerValues: { referer: null } });
       const res = createResponse();
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const {
         middleware,
         getPersonalizeInfo,
@@ -678,7 +795,7 @@ describe('PersonalizeMiddleware', () => {
           sc_site: 'foo',
         },
       });
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const {
         middleware,
         getPersonalizeInfo,
@@ -722,7 +839,7 @@ describe('PersonalizeMiddleware', () => {
           'x-sc-rewrite': '/_site_nextjs-app/styleguide',
         },
       });
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const {
         middleware,
         getPersonalizeInfo,
@@ -765,7 +882,7 @@ describe('PersonalizeMiddleware', () => {
         },
       });
       const res = createResponse();
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const {
         middleware,
         getPersonalizeInfo,
@@ -808,7 +925,7 @@ describe('PersonalizeMiddleware', () => {
         },
       });
       const res = createResponse();
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const {
         middleware,
         getPersonalizeInfo,
@@ -847,8 +964,8 @@ describe('PersonalizeMiddleware', () => {
       const scope = 'myscope';
       const req = createRequest();
       const res = createResponse();
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const personalizeStub = sinon.stub().returns(Promise.resolve({ variantId: undefined }));
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const personalizeStub = sandbox.stub().returns(Promise.resolve({ variantId: undefined }));
       const { middleware, getPersonalizeInfo, personalize } = createMiddleware({
         config: { ...defaultConfig, scope },
         personalizeInfo: {
@@ -862,8 +979,8 @@ describe('PersonalizeMiddleware', () => {
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en', siteName)).to.be.true;
       expect(
         personalize.calledWith(
-          sinon.match({ friendlyId: CdpHelper.getPageFriendlyId(pageId, 'en', scope) }),
-          sinon.match.any
+          sandbox.match({ friendlyId: CdpHelper.getPageFriendlyId(pageId, 'en', scope) }),
+          sandbox.match.any
         )
       ).to.be.true;
       expect(finalRes).to.deep.equal(res);
@@ -876,8 +993,8 @@ describe('PersonalizeMiddleware', () => {
       const cdpTimeout = 1000;
       const req = createRequest();
       const res = createResponse();
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const personalizeStub = sinon.stub().returns(Promise.resolve({ variantId: undefined }));
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const personalizeStub = sandbox.stub().returns(Promise.resolve({ variantId: undefined }));
       const { middleware, personalize } = createMiddleware({
         config: { ...defaultConfig, edgeTimeout, cdpTimeout },
         personalizeInfo: {
@@ -889,8 +1006,8 @@ describe('PersonalizeMiddleware', () => {
       const finalRes = await middleware.handle(req, res);
 
       expect(middleware['personalizeService']['config'].timeout).to.equal(edgeTimeout);
-      expect(personalize.calledWith(sinon.match({ timeout: cdpTimeout }), sinon.match.any)).to.be
-        .true;
+      expect(personalize.calledWith(sandbox.match({ timeout: cdpTimeout }), sandbox.match.any)).to
+        .be.true;
       expect(finalRes).to.deep.equal(res);
       nextRewriteStub.restore();
     });
@@ -899,29 +1016,29 @@ describe('PersonalizeMiddleware', () => {
       const pageId = 'item-id';
       const req = createRequest();
       const res = createResponse();
-      const nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const personalizeStub = sinon.stub();
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const personalizeStub = sandbox.stub();
       personalizeStub
         .withArgs(
-          sinon.match({
+          sandbox.match({
             friendlyId: CdpHelper.getComponentFriendlyId(pageId, 'component1', 'en'),
             variantIds: ['component1_default', 'component1_variant1'],
           }),
-          sinon.match.any
+          sandbox.match.any
         )
         .returns(Promise.resolve({ variantId: 'component1_default' }));
       personalizeStub
         .withArgs(
-          sinon.match({
+          sandbox.match({
             friendlyId: CdpHelper.getComponentFriendlyId(pageId, 'component2', 'en'),
             variantIds: ['component2_default', 'component2_variant1', 'component2_variant2'],
           }),
-          sinon.match.any
+          sandbox.match.any
         )
         .returns(Promise.resolve({ variantId: 'component2_variant1' }));
       personalizeStub
         .withArgs(
-          sinon.match({
+          sandbox.match({
             friendlyId: CdpHelper.getComponentFriendlyId(pageId, 'component3', 'en'),
             variantIds: [
               'component3_default',
@@ -930,7 +1047,7 @@ describe('PersonalizeMiddleware', () => {
               'component3_variant3',
             ],
           }),
-          sinon.match.any
+          sandbox.match.any
         )
         .returns(Promise.resolve({ variantId: 'component3_variant3' }));
       const { middleware, getPersonalizeInfo, initPersonalizeServer } = createMiddleware({
@@ -998,7 +1115,7 @@ describe('PersonalizeMiddleware', () => {
     it('should log error when getPersonalizeInfo throws', async () => {
       const error = new Error('Edge fails');
 
-      const getPersonalizeInfoWithError = sinon.stub().throws(error);
+      const getPersonalizeInfoWithError = sandbox.stub().throws(error);
 
       const {
         middleware,
