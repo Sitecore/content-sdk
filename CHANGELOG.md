@@ -27,7 +27,10 @@ Our versioning strategy is as follows:
     - In XM Cloud, this is set to `true` by default as the application runs as an editing host.  
     - It can still be configured via the `DISABLE_SSG_FETCH` environment variable or the `disableStaticPaths` config property if needed.
     - By default, it is set to `false` in the configuration.
-* `[core][nextjs]` Refactor of robots api and extraction to SDK level ([#83](https://github.com/Sitecore/content-sdk/pull/83))
+* `[core][nextjs]` Introduced `getRobots` method in `SitecoreClient` and a new `RobotsMiddleware` for Next.js API routes ([#83](https://github.com/Sitecore/content-sdk/pull/83))
+  - The `getRobots(siteName, fetchOptions?)` method centralizes logic for fetching `robots.txt` content from Sitecore using GraphQL.
+  - A new `RobotsMiddleware` class encapsulates HTTP-level logic for generating `robots.txt` responses in Next.js apps.
+  - These additions follow the same extensible architecture as existing features enabling custom behavior via service overrides and improving consistency across endpoints.
 * `[core]` Introduce get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#75](https://github.com/Sitecore/content-sdk/pull/75))
 * `[cli]` Introduce "project" subcommands ([#73](https://github.com/Sitecore/content-sdk/pull/73))
 

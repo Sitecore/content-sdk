@@ -100,10 +100,10 @@ export interface BaseSitecoreClient {
 
   /**
    * Retrieves the robots.txt content for a given site name.
-   * @param {RobotsOptions} options - Options for fetching the robots.txt content.
+   * @param {string} siteName - The name of the site for which to fetch robots.txt content.
    * @returns {Promise<string>} A promise that resolves to the robots.txt content.
    */
-  getRobots(options: { siteName: string }): Promise<string>;
+  getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string>;
   /*
    * Get dictionary data for a given site and locale.
    * Can retrieve dictionary phrases for default site and language when page options not provided
@@ -153,9 +153,17 @@ export interface BaseSitecoreClient {
   /**
    * Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
    * @param { SitemapRequestConfig} reqOptions - Configuration for sitemap retrieval
+   * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests (like retries and fetch)
    * @returns {Promise<string>} Promise resolving to the sitemap XML content as string
    */
-  getSiteMap(reqOptions: SitemapXmlOptions): Promise<string>;
+  getSiteMap(reqOptions: SitemapXmlOptions, fetchOptions?: FetchOptions): Promise<string>;
+  /**
+   * Retrieves the robots.txt content for a given site name.
+   * @param {string} siteName - The name of the site for which to fetch robots.txt content.
+   * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests (like retries and fetch)
+   * @returns {Promise<string>} A promise that resolves to the robots.txt content.
+   */
+  getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string>;
 }
 
 export interface BaseServiceOptions {
@@ -507,16 +515,11 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @returns {Promise<string>} A promise that resolves to the robots.txt content.
    * @throws {Error} If the robots.txt content is not found, throws an error with the message 'REDIRECT_404'.
    */
-  async getRobots(options: { siteName: string }): Promise<string> {
-    const { siteName } = options;
-
-    const robotsService = new GraphQLRobotsService({
-      clientFactory: createGraphQLClientFactory({ api: this.initOptions.api }),
-      siteName: siteName || this.initOptions.defaultSite,
-    });
+  async getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string> {
+    const robotsService = this.getRobotsService(siteName || this.initOptions.defaultSite);
 
     try {
-      const content = await robotsService.fetchRobots();
+      const content = await robotsService.fetchRobots(fetchOptions);
       if (!content) {
         throw new Error('REDIRECT_404');
       }
@@ -533,6 +536,13 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   protected getGraphqlSitemapXMLService(siteName: string): GraphQLSitemapXmlService {
     return new GraphQLSitemapXmlService({
+      clientFactory: this.clientFactory,
+      siteName,
+    });
+  }
+
+  protected getRobotsService(siteName: string): GraphQLRobotsService {
+    return new GraphQLRobotsService({
       clientFactory: this.clientFactory,
       siteName,
     });

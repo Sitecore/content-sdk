@@ -1,4 +1,4 @@
-import { GraphQLClient } from '../client';
+import { FetchOptions, GraphQLClient } from '../client';
 import { siteNameError } from '../constants';
 import debug from '../debug';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
@@ -54,7 +54,7 @@ export class GraphQLRobotsService {
    * @returns text of robots.txt
    * @throws {Error} if the siteName is empty.
    */
-  async fetchRobots(): Promise<string> {
+  async fetchRobots(fetchOptions?: FetchOptions): Promise<string> {
     const siteName: string = this.options.siteName;
 
     if (!siteName) {
@@ -63,7 +63,7 @@ export class GraphQLRobotsService {
 
     const robotsResult: Promise<RobotsQueryResult> = this.graphQLClient.request(this.query, {
       siteName,
-    });
+    }, fetchOptions);
     try {
       return robotsResult.then((result: RobotsQueryResult) => {
         return result?.site?.siteInfo?.robots;
