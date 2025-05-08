@@ -599,7 +599,6 @@ describe('GraphQLEditingService', () => {
         mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
-      console.log(error);
       expect(error.message).to.equal('The site name must be a non-empty string');
     }
   });
