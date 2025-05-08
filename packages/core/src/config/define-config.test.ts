@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { defineConfig, getFallbackConfig } from './define-config';
 import { SitecoreConfigInput } from './models';
 import { DefaultRetryStrategy } from '..';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 
 describe('define-config', () => {
   const mockConfig: SitecoreConfigInput = {
@@ -36,13 +37,13 @@ describe('define-config', () => {
     const config = defineConfig(mockConfig);
     const fallbackConfig = getFallbackConfig();
     // api.edge
-    expect(config.api.edge.contextId).to.equal(mockConfig.api.edge?.contextId);
-    expect(config.api.edge.clientContextId).to.equal(mockConfig.api.edge?.clientContextId);
+    expect(config.api.edge.contextId).to.equal(mockConfig.api?.edge?.contextId);
+    expect(config.api.edge.clientContextId).to.equal(mockConfig.api?.edge?.clientContextId);
     expect(config.api.edge.edgeUrl).to.equal(fallbackConfig.api.edge.edgeUrl);
 
     // api.local
-    expect(config.api.local.apiHost).to.equal(mockConfig.api.local?.apiHost);
-    expect(config.api.local.apiKey).to.equal(mockConfig.api.local?.apiKey);
+    expect(config.api.local.apiHost).to.equal(mockConfig.api?.local?.apiHost);
+    expect(config.api.local.apiKey).to.equal(mockConfig.api?.local?.apiKey);
 
     // defaultSite
     expect(config.defaultSite).to.equal(mockConfig.defaultSite);
@@ -51,20 +52,20 @@ describe('define-config', () => {
     expect(config.defaultLanguage).to.equal(mockConfig.defaultLanguage);
 
     // multisite
-    expect(config.multisite.enabled).to.equal(mockConfig.multisite.enabled);
+    expect(config.multisite.enabled).to.equal(mockConfig.multisite?.enabled);
     expect(config.multisite.useCookieResolution()).to.equal(false);
 
     // personalize
-    expect(config.personalize.enabled).to.equal(mockConfig.personalize.enabled);
-    expect(config.personalize.edgeTimeout).to.equal(mockConfig.personalize.edgeTimeout);
-    expect(config.personalize.cdpTimeout).to.equal(mockConfig.personalize.cdpTimeout);
-    expect(config.personalize.scope).to.equal(mockConfig.personalize.scope);
+    expect(config.personalize.enabled).to.equal(mockConfig.personalize?.enabled);
+    expect(config.personalize.edgeTimeout).to.equal(mockConfig.personalize?.edgeTimeout);
+    expect(config.personalize.cdpTimeout).to.equal(mockConfig.personalize?.cdpTimeout);
+    expect(config.personalize.scope).to.equal(mockConfig.personalize?.scope);
     expect(config.personalize.currency).to.equal(fallbackConfig.personalize.currency);
     expect(config.personalize.channel).to.equal(fallbackConfig.personalize.channel);
 
     // redirects
-    expect(config.redirects.enabled).to.equal(mockConfig.redirects.enabled);
-    expect(config.redirects.locales).to.deep.equal(mockConfig.redirects.locales);
+    expect(config.redirects.enabled).to.equal(mockConfig.redirects?.enabled);
+    expect(config.redirects.locales).to.deep.equal(mockConfig.redirects?.locales);
 
     // retries (fallback config values)
     expect(config.retries?.count).to.equal(fallbackConfig.retries.count);
@@ -147,5 +148,43 @@ describe('define-config', () => {
       523,
       524,
     ]);
+  });
+
+  describe('getFallbackConfig', () => {
+    it('should use populate env variables when present in fallback config', () => {
+      const contextId = 'env-context-id';
+      const edgeUrl = 'env-edge-url';
+      const jssEditingSecret = 'env-editing-secret';
+      const personalizeMiddlewareEdgeTimeout = 111;
+      const personalizeMiddlewareCdpTimeout = 222;
+
+      process.env.SITECORE_EDGE_CONTEXT_ID = contextId;
+      process.env.SITECORE_EDGE_URL = edgeUrl;
+      process.env.JSS_EDITING_SECRET = jssEditingSecret;
+      process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT = personalizeMiddlewareEdgeTimeout.toString();
+      process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT = personalizeMiddlewareCdpTimeout.toString();
+
+      const fallbackConfig = getFallbackConfig();
+      expect(fallbackConfig.api.edge.contextId).to.equal(contextId);
+      expect(fallbackConfig.api.edge.edgeUrl).to.equal(edgeUrl);
+      expect(fallbackConfig.editingSecret).to.equal(jssEditingSecret);
+      expect(fallbackConfig.personalize.edgeTimeout).to.equal(personalizeMiddlewareEdgeTimeout);
+      expect(fallbackConfig.personalize.cdpTimeout).to.equal(personalizeMiddlewareCdpTimeout);
+    });
+
+    it('should use falback values when env variables are not present', () => {
+      delete process.env.SITECORE_EDGE_CONTEXT_ID;
+      delete process.env.SITECORE_EDGE_URL;
+      delete process.env.JSS_EDITING_SECRET;
+      delete process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT;
+      delete process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT;
+
+      const fallbackConfig = getFallbackConfig();
+      expect(fallbackConfig.api.edge.contextId).to.equal('');
+      expect(fallbackConfig.api.edge.edgeUrl).to.equal(SITECORE_EDGE_URL_DEFAULT);
+      expect(fallbackConfig.editingSecret).to.equal('editing-secret-missing');
+      expect(fallbackConfig.personalize.edgeTimeout).to.equal(400);
+      expect(fallbackConfig.personalize.cdpTimeout).to.equal(400);
+    });
   });
 });

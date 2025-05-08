@@ -9,9 +9,9 @@ import { SitecoreConfig, SitecoreConfigInput } from './models';
 export const getFallbackConfig = (): SitecoreConfig => ({
   api: {
     edge: {
-      contextId: '',
+      contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
       clientContextId: '',
-      edgeUrl: SITECORE_EDGE_URL_DEFAULT,
+      edgeUrl: process.env.SITECORE_EDGE_URL || SITECORE_EDGE_URL_DEFAULT,
     },
     local: {
       apiKey: '',
@@ -19,7 +19,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       path: '/sitecore/api/graph/edge',
     },
   },
-  editingSecret: 'editing-secret-missing',
+  editingSecret: process.env.JSS_EDITING_SECRET || 'editing-secret-missing',
   retries: {
     count: 3,
     retryStrategy: new DefaultRetryStrategy({
@@ -36,8 +36,8 @@ export const getFallbackConfig = (): SitecoreConfig => ({
   },
   personalize: {
     enabled: process.env.NODE_ENV !== 'development',
-    edgeTimeout: 400,
-    cdpTimeout: 400,
+    edgeTimeout: parseInt(process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT!, 10) || 400,
+    cdpTimeout: parseInt(process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT!, 10) || 400,
     scope: '',
     channel: 'WEB',
     currency: 'USD',
