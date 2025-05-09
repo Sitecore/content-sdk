@@ -56,11 +56,17 @@ Defined in: core/types/site/graphql-robots-service.d.ts:35
 
 ### fetchRobots()
 
-> **fetchRobots**(): `Promise`\<`string`\>
+> **fetchRobots**(`fetchOptions?`): `Promise`\<`string`\>
 
 Defined in: core/types/site/graphql-robots-service.d.ts:41
 
 Fetch a data of robots.txt from API
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `fetchOptions?` | `FetchOptions` |
 
 #### Returns
 
