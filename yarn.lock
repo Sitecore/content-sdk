@@ -2383,7 +2383,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/core": 0.2.0-canary.32
+    "@sitecore-content-sdk/core": 0.2.0-beta.6
     "@types/chai": ^5.2.2
     "@types/mocha": ^10.0.10
     "@types/node": ^22.15.13
@@ -2411,7 +2411,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/core@0.2.0-canary.32, @sitecore-content-sdk/core@workspace:packages/core":
+"@sitecore-content-sdk/core@0.2.0-beta.6, @sitecore-content-sdk/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
@@ -2454,23 +2454,6 @@ __metadata:
     "@sitecore-cloudsdk/events": ^0.5.1
   languageName: unknown
   linkType: soft
-
-"@sitecore-content-sdk/core@npm:0.2.0-beta.6":
-  version: 0.2.0-beta.6
-  resolution: "@sitecore-content-sdk/core@npm:0.2.0-beta.6"
-  dependencies:
-    chalk: ^4.1.2
-    debug: ^4.4.0
-    graphql: ^16.10.0
-    graphql-request: ^6.1.0
-    memory-cache: ^0.2.0
-    sinon-chai: ^4.0.0
-    url-parse: ^1.5.10
-  peerDependencies:
-    "@sitecore-cloudsdk/events": ^0.5.0
-  checksum: 565371346d2d8a7d7d8438390e04de5300b0efad9cbe4942369c6ace15fac39dd18c8087eb65cd7eed435bf923127b999c70ae33003b2d62b40fa9389cc2e880
-  languageName: node
-  linkType: hard
 
 "@sitecore-content-sdk/create-sitecore-jss@workspace:packages/create-sitecore-jss":
   version: 0.0.0-use.local
@@ -2518,8 +2501,8 @@ __metadata:
     "@babel/parser": ^7.27.2
     "@sitecore-cloudsdk/core": ^0.5.1
     "@sitecore-cloudsdk/personalize": ^0.5.1
-    "@sitecore-content-sdk/core": 0.2.0-canary.32
-    "@sitecore-content-sdk/react": 0.2.0-canary.32
+    "@sitecore-content-sdk/core": 0.2.0-beta.6
+    "@sitecore-content-sdk/react": 0.2.0-beta.6
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.3.0
     "@types/chai": ^5.2.2
@@ -2567,11 +2550,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/react@0.2.0-canary.32, @sitecore-content-sdk/react@workspace:packages/react":
+"@sitecore-content-sdk/react@0.2.0-beta.6, @sitecore-content-sdk/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
-    "@sitecore-content-sdk/core": 0.2.0-canary.32
+    "@sitecore-content-sdk/core": 0.2.0-beta.6
     "@sitecore-feaas/clientside": ^0.5.19
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.3.0
@@ -6618,7 +6601,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql@npm:^16.10.0, graphql@npm:^16.11.0":
+"graphql@npm:^16.11.0":
   version: 16.11.0
   resolution: "graphql@npm:16.11.0"
   checksum: 65bc206edbe980f2759a8e4cf324873f75a66ab48263961472716e50127ae446739be20f926bb7f036a8d199bd4de072f684fd147c285bd6ba965d98cebb6200
