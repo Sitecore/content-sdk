@@ -8,7 +8,7 @@
 
 > `const` **getServerSideProps**: [`GetServerSideComponentProps`](../../../type-aliases/GetServerSideComponentProps.md)
 
-Defined in: [nextjs/src/components/FEaaSWrapper.tsx:38](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/components/FEaaSWrapper.tsx#L38)
+Defined in: [nextjs/src/components/FEaaSWrapper.tsx:38](https://github.com/Sitecore/content-sdk/blob/a712319c51b886f2d29baa88e1f9ca98c12e4c87/packages/nextjs/src/components/FEaaSWrapper.tsx#L38)
 
 Will be called during SSR
 
