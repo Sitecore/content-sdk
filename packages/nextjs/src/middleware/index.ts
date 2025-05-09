@@ -4,3 +4,4 @@ export { RedirectsMiddleware, RedirectsMiddlewareConfig } from './redirects-midd
 export { PersonalizeMiddleware, PersonalizeMiddlewareConfig } from './personalize-middleware';
 export { MultisiteMiddleware, MultisiteMiddlewareConfig } from './multisite-middleware';
 export { SitemapMiddleware } from './sitemap-middleware';
+export { RobotsMiddleware } from './robots-middleware';
