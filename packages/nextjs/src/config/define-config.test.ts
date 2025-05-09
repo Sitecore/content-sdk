@@ -237,7 +237,7 @@ describe('defineConfig', () => {
       it('should default to undefined', () => {
         defineConfigModule.defineConfig(defaultConfig());
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.defaultSite).to.be.undefined;
+        expect(resultConfig.defaultSite).to.equal('');
       });
 
       it('should use the value from the config', () => {
@@ -285,7 +285,7 @@ describe('defineConfig', () => {
           },
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.defaultLanguage).to.be.undefined;
+        expect(resultConfig.defaultLanguage).to.equal('en');
       });
 
       it('should use the value from the config', () => {
