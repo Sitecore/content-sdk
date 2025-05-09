@@ -23,13 +23,14 @@ export class RobotsMiddleware {
 
     try {
       const robotsContent = await this.client.getRobots({ siteName: site.name });
-      res.status(200).send(robotsContent);
-    } catch (error) {
-      if (error instanceof Error && error.message === 'REDIRECT_404') {
-        res.status(404).send('User-agent: *\nDisallow: /');
-      } else {
-        res.status(500).send('Internal Server Error');
+
+      if (!robotsContent) {
+        return res.status(404).send('User-agent: *\nDisallow: /');
       }
+
+      res.status(200).send(robotsContent);
+    } catch {
+      res.status(500).send('Internal Server Error');
     }
   }
 }

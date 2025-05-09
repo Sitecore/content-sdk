@@ -96,4 +96,34 @@ describe('RobotsMiddleware', () => {
     expect(res.status).to.have.been.calledWith(500);
     expect(res.send).to.have.been.calledWith('Internal Server Error');
   });
+
+  it('should return 404 if getRobots returns null', async () => {
+    sitecoreClientStub.resolveSite.returns({
+      name: 'test-site',
+      hostName: 'example.com',
+      language: 'en',
+    });
+
+    sitecoreClientStub.getRobots.resolves(undefined);
+
+    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.send).to.have.been.calledWith('User-agent: *\nDisallow: /');
+  });
+
+  it('should return 500 if getRobots throws an error', async () => {
+    sitecoreClientStub.resolveSite.returns({
+      name: 'test-site',
+      hostName: 'example.com',
+      language: 'en',
+    });
+
+    sitecoreClientStub.getRobots.rejects(new Error('Unexpected failure'));
+
+    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+
+    expect(res.status).to.have.been.calledWith(500);
+    expect(res.send).to.have.been.calledWith('Internal Server Error');
+  });
 });

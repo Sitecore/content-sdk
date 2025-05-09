@@ -1014,4 +1014,63 @@ describe('SitecoreClient', () => {
       );
     });
   });
+
+  describe('getRobots', () => {
+    const siteName = 'test-site';
+    let getRobotsServiceStub: sinon.SinonStub;
+    const mockRobotsService = {
+      fetchRobots: sandbox.stub(),
+    };
+
+    beforeEach(() => {
+      getRobotsServiceStub = sandbox
+        .stub(SitecoreClient.prototype, 'getRobotsService')
+        .returns(mockRobotsService as any);
+    });
+
+    it('should return robots.txt content if available', async () => {
+      const content = 'User-agent: *\nDisallow: /';
+      mockRobotsService.fetchRobots.resolves(content);
+
+      const result = await sitecoreClient.getRobots(siteName);
+
+      expect(getRobotsServiceStub.calledWith(siteName)).to.be.true;
+      expect(result).to.equal(content);
+    });
+
+    it('should return null if fetchRobots returns null or empty', async () => {
+      mockRobotsService.fetchRobots.resolves(null);
+
+      const result = await sitecoreClient.getRobots(siteName);
+
+      expect(getRobotsServiceStub.calledWith(siteName)).to.be.true;
+      expect(result).to.be.null;
+    });
+
+    it('should propagate errors from fetchRobots', async () => {
+      const error = new Error('Network error');
+      mockRobotsService.fetchRobots.rejects(error);
+
+      try {
+        await sitecoreClient.getRobots(siteName);
+        expect.fail('Expected error to be thrown');
+      } catch (err) {
+        expect(getRobotsServiceStub.calledWith(siteName)).to.be.true;
+        expect(err).to.equal(error);
+      }
+    });
+
+    it('should pass fetchOptions to fetchRobots', async () => {
+      const fetchOptions = {
+        headers: { 'X-Test': 'true' },
+        cache: 'no-store' as RequestCache,
+      };
+
+      mockRobotsService.fetchRobots.resolves('User-agent: *\nDisallow: /');
+
+      await sitecoreClient.getRobots(siteName, fetchOptions);
+
+      expect(mockRobotsService.fetchRobots.calledWith(fetchOptions)).to.be.true;
+    });
+  });
 });

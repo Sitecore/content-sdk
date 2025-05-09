@@ -103,7 +103,7 @@ export interface BaseSitecoreClient {
    * @param {string} siteName - The name of the site for which to fetch robots.txt content.
    * @returns {Promise<string>} A promise that resolves to the robots.txt content.
    */
-  getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string>;
+  getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
   /*
    * Get dictionary data for a given site and locale.
    * Can retrieve dictionary phrases for default site and language when page options not provided
@@ -160,10 +160,10 @@ export interface BaseSitecoreClient {
   /**
    * Retrieves the robots.txt content for a given site name.
    * @param {string} siteName - The name of the site for which to fetch robots.txt content.
-   * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests
    * @returns {Promise<string>} A promise that resolves to the robots.txt content.
    */
-  getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string>;
+  getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
 }
 
 export interface BaseServiceOptions {
@@ -238,7 +238,7 @@ export class SitecoreClient implements BaseSitecoreClient {
    * Get page details for a route, with layout and other details
    * @param {string} path route path
    * @param {PageOptions} [pageOptions] site, language and personalization variant details for route
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {Page | null} page details
    */
   async getPage(
@@ -314,7 +314,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Retrieves dictionary phrases for a given site and locale.
    * @param {RouteOptions} routeOptions - Route options containing language and site name to load dictionary for
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {DictionaryPhrases} A promise that resolves to the dictionary phrases.
    */
   async getDictionary(
@@ -329,7 +329,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Retrieves error pages for a given site and locale.
    * @param {RouteOptions} routeOptions - Route options containing language and site name to load error pages
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {ErrorPages | null} A promise that resolves to the error pages or null if not found.
    */
   async getErrorPages(
@@ -344,7 +344,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Retrieves preview page and layout details
    * @param {EditingPreviewData | undefined} previewData - The editing preview data for metadata mode.
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {Page} preview page details
    */
   async getPreview(
@@ -396,7 +396,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Get design library page details for Design Library mode of your app
    * @param {DesignLibraryRenderPreviewData} designLibData preview data set in 'library' mode of the app
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {Page} preview page for Design Library
    */
   async getDesignLibraryData(
@@ -511,22 +511,16 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves the robots.txt content for a given site name.
-   * @param {Object} options - Options for fetching the robots.txt content.
-   * @returns {Promise<string>} A promise that resolves to the robots.txt content.
-   * @throws {Error} If the robots.txt content is not found, throws an error with the message 'REDIRECT_404'.
+   *
+   * @param {string} siteName - The name of the site to retrieve the robots.txt for.
+   * @param {FetchOptions} [fetchOptions] - Optional fetch options.
+   * @returns {Promise<string | null>} A promise that resolves to the robots.txt content,
+   * or null if no content is found.
    */
-  async getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string> {
+  async getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null> {
     const robotsService = this.getRobotsService(siteName || this.initOptions.defaultSite);
-
-    try {
-      const content = await robotsService.fetchRobots(fetchOptions);
-      if (!content) {
-        throw new Error('REDIRECT_404');
-      }
-      return content;
-    } catch (error) {
-      throw new Error('REDIRECT_404');
-    }
+    const content = await robotsService.fetchRobots(fetchOptions);
+    return content || null;
   }
 
   /**
