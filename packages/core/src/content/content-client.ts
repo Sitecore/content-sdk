@@ -3,12 +3,6 @@ import { GraphQLRequestClient } from '../graphql-request-client';
 import { getContentUrl } from './utils';
 import { FetchOptions } from '../models';
 import debug from '../debug';
-import {
-  GET_LOCALE_QUERY,
-  GET_LOCALES_QUERY,
-  LocaleQueryResponse,
-  LocalesQueryResponse,
-} from './locales';
 
 /**
  * Interface representing the options for the ContentClient.
@@ -105,28 +99,5 @@ export class ContentClient {
     debug.content('fetching content data');
 
     return this.graphqlClient.request<T>(query, variables, options);
-  }
-
-  /**
-   * Retrieves the locale information for a given locale ID.
-   * @param {string} id - The unique identifier of the locale item.
-   * @returns A promise that resolves to the locale information associated with the specified locale ID.
-   */
-  async getLocale(id: string) {
-    debug.content('Getting locale for id: %s', id);
-
-    const response = await this.get<LocaleQueryResponse>(GET_LOCALE_QUERY, { id });
-    return response.locale;
-  }
-
-  /**
-   * Retrieves all available locales from the content service.
-   * @returns A promise that resolves to an array of locales.
-   */
-  async getLocales() {
-    debug.content('Getting all locales');
-
-    const response = await this.get<LocalesQueryResponse>(GET_LOCALES_QUERY);
-    return response.manyLocale;
   }
 }

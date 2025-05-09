@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { ContentClient } from './content-client';
 import { GraphQLRequestClient } from '../graphql-request-client';
-import { GET_LOCALE_QUERY, GET_LOCALES_QUERY } from './locales';
 
 describe('content-client', () => {
   describe('constructor', () => {
@@ -132,95 +131,6 @@ describe('content-client', () => {
 
       try {
         await client.get(query);
-      } catch (err) {
-        expect(err).to.equal(error);
-      }
-    });
-  });
-
-  describe('getLocale', () => {
-    let client: ContentClient;
-    let requestStub: sinon.SinonStub;
-
-    beforeEach(() => {
-      client = new ContentClient({
-        url: 'https://example.com',
-        tenant: 'test-tenant',
-        environment: 'test-env',
-        preview: true,
-        token: 'test-token',
-      });
-
-      requestStub = sinon.stub(client.graphqlClient, 'request');
-    });
-
-    it('should retrieve a locale by ID', async () => {
-      const localeId = 'en-us';
-      const mockResponse = { locale: { id: localeId, label: 'English (US)' } };
-
-      requestStub.resolves(mockResponse);
-
-      const result = await client.getLocale(localeId);
-
-      expect(requestStub.calledOnce).to.be.true;
-      expect(requestStub.calledWith(GET_LOCALE_QUERY, { id: localeId })).to.be.true;
-      expect(result).to.deep.equal(mockResponse.locale);
-    });
-
-    it('should handle errors when retrieving a locale by ID', async () => {
-      const localeId = 'en-us';
-      const error = new Error('Failed to fetch locale');
-
-      requestStub.rejects(error);
-
-      try {
-        await client.getLocale(localeId);
-      } catch (err) {
-        expect(err).to.equal(error);
-      }
-    });
-  });
-
-  describe('getLocales', () => {
-    let client: ContentClient;
-    let requestStub: sinon.SinonStub;
-
-    beforeEach(() => {
-      client = new ContentClient({
-        url: 'https://example.com',
-        tenant: 'test-tenant',
-        environment: 'test-env',
-        preview: true,
-        token: 'test-token',
-      });
-
-      requestStub = sinon.stub(client.graphqlClient, 'request');
-    });
-
-    it('should retrieve all available locales', async () => {
-      const mockResponse = {
-        manyLocale: [
-          { id: 'en-us', label: 'English (US)' },
-          { id: 'fr-fr', label: 'French (France)' },
-        ],
-      };
-
-      requestStub.resolves(mockResponse);
-
-      const result = await client.getLocales();
-
-      expect(requestStub.calledOnce).to.be.true;
-      expect(requestStub.calledWith(GET_LOCALES_QUERY)).to.be.true;
-      expect(result).to.deep.equal(mockResponse.manyLocale);
-    });
-
-    it('should handle errors when retrieving all locales', async () => {
-      const error = new Error('Failed to fetch locales');
-
-      requestStub.rejects(error);
-
-      try {
-        await client.getLocales();
       } catch (err) {
         expect(err).to.equal(error);
       }
