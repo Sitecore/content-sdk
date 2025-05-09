@@ -10,11 +10,13 @@ import { GraphQLErrorPagesService, GraphQLSitePathService, SiteInfo, SiteResolve
  */
 export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' | 'personalize'> & {
   sites: SiteInfo[];
-  layoutService?: GraphQLLayoutService;
-  dictionaryService?: GraphQLDictionaryService;
-  siteResolver?: SiteResolver;
-  editingService?: GraphQLEditingService;
-  errorPagesService?: GraphQLErrorPagesService;
-  componentService?: RestComponentLayoutService;
-  sitePathService?: GraphQLSitePathService;
+  custom?: {
+    layoutService?: GraphQLLayoutService;
+    dictionaryService?: GraphQLDictionaryService;
+    siteResolver?: SiteResolver;
+    editingService?: GraphQLEditingService;
+    errorPagesService?: GraphQLErrorPagesService;
+    componentService?: RestComponentLayoutService;
+    sitePathService?: GraphQLSitePathService;
+  };
 };

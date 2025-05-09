@@ -28,7 +28,11 @@ type RedirectResult = RedirectInfo & { matchedQueryString?: string };
 /**
  * extended RedirectsMiddlewareConfig config type for RedirectsMiddleware
  */
-export type RedirectsMiddlewareConfig = Omit<GraphQLRedirectsServiceConfig, 'fetch'> &
+export type RedirectsMiddlewareConfig = Omit<
+  GraphQLRedirectsServiceConfig,
+  'fetch' | 'clientFactory'
+> &
+  SitecoreConfig['api']['edge'] &
   MiddlewareBaseConfig &
   SitecoreConfig['redirects'] & {
     redirectsService?: GraphQLRedirectsService;
@@ -46,10 +50,24 @@ export class RedirectsMiddleware extends MiddlewareBase {
    */
   constructor(protected config: RedirectsMiddlewareConfig) {
     super(config);
+    const graphQLOptions = {
+      api: {
+        edge: {
+          contextId: this.config.contextId,
+          clientContextId: this.config.clientContextId,
+          edgeUrl: this.config.edgeUrl,
+        },
+      },
+    };
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
     this.redirectsService =
-      this.config.redirectsService ?? new GraphQLRedirectsService({ ...config, fetch: fetch });
+      this.config.redirectsService ??
+      new GraphQLRedirectsService({
+        ...config,
+        clientFactory: this.getClientFactory(graphQLOptions),
+        fetch: fetch,
+      });
     this.locales = config.locales;
   }
 

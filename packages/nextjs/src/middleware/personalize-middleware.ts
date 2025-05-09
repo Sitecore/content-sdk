@@ -6,7 +6,7 @@ import {
   CdpHelper,
   DEFAULT_VARIANT,
 } from '@sitecore-content-sdk/core/personalize';
-import { debug, GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
@@ -15,9 +15,8 @@ import { SitecoreConfig } from '../config';
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['api']['edge'] &
   SitecoreConfig['personalize'] & {
-    clientFactory: GraphQLRequestClientFactory;
     personalizeService?: GraphQLPersonalizeService;
-    getOverrideExperienceParams?: (req: NextRequest) => ExperienceParams;
+    getExtraExperienceParams?: (req: NextRequest) => ExperienceParams['utm'];
   };
 
 /**
@@ -53,37 +52,25 @@ export class PersonalizeMiddleware extends MiddlewareBase {
    */
   constructor(protected config: PersonalizeMiddlewareConfig) {
     super(config);
+    const graphQLOptions = {
+      api: {
+        edge: {
+          contextId: this.config.contextId,
+          clientContextId: this.config.clientContextId,
+          edgeUrl: this.config.edgeUrl,
+        },
+      },
+    };
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
     this.personalizeService =
       this.config.personalizeService ??
       new GraphQLPersonalizeService({
-        clientFactory: this.config.clientFactory,
+        clientFactory: this.getClientFactory(graphQLOptions),
         timeout: this.config.edgeTimeout,
         scope: this.config.scope,
         fetch: fetch,
       });
-  }
-
-  public getExperienceParams(req: NextRequest): ExperienceParams {
-    const extraParams = this.config.getOverrideExperienceParams
-      ? this.config.getOverrideExperienceParams(req)
-      : { utm: {} };
-    const utm = {
-      campaign: req.nextUrl.searchParams.get('utm_campaign') || undefined,
-      content: req.nextUrl.searchParams.get('utm_content') || undefined,
-      medium: req.nextUrl.searchParams.get('utm_medium') || undefined,
-      source: req.nextUrl.searchParams.get('utm_source') || undefined,
-      ...extraParams.utm,
-    };
-    return {
-      // It's expected that the header name "referer" is actually a misspelling of the word "referrer"
-      // req.referrer is used during fetching to determine the value of the Referer header of the request being made,
-      // used as a fallback
-      referrer: req.headers.get('referer') || req.referrer,
-      ...extraParams,
-      utm,
-    };
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
@@ -210,6 +197,26 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       return res;
     }
   };
+
+  protected getExperienceParams(req: NextRequest): ExperienceParams {
+    const extraParams = this.config.getExtraExperienceParams
+      ? this.config.getExtraExperienceParams(req)
+      : {};
+    const utm = {
+      campaign: req.nextUrl.searchParams.get('utm_campaign') || undefined,
+      content: req.nextUrl.searchParams.get('utm_content') || undefined,
+      medium: req.nextUrl.searchParams.get('utm_medium') || undefined,
+      source: req.nextUrl.searchParams.get('utm_source') || undefined,
+      ...extraParams,
+    };
+    return {
+      // It's expected that the header name "referer" is actually a misspelling of the word "referrer"
+      // req.referrer is used during fetching to determine the value of the Referer header of the request being made,
+      // used as a fallback
+      referrer: req.headers.get('referer') || req.referrer,
+      utm,
+    };
+  }
 
   protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
     // ignore files

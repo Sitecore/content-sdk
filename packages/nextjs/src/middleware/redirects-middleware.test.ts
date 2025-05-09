@@ -117,7 +117,8 @@ describe('RedirectsMiddleware', () => {
       redirectType?: string;
       isQueryStringPreserved?: boolean;
       locale?: string;
-      fetchRedirectsStub?: sandbox.SinonStub;
+      fetchRedirectsStub?: sinon.SinonStub;
+      getClientFactoryStub?: sinon.SinonStub;
       defaultHostname?: string;
       siteResolver?: SiteResolver;
     } = {}
@@ -146,8 +147,17 @@ describe('RedirectsMiddleware', () => {
 
     const middleware = new RedirectsMiddleware({
       enabled: true,
+      edge: {
+        contextId: '1243',
+        edgeUrl: '123',
+        clientContextId: '123',
+      },
+      local: {
+        apiKey: 'edge-api-key',
+        path: '/api/graph/edge',
+        apiHost: 'http://edge-endpoint',
+      },
       sites: [],
-      clientFactory,
       locales: ['en', 'ua', 'pl-PL'],
       ...props,
     });
@@ -168,7 +178,10 @@ describe('RedirectsMiddleware', () => {
       props.fetchRedirectsStub ||
       sandbox.stub().returns(Promise.resolve(Object.keys(props).length ? redirectMaps : [])));
 
-    return { middleware, fetchRedirects, siteResolver };
+    const getClientFactory = (middleware['getClientFactory'] =
+      props.getClientFactoryStub || sandbox.stub().returns(clientFactory));
+
+    return { middleware, fetchRedirects, siteResolver, getClientFactory };
   };
 
   const setupRedirectStub = (status = 307) => {

@@ -129,7 +129,9 @@ describe('SitecoreClient', () => {
 
       const customClient = new SitecoreClient({
         ...defaultInitOptions,
-        layoutService: customLayoutService,
+        custom: {
+          layoutService: customLayoutService,
+        },
       });
 
       const result = await customClient.getPage('/custom-path');
@@ -145,7 +147,9 @@ describe('SitecoreClient', () => {
 
       const customClient = new SitecoreClient({
         ...defaultInitOptions,
-        dictionaryService: customDictionaryService,
+        custom: {
+          dictionaryService: customDictionaryService,
+        },
       });
 
       const result = await customClient.getDictionary();
@@ -169,7 +173,9 @@ describe('SitecoreClient', () => {
 
       const customClient = new SitecoreClient({
         ...defaultInitOptions,
-        editingService: customEditingService,
+        custom: {
+          editingService: customEditingService,
+        },
       });
 
       const previewData = {
@@ -198,7 +204,9 @@ describe('SitecoreClient', () => {
 
       const customClient = new SitecoreClient({
         ...defaultInitOptions,
-        errorPagesService: customErrorPagesService,
+        custom: {
+          errorPagesService: customErrorPagesService,
+        },
       });
 
       const result = await customClient.getErrorPages({ site: 'custom-site', locale: 'en' });
@@ -216,7 +224,9 @@ describe('SitecoreClient', () => {
 
       const customClient = new SitecoreClient({
         ...defaultInitOptions,
-        sitePathService: customSitePathService,
+        custom: {
+          sitePathService: customSitePathService,
+        },
       });
 
       const result = await customClient.getPagePaths(['en']);

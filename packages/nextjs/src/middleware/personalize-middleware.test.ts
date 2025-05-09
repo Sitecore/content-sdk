@@ -161,9 +161,10 @@ describe('PersonalizeMiddleware', () => {
         pageId: string;
         variantIds: string[];
       } | null;
-      getPersonalizeInfoStub?: sandbox.SinonStub;
-      personalizeStub?: sandbox.SinonStub;
-      handleCookieStub?: sandbox.SinonStub;
+      getPersonalizeInfoStub?: sinon.SinonStub;
+      personalizeStub?: sinon.SinonStub;
+      handleCookieStub?: sinon.SinonStub;
+      getClientFactoryStub?: sinon.SinonStub;
     } = { config: defaultConfig }
   ) => {
     const clientFactory = GraphQLRequestClient.createClientFactory({
@@ -172,7 +173,6 @@ describe('PersonalizeMiddleware', () => {
     });
     const personalizeConfig = {
       ...defaultConfig,
-      clientFactory,
       ...(props?.config || {}),
     };
 
@@ -198,6 +198,9 @@ describe('PersonalizeMiddleware', () => {
     middleware['siteResolver'] = siteResolver;
 
     const initPersonalizeServer = (middleware['initPersonalizeServer'] = sandbox.stub());
+
+    const getClientFactory = (middleware['getClientFactory'] =
+      props.getClientFactoryStub || sandbox.stub().returns(clientFactory));
 
     const personalize = (middleware['personalize'] =
       props.personalizeStub ||
@@ -226,6 +229,7 @@ describe('PersonalizeMiddleware', () => {
       siteResolver,
       initPersonalizeServer,
       personalize,
+      getClientFactory,
     };
   };
 
@@ -243,15 +247,12 @@ describe('PersonalizeMiddleware', () => {
   });
 
   describe('Extensibility', () => {
-    it('should apply custom experience params from getOverrideExperienceParams, when provided', async () => {
+    it('should apply custom experience params from getExtraExperienceParams, when provided', async () => {
       const customParams = {
-        referrer: 'http://custom-referrer.com',
-        utm: {
-          campaign: 'custom_campaign',
-          source: 'custom_source',
-          medium: 'custom_medium',
-          content: 'custom_content',
-        },
+        campaign: 'custom_campaign',
+        source: 'custom_source',
+        medium: 'custom_medium',
+        content: 'custom_content',
       };
 
       const req = createRequest();
@@ -269,7 +270,7 @@ describe('PersonalizeMiddleware', () => {
         variantId: 'variant-2',
         config: {
           ...defaultConfig,
-          getOverrideExperienceParams: getOverrideExperienceParamsStub,
+          getExtraExperienceParams: getOverrideExperienceParamsStub,
         },
       });
 
@@ -289,8 +290,9 @@ describe('PersonalizeMiddleware', () => {
       expect(personalize.calledOnce).to.be.true;
 
       expect(getOverrideExperienceParamsStub.calledOnceWith(req)).to.be.true;
-      expect(personalize.calledWith(sandbox.match({ params: customParams }), sandbox.match.any)).to
-        .be.true;
+      expect(
+        personalize.calledWith(sandbox.match({ params: { utm: customParams } }), sandbox.match.any)
+      ).to.be.true;
 
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
         rewritePath: '/_variantId_variant-2/styleguide',
