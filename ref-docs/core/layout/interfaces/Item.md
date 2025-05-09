@@ -1,12 +1,12 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [layout](../README.md) / Item
 
 # Interface: Item
 
-Defined in: [packages/core/src/layout/models.ts:127](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/layout/models.ts#L127)
+Defined in: [packages/core/src/layout/models.ts:127](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/models.ts#L127)
 
 Content data returned from Layout Service
 
@@ -16,40 +16,40 @@ Content data returned from Layout Service
 
 > `optional` **displayName**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:129](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/layout/models.ts#L129)
+Defined in: [packages/core/src/layout/models.ts:129](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/models.ts#L129)
 
-***
+---
 
 ### fields
 
 > **fields**: `object`
 
-Defined in: [packages/core/src/layout/models.ts:132](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/layout/models.ts#L132)
+Defined in: [packages/core/src/layout/models.ts:132](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/models.ts#L132)
 
 #### Index Signature
 
-\[`name`: `string`\]: `undefined` \| [`Field`](Field.md) \| [`Item`](Item.md) \| [`Item`](Item.md)[]
+\[`name`: `string`\]: `undefined` \| [`Field`](Field.md)\<[`GenericFieldValue`](../type-aliases/GenericFieldValue.md)\> \| `Item` \| `Item`[]
 
-***
+---
 
 ### id?
 
 > `optional` **id**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:130](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/layout/models.ts#L130)
+Defined in: [packages/core/src/layout/models.ts:130](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/models.ts#L130)
 
-***
+---
 
 ### name
 
 > **name**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:128](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/layout/models.ts#L128)
+Defined in: [packages/core/src/layout/models.ts:128](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/models.ts#L128)
 
-***
+---
 
 ### url?
 
 > `optional` **url**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:131](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/layout/models.ts#L131)
+Defined in: [packages/core/src/layout/models.ts:131](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/models.ts#L131)

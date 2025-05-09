@@ -6,6 +6,6 @@
 
 # Type Alias: BYOCComponentProps
 
-> **BYOCComponentProps**: `BYOCComponentClientProps` & `BYOCServerProps`
+> **BYOCComponentProps** = `BYOCComponentClientProps` & `BYOCServerProps`
 
 Defined in: react/types/components/BYOCComponent.d.ts:66

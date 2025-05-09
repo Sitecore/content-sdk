@@ -1,12 +1,12 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/react](../README.md) / ImageField
 
 # Interface: ImageField
 
-Defined in: [packages/react/src/components/Image.tsx:17](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/Image.tsx#L17)
+Defined in: [packages/react/src/components/Image.tsx:17](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/Image.tsx#L17)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [packages/react/src/components/Image.tsx:17](https://github.com/Site
 
 > `optional` **value**: [`ImageFieldValue`](ImageFieldValue.md)
 
-Defined in: [packages/react/src/components/Image.tsx:18](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/Image.tsx#L18)
+Defined in: [packages/react/src/components/Image.tsx:18](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/Image.tsx#L18)

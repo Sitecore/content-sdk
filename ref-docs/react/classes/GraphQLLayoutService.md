@@ -20,9 +20,9 @@ GraphQLRequestClient
 
 ## Constructors
 
-### new GraphQLLayoutService()
+### Constructor
 
-> **new GraphQLLayoutService**(`serviceConfig`): [`GraphQLLayoutService`](GraphQLLayoutService.md)
+> **new GraphQLLayoutService**(`serviceConfig`): `GraphQLLayoutService`
 
 Defined in: packages/core/types/layout/graphql-layout-service.d.ts:19
 
@@ -36,7 +36,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 #### Returns
 
-[`GraphQLLayoutService`](GraphQLLayoutService.md)
+`GraphQLLayoutService`
 
 #### Overrides
 
@@ -70,7 +70,7 @@ Defined in: packages/core/types/layout/graphql-layout-service.d.ts:14
 
 ### fetchLayoutData()
 
-> **fetchLayoutData**(`itemPath`, `routeOptions`?, `fetchOptions`?): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
+> **fetchLayoutData**(`itemPath`, `routeOptions?`, `fetchOptions?`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
 Defined in: packages/core/types/layout/graphql-layout-service.d.ts:27
 
@@ -81,8 +81,8 @@ Fetch layout data for an item.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `itemPath` | `string` | item path to fetch layout data for. |
-| `routeOptions`? | `RouteOptions` | Request options like language and site to retrieve data for |
-| `fetchOptions`? | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
+| `routeOptions?` | `RouteOptions` | Request options like language and site to retrieve data for |
+| `fetchOptions?` | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -118,7 +118,7 @@ implementation
 
 ### getLayoutQuery()
 
-> `protected` **getLayoutQuery**(`itemPath`, `site`?, `language`?): `string`
+> `protected` **getLayoutQuery**(`itemPath`, `site?`, `language?`): `string`
 
 Defined in: packages/core/types/layout/graphql-layout-service.d.ts:35
 
@@ -129,8 +129,8 @@ Returns GraphQL Layout query
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `itemPath` | `string` | page route |
-| `site`? | `string` | site name |
-| `language`? | `string` | language |
+| `site?` | `string` | site name |
+| `language?` | `string` | language |
 
 #### Returns
 

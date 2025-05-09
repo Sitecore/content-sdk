@@ -6,7 +6,7 @@
 
 # Type Alias: EnhancedOmit\<T, K\>
 
-> **EnhancedOmit**\<`T`, `K`\>: `{ [P in keyof T as Exclude<P, K>]: T[P] }`
+> **EnhancedOmit**\<`T`, `K`\> = `{ [P in keyof T as Exclude<P, K>]: T[P] }`
 
 Defined in: packages/core/types/utils/utils.d.ts:7
 

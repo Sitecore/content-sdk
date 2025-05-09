@@ -1,33 +1,33 @@
 [**@sitecore-content-sdk/nextjs**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [middleware](../README.md) / SitemapMiddleware
 
 # Class: SitemapMiddleware
 
-Defined in: [nextjs/src/middleware/sitemap-middleware.ts:8](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/middleware/sitemap-middleware.ts#L8)
+Defined in: [nextjs/src/middleware/sitemap-middleware.ts:8](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/middleware/sitemap-middleware.ts#L8)
 
 Middleware for handling sitemap requests in a Next.js application.
 Encapsulates all HTTP-related logic for sitemap generation and delivery.
 
 ## Constructors
 
-### new SitemapMiddleware()
+### Constructor
 
-> **new SitemapMiddleware**(`client`): [`SitemapMiddleware`](SitemapMiddleware.md)
+> **new SitemapMiddleware**(`client`): `SitemapMiddleware`
 
-Defined in: [nextjs/src/middleware/sitemap-middleware.ts:11](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/middleware/sitemap-middleware.ts#L11)
+Defined in: [nextjs/src/middleware/sitemap-middleware.ts:11](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/middleware/sitemap-middleware.ts#L11)
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `client` | `SitecoreClient` |
+| Parameter | Type             |
+| --------- | ---------------- |
+| `client`  | `SitecoreClient` |
 
 #### Returns
 
-[`SitemapMiddleware`](SitemapMiddleware.md)
+`SitemapMiddleware`
 
 ## Methods
 
@@ -35,18 +35,18 @@ Defined in: [nextjs/src/middleware/sitemap-middleware.ts:11](https://github.com/
 
 > **getHandler**(): (`req`, `res`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/middleware/sitemap-middleware.ts:15](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/middleware/sitemap-middleware.ts#L15)
+Defined in: [nextjs/src/middleware/sitemap-middleware.ts:15](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/middleware/sitemap-middleware.ts#L15)
 
 #### Returns
 
-`Function`
+> (`req`, `res`): `Promise`\<`void`\>
 
 ##### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `req` | `NextApiRequest` |
-| `res` | `NextApiResponse` |
+| Parameter | Type              |
+| --------- | ----------------- |
+| `req`     | `NextApiRequest`  |
+| `res`     | `NextApiResponse` |
 
 ##### Returns
 

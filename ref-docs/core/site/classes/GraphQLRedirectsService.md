@@ -1,34 +1,34 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [site](../README.md) / GraphQLRedirectsService
 
 # Class: GraphQLRedirectsService
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:58](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-redirects-service.ts#L58)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:58](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L58)
 
 The GraphQLRedirectsService class is used to query the JSS redirects using Graphql endpoint
 
 ## Constructors
 
-### new GraphQLRedirectsService()
+### Constructor
 
-> **new GraphQLRedirectsService**(`options`): [`GraphQLRedirectsService`](GraphQLRedirectsService.md)
+> **new GraphQLRedirectsService**(`options`): `GraphQLRedirectsService`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:66](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-redirects-service.ts#L66)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:66](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L66)
 
 Creates an instance of graphQL redirects service with the provided options
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `options` | [`GraphQLRedirectsServiceConfig`](../type-aliases/GraphQLRedirectsServiceConfig.md) | instance |
+| Parameter | Type                                                                                | Description |
+| --------- | ----------------------------------------------------------------------------------- | ----------- |
+| `options` | [`GraphQLRedirectsServiceConfig`](../type-aliases/GraphQLRedirectsServiceConfig.md) | instance    |
 
 #### Returns
 
-[`GraphQLRedirectsService`](GraphQLRedirectsService.md)
+`GraphQLRedirectsService`
 
 ## Accessors
 
@@ -38,7 +38,7 @@ Creates an instance of graphQL redirects service with the provided options
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:71](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-redirects-service.ts#L71)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:71](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L71)
 
 ##### Returns
 
@@ -48,18 +48,18 @@ Defined in: [packages/core/src/site/graphql-redirects-service.ts:71](https://git
 
 ### fetchRedirects()
 
-> **fetchRedirects**(`siteName`, `fetchOptions`?): `Promise`\<[`RedirectInfo`](../type-aliases/RedirectInfo.md)[]\>
+> **fetchRedirects**(`siteName`, `fetchOptions?`): `Promise`\<[`RedirectInfo`](../type-aliases/RedirectInfo.md)[]\>
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:82](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-redirects-service.ts#L82)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:82](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L82)
 
 Fetch an array of redirects from API
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `siteName` | `string` | site name |
-| `fetchOptions`? | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options to override graphQL client details like retries and fetch implementation |
+| Parameter       | Type                                                        | Description                                                                      |
+| --------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `siteName`      | `string`                                                    | site name                                                                        |
+| `fetchOptions?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -71,13 +71,13 @@ Promise<RedirectInfo[]>
 
 if the siteName is empty.
 
-***
+---
 
 ### getCacheClient()
 
 > `protected` **getCacheClient**(): [`CacheClient`](../../index/interfaces/CacheClient.md)\<[`RedirectsQueryResult`](../type-aliases/RedirectsQueryResult.md)\>
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:126](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-redirects-service.ts#L126)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:126](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L126)
 
 Gets cache client implementation
 Override this method if custom cache needs to be used
@@ -88,13 +88,13 @@ Override this method if custom cache needs to be used
 
 CacheClient instance
 
-***
+---
 
 ### getGraphQLClient()
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:110](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-redirects-service.ts#L110)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:110](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L110)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

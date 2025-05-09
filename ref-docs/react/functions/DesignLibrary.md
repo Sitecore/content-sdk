@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/react](../README.md) / DesignLibrary
 
@@ -8,12 +8,12 @@
 
 > **DesignLibrary**(`layoutData`): `Element`
 
-Defined in: [packages/react/src/components/DesignLibrary.tsx:15](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/DesignLibrary.tsx#L15)
+Defined in: [packages/react/src/components/DesignLibrary.tsx:15](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/DesignLibrary.tsx#L15)
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter    | Type                                                      |
+| ------------ | --------------------------------------------------------- |
 | `layoutData` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |
 
 ## Returns

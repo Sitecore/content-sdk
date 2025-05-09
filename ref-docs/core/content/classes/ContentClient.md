@@ -1,32 +1,32 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [content](../README.md) / ContentClient
 
 # Class: ContentClient
 
-Defined in: [packages/core/src/content/content-client.ts:32](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/content/content-client.ts#L32)
+Defined in: [packages/core/src/content/content-client.ts:32](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/content/content-client.ts#L32)
 
 Class representing a client for interacting with the Content API.
 
 ## Constructors
 
-### new ContentClient()
+### Constructor
 
-> **new ContentClient**(`__namedParameters`): [`ContentClient`](ContentClient.md)
+> **new ContentClient**(`__namedParameters`): `ContentClient`
 
-Defined in: [packages/core/src/content/content-client.ts:36](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/content/content-client.ts#L36)
+Defined in: [packages/core/src/content/content-client.ts:36](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/content/content-client.ts#L36)
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter           | Type                                                            |
+| ------------------- | --------------------------------------------------------------- |
 | `__namedParameters` | [`ContentClientOptions`](../interfaces/ContentClientOptions.md) |
 
 #### Returns
 
-[`ContentClient`](ContentClient.md)
+`ContentClient`
 
 ## Properties
 
@@ -34,15 +34,15 @@ Defined in: [packages/core/src/content/content-client.ts:36](https://github.com/
 
 > **endpoint**: `string`
 
-Defined in: [packages/core/src/content/content-client.ts:33](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/content/content-client.ts#L33)
+Defined in: [packages/core/src/content/content-client.ts:33](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/content/content-client.ts#L33)
 
-***
+---
 
 ### graphqlClient
 
 > **graphqlClient**: [`GraphQLRequestClient`](../../index/classes/GraphQLRequestClient.md)
 
-Defined in: [packages/core/src/content/content-client.ts:34](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/content/content-client.ts#L34)
+Defined in: [packages/core/src/content/content-client.ts:34](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/content/content-client.ts#L34)
 
 ## Methods
 
@@ -50,23 +50,23 @@ Defined in: [packages/core/src/content/content-client.ts:34](https://github.com/
 
 > **get**\<`T`\>(`query`, `variables`, `options`): `Promise`\<`T`\>
 
-Defined in: [packages/core/src/content/content-client.ts:100](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/content/content-client.ts#L100)
+Defined in: [packages/core/src/content/content-client.ts:100](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/content/content-client.ts#L100)
 
 Execute graphql request
 
 #### Type Parameters
 
 | Type Parameter |
-| ------ |
-| `T` |
+| -------------- |
+| `T`            |
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `query` | `string` \| `DocumentNode` | graphql query |
-| `variables` | `Record`\<`string`, `unknown`\> | variables for the query |
-| `options` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | options for configuring the request |
+| Parameter   | Type                                                        | Description                         |
+| ----------- | ----------------------------------------------------------- | ----------------------------------- |
+| `query`     | `string` \| `DocumentNode`                                  | graphql query                       |
+| `variables` | `Record`\<`string`, `unknown`\>                             | variables for the query             |
+| `options`   | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | options for configuring the request |
 
 #### Returns
 
@@ -74,21 +74,21 @@ Execute graphql request
 
 response data
 
-***
+---
 
 ### getLocale()
 
 > **getLocale**(`id`): `Promise`\<`null` \| [`Locale`](../type-aliases/Locale.md)\>
 
-Defined in: [packages/core/src/content/content-client.ts:116](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/content/content-client.ts#L116)
+Defined in: [packages/core/src/content/content-client.ts:115](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/content/content-client.ts#L115)
 
 Retrieves the locale information for a given locale ID.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `id` | `string` | The unique identifier of the locale item. |
+| Parameter | Type     | Description                               |
+| --------- | -------- | ----------------------------------------- |
+| `id`      | `string` | The unique identifier of the locale item. |
 
 #### Returns
 
@@ -96,13 +96,13 @@ Retrieves the locale information for a given locale ID.
 
 A promise that resolves to the locale information associated with the specified locale ID.
 
-***
+---
 
 ### getLocales()
 
 > **getLocales**(): `Promise`\<[`Locale`](../type-aliases/Locale.md)[]\>
 
-Defined in: [packages/core/src/content/content-client.ts:128](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/content/content-client.ts#L128)
+Defined in: [packages/core/src/content/content-client.ts:126](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/content/content-client.ts#L126)
 
 Retrieves all available locales from the content service.
 
@@ -112,25 +112,25 @@ Retrieves all available locales from the content service.
 
 A promise that resolves to an array of locales.
 
-***
+---
 
 ### createClient()
 
-> `static` **createClient**(`options`?): [`ContentClient`](ContentClient.md)
+> `static` **createClient**(`options?`): `ContentClient`
 
-Defined in: [packages/core/src/content/content-client.ts:63](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/content/content-client.ts#L63)
+Defined in: [packages/core/src/content/content-client.ts:63](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/content/content-client.ts#L63)
 
 Factory method for creating a ContentClient instance. This method allows you to create a client with the values populated from environment variables or provided as arguments.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `options`? | `Partial`\<[`ContentClientOptions`](../interfaces/ContentClientOptions.md)\> | client configuration options |
+| Parameter  | Type                                                                         | Description                  |
+| ---------- | ---------------------------------------------------------------------------- | ---------------------------- |
+| `options?` | `Partial`\<[`ContentClientOptions`](../interfaces/ContentClientOptions.md)\> | client configuration options |
 
 #### Returns
 
-[`ContentClient`](ContentClient.md)
+`ContentClient`
 
 ContentClient instance
 

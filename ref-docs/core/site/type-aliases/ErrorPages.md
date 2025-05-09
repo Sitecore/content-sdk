@@ -1,39 +1,53 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [site](../README.md) / ErrorPages
 
 # Type Alias: ErrorPages
 
-> **ErrorPages**: `object`
+> **ErrorPages** = `object`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:43](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-error-pages-service.ts#L43)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:43](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L43)
 
 Object model of Error Pages result
 
-## Type declaration
+## Properties
 
 ### notFoundPage
 
 > **notFoundPage**: `object`
 
-#### notFoundPage.rendered
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:44](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L44)
+
+#### rendered
 
 > **rendered**: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)
+
+---
 
 ### notFoundPagePath
 
 > **notFoundPagePath**: `string`
 
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:45](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L45)
+
+---
+
 ### serverErrorPage
 
 > **serverErrorPage**: `object`
 
-#### serverErrorPage.rendered
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:46](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L46)
+
+#### rendered
 
 > **rendered**: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)
+
+---
 
 ### serverErrorPagePath
 
 > **serverErrorPagePath**: `string`
+
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:47](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L47)

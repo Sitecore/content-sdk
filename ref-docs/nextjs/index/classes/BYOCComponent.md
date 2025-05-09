@@ -21,9 +21,9 @@ component props
 
 ## Constructors
 
-### new BYOCComponent()
+### Constructor
 
-> **new BYOCComponent**(`props`): [`BYOCComponent`](BYOCComponent.md)
+> **new BYOCComponent**(`props`): `BYOCComponent`
 
 Defined in: react/types/components/BYOCComponent.d.ts:81
 
@@ -35,7 +35,7 @@ Defined in: react/types/components/BYOCComponent.d.ts:81
 
 #### Returns
 
-[`BYOCComponent`](BYOCComponent.md)
+`BYOCComponent`
 
 #### Overrides
 
@@ -87,7 +87,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:961
 
 ### state
 
-> **state**: `Readonly`\<\{ `error`: `Error`; \}\>
+> **state**: `Readonly`\<\{ `error?`: `Error`; \}\>
 
 Defined in: react/types/components/BYOCComponent.d.ts:78
 
@@ -193,21 +193,21 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 ### componentDidUpdate()?
 
-> `optional` **componentDidUpdate**(`prevProps`, `prevState`, `snapshot`?): `void`
+> `optional` **componentDidUpdate**(`prevProps`, `prevState`, `snapshot?`): `void`
 
 Defined in: nextjs/node\_modules/@types/react/index.d.ts:1236
 
 Called immediately after updating occurs. Not called for the initial render.
 
-The snapshot is only present if [getSnapshotBeforeUpdate](BYOCComponent.md#getsnapshotbeforeupdate) is present and returns non-null.
+The snapshot is only present if [getSnapshotBeforeUpdate](#getsnapshotbeforeupdate) is present and returns non-null.
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
 | `prevProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `prevState` | `Readonly`\<\{\}\> |
-| `snapshot`? | `any` |
+| `prevState` | `Readonly`\<\{ \}\> |
+| `snapshot?` | `any` |
 
 #### Returns
 
@@ -331,7 +331,7 @@ this from being invoked.
 | Parameter | Type |
 | ------ | ------ |
 | `nextProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `nextState` | `Readonly`\<\{\}\> |
+| `nextState` | `Readonly`\<\{ \}\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -355,7 +355,7 @@ this from being invoked.
 
 ### forceUpdate()
 
-> **forceUpdate**(`callback`?): `void`
+> **forceUpdate**(`callback?`): `void`
 
 Defined in: nextjs/node\_modules/@types/react/index.d.ts:958
 
@@ -363,7 +363,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:958
 
 | Parameter | Type |
 | ------ | ------ |
-| `callback`? | () => `void` |
+| `callback?` | () => `void` |
 
 #### Returns
 
@@ -382,7 +382,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:958
 Defined in: nextjs/node\_modules/@types/react/index.d.ts:1230
 
 Runs before React applies the result of Component.render render to the document, and
-returns an object to be given to [componentDidUpdate](BYOCComponent.md#componentdidupdate). Useful for saving
+returns an object to be given to [componentDidUpdate](#componentdidupdate). Useful for saving
 things such as scroll position before Component.render render causes changes to it.
 
 Note: the presence of this method prevents any of the deprecated
@@ -393,7 +393,7 @@ lifecycle events from running.
 | Parameter | Type |
 | ------ | ------ |
 | `prevProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `prevState` | `Readonly`\<\{\}\> |
+| `prevState` | `Readonly`\<\{ \}\> |
 
 #### Returns
 
@@ -423,7 +423,7 @@ Defined in: react/types/components/BYOCComponent.d.ts:86
 
 ### setState()
 
-> **setState**\<`K`\>(`state`, `callback`?): `void`
+> **setState**\<`K`\>(`state`, `callback?`): `void`
 
 Defined in: nextjs/node\_modules/@types/react/index.d.ts:953
 
@@ -437,8 +437,8 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:953
 
 | Parameter | Type |
 | ------ | ------ |
-| `state` | `null` \| \{\} \| (`prevState`, `props`) => `null` \| \{\} \| `Pick`\<\{\}, `K`\> \| `Pick`\<\{\}, `K`\> |
-| `callback`? | () => `void` |
+| `state` | `null` \| \{ \} \| (`prevState`, `props`) => `null` \| \{ \} \| `Pick`\<\{ \}, `K`\> \| `Pick`\<\{ \}, `K`\> |
+| `callback?` | () => `void` |
 
 #### Returns
 
@@ -470,7 +470,7 @@ and `componentDidUpdate` will not be called.
 | Parameter | Type |
 | ------ | ------ |
 | `nextProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `nextState` | `Readonly`\<\{\}\> |
+| `nextState` | `Readonly`\<\{ \}\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -582,7 +582,7 @@ this from being invoked.
 | Parameter | Type |
 | ------ | ------ |
 | `nextProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `nextState` | `Readonly`\<\{\}\> |
+| `nextState` | `Readonly`\<\{ \}\> |
 | `nextContext` | `any` |
 
 #### Returns

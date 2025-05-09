@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/nextjs**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [editing](../README.md) / isDesignLibraryPreviewData
 
@@ -8,15 +8,15 @@
 
 > **isDesignLibraryPreviewData**(`data`): `data is DesignLibraryRenderPreviewData`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:45](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/editing/editing-render-middleware.ts#L45)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:45](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/editing/editing-render-middleware.ts#L45)
 
 Type guard for Design Library mode
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `data` | `unknown` | preview data to check |
+| Parameter | Type      | Description           |
+| --------- | --------- | --------------------- |
+| `data`    | `unknown` | preview data to check |
 
 ## Returns
 

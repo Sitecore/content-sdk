@@ -1,17 +1,17 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/react](../README.md) / WithSitecoreContextHocProps
 
 # Type Alias: WithSitecoreContextHocProps\<ComponentProps\>
 
-> **WithSitecoreContextHocProps**\<`ComponentProps`\>: [`EnhancedOmit`](EnhancedOmit.md)\<`ComponentProps`, keyof [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md)\>
+> **WithSitecoreContextHocProps**\<`ComponentProps`\> = [`EnhancedOmit`](EnhancedOmit.md)\<`ComponentProps`, keyof [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md)\>
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:21](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/enhancers/withSitecoreContext.tsx#L21)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:21](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/enhancers/withSitecoreContext.tsx#L21)
 
 ## Type Parameters
 
-| Type Parameter |
-| ------ |
+| Type Parameter   |
+| ---------------- |
 | `ComponentProps` |

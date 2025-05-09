@@ -1,33 +1,33 @@
 [**@sitecore-content-sdk/nextjs**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [editing](../README.md) / EditingConfigMiddleware
 
 # Class: EditingConfigMiddleware
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:29](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/editing/editing-config-middleware.ts#L29)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:29](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/editing/editing-config-middleware.ts#L29)
 
 Middleware / handler used in the editing config API route in xmcloud add on (e.g. '/api/editing/config')
 provides configuration information to determine feature compatibility on Pages side.
 
 ## Constructors
 
-### new EditingConfigMiddleware()
+### Constructor
 
-> **new EditingConfigMiddleware**(`config`?): [`EditingConfigMiddleware`](EditingConfigMiddleware.md)
+> **new EditingConfigMiddleware**(`config?`): `EditingConfigMiddleware`
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/editing/editing-config-middleware.ts#L33)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/editing/editing-config-middleware.ts#L33)
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `config`? | [`EditingConfigMiddlewareConfig`](../type-aliases/EditingConfigMiddlewareConfig.md) | Editing configuration middleware config |
+| Parameter | Type                                                                                | Description                             |
+| --------- | ----------------------------------------------------------------------------------- | --------------------------------------- |
+| `config?` | [`EditingConfigMiddlewareConfig`](../type-aliases/EditingConfigMiddlewareConfig.md) | Editing configuration middleware config |
 
 #### Returns
 
-[`EditingConfigMiddleware`](EditingConfigMiddleware.md)
+`EditingConfigMiddleware`
 
 ## Properties
 
@@ -35,7 +35,7 @@ Defined in: [nextjs/src/editing/editing-config-middleware.ts:33](https://github.
 
 > `protected` **config**: [`EditingConfigMiddlewareConfig`](../type-aliases/EditingConfigMiddlewareConfig.md)
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/editing/editing-config-middleware.ts#L33)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/editing/editing-config-middleware.ts#L33)
 
 Editing configuration middleware config
 
@@ -45,22 +45,22 @@ Editing configuration middleware config
 
 > **getHandler**(): (`req`, `res`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/editing/editing-config-middleware.ts#L39)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/editing/editing-config-middleware.ts#L39)
 
 Gets the Next.js API route handler
 
 #### Returns
 
-`Function`
-
 middleware handler
+
+> (`req`, `res`): `Promise`\<`void`\>
 
 ##### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `req` | `NextApiRequest` |
-| `res` | `NextApiResponse` |
+| Parameter | Type              |
+| --------- | ----------------- |
+| `req`     | `NextApiRequest`  |
+| `res`     | `NextApiResponse` |
 
 ##### Returns
 

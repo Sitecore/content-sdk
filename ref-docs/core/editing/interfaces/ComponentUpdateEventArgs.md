@@ -1,12 +1,12 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [editing](../README.md) / ComponentUpdateEventArgs
 
 # Interface: ComponentUpdateEventArgs
 
-Defined in: [packages/core/src/editing/utils.ts:45](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/editing/utils.ts#L45)
+Defined in: [packages/core/src/editing/utils.ts:45](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/editing/utils.ts#L45)
 
 Event args for Design Library `update` event
 
@@ -16,11 +16,11 @@ Event args for Design Library `update` event
 
 > `optional` **details**: `object`
 
-Defined in: [packages/core/src/editing/utils.ts:47](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/editing/utils.ts#L47)
+Defined in: [packages/core/src/editing/utils.ts:47](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/editing/utils.ts#L47)
 
 #### fields?
 
-> `optional` **fields**: `Record`\<`string`, [`Field`](../../layout/interfaces/Field.md)\>
+> `optional` **fields**: `Record`\<`string`, [`Field`](../../layout/interfaces/Field.md)\<[`GenericFieldValue`](../../layout/type-aliases/GenericFieldValue.md)\>\>
 
 #### params?
 
@@ -30,10 +30,10 @@ Defined in: [packages/core/src/editing/utils.ts:47](https://github.com/Sitecore/
 
 > **uid**: `string`
 
-***
+---
 
 ### name
 
 > **name**: `string`
 
-Defined in: [packages/core/src/editing/utils.ts:46](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/editing/utils.ts#L46)
+Defined in: [packages/core/src/editing/utils.ts:46](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/editing/utils.ts#L46)

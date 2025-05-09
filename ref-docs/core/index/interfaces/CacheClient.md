@@ -1,20 +1,20 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [index](../README.md) / CacheClient
 
 # Interface: CacheClient\<T\>
 
-Defined in: [packages/core/src/cache-client.ts:7](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/cache-client.ts#L7)
+Defined in: [packages/core/src/cache-client.ts:7](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/cache-client.ts#L7)
 
 An interface for cache clients.
 
 ## Type Parameters
 
-| Type Parameter | Description |
-| ------ | ------ |
-| `T` | The type of data being cached. |
+| Type Parameter | Description                    |
+| -------------- | ------------------------------ |
+| `T`            | The type of data being cached. |
 
 ## Methods
 
@@ -22,15 +22,15 @@ An interface for cache clients.
 
 > **getCacheValue**(`key`): `null` \| `T`
 
-Defined in: [packages/core/src/cache-client.ts:21](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/cache-client.ts#L21)
+Defined in: [packages/core/src/cache-client.ts:21](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/cache-client.ts#L21)
 
 Retrieves a value from the cache.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `key` | `string` | The cache key. |
+| Parameter | Type     | Description    |
+| --------- | -------- | -------------- |
+| `key`     | `string` | The cache key. |
 
 #### Returns
 
@@ -38,22 +38,22 @@ Retrieves a value from the cache.
 
 The cache value as {T}, or null if the specified key was not found in the cache.
 
-***
+---
 
 ### setCacheValue()
 
 > **setCacheValue**(`key`, `value`): `T`
 
-Defined in: [packages/core/src/cache-client.ts:14](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/cache-client.ts#L14)
+Defined in: [packages/core/src/cache-client.ts:14](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/cache-client.ts#L14)
 
 Adds a value to the cache for the specified cache key.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `key` | `string` | The cache key. |
-| `value` | `T` | The value to cache. |
+| Parameter | Type     | Description         |
+| --------- | -------- | ------------------- |
+| `key`     | `string` | The cache key.      |
+| `value`   | `T`      | The value to cache. |
 
 #### Returns
 

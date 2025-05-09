@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/nextjs**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / Placeholder
 
@@ -8,13 +8,13 @@
 
 > **Placeholder**(`props`): `Element`
 
-Defined in: [nextjs/src/components/Placeholder.tsx:15](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/components/Placeholder.tsx#L15)
+Defined in: [nextjs/src/components/Placeholder.tsx:15](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/components/Placeholder.tsx#L15)
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `EnhancedOmit`\<[`PlaceholderComponentProps`](../interfaces/PlaceholderComponentProps.md), keyof [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md)\> |
+| Parameter | Type           |
+| --------- | -------------- |
+| `props`   | `EnhancedOmit` |
 
 ## Returns
 

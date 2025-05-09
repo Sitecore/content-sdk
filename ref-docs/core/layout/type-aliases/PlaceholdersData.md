@@ -1,19 +1,19 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [layout](../README.md) / PlaceholdersData
 
 # Type Alias: PlaceholdersData\<TYPEDNAME\>
 
-> **PlaceholdersData**\<`TYPEDNAME`\>: `{ [P in TYPEDNAME]: ComponentRendering[] }`
+> **PlaceholdersData**\<`TYPEDNAME`\> = `{ [P in TYPEDNAME]: ComponentRendering[] }`
 
-Defined in: [packages/core/src/layout/models.ts:72](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/layout/models.ts#L72)
+Defined in: [packages/core/src/layout/models.ts:72](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/models.ts#L72)
 
 Placeholder contents data (name: placeholder name, then array of components within that placeholder name)
 
 ## Type Parameters
 
-| Type Parameter | Default type |
-| ------ | ------ |
-| `TYPEDNAME` *extends* `string` | `string` |
+| Type Parameter                 | Default type |
+| ------------------------------ | ------------ |
+| `TYPEDNAME` _extends_ `string` | `string`     |

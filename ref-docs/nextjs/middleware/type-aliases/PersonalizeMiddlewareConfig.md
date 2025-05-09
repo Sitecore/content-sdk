@@ -6,12 +6,26 @@
 
 # Type Alias: PersonalizeMiddlewareConfig
 
-> **PersonalizeMiddlewareConfig**: [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
+> **PersonalizeMiddlewareConfig** = [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/middleware/personalize-middleware.ts#L39)
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:15](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/middleware/personalize-middleware.ts#L15)
 
 ## Type declaration
 
-### clientFactory
+### getExtraUtmParams()?
 
-> **clientFactory**: [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
+> `optional` **getExtraUtmParams**: (`req`) => `Partial`\<`ExperienceParams`\[`"utm"`\]\>
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `req` | `NextRequest` |
+
+#### Returns
+
+`Partial`\<`ExperienceParams`\[`"utm"`\]\>
+
+### personalizeService?
+
+> `optional` **personalizeService**: [`GraphQLPersonalizeService`](../../index/classes/GraphQLPersonalizeService.md)

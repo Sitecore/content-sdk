@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [tools](../README.md) / scaffoldComponent
 
@@ -8,18 +8,18 @@
 
 > **scaffoldComponent**(`outputFolderPath`, `componentName`, `templateName`, `templates`): `void`
 
-Defined in: [packages/core/src/tools/scaffold.ts:46](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/tools/scaffold.ts#L46)
+Defined in: [packages/core/src/tools/scaffold.ts:46](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/tools/scaffold.ts#L46)
 
 Scaffolds a new component based on the provided template.
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `outputFolderPath` | `string` | The file path where the component will be created. |
-| `componentName` | `string` | The name of the component to be created. |
-| `templateName` | `string` | The name of the template to use for scaffolding. If not provided, defaults to 'byoc' if `byoc` is true, otherwise 'default'. |
-| `templates` | [`ScaffoldTemplate`](../../config/type-aliases/ScaffoldTemplate.md)[] | An array of template objects, each containing a name, a template function, and a getNextSteps function. |
+| Parameter          | Type                                                                  | Description                                                                                                                  |
+| ------------------ | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `outputFolderPath` | `string`                                                              | The file path where the component will be created.                                                                           |
+| `componentName`    | `string`                                                              | The name of the component to be created.                                                                                     |
+| `templateName`     | `string`                                                              | The name of the template to use for scaffolding. If not provided, defaults to 'byoc' if `byoc` is true, otherwise 'default'. |
+| `templates`        | [`ScaffoldTemplate`](../../config/type-aliases/ScaffoldTemplate.md)[] | An array of template objects, each containing a name, a template function, and a getNextSteps function.                      |
 
 ## Returns
 

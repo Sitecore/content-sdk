@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [layout](../README.md) / isFieldValueEmpty
 
@@ -8,15 +8,15 @@
 
 > **isFieldValueEmpty**(`field`): `boolean`
 
-Defined in: [packages/core/src/layout/utils.ts:103](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/layout/utils.ts#L103)
+Defined in: [packages/core/src/layout/utils.ts:103](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/utils.ts#L103)
 
 Determines if the passed in field object's value is empty.
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `field` | [`GenericFieldValue`](../type-aliases/GenericFieldValue.md) \| `Partial`\<[`Field`](../interfaces/Field.md)\> | the field object. Partial<T> type is used here because _field.value_ could be required or optional for the different field types |
+| Parameter | Type                                                                                                                                                                         | Description                                                                                                                      |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `field`   | [`GenericFieldValue`](../type-aliases/GenericFieldValue.md) \| `Partial`\<[`Field`](../interfaces/Field.md)\<[`GenericFieldValue`](../type-aliases/GenericFieldValue.md)\>\> | the field object. Partial<T> type is used here because _field.value_ could be required or optional for the different field types |
 
 ## Returns
 

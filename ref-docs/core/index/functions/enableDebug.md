@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [index](../README.md) / enableDebug
 
@@ -8,14 +8,14 @@
 
 > **enableDebug**(`namespaces`): `void`
 
-Defined in: [packages/core/src/debug.ts:24](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/debug.ts#L24)
+Defined in: [packages/core/src/debug.ts:24](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/debug.ts#L24)
 
 Enable debug logging dynamically
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
+| Parameter    | Type     | Description                                  |
+| ------------ | -------- | -------------------------------------------- |
 | `namespaces` | `string` | space-separated list of namespaces to enable |
 
 ## Returns

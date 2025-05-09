@@ -1,11 +1,11 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
-[@sitecore-content-sdk/core](../../README.md) / [site](../README.md) / SITE\_PREFIX
+[@sitecore-content-sdk/core](../../README.md) / [site](../README.md) / SITE_PREFIX
 
-# Variable: SITE\_PREFIX
+# Variable: SITE_PREFIX
 
-> `const` **SITE\_PREFIX**: `"_site_"` = `'_site_'`
+> `const` **SITE_PREFIX**: `"_site_"` = `'_site_'`
 
-Defined in: [packages/core/src/site/utils.ts:1](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/utils.ts#L1)
+Defined in: [packages/core/src/site/utils.ts:1](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/utils.ts#L1)

@@ -1,13 +1,14 @@
 **@sitecore-content-sdk/react**
 
-***
+---
 
 # @sitecore-content-sdk/react
 
 ## Namespaces
 
-- [constants](namespaces/constants/README.md)
-- [mediaApi](namespaces/mediaApi/README.md)
+- [constants](@sitecore-content-sdk/namespaces/constants/README.md)
+- [File](@sitecore-content-sdk/namespaces/File/README.md)
+- [mediaApi](@sitecore-content-sdk/namespaces/mediaApi/README.md)
 
 ## Enumerations
 
@@ -78,33 +79,36 @@
 - [SitecoreContextValue](type-aliases/SitecoreContextValue.md)
 - [WithSitecoreContextHocProps](type-aliases/WithSitecoreContextHocProps.md)
 
+## Variables
+
+- [DateField](variables/DateField.md)
+- [DefaultEmptyFieldEditingComponentImage](variables/DefaultEmptyFieldEditingComponentImage.md)
+- [DefaultEmptyFieldEditingComponentText](variables/DefaultEmptyFieldEditingComponentText.md)
+- [enableDebug](variables/enableDebug.md)
+- [File](variables/File.md)
+- [getContentStylesheetLink](variables/getContentStylesheetLink.md)
+- [Image](variables/Image.md)
+- [isEditorActive](variables/isEditorActive.md)
+- [Link](variables/Link.md)
+- [Placeholder](variables/Placeholder.md)
+- [resetEditorChromes](variables/resetEditorChromes.md)
+- [RichText](variables/RichText.md)
+- [SitecoreContextReactContext](variables/SitecoreContextReactContext.md)
+- [Text](variables/Text.md)
+
 ## Functions
 
 - [BYOCWrapper](functions/BYOCWrapper.md)
-- [DateField](functions/DateField.md)
-- [DefaultEmptyFieldEditingComponentImage](functions/DefaultEmptyFieldEditingComponentImage.md)
-- [DefaultEmptyFieldEditingComponentText](functions/DefaultEmptyFieldEditingComponentText.md)
 - [DesignLibrary](functions/DesignLibrary.md)
 - [EditingScripts](functions/EditingScripts.md)
-- [enableDebug](functions/enableDebug.md)
 - [FEaaSComponent](functions/FEaaSComponent.md)
 - [FEaaSWrapper](functions/FEaaSWrapper.md)
 - [fetchBYOCComponentServerProps](functions/fetchBYOCComponentServerProps.md)
 - [fetchFEaaSComponentServerProps](functions/fetchFEaaSComponentServerProps.md)
-- [File](functions/File.md)
 - [Form](functions/Form.md)
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
-- [getContentStylesheetLink](functions/getContentStylesheetLink.md)
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getFieldValue](functions/getFieldValue.md)
-- [Image](functions/Image.md)
-- [isEditorActive](functions/isEditorActive.md)
-- [Link](functions/Link.md)
-- [Placeholder](functions/Placeholder.md)
-- [resetEditorChromes](functions/resetEditorChromes.md)
-- [RichText](functions/RichText.md)
-- [SitecoreContextReactContext](functions/SitecoreContextReactContext.md)
-- [Text](functions/Text.md)
 - [useSitecoreContext](functions/useSitecoreContext.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEditorChromes](functions/withEditorChromes.md)

@@ -1,27 +1,33 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [index](../README.md) / StaticPath
 
 # Type Alias: StaticPath
 
-> **StaticPath**: `object`
+> **StaticPath** = `object`
 
-Defined in: [packages/core/src/models.ts:48](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/models.ts#L48)
+Defined in: [packages/core/src/models.ts:48](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/models.ts#L48)
 
 Object model of a sitemap's site page item.
 
-## Type declaration
+## Properties
 
 ### locale?
 
 > `optional` **locale**: `string`
 
+Defined in: [packages/core/src/models.ts:52](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/models.ts#L52)
+
+---
+
 ### params
 
 > **params**: `object`
 
-#### params.path
+Defined in: [packages/core/src/models.ts:49](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/models.ts#L49)
+
+#### path
 
 > **path**: `string`[]

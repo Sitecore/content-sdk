@@ -1,14 +1,14 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
-[@sitecore-content-sdk/core](../../README.md) / [layout](../README.md) / EMPTY\_DATE\_FIELD\_VALUE
+[@sitecore-content-sdk/core](../../README.md) / [layout](../README.md) / EMPTY_DATE_FIELD_VALUE
 
-# Variable: EMPTY\_DATE\_FIELD\_VALUE
+# Variable: EMPTY_DATE_FIELD_VALUE
 
-> `const` **EMPTY\_DATE\_FIELD\_VALUE**: `"0001-01-01T00:00:00Z"` = `'0001-01-01T00:00:00Z'`
+> `const` **EMPTY_DATE_FIELD_VALUE**: `"0001-01-01T00:00:00Z"` = `'0001-01-01T00:00:00Z'`
 
-Defined in: [packages/core/src/layout/utils.ts:96](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/layout/utils.ts#L96)
+Defined in: [packages/core/src/layout/utils.ts:96](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/utils.ts#L96)
 
 The default value for an empty Date field.
 This value is defined as a default one by .NET

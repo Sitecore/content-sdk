@@ -14,7 +14,7 @@ Contents of a single placeholder returned from placeholder service
 
 ### elements
 
-> **elements**: [`ComponentRendering`](ComponentRendering.md)[]
+> **elements**: [`ComponentRendering`](ComponentRendering.md)\<[`ComponentFields`](ComponentFields.md)\>[]
 
 Defined in: core/types/layout/models.d.ts:129
 

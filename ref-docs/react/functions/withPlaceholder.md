@@ -1,41 +1,41 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/react](../README.md) / withPlaceholder
 
 # Function: withPlaceholder()
 
-> **withPlaceholder**(`placeholders`, `options`?): (`WrappedComponent`) => (`props`) => `Element`
+> **withPlaceholder**(`placeholders`, `options?`): (`WrappedComponent`) => (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/enhancers/withPlaceholder.tsx#L42)
+Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/enhancers/withPlaceholder.tsx#L42)
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `placeholders` | `WithPlaceholderSpec` |  |
-| `options`? | `WithPlaceholderOptions` |  |
+| Parameter      | Type                     | Description |
+| -------------- | ------------------------ | ----------- |
+| `placeholders` | `WithPlaceholderSpec`    |             |
+| `options?`     | `WithPlaceholderOptions` |             |
 
 ## Returns
 
-`Function`
+> (`WrappedComponent`): (`props`) => `Element`
 
 ### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `WrappedComponent` | `ComponentClass`\<`PlaceholderProps`\> \| `FunctionComponent`\<`PlaceholderProps`\> |
+| Parameter          | Type                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------ |
+| `WrappedComponent` | `ComponentClass`\<`PlaceholderProps`, `any`\> \| `FunctionComponent`\<`PlaceholderProps`\> |
 
 ### Returns
 
-`Function`
+> (`props`): `Element`
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `props` | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<`PlaceholderProps`, keyof [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md)\> |
+| Parameter | Type                                                                    |
+| --------- | ----------------------------------------------------------------------- |
+| `props`   | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<`PlaceholderProps`\> |
 
 #### Returns
 

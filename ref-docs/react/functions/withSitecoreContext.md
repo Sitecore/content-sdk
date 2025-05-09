@@ -1,46 +1,46 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/react](../README.md) / withSitecoreContext
 
 # Function: withSitecoreContext()
 
-> **withSitecoreContext**(`options`?): \<`ComponentProps`\>(`Component`) => (`props`) => `Element`
+> **withSitecoreContext**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:29](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/enhancers/withSitecoreContext.tsx#L29)
+Defined in: [packages/react/src/enhancers/withSitecoreContext.tsx:29](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/enhancers/withSitecoreContext.tsx#L29)
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `options`? | [`WithSitecoreContextOptions`](../interfaces/WithSitecoreContextOptions.md) |  |
+| Parameter  | Type                                                                        | Description |
+| ---------- | --------------------------------------------------------------------------- | ----------- |
+| `options?` | [`WithSitecoreContextOptions`](../interfaces/WithSitecoreContextOptions.md) |             |
 
 ## Returns
 
-`Function`
+> \<`ComponentProps`\>(`Component`): (`props`) => `Element`
 
 ### Type Parameters
 
-| Type Parameter |
-| ------ |
-| `ComponentProps` *extends* [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md) |
+| Type Parameter                                                                                     |
+| -------------------------------------------------------------------------------------------------- |
+| `ComponentProps` _extends_ [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md) |
 
 ### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter   | Type                                |
+| ----------- | ----------------------------------- |
 | `Component` | `ComponentType`\<`ComponentProps`\> |
 
 ### Returns
 
-`Function`
+> (`props`): `Element`
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `props` | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<`ComponentProps`, keyof [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md)\> |
+| Parameter | Type                                                                  |
+| --------- | --------------------------------------------------------------------- |
+| `props`   | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<`ComponentProps`\> |
 
 #### Returns
 

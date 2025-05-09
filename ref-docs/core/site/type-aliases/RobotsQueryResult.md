@@ -1,27 +1,29 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [site](../README.md) / RobotsQueryResult
 
 # Type Alias: RobotsQueryResult
 
-> **RobotsQueryResult**: `object`
+> **RobotsQueryResult** = `object`
 
-Defined in: [packages/core/src/site/graphql-robots-service.ts:32](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-robots-service.ts#L32)
+Defined in: [packages/core/src/site/graphql-robots-service.ts:32](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-robots-service.ts#L32)
 
 The schema of data returned in response to robots.txt request
 
-## Type declaration
+## Properties
 
 ### site
 
 > **site**: `object`
 
-#### site.siteInfo
+Defined in: [packages/core/src/site/graphql-robots-service.ts:32](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-robots-service.ts#L32)
+
+#### siteInfo
 
 > **siteInfo**: `object`
 
-#### site.siteInfo.robots
+##### siteInfo.robots
 
 > **robots**: `string`

@@ -1,34 +1,34 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [site](../README.md) / GraphQLErrorPagesService
 
 # Class: GraphQLErrorPagesService
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:60](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-error-pages-service.ts#L60)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:60](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L60)
 
 Service that fetch the error pages data using Sitecore's GraphQL API.
 
 ## Constructors
 
-### new GraphQLErrorPagesService()
+### Constructor
 
-> **new GraphQLErrorPagesService**(`options`): [`GraphQLErrorPagesService`](GraphQLErrorPagesService.md)
+> **new GraphQLErrorPagesService**(`options`): `GraphQLErrorPagesService`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:67](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-error-pages-service.ts#L67)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:67](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L67)
 
 Creates an instance of graphQL error pages service with the provided options
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `options` | [`GraphQLErrorPagesServiceConfig`](../interfaces/GraphQLErrorPagesServiceConfig.md) | instance |
+| Parameter | Type                                                                                | Description |
+| --------- | ----------------------------------------------------------------------------------- | ----------- |
+| `options` | [`GraphQLErrorPagesServiceConfig`](../interfaces/GraphQLErrorPagesServiceConfig.md) | instance    |
 
 #### Returns
 
-[`GraphQLErrorPagesService`](GraphQLErrorPagesService.md)
+`GraphQLErrorPagesService`
 
 ## Properties
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL error pages service with the provided options
 
 > **options**: [`GraphQLErrorPagesServiceConfig`](../interfaces/GraphQLErrorPagesServiceConfig.md)
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:67](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-error-pages-service.ts#L67)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:67](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L67)
 
 instance
 
@@ -48,7 +48,7 @@ instance
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:71](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-error-pages-service.ts#L71)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:71](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L71)
 
 ##### Returns
 
@@ -58,19 +58,19 @@ Defined in: [packages/core/src/site/graphql-error-pages-service.ts:71](https://g
 
 ### fetchErrorPages()
 
-> **fetchErrorPages**(`siteName`, `locale`?, `fetchOptions`?): `Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
+> **fetchErrorPages**(`siteName`, `locale?`, `fetchOptions?`): `Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:83](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-error-pages-service.ts#L83)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:83](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L83)
 
 Fetch list of error pages for the site
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `siteName` | `string` | The site name |
-| `locale`? | `string` | The language |
-| `fetchOptions`? | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options to override graphQL client details like retries and fetch implementation |
+| Parameter       | Type                                                        | Description                                                                      |
+| --------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `siteName`      | `string`                                                    | The site name                                                                    |
+| `locale?`       | `string`                                                    | The language                                                                     |
+| `fetchOptions?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -82,13 +82,13 @@ list of url's error pages
 
 if the siteName is empty.
 
-***
+---
 
 ### getGraphQLClient()
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:114](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-error-pages-service.ts#L114)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:114](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L114)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

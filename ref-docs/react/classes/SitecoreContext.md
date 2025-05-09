@@ -1,12 +1,12 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/react](../README.md) / SitecoreContext
 
 # Class: SitecoreContext
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:32](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/SitecoreContext.tsx#L32)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:32](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/SitecoreContext.tsx#L32)
 
 ## Extends
 
@@ -14,21 +14,21 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:32](https://githu
 
 ## Constructors
 
-### new SitecoreContext()
+### Constructor
 
-> **new SitecoreContext**(`props`): [`SitecoreContext`](SitecoreContext.md)
+> **new SitecoreContext**(`props`): `SitecoreContext`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:35](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/SitecoreContext.tsx#L35)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:35](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/SitecoreContext.tsx#L35)
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `SitecoreContextProps` |
+| Parameter | Type                   |
+| --------- | ---------------------- |
+| `props`   | `SitecoreContextProps` |
 
 #### Returns
 
-[`SitecoreContext`](SitecoreContext.md)
+`SitecoreContext`
 
 #### Overrides
 
@@ -40,7 +40,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:35](https://githu
 
 > **context**: `unknown`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:945
+Defined in: packages/react/node_modules/@types/react/index.d.ts:945
 
 If using the new style context, re-declare this in your class to be the
 `React.ContextType` of your `static contextType`.
@@ -64,50 +64,50 @@ declare context: React.ContextType<typeof MyContext>
 
 `React.Component.context`
 
-***
+---
 
 ### props
 
 > `readonly` **props**: `Readonly`\<`SitecoreContextProps`\>
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:961
+Defined in: packages/react/node_modules/@types/react/index.d.ts:961
 
 #### Inherited from
 
 `React.Component.props`
 
-***
+---
 
 ### state
 
 > **state**: `Readonly`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\>
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:962
+Defined in: packages/react/node_modules/@types/react/index.d.ts:962
 
 #### Inherited from
 
 `React.Component.state`
 
-***
+---
 
 ### contextType?
 
 > `static` `optional` **contextType**: `Context`\<`any`\>
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:921
+Defined in: packages/react/node_modules/@types/react/index.d.ts:921
 
 If set, `this.context` will be set at runtime to the current value of the given Context.
 
 #### Example
 
 ```ts
-type MyContext = number
-const Ctx = React.createContext<MyContext>(0)
+type MyContext = number;
+const Ctx = React.createContext<MyContext>(0);
 
 class Foo extends React.Component {
-  static contextType = Ctx
-  context!: React.ContextType<typeof Ctx>
-  render () {
+  static contextType = Ctx;
+  context!: React.ContextType<typeof Ctx>;
+  render() {
     return <>My context's value: {this.context}</>;
   }
 }
@@ -121,21 +121,21 @@ class Foo extends React.Component {
 
 `React.Component.contextType`
 
-***
+---
 
 ### displayName
 
 > `static` **displayName**: `string` = `'SitecoreContext'`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/SitecoreContext.tsx#L33)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/SitecoreContext.tsx#L33)
 
-***
+---
 
 ### ~~propTypes?~~
 
 > `static` `optional` **propTypes**: `any`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:927
+Defined in: packages/react/node_modules/@types/react/index.d.ts:927
 
 Ignored by React.
 
@@ -153,16 +153,16 @@ Only kept in types for backwards compatibility. Will be removed in a future majo
 
 > `optional` **componentDidCatch**(`error`, `errorInfo`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1194
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1194
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `error` | `Error` |
+| Parameter   | Type        |
+| ----------- | ----------- |
+| `error`     | `Error`     |
 | `errorInfo` | `ErrorInfo` |
 
 #### Returns
@@ -173,13 +173,13 @@ the entire component tree to unmount.
 
 `React.Component.componentDidCatch`
 
-***
+---
 
 ### componentDidMount()?
 
 > `optional` **componentDidMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1173
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1173
 
 Called immediately after a component is mounted. Setting state here will trigger re-rendering.
 
@@ -191,22 +191,22 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 `React.Component.componentDidMount`
 
-***
+---
 
 ### componentDidUpdate()
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:73](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/SitecoreContext.tsx#L73)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:73](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/SitecoreContext.tsx#L73)
 
 Called immediately after updating occurs. Not called for the initial render.
 
-The snapshot is only present if [getSnapshotBeforeUpdate](SitecoreContext.md#getsnapshotbeforeupdate) is present and returns non-null.
+The snapshot is only present if [getSnapshotBeforeUpdate](#getsnapshotbeforeupdate) is present and returns non-null.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter   | Type                   |
+| ----------- | ---------------------- |
 | `prevProps` | `SitecoreContextProps` |
 
 #### Returns
@@ -217,13 +217,13 @@ The snapshot is only present if [getSnapshotBeforeUpdate](SitecoreContext.md#get
 
 `React.Component.componentDidUpdate`
 
-***
+---
 
 ### ~~componentWillMount()?~~
 
 > `optional` **componentWillMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1252
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1252
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -242,20 +242,20 @@ this from being invoked.
 
 #### See
 
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state)
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
 
 #### Inherited from
 
 `React.Component.componentWillMount`
 
-***
+---
 
 ### ~~componentWillReceiveProps()?~~
 
 > `optional` **componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1283
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1283
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -269,10 +269,10 @@ this from being invoked.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `nextProps` | `Readonly`\<`SitecoreContextProps`\> |
-| `nextContext` | `any` |
+| Parameter     | Type                                 |
+| ------------- | ------------------------------------ |
+| `nextProps`   | `Readonly`\<`SitecoreContextProps`\> |
+| `nextContext` | `any`                                |
 
 #### Returns
 
@@ -284,20 +284,20 @@ this from being invoked.
 
 #### See
 
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props)
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
 
 #### Inherited from
 
 `React.Component.componentWillReceiveProps`
 
-***
+---
 
 ### componentWillUnmount()?
 
 > `optional` **componentWillUnmount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1189
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1189
 
 Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
 cancelled network requests, or cleaning up any DOM elements created in `componentDidMount`.
@@ -310,13 +310,13 @@ cancelled network requests, or cleaning up any DOM elements created in `componen
 
 `React.Component.componentWillUnmount`
 
-***
+---
 
 ### ~~componentWillUpdate()?~~
 
 > `optional` **componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1315
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1315
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -328,11 +328,11 @@ this from being invoked.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `nextProps` | `Readonly`\<`SitecoreContextProps`\> |
-| `nextState` | `Readonly`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\> |
-| `nextContext` | `any` |
+| Parameter     | Type                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| `nextProps`   | `Readonly`\<`SitecoreContextProps`\>                                          |
+| `nextState`   | `Readonly`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\> |
+| `nextContext` | `any`                                                                         |
 
 #### Returns
 
@@ -344,44 +344,44 @@ this from being invoked.
 
 #### See
 
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update)
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
 
 #### Inherited from
 
 `React.Component.componentWillUpdate`
 
-***
+---
 
 ### constructContext()
 
-> **constructContext**(`layoutData`?): [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
+> **constructContext**(`layoutData?`): [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:59](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/SitecoreContext.tsx#L59)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:59](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/SitecoreContext.tsx#L59)
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `layoutData`? | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |
+| Parameter     | Type                                                      |
+| ------------- | --------------------------------------------------------- |
+| `layoutData?` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |
 
 #### Returns
 
 [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-***
+---
 
 ### forceUpdate()
 
-> **forceUpdate**(`callback`?): `void`
+> **forceUpdate**(`callback?`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:958
+Defined in: packages/react/node_modules/@types/react/index.d.ts:958
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `callback`? | () => `void` |
+| Parameter   | Type         |
+| ----------- | ------------ |
+| `callback?` | () => `void` |
 
 #### Returns
 
@@ -391,16 +391,16 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:958
 
 `React.Component.forceUpdate`
 
-***
+---
 
 ### getSnapshotBeforeUpdate()?
 
 > `optional` **getSnapshotBeforeUpdate**(`prevProps`, `prevState`): `any`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1230
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1230
 
 Runs before React applies the result of Component.render render to the document, and
-returns an object to be given to [componentDidUpdate](SitecoreContext.md#componentdidupdate). Useful for saving
+returns an object to be given to [componentDidUpdate](#componentdidupdate). Useful for saving
 things such as scroll position before Component.render render causes changes to it.
 
 Note: the presence of this method prevents any of the deprecated
@@ -408,9 +408,9 @@ lifecycle events from running.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `prevProps` | `Readonly`\<`SitecoreContextProps`\> |
+| Parameter   | Type                                                                          |
+| ----------- | ----------------------------------------------------------------------------- |
+| `prevProps` | `Readonly`\<`SitecoreContextProps`\>                                          |
 | `prevState` | `Readonly`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\> |
 
 #### Returns
@@ -421,13 +421,13 @@ lifecycle events from running.
 
 `React.Component.getSnapshotBeforeUpdate`
 
-***
+---
 
 ### render()
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:96](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/SitecoreContext.tsx#L96)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:96](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/SitecoreContext.tsx#L96)
 
 #### Returns
 
@@ -437,46 +437,46 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:96](https://githu
 
 `React.Component.render`
 
-***
+---
 
 ### setContext()
 
 > **setContext**(`value`): `void`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:88](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/SitecoreContext.tsx#L88)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:88](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/SitecoreContext.tsx#L88)
 
 Update context state. Value can be
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `value` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) \| [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md) | New context value |
+| Parameter | Type                                                                                                                           | Description       |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
+| `value`   | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) \| [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md) | New context value |
 
 #### Returns
 
 `void`
 
-***
+---
 
 ### setState()
 
-> **setState**\<`K`\>(`state`, `callback`?): `void`
+> **setState**\<`K`\>(`state`, `callback?`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:953
+Defined in: packages/react/node_modules/@types/react/index.d.ts:953
 
 #### Type Parameters
 
-| Type Parameter |
-| ------ |
-| `K` *extends* keyof [`SitecoreContextState`](../interfaces/SitecoreContextState.md) |
+| Type Parameter                                                                      |
+| ----------------------------------------------------------------------------------- |
+| `K` _extends_ keyof [`SitecoreContextState`](../interfaces/SitecoreContextState.md) |
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `state` | [`SitecoreContextState`](../interfaces/SitecoreContextState.md) \| (`prevState`, `props`) => [`SitecoreContextState`](../interfaces/SitecoreContextState.md) \| `Pick`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md), `K`\> \| `Pick`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md), `K`\> |
-| `callback`? | () => `void` |
+| Parameter   | Type                                                                                                                                                                                                                                                                                                                             |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `state`     | [`SitecoreContextState`](../interfaces/SitecoreContextState.md) \| (`prevState`, `props`) => [`SitecoreContextState`](../interfaces/SitecoreContextState.md) \| `Pick`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md), `K`\> \| `Pick`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md), `K`\> |
+| `callback?` | () => `void`                                                                                                                                                                                                                                                                                                                     |
 
 #### Returns
 
@@ -486,13 +486,13 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:953
 
 `React.Component.setState`
 
-***
+---
 
 ### shouldComponentUpdate()?
 
 > `optional` **shouldComponentUpdate**(`nextProps`, `nextState`, `nextContext`): `boolean`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1184
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1184
 
 Called to determine whether the change in props and state should trigger a re-render.
 
@@ -505,11 +505,11 @@ and `componentDidUpdate` will not be called.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `nextProps` | `Readonly`\<`SitecoreContextProps`\> |
-| `nextState` | `Readonly`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\> |
-| `nextContext` | `any` |
+| Parameter     | Type                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| `nextProps`   | `Readonly`\<`SitecoreContextProps`\>                                          |
+| `nextState`   | `Readonly`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\> |
+| `nextContext` | `any`                                                                         |
 
 #### Returns
 
@@ -519,13 +519,13 @@ and `componentDidUpdate` will not be called.
 
 `React.Component.shouldComponentUpdate`
 
-***
+---
 
-### ~~UNSAFE\_componentWillMount()?~~
+### ~~UNSAFE_componentWillMount()?~~
 
-> `optional` **UNSAFE\_componentWillMount**(): `void`
+> `optional` **UNSAFE_componentWillMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1267
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1267
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -546,20 +546,20 @@ this from being invoked.
 
 #### See
 
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state)
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
 
 #### Inherited from
 
 `React.Component.UNSAFE_componentWillMount`
 
-***
+---
 
-### ~~UNSAFE\_componentWillReceiveProps()?~~
+### ~~UNSAFE_componentWillReceiveProps()?~~
 
-> `optional` **UNSAFE\_componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
+> `optional` **UNSAFE_componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1301
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1301
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -575,10 +575,10 @@ this from being invoked.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `nextProps` | `Readonly`\<`SitecoreContextProps`\> |
-| `nextContext` | `any` |
+| Parameter     | Type                                 |
+| ------------- | ------------------------------------ |
+| `nextProps`   | `Readonly`\<`SitecoreContextProps`\> |
+| `nextContext` | `any`                                |
 
 #### Returns
 
@@ -590,20 +590,20 @@ this from being invoked.
 
 #### See
 
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props)
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
 
 #### Inherited from
 
 `React.Component.UNSAFE_componentWillReceiveProps`
 
-***
+---
 
-### ~~UNSAFE\_componentWillUpdate()?~~
+### ~~UNSAFE_componentWillUpdate()?~~
 
-> `optional` **UNSAFE\_componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
+> `optional` **UNSAFE_componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1331
+Defined in: packages/react/node_modules/@types/react/index.d.ts:1331
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -617,11 +617,11 @@ this from being invoked.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `nextProps` | `Readonly`\<`SitecoreContextProps`\> |
-| `nextState` | `Readonly`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\> |
-| `nextContext` | `any` |
+| Parameter     | Type                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| `nextProps`   | `Readonly`\<`SitecoreContextProps`\>                                          |
+| `nextState`   | `Readonly`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md)\> |
+| `nextContext` | `any`                                                                         |
 
 #### Returns
 
@@ -633,8 +633,8 @@ this from being invoked.
 
 #### See
 
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update)
- - [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update)
+- [https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path](https://legacy.reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path)
 
 #### Inherited from
 

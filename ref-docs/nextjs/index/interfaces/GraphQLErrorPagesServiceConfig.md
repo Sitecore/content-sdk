@@ -57,7 +57,7 @@ The language
 
 > `optional` **retries**: `object`
 
-Defined in: core/types/config/models.d.ts:71
+Defined in: core/types/config/models.d.ts:72
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
 

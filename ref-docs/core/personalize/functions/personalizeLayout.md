@@ -1,25 +1,25 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [personalize](../README.md) / personalizeLayout
 
 # Function: personalizeLayout()
 
-> **personalizeLayout**(`layout`, `variantId`, `componentVariantIds`?): [`PlaceholdersData`](../../layout/type-aliases/PlaceholdersData.md)\<`string`\> \| `undefined`
+> **personalizeLayout**(`layout`, `variantId`, `componentVariantIds?`): `undefined` \| [`PlaceholdersData`](../../layout/type-aliases/PlaceholdersData.md)\<`string`\>
 
-Defined in: [packages/core/src/personalize/layout-personalizer.ts:20](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/personalize/layout-personalizer.ts#L20)
+Defined in: [packages/core/src/personalize/layout-personalizer.ts:20](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/personalize/layout-personalizer.ts#L20)
 
 Apply personalization to layout data. This will recursively go through all placeholders/components, check experiences nodes and replace default with object from specific experience.
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `layout` | [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md) | Layout data |
-| `variantId` | `string` | variant id |
-| `componentVariantIds`? | `string`[] | component variant ids |
+| Parameter              | Type                                                                | Description           |
+| ---------------------- | ------------------------------------------------------------------- | --------------------- |
+| `layout`               | [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md) | Layout data           |
+| `variantId`            | `string`                                                            | variant id            |
+| `componentVariantIds?` | `string`[]                                                          | component variant ids |
 
 ## Returns
 
-[`PlaceholdersData`](../../layout/type-aliases/PlaceholdersData.md)\<`string`\> \| `undefined`
+`undefined` \| [`PlaceholdersData`](../../layout/type-aliases/PlaceholdersData.md)\<`string`\>

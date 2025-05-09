@@ -1,33 +1,51 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [site](../README.md) / RedirectInfo
 
 # Type Alias: RedirectInfo
 
-> **RedirectInfo**: `object`
+> **RedirectInfo** = `object`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:11](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/site/graphql-redirects-service.ts#L11)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:11](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L11)
 
-## Type declaration
+## Properties
 
 ### isQueryStringPreserved
 
 > **isQueryStringPreserved**: `boolean`
 
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:15](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L15)
+
+---
+
 ### locale
 
 > **locale**: `string`
+
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:16](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L16)
+
+---
 
 ### pattern
 
 > **pattern**: `string`
 
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:12](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L12)
+
+---
+
 ### redirectType
 
 > **redirectType**: `string`
 
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:14](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L14)
+
+---
+
 ### target
 
 > **target**: `string`
+
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:13](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L13)

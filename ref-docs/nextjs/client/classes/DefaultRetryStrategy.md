@@ -18,9 +18,9 @@ should be retried and calculates the delay before the next retry attempt.
 
 ## Constructors
 
-### new DefaultRetryStrategy()
+### Constructor
 
-> **new DefaultRetryStrategy**(`options`?): [`DefaultRetryStrategy`](DefaultRetryStrategy.md)
+> **new DefaultRetryStrategy**(`options?`): `DefaultRetryStrategy`
 
 Defined in: core/types/retries.d.ts:17
 
@@ -28,14 +28,14 @@ Defined in: core/types/retries.d.ts:17
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `options`? | \{ `errorCodes`: `string`[]; `factor`: `number`; `statusCodes`: `number`[]; \} | Configurable options for retry mechanism. |
-| `options.errorCodes`? | `string`[] | Node error codes to trigger retries. Default is ['ECONNRESET', 'ETIMEDOUT', 'EPROTO']. |
-| `options.factor`? | `number` | Factor by which the delay increases with each retry attempt. Default is 2. |
-| `options.statusCodes`? | `number`[] | HTTP status codes to trigger retries on. Default is [429]. |
+| `options?` | \{ `errorCodes?`: `string`[]; `factor?`: `number`; `statusCodes?`: `number`[]; \} | Configurable options for retry mechanism. |
+| `options.errorCodes?` | `string`[] | Node error codes to trigger retries. Default is ['ECONNRESET', 'ETIMEDOUT', 'EPROTO']. |
+| `options.factor?` | `number` | Factor by which the delay increases with each retry attempt. Default is 2. |
+| `options.statusCodes?` | `number`[] | HTTP status codes to trigger retries on. Default is [429]. |
 
 #### Returns
 
-[`DefaultRetryStrategy`](DefaultRetryStrategy.md)
+`DefaultRetryStrategy`
 
 ## Methods
 

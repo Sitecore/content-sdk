@@ -1,12 +1,12 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [i18n](../README.md) / DictionaryService
 
 # Interface: DictionaryService
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:70](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/i18n/graphql-dictionary-service.ts#L70)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:70](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/i18n/graphql-dictionary-service.ts#L70)
 
 Service that fetches dictionary data using Sitecore's GraphQL API.
 
@@ -14,19 +14,19 @@ Service that fetches dictionary data using Sitecore's GraphQL API.
 
 ### fetchDictionaryData()
 
-> **fetchDictionaryData**(`language`, `site`?, `fetchOptions`?): `Promise`\<[`DictionaryPhrases`](DictionaryPhrases.md)\>
+> **fetchDictionaryData**(`language`, `site?`, `fetchOptions?`): `Promise`\<[`DictionaryPhrases`](DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:76](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/i18n/graphql-dictionary-service.ts#L76)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:76](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/i18n/graphql-dictionary-service.ts#L76)
 
 Fetch dictionary data for a language.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `language` | `string` | the language to be used to fetch the dictionary |
-| `site`? | `string` | site name to fetch data for. |
-| `fetchOptions`? | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | - |
+| Parameter       | Type                                                        | Description                                     |
+| --------------- | ----------------------------------------------------------- | ----------------------------------------------- |
+| `language`      | `string`                                                    | the language to be used to fetch the dictionary |
+| `site?`         | `string`                                                    | site name to fetch data for.                    |
+| `fetchOptions?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | -                                               |
 
 #### Returns
 

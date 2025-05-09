@@ -6,7 +6,7 @@
 
 # Function: getChildPlaceholder()
 
-> **getChildPlaceholder**(`rendering`, `placeholderName`): [`ComponentRendering`](../interfaces/ComponentRendering.md)[]
+> **getChildPlaceholder**(`rendering`, `placeholderName`): [`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\>[]
 
 Defined in: core/types/layout/utils.d.ts:17
 
@@ -21,6 +21,6 @@ Gets rendering definitions in a given child placeholder under a current renderin
 
 ## Returns
 
-[`ComponentRendering`](../interfaces/ComponentRendering.md)[]
+[`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\>[]
 
 child placeholder

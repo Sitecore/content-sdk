@@ -3,6 +3,7 @@ import nock from 'nock';
 import { GraphQLRobotsService } from './graphql-robots-service';
 import { siteNameError } from '../constants';
 import { GraphQLRequestClient } from '../graphql-request-client';
+import { FetchOptions } from '../../client';
 
 const robotsQueryResultNull = {
   site: {
@@ -23,8 +24,10 @@ describe('GraphQLRobotsService', () => {
     nock.cleanAll();
   });
 
-  const mockRobotsRequest = (siteName?: string) => {
-    nock(endpoint)
+  const mockRobotsRequest = (siteName?: string, fetchOptions?: FetchOptions) => {
+    nock(endpoint, {
+      reqheaders: fetchOptions?.headers,
+    })
       .post('/')
       .reply(
         200,
@@ -63,6 +66,25 @@ describe('GraphQLRobotsService', () => {
       const robots = await service.fetchRobots();
       expect(robots).to.equal(siteName);
 
+      return expect(nock.isDone()).to.be.true;
+    });
+
+    it('should pass fetchOptions to the GraphQL client request', async () => {
+      const fetchOptions = {
+        headers: { 'X-Test-Header': 'true' },
+        cache: 'no-store' as RequestCache,
+      };
+
+      mockRobotsRequest('User-agent: *\nDisallow: /', fetchOptions);
+
+      const service = new GraphQLRobotsService({
+        siteName: 'test-site',
+        clientFactory: () => new GraphQLRequestClient(endpoint),
+      });
+
+      const result = await service.fetchRobots(fetchOptions);
+
+      expect(result).to.equal('User-agent: *\nDisallow: /');
       return expect(nock.isDone()).to.be.true;
     });
   });

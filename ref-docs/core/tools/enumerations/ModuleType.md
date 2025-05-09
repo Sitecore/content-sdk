@@ -1,12 +1,12 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [tools](../README.md) / ModuleType
 
 # Enumeration: ModuleType
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:8](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/tools/templating/plugins.ts#L8)
+Defined in: [packages/core/src/tools/templating/plugins.ts:8](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/tools/templating/plugins.ts#L8)
 
 Identifies the format of the module to be compiled
 
@@ -16,12 +16,12 @@ Identifies the format of the module to be compiled
 
 > **CJS**: `0`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:9](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/tools/templating/plugins.ts#L9)
+Defined in: [packages/core/src/tools/templating/plugins.ts:9](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/tools/templating/plugins.ts#L9)
 
-***
+---
 
 ### ESM
 
 > **ESM**: `1`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:10](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/tools/templating/plugins.ts#L10)
+Defined in: [packages/core/src/tools/templating/plugins.ts:10](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/tools/templating/plugins.ts#L10)

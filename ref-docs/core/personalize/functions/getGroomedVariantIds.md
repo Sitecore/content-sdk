@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [personalize](../README.md) / getGroomedVariantIds
 
@@ -8,14 +8,14 @@
 
 > **getGroomedVariantIds**(`variantIds`): [`PersonalizedRewriteData`](../type-aliases/PersonalizedRewriteData.md)
 
-Defined in: [packages/core/src/personalize/utils.ts:43](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/personalize/utils.ts#L43)
+Defined in: [packages/core/src/personalize/utils.ts:43](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/personalize/utils.ts#L43)
 
 Parses a list of variantIds and divides into layout and component variants
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
+| Parameter    | Type       | Description                        |
+| ------------ | ---------- | ---------------------------------- |
 | `variantIds` | `string`[] | the list of variant IDs for a page |
 
 ## Returns

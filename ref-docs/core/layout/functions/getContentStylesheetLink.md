@@ -1,24 +1,24 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [layout](../README.md) / getContentStylesheetLink
 
 # Function: getContentStylesheetLink()
 
-> **getContentStylesheetLink**(`layoutData`, `sitecoreEdgeContextId`, `sitecoreEdgeUrl`?): `null` \| [`HTMLLink`](../../index/type-aliases/HTMLLink.md)
+> **getContentStylesheetLink**(`layoutData`, `sitecoreEdgeContextId`, `sitecoreEdgeUrl?`): `null` \| [`HTMLLink`](../../index/type-aliases/HTMLLink.md)
 
-Defined in: [packages/core/src/layout/content-styles.ts:20](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/layout/content-styles.ts#L20)
+Defined in: [packages/core/src/layout/content-styles.ts:20](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/content-styles.ts#L20)
 
 Get the content styles link to be loaded from the Sitecore Edge Platform
 
 ## Parameters
 
-| Parameter | Type | Default value | Description |
-| ------ | ------ | ------ | ------ |
-| `layoutData` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) | `undefined` | Layout service data |
-| `sitecoreEdgeContextId` | `string` | `undefined` | Sitecore Edge Context ID |
-| `sitecoreEdgeUrl`? | `string` | `SITECORE_EDGE_URL_DEFAULT` | Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io |
+| Parameter               | Type                                                      | Default value               | Description                                                                   |
+| ----------------------- | --------------------------------------------------------- | --------------------------- | ----------------------------------------------------------------------------- |
+| `layoutData`            | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) | `undefined`                 | Layout service data                                                           |
+| `sitecoreEdgeContextId` | `string`                                                  | `undefined`                 | Sitecore Edge Context ID                                                      |
+| `sitecoreEdgeUrl?`      | `string`                                                  | `SITECORE_EDGE_URL_DEFAULT` | Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io |
 
 ## Returns
 

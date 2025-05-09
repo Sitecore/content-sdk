@@ -12,9 +12,9 @@ Resolves site based on the provided host or site name
 
 ## Constructors
 
-### new SiteResolver()
+### Constructor
 
-> **new SiteResolver**(`sites`): [`SiteResolver`](SiteResolver.md)
+> **new SiteResolver**(`sites`): `SiteResolver`
 
 Defined in: core/types/site/site-resolver.d.ts:10
 
@@ -26,7 +26,7 @@ Defined in: core/types/site/site-resolver.d.ts:10
 
 #### Returns
 
-[`SiteResolver`](SiteResolver.md)
+`SiteResolver`
 
 ## Properties
 

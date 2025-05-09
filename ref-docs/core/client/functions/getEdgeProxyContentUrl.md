@@ -1,23 +1,23 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/core](../../README.md) / [client](../README.md) / getEdgeProxyContentUrl
 
 # Function: getEdgeProxyContentUrl()
 
-> **getEdgeProxyContentUrl**(`sitecoreEdgeContextId`, `sitecoreEdgeUrl`?): `string`
+> **getEdgeProxyContentUrl**(`sitecoreEdgeContextId`, `sitecoreEdgeUrl?`): `string`
 
-Defined in: [packages/core/src/client/graphql-edge-proxy.ts:9](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/core/src/client/graphql-edge-proxy.ts#L9)
+Defined in: [packages/core/src/client/graphql-edge-proxy.ts:9](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/client/graphql-edge-proxy.ts#L9)
 
 Generates a URL for accessing Sitecore Edge Platform Content using the provided endpoint and context ID.
 
 ## Parameters
 
-| Parameter | Type | Default value | Description |
-| ------ | ------ | ------ | ------ |
-| `sitecoreEdgeContextId` | `string` | `undefined` | The unique context id. |
-| `sitecoreEdgeUrl`? | `string` | `SITECORE_EDGE_URL_DEFAULT` | The base endpoint URL for the Edge Platform. Default is https://edge-platform.sitecorecloud.io |
+| Parameter               | Type     | Default value               | Description                                                                                    |
+| ----------------------- | -------- | --------------------------- | ---------------------------------------------------------------------------------------------- |
+| `sitecoreEdgeContextId` | `string` | `undefined`                 | The unique context id.                                                                         |
+| `sitecoreEdgeUrl?`      | `string` | `SITECORE_EDGE_URL_DEFAULT` | The base endpoint URL for the Edge Platform. Default is https://edge-platform.sitecorecloud.io |
 
 ## Returns
 

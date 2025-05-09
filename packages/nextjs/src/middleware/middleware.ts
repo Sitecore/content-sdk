@@ -1,6 +1,10 @@
 ﻿import { SITE_KEY, SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
-import { debug } from '@sitecore-content-sdk/core';
+import { debug, GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { NextRequest, NextFetchEvent, NextResponse } from 'next/server';
+import {
+  createGraphQLClientFactory,
+  GraphQLClientOptions,
+} from '@sitecore-content-sdk/core/client';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
 
@@ -142,6 +146,10 @@ export abstract class MiddlewareBase extends Middleware {
     }
 
     return this.siteResolver.getByHost(hostname);
+  }
+
+  protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory {
+    return createGraphQLClientFactory(graphQLOptions);
   }
 
   /**

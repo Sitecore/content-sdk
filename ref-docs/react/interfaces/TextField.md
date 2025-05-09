@@ -1,12 +1,12 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/react](../README.md) / TextField
 
 # Interface: TextField
 
-Defined in: [packages/react/src/components/Text.tsx:8](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/Text.tsx#L8)
+Defined in: [packages/react/src/components/Text.tsx:8](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/Text.tsx#L8)
 
 ## Extends
 
@@ -28,10 +28,10 @@ Defined in: packages/core/types/layout/models.d.ts:107
 
 `FieldMetadata.metadata`
 
-***
+---
 
 ### value?
 
 > `optional` **value**: `string` \| `number`
 
-Defined in: [packages/react/src/components/Text.tsx:9](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/Text.tsx#L9)
+Defined in: [packages/react/src/components/Text.tsx:9](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/Text.tsx#L9)

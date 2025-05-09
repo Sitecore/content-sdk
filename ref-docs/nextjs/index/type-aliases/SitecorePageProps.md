@@ -1,14 +1,14 @@
 [**@sitecore-content-sdk/nextjs**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / SitecorePageProps
 
 # Type Alias: SitecorePageProps
 
-> **SitecorePageProps**: [`NextjsPage`](../../client/type-aliases/NextjsPage.md) & `object`
+> **SitecorePageProps** = [`NextjsPage`](../../client/type-aliases/NextjsPage.md) & `object`
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:4](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L4)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:4](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L4)
 
 ## Type declaration
 

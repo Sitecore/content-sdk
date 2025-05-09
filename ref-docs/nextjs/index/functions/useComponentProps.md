@@ -1,32 +1,32 @@
 [**@sitecore-content-sdk/nextjs**](../../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / useComponentProps
 
 # Function: useComponentProps()
 
-> **useComponentProps**\<`ComponentData`\>(`componentUid`): `ComponentData` \| `undefined`
+> **useComponentProps**\<`ComponentData`\>(`componentUid`): `undefined` \| `ComponentData`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:15](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/nextjs/src/components/ComponentPropsContext.tsx#L15)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:15](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/components/ComponentPropsContext.tsx#L15)
 
 Hook in order to get access to props related to specific component. Data comes from ComponentPropsContext.
 
 ## Type Parameters
 
-| Type Parameter |
-| ------ |
+| Type Parameter  |
+| --------------- |
 | `ComponentData` |
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
+| Parameter      | Type                    | Description   |
+| -------------- | ----------------------- | ------------- |
 | `componentUid` | `undefined` \| `string` | component uId |
 
 ## Returns
 
-`ComponentData` \| `undefined`
+`undefined` \| `ComponentData`
 
 component props
 

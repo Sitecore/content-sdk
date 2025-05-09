@@ -1,12 +1,12 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
-***
+---
 
 [@sitecore-content-sdk/react](../README.md) / FileField
 
 # Interface: FileField
 
-Defined in: [packages/react/src/components/File.tsx:11](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/File.tsx#L11)
+Defined in: [packages/react/src/components/File.tsx:11](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/File.tsx#L11)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [packages/react/src/components/File.tsx:11](https://github.com/Sitec
 
 > **value**: `FileFieldValue`
 
-Defined in: [packages/react/src/components/File.tsx:12](https://github.com/Sitecore/content-sdk/blob/99f894d8cf7b38b3ff4dfa6964d9bb9d0d530492/packages/react/src/components/File.tsx#L12)
+Defined in: [packages/react/src/components/File.tsx:12](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/File.tsx#L12)
