@@ -6,7 +6,7 @@
 
 # Function: withSitecoreContext()
 
-> **withSitecoreContext**(`options`?): \<`ComponentProps`\>(`Component`) => (`props`) => `React.JSX.Element`
+> **withSitecoreContext**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element`
 
 Defined in: react/types/enhancers/withSitecoreContext.d.ts:16
 
@@ -14,11 +14,11 @@ Defined in: react/types/enhancers/withSitecoreContext.d.ts:16
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `options`? | [`WithSitecoreContextOptions`](../interfaces/WithSitecoreContextOptions.md) |  |
+| `options?` | [`WithSitecoreContextOptions`](../interfaces/WithSitecoreContextOptions.md) |  |
 
 ## Returns
 
-`Function`
+> \<`ComponentProps`\>(`Component`): (`props`) => `Element`
 
 ### Type Parameters
 
@@ -30,18 +30,18 @@ Defined in: react/types/enhancers/withSitecoreContext.d.ts:16
 
 | Parameter | Type |
 | ------ | ------ |
-| `Component` | `React.ComponentType`\<`ComponentProps`\> |
+| `Component` | `ComponentType`\<`ComponentProps`\> |
 
 ### Returns
 
-`Function`
+> (`props`): `Element`
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | [`WithSitecoreContextHocProps`](../type-aliases/WithSitecoreContextHocProps.md)\<`ComponentProps`\> |
+| `props` | `EnhancedOmit`\<`ComponentProps`\> |
 
 #### Returns
 
-`React.JSX.Element`
+`Element`

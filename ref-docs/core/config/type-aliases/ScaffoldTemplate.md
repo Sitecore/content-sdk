@@ -6,23 +6,29 @@
 
 # Type Alias: ScaffoldTemplate
 
-> **ScaffoldTemplate**: `object`
+> **ScaffoldTemplate** = `object`
 
-Defined in: [packages/core/src/config/models.ts:218](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/config/models.ts#L218)
+Defined in: [packages/core/src/config/models.ts:218](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/core/src/config/models.ts#L218)
 
 Represents a scaffold template used for generating components.
 
-## Type declaration
+## Properties
 
 ### fileExtension
 
 > **fileExtension**: `string`
 
+Defined in: [packages/core/src/config/models.ts:226](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/core/src/config/models.ts#L226)
+
 File extension for the generated component.
+
+***
 
 ### generateTemplate()
 
 > **generateTemplate**: (`componentName`) => `string`
+
+Defined in: [packages/core/src/config/models.ts:232](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/core/src/config/models.ts#L232)
 
 Function to generate the component file contents based on the component name.
 
@@ -38,9 +44,13 @@ Function to generate the component file contents based on the component name.
 
 The generated content as a string.
 
+***
+
 ### getNextSteps()?
 
 > `optional` **getNextSteps**: (`componentOutputPath`) => `string`[]
+
+Defined in: [packages/core/src/config/models.ts:238](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/core/src/config/models.ts#L238)
 
 Optional function to get the next steps to be shown by the cli after generating the component.
 
@@ -56,8 +66,12 @@ Optional function to get the next steps to be shown by the cli after generating 
 
 An array of strings representing the next steps.
 
+***
+
 ### name
 
 > **name**: `string`
+
+Defined in: [packages/core/src/config/models.ts:222](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/core/src/config/models.ts#L222)
 
 Name of the template.

@@ -6,9 +6,9 @@
 
 # Type Alias: PageOptions
 
-> **PageOptions**: `Partial`\<[`RouteOptions`](../../layout/type-aliases/RouteOptions.md)\> & `object`
+> **PageOptions** = `Partial`\<[`RouteOptions`](../../layout/type-aliases/RouteOptions.md)\> & `object`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:49](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/client/sitecore-client.ts#L49)
+Defined in: [packages/core/src/client/sitecore-client.ts:49](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/core/src/client/sitecore-client.ts#L49)
 
 ## Type declaration
 

@@ -6,50 +6,88 @@
 
 # Type Alias: FEaaSComponentParams
 
-> **FEaaSComponentParams**: `object`
+> **FEaaSComponentParams** = `object`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:11](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/FEaaSComponent.tsx#L11)
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:11](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L11)
 
 Params from a Sitecore FEaaS rendering
 
-## Type declaration
+## Properties
 
 ### ComponentDataOverride?
 
 > `optional` **ComponentDataOverride**: `string`
 
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:18](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L18)
+
+***
+
 ### ComponentHostName?
 
 > `optional` **ComponentHostName**: `string`
+
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:16](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L16)
+
+***
 
 ### ComponentHTMLOverride?
 
 > `optional` **ComponentHTMLOverride**: `string`
 
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:19](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L19)
+
+***
+
 ### ComponentId?
 
 > `optional` **ComponentId**: `string`
+
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:13](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L13)
+
+***
 
 ### ComponentInstanceId?
 
 > `optional` **ComponentInstanceId**: `string`
 
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:17](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L17)
+
+***
+
 ### ComponentRevision?
 
 > `optional` **ComponentRevision**: `RevisionType`
+
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:15](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L15)
+
+***
 
 ### ComponentVersion?
 
 > `optional` **ComponentVersion**: `string`
 
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:14](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L14)
+
+***
+
 ### LibraryId?
 
 > `optional` **LibraryId**: `string`
+
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:12](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L12)
+
+***
 
 ### RenderingIdentifier?
 
 > `optional` **RenderingIdentifier**: `string`
 
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:21](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L21)
+
+***
+
 ### styles?
 
 > `optional` **styles**: `string`
+
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:20](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/react/src/components/FEaaSComponent.tsx#L20)

@@ -22,4 +22,4 @@ Defined in: packages/core/types/layout/models.d.ts:5
 
 ##### route
 
-> **route**: [`RouteData`](RouteData.md)
+> **route**: [`RouteData`](RouteData.md)\<`Record`\<`string`, [`Field`](Field.md)\<`GenericFieldValue`\> \| [`Item`](Item.md) \| [`Item`](Item.md)[]\>\>

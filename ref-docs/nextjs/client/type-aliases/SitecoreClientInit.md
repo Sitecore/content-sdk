@@ -6,7 +6,7 @@
 
 # Type Alias: SitecoreClientInit
 
-> **SitecoreClientInit**: `Omit`\<`SitecoreConfig`, `"multisite"` \| `"redirects"` \| `"personalize"`\> & `object`
+> **SitecoreClientInit** = `Omit`\<`SitecoreConfig`, `"multisite"` \| `"redirects"` \| `"personalize"`\> & `object`
 
 Defined in: core/types/client/models.d.ts:3
 

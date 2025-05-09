@@ -6,9 +6,9 @@
 
 # Function: handleEditorFastRefresh()
 
-> **handleEditorFastRefresh**(`forceReload`?): `void`
+> **handleEditorFastRefresh**(`forceReload?`): `void`
 
-Defined in: [nextjs/src/utils/utils.ts:10](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/nextjs/src/utils/utils.ts#L10)
+Defined in: [nextjs/src/utils/utils.ts:10](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/nextjs/src/utils/utils.ts#L10)
 
 Since Sitecore editors do not support Fast Refresh:
 1. Subscribe on events provided by webpack.
@@ -18,7 +18,7 @@ Since Sitecore editors do not support Fast Refresh:
 
 | Parameter | Type | Default value | Description |
 | ------ | ------ | ------ | ------ |
-| `forceReload`? | `boolean` | `false` | force page reload instead of reset chromes |
+| `forceReload?` | `boolean` | `false` | force page reload instead of reset chromes |
 
 ## Returns
 

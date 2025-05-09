@@ -6,7 +6,7 @@
 
 # Type Alias: GraphQLClientError
 
-> **GraphQLClientError**: `Partial`\<`ClientError`\> & `GenericGraphQLClientError`
+> **GraphQLClientError** = `Partial`\<`ClientError`\> & `GenericGraphQLClientError`
 
 Defined in: core/types/graphql-request-client.d.ts:22
 

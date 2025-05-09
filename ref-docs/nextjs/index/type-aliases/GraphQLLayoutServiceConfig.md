@@ -6,6 +6,6 @@
 
 # Type Alias: GraphQLLayoutServiceConfig
 
-> **GraphQLLayoutServiceConfig**: `GraphQLServiceConfig` & `Partial`\<`SitecoreConfigInput`\[`"layout"`\]\>
+> **GraphQLLayoutServiceConfig** = `GraphQLServiceConfig` & `Partial`\<`SitecoreConfigInput`\[`"layout"`\]\>
 
 Defined in: core/types/layout/graphql-layout-service.d.ts:7

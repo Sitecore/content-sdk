@@ -12,9 +12,9 @@ Service that fetch the robots.txt data using Sitecore's GraphQL API.
 
 ## Constructors
 
-### new GraphQLRobotsService()
+### Constructor
 
-> **new GraphQLRobotsService**(`options`): [`GraphQLRobotsService`](GraphQLRobotsService.md)
+> **new GraphQLRobotsService**(`options`): `GraphQLRobotsService`
 
 Defined in: core/types/site/graphql-robots-service.d.ts:34
 
@@ -28,7 +28,7 @@ Creates an instance of graphQL robots.txt service with the provided options
 
 #### Returns
 
-[`GraphQLRobotsService`](GraphQLRobotsService.md)
+`GraphQLRobotsService`
 
 ## Properties
 

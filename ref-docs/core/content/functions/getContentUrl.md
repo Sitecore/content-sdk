@@ -8,7 +8,7 @@
 
 > **getContentUrl**(`params`): `string`
 
-Defined in: [packages/core/src/content/utils.ts:12](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/content/utils.ts#L12)
+Defined in: [packages/core/src/content/utils.ts:12](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/core/src/content/utils.ts#L12)
 
 Get the Content graphql endpoint url
 
@@ -16,11 +16,11 @@ Get the Content graphql endpoint url
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `params` | \{ `environment`: `string`; `preview`: `boolean`; `tenant`: `string`; `url`: `string`; \} | Parameters |
+| `params` | \{ `environment`: `string`; `preview`: `boolean`; `tenant`: `string`; `url?`: `string`; \} | Parameters |
 | `params.environment` | `string` | Environment name |
 | `params.preview` | `boolean` | Indicates if preview mode is enabled |
 | `params.tenant` | `string` | Tenant name |
-| `params.url`? | `string` | Content base graphql endpoint url |
+| `params.url?` | `string` | Content base graphql endpoint url |
 
 ## Returns
 

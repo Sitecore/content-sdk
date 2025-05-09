@@ -6,16 +6,22 @@
 
 # Type Alias: ComponentPropsContextProps
 
-> **ComponentPropsContextProps**: `object`
+> **ComponentPropsContextProps** = `object`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:26](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/nextjs/src/components/ComponentPropsContext.tsx#L26)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:26](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/nextjs/src/components/ComponentPropsContext.tsx#L26)
 
-## Type declaration
+## Properties
 
 ### children
 
 > **children**: `ReactNode`
 
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:27](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/nextjs/src/components/ComponentPropsContext.tsx#L27)
+
+***
+
 ### value
 
 > **value**: [`ComponentPropsCollection`](ComponentPropsCollection.md)
+
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:28](https://github.com/Sitecore/content-sdk/blob/f461d2159effd4f50f4ce950c15cc271ac94c771/packages/nextjs/src/components/ComponentPropsContext.tsx#L28)

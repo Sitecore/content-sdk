@@ -14,9 +14,9 @@ Defined in: react/types/components/SitecoreContext.d.ts:22
 
 ## Constructors
 
-### new SitecoreContext()
+### Constructor
 
-> **new SitecoreContext**(`props`): [`SitecoreContext`](SitecoreContext.md)
+> **new SitecoreContext**(`props`): `SitecoreContext`
 
 Defined in: react/types/components/SitecoreContext.d.ts:24
 
@@ -28,7 +28,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:24
 
 #### Returns
 
-[`SitecoreContext`](SitecoreContext.md)
+`SitecoreContext`
 
 #### Overrides
 
@@ -221,7 +221,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:26
 
 Called immediately after updating occurs. Not called for the initial render.
 
-The snapshot is only present if [getSnapshotBeforeUpdate](SitecoreContext.md#getsnapshotbeforeupdate) is present and returns non-null.
+The snapshot is only present if [getSnapshotBeforeUpdate](#getsnapshotbeforeupdate) is present and returns non-null.
 
 #### Parameters
 
@@ -375,7 +375,7 @@ this from being invoked.
 
 ### constructContext()
 
-> **constructContext**(`layoutData`?): [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
+> **constructContext**(`layoutData?`): [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
 Defined in: react/types/components/SitecoreContext.d.ts:25
 
@@ -383,7 +383,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:25
 
 | Parameter | Type |
 | ------ | ------ |
-| `layoutData`? | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |
+| `layoutData?` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |
 
 #### Returns
 
@@ -393,7 +393,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:25
 
 ### forceUpdate()
 
-> **forceUpdate**(`callback`?): `void`
+> **forceUpdate**(`callback?`): `void`
 
 Defined in: nextjs/node\_modules/@types/react/index.d.ts:958
 
@@ -401,7 +401,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:958
 
 | Parameter | Type |
 | ------ | ------ |
-| `callback`? | () => `void` |
+| `callback?` | () => `void` |
 
 #### Returns
 
@@ -420,7 +420,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:958
 Defined in: nextjs/node\_modules/@types/react/index.d.ts:1230
 
 Runs before React applies the result of Component.render render to the document, and
-returns an object to be given to [componentDidUpdate](SitecoreContext.md#componentdidupdate). Useful for saving
+returns an object to be given to [componentDidUpdate](#componentdidupdate). Useful for saving
 things such as scroll position before Component.render render causes changes to it.
 
 Note: the presence of this method prevents any of the deprecated
@@ -461,7 +461,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:33
 
 ### setState()
 
-> **setState**\<`K`\>(`state`, `callback`?): `void`
+> **setState**\<`K`\>(`state`, `callback?`): `void`
 
 Defined in: nextjs/node\_modules/@types/react/index.d.ts:953
 
@@ -476,7 +476,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:953
 | Parameter | Type |
 | ------ | ------ |
 | `state` | `null` \| [`SitecoreContextState`](../interfaces/SitecoreContextState.md) \| (`prevState`, `props`) => `null` \| [`SitecoreContextState`](../interfaces/SitecoreContextState.md) \| `Pick`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md), `K`\> \| `Pick`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md), `K`\> |
-| `callback`? | () => `void` |
+| `callback?` | () => `void` |
 
 #### Returns
 

@@ -6,8 +6,8 @@
 
 # FEaaSWrapper
 
-## Functions
+## Variables
 
-- [default](functions/default.md)
-- [getServerSideProps](functions/getServerSideProps.md)
-- [getStaticProps](functions/getStaticProps.md)
+- [default](variables/default.md)
+- [getServerSideProps](variables/getServerSideProps.md)
+- [getStaticProps](variables/getStaticProps.md)

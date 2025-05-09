@@ -6,34 +6,48 @@
 
 # Type Alias: ErrorPages
 
-> **ErrorPages**: `object`
+> **ErrorPages** = `object`
 
 Defined in: core/types/site/graphql-error-pages-service.d.ts:19
 
 Object model of Error Pages result
 
-## Type declaration
+## Properties
 
 ### notFoundPage
 
 > **notFoundPage**: `object`
 
-#### notFoundPage.rendered
+Defined in: core/types/site/graphql-error-pages-service.d.ts:20
+
+#### rendered
 
 > **rendered**: [`LayoutServiceData`](../interfaces/LayoutServiceData.md)
+
+***
 
 ### notFoundPagePath
 
 > **notFoundPagePath**: `string`
 
+Defined in: core/types/site/graphql-error-pages-service.d.ts:23
+
+***
+
 ### serverErrorPage
 
 > **serverErrorPage**: `object`
 
-#### serverErrorPage.rendered
+Defined in: core/types/site/graphql-error-pages-service.d.ts:24
+
+#### rendered
 
 > **rendered**: [`LayoutServiceData`](../interfaces/LayoutServiceData.md)
+
+***
 
 ### serverErrorPagePath
 
 > **serverErrorPagePath**: `string`
+
+Defined in: core/types/site/graphql-error-pages-service.d.ts:27
