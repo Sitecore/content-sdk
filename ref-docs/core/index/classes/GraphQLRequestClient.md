@@ -6,7 +6,7 @@
 
 # Class: GraphQLRequestClient
 
-Defined in: [packages/core/src/graphql-request-client.ts:88](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/graphql-request-client.ts#L88)
+Defined in: [packages/core/src/graphql-request-client.ts:88](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/graphql-request-client.ts#L88)
 
 A GraphQL client for Sitecore APIs that uses the 'graphql-request' library.
 https://github.com/prisma-labs/graphql-request
@@ -17,11 +17,11 @@ https://github.com/prisma-labs/graphql-request
 
 ## Constructors
 
-### new GraphQLRequestClient()
+### Constructor
 
-> **new GraphQLRequestClient**(`endpoint`, `clientConfig`?): [`GraphQLRequestClient`](GraphQLRequestClient.md)
+> **new GraphQLRequestClient**(`endpoint`, `clientConfig?`): `GraphQLRequestClient`
 
-Defined in: [packages/core/src/graphql-request-client.ts:102](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/graphql-request-client.ts#L102)
+Defined in: [packages/core/src/graphql-request-client.ts:102](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/graphql-request-client.ts#L102)
 
 Provides ability to execute graphql query using given `endpoint`
 
@@ -30,19 +30,19 @@ Provides ability to execute graphql query using given `endpoint`
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `endpoint` | `string` | The Graphql endpoint |
-| `clientConfig`? | [`GraphQLRequestClientConfig`](../type-aliases/GraphQLRequestClientConfig.md) | GraphQL request client configuration. |
+| `clientConfig?` | [`GraphQLRequestClientConfig`](../type-aliases/GraphQLRequestClientConfig.md) | GraphQL request client configuration. |
 
 #### Returns
 
-[`GraphQLRequestClient`](GraphQLRequestClient.md)
+`GraphQLRequestClient`
 
 ## Methods
 
 ### request()
 
-> **request**\<`T`\>(`query`, `variables`?, `options`?): `Promise`\<`T`\>
+> **request**\<`T`\>(`query`, `variables?`, `options?`): `Promise`\<`T`\>
 
-Defined in: [packages/core/src/graphql-request-client.ts:147](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/graphql-request-client.ts#L147)
+Defined in: [packages/core/src/graphql-request-client.ts:147](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/graphql-request-client.ts#L147)
 
 Execute graphql request
 
@@ -57,8 +57,8 @@ Execute graphql request
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `query` | `string` \| `DocumentNode` | graphql query |
-| `variables`? | \{\} | - |
-| `options`? | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options for configuring a GraphQL request. |
+| `variables?` | \{[`key`: `string`]: `unknown`; \} | - |
+| `options?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options for configuring a GraphQL request. |
 
 #### Returns
 
@@ -74,7 +74,7 @@ Execute graphql request
 
 > `static` **createClientFactory**(`config`): [`GraphQLRequestClientFactory`](../type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:134](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/graphql-request-client.ts#L134)
+Defined in: [packages/core/src/graphql-request-client.ts:134](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/graphql-request-client.ts#L134)
 
 Factory method for creating a GraphQLRequestClientFactory.
 

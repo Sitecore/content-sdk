@@ -109,8 +109,7 @@ export class ContentClient {
 
   /**
    * Retrieves the locale information for a given locale ID.
-   *
-   * @param id - The unique identifier of the locale item.
+   * @param {string} id - The unique identifier of the locale item.
    * @returns A promise that resolves to the locale information associated with the specified locale ID.
    */
   async getLocale(id: string) {
@@ -122,7 +121,6 @@ export class ContentClient {
 
   /**
    * Retrieves all available locales from the content service.
-   *
    * @returns A promise that resolves to an array of locales.
    */
   async getLocales() {

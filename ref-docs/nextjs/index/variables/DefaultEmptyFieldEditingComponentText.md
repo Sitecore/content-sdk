@@ -1,0 +1,11 @@
+[**@sitecore-content-sdk/nextjs**](../../README.md)
+
+***
+
+[@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / DefaultEmptyFieldEditingComponentText
+
+# Variable: DefaultEmptyFieldEditingComponentText
+
+> `const` **DefaultEmptyFieldEditingComponentText**: `React.FC`
+
+Defined in: react/types/components/DefaultEmptyFieldEditingComponents.d.ts:2

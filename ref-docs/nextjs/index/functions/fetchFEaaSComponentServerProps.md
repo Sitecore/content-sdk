@@ -6,7 +6,7 @@
 
 # Function: fetchFEaaSComponentServerProps()
 
-> **fetchFEaaSComponentServerProps**(`params`, `pageState`?, `endpointOverride`?): `Promise`\<[`FEaaSComponentProps`](../type-aliases/FEaaSComponentProps.md)\>
+> **fetchFEaaSComponentServerProps**(`params`, `pageState?`, `endpointOverride?`): `Promise`\<[`FEaaSComponentProps`](../type-aliases/FEaaSComponentProps.md)\>
 
 Defined in: react/types/components/FEaaSComponent.d.ts:64
 
@@ -18,8 +18,8 @@ Component endpoint will either be retrieved from params or from endpointOverride
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `params` | [`FEaaSComponentParams`](../type-aliases/FEaaSComponentParams.md) | component params |
-| `pageState`? | [`LayoutServicePageState`](../enumerations/LayoutServicePageState.md) | page state to determine which component variant to use |
-| `endpointOverride`? | `string` | optional override for component endpoint |
+| `pageState?` | [`LayoutServicePageState`](../enumerations/LayoutServicePageState.md) | page state to determine which component variant to use |
+| `endpointOverride?` | `string` | optional override for component endpoint |
 
 ## Returns
 

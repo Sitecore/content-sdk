@@ -6,9 +6,9 @@
 
 # mediaApi
 
-## Functions
+## Variables
 
-- [getRequiredParams](functions/getRequiredParams.md)
-- [getSrcSet](functions/getSrcSet.md)
-- [replaceMediaUrlPrefix](functions/replaceMediaUrlPrefix.md)
-- [updateImageUrl](functions/updateImageUrl.md)
+- [getRequiredParams](variables/getRequiredParams.md)
+- [getSrcSet](variables/getSrcSet.md)
+- [replaceMediaUrlPrefix](variables/replaceMediaUrlPrefix.md)
+- [updateImageUrl](variables/updateImageUrl.md)

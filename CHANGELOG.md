@@ -14,6 +14,19 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* `[next.js]` Rework and simplify .env ([#89](https://github.com/Sitecore/content-sdk/pull/89)):
+  - Introduced `.env.container.example`  
+    - Intended for local development against a Sitecore container instance.
+  - Introduced `.env.remote.example`
+    - Intended for working with a remote Sitecore instance.
+  - Removed `GRAPH_QL_ENDPOINT` environment variable
+    No longer required or used.
+  - Removed `GRAPH_QL_SERVICE_RETRIES` environment variable
+    This is not environment-specific and should be defined in the configuration instead.
+  - Removed `DISABLE_SSG_FETCH` environment variable
+    - In XM Cloud, this is set to `true` by default as the application runs as an editing host.  
+    - It can still be configured via the `DISABLE_SSG_FETCH` environment variable or the `disableStaticPaths` config property if needed.
+    - By default, it is set to `false` in the configuration.
 * `[core]` Introduce get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#75](https://github.com/Sitecore/content-sdk/pull/75))
 * `[cli]` Introduce "project" subcommands ([#73](https://github.com/Sitecore/content-sdk/pull/73))
 * `[core]` `[next]` `[create-sitecore-jss]` Passing configuration object to `defineConfig` in _sitecore.config_ is now optional. Introduced _sitecore.config.ts.example_ ([#90](https://github.com/Sitecore/content-sdk/pull/90))
@@ -35,4 +48,6 @@ Our versioning strategy is as follows:
 * `[react]` `[nextjs]` Do not render EditingScripts component in DesignLibrary component. Fix 'dataSourceId' query parameter name in editing render middleware. ([#64](https://github.com/Sitecore/content-sdk/pull/64))
 
 ### 🧹 Chores
+
 * `[template/nextjs]` Clean package.json scripts ([#75](https://github.com/Sitecore/content-sdk/pull/75))
+* Upgrade 3rd party dependencies ([#88](https://github.com/Sitecore/content-sdk/pull/88))

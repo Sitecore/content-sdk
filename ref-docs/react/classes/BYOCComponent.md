@@ -6,7 +6,7 @@
 
 # Class: BYOCComponent
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:92](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/BYOCComponent.tsx#L92)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:92](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/react/src/components/BYOCComponent.tsx#L92)
 
 BYOCComponent facilitate the rendering of external components. It manages potential errors,
 missing components, and customization of error messages or alternative rendering components.
@@ -21,11 +21,11 @@ component props
 
 ## Constructors
 
-### new BYOCComponent()
+### Constructor
 
-> **new BYOCComponent**(`props`): [`BYOCComponent`](BYOCComponent.md)
+> **new BYOCComponent**(`props`): `BYOCComponent`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:95](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/BYOCComponent.tsx#L95)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:95](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/react/src/components/BYOCComponent.tsx#L95)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [packages/react/src/components/BYOCComponent.tsx:95](https://github.
 
 #### Returns
 
-[`BYOCComponent`](BYOCComponent.md)
+`BYOCComponent`
 
 #### Overrides
 
@@ -87,9 +87,9 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:961
 
 ### state
 
-> **state**: `Readonly`\<\{ `error`: `Error`; \}\>
+> **state**: `Readonly`\<\{ `error?`: `Error`; \}\>
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:93](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/BYOCComponent.tsx#L93)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:93](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/react/src/components/BYOCComponent.tsx#L93)
 
 #### Overrides
 
@@ -152,7 +152,7 @@ Only kept in types for backwards compatibility. Will be removed in a future majo
 
 > **componentDidCatch**(`error`): `void`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:105](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/BYOCComponent.tsx#L105)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:105](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/react/src/components/BYOCComponent.tsx#L105)
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
@@ -193,21 +193,21 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 ### componentDidUpdate()?
 
-> `optional` **componentDidUpdate**(`prevProps`, `prevState`, `snapshot`?): `void`
+> `optional` **componentDidUpdate**(`prevProps`, `prevState`, `snapshot?`): `void`
 
 Defined in: packages/react/node\_modules/@types/react/index.d.ts:1236
 
 Called immediately after updating occurs. Not called for the initial render.
 
-The snapshot is only present if [getSnapshotBeforeUpdate](BYOCComponent.md#getsnapshotbeforeupdate) is present and returns non-null.
+The snapshot is only present if [getSnapshotBeforeUpdate](#getsnapshotbeforeupdate) is present and returns non-null.
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
 | `prevProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `prevState` | `Readonly`\<\{\}\> |
-| `snapshot`? | `any` |
+| `prevState` | `Readonly`\<\{ \}\> |
+| `snapshot?` | `any` |
 
 #### Returns
 
@@ -331,7 +331,7 @@ this from being invoked.
 | Parameter | Type |
 | ------ | ------ |
 | `nextProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `nextState` | `Readonly`\<\{\}\> |
+| `nextState` | `Readonly`\<\{ \}\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -355,7 +355,7 @@ this from being invoked.
 
 ### forceUpdate()
 
-> **forceUpdate**(`callback`?): `void`
+> **forceUpdate**(`callback?`): `void`
 
 Defined in: packages/react/node\_modules/@types/react/index.d.ts:958
 
@@ -363,7 +363,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:958
 
 | Parameter | Type |
 | ------ | ------ |
-| `callback`? | () => `void` |
+| `callback?` | () => `void` |
 
 #### Returns
 
@@ -382,7 +382,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:958
 Defined in: packages/react/node\_modules/@types/react/index.d.ts:1230
 
 Runs before React applies the result of Component.render render to the document, and
-returns an object to be given to [componentDidUpdate](BYOCComponent.md#componentdidupdate). Useful for saving
+returns an object to be given to [componentDidUpdate](#componentdidupdate). Useful for saving
 things such as scroll position before Component.render render causes changes to it.
 
 Note: the presence of this method prevents any of the deprecated
@@ -393,7 +393,7 @@ lifecycle events from running.
 | Parameter | Type |
 | ------ | ------ |
 | `prevProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `prevState` | `Readonly`\<\{\}\> |
+| `prevState` | `Readonly`\<\{ \}\> |
 
 #### Returns
 
@@ -409,7 +409,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:109](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/BYOCComponent.tsx#L109)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:109](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/react/src/components/BYOCComponent.tsx#L109)
 
 #### Returns
 
@@ -423,7 +423,7 @@ Defined in: [packages/react/src/components/BYOCComponent.tsx:109](https://github
 
 ### setState()
 
-> **setState**\<`K`\>(`state`, `callback`?): `void`
+> **setState**\<`K`\>(`state`, `callback?`): `void`
 
 Defined in: packages/react/node\_modules/@types/react/index.d.ts:953
 
@@ -437,8 +437,8 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:953
 
 | Parameter | Type |
 | ------ | ------ |
-| `state` | \{\} \| (`prevState`, `props`) => \{\} \| `Pick`\<\{\}, `K`\> \| `Pick`\<\{\}, `K`\> |
-| `callback`? | () => `void` |
+| `state` | \{ \} \| (`prevState`, `props`) => \{ \} \| `Pick`\<\{ \}, `K`\> \| `Pick`\<\{ \}, `K`\> |
+| `callback?` | () => `void` |
 
 #### Returns
 
@@ -470,7 +470,7 @@ and `componentDidUpdate` will not be called.
 | Parameter | Type |
 | ------ | ------ |
 | `nextProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `nextState` | `Readonly`\<\{\}\> |
+| `nextState` | `Readonly`\<\{ \}\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -582,7 +582,7 @@ this from being invoked.
 | Parameter | Type |
 | ------ | ------ |
 | `nextProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `nextState` | `Readonly`\<\{\}\> |
+| `nextState` | `Readonly`\<\{ \}\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -608,7 +608,7 @@ this from being invoked.
 
 > `static` **getDerivedStateFromError**(`error`): `object`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:100](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/react/src/components/BYOCComponent.tsx#L100)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:100](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/react/src/components/BYOCComponent.tsx#L100)
 
 #### Parameters
 

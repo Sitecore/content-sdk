@@ -6,7 +6,7 @@
 
 # Interface: Item
 
-Defined in: [packages/core/src/layout/models.ts:127](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/layout/models.ts#L127)
+Defined in: [packages/core/src/layout/models.ts:127](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/layout/models.ts#L127)
 
 Content data returned from Layout Service
 
@@ -16,7 +16,7 @@ Content data returned from Layout Service
 
 > `optional` **displayName**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:129](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/layout/models.ts#L129)
+Defined in: [packages/core/src/layout/models.ts:129](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/layout/models.ts#L129)
 
 ***
 
@@ -24,11 +24,11 @@ Defined in: [packages/core/src/layout/models.ts:129](https://github.com/Sitecore
 
 > **fields**: `object`
 
-Defined in: [packages/core/src/layout/models.ts:132](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/layout/models.ts#L132)
+Defined in: [packages/core/src/layout/models.ts:132](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/layout/models.ts#L132)
 
 #### Index Signature
 
-\[`name`: `string`\]: `undefined` \| [`Field`](Field.md) \| [`Item`](Item.md) \| [`Item`](Item.md)[]
+\[`name`: `string`\]: `undefined` \| [`Field`](Field.md)\<[`GenericFieldValue`](../type-aliases/GenericFieldValue.md)\> \| `Item` \| `Item`[]
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [packages/core/src/layout/models.ts:132](https://github.com/Sitecore
 
 > `optional` **id**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:130](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/layout/models.ts#L130)
+Defined in: [packages/core/src/layout/models.ts:130](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/layout/models.ts#L130)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/core/src/layout/models.ts:130](https://github.com/Sitecore
 
 > **name**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:128](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/layout/models.ts#L128)
+Defined in: [packages/core/src/layout/models.ts:128](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/layout/models.ts#L128)
 
 ***
 
@@ -52,4 +52,4 @@ Defined in: [packages/core/src/layout/models.ts:128](https://github.com/Sitecore
 
 > `optional` **url**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:131](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/layout/models.ts#L131)
+Defined in: [packages/core/src/layout/models.ts:131](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/layout/models.ts#L131)

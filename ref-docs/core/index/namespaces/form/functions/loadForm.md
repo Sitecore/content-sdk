@@ -6,9 +6,9 @@
 
 # Function: loadForm()
 
-> **loadForm**(`contextId`, `formId`, `edgeUrl`?): `Promise`\<`string`\>
+> **loadForm**(`contextId`, `formId`, `edgeUrl?`): `Promise`\<`string`\>
 
-Defined in: [packages/core/src/form/form.ts:11](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/form/form.ts#L11)
+Defined in: [packages/core/src/form/form.ts:11](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/form/form.ts#L11)
 
 Fetches the form markup from the Sitecore Edge service and renders it in the component's template.
 
@@ -18,7 +18,7 @@ Fetches the form markup from the Sitecore Edge service and renders it in the com
 | ------ | ------ | ------ |
 | `contextId` | `string` | The unique identifier of the current context |
 | `formId` | `string` | The unique identifier of the form |
-| `edgeUrl`? | `string` | The URL of the Sitecore Edge Platform |
+| `edgeUrl?` | `string` | The URL of the Sitecore Edge Platform |
 
 ## Returns
 

@@ -6,16 +6,22 @@
 
 # Type Alias: PersonalizedRewriteData
 
-> **PersonalizedRewriteData**: `object`
+> **PersonalizedRewriteData** = `object`
 
-Defined in: [packages/core/src/personalize/utils.ts:4](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/personalize/utils.ts#L4)
+Defined in: [packages/core/src/personalize/utils.ts:4](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/personalize/utils.ts#L4)
 
-## Type declaration
+## Properties
 
 ### componentVariantIds?
 
 > `optional` **componentVariantIds**: `string`[]
 
+Defined in: [packages/core/src/personalize/utils.ts:6](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/personalize/utils.ts#L6)
+
+***
+
 ### variantId
 
 > **variantId**: `string`
+
+Defined in: [packages/core/src/personalize/utils.ts:5](https://github.com/Sitecore/content-sdk/blob/fccbe3bad054195743d198c26551a80a85bb7ddc/packages/core/src/personalize/utils.ts#L5)

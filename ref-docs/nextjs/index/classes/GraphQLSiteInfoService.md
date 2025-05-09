@@ -10,9 +10,9 @@ Defined in: core/types/site/graphql-siteinfo-service.d.ts:24
 
 ## Constructors
 
-### new GraphQLSiteInfoService()
+### Constructor
 
-> **new GraphQLSiteInfoService**(`config`): [`GraphQLSiteInfoService`](GraphQLSiteInfoService.md)
+> **new GraphQLSiteInfoService**(`config`): `GraphQLSiteInfoService`
 
 Defined in: core/types/site/graphql-siteinfo-service.d.ts:32
 
@@ -26,7 +26,7 @@ Creates an instance of graphQL service to retrieve site configuration list from 
 
 #### Returns
 
-[`GraphQLSiteInfoService`](GraphQLSiteInfoService.md)
+`GraphQLSiteInfoService`
 
 ## Accessors
 
@@ -48,7 +48,7 @@ site query is available on XM Cloud and XP 10.4+
 
 ### fetchSiteInfo()
 
-> **fetchSiteInfo**(`fetchOptions`?): `Promise`\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
+> **fetchSiteInfo**(`fetchOptions?`): `Promise`\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
 
 Defined in: core/types/site/graphql-siteinfo-service.d.ts:37
 
@@ -56,7 +56,7 @@ Defined in: core/types/site/graphql-siteinfo-service.d.ts:37
 
 | Parameter | Type |
 | ------ | ------ |
-| `fetchOptions`? | `FetchOptions` |
+| `fetchOptions?` | `FetchOptions` |
 
 #### Returns
 

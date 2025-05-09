@@ -6,7 +6,7 @@
 
 # Type Alias: SitecoreContextValue
 
-> **SitecoreContextValue**: [`LayoutServiceContext`](../interfaces/LayoutServiceContext.md) & `object`
+> **SitecoreContextValue** = [`LayoutServiceContext`](../interfaces/LayoutServiceContext.md) & `object`
 
 Defined in: react/types/components/SitecoreContext.d.ts:18
 

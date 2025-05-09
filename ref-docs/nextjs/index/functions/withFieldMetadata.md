@@ -6,7 +6,7 @@
 
 # Function: withFieldMetadata()
 
-> **withFieldMetadata**\<`FieldComponentProps`, `RefElementType`\>(`FieldComponent`, `isForwardRef`?): `React.ForwardRefExoticComponent`\<`React.PropsWithoutRef`\<`FieldComponentProps`\> & `React.RefAttributes`\<`RefElementType`\>\> \| (`props`) => `React.JSX.Element`
+> **withFieldMetadata**\<`FieldComponentProps`, `RefElementType`\>(`FieldComponent`, `isForwardRef?`): `ForwardRefExoticComponent`\<`PropsWithoutRef`\<`FieldComponentProps`\> & `RefAttributes`\<`RefElementType`\>\> \| (`props`) => `Element`
 
 Defined in: react/types/enhancers/withFieldMetadata.d.ts:15
 
@@ -24,8 +24,8 @@ Wraps the field component with metadata markup intended to be used for chromes h
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `FieldComponent` | `ComponentType`\<`FieldComponentProps`\> | the field component |
-| `isForwardRef`? | `boolean` | set to 'true' if forward reference is needed |
+| `isForwardRef?` | `boolean` | set to 'true' if forward reference is needed |
 
 ## Returns
 
-`React.ForwardRefExoticComponent`\<`React.PropsWithoutRef`\<`FieldComponentProps`\> & `React.RefAttributes`\<`RefElementType`\>\> \| (`props`) => `React.JSX.Element`
+`ForwardRefExoticComponent`\<`PropsWithoutRef`\<`FieldComponentProps`\> & `RefAttributes`\<`RefElementType`\>\> \| (`props`) => `Element`
