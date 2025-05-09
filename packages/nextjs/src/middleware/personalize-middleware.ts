@@ -16,7 +16,7 @@ export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['api']['edge'] &
   SitecoreConfig['personalize'] & {
     personalizeService?: GraphQLPersonalizeService;
-    getExtraExperienceParams?: (req: NextRequest) => ExperienceParams['utm'];
+    getExtrUtmParams?: (req: NextRequest) => ExperienceParams['utm'];
   };
 
 /**
@@ -200,7 +200,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 
   protected getExperienceParams(req: NextRequest): ExperienceParams {
     const extraParams = this.config.getExtraExperienceParams
-      ? this.config.getExtraExperienceParams(req)
+      ? this.config.getExtrUtmParams(req)
       : {};
     const utm = {
       campaign: req.nextUrl.searchParams.get('utm_campaign') || undefined,
