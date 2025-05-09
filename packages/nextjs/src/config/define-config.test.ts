@@ -323,84 +323,90 @@ describe('defineConfig', () => {
   });
 
   describe('config.multisite', () => {
-    it('should default to undefined', () => {
-      defineConfigModule.defineConfig(defaultConfig());
-      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-      expect(resultConfig.multisite?.enabled).to.be.undefined;
-    });
-
-    it('should be able to override default value of enabled', () => {
-      defineConfigModule.defineConfig({ ...defaultConfig(), multisite: { enabled: false } });
-      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-      expect(resultConfig.multisite?.enabled).to.be.false;
-    });
-
-    it('cookie resolution should return default function', () => {
-      defineConfigModule.defineConfig(defaultConfig());
-      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-      expect(resultConfig.multisite?.useCookieResolution).to.be.a('function');
-
-      if (resultConfig.multisite?.useCookieResolution) {
-        process.env.VERCEL_ENV = 'preview';
-        expect(resultConfig.multisite.useCookieResolution()).to.be.true;
-        delete process.env.VERCEL_ENV;
-        expect(resultConfig.multisite.useCookieResolution()).to.be.false;
-      }
-    });
-
-    it('it should be able to override cookie resolution function', () => {
-      defineConfigModule.defineConfig({
-        ...defaultConfig(),
-        multisite: { useCookieResolution: () => true },
+    describe('enabled', () => {
+      it('should default to undefined', () => {
+        defineConfigModule.defineConfig(defaultConfig());
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.multisite?.enabled).to.be.undefined;
       });
-      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-      expect(resultConfig.multisite?.useCookieResolution).to.be.a('function');
-      if (resultConfig.multisite?.useCookieResolution) {
-        expect(resultConfig.multisite.useCookieResolution()).to.be.true;
-      }
+
+      it('should be able to override default value of enabled', () => {
+        defineConfigModule.defineConfig({ ...defaultConfig(), multisite: { enabled: false } });
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.multisite?.enabled).to.be.false;
+      });
+    });
+
+    describe('useCookieResolution', () => {
+      it('cookie resolution should return default function', () => {
+        defineConfigModule.defineConfig(defaultConfig());
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.multisite?.useCookieResolution).to.be.a('function');
+
+        if (resultConfig.multisite?.useCookieResolution) {
+          process.env.VERCEL_ENV = 'preview';
+          expect(resultConfig.multisite.useCookieResolution()).to.be.true;
+          delete process.env.VERCEL_ENV;
+          expect(resultConfig.multisite.useCookieResolution()).to.be.false;
+        }
+      });
+
+      it('it should be able to override cookie resolution function', () => {
+        defineConfigModule.defineConfig({
+          ...defaultConfig(),
+          multisite: { useCookieResolution: () => true },
+        });
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.multisite?.useCookieResolution).to.be.a('function');
+        if (resultConfig.multisite?.useCookieResolution) {
+          expect(resultConfig.multisite.useCookieResolution()).to.be.true;
+        }
+      });
     });
   });
 
   describe('config.personalize', () => {
-    describe('environment variable is not set', () => {
-      it('should default to undefined', () => {
-        defineConfigModule.defineConfig(defaultConfig());
-        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.personalize?.scope).to.be.undefined;
-      });
-
-      it('should use the value from the config', () => {
-        defineConfigModule.defineConfig({
-          ...defaultConfig(),
-          personalize: { scope: 'custom-scope' },
+    describe('scope', () => {
+      describe('environment variable is not set', () => {
+        it('should default to undefined', () => {
+          defineConfigModule.defineConfig(defaultConfig());
+          const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+          expect(resultConfig.personalize?.scope).to.be.undefined;
         });
-        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.personalize?.scope).to.equal('custom-scope');
-      });
-    });
 
-    describe('environment variable is set', () => {
-      before(() => {
-        process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE = 'custom-env-scope';
-      });
-
-      after(() => {
-        delete process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE;
-      });
-
-      it('should use the value from the config if present', () => {
-        defineConfigModule.defineConfig({
-          ...defaultConfig(),
-          personalize: { scope: 'custom-scope' },
+        it('should use the value from the config', () => {
+          defineConfigModule.defineConfig({
+            ...defaultConfig(),
+            personalize: { scope: 'custom-scope' },
+          });
+          const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+          expect(resultConfig.personalize?.scope).to.equal('custom-scope');
         });
-        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.personalize?.scope).to.equal('custom-scope');
       });
 
-      it('should use the env var if config value not present', () => {
-        defineConfigModule.defineConfig(defaultConfig());
-        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.personalize?.scope).to.equal('custom-env-scope');
+      describe('environment variable is set', () => {
+        before(() => {
+          process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE = 'custom-env-scope';
+        });
+
+        after(() => {
+          delete process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE;
+        });
+
+        it('should use the value from the config if present', () => {
+          defineConfigModule.defineConfig({
+            ...defaultConfig(),
+            personalize: { scope: 'custom-scope' },
+          });
+          const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+          expect(resultConfig.personalize?.scope).to.equal('custom-scope');
+        });
+
+        it('should use the env var if config value not present', () => {
+          defineConfigModule.defineConfig(defaultConfig());
+          const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+          expect(resultConfig.personalize?.scope).to.equal('custom-env-scope');
+        });
       });
     });
   });
@@ -415,11 +421,11 @@ describe('defineConfig', () => {
 
       it('should use the value from the config', () => {
         defineConfigModule.defineConfig({
-          disableStaticPaths: false,
+          disableStaticPaths: true,
           ...defaultConfig(),
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(false);
+        expect(resultConfig.disableStaticPaths).to.equal(true);
       });
     });
 
