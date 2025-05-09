@@ -106,4 +106,21 @@ describe('RobotsMiddleware', () => {
     expect(res.status).to.have.been.calledWith(500);
     expect(res.send).to.have.been.calledWith('Internal Server Error');
   });
+
+  it('should use "localhost" as fallback when host header is missing', async () => {
+    req.headers = {}; // no host header
+    sitecoreClientStub.resolveSite.returns({
+      name: 'localhost-site',
+      hostName: 'localhost',
+      language: 'en',
+    });
+  
+    sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
+  
+    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+  
+    expect(sitecoreClientStub.resolveSite).to.have.been.calledWith('localhost');
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.send).to.have.been.calledWith('User-agent: *\nDisallow: /');
+  });
 });

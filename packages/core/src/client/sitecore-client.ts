@@ -101,6 +101,7 @@ export interface BaseSitecoreClient {
   /**
    * Retrieves the robots.txt content for a given site name.
    * @param {string} siteName - The name of the site for which to fetch robots.txt content.
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {Promise<string>} A promise that resolves to the robots.txt content.
    */
   getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
@@ -153,7 +154,7 @@ export interface BaseSitecoreClient {
   /**
    * Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
    * @param { SitemapRequestConfig} reqOptions - Configuration for sitemap retrieval
-   * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests
+   * @param {FetchOptions} [fetchOptions] - Additional fetchOptions Additional fetch options to override GraphQL requests
    * @returns {Promise<string>} Promise resolving to the sitemap XML content as string
    */
   getSiteMap(reqOptions: SitemapXmlOptions, fetchOptions?: FetchOptions): Promise<string>;

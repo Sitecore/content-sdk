@@ -74,17 +74,18 @@ describe('GraphQLRobotsService', () => {
         headers: { 'X-Test-Header': 'true' },
         cache: 'no-store' as RequestCache,
       };
-
+    
       mockRobotsRequest('User-agent: *\nDisallow: /', fetchOptions);
-
+    
       const service = new GraphQLRobotsService({
         siteName: 'test-site',
         clientFactory: () => new GraphQLRequestClient(endpoint),
       });
-
+    
       const result = await service.fetchRobots(fetchOptions);
-
-      return expect(result).to.equal('User-agent: *\nDisallow: /');
+    
+      expect(result).to.equal('User-agent: *\nDisallow: /');
+      return expect(nock.isDone()).to.be.true;
     });
   });
 });
