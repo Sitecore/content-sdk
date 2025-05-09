@@ -5,6 +5,7 @@ import proxyquire from 'proxyquire';
 describe('defineConfig', () => {
   let defineConfigCoreStub: sinon.SinonStub;
   let defineConfigModule: any;
+  const sandbox = sinon.createSandbox();
   const defaultConfig = () => ({
     api: {
       edge: { contextId: 'contextId' },
@@ -13,14 +14,14 @@ describe('defineConfig', () => {
   });
 
   beforeEach(() => {
-    defineConfigCoreStub = sinon.stub();
+    defineConfigCoreStub = sandbox.stub();
     defineConfigModule = proxyquire('./define-config', {
       '@sitecore-content-sdk/core/config': { defineConfig: defineConfigCoreStub },
     });
   });
 
   afterEach(() => {
-    sinon.restore();
+    sandbox.restore();
   });
 
   describe('config.api.edge.contextid', () => {
