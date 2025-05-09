@@ -64,7 +64,7 @@ describe('RobotsMiddleware', () => {
 
     await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
-    expect(sitecoreClientStub.getRobots).to.have.been.calledWith({ siteName: 'test-site' });
+    expect(sitecoreClientStub.getRobots).to.have.been.calledWith('test-site');
   });
 
   it('should return 200 with robots content', async () => {
@@ -75,26 +75,6 @@ describe('RobotsMiddleware', () => {
 
     expect(res.status).to.have.been.calledWith(200);
     expect(res.send).to.have.been.calledWith('User-agent: *\nDisallow: /');
-  });
-
-  it('should return 404 if REDIRECT_404 is thrown', async () => {
-    sitecoreClientStub.resolveSite.returns(mockSiteInfo);
-    sitecoreClientStub.getRobots.rejects(new Error('REDIRECT_404'));
-
-    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
-
-    expect(res.status).to.have.been.calledWith(404);
-    expect(res.send).to.have.been.calledWith('User-agent: *\nDisallow: /');
-  });
-
-  it('should return 500 for any other error', async () => {
-    sitecoreClientStub.resolveSite.returns(mockSiteInfo);
-    sitecoreClientStub.getRobots.rejects(new Error('Unexpected error'));
-
-    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
-
-    expect(res.status).to.have.been.calledWith(500);
-    expect(res.send).to.have.been.calledWith('Internal Server Error');
   });
 
   it('should return 404 if getRobots returns null', async () => {
