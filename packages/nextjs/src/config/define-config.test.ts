@@ -295,9 +295,9 @@ describe('defineConfig', () => {
     });
 
     describe('config.multisite', () => {
-      it('should default to enabled', () => {
+      it('should default to undefined', () => {
         const config = getNextFallbackConfig(defaultConfig());
-        expect(config.multisite?.enabled).to.be.true;
+        expect(config.multisite?.enabled).to.be.undefined;
       });
 
       it('should be able to override default value of enabled', () => {

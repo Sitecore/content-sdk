@@ -32,7 +32,6 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
     defaultLanguage: config?.defaultLanguage || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
     multisite: {
       ...config?.multisite,
-      enabled: config?.multisite?.enabled ?? true,
       useCookieResolution:
         config?.multisite?.useCookieResolution ?? (() => process.env.VERCEL_ENV === 'preview'),
     },
