@@ -8,7 +8,7 @@
 
 > `const` **GET\_LOCALE\_QUERY**: "\n  query GetLocaleById ($id: ID!) \{\n    locale(id: $id) \{\n      id\n      label\n    \}\n  \}\n"
 
-Defined in: [packages/core/src/content/locales.ts:31](https://github.com/Sitecore/content-sdk/blob/16f92dbaf554a7042aa0195335010222fc28090f/packages/core/src/content/locales.ts#L31)
+Defined in: [packages/core/src/content/locales.ts:31](https://github.com/Sitecore/content-sdk/blob/201a4457308c1dedee029dd750f141e134f79a00/packages/core/src/content/locales.ts#L31)
 
 GraphQL query to retrieve a specific locale by its ID.
 
