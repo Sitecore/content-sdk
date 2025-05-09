@@ -16,7 +16,7 @@ Our versioning strategy is as follows:
 
 * `[core]` Introduce get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#75](https://github.com/Sitecore/content-sdk/pull/75))
 * `[cli]` Introduce "project" subcommands ([#73](https://github.com/Sitecore/content-sdk/pull/73))
-* `[core]``[next]``[create-sitecore-jss]` Passing configuration object to defineConfig in sitecore.config is now optional. Introduced sitecore.config.ts.example ([#90](https://github.com/Sitecore/content-sdk/pull/90))
+* `[core]` `[next]` `[create-sitecore-jss]` Passing configuration object to `defineConfig` in _sitecore.config_ is now optional. Introduced _sitecore.config.ts.example_ ([#90](https://github.com/Sitecore/content-sdk/pull/90))
 
 
 ### 🛠 Breaking Changes
