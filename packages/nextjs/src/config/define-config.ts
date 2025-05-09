@@ -6,6 +6,7 @@ import {
 
 /**
  * Provides default NextJs initial values from env variables for SitecoreConfig
+ * @param {SitecoreConfigInput} config optional override values to be written over default config settings
  * @returns default nextjs input config
  */
 export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreConfigInput => {
