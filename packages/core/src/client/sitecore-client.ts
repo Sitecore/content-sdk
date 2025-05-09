@@ -196,16 +196,18 @@ export class SitecoreClient implements BaseSitecoreClient {
    */
   constructor(protected initOptions: SitecoreClientInit) {
     this.clientFactory = this.getClientFactory();
-    this.siteResolver = this.getSiteResolver();
+    this.siteResolver = initOptions.custom?.siteResolver ?? this.getSiteResolver();
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
-    this.layoutService = this.getLayoutService(baseServiceOptions);
-    this.dictionaryService = this.getDictionaryService(baseServiceOptions);
-    this.editingService = this.getEditingService();
-    this.errorPagesService = this.getErrorPagesService();
+    this.layoutService =
+      initOptions.custom?.layoutService ?? this.getLayoutService(baseServiceOptions);
+    this.dictionaryService =
+      initOptions.custom?.dictionaryService ?? this.getDictionaryService(baseServiceOptions);
+    this.editingService = initOptions.custom?.editingService ?? this.getEditingService();
+    this.errorPagesService = initOptions.custom?.errorPagesService ?? this.getErrorPagesService();
+    this.sitePathService = initOptions.custom?.sitePathService ?? this.getSitePathService();
     this.componentService = this.getComponentService();
-    this.sitePathService = this.getSitePathService();
   }
 
   /**
@@ -512,7 +514,6 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves the robots.txt content for a given site name.
-   *
    * @param {string} siteName - The name of the site to retrieve the robots.txt for.
    * @param {FetchOptions} [fetchOptions] - Optional fetch options.
    * @returns {Promise<string | null>} A promise that resolves to the robots.txt content,
@@ -551,7 +552,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     };
   }
 
-  protected getClientFactory(): GraphQLRequestClientFactory {
+  private getClientFactory(): GraphQLRequestClientFactory {
     const graphQLOptions: GraphQLClientOptions = {
       api: this.initOptions.api,
       retries: this.initOptions.retries.count,
@@ -560,18 +561,18 @@ export class SitecoreClient implements BaseSitecoreClient {
     return createGraphQLClientFactory(graphQLOptions);
   }
 
-  protected getSiteResolver(): SiteResolver {
+  private getSiteResolver(): SiteResolver {
     return new SiteResolver(this.initOptions.sites);
   }
 
-  protected getLayoutService(baseOptions: BaseServiceOptions): GraphQLLayoutService {
+  private getLayoutService(baseOptions: BaseServiceOptions): GraphQLLayoutService {
     return new GraphQLLayoutService({
       ...baseOptions,
       formatLayoutQuery: this.initOptions.layout.formatLayoutQuery,
     });
   }
 
-  protected getDictionaryService(baseOptions: BaseServiceOptions): GraphQLDictionaryService {
+  private getDictionaryService(baseOptions: BaseServiceOptions): GraphQLDictionaryService {
     return new GraphQLDictionaryService({
       ...baseOptions,
       cacheEnabled: this.initOptions.dictionary.caching.enabled,
@@ -579,11 +580,11 @@ export class SitecoreClient implements BaseSitecoreClient {
     });
   }
 
-  protected getEditingService(): GraphQLEditingService {
+  private getEditingService(): GraphQLEditingService {
     return new GraphQLEditingService({ clientFactory: this.clientFactory });
   }
 
-  protected getErrorPagesService(): GraphQLErrorPagesService {
+  private getErrorPagesService(): GraphQLErrorPagesService {
     return new GraphQLErrorPagesService({
       ...this.initOptions,
       language: this.initOptions.defaultLanguage,
@@ -591,7 +592,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     });
   }
 
-  protected getComponentService(): RestComponentLayoutService {
+  private getComponentService(): RestComponentLayoutService {
     return new RestComponentLayoutService({
       apiHost: this.initOptions.api.local?.apiHost,
       apiKey: this.initOptions.api.local?.apiKey,
@@ -599,7 +600,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     });
   }
 
-  protected getSitePathService(): GraphQLSitePathService {
+  private getSitePathService(): GraphQLSitePathService {
     return new GraphQLSitePathService({
       clientFactory: this.clientFactory,
       sites: this.siteResolver.sites,

@@ -116,6 +116,126 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).sitemapXmlService = sitemapXmlServiceStub;
   });
 
+  describe('Extensibility', () => {
+    it('should use custom layoutService when provided', async () => {
+      const customLayoutService = {
+        fetchLayoutData: sandbox.stub().resolves({
+          sitecore: {
+            route: { name: 'custom-home', placeholders: {} },
+            context: { site: { name: 'custom-site' } },
+          },
+        }),
+      };
+
+      const customClient = new SitecoreClient({
+        ...defaultInitOptions,
+        custom: {
+          layoutService: customLayoutService,
+        },
+      });
+
+      const result = await customClient.getPage('/custom-path');
+
+      expect(result?.layout.sitecore.route?.name).to.equal('custom-home');
+      expect(customLayoutService.fetchLayoutData.calledOnce).to.be.true;
+    });
+
+    it('should use custom dictionaryService when provided', async () => {
+      const customDictionaryService = {
+        fetchDictionaryData: sandbox.stub().resolves({ key: 'custom-value' }),
+      };
+
+      const customClient = new SitecoreClient({
+        ...defaultInitOptions,
+        custom: {
+          dictionaryService: customDictionaryService,
+        },
+      });
+
+      const result = await customClient.getDictionary();
+
+      expect(result).to.deep.equal({ key: 'custom-value' });
+      expect(customDictionaryService.fetchDictionaryData.calledOnce).to.be.true;
+    });
+
+    it('should use custom editingService when provided', async () => {
+      const customEditingService = {
+        fetchEditingData: sandbox.stub().resolves({
+          layoutData: {
+            sitecore: {
+              route: { name: 'custom-edit', placeholders: {} },
+              context: { site: { name: 'custom-site' } },
+            },
+          },
+          dictionary: { key: 'custom-dictionary' },
+        }),
+      };
+
+      const customClient = new SitecoreClient({
+        ...defaultInitOptions,
+        custom: {
+          editingService: customEditingService,
+        },
+      });
+
+      const previewData = {
+        site: 'custom-site',
+        itemId: 'custom-item-id',
+        mode: LayoutServicePageState.Edit,
+        language: 'en',
+        version: '1',
+        layoutKind: LayoutKind.Final,
+        variantIds: ['variant1', 'comp_variant2'],
+      };
+
+      const result = await customClient.getPreview(previewData);
+
+      expect(result?.layout.sitecore.route?.name).to.equal('custom-edit');
+      expect(customEditingService.fetchEditingData.calledOnce).to.be.true;
+    });
+
+    it('should use custom errorPagesService when provided', async () => {
+      const customErrorPagesService = {
+        fetchErrorPages: sandbox.stub().resolves({
+          notFoundPagePath: '/custom-not-found',
+          serverErrorPagePath: '/custom-server-error',
+        }),
+      };
+
+      const customClient = new SitecoreClient({
+        ...defaultInitOptions,
+        custom: {
+          errorPagesService: customErrorPagesService,
+        },
+      });
+
+      const result = await customClient.getErrorPages({ site: 'custom-site', locale: 'en' });
+
+      expect(result?.notFoundPagePath).to.equal('/custom-not-found');
+      expect(customErrorPagesService.fetchErrorPages.calledOnce).to.be.true;
+    });
+
+    it('should use custom sitePathService when provided', async () => {
+      const customSitePathService = {
+        fetchSiteRoutes: sandbox
+          .stub()
+          .resolves([{ params: { path: ['custom-home'] }, locale: 'en' }]),
+      };
+
+      const customClient = new SitecoreClient({
+        ...defaultInitOptions,
+        custom: {
+          sitePathService: customSitePathService,
+        },
+      });
+
+      const result = await customClient.getPagePaths(['en']);
+
+      expect(result).to.deep.equal([{ params: { path: ['custom-home'] }, locale: 'en' }]);
+      expect(customSitePathService.fetchSiteRoutes.calledOnce).to.be.true;
+    });
+  });
+
   describe('parsePath', () => {
     it('should return path as string, when input is array', () => {
       const test = ['my', 'path'];
