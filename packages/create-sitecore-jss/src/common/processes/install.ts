@@ -27,7 +27,7 @@ export const installPackages = (projectFolder: string, silent?: boolean) => {
   } else {
     run(
       'npm',
-      ['install', '--no-warn'],
+      ['install', '--loglevel=error'],
       {
         cwd: projectFolder,
         encoding: 'utf8',

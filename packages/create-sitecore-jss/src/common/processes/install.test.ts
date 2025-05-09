@@ -37,7 +37,7 @@ describe('install', () => {
       expect(log).to.have.been.calledOnceWith(chalk.cyan('Installing packages...'));
       expect(run).to.have.been.calledOnceWith(
         'npm',
-        ['install', '--no-warn'],
+        ['install', '--loglevel=error'],
         { cwd: projectFolder, encoding: 'utf8' },
         undefined
       );
@@ -70,7 +70,7 @@ describe('install', () => {
       expect(log).to.not.have.been.called;
       expect(run).to.have.been.calledOnceWith(
         'npm',
-        ['install', '--no-warn'],
+        ['install', '--loglevel=error'],
         { cwd: projectFolder, encoding: 'utf8' },
         silent
       );
