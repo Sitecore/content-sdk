@@ -91,12 +91,10 @@ describe('defineConfig', () => {
 
       describe('environment variable is set', () => {
         before(() => {
-          process.env.SITECORE_EDGE_CONTEXT_ID = 'sitecore-edge-context-id';
           process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID = 'next-public-sitecore-edge-context-id';
         });
 
         after(() => {
-          delete process.env.SITECORE_EDGE_CONTEXT_ID;
           delete process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID;
         });
 
@@ -110,18 +108,7 @@ describe('defineConfig', () => {
           expect(config.api?.edge?.contextId).to.equal('custom-context-id');
         });
 
-        it('should use the general env var if present', () => {
-          const config = getNextFallbackConfig({
-            api: {
-              local: { apiHost: 'apihost', apiKey: 'apikey' },
-            },
-            defaultLanguage: 'en',
-          });
-          expect(config.api?.edge?.contextId).to.equal('sitecore-edge-context-id');
-        });
-
-        it('should use the next public env var if present', () => {
-          delete process.env.SITECORE_EDGE_CONTEXT_ID;
+        it('should use the env var if present', () => {
           const config = getNextFallbackConfig({
             api: {
               local: { apiHost: 'apihost', apiKey: 'apikey' },
@@ -167,7 +154,7 @@ describe('defineConfig', () => {
           expect(config.api?.edge?.clientContextId).to.equal('custom-client-context-id');
         });
 
-        it('should use the general env var if present', () => {
+        it('should use the env var if present', () => {
           const config = getNextFallbackConfig({
             api: {
               local: { apiHost: 'apihost', apiKey: 'apikey' },
