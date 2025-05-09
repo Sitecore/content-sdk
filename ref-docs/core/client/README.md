@@ -18,6 +18,7 @@
 
 - [FetchOptions](type-aliases/FetchOptions.md)
 - [GraphQLClientError](type-aliases/GraphQLClientError.md)
+- [GraphQLClientOptions](type-aliases/GraphQLClientOptions.md)
 - [Page](type-aliases/Page.md)
 - [PageOptions](type-aliases/PageOptions.md)
 - [SitecoreClientInit](type-aliases/SitecoreClientInit.md)

@@ -8,6 +8,6 @@
 
 > `const` **DEFAULT\_PLACEHOLDER\_UID**: `"00000000-0000-0000-0000-000000000000"` = `'00000000-0000-0000-0000-000000000000'`
 
-Defined in: [packages/core/src/editing/utils.ts:7](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/editing/utils.ts#L7)
+Defined in: [packages/core/src/editing/utils.ts:7](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/editing/utils.ts#L7)
 
 Default value of uid for root placeholder when uid is not present.

@@ -6,8 +6,14 @@
 
 # Type Alias: RedirectsMiddlewareConfig
 
-> **RedirectsMiddlewareConfig** = `Omit`\<`GraphQLRedirectsServiceConfig`, `"fetch"`\> & [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `SitecoreConfig`\[`"redirects"`\]
+> **RedirectsMiddlewareConfig** = `Omit`\<[`GraphQLRedirectsServiceConfig`](../../index/type-aliases/GraphQLRedirectsServiceConfig.md), `"fetch"` \| `"clientFactory"`\> & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `SitecoreConfig`\[`"redirects"`\] & `object`
 
-Defined in: [nextjs/src/middleware/redirects-middleware.ts:31](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/nextjs/src/middleware/redirects-middleware.ts#L31)
+Defined in: [nextjs/src/middleware/redirects-middleware.ts:31](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/middleware/redirects-middleware.ts#L31)
 
 extended RedirectsMiddlewareConfig config type for RedirectsMiddleware
+
+## Type declaration
+
+### redirectsService?
+
+> `optional` **redirectsService**: [`GraphQLRedirectsService`](../../index/classes/GraphQLRedirectsService.md)

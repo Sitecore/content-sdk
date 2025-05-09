@@ -8,9 +8,43 @@
 
 > **SitecoreClientInit** = `Omit`\<[`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md), `"multisite"` \| `"redirects"` \| `"personalize"`\> & `object`
 
-Defined in: [packages/core/src/client/models.ts:4](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/client/models.ts#L4)
+Defined in: [packages/core/src/client/models.ts:11](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/client/models.ts#L11)
+
+Init options for Sitecore Client that allows you to override services too
 
 ## Type declaration
+
+### custom?
+
+> `optional` **custom**: `object`
+
+#### custom.componentService?
+
+> `optional` **componentService**: [`RestComponentLayoutService`](../../editing/classes/RestComponentLayoutService.md)
+
+#### custom.dictionaryService?
+
+> `optional` **dictionaryService**: [`GraphQLDictionaryService`](../../i18n/classes/GraphQLDictionaryService.md)
+
+#### custom.editingService?
+
+> `optional` **editingService**: [`GraphQLEditingService`](../../editing/classes/GraphQLEditingService.md)
+
+#### custom.errorPagesService?
+
+> `optional` **errorPagesService**: [`GraphQLErrorPagesService`](../../site/classes/GraphQLErrorPagesService.md)
+
+#### custom.layoutService?
+
+> `optional` **layoutService**: [`GraphQLLayoutService`](../../layout/classes/GraphQLLayoutService.md)
+
+#### custom.sitePathService?
+
+> `optional` **sitePathService**: [`GraphQLSitePathService`](../../site/classes/GraphQLSitePathService.md)
+
+#### custom.siteResolver?
+
+> `optional` **siteResolver**: [`SiteResolver`](../../site/classes/SiteResolver.md)
 
 ### sites
 
