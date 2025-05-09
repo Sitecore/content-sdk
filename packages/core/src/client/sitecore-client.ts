@@ -89,7 +89,7 @@ export interface BaseSitecoreClient {
    * Retrieves page layoutData and returns page details like language, layoutData and site info for current request
    * @param {string} path current request path
    * @param {PageOptions} pageOptions additional overrides like language, site name and personalization variants
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {Page | null} page details when page layout is found and null when not
    */
   getPage(
@@ -108,7 +108,7 @@ export interface BaseSitecoreClient {
    * Get dictionary data for a given site and locale.
    * Can retrieve dictionary phrases for default site and language when page options not provided
    * @param {RouteOptions} [routeOptions] language and site to load dictionary data for
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
   getDictionary(
     routeOptions?: Partial<RouteOptions>,
@@ -117,7 +117,7 @@ export interface BaseSitecoreClient {
   /**
    * Get error pages configured by SXA for a given site and locale
    * @param {RouteOptions} [routeOptions] language and site to load error pages for
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
   getErrorPages(
     routeOptions?: RouteOptions,
@@ -126,7 +126,7 @@ export interface BaseSitecoreClient {
   /**
    * Get preview layout details based on details from EditingPreviewData input
    * @param {EditingPreviewData | undefined} previewData preview details like route, site, language etc used to retrieve preview page and layout
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
   getPreview(
     previewData: EditingPreviewData | undefined,
@@ -135,7 +135,7 @@ export interface BaseSitecoreClient {
   /**
    * Get route paths for all pages in the site. Can be used for static site generation.
    * @param {string[]} [languages] languages to fetch routes in
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
   getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
   /**
@@ -153,7 +153,7 @@ export interface BaseSitecoreClient {
   /**
    * Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
    * @param { SitemapRequestConfig} reqOptions - Configuration for sitemap retrieval
-   * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests
    * @returns {Promise<string>} Promise resolving to the sitemap XML content as string
    */
   getSiteMap(reqOptions: SitemapXmlOptions, fetchOptions?: FetchOptions): Promise<string>;
