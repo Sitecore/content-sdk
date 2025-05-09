@@ -114,11 +114,11 @@ describe('RobotsMiddleware', () => {
       hostName: 'localhost',
       language: 'en',
     });
-  
+
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
-  
+
     await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
-  
+
     expect(sitecoreClientStub.resolveSite).to.have.been.calledWith('localhost');
     expect(res.status).to.have.been.calledWith(200);
     expect(res.send).to.have.been.calledWith('User-agent: *\nDisallow: /');
