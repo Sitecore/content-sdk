@@ -132,6 +132,56 @@ describe('defineConfig', () => {
     });
   });
 
+  describe('config.api.edge.edgeUrl', () => {
+    describe('environment variable is not set', () => {
+      it('should default to undefined', () => {
+        defineConfigModule.defineConfig(defaultConfig());
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.api?.edge?.edgeUrl).to.be.undefined;
+      });
+
+      it('should use the value from the config', () => {
+        defineConfigModule.defineConfig({
+          ...defaultConfig(),
+          api: { edge: { contextId: 'context-id', edgeUrl: 'edgeUrl' } },
+        });
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.api?.edge?.edgeUrl).to.equal('edgeUrl');
+      });
+    });
+    describe('environment variable is set', () => {
+      before(() => {
+        process.env.NEXT_PUBLIC_SITECORE_EDGE_URL = 'next-public-sitecore-edgeUrl';
+      });
+
+      after(() => {
+        delete process.env.NEXT_PUBLIC_SITECORE_EDGE_URL;
+      });
+
+      it('should use the value from the config if present', () => {
+        defineConfigModule.defineConfig({
+          api: {
+            edge: { contextId: 'custom-context-id', edgeUrl: 'custom-edgeUrl' },
+          },
+          defaultLanguage: 'en',
+        });
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.api?.edge?.edgeUrl).to.equal('custom-edgeUrl');
+      });
+
+      it('should use the env var if present', () => {
+        defineConfigModule.defineConfig({
+          api: {
+            local: { apiHost: 'apihost', apiKey: 'apikey' },
+          },
+          defaultLanguage: 'en',
+        });
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.api?.edge?.edgeUrl).to.equal('next-public-sitecore-edgeUrl');
+      });
+    });
+  });
+
   describe('config.api.local', () => {
     describe('environment variables are not set', () => {
       it('should default to empty string', () => {
