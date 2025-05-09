@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [site](../README.md) / GraphQLRedirectsServiceConfig
 
@@ -8,7 +8,7 @@
 
 > **GraphQLRedirectsServiceConfig** = [`CacheOptions`](../../index/interfaces/CacheOptions.md) & `object`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:36](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-redirects-service.ts#L36)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:36](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/site/graphql-redirects-service.ts#L36)
 
 ## Type declaration
 
@@ -21,6 +21,6 @@ This factory function is used to create and configure GraphQL clients for making
 
 ### fetch?
 
-> `optional` **fetch**: _typeof_ `fetch`
+> `optional` **fetch**: *typeof* `fetch`
 
 Override fetch method. Uses 'GraphQLRequestClient' default otherwise.

@@ -1,12 +1,12 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [site](../README.md) / GraphQLErrorPagesServiceConfig
 
 # Interface: GraphQLErrorPagesServiceConfig
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:28](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L28)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:28](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/site/graphql-error-pages-service.ts#L28)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/core/src/site/graphql-error-pages-service.ts:28](https://g
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:37](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L37)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:37](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/site/graphql-error-pages-service.ts#L37)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -27,13 +27,13 @@ This factory function is used to create and configure GraphQL clients for making
 
 `GraphQLServiceConfig.clientFactory`
 
----
+***
 
 ### debugger?
 
 > `optional` **debugger**: `Debugger`
 
-Defined in: [packages/core/src/sitecore-service-base.ts:14](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/sitecore-service-base.ts#L14)
+Defined in: [packages/core/src/sitecore-service-base.ts:14](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/sitecore-service-base.ts#L14)
 
 Optional debug logger override
 
@@ -41,23 +41,23 @@ Optional debug logger override
 
 `GraphQLServiceConfig.debugger`
 
----
+***
 
 ### language
 
 > **language**: `string`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:32](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/graphql-error-pages-service.ts#L32)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:32](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/site/graphql-error-pages-service.ts#L32)
 
 The language
 
----
+***
 
 ### retries?
 
 > `optional` **retries**: `object`
 
-Defined in: [packages/core/src/config/models.ts:78](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/config/models.ts#L78)
+Defined in: [packages/core/src/config/models.ts:78](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/config/models.ts#L78)
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
 
@@ -70,7 +70,7 @@ Number of retries for graphql client. Will use the specified `retryStrategy`.
 ##### Default
 
 ```ts
-3;
+3
 ```
 
 #### retryStrategy?
@@ -83,7 +83,7 @@ back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
 ##### Default
 
 ```ts
-DefaultRetryStrategy;
+DefaultRetryStrategy
 ```
 
 #### Inherited from

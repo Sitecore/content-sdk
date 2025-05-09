@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
----
+***
 
 [@sitecore-content-sdk/react](../README.md) / withPlaceholder
 
@@ -8,14 +8,14 @@
 
 > **withPlaceholder**(`placeholders`, `options?`): (`WrappedComponent`) => (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/enhancers/withPlaceholder.tsx#L42)
+Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/react/src/enhancers/withPlaceholder.tsx#L42)
 
 ## Parameters
 
-| Parameter      | Type                     | Description |
-| -------------- | ------------------------ | ----------- |
-| `placeholders` | `WithPlaceholderSpec`    |             |
-| `options?`     | `WithPlaceholderOptions` |             |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `placeholders` | `WithPlaceholderSpec` |  |
+| `options?` | `WithPlaceholderOptions` |  |
 
 ## Returns
 
@@ -23,8 +23,8 @@ Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github
 
 ### Parameters
 
-| Parameter          | Type                                                                                       |
-| ------------------ | ------------------------------------------------------------------------------------------ |
+| Parameter | Type |
+| ------ | ------ |
 | `WrappedComponent` | `ComponentClass`\<`PlaceholderProps`, `any`\> \| `FunctionComponent`\<`PlaceholderProps`\> |
 
 ### Returns
@@ -33,9 +33,9 @@ Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github
 
 #### Parameters
 
-| Parameter | Type                                                                    |
-| --------- | ----------------------------------------------------------------------- |
-| `props`   | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<`PlaceholderProps`\> |
+| Parameter | Type |
+| ------ | ------ |
+| `props` | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<`PlaceholderProps`\> |
 
 #### Returns
 

@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [site](../README.md) / getSiteRewriteData
 
@@ -8,15 +8,15 @@
 
 > **getSiteRewriteData**(`pathname`, `defaultSiteName`): [`SiteRewriteData`](../type-aliases/SiteRewriteData.md)
 
-Defined in: [packages/core/src/site/utils.ts:30](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/site/utils.ts#L30)
+Defined in: [packages/core/src/site/utils.ts:30](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/site/utils.ts#L30)
 
 Get site data from the rewrite path
 
 ## Parameters
 
-| Parameter         | Type     | Description           |
-| ----------------- | -------- | --------------------- |
-| `pathname`        | `string` | the pathname          |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `pathname` | `string` | the pathname |
 | `defaultSiteName` | `string` | the default site name |
 
 ## Returns

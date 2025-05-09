@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
----
+***
 
 [@sitecore-content-sdk/react](../README.md) / BYOCWrapper
 
@@ -8,15 +8,15 @@
 
 > **BYOCWrapper**(`props`): `Element`
 
-Defined in: [packages/react/src/components/BYOCWrapper.tsx:10](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/BYOCWrapper.tsx#L10)
+Defined in: [packages/react/src/components/BYOCWrapper.tsx:10](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/react/src/components/BYOCWrapper.tsx#L10)
 
 TODO: remove when framework agnostic forms implemented
 
 ## Parameters
 
-| Parameter | Type                                                          |
-| --------- | ------------------------------------------------------------- |
-| `props`   | [`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md) |
+| Parameter | Type |
+| ------ | ------ |
+| `props` | [`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md) |
 
 ## Returns
 

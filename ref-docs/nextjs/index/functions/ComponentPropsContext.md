@@ -1,6 +1,6 @@
-K[**@sitecore-content-sdk/nextjs**](../../README.md)
+[**@sitecore-content-sdk/nextjs**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / ComponentPropsContext
 
@@ -8,12 +8,12 @@ K[**@sitecore-content-sdk/nextjs**](../../README.md)
 
 > **ComponentPropsContext**(`__namedParameters`): `Element`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:31](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/components/ComponentPropsContext.tsx#L31)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:31](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/nextjs/src/components/ComponentPropsContext.tsx#L31)
 
 ## Parameters
 
-| Parameter           | Type                                                                          |
-| ------------------- | ----------------------------------------------------------------------------- |
+| Parameter | Type |
+| ------ | ------ |
 | `__namedParameters` | [`ComponentPropsContextProps`](../type-aliases/ComponentPropsContextProps.md) |
 
 ## Returns

@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
----
+***
 
 [@sitecore-content-sdk/react](../README.md) / FEaaSComponent
 
@@ -8,13 +8,13 @@
 
 > **FEaaSComponent**(`props`): `Element`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:64](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/FEaaSComponent.tsx#L64)
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:64](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/react/src/components/FEaaSComponent.tsx#L64)
 
 ## Parameters
 
-| Parameter | Type                                                            | Description     |
-| --------- | --------------------------------------------------------------- | --------------- |
-| `props`   | [`FEaaSComponentProps`](../type-aliases/FEaaSComponentProps.md) | component props |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `props` | [`FEaaSComponentProps`](../type-aliases/FEaaSComponentProps.md) | component props |
 
 ## Returns
 

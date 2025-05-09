@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/nextjs**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [utils](../README.md) / extractPath
 
@@ -8,12 +8,12 @@
 
 > **extractPath**(`context`): `string`
 
-Defined in: [nextjs/src/utils/utils.ts:49](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/utils/utils.ts#L49)
+Defined in: [nextjs/src/utils/utils.ts:49](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/nextjs/src/utils/utils.ts#L49)
 
 ## Parameters
 
-| Parameter | Type                                                   |
-| --------- | ------------------------------------------------------ |
+| Parameter | Type |
+| ------ | ------ |
 | `context` | `GetServerSidePropsContext` \| `GetStaticPropsContext` |
 
 ## Returns

@@ -1,6 +1,6 @@
 **@sitecore-content-sdk/react**
 
----
+***
 
 # @sitecore-content-sdk/react
 

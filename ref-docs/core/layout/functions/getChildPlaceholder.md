@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [layout](../README.md) / getChildPlaceholder
 
@@ -8,16 +8,16 @@
 
 > **getChildPlaceholder**(`rendering`, `placeholderName`): [`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\>[]
 
-Defined in: [packages/core/src/layout/utils.ts:60](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/utils.ts#L60)
+Defined in: [packages/core/src/layout/utils.ts:60](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/layout/utils.ts#L60)
 
 Gets rendering definitions in a given child placeholder under a current rendering.
 
 ## Parameters
 
-| Parameter         | Type                                                        | Description |
-| ----------------- | ----------------------------------------------------------- | ----------- |
-| `rendering`       | [`ComponentRendering`](../interfaces/ComponentRendering.md) |             |
-| `placeholderName` | `string`                                                    |             |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `rendering` | [`ComponentRendering`](../interfaces/ComponentRendering.md) |  |
+| `placeholderName` | `string` |  |
 
 ## Returns
 

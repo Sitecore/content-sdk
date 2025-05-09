@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [tools](../README.md) / getComponentList
 
@@ -8,15 +8,15 @@
 
 > **getComponentList**(`path`): [`ComponentFile`](../interfaces/ComponentFile.md)[]
 
-Defined in: [packages/core/src/tools/templating/components.ts:33](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/tools/templating/components.ts#L33)
+Defined in: [packages/core/src/tools/templating/components.ts:33](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/tools/templating/components.ts#L33)
 
 Get list of components from
 
 ## Parameters
 
-| Parameter | Type     | Description    |
-| --------- | -------- | -------------- |
-| `path`    | `string` | path to search |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `path` | `string` | path to search |
 
 ## Returns
 
@@ -27,7 +27,7 @@ Get list of components from
 path
 Returns a list of components in the following format:
 {
-path: 'path/to/component',
-componentName: 'ComponentName',
-moduleName: 'ComponentName'
+ path: 'path/to/component',
+ componentName: 'ComponentName',
+ moduleName: 'ComponentName'
 }

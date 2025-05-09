@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../../../README.md) / [index](../../../README.md) / [form](../README.md) / subscribeToFormSubmitEvent
 
@@ -8,17 +8,17 @@
 
 > **subscribeToFormSubmitEvent**(`formElement`, `componentId?`): `void`
 
-Defined in: [packages/core/src/form/form.ts:76](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/form/form.ts#L76)
+Defined in: [packages/core/src/form/form.ts:76](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/form/form.ts#L76)
 
 Subscribes to the Form event and then sends data to CloudSDK.
 This listener captures interactions such as form views or submissions
 
 ## Parameters
 
-| Parameter      | Type          | Description                                |
-| -------------- | ------------- | ------------------------------------------ |
-| `formElement`  | `HTMLElement` | The form element to subscribe to events on |
-| `componentId?` | `string`      | The unique identifier of the component     |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `formElement` | `HTMLElement` | The form element to subscribe to events on |
+| `componentId?` | `string` | The unique identifier of the component |
 
 ## Returns
 

@@ -1,11 +1,11 @@
 [**@sitecore-content-sdk/react**](../../../../README.md)
 
----
+***
 
-[@sitecore-content-sdk/react](../../../../README.md) / [constants](../README.md) / DEFAULT_SITECORE_AUTH_ENDPOINT
+[@sitecore-content-sdk/react](../../../../README.md) / [constants](../README.md) / DEFAULT\_SITECORE\_AUTH\_ENDPOINT
 
-# Variable: DEFAULT_SITECORE_AUTH_ENDPOINT
+# Variable: DEFAULT\_SITECORE\_AUTH\_ENDPOINT
 
-> `const` **DEFAULT_SITECORE_AUTH_ENDPOINT**: `"https://auth.sitecorecloud.io/oauth/token"` = `"https://auth.sitecorecloud.io/oauth/token"`
+> `const` **DEFAULT\_SITECORE\_AUTH\_ENDPOINT**: `"https://auth.sitecorecloud.io/oauth/token"` = `"https://auth.sitecorecloud.io/oauth/token"`
 
 Defined in: packages/core/types/constants.d.ts:8

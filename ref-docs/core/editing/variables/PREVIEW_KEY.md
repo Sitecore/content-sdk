@@ -1,13 +1,13 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
-[@sitecore-content-sdk/core](../../README.md) / [editing](../README.md) / PREVIEW_KEY
+[@sitecore-content-sdk/core](../../README.md) / [editing](../README.md) / PREVIEW\_KEY
 
-# Variable: PREVIEW_KEY
+# Variable: PREVIEW\_KEY
 
-> `const` **PREVIEW_KEY**: `"sc_preview"` = `'sc_preview'`
+> `const` **PREVIEW\_KEY**: `"sc_preview"` = `'sc_preview'`
 
-Defined in: [packages/core/src/editing/utils.ts:17](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/editing/utils.ts#L17)
+Defined in: [packages/core/src/editing/utils.ts:17](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/editing/utils.ts#L17)
 
 Key to identify whether the app is running in Sitecore Preview mode

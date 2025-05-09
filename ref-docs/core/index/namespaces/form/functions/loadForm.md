@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../../../README.md) / [index](../../../README.md) / [form](../README.md) / loadForm
 
@@ -8,17 +8,17 @@
 
 > **loadForm**(`contextId`, `formId`, `edgeUrl?`): `Promise`\<`string`\>
 
-Defined in: [packages/core/src/form/form.ts:11](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/form/form.ts#L11)
+Defined in: [packages/core/src/form/form.ts:11](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/form/form.ts#L11)
 
 Fetches the form markup from the Sitecore Edge service and renders it in the component's template.
 
 ## Parameters
 
-| Parameter   | Type     | Description                                  |
-| ----------- | -------- | -------------------------------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `contextId` | `string` | The unique identifier of the current context |
-| `formId`    | `string` | The unique identifier of the form            |
-| `edgeUrl?`  | `string` | The URL of the Sitecore Edge Platform        |
+| `formId` | `string` | The unique identifier of the form |
+| `edgeUrl?` | `string` | The URL of the Sitecore Edge Platform |
 
 ## Returns
 

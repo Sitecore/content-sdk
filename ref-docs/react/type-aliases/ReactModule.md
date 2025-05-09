@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
----
+***
 
 [@sitecore-content-sdk/react](../README.md) / ReactModule
 
@@ -8,7 +8,7 @@
 
 > **ReactModule** = `object`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:13](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/sharedTypes/components.ts#L13)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:13](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/react/src/components/sharedTypes/components.ts#L13)
 
 ## Indexable
 
@@ -22,16 +22,16 @@ Custom exports
 
 > `optional` **default**: `ComponentType`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:25](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/sharedTypes/components.ts#L25)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:25](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/react/src/components/sharedTypes/components.ts#L25)
 
 Default non-standard export
 
----
+***
 
 ### Default?
 
 > `optional` **Default**: `ComponentType`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:21](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/sharedTypes/components.ts#L21)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:21](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/react/src/components/sharedTypes/components.ts#L21)
 
 Default module export

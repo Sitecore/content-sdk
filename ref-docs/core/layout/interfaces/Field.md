@@ -1,12 +1,12 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [layout](../README.md) / Field
 
 # Interface: Field\<T\>
 
-Defined in: [packages/core/src/layout/models.ts:113](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/models.ts#L113)
+Defined in: [packages/core/src/layout/models.ts:113](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/layout/models.ts#L113)
 
 Field metadata in editing mode
 
@@ -16,9 +16,9 @@ Field metadata in editing mode
 
 ## Type Parameters
 
-| Type Parameter | Default type                                                |
-| -------------- | ----------------------------------------------------------- |
-| `T`            | [`GenericFieldValue`](../type-aliases/GenericFieldValue.md) |
+| Type Parameter | Default type |
+| ------ | ------ |
+| `T` | [`GenericFieldValue`](../type-aliases/GenericFieldValue.md) |
 
 ## Properties
 
@@ -26,7 +26,7 @@ Field metadata in editing mode
 
 > `optional` **metadata**: `object`
 
-Defined in: [packages/core/src/layout/models.ts:121](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/models.ts#L121)
+Defined in: [packages/core/src/layout/models.ts:121](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/layout/models.ts#L121)
 
 #### Index Signature
 
@@ -36,10 +36,10 @@ Defined in: [packages/core/src/layout/models.ts:121](https://github.com/Sitecore
 
 [`FieldMetadata`](FieldMetadata.md).[`metadata`](FieldMetadata.md#metadata)
 
----
+***
 
 ### value
 
 > **value**: `T`
 
-Defined in: [packages/core/src/layout/models.ts:114](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/models.ts#L114)
+Defined in: [packages/core/src/layout/models.ts:114](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/layout/models.ts#L114)

@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [layout](../README.md) / getFieldValue
 
@@ -22,7 +22,7 @@ the default value to return if the field is not defined
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`): `undefined` \| `T`
 
-Defined in: [packages/core/src/layout/utils.ts:10](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/utils.ts#L10)
+Defined in: [packages/core/src/layout/utils.ts:10](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/layout/utils.ts#L10)
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.
@@ -30,15 +30,15 @@ Null will be returned if the field is not defined.
 ### Type Parameters
 
 | Type Parameter |
-| -------------- |
-| `T`            |
+| ------ |
+| `T` |
 
 ### Parameters
 
-| Parameter           | Type                                                                                                                                                                          | Description                                              |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `renderingOrFields` | [`ComponentFields`](../interfaces/ComponentFields.md) \| [`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\> | the rendering or fields object to extract the field from |
-| `fieldName`         | `string`                                                                                                                                                                      | the name of the field to extract                         |
+| `fieldName` | `string` | the name of the field to extract |
 
 ### Returns
 
@@ -62,7 +62,7 @@ the default value to return if the field is not defined
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`, `defaultValue`): `T`
 
-Defined in: [packages/core/src/layout/utils.ts:15](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/utils.ts#L15)
+Defined in: [packages/core/src/layout/utils.ts:15](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/layout/utils.ts#L15)
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.
@@ -70,16 +70,16 @@ Null will be returned if the field is not defined.
 ### Type Parameters
 
 | Type Parameter |
-| -------------- |
-| `T`            |
+| ------ |
+| `T` |
 
 ### Parameters
 
-| Parameter           | Type                                                                                                                                                                          | Description                                              |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `renderingOrFields` | [`ComponentFields`](../interfaces/ComponentFields.md) \| [`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\> | the rendering or fields object to extract the field from |
-| `fieldName`         | `string`                                                                                                                                                                      | the name of the field to extract                         |
-| `defaultValue`      | `T`                                                                                                                                                                           | -                                                        |
+| `fieldName` | `string` | the name of the field to extract |
+| `defaultValue` | `T` | - |
 
 ### Returns
 

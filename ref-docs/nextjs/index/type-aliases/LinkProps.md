@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/nextjs**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / LinkProps
 
@@ -8,7 +8,7 @@
 
 > **LinkProps** = `ReactLinkProps` & `object`
 
-Defined in: [nextjs/src/components/Link.tsx:10](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/nextjs/src/components/Link.tsx#L10)
+Defined in: [nextjs/src/components/Link.tsx:10](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/nextjs/src/components/Link.tsx#L10)
 
 ## Type declaration
 
@@ -21,7 +21,7 @@ If `href` match with `internalLinkMatcher` regexp, then it's internal link and N
 #### Default
 
 ```ts
-/^/ / g;
+/^//g
 ```
 
 ### prefetch?

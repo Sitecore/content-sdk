@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/react**](../README.md)
 
----
+***
 
 [@sitecore-content-sdk/react](../README.md) / ComponentMap
 
@@ -8,10 +8,10 @@
 
 > **ComponentMap**\<`TComponent`\> = `Map`\<`string`, `TComponent`\>
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:37](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/react/src/components/sharedTypes/components.ts#L37)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:37](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/react/src/components/sharedTypes/components.ts#L37)
 
 ## Type Parameters
 
-| Type Parameter                                                     | Default type                                |
-| ------------------------------------------------------------------ | ------------------------------------------- |
-| `TComponent` _extends_ [`ReactJssComponent`](ReactJssComponent.md) | [`ReactJssComponent`](ReactJssComponent.md) |
+| Type Parameter | Default type |
+| ------ | ------ |
+| `TComponent` *extends* [`ReactJssComponent`](ReactJssComponent.md) | [`ReactJssComponent`](ReactJssComponent.md) |

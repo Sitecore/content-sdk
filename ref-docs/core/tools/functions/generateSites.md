@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [tools](../README.md) / generateSites
 
@@ -8,15 +8,15 @@
 
 > **generateSites**(`config`): () => `Promise`\<`void`\>
 
-Defined in: [packages/core/src/tools/generateSites.ts:35](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/tools/generateSites.ts#L35)
+Defined in: [packages/core/src/tools/generateSites.ts:35](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/tools/generateSites.ts#L35)
 
 Generates site information and writes it to a specified destination path.
 
 ## Parameters
 
-| Parameter | Type                                                            | Description                                 |
-| --------- | --------------------------------------------------------------- | ------------------------------------------- |
-| `config`  | [`GenerateSitesConfig`](../type-aliases/GenerateSitesConfig.md) | The configuration for generating site info. |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `config` | [`GenerateSitesConfig`](../type-aliases/GenerateSitesConfig.md) | The configuration for generating site info. |
 
 ## Returns
 

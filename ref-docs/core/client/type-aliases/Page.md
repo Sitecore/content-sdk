@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [client](../README.md) / Page
 
@@ -8,7 +8,7 @@
 
 > **Page** = `object`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:35](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/client/sitecore-client.ts#L35)
+Defined in: [packages/core/src/client/sitecore-client.ts:35](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/client/sitecore-client.ts#L35)
 
 Represent a Page model returned from Edge endpoint
 
@@ -18,26 +18,26 @@ Represent a Page model returned from Edge endpoint
 
 > **layout**: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:39](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/client/sitecore-client.ts#L39)
+Defined in: [packages/core/src/client/sitecore-client.ts:39](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/client/sitecore-client.ts#L39)
 
 Layout details and props for the page
 
----
+***
 
 ### locale
 
 > **locale**: `string`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:47](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/client/sitecore-client.ts#L47)
+Defined in: [packages/core/src/client/sitecore-client.ts:47](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/client/sitecore-client.ts#L47)
 
 Route locale
 
----
+***
 
 ### site?
 
 > `optional` **site**: [`SiteInfo`](../../site/type-aliases/SiteInfo.md)
 
-Defined in: [packages/core/src/client/sitecore-client.ts:43](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/client/sitecore-client.ts#L43)
+Defined in: [packages/core/src/client/sitecore-client.ts:43](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/client/sitecore-client.ts#L43)
 
 Site info for current page / route

@@ -1,11 +1,11 @@
 [**@sitecore-content-sdk/core**](../../../../README.md)
 
----
+***
 
-[@sitecore-content-sdk/core](../../../../README.md) / [index](../../../README.md) / [constants](../README.md) / SITECORE_EDGE_URL_DEFAULT
+[@sitecore-content-sdk/core](../../../../README.md) / [index](../../../README.md) / [constants](../README.md) / SITECORE\_EDGE\_URL\_DEFAULT
 
-# Variable: SITECORE_EDGE_URL_DEFAULT
+# Variable: SITECORE\_EDGE\_URL\_DEFAULT
 
-> `const` **SITECORE_EDGE_URL_DEFAULT**: `"https://edge-platform.sitecorecloud.io"` = `'https://edge-platform.sitecorecloud.io'`
+> `const` **SITECORE\_EDGE\_URL\_DEFAULT**: `"https://edge-platform.sitecorecloud.io"` = `'https://edge-platform.sitecorecloud.io'`
 
-Defined in: [packages/core/src/constants.ts:11](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/constants.ts#L11)
+Defined in: [packages/core/src/constants.ts:11](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/constants.ts#L11)

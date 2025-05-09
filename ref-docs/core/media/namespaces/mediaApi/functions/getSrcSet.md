@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../../../README.md) / [media](../../../README.md) / [mediaApi](../README.md) / getSrcSet
 
@@ -8,19 +8,19 @@
 
 > **getSrcSet**(`url`, `srcSet`, `imageParams?`, `mediaUrlPrefix?`): `string`
 
-Defined in: [packages/core/src/media/media-api.ts:95](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/media/media-api.ts#L95)
+Defined in: [packages/core/src/media/media-api.ts:95](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/media/media-api.ts#L95)
 
 Receives an array of `srcSet` parameters that are iterated and used as parameters to generate
 a corresponding set of updated Sitecore media URLs via
 
 ## Parameters
 
-| Parameter         | Type                                                         | Description                             |
-| ----------------- | ------------------------------------------------------------ | --------------------------------------- |
-| `url`             | `string`                                                     | The URL to prepare                      |
-| `srcSet`          | `object`[]                                                   | The array of parameters to use          |
-| `imageParams?`    | \{[`key`: `string`]: `undefined` \| `string` \| `number`; \} | The querystring parameters to use       |
-| `mediaUrlPrefix?` | `RegExp`                                                     | The regex to match the media URL prefix |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `url` | `string` | The URL to prepare |
+| `srcSet` | `object`[] | The array of parameters to use |
+| `imageParams?` | \{[`key`: `string`]: `undefined` \| `string` \| `number`; \} | The querystring parameters to use |
+| `mediaUrlPrefix?` | `RegExp` | The regex to match the media URL prefix |
 
 ## Returns
 

@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../../../README.md) / [index](../../../README.md) / [form](../README.md) / executeScriptElements
 
@@ -8,7 +8,7 @@
 
 > **executeScriptElements**(`rootElement`): `void`
 
-Defined in: [packages/core/src/form/form.ts:50](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/form/form.ts#L50)
+Defined in: [packages/core/src/form/form.ts:50](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/form/form.ts#L50)
 
 When you set the innerHTML property of an element, the browser does not execute any <script> tags included in the HTML string
 This method ensures that any <script> elements within the loaded HTML are executed.
@@ -16,8 +16,8 @@ It re-creates the script elements and appends the to the component's template, t
 
 ## Parameters
 
-| Parameter     | Type          | Description                                        |
-| ------------- | ------------- | -------------------------------------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `rootElement` | `HTMLElement` | The root element to execute script elements within |
 
 ## Returns

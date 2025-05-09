@@ -8,4 +8,4 @@
 
 > `const` **GRAPHQL\_LAYOUT\_QUERY\_NAME**: `"JssLayoutQuery"` = `'JssLayoutQuery'`
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:8](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/layout/graphql-layout-service.ts#L8)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:8](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/layout/graphql-layout-service.ts#L8)

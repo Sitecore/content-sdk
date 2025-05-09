@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/nextjs**](../README.md)
 
----
+***
 
 [@sitecore-content-sdk/nextjs](../README.md) / tools
 

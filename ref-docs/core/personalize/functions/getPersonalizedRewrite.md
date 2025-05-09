@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [personalize](../README.md) / getPersonalizedRewrite
 
@@ -8,15 +8,15 @@
 
 > **getPersonalizedRewrite**(`pathname`, `variantIds`): `string`
 
-Defined in: [packages/core/src/personalize/utils.ts:15](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/personalize/utils.ts#L15)
+Defined in: [packages/core/src/personalize/utils.ts:15](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/personalize/utils.ts#L15)
 
 Get a personalized rewrite path for given pathname
 
 ## Parameters
 
-| Parameter    | Type       | Description                              |
-| ------------ | ---------- | ---------------------------------------- |
-| `pathname`   | `string`   | the pathname                             |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `pathname` | `string` | the pathname |
 | `variantIds` | `string`[] | the variantIds to include in the rewrite |
 
 ## Returns

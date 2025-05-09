@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../../../README.md) / [media](../../../README.md) / [mediaApi](../README.md) / updateImageUrl
 
@@ -8,7 +8,7 @@
 
 > **updateImageUrl**(`url`, `params?`, `mediaUrlPrefix?`): `string`
 
-Defined in: [packages/core/src/media/media-api.ts:50](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/media/media-api.ts#L50)
+Defined in: [packages/core/src/media/media-api.ts:50](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/media/media-api.ts#L50)
 
 Prepares a Sitecore media URL with `params` for use by the JSS media handler.
 This is done by replacing `/~/media` or `/-/media` with `/~/jssmedia` or `/-/jssmedia`, respectively.
@@ -18,11 +18,11 @@ If no `params` are sent, the original media URL is returned.
 
 ## Parameters
 
-| Parameter         | Type                                                                   | Default value         | Description                             |
-| ----------------- | ---------------------------------------------------------------------- | --------------------- | --------------------------------------- |
-| `url`             | `string`                                                               | `undefined`           | The URL to prepare                      |
-| `params?`         | `null` \| \{[`key`: `string`]: `undefined` \| `string` \| `number`; \} | `undefined`           | The querystring parameters to use       |
-| `mediaUrlPrefix?` | `RegExp`                                                               | `mediaUrlPrefixRegex` | The regex to match the media URL prefix |
+| Parameter | Type | Default value | Description |
+| ------ | ------ | ------ | ------ |
+| `url` | `string` | `undefined` | The URL to prepare |
+| `params?` | `null` \| \{[`key`: `string`]: `undefined` \| `string` \| `number`; \} | `undefined` | The querystring parameters to use |
+| `mediaUrlPrefix?` | `RegExp` | `mediaUrlPrefixRegex` | The regex to match the media URL prefix |
 
 ## Returns
 

@@ -1,6 +1,6 @@
 [**@sitecore-content-sdk/core**](../../README.md)
 
----
+***
 
 [@sitecore-content-sdk/core](../../README.md) / [editing](../README.md) / getDesignLibraryStatusEvent
 
@@ -8,16 +8,16 @@
 
 > **getDesignLibraryStatusEvent**(`status`, `uid`): [`DesignLibraryStatusEvent`](../interfaces/DesignLibraryStatusEvent.md)
 
-Defined in: [packages/core/src/editing/design-library.ts:136](https://github.com/Sitecore/content-sdk/blob/d60a82d1a68474e16b7f78b07443588ed56138bb/packages/core/src/editing/design-library.ts#L136)
+Defined in: [packages/core/src/editing/design-library.ts:136](https://github.com/Sitecore/content-sdk/blob/046c22f997ef59634e638182364538e353ce0f3a/packages/core/src/editing/design-library.ts#L136)
 
 Generates a DesignLibraryStatusEvent with the given status and uid.
 
 ## Parameters
 
-| Parameter | Type                                                            | Description                          |
-| --------- | --------------------------------------------------------------- | ------------------------------------ |
-| `status`  | [`DesignLibraryStatus`](../enumerations/DesignLibraryStatus.md) | The status of rendering.             |
-| `uid`     | `string`                                                        | The unique identifier for the event. |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `status` | [`DesignLibraryStatus`](../enumerations/DesignLibraryStatus.md) | The status of rendering. |
+| `uid` | `string` | The unique identifier for the event. |
 
 ## Returns
 
