@@ -31,7 +31,7 @@ Our versioning strategy is as follows:
   - The `getRobots(siteName, fetchOptions?)` method centralizes logic for fetching `robots.txt` content.
   - A new `RobotsMiddleware` class encapsulates HTTP-level logic for generating `robots.txt` responses in Next.js apps.
   - These additions follow the same extensible architecture as existing features enabling custom behavior via service overrides and improving consistency across endpoints.
-* `[core]` Introduce get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#75](https://github.com/Sitecore/content-sdk/pull/75))
+* `[core]` Introduce get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))
 * `[cli]` Introduce "project" subcommands ([#73](https://github.com/Sitecore/content-sdk/pull/73))
 * `[nextjs]` Enhance customizability for Sitecore Client and SDK Middlwares ([#87](https://github.com/Sitecore/content-sdk/pull/87))
 * `[core]` `[next]` `[create-sitecore-jss]` Passing configuration object to `defineConfig` in _sitecore.config_ is now optional. Introduced _sitecore.config.ts.example_ ([#90](https://github.com/Sitecore/content-sdk/pull/90)) ([#93](https://github.com/Sitecore/content-sdk/pull/93))
