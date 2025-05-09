@@ -78,6 +78,7 @@
     }
   },
   "dependencies": {
+    "@babel/parser": "^7.27.2",
     "@sitecore-content-sdk/core": "0.2.0-canary.30",
     "@sitecore-content-sdk/react": "0.2.0-canary.30",
     "recast": "^0.23.11",
