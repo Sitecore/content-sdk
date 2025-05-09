@@ -6,7 +6,7 @@
 
 # Interface: GraphQLClient
 
-Defined in: [packages/core/src/graphql-request-client.ts:12](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/graphql-request-client.ts#L12)
+Defined in: [packages/core/src/graphql-request-client.ts:12](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/graphql-request-client.ts#L12)
 
 An interface for GraphQL clients for Sitecore APIs
 
@@ -14,9 +14,9 @@ An interface for GraphQL clients for Sitecore APIs
 
 ### request()
 
-> **request**\<`T`\>(`query`, `variables`?, `options`?): `Promise`\<`T`\>
+> **request**\<`T`\>(`query`, `variables?`, `options?`): `Promise`\<`T`\>
 
-Defined in: [packages/core/src/graphql-request-client.ts:18](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/graphql-request-client.ts#L18)
+Defined in: [packages/core/src/graphql-request-client.ts:18](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/graphql-request-client.ts#L18)
 
 Execute graphql request
 
@@ -31,8 +31,8 @@ Execute graphql request
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `query` | `string` \| `DocumentNode` | graphql query |
-| `variables`? | \{\} | - |
-| `options`? | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | options and variables for configuring a GraphQL request. |
+| `variables?` | \{[`key`: `string`]: `unknown`; \} | - |
+| `options?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | options and variables for configuring a GraphQL request. |
 
 #### Returns
 

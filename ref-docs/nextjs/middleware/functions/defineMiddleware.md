@@ -8,7 +8,7 @@
 
 > **defineMiddleware**(...`middlewares`): `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:178](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/nextjs/src/middleware/middleware.ts#L178)
+Defined in: [nextjs/src/middleware/middleware.ts:178](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/nextjs/src/middleware/middleware.ts#L178)
 
 Define a middleware with a list of middlewares
 
@@ -20,11 +20,9 @@ Define a middleware with a list of middlewares
 
 ## Returns
 
-`object`
-
 ### exec()
 
-> **exec**: (`req`, `ev`, `res`?) => `Promise`\<`NextResponse`\>
+> **exec**: (`req`, `ev`, `res?`) => `Promise`\<`NextResponse`\<`unknown`\>\>
 
 Execute all middlewares
 
@@ -34,8 +32,8 @@ Execute all middlewares
 | ------ | ------ | ------ |
 | `req` | `NextRequest` | request |
 | `ev` | `NextFetchEvent` | fetch event |
-| `res`? | `NextResponse` | response |
+| `res?` | `NextResponse`\<`unknown`\> | response |
 
 #### Returns
 
-`Promise`\<`NextResponse`\>
+`Promise`\<`NextResponse`\<`unknown`\>\>

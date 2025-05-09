@@ -6,38 +6,56 @@
 
 # Type Alias: BYOCComponentParams
 
-> **BYOCComponentParams**: `object`
+> **BYOCComponentParams** = `object`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:26](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/BYOCComponent.tsx#L26)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:26](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/BYOCComponent.tsx#L26)
 
 Data from rendering params on Sitecore's BYOC rendering
 
-## Type declaration
+## Properties
 
 ### ComponentDataOverride?
 
 > `optional` **ComponentDataOverride**: `string`
 
+Defined in: [packages/react/src/components/BYOCComponent.tsx:38](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/BYOCComponent.tsx#L38)
+
 A JSON object with data sources to be fetched and passed to the component
+
+***
 
 ### ComponentName?
 
 > `optional` **ComponentName**: `string`
 
+Defined in: [packages/react/src/components/BYOCComponent.tsx:30](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/BYOCComponent.tsx#L30)
+
 Name of the component to render
+
+***
 
 ### ComponentProps?
 
 > `optional` **ComponentProps**: `string`
 
+Defined in: [packages/react/src/components/BYOCComponent.tsx:34](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/BYOCComponent.tsx#L34)
+
 JSON props to pass into rendered component
+
+***
 
 ### RenderingIdentifier?
 
 > `optional` **RenderingIdentifier**: `string`
 
+Defined in: [packages/react/src/components/BYOCComponent.tsx:43](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/BYOCComponent.tsx#L43)
+
+***
+
 ### styles?
 
 > `optional` **styles**: `string`
+
+Defined in: [packages/react/src/components/BYOCComponent.tsx:42](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/BYOCComponent.tsx#L42)
 
 A string with classes that can be used to apply themes, via SXA functionality

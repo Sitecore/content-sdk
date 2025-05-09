@@ -4,12 +4,11 @@ export { RedirectsMiddleware, RedirectsMiddlewareConfig } from './redirects-midd
 export { PersonalizeMiddleware, PersonalizeMiddlewareConfig } from './personalize-middleware';
 export { MultisiteMiddleware, MultisiteMiddlewareConfig } from './multisite-middleware';
 export { SitemapMiddleware } from './sitemap-middleware';
-
+export { RobotsMiddleware } from './robots-middleware';
 export {
   GraphQLPersonalizeService,
   GraphQLPersonalizeServiceConfig,
 } from '@sitecore-content-sdk/core/personalize';
-
 export {
   GraphQLRedirectsService,
   GraphQLRedirectsServiceConfig,

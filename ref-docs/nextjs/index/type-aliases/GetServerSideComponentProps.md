@@ -6,8 +6,8 @@
 
 # Type Alias: GetServerSideComponentProps
 
-> **GetServerSideComponentProps**: `ComponentPropsFetchFunction`\<`GetServerSidePropsContext`\>
+> **GetServerSideComponentProps** = `ComponentPropsFetchFunction`\<`GetServerSidePropsContext`\>
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:26](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/nextjs/src/sharedTypes/component-props.ts#L26)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:26](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/nextjs/src/sharedTypes/component-props.ts#L26)
 
 Shape of getServerSideProps function on component level

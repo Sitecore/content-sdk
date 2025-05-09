@@ -21,9 +21,9 @@ SearchQueryService<DictionaryQueryResult>
 
 ## Constructors
 
-### new GraphQLDictionaryService()
+### Constructor
 
-> **new GraphQLDictionaryService**(`options`): [`GraphQLDictionaryService`](GraphQLDictionaryService.md)
+> **new GraphQLDictionaryService**(`options`): `GraphQLDictionaryService`
 
 Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:109
 
@@ -37,7 +37,7 @@ Creates an instance of graphQL dictionary service with the provided options
 
 #### Returns
 
-[`GraphQLDictionaryService`](GraphQLDictionaryService.md)
+`GraphQLDictionaryService`
 
 ## Properties
 
@@ -51,7 +51,7 @@ Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:102
 
 ### fetchDictionaryData()
 
-> **fetchDictionaryData**(`language`, `site`, `fetchOptions`?): `Promise`\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
+> **fetchDictionaryData**(`language`, `site`, `fetchOptions?`): `Promise`\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
 Defined in: packages/core/types/i18n/graphql-dictionary-service.d.ts:118
 
@@ -63,7 +63,7 @@ Fetches dictionary data for internalization. Uses search query by default
 | ------ | ------ | ------ |
 | `language` | `string` | the language to fetch |
 | `site` | `string` | site name to fetch data for. |
-| `fetchOptions`? | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
+| `fetchOptions?` | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 

@@ -6,34 +6,48 @@
 
 # Type Alias: ErrorPages
 
-> **ErrorPages**: `object`
+> **ErrorPages** = `object`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:43](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/site/graphql-error-pages-service.ts#L43)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:43](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/site/graphql-error-pages-service.ts#L43)
 
 Object model of Error Pages result
 
-## Type declaration
+## Properties
 
 ### notFoundPage
 
 > **notFoundPage**: `object`
 
-#### notFoundPage.rendered
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:44](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/site/graphql-error-pages-service.ts#L44)
+
+#### rendered
 
 > **rendered**: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)
+
+***
 
 ### notFoundPagePath
 
 > **notFoundPagePath**: `string`
 
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:45](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/site/graphql-error-pages-service.ts#L45)
+
+***
+
 ### serverErrorPage
 
 > **serverErrorPage**: `object`
 
-#### serverErrorPage.rendered
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:46](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/site/graphql-error-pages-service.ts#L46)
+
+#### rendered
 
 > **rendered**: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)
+
+***
 
 ### serverErrorPagePath
 
 > **serverErrorPagePath**: `string`
+
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:47](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/site/graphql-error-pages-service.ts#L47)

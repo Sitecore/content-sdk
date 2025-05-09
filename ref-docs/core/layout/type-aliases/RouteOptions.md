@@ -6,18 +6,24 @@
 
 # Type Alias: RouteOptions
 
-> **RouteOptions**: `object`
+> **RouteOptions** = `object`
 
-Defined in: [packages/core/src/layout/models.ts:156](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/layout/models.ts#L156)
+Defined in: [packages/core/src/layout/models.ts:156](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/layout/models.ts#L156)
 
 Contract for additional route options when requesting layout data
 
-## Type declaration
+## Properties
 
 ### locale?
 
 > `optional` **locale**: `string`
 
+Defined in: [packages/core/src/layout/models.ts:158](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/layout/models.ts#L158)
+
+***
+
 ### site
 
 > **site**: `string`
+
+Defined in: [packages/core/src/layout/models.ts:157](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/layout/models.ts#L157)

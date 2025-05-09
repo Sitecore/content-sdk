@@ -40,7 +40,7 @@ true
 
 ### emptyFieldEditingComponent?
 
-> `optional` **emptyFieldEditingComponent**: `ComponentClass`\<`unknown`\> \| `FC`\<`unknown`\>
+> `optional` **emptyFieldEditingComponent**: `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\>
 
 Defined in: react/types/components/sharedTypes/props.d.ts:13
 

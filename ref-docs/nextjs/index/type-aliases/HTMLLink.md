@@ -6,7 +6,7 @@
 
 # Type Alias: HTMLLink
 
-> **HTMLLink**: `object` & `Pick`\<`HTMLLinkElement`, `"rel"` \| `"href"`\>
+> **HTMLLink** = `object` & `Pick`\<`HTMLLinkElement`, `"rel"` \| `"href"`\>
 
 Defined in: core/types/models.d.ts:5
 

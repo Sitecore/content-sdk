@@ -6,9 +6,9 @@
 
 # Function: enforceCors()
 
-> **enforceCors**(`req`, `res`, `allowedOrigins`?): `boolean`
+> **enforceCors**(`req`, `res`, `allowedOrigins?`): `boolean`
 
-Defined in: [packages/core/src/utils/utils.ts:116](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/utils/utils.ts#L116)
+Defined in: [packages/core/src/utils/utils.ts:116](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/utils/utils.ts#L116)
 
 Tests origin from incoming request against allowed origins list that can be
 set in JSS's JSS_ALLOWED_ORIGINS env variable, passed via allowedOrigins param and/or
@@ -22,7 +22,7 @@ Also applies Access-Control-Allow-Headers for preflight requests
 | ------ | ------ | ------ |
 | `req` | `IncomingMessage` | incoming request |
 | `res` | `OutgoingMessage` | response to set CORS headers for |
-| `allowedOrigins`? | `string`[] | additional list of origins to test against |
+| `allowedOrigins?` | `string`[] | additional list of origins to test against |
 
 ## Returns
 

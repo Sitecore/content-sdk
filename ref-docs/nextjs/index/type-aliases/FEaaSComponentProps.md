@@ -6,6 +6,6 @@
 
 # Type Alias: FEaaSComponentProps
 
-> **FEaaSComponentProps**: `FEaaSComponentServerProps` & `FEaaSComponentClientProps`
+> **FEaaSComponentProps** = `FEaaSComponentServerProps` & `FEaaSComponentClientProps`
 
 Defined in: react/types/components/FEaaSComponent.d.ts:52

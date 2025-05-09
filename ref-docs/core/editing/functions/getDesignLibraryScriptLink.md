@@ -6,9 +6,9 @@
 
 # Function: getDesignLibraryScriptLink()
 
-> **getDesignLibraryScriptLink**(`sitecoreEdgeUrl`?): `string`
+> **getDesignLibraryScriptLink**(`sitecoreEdgeUrl?`): `string`
 
-Defined in: [packages/core/src/editing/design-library.ts:154](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/editing/design-library.ts#L154)
+Defined in: [packages/core/src/editing/design-library.ts:154](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/editing/design-library.ts#L154)
 
 Generates the URL for the design library script link.
 
@@ -16,7 +16,7 @@ Generates the URL for the design library script link.
 
 | Parameter | Type | Default value | Description |
 | ------ | ------ | ------ | ------ |
-| `sitecoreEdgeUrl`? | `string` | `SITECORE_EDGE_URL_DEFAULT` | Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io |
+| `sitecoreEdgeUrl?` | `string` | `SITECORE_EDGE_URL_DEFAULT` | Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io |
 
 ## Returns
 

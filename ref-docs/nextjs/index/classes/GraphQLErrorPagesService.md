@@ -12,9 +12,9 @@ Service that fetch the error pages data using Sitecore's GraphQL API.
 
 ## Constructors
 
-### new GraphQLErrorPagesService()
+### Constructor
 
-> **new GraphQLErrorPagesService**(`options`): [`GraphQLErrorPagesService`](GraphQLErrorPagesService.md)
+> **new GraphQLErrorPagesService**(`options`): `GraphQLErrorPagesService`
 
 Defined in: core/types/site/graphql-error-pages-service.d.ts:39
 
@@ -28,7 +28,7 @@ Creates an instance of graphQL error pages service with the provided options
 
 #### Returns
 
-[`GraphQLErrorPagesService`](GraphQLErrorPagesService.md)
+`GraphQLErrorPagesService`
 
 ## Properties
 
@@ -56,7 +56,7 @@ Defined in: core/types/site/graphql-error-pages-service.d.ts:40
 
 ### fetchErrorPages()
 
-> **fetchErrorPages**(`siteName`, `locale`?, `fetchOptions`?): `Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
+> **fetchErrorPages**(`siteName`, `locale?`, `fetchOptions?`): `Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
 
 Defined in: core/types/site/graphql-error-pages-service.d.ts:49
 
@@ -67,8 +67,8 @@ Fetch list of error pages for the site
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `siteName` | `string` | The site name |
-| `locale`? | `string` | The language |
-| `fetchOptions`? | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
+| `locale?` | `string` | The language |
+| `fetchOptions?` | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 

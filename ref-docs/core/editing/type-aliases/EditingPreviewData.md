@@ -6,38 +6,64 @@
 
 # Type Alias: EditingPreviewData
 
-> **EditingPreviewData**: `object`
+> **EditingPreviewData** = `object`
 
-Defined in: [packages/core/src/editing/models.ts:61](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/editing/models.ts#L61)
+Defined in: [packages/core/src/editing/models.ts:61](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/editing/models.ts#L61)
 
 Data for Preview (Editing) Mode.
 
-## Type declaration
+## Properties
 
 ### itemId
 
 > **itemId**: `string`
 
+Defined in: [packages/core/src/editing/models.ts:63](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/editing/models.ts#L63)
+
+***
+
 ### language
 
 > **language**: `string`
+
+Defined in: [packages/core/src/editing/models.ts:64](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/editing/models.ts#L64)
+
+***
 
 ### layoutKind?
 
 > `optional` **layoutKind**: [`LayoutKind`](../enumerations/LayoutKind.md)
 
+Defined in: [packages/core/src/editing/models.ts:68](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/editing/models.ts#L68)
+
+***
+
 ### mode
 
 > **mode**: `Exclude`\<[`LayoutServicePageState`](../../layout/enumerations/LayoutServicePageState.md), `"Normal"`\>
+
+Defined in: [packages/core/src/editing/models.ts:65](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/editing/models.ts#L65)
+
+***
 
 ### site
 
 > **site**: `string`
 
+Defined in: [packages/core/src/editing/models.ts:62](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/editing/models.ts#L62)
+
+***
+
 ### variantIds
 
 > **variantIds**: `string`[]
 
+Defined in: [packages/core/src/editing/models.ts:66](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/editing/models.ts#L66)
+
+***
+
 ### version?
 
 > `optional` **version**: `string`
+
+Defined in: [packages/core/src/editing/models.ts:67](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/editing/models.ts#L67)

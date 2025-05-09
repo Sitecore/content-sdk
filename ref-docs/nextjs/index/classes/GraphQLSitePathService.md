@@ -18,9 +18,9 @@ SearchQueryService<PageListQueryResult>
 
 ## Constructors
 
-### new GraphQLSitePathService()
+### Constructor
 
-> **new GraphQLSitePathService**(`options`): [`GraphQLSitePathService`](GraphQLSitePathService.md)
+> **new GraphQLSitePathService**(`options`): `GraphQLSitePathService`
 
 Defined in: core/types/site/graphql-sitepath-service.d.ts:99
 
@@ -34,7 +34,7 @@ Creates an instance of graphQL sitemap service with the provided options
 
 #### Returns
 
-[`GraphQLSitePathService`](GraphQLSitePathService.md)
+`GraphQLSitePathService`
 
 ## Properties
 
@@ -80,7 +80,7 @@ Gets the default query used for fetching the list of site pages
 
 ### fetchLanguageSitePaths()
 
-> `protected` **fetchLanguageSitePaths**(`language`, `siteName`, `fetchOptions`?): `Promise`\<`RouteListQueryResult`[]\>
+> `protected` **fetchLanguageSitePaths**(`language`, `siteName`, `fetchOptions?`): `Promise`\<`RouteListQueryResult`[]\>
 
 Defined in: core/types/site/graphql-sitepath-service.d.ts:133
 
@@ -92,7 +92,7 @@ Fetch and return site paths for multisite implementation, with prefixes included
 | ------ | ------ | ------ |
 | `language` | `string` | path language |
 | `siteName` | `string` | site name |
-| `fetchOptions`? | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
+| `fetchOptions?` | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -104,7 +104,7 @@ modified paths
 
 ### fetchSiteRoutes()
 
-> **fetchSiteRoutes**(`languages`, `fetchOptions`?): `Promise`\<[`StaticPath`](../type-aliases/StaticPath.md)[]\>
+> **fetchSiteRoutes**(`languages`, `fetchOptions?`): `Promise`\<[`StaticPath`](../type-aliases/StaticPath.md)[]\>
 
 Defined in: core/types/site/graphql-sitepath-service.d.ts:117
 
@@ -116,7 +116,7 @@ version in the specified language(s).
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `languages` | `string`[] | Fetch pages that have versions in this language(s). |
-| `fetchOptions`? | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
+| `fetchOptions?` | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 

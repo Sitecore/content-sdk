@@ -6,7 +6,7 @@
 
 # Class: SitecoreContext
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:32](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/SitecoreContext.tsx#L32)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:32](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/SitecoreContext.tsx#L32)
 
 ## Extends
 
@@ -14,11 +14,11 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:32](https://githu
 
 ## Constructors
 
-### new SitecoreContext()
+### Constructor
 
-> **new SitecoreContext**(`props`): [`SitecoreContext`](SitecoreContext.md)
+> **new SitecoreContext**(`props`): `SitecoreContext`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:35](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/SitecoreContext.tsx#L35)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:35](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/SitecoreContext.tsx#L35)
 
 #### Parameters
 
@@ -28,7 +28,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:35](https://githu
 
 #### Returns
 
-[`SitecoreContext`](SitecoreContext.md)
+`SitecoreContext`
 
 #### Overrides
 
@@ -127,7 +127,7 @@ class Foo extends React.Component {
 
 > `static` **displayName**: `string` = `'SitecoreContext'`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/SitecoreContext.tsx#L33)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/SitecoreContext.tsx#L33)
 
 ***
 
@@ -197,11 +197,11 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:73](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/SitecoreContext.tsx#L73)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:73](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/SitecoreContext.tsx#L73)
 
 Called immediately after updating occurs. Not called for the initial render.
 
-The snapshot is only present if [getSnapshotBeforeUpdate](SitecoreContext.md#getsnapshotbeforeupdate) is present and returns non-null.
+The snapshot is only present if [getSnapshotBeforeUpdate](#getsnapshotbeforeupdate) is present and returns non-null.
 
 #### Parameters
 
@@ -355,15 +355,15 @@ this from being invoked.
 
 ### constructContext()
 
-> **constructContext**(`layoutData`?): [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
+> **constructContext**(`layoutData?`): [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:59](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/SitecoreContext.tsx#L59)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:59](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/SitecoreContext.tsx#L59)
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `layoutData`? | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |
+| `layoutData?` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |
 
 #### Returns
 
@@ -373,7 +373,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:59](https://githu
 
 ### forceUpdate()
 
-> **forceUpdate**(`callback`?): `void`
+> **forceUpdate**(`callback?`): `void`
 
 Defined in: packages/react/node\_modules/@types/react/index.d.ts:958
 
@@ -381,7 +381,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:958
 
 | Parameter | Type |
 | ------ | ------ |
-| `callback`? | () => `void` |
+| `callback?` | () => `void` |
 
 #### Returns
 
@@ -400,7 +400,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:958
 Defined in: packages/react/node\_modules/@types/react/index.d.ts:1230
 
 Runs before React applies the result of Component.render render to the document, and
-returns an object to be given to [componentDidUpdate](SitecoreContext.md#componentdidupdate). Useful for saving
+returns an object to be given to [componentDidUpdate](#componentdidupdate). Useful for saving
 things such as scroll position before Component.render render causes changes to it.
 
 Note: the presence of this method prevents any of the deprecated
@@ -427,7 +427,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:96](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/SitecoreContext.tsx#L96)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:96](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/SitecoreContext.tsx#L96)
 
 #### Returns
 
@@ -443,7 +443,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:96](https://githu
 
 > **setContext**(`value`): `void`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:88](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/SitecoreContext.tsx#L88)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:88](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/SitecoreContext.tsx#L88)
 
 Update context state. Value can be
 
@@ -461,7 +461,7 @@ Update context state. Value can be
 
 ### setState()
 
-> **setState**\<`K`\>(`state`, `callback`?): `void`
+> **setState**\<`K`\>(`state`, `callback?`): `void`
 
 Defined in: packages/react/node\_modules/@types/react/index.d.ts:953
 
@@ -476,7 +476,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:953
 | Parameter | Type |
 | ------ | ------ |
 | `state` | [`SitecoreContextState`](../interfaces/SitecoreContextState.md) \| (`prevState`, `props`) => [`SitecoreContextState`](../interfaces/SitecoreContextState.md) \| `Pick`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md), `K`\> \| `Pick`\<[`SitecoreContextState`](../interfaces/SitecoreContextState.md), `K`\> |
-| `callback`? | () => `void` |
+| `callback?` | () => `void` |
 
 #### Returns
 

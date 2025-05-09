@@ -6,38 +6,56 @@
 
 # Type Alias: FetchOptions
 
-> **FetchOptions**: `object`
+> **FetchOptions** = `object`
 
-Defined in: [packages/core/src/models.ts:69](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/models.ts#L69)
+Defined in: [packages/core/src/models.ts:69](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/models.ts#L69)
 
-## Type declaration
+## Properties
 
 ### debugger?
 
 > `optional` **debugger**: `Debugger`
 
+Defined in: [packages/core/src/models.ts:89](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/models.ts#L89)
+
 Override debugger for logging. Uses 'core:http' by default.
+
+***
 
 ### fetch?
 
 > `optional` **fetch**: *typeof* `fetch`
 
+Defined in: [packages/core/src/models.ts:81](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/models.ts#L81)
+
 Override to replace default nodeJS fetch implementation
+
+***
 
 ### headers?
 
 > `optional` **headers**: `Record`\<`string`, `string`\>
 
+Defined in: [packages/core/src/models.ts:85](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/models.ts#L85)
+
 Custom headers to be sent with each request.
+
+***
 
 ### retries?
 
 > `optional` **retries**: `number`
 
+Defined in: [packages/core/src/models.ts:73](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/models.ts#L73)
+
 Number of retries GraphQL client will attempt on request error
+
+***
 
 ### retryStrategy?
 
 > `optional` **retryStrategy**: [`RetryStrategy`](../../index/interfaces/RetryStrategy.md)
+
+Defined in: [packages/core/src/models.ts:77](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/models.ts#L77)
 
 Retry strategy instance

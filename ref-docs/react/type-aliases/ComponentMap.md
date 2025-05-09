@@ -6,9 +6,9 @@
 
 # Type Alias: ComponentMap\<TComponent\>
 
-> **ComponentMap**\<`TComponent`\>: `Map`\<`string`, `TComponent`\>
+> **ComponentMap**\<`TComponent`\> = `Map`\<`string`, `TComponent`\>
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:37](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/react/src/components/sharedTypes/components.ts#L37)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:37](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/react/src/components/sharedTypes/components.ts#L37)
 
 ## Type Parameters
 

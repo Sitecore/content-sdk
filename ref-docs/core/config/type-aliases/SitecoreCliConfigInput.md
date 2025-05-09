@@ -6,21 +6,23 @@
 
 # Type Alias: SitecoreCliConfigInput
 
-> **SitecoreCliConfigInput**: `object`
+> **SitecoreCliConfigInput** = `object`
 
-Defined in: [packages/core/src/config/models.ts:186](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/config/models.ts#L186)
+Defined in: [packages/core/src/config/models.ts:191](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/config/models.ts#L191)
 
 Type to be used as cli config input in sitecore.cli.config
 
-## Type declaration
+## Properties
 
 ### build?
 
 > `optional` **build**: `object`
 
+Defined in: [packages/core/src/config/models.ts:195](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/config/models.ts#L195)
+
 Configuration for the `sitecore-tools build` cli command
 
-#### build.commands?
+#### commands?
 
 > `optional` **commands**: () => `Promise`\<`void`\>[]
 
@@ -30,13 +32,17 @@ List of commands to run during the build process
 
 `Promise`\<`void`\>
 
+***
+
 ### scaffold?
 
 > `optional` **scaffold**: `object`
 
+Defined in: [packages/core/src/config/models.ts:204](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/config/models.ts#L204)
+
 Configuration for the `sitecore-tools scaffold` cli command
 
-#### scaffold.templates?
+#### templates?
 
 > `optional` **templates**: [`ScaffoldTemplate`](ScaffoldTemplate.md)[]
 

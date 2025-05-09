@@ -6,7 +6,7 @@
 
 # Function: resolveUrl()
 
-> **resolveUrl**(`urlBase`, `params`?): `string`
+> **resolveUrl**(`urlBase`, `params?`): `string`
 
 Defined in: core/types/utils/utils.d.ts:18
 
@@ -18,7 +18,7 @@ string parameters into a unified string representation.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `urlBase` | `string` | the base URL that may contain query string parameters |
-| `params`? | `ParsedUrlQueryInput` | query string parameters |
+| `params?` | `ParsedUrlQueryInput` | query string parameters |
 
 ## Returns
 

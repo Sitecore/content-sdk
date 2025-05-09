@@ -6,15 +6,17 @@
 
 # Type Alias: MiddlewareBaseConfig
 
-> **MiddlewareBaseConfig**: `object`
+> **MiddlewareBaseConfig** = `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:7](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/nextjs/src/middleware/middleware.ts#L7)
+Defined in: [nextjs/src/middleware/middleware.ts:7](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/nextjs/src/middleware/middleware.ts#L7)
 
-## Type declaration
+## Properties
 
 ### defaultHostname?
 
 > `optional` **defaultHostname**: `string`
+
+Defined in: [nextjs/src/middleware/middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/nextjs/src/middleware/middleware.ts#L18)
 
 Fallback hostname in case `host` header is not present
 
@@ -24,9 +26,13 @@ Fallback hostname in case `host` header is not present
 localhost
 ```
 
+***
+
 ### defaultLanguage?
 
 > `optional` **defaultLanguage**: `string`
+
+Defined in: [nextjs/src/middleware/middleware.ts:23](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/nextjs/src/middleware/middleware.ts#L23)
 
 Fallback language in locale cannot be extracted from request URL
 
@@ -36,15 +42,23 @@ Fallback language in locale cannot be extracted from request URL
 'en'
 ```
 
+***
+
 ### sites
 
 > **sites**: [`SiteInfo`](../../index/type-aliases/SiteInfo.md)[]
 
+Defined in: [nextjs/src/middleware/middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/nextjs/src/middleware/middleware.ts#L27)
+
 Site resolution implementation by name/hostname
+
+***
 
 ### skip()?
 
 > `optional` **skip**: (`req`, `res`) => `boolean`
+
+Defined in: [nextjs/src/middleware/middleware.ts:13](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/nextjs/src/middleware/middleware.ts#L13)
 
 function, determines if middleware execution should be skipped, based on cookie, header, or other considerations
 

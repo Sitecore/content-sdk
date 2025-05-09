@@ -27,6 +27,7 @@ import {
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { NativeDataFetcher } from '../native-fetcher';
+import { GraphQLRobotsService } from '../site/graphql-robots-service';
 
 /**
  * Represent a Page model returned from Edge endpoint
@@ -65,6 +66,16 @@ export type SitemapXmlOptions = {
 };
 
 /**
+ * Options for fetching robots.txt content.
+ */
+export type RobotsOptions = {
+  /**
+   * The name of the site for which to fetch robots.txt content.
+   */
+  siteName: string;
+};
+
+/**
  * Contract for the Sitecore Client implementations
  */
 export interface BaseSitecoreClient {
@@ -78,7 +89,7 @@ export interface BaseSitecoreClient {
    * Retrieves page layoutData and returns page details like language, layoutData and site info for current request
    * @param {string} path current request path
    * @param {PageOptions} pageOptions additional overrides like language, site name and personalization variants
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {Page | null} page details when page layout is found and null when not
    */
   getPage(
@@ -86,11 +97,19 @@ export interface BaseSitecoreClient {
     pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
+
   /**
+   * Retrieves the robots.txt content for a given site name.
+   * @param {string} siteName - The name of the site for which to fetch robots.txt content.
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
+   * @returns {Promise<string>} A promise that resolves to the robots.txt content.
+   */
+  getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
+  /*
    * Get dictionary data for a given site and locale.
    * Can retrieve dictionary phrases for default site and language when page options not provided
    * @param {RouteOptions} [routeOptions] language and site to load dictionary data for
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
   getDictionary(
     routeOptions?: Partial<RouteOptions>,
@@ -99,7 +118,7 @@ export interface BaseSitecoreClient {
   /**
    * Get error pages configured by SXA for a given site and locale
    * @param {RouteOptions} [routeOptions] language and site to load error pages for
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
   getErrorPages(
     routeOptions?: RouteOptions,
@@ -108,7 +127,7 @@ export interface BaseSitecoreClient {
   /**
    * Get preview layout details based on details from EditingPreviewData input
    * @param {EditingPreviewData | undefined} previewData preview details like route, site, language etc used to retrieve preview page and layout
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
   getPreview(
     previewData: EditingPreviewData | undefined,
@@ -117,7 +136,7 @@ export interface BaseSitecoreClient {
   /**
    * Get route paths for all pages in the site. Can be used for static site generation.
    * @param {string[]} [languages] languages to fetch routes in
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
   getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
   /**
@@ -135,9 +154,17 @@ export interface BaseSitecoreClient {
   /**
    * Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
    * @param { SitemapRequestConfig} reqOptions - Configuration for sitemap retrieval
+   * @param {FetchOptions} [fetchOptions] - Additional fetchOptions Additional fetch options to override GraphQL requests
    * @returns {Promise<string>} Promise resolving to the sitemap XML content as string
    */
-  getSiteMap(reqOptions: SitemapXmlOptions): Promise<string>;
+  getSiteMap(reqOptions: SitemapXmlOptions, fetchOptions?: FetchOptions): Promise<string>;
+  /**
+   * Retrieves the robots.txt content for a given site name.
+   * @param {string} siteName - The name of the site for which to fetch robots.txt content.
+   * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests
+   * @returns {Promise<string>} A promise that resolves to the robots.txt content.
+   */
+  getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
 }
 
 export interface BaseServiceOptions {
@@ -214,7 +241,7 @@ export class SitecoreClient implements BaseSitecoreClient {
    * Get page details for a route, with layout and other details
    * @param {string} path route path
    * @param {PageOptions} [pageOptions] site, language and personalization variant details for route
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {Page | null} page details
    */
   async getPage(
@@ -290,7 +317,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Retrieves dictionary phrases for a given site and locale.
    * @param {RouteOptions} routeOptions - Route options containing language and site name to load dictionary for
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {DictionaryPhrases} A promise that resolves to the dictionary phrases.
    */
   async getDictionary(
@@ -305,7 +332,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Retrieves error pages for a given site and locale.
    * @param {RouteOptions} routeOptions - Route options containing language and site name to load error pages
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {ErrorPages | null} A promise that resolves to the error pages or null if not found.
    */
   async getErrorPages(
@@ -320,7 +347,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Retrieves preview page and layout details
    * @param {EditingPreviewData | undefined} previewData - The editing preview data for metadata mode.
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {Page} preview page details
    */
   async getPreview(
@@ -372,7 +399,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Get design library page details for Design Library mode of your app
    * @param {DesignLibraryRenderPreviewData} designLibData preview data set in 'library' mode of the app
-   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    * @returns {Page} preview page for Design Library
    */
   async getDesignLibraryData(
@@ -486,18 +513,38 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
+   * Retrieves the robots.txt content for a given site name.
+   * @param {string} siteName - The name of the site to retrieve the robots.txt for.
+   * @param {FetchOptions} [fetchOptions] - Optional fetch options.
+   * @returns {Promise<string | null>} A promise that resolves to the robots.txt content,
+   * or null if no content is found.
+   */
+  async getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null> {
+    const robotsService = this.getRobotsService(siteName || this.initOptions.defaultSite);
+    const content = await robotsService.fetchRobots(fetchOptions);
+    return content || null;
+  }
+
+  /**
    * Factory methods for creating dependencies
    * Subclasses can override these to provide custom implementations.
    */
 
-  private getGraphqlSitemapXMLService(siteName: string): GraphQLSitemapXmlService {
+  protected getGraphqlSitemapXMLService(siteName: string): GraphQLSitemapXmlService {
     return new GraphQLSitemapXmlService({
       clientFactory: this.clientFactory,
       siteName,
     });
   }
 
-  private getBaseServiceOptions(): BaseServiceOptions {
+  protected getRobotsService(siteName: string): GraphQLRobotsService {
+    return new GraphQLRobotsService({
+      clientFactory: this.clientFactory,
+      siteName,
+    });
+  }
+
+  protected getBaseServiceOptions(): BaseServiceOptions {
     return {
       defaultSite: this.initOptions.defaultSite,
       clientFactory: this.clientFactory,

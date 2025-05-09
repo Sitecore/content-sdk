@@ -20,9 +20,9 @@ the default value to return if the field is not defined
 
 ## Call Signature
 
-> **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`): `T` \| `undefined`
+> **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`): `undefined` \| `T`
 
-Defined in: [packages/core/src/layout/utils.ts:10](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/layout/utils.ts#L10)
+Defined in: [packages/core/src/layout/utils.ts:10](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/layout/utils.ts#L10)
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.
@@ -37,16 +37,14 @@ Null will be returned if the field is not defined.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `renderingOrFields` | [`ComponentFields`](../interfaces/ComponentFields.md) \| [`ComponentRendering`](../interfaces/ComponentRendering.md) | the rendering or fields object to extract the field from |
+| `renderingOrFields` | [`ComponentFields`](../interfaces/ComponentFields.md) \| [`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\> | the rendering or fields object to extract the field from |
 | `fieldName` | `string` | the name of the field to extract |
 
 ### Returns
 
-`T` \| `undefined`
+`undefined` \| `T`
 
 the field value or the default value if the field is not defined
-
-the field value or null if the field is not defined
 
 ### Param
 
@@ -64,7 +62,7 @@ the default value to return if the field is not defined
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`, `defaultValue`): `T`
 
-Defined in: [packages/core/src/layout/utils.ts:15](https://github.com/Sitecore/content-sdk/blob/b60d4881ed47b9a004bc31855cb9a3fd1d4f6563/packages/core/src/layout/utils.ts#L15)
+Defined in: [packages/core/src/layout/utils.ts:15](https://github.com/Sitecore/content-sdk/blob/6b15aee2c3c6f42f298231134179bbd643792be1/packages/core/src/layout/utils.ts#L15)
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.
@@ -79,7 +77,7 @@ Null will be returned if the field is not defined.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `renderingOrFields` | [`ComponentFields`](../interfaces/ComponentFields.md) \| [`ComponentRendering`](../interfaces/ComponentRendering.md) | the rendering or fields object to extract the field from |
+| `renderingOrFields` | [`ComponentFields`](../interfaces/ComponentFields.md) \| [`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\> | the rendering or fields object to extract the field from |
 | `fieldName` | `string` | the name of the field to extract |
 | `defaultValue` | `T` | - |
 
@@ -88,8 +86,6 @@ Null will be returned if the field is not defined.
 `T`
 
 the field value or the default value if the field is not defined
-
-the field value or null if the field is not defined
 
 ### Param
 
