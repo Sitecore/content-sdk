@@ -22,7 +22,7 @@ export class RobotsMiddleware {
     const site = this.client.resolveSite(hostName);
 
     try {
-      const robotsContent = await this.client.getRobots({ siteName: site.name });
+      const robotsContent = await this.client.getRobots(site.name);
 
       if (!robotsContent) {
         return res.status(404).send('User-agent: *\nDisallow: /');
