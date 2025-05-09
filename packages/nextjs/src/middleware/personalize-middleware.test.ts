@@ -247,7 +247,7 @@ describe('PersonalizeMiddleware', () => {
   });
 
   describe('Extensibility', () => {
-    it('should apply custom experience params from getExtrUtmParams, when provided', async () => {
+    it('should apply custom experience params from getExtraUtmParams, when provided', async () => {
       const customParams = {
         campaign: 'custom_campaign',
         source: 'custom_source',
@@ -270,7 +270,7 @@ describe('PersonalizeMiddleware', () => {
         variantId: 'variant-2',
         config: {
           ...defaultConfig,
-          getExtrUtmParams: getOverrideExperienceParamsStub,
+          getExtraUtmParams: getOverrideExperienceParamsStub,
         },
       });
 

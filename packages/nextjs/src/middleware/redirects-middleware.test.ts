@@ -147,16 +147,9 @@ describe('RedirectsMiddleware', () => {
 
     const middleware = new RedirectsMiddleware({
       enabled: true,
-      edge: {
-        contextId: '1243',
-        edgeUrl: '123',
-        clientContextId: '123',
-      },
-      local: {
-        apiKey: 'edge-api-key',
-        path: '/api/graph/edge',
-        apiHost: 'http://edge-endpoint',
-      },
+      contextId: '1243',
+      edgeUrl: '123',
+      clientContextId: '123',
       sites: [],
       locales: ['en', 'ua', 'pl-PL'],
       ...props,
