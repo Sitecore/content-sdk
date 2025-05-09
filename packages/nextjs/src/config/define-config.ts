@@ -28,8 +28,8 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
         apiHost: config?.api?.local?.apiHost || process.env.NEXT_PUBLIC_SITECORE_API_HOST || '',
       },
     },
-    defaultSite: config?.defaultSite || process.env.NEXT_PUBLIC_SITECORE_SITE_NAME,
-    defaultLanguage: config?.defaultLanguage || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
+    defaultSite: config?.defaultSite || process.env.NEXT_PUBLIC_SITECORE_SITE_NAME || '',
+    defaultLanguage: config?.defaultLanguage || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
     multisite: {
       ...config?.multisite,
       useCookieResolution:
