@@ -8,7 +8,7 @@
 
 > **generateSites**(`config`): () => `Promise`\<`void`\>
 
-Defined in: [packages/core/src/tools/generateSites.ts:35](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/tools/generateSites.ts#L35)
+Defined in: [packages/core/src/tools/generateSites.ts:35](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/tools/generateSites.ts#L35)
 
 Generates site information and writes it to a specified destination path.
 
@@ -20,9 +20,9 @@ Generates site information and writes it to a specified destination path.
 
 ## Returns
 
-`Function`
-
 - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
+
+> (): `Promise`\<`void`\>
 
 ### Returns
 

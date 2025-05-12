@@ -6,17 +6,19 @@
 
 # Type Alias: EditingRenderMiddlewareConfig
 
-> **EditingRenderMiddlewareConfig**: `object`
+> **EditingRenderMiddlewareConfig** = `object`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/nextjs/src/editing/editing-render-middleware.ts#L21)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/nextjs/src/editing/editing-render-middleware.ts#L21)
 
 Configuration for the Editing Render Middleware.
 
-## Type declaration
+## Properties
 
 ### resolvePageUrl()?
 
 > `optional` **resolvePageUrl**: (`itemPath`) => `string`
+
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:29](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/nextjs/src/editing/editing-render-middleware.ts#L29)
 
 Function used to determine route/page URL to render.
 This may be necessary for certain custom Next.js routing configurations.

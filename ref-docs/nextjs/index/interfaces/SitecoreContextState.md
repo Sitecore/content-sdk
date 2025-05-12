@@ -6,15 +6,15 @@
 
 # Interface: SitecoreContextState
 
-Defined in: react/types/components/SitecoreContext.d.ts:12
+Defined in: react/types/components/SitecoreContext.d.ts:11
 
 ## Properties
 
 ### api?
 
-> `optional` **api**: `Required`\<\{ `edge`: `Required`\<`undefined` \| \{ `clientContextId`: `string`; `contextId`: `string`; `edgeUrl`: `string`; \}\>; `local`: `Required`\<`undefined` \| \{ `apiHost`: `string`; `apiKey`: `string`; `path`: `string`; \}\>; \}\>
+> `optional` **api**: `Required`\<\{ `edge?`: `Required`\<`undefined` \| \{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \}\>; `local?`: `Required`\<`undefined` \| \{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \}\>; \}\>
 
-Defined in: react/types/components/SitecoreContext.d.ts:15
+Defined in: react/types/components/SitecoreContext.d.ts:14
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:15
 
 > **context**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: react/types/components/SitecoreContext.d.ts:14
+Defined in: react/types/components/SitecoreContext.d.ts:13
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: react/types/components/SitecoreContext.d.ts:14
 
 > **setContext**: (`value`) => `void`
 
-Defined in: react/types/components/SitecoreContext.d.ts:13
+Defined in: react/types/components/SitecoreContext.d.ts:12
 
 #### Parameters
 

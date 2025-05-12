@@ -6,7 +6,7 @@
 
 # Interface: RichTextField
 
-Defined in: react/types/components/RichText.d.ts:5
+Defined in: react/types/components/RichText.d.ts:4
 
 ## Extends
 
@@ -34,4 +34,4 @@ Defined in: core/types/layout/models.d.ts:107
 
 > `optional` **value**: `string`
 
-Defined in: react/types/components/RichText.d.ts:6
+Defined in: react/types/components/RichText.d.ts:5

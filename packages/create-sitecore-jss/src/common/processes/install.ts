@@ -20,13 +20,14 @@ export const installPackages = (projectFolder: string, silent?: boolean) => {
       {
         cwd: projectFolder,
         encoding: 'utf8',
+        env: { ...process.env, NODE_NO_WARNINGS: '1' },
       },
       silent
     );
   } else {
     run(
       'npm',
-      ['install'],
+      ['install', '--loglevel=error'],
       {
         cwd: projectFolder,
         encoding: 'utf8',

@@ -6,15 +6,15 @@
 
 # Interface: SitecoreContextState
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:17](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/react/src/components/SitecoreContext.tsx#L17)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:16](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/react/src/components/SitecoreContext.tsx#L16)
 
 ## Properties
 
 ### api?
 
-> `optional` **api**: `Required`\<\{ `edge`: `Required`\<\{ `clientContextId`: `string`; `contextId`: `string`; `edgeUrl`: `string`; \}\>; `local`: `Required`\<\{ `apiHost`: `string`; `apiKey`: `string`; `path`: `string`; \}\>; \}\>
+> `optional` **api**: `Required`\<\{ `edge?`: `Required`\<\{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \}\>; `local?`: `Required`\<\{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \}\>; \}\>
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:20](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/react/src/components/SitecoreContext.tsx#L20)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:19](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/react/src/components/SitecoreContext.tsx#L19)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:20](https://githu
 
 > **context**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:19](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/react/src/components/SitecoreContext.tsx#L19)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:18](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/react/src/components/SitecoreContext.tsx#L18)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [packages/react/src/components/SitecoreContext.tsx:19](https://githu
 
 > **setContext**: (`value`) => `void`
 
-Defined in: [packages/react/src/components/SitecoreContext.tsx:18](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/react/src/components/SitecoreContext.tsx#L18)
+Defined in: [packages/react/src/components/SitecoreContext.tsx:17](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/react/src/components/SitecoreContext.tsx#L17)
 
 #### Parameters
 

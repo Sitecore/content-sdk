@@ -6,40 +6,17 @@ import {
   CdpHelper,
   DEFAULT_VARIANT,
 } from '@sitecore-content-sdk/core/personalize';
-import { debug, GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { SitecoreConfig } from '../config';
 
-export type CdpServiceConfig = {
-  /**
-   * Your Sitecore Edge Platform endpoint
-   * Default is https://edge-platform.sitecorecloud.io
-   */
-  sitecoreEdgeUrl?: string;
-  /**
-   * Your unified Sitecore Edge Context Id
-   */
-  sitecoreEdgeContextId: string;
-  /**
-   * The Sitecore CDP channel to use for events. Uses 'WEB' by default.
-   */
-  channel?: string;
-  /**
-   * Currency for CDP request. Uses 'USA' as default.
-   */
-  currency?: string;
-  /**
-   * Timeout (ms) for CDP request. Default is 400.
-   */
-  timeout?: number;
-};
-
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['api']['edge'] &
   SitecoreConfig['personalize'] & {
-    clientFactory: GraphQLRequestClientFactory;
+    personalizeService?: GraphQLPersonalizeService;
+    getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
   };
 
 /**
@@ -68,21 +45,32 @@ type PersonalizeExecution = {
  * Middleware / handler to support Sitecore Personalize
  */
 export class PersonalizeMiddleware extends MiddlewareBase {
-  private personalizeService: GraphQLPersonalizeService;
+  protected personalizeService: GraphQLPersonalizeService;
 
   /**
    * @param {PersonalizeMiddlewareConfig} [config] Personalize middleware config
    */
   constructor(protected config: PersonalizeMiddlewareConfig) {
     super(config);
+    const graphQLOptions = {
+      api: {
+        edge: {
+          contextId: this.config.contextId,
+          clientContextId: this.config.clientContextId,
+          edgeUrl: this.config.edgeUrl,
+        },
+      },
+    };
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
-    this.personalizeService = new GraphQLPersonalizeService({
-      clientFactory: this.config.clientFactory,
-      timeout: this.config.edgeTimeout,
-      scope: this.config.scope,
-      fetch: fetch,
-    });
+    this.personalizeService =
+      this.config.personalizeService ??
+      new GraphQLPersonalizeService({
+        clientFactory: this.getClientFactory(graphQLOptions),
+        timeout: this.config.edgeTimeout,
+        scope: this.config.scope,
+        fetch: fetch,
+      });
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
@@ -210,6 +198,29 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     }
   };
 
+  protected getExperienceParams(req: NextRequest): ExperienceParams {
+    const extraParams = this.config.getExtraUtmParams ? this.config.getExtraUtmParams(req) : {};
+    const utm = {
+      campaign: req.nextUrl.searchParams.get('utm_campaign') || undefined,
+      content: req.nextUrl.searchParams.get('utm_content') || undefined,
+      medium: req.nextUrl.searchParams.get('utm_medium') || undefined,
+      source: req.nextUrl.searchParams.get('utm_source') || undefined,
+      ...extraParams,
+    };
+    return {
+      // It's expected that the header name "referer" is actually a misspelling of the word "referrer"
+      // req.referrer is used during fetching to determine the value of the Referer header of the request being made,
+      // used as a fallback
+      referrer: req.headers.get('referer') || req.referrer,
+      utm,
+    };
+  }
+
+  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
+    // ignore files
+    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
+  }
+
   protected async initPersonalizeServer({
     hostname,
     siteName,
@@ -264,28 +275,6 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     )) as {
       variantId: string;
     };
-  }
-
-  protected getExperienceParams(req: NextRequest): ExperienceParams {
-    const utm = {
-      campaign: req.nextUrl.searchParams.get('utm_campaign') || undefined,
-      content: req.nextUrl.searchParams.get('utm_content') || undefined,
-      medium: req.nextUrl.searchParams.get('utm_medium') || undefined,
-      source: req.nextUrl.searchParams.get('utm_source') || undefined,
-    };
-
-    return {
-      // It's expected that the header name "referer" is actually a misspelling of the word "referrer"
-      // req.referrer is used during fetching to determine the value of the Referer header of the request being made,
-      // used as a fallback
-      referrer: req.headers.get('referer') || req.referrer,
-      utm: utm,
-    };
-  }
-
-  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
-    // ignore files
-    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
   }
 
   /**

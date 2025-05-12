@@ -6,22 +6,28 @@
 
 # Type Alias: StaticPath
 
-> **StaticPath**: `object`
+> **StaticPath** = `object`
 
-Defined in: [packages/core/src/models.ts:48](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/models.ts#L48)
+Defined in: [packages/core/src/models.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/models.ts#L48)
 
 Object model of a sitemap's site page item.
 
-## Type declaration
+## Properties
 
 ### locale?
 
 > `optional` **locale**: `string`
 
+Defined in: [packages/core/src/models.ts:52](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/models.ts#L52)
+
+***
+
 ### params
 
 > **params**: `object`
 
-#### params.path
+Defined in: [packages/core/src/models.ts:49](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/models.ts#L49)
+
+#### path
 
 > **path**: `string`[]

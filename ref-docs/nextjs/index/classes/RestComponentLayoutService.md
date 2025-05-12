@@ -14,9 +14,9 @@ Returns layoutData for one single rendered component
 
 ## Constructors
 
-### new RestComponentLayoutService()
+### Constructor
 
-> **new RestComponentLayoutService**(`config`): [`RestComponentLayoutService`](RestComponentLayoutService.md)
+> **new RestComponentLayoutService**(`config`): `RestComponentLayoutService`
 
 Defined in: core/types/editing/rest-component-layout-service.d.ts:84
 
@@ -28,13 +28,13 @@ Defined in: core/types/editing/rest-component-layout-service.d.ts:84
 
 #### Returns
 
-[`RestComponentLayoutService`](RestComponentLayoutService.md)
+`RestComponentLayoutService`
 
 ## Properties
 
 ### getDefaultFetcher()
 
-> `protected` **getDefaultFetcher**: \<`T`\>(`req`?) => (`url`, `data`?) => `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
+> `protected` **getDefaultFetcher**: \<`T`\>(`req?`) => (`url`, `data?`) => `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
 Defined in: core/types/editing/rest-component-layout-service.d.ts:98
 
@@ -50,20 +50,20 @@ Provides default
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `req`? | `IncomingMessage` | Request instance |
+| `req?` | `IncomingMessage` | Request instance |
 
 #### Returns
 
-`Function`
-
 default fetcher
+
+> (`url`, `data?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
 ##### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
 | `url` | `string` |
-| `data`? | `RequestInit` |
+| `data?` | `RequestInit` |
 
 ##### Returns
 
@@ -77,7 +77,7 @@ NativeDataFetcher data fetcher
 
 ### getFetcher()
 
-> `protected` **getFetcher**: (`req`?, `res`?) => `HttpDataFetcher`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\> \| (`url`, `data`?) => `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>\>
+> `protected` **getFetcher**: (`req?`, `res?`) => `HttpDataFetcher`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\> \| (`url`, `data?`) => `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>\>
 
 Defined in: core/types/editing/rest-component-layout-service.d.ts:86
 
@@ -85,18 +85,18 @@ Defined in: core/types/editing/rest-component-layout-service.d.ts:86
 
 | Parameter | Type |
 | ------ | ------ |
-| `req`? | `IncomingMessage` |
-| `res`? | `ServerResponse` |
+| `req?` | `IncomingMessage` |
+| `res?` | `ServerResponse`\<`IncomingMessage`\> |
 
 #### Returns
 
-`HttpDataFetcher`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\> \| (`url`, `data`?) => `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>\>
+`HttpDataFetcher`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\> \| (`url`, `data?`) => `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>\>
 
 ## Methods
 
 ### fetchComponentData()
 
-> **fetchComponentData**(`params`, `req`?, `res`?): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
+> **fetchComponentData**(`params`, `req?`, `res?`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
 Defined in: core/types/editing/rest-component-layout-service.d.ts:85
 
@@ -105,8 +105,8 @@ Defined in: core/types/editing/rest-component-layout-service.d.ts:85
 | Parameter | Type |
 | ------ | ------ |
 | `params` | `ComponentLayoutRequestParams` |
-| `req`? | `IncomingMessage` |
-| `res`? | `ServerResponse` |
+| `req?` | `IncomingMessage` |
+| `res?` | `ServerResponse`\<`IncomingMessage`\> |
 
 #### Returns
 

@@ -8,13 +8,13 @@
 
 > **Placeholder**(`props`): `Element`
 
-Defined in: [nextjs/src/components/Placeholder.tsx:15](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/nextjs/src/components/Placeholder.tsx#L15)
+Defined in: [nextjs/src/components/Placeholder.tsx:15](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/nextjs/src/components/Placeholder.tsx#L15)
 
 ## Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | `EnhancedOmit`\<[`PlaceholderComponentProps`](../interfaces/PlaceholderComponentProps.md), keyof [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md)\> |
+| `props` | `EnhancedOmit` |
 
 ## Returns
 

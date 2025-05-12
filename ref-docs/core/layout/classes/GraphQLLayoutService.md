@@ -6,7 +6,7 @@
 
 # Class: GraphQLLayoutService
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:17](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/layout/graphql-layout-service.ts#L17)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:17](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/layout/graphql-layout-service.ts#L17)
 
 Service that fetch layout data using Sitecore's GraphQL API.
 
@@ -20,11 +20,11 @@ GraphQLRequestClient
 
 ## Constructors
 
-### new GraphQLLayoutService()
+### Constructor
 
-> **new GraphQLLayoutService**(`serviceConfig`): [`GraphQLLayoutService`](GraphQLLayoutService.md)
+> **new GraphQLLayoutService**(`serviceConfig`): `GraphQLLayoutService`
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:22](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/layout/graphql-layout-service.ts#L22)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:22](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/layout/graphql-layout-service.ts#L22)
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -32,11 +32,11 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `serviceConfig` | `Pick`\<[`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md), `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery`: `null` \| (`siteName`, `itemPath`, `locale`?) => `string`; \}\> | configuration |
+| `serviceConfig` | `Pick`\<[`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md), `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\> | configuration |
 
 #### Returns
 
-[`GraphQLLayoutService`](GraphQLLayoutService.md)
+`GraphQLLayoutService`
 
 #### Overrides
 
@@ -48,7 +48,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > `protected` **graphQLClient**: [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/sitecore-service-base.ts:21](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/sitecore-service-base.ts#L21)
+Defined in: [packages/core/src/sitecore-service-base.ts:21](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/sitecore-service-base.ts#L21)
 
 #### Inherited from
 
@@ -58,9 +58,9 @@ Defined in: [packages/core/src/sitecore-service-base.ts:21](https://github.com/S
 
 ### serviceConfig
 
-> **serviceConfig**: `Pick`\<[`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md), `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery`: `null` \| (`siteName`, `itemPath`, `locale`?) => `string`; \}\>
+> **serviceConfig**: `Pick`\<[`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md), `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\>
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:22](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/layout/graphql-layout-service.ts#L22)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:22](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/layout/graphql-layout-service.ts#L22)
 
 configuration
 
@@ -87,9 +87,9 @@ Optional debug logger override
 
 ### fetchLayoutData()
 
-> **fetchLayoutData**(`itemPath`, `routeOptions`?, `fetchOptions`?): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
+> **fetchLayoutData**(`itemPath`, `routeOptions?`, `fetchOptions?`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:33](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/layout/graphql-layout-service.ts#L33)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:33](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/layout/graphql-layout-service.ts#L33)
 
 Fetch layout data for an item.
 
@@ -98,8 +98,8 @@ Fetch layout data for an item.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `itemPath` | `string` | item path to fetch layout data for. |
-| `routeOptions`? | [`RouteOptions`](../type-aliases/RouteOptions.md) | Request options like language and site to retrieve data for |
-| `fetchOptions`? | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options to override graphQL client details like retries and fetch implementation |
+| `routeOptions?` | [`RouteOptions`](../type-aliases/RouteOptions.md) | Request options like language and site to retrieve data for |
+| `fetchOptions?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -117,7 +117,7 @@ layout service data
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/sitecore-service-base.ts:35](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/sitecore-service-base.ts#L35)
+Defined in: [packages/core/src/sitecore-service-base.ts:35](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/sitecore-service-base.ts#L35)
 
 Gets a GraphQL client that can make requests to the API.
 
@@ -135,9 +135,9 @@ implementation
 
 ### getLayoutQuery()
 
-> `protected` **getLayoutQuery**(`itemPath`, `site`?, `language`?): `string`
+> `protected` **getLayoutQuery**(`itemPath`, `site?`, `language?`): `string`
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:60](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/layout/graphql-layout-service.ts#L60)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:60](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/layout/graphql-layout-service.ts#L60)
 
 Returns GraphQL Layout query
 
@@ -146,8 +146,8 @@ Returns GraphQL Layout query
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `itemPath` | `string` | page route |
-| `site`? | `string` | site name |
-| `language`? | `string` | language |
+| `site?` | `string` | site name |
+| `language?` | `string` | language |
 
 #### Returns
 

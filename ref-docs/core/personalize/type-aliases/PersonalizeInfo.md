@@ -6,22 +6,28 @@
 
 # Type Alias: PersonalizeInfo
 
-> **PersonalizeInfo**: `object`
+> **PersonalizeInfo** = `object`
 
-Defined in: [packages/core/src/personalize/graphql-personalize-service.ts:30](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/personalize/graphql-personalize-service.ts#L30)
+Defined in: [packages/core/src/personalize/graphql-personalize-service.ts:30](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/personalize/graphql-personalize-service.ts#L30)
 
 Object model of personlize info
 
-## Type declaration
+## Properties
 
 ### pageId
 
 > **pageId**: `string`
 
+Defined in: [packages/core/src/personalize/graphql-personalize-service.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/personalize/graphql-personalize-service.ts#L34)
+
 The page id
+
+***
 
 ### variantIds
 
 > **variantIds**: `string`[]
+
+Defined in: [packages/core/src/personalize/graphql-personalize-service.ts:38](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/personalize/graphql-personalize-service.ts#L38)
 
 The configured variant ids

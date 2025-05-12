@@ -12,19 +12,19 @@ Static utility class for Sitecore CDP
 
 ## Constructors
 
-### new CdpHelper()
+### Constructor
 
-> **new CdpHelper**(): [`CdpHelper`](CdpHelper.md)
+> **new CdpHelper**(): `CdpHelper`
 
 #### Returns
 
-[`CdpHelper`](CdpHelper.md)
+`CdpHelper`
 
 ## Methods
 
 ### getComponentFriendlyId()
 
-> `static` **getComponentFriendlyId**(`pageId`, `componentId`, `language`, `scope`?): `string`
+> `static` **getComponentFriendlyId**(`pageId`, `componentId`, `language`, `scope?`): `string`
 
 Defined in: core/types/personalize/utils.d.ts:61
 
@@ -37,7 +37,7 @@ Gets the friendly id for Component A/B Testing in the required format `component
 | `pageId` | `string` | the page id |
 | `componentId` | `string` | the component id |
 | `language` | `string` | the language |
-| `scope`? | `string` | the scope value |
+| `scope?` | `string` | the scope value |
 
 #### Returns
 
@@ -49,7 +49,7 @@ the friendly id
 
 ### getPageFriendlyId()
 
-> `static` **getPageFriendlyId**(`pageId`, `language`, `scope`?): `string`
+> `static` **getPageFriendlyId**(`pageId`, `language`, `scope?`): `string`
 
 Defined in: core/types/personalize/utils.d.ts:52
 
@@ -61,7 +61,7 @@ Gets the friendly id for (page-level) Embedded Personalization in the required f
 | ------ | ------ | ------ |
 | `pageId` | `string` | the page id |
 | `language` | `string` | the language |
-| `scope`? | `string` | the scope value |
+| `scope?` | `string` | the scope value |
 
 #### Returns
 
@@ -73,7 +73,7 @@ the friendly id
 
 ### getPageVariantId()
 
-> `static` **getPageVariantId**(`pageId`, `language`, `variantId`, `scope`?): `string`
+> `static` **getPageVariantId**(`pageId`, `language`, `variantId`, `scope?`): `string`
 
 Defined in: core/types/personalize/utils.d.ts:44
 
@@ -86,7 +86,7 @@ Gets the page variant id for CDP in the required format
 | `pageId` | `string` | the page id |
 | `language` | `string` | the language |
 | `variantId` | `string` | the variant id |
-| `scope`? | `string` | the scope value |
+| `scope?` | `string` | the scope value |
 
 #### Returns
 
@@ -98,7 +98,7 @@ the formatted page variant id
 
 ### normalizeScope()
 
-> `static` **normalizeScope**(`scope`?): `string`
+> `static` **normalizeScope**(`scope?`): `string`
 
 Defined in: core/types/personalize/utils.d.ts:68
 
@@ -109,7 +109,7 @@ Removes all non-alphanumeric characters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `scope`? | `string` | the scope value |
+| `scope?` | `string` | the scope value |
 
 #### Returns
 

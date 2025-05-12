@@ -6,22 +6,24 @@
 
 # Type Alias: RobotsQueryResult
 
-> **RobotsQueryResult**: `object`
+> **RobotsQueryResult** = `object`
 
-Defined in: [packages/core/src/site/graphql-robots-service.ts:32](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/site/graphql-robots-service.ts#L32)
+Defined in: [packages/core/src/site/graphql-robots-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/site/graphql-robots-service.ts#L32)
 
 The schema of data returned in response to robots.txt request
 
-## Type declaration
+## Properties
 
 ### site
 
 > **site**: `object`
 
-#### site.siteInfo
+Defined in: [packages/core/src/site/graphql-robots-service.ts:32](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/site/graphql-robots-service.ts#L32)
+
+#### siteInfo
 
 > **siteInfo**: `object`
 
-#### site.siteInfo.robots
+##### siteInfo.robots
 
 > **robots**: `string`

@@ -92,7 +92,7 @@ Defined in: packages/core/types/layout/models.d.ts:50
 
 ### placeholders
 
-> **placeholders**: `PlaceholdersData`\<`string`\>
+> **placeholders**: `PlaceholdersData`
 
 Defined in: packages/core/types/layout/models.d.ts:60
 

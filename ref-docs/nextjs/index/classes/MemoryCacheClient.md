@@ -25,9 +25,9 @@ This class is meant to be extended or used as a mixin; it's not meant to be used
 
 ## Constructors
 
-### new MemoryCacheClient()
+### Constructor
 
-> **new MemoryCacheClient**\<`T`\>(`options`): [`MemoryCacheClient`](MemoryCacheClient.md)\<`T`\>
+> **new MemoryCacheClient**\<`T`\>(`options`): `MemoryCacheClient`\<`T`\>
 
 Defined in: core/types/cache-client.d.ts:48
 
@@ -41,7 +41,7 @@ Initializes a new instance of
 
 #### Returns
 
-[`MemoryCacheClient`](MemoryCacheClient.md)\<`T`\>
+`MemoryCacheClient`\<`T`\>
 
 #### See
 

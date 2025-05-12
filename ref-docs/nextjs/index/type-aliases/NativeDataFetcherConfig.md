@@ -6,6 +6,6 @@
 
 # Type Alias: NativeDataFetcherConfig
 
-> **NativeDataFetcherConfig**: `NativeDataFetcherOptions` & `RequestInit`
+> **NativeDataFetcherConfig** = `NativeDataFetcherOptions` & `RequestInit`
 
 Defined in: core/types/native-fetcher.d.ts:43

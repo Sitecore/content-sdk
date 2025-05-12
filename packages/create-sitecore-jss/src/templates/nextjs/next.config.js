@@ -89,7 +89,7 @@ const nextConfig = {
     <%_ if (helper.isDev) { -%>
     // monorepo configuration start
     if (options.isServer) {
-      config.externals = ['react', 'vertx', ...config.externals];
+      config.externals = ['vertx', ...config.externals];
     }
 
     config.resolve.alias['@sitecore-cloudsdk/events'] = path.resolve(
@@ -107,6 +107,9 @@ const nextConfig = {
       '@sass': path.join(process.cwd(), './src/assets', 'sass'),
       '@fontawesome': path.join(process.cwd(), './node_modules', 'font-awesome'),
     }).getImporter(),
+    // temporary measure until new versions of bootstrap and font-awesome released
+    quietDeps: true,    
+    silenceDeprecations: ["import", "legacy-js-api"],
   },
 };
 

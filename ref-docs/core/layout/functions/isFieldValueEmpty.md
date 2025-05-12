@@ -8,7 +8,7 @@
 
 > **isFieldValueEmpty**(`field`): `boolean`
 
-Defined in: [packages/core/src/layout/utils.ts:103](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/layout/utils.ts#L103)
+Defined in: [packages/core/src/layout/utils.ts:103](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/layout/utils.ts#L103)
 
 Determines if the passed in field object's value is empty.
 
@@ -16,7 +16,7 @@ Determines if the passed in field object's value is empty.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `field` | [`GenericFieldValue`](../type-aliases/GenericFieldValue.md) \| `Partial`\<[`Field`](../interfaces/Field.md)\> | the field object. Partial<T> type is used here because _field.value_ could be required or optional for the different field types |
+| `field` | [`GenericFieldValue`](../type-aliases/GenericFieldValue.md) \| `Partial`\<[`Field`](../interfaces/Field.md)\<[`GenericFieldValue`](../type-aliases/GenericFieldValue.md)\>\> | the field object. Partial<T> type is used here because _field.value_ could be required or optional for the different field types |
 
 ## Returns
 

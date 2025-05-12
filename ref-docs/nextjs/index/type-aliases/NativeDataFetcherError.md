@@ -6,7 +6,7 @@
 
 # Type Alias: NativeDataFetcherError
 
-> **NativeDataFetcherError**: `Error` & `object`
+> **NativeDataFetcherError** = `Error` & `object`
 
 Defined in: core/types/native-fetcher.d.ts:33
 

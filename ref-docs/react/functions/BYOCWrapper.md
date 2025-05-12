@@ -8,7 +8,7 @@
 
 > **BYOCWrapper**(`props`): `Element`
 
-Defined in: [packages/react/src/components/BYOCWrapper.tsx:10](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/react/src/components/BYOCWrapper.tsx#L10)
+Defined in: [packages/react/src/components/BYOCWrapper.tsx:10](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/react/src/components/BYOCWrapper.tsx#L10)
 
 TODO: remove when framework agnostic forms implemented
 

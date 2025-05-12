@@ -6,22 +6,24 @@
 
 # Type Alias: SitemapQueryResult
 
-> **SitemapQueryResult**: `object`
+> **SitemapQueryResult** = `object`
 
-Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:34](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/site/graphql-sitemap-xml-service.ts#L34)
+Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/site/graphql-sitemap-xml-service.ts#L34)
 
 The schema of data returned in response to sitemaps request
 
-## Type declaration
+## Properties
 
 ### site
 
 > **site**: `object`
 
-#### site.siteInfo
+Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:34](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/site/graphql-sitemap-xml-service.ts#L34)
+
+#### siteInfo
 
 > **siteInfo**: `object`
 
-#### site.siteInfo.sitemap
+##### siteInfo.sitemap
 
 > **sitemap**: `string`[]

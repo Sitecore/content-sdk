@@ -6,10 +6,10 @@
 
 # Interface: ComponentFields
 
-Defined in: [packages/core/src/layout/models.ts:79](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/layout/models.ts#L79)
+Defined in: [packages/core/src/layout/models.ts:79](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/layout/models.ts#L79)
 
 Content field data passed to a component
 
 ## Indexable
 
-\[`name`: `string`\]: [`Field`](Field.md) \| [`Item`](Item.md) \| [`Item`](Item.md)[]
+\[`name`: `string`\]: [`Field`](Field.md)\<[`GenericFieldValue`](../type-aliases/GenericFieldValue.md)\> \| [`Item`](Item.md) \| [`Item`](Item.md)[]

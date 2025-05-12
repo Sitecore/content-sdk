@@ -6,28 +6,38 @@
 
 # Type Alias: Page
 
-> **Page**: `object`
+> **Page** = `object`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:34](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/client/sitecore-client.ts#L34)
+Defined in: [packages/core/src/client/sitecore-client.ts:35](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/client/sitecore-client.ts#L35)
 
 Represent a Page model returned from Edge endpoint
 
-## Type declaration
+## Properties
 
 ### layout
 
 > **layout**: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)
 
+Defined in: [packages/core/src/client/sitecore-client.ts:39](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/client/sitecore-client.ts#L39)
+
 Layout details and props for the page
+
+***
 
 ### locale
 
 > **locale**: `string`
 
+Defined in: [packages/core/src/client/sitecore-client.ts:47](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/client/sitecore-client.ts#L47)
+
 Route locale
+
+***
 
 ### site?
 
 > `optional` **site**: [`SiteInfo`](../../site/type-aliases/SiteInfo.md)
+
+Defined in: [packages/core/src/client/sitecore-client.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/client/sitecore-client.ts#L43)
 
 Site info for current page / route

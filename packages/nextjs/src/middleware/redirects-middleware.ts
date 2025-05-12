@@ -28,15 +28,21 @@ type RedirectResult = RedirectInfo & { matchedQueryString?: string };
 /**
  * extended RedirectsMiddlewareConfig config type for RedirectsMiddleware
  */
-export type RedirectsMiddlewareConfig = Omit<GraphQLRedirectsServiceConfig, 'fetch'> &
+export type RedirectsMiddlewareConfig = Omit<
+  GraphQLRedirectsServiceConfig,
+  'fetch' | 'clientFactory'
+> &
+  SitecoreConfig['api']['edge'] &
   MiddlewareBaseConfig &
-  SitecoreConfig['redirects'];
+  SitecoreConfig['redirects'] & {
+    redirectsService?: GraphQLRedirectsService;
+  };
 /**
  * Middleware / handler fetches all redirects from Sitecore instance by grapqhl service
  * compares with current url and redirects to target url
  */
 export class RedirectsMiddleware extends MiddlewareBase {
-  private redirectsService: GraphQLRedirectsService;
+  protected redirectsService: GraphQLRedirectsService;
   private locales: string[];
 
   /**
@@ -44,9 +50,24 @@ export class RedirectsMiddleware extends MiddlewareBase {
    */
   constructor(protected config: RedirectsMiddlewareConfig) {
     super(config);
+    const graphQLOptions = {
+      api: {
+        edge: {
+          contextId: this.config.contextId,
+          clientContextId: this.config.clientContextId,
+          edgeUrl: this.config.edgeUrl,
+        },
+      },
+    };
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
-    this.redirectsService = new GraphQLRedirectsService({ ...config, fetch: fetch });
+    this.redirectsService =
+      this.config.redirectsService ??
+      new GraphQLRedirectsService({
+        ...config,
+        clientFactory: this.getClientFactory(graphQLOptions),
+        fetch: fetch,
+      });
     this.locales = config.locales;
   }
 
@@ -199,7 +220,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
    * @returns Promise<RedirectInfo | undefined>
    * @private
    */
-  private async getExistsRedirect(
+  protected async getExistsRedirect(
     req: NextRequest,
     siteName: string
   ): Promise<RedirectResult | undefined> {
@@ -284,7 +305,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
    * @param {NextURL} url
    * @returns {string} normalize url
    */
-  private normalizeUrl(url: NextURL): NextURL {
+  protected normalizeUrl(url: NextURL): NextURL {
     if (!url.search) {
       return url;
     }
@@ -314,10 +335,10 @@ export class RedirectsMiddleware extends MiddlewareBase {
       })
       .join('&');
 
-    const newUrl = new URL(`${url.pathname}?${newQueryString}`, url.origin);
+    const newUrl = new URL(`${url.pathname.toLowerCase()}?${newQueryString}`, url.origin);
 
     url.search = newUrl.search;
-    url.pathname = newUrl.pathname;
+    url.pathname = newUrl.pathname.toLocaleLowerCase();
     url.href = newUrl.href;
 
     return url;
@@ -331,7 +352,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
    * @param {string} statusText The status text of the redirect.
    * @returns {NextResponse<unknown>} The redirect response.
    */
-  private createRedirectResponse(
+  protected createRedirectResponse(
     url: NextURL,
     res: Response | undefined,
     status: number,

@@ -12,9 +12,9 @@ Service that fetch the sitemaps data using Sitecore's GraphQL API.
 
 ## Constructors
 
-### new GraphQLSitemapXmlService()
+### Constructor
 
-> **new GraphQLSitemapXmlService**(`options`): [`GraphQLSitemapXmlService`](GraphQLSitemapXmlService.md)
+> **new GraphQLSitemapXmlService**(`options`): `GraphQLSitemapXmlService`
 
 Defined in: core/types/site/graphql-sitemap-xml-service.d.ts:34
 
@@ -28,7 +28,7 @@ Creates an instance of graphQL sitemaps service with the provided options
 
 #### Returns
 
-[`GraphQLSitemapXmlService`](GraphQLSitemapXmlService.md)
+`GraphQLSitemapXmlService`
 
 ## Properties
 
@@ -56,7 +56,7 @@ Defined in: core/types/site/graphql-sitemap-xml-service.d.ts:35
 
 ### fetchSitemaps()
 
-> **fetchSitemaps**(`fetchOptions`?): `Promise`\<`string`[]\>
+> **fetchSitemaps**(`fetchOptions?`): `Promise`\<`string`[]\>
 
 Defined in: core/types/site/graphql-sitemap-xml-service.d.ts:42
 
@@ -66,7 +66,7 @@ Fetch list of sitemaps for the site
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `fetchOptions`? | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
+| `fetchOptions?` | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 

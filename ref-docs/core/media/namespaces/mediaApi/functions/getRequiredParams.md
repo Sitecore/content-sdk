@@ -8,7 +8,7 @@
 
 > **getRequiredParams**(`qs`): `object`
 
-Defined in: [packages/core/src/media/media-api.ts:11](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/media/media-api.ts#L11)
+Defined in: [packages/core/src/media/media-api.ts:11](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/media/media-api.ts#L11)
 
 Get required query string params which should be merged with user params
 
@@ -16,7 +16,7 @@ Get required query string params which should be merged with user params
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `qs` | \{\} | layout service parsed query string |
+| `qs` | \{[`key`: `string`]: `undefined` \| `string`; \} | layout service parsed query string |
 
 ## Returns
 

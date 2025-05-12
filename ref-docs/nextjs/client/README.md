@@ -24,7 +24,7 @@
 - [NextjsPage](type-aliases/NextjsPage.md)
 - [SitecoreClientInit](type-aliases/SitecoreClientInit.md)
 
-## Functions
+## Variables
 
-- [createGraphQLClientFactory](functions/createGraphQLClientFactory.md)
-- [getEdgeProxyContentUrl](functions/getEdgeProxyContentUrl.md)
+- [createGraphQLClientFactory](variables/createGraphQLClientFactory.md)
+- [getEdgeProxyContentUrl](variables/getEdgeProxyContentUrl.md)

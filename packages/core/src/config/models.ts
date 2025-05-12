@@ -17,7 +17,7 @@ export type SitecoreConfigInput = {
    * API settings required to connect to Sitecore.
    * Both edge and local set can be specified as JSS app will use API Key for component library
    */
-  api: {
+  api?: {
     /**
      * Edge endpoint credentials for Sitecore connection. Will be used to connect to SaaS XMCloud instance
      */
@@ -61,7 +61,7 @@ export type SitecoreConfigInput = {
    * The default and fallback locale for your site.
    * Ensure it aligns with the framework-specific settings used in your application.
    */
-  defaultLanguage: string;
+  defaultLanguage?: string;
   /**
    * Your default site name. When using the multisite feature this variable defines the fallback site.
    * @default empty string
@@ -69,6 +69,7 @@ export type SitecoreConfigInput = {
   defaultSite?: string;
   /**
    * Editing secret required to support Sitecore editing and preview functionality.
+   * by default set by the JSS_EDITING_SECRET environment variable
    */
   editingSecret?: string;
   /**
@@ -138,10 +139,14 @@ export type SitecoreConfigInput = {
     enabled?: boolean;
     /**
      * Configuration for your Sitecore Experience Edge endpoint
+     * by default set by the PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT environment variable
+     * if not set, will use the default value of 400ms
      */
     edgeTimeout?: number;
     /**
      * Configuration for your Sitecore CDP endpoint
+     * by default set by the PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT environment variable
+     * if not set, will use the default value of 400ms
      */
     cdpTimeout?: number;
     /**

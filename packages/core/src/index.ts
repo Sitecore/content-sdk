@@ -2,6 +2,8 @@
 // and to keep react-native working with cjs modules.
 
 import * as constants from './constants';
+import * as form from './form';
+
 export { default as debug, Debugger, enableDebug } from './debug';
 export {
   GraphQLClient,
@@ -21,4 +23,5 @@ export {
 } from './native-fetcher';
 export { HTMLLink, RetryStrategy, GenericGraphQLClientError, StaticPath } from './models';
 export { constants };
+export { form };
 export { defineConfig } from './config';

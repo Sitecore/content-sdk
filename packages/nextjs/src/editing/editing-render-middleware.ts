@@ -171,7 +171,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           language: query.sc_lang,
           site: query.sc_site,
           mode: 'library',
-          dataSourceId: query.sc_datasourceId,
+          dataSourceId: query.dataSourceId,
           version: query.sc_version,
         } as DesignLibraryRenderPreviewData,
         {

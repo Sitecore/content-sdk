@@ -20,9 +20,12 @@
 
 - [GenerateSitesConfig](type-aliases/GenerateSitesConfig.md)
 
+## Variables
+
+- [generateMetadata](variables/generateMetadata.md)
+- [generateSites](variables/generateSites.md)
+
 ## Functions
 
-- [generateMetadata](functions/generateMetadata.md)
 - [generatePlugins](functions/generatePlugins.md)
-- [generateSites](functions/generateSites.md)
 - [getComponentList](functions/getComponentList.md)

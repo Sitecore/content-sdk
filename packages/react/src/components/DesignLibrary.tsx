@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState, JSX } from 'react';
 import { Placeholder } from './Placeholder';
 import {
   ComponentRendering,
@@ -11,7 +11,6 @@ import {
   getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
 } from '@sitecore-content-sdk/core/editing';
-import { EditingScripts } from './EditingScripts';
 
 export const DesignLibrary = (layoutData: LayoutServiceData): JSX.Element => {
   const { route } = layoutData.sitecore;
@@ -59,7 +58,6 @@ export const DesignLibrary = (layoutData: LayoutServiceData): JSX.Element => {
 
   return (
     <>
-      <EditingScripts />
       <main>
         <div id={EDITING_COMPONENT_ID}>
           {route && (

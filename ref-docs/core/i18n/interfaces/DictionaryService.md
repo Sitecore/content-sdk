@@ -6,7 +6,7 @@
 
 # Interface: DictionaryService
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:70](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/i18n/graphql-dictionary-service.ts#L70)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:70](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/i18n/graphql-dictionary-service.ts#L70)
 
 Service that fetches dictionary data using Sitecore's GraphQL API.
 
@@ -14,9 +14,9 @@ Service that fetches dictionary data using Sitecore's GraphQL API.
 
 ### fetchDictionaryData()
 
-> **fetchDictionaryData**(`language`, `site`?, `fetchOptions`?): `Promise`\<[`DictionaryPhrases`](DictionaryPhrases.md)\>
+> **fetchDictionaryData**(`language`, `site?`, `fetchOptions?`): `Promise`\<[`DictionaryPhrases`](DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:76](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/core/src/i18n/graphql-dictionary-service.ts#L76)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:76](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/core/src/i18n/graphql-dictionary-service.ts#L76)
 
 Fetch dictionary data for a language.
 
@@ -25,8 +25,8 @@ Fetch dictionary data for a language.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `language` | `string` | the language to be used to fetch the dictionary |
-| `site`? | `string` | site name to fetch data for. |
-| `fetchOptions`? | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | - |
+| `site?` | `string` | site name to fetch data for. |
+| `fetchOptions?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | - |
 
 #### Returns
 

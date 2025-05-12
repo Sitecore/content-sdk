@@ -6,36 +6,36 @@
 
 # Function: withPlaceholder()
 
-> **withPlaceholder**(`placeholders`, `options`?): (`WrappedComponent`) => (`props`) => `Element`
+> **withPlaceholder**(`placeholders`, `options?`): (`WrappedComponent`) => (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github.com/Sitecore/content-sdk/blob/bfe672d212140ef15b86f850b9fb38de51521218/packages/react/src/enhancers/withPlaceholder.tsx#L42)
+Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github.com/Sitecore/xmc-jss-dev/blob/e071b5c5bcc29ad3f8f0d1250181261d976b39d1/packages/react/src/enhancers/withPlaceholder.tsx#L42)
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `placeholders` | `WithPlaceholderSpec` |  |
-| `options`? | `WithPlaceholderOptions` |  |
+| `options?` | `WithPlaceholderOptions` |  |
 
 ## Returns
 
-`Function`
+> (`WrappedComponent`): (`props`) => `Element`
 
 ### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `WrappedComponent` | `ComponentClass`\<`PlaceholderProps`\> \| `FunctionComponent`\<`PlaceholderProps`\> |
+| `WrappedComponent` | `ComponentClass`\<`PlaceholderProps`, `any`\> \| `FunctionComponent`\<`PlaceholderProps`\> |
 
 ### Returns
 
-`Function`
+> (`props`): `Element`
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<`PlaceholderProps`, keyof [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md)\> |
+| `props` | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<`PlaceholderProps`\> |
 
 #### Returns
 

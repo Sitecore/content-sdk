@@ -1,4 +1,4 @@
-﻿import { useEffect } from 'react';
+﻿import { useEffect, JSX } from 'react';
 <% if (prerender === 'SSG') { -%>
 import { GetStaticPaths, GetStaticProps } from 'next';
 <% } else if (prerender === 'SSR') { -%>
@@ -60,7 +60,7 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
   let paths: StaticPath[] = [];
   let fallback: boolean | 'blocking' = 'blocking';
 
-  if (process.env.NODE_ENV !== 'development' && process.env.DISABLE_SSG_FETCH?.toLowerCase() !== 'true') {
+  if (process.env.NODE_ENV !== 'development' && !scConfig.disableStaticPaths) {
     try {
       paths = await client.getPagePaths(context?.locales || []);
     } catch (error) {

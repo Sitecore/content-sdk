@@ -21,9 +21,9 @@ component props
 
 ## Constructors
 
-### new BYOCComponent()
+### Constructor
 
-> **new BYOCComponent**(`props`): [`BYOCComponent`](BYOCComponent.md)
+> **new BYOCComponent**(`props`): `BYOCComponent`
 
 Defined in: react/types/components/BYOCComponent.d.ts:81
 
@@ -35,7 +35,7 @@ Defined in: react/types/components/BYOCComponent.d.ts:81
 
 #### Returns
 
-[`BYOCComponent`](BYOCComponent.md)
+`BYOCComponent`
 
 #### Overrides
 
@@ -47,7 +47,7 @@ Defined in: react/types/components/BYOCComponent.d.ts:81
 
 > **context**: `unknown`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1013
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:945
 
 If using the new style context, re-declare this in your class to be the
 `React.ContextType` of your `static contextType`.
@@ -77,7 +77,7 @@ declare context: React.ContextType<typeof MyContext>
 
 > `readonly` **props**: `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\>
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1033
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:961
 
 #### Inherited from
 
@@ -85,31 +85,9 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:1033
 
 ***
 
-### ~~refs~~
-
-> **refs**: `object`
-
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1040
-
-#### Index Signature
-
-\[`key`: `string`\]: `ReactInstance`
-
-#### Deprecated
-
-#### See
-
-[Legacy React Docs](https://legacy.reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs)
-
-#### Inherited from
-
-`React.Component.refs`
-
-***
-
 ### state
 
-> **state**: `Readonly`\<\{ `error`: `Error`; \}\>
+> **state**: `Readonly`\<\{ `error?`: `Error`; \}\>
 
 Defined in: react/types/components/BYOCComponent.d.ts:78
 
@@ -123,7 +101,7 @@ Defined in: react/types/components/BYOCComponent.d.ts:78
 
 > `static` `optional` **contextType**: `Context`\<`any`\>
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:995
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:921
 
 If set, `this.context` will be set at runtime to the current value of the given Context.
 
@@ -149,6 +127,24 @@ class Foo extends React.Component {
 #### Inherited from
 
 `React.Component.contextType`
+
+***
+
+### ~~propTypes?~~
+
+> `static` `optional` **propTypes**: `any`
+
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:927
+
+Ignored by React.
+
+#### Deprecated
+
+Only kept in types for backwards compatibility. Will be removed in a future major release.
+
+#### Inherited from
+
+`React.Component.propTypes`
 
 ## Methods
 
@@ -181,7 +177,7 @@ the entire component tree to unmount.
 
 > `optional` **componentDidMount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1376
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1173
 
 Called immediately after a component is mounted. Setting state here will trigger re-rendering.
 
@@ -197,21 +193,21 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 ### componentDidUpdate()?
 
-> `optional` **componentDidUpdate**(`prevProps`, `prevState`, `snapshot`?): `void`
+> `optional` **componentDidUpdate**(`prevProps`, `prevState`, `snapshot?`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1439
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1236
 
 Called immediately after updating occurs. Not called for the initial render.
 
-The snapshot is only present if [getSnapshotBeforeUpdate](BYOCComponent.md#getsnapshotbeforeupdate) is present and returns non-null.
+The snapshot is only present if [getSnapshotBeforeUpdate](#getsnapshotbeforeupdate) is present and returns non-null.
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
 | `prevProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `prevState` | `Readonly`\<\{\}\> |
-| `snapshot`? | `any` |
+| `prevState` | `Readonly`\<\{ \}\> |
+| `snapshot?` | `any` |
 
 #### Returns
 
@@ -227,7 +223,7 @@ The snapshot is only present if [getSnapshotBeforeUpdate](BYOCComponent.md#getsn
 
 > `optional` **componentWillMount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1455
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1252
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -259,7 +255,7 @@ this from being invoked.
 
 > `optional` **componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1486
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1283
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -301,7 +297,7 @@ this from being invoked.
 
 > `optional` **componentWillUnmount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1392
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1189
 
 Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
 cancelled network requests, or cleaning up any DOM elements created in `componentDidMount`.
@@ -320,7 +316,7 @@ cancelled network requests, or cleaning up any DOM elements created in `componen
 
 > `optional` **componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1518
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1315
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -335,7 +331,7 @@ this from being invoked.
 | Parameter | Type |
 | ------ | ------ |
 | `nextProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `nextState` | `Readonly`\<\{\}\> |
+| `nextState` | `Readonly`\<\{ \}\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -359,15 +355,15 @@ this from being invoked.
 
 ### forceUpdate()
 
-> **forceUpdate**(`callback`?): `void`
+> **forceUpdate**(`callback?`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1030
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:958
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `callback`? | () => `void` |
+| `callback?` | () => `void` |
 
 #### Returns
 
@@ -383,10 +379,10 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:1030
 
 > `optional` **getSnapshotBeforeUpdate**(`prevProps`, `prevState`): `any`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1433
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1230
 
 Runs before React applies the result of Component.render render to the document, and
-returns an object to be given to [componentDidUpdate](BYOCComponent.md#componentdidupdate). Useful for saving
+returns an object to be given to [componentDidUpdate](#componentdidupdate). Useful for saving
 things such as scroll position before Component.render render causes changes to it.
 
 Note: the presence of this method prevents any of the deprecated
@@ -397,7 +393,7 @@ lifecycle events from running.
 | Parameter | Type |
 | ------ | ------ |
 | `prevProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `prevState` | `Readonly`\<\{\}\> |
+| `prevState` | `Readonly`\<\{ \}\> |
 
 #### Returns
 
@@ -427,9 +423,9 @@ Defined in: react/types/components/BYOCComponent.d.ts:86
 
 ### setState()
 
-> **setState**\<`K`\>(`state`, `callback`?): `void`
+> **setState**\<`K`\>(`state`, `callback?`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1025
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:953
 
 #### Type Parameters
 
@@ -441,8 +437,8 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:1025
 
 | Parameter | Type |
 | ------ | ------ |
-| `state` | `null` \| \{\} \| (`prevState`, `props`) => `null` \| \{\} \| `Pick`\<\{\}, `K`\> \| `Pick`\<\{\}, `K`\> |
-| `callback`? | () => `void` |
+| `state` | `null` \| \{ \} \| (`prevState`, `props`) => `null` \| \{ \} \| `Pick`\<\{ \}, `K`\> \| `Pick`\<\{ \}, `K`\> |
+| `callback?` | () => `void` |
 
 #### Returns
 
@@ -458,7 +454,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:1025
 
 > `optional` **shouldComponentUpdate**(`nextProps`, `nextState`, `nextContext`): `boolean`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1387
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1184
 
 Called to determine whether the change in props and state should trigger a re-render.
 
@@ -474,7 +470,7 @@ and `componentDidUpdate` will not be called.
 | Parameter | Type |
 | ------ | ------ |
 | `nextProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `nextState` | `Readonly`\<\{\}\> |
+| `nextState` | `Readonly`\<\{ \}\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -491,7 +487,7 @@ and `componentDidUpdate` will not be called.
 
 > `optional` **UNSAFE\_componentWillMount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1470
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1267
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -525,7 +521,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1504
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1301
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -569,7 +565,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1534
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1331
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -586,7 +582,7 @@ this from being invoked.
 | Parameter | Type |
 | ------ | ------ |
 | `nextProps` | `Readonly`\<[`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md)\> |
-| `nextState` | `Readonly`\<\{\}\> |
+| `nextState` | `Readonly`\<\{ \}\> |
 | `nextContext` | `any` |
 
 #### Returns
