@@ -6,7 +6,7 @@
 
 # Interface: Field\<T\>
 
-Defined in: [packages/core/src/layout/models.ts:113](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/layout/models.ts#L113)
+Defined in: [packages/core/src/layout/models.ts:113](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/layout/models.ts#L113)
 
 Field metadata in editing mode
 
@@ -26,7 +26,7 @@ Field metadata in editing mode
 
 > `optional` **metadata**: `object`
 
-Defined in: [packages/core/src/layout/models.ts:121](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/layout/models.ts#L121)
+Defined in: [packages/core/src/layout/models.ts:121](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/layout/models.ts#L121)
 
 #### Index Signature
 
@@ -42,4 +42,4 @@ Defined in: [packages/core/src/layout/models.ts:121](https://github.com/Sitecore
 
 > **value**: `T`
 
-Defined in: [packages/core/src/layout/models.ts:114](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/layout/models.ts#L114)
+Defined in: [packages/core/src/layout/models.ts:114](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/layout/models.ts#L114)

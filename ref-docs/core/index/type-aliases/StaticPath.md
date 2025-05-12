@@ -8,7 +8,7 @@
 
 > **StaticPath** = `object`
 
-Defined in: [packages/core/src/models.ts:48](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/models.ts#L48)
+Defined in: [packages/core/src/models.ts:48](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/models.ts#L48)
 
 Object model of a sitemap's site page item.
 
@@ -18,7 +18,7 @@ Object model of a sitemap's site page item.
 
 > `optional` **locale**: `string`
 
-Defined in: [packages/core/src/models.ts:52](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/models.ts#L52)
+Defined in: [packages/core/src/models.ts:52](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/models.ts#L52)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/core/src/models.ts:52](https://github.com/Sitecore/xmc-jss
 
 > **params**: `object`
 
-Defined in: [packages/core/src/models.ts:49](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/models.ts#L49)
+Defined in: [packages/core/src/models.ts:49](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/models.ts#L49)
 
 #### path
 

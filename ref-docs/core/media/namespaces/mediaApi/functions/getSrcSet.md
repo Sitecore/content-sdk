@@ -8,7 +8,7 @@
 
 > **getSrcSet**(`url`, `srcSet`, `imageParams?`, `mediaUrlPrefix?`): `string`
 
-Defined in: [packages/core/src/media/media-api.ts:95](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/media/media-api.ts#L95)
+Defined in: [packages/core/src/media/media-api.ts:95](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/media/media-api.ts#L95)
 
 Receives an array of `srcSet` parameters that are iterated and used as parameters to generate
 a corresponding set of updated Sitecore media URLs via

@@ -8,7 +8,7 @@
 
 > **NativeDataFetcherError** = `Error` & `object`
 
-Defined in: [packages/core/src/native-fetcher.ts:37](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/native-fetcher.ts#L37)
+Defined in: [packages/core/src/native-fetcher.ts:37](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/native-fetcher.ts#L37)
 
 Native fetcher error type to include response text and status
 

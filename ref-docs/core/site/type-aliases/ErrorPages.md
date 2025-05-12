@@ -8,7 +8,7 @@
 
 > **ErrorPages** = `object`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:43](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/site/graphql-error-pages-service.ts#L43)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:43](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/site/graphql-error-pages-service.ts#L43)
 
 Object model of Error Pages result
 
@@ -18,7 +18,7 @@ Object model of Error Pages result
 
 > **notFoundPage**: `object`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:44](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/site/graphql-error-pages-service.ts#L44)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:44](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/site/graphql-error-pages-service.ts#L44)
 
 #### rendered
 
@@ -30,7 +30,7 @@ Defined in: [packages/core/src/site/graphql-error-pages-service.ts:44](https://g
 
 > **notFoundPagePath**: `string`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:45](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/site/graphql-error-pages-service.ts#L45)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:45](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/site/graphql-error-pages-service.ts#L45)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/core/src/site/graphql-error-pages-service.ts:45](https://g
 
 > **serverErrorPage**: `object`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:46](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/site/graphql-error-pages-service.ts#L46)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:46](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/site/graphql-error-pages-service.ts#L46)
 
 #### rendered
 
@@ -50,4 +50,4 @@ Defined in: [packages/core/src/site/graphql-error-pages-service.ts:46](https://g
 
 > **serverErrorPagePath**: `string`
 
-Defined in: [packages/core/src/site/graphql-error-pages-service.ts:47](https://github.com/Sitecore/xmc-jss-dev/blob/b958912809996db10220a105056215d43fb2c6d5/packages/core/src/site/graphql-error-pages-service.ts#L47)
+Defined in: [packages/core/src/site/graphql-error-pages-service.ts:47](https://github.com/Sitecore/content-sdk/blob/a10265eeed96cff602ebc20fbfc8e3d581265b9b/packages/core/src/site/graphql-error-pages-service.ts#L47)
