@@ -2529,10 +2529,6 @@ __metadata:
     next: ^15.3.2
     react: ^19.1.0
     react-dom: ^19.1.0
-    typescript: ^5.8.3
-  peerDependenciesMeta:
-    typescript:
-      optional: true
   languageName: unknown
   linkType: soft
 

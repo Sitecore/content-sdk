@@ -11,6 +11,3 @@ export const siteNameError = 'The siteName cannot be empty';
 export const SITECORE_EDGE_URL_DEFAULT = 'https://edge-platform.sitecorecloud.io';
 
 export const HIDDEN_RENDERING_NAME = 'Hidden Rendering';
-
-export const DEFAULT_SITECORE_AUTH_ENDPOINT = 'https://auth.sitecorecloud.io/oauth/token';
-export const DEFAULT_SITECORE_AUTH_AUDIENCE = 'https://api.sitecorecloud.io';
