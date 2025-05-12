@@ -8,7 +8,7 @@
 
 > **EnhancedOmit**\<`T`, `K`\> = `{ [P in keyof T as Exclude<P, K>]: T[P] }`
 
-Defined in: [packages/core/src/utils/utils.ts:11](https://github.com/Sitecore/content-sdk/blob/a712319c51b886f2d29baa88e1f9ca98c12e4c87/packages/core/src/utils/utils.ts#L11)
+Defined in: [packages/core/src/utils/utils.ts:11](https://github.com/Sitecore/content-sdk/blob/eb3a033122ca57fc4562bef04a2d36e3fbd30f7c/packages/core/src/utils/utils.ts#L11)
 
 Omit properties from T that are in K. This is a simplified version of TypeScript's built-in `Omit` utility type.
 Since default `Omit` doesn't support indexing types, we had to introduce this custom implementation.

@@ -6,7 +6,7 @@
 
 # Enumeration: DesignLibraryStatus
 
-Defined in: [packages/core/src/editing/design-library.ts:24](https://github.com/Sitecore/content-sdk/blob/a712319c51b886f2d29baa88e1f9ca98c12e4c87/packages/core/src/editing/design-library.ts#L24)
+Defined in: [packages/core/src/editing/design-library.ts:24](https://github.com/Sitecore/content-sdk/blob/eb3a033122ca57fc4562bef04a2d36e3fbd30f7c/packages/core/src/editing/design-library.ts#L24)
 
 Enumeration of statuses for the design library.
 
@@ -16,7 +16,7 @@ Enumeration of statuses for the design library.
 
 > **READY**: `"ready"`
 
-Defined in: [packages/core/src/editing/design-library.ts:25](https://github.com/Sitecore/content-sdk/blob/a712319c51b886f2d29baa88e1f9ca98c12e4c87/packages/core/src/editing/design-library.ts#L25)
+Defined in: [packages/core/src/editing/design-library.ts:25](https://github.com/Sitecore/content-sdk/blob/eb3a033122ca57fc4562bef04a2d36e3fbd30f7c/packages/core/src/editing/design-library.ts#L25)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/core/src/editing/design-library.ts:25](https://github.com/
 
 > **RENDERED**: `"rendered"`
 
-Defined in: [packages/core/src/editing/design-library.ts:26](https://github.com/Sitecore/content-sdk/blob/a712319c51b886f2d29baa88e1f9ca98c12e4c87/packages/core/src/editing/design-library.ts#L26)
+Defined in: [packages/core/src/editing/design-library.ts:26](https://github.com/Sitecore/content-sdk/blob/eb3a033122ca57fc4562bef04a2d36e3fbd30f7c/packages/core/src/editing/design-library.ts#L26)

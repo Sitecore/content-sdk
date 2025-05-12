@@ -8,7 +8,7 @@
 
 > **SitecoreCliConfigInput** = `object`
 
-Defined in: [packages/core/src/config/models.ts:191](https://github.com/Sitecore/content-sdk/blob/a712319c51b886f2d29baa88e1f9ca98c12e4c87/packages/core/src/config/models.ts#L191)
+Defined in: [packages/core/src/config/models.ts:191](https://github.com/Sitecore/content-sdk/blob/eb3a033122ca57fc4562bef04a2d36e3fbd30f7c/packages/core/src/config/models.ts#L191)
 
 Type to be used as cli config input in sitecore.cli.config
 
@@ -18,7 +18,7 @@ Type to be used as cli config input in sitecore.cli.config
 
 > `optional` **build**: `object`
 
-Defined in: [packages/core/src/config/models.ts:195](https://github.com/Sitecore/content-sdk/blob/a712319c51b886f2d29baa88e1f9ca98c12e4c87/packages/core/src/config/models.ts#L195)
+Defined in: [packages/core/src/config/models.ts:195](https://github.com/Sitecore/content-sdk/blob/eb3a033122ca57fc4562bef04a2d36e3fbd30f7c/packages/core/src/config/models.ts#L195)
 
 Configuration for the `sitecore-tools build` cli command
 
@@ -38,7 +38,7 @@ List of commands to run during the build process
 
 > `optional` **scaffold**: `object`
 
-Defined in: [packages/core/src/config/models.ts:204](https://github.com/Sitecore/content-sdk/blob/a712319c51b886f2d29baa88e1f9ca98c12e4c87/packages/core/src/config/models.ts#L204)
+Defined in: [packages/core/src/config/models.ts:204](https://github.com/Sitecore/content-sdk/blob/eb3a033122ca57fc4562bef04a2d36e3fbd30f7c/packages/core/src/config/models.ts#L204)
 
 Configuration for the `sitecore-tools scaffold` cli command
 

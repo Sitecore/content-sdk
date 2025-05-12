@@ -8,7 +8,7 @@
 
 > **generatePlugins**(`definition`): `void`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:90](https://github.com/Sitecore/content-sdk/blob/a712319c51b886f2d29baa88e1f9ca98c12e4c87/packages/core/src/tools/templating/plugins.ts#L90)
+Defined in: [packages/core/src/tools/templating/plugins.ts:90](https://github.com/Sitecore/content-sdk/blob/eb3a033122ca57fc4562bef04a2d36e3fbd30f7c/packages/core/src/tools/templating/plugins.ts#L90)
 
 Generates the plugins file and saves it to the filesystem.
 By convention, we expect to find plugins under {pluginName}/plugins/** (subfolders are searched recursively).
