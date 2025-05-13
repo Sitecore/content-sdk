@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { render, waitFor } from '@testing-library/react';
 import { spy } from 'sinon';
 import ErrorBoundary from './ErrorBoundary';
-import { SitecoreContextReactContext } from '../components/SitecoreContext';
+import { SitecoreProviderReactContext } from '../components/SitecoreProvider';
 import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 
 describe('ErrorBoundary', () => {
@@ -31,11 +31,11 @@ describe('ErrorBoundary', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={testComponentProps}>
           <ErrorBoundary rendering={rendering} errorComponent={CustomErrorComponent}>
             <TestErrorComponent />
           </ErrorBoundary>
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
 
       expect(rendered.container.querySelectorAll('div').length).to.equal(1);
@@ -48,7 +48,7 @@ describe('ErrorBoundary', () => {
       const setContext = spy();
 
       const testComponentProps = {
-        context: {
+        pageContext: {
           pageState: LayoutServicePageState.Edit,
         },
         setContext,
@@ -63,11 +63,11 @@ describe('ErrorBoundary', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={testComponentProps}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
       const ems = rendered.container.querySelectorAll('em');
       expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
@@ -81,7 +81,7 @@ describe('ErrorBoundary', () => {
       const setContext = spy();
 
       const testComponentProps = {
-        context: {
+        pageContext: {
           pageState: LayoutServicePageState.Preview,
         },
         setContext,
@@ -96,11 +96,11 @@ describe('ErrorBoundary', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={testComponentProps}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
       const ems = rendered.container.querySelectorAll('em');
 
@@ -145,7 +145,7 @@ describe('ErrorBoundary', () => {
       const setContext = spy();
 
       const testComponentProps = {
-        context: {
+        pageContext: {
           pageEditing: true,
         },
         setContext,
@@ -160,11 +160,11 @@ describe('ErrorBoundary', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={testComponentProps}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
       const ems = rendered.container.querySelectorAll('em');
       expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
@@ -178,7 +178,7 @@ describe('ErrorBoundary', () => {
       const setContext = spy();
 
       const testComponentProps = {
-        context: {
+        pageContext: {
           pageEditing: false,
         },
         setContext,
@@ -193,11 +193,11 @@ describe('ErrorBoundary', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={testComponentProps}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
       const ems = rendered.container.querySelectorAll('em');
 

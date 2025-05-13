@@ -5,7 +5,7 @@
   Link as JssLink,
   LinkField,
   Text,
-  useSitecoreContext,
+  useSitecore,
 } from '@sitecore-content-sdk/nextjs';
 import React, { CSSProperties, JSX } from 'react';
 
@@ -30,8 +30,8 @@ const ImageDefault = (props: ImageProps): JSX.Element => (
 
 export const Banner = (props: ImageProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
-  const { sitecoreContext } = useSitecoreContext();
-  const isPageEditing = sitecoreContext.pageEditing;
+  const { pageContext } = useSitecore();
+  const isPageEditing = pageContext.pageEditing;
   const classHeroBannerEmpty =
     isPageEditing && props.fields?.Image?.value?.class === 'scEmptyImage'
       ? 'hero-banner-empty'
@@ -53,14 +53,14 @@ export const Banner = (props: ImageProps): JSX.Element => {
       id={id ? id : undefined}
     >
       <div className="component-content sc-sxa-image-hero-banner" style={backgroundStyle}>
-        {sitecoreContext.pageEditing ? <JssImage field={modifyImageProps} /> : ''}
+        {pageContext.pageEditing ? <JssImage field={modifyImageProps} /> : ''}
       </div>
     </div>
   );
 };
 
 export const Default = (props: ImageProps): JSX.Element => {
-  const { sitecoreContext } = useSitecoreContext();
+  const { pageContext } = useSitecore();
 
   if (props.fields) {
     const Image = () => <JssImage field={props.fields.Image} />;
@@ -69,7 +69,7 @@ export const Default = (props: ImageProps): JSX.Element => {
     return (
       <div className={`component image ${props.params.styles}`} id={id ? id : undefined}>
         <div className="component-content">
-          {sitecoreContext.pageState === 'edit' || !props.fields.TargetUrl?.value?.href ? (
+          {pageContext.pageState === 'edit' || !props.fields.TargetUrl?.value?.href ? (
             <Image />
           ) : (
             <JssLink field={props.fields.TargetUrl}>

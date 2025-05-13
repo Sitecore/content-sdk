@@ -7,7 +7,7 @@ import { GetServerSideProps } from 'next';
 import NotFound from 'src/NotFound';
 import Layout from 'src/Layout';
 import {
-  SitecoreContext,
+  SitecoreProvider,
   ComponentPropsContext,
   SitecorePageProps,
   <% if (prerender === 'SSG') { -%>
@@ -34,13 +34,13 @@ const SitecorePage = ({ notFound, componentProps, layout }: SitecorePageProps): 
 
   return (
     <ComponentPropsContext value={componentProps || {}}>
-      <SitecoreContext
+      <SitecoreProvider
         componentMap={components}
         layoutData={layout}
         api={scConfig.api}
       >
         <Layout layoutData={layout} />
-      </SitecoreContext>
+      </SitecoreProvider>
     </ComponentPropsContext>
   );
 };

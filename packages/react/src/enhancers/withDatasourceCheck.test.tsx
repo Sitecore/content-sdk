@@ -5,12 +5,12 @@ import { render } from '@testing-library/react';
 import { spy } from 'sinon';
 
 import { withDatasourceCheck, WithDatasourceCheckProps } from '../enhancers/withDatasourceCheck';
-import { SitecoreContextReactContext } from '../components/SitecoreContext';
+import { SitecoreProviderReactContext } from '../components/SitecoreProvider';
 import { RenderingType } from '@sitecore-content-sdk/core/layout';
 
 const mockContext = (editing: boolean, renderingType?: RenderingType) => {
   return {
-    context: { pageEditing: editing, renderingType },
+    pageContext: { pageEditing: editing, renderingType },
     setContext: spy(),
   };
 };
@@ -35,9 +35,9 @@ describe('withDatasourceCheck', () => {
     };
 
     const wrapper = render(
-      <SitecoreContextReactContext.Provider value={mockContext(false)}>
+      <SitecoreProviderReactContext.Provider value={mockContext(false)}>
         <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     );
 
     expect(wrapper.container.innerHTML).to.be.empty;
@@ -48,9 +48,9 @@ describe('withDatasourceCheck', () => {
     const props = {} as WithDatasourceCheckProps;
 
     const wrapper = render(
-      <SitecoreContextReactContext.Provider value={mockContext(false)}>
+      <SitecoreProviderReactContext.Provider value={mockContext(false)}>
         <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     );
 
     expect(wrapper.container.innerHTML).to.be.empty;
@@ -66,9 +66,9 @@ describe('withDatasourceCheck', () => {
     };
 
     const wrapper = render(
-      <SitecoreContextReactContext.Provider value={mockContext(true)}>
+      <SitecoreProviderReactContext.Provider value={mockContext(true)}>
         <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     );
 
     expect(wrapper.container.querySelectorAll('div.sc-jss-editing-error')).to.have.length(1);
@@ -87,9 +87,9 @@ describe('withDatasourceCheck', () => {
     };
 
     const wrapper = render(
-      <SitecoreContextReactContext.Provider value={mockContext(true)}>
+      <SitecoreProviderReactContext.Provider value={mockContext(true)}>
         <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     );
 
     expect(wrapper.container.innerHTML).to.contain('Better than yours');
@@ -105,9 +105,9 @@ describe('withDatasourceCheck', () => {
     };
 
     const wrapper = render(
-      <SitecoreContextReactContext.Provider value={mockContext(false, RenderingType.Component)}>
+      <SitecoreProviderReactContext.Provider value={mockContext(false, RenderingType.Component)}>
         <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     );
 
     expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
@@ -124,9 +124,9 @@ describe('withDatasourceCheck', () => {
     };
 
     const wrapper = render(
-      <SitecoreContextReactContext.Provider value={mockContext(false)}>
+      <SitecoreProviderReactContext.Provider value={mockContext(false)}>
         <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     );
 
     expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
@@ -143,16 +143,16 @@ describe('withDatasourceCheck', () => {
     };
 
     const wrapper = render(
-      <SitecoreContextReactContext.Provider value={mockContext(true)}>
+      <SitecoreProviderReactContext.Provider value={mockContext(true)}>
         <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     );
 
     expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
     expect(wrapper.container.innerHTML).to.contain(props.rendering.dataSource);
   });
 
-  it('should return wrapped component if not within SitecoreContext', () => {
+  it('should return wrapped component if not within SitecoreProvider', () => {
     const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
     const props = {
       rendering: {

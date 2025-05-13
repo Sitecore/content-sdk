@@ -1,28 +1,26 @@
 import React, { FC } from 'react';
 import { expect } from 'chai';
-import { SitecoreContext } from './SitecoreContext';
-import { ComponentMap } from './sharedTypes';
-import { WithSitecoreContextProps, withSitecoreContext } from '../enhancers/withSitecoreContext';
+import { SitecoreProvider } from './SitecoreProvider';
+import { WithSitecoreProps, withSitecore, useSitecore } from '../enhancers/withSitecore';
 import { LayoutServiceData } from '../index';
 import { render } from '@testing-library/react';
-import { useSitecoreContext } from '../enhancers/withSitecoreContext';
 
-describe('SitecoreContext', () => {
+describe('SitecoreProvider', () => {
   let nestedContext = {};
 
-  interface NestedComponentProps extends WithSitecoreContextProps {
+  interface NestedComponentProps extends WithSitecoreProps {
     anotherProperty?: string;
   }
 
   const NestedComponent: FC<NestedComponentProps> = (props: NestedComponentProps) => {
-    const { sitecoreContext } = useSitecoreContext();
+    const { pageContext } = useSitecore();
 
-    nestedContext = sitecoreContext;
+    nestedContext = pageContext;
 
-    <div>{props.sitecoreContext && 'test'}</div>;
+    <div>{props.pageContext && 'test'}</div>;
   };
 
-  const NestedComponentWithContext = withSitecoreContext()(NestedComponent);
+  const NestedComponentWithContext = withSitecore()(NestedComponent);
 
   const components = new Map();
 
@@ -47,9 +45,9 @@ describe('SitecoreContext', () => {
 
   it('should set default context', () => {
     render(
-      <SitecoreContext componentMap={components}>
+      <SitecoreProvider componentMap={components}>
         <NestedComponentWithContext />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(nestedContext).deep.equal({
@@ -59,9 +57,9 @@ describe('SitecoreContext', () => {
 
   it('should update state when new context as prop received', () => {
     const component = render(
-      <SitecoreContext componentMap={components}>
+      <SitecoreProvider componentMap={components}>
         <NestedComponentWithContext />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(nestedContext).deep.equal({
@@ -69,9 +67,9 @@ describe('SitecoreContext', () => {
     });
 
     component.rerender(
-      <SitecoreContext componentMap={components} layoutData={mockLayoutData}>
+      <SitecoreProvider componentMap={components} layoutData={mockLayoutData}>
         <NestedComponentWithContext />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(nestedContext).to.deep.equal({

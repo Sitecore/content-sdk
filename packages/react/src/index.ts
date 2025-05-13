@@ -73,18 +73,18 @@ export { BYOCWrapper } from './components/BYOCWrapper';
 export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';
 export { File, FileField } from './components/File';
 export {
-  SitecoreContext,
-  SitecoreContextState,
-  SitecoreContextValue,
-  SitecoreContextReactContext,
-} from './components/SitecoreContext';
+  SitecoreProvider,
+  SitecoreProviderState,
+  SitecoreProviderPageContext,
+  SitecoreProviderReactContext,
+} from './components/SitecoreProvider';
 export {
-  withSitecoreContext,
-  useSitecoreContext,
-  WithSitecoreContextOptions,
-  WithSitecoreContextProps,
-  WithSitecoreContextHocProps,
-} from './enhancers/withSitecoreContext';
+  withSitecore,
+  useSitecore,
+  WithSitecoreOptions,
+  WithSitecoreProps,
+  WithSitecoreHocProps,
+} from './enhancers/withSitecore';
 export { withEditorChromes } from './enhancers/withEditorChromes';
 export { withPlaceholder } from './enhancers/withPlaceholder';
 export { withDatasourceCheck } from './enhancers/withDatasourceCheck';
