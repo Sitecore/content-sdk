@@ -28,7 +28,7 @@ Defined in: packages/core/types/layout/models.d.ts:119
 
 #### Index Signature
 
-\[`name`: `string`\]: [`Field`](Field.md) \| [`Item`](Item.md) \| [`Item`](Item.md)[]
+\[`name`: `string`\]: [`Field`](Field.md)\<`GenericFieldValue`\> \| `Item` \| `Item`[]
 
 ***
 

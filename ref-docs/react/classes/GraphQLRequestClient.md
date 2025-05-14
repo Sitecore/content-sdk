@@ -17,9 +17,9 @@ https://github.com/prisma-labs/graphql-request
 
 ## Constructors
 
-### new GraphQLRequestClient()
+### Constructor
 
-> **new GraphQLRequestClient**(`endpoint`, `clientConfig`?): [`GraphQLRequestClient`](GraphQLRequestClient.md)
+> **new GraphQLRequestClient**(`endpoint`, `clientConfig?`): `GraphQLRequestClient`
 
 Defined in: packages/core/types/graphql-request-client.d.ts:89
 
@@ -30,17 +30,17 @@ Provides ability to execute graphql query using given `endpoint`
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `endpoint` | `string` | The Graphql endpoint |
-| `clientConfig`? | `GraphQLRequestClientConfig` | GraphQL request client configuration. |
+| `clientConfig?` | `GraphQLRequestClientConfig` | GraphQL request client configuration. |
 
 #### Returns
 
-[`GraphQLRequestClient`](GraphQLRequestClient.md)
+`GraphQLRequestClient`
 
 ## Methods
 
 ### request()
 
-> **request**\<`T`\>(`query`, `variables`?, `options`?): `Promise`\<`T`\>
+> **request**\<`T`\>(`query`, `variables?`, `options?`): `Promise`\<`T`\>
 
 Defined in: packages/core/types/graphql-request-client.d.ts:102
 
@@ -57,8 +57,8 @@ Execute graphql request
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `query` | `string` \| `DocumentNode` | graphql query |
-| `variables`? | \{\} | - |
-| `options`? | `FetchOptions` | Options for configuring a GraphQL request. |
+| `variables?` | \{[`key`: `string`]: `unknown`; \} | - |
+| `options?` | `FetchOptions` | Options for configuring a GraphQL request. |
 
 #### Returns
 

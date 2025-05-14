@@ -11,10 +11,12 @@ export type ComponentPropsCollection = {
   [componentUid: string]: unknown | ComponentPropsError;
 };
 
+export type NextContext = GetServerSidePropsContext | GetStaticPropsContext;
+
 /**
  * Type of side effect function which could be invoked on component level (getStaticProps/getServerSideProps)
  */
-export type ComponentPropsFetchFunction<NextContext, FetchedProps = unknown> = {
+export type ComponentPropsFetchFunction<FetchedProps = unknown> = {
   (rendering: ComponentRendering, layoutData: LayoutServiceData, context: NextContext): Promise<
     FetchedProps
   >;
@@ -28,16 +30,19 @@ export type ComponentPropsFetchFunction<NextContext, FetchedProps = unknown> = {
  *
  * The returned props are passed directly to the component at render time.
  */
-export type GetComponentServerProps = ComponentPropsFetchFunction<
-  GetServerSidePropsContext | GetStaticPropsContext
->;
+export type GetComponentServerProps = ComponentPropsFetchFunction;
 
 /**
  * Represents a nextjs component import
  */
 export type NextjsJssComponent = ReactJssComponent & {
   /**
-   * function for component level data fetching in both SSR and SSG
+   * Defines the shape of a data-fetching function used at the component level.
+   *
+   * This function can be used in both **Server-Side Rendering (SSR)** and **Static Site Generation (SSG)** contexts.
+   * It enables component-specific data loading that integrates with Next.js rendering flows.
+   *
+   * The returned props are passed directly to the component at render time.
    */
   getComponentServerProps?: GetComponentServerProps;
   /**

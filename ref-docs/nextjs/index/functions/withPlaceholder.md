@@ -6,7 +6,7 @@
 
 # Function: withPlaceholder()
 
-> **withPlaceholder**(`placeholders`, `options`?): (`WrappedComponent`) => (`props`) => `React.JSX.Element`
+> **withPlaceholder**(`placeholders`, `options?`): (`WrappedComponent`) => (`props`) => `Element`
 
 Defined in: react/types/enhancers/withPlaceholder.d.ts:34
 
@@ -15,28 +15,28 @@ Defined in: react/types/enhancers/withPlaceholder.d.ts:34
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `placeholders` | `WithPlaceholderSpec` |  |
-| `options`? | `WithPlaceholderOptions` |  |
+| `options?` | `WithPlaceholderOptions` |  |
 
 ## Returns
 
-`Function`
+> (`WrappedComponent`): (`props`) => `Element`
 
 ### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `WrappedComponent` | `React.ComponentClass`\<`PlaceholderProps`\> \| `React.FunctionComponent`\<`PlaceholderProps`\> |
+| `WrappedComponent` | `ComponentClass`\<`PlaceholderProps`, `any`\> \| `FunctionComponent`\<`PlaceholderProps`\> |
 
 ### Returns
 
-`Function`
+> (`props`): `Element`
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | `EnhancedOmit` |
+| `props` | `EnhancedOmit`\<`PlaceholderProps`, keyof [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)\> |
 
 #### Returns
 
-`React.JSX.Element`
+`Element`

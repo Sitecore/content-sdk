@@ -6,22 +6,24 @@
 
 # Type Alias: RobotsQueryResult
 
-> **RobotsQueryResult**: `object`
+> **RobotsQueryResult** = `object`
 
 Defined in: core/types/site/graphql-robots-service.d.ts:17
 
 The schema of data returned in response to robots.txt request
 
-## Type declaration
+## Properties
 
 ### site
 
 > **site**: `object`
 
-#### site.siteInfo
+Defined in: core/types/site/graphql-robots-service.d.ts:18
+
+#### siteInfo
 
 > **siteInfo**: `object`
 
-#### site.siteInfo.robots
+##### siteInfo.robots
 
 > **robots**: `string`

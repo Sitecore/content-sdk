@@ -6,9 +6,9 @@
 
 # Type Alias: NativeDataFetcherError
 
-> **NativeDataFetcherError**: `Error` & `object`
+> **NativeDataFetcherError** = `Error` & `object`
 
-Defined in: [packages/core/src/native-fetcher.ts:37](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/core/src/native-fetcher.ts#L37)
+Defined in: [packages/core/src/native-fetcher.ts:37](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/core/src/native-fetcher.ts#L37)
 
 Native fetcher error type to include response text and status
 

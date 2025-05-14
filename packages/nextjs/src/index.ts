@@ -42,6 +42,7 @@ export {
   GraphQLDictionaryService,
   GraphQLDictionaryServiceConfig,
 } from '@sitecore-content-sdk/core/i18n';
+
 export {
   personalizeLayout,
   getPersonalizedRewrite,
@@ -49,22 +50,18 @@ export {
   getGroomedVariantIds,
   normalizePersonalizedRewrite,
   CdpHelper,
+  GraphQLPersonalizeService,
 } from '@sitecore-content-sdk/core/personalize';
-
-export {
-  ComponentPropsCollection,
-  ComponentPropsError,
-  NextjsJssComponent,
-  GetComponentServerProps,
-} from './sharedTypes/component-props';
-
-export { SitecorePageProps } from './sharedTypes/sitecore-page-props';
-
-export { ComponentPropsService } from './services/component-props-service';
 
 export {
   GraphQLSitePathService,
   GraphQLSitePathServiceConfig,
+  GraphQLRedirectsService,
+  GraphQLRedirectsServiceConfig,
+  REDIRECT_TYPE_301,
+  REDIRECT_TYPE_302,
+  REDIRECT_TYPE_SERVER_TRANSFER,
+  RedirectInfo,
 } from '@sitecore-content-sdk/core/site';
 
 export { StaticPath } from '@sitecore-content-sdk/core';
@@ -86,6 +83,17 @@ export {
   getSiteRewriteData,
   normalizeSiteRewrite,
 } from '@sitecore-content-sdk/core/site';
+
+export {
+  ComponentPropsCollection,
+  ComponentPropsError,
+  NextjsJssComponent,
+  GetComponentServerProps,
+} from './sharedTypes/component-props';
+
+export { SitecorePageProps } from './sharedTypes/sitecore-page-props';
+
+export { ComponentPropsService } from './services/component-props-service';
 
 export {
   ComponentPropsReactContext,
@@ -129,19 +137,19 @@ export {
   DefaultEmptyFieldEditingComponentImage,
   DefaultEmptyFieldEditingComponentText,
   PlaceholderComponentProps,
-  SitecoreContext,
-  SitecoreContextState,
-  SitecoreContextValue,
-  SitecoreContextReactContext,
-  withSitecoreContext,
-  useSitecoreContext,
+  SitecoreProvider,
+  SitecoreProviderState,
+  SitecoreProviderPageContext,
+  SitecoreProviderReactContext,
+  withSitecore,
+  useSitecore,
   withEditorChromes,
   withPlaceholder,
   withDatasourceCheck,
   ImageSizeParameters,
-  WithSitecoreContextOptions,
-  WithSitecoreContextProps,
-  WithSitecoreContextHocProps,
+  WithSitecoreOptions,
+  WithSitecoreProps,
+  WithSitecoreHocProps,
   withFieldMetadata,
   withEmptyFieldEditingComponent,
   EditingScripts,

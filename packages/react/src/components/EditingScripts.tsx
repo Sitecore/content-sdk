@@ -1,6 +1,6 @@
 ﻿import React, { JSX } from 'react';
 import { LayoutServicePageState, RenderingType } from '@sitecore-content-sdk/core/layout';
-import { useSitecoreContext } from '../enhancers/withSitecoreContext';
+import { useSitecore } from '../enhancers/withSitecore';
 import { getJssPagesClientData } from '@sitecore-content-sdk/core/editing';
 import { getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
 
@@ -23,8 +23,8 @@ export type EditingScriptsProps = {
  */
 export const EditingScripts = (props: EditingScriptsProps): JSX.Element => {
   const {
-    sitecoreContext: { pageState, clientData, clientScripts, renderingType },
-  } = useSitecoreContext();
+    pageContext: { pageState, clientData, clientScripts, renderingType },
+  } = useSitecore();
 
   // Don't render anything if not in editing/preview mode and rendering type is not component
   if (

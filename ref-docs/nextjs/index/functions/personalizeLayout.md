@@ -6,7 +6,7 @@
 
 # Function: personalizeLayout()
 
-> **personalizeLayout**(`layout`, `variantId`, `componentVariantIds`?): [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\> \| `undefined`
+> **personalizeLayout**(`layout`, `variantId`, `componentVariantIds?`): `undefined` \| [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
 
 Defined in: core/types/personalize/layout-personalizer.d.ts:13
 
@@ -18,8 +18,8 @@ Apply personalization to layout data. This will recursively go through all place
 | ------ | ------ | ------ |
 | `layout` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) | Layout data |
 | `variantId` | `string` | variant id |
-| `componentVariantIds`? | `string`[] | component variant ids |
+| `componentVariantIds?` | `string`[] | component variant ids |
 
 ## Returns
 
-[`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\> \| `undefined`
+`undefined` \| [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>

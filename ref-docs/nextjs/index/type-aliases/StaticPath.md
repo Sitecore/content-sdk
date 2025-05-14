@@ -6,22 +6,28 @@
 
 # Type Alias: StaticPath
 
-> **StaticPath**: `object`
+> **StaticPath** = `object`
 
 Defined in: core/types/models.d.ts:44
 
 Object model of a sitemap's site page item.
 
-## Type declaration
+## Properties
 
 ### locale?
 
 > `optional` **locale**: `string`
 
+Defined in: core/types/models.d.ts:48
+
+***
+
 ### params
 
 > **params**: `object`
 
-#### params.path
+Defined in: core/types/models.d.ts:45
+
+#### path
 
 > **path**: `string`[]

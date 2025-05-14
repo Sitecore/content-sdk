@@ -6,8 +6,9 @@
 
 ## Namespaces
 
-- [constants](namespaces/constants/README.md)
-- [mediaApi](namespaces/mediaApi/README.md)
+- [constants](@sitecore-content-sdk/namespaces/constants/README.md)
+- [File](@sitecore-content-sdk/namespaces/File/README.md)
+- [mediaApi](@sitecore-content-sdk/namespaces/mediaApi/README.md)
 
 ## Enumerations
 
@@ -25,7 +26,7 @@
 - [GraphQLSitePathService](classes/GraphQLSitePathService.md)
 - [MemoryCacheClient](classes/MemoryCacheClient.md)
 - [NativeDataFetcher](classes/NativeDataFetcher.md)
-- [SitecoreContext](classes/SitecoreContext.md)
+- [SitecoreProvider](classes/SitecoreProvider.md)
 
 ## Interfaces
 
@@ -56,10 +57,10 @@
 - [RichTextField](interfaces/RichTextField.md)
 - [RichTextProps](interfaces/RichTextProps.md)
 - [RouteData](interfaces/RouteData.md)
-- [SitecoreContextState](interfaces/SitecoreContextState.md)
+- [SitecoreProviderState](interfaces/SitecoreProviderState.md)
 - [TextField](interfaces/TextField.md)
-- [WithSitecoreContextOptions](interfaces/WithSitecoreContextOptions.md)
-- [WithSitecoreContextProps](interfaces/WithSitecoreContextProps.md)
+- [WithSitecoreOptions](interfaces/WithSitecoreOptions.md)
+- [WithSitecoreProps](interfaces/WithSitecoreProps.md)
 
 ## Type Aliases
 
@@ -75,40 +76,43 @@
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
 - [ReactJssComponent](type-aliases/ReactJssComponent.md)
 - [ReactModule](type-aliases/ReactModule.md)
-- [SitecoreContextValue](type-aliases/SitecoreContextValue.md)
-- [WithSitecoreContextHocProps](type-aliases/WithSitecoreContextHocProps.md)
+- [SitecoreProviderPageContext](type-aliases/SitecoreProviderPageContext.md)
+- [WithSitecoreHocProps](type-aliases/WithSitecoreHocProps.md)
+
+## Variables
+
+- [DateField](variables/DateField.md)
+- [DefaultEmptyFieldEditingComponentImage](variables/DefaultEmptyFieldEditingComponentImage.md)
+- [DefaultEmptyFieldEditingComponentText](variables/DefaultEmptyFieldEditingComponentText.md)
+- [enableDebug](variables/enableDebug.md)
+- [File](variables/File.md)
+- [getContentStylesheetLink](variables/getContentStylesheetLink.md)
+- [Image](variables/Image.md)
+- [isEditorActive](variables/isEditorActive.md)
+- [Link](variables/Link.md)
+- [Placeholder](variables/Placeholder.md)
+- [resetEditorChromes](variables/resetEditorChromes.md)
+- [RichText](variables/RichText.md)
+- [SitecoreProviderReactContext](variables/SitecoreProviderReactContext.md)
+- [Text](variables/Text.md)
 
 ## Functions
 
 - [BYOCWrapper](functions/BYOCWrapper.md)
-- [DateField](functions/DateField.md)
-- [DefaultEmptyFieldEditingComponentImage](functions/DefaultEmptyFieldEditingComponentImage.md)
-- [DefaultEmptyFieldEditingComponentText](functions/DefaultEmptyFieldEditingComponentText.md)
 - [DesignLibrary](functions/DesignLibrary.md)
 - [EditingScripts](functions/EditingScripts.md)
-- [enableDebug](functions/enableDebug.md)
 - [FEaaSComponent](functions/FEaaSComponent.md)
 - [FEaaSWrapper](functions/FEaaSWrapper.md)
 - [fetchBYOCComponentServerProps](functions/fetchBYOCComponentServerProps.md)
 - [fetchFEaaSComponentServerProps](functions/fetchFEaaSComponentServerProps.md)
-- [File](functions/File.md)
 - [Form](functions/Form.md)
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
-- [getContentStylesheetLink](functions/getContentStylesheetLink.md)
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getFieldValue](functions/getFieldValue.md)
-- [Image](functions/Image.md)
-- [isEditorActive](functions/isEditorActive.md)
-- [Link](functions/Link.md)
-- [Placeholder](functions/Placeholder.md)
-- [resetEditorChromes](functions/resetEditorChromes.md)
-- [RichText](functions/RichText.md)
-- [SitecoreContextReactContext](functions/SitecoreContextReactContext.md)
-- [Text](functions/Text.md)
-- [useSitecoreContext](functions/useSitecoreContext.md)
+- [useSitecore](functions/useSitecore.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEditorChromes](functions/withEditorChromes.md)
 - [withEmptyFieldEditingComponent](functions/withEmptyFieldEditingComponent.md)
 - [withFieldMetadata](functions/withFieldMetadata.md)
 - [withPlaceholder](functions/withPlaceholder.md)
-- [withSitecoreContext](functions/withSitecoreContext.md)
+- [withSitecore](functions/withSitecore.md)

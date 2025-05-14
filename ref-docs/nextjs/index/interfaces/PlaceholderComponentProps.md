@@ -22,7 +22,7 @@ Defined in: react/types/components/Placeholder.d.ts:4
 
 > `optional` **componentLoadingMessage**: `string`
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:66
+Defined in: react/types/components/PlaceholderCommon.d.ts:67
 
 The message that gets displayed while component is loading
 
@@ -39,7 +39,7 @@ The message that gets displayed while component is loading
 Defined in: react/types/components/PlaceholderCommon.d.ts:23
 
 Component Map will be used to map Sitecore component names to app implementation
-When rendered within a <SitecoreContext> component, defaults to the context componentMap.
+When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
 
 #### Inherited from
 
@@ -49,7 +49,7 @@ When rendered within a <SitecoreContext> component, defaults to the context comp
 
 ### errorComponent?
 
-> `optional` **errorComponent**: `ComponentClass`\<`ErrorComponentProps`\> \| `FC`\<`ErrorComponentProps`\>
+> `optional` **errorComponent**: `ComponentClass`\<`ErrorComponentProps`, `any`\> \| `FC`\<`ErrorComponentProps`\>
 
 Defined in: react/types/components/PlaceholderCommon.d.ts:58
 
@@ -73,7 +73,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 #### Index Signature
 
-\[`name`: `string`\]: [`Field`](Field.md) \| [`Item`](Item.md) \| [`Item`](Item.md)[]
+\[`name`: `string`\]: [`Field`](Field.md)\<`GenericFieldValue`\> \| [`Item`](Item.md) \| [`Item`](Item.md)[]
 
 #### Inherited from
 
@@ -83,7 +83,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 ### hiddenRenderingComponent?
 
-> `optional` **hiddenRenderingComponent**: `ComponentClass`\<`unknown`\> \| `FC`\<`unknown`\>
+> `optional` **hiddenRenderingComponent**: `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\>
 
 Defined in: react/types/components/PlaceholderCommon.d.ts:53
 
@@ -97,7 +97,7 @@ A component that is rendered in place of any components that are hidden
 
 ### missingComponentComponent?
 
-> `optional` **missingComponentComponent**: `ComponentClass`\<`unknown`\> \| `FC`\<`unknown`\>
+> `optional` **missingComponentComponent**: `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\>
 
 Defined in: react/types/components/PlaceholderCommon.d.ts:49
 
@@ -151,6 +151,21 @@ Name of the placeholder to render.
 
 ***
 
+### pageContext
+
+> **pageContext**: [`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md)
+
+Defined in: react/types/components/PlaceholderCommon.d.ts:63
+
+Page context data.
+This data is passed by the SitecoreProvider.
+
+#### Inherited from
+
+`PlaceholderProps.pageContext`
+
+***
+
 ### params?
 
 > `optional` **params**: `object`
@@ -184,7 +199,7 @@ Useful for techniques like wrapping each child in a wrapper component.
 | Parameter | Type |
 | ------ | ------ |
 | `components` | `ReactNode`[] |
-| `data` | [`ComponentRendering`](ComponentRendering.md)[] |
+| `data` | [`ComponentRendering`](ComponentRendering.md)\<[`ComponentFields`](ComponentFields.md)\>[] |
 | `props` | `PlaceholderProps` |
 
 #### Returns
@@ -237,7 +252,7 @@ Render props function that is called when the placeholder contains no content co
 
 ### rendering
 
-> **rendering**: [`ComponentRendering`](ComponentRendering.md) \| [`RouteData`](RouteData.md)
+> **rendering**: [`ComponentRendering`](ComponentRendering.md)\<[`ComponentFields`](ComponentFields.md)\> \| [`RouteData`](RouteData.md)\<`Record`\<`string`, [`Field`](Field.md)\<`GenericFieldValue`\> \| [`Item`](Item.md) \| [`Item`](Item.md)[]\>\>
 
 Defined in: react/types/components/PlaceholderCommon.d.ts:18
 
@@ -246,17 +261,3 @@ Rendering data to be used when rendering the placeholder.
 #### Inherited from
 
 `PlaceholderProps.rendering`
-
-***
-
-### sitecoreContext
-
-> **sitecoreContext**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
-
-Defined in: react/types/components/PlaceholderCommon.d.ts:62
-
-Context data from the Sitecore Layout Service
-
-#### Inherited from
-
-`PlaceholderProps.sitecoreContext`

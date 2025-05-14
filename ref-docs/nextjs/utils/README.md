@@ -6,11 +6,15 @@
 
 # utils
 
+## Variables
+
+- [isEditorActive](variables/isEditorActive.md)
+- [resetEditorChromes](variables/resetEditorChromes.md)
+- [tryParseEnvValue](variables/tryParseEnvValue.md)
+
 ## Functions
 
 - [extractPath](functions/extractPath.md)
 - [handleEditorFastRefresh](functions/handleEditorFastRefresh.md)
-- [isEditorActive](functions/isEditorActive.md)
-- [resetEditorChromes](functions/resetEditorChromes.md)
+- [isServerSidePropsContext](functions/isServerSidePropsContext.md)
 - [resolveUrl](functions/resolveUrl.md)
-- [tryParseEnvValue](functions/tryParseEnvValue.md)

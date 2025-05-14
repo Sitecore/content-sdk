@@ -5,7 +5,7 @@ import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { render } from '@testing-library/react';
 import { withComponentMap } from './withComponentMap';
-import { ComponentMapReactContext } from '../components/SitecoreContext';
+import { ComponentMapReactContext } from '../components/SitecoreProvider';
 
 use(sinonChai);
 

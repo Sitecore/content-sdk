@@ -6,16 +6,22 @@
 
 # Type Alias: ComponentPropsError
 
-> **ComponentPropsError**: `object`
+> **ComponentPropsError** = `object`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/93bfa9084ba33bdc1f85e58c883ff7f5ab420ed2/packages/nextjs/src/sharedTypes/component-props.ts#L5)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/d43cd6b87786479497db0c411c900beadb8b920e/packages/nextjs/src/sharedTypes/component-props.ts#L5)
 
-## Type declaration
+## Properties
 
 ### componentName
 
 > **componentName**: `string`
 
+Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/d43cd6b87786479497db0c411c900beadb8b920e/packages/nextjs/src/sharedTypes/component-props.ts#L5)
+
+***
+
 ### error
 
 > **error**: `string`
+
+Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/d43cd6b87786479497db0c411c900beadb8b920e/packages/nextjs/src/sharedTypes/component-props.ts#L5)

@@ -1,5 +1,4 @@
-﻿import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
-import chalk from 'chalk';
+﻿import chalk from 'chalk';
 import {
   LayoutServiceData,
   ComponentRendering,
@@ -8,30 +7,31 @@ import {
 import {
   ComponentPropsCollection,
   ComponentPropsFetchFunction,
+  NextContext,
   NextjsJssComponent,
 } from '../sharedTypes/component-props';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 
-export type FetchComponentPropsArguments<NextContext> = {
+export type FetchComponentPropsArguments = {
   layoutData: LayoutServiceData;
   context: NextContext;
   components: ComponentMap<NextjsJssComponent>;
 };
 
-export type ComponentPropsRequest<NextContext> = {
-  fetch: ComponentPropsFetchFunction<NextContext>;
+export type ComponentPropsRequest = {
+  fetch: ComponentPropsFetchFunction;
   layoutData: LayoutServiceData;
   rendering: ComponentRendering;
   context: NextContext;
 };
 
-type FetchFunctionFactory<NextContext> = (
+type FetchFunctionFactory = (
   componentName: string
-) => Promise<ComponentPropsFetchFunction<NextContext> | undefined>;
+) => Promise<ComponentPropsFetchFunction | undefined>;
 
 export class ComponentPropsService {
   async fetchComponentProps(
-    params: FetchComponentPropsArguments<GetServerSidePropsContext | GetStaticPropsContext>
+    params: FetchComponentPropsArguments
   ): Promise<ComponentPropsCollection> {
     const { layoutData, context, components } = params;
     const fetchFunctionFactory = async (componentName: string) =>
@@ -50,19 +50,19 @@ export class ComponentPropsService {
    * Write result in requests variable
    * @param {object} params params
    * @param {PlaceholdersData} [params.placeholders]
-   * @param {FetchFunctionFactory<NextContext>} params.fetchFunctionFactory
+   * @param {FetchFunctionFactory} params.fetchFunctionFactory
    * @param {LayoutServiceData} params.layoutData
    * @param {NextContext} params.context
-   * @param {ComponentPropsRequest<NextContext>[]} params.requests
-   * @returns {ComponentPropsRequest<NextContext>[]} array of requests
+   * @param {ComponentPropsRequest[]} params.requests
+   * @returns {ComponentPropsRequest[]} array of requests
    */
-  protected async collectRequests<NextContext>(params: {
+  protected async collectRequests(params: {
     placeholders?: PlaceholdersData;
-    fetchFunctionFactory: FetchFunctionFactory<NextContext>;
+    fetchFunctionFactory: FetchFunctionFactory;
     layoutData: LayoutServiceData;
     context: NextContext;
-    requests?: ComponentPropsRequest<NextContext>[];
-  }): Promise<ComponentPropsRequest<NextContext>[]> {
+    requests?: ComponentPropsRequest[];
+  }): Promise<ComponentPropsRequest[]> {
     const { placeholders = {}, fetchFunctionFactory, layoutData, context } = params;
 
     // Will be called on first round
@@ -101,11 +101,11 @@ export class ComponentPropsService {
 
   /**
    * Execute request for component props
-   * @param {ComponentPropsRequest<NextContext>[]} requests requests
+   * @param {ComponentPropsRequest[]} requests requests
    * @returns {Promise<ComponentPropsCollection>} requests result
    */
-  protected async execRequests<NextContext>(
-    requests: ComponentPropsRequest<NextContext>[]
+  protected async execRequests(
+    requests: ComponentPropsRequest[]
   ): Promise<ComponentPropsCollection> {
     const componentProps: ComponentPropsCollection = {};
 

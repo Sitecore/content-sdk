@@ -1,7 +1,7 @@
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { expect } from 'chai';
-import { SitecoreContext } from './SitecoreContext';
+import { SitecoreProvider } from './SitecoreProvider';
 import { Form, mockFormModule } from './Form';
 import sinon from 'sinon';
 
@@ -62,9 +62,9 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreContext api={context.api} layoutData={context.layoutData.normal}>
+      <SitecoreProvider api={context.api} layoutData={context.layoutData.normal}>
         <Form rendering={rendering} params={rendering.params} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -104,9 +104,9 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreContext api={context.api} layoutData={context.layoutData.editing}>
+      <SitecoreProvider api={context.api} layoutData={context.layoutData.editing}>
         <Form rendering={rendering} params={rendering.params} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     await waitFor(() => {
@@ -144,9 +144,9 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreContext api={context.api} layoutData={context.layoutData.normal}>
+      <SitecoreProvider api={context.api} layoutData={context.layoutData.normal}>
         <Form rendering={rendering} params={rendering.params} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
     await waitFor(() => {
       expect(loadFormSpy.calledOnce).to.be.true;
@@ -177,18 +177,18 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreContext api={context.api} layoutData={context.layoutData.editing}>
+      <SitecoreProvider api={context.api} layoutData={context.layoutData.editing}>
         <Form rendering={rendering} params={rendering.params} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
     await waitFor(() => {
       // react test library doesn't update html otherwise
       rendered.rerender(
-        <SitecoreContext api={context.api} layoutData={context.layoutData.editing}>
+        <SitecoreProvider api={context.api} layoutData={context.layoutData.editing}>
           <Form rendering={rendering} params={rendering.params} />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
       expect(loadFormSpy.calledOnce).to.be.true;
       expect(subscribeToFormSubmitEventSpy.notCalled).to.be.true;

@@ -1,5 +1,5 @@
 import React, { JSX } from 'react';
-import { ComponentMapReactContext } from '../components/SitecoreContext';
+import { ComponentMapReactContext } from '../components/SitecoreProvider';
 import { useContext } from 'react';
 import { ComponentMap } from '../components/sharedTypes';
 

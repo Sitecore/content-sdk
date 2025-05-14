@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { fireEvent, render } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../test-data/component-editing-data';
-import { SitecoreContext } from './SitecoreContext';
+import { SitecoreProvider } from './SitecoreProvider';
 import { RichText } from './RichText';
 import { Text } from './Text';
 import { Placeholder } from '..';
@@ -63,9 +63,9 @@ describe('<DesignLibrary />', () => {
     const basicPage = getTestLayoutData();
     // don't wrap the content in divs
     const rendered = render(
-      <SitecoreContext componentMap={components}>
+      <SitecoreProvider componentMap={components}>
         <DesignLibrary {...basicPage.layoutData} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
     expect(rendered.baseElement.innerHTML).to.equal(
@@ -81,9 +81,9 @@ describe('<DesignLibrary />', () => {
   it('should render component with placeholders', () => {
     const placeholderPage = getTestLayoutData(true);
     const rendered = render(
-      <SitecoreContext componentMap={components} layoutData={placeholderPage.layoutData}>
+      <SitecoreProvider componentMap={components} layoutData={placeholderPage.layoutData}>
         <DesignLibrary {...placeholderPage.layoutData} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -108,9 +108,9 @@ describe('<DesignLibrary />', () => {
       'test-content'
     );
     const rendered = render(
-      <SitecoreContext componentMap={components} layoutData={basicPage.layoutData}>
+      <SitecoreProvider componentMap={components} layoutData={basicPage.layoutData}>
         <DesignLibrary {...basicPage.layoutData} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -133,9 +133,9 @@ describe('<DesignLibrary />', () => {
   it('should update root component', async () => {
     const basicPage = getTestLayoutData();
     const rendered = render(
-      <SitecoreContext componentMap={components} layoutData={basicPage.layoutData}>
+      <SitecoreProvider componentMap={components} layoutData={basicPage.layoutData}>
         <DesignLibrary {...basicPage.layoutData} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -167,9 +167,9 @@ describe('<DesignLibrary />', () => {
     const basicPage = getTestLayoutData();
     const placeholderPage = getTestLayoutData(true);
     const rendered = render(
-      <SitecoreContext componentMap={components} layoutData={basicPage.layoutData}>
+      <SitecoreProvider componentMap={components} layoutData={basicPage.layoutData}>
         <DesignLibrary {...placeholderPage.layoutData} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -208,9 +208,9 @@ describe('<DesignLibrary />', () => {
   it('should send render event when component is updated', async () => {
     const basicPage = getTestLayoutData();
     const rendered = render(
-      <SitecoreContext componentMap={components}>
+      <SitecoreProvider componentMap={components}>
         <DesignLibrary {...basicPage.layoutData} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     await sendUpdateEvent({

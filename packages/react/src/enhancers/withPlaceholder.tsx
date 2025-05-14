@@ -2,7 +2,7 @@
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
 import { PlaceholderProps, PlaceholderCommon } from '../components/PlaceholderCommon';
 import { withComponentMap } from './withComponentMap';
-import { withSitecoreContext } from './withSitecoreContext';
+import { withSitecore } from './withSitecore';
 
 export interface WithPlaceholderOptions {
   /**
@@ -90,7 +90,7 @@ export function withPlaceholder(
             placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
               renderingData,
               placeholder.placeholder,
-              childProps.sitecoreContext.pageEditing
+              childProps.pageContext.pageEditing
             );
             if (placeholderData) {
               childProps[placeholder.prop] = this.getComponentsForRenderingData(placeholderData);
@@ -99,7 +99,7 @@ export function withPlaceholder(
             placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
               renderingData,
               placeholder as string,
-              childProps.sitecoreContext.pageEditing
+              childProps.pageContext.pageEditing
             );
             if (placeholderData) {
               childProps[placeholder as string] = this.getComponentsForRenderingData(
@@ -113,6 +113,6 @@ export function withPlaceholder(
       }
     }
 
-    return withSitecoreContext()(withComponentMap(WithPlaceholder));
+    return withSitecore()(withComponentMap(WithPlaceholder));
   };
 }

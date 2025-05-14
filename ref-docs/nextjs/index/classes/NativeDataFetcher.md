@@ -10,9 +10,9 @@ Defined in: core/types/native-fetcher.d.ts:44
 
 ## Constructors
 
-### new NativeDataFetcher()
+### Constructor
 
-> **new NativeDataFetcher**(`config`?): [`NativeDataFetcher`](NativeDataFetcher.md)
+> **new NativeDataFetcher**(`config?`): `NativeDataFetcher`
 
 Defined in: core/types/native-fetcher.d.ts:47
 
@@ -20,11 +20,11 @@ Defined in: core/types/native-fetcher.d.ts:47
 
 | Parameter | Type |
 | ------ | ------ |
-| `config`? | [`NativeDataFetcherConfig`](../type-aliases/NativeDataFetcherConfig.md) |
+| `config?` | [`NativeDataFetcherConfig`](../type-aliases/NativeDataFetcherConfig.md) |
 
 #### Returns
 
-[`NativeDataFetcher`](NativeDataFetcher.md)
+`NativeDataFetcher`
 
 ## Properties
 
@@ -38,7 +38,7 @@ Defined in: core/types/native-fetcher.d.ts:45
 
 ### delete()
 
-> **delete**\<`T`\>(`url`, `options`?): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
+> **delete**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
 Defined in: core/types/native-fetcher.d.ts:76
 
@@ -55,7 +55,7 @@ Perform a DELETE request
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `url` | `string` | The URL to request (may include query string) |
-| `options`? | `RequestInit` | Fetch options |
+| `options?` | `RequestInit` | Fetch options |
 
 #### Returns
 
@@ -67,7 +67,7 @@ response
 
 ### extractDebugHeaders()
 
-> `protected` **extractDebugHeaders**(`incomingHeaders`?): `object`
+> `protected` **extractDebugHeaders**(`incomingHeaders?`): `object`
 
 Defined in: core/types/native-fetcher.d.ts:103
 
@@ -77,7 +77,7 @@ Safely extract all headers for debug logging
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `incomingHeaders`? | `HeadersInit` | Incoming headers |
+| `incomingHeaders?` | `HeadersInit` | Incoming headers |
 
 #### Returns
 
@@ -89,7 +89,7 @@ Object with headers as key/value pairs
 
 ### fetch()
 
-> **fetch**\<`T`\>(`url`, `options`?): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
+> **fetch**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
 Defined in: core/types/native-fetcher.d.ts:54
 
@@ -106,7 +106,7 @@ Implements a data fetcher.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `url` | `string` | The URL to request (may include query string) |
-| `options`? | `RequestInit` | Optional fetch options |
+| `options?` | `RequestInit` | Optional fetch options |
 
 #### Returns
 
@@ -118,7 +118,7 @@ response
 
 ### get()
 
-> **get**\<`T`\>(`url`, `options`?): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
+> **get**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
 Defined in: core/types/native-fetcher.d.ts:61
 
@@ -135,7 +135,7 @@ Perform a GET request
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `url` | `string` | The URL to request (may include query string) |
-| `options`? | `RequestInit` | Fetch options |
+| `options?` | `RequestInit` | Fetch options |
 
 #### Returns
 
@@ -147,7 +147,7 @@ response
 
 ### getRequestInit()
 
-> `protected` **getRequestInit**(`init`?): `RequestInit`
+> `protected` **getRequestInit**(`init?`): `RequestInit`
 
 Defined in: core/types/native-fetcher.d.ts:97
 
@@ -157,7 +157,7 @@ Determines settings for the request
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `init`? | `RequestInit` | Custom settings for request |
+| `init?` | `RequestInit` | Custom settings for request |
 
 #### Returns
 
@@ -169,7 +169,7 @@ The final request settings
 
 ### head()
 
-> **head**\<`T`\>(`url`, `options`?): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
+> **head**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
 Defined in: core/types/native-fetcher.d.ts:91
 
@@ -186,7 +186,7 @@ Perform a HEAD request
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `url` | `string` | The URL to request (may include query string) |
-| `options`? | `RequestInit` | Fetch options |
+| `options?` | `RequestInit` | Fetch options |
 
 #### Returns
 
@@ -198,7 +198,7 @@ response
 
 ### post()
 
-> **post**\<`T`\>(`url`, `body`, `options`?): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
+> **post**\<`T`\>(`url`, `body`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
 Defined in: core/types/native-fetcher.d.ts:69
 
@@ -216,7 +216,7 @@ Perform a POST request
 | ------ | ------ | ------ |
 | `url` | `string` | The URL to request (may include query string) |
 | `body` | `unknown` | The data to send with the request |
-| `options`? | `RequestInit` | Fetch options |
+| `options?` | `RequestInit` | Fetch options |
 
 #### Returns
 
@@ -228,7 +228,7 @@ response
 
 ### put()
 
-> **put**\<`T`\>(`url`, `body`, `options`?): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
+> **put**\<`T`\>(`url`, `body`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
 Defined in: core/types/native-fetcher.d.ts:84
 
@@ -246,7 +246,7 @@ Perform a PUT request
 | ------ | ------ | ------ |
 | `url` | `string` | The URL to request (may include query string) |
 | `body` | `unknown` | The data to send with the request |
-| `options`? | `RequestInit` | Fetch options |
+| `options?` | `RequestInit` | Fetch options |
 
 #### Returns
 

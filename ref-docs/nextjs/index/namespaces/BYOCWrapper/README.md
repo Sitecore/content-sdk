@@ -6,8 +6,7 @@
 
 # BYOCWrapper
 
-## Functions
+## Variables
 
-- [default](functions/default.md)
-- [getServerSideProps](functions/getServerSideProps.md)
-- [getStaticProps](functions/getStaticProps.md)
+- [default](variables/default.md)
+- [getComponentServerProps](variables/getComponentServerProps.md)

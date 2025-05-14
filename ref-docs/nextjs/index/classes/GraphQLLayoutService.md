@@ -20,9 +20,9 @@ GraphQLRequestClient
 
 ## Constructors
 
-### new GraphQLLayoutService()
+### Constructor
 
-> **new GraphQLLayoutService**(`serviceConfig`): [`GraphQLLayoutService`](GraphQLLayoutService.md)
+> **new GraphQLLayoutService**(`serviceConfig`): `GraphQLLayoutService`
 
 Defined in: core/types/layout/graphql-layout-service.d.ts:19
 
@@ -32,11 +32,11 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `serviceConfig` | `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery`: `null` \| (`siteName`, `itemPath`, `locale`?) => `string`; \}\> | configuration |
+| `serviceConfig` | `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\> | configuration |
 
 #### Returns
 
-[`GraphQLLayoutService`](GraphQLLayoutService.md)
+`GraphQLLayoutService`
 
 #### Overrides
 
@@ -58,7 +58,7 @@ Defined in: core/types/sitecore-service-base.d.ts:19
 
 ### serviceConfig
 
-> **serviceConfig**: `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery`: `null` \| (`siteName`, `itemPath`, `locale`?) => `string`; \}\>
+> **serviceConfig**: `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\>
 
 Defined in: core/types/layout/graphql-layout-service.d.ts:14
 
@@ -85,7 +85,7 @@ Optional debug logger override
 
 ### fetchLayoutData()
 
-> **fetchLayoutData**(`itemPath`, `routeOptions`?, `fetchOptions`?): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
+> **fetchLayoutData**(`itemPath`, `routeOptions?`, `fetchOptions?`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
 Defined in: core/types/layout/graphql-layout-service.d.ts:27
 
@@ -96,8 +96,8 @@ Fetch layout data for an item.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `itemPath` | `string` | item path to fetch layout data for. |
-| `routeOptions`? | `RouteOptions` | Request options like language and site to retrieve data for |
-| `fetchOptions`? | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
+| `routeOptions?` | `RouteOptions` | Request options like language and site to retrieve data for |
+| `fetchOptions?` | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
 
 #### Returns
 
@@ -133,7 +133,7 @@ implementation
 
 ### getLayoutQuery()
 
-> `protected` **getLayoutQuery**(`itemPath`, `site`?, `language`?): `string`
+> `protected` **getLayoutQuery**(`itemPath`, `site?`, `language?`): `string`
 
 Defined in: core/types/layout/graphql-layout-service.d.ts:35
 
@@ -144,8 +144,8 @@ Returns GraphQL Layout query
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `itemPath` | `string` | page route |
-| `site`? | `string` | site name |
-| `language`? | `string` | language |
+| `site?` | `string` | site name |
+| `language?` | `string` | language |
 
 #### Returns
 
