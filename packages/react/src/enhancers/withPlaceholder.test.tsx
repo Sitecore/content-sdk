@@ -84,7 +84,7 @@ describe('withPlaceholder HOC', () => {
 
     it('should render default error component on wrapped component error', () => {
       const phKey = 'page-content';
-      const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
         name: phKey,
         rendering: (null as unknown) as ComponentRendering,
       };
@@ -104,7 +104,7 @@ describe('withPlaceholder HOC', () => {
 
     it('should render custom component error on wrapped component error, when provided', () => {
       const phKey = 'page-content';
-      const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
         name: phKey,
         rendering: (null as unknown) as ComponentRendering,
         errorComponent: ErrorMessageComponent,
@@ -127,7 +127,7 @@ describe('withPlaceholder HOC', () => {
         | RouteData
       )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
       const phKey = 'page-content';
-      const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
         name: phKey,
         rendering: component,
       };
@@ -156,7 +156,7 @@ describe('withPlaceholder HOC', () => {
         | RouteData
       )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
       const phKey = 'page-content';
-      const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
         name: phKey,
         rendering: component,
         errorComponent: ErrorMessageComponent,
@@ -188,7 +188,7 @@ describe('withPlaceholder HOC', () => {
           | RouteData
         )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
         const phKey = 'page-content';
-        const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+        const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
           name: phKey,
           rendering: component,
         };
@@ -215,7 +215,7 @@ describe('withPlaceholder HOC', () => {
           placeholder: 'page-header',
           prop: 'subProp',
         };
-        const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+        const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
           name: 'page-header',
           rendering: component,
         };
@@ -248,7 +248,7 @@ describe('withPlaceholder HOC', () => {
             return { ...props, reset: true };
           },
         };
-        const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+        const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
           name: 'page-header',
           rendering: component,
         };
@@ -292,7 +292,7 @@ describe('withPlaceholder HOC', () => {
     it('should render a placeholder with given key', () => {
       const component = layoutData.sitecore.route;
       const phKey = 'main';
-      const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
         name: phKey,
         rendering: component,
       };
@@ -328,7 +328,7 @@ describe('withPlaceholder HOC', () => {
         placeholder: phKey,
         prop: 'subProp',
       };
-      const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
         name: phKey,
         rendering: component,
       };
@@ -361,7 +361,7 @@ describe('withPlaceholder HOC', () => {
     it('should render code blocks even if placeholder is empty', () => {
       const component = layoutDataWithEmptyPlaceholder.sitecore.route;
       const phKey = 'main';
-      const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
         name: phKey,
         rendering: component,
       };
@@ -385,7 +385,7 @@ describe('withPlaceholder HOC', () => {
     it('should render missing component with code blocks if component is not registered', () => {
       const component = layoutDataWithUnknownComponent.sitecore.route;
       const phKey = 'main';
-      const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
         name: phKey,
         rendering: component,
       };
@@ -413,7 +413,7 @@ describe('withPlaceholder HOC', () => {
       const phKey = 'container-1';
       const layoutData = layoutDataForNestedDynamicPlaceholder('container-{*}');
       const component = layoutData.sitecore.route;
-      const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
         name: phKey,
         rendering: component,
       };
@@ -446,7 +446,7 @@ describe('withPlaceholder HOC', () => {
       const phKey = 'container-1-2';
       const layoutData = layoutDataForNestedDynamicPlaceholder('container-1-{*}');
       const component = layoutData.sitecore.route;
-      const props: EnhancedOmit<PlaceholderProps, 'context'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
         name: phKey,
         rendering: component,
       };
