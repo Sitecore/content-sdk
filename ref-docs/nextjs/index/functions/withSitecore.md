@@ -2,19 +2,19 @@
 
 ***
 
-[@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / withSitecoreContext
+[@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / withSitecore
 
-# Function: withSitecoreContext()
+# Function: withSitecore()
 
-> **withSitecoreContext**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element`
+> **withSitecore**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element`
 
-Defined in: react/types/enhancers/withSitecoreContext.d.ts:16
+Defined in: react/types/enhancers/withSitecore.d.ts:30
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `options?` | [`WithSitecoreContextOptions`](../interfaces/WithSitecoreContextOptions.md) |  |
+| `options?` | [`WithSitecoreOptions`](../interfaces/WithSitecoreOptions.md) |  |
 
 ## Returns
 
@@ -24,7 +24,7 @@ Defined in: react/types/enhancers/withSitecoreContext.d.ts:16
 
 | Type Parameter |
 | ------ |
-| `ComponentProps` *extends* [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md) |
+| `ComponentProps` *extends* [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md) |
 
 ### Parameters
 
