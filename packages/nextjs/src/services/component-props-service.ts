@@ -25,20 +25,14 @@ export type ComponentPropsRequest = {
   context: NextContext;
 };
 
-type FetchFunctionFactory = (
-  componentName: string
-) => Promise<ComponentPropsFetchFunction | undefined>;
-
 export class ComponentPropsService {
   async fetchComponentProps(
     params: FetchComponentPropsArguments
   ): Promise<ComponentPropsCollection> {
     const { layoutData, context, components } = params;
-    const fetchFunctionFactory = async (componentName: string) =>
-      (await this.getModule(components, componentName))?.getComponentServerProps;
     const requests = await this.collectRequests({
       placeholders: layoutData.sitecore.route?.placeholders,
-      fetchFunctionFactory,
+      components,
       layoutData,
       context,
     });
@@ -50,7 +44,7 @@ export class ComponentPropsService {
    * Write result in requests variable
    * @param {object} params params
    * @param {PlaceholdersData} [params.placeholders]
-   * @param {FetchFunctionFactory} params.fetchFunctionFactory
+   * @param {ComponentMap} params.components
    * @param {LayoutServiceData} params.layoutData
    * @param {NextContext} params.context
    * @param {ComponentPropsRequest[]} params.requests
@@ -58,12 +52,12 @@ export class ComponentPropsService {
    */
   protected async collectRequests(params: {
     placeholders?: PlaceholdersData;
-    fetchFunctionFactory: FetchFunctionFactory;
+    components: ComponentMap<NextjsJssComponent>;
     layoutData: LayoutServiceData;
     context: NextContext;
     requests?: ComponentPropsRequest[];
   }): Promise<ComponentPropsRequest[]> {
-    const { placeholders = {}, fetchFunctionFactory, layoutData, context } = params;
+    const { placeholders = {}, components, layoutData, context } = params;
 
     // Will be called on first round
     if (!params.requests) {
@@ -73,7 +67,8 @@ export class ComponentPropsService {
     const renderings = this.flatRenderings(placeholders);
 
     const actions = renderings.map(async (r) => {
-      const fetchFunc = await fetchFunctionFactory(r.componentName);
+      const fetchFunc = (await this.getModule(components, r.componentName))
+        ?.getComponentServerProps;
 
       if (fetchFunc) {
         params.requests &&
