@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import config from 'sitecore.config';
 import {
   LayoutServicePageState,
-  SitecoreContextReactContext,
+  SitecoreProviderReactContext,
 } from '@sitecore-content-sdk/nextjs';
 /**
  * This is an out-of-box bundler for External components (BYOC) (see Sitecore documentation for more details)
@@ -27,13 +27,13 @@ FEAAS.enableNextClientsideComponents(dynamic, ClientBundle);
 import './index.hybrid';
 
 const BYOCInit = (): JSX.Element | null => {
-  const sitecoreContext = React.useContext(SitecoreContextReactContext).context;
+  const pageContext = React.useContext(SitecoreProviderReactContext).pageContext;
   // Set context properties to be available within BYOC components
   FEAAS.setContextProperties({
     sitecoreEdgeUrl: config.api.edge?.edgeUrl,
     sitecoreEdgeContextId: config.api.edge?.contextId,
-    pageState: sitecoreContext?.pageState || LayoutServicePageState.Normal,
-    siteName: sitecoreContext?.site?.name || config.defaultSite,
+    pageState: pageContext?.pageState || LayoutServicePageState.Normal,
+    siteName: pageContext?.site?.name || config.defaultSite,
     eventsSDK: Events,
   });
 

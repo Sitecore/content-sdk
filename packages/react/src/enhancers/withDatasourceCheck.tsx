@@ -1,6 +1,6 @@
 ﻿import React, { JSX } from 'react';
 import { ComponentRendering, RenderingType } from '@sitecore-content-sdk/core/layout';
-import { useSitecoreContext } from './withSitecoreContext';
+import { useSitecore } from './withSitecore';
 
 export const DefaultEditingError = (): JSX.Element => (
   <div className="sc-jss-editing-error" role="alert">
@@ -32,15 +32,15 @@ export function withDatasourceCheck(options?: WithDatasourceCheckOptions) {
     Component: React.ComponentType<ComponentProps>
   ) {
     return function WithDatasourceCheck(props: ComponentProps) {
-      const { sitecoreContext } = useSitecoreContext();
+      const { pageContext } = useSitecore();
       const EditingError = options?.editingErrorComponent ?? DefaultEditingError;
 
       // If the component is rendered in DesignLibrary, we don't need to check for datasource
-      const isDesignLibrary = sitecoreContext?.renderingType === RenderingType.Component;
+      const isDesignLibrary = pageContext?.renderingType === RenderingType.Component;
 
       return isDesignLibrary || props.rendering?.dataSource ? (
         <Component {...props} />
-      ) : sitecoreContext.pageEditing ? (
+      ) : pageContext.pageEditing ? (
         <EditingError />
       ) : null;
     };

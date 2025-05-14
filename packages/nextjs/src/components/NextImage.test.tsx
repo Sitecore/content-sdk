@@ -8,7 +8,7 @@ import {
   ImageField,
   DefaultEmptyFieldEditingComponentImage,
   LayoutServicePageState,
-  SitecoreContextReactContext,
+  SitecoreProviderReactContext,
 } from '@sitecore-content-sdk/react';
 import { RenderingType } from '@sitecore-content-sdk/core/layout';
 import { ImageLoader } from 'next/image';
@@ -20,7 +20,7 @@ use(sinonChai);
 const setContext = spy();
 const expect = chai.use(chaiString).expect;
 const testContextProps = {
-  context: {
+  pageContext: {
     pageState: LayoutServicePageState.Normal,
   },
   setContext,
@@ -50,9 +50,9 @@ describe('<NextImage />', () => {
     };
 
     const mounted = render(
-      <SitecoreContextReactContext.Provider value={testContextProps}>
+      <SitecoreProviderReactContext.Provider value={testContextProps}>
         <NextImage loader={mockLoader} {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     );
 
     const rendered = mounted.container.querySelectorAll('img');
@@ -82,9 +82,9 @@ describe('<NextImage />', () => {
     };
 
     const rendered = render(
-      <SitecoreContextReactContext.Provider value={testContextProps}>
+      <SitecoreProviderReactContext.Provider value={testContextProps}>
         <NextImage loader={mockLoader} {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     ).container.querySelectorAll('img');
 
     const img = rendered[0];
@@ -114,9 +114,9 @@ describe('<NextImage />', () => {
         value: { src: '/assets/img/test0.png', alt: 'my image', width: 200, height: 400 },
       };
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testContextProps}>
+        <SitecoreProviderReactContext.Provider value={testContextProps}>
           <NextImage loader={mockLoader} {...props} field={field} fill />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       ).container.querySelectorAll('img');
 
       const img = rendered[0];
@@ -144,9 +144,9 @@ describe('<NextImage />', () => {
       className: 'the-dude-abides',
     };
     const rendered = render(
-      <SitecoreContextReactContext.Provider value={testContextProps}>
+      <SitecoreProviderReactContext.Provider value={testContextProps}>
         <NextImage loader={mockLoader} {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     ).container.querySelectorAll('img');
 
     const img = rendered[0];
@@ -181,9 +181,9 @@ describe('<NextImage />', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testContextProps}>
+        <SitecoreProviderReactContext.Provider value={testContextProps}>
           <NextImage loader={mockLoader} {...props} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       ).container.querySelectorAll('img');
 
       const img = rendered[0];
@@ -213,9 +213,9 @@ describe('<NextImage />', () => {
         mediaUrlPrefix: /\/([-~]{1})assets\//i,
       };
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testContextProps}>
+        <SitecoreProviderReactContext.Provider value={testContextProps}>
           <NextImage loader={mockLoader} {...props} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
 
       const img1 = rendered.container.querySelector('img');
@@ -228,9 +228,9 @@ describe('<NextImage />', () => {
         field: { src: '/-assets/img/test0.png' },
       };
       const rendered2 = render(
-        <SitecoreContextReactContext.Provider value={testContextProps}>
+        <SitecoreProviderReactContext.Provider value={testContextProps}>
           <NextImage loader={mockLoader} {...props2} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
 
       const img2 = rendered2.container.querySelector('img');
@@ -259,9 +259,9 @@ describe('<NextImage />', () => {
         mediaUrlPrefix: /\/([-~]{1})assets\//i,
       };
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testContextProps}>
+        <SitecoreProviderReactContext.Provider value={testContextProps}>
           <NextImage loader={mockLoader} {...props} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
 
       const img1 = rendered.container.querySelector('img');
@@ -276,9 +276,9 @@ describe('<NextImage />', () => {
         height: 10,
       };
       const rendered2 = render(
-        <SitecoreContextReactContext.Provider value={testContextProps}>
+        <SitecoreProviderReactContext.Provider value={testContextProps}>
           <NextImage loader={mockLoader} {...props2} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
       const img2 = rendered2.container.querySelector('img');
       expect(img2?.getAttribute('src')).to.equal(
@@ -296,9 +296,9 @@ describe('<NextImage />', () => {
     it('should render no image when field prop is empty', () => {
       const img = '' as ImageField;
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testContextProps}>
+        <SitecoreProviderReactContext.Provider value={testContextProps}>
           <NextImage field={img} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
       expect(rendered.container.querySelectorAll('img')).to.have.length(0);
     });
@@ -312,9 +312,9 @@ describe('<NextImage />', () => {
       };
       expect(() =>
         render(
-          <SitecoreContextReactContext.Provider value={testContextProps}>
+          <SitecoreProviderReactContext.Provider value={testContextProps}>
             <NextImage src={src} field={field} />
-          </SitecoreContextReactContext.Provider>
+          </SitecoreProviderReactContext.Provider>
         )
       ).to.throw('Detected src prop. If you wish to use src, use next/image directly.');
     });
@@ -333,9 +333,9 @@ describe('<NextImage />', () => {
     };
 
     const rendered = render(
-      <SitecoreContextReactContext.Provider value={testContextProps}>
+      <SitecoreProviderReactContext.Provider value={testContextProps}>
         <NextImage {...props} />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     ).container.querySelectorAll('img');
 
     const img = rendered[0];
@@ -355,7 +355,7 @@ describe('<NextImage />', () => {
   describe('editMode metadata', () => {
     const testEditingContext = {
       ...testContextProps,
-      context: {
+      pageContext: {
         pageState: LayoutServicePageState.Edit,
       },
     };
@@ -378,9 +378,9 @@ describe('<NextImage />', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testEditingContext}>
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
           <NextImage field={field} fill={true} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
       // we expect imgSrc from nextjs optimizations to be absent in editing/metadata mode
       expect(rendered.container.innerHTML).to.equal(
@@ -401,9 +401,9 @@ describe('<NextImage />', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testEditingContext}>
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
           <NextImage field={field} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
       const defaultEmptyImagePlaceholder = render(<DefaultEmptyFieldEditingComponentImage />);
       expect(rendered.container.innerHTML).to.equal(
@@ -424,9 +424,9 @@ describe('<NextImage />', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testEditingContext}>
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
           <NextImage field={field} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
       const defaultEmptyImagePlaceholder = render(<DefaultEmptyFieldEditingComponentImage />);
       expect(rendered.container.innerHTML).to.equal(
@@ -451,9 +451,9 @@ describe('<NextImage />', () => {
       );
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testEditingContext}>
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
           <NextImage field={field} emptyFieldEditingComponent={EmptyFieldEditingComponent} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
 
       expect(rendered.container.innerHTML).to.equal(
@@ -478,9 +478,9 @@ describe('<NextImage />', () => {
       );
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testEditingContext}>
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
           <NextImage field={field} emptyFieldEditingComponent={EmptyFieldEditingComponent} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
 
       expect(rendered.container.innerHTML).to.equal(
@@ -501,9 +501,9 @@ describe('<NextImage />', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testEditingContext}>
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
           <NextImage field={field} editable={false} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
 
       expect(rendered.container.innerHTML).to.equal('');
@@ -516,9 +516,9 @@ describe('<NextImage />', () => {
       };
 
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testEditingContext}>
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
           <NextImage field={field} editable={false} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
 
       expect(rendered.container.innerHTML).to.equal('');
@@ -537,14 +537,14 @@ describe('<NextImage />', () => {
     it('should render unoptimized image in edit mode', () => {
       const testEditingContext = {
         ...testContextProps,
-        context: {
+        pageContext: {
           pageState: LayoutServicePageState.Edit,
         },
       };
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testEditingContext}>
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
           <NextImage loader={mockLoader} {...props} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       ).container.querySelector('img');
       expect(rendered?.getAttribute('data-unoptimized')).to.equal('true');
     });
@@ -552,14 +552,14 @@ describe('<NextImage />', () => {
     it('should render unoptimized image in preview mode', () => {
       const testEditingContext = {
         ...testContextProps,
-        context: {
+        pageContext: {
           pageState: LayoutServicePageState.Preview,
         },
       };
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testEditingContext}>
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
           <NextImage loader={mockLoader} {...props} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       ).container.querySelector('img');
       expect(rendered?.getAttribute('data-unoptimized')).to.equal('true');
     });
@@ -567,15 +567,15 @@ describe('<NextImage />', () => {
     it('should render unoptimized image in component rendering type', () => {
       const testEditingContext = {
         ...testContextProps,
-        context: {
-          ...testContextProps.context,
+        pageContext: {
+          ...testContextProps.pageContext,
           renderingType: RenderingType.Component,
         },
       };
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testEditingContext}>
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
           <NextImage loader={mockLoader} {...props} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       ).container.querySelector('img');
       expect(rendered?.getAttribute('data-unoptimized')).to.equal('true');
     });
@@ -586,9 +586,9 @@ describe('<NextImage />', () => {
         unoptimized: true,
       };
       const rendered = render(
-        <SitecoreContextReactContext.Provider value={testContextProps}>
+        <SitecoreProviderReactContext.Provider value={testContextProps}>
           <NextImage loader={mockLoader} {...modifiedProps} />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       ).container.querySelector('img');
       expect(rendered?.getAttribute('data-unoptimized')).to.equal('true');
     });

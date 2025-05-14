@@ -12,6 +12,41 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🛠 Breaking Changes
+
+* `[react]` `[nextjs]` Refactor `SitecoreContext` naming to `SitecoreProvider` ([95](https://github.com/Sitecore/content-sdk/pull/95)):
+
+  We’ve revisited and improved the `SitecoreContext` naming for clarity and consistency. This affects component names, types, hook, and HOC.
+  
+  #### Component Renames
+
+  - Component:
+    - `SitecoreContext` → `SitecoreProvider`
+
+  - Properties:
+    - `context` property renamed to `pageContext` to clarify that it holds **page-specific data** only
+
+  - Interfaces:
+    - `SitecoreContextValue` → `SitecoreProviderPageContext`
+    - `SitecoreContextReactContext` → `SitecoreProviderReactContext`
+    - `SitecoreContextState` → `SitecoreProviderState`
+    - `SitecoreContextProps` → `SitecoreProviderProps`
+
+  #### Hook and HOC Renames
+
+  - Functions:
+    - `withSitecoreContext` → `withSitecore`  
+    - `useSitecoreContext` → `useSitecore`  
+
+  - Properties:
+    - `updateSitecoreContext` property -> `updateContext`
+    - `sitecoreContext`  property -> `pageContext`
+
+  - Interfaces:
+    - `WithSitecoreContextOptions` → `WithSitecoreOptions`
+    - `WithSitecoreContextProps` → `WithSitecoreProps`
+    - `WithSitecoreContextHocProps` → `WithSitecoreHocProps`
+
 ## 0.2.0
 
 ### 🎉 New Features & Improvements

@@ -5,17 +5,17 @@ import { fireEvent, render } from '@testing-library/react';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { useSitecoreContext, withSitecoreContext } from '../enhancers/withSitecoreContext';
-import { SitecoreContextReactContext } from '../components/SitecoreContext';
+import { useSitecore, withSitecore } from '../enhancers/withSitecore';
+import { SitecoreProviderReactContext } from '../components/SitecoreProvider';
 
 use(sinonChai);
 
-describe('withSitecoreContext', () => {
-  it('withSitecoreContext()', () => {
+describe('withSitecore', () => {
+  it('withSitecore()', () => {
     const setContext = spy();
 
     const testComponentProps = {
-      context: {
+      pageContext: {
         text: 'value',
       },
       api: {
@@ -29,8 +29,8 @@ describe('withSitecoreContext', () => {
 
     const TestComponent: React.FC<any> = (props: any) => (
       <>
-        <div onClick={props.updateSitecoreContext}>
-          {props.sitecoreContext.text}
+        <div onClick={props.updateContext}>
+          {props.pageContext.text}
           {props.customProp}
         </div>
         <span>
@@ -39,29 +39,29 @@ describe('withSitecoreContext', () => {
       </>
     );
 
-    let TestComponentWithContext: React.FC<any> = withSitecoreContext()(TestComponent);
+    let TestComponentWithContext: React.FC<any> = withSitecore()(TestComponent);
 
     let wrapper = render(
-      <SitecoreContextReactContext.Provider value={testComponentProps}>
+      <SitecoreProviderReactContext.Provider value={testComponentProps}>
         <TestComponentWithContext customProp="xxx" />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     );
 
     expect(wrapper.container.querySelector('span')?.textContent).equal('id url');
     expect(wrapper.container.querySelector('div')?.textContent).equal(
-      testComponentProps.context.text + 'xxx'
+      testComponentProps.pageContext.text + 'xxx'
     );
     fireEvent.click(wrapper.container.querySelector('div') as Element);
 
     // eslint-disable-next-line no-unused-expressions
     expect(testComponentProps.setContext).not.to.be.called;
 
-    TestComponentWithContext = withSitecoreContext({ updatable: true })(TestComponent);
+    TestComponentWithContext = withSitecore({ updatable: true })(TestComponent);
 
     wrapper = render(
-      <SitecoreContextReactContext.Provider value={testComponentProps}>
+      <SitecoreProviderReactContext.Provider value={testComponentProps}>
         <TestComponentWithContext customProp="xxx" />
-      </SitecoreContextReactContext.Provider>
+      </SitecoreProviderReactContext.Provider>
     );
 
     fireEvent.click(wrapper.container.querySelector('div') as Element);
@@ -70,12 +70,12 @@ describe('withSitecoreContext', () => {
     expect(testComponentProps.setContext).to.have.been.called;
   });
 
-  describe('useSitecoreContext()', () => {
+  describe('useSitecore()', () => {
     it('context access', () => {
       const setContext = spy();
 
       const testComponentProps = {
-        context: {
+        pageContext: {
           text: 'value',
         },
         api: {
@@ -88,12 +88,12 @@ describe('withSitecoreContext', () => {
       };
 
       const TestComponent: React.FC<any> = (props: any) => {
-        const reactContext = useSitecoreContext();
-        const context = reactContext.sitecoreContext as { text: string };
+        const reactContext = useSitecore();
+        const context = reactContext.pageContext as { text: string };
 
         return (
           <>
-            <div onClick={reactContext.updateSitecoreContext}>
+            <div onClick={reactContext.updateContext}>
               {context.text}
               {props.customProp}
             </div>
@@ -105,13 +105,13 @@ describe('withSitecoreContext', () => {
       };
 
       const wrapper = render(
-        <SitecoreContextReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={testComponentProps}>
           <TestComponent customProp="xxx" />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
 
       expect(wrapper.container.querySelector('div')?.textContent).equal(
-        testComponentProps.context.text + 'xxx'
+        testComponentProps.pageContext.text + 'xxx'
       );
       expect(wrapper.container.querySelector('span')?.textContent).equal('id url');
       fireEvent.click(wrapper.container.querySelector('div') as Element);
@@ -124,18 +124,18 @@ describe('withSitecoreContext', () => {
       const setContext = spy();
 
       const testComponentProps = {
-        context: {
+        pageContext: {
           text: 'value',
         },
         setContext,
       };
 
       const TestComponent: React.FC<any> = (props: any) => {
-        const reactContext = useSitecoreContext({ updatable: true });
-        const context = reactContext.sitecoreContext as { text: string };
+        const reactContext = useSitecore({ updatable: true });
+        const context = reactContext.pageContext as { text: string };
 
         return (
-          <div onClick={reactContext.updateSitecoreContext}>
+          <div onClick={reactContext.updateContext}>
             {context.text}
             {props.customProp}
           </div>
@@ -143,13 +143,13 @@ describe('withSitecoreContext', () => {
       };
 
       const wrapper = render(
-        <SitecoreContextReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={testComponentProps}>
           <TestComponent customProp="bbb" />
-        </SitecoreContextReactContext.Provider>
+        </SitecoreProviderReactContext.Provider>
       );
 
       expect(wrapper.container.querySelector('div')?.textContent).equal(
-        testComponentProps.context.text + 'bbb'
+        testComponentProps.pageContext.text + 'bbb'
       );
       fireEvent.click(wrapper.container.querySelector('div') as Element);
 

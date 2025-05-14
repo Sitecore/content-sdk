@@ -8,7 +8,7 @@ import {
   RenderingType,
 } from '@sitecore-content-sdk/core/layout';
 import { EditingScripts } from './EditingScripts';
-import { SitecoreContext } from './SitecoreContext';
+import { SitecoreProvider } from './SitecoreProvider';
 import {
   getJssPagesClientData,
   getDesignLibraryScriptLink,
@@ -67,9 +67,9 @@ describe('<EditingScripts />', () => {
     });
 
     const component = render(
-      <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+      <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
         <EditingScripts />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -84,9 +84,9 @@ describe('<EditingScripts />', () => {
     });
 
     const component = render(
-      <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+      <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
         <EditingScripts />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -102,9 +102,9 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
           <EditingScripts />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
 
       const scripts = component.baseElement;
@@ -142,9 +142,9 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
           <EditingScripts />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
 
       const scripts = component.baseElement;
@@ -167,9 +167,9 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
           <EditingScripts />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
 
       const scripts = component.baseElement;
@@ -190,9 +190,9 @@ describe('<EditingScripts />', () => {
       const stagingEdgeUrl = 'http://edge-staging';
 
       const component = render(
-        <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
           <EditingScripts sitecoreEdgeUrl={stagingEdgeUrl} />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
 
       const scripts = component.baseElement;
