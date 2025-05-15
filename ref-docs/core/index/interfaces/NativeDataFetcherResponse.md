@@ -6,7 +6,7 @@
 
 # Interface: NativeDataFetcherResponse\<T\>
 
-Defined in: [packages/core/src/native-fetcher.ts:23](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/core/src/native-fetcher.ts#L23)
+Defined in: [packages/core/src/native-fetcher.ts:23](https://github.com/Sitecore/content-sdk/blob/4b51519c85e68fe45f6c2a51c165a6b484cea0c0/packages/core/src/native-fetcher.ts#L23)
 
 Response data for an HTTP request sent to an API
 
@@ -22,7 +22,7 @@ Response data for an HTTP request sent to an API
 
 > **data**: `T`
 
-Defined in: [packages/core/src/native-fetcher.ts:29](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/core/src/native-fetcher.ts#L29)
+Defined in: [packages/core/src/native-fetcher.ts:29](https://github.com/Sitecore/content-sdk/blob/4b51519c85e68fe45f6c2a51c165a6b484cea0c0/packages/core/src/native-fetcher.ts#L29)
 
 Response content
 
@@ -32,7 +32,7 @@ Response content
 
 > `optional` **headers**: `HeadersInit`
 
-Defined in: [packages/core/src/native-fetcher.ts:31](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/core/src/native-fetcher.ts#L31)
+Defined in: [packages/core/src/native-fetcher.ts:31](https://github.com/Sitecore/content-sdk/blob/4b51519c85e68fe45f6c2a51c165a6b484cea0c0/packages/core/src/native-fetcher.ts#L31)
 
 Response headers
 
@@ -42,7 +42,7 @@ Response headers
 
 > **status**: `number`
 
-Defined in: [packages/core/src/native-fetcher.ts:25](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/core/src/native-fetcher.ts#L25)
+Defined in: [packages/core/src/native-fetcher.ts:25](https://github.com/Sitecore/content-sdk/blob/4b51519c85e68fe45f6c2a51c165a6b484cea0c0/packages/core/src/native-fetcher.ts#L25)
 
 HTTP status code of the response (i.e. 200, 404)
 
@@ -52,6 +52,6 @@ HTTP status code of the response (i.e. 200, 404)
 
 > **statusText**: `string`
 
-Defined in: [packages/core/src/native-fetcher.ts:27](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/core/src/native-fetcher.ts#L27)
+Defined in: [packages/core/src/native-fetcher.ts:27](https://github.com/Sitecore/content-sdk/blob/4b51519c85e68fe45f6c2a51c165a6b484cea0c0/packages/core/src/native-fetcher.ts#L27)
 
 HTTP status text of the response (i.e. 'OK', 'Bad Request')
