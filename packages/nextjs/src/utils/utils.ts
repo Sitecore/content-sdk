@@ -53,3 +53,13 @@ export const extractPath = (context: GetStaticPropsContext | GetServerSidePropsC
     ? context.params.path.join('/')
     : context.params.path ?? '/';
 };
+
+/**
+ * Determines whether context is GetServerSidePropsContext (SSR) or GetStaticPropsContext (SSG)
+ * @param {GetServerSidePropsContext | GetStaticPropsContext} context
+ */
+export const isServerSidePropsContext = (
+  context: GetServerSidePropsContext | GetStaticPropsContext
+): context is GetServerSidePropsContext => {
+  return (<GetServerSidePropsContext>context).req !== undefined;
+};

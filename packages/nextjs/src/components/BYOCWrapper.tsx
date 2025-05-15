@@ -3,10 +3,7 @@
   BYOCComponentParams,
   fetchBYOCComponentServerProps,
 } from '@sitecore-content-sdk/react';
-import {
-  GetStaticComponentProps,
-  GetServerSideComponentProps,
-} from '../sharedTypes/component-props';
+import { GetComponentServerProps } from '../sharedTypes/component-props';
 
 /**
  * TODO: remove when framework agnostic forms implemented
@@ -15,22 +12,11 @@ import {
  */
 
 /**
- * Will be called during SSG
+ * Will be called during SSG or SSR
  * @param {ComponentRendering} rendering
- * @returns {GetStaticPropsContext} context
+ * @returns {GetStaticPropsContext | GetStaticPropsContext} context with type depending on SSR or SSG mode
  */
-export const getStaticProps: GetStaticComponentProps = async (rendering) => {
-  const params: BYOCComponentParams = rendering.params || {};
-  const result = await fetchBYOCComponentServerProps(params);
-  return result;
-};
-
-/**
- * Will be called during SSR
- * @param {ComponentRendering} rendering
- * @returns {GetStaticPropsContext} context
- */
-export const getServerSideProps: GetServerSideComponentProps = async (rendering) => {
+export const getComponentServerProps: GetComponentServerProps = async (rendering) => {
   const params: BYOCComponentParams = rendering.params || {};
   const result = await fetchBYOCComponentServerProps(params);
   return result;

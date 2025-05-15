@@ -1,5 +1,4 @@
-﻿import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
-import chalk from 'chalk';
+﻿import chalk from 'chalk';
 import {
   LayoutServiceData,
   ComponentRendering,
@@ -8,54 +7,36 @@ import {
 import {
   ComponentPropsCollection,
   ComponentPropsFetchFunction,
+  NextContext,
   NextjsJssComponent,
 } from '../sharedTypes/component-props';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 
-export type FetchComponentPropsArguments<NextContext> = {
+export type FetchComponentPropsArguments = {
   layoutData: LayoutServiceData;
   context: NextContext;
   components: ComponentMap<NextjsJssComponent>;
 };
 
-export type ComponentPropsRequest<NextContext> = {
-  fetch: ComponentPropsFetchFunction<NextContext>;
+export type ComponentPropsRequest = {
+  fetch: ComponentPropsFetchFunction;
   layoutData: LayoutServiceData;
   rendering: ComponentRendering;
   context: NextContext;
 };
 
-type FetchFunctionFactory<NextContext> = (
-  componentName: string
-) => Promise<ComponentPropsFetchFunction<NextContext> | undefined>;
-
 export class ComponentPropsService {
   async fetchComponentProps(
-    params: FetchComponentPropsArguments<GetServerSidePropsContext | GetStaticPropsContext>
+    params: FetchComponentPropsArguments
   ): Promise<ComponentPropsCollection> {
     const { layoutData, context, components } = params;
-    if (this.isServerSidePropsContext(context)) {
-      const fetchFunctionFactory = async (componentName: string) =>
-        (await this.getModule(components, componentName))?.getServerSideProps;
-      const requests = await this.collectRequests({
-        placeholders: layoutData.sitecore.route?.placeholders,
-        fetchFunctionFactory,
-        layoutData,
-        context,
-      });
-      return await this.execRequests(requests);
-    } else {
-      const fetchFunctionFactory = async (componentName: string) =>
-        (await this.getModule(components, componentName))?.getStaticProps;
-
-      const requests = await this.collectRequests({
-        placeholders: layoutData.sitecore.route?.placeholders,
-        fetchFunctionFactory,
-        layoutData,
-        context,
-      });
-      return await this.execRequests(requests);
-    }
+    const requests = await this.collectRequests({
+      placeholders: layoutData.sitecore.route?.placeholders,
+      components,
+      layoutData,
+      context,
+    });
+    return await this.execRequests(requests);
   }
 
   /**
@@ -63,20 +44,20 @@ export class ComponentPropsService {
    * Write result in requests variable
    * @param {object} params params
    * @param {PlaceholdersData} [params.placeholders]
-   * @param {FetchFunctionFactory<NextContext>} params.fetchFunctionFactory
+   * @param {ComponentMap} params.components
    * @param {LayoutServiceData} params.layoutData
    * @param {NextContext} params.context
-   * @param {ComponentPropsRequest<NextContext>[]} params.requests
-   * @returns {ComponentPropsRequest<NextContext>[]} array of requests
+   * @param {ComponentPropsRequest[]} params.requests
+   * @returns {ComponentPropsRequest[]} array of requests
    */
-  protected async collectRequests<NextContext>(params: {
+  protected async collectRequests(params: {
     placeholders?: PlaceholdersData;
-    fetchFunctionFactory: FetchFunctionFactory<NextContext>;
+    components: ComponentMap<NextjsJssComponent>;
     layoutData: LayoutServiceData;
     context: NextContext;
-    requests?: ComponentPropsRequest<NextContext>[];
-  }): Promise<ComponentPropsRequest<NextContext>[]> {
-    const { placeholders = {}, fetchFunctionFactory, layoutData, context } = params;
+    requests?: ComponentPropsRequest[];
+  }): Promise<ComponentPropsRequest[]> {
+    const { placeholders = {}, components, layoutData, context } = params;
 
     // Will be called on first round
     if (!params.requests) {
@@ -86,7 +67,8 @@ export class ComponentPropsService {
     const renderings = this.flatRenderings(placeholders);
 
     const actions = renderings.map(async (r) => {
-      const fetchFunc = await fetchFunctionFactory(r.componentName);
+      const fetchFunc = (await this.getModule(components, r.componentName))
+        ?.getComponentServerProps;
 
       if (fetchFunc) {
         params.requests &&
@@ -114,11 +96,11 @@ export class ComponentPropsService {
 
   /**
    * Execute request for component props
-   * @param {ComponentPropsRequest<NextContext>[]} requests requests
+   * @param {ComponentPropsRequest[]} requests requests
    * @returns {Promise<ComponentPropsCollection>} requests result
    */
-  protected async execRequests<NextContext>(
-    requests: ComponentPropsRequest<NextContext>[]
+  protected async execRequests(
+    requests: ComponentPropsRequest[]
   ): Promise<ComponentPropsCollection> {
     const componentProps: ComponentPropsCollection = {};
 
@@ -181,17 +163,6 @@ export class ComponentPropsService {
     });
 
     return allComponentRenderings;
-  }
-
-  // TODO: remove when unifying server/static component props
-  /**
-   * Determines whether context is GetServerSidePropsContext (SSR) or GetStaticPropsContext (SSG)
-   * @param {GetServerSidePropsContext | GetStaticPropsContext} context
-   */
-  private isServerSidePropsContext(
-    context: GetServerSidePropsContext | GetStaticPropsContext
-  ): context is GetServerSidePropsContext {
-    return (<GetServerSidePropsContext>context).req !== undefined;
   }
 
   private async getModule(components: ComponentMap<NextjsJssComponent>, componentName: string) {

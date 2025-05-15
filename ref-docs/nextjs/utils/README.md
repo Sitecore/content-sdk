@@ -16,4 +16,5 @@
 
 - [extractPath](functions/extractPath.md)
 - [handleEditorFastRefresh](functions/handleEditorFastRefresh.md)
+- [isServerSidePropsContext](functions/isServerSidePropsContext.md)
 - [resolveUrl](functions/resolveUrl.md)

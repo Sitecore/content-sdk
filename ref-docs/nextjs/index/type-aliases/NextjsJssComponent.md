@@ -8,7 +8,7 @@
 
 > **NextjsJssComponent** = `ReactJssComponent` & `object`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:36](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/nextjs/src/sharedTypes/component-props.ts#L36)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:38](https://github.com/Sitecore/content-sdk/blob/d43cd6b87786479497db0c411c900beadb8b920e/packages/nextjs/src/sharedTypes/component-props.ts#L38)
 
 Represents a nextjs component import
 
@@ -24,14 +24,13 @@ Optional dynamic import for lazy components - allows component props retrieval
 
 `Promise`\<`ReactJssComponent`\>
 
-### getServerSideProps?
+### getComponentServerProps?
 
-> `optional` **getServerSideProps**: [`GetServerSideComponentProps`](GetServerSideComponentProps.md)
+> `optional` **getComponentServerProps**: [`GetComponentServerProps`](GetComponentServerProps.md)
 
-function for component level data fetching in SSR mode
+Defines the shape of a data-fetching function used at the component level.
 
-### getStaticProps?
+This function can be used in both **Server-Side Rendering (SSR)** and **Static Site Generation (SSG)** contexts.
+It enables component-specific data loading that integrates with Next.js rendering flows.
 
-> `optional` **getStaticProps**: [`GetStaticComponentProps`](GetStaticComponentProps.md)
-
-function for component level data fetching in SSG mode
+The returned props are passed directly to the component at render time.

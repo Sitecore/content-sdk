@@ -87,9 +87,8 @@ export {
 export {
   ComponentPropsCollection,
   ComponentPropsError,
-  GetStaticComponentProps,
-  GetServerSideComponentProps,
   NextjsJssComponent,
+  GetComponentServerProps,
 } from './sharedTypes/component-props';
 
 export { SitecorePageProps } from './sharedTypes/sitecore-page-props';

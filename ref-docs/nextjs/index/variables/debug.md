@@ -19,6 +19,10 @@ See [https://www.npmjs.com/package/debug](https://www.npmjs.com/package/debug) f
 
 > **common**: `debug.Debugger`
 
+### content
+
+> **content**: `debug.Debugger`
+
 ### dictionary
 
 > **dictionary**: `debug.Debugger`

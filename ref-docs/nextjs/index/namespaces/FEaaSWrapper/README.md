@@ -9,5 +9,4 @@
 ## Variables
 
 - [default](variables/default.md)
-- [getServerSideProps](variables/getServerSideProps.md)
-- [getStaticProps](variables/getStaticProps.md)
+- [getComponentServerProps](variables/getComponentServerProps.md)

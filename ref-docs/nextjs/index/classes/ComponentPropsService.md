@@ -6,7 +6,7 @@
 
 # Class: ComponentPropsService
 
-Defined in: [nextjs/src/services/component-props-service.ts:32](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/nextjs/src/services/component-props-service.ts#L32)
+Defined in: [nextjs/src/services/component-props-service.ts:32](https://github.com/Sitecore/content-sdk/blob/d43cd6b87786479497db0c411c900beadb8b920e/packages/nextjs/src/services/component-props-service.ts#L32)
 
 ## Constructors
 
@@ -22,33 +22,27 @@ Defined in: [nextjs/src/services/component-props-service.ts:32](https://github.c
 
 ### collectRequests()
 
-> `protected` **collectRequests**\<`NextContext`\>(`params`): `Promise`\<`ComponentPropsRequest`\<`NextContext`\>[]\>
+> `protected` **collectRequests**(`params`): `Promise`\<`ComponentPropsRequest`[]\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:72](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/nextjs/src/services/component-props-service.ts#L72)
+Defined in: [nextjs/src/services/component-props-service.ts:59](https://github.com/Sitecore/content-sdk/blob/d43cd6b87786479497db0c411c900beadb8b920e/packages/nextjs/src/services/component-props-service.ts#L59)
 
 Go through layout service data, check all renderings using displayName, which should make some side effects.
 Write result in requests variable
-
-#### Type Parameters
-
-| Type Parameter |
-| ------ |
-| `NextContext` |
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `params` | \{ `context`: `NextContext`; `fetchFunctionFactory`: `FetchFunctionFactory`\<`NextContext`\>; `layoutData`: [`LayoutServiceData`](../interfaces/LayoutServiceData.md); `placeholders?`: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md); `requests?`: `ComponentPropsRequest`\<`NextContext`\>[]; \} | params |
+| `params` | \{ `context`: `NextContext`; `fetchFunctionFactory`: `FetchFunctionFactory`; `layoutData`: [`LayoutServiceData`](../interfaces/LayoutServiceData.md); `placeholders?`: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md); `requests?`: `ComponentPropsRequest`[]; \} | params |
 | `params.context` | `NextContext` |  |
-| `params.fetchFunctionFactory` | `FetchFunctionFactory`\<`NextContext`\> |  |
+| `params.fetchFunctionFactory` | `FetchFunctionFactory` |  |
 | `params.layoutData` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |  |
 | `params.placeholders?` | [`PlaceholdersData`](../type-aliases/PlaceholdersData.md) |  |
-| `params.requests?` | `ComponentPropsRequest`\<`NextContext`\>[] |  |
+| `params.requests?` | `ComponentPropsRequest`[] |  |
 
 #### Returns
 
-`Promise`\<`ComponentPropsRequest`\<`NextContext`\>[]\>
+`Promise`\<`ComponentPropsRequest`[]\>
 
 array of requests
 
@@ -56,23 +50,17 @@ array of requests
 
 ### execRequests()
 
-> `protected` **execRequests**\<`NextContext`\>(`requests`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
+> `protected` **execRequests**(`requests`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:120](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/nextjs/src/services/component-props-service.ts#L120)
+Defined in: [nextjs/src/services/component-props-service.ts:107](https://github.com/Sitecore/content-sdk/blob/d43cd6b87786479497db0c411c900beadb8b920e/packages/nextjs/src/services/component-props-service.ts#L107)
 
 Execute request for component props
-
-#### Type Parameters
-
-| Type Parameter |
-| ------ |
-| `NextContext` |
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `requests` | `ComponentPropsRequest`\<`NextContext`\>[] | requests |
+| `requests` | `ComponentPropsRequest`[] | requests |
 
 #### Returns
 
@@ -86,13 +74,13 @@ requests result
 
 > **fetchComponentProps**(`params`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:33](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/nextjs/src/services/component-props-service.ts#L33)
+Defined in: [nextjs/src/services/component-props-service.ts:33](https://github.com/Sitecore/content-sdk/blob/d43cd6b87786479497db0c411c900beadb8b920e/packages/nextjs/src/services/component-props-service.ts#L33)
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `params` | `FetchComponentPropsArguments`\<`GetServerSidePropsContext` \| `GetStaticPropsContext`\> |
+| `params` | `FetchComponentPropsArguments` |
 
 #### Returns
 
@@ -104,7 +92,7 @@ Defined in: [nextjs/src/services/component-props-service.ts:33](https://github.c
 
 > `protected` **flatRenderings**(`placeholders`): [`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\>[]
 
-Defined in: [nextjs/src/services/component-props-service.ts:174](https://github.com/Sitecore/content-sdk/blob/e5be09d2ad649483512d9e46f51c0834aec1f7e8/packages/nextjs/src/services/component-props-service.ts#L174)
+Defined in: [nextjs/src/services/component-props-service.ts:161](https://github.com/Sitecore/content-sdk/blob/d43cd6b87786479497db0c411c900beadb8b920e/packages/nextjs/src/services/component-props-service.ts#L161)
 
 Take renderings from all placeholders and returns a flat array of renderings.
 
