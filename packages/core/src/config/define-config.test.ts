@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { defineConfig, getFallbackConfig } from './define-config';
+import { deepMerge, defineConfig, getFallbackConfig } from './define-config';
 import { SitecoreConfigInput } from './models';
 import { DefaultRetryStrategy } from '..';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
@@ -185,6 +185,81 @@ describe('define-config', () => {
       expect(fallbackConfig.editingSecret).to.equal('editing-secret-missing');
       expect(fallbackConfig.personalize.edgeTimeout).to.equal(400);
       expect(fallbackConfig.personalize.cdpTimeout).to.equal(400);
+    });
+  });
+
+  describe('deepMerge', () => {
+    it('should fallback to base when override value is empty', () => {
+      expect(
+        deepMerge(
+          {
+            deep: {
+              test: 'base',
+            },
+          },
+          {
+            deep: {
+              test: '',
+            },
+          }
+        )
+      ).to.deep.equal({ deep: { test: 'base' } });
+
+      expect(
+        deepMerge(
+          {
+            deep: {
+              test: 'base',
+            },
+          },
+          {
+            deep: {
+              test: undefined,
+            },
+          }
+        )
+      ).to.deep.equal({ deep: { test: 'base' } });
+    });
+
+    it('should traverse nested objects and merge', () => {
+      class Test {
+        a = true;
+      }
+
+      class BaseTest extends Test {
+        b = true;
+      }
+
+      const base = {
+        deep: {
+          fn: () => {
+            return false;
+          },
+          class: new BaseTest(),
+          array: [4, 5, 6],
+          number: 5,
+          string: '5',
+        },
+        boolean: true,
+      };
+
+      const override = {
+        deep: {
+          fn: () => {
+            return true;
+          },
+          class: new Test(),
+          nullValue: null,
+          array: [1, 2, 3],
+          number: 10,
+          string: '10',
+        },
+        boolean: false,
+      };
+
+      console.log(override);
+
+      expect(deepMerge(base, override)).to.deep.equal(override);
     });
   });
 });
