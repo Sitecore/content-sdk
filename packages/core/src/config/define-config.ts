@@ -93,7 +93,7 @@ export function deepMerge<T>(base: T, override?: DeepPartial<T>): T {
 }
 
 /**
- * Resolves sitecore config vased on base config and overrides
+ * Resolves sitecore config based on base config and overrides
  * @param {SitecoreConfig} base base sitecore config object
  * @param {SitecoreConfig} override override sitecore config object
  * @returns resolved SitecoreConfig object
