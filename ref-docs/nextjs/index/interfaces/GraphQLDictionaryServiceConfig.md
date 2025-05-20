@@ -143,7 +143,7 @@ Optional. How many result items to fetch in each GraphQL call. This is needed fo
 
 > `optional` **retries**: `object`
 
-Defined in: core/types/config/models.d.ts:72
+Defined in: core/types/config/models.d.ts:78
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
 
