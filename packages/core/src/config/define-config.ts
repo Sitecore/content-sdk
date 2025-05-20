@@ -1,6 +1,6 @@
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { DefaultRetryStrategy } from '../retries';
-import { SitecoreConfig, SitecoreConfigInput } from './models';
+import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 
 /**
  * Provides default initial values for SitecoreConfig
@@ -56,26 +56,51 @@ export const getFallbackConfig = (): SitecoreConfig => ({
 });
 
 /**
- * Merges two SitecoreConfig objects
+ * Deep merge utility that skips undefined or empty string values in the override.
+ * @param {T} base base value
+ * @param {DeepPartial<T>} [override] override value
+ */
+export function deepMerge<T>(base: T, override?: DeepPartial<T>): T {
+  if (!override) return base;
+
+  const result: T = { ...base };
+
+  for (const key in override) {
+    if (!Object.prototype.hasOwnProperty.call(override, key)) continue;
+
+    const typedKey = key as keyof T;
+    const baseValue = base[typedKey];
+    const overrideValue = override[typedKey];
+
+    // Skip undefined and empty string overrides
+    if (overrideValue === undefined || overrideValue === '') {
+      continue;
+    }
+
+    if (
+      typeof overrideValue === 'object' &&
+      overrideValue !== null &&
+      !Array.isArray(overrideValue) &&
+      Object.getPrototypeOf(overrideValue) === Object.prototype
+    ) {
+      result[typedKey] = deepMerge(baseValue, overrideValue);
+    } else {
+      result[typedKey] = overrideValue as T[typeof typedKey];
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Resolves sitecore config based on base config and overrides
  * @param {SitecoreConfig} base base sitecore config object
  * @param {SitecoreConfig} override override sitecore config object
- * @returns merged SitecoreConfig object
+ * @returns resolved SitecoreConfig object
  */
-const deepMerge = (base: SitecoreConfig, override: SitecoreConfigInput) => {
-  const result = {
-    ...base,
-    ...override,
-    api: {
-      edge: { ...base.api?.edge, ...override.api?.edge },
-      local: { ...base.api?.local, ...override.api?.local },
-    },
-    retries: { ...base.retries, ...override.retries },
-    layout: { ...base.layout, ...override.layout },
-    multisite: { ...base.multisite, ...override.multisite },
-    personalize: { ...base.personalize, ...override.personalize },
-    redirects: { ...base.redirects, ...override.redirects },
-    dictionary: { ...base.dictionary, ...override.dictionary },
-  };
+const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): SitecoreConfig => {
+  const result: SitecoreConfig = deepMerge(base, override);
+
   if (Number.isNaN(result.personalize.cdpTimeout) || !result.personalize.cdpTimeout) {
     result.personalize.cdpTimeout = base.personalize.cdpTimeout;
   }
@@ -109,7 +134,10 @@ const validateConfig = (config: SitecoreConfigInput) => {
  * @param {SitecoreConfigInput} config override values to be written over default config settings
  * @returns {SitecoreConfig} full sitecore configuration to use in application
  */
-export const defineConfig = (config: SitecoreConfigInput) => {
-  validateConfig(config);
-  return deepMerge(getFallbackConfig(), config) as SitecoreConfig;
+export const defineConfig = (config: SitecoreConfigInput): SitecoreConfig => {
+  const resolvedConfig = resolveConfig(getFallbackConfig(), config);
+
+  validateConfig(resolvedConfig);
+
+  return resolvedConfig;
 };

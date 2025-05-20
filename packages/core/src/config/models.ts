@@ -10,6 +10,13 @@ export type DeepRequired<T> = Required<
 >;
 
 /**
+ * Utility type to make all properties in a type optional, recursively.
+ */
+export type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+};
+
+/**
  * Type to be used as config input in sitecore.config
  */
 export type SitecoreConfigInput = {
