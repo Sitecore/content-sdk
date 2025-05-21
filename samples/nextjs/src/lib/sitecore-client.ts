@@ -1,10 +1,5 @@
 import { SitecoreClient } from '@sitecore-content-sdk/nextjs/client';
-import sites from '.sitecore/sites.json';
-import scConfig from 'sitecore.config';
 
-const client = new SitecoreClient({
-  sites,
-  ...scConfig,
-});
+const client = new SitecoreClient();
 
 export default client;

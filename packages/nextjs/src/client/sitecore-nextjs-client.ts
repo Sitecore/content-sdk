@@ -1,10 +1,4 @@
-import {
-  FetchOptions,
-  Page,
-  PageOptions,
-  SitecoreClient,
-  SitecoreClientInit,
-} from '@sitecore-content-sdk/core/client';
+import { FetchOptions, Page, PageOptions, SitecoreClient } from '@sitecore-content-sdk/core/client';
 import {
   ComponentPropsCollection,
   ComponentPropsError,
@@ -20,6 +14,7 @@ import {
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/core/personalize';
 import { ComponentMap } from '@sitecore-content-sdk/react';
+import { getConfig, getSites } from '../config';
 
 export type NextjsPage = Page & {
   componentProps?: ComponentPropsCollection;
@@ -28,8 +23,12 @@ export type NextjsPage = Page & {
 
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
-  constructor(protected initOptions: SitecoreClientInit) {
-    super(initOptions);
+  constructor() {
+    const injectedConfig = getConfig();
+    console.log('injectedConfig', injectedConfig);
+    const injectedSites = getSites();
+    console.log('injectedSites', injectedSites);
+    super({ ...injectedConfig, sites: injectedSites });
     this.componentPropsService = this.getComponentPropsService();
   }
 

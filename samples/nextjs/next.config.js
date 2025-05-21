@@ -1,4 +1,8 @@
 const path = require('path');
+const {
+  resolveSitecoreConfigPath,
+  resolveSitecoreSitesPath,
+} = require('@sitecore-content-sdk/nextjs/resolve-config');
 const SassAlias = require('sass-alias');
 
 /**
@@ -56,7 +60,7 @@ const nextConfig = {
       // sitemap route
       {
         source: '/sitemap:id([\\w-]{0,}).xml',
-        destination: '/api/sitemap'
+        destination: '/api/sitemap',
       },
       // feaas api route
       {
@@ -92,10 +96,14 @@ const nextConfig = {
     }
 
     config.resolve.alias['@sitecore-cloudsdk/events'] = path.resolve(
-      process.cwd(), './node_modules/@sitecore-cloudsdk/events'
+      process.cwd(),
+      './node_modules/@sitecore-cloudsdk/events'
     );
     // monorepo configuration end
-    
+
+    config.resolve.alias['./injected-config'] = resolveSitecoreConfigPath(config.context);
+    config.resolve.alias['./injected-sites'] = resolveSitecoreSitesPath(config.context);
+
     return config;
   },
 
@@ -106,8 +114,8 @@ const nextConfig = {
       '@fontawesome': path.join(process.cwd(), './node_modules', 'font-awesome'),
     }).getImporter(),
     // temporary measure until new versions of bootstrap and font-awesome released
-    quietDeps: true,    
-    silenceDeprecations: ["import", "legacy-js-api"],
+    quietDeps: true,
+    silenceDeprecations: ['import', 'legacy-js-api'],
   },
 };
 

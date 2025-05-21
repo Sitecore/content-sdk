@@ -17,62 +17,70 @@ import {
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';
-import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
-import { SitecoreConfig } from '../config';
+import { MiddlewareBase, REWRITE_HEADER_NAME } from './middleware';
+import { getConfig, getSites, SitecoreConfig } from '../config';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
 
 type RedirectResult = RedirectInfo & { matchedQueryString?: string };
 
+export type RedirectsMiddlewareOptions = Omit<
+  GraphQLRedirectsServiceConfig,
+  'fetch' | 'clientFactory'
+> & {
+  redirectsService?: GraphQLRedirectsService;
+};
+
 /**
  * extended RedirectsMiddlewareConfig config type for RedirectsMiddleware
  */
-export type RedirectsMiddlewareConfig = Omit<
-  GraphQLRedirectsServiceConfig,
-  'fetch' | 'clientFactory'
-> &
+export type RedirectsMiddlewareConfig = RedirectsMiddlewareOptions &
   SitecoreConfig['api']['edge'] &
-  MiddlewareBaseConfig &
-  SitecoreConfig['redirects'] & {
-    redirectsService?: GraphQLRedirectsService;
-  };
+  SitecoreConfig['redirects'];
+
 /**
  * Middleware / handler fetches all redirects from Sitecore instance by grapqhl service
  * compares with current url and redirects to target url
  */
 export class RedirectsMiddleware extends MiddlewareBase {
   protected redirectsService: GraphQLRedirectsService;
+  protected sites: SiteInfo[];
+  protected redirectsConfig: RedirectsMiddlewareConfig;
   private locales: string[];
 
   /**
-   * @param {RedirectsMiddlewareConfig} [config] redirects middleware config
+   * @param {RedirectsMiddlewareOptions} [options] redirects middleware config
    */
-  constructor(protected config: RedirectsMiddlewareConfig) {
-    super(config);
+  constructor(protected options?: RedirectsMiddlewareOptions) {
+    const injectedConfig = getConfig();
+    const sites = getSites();
+    super({ ...options, ...injectedConfig.multisite, sites });
+    this.sites = sites;
+    this.redirectsConfig = { ...injectedConfig.api.edge, ...injectedConfig.redirects, ...options };
     const graphQLOptions = {
       api: {
         edge: {
-          contextId: this.config.contextId,
-          clientContextId: this.config.clientContextId,
-          edgeUrl: this.config.edgeUrl,
+          contextId: this.redirectsConfig.contextId,
+          clientContextId: this.redirectsConfig.clientContextId,
+          edgeUrl: this.redirectsConfig.edgeUrl,
         },
       },
     };
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
     this.redirectsService =
-      this.config.redirectsService ??
+      this.redirectsConfig.redirectsService ??
       new GraphQLRedirectsService({
-        ...config,
+        ...this.redirectsConfig,
         clientFactory: this.getClientFactory(graphQLOptions),
         fetch: fetch,
       });
-    this.locales = config.locales;
+    this.locales = this.redirectsConfig.locales;
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
-    if (!this.config.enabled) {
+    if (!this.redirectsConfig.enabled) {
       debug.redirects('skipped (redirects middleware is disabled globally)');
       return res;
     }

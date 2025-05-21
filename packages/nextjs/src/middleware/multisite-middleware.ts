@@ -1,10 +1,10 @@
 ﻿/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 import { NextResponse, NextRequest } from 'next/server';
-import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/core/site';
+import { getSiteRewrite, SITE_KEY, SiteInfo } from '@sitecore-content-sdk/core/site';
 import { debug } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
-import { SitecoreConfig } from '../config';
+import { getConfig, getSites, SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/core/editing';
 
 export type CookieAttributes = {
@@ -28,15 +28,23 @@ export type MultisiteMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['m
  * Middleware / handler for multisite support
  */
 export class MultisiteMiddleware extends MiddlewareBase {
+  protected sites: SiteInfo[];
+  protected multisiteConfig: SitecoreConfig['multisite'];
+
   /**
-   * @param {MultisiteMiddlewareConfig} [config] Multisite middleware config
+   *
+   * @param {Pick<MiddlewareBaseConfig, 'skip'>} multisiteOptions optional multisite options to override default config settings
    */
-  constructor(protected config: MultisiteMiddlewareConfig) {
-    super(config);
+  constructor(multisiteOptions?: Pick<MiddlewareBaseConfig, 'skip'>) {
+    const injectedConfig = getConfig();
+    const sites = getSites();
+    super({ ...injectedConfig.multisite, ...multisiteOptions, sites });
+    this.sites = sites;
+    this.multisiteConfig = injectedConfig.multisite;
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
-    if (!this.config.enabled) {
+    if (!this.multisiteConfig.enabled) {
       debug.multisite('skipped (multisite middleware is disabled globally)');
       return res;
     }
@@ -75,8 +83,8 @@ export class MultisiteMiddleware extends MiddlewareBase {
         // Site name can be forced by query string parameter or cookie
         siteName =
           req.nextUrl.searchParams.get(SITE_KEY) ||
-          (this.config.useCookieResolution &&
-            this.config.useCookieResolution(req) &&
+          (this.multisiteConfig.useCookieResolution &&
+            this.multisiteConfig.useCookieResolution(req) &&
             req.cookies.get(SITE_KEY)?.value) ||
           this.siteResolver.getByHost(hostname).name;
       }
