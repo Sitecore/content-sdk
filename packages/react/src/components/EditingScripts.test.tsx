@@ -190,8 +190,12 @@ describe('<EditingScripts />', () => {
       const stagingEdgeUrl = 'http://edge-staging';
 
       const component = render(
-        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
-          <EditingScripts sitecoreEdgeUrl={stagingEdgeUrl} />
+        <SitecoreProvider
+          componentMap={mockComponentMap}
+          layoutData={layoutData}
+          api={{ edge: { edgeUrl: stagingEdgeUrl, contextId: 'id' } }}
+        >
+          <EditingScripts />
         </SitecoreProvider>
       );
 

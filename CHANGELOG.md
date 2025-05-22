@@ -46,9 +46,11 @@ Our versioning strategy is as follows:
     - `WithSitecoreContextOptions` → `WithSitecoreOptions`
     - `WithSitecoreContextProps` → `WithSitecoreProps`
     - `WithSitecoreContextHocProps` → `WithSitecoreHocProps`
-
 * `[nextjs]` Component-level `getServerSideProps` and `getStaticProps` methods have been replaced by a single `getComponentServerProps` method for simplicity.
     * In case a separate logic is needed depending on SSR/SSG context, an `isServerSidePropsContext` helper method from `@sitecore-content-sdk/nextjs/utils` can now be used.
+* `[nextjs]` [DesignLibrary] Script is requested from production even when a custom Edge URL is set ([#98](https://github.com/Sitecore/content-sdk/pull/98)):
+  * The `EditingScripts` component doesn't accept `sitecoreEdgeUrl` property anymore.
+  * The custom Edge URL is now accessed via the `api` property of the `SitecoreProvider` component.
 
 ### 🐛 Bug Fixes
 
