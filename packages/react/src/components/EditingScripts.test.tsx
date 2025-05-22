@@ -193,7 +193,7 @@ describe('<EditingScripts />', () => {
         <SitecoreProvider
           componentMap={mockComponentMap}
           layoutData={layoutData}
-          api={{ edge: { edgeUrl: stagingEdgeUrl, contextPath: 'id' } }}
+          api={{ edge: { edgeUrl: stagingEdgeUrl, contextId: 'id' } }}
         >
           <EditingScripts />
         </SitecoreProvider>
