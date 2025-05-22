@@ -19,7 +19,7 @@ export type ExtractedFile = {
 export enum ExtractedFileType {
   Component = 'component',
   Json = 'json',
-  Package = 'package.json',
+  PackageJson = 'package.json',
 }
 
 /**
@@ -215,7 +215,7 @@ export const sendCode = async ({
 }) => {
   const meshEndpoint = `${edgeUrl || constants.SITECORE_EDGE_URL_DEFAULT}/api/v1/mesh`;
   if (!fs.existsSync(file.path)) {
-    console.error(chalk.red(`Component file not found: ${file.path}`));
+    console.error(chalk.red(`File not found: ${file.path}`));
     return;
   }
   const code = fs.readFileSync(file.path);
@@ -241,6 +241,6 @@ export const sendCode = async ({
       chalk.red(`Failed to send extracted code from ${file.path}: ${response.statusText}`)
     );
   } else {
-    console.log(chalk.green(`Code from ${file.path} extracted and sent to mesh endpoint`));
+    console.log(chalk.green(`Contents from ${file.path} extracted and sent to mesh endpoint`));
   }
 };

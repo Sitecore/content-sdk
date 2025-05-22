@@ -2,14 +2,14 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import chalk from 'chalk';
 import fs from 'fs';
-import { extractComponents } from './extract-components';
+import { extractFiles } from './extract-files';
 import { constants } from '@sitecore-content-sdk/core/';
 import { defineConfig } from '@sitecore-content-sdk/core/config';
 import nock from 'nock';
 import * as coreTools from '@sitecore-content-sdk/core/tools';
 import path from 'path';
 
-describe('extract-components', () => {
+describe('extract-files', () => {
   const sandbox = sinon.createSandbox();
   const defaultConfig = defineConfig({
     api: {
@@ -56,8 +56,8 @@ describe('extract-components', () => {
     const fetchBearerTokenStub = sandbox.stub().resolves('');
     sandbox.replaceGetter(coreTools, 'fetchBearerToken', () => fetchBearerTokenStub);
 
-    const extractComponentsCall = extractComponents(mockArgs);
-    await extractComponentsCall();
+    const extractFilesCall = extractFiles(mockArgs);
+    await extractFilesCall();
 
     expect(consoleErrorStub.calledOnce).to.be.true;
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
@@ -79,8 +79,8 @@ describe('extract-components', () => {
     sandbox.replaceGetter(coreTools, 'fetchBearerToken', () => fetchBearerTokenStub);
 
     const consoleErrorStub = sandbox.stub(console, 'error');
-    const extractComponentsCall = extractComponents(args);
-    await extractComponentsCall();
+    const extractFilesCall = extractFiles(args);
+    await extractFilesCall();
 
     expect(fetchBearerTokenStub.calledOnce).to.be.true;
     expect(consoleErrorStub.calledOnce).to.be.true;
@@ -93,7 +93,7 @@ describe('extract-components', () => {
     );
   });
 
-  it('should call sendCode for each component path', async () => {
+  it('should call sendCode for each component path and package.json', async () => {
     const args = {
       ...mockArgs,
     };
@@ -117,19 +117,25 @@ describe('extract-components', () => {
 
     const component2Path = path.resolve(process.cwd(), './src/components/TestComponent2.tsx');
 
-    const extractComponentsCall = extractComponents(args);
-    await extractComponentsCall();
+    const packageJsonPath = path.resolve(process.cwd(), './package.json');
+
+    const extractFilesCall = extractFiles(args);
+    await extractFilesCall();
 
     expect(fetchBearerTokenStub.calledOnce).to.be.true;
 
-    expect(consoleLogStub.callCount).to.equal(2);
+    expect(consoleLogStub.callCount).to.equal(3);
 
     expect(consoleLogStub.getCall(0).args[0]).to.equal(
-      chalk.green(`Code from ${component1Path} extracted and sent to mesh endpoint`)
+      chalk.green(`Contents from ${component1Path} extracted and sent to mesh endpoint`)
     );
 
     expect(consoleLogStub.getCall(1).args[0]).to.equal(
-      chalk.green(`Code from ${component2Path} extracted and sent to mesh endpoint`)
+      chalk.green(`Contents from ${component2Path} extracted and sent to mesh endpoint`)
+    );
+
+    expect(consoleLogStub.getCall(2).args[0]).to.equal(
+      chalk.green(`Contents from ${packageJsonPath} extracted and sent to mesh endpoint`)
     );
   });
 });

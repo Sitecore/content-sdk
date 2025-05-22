@@ -60,7 +60,7 @@ describe('codegen-utils', () => {
 
       expect(consoleLogStub.called).to.be.true;
       expect(consoleLogStub.firstCall.args[0]).to.equal(
-        chalk.green('Code from /path/to/component.ts extracted and sent to mesh endpoint')
+        chalk.green('Contents from /path/to/component.ts extracted and sent to mesh endpoint')
       );
     });
 
@@ -85,7 +85,7 @@ describe('codegen-utils', () => {
 
       expect(consoleErrorStub.calledOnce).to.be.true;
       expect(consoleErrorStub.firstCall.args[0]).to.equal(
-        chalk.red(`Component file not found: ${componentPath}`)
+        chalk.red(`File not found: ${componentPath}`)
       );
     });
 
