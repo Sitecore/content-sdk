@@ -8,7 +8,7 @@
 
 > **useSitecore**(`options?`): [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:84](https://github.com/Sitecore/content-sdk/blob/8b51c27af4197381ca0801342e71e5225c33820b/packages/react/src/enhancers/withSitecore.tsx#L84)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:84](https://github.com/Sitecore/content-sdk/blob/edcc04a36ef7f57a72a1f7bbcbe6f0f4b5c25fc1/packages/react/src/enhancers/withSitecore.tsx#L84)
 
 This hook grants acсess to the current Sitecore page context and api.
 by default JSS includes the following properties in this context:
