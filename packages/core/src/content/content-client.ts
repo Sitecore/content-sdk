@@ -9,6 +9,13 @@ import {
   LocaleQueryResponse,
   LocalesQueryResponse,
 } from './locales';
+import {
+  GET_TAXONOMY_QUERY,
+  GET_TAXONOMIES_QUERY,
+  TaxonomyQueryResponse,
+  TaxonomiesQueryResponse,
+  Taxonomy,
+} from './taxonomies';
 
 /**
  * Interface representing the options for the ContentClient.
@@ -103,7 +110,6 @@ export class ContentClient {
     options: FetchOptions = {}
   ): Promise<T> {
     debug.content('fetching content data');
-
     return this.graphqlClient.request<T>(query, variables, options);
   }
 
@@ -128,5 +134,28 @@ export class ContentClient {
 
     const response = await this.get<LocalesQueryResponse>(GET_LOCALES_QUERY);
     return response.manyLocale;
+  }
+
+  /**
+   * Retrieves all available taxonomies.
+   * @returns A promise that resolves to a list of taxonomies.
+   */
+  async getTaxonomies() {
+    debug.content('Getting taxonomies');
+
+    const response = await this.get<TaxonomiesQueryResponse>(GET_TAXONOMIES_QUERY);
+    return response?.manyTaxonomy;
+  }
+
+  /**
+   * Retrieves a taxonomy by its ID.
+   * @param {string} id - The unique identifier of the taxonomy.
+   * @returns A promise that resolves to the taxonomy information associated with the specified ID.
+   */
+  async getTaxonomy(id: string) {
+    debug.content('Getting taxonomy for id: %s', id);
+
+    const response = await this.get<TaxonomyQueryResponse>(GET_TAXONOMY_QUERY, { id });
+    return response?.taxonomy;
   }
 }
