@@ -4,6 +4,7 @@ import sinon from 'sinon';
 import { ContentClient } from './content-client';
 import { GraphQLRequestClient } from '../graphql-request-client';
 import { GET_LOCALE_QUERY, GET_LOCALES_QUERY } from './locales';
+import { GET_TAXONOMIES_QUERY, GET_TAXONOMY_QUERY } from './taxonomies';
 
 describe('content-client', () => {
   describe('constructor', () => {
@@ -221,6 +222,147 @@ describe('content-client', () => {
 
       try {
         await client.getLocales();
+      } catch (err) {
+        expect(err).to.equal(error);
+      }
+    });
+  });
+
+  describe('getTaxonomies', () => {
+    let client: ContentClient;
+    let requestStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      client = new ContentClient({
+        url: 'https://example.com',
+        tenant: 'test-tenant',
+        environment: 'test-env',
+        preview: true,
+        token: 'test-token',
+      });
+
+      requestStub = sinon.stub(client.graphqlClient, 'request');
+    });
+
+    it('should retrieve all available taxonomies', async () => {
+      const mockResponse = {
+        manyTaxonomy: {
+          results: [
+            {
+              terms: {
+                results: [
+                  { id: 'term1', name: 'Term 1', label: 'First Term' },
+                  { id: 'term2', name: 'Term 2', label: 'Second Term' },
+                ],
+              },
+              system: {
+                id: 'tax1',
+                name: 'Taxonomy 1',
+                version: 1,
+                label: 'First Taxonomy',
+                createdAt: '2024-01-01',
+                createdBy: 'user1',
+                updatedAt: '2024-01-02',
+                updatedBy: 'user2',
+                publishStatus: 'published',
+              },
+            },
+          ],
+        },
+      };
+
+      requestStub.resolves(mockResponse);
+
+      const result = await client.getTaxonomies();
+
+      expect(requestStub.calledOnce).to.be.true;
+      expect(requestStub.calledWith(GET_TAXONOMIES_QUERY)).to.be.true;
+      expect(result).to.deep.equal(mockResponse.manyTaxonomy);
+    });
+
+    it('should handle null response', async () => {
+      requestStub.resolves({ manyTaxonomy: null });
+
+      const result = await client.getTaxonomies();
+      expect(result).to.be.null;
+    });
+
+    it('should handle errors when retrieving taxonomies', async () => {
+      const error = new Error('Failed to fetch taxonomies');
+      requestStub.rejects(error);
+
+      try {
+        await client.getTaxonomies();
+      } catch (err) {
+        expect(err).to.equal(error);
+      }
+    });
+  });
+
+  describe('getTaxonomy', () => {
+    let client: ContentClient;
+    let requestStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      client = new ContentClient({
+        url: 'https://example.com',
+        tenant: 'test-tenant',
+        environment: 'test-env',
+        preview: true,
+        token: 'test-token',
+      });
+
+      requestStub = sinon.stub(client.graphqlClient, 'request');
+    });
+
+    it('should retrieve a taxonomy by ID', async () => {
+      const taxonomyId = 'tax1';
+      const mockResponse = {
+        taxonomy: {
+          terms: {
+            results: [
+              { id: 'term1', name: 'Term 1', label: 'First Term' },
+              { id: 'term2', name: 'Term 2', label: 'Second Term' },
+            ],
+          },
+          system: {
+            id: taxonomyId,
+            name: 'Taxonomy 1',
+            version: 1,
+            label: 'First Taxonomy',
+            createdAt: '2024-01-01',
+            createdBy: 'user1',
+            updatedAt: '2024-01-02',
+            updatedBy: 'user2',
+            publishStatus: 'published',
+          },
+        },
+      };
+
+      requestStub.resolves(mockResponse);
+
+      const result = await client.getTaxonomy(taxonomyId);
+
+      expect(requestStub.calledOnce).to.be.true;
+      expect(requestStub.calledWith(GET_TAXONOMY_QUERY, { id: taxonomyId })).to.be.true;
+      expect(result).to.deep.equal(mockResponse.taxonomy);
+    });
+
+    it('should handle null response', async () => {
+      const taxonomyId = 'nonexistent';
+      requestStub.resolves({ taxonomy: null });
+
+      const result = await client.getTaxonomy(taxonomyId);
+      expect(result).to.be.null;
+    });
+
+    it('should handle errors when retrieving a taxonomy', async () => {
+      const taxonomyId = 'tax1';
+      const error = new Error('Failed to fetch taxonomy');
+      requestStub.rejects(error);
+
+      try {
+        await client.getTaxonomy(taxonomyId);
       } catch (err) {
         expect(err).to.equal(error);
       }
