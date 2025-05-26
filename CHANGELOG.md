@@ -12,6 +12,16 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🎉 New Features & Improvements
+
+* `[cli]` Introduced auth CLI commands for Sitecore Content Services: ([101](https://github.com/Sitecore/content-sdk/pull/101))
+    - auth login – Authenticate using client credentials and store token info
+    - auth status – Show active tenant and auto-renew token if expired
+    - auth logout – Clear active tenant and delete stored credentials
+    - auth list – List all known tenants from local storage
+  - Token validation and renewal support
+  - Token and tenant metadata storage and active tenant tracking under `~/.sitecore/sitecore-tools/`
+
 ### 🛠 Breaking Changes
 
 * `[react]` `[nextjs]` Refactor `SitecoreContext` naming to `SitecoreProvider` ([95](https://github.com/Sitecore/content-sdk/pull/95)):
