@@ -14,7 +14,10 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* `[core]` Introduced get taxonomy/taxonomies functionality on content client ([#99](https://github.com/Sitecore/content-sdk/pull/99))
+* `[core]` Introduced get taxonomy/taxonomies functionality on content client ([#99](https://github.com/Sitecore/content-sdk/pull/99)):
+  - Introduced `getTaxonomy` and `getTaxonomies` methods on Content Client class
+  - Support pagination for the above methods by implementing an internal fetchNext method to handle this in each method
+  - Introduced respective queries and types
 * `[next.js]` Rework and simplify .env ([#89](https://github.com/Sitecore/content-sdk/pull/89)):
   - Introduced `.env.container.example`  
     - Intended for local development against a Sitecore container instance.

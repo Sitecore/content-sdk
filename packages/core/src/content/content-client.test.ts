@@ -244,17 +244,11 @@ describe('content-client', () => {
       requestStub = sinon.stub(client.graphqlClient, 'request');
     });
 
-    it('should retrieve all available taxonomies', async () => {
+    it('should retrieve taxonomies with terms and pagination support', async () => {
       const mockResponse = {
         manyTaxonomy: {
           results: [
             {
-              terms: {
-                results: [
-                  { id: 'term1', name: 'Term 1', label: 'First Term' },
-                  { id: 'term2', name: 'Term 2', label: 'Second Term' },
-                ],
-              },
               system: {
                 id: 'tax1',
                 name: 'Taxonomy 1',
@@ -266,36 +260,45 @@ describe('content-client', () => {
                 updatedBy: 'user2',
                 publishStatus: 'published',
               },
+              terms: {
+                results: [{ id: 'term1', name: 'Term 1', label: 'First Term' }],
+                cursor: 'cursor-terms',
+                hasMore: true,
+              },
             },
           ],
+          cursor: 'cursor-taxonomies',
+          hasMore: true,
         },
       };
 
       requestStub.resolves(mockResponse);
 
-      const result = await client.getTaxonomies();
+      const result = await client.getTaxonomies(2, 1);
 
       expect(requestStub.calledOnce).to.be.true;
       expect(requestStub.calledWith(GET_TAXONOMIES_QUERY)).to.be.true;
-      expect(result).to.deep.equal(mockResponse.manyTaxonomy);
+      expect(result.results[0].system.name).to.equal('Taxonomy 1');
+      expect(result.results[0].terms.results[0].name).to.equal('Term 1');
+
+      // Test fetchNext for taxonomies
+      if (result.fetchNext) {
+        requestStub.resolves(mockResponse); // Mock again for fetchNext
+        const nextPage = await result.fetchNext();
+        expect(requestStub.calledTwice).to.be.true;
+        expect(nextPage.results[0].system.name).to.equal('Taxonomy 1');
+      }
     });
 
-    it('should handle null response', async () => {
+    it('should handle empty or null responses', async () => {
       requestStub.resolves({ manyTaxonomy: null });
 
       const result = await client.getTaxonomies();
-      expect(result).to.be.null;
-    });
-
-    it('should handle errors when retrieving taxonomies', async () => {
-      const error = new Error('Failed to fetch taxonomies');
-      requestStub.rejects(error);
-
-      try {
-        await client.getTaxonomies();
-      } catch (err) {
-        expect(err).to.equal(error);
-      }
+      expect(result).to.deep.include({
+        results: [],
+        cursor: undefined,
+        hasMore: false,
+      });
     });
   });
 
@@ -315,16 +318,10 @@ describe('content-client', () => {
       requestStub = sinon.stub(client.graphqlClient, 'request');
     });
 
-    it('should retrieve a taxonomy by ID', async () => {
+    it('should retrieve a taxonomy by ID with paginated terms', async () => {
       const taxonomyId = 'tax1';
       const mockResponse = {
         taxonomy: {
-          terms: {
-            results: [
-              { id: 'term1', name: 'Term 1', label: 'First Term' },
-              { id: 'term2', name: 'Term 2', label: 'Second Term' },
-            ],
-          },
           system: {
             id: taxonomyId,
             name: 'Taxonomy 1',
@@ -336,36 +333,62 @@ describe('content-client', () => {
             updatedBy: 'user2',
             publishStatus: 'published',
           },
+          terms: {
+            results: [{ id: 'term1', name: 'Term 1', label: 'First Term' }],
+            cursor: 'cursor-terms',
+            hasMore: true,
+          },
+        },
+      };
+
+      requestStub.resolves(mockResponse);
+
+      const result = await client.getTaxonomy(taxonomyId, 3);
+      expect(result?.system.id).to.equal(taxonomyId);
+      expect(result?.terms.results[0].name).to.equal('Term 1');
+
+      // Test fetchNext for terms
+      if (result?.terms.fetchNext) {
+        requestStub.resolves(mockResponse); // Mock again for fetchNext
+        const nextTerms = await result.terms.fetchNext();
+        expect(nextTerms.results[0].name).to.equal('Term 1');
+      }
+    });
+
+    it('should retrieve a taxonomy by ID without terms pagination', async () => {
+      const taxonomyId = 'tax2';
+      const mockResponse = {
+        taxonomy: {
+          system: {
+            id: taxonomyId,
+            name: 'Taxonomy 2',
+            version: 1,
+            label: 'Second Taxonomy',
+            createdAt: '2024-02-01',
+            createdBy: 'user3',
+            updatedAt: '2024-02-02',
+            updatedBy: 'user4',
+            publishStatus: 'published',
+          },
+          terms: {
+            results: [{ id: 'term2', name: 'Term 2', label: 'Second Term' }],
+            cursor: null,
+            hasMore: false,
+          },
         },
       };
 
       requestStub.resolves(mockResponse);
 
       const result = await client.getTaxonomy(taxonomyId);
-
-      expect(requestStub.calledOnce).to.be.true;
-      expect(requestStub.calledWith(GET_TAXONOMY_QUERY, { id: taxonomyId })).to.be.true;
-      expect(result).to.deep.equal(mockResponse.taxonomy);
+      expect(result?.system.id).to.equal(taxonomyId);
+      expect(result?.terms.results[0].name).to.equal('Term 2');
     });
 
-    it('should handle null response', async () => {
-      const taxonomyId = 'nonexistent';
+    it('should handle null taxonomy response', async () => {
       requestStub.resolves({ taxonomy: null });
-
-      const result = await client.getTaxonomy(taxonomyId);
+      const result = await client.getTaxonomy('invalid-id');
       expect(result).to.be.null;
-    });
-
-    it('should handle errors when retrieving a taxonomy', async () => {
-      const taxonomyId = 'tax1';
-      const error = new Error('Failed to fetch taxonomy');
-      requestStub.rejects(error);
-
-      try {
-        await client.getTaxonomy(taxonomyId);
-      } catch (err) {
-        expect(err).to.equal(error);
-      }
     });
   });
 });

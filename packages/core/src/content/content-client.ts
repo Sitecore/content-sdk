@@ -12,8 +12,11 @@ import {
 import {
   GET_TAXONOMY_QUERY,
   GET_TAXONOMIES_QUERY,
+  ContentItemList,
+  Taxonomy,
   TaxonomyQueryResponse,
   TaxonomiesQueryResponse,
+  TermList,
 } from './taxonomies';
 
 /**
@@ -137,24 +140,180 @@ export class ContentClient {
 
   /**
    * Retrieves all available taxonomies.
-   * @returns A promise that resolves to a list of taxonomies.
+   *
+   * This method supports optional pagination for both taxonomies and their terms.
+   * - If `taxonomyPageSize` is provided, it limits the number of taxonomies returned per request.
+   * - If `termsPageSize` is provided, it limits the number of terms returned per taxonomy per request.
+   * - If either is omitted, the API defaults are used (returns all results in a single request if no pagination is required).
+   *
+   * @param {number} [taxonomyPageSize] - Optional. The number of taxonomies per page.
+   * @param {number} [termsPageSize] - Optional. The number of terms per page within each taxonomy.
+   * @returns A promise that resolves to a paginated list of taxonomies, including pagination helpers (`fetchNext`) if applicable.
    */
-  async getTaxonomies() {
-    debug.content('Getting taxonomies');
+  async getTaxonomies(
+    taxonomyPageSize?: number,
+    termsPageSize?: number
+  ): Promise<ContentItemList<Taxonomy>> {
+    const fetchTaxonomiesPage = async (after: string = ''): Promise<ContentItemList<Taxonomy>> => {
+      debug.content(
+        'Fetching taxonomies (pageSize: %s, after: %s)',
+        taxonomyPageSize ?? 'API Default',
+        after
+      );
 
-    const response = await this.get<TaxonomiesQueryResponse>(GET_TAXONOMIES_QUERY);
-    return response?.manyTaxonomy;
+      const variables: Record<string, any> = {
+        after: after || '',
+        termsAfter: '', // Always provide for API requirements
+      };
+
+      if (taxonomyPageSize !== undefined) {
+        variables.minimumPageSize = taxonomyPageSize;
+      }
+
+      if (termsPageSize !== undefined) {
+        variables.termsPageSize = termsPageSize;
+      }
+
+      const response = await this.get<TaxonomiesQueryResponse>(GET_TAXONOMIES_QUERY, variables);
+      const data = response?.manyTaxonomy;
+
+      if (!data) {
+        return {
+          results: [],
+          cursor: undefined,
+          hasMore: false,
+        };
+      }
+
+      const taxonomies = await Promise.all(
+        data.results.map(async (taxonomy) => {
+          const fetchTermsPage = async (termsAfter: string = ''): Promise<TermList> => {
+            debug.content(
+              'Fetching terms for taxonomy %s (pageSize: %s, after: %s)',
+              taxonomy.system.id,
+              termsPageSize ?? 'API Default',
+              termsAfter
+            );
+
+            const termVariables: Record<string, any> = {
+              after: after || '',
+              termsAfter: termsAfter || '',
+            };
+
+            if (taxonomyPageSize !== undefined) {
+              termVariables.minimumPageSize = taxonomyPageSize;
+            }
+
+            if (termsPageSize !== undefined) {
+              termVariables.termsPageSize = termsPageSize;
+            }
+
+            const termResponse = await this.get<TaxonomiesQueryResponse>(
+              GET_TAXONOMIES_QUERY,
+              termVariables
+            );
+
+            const termData = termResponse?.manyTaxonomy?.results.find(
+              (r) => r.system.id === taxonomy.system.id
+            )?.terms;
+
+            return {
+              results: termData?.results ?? [],
+              cursor: termData?.cursor,
+              hasMore: termData?.hasMore ?? false,
+              fetchNext: termData?.hasMore
+                ? () => fetchTermsPage(termData.cursor || '')
+                : undefined,
+            };
+          };
+
+          return {
+            system: taxonomy.system,
+            terms: {
+              results: taxonomy.terms?.results ?? [],
+              cursor: taxonomy.terms?.cursor,
+              hasMore: taxonomy.terms?.hasMore ?? false,
+              fetchNext: taxonomy.terms?.hasMore
+                ? () => fetchTermsPage(taxonomy.terms.cursor || '')
+                : undefined,
+            },
+          };
+        })
+      );
+
+      return {
+        results: taxonomies,
+        cursor: data.cursor,
+        hasMore: data.hasMore,
+        fetchNext: data.hasMore ? () => fetchTaxonomiesPage(data.cursor || '') : undefined,
+      };
+    };
+
+    return fetchTaxonomiesPage();
   }
 
   /**
-   * Retrieves a taxonomy by its ID.
+   * Retrieves a single taxonomy by its ID.
+   *
+   * This method supports optional pagination for the terms within the taxonomy.
+   * - If `termsPageSize` is provided, it limits the number of terms returned per request.
+   * - If omitted, the API default is used (returns all terms in a single request).
+   *
+   * The returned taxonomy object includes the system metadata, the initial set of terms,
+   * and a `fetchNext` function for retrieving additional terms if more are available.
+   *
    * @param {string} id - The unique identifier of the taxonomy.
-   * @returns A promise that resolves to the taxonomy information associated with the specified ID.
+   * @param {number} [termsPageSize] - Optional. The number of terms per page.
+   * @returns A promise that resolves to the taxonomy object, or `null` if not found.
    */
-  async getTaxonomy(id: string) {
+  async getTaxonomy(id: string, termsPageSize?: number): Promise<Taxonomy | null> {
     debug.content('Getting taxonomy for id: %s', id);
 
-    const response = await this.get<TaxonomyQueryResponse>(GET_TAXONOMY_QUERY, { id });
-    return response?.taxonomy;
+    const fetchTermsPage = async (termsAfter: string = ''): Promise<TermList> => {
+      debug.content(
+        'Fetching terms for taxonomy %s (pageSize: %s, after: %s)',
+        id,
+        termsPageSize ?? 'API Default',
+        termsAfter
+      );
+
+      const variables: Record<string, any> = { id, termsAfter };
+
+      if (termsPageSize !== undefined) {
+        variables.termsPageSize = termsPageSize;
+      }
+
+      const response = await this.get<TaxonomyQueryResponse>(GET_TAXONOMY_QUERY, variables);
+      const terms = response?.taxonomy?.terms;
+
+      return {
+        results: terms?.results ?? [],
+        cursor: terms?.cursor,
+        hasMore: terms?.hasMore ?? false,
+        fetchNext: terms?.hasMore ? () => fetchTermsPage(terms.cursor || '') : undefined,
+      };
+    };
+
+    const initialVars: Record<string, any> = { id };
+    if (termsPageSize !== undefined) {
+      initialVars.termsPageSize = termsPageSize;
+    }
+
+    const response = await this.get<TaxonomyQueryResponse>(GET_TAXONOMY_QUERY, initialVars);
+    const taxonomy = response?.taxonomy;
+
+    if (!taxonomy) return null;
+
+    return {
+      system: taxonomy.system,
+      terms: {
+        results: taxonomy.terms?.results ?? [],
+        cursor: taxonomy.terms?.cursor,
+        hasMore: taxonomy.terms?.hasMore ?? false,
+        fetchNext: taxonomy.terms?.hasMore
+          ? () => fetchTermsPage(taxonomy.terms.cursor || '')
+          : undefined,
+      },
+    };
   }
 }
