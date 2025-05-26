@@ -14,7 +14,6 @@ import {
   GET_TAXONOMIES_QUERY,
   TaxonomyQueryResponse,
   TaxonomiesQueryResponse,
-  Taxonomy,
 } from './taxonomies';
 
 /**
