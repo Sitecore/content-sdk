@@ -14,6 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* `[core]` Introduced get taxonomy/taxonomies functionality on content client ([#99](https://github.com/Sitecore/content-sdk/pull/99))
 * `[next.js]` Rework and simplify .env ([#89](https://github.com/Sitecore/content-sdk/pull/89)):
   - Introduced `.env.container.example`  
     - Intended for local development against a Sitecore container instance.
@@ -32,7 +33,7 @@ Our versioning strategy is as follows:
   - A new `RobotsMiddleware` class encapsulates HTTP-level logic for generating `robots.txt` responses in Next.js apps.
   - These additions follow the same extensible architecture as existing features enabling custom behavior via service overrides and improving consistency across endpoints.
 * `[sitecore-jss-cli]` Code extraction feature for XMCloud code generation is added ([#71](https://github.com/Sitecore/jss/pull/71))
-* `[core]` Introduce get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#78](https://github.com/Sitecore/content-sdk/pull/78))
+* `[core]` Introduced get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#78](https://github.com/Sitecore/content-sdk/pull/78))
 * `[all]` XM Cloud Content support
   * `[core]` Introduced /content submodule to interact with XM Cloud Content ([#65](https://github.com/Sitecore/content-sdk/pull/65))
   * `[richtext]` Added new `richtext` package to enable Content SDK to work with TipTap Rich Text editors ([#85](https://github.com/Sitecore/content-sdk/pull/85))
