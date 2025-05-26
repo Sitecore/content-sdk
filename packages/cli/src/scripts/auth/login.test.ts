@@ -1,0 +1,68 @@
+﻿import { expect } from 'chai';
+import sinon from 'sinon';
+import { login } from '../../../src/scripts/auth/login';
+import * as authFlow from '../../../src/utils/auth/flow';
+import * as tenantStore from '../../../src/utils/auth/tenant-store';
+import * as tenantState from '../../../src/utils/auth/tenant-state';
+
+describe('login command', () => {
+  const fakeArgs = {
+    clientId: 'test-client-id',
+    clientSecret: 'test-client-secret',
+    tenantId: 'test-tenant-id',
+    organizationId: 'test-org-id',
+    audience: 'https://example.com/api',
+    authAuthority: 'https://auth.example.com',
+    baseUrl: 'https://api.example.com',
+  };
+
+  const fakeAuthResponse = {
+    data: {
+      access_token: 'test-access-token',
+      expires_in: 3600,
+    },
+    tokenTenantId: 'test-tenant-id',
+    tokenOrgId: 'test-org-id',
+    tokenTenantName: 'TestTenant',
+  };
+
+  let clientCredentialsStub: sinon.SinonStub;
+  let writeTenantAuthStub: sinon.SinonStub;
+  let writeTenantInfoStub: sinon.SinonStub;
+  let setActiveTenantStub: sinon.SinonStub;
+  let consoleInfoStub: sinon.SinonStub;
+
+  beforeEach(() => {
+    clientCredentialsStub = sinon
+      .stub(authFlow, 'clientCredentialsFlow')
+      .resolves(fakeAuthResponse);
+    writeTenantAuthStub = sinon.stub(tenantStore, 'writeTenantAuthInfo').resolves();
+    writeTenantInfoStub = sinon.stub(tenantStore, 'writeTenantInfo').resolves();
+    setActiveTenantStub = sinon.stub(tenantState, 'setActiveTenant');
+    consoleInfoStub = sinon.stub(console, 'info');
+  });
+
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  it('should call clientCredentialsFlow and save tenant info', async () => {
+    await login.handler(fakeArgs as any);
+
+    expect(clientCredentialsStub.calledOnce).to.be.true;
+    expect(clientCredentialsStub.firstCall.args[0]).to.include({
+      clientId: fakeArgs.clientId,
+      clientSecret: fakeArgs.clientSecret,
+      organizationId: fakeArgs.organizationId,
+      tenantId: fakeArgs.tenantId,
+      audience: fakeArgs.audience,
+      authAuthority: fakeArgs.authAuthority,
+      baseUrl: fakeArgs.baseUrl,
+    });
+
+    expect(writeTenantAuthStub.calledOnce).to.be.true;
+    expect(writeTenantInfoStub.calledOnce).to.be.true;
+    expect(setActiveTenantStub.calledWith(fakeAuthResponse.tokenTenantId)).to.be.true;
+    expect(consoleInfoStub.calledWithMatch(/Logged in successfully/)).to.be.true;
+  });
+});
