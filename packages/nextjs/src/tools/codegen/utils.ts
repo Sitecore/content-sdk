@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
-import { constants } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/core';
 
 /**
  * Description properties for the files sent to the mesh endpoint
@@ -57,12 +57,12 @@ export const validateDeployContext = () => {
  * Parses the componentBuilder.ts file and returns a map of component names
  * and their respective import strings
  * @param {string} appPath path to the JSS app root
- * @param {string} [componentMapPath] path to the app's component map file. Default: 'src/lib/componentMap.ts'
+ * @param {string} [componentMapPath] path to the app's component map file. Default: 'src/lib/component-map.ts'
  * @returns map of component names and their respective import strings
  */
 export const resolveComponentImportFiles = (
   appPath: string,
-  componentMapPath: string = './src/lib/componentMap.ts'
+  componentMapPath: string = './src/lib/component-map.ts'
 ) => {
   appPath = path.isAbsolute(appPath) ? appPath : path.resolve(process.cwd(), appPath);
   const tsConfig = ts.readConfigFile(path.resolve(appPath, 'tsconfig.json'), ts.sys.readFile);
@@ -135,7 +135,11 @@ export const resolveComponentImportFiles = (
       // import path is extracted
       const moduleName = childNode.moduleSpecifier.getText().replace(/['"]/g, '');
       // unless the import is a nodeJS one, or points to dependency package, resolve full path to the imported source file
-      if (moduleName.startsWith('node:') || moduleName.indexOf('/node_modules') > -1) {
+      if (
+        moduleName.startsWith('node:') ||
+        moduleName.indexOf('/node_modules') > -1 ||
+        moduleName.endsWith('.d.ts')
+      ) {
         return;
       }
       const resolvedModule = ts.nodeModuleNameResolver(
@@ -207,31 +211,35 @@ export const resolveComponentImportFiles = (
 export const sendCode = async ({
   file,
   token,
-  edgeUrl,
+  endpoint,
 }: {
   file: ExtractedFile;
   token: string;
-  edgeUrl?: string;
+  endpoint: string;
 }) => {
-  const meshEndpoint = `${edgeUrl || constants.SITECORE_EDGE_URL_DEFAULT}/api/v1/mesh`;
+  const apiEndpoint = `${endpoint}/api/v1/contentsdk/code/extracted`;
   if (!fs.existsSync(file.path)) {
     console.error(chalk.red(`File not found: ${file.path}`));
     return;
   }
   const code = fs.readFileSync(file.path);
-  const response = await fetch(meshEndpoint, {
+  const response = await fetch(apiEndpoint, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
+      // identify environment by XMCloud, Vercel or Netlify build metadata
+      EnvironmentId:
+        process.env.BuildMetadata_EnvironmentId ||
+        process.env.VERCEL_PROJECT_ID ||
+        process.env.ACCOUNT_ID ||
+        'not-set',
       name: file.name,
       content: code.toString(),
       labels: {
-        properties: {
-          type: file.type,
-        },
+        type: file.type,
       },
     }),
   });
@@ -240,6 +248,12 @@ export const sendCode = async ({
     console.error(
       chalk.red(`Failed to send extracted code from ${file.path}: ${response.statusText}`)
     );
+    debug.http('Error details: %o', {
+      status: response.status,
+      text: await response.text(),
+      url: response.url,
+      headers: response.headers,
+    });
   } else {
     console.log(chalk.green(`Contents from ${file.path} extracted and sent to mesh endpoint`));
   }
