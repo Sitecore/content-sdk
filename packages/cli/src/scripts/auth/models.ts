@@ -1,4 +1,7 @@
-﻿export interface TenantArgs {
+﻿/**
+ * CLI arguments used for authentication and tenant identification.
+ */
+export interface TenantArgs {
   /**
    * OAuth2 client ID used to identify the application
    */
@@ -36,6 +39,9 @@ export interface Settings {
   activeTenant?: string;
 }
 
+/**
+ * Auth configuration stored per tenant for accessing Sitecore APIs.
+ */
 export interface TenantAuth {
   /**
    * Client ID used during authentication
@@ -60,6 +66,9 @@ export interface TenantAuth {
   clientSecret?: string;
 }
 
+/**
+ * Public metadata for a known tenant.
+ */
 export interface TenantInfo {
   /**
    * Unique ID of the tenant
