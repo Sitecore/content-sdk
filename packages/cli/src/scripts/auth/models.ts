@@ -44,10 +44,6 @@ export interface Settings {
  */
 export interface TenantAuth {
   /**
-   * Client ID used during authentication
-   */
-  clientId: string;
-  /**
    * Access token issued by the identity provider
    */
   access_token: string;
@@ -64,6 +60,10 @@ export interface TenantAuth {
    * Secret used for client credentials flow and re-authenticate
    */
   clientSecret?: string;
+  /*
+    Refresh token used to obtain new access tokens
+   */
+  refresh_token?: string;
 }
 
 /**
@@ -86,4 +86,16 @@ export interface TenantInfo {
    * Client ID associated with this tenant's authentication
    */
   clientId: string;
+  /**
+   * OAuth2 audience (e.g., API base URL the token is intended for)
+   */
+  audience: string;
+  /**
+   * Auth authority/issuer URL (e.g., Sitecore identity endpoint)
+   */
+  authority: string;
+  /**
+   * Base URL for the target Sitecore Content Management API
+   */
+  baseUrl: string;
 }

@@ -136,6 +136,9 @@ export function getAllTenantsInfo(): TenantInfo[] {
             tenantName: data.tenantName,
             organizationId: data.organizationId,
             clientId: data.clientId,
+            authority: data.authority,
+            audience: data.audience,
+            baseUrl: data.baseUrl,
           });
         }
       } catch (error) {

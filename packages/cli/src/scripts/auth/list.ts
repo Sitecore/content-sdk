@@ -8,18 +8,22 @@ export const list: CommandModule = {
     const tenants = getAllTenantsInfo();
 
     if (tenants.length === 0) {
-      console.info('\n No tenant information found.');
+      console.log('\n No tenant information found.');
       return;
     }
 
-    console.info('\n Known tenants:');
-    console.table(
-      tenants.map((tenant) => ({
-        tenant_id: tenant.tenantId,
-        tenant_name: tenant.tenantName,
-        organization_id: tenant.organizationId,
-        client_id: tenant.clientId,
-      }))
-    );
+    console.log('\nKnown tenants:\n');
+
+    tenants.forEach((tenant, index) => {
+      console.log(`Tenant ${index + 1}:`);
+      console.log(`  Tenant ID       : ${tenant.tenantId}`);
+      console.log(`  Tenant Name     : ${tenant.tenantName}`);
+      console.log(`  Organization ID : ${tenant.organizationId}`);
+      console.log(`  Client ID       : ${tenant.clientId}`);
+      console.log(`  Authority       : ${tenant.authority || 'N/A'}`);
+      console.log(`  Audience        : ${tenant.audience || 'N/A'}`);
+      console.log(`  Base URL        : ${tenant.baseUrl || 'N/A'}`);
+      console.log();
+    });
   },
 };

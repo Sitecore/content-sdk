@@ -3,6 +3,7 @@ import { clientCredentialsFlow } from '../../utils/auth/flow';
 import { writeTenantAuthInfo, writeTenantInfo } from '../../utils/auth/tenant-store';
 import { setActiveTenant } from '../../utils/auth/tenant-state';
 import { TenantArgs } from './models';
+import { AUTH0_DOMAIN, AUDIENCE } from '../../utils/auth/flow';
 
 export const login: CommandModule<object, TenantArgs> = {
   command: 'login',
@@ -78,7 +79,6 @@ export const login: CommandModule<object, TenantArgs> = {
     }
 
     await writeTenantAuthInfo(tenantId, {
-      clientId,
       clientSecret: argv.clientSecret,
       access_token: authResult.access_token,
       expires_in: authResult.expires_in,
@@ -90,6 +90,9 @@ export const login: CommandModule<object, TenantArgs> = {
       organizationId,
       clientId,
       tenantName,
+      authority: argv.authority || AUTH0_DOMAIN,
+      audience: argv.audience || AUDIENCE,
+      baseUrl: argv.baseUrl || '',
     });
 
     setActiveTenant(tenantId);

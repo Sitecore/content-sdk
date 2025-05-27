@@ -11,16 +11,26 @@ describe('auth token renewal utilities', () => {
   const pastDate = new Date(Date.now() - 3600 * 1000).toISOString();
 
   const authMock = {
-    clientId: 'cid',
     clientSecret: 'secret',
     access_token: 'token',
     expires_in: 3600,
     expires_at: futureDate,
   };
 
+  const tenantMock = {
+    tenantId: 'tenant1',
+    tenantName: 'DemoTenant',
+    organizationId: 'org1',
+    clientId: 'cid',
+    audience: 'audience',
+    authority: 'auth',
+    baseUrl: 'https://fake.base.url',
+  };
+
   let flowStub: sinon.SinonStub;
   let writeStub: sinon.SinonStub;
   let readAuthStub: sinon.SinonStub;
+  let readTenantInfoStub: sinon.SinonStub;
   let getTenantStub: sinon.SinonStub;
   let deleteAuthStub: sinon.SinonStub;
   let clearActiveStub: sinon.SinonStub;
@@ -33,10 +43,14 @@ describe('auth token renewal utilities', () => {
         access_token: 'new-token',
         expires_in: 3600,
       },
+      tokenOrgId: 'org1',
+      tokenTenantId: 'tenant1',
+      tokenTenantName: 'DemoTenant',
     });
 
     writeStub = sinon.stub(tenantStore, 'writeTenantAuthInfo').resolves();
     readAuthStub = sinon.stub(tenantStore, 'readTenantAuthInfo');
+    readTenantInfoStub = sinon.stub(tenantStore, 'readTenantInfo');
     getTenantStub = sinon.stub(tenantState, 'getActiveTenant');
     deleteAuthStub = sinon.stub(tenantStore, 'deleteTenantAuthInfo').resolves();
     clearActiveStub = sinon.stub(tenantState, 'clearActiveTenant');
@@ -62,19 +76,19 @@ describe('auth token renewal utilities', () => {
 
   describe('renewClientToken', () => {
     it('should call flow and update auth file with new token', async () => {
-      await renewClientToken('tenant1', authMock);
+      await renewClientToken(authMock, tenantMock);
 
       expect(flowStub.calledOnce).to.be.true;
       expect(writeStub.calledOnce).to.be.true;
       expect(writeStub.firstCall.args[0]).to.equal('tenant1');
+
       const writtenAuth = writeStub.firstCall.args[1];
-      expect(writtenAuth).to.deep.equal({
-        clientId: authMock.clientId,
+      expect(writtenAuth).to.deep.include({
         clientSecret: authMock.clientSecret,
         access_token: 'new-token',
         expires_in: 3600,
-        expires_at: writtenAuth.expires_at,
       });
+      expect(writtenAuth.expires_at).to.be.a('string');
     });
   });
 
@@ -105,6 +119,7 @@ describe('auth token renewal utilities', () => {
     it('should renew and return tenantId if token is expired', async () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves({ ...authMock, expires_at: pastDate });
+      readTenantInfoStub.resolves(tenantMock);
 
       const result = await renewAuthIfExpired();
 
@@ -115,6 +130,7 @@ describe('auth token renewal utilities', () => {
     it('should handle renewal error and cleanup', async () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves({ ...authMock, expires_at: pastDate });
+      readTenantInfoStub.resolves(tenantMock);
       flowStub.rejects(new Error('Network error'));
 
       const result = await renewAuthIfExpired();
@@ -128,11 +144,11 @@ describe('auth token renewal utilities', () => {
     it('should error out if clientSecret is missing', async () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves({
-        clientId: 'cid',
-        expires_at: pastDate,
         access_token: 'token',
+        expires_at: pastDate,
         expires_in: 3600,
       });
+      readTenantInfoStub.resolves(tenantMock);
 
       const result = await renewAuthIfExpired();
 
@@ -140,6 +156,16 @@ describe('auth token renewal utilities', () => {
       expect(consoleErrorStub.calledWithMatch(/clientSecret/)).to.be.true;
       expect(deleteAuthStub.calledOnce).to.be.true;
       expect(clearActiveStub.calledOnce).to.be.true;
+    });
+
+    it('should return null if tenant info cannot be read', async () => {
+      getTenantStub.returns('tenant1');
+      readAuthStub.resolves({ ...authMock, expires_at: pastDate });
+      readTenantInfoStub.resolves(null);
+
+      const result = await renewAuthIfExpired();
+
+      expect(result).to.be.null;
     });
   });
 });

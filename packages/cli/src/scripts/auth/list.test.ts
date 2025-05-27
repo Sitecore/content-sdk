@@ -5,12 +5,10 @@ import * as tenantStore from '../../../src/utils/auth/tenant-store';
 
 describe('list command', () => {
   let getAllTenantsStub: sinon.SinonStub;
-  let consoleInfoStub: sinon.SinonStub;
-  let consoleTableStub: sinon.SinonStub;
+  let consoleLogStub: sinon.SinonStub;
 
   beforeEach(() => {
-    consoleInfoStub = sinon.stub(console, 'info');
-    consoleTableStub = sinon.stub(console, 'table');
+    consoleLogStub = sinon.stub(console, 'log');
   });
 
   afterEach(() => {
@@ -22,24 +20,20 @@ describe('list command', () => {
 
     await list.handler({} as any);
 
-    expect(consoleInfoStub.calledOnce).to.be.true;
-    expect(consoleInfoStub.firstCall.args[0]).to.include('No tenant information found');
-    expect(consoleTableStub.notCalled).to.be.true;
+    expect(consoleLogStub.calledOnce).to.be.true;
+    expect(consoleLogStub.firstCall.args[0]).to.include('No tenant information found');
   });
 
-  it('should list tenants in table format when tenants exist', async () => {
+  it('should log all tenant properties line by line', async () => {
     const mockTenants = [
       {
         tenantId: 't1',
         tenantName: 'Tenant One',
         organizationId: 'org1',
         clientId: 'client1',
-      },
-      {
-        tenantId: 't2',
-        tenantName: 'Tenant Two',
-        organizationId: 'org2',
-        clientId: 'client2',
+        authority: 'auth1',
+        audience: 'aud1',
+        baseUrl: 'base1',
       },
     ];
 
@@ -47,16 +41,21 @@ describe('list command', () => {
 
     await list.handler({} as any);
 
-    expect(consoleInfoStub.calledWithMatch('Known tenants')).to.be.true;
-    expect(consoleTableStub.calledOnce).to.be.true;
+    const expectedLines = [
+      '\nKnown tenants:\n',
+      'Tenant 1:',
+      '  Tenant ID       : t1',
+      '  Tenant Name     : Tenant One',
+      '  Organization ID : org1',
+      '  Client ID       : client1',
+      '  Authority       : auth1',
+      '  Audience        : aud1',
+      '  Base URL        : base1',
+      '', // spacing line after each tenant
+    ];
 
-    const expectedTableData = mockTenants.map((t) => ({
-      tenant_id: t.tenantId,
-      tenant_name: t.tenantName,
-      organization_id: t.organizationId,
-      client_id: t.clientId,
-    }));
-
-    expect(consoleTableStub.firstCall.args[0]).to.deep.equal(expectedTableData);
+    expectedLines.forEach((line) => {
+      expect(consoleLogStub.calledWithMatch(line)).to.be.true;
+    });
   });
 });

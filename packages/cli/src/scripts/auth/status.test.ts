@@ -8,13 +8,9 @@ describe('status command', () => {
   let renewStub: sinon.SinonStub;
   let readTenantInfoStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
-  let consoleInfoStub: sinon.SinonStub;
-  let consoleTableStub: sinon.SinonStub;
 
   beforeEach(() => {
     consoleLogStub = sinon.stub(console, 'log');
-    consoleInfoStub = sinon.stub(console, 'info');
-    consoleTableStub = sinon.stub(console, 'table');
   });
 
   afterEach(() => {
@@ -37,6 +33,9 @@ describe('status command', () => {
       tenantName: 'DemoTenant',
       organizationId: 'org-001',
       clientId: 'client-abc',
+      authority: 'https://auth.example.com',
+      audience: 'https://api.example.com',
+      baseUrl: 'https://sitecore.example.com',
     };
 
     renewStub = sinon.stub(auth, 'renewAuthIfExpired').resolves({ tenantId: fakeTenantId });
@@ -44,13 +43,19 @@ describe('status command', () => {
 
     await status.handler({} as any);
 
-    expect(consoleInfoStub.calledWithMatch('Active tenant')).to.be.true;
-    expect(consoleTableStub.calledOnce).to.be.true;
+    const expectedLines = [
+      '\n Active tenant:',
+      '  Tenant ID       : tenant-123',
+      '  Tenant Name     : DemoTenant',
+      '  Organization ID : org-001',
+      '  Client ID       : client-abc',
+      '  Authority       : https://auth.example.com',
+      '  Audience        : https://api.example.com',
+      '  Base URL        : https://sitecore.example.com',
+    ];
 
-    const outputRow = consoleTableStub.firstCall.args[0][0];
-    expect(outputRow.tenant_id).to.equal(fakeTenantId);
-    expect(outputRow.tenant_name).to.equal('DemoTenant');
-    expect(outputRow.organization_id).to.equal('org-001');
-    expect(outputRow.client_id).to.equal('client-abc');
+    expectedLines.forEach((line) => {
+      expect(consoleLogStub.calledWithMatch(line)).to.be.true;
+    });
   });
 });

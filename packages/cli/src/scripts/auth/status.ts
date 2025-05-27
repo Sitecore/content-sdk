@@ -15,14 +15,13 @@ export const status: CommandModule = {
 
     const tenantInfo = await readTenantInfo(context.tenantId);
 
-    console.info('\n Active tenant:');
-    console.table([
-      {
-        tenant_id: context.tenantId,
-        tenant_name: tenantInfo?.tenantName || 'N/A',
-        organization_id: tenantInfo?.organizationId || 'N/A',
-        client_id: tenantInfo?.clientId || 'N/A',
-      },
-    ]);
+    console.log('\n Active tenant:');
+    console.log(`  Tenant ID       : ${context.tenantId}`);
+    console.log(`  Tenant Name     : ${tenantInfo?.tenantName || 'N/A'}`);
+    console.log(`  Organization ID : ${tenantInfo?.organizationId || 'N/A'}`);
+    console.log(`  Client ID       : ${tenantInfo?.clientId || 'N/A'}`);
+    console.log(`  Authority       : ${tenantInfo?.authority || 'N/A'}`);
+    console.log(`  Audience        : ${tenantInfo?.audience || 'N/A'}`);
+    console.log(`  Base URL        : ${tenantInfo?.baseUrl || 'N/A'}`);
   },
 };

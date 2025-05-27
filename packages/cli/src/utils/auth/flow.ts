@@ -1,8 +1,8 @@
 ﻿import { TenantArgs } from '../../scripts/auth/models';
 import { decodeJwtPayload } from './tenant-store';
 
-const AUTH0_DOMAIN = 'https://auth.sitecorecloud.io';
-const AUDIENCE = 'https://api.sitecorecloud.io';
+export const AUTH0_DOMAIN = 'https://auth.sitecorecloud.io';
+export const AUDIENCE = 'https://api.sitecorecloud.io';
 const GRANT_TYPE = 'client_credentials';
 
 /**

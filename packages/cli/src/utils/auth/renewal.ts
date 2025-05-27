@@ -1,7 +1,12 @@
 ﻿import { getActiveTenant, clearActiveTenant } from './tenant-state';
 import { clientCredentialsFlow } from './flow';
-import { TenantAuth } from './../../scripts/auth/models';
-import { writeTenantAuthInfo, readTenantAuthInfo, deleteTenantAuthInfo } from './tenant-store';
+import { TenantAuth, TenantInfo } from './../../scripts/auth/models';
+import {
+  writeTenantAuthInfo,
+  readTenantAuthInfo,
+  deleteTenantAuthInfo,
+  readTenantInfo,
+} from './tenant-store';
 
 /**
  * Validates whether a given auth config is still valid (i.e., not expired).
@@ -16,20 +21,28 @@ export function validateAuthInfo(authInfo: TenantAuth): boolean {
 
 /**
  * Renews the token for a given tenant using stored credentials.
- * @param {string} tenantId - ID of the tenant whose token needs renewal.
- * @param {TenantAuth} auth
+ * @param {TenantAuth} authInfo - Current authentication info for the tenant.
+ * @param {TenantInfo} tenantInfo - Public metadata about the tenant (e.g., clientId).
  * @returns Promise<void>
  * @throws If credentials are missing or renewal fails.
  */
-export async function renewClientToken(tenantId: string, auth: TenantAuth): Promise<void> {
+export async function renewClientToken(
+  authInfo: TenantAuth,
+  tenantInfo: TenantInfo
+): Promise<void> {
   const result = await clientCredentialsFlow({
-    clientId: auth.clientId,
-    clientSecret: auth.clientSecret,
+    clientId: tenantInfo.clientId,
+    clientSecret: authInfo.clientSecret,
+    organizationId: tenantInfo.organizationId,
+    tenantId: tenantInfo.tenantId,
+    audience: tenantInfo.audience,
+    authority: tenantInfo.authority,
+    baseUrl: tenantInfo.baseUrl,
   });
+  const tenantId = tenantInfo.tenantId;
 
   await writeTenantAuthInfo(tenantId, {
-    clientId: auth.clientId,
-    clientSecret: auth.clientSecret,
+    clientSecret: authInfo.clientSecret,
     access_token: result.data.access_token,
     expires_in: result.data.expires_in,
     expires_at: new Date(Date.now() + result.data.expires_in * 1000).toISOString(),
@@ -46,19 +59,21 @@ export async function renewAuthIfExpired(): Promise<{ tenantId: string } | null>
   const tenantId = getActiveTenant();
   if (!tenantId) return null;
 
-  const auth = await readTenantAuthInfo(tenantId);
-  if (!auth) return null;
+  const authInfo = await readTenantAuthInfo(tenantId);
+  if (!authInfo) return null;
 
-  const isValid = validateAuthInfo(auth);
+  const isValid = validateAuthInfo(authInfo);
   if (isValid) {
     return { tenantId };
   }
+  const tenantInfo = await readTenantInfo(tenantId);
+  if (!tenantInfo) return null;
 
   console.info(`\n Token for tenant ${tenantId} is expired. Renewing...`);
 
   try {
-    if (auth.clientSecret) {
-      await renewClientToken(tenantId, auth);
+    if (authInfo.clientSecret) {
+      await renewClientToken(authInfo, tenantInfo);
     } else {
       // <TODO>: Implement Device auth token renewal.
       throw new Error('\n Please use clientSecret for authentication.');
