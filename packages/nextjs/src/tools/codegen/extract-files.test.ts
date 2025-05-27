@@ -10,7 +10,6 @@ import path from 'path';
 
 describe('extract-files', () => {
   const sandbox = sinon.createSandbox();
-  const meshUrl = 'https://test-mesh-url.com';
   const defaultConfig = defineConfig({
     api: {
       edge: {
@@ -20,6 +19,8 @@ describe('extract-files', () => {
     },
     defaultLanguage: '',
   });
+
+  const edgeUrl = defaultConfig.api.edge.edgeUrl;
 
   const mockArgs = {
     scConfig: {
@@ -39,7 +40,6 @@ describe('extract-files', () => {
     process.env.BuildMetadata_BuildId = '0451';
     process.env.SITECORE_AUTH_CLIENT_ID = 'test-client-id';
     process.env.SITECORE_AUTH_CLIENT_SECRET = 'test-client-secret';
-    process.env.SITECORE_MESH_URL = meshUrl;
     sandbox.stub(fs, 'existsSync').returns(true);
   });
 
@@ -50,7 +50,6 @@ describe('extract-files', () => {
     delete process.env.SITECORE_AUTH_CLIENT_ID;
     delete process.env.SITECORE_AUTH_CLIENT_SECRET;
     delete process.env.BuildMetadata_BuildId;
-    delete process.env.SITECORE_MESH_URL;
   });
 
   it('should log when bearer is empty', async () => {
@@ -110,7 +109,7 @@ describe('extract-files', () => {
 
     const consoleLogStub = sandbox.stub(console, 'log');
 
-    nock(meshUrl)
+    nock(edgeUrl)
       .post('/api/v1/contentsdk/code/extracted')
       .reply(200)
       .persist();

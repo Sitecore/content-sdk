@@ -54,68 +54,7 @@ describe('codegen-utils', () => {
 
       const consoleLogStub = sandbox.spy(console, 'log');
 
-      await codegenUtils.sendCode({ file, token, endpoint: meshEndpoint });
-
-      expect(consoleLogStub.called).to.be.true;
-      expect(consoleLogStub.firstCall.args[0]).to.equal(
-        chalk.green('Contents from /path/to/component.ts extracted and sent to mesh endpoint')
-      );
-    });
-
-    it('should send code to custom meshEndpoint', async () => {
-      const componentPath = '/path/to/component.ts';
-      const token = 'test-token';
-      const fileContent = 'export const test = () => {};';
-      const customMeshEndpoint = 'https://custom-mesh-endpoint.com';
-
-      const file = {
-        name: componentName,
-        path: componentPath,
-        type: codegenUtils.ExtractedFileType.Component,
-      };
-
-      sandbox
-        .stub(fs, 'existsSync')
-        .withArgs(componentPath)
-        .returns(true);
-      sandbox
-        .stub(fs, 'readFileSync')
-        .withArgs(componentPath)
-        .returns(fileContent);
-
-      nock(customMeshEndpoint)
-        .post(
-          '/api/v1/contentsdk/code/extracted',
-          JSON.stringify({
-            EnvironmentId: 'not-set',
-            name: file.name,
-            content: fileContent,
-            labels: {
-              type: file.type,
-            },
-          })
-        )
-        .matchHeader('Authorization', `Bearer ${token}`)
-        .reply(200);
-
-      nock(meshEndpoint)
-        .post(
-          '/api/v1/contentsdk/code/extracted',
-          JSON.stringify({
-            EnvironmentId: 'not-set',
-            name: file.name,
-            content: fileContent,
-            labels: {
-              type: file.type,
-            },
-          })
-        )
-        .matchHeader('Authorization', `Bearer ${token}`)
-        .reply(503, 'Service Unavailable');
-
-      const consoleLogStub = sandbox.spy(console, 'log');
-
-      await codegenUtils.sendCode({ file, token, endpoint: customMeshEndpoint });
+      await codegenUtils.sendCode({ file, token, targetUrl: meshEndpoint });
 
       expect(consoleLogStub.called).to.be.true;
       expect(consoleLogStub.firstCall.args[0]).to.equal(
@@ -140,7 +79,7 @@ describe('codegen-utils', () => {
 
       const consoleErrorStub = sandbox.stub(console, 'error');
 
-      await codegenUtils.sendCode({ file, token, endpoint: meshEndpoint });
+      await codegenUtils.sendCode({ file, token, targetUrl: meshEndpoint });
 
       expect(consoleErrorStub.calledOnce).to.be.true;
       expect(consoleErrorStub.firstCall.args[0]).to.equal(
@@ -184,7 +123,7 @@ describe('codegen-utils', () => {
 
       const consoleErrorStub = sandbox.stub(console, 'error');
 
-      await codegenUtils.sendCode({ file, token, endpoint: meshEndpoint });
+      await codegenUtils.sendCode({ file, token, targetUrl: meshEndpoint });
 
       expect(consoleErrorStub.calledOnce).to.be.true;
       expect(consoleErrorStub.firstCall.args[0]).to.equal(

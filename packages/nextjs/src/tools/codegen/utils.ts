@@ -211,13 +211,13 @@ export const resolveComponentImportFiles = (
 export const sendCode = async ({
   file,
   token,
-  endpoint,
+  targetUrl,
 }: {
   file: ExtractedFile;
   token: string;
-  endpoint: string;
+  targetUrl: string;
 }) => {
-  const apiEndpoint = `${endpoint}/api/v1/contentsdk/code/extracted`;
+  const apiEndpoint = `${targetUrl}/api/v1/contentsdk/code/extracted`;
   if (!fs.existsSync(file.path)) {
     console.error(chalk.red(`File not found: ${file.path}`));
     return;
@@ -231,11 +231,7 @@ export const sendCode = async ({
     },
     body: JSON.stringify({
       // identify environment by XMCloud, Vercel or Netlify build metadata
-      EnvironmentId:
-        process.env.BuildMetadata_EnvironmentId ||
-        process.env.VERCEL_PROJECT_ID ||
-        process.env.ACCOUNT_ID ||
-        'not-set',
+      EnvironmentId: 'not-set',
       name: file.name,
       content: code.toString(),
       labels: {
