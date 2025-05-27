@@ -1,9 +1,8 @@
 ﻿import { Argv, CommandModule } from 'yargs';
-import { clientCredentialsFlow } from '../../utils/auth/flow';
+import { clientCredentialsFlow, AUTH0_DOMAIN, AUDIENCE, BASE_URL } from '../../utils/auth/flow';
 import { writeTenantAuthInfo, writeTenantInfo } from '../../utils/auth/tenant-store';
 import { setActiveTenant } from '../../utils/auth/tenant-state';
 import { TenantArgs } from './models';
-import { AUTH0_DOMAIN, AUDIENCE } from '../../utils/auth/flow';
 
 export const login: CommandModule<object, TenantArgs> = {
   command: 'login',
@@ -92,7 +91,7 @@ export const login: CommandModule<object, TenantArgs> = {
       tenantName,
       authority: argv.authority || AUTH0_DOMAIN,
       audience: argv.audience || AUDIENCE,
-      baseUrl: argv.baseUrl || '',
+      baseUrl: argv.baseUrl || BASE_URL,
     });
 
     setActiveTenant(tenantId);

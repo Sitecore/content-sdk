@@ -3,6 +3,7 @@ import { decodeJwtPayload } from './tenant-store';
 
 export const AUTH0_DOMAIN = 'https://auth.sitecorecloud.io';
 export const AUDIENCE = 'https://api.sitecorecloud.io';
+export const BASE_URL = 'https://edge-platform.sitecorecloud.io/cs/api';
 const GRANT_TYPE = 'client_credentials';
 
 /**
@@ -26,7 +27,7 @@ export async function clientCredentialsFlow({
   tenantId,
   audience = AUDIENCE,
   authority = AUTH0_DOMAIN,
-  baseUrl,
+  baseUrl = BASE_URL,
 }: TenantArgs) {
   const params = new URLSearchParams({
     client_id: clientId,

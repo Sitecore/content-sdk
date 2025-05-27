@@ -1,6 +1,6 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
-import { clientCredentialsFlow } from './flow';
+import { clientCredentialsFlow, AUDIENCE, BASE_URL } from './flow';
 import * as jwtUtil from './tenant-store';
 
 describe('clientCredentialsFlow', () => {
@@ -35,7 +35,7 @@ describe('clientCredentialsFlow', () => {
     sinon.restore();
   });
 
-  it('should succeed when tenantId and organizationId are not passed', async () => {
+  it('should succeed when tenantId and organizationId are not passed and grab them from token claims', async () => {
     const result = await clientCredentialsFlow({
       clientId: 'id',
       clientSecret: 'secret',
@@ -47,7 +47,13 @@ describe('clientCredentialsFlow', () => {
     expect(result.tokenTenantName).to.equal(fakeDecoded.tokenTenantName);
   });
 
-  it('should succeed when tenantId and organizationId are passed', async () => {
+  it('should succeed only if passed tenantId and organizationId match token claims', async () => {
+    decodeStub.returns({
+      tokenTenantId: 'tenant123',
+      tokenOrgId: 'org456',
+      tokenTenantName: 'FakeTenant',
+    });
+
     const result = await clientCredentialsFlow({
       clientId: 'id',
       clientSecret: 'secret',
@@ -56,9 +62,71 @@ describe('clientCredentialsFlow', () => {
     });
 
     expect(result.data.access_token).to.equal(fakeToken);
-    expect(result.tokenTenantId).to.equal(fakeDecoded.tokenTenantId);
-    expect(result.tokenOrgId).to.equal(fakeDecoded.tokenOrgId);
-    expect(result.tokenTenantName).to.equal(fakeDecoded.tokenTenantName);
+    expect(result.tokenTenantId).to.equal('tenant123');
+    expect(result.tokenOrgId).to.equal('org456');
+    expect(result.tokenTenantName).to.equal('FakeTenant');
+  });
+
+  it('should use default values when audience, authority, and baseUrl are not provided', async () => {
+    const expectedParams = new URLSearchParams({
+      client_id: 'id',
+      client_secret: 'secret',
+      organization_id: '',
+      tenant_id: '',
+      audience: AUDIENCE,
+      grant_type: 'client_credentials',
+      baseUrl: BASE_URL,
+    }).toString();
+
+    let actualRequestBody: string = '';
+
+    fetchStub.callsFake(async (_url: string, options: any) => {
+      actualRequestBody = options.body;
+      return fetchResponse as any;
+    });
+
+    await clientCredentialsFlow({
+      clientId: 'id',
+      clientSecret: 'secret',
+    });
+
+    expect(actualRequestBody).to.equal(expectedParams);
+  });
+
+  it('should override defaults when custom audience, authority, and baseUrl are provided', async () => {
+    const customAuthority = 'https://custom-authority.io';
+    const customAudience = 'https://custom-api.io';
+    const customBaseUrl = 'https://custom-base.io';
+
+    const expectedParams = new URLSearchParams({
+      client_id: 'id',
+      client_secret: 'secret',
+      organization_id: '',
+      tenant_id: '',
+      audience: customAudience,
+      grant_type: 'client_credentials',
+      baseUrl: customBaseUrl,
+    }).toString();
+
+    let actualUrl: string = '';
+    let actualRequestBody: string = '';
+
+    fetchStub.callsFake(async (url: string, options: any) => {
+      actualUrl = url;
+      actualRequestBody = options.body;
+      return fetchResponse as any;
+    });
+
+    await clientCredentialsFlow({
+      clientId: 'id',
+      clientSecret: 'secret',
+      authority: customAuthority,
+      audience: customAudience,
+      baseUrl: customBaseUrl,
+    });
+
+    expect(actualUrl).to.equal(`${customAuthority}/oauth/token`);
+    expect(actualRequestBody).to.equal(expectedParams);
   });
 
   it('should throw if token has missing claims', async () => {
