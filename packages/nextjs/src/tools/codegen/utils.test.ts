@@ -41,7 +41,7 @@ describe('codegen-utils', () => {
         .post(
           '/api/v1/contentsdk/code/extracted',
           JSON.stringify({
-            EnvironmentId: 'not-set',
+            EnvironmentId: 'ContentSDK',
             name: file.name,
             content: fileContent,
             labels: {
@@ -110,7 +110,7 @@ describe('codegen-utils', () => {
         .post(
           '/api/v1/contentsdk/code/extracted',
           JSON.stringify({
-            EnvironmentId: 'not-set',
+            EnvironmentId: 'ContentSDK',
             name: file.name,
             content: fileContent,
             labels: {

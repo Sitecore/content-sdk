@@ -135,11 +135,7 @@ export const resolveComponentImportFiles = (
       // import path is extracted
       const moduleName = childNode.moduleSpecifier.getText().replace(/['"]/g, '');
       // unless the import is a nodeJS one, or points to dependency package, resolve full path to the imported source file
-      if (
-        moduleName.startsWith('node:') ||
-        moduleName.indexOf('/node_modules') > -1 ||
-        moduleName.endsWith('.d.ts')
-      ) {
+      if (moduleName.startsWith('node:') || moduleName.indexOf('/node_modules') > -1) {
         return;
       }
       const resolvedModule = ts.nodeModuleNameResolver(
@@ -150,8 +146,10 @@ export const resolveComponentImportFiles = (
       );
       const resolvedFile = resolvedModule?.resolvedModule?.resolvedFileName;
       // module imports will be resolved to /node_modules location - we don't support that yet
-      if (resolvedFile && resolvedFile.indexOf('node_modules') === -1) {
-        importStringsMap[childNode.importClause.getText()] = path.resolve(resolvedFile);
+      if (resolvedFile) {
+        if (resolvedFile.indexOf('node_modules') === -1 && !resolvedFile.endsWith('.d.ts')) {
+          importStringsMap[childNode.importClause.getText()] = path.resolve(resolvedFile);
+        }
       } else {
         console.warn('Could not resolve a file for import %s', moduleName);
       }
@@ -230,8 +228,8 @@ export const sendCode = async ({
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      // identify environment by XMCloud, Vercel or Netlify build metadata
-      EnvironmentId: 'not-set',
+      // EnvironmentId can have any value - but it's required
+      EnvironmentId: 'ContentSDK',
       name: file.name,
       content: code.toString(),
       labels: {
