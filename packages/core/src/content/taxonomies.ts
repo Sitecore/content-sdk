@@ -112,19 +112,19 @@ export interface ContentItemList<T> {
  * GraphQL query to retrieve all taxonomies with optional pagination for taxonomies and terms.
  *
  * Variables:
- * - minimumPageSize: The number of taxonomies to retrieve per page.
+ * - pageSize: The number of taxonomies to retrieve per page.
  * - termsPageSize: The number of terms to retrieve per page within each taxonomy.
  * - after: The cursor for fetching the next page of taxonomies.
  * - termsAfter: The cursor for fetching the next page of terms within a taxonomy.
  */
 export const GET_TAXONOMIES_QUERY = `
   query GetAllTaxonomies(
-    $minimumPageSize: Int
+    $pageSize: Int
     $termsPageSize: Int
     $after: String
     $termsAfter: String
   ) {
-    manyTaxonomy(minimumPageSize: $minimumPageSize, after: $after) {
+    manyTaxonomy(minimumPageSize: $pageSize, after: $after) {
       cursor
       hasMore
       results {
