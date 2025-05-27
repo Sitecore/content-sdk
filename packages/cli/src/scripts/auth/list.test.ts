@@ -23,7 +23,7 @@ describe('list command', () => {
     await list.handler({} as any);
 
     expect(consoleInfoStub.calledOnce).to.be.true;
-    expect(consoleInfoStub.firstCall.args[0]).to.include('No tenant info found');
+    expect(consoleInfoStub.firstCall.args[0]).to.include('No tenant information found');
     expect(consoleTableStub.notCalled).to.be.true;
   });
 
