@@ -12,12 +12,12 @@ export const list: CommandModule = {
       return;
     }
 
-    console.log('\nKnown tenants:\n');
+    console.log('\n Known tenants:\n');
 
     tenants.forEach((tenant, index) => {
       console.log(`Tenant ${index + 1}:`);
       console.log(`  Tenant ID       : ${tenant.tenantId}`);
-      console.log(`  Tenant Name     : ${tenant.tenantName}`);
+      console.log(`  Tenant Name     : ${tenant.tenantName || 'N/A'}`);
       console.log(`  Organization ID : ${tenant.organizationId}`);
       console.log(`  Client ID       : ${tenant.clientId}`);
       console.log(`  Authority       : ${tenant.authority || 'N/A'}`);

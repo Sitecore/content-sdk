@@ -31,6 +31,8 @@ describe('login command', () => {
   let writeTenantInfoStub: sinon.SinonStub;
   let setActiveTenantStub: sinon.SinonStub;
   let consoleInfoStub: sinon.SinonStub;
+  let processExitStub: sinon.SinonStub;
+  let consoleErrorStub: sinon.SinonStub;
 
   beforeEach(() => {
     clientCredentialsStub = sinon
@@ -40,6 +42,8 @@ describe('login command', () => {
     writeTenantInfoStub = sinon.stub(tenantStore, 'writeTenantInfo').resolves();
     setActiveTenantStub = sinon.stub(tenantState, 'setActiveTenant');
     consoleInfoStub = sinon.stub(console, 'info');
+    processExitStub = sinon.stub(process, 'exit');
+    consoleErrorStub = sinon.stub(console, 'error');
   });
 
   afterEach(() => {
@@ -64,5 +68,28 @@ describe('login command', () => {
     expect(writeTenantInfoStub.calledOnce).to.be.true;
     expect(setActiveTenantStub.calledWith(fakeAuthResponse.tokenTenantId)).to.be.true;
     expect(consoleInfoStub.calledWithMatch(/Logged in successfully/)).to.be.true;
+  });
+
+  it('should exit when clientCredentialsFlow throws', async () => {
+    clientCredentialsStub.rejects(new Error('invalid'));
+
+    processExitStub.callsFake(() => {
+      throw new Error('EXIT_CALLED');
+    });
+
+    const argv = {
+      clientId: 'test-client-id',
+      clientSecret: 'valid-secret',
+    };
+
+    try {
+      await login.handler(argv as any);
+      throw new Error('Test failed: process.exit was not called');
+    } catch (err) {
+      expect((err as Error).message).to.equal('EXIT_CALLED');
+    }
+
+    expect(consoleErrorStub.calledWithMatch('Login failed')).to.be.true;
+    expect(processExitStub.calledOnceWith(1)).to.be.true;
   });
 });

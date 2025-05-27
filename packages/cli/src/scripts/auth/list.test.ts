@@ -6,9 +6,13 @@ import * as tenantStore from '../../../src/utils/auth/tenant-store';
 describe('list command', () => {
   let getAllTenantsStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
+  let logs: string[];
 
   beforeEach(() => {
-    consoleLogStub = sinon.stub(console, 'log');
+    logs = [];
+    consoleLogStub = sinon.stub(console, 'log').callsFake((msg) => {
+      logs.push(String(msg));
+    });
   });
 
   afterEach(() => {
@@ -21,7 +25,7 @@ describe('list command', () => {
     await list.handler({} as any);
 
     expect(consoleLogStub.calledOnce).to.be.true;
-    expect(consoleLogStub.firstCall.args[0]).to.include('No tenant information found');
+    expect(logs[0]).to.include('No tenant information found');
   });
 
   it('should log all tenant properties line by line', async () => {
@@ -41,8 +45,8 @@ describe('list command', () => {
 
     await list.handler({} as any);
 
-    const expectedLines = [
-      '\nKnown tenants:\n',
+    const expectedLogs = [
+      '\n Known tenants:\n',
       'Tenant 1:',
       '  Tenant ID       : t1',
       '  Tenant Name     : Tenant One',
@@ -51,11 +55,10 @@ describe('list command', () => {
       '  Authority       : auth1',
       '  Audience        : aud1',
       '  Base URL        : base1',
-      '', // spacing line after each tenant
     ];
 
-    expectedLines.forEach((line) => {
-      expect(consoleLogStub.calledWithMatch(line)).to.be.true;
+    expectedLogs.forEach((expectedLine) => {
+      expect(logs).to.include(expectedLine);
     });
   });
 });

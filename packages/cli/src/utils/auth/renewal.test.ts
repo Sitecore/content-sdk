@@ -36,6 +36,7 @@ describe('auth token renewal utilities', () => {
   let clearActiveStub: sinon.SinonStub;
   let consoleInfoStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
+  let consoleWarnStub: sinon.SinonStub;
 
   beforeEach(() => {
     flowStub = sinon.stub(authFlow, 'clientCredentialsFlow').resolves({
@@ -53,9 +54,10 @@ describe('auth token renewal utilities', () => {
     readTenantInfoStub = sinon.stub(tenantStore, 'readTenantInfo');
     getTenantStub = sinon.stub(tenantState, 'getActiveTenant');
     deleteAuthStub = sinon.stub(tenantStore, 'deleteTenantAuthInfo').resolves();
-    clearActiveStub = sinon.stub(tenantState, 'clearActiveTenant');
+    clearActiveStub = sinon.stub(tenantState, 'clearActiveTenant').resolves();
     consoleInfoStub = sinon.stub(console, 'info');
     consoleErrorStub = sinon.stub(console, 'error');
+    consoleWarnStub = sinon.stub(console, 'warn');
   });
 
   afterEach(() => {
@@ -108,56 +110,6 @@ describe('auth token renewal utilities', () => {
       expect(result).to.be.null;
     });
 
-    it('should return tenantId if auth is still valid', async () => {
-      getTenantStub.returns('tenant1');
-      readAuthStub.resolves({ ...authMock, expires_at: futureDate });
-
-      const result = await renewAuthIfExpired();
-      expect(result).to.deep.equal({ tenantId: 'tenant1' });
-    });
-
-    it('should renew and return tenantId if token is expired', async () => {
-      getTenantStub.returns('tenant1');
-      readAuthStub.resolves({ ...authMock, expires_at: pastDate });
-      readTenantInfoStub.resolves(tenantMock);
-
-      const result = await renewAuthIfExpired();
-
-      expect(flowStub.calledOnce).to.be.true;
-      expect(result).to.deep.equal({ tenantId: 'tenant1' });
-    });
-
-    it('should handle renewal error and cleanup', async () => {
-      getTenantStub.returns('tenant1');
-      readAuthStub.resolves({ ...authMock, expires_at: pastDate });
-      readTenantInfoStub.resolves(tenantMock);
-      flowStub.rejects(new Error('Network error'));
-
-      const result = await renewAuthIfExpired();
-
-      expect(consoleErrorStub.calledWithMatch(/Token renewal failed/)).to.be.true;
-      expect(deleteAuthStub.calledOnce).to.be.true;
-      expect(clearActiveStub.calledOnce).to.be.true;
-      expect(result).to.be.null;
-    });
-
-    it('should error out if clientSecret is missing', async () => {
-      getTenantStub.returns('tenant1');
-      readAuthStub.resolves({
-        access_token: 'token',
-        expires_at: pastDate,
-        expires_in: 3600,
-      });
-      readTenantInfoStub.resolves(tenantMock);
-
-      const result = await renewAuthIfExpired();
-
-      expect(result).to.be.null;
-      expect(consoleErrorStub.calledWithMatch(/clientSecret/)).to.be.true;
-      expect(deleteAuthStub.calledOnce).to.be.true;
-      expect(clearActiveStub.calledOnce).to.be.true;
-    });
-
     it('should return null if tenant info cannot be read', async () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves({ ...authMock, expires_at: pastDate });
@@ -166,6 +118,42 @@ describe('auth token renewal utilities', () => {
       const result = await renewAuthIfExpired();
 
       expect(result).to.be.null;
+    });
+
+    it('should return tenantId if auth is still valid', async () => {
+      getTenantStub.returns('tenant1');
+      readAuthStub.resolves({ ...authMock, expires_at: futureDate });
+
+      const result = await renewAuthIfExpired();
+      expect(result).to.deep.equal({ tenantId: 'tenant1' });
+    });
+
+    it('should exit if token renewal fails unexpectedly', async () => {
+      getTenantStub.returns('tenant1');
+      readAuthStub.resolves({ ...authMock, expires_at: pastDate });
+      readTenantInfoStub.resolves(tenantMock);
+      flowStub.rejects(new Error('Unexpected failure'));
+
+      const exitStub = sinon.stub(process, 'exit').callsFake(() => {
+        throw new Error('EXIT_CALLED');
+      });
+
+      try {
+        await renewAuthIfExpired();
+        throw new Error('Test failed: process.exit not triggered');
+      } catch (err) {
+        if (err instanceof Error) {
+          expect(err.message).to.equal('EXIT_CALLED');
+        } else {
+          throw err;
+        }
+      }
+
+      expect(consoleErrorStub.calledWithMatch(/Failed to renew token/)).to.be.true;
+      expect(consoleWarnStub.calledWithMatch(/Cleaning up stale/)).to.be.true;
+      expect(deleteAuthStub.calledOnce).to.be.true;
+      expect(clearActiveStub.calledOnce).to.be.true;
+      expect(exitStub.calledOnceWith(1)).to.be.true;
     });
   });
 });

@@ -32,7 +32,7 @@ export interface TenantArgs {
   baseUrl?: string;
 }
 
-export interface Settings {
+export interface TenantSettings {
   /**
    * Currently active tenant ID tracked by the CLI
    */
@@ -55,13 +55,12 @@ export interface TenantAuth {
    * Exact ISO timestamp when the token expires
    */
   expires_at: string;
-
   /**
    * Secret used for client credentials flow and re-authenticate
    */
   clientSecret?: string;
   /*
-    Refresh token used to obtain new access tokens
+   * Refresh token used to obtain new access tokens
    */
   refresh_token?: string;
 }

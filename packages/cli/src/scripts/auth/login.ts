@@ -38,7 +38,7 @@ export const login: CommandModule<object, TenantArgs> = {
       .option('audience', {
         type: 'string',
         demandOption: false,
-        describe: 'Intended recipient (audience) of the token, usually the API base URL.',
+        describe: 'Intended recipient of the token, usually the API base URL.',
       })
       .option('baseUrl', {
         type: 'string',
@@ -46,10 +46,17 @@ export const login: CommandModule<object, TenantArgs> = {
         describe: 'Base URL for the API, used to construct the audience.',
       })
       .group(
-        ['clientId', 'clientSecret', 'tenantId', 'organizationId, authority, audience', 'baseUrl'],
+        [
+          'clientId',
+          'clientSecret',
+          'tenantId',
+          'organizationId',
+          'authority',
+          'audience',
+          'baseUrl',
+        ],
         'Login Options:'
-      )
-      .help(),
+      ),
 
   handler: async (argv: TenantArgs) => {
     const { clientId } = argv;
@@ -57,20 +64,25 @@ export const login: CommandModule<object, TenantArgs> = {
     let authResult, tenantId, organizationId, tenantName;
 
     if (argv.clientSecret) {
-      const authData = await clientCredentialsFlow({
-        clientId,
-        clientSecret: argv.clientSecret,
-        organizationId: argv.organizationId,
-        tenantId: argv.tenantId,
-        audience: argv.audience,
-        authority: argv.authority,
-        baseUrl: argv.baseUrl,
-      });
+      try {
+        const authData = await clientCredentialsFlow({
+          clientId,
+          clientSecret: argv.clientSecret,
+          organizationId: argv.organizationId,
+          tenantId: argv.tenantId,
+          audience: argv.audience,
+          authority: argv.authority,
+          baseUrl: argv.baseUrl,
+        });
 
-      authResult = authData.data;
-      tenantId = authData.tokenTenantId;
-      organizationId = authData.tokenOrgId;
-      tenantName = authData.tokenTenantName;
+        authResult = authData.data;
+        tenantId = authData.tokenTenantId;
+        organizationId = authData.tokenOrgId;
+        tenantName = authData.tokenTenantName;
+      } catch (err) {
+        console.error(`\n Login failed: ${(err as Error).message}`);
+        process.exit(1);
+      }
     } else {
       // TODO: Implement Device Authorization Flow when clientSecret is not provided.
       console.log('\n Please provide client secret for authentication.');

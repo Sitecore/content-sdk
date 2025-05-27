@@ -78,6 +78,6 @@ export async function clientCredentialsFlow({
       '\n Error during client credentials flow:',
       error instanceof Error ? error.message : error
     );
-    process.exit(1);
+    throw error;
   }
 }

@@ -1,7 +1,7 @@
 ﻿import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { Settings } from '../../scripts/auth/models';
+import { TenantSettings } from '../../scripts/auth/models';
 
 const configDir: string = path.join(os.homedir(), '.sitecore', 'sitecore-tools');
 const settingsFile: string = path.join(configDir, 'settings.json');
@@ -17,7 +17,7 @@ export function getActiveTenant(): string | null {
 
   try {
     const content: string = fs.readFileSync(settingsFile, 'utf-8');
-    const data: Settings = JSON.parse(content);
+    const data: TenantSettings = JSON.parse(content);
     return data.activeTenant ?? null;
   } catch (error) {
     console.error(`\n Failed to read active tenant: ${(error as Error).message}`);
@@ -35,7 +35,7 @@ export function setActiveTenant(tenantId: string): void {
       fs.mkdirSync(configDir, { recursive: true });
     }
 
-    const data: Settings = { activeTenant: tenantId };
+    const data: TenantSettings = { activeTenant: tenantId };
     fs.writeFileSync(settingsFile, JSON.stringify(data, null, 2));
   } catch (error) {
     console.error(`\n Failed to set active tenant '${tenantId}': ${(error as Error).message}`);

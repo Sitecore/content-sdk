@@ -80,9 +80,13 @@ export async function renewAuthIfExpired(): Promise<{ tenantId: string } | null>
     }
     return { tenantId };
   } catch (err) {
-    console.error(`\n Token renewal failed: ${(err as Error).message}`);
+    console.error(`\n Failed to renew token for tenant '${tenantId}'`);
+
+    console.warn(`\n Cleaning up stale authentication data for tenant '${tenantId}'...`);
     await deleteTenantAuthInfo(tenantId);
     clearActiveTenant();
-    return null;
+
+    console.info('\n You will need to login again to re-authenticate.');
+    process.exit(1);
   }
 }

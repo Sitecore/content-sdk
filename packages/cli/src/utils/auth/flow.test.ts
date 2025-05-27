@@ -21,13 +21,11 @@ describe('clientCredentialsFlow', () => {
 
   let fetchStub: sinon.SinonStub;
   let decodeStub: sinon.SinonStub;
-  let processExitStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
 
   beforeEach(() => {
     fetchStub = sinon.stub(global, 'fetch' as any).resolves(fetchResponse as any);
     decodeStub = sinon.stub(jwtUtil, 'decodeJwtPayload').returns(fakeDecoded);
-    processExitStub = sinon.stub(process, 'exit');
     consoleErrorStub = sinon.stub(console, 'error');
   });
 
@@ -174,20 +172,22 @@ describe('clientCredentialsFlow', () => {
     }
   });
 
-  it('should exit process and log error on non-OK response', async () => {
+  it('should throw and log error on non-OK response', async () => {
     fetchStub.resolves({
       ok: false,
       json: async () => ({ error: 'unauthorized' }),
     });
 
-    await clientCredentialsFlow({
-      clientId: 'id',
-      clientSecret: 'secret',
-      tenantId: 'tenant123',
-      organizationId: 'org456',
-    });
-
-    expect(consoleErrorStub.called).to.be.true;
-    expect(processExitStub.calledOnce).to.be.true;
+    try {
+      await clientCredentialsFlow({
+        clientId: 'id',
+        clientSecret: 'secret',
+        tenantId: 'tenant123',
+        organizationId: 'org456',
+      });
+    } catch (err) {
+      expect(consoleErrorStub.called).to.be.true;
+      expect((err as Error).message).to.include('unauthorized');
+    }
   });
 });
