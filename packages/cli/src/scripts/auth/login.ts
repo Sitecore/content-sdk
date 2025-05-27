@@ -30,7 +30,7 @@ export const login: CommandModule<object, TenantArgs> = {
         demandOption: false,
         describe: 'Organization ID to authenticate against.',
       })
-      .option('authAuthority', {
+      .option('authority', {
         type: 'string',
         demandOption: false,
         describe: 'OAuth 2.0 authority URL for authentication.',
@@ -46,13 +46,7 @@ export const login: CommandModule<object, TenantArgs> = {
         describe: 'Base URL for the API, used to construct the audience.',
       })
       .group(
-        [
-          'clientId',
-          'clientSecret',
-          'tenantId',
-          'organizationId, authAuthority, audience',
-          'baseUrl',
-        ],
+        ['clientId', 'clientSecret', 'tenantId', 'organizationId, authority, audience', 'baseUrl'],
         'Login Options:'
       )
       .help(),
@@ -69,7 +63,7 @@ export const login: CommandModule<object, TenantArgs> = {
         organizationId: argv.organizationId,
         tenantId: argv.tenantId,
         audience: argv.audience,
-        authAuthority: argv.authAuthority,
+        authority: argv.authority,
         baseUrl: argv.baseUrl,
       });
 

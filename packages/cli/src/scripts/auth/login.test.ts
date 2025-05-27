@@ -12,7 +12,7 @@ describe('login command', () => {
     tenantId: 'test-tenant-id',
     organizationId: 'test-org-id',
     audience: 'https://example.com/api',
-    authAuthority: 'https://auth.example.com',
+    authority: 'https://auth.example.com',
     baseUrl: 'https://api.example.com',
   };
 
@@ -56,7 +56,7 @@ describe('login command', () => {
       organizationId: fakeArgs.organizationId,
       tenantId: fakeArgs.tenantId,
       audience: fakeArgs.audience,
-      authAuthority: fakeArgs.authAuthority,
+      authority: fakeArgs.authority,
       baseUrl: fakeArgs.baseUrl,
     });
 

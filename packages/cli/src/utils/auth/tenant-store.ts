@@ -4,6 +4,7 @@ import * as os from 'os';
 import { TenantAuth, TenantInfo } from './../../scripts/auth/models';
 
 const CLAIMS = 'https://auth.sitecorecloud.io/claims';
+
 const rootDir = path.join(os.homedir(), '.sitecore', 'sitecore-tools');
 
 /**

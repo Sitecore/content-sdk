@@ -3,12 +3,12 @@ import { getAllTenantsInfo } from '../../utils/auth/tenant-store';
 
 export const list: CommandModule = {
   command: 'list',
-  describe: 'List all tenants',
+  describe: 'List all known tenants',
   handler: async () => {
     const tenants = getAllTenantsInfo();
 
     if (tenants.length === 0) {
-      console.info('\n No tenant info found.');
+      console.info('\n No tenant information found.');
       return;
     }
 
