@@ -16,7 +16,6 @@ import {
   Taxonomy,
   TaxonomyQueryResponse,
   TaxonomiesQueryResponse,
-  TermList,
 } from './taxonomies';
 
 /**
@@ -139,130 +138,76 @@ export class ContentClient {
   }
 
   /**
-   * Retrieves all available taxonomies, with optional pagination support.
-   * @param {number} [pageSize] - Optional. The number of taxonomies to return per page.
-   * @param {number} [termsPageSize] - Optional. The number of terms to return per page within each taxonomy.
-   * @returns A promise that resolves to a paginated list of taxonomies, including pagination helpers (`fetchNext`) if applicable.
+   * Retrieves all available taxonomies with optional pagination support.
+   * Note: Only taxonomies are paginated. Terms within each taxonomy are returned in full (no term pagination).
+   * @param {object} [options] - Optional pagination options.
+   * @param {number} [options.pageSize] - Optional. Limits the number of taxonomies returned per page. If not provided, defaults to Content Services API default (20).
+   * @param {string} [options.after] - Optional. Cursor for pagination. Used to fetch the next page of taxonomies.
+   * @returns A promise that resolves to a paginated list of taxonomies, including pagination metadata (`hasMore`, `cursor`) for developer-controlled pagination.
    */
-  async getTaxonomies(
-    pageSize?: number,
-    termsPageSize?: number
-  ): Promise<ContentItemList<Taxonomy>> {
-    const fetchTaxonomiesPage = async (after: string = ''): Promise<ContentItemList<Taxonomy>> => {
-      debug.content(
-        'Fetching taxonomies (pageSize: %s, after: %s)',
-        pageSize ?? 'API Default',
-        after
-      );
+  async getTaxonomies(options?: {
+    pageSize?: number;
+    after?: string;
+  }): Promise<ContentItemList<Taxonomy>> {
+    debug.content(
+      'Fetching taxonomies (pageSize: %s, after: %s)',
+      options?.pageSize ?? 'API Default',
+      options?.after ?? ''
+    );
 
-      const createVariables = (after = '', termsAfter = '') => ({
-        pageSize,
-        after,
-        termsAfter,
-        termsPageSize,
-      });
+    const variables: Record<string, any> = {};
+    if (options?.pageSize !== undefined) variables.pageSize = options.pageSize;
 
-      const variables = createVariables(after);
+    variables.after = options?.after ?? '';
 
-      const response = await this.get<TaxonomiesQueryResponse>(GET_TAXONOMIES_QUERY, variables);
-      const data = response?.manyTaxonomy;
+    const response = await this.get<TaxonomiesQueryResponse>(GET_TAXONOMIES_QUERY, variables);
+    const data = response?.manyTaxonomy;
 
-      if (!data) {
-        return {
-          results: [],
+    return {
+      results: (data?.results ?? []).map((taxonomy) => ({
+        system: taxonomy.system,
+        terms: {
+          results: taxonomy.terms?.results ?? [],
           cursor: undefined,
           hasMore: false,
-        };
-      }
-
-      const taxonomies = await Promise.all(
-        data.results.map(async (taxonomy) => {
-          const fetchTermsPage = async (termsAfter: string = ''): Promise<TermList> => {
-            debug.content(
-              'Fetching terms for taxonomy %s (termsPageSize: %s, after: %s)',
-              taxonomy.system.id,
-              termsPageSize ?? 'API Default',
-              termsAfter
-            );
-
-            const termVariables = createVariables(after, termsAfter);
-
-            const termResponse = await this.get<TaxonomiesQueryResponse>(
-              GET_TAXONOMIES_QUERY,
-              termVariables
-            );
-            const termData = termResponse?.manyTaxonomy?.results.find(
-              (r) => r.system.id === taxonomy.system.id
-            )?.terms;
-
-            return {
-              results: termData?.results ?? [],
-              cursor: termData?.cursor,
-              hasMore: termData?.hasMore ?? false,
-              fetchNext: termData?.hasMore
-                ? () => fetchTermsPage(termData.cursor || '')
-                : undefined,
-            };
-          };
-
-          return {
-            system: taxonomy.system,
-            terms: {
-              results: taxonomy.terms?.results ?? [],
-              cursor: taxonomy.terms?.cursor,
-              hasMore: taxonomy.terms?.hasMore ?? false,
-              fetchNext: taxonomy.terms?.hasMore
-                ? () => fetchTermsPage(taxonomy.terms.cursor || '')
-                : undefined,
-            },
-          };
-        })
-      );
-
-      return {
-        results: taxonomies,
-        cursor: data.cursor,
-        hasMore: data.hasMore,
-        fetchNext: data.hasMore ? () => fetchTaxonomiesPage(data.cursor || '') : undefined,
-      };
+        },
+      })),
+      cursor: data?.cursor,
+      hasMore: data?.hasMore ?? false,
     };
-
-    return fetchTaxonomiesPage();
   }
 
   /**
    * Retrieves a taxonomy by its ID, with optional pagination support for its terms.
-   * @param {string} id - The unique identifier of the taxonomy.
-   * @param {number} [termsPageSize] - Optional. The number of terms to return per page.
-   * @returns A promise that resolves to the taxonomy object, including its system metadata, the initial set of terms, and a `fetchNext` function for retrieving additional terms if available. Returns `null` if the taxonomy is not found.
+   * @param {object} options - Options for fetching the taxonomy.
+   * @param {string} options.id - The unique identifier of the taxonomy.
+   * @param {object} [options.terms] - Optional pagination options for terms.
+   * @param {number} [options.terms.pageSize] - Optional. Limits the number of terms returned per page.
+   * @param {string} [options.terms.after] - Optional. Cursor for pagination. Used to fetch the next page of terms.
+   * @returns A promise that resolves to the taxonomy object, including pagination metadata (`hasMore`, `cursor`) for its terms. Returns `null` if the taxonomy is not found.
    */
-  async getTaxonomy(id: string, termsPageSize?: number): Promise<Taxonomy | null> {
-    debug.content('Getting taxonomy for id: %s', id);
-
-    const fetchTermsPage = async (termsAfter: string = ''): Promise<TermList> => {
-      debug.content(
-        'Fetching terms for taxonomy %s (termsPageSize: %s, after: %s)',
-        id,
-        termsPageSize ?? 'API Default',
-        termsAfter
-      );
-
-      const variables = { id, termsAfter, termsPageSize };
-
-      const response = await this.get<TaxonomyQueryResponse>(GET_TAXONOMY_QUERY, variables);
-      const terms = response?.taxonomy?.terms;
-
-      return {
-        results: terms?.results ?? [],
-        cursor: terms?.cursor,
-        hasMore: terms?.hasMore ?? false,
-        fetchNext: terms?.hasMore ? () => fetchTermsPage(terms.cursor || '') : undefined,
-      };
+  async getTaxonomy({
+    id,
+    terms,
+  }: {
+    id: string;
+    terms?: {
+      pageSize?: number;
+      after?: string;
     };
+  }): Promise<Taxonomy | null> {
+    debug.content(
+      'Getting taxonomy for id: %s (termsPageSize: %s, termsAfter: %s)',
+      id,
+      terms?.pageSize ?? 'API Default',
+      terms?.after ?? ''
+    );
 
-    const initialVars = { id, termsPageSize };
+    const variables: Record<string, any> = { id };
+    if (terms?.pageSize !== undefined) variables.termsPageSize = terms.pageSize;
+    if (terms?.after !== undefined) variables.termsAfter = terms.after;
 
-    const response = await this.get<TaxonomyQueryResponse>(GET_TAXONOMY_QUERY, initialVars);
+    const response = await this.get<TaxonomyQueryResponse>(GET_TAXONOMY_QUERY, variables);
     const taxonomy = response?.taxonomy;
 
     if (!taxonomy) return null;
@@ -273,9 +218,6 @@ export class ContentClient {
         results: taxonomy.terms?.results ?? [],
         cursor: taxonomy.terms?.cursor,
         hasMore: taxonomy.terms?.hasMore ?? false,
-        fetchNext: taxonomy.terms?.hasMore
-          ? () => fetchTermsPage(taxonomy.terms.cursor || '')
-          : undefined,
       },
     };
   }

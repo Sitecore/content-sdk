@@ -244,7 +244,7 @@ describe('content-client', () => {
       requestStub = sinon.stub(client.graphqlClient, 'request');
     });
 
-    it('should retrieve taxonomies with terms and pagination support', async () => {
+    it('should retrieve the first page with after=""', async () => {
       const mockResponse = {
         manyTaxonomy: {
           results: [
@@ -254,16 +254,16 @@ describe('content-client', () => {
                 name: 'Taxonomy 1',
                 version: 1,
                 label: 'First Taxonomy',
-                createdAt: '2024-01-01',
-                createdBy: 'user1',
-                updatedAt: '2024-01-02',
-                updatedBy: 'user2',
-                publishStatus: 'published',
+                createdAt: '',
+                createdBy: '',
+                updatedAt: '',
+                updatedBy: '',
+                publishStatus: '',
               },
               terms: {
                 results: [{ id: 'term1', name: 'Term 1', label: 'First Term' }],
-                cursor: 'cursor-terms',
-                hasMore: true,
+                cursor: null,
+                hasMore: false,
               },
             },
           ],
@@ -271,29 +271,63 @@ describe('content-client', () => {
           hasMore: true,
         },
       };
-
       requestStub.resolves(mockResponse);
 
-      const result = await client.getTaxonomies(2, 1);
+      const result = await client.getTaxonomies({ pageSize: 2, after: '' });
 
       expect(requestStub.calledOnce).to.be.true;
-      expect(requestStub.calledWith(GET_TAXONOMIES_QUERY)).to.be.true;
+      const callArgs = requestStub.getCall(0).args;
+      expect(callArgs[1]).to.deep.equal({ pageSize: 2, after: '' });
       expect(result.results[0].system.name).to.equal('Taxonomy 1');
       expect(result.results[0].terms.results[0].name).to.equal('Term 1');
+      expect(result.cursor).to.equal('cursor-taxonomies');
+      expect(result.hasMore).to.be.true;
+    });
 
-      // Test fetchNext for taxonomies
-      if (result.fetchNext) {
-        requestStub.resolves(mockResponse); // Mock again for fetchNext
-        const nextPage = await result.fetchNext();
-        expect(requestStub.calledTwice).to.be.true;
-        expect(nextPage.results[0].system.name).to.equal('Taxonomy 1');
-      }
+    it('should retrieve the next page with a valid cursor', async () => {
+      const mockResponse = {
+        manyTaxonomy: {
+          results: [
+            {
+              system: {
+                id: 'tax2',
+                name: 'Taxonomy 2',
+                version: 1,
+                label: 'Second Taxonomy',
+                createdAt: '',
+                createdBy: '',
+                updatedAt: '',
+                updatedBy: '',
+                publishStatus: '',
+              },
+              terms: {
+                results: [{ id: 'term2', name: 'Term 2', label: 'Second Term' }],
+                cursor: null,
+                hasMore: false,
+              },
+            },
+          ],
+          cursor: 'another-cursor',
+          hasMore: false,
+        },
+      };
+      requestStub.resolves(mockResponse);
+
+      const result = await client.getTaxonomies({ pageSize: 2, after: 'cursor-taxonomies' });
+
+      expect(requestStub.calledOnce).to.be.true;
+      const callArgs = requestStub.getCall(0).args;
+      expect(callArgs[1]).to.deep.equal({ pageSize: 2, after: 'cursor-taxonomies' });
+      expect(result.results[0].system.name).to.equal('Taxonomy 2');
+      expect(result.results[0].terms.results[0].name).to.equal('Term 2');
+      expect(result.cursor).to.equal('another-cursor');
+      expect(result.hasMore).to.be.false;
     });
 
     it('should handle empty or null responses', async () => {
       requestStub.resolves({ manyTaxonomy: null });
 
-      const result = await client.getTaxonomies();
+      const result = await client.getTaxonomies({ pageSize: 2, after: '' });
       expect(result).to.deep.include({
         results: [],
         cursor: undefined,
@@ -318,7 +352,7 @@ describe('content-client', () => {
       requestStub = sinon.stub(client.graphqlClient, 'request');
     });
 
-    it('should retrieve a taxonomy by ID with paginated terms', async () => {
+    it('should retrieve a taxonomy by ID with paginated terms (first page)', async () => {
       const taxonomyId = 'tax1';
       const mockResponse = {
         taxonomy: {
@@ -327,11 +361,11 @@ describe('content-client', () => {
             name: 'Taxonomy 1',
             version: 1,
             label: 'First Taxonomy',
-            createdAt: '2024-01-01',
-            createdBy: 'user1',
-            updatedAt: '2024-01-02',
-            updatedBy: 'user2',
-            publishStatus: 'published',
+            createdAt: '',
+            createdBy: '',
+            updatedAt: '',
+            updatedBy: '',
+            publishStatus: '',
           },
           terms: {
             results: [{ id: 'term1', name: 'Term 1', label: 'First Term' }],
@@ -343,16 +377,18 @@ describe('content-client', () => {
 
       requestStub.resolves(mockResponse);
 
-      const result = await client.getTaxonomy(taxonomyId, 3);
+      // Now expecting options object: { id, terms?: { pageSize, after } }
+      const result = await client.getTaxonomy({
+        id: taxonomyId,
+        terms: { pageSize: 1, after: '' },
+      });
+      expect(requestStub.calledOnce).to.be.true;
+      const callArgs = requestStub.getCall(0).args;
+      expect(callArgs[1]).to.deep.equal({ id: taxonomyId, termsPageSize: 1, termsAfter: '' });
       expect(result?.system.id).to.equal(taxonomyId);
       expect(result?.terms.results[0].name).to.equal('Term 1');
-
-      // Test fetchNext for terms
-      if (result?.terms.fetchNext) {
-        requestStub.resolves(mockResponse); // Mock again for fetchNext
-        const nextTerms = await result.terms.fetchNext();
-        expect(nextTerms.results[0].name).to.equal('Term 1');
-      }
+      expect(result?.terms.cursor).to.equal('cursor-terms');
+      expect(result?.terms.hasMore).to.be.true;
     });
 
     it('should retrieve a taxonomy by ID without terms pagination', async () => {
@@ -364,11 +400,11 @@ describe('content-client', () => {
             name: 'Taxonomy 2',
             version: 1,
             label: 'Second Taxonomy',
-            createdAt: '2024-02-01',
-            createdBy: 'user3',
-            updatedAt: '2024-02-02',
-            updatedBy: 'user4',
-            publishStatus: 'published',
+            createdAt: '',
+            createdBy: '',
+            updatedAt: '',
+            updatedBy: '',
+            publishStatus: '',
           },
           terms: {
             results: [{ id: 'term2', name: 'Term 2', label: 'Second Term' }],
@@ -380,14 +416,20 @@ describe('content-client', () => {
 
       requestStub.resolves(mockResponse);
 
-      const result = await client.getTaxonomy(taxonomyId);
+      // No terms object means no pagination (should send only id)
+      const result = await client.getTaxonomy({ id: taxonomyId });
+      expect(requestStub.calledOnce).to.be.true;
+      const callArgs = requestStub.getCall(0).args;
+      expect(callArgs[1]).to.deep.equal({ id: taxonomyId });
       expect(result?.system.id).to.equal(taxonomyId);
       expect(result?.terms.results[0].name).to.equal('Term 2');
+      expect(result?.terms.cursor).to.be.null;
+      expect(result?.terms.hasMore).to.be.false;
     });
 
     it('should handle null taxonomy response', async () => {
       requestStub.resolves({ taxonomy: null });
-      const result = await client.getTaxonomy('invalid-id');
+      const result = await client.getTaxonomy({ id: 'invalid-id' });
       expect(result).to.be.null;
     });
   });

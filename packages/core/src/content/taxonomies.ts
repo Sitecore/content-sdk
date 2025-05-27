@@ -11,19 +11,19 @@ export type Term = {
 };
 
 /**
- * Represents a paginated list of terms within a taxonomy.
+ * Represents a list of terms within a taxonomy.
+ * In getTaxonomies, terms are always returned as a full list (no pagination).
+ * In getTaxonomy, terms may be paginated.
  */
 export interface TermList {
-  /** The list of terms in the current page. */
+  /** The list of terms in the current (or full) page. */
   results: Term[];
-  /** The cursor to fetch the next page of terms, if available. */
+  /** The cursor to fetch the next page of terms, if available. (Used only in getTaxonomy) */
   cursor?: string | null;
-  /** Indicates whether more terms are available after the current page. */
+  /** Indicates whether more terms are available after the current page. (Used only in getTaxonomy) */
   hasMore: boolean;
-  /** The minimum page size used for fetching terms (if provided). */
+  /** The minimum page size used for fetching terms (if provided). (Used only in getTaxonomy) */
   minimumPageSize?: number;
-  /** A function to fetch the next page of terms, if available. */
-  fetchNext?: () => Promise<TermList>;
 }
 
 /**
@@ -52,9 +52,10 @@ export type TaxonomySystem = {
 
 /**
  * Represents a taxonomy with its associated terms.
+ * Terms are paginated only in single-taxonomy queries (getTaxonomy).
  */
 export type Taxonomy = {
-  /** The list of terms within the taxonomy, with pagination support. */
+  /** The list of terms within the taxonomy. */
   terms: TermList;
   /** The system metadata of the taxonomy. */
   system: TaxonomySystem;
@@ -65,7 +66,16 @@ export type Taxonomy = {
  */
 export interface TaxonomyQueryResponse {
   /** The retrieved taxonomy. */
-  taxonomy: Taxonomy;
+  taxonomy: {
+    /** The system metadata of the taxonomy. */
+    system: TaxonomySystem;
+    /** The terms for the taxonomy (may be paginated). */
+    terms: {
+      results: Term[];
+      cursor?: string | null;
+      hasMore: boolean;
+    };
+  };
 }
 
 /**
@@ -76,7 +86,7 @@ export interface TaxonomiesQueryResponse {
   manyTaxonomy: {
     /** The list of taxonomies in the current page. */
     results: {
-      /** The terms associated with the taxonomy, in a paginated format. */
+      /** The terms associated with the taxonomy (always the full list, not paginated). */
       terms: {
         results: Term[];
         cursor?: string | null;
@@ -94,6 +104,7 @@ export interface TaxonomiesQueryResponse {
 
 /**
  * Represents a paginated list of content items (generic for various types, e.g., Taxonomy).
+ * Note: This type does not include any stateful fetchNext/fetchMore helpers. Pagination is stateless.
  */
 export interface ContentItemList<T> {
   /** The list of content items in the current page. */
@@ -104,31 +115,27 @@ export interface ContentItemList<T> {
   hasMore: boolean;
   /** The minimum page size used for fetching items (if applicable). */
   minimumPageSize?: number;
-  /** A function to fetch the next page of items, if available. */
-  fetchNext?: () => Promise<ContentItemList<T>>;
 }
 
+// --- GraphQL queries ---
+
 /**
- * GraphQL query to retrieve all taxonomies with optional pagination for taxonomies and terms.
+ * GraphQL query to retrieve all taxonomies with optional pagination for taxonomies only.
  *
  * Variables:
  * - pageSize: The number of taxonomies to retrieve per page.
- * - termsPageSize: The number of terms to retrieve per page within each taxonomy.
  * - after: The cursor for fetching the next page of taxonomies.
- * - termsAfter: The cursor for fetching the next page of terms within a taxonomy.
  */
 export const GET_TAXONOMIES_QUERY = `
   query GetAllTaxonomies(
     $pageSize: Int
-    $termsPageSize: Int
     $after: String
-    $termsAfter: String
   ) {
     manyTaxonomy(minimumPageSize: $pageSize, after: $after) {
       cursor
       hasMore
       results {
-        terms(minimumPageSize: $termsPageSize, after: $termsAfter) {
+        terms {
           cursor
           hasMore
           results {
