@@ -14,7 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* `[cli]` Introduced auth CLI commands for Sitecore Content Services: ([101](https://github.com/Sitecore/content-sdk/pull/101))
+* `[cli]` Introduced auth CLI commands for Sitecore Content Services: ([102](https://github.com/Sitecore/content-sdk/pull/102))
     - auth login – Authenticate using client credentials and store token info
     - auth status – Show active tenant and auto-renew token if expired
     - auth logout – Clear active tenant and delete stored credentials
