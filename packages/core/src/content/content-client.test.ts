@@ -277,6 +277,7 @@ describe('content-client', () => {
 
       expect(requestStub.calledOnce).to.be.true;
       const callArgs = requestStub.getCall(0).args;
+      expect(callArgs[0]).to.equal(GET_TAXONOMIES_QUERY);
       expect(callArgs[1]).to.deep.equal({ pageSize: 2, after: '' });
       expect(result.results[0].system.name).to.equal('Taxonomy 1');
       expect(result.results[0].terms[0].name).to.equal('Term 1');
@@ -317,6 +318,7 @@ describe('content-client', () => {
 
       expect(requestStub.calledOnce).to.be.true;
       const callArgs = requestStub.getCall(0).args;
+      expect(callArgs[0]).to.equal(GET_TAXONOMIES_QUERY);
       expect(callArgs[1]).to.deep.equal({ pageSize: 2, after: 'cursor-taxonomies' });
       expect(result.results[0].system.name).to.equal('Taxonomy 2');
       expect(result.results[0].terms[0].name).to.equal('Term 2');
@@ -383,6 +385,7 @@ describe('content-client', () => {
       });
       expect(requestStub.calledOnce).to.be.true;
       const callArgs = requestStub.getCall(0).args;
+      expect(callArgs[0]).to.equal(GET_TAXONOMY_QUERY); // <-- Ensure correct query is used
       expect(callArgs[1]).to.deep.equal({
         id: taxonomyId,
         termsPageSize: 1,
@@ -419,10 +422,10 @@ describe('content-client', () => {
 
       requestStub.resolves(mockResponse);
 
-      // Now expect undefineds for termsPageSize/termsAfter
       const result = await client.getTaxonomy({ id: taxonomyId });
       expect(requestStub.calledOnce).to.be.true;
       const callArgs = requestStub.getCall(0).args;
+      expect(callArgs[0]).to.equal(GET_TAXONOMY_QUERY); // <-- Ensure correct query is used
       expect(callArgs[1]).to.deep.equal({
         id: taxonomyId,
         termsPageSize: undefined,
