@@ -156,7 +156,9 @@ describe('content-client', () => {
 
     it('should retrieve a locale by ID', async () => {
       const localeId = 'en-us';
-      const mockResponse = { locale: { id: localeId, label: 'English (US)' } };
+      const mockResponse = {
+        locale: { system: { id: localeId, label: 'English (US)' } },
+      };
 
       requestStub.resolves(mockResponse);
 
@@ -164,7 +166,7 @@ describe('content-client', () => {
 
       expect(requestStub.calledOnce).to.be.true;
       expect(requestStub.calledWith(GET_LOCALE_QUERY, { id: localeId })).to.be.true;
-      expect(result).to.deep.equal(mockResponse.locale);
+      expect(result).to.deep.equal(mockResponse.locale.system);
     });
 
     it('should handle errors when retrieving a locale by ID', async () => {
@@ -200,8 +202,8 @@ describe('content-client', () => {
     it('should retrieve all available locales', async () => {
       const mockResponse = {
         manyLocale: [
-          { id: 'en-us', label: 'English (US)' },
-          { id: 'fr-fr', label: 'French (France)' },
+          { system: { id: 'en-us', label: 'English (US)' } },
+          { system: { id: 'fr-fr', label: 'French (France)' } },
         ],
       };
 
@@ -211,7 +213,7 @@ describe('content-client', () => {
 
       expect(requestStub.calledOnce).to.be.true;
       expect(requestStub.calledWith(GET_LOCALES_QUERY)).to.be.true;
-      expect(result).to.deep.equal(mockResponse.manyLocale);
+      expect(result).to.deep.equal(mockResponse.manyLocale.map((x) => x.system));
     });
 
     it('should handle errors when retrieving all locales', async () => {
