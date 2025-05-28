@@ -14,6 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* `[core]` Update `getLocale/getLocales` ([#105](https://github.com/Sitecore/content-sdk/pull/105))
 * `[next.js]` Rework and simplify .env ([#89](https://github.com/Sitecore/content-sdk/pull/89)):
   - Introduced `.env.container.example`  
     - Intended for local development against a Sitecore container instance.

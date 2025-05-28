@@ -4,6 +4,6 @@ export {
   GET_LOCALES_QUERY,
   LocaleQueryResponse,
   LocalesQueryResponse,
-  Locale,
+  SingleLocale,
 } from './locales';
 export { getContentUrl } from './utils';
