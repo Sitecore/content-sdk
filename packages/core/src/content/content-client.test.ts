@@ -336,6 +336,74 @@ describe('content-client', () => {
         hasMore: false,
       });
     });
+
+    describe('edge cases: terms.results null/undefined', () => {
+      it('should handle null terms.results in taxonomy', async () => {
+        const mockResponse = {
+          manyTaxonomy: {
+            results: [
+              {
+                system: {
+                  id: 'tax1',
+                  name: 'Taxonomy 1',
+                  version: 1,
+                  label: 'First Taxonomy',
+                  createdAt: '',
+                  createdBy: '',
+                  updatedAt: '',
+                  updatedBy: '',
+                  publishStatus: '',
+                },
+                terms: {
+                  results: null, // simulate null
+                  cursor: null,
+                  hasMore: false,
+                },
+              },
+            ],
+            cursor: 'cursor-taxonomies',
+            hasMore: false,
+          },
+        };
+        requestStub.resolves(mockResponse);
+
+        const result = await client.getTaxonomies({ pageSize: 2, after: '' });
+        expect(result.results[0].terms).to.deep.equal([]);
+      });
+
+      it('should handle undefined terms.results in taxonomy', async () => {
+        const mockResponse = {
+          manyTaxonomy: {
+            results: [
+              {
+                system: {
+                  id: 'tax1',
+                  name: 'Taxonomy 1',
+                  version: 1,
+                  label: 'First Taxonomy',
+                  createdAt: '',
+                  createdBy: '',
+                  updatedAt: '',
+                  updatedBy: '',
+                  publishStatus: '',
+                },
+                terms: {
+                  // results is undefined
+                  cursor: null,
+                  hasMore: false,
+                },
+              },
+            ],
+            cursor: 'cursor-taxonomies',
+            hasMore: false,
+          },
+        };
+        requestStub.resolves(mockResponse);
+
+        const result = await client.getTaxonomies({ pageSize: 2, after: '' });
+        expect(result.results[0].terms).to.deep.equal([]);
+      });
+    });
   });
 
   describe('getTaxonomy', () => {
@@ -385,7 +453,7 @@ describe('content-client', () => {
       });
       expect(requestStub.calledOnce).to.be.true;
       const callArgs = requestStub.getCall(0).args;
-      expect(callArgs[0]).to.equal(GET_TAXONOMY_QUERY); // <-- Ensure correct query is used
+      expect(callArgs[0]).to.equal(GET_TAXONOMY_QUERY);
       expect(callArgs[1]).to.deep.equal({
         id: taxonomyId,
         termsPageSize: 1,
@@ -425,7 +493,7 @@ describe('content-client', () => {
       const result = await client.getTaxonomy({ id: taxonomyId });
       expect(requestStub.calledOnce).to.be.true;
       const callArgs = requestStub.getCall(0).args;
-      expect(callArgs[0]).to.equal(GET_TAXONOMY_QUERY); // <-- Ensure correct query is used
+      expect(callArgs[0]).to.equal(GET_TAXONOMY_QUERY);
       expect(callArgs[1]).to.deep.equal({
         id: taxonomyId,
         termsPageSize: undefined,
@@ -441,6 +509,62 @@ describe('content-client', () => {
       requestStub.resolves({ taxonomy: null });
       const result = await client.getTaxonomy({ id: 'invalid-id' });
       expect(result).to.be.null;
+    });
+
+    describe('edge cases: terms.results null/undefined', () => {
+      it('should handle null terms.results', async () => {
+        const taxonomyId = 'tax1';
+        const mockResponse = {
+          taxonomy: {
+            system: {
+              id: taxonomyId,
+              name: 'Taxonomy 1',
+              version: 1,
+              label: 'First Taxonomy',
+              createdAt: '',
+              createdBy: '',
+              updatedAt: '',
+              updatedBy: '',
+              publishStatus: '',
+            },
+            terms: {
+              results: null,
+              cursor: null,
+              hasMore: false,
+            },
+          },
+        };
+        requestStub.resolves(mockResponse);
+        const result = await client.getTaxonomy({ id: taxonomyId });
+        expect(result?.terms.results).to.deep.equal([]);
+      });
+
+      it('should handle undefined terms.results', async () => {
+        const taxonomyId = 'tax1';
+        const mockResponse = {
+          taxonomy: {
+            system: {
+              id: taxonomyId,
+              name: 'Taxonomy 1',
+              version: 1,
+              label: 'First Taxonomy',
+              createdAt: '',
+              createdBy: '',
+              updatedAt: '',
+              updatedBy: '',
+              publishStatus: '',
+            },
+            terms: {
+              // results missing
+              cursor: null,
+              hasMore: false,
+            },
+          },
+        };
+        requestStub.resolves(mockResponse);
+        const result = await client.getTaxonomy({ id: taxonomyId });
+        expect(result?.terms.results).to.deep.equal([]);
+      });
     });
   });
 });

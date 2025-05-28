@@ -150,7 +150,7 @@ export class ContentClient {
       options?.after ?? ''
     );
 
-    const variables: Record<string, any> = {
+    const variables = {
       pageSize: options?.pageSize,
       after: options?.after ?? '',
     };
@@ -194,7 +194,7 @@ export class ContentClient {
       terms?.after ?? ''
     );
 
-    const variables: Record<string, any> = {
+    const variables = {
       id,
       termsPageSize: terms?.pageSize,
       termsAfter: terms?.after,
