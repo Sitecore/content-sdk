@@ -22,8 +22,6 @@ export interface TermList {
   cursor?: string | null;
   /** Indicates whether more terms are available after the current page. (Used only in getTaxonomy) */
   hasMore: boolean;
-  /** The minimum page size used for fetching terms (if provided). (Used only in getTaxonomy) */
-  minimumPageSize?: number;
 }
 
 /**
@@ -113,8 +111,6 @@ export interface ContentItemList<T> {
   cursor?: string;
   /** Indicates whether more items are available after the current page. */
   hasMore: boolean;
-  /** The minimum page size used for fetching items (if applicable). */
-  minimumPageSize?: number;
 }
 
 // --- GraphQL queries ---
