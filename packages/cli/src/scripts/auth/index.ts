@@ -1,4 +1,4 @@
-﻿﻿import { Argv } from 'yargs';
+﻿import { Argv } from 'yargs';
 import { login } from './login';
 import { logout } from './logout';
 import { status } from './status';

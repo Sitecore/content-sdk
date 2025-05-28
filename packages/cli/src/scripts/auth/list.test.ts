@@ -1,4 +1,4 @@
-﻿﻿import { expect } from 'chai';
+﻿import { expect } from 'chai';
 import sinon from 'sinon';
 import { list } from './list';
 import * as tenantStore from '../../../src/utils/auth/tenant-store';
