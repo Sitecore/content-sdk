@@ -9,6 +9,13 @@ import {
   LocaleQueryResponse,
   LocalesQueryResponse,
 } from './locales';
+import {
+  GET_TAXONOMY_QUERY,
+  GET_TAXONOMIES_QUERY,
+  Taxonomy,
+  TaxonomyQueryResponse,
+  TaxonomiesQueryResponse,
+} from './taxonomies';
 
 /**
  * Interface representing the options for the ContentClient.
@@ -103,7 +110,6 @@ export class ContentClient {
     options: FetchOptions = {}
   ): Promise<T> {
     debug.content('fetching content data');
-
     return this.graphqlClient.request<T>(query, variables, options);
   }
 
@@ -128,5 +134,84 @@ export class ContentClient {
 
     const response = await this.get<LocalesQueryResponse>(GET_LOCALES_QUERY);
     return response.manyLocale;
+  }
+
+  /**
+   * Retrieves all available taxonomies with optional pagination support.
+   * @param {object} [options] - Optional pagination options.
+   * @param {number} [options.pageSize] - Limits the number of taxonomies returned per page. Defaults to the API's default
+   * @param {string} [options.after] - Cursor for pagination; use the `cursor` returned from the previous call to fetch the next page.
+   * @returns A promise that resolves to an object containing taxonomies, their terms, and pagination info.
+   */
+  async getTaxonomies(options?: { pageSize?: number; after?: string }) {
+    debug.content(
+      'Getting taxonomies (pageSize: %s, after: %s)',
+      options?.pageSize ?? 'API Default',
+      options?.after ?? ''
+    );
+
+    const variables = {
+      pageSize: options?.pageSize,
+      after: options?.after ?? '',
+    };
+
+    const response = await this.get<TaxonomiesQueryResponse>(GET_TAXONOMIES_QUERY, variables);
+    const data = response?.manyTaxonomy;
+
+    return {
+      results: (data?.results ?? []).map((taxonomy) => ({
+        system: taxonomy.system,
+        terms: taxonomy.terms?.results ?? [],
+      })),
+      cursor: data?.cursor,
+      hasMore: data?.hasMore ?? false,
+    };
+  }
+
+  /**
+   * Retrieves a taxonomy by its ID, with optional pagination support for its terms.
+   * @param {object} options - Options for fetching the taxonomy.
+   * @param {string} options.id - The unique identifier of the taxonomy.
+   * @param {object} [options.terms] - Optional pagination options for terms.
+   * @param {number} [options.terms.pageSize] - Optional. Limits the number of terms returned per page.
+   * @param {string} [options.terms.after] - Optional. Cursor for pagination. Used to fetch the next page of terms.
+   * @returns A promise that resolves to the taxonomy object, including pagination metadata (`hasMore`, `cursor`) for its terms. Returns `null` if the taxonomy is not found.
+   */
+  async getTaxonomy({
+    id,
+    terms,
+  }: {
+    id: string;
+    terms?: {
+      pageSize?: number;
+      after?: string;
+    };
+  }): Promise<Taxonomy | null> {
+    debug.content(
+      'Getting taxonomy for id: %s (termsPageSize: %s, termsAfter: %s)',
+      id,
+      terms?.pageSize ?? 'API Default',
+      terms?.after ?? ''
+    );
+
+    const variables = {
+      id,
+      termsPageSize: terms?.pageSize,
+      termsAfter: terms?.after,
+    };
+
+    const response = await this.get<TaxonomyQueryResponse>(GET_TAXONOMY_QUERY, variables);
+    const taxonomy = response?.taxonomy;
+
+    if (!taxonomy) return null;
+
+    return {
+      system: taxonomy.system,
+      terms: {
+        results: taxonomy.terms?.results ?? [],
+        cursor: taxonomy.terms?.cursor,
+        hasMore: taxonomy.terms?.hasMore ?? false,
+      },
+    };
   }
 }
