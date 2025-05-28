@@ -116,7 +116,7 @@ export class ContentClient {
     debug.content('Getting locale for id: %s', id);
 
     const response = await this.get<LocaleQueryResponse>(GET_LOCALE_QUERY, { id });
-    return response.locale;
+    return response.locale ? response?.locale?.system : null;
   }
 
   /**
@@ -127,6 +127,6 @@ export class ContentClient {
     debug.content('Getting all locales');
 
     const response = await this.get<LocalesQueryResponse>(GET_LOCALES_QUERY);
-    return response.manyLocale;
+    return response?.manyLocale?.map((entry) => entry.system) ?? [];
   }
 }
