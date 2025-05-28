@@ -12,7 +12,6 @@ import {
 import {
   GET_TAXONOMY_QUERY,
   GET_TAXONOMIES_QUERY,
-  ContentItemList,
   Taxonomy,
   TaxonomyQueryResponse,
   TaxonomiesQueryResponse,
