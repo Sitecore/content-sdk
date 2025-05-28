@@ -279,7 +279,7 @@ describe('content-client', () => {
       const callArgs = requestStub.getCall(0).args;
       expect(callArgs[1]).to.deep.equal({ pageSize: 2, after: '' });
       expect(result.results[0].system.name).to.equal('Taxonomy 1');
-      expect(result.results[0].terms.results[0].name).to.equal('Term 1');
+      expect(result.results[0].terms[0].name).to.equal('Term 1');
       expect(result.cursor).to.equal('cursor-taxonomies');
       expect(result.hasMore).to.be.true;
     });
@@ -319,7 +319,7 @@ describe('content-client', () => {
       const callArgs = requestStub.getCall(0).args;
       expect(callArgs[1]).to.deep.equal({ pageSize: 2, after: 'cursor-taxonomies' });
       expect(result.results[0].system.name).to.equal('Taxonomy 2');
-      expect(result.results[0].terms.results[0].name).to.equal('Term 2');
+      expect(result.results[0].terms[0].name).to.equal('Term 2');
       expect(result.cursor).to.equal('another-cursor');
       expect(result.hasMore).to.be.false;
     });
@@ -377,14 +377,17 @@ describe('content-client', () => {
 
       requestStub.resolves(mockResponse);
 
-      // Now expecting options object: { id, terms?: { pageSize, after } }
       const result = await client.getTaxonomy({
         id: taxonomyId,
         terms: { pageSize: 1, after: '' },
       });
       expect(requestStub.calledOnce).to.be.true;
       const callArgs = requestStub.getCall(0).args;
-      expect(callArgs[1]).to.deep.equal({ id: taxonomyId, termsPageSize: 1, termsAfter: '' });
+      expect(callArgs[1]).to.deep.equal({
+        id: taxonomyId,
+        termsPageSize: 1,
+        termsAfter: '',
+      });
       expect(result?.system.id).to.equal(taxonomyId);
       expect(result?.terms.results[0].name).to.equal('Term 1');
       expect(result?.terms.cursor).to.equal('cursor-terms');
@@ -416,11 +419,15 @@ describe('content-client', () => {
 
       requestStub.resolves(mockResponse);
 
-      // No terms object means no pagination (should send only id)
+      // Now expect undefineds for termsPageSize/termsAfter
       const result = await client.getTaxonomy({ id: taxonomyId });
       expect(requestStub.calledOnce).to.be.true;
       const callArgs = requestStub.getCall(0).args;
-      expect(callArgs[1]).to.deep.equal({ id: taxonomyId });
+      expect(callArgs[1]).to.deep.equal({
+        id: taxonomyId,
+        termsPageSize: undefined,
+        termsAfter: undefined,
+      });
       expect(result?.system.id).to.equal(taxonomyId);
       expect(result?.terms.results[0].name).to.equal('Term 2');
       expect(result?.terms.cursor).to.be.null;

@@ -139,26 +139,22 @@ export class ContentClient {
 
   /**
    * Retrieves all available taxonomies with optional pagination support.
-   * Note: Only taxonomies are paginated. Terms within each taxonomy are returned in full (no term pagination).
    * @param {object} [options] - Optional pagination options.
-   * @param {number} [options.pageSize] - Optional. Limits the number of taxonomies returned per page. If not provided, defaults to Content Services API default (20).
-   * @param {string} [options.after] - Optional. Cursor for pagination. Used to fetch the next page of taxonomies.
-   * @returns A promise that resolves to a paginated list of taxonomies, including pagination metadata (`hasMore`, `cursor`) for developer-controlled pagination.
+   * @param {number} [options.pageSize] - Limits the number of taxonomies returned per page. Defaults to the API's default
+   * @param {string} [options.after] - Cursor for pagination; use the `cursor` returned from the previous call to fetch the next page.
+   * @returns A promise that resolves to an object containing taxonomies, their terms, and pagination info.
    */
-  async getTaxonomies(options?: {
-    pageSize?: number;
-    after?: string;
-  }): Promise<ContentItemList<Taxonomy>> {
+  async getTaxonomies(options?: { pageSize?: number; after?: string }) {
     debug.content(
-      'Fetching taxonomies (pageSize: %s, after: %s)',
+      'Getting taxonomies (pageSize: %s, after: %s)',
       options?.pageSize ?? 'API Default',
       options?.after ?? ''
     );
 
-    const variables: Record<string, any> = {};
-    if (options?.pageSize !== undefined) variables.pageSize = options.pageSize;
-
-    variables.after = options?.after ?? '';
+    const variables: Record<string, any> = {
+      pageSize: options?.pageSize,
+      after: options?.after ?? '',
+    };
 
     const response = await this.get<TaxonomiesQueryResponse>(GET_TAXONOMIES_QUERY, variables);
     const data = response?.manyTaxonomy;
@@ -166,11 +162,7 @@ export class ContentClient {
     return {
       results: (data?.results ?? []).map((taxonomy) => ({
         system: taxonomy.system,
-        terms: {
-          results: taxonomy.terms?.results ?? [],
-          cursor: undefined,
-          hasMore: false,
-        },
+        terms: taxonomy.terms?.results ?? [],
       })),
       cursor: data?.cursor,
       hasMore: data?.hasMore ?? false,
@@ -203,9 +195,11 @@ export class ContentClient {
       terms?.after ?? ''
     );
 
-    const variables: Record<string, any> = { id };
-    if (terms?.pageSize !== undefined) variables.termsPageSize = terms.pageSize;
-    if (terms?.after !== undefined) variables.termsAfter = terms.after;
+    const variables: Record<string, any> = {
+      id,
+      termsPageSize: terms?.pageSize,
+      termsAfter: terms?.after,
+    };
 
     const response = await this.get<TaxonomyQueryResponse>(GET_TAXONOMY_QUERY, variables);
     const taxonomy = response?.taxonomy;
