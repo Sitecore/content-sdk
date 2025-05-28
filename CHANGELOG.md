@@ -18,7 +18,14 @@ Our versioning strategy is as follows:
   - Introduced get taxonomy/taxonomies functionality on content client ([#99](https://github.com/Sitecore/content-sdk/pull/99)):
     - Introduced `getTaxonomy` and `getTaxonomies` methods on Content Client class
     - Support pagination for the above methods by implementing an internal `fetchNext` method to handle this in each method
-  - Introduced get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#78](https://github.com/Sitecore/content-sdk/pull/78))   
+  - Introduced get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#78](https://github.com/Sitecore/content-sdk/pull/78))
+* `[cli]` Introduce Sitecore Content Services Auth CLI commands ([106](https://github.com/Sitecore/content-sdk/pull/106))
+    - auth login – Authenticate using client credentials and store token info
+    - auth status – Show active tenant and auto-renew token if expired
+    - auth logout – Clear active tenant and delete stored credentials
+    - auth list – List all known tenants from local storage
+  - Token validation and renewal support
+  - Token and tenant metadata storage and active tenant tracking under `~/.sitecore/sitecore-tools/`
 * `[next.js]` Rework and simplify .env ([#89](https://github.com/Sitecore/content-sdk/pull/89)):
   - Introduced `.env.container.example`  
     - Intended for local development against a Sitecore container instance.

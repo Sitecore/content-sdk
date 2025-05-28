@@ -1,0 +1,46 @@
+﻿import { expect } from 'chai';
+import sinon from 'sinon';
+import { logout } from './logout';
+import * as tenantState from '../../../src/utils/auth/tenant-state';
+import * as tenantStore from '../../../src/utils/auth/tenant-store';
+
+describe('logout command', () => {
+  let getActiveTenantStub: sinon.SinonStub;
+  let clearActiveTenantStub: sinon.SinonStub;
+  let deleteTenantAuthInfoStub: sinon.SinonStub;
+  let consoleInfoStub: sinon.SinonStub;
+  let consoleErrorStub: sinon.SinonStub;
+
+  beforeEach(() => {
+    consoleInfoStub = sinon.stub(console, 'info');
+    consoleErrorStub = sinon.stub(console, 'error');
+    clearActiveTenantStub = sinon.stub(tenantState, 'clearActiveTenant');
+    deleteTenantAuthInfoStub = sinon.stub(tenantStore, 'deleteTenantAuthInfo');
+  });
+
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  it('should show error if no active tenant is found', async () => {
+    getActiveTenantStub = sinon.stub(tenantState, 'getActiveTenant').returns(null);
+
+    await logout.handler({} as any);
+
+    expect(consoleErrorStub.calledOnce).to.be.true;
+    expect(consoleErrorStub.firstCall.args[0]).to.include('No active tenant found');
+    expect(clearActiveTenantStub.notCalled).to.be.true;
+    expect(deleteTenantAuthInfoStub.notCalled).to.be.true;
+  });
+
+  it('should logout and clean up when active tenant exists', async () => {
+    const mockTenantId = 'mock-tenant-id';
+    getActiveTenantStub = sinon.stub(tenantState, 'getActiveTenant').returns(mockTenantId);
+
+    await logout.handler({} as any);
+
+    expect(clearActiveTenantStub.calledOnce).to.be.true;
+    expect(deleteTenantAuthInfoStub.calledWith(mockTenantId)).to.be.true;
+    expect(consoleInfoStub.calledWithMatch(`Logged out from tenant ${mockTenantId}`)).to.be.true;
+  });
+});
