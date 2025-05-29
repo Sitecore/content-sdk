@@ -1,0 +1,45 @@
+[**@sitecore-content-sdk/core**](../../README.md)
+
+***
+
+[@sitecore-content-sdk/core](../../README.md) / [content](../README.md) / TaxonomyQueryResponse
+
+# Interface: TaxonomyQueryResponse
+
+Defined in: [packages/core/src/content/taxonomies.ts:65](https://github.com/Sitecore/content-sdk/blob/fd84f4476fa098e302de5c6b6f25b870be446d60/packages/core/src/content/taxonomies.ts#L65)
+
+Represents the response structure for a query that retrieves a specific taxonomy by ID.
+
+## Properties
+
+### taxonomy
+
+> **taxonomy**: `object`
+
+Defined in: [packages/core/src/content/taxonomies.ts:67](https://github.com/Sitecore/content-sdk/blob/fd84f4476fa098e302de5c6b6f25b870be446d60/packages/core/src/content/taxonomies.ts#L67)
+
+The retrieved taxonomy.
+
+#### system
+
+> **system**: [`TaxonomySystem`](../type-aliases/TaxonomySystem.md)
+
+The system metadata of the taxonomy.
+
+#### terms
+
+> **terms**: `object`
+
+The terms for the taxonomy (may be paginated).
+
+##### terms.cursor?
+
+> `optional` **cursor**: `null` \| `string`
+
+##### terms.hasMore
+
+> **hasMore**: `boolean`
+
+##### terms.results
+
+> **results**: [`Term`](../type-aliases/Term.md)[]
