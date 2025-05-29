@@ -8,9 +8,9 @@
 
 > **Locale** = `object`
 
-Defined in: [packages/core/src/content/locales.ts:18](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/locales.ts#L18)
+Defined in: [packages/core/src/content/locales.ts:4](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/locales.ts#L4)
 
-Represents a locale with an id and a label.
+Represents the locale entity.
 
 ## Properties
 
@@ -18,9 +18,9 @@ Represents a locale with an id and a label.
 
 > **id**: `string`
 
-Defined in: [packages/core/src/content/locales.ts:20](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/locales.ts#L20)
+Defined in: [packages/core/src/content/locales.ts:6](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/locales.ts#L6)
 
-The unique identifier for the locale.
+The unique identifier of the locale.
 
 ***
 
@@ -28,6 +28,6 @@ The unique identifier for the locale.
 
 > **label**: `string`
 
-Defined in: [packages/core/src/content/locales.ts:22](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/locales.ts#L22)
+Defined in: [packages/core/src/content/locales.ts:8](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/locales.ts#L8)
 
-The display name or label for the locale.
+The label of the locale.

@@ -6,7 +6,7 @@
 
 # Class: ContentClient
 
-Defined in: [packages/core/src/content/content-client.ts:39](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/content-client.ts#L39)
+Defined in: [packages/core/src/content/content-client.ts:39](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/content-client.ts#L39)
 
 Class representing a client for interacting with the Content API.
 
@@ -16,7 +16,7 @@ Class representing a client for interacting with the Content API.
 
 > **new ContentClient**(`__namedParameters`): `ContentClient`
 
-Defined in: [packages/core/src/content/content-client.ts:43](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/content-client.ts#L43)
+Defined in: [packages/core/src/content/content-client.ts:43](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/content-client.ts#L43)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/content/content-client.ts:43](https://github.com/
 
 > **endpoint**: `string`
 
-Defined in: [packages/core/src/content/content-client.ts:40](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/content-client.ts#L40)
+Defined in: [packages/core/src/content/content-client.ts:40](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/content-client.ts#L40)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/core/src/content/content-client.ts:40](https://github.com/
 
 > **graphqlClient**: [`GraphQLRequestClient`](../../index/classes/GraphQLRequestClient.md)
 
-Defined in: [packages/core/src/content/content-client.ts:41](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/content-client.ts#L41)
+Defined in: [packages/core/src/content/content-client.ts:41](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/content-client.ts#L41)
 
 ## Methods
 
@@ -50,7 +50,7 @@ Defined in: [packages/core/src/content/content-client.ts:41](https://github.com/
 
 > **get**\<`T`\>(`query`, `variables`, `options`): `Promise`\<`T`\>
 
-Defined in: [packages/core/src/content/content-client.ts:107](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/content-client.ts#L107)
+Defined in: [packages/core/src/content/content-client.ts:107](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/content-client.ts#L107)
 
 Execute graphql request
 
@@ -80,7 +80,7 @@ response data
 
 > **getLocale**(`id`): `Promise`\<`null` \| [`Locale`](../type-aliases/Locale.md)\>
 
-Defined in: [packages/core/src/content/content-client.ts:121](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/content-client.ts#L121)
+Defined in: [packages/core/src/content/content-client.ts:121](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/content-client.ts#L121)
 
 Retrieves the locale information for a given locale ID.
 
@@ -102,7 +102,7 @@ A promise that resolves to the locale information associated with the specified 
 
 > **getLocales**(): `Promise`\<[`Locale`](../type-aliases/Locale.md)[]\>
 
-Defined in: [packages/core/src/content/content-client.ts:132](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/content-client.ts#L132)
+Defined in: [packages/core/src/content/content-client.ts:132](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/content-client.ts#L132)
 
 Retrieves all available locales from the content service.
 
@@ -118,7 +118,7 @@ A promise that resolves to an array of locales.
 
 > **getTaxonomies**(`options?`): `Promise`\<\{ `cursor`: `undefined` \| `string`; `hasMore`: `boolean`; `results`: `object`[]; \}\>
 
-Defined in: [packages/core/src/content/content-client.ts:146](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/content-client.ts#L146)
+Defined in: [packages/core/src/content/content-client.ts:146](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/content-client.ts#L146)
 
 Retrieves all available taxonomies with optional pagination support.
 
@@ -142,7 +142,7 @@ A promise that resolves to an object containing taxonomies, their terms, and pag
 
 > **getTaxonomy**(`options`): `Promise`\<`null` \| `Taxonomy`\>
 
-Defined in: [packages/core/src/content/content-client.ts:180](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/content-client.ts#L180)
+Defined in: [packages/core/src/content/content-client.ts:180](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/content-client.ts#L180)
 
 Retrieves a taxonomy by its ID, with optional pagination support for its terms.
 
@@ -168,7 +168,7 @@ A promise that resolves to the taxonomy object, including pagination metadata (`
 
 > `static` **createClient**(`options?`): `ContentClient`
 
-Defined in: [packages/core/src/content/content-client.ts:70](https://github.com/Sitecore/content-sdk/blob/327f9bf742e33e705e98373e14fdc6c8bfd0ce1b/packages/core/src/content/content-client.ts#L70)
+Defined in: [packages/core/src/content/content-client.ts:70](https://github.com/Sitecore/content-sdk/blob/b729bf4210968ad33896556213eb3325c7a4a16e/packages/core/src/content/content-client.ts#L70)
 
 Factory method for creating a ContentClient instance. This method allows you to create a client with the values populated from environment variables or provided as arguments.
 
