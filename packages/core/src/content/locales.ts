@@ -1,26 +1,33 @@
 /**
- * Represents the response structure for a query that retrieves a locale.
+ * Represents the locale entity.
+ */
+export type Locale = {
+  /** The unique identifier of the locale. */
+  id: string;
+  /** The label of the locale. */
+  label: string;
+};
+
+/**
+ * A locale item included in a locale query response.
+ */
+export type LocaleItem = {
+  system: Locale;
+};
+
+/**
+ * Represents the response structure for a query that retrieves a single locale.
  */
 export interface LocaleQueryResponse {
-  locale: Locale | null;
+  locale: LocaleItem | null;
 }
 
 /**
  * Represents the response structure for a query that retrieves multiple locales.
  */
 export interface LocalesQueryResponse {
-  manyLocale: Locale[];
+  manyLocale: LocaleItem[];
 }
-
-/**
- * Represents a locale with an id and a label.
- */
-export type Locale = {
-  /** The unique identifier for the locale. */
-  id: string;
-  /** The display name or label for the locale. */
-  label: string;
-};
 
 /**
  * GraphQL query to retrieve a specific locale by its ID.
@@ -29,10 +36,12 @@ export type Locale = {
  * - id: The ID of the locale to retrieve.
  */
 export const GET_LOCALE_QUERY = `
-  query GetLocaleById ($id: ID!) {
+  query GetLocaleById($id: ID!) {
     locale(id: $id) {
-      id
-      label
+      system {
+        id
+        label
+      }
     }
   }
 `;
@@ -41,10 +50,12 @@ export const GET_LOCALE_QUERY = `
  * GraphQL query to retrieve all available locales.
  */
 export const GET_LOCALES_QUERY = `
-  query GetAllLocales{
+  query GetAllLocales {
     manyLocale {
-      id
-      label
+      system {
+        id
+        label
+      }
     }
   }
 `;
