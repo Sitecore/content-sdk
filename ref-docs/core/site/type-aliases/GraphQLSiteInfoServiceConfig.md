@@ -8,7 +8,7 @@
 
 > **GraphQLSiteInfoServiceConfig** = [`CacheOptions`](../../index/interfaces/CacheOptions.md) & `object`
 
-Defined in: [packages/core/src/site/graphql-siteinfo-service.ts:19](https://github.com/Sitecore/content-sdk/blob/b35860e173c4258c981f546aecdc086cd4c5f56d/packages/core/src/site/graphql-siteinfo-service.ts#L19)
+Defined in: [packages/core/src/site/graphql-siteinfo-service.ts:19](https://github.com/Sitecore/content-sdk/blob/d69a0b2353c5248fbc2375e5024bac38d139f74b/packages/core/src/site/graphql-siteinfo-service.ts#L19)
 
 ## Type declaration
 
