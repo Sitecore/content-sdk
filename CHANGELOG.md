@@ -46,7 +46,7 @@ Our versioning strategy is as follows:
   - These additions follow the same extensible architecture as existing features enabling custom behavior via service overrides and improving consistency across endpoints.
 * `[sitecore-jss-cli]` Code extraction feature for XMCloud code generation is added ([#71](https://github.com/Sitecore/jss/pull/71))
 * `[all]` XM Cloud Content support
-  * `[core]` Introduced /content submodule to interact with XM Cloud Content ([#65](https://github.com/Sitecore/content-sdk/pull/65))
+  * `[core]` Introduced /content submodule to interact with XM Cloud Content ([#65](https://github.com/Sitecore/content-sdk/pull/65)[#104](https://github.com/Sitecore/content-sdk/pull/104))
   * `[richtext]` Added new `richtext` package to enable Content SDK to work with TipTap Rich Text editors ([#85](https://github.com/Sitecore/content-sdk/pull/85))
 * `[cli]` Introduce "project" subcommands ([#73](https://github.com/Sitecore/content-sdk/pull/73))
 * `[nextjs]` Enhance customizability for Sitecore Client and SDK Middlwares ([#87](https://github.com/Sitecore/content-sdk/pull/87))

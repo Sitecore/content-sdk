@@ -10,4 +10,4 @@ export {
   ModuleType,
 } from '@sitecore-content-sdk/core/tools';
 
-export { extractComponents } from './codegen/extract-components';
+export { extractFiles } from './codegen/extract-files';

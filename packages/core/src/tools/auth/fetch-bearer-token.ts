@@ -21,7 +21,6 @@ export const fetchBearerToken = async (options: FetchBearerTokenOptions) => {
   const endpoint = options.endpoint || DEFAULT_SITECORE_AUTH_ENDPOINT;
 
   try {
-    // TODO:adjust when M2M endpoint is live
     const authenticateResponse = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -34,6 +33,9 @@ export const fetchBearerToken = async (options: FetchBearerTokenOptions) => {
         grant_type: 'client_credentials',
       }),
     });
+    if (!authenticateResponse.ok) {
+      throw new Error(`Authentication failed with status: ${authenticateResponse.status}`);
+    }
     const jsonResponse = await authenticateResponse.json();
     return jsonResponse.access_token;
   } catch (error) {
