@@ -1,30 +1,32 @@
 /**
- * Represents the "system" field in a locale response.
+ * Represents the locale entity.
  */
-export type SingleLocale = {
+export type Locale = {
+  /** The unique identifier of the locale. */
   id: string;
+  /** The label of the locale. */
   label: string;
 };
 
 /**
- * Represents a locale result with a system field.
+ * Represents a locale query response.
  */
-export type LocaleEntry = {
-  system: SingleLocale;
+export type LocaleItem = {
+  system: Locale;
 };
 
 /**
  * Represents the response structure for a query that retrieves a single locale.
  */
 export interface LocaleQueryResponse {
-  locale: LocaleEntry | null;
+  locale: LocaleItem | null;
 }
 
 /**
  * Represents the response structure for a query that retrieves multiple locales.
  */
 export interface LocalesQueryResponse {
-  manyLocale: LocaleEntry[];
+  manyLocale: LocaleItem[];
 }
 
 /**

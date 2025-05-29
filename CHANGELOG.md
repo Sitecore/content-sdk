@@ -19,8 +19,7 @@ Our versioning strategy is as follows:
     - Introduced `getTaxonomy` and `getTaxonomies` methods on Content Client class
     - Support pagination for the above methods by implementing an internal `fetchNext` method to handle this in each method
   - Introduced `getLocale/getLocales` functionality on content client: 
-    - Updated `getLocale/getLocales` based on new GQL Schemas ([#105](https://github.com/Sitecore/content-sdk/pull/105))   
-    - Initial implementation of `getLocale/getLocales` ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#78](https://github.com/Sitecore/content-sdk/pull/78))
+    - Initial implementation of `getLocale/getLocales` ([#74](https://github.com/Sitecore/content-sdk/pull/74)) ([#78](https://github.com/Sitecore/content-sdk/pull/78)) ([#105](https://github.com/Sitecore/content-sdk/pull/105))   
 * `[next.js]` Rework and simplify .env ([#89](https://github.com/Sitecore/content-sdk/pull/89)):
   - Introduced `.env.container.example`  
     - Intended for local development against a Sitecore container instance.
