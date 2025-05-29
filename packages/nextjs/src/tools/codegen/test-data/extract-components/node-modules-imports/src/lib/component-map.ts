@@ -5,6 +5,7 @@
 import * as TestComponent from '../components/TestComponent';
 import * as Test2 from '../../node_modules/TestComponent2';
 import * as fs from 'node:fs';
+import * as index from '../index';
 
 export const components = new Map([
     ['TestComponent', TestComponent],

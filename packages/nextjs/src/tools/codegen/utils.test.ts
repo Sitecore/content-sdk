@@ -5,7 +5,6 @@ import * as path from 'path';
 import nock from 'nock';
 import fs from 'fs';
 import * as codegenUtils from './utils';
-import { constants } from '@sitecore-content-sdk/core';
 
 describe('codegen-utils', () => {
   const sandbox = sinon.createSandbox();
@@ -15,7 +14,7 @@ describe('codegen-utils', () => {
   });
 
   describe('sendCode', () => {
-    const meshEndpoint = constants.SITECORE_EDGE_URL_DEFAULT;
+    const meshEndpoint = 'https://test-mesh-endpoint.com';
     const componentName = 'component';
 
     it('should read file from componentPath and send code to meshEndpoint', async () => {
@@ -40,14 +39,13 @@ describe('codegen-utils', () => {
 
       nock(meshEndpoint)
         .post(
-          '/api/v1/mesh',
+          '/api/v1/contentsdk/code/extracted',
           JSON.stringify({
+            EnvironmentId: 'ContentSDK',
             name: file.name,
             content: fileContent,
             labels: {
-              properties: {
-                type: file.type,
-              },
+              type: file.type,
             },
           })
         )
@@ -56,11 +54,11 @@ describe('codegen-utils', () => {
 
       const consoleLogStub = sandbox.spy(console, 'log');
 
-      await codegenUtils.sendCode({ file, token });
+      await codegenUtils.sendCode({ file, token, targetUrl: meshEndpoint });
 
       expect(consoleLogStub.called).to.be.true;
       expect(consoleLogStub.firstCall.args[0]).to.equal(
-        chalk.green('Code from /path/to/component.ts extracted and sent to mesh endpoint')
+        chalk.green('Contents from /path/to/component.ts extracted and sent to mesh endpoint')
       );
     });
 
@@ -81,11 +79,11 @@ describe('codegen-utils', () => {
 
       const consoleErrorStub = sandbox.stub(console, 'error');
 
-      await codegenUtils.sendCode({ file, token });
+      await codegenUtils.sendCode({ file, token, targetUrl: meshEndpoint });
 
       expect(consoleErrorStub.calledOnce).to.be.true;
       expect(consoleErrorStub.firstCall.args[0]).to.equal(
-        chalk.red(`Component file not found: ${componentPath}`)
+        chalk.red(`File not found: ${componentPath}`)
       );
     });
 
@@ -110,14 +108,13 @@ describe('codegen-utils', () => {
 
       nock(meshEndpoint)
         .post(
-          '/api/v1/mesh',
+          '/api/v1/contentsdk/code/extracted',
           JSON.stringify({
+            EnvironmentId: 'ContentSDK',
             name: file.name,
             content: fileContent,
             labels: {
-              properties: {
-                type: file.type,
-              },
+              type: file.type,
             },
           })
         )
@@ -126,7 +123,7 @@ describe('codegen-utils', () => {
 
       const consoleErrorStub = sandbox.stub(console, 'error');
 
-      await codegenUtils.sendCode({ file, token });
+      await codegenUtils.sendCode({ file, token, targetUrl: meshEndpoint });
 
       expect(consoleErrorStub.calledOnce).to.be.true;
       expect(consoleErrorStub.firstCall.args[0]).to.equal(
@@ -149,12 +146,12 @@ describe('codegen-utils', () => {
       );
     });
 
-    it('should throw when src/lib/componentMap.ts is not found', () => {
+    it('should throw when src/lib/component-map.ts is not found', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/no-componentBuilder';
       const appRoot = process.cwd();
       const expectedPath = path.resolve(
         appRoot,
-        './src/tools/codegen/test-data/extract-components/no-componentBuilder/src/lib/componentMap.ts'
+        './src/tools/codegen/test-data/extract-components/no-componentBuilder/src/lib/component-map.ts'
       );
       expect(() => codegenUtils.resolveComponentImportFiles(appPath)).to.throw(
         ReferenceError,
@@ -162,7 +159,7 @@ describe('codegen-utils', () => {
       );
     });
 
-    it('should return JS imports with absolute paths from componentMap.ts', () => {
+    it('should return JS imports with absolute paths from component-map.ts', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/regular-imports';
       const imports = codegenUtils.resolveComponentImportFiles(appPath);
       expect(Array.from(imports)).to.deep.equal([
@@ -205,7 +202,7 @@ describe('codegen-utils', () => {
       ]);
     });
 
-    it('should return imports with absolute paths from componentMap.ts', () => {
+    it('should return imports with absolute paths from component-map.ts', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/js-imports';
 
       const imports = codegenUtils.resolveComponentImportFiles(appPath);
@@ -248,7 +245,7 @@ describe('codegen-utils', () => {
       ]);
     });
 
-    it('should return imports with absolute paths from componentMap.ts with named imports', () => {
+    it('should return imports with absolute paths from component-map.ts with named imports', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/named-imports';
 
       const imports = codegenUtils.resolveComponentImportFiles(appPath);
@@ -277,7 +274,7 @@ describe('codegen-utils', () => {
       ]);
     });
 
-    it('should return imports with absolute paths from componentMap.ts when paths aliases are used', () => {
+    it('should return imports with absolute paths from component-map.ts when paths aliases are used', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/with-path-aliases';
       const imports = codegenUtils.resolveComponentImportFiles(appPath);
 
@@ -292,7 +289,7 @@ describe('codegen-utils', () => {
       ]);
     });
 
-    it('should ignore imports starting with "node:" and containing "node_modules"', () => {
+    it('should ignore imports starting with "node:", ending with ".d.ts" and containing "node_modules"', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/node-modules-imports';
       const imports = codegenUtils.resolveComponentImportFiles(appPath);
 

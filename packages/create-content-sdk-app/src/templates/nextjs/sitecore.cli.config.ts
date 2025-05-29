@@ -1,10 +1,6 @@
 import config from './sitecore.config';
 import { defineCliConfig } from '@sitecore-content-sdk/nextjs/config-cli';
-import {
-  generateSites,
-  generateMetadata,
-  extractComponents,
-} from '@sitecore-content-sdk/nextjs/tools';
+import { generateSites, generateMetadata, extractFiles } from '@sitecore-content-sdk/nextjs/tools';
 
 export default defineCliConfig({
   build: {
@@ -13,7 +9,7 @@ export default defineCliConfig({
       generateSites({
         scConfig: config,
       }),
-      extractComponents({
+      extractFiles({
         scConfig: config,
       }),
     ],

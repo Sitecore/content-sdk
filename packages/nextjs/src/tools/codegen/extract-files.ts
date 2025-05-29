@@ -9,17 +9,18 @@ import {
 import { constants } from '@sitecore-content-sdk/core';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { fetchBearerToken } from '@sitecore-content-sdk/core/tools';
+import path from 'path';
 
-export type ExtractComponentsConfig = {
+export type ExtractFilesConfig = {
   scConfig: SitecoreConfig;
   componentMapPath?: string;
 };
 
 /**
  * Extracts components from the app folder and sends them to XMCloud.
- * @param {ExtractComponentsConfig} args - Config for components extraction
+ * @param {ExtractFilesConfig} args - Config for components extraction
  */
-export const extractComponents = (args: ExtractComponentsConfig) => {
+export const extractFiles = (args: ExtractFilesConfig) => {
   const authParams = {
     clientId: process.env.SITECORE_AUTH_CLIENT_ID || '',
     clientSecret: process.env.SITECORE_AUTH_CLIENT_SECRET || '',
@@ -38,6 +39,8 @@ export const extractComponents = (args: ExtractComponentsConfig) => {
     const basePath = process.cwd();
 
     try {
+      // MESH_URL is temporary option to use until mesh is onboarded into Edge Proxy
+      const targetUrl = process.env.SITECORE_MESH_URL || args.scConfig.api.edge.edgeUrl;
       const bearer = await fetchBearerToken(authParams);
       if (!bearer) {
         console.error(chalk.red('Failed to get bearer token, aborting code extraction'));
@@ -46,7 +49,7 @@ export const extractComponents = (args: ExtractComponentsConfig) => {
 
       const componentPaths = await resolveComponentImportFiles(basePath, args.componentMapPath);
 
-      const codeDispatches = Array.from(componentPaths, (mapEntry) =>
+      const fileDispatches = Array.from(componentPaths, (mapEntry) =>
         sendCode({
           file: {
             name: mapEntry[0],
@@ -54,11 +57,23 @@ export const extractComponents = (args: ExtractComponentsConfig) => {
             type: ExtractedFileType.Component,
           },
           token: bearer,
-          edgeUrl: args.scConfig.api.edge.edgeUrl,
+          targetUrl,
         })
       );
 
-      await Promise.all(codeDispatches);
+      fileDispatches.push(
+        sendCode({
+          file: {
+            name: 'package.json',
+            path: path.resolve(basePath, './package.json'),
+            type: ExtractedFileType.PackageJson,
+          },
+          token: bearer,
+          targetUrl,
+        })
+      );
+
+      await Promise.all(fileDispatches);
     } catch (error) {
       console.error(chalk.red('Error during component extraction:', error));
     }

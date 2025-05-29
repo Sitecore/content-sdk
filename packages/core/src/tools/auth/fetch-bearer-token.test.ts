@@ -78,7 +78,7 @@ describe('fetchBearerToken', () => {
   it('should log when request to SITECORE_AUTH_ENDPOINT fails', async () => {
     nock('https://auth.sitecorecloud.io')
       .post('/oauth/token')
-      .reply(503, 'Service Unavailable');
+      .reply(503);
     const consoleErrorStub = sinon.stub(console, 'error');
     const token = await fetchBearerToken({
       clientId,
@@ -90,7 +90,7 @@ describe('fetchBearerToken', () => {
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
       chalk.red(
         // eslint-disable-next-line
-        `Error authenticating with Sitecore Auth endpoint: SyntaxError: Unexpected token 'S', "Service Unavailable" is not valid JSON`
+        `Error authenticating with Sitecore Auth endpoint: Error: Authentication failed with status: 503`
       )
     );
   });
