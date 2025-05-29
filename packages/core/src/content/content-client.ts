@@ -122,7 +122,7 @@ export class ContentClient {
     debug.content('Getting locale for id: %s', id);
 
     const response = await this.get<LocaleQueryResponse>(GET_LOCALE_QUERY, { id });
-    return response.locale ? response?.locale?.system : null;
+    return response.locale?.system || null;
   }
 
   /**

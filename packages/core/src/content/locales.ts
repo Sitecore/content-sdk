@@ -9,7 +9,7 @@ export type Locale = {
 };
 
 /**
- * Represents a locale query response.
+ * A locale item included in a locale query response.
  */
 export type LocaleItem = {
   system: Locale;
