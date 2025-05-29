@@ -1,9 +1,7 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
 import { login } from '../../../src/scripts/auth/login';
-import * as authFlow from '../../../src/utils/auth/flow';
-import * as tenantStore from '../../../src/utils/auth/tenant-store';
-import * as tenantState from '../../../src/utils/auth/tenant-state';
+import * as authTools from '@sitecore-content-sdk/core/tools';
 
 describe('login command', () => {
   const fakeArgs = {
@@ -36,11 +34,11 @@ describe('login command', () => {
 
   beforeEach(() => {
     clientCredentialsStub = sinon
-      .stub(authFlow, 'clientCredentialsFlow')
+      .stub(authTools, 'clientCredentialsFlow')
       .resolves(fakeAuthResponse);
-    writeTenantAuthStub = sinon.stub(tenantStore, 'writeTenantAuthInfo').resolves();
-    writeTenantInfoStub = sinon.stub(tenantStore, 'writeTenantInfo').resolves();
-    setActiveTenantStub = sinon.stub(tenantState, 'setActiveTenant');
+    writeTenantAuthStub = sinon.stub(authTools, 'writeTenantAuthInfo').resolves();
+    writeTenantInfoStub = sinon.stub(authTools, 'writeTenantInfo').resolves();
+    setActiveTenantStub = sinon.stub(authTools, 'setActiveTenant');
     consoleInfoStub = sinon.stub(console, 'info');
     processExitStub = sinon.stub(process, 'exit');
     consoleErrorStub = sinon.stub(console, 'error');

@@ -1,5 +1,5 @@
 ﻿import { CommandModule } from 'yargs';
-import { getAllTenantsInfo } from '../../utils/auth/tenant-store';
+import { getAllTenantsInfo } from '@sitecore-content-sdk/core/tools';
 
 export const list: CommandModule = {
   command: 'list',

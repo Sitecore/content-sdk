@@ -1,6 +1,5 @@
 ﻿import { CommandModule } from 'yargs';
-import { readTenantInfo } from '../../utils/auth/tenant-store';
-import { renewAuthIfExpired } from '../../utils/auth/renewal';
+import { readTenantInfo, renewAuthIfExpired } from '@sitecore-content-sdk/core/tools';
 
 export const status: CommandModule = {
   command: 'status',

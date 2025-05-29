@@ -1,26 +1,27 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
 import { list } from './list';
-import * as tenantStore from '../../../src/utils/auth/tenant-store';
+import * as authTools from '@sitecore-content-sdk/core/tools';
 
 describe('list command', () => {
   let getAllTenantsStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
   let logs: string[];
+  const sandbox = sinon.createSandbox();
 
   beforeEach(() => {
     logs = [];
-    consoleLogStub = sinon.stub(console, 'log').callsFake((msg) => {
+    consoleLogStub = sandbox.stub(console, 'log').callsFake((msg) => {
       logs.push(String(msg));
     });
   });
 
   afterEach(() => {
-    sinon.restore();
+    sandbox.restore();
   });
 
   it('should log message if no tenants are found', async () => {
-    getAllTenantsStub = sinon.stub(tenantStore, 'getAllTenantsInfo').returns([]);
+    getAllTenantsStub = sandbox.stub(authTools, 'getAllTenantsInfo').returns([]);
 
     await list.handler({} as any);
 
@@ -41,7 +42,7 @@ describe('list command', () => {
       },
     ];
 
-    getAllTenantsStub = sinon.stub(tenantStore, 'getAllTenantsInfo').returns(mockTenants);
+    getAllTenantsStub = sandbox.stub(authTools, 'getAllTenantsInfo').returns(mockTenants);
 
     await list.handler({} as any);
 

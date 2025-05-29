@@ -54,8 +54,8 @@ describe('extract-files', () => {
 
   it('should log when bearer is empty', async () => {
     const consoleErrorStub = sandbox.stub(console, 'error');
-    const fetchBearerTokenStub = sandbox.stub().resolves('');
-    sandbox.replaceGetter(coreTools, 'fetchBearerToken', () => fetchBearerTokenStub);
+    const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
+    sandbox.replaceGetter(coreTools, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
     const extractFilesCall = extractFiles(mockArgs);
     await extractFilesCall();
@@ -76,8 +76,8 @@ describe('extract-files', () => {
     );
     sandbox.stub(process, 'cwd').returns(appFolder);
 
-    const fetchBearerTokenStub = sandbox.stub().resolves('test-token');
-    sandbox.replaceGetter(coreTools, 'fetchBearerToken', () => fetchBearerTokenStub);
+    const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: 'test-token' });
+    sandbox.replaceGetter(coreTools, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
     const consoleErrorStub = sandbox.stub(console, 'error');
     const extractFilesCall = extractFiles(args);
@@ -104,8 +104,8 @@ describe('extract-files', () => {
     );
     sandbox.stub(process, 'cwd').returns(appFolder);
 
-    const fetchBearerTokenStub = sandbox.stub().resolves('test-token');
-    sandbox.replaceGetter(coreTools, 'fetchBearerToken', () => fetchBearerTokenStub);
+    const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: 'test-token' });
+    sandbox.replaceGetter(coreTools, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
     const consoleLogStub = sandbox.stub(console, 'log');
 

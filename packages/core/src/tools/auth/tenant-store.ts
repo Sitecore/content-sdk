@@ -1,27 +1,116 @@
-﻿import * as fs from 'fs';
+﻿/* eslint-disable jsdoc/require-jsdoc */
+import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { TenantAuth, TenantInfo } from './../../scripts/auth/models';
+import { TenantAuth, TenantInfo } from './models';
 
 const CLAIMS = 'https://auth.sitecorecloud.io/claims';
 
 const rootDir = path.join(os.homedir(), '.sitecore', 'sitecore-tools');
 
 /**
- * Get the full path to the tenant-specific folder.
- * @param {string} tenantId - The tenant ID.
- * @returns The absolute path to the tenant directory.
+ * Decodes a JWT without verifying its signature.
+ * @param {string} token - The access token string.
+ * @returns Decoded payload object or null if invalid.
  */
-function getTenantPath(tenantId: string): string {
-  return path.join(rootDir, tenantId);
-}
+export let decodeJwtPayload = _decodeJwtPayload;
 
 /**
  * Write the authentication configuration for a tenant.
  * @param {string} tenantId - The tenant ID.
  * @param {TenantAuth} authInfo - The tenant's auth data.
  */
-export async function writeTenantAuthInfo(tenantId: string, authInfo: TenantAuth): Promise<void> {
+export let writeTenantAuthInfo = _writeTenantAuthInfo;
+
+/**
+ * Read the authentication configuration for a tenant.
+ * @param {string} tenantId - The tenant ID.
+ * @returns Parsed auth config or null if not found or failed to read.
+ */
+export let readTenantAuthInfo = _readTenantAuthInfo;
+
+/**
+ * Write the public metadata information for a tenant.
+ * @param {TenantInfo} info - The tenant info object.
+ */
+export let writeTenantInfo = _writeTenantInfo;
+
+/**
+ * Read the public metadata information for a tenant.
+ * @param {string} tenantId - The tenant ID.
+ * @returns Parsed tenant info or null if not found or failed to read.
+ */
+export let readTenantInfo = _readTenantInfo;
+
+/**
+ * Deletes the stored auth.json file for the given tenant.
+ * @param {string} tenantId - The tenant ID.
+ */
+export let deleteTenantAuthInfo = _deleteTenantAuthInfo;
+
+/**
+ * Scans the CLI root directory and returns all valid tenant infos.
+ * @returns A list of TenantInfo objects found in {tenant-id}/info.json files.
+ */
+export let getAllTenantsInfo = _getAllTenantsInfo;
+
+// mock setup for unit tests to make sinon happy and mock-able with esbuild/tsx
+// https://sinonjs.org/how-to/typescript-swc/
+export const unitMocks = {
+  set decodeJwtPayload(mockImplementation) {
+    decodeJwtPayload = mockImplementation;
+  },
+  get decodeJwtPayload() {
+    return _decodeJwtPayload;
+  },
+  set writeTenantAuthInfo(mockImplementation) {
+    writeTenantAuthInfo = mockImplementation;
+  },
+  get writeTenantAuthInfo() {
+    return _writeTenantAuthInfo;
+  },
+  set readTenantAuthInfo(mockImplementation) {
+    readTenantAuthInfo = mockImplementation;
+  },
+  get readTenantAuthInfo() {
+    return _readTenantAuthInfo;
+  },
+  set writeTenantInfo(mockImplementation) {
+    writeTenantInfo = mockImplementation;
+  },
+  get writeTenantInfo() {
+    return _writeTenantInfo;
+  },
+  set readTenantInfo(mockImplementation) {
+    readTenantInfo = mockImplementation;
+  },
+  get readTenantInfo() {
+    return _readTenantInfo;
+  },
+  set deleteTenantAuthInfo(mockImplementation) {
+    deleteTenantAuthInfo = mockImplementation;
+  },
+  get deleteTenantAuthInfo() {
+    return _deleteTenantAuthInfo;
+  },
+  set getAllTenantsInfo(mockImplementation) {
+    getAllTenantsInfo = mockImplementation;
+  },
+  get getAllTenantsInfo() {
+    return _getAllTenantsInfo;
+  },
+};
+
+/**
+ * Get the full path to the tenant-specific folder.
+ * @param {string} tenantId - The tenant ID.
+ * @returns The absolute path to the tenant directory.
+ */
+export function getTenantPath(tenantId: string): string {
+  return path.join(rootDir, tenantId);
+}
+
+async function _writeTenantAuthInfo(tenantId: string, authInfo: TenantAuth): Promise<void> {
   try {
     const dir = getTenantPath(tenantId);
     fs.mkdirSync(dir, { recursive: true });
@@ -33,12 +122,7 @@ export async function writeTenantAuthInfo(tenantId: string, authInfo: TenantAuth
   }
 }
 
-/**
- * Read the authentication configuration for a tenant.
- * @param {string} tenantId - The tenant ID.
- * @returns Parsed auth config or null if not found or failed to read.
- */
-export async function readTenantAuthInfo(tenantId: string): Promise<TenantAuth | null> {
+async function _readTenantAuthInfo(tenantId: string): Promise<TenantAuth | null> {
   const filePath = path.join(getTenantPath(tenantId), 'auth.json');
   if (!fs.existsSync(filePath)) return null;
 
@@ -53,11 +137,7 @@ export async function readTenantAuthInfo(tenantId: string): Promise<TenantAuth |
   }
 }
 
-/**
- * Write the public metadata information for a tenant.
- * @param {TenantInfo} info - The tenant info object.
- */
-export async function writeTenantInfo(info: TenantInfo): Promise<void> {
+async function _writeTenantInfo(info: TenantInfo): Promise<void> {
   try {
     const dir = getTenantPath(info.tenantId);
     fs.mkdirSync(dir, { recursive: true });
@@ -69,12 +149,7 @@ export async function writeTenantInfo(info: TenantInfo): Promise<void> {
   }
 }
 
-/**
- * Read the public metadata information for a tenant.
- * @param {string} tenantId - The tenant ID.
- * @returns Parsed tenant info or null if not found or failed to read.
- */
-export async function readTenantInfo(tenantId: string): Promise<TenantInfo | null> {
+async function _readTenantInfo(tenantId: string): Promise<TenantInfo | null> {
   const infoFilePath = path.join(getTenantPath(tenantId), 'info.json');
 
   if (!fs.existsSync(infoFilePath)) {
@@ -92,11 +167,7 @@ export async function readTenantInfo(tenantId: string): Promise<TenantInfo | nul
   }
 }
 
-/**
- * Deletes the stored auth.json file for the given tenant.
- * @param {string} tenantId - The tenant ID.
- */
-export async function deleteTenantAuthInfo(tenantId: string): Promise<void> {
+async function _deleteTenantAuthInfo(tenantId: string): Promise<void> {
   const filePath = path.join(getTenantPath(tenantId), 'auth.json');
   try {
     if (fs.existsSync(filePath)) {
@@ -109,11 +180,7 @@ export async function deleteTenantAuthInfo(tenantId: string): Promise<void> {
   }
 }
 
-/**
- * Scans the CLI root directory and returns all valid tenant infos.
- * @returns A list of TenantInfo objects found in {tenant-id}/info.json files.
- */
-export function getAllTenantsInfo(): TenantInfo[] {
+function _getAllTenantsInfo(): TenantInfo[] {
   if (!fs.existsSync(rootDir)) return [];
 
   const subDirs = fs
@@ -150,12 +217,7 @@ export function getAllTenantsInfo(): TenantInfo[] {
   return tenants;
 }
 
-/**
- * Decodes a JWT without verifying its signature.
- * @param {string} token - The access token string.
- * @returns Decoded payload object or null if invalid.
- */
-export function decodeJwtPayload(token: string): Record<string, any> | null {
+function _decodeJwtPayload(token: string): Record<string, any> | null {
   try {
     const base64Payload = token.split('.')[1];
     const payload = Buffer.from(base64Payload, 'base64').toString('utf-8');

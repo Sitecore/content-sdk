@@ -8,7 +8,7 @@ import {
 } from './utils';
 import { constants } from '@sitecore-content-sdk/core';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
-import { fetchBearerToken } from '@sitecore-content-sdk/core/tools';
+import { clientCredentialsFlow } from '@sitecore-content-sdk/core/tools';
 import path from 'path';
 
 export type ExtractFilesConfig = {
@@ -41,8 +41,8 @@ export const extractFiles = (args: ExtractFilesConfig) => {
     try {
       // MESH_URL is temporary option to use until mesh is onboarded into Edge Proxy
       const targetUrl = process.env.SITECORE_MESH_URL || args.scConfig.api.edge.edgeUrl;
-      const bearer = await fetchBearerToken(authParams);
-      if (!bearer) {
+      const { accessToken } = await clientCredentialsFlow(authParams);
+      if (!accessToken) {
         console.error(chalk.red('Failed to get bearer token, aborting code extraction'));
         return;
       }
@@ -56,7 +56,7 @@ export const extractFiles = (args: ExtractFilesConfig) => {
             path: mapEntry[1],
             type: ExtractedFileType.Component,
           },
-          token: bearer,
+          token: accessToken,
           targetUrl,
         })
       );

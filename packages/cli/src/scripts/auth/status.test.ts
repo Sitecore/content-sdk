@@ -1,8 +1,8 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
 import { status } from './status';
-import * as auth from '../../utils/auth/renewal';
-import * as tenantStore from './../../utils/auth/tenant-store';
+import * as auth from '@sitecore-content-sdk/core/tools';
+import * as tenantStore from '@sitecore-content-sdk/core/tools';
 
 describe('status command', () => {
   let renewStub: sinon.SinonStub;

@@ -1,6 +1,9 @@
 ﻿import { CommandModule } from 'yargs';
-import { getActiveTenant, clearActiveTenant } from '../../utils/auth/tenant-state';
-import { deleteTenantAuthInfo } from '../../utils/auth/tenant-store';
+import {
+  deleteTenantAuthInfo,
+  getActiveTenant,
+  clearActiveTenant,
+} from '@sitecore-content-sdk/core/tools';
 
 export const logout: CommandModule = {
   command: 'logout',

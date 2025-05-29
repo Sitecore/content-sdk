@@ -1,8 +1,8 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
 import { logout } from './logout';
-import * as tenantState from '../../../src/utils/auth/tenant-state';
-import * as tenantStore from '../../../src/utils/auth/tenant-store';
+import * as tenantState from '@sitecore-content-sdk/core/tools';
+import * as tenantStore from '@sitecore-content-sdk/core/tools';
 
 describe('logout command', () => {
   let getActiveTenantStub: sinon.SinonStub;

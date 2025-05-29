@@ -1,8 +1,14 @@
 ﻿import { Argv, CommandModule } from 'yargs';
-import { clientCredentialsFlow, AUTH0_DOMAIN, AUDIENCE, BASE_URL } from '../../utils/auth/flow';
-import { writeTenantAuthInfo, writeTenantInfo } from '../../utils/auth/tenant-store';
-import { setActiveTenant } from '../../utils/auth/tenant-state';
-import { TenantArgs } from './models';
+import {
+  setActiveTenant,
+  TenantArgs,
+  writeTenantAuthInfo,
+  writeTenantInfo,
+  clientCredentialsFlow,
+  AUTH0_DOMAIN,
+  AUTH0_AUDIENCE,
+  AUTH0_BASE_URL,
+} from '@sitecore-content-sdk/core/tools';
 
 export const login: CommandModule<object, TenantArgs> = {
   command: 'login',
@@ -102,8 +108,8 @@ export const login: CommandModule<object, TenantArgs> = {
       clientId,
       tenantName,
       authority: argv.authority || AUTH0_DOMAIN,
-      audience: argv.audience || AUDIENCE,
-      baseUrl: argv.baseUrl || BASE_URL,
+      audience: argv.audience || AUTH0_AUDIENCE,
+      baseUrl: argv.baseUrl || AUTH0_BASE_URL,
     });
 
     setActiveTenant(tenantId);

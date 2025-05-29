@@ -25,7 +25,8 @@ describe('clientCredentialsFlow', () => {
 
   beforeEach(() => {
     fetchStub = sinon.stub(global, 'fetch' as any).resolves(fetchResponse as any);
-    decodeStub = sinon.stub(jwtUtil, 'decodeJwtPayload').returns(fakeDecoded);
+    decodeStub = sinon.stub().returns(fakeDecoded);
+    sinon.replace.usingAccessor(jwtUtil.unitMocks, 'decodeJwtPayload', decodeStub);
     consoleErrorStub = sinon.stub(console, 'error');
   });
 

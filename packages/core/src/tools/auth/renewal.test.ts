@@ -39,7 +39,7 @@ describe('auth token renewal utilities', () => {
   let consoleWarnStub: sinon.SinonStub;
 
   beforeEach(() => {
-    flowStub = sinon.stub(authFlow, 'clientCredentialsFlow').resolves({
+    flowStub = sinon.stub().resolves({
       data: {
         access_token: 'new-token',
         expires_in: 3600,
@@ -48,13 +48,24 @@ describe('auth token renewal utilities', () => {
       tokenTenantId: 'tenant1',
       tokenTenantName: 'DemoTenant',
     });
+    sinon.replace.usingAccessor(authFlow.unitMocks, 'clientCredentialsFlow', flowStub);
 
-    writeStub = sinon.stub(tenantStore, 'writeTenantAuthInfo').resolves();
-    readAuthStub = sinon.stub(tenantStore, 'readTenantAuthInfo');
-    readTenantInfoStub = sinon.stub(tenantStore, 'readTenantInfo');
-    getTenantStub = sinon.stub(tenantState, 'getActiveTenant');
-    deleteAuthStub = sinon.stub(tenantStore, 'deleteTenantAuthInfo').resolves();
-    clearActiveStub = sinon.stub(tenantState, 'clearActiveTenant').resolves();
+    writeStub = sinon.stub().resolves();
+    readAuthStub = sinon.stub();
+    readTenantInfoStub = sinon.stub();
+    deleteAuthStub = sinon.stub().resolves();
+
+    sinon.replace.usingAccessor(tenantStore.unitMocks, 'writeTenantAuthInfo', writeStub);
+    sinon.replace.usingAccessor(tenantStore.unitMocks, 'readTenantAuthInfo', readAuthStub);
+    sinon.replace.usingAccessor(tenantStore.unitMocks, 'readTenantInfo', readTenantInfoStub);
+    sinon.replace.usingAccessor(tenantStore.unitMocks, 'deleteTenantAuthInfo', deleteAuthStub);
+
+    getTenantStub = sinon.stub();
+    clearActiveStub = sinon.stub().resolves();
+
+    sinon.replace.usingAccessor(tenantState.unitMocks, 'getActiveTenant', getTenantStub);
+    sinon.replace.usingAccessor(tenantState.unitMocks, 'clearActiveTenant', clearActiveStub);
+
     consoleInfoStub = sinon.stub(console, 'info');
     consoleErrorStub = sinon.stub(console, 'error');
     consoleWarnStub = sinon.stub(console, 'warn');

@@ -1,9 +1,10 @@
-﻿import { TenantArgs } from '../../scripts/auth/models';
+﻿/* eslint-disable jsdoc/require-jsdoc */
+import { TenantArgs } from './models';
 import { decodeJwtPayload } from './tenant-store';
 
 export const AUTH0_DOMAIN = 'https://auth.sitecorecloud.io';
-export const AUDIENCE = 'https://api.sitecorecloud.io';
-export const BASE_URL = 'https://edge-platform.sitecorecloud.io/cs/api';
+export const AUTH0_AUDIENCE = 'https://api.sitecorecloud.io';
+export const AUTH0_BASE_URL = 'https://edge-platform.sitecorecloud.io/cs/api';
 const GRANT_TYPE = 'client_credentials';
 
 /**
@@ -20,14 +21,27 @@ const GRANT_TYPE = 'client_credentials';
  * @returns A Promise that resolves to the access token response (including access token, token type, expiry, etc.)
  * @throws Will log and exit the process if the request fails or returns a non-OK status
  */
-export async function clientCredentialsFlow({
+export let clientCredentialsFlow = _clientCredentialsFlow;
+
+// mock setup for unit tests to make sinon happy and mock-able with esbuild/tsx
+// https://sinonjs.org/how-to/typescript-swc/
+export const unitMocks = {
+  set clientCredentialsFlow(mockImplementation) {
+    clientCredentialsFlow = mockImplementation;
+  },
+  get clientCredentialsFlow() {
+    return _clientCredentialsFlow;
+  },
+};
+
+async function _clientCredentialsFlow({
   clientId,
   clientSecret,
   organizationId,
   tenantId,
-  audience = AUDIENCE,
+  audience = AUTH0_AUDIENCE,
   authority = AUTH0_DOMAIN,
-  baseUrl = BASE_URL,
+  baseUrl = AUTH0_BASE_URL,
 }: TenantArgs) {
   const params = new URLSearchParams({
     client_id: clientId,
@@ -72,7 +86,7 @@ export async function clientCredentialsFlow({
       );
     }
 
-    return { data, tokenOrgId, tokenTenantId, tokenTenantName };
+    return { data, tokenOrgId, tokenTenantId, tokenTenantName, accessToken: data.access_token };
   } catch (error) {
     console.error(
       '\n Error during client credentials flow:',
