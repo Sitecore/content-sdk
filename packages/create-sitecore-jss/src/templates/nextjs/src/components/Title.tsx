@@ -1,66 +1,49 @@
-﻿import {
-  Link,
-  LinkField,
-  Text,
-  TextField,
-  useSitecore,
-} from '@sitecore-content-sdk/nextjs';
+﻿import { Link, LinkField, Text, TextField, useSitecore } from '@sitecore-content-sdk/nextjs';
 import React, { JSX } from 'react';
+import { ComponentProps } from 'lib/component-props';
 
-interface Fields {
-  data: {
-    datasource: {
-      url: {
-        path: string;
-        siteName: string;
-      };
-      field: {
-        jsonValue: {
-          value: string;
-          metadata?: { [key: string]: unknown };
-        };
-      };
-    };
-    contextItem: {
-      url: {
-        path: string;
-        siteName: string;
-      };
-      field: {
-        jsonValue: {
-          value: string;
-          metadata?: { [key: string]: unknown };
-        };
-      };
+interface Item {
+  url: {
+    path: string;
+    siteName: string;
+  };
+  field: {
+    jsonValue: {
+      value: string;
     };
   };
 }
 
-type TitleProps = {
-  params: { [key: string]: string };
-  fields: Fields;
-};
+interface TitleProps extends ComponentProps {
+  fields: {
+    /**
+     * The Integrated graphQL query result. This illustrates the way to access the context item datasource information.
+     */
+    data?: {
+      datasource?: Item;
+      contextItem?: Item;
+    };
+  };
+}
 
-type ComponentContentProps = {
-  id: string;
-  styles: string;
-  children: JSX.Element;
-};
+interface ComponentContentProps {
+  id?: string;
+  styles?: string;
+  children: React.ReactNode;
+}
 
-const ComponentContent = (props: ComponentContentProps) => {
-  const id = props.id;
-  return (
-    <div className={`component title ${props.styles}`} id={id ? id : undefined}>
-      <div className="component-content">
-        <div className="field-title">{props.children}</div>
-      </div>
+const ComponentContent = ({ id, styles = '', children }: ComponentContentProps): JSX.Element => (
+  <div className={`component title ${styles.trim()}`} id={id}>
+    <div className="component-content">
+      <div className="field-title">{children}</div>
     </div>
-  );
-};
+  </div>
+);
 
-export const Default = (props: TitleProps): JSX.Element => {
-  const datasource = props.fields?.data?.datasource || props.fields?.data?.contextItem;
+export const Default = ({ params, fields }: TitleProps): JSX.Element => {
   const { pageContext } = useSitecore();
+  const { styles, RenderingIdentifier: id } = params;
+  const datasource = fields?.data?.datasource || fields?.data?.contextItem;
   const text: TextField = datasource?.field?.jsonValue || {};
   const link: LinkField = {
     value: {
@@ -68,25 +51,16 @@ export const Default = (props: TitleProps): JSX.Element => {
       title: datasource?.field?.jsonValue?.value,
     },
   };
-  if (pageContext.pageState !== 'normal') {
-    link.value.querystring = `sc_site=${datasource?.url?.siteName}`;
-    if (!text?.value) {
-      text.value = 'Title field';
-      link.value.href = '#';
-    }
-  }
 
   return (
-    <ComponentContent styles={props.params.styles} id={props.params.RenderingIdentifier}>
-      <>
-        {pageContext.pageEditing ? (
+    <ComponentContent styles={styles} id={id}>
+      {pageContext.pageEditing ? (
+        <Text field={text} />
+      ) : (
+        <Link field={link}>
           <Text field={text} />
-        ) : (
-          <Link field={link}>
-            <Text field={text} />
-          </Link>
-        )}
-      </>
+        </Link>
+      )}
     </ComponentContent>
   );
 };

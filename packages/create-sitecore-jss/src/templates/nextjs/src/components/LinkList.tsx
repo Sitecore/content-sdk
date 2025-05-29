@@ -1,91 +1,84 @@
-﻿import React, { JSX } from 'react';
+﻿import React from 'react';
 import {
   Link as JssLink,
   Text,
   LinkField,
   TextField,
 } from '@sitecore-content-sdk/nextjs';
+import { ComponentProps } from 'lib/component-props';
 
-type ResultsFieldLink = {
-  field: {
-    link: LinkField;
-  };
-};
-
-interface Fields {
-  data: {
-    datasource: {
-      children: {
-        results: ResultsFieldLink[];
-      };
-      field: {
-        title: TextField;
+interface LinkListProps extends ComponentProps {
+  fields: {
+    /**
+     * The Integrated graphQL query result. This illustrates the way to access the datasource children.
+     */
+    data: {
+      datasource: {
+        children: {
+          results: Array<{
+            field: {
+              link: LinkField;
+            };
+          }>;
+        };
+        field: {
+          title: TextField;
+        };
       };
     };
   };
 }
 
-type LinkListProps = {
-  params: { [key: string]: string };
-  fields: Fields;
-};
+const LinkListItem = ({ index, total, field }: { index: number; total: number; field: LinkField }) => {
+  const classNames = [
+    `item${index}`,
+    index % 2 === 0 ? 'odd' : 'even',
+    index === 0 ? 'first' : '',
+    index === total - 1 ? 'last' : '',
+  ].filter(Boolean).join(' ');
 
-type LinkListItemProps = {
-  key: string;
-  index: number;
-  total: number;
-  field: LinkField;
-};
-
-const LinkListItem = (props: LinkListItemProps) => {
-  let className = `item${props.index}`;
-  className += (props.index + 1) % 2 == 0 ? ' even' : ' odd';
-  if (props.index == 0) {
-    className += ' first';
-  }
-  if (props.index + 1 == props.total) {
-    className += ' last';
-  }
   return (
-    <li className={className}>
+    <li className={classNames}>
       <div className="field-link">
-        <JssLink field={props.field} />
+        <JssLink field={field} />
       </div>
     </li>
   );
 };
 
-export const Default = (props: LinkListProps): JSX.Element => {
-  const datasource = props.fields?.data?.datasource;
-  const styles = `component link-list ${props.params.styles}`.trimEnd();
-  const id = props.params.RenderingIdentifier;
+export const Default = ({ params, fields }: LinkListProps) => {
+  const datasource = fields?.data?.datasource;
+  const styles = `component link-list ${params.styles || ''}`.trim();
+  const id = params.RenderingIdentifier;
 
-  if (datasource) {
-    const list = datasource.children.results
-      .filter((element: ResultsFieldLink) => element?.field?.link)
-      .map((element: ResultsFieldLink, key: number) => (
+  const renderContent = () => {
+    if (!datasource) {
+      return <h3>Link List</h3>;
+    }
+
+    const links = datasource.children.results
+      .filter(element => element?.field?.link)
+      .map((element, index) => (
         <LinkListItem
-          index={key}
-          key={`${key}${element.field.link}`}
+          key={`${index}-${element.field?.link}`}
+          index={index}
           total={datasource.children.results.length}
           field={element.field.link}
         />
       ));
 
     return (
-      <div className={styles} id={id ? id : undefined}>
-        <div className="component-content">
-          <Text tag="h3" field={datasource?.field?.title} />
-          <ul>{list}</ul>
-        </div>
-      </div>
+      <>
+        <Text tag="h3" field={datasource.field?.title} />
+        <ul>{links}</ul>
+      </>
     );
-  }
+  };
 
   return (
-    <div className={styles} id={id ? id : undefined}>
+    <div className={styles} id={id}>
       <div className="component-content">
-        <h3>Link List</h3>
+        {renderContent()}
       </div>
     </div>
   );

@@ -1,57 +1,26 @@
 ﻿import React, { JSX } from 'react';
-import {
-  RichText as JssRichText,
-  useSitecore,
-  RichTextField,
-} from '@sitecore-content-sdk/nextjs';
+import { RichText as JssRichText, useSitecore, RichTextField } from '@sitecore-content-sdk/nextjs';
+import { ComponentProps } from 'lib/component-props';
 
 interface Fields {
   Content: RichTextField;
 }
 
-type PageContentProps = {
-  params: { [key: string]: string };
+type PageContentProps = ComponentProps & {
   fields: Fields;
 };
 
-type ComponentContentProps = {
-  id: string;
-  styles: string;
-  children: JSX.Element;
-};
+export const Default = ({ params, fields }: PageContentProps): JSX.Element => {
+  const { pageContext } = useSitecore();
+  const { styles, RenderingIdentifier: id } = params;
 
-const ComponentContent = (props: ComponentContentProps) => {
-  const id = props.id;
+  const field = fields?.Content ?? (pageContext?.route?.fields?.Content as RichTextField);
+
   return (
-    <div className={`component content ${props.styles}`} id={id ? id : undefined}>
+    <div className={`component content ${styles}`} id={id}>
       <div className="component-content">
-        <div className="field-content">{props.children}</div>
+        <div className="field-content">{field ? <JssRichText field={field} /> : '[Content]'}</div>
       </div>
     </div>
-  );
-};
-
-export const Default = (props: PageContentProps): JSX.Element => {
-  const { pageContext } = useSitecore();
-  const id = props.params.RenderingIdentifier;
-
-  if (!(props.fields && props.fields.Content) && !pageContext?.route?.fields?.Content) {
-    return (
-      <div className={`component content ${props.params.styles}`} id={id ? id : undefined}>
-        <div className="component-content">
-          <div className="field-content">[Content]</div>
-        </div>
-      </div>
-    );
-  }
-
-  const field = (props.fields && props.fields.Content
-    ? props.fields.Content
-    : pageContext?.route?.fields?.Content) as RichTextField;
-
-  return (
-    <ComponentContent styles={props.params.styles} id={id}>
-      <JssRichText field={field} />
-    </ComponentContent>
   );
 };
