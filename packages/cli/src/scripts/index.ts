@@ -3,4 +3,7 @@
 
 import * as project from './project';
 
+import * as auth from './auth';
+
 export { project };
+export { auth };

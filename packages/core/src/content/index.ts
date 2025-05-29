@@ -6,4 +6,13 @@ export {
   LocalesQueryResponse,
   Locale,
 } from './locales';
+export {
+  GET_TAXONOMY_QUERY,
+  GET_TAXONOMIES_QUERY,
+  TaxonomyQueryResponse,
+  TaxonomiesQueryResponse,
+  Taxonomy,
+  TaxonomySystem,
+  Term,
+} from './taxonomies';
 export { getContentUrl } from './utils';

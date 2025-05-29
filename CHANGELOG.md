@@ -14,8 +14,21 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* `[Content - Name TBD] Support`:
+  - Introduced get taxonomy/taxonomies functionality on content client ([#99](https://github.com/Sitecore/content-sdk/pull/99)):
+    - Introduced `getTaxonomy` and `getTaxonomies` methods on Content Client class
+    - Support pagination for the above methods by implementing an internal `fetchNext` method to handle this in each method
+  - Introduced `getLocale/getLocales` functionality on content client: 
+    - Initial implementation of `getLocale/getLocales` ([#74](https://github.com/Sitecore/content-sdk/pull/74)) ([#78](https://github.com/Sitecore/content-sdk/pull/78)) ([#105](https://github.com/Sitecore/content-sdk/pull/105))
+* `[cli]` Introduce Sitecore Content Services Auth CLI commands ([106](https://github.com/Sitecore/content-sdk/pull/106)):
+    - auth login: Authenticate using client credentials and store token info.
+    - auth status: Show active tenant and auto-renew token if expired.
+    - auth logout: Clear active tenant and delete stored credentials.
+    - auth list: List all known tenants from local storage.
+  - Token validation and renewal support.
+  - Token and tenant metadata storage and active tenant tracking under `~/.sitecore/sitecore-tools/`.
 * `[next.js]` Rework and simplify .env ([#89](https://github.com/Sitecore/content-sdk/pull/89)):
-  - Introduced `.env.container.example`  
+  - Introduced `.env.container.example`
     - Intended for local development against a Sitecore container instance.
   - Introduced `.env.remote.example`
     - Intended for working with a remote Sitecore instance.
@@ -32,7 +45,6 @@ Our versioning strategy is as follows:
   - A new `RobotsMiddleware` class encapsulates HTTP-level logic for generating `robots.txt` responses in Next.js apps.
   - These additions follow the same extensible architecture as existing features enabling custom behavior via service overrides and improving consistency across endpoints.
 * `[sitecore-jss-cli]` Code extraction feature for XMCloud code generation is added ([#71](https://github.com/Sitecore/jss/pull/71))
-* `[core]` Introduce get locales functionality on content client ([#74](https://github.com/Sitecore/content-sdk/pull/74))([#78](https://github.com/Sitecore/content-sdk/pull/78))
 * `[all]` XM Cloud Content support
   * `[core]` Introduced /content submodule to interact with XM Cloud Content ([#65](https://github.com/Sitecore/content-sdk/pull/65)[#104](https://github.com/Sitecore/content-sdk/pull/104))
   * `[richtext]` Added new `richtext` package to enable Content SDK to work with TipTap Rich Text editors ([#85](https://github.com/Sitecore/content-sdk/pull/85))
