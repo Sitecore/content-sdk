@@ -62,6 +62,7 @@ export const Banner: React.FC<ImageProps> = ({ params, fields }) => {
 };
 
 export const Default: React.FC<ImageProps> = (props) => {
+  const { pageContext } = useSitecore();
   const { fields, params } = props;
   const { styles, RenderingIdentifier: id } = params;
 
@@ -70,7 +71,7 @@ export const Default: React.FC<ImageProps> = (props) => {
   }
 
   const Image = () => <JssImage field={fields.Image} />;
-  const shouldWrapWithLink = fields.TargetUrl?.value?.href;
+  const shouldWrapWithLink = !pageContext.pageEditing && fields.TargetUrl?.value?.href;
 
   return (
     <ImageWrapper className={`component image ${styles}`} id={id}>
