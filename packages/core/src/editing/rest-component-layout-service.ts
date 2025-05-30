@@ -112,7 +112,7 @@ export class RestComponentLayoutService {
    */
   private getFetchUrl(params: ComponentLayoutRequestParams) {
     return resolveUrl(
-      `${this.config.edgeUrl || SITECORE_EDGE_URL_DEFAULT}/v1/layout/component`,
+      `${this.config.edgeUrl || SITECORE_EDGE_URL_DEFAULT}/layout/component`,
       this.getComponentFetchParams(params)
     );
   }
