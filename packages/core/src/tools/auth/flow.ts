@@ -1,10 +1,12 @@
 ﻿/* eslint-disable jsdoc/require-jsdoc */
 import { TenantArgs } from './models';
 import { decodeJwtPayload } from './tenant-store';
+import {
+  DEFAULT_SITECORE_AUTH_DOMAIN,
+  DEFAULT_SITECORE_AUTH_AUDIENCE,
+  DEFAULT_SITECORE_AUTH_BASE_URL,
+} from '../../constants';
 
-export const AUTH0_DOMAIN = 'https://auth.sitecorecloud.io';
-export const AUTH0_AUDIENCE = 'https://api.sitecorecloud.io';
-export const AUTH0_BASE_URL = 'https://edge-platform.sitecorecloud.io/cs/api';
 const GRANT_TYPE = 'client_credentials';
 
 /**
@@ -15,8 +17,8 @@ const GRANT_TYPE = 'client_credentials';
  * @param {string} [args.clientSecret] - The client secret associated with the client ID
  * @param {string} [args.organizationId] - The ID of the organization the client belongs to
  * @param {string} [args.tenantId] - The tenant ID representing the specific Sitecore environment
- * @param {string} [args.audience] - The API audience the token is intended for. Defaults to `AUDIENCE`
- * @param {string} [args.authority] - The auth server base URL. Defaults to `AUTH0_DOMAIN`
+ * @param {string} [args.audience] - The API audience the token is intended for. Defaults to `DEFAULT_SITECORE_AUTH_AUDIENCE`
+ * @param {string} [args.authority] - The auth server base URL. Defaults to `DEFAULT_SITECORE_AUTH_DOMAIN`
  * @param {string} [args.baseUrl] - The base URL for the API, used to construct the audience
  * @returns A Promise that resolves to the access token response (including access token, token type, expiry, etc.)
  * @throws Will log and exit the process if the request fails or returns a non-OK status
@@ -39,9 +41,9 @@ async function _clientCredentialsFlow({
   clientSecret,
   organizationId,
   tenantId,
-  audience = AUTH0_AUDIENCE,
-  authority = AUTH0_DOMAIN,
-  baseUrl = AUTH0_BASE_URL,
+  audience = DEFAULT_SITECORE_AUTH_AUDIENCE,
+  authority = DEFAULT_SITECORE_AUTH_DOMAIN,
+  baseUrl = DEFAULT_SITECORE_AUTH_BASE_URL,
 }: TenantArgs) {
   const params = new URLSearchParams({
     client_id: clientId,

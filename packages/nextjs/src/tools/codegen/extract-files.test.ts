@@ -5,7 +5,7 @@ import fs from 'fs';
 import { extractFiles } from './extract-files';
 import { defineConfig } from '@sitecore-content-sdk/core/config';
 import nock from 'nock';
-import * as coreTools from '@sitecore-content-sdk/core/tools';
+import { auth } from '@sitecore-content-sdk/core/tools';
 import path from 'path';
 
 describe('extract-files', () => {
@@ -55,7 +55,7 @@ describe('extract-files', () => {
   it('should log when bearer is empty', async () => {
     const consoleErrorStub = sandbox.stub(console, 'error');
     const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
-    sandbox.replaceGetter(coreTools, 'clientCredentialsFlow', () => fetchBearerTokenStub);
+    sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
     const extractFilesCall = extractFiles(mockArgs);
     await extractFilesCall();
@@ -77,7 +77,7 @@ describe('extract-files', () => {
     sandbox.stub(process, 'cwd').returns(appFolder);
 
     const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: 'test-token' });
-    sandbox.replaceGetter(coreTools, 'clientCredentialsFlow', () => fetchBearerTokenStub);
+    sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
     const consoleErrorStub = sandbox.stub(console, 'error');
     const extractFilesCall = extractFiles(args);
@@ -105,7 +105,7 @@ describe('extract-files', () => {
     sandbox.stub(process, 'cwd').returns(appFolder);
 
     const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: 'test-token' });
-    sandbox.replaceGetter(coreTools, 'clientCredentialsFlow', () => fetchBearerTokenStub);
+    sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
     const consoleLogStub = sandbox.stub(console, 'log');
 

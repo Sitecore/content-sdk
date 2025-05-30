@@ -1,7 +1,8 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
-import { clientCredentialsFlow, AUTH0_AUDIENCE, AUTH0_BASE_URL } from './flow';
+import { clientCredentialsFlow } from './flow';
 import * as jwtUtil from './tenant-store';
+import { DEFAULT_SITECORE_AUTH_AUDIENCE, DEFAULT_SITECORE_AUTH_BASE_URL } from '../../constants';
 
 describe('clientCredentialsFlow', () => {
   const fakeToken = 'fake.jwt.token';
@@ -72,9 +73,9 @@ describe('clientCredentialsFlow', () => {
       client_secret: 'secret',
       organization_id: '',
       tenant_id: '',
-      audience: AUTH0_AUDIENCE,
+      audience: DEFAULT_SITECORE_AUTH_AUDIENCE,
       grant_type: 'client_credentials',
-      baseUrl: AUTH0_BASE_URL,
+      baseUrl: DEFAULT_SITECORE_AUTH_BASE_URL,
     }).toString();
 
     let actualRequestBody: string = '';

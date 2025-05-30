@@ -1,5 +1,6 @@
 ﻿import { Argv, CommandModule } from 'yargs';
 import { auth, TenantArgs } from '@sitecore-content-sdk/core/tools';
+import { constants } from '@sitecore-content-sdk/core';
 let { setActiveTenant, writeTenantAuthInfo, writeTenantInfo, clientCredentialsFlow } = auth;
 
 export const unitMock = (formModule: any) => {
@@ -106,9 +107,9 @@ export const login: CommandModule<object, TenantArgs> = {
       organizationId,
       clientId,
       tenantName,
-      authority: argv.authority || auth.AUTH0_DOMAIN,
-      audience: argv.audience || auth.AUTH0_AUDIENCE,
-      baseUrl: argv.baseUrl || auth.AUTH0_BASE_URL,
+      authority: argv.authority || constants.DEFAULT_SITECORE_AUTH_DOMAIN,
+      audience: argv.audience || constants.DEFAULT_SITECORE_AUTH_AUDIENCE,
+      baseUrl: argv.baseUrl || constants.DEFAULT_SITECORE_AUTH_BASE_URL,
     });
 
     setActiveTenant(tenantId);
