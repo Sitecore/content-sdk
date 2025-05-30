@@ -39,7 +39,7 @@ Our versioning strategy is as follows:
 * `[cli]` Introduce "project" subcommands ([#73](https://github.com/Sitecore/content-sdk/pull/73))
 * `[nextjs]` Enhance customizability for Sitecore Client and SDK Middlwares ([#87](https://github.com/Sitecore/content-sdk/pull/87))
 * `[core]` `[next]` `[create-sitecore-jss]` Passing configuration object to `defineConfig` in _sitecore.config_ is now optional. Introduced _sitecore.config.ts.example_ ([#90](https://github.com/Sitecore/content-sdk/pull/90)) ([#93](https://github.com/Sitecore/content-sdk/pull/93))
-
+* `[core]` [DesignLibrary] Call partial layout rendering endpoint via Envoy and ContextID ([#100](https://github.com/Sitecore/content-sdk/pull/100))
 
 ### 🛠 Breaking Changes
 
