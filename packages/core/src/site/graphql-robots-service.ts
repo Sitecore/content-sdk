@@ -51,6 +51,7 @@ export class GraphQLRobotsService {
 
   /**
    * Fetch a data of robots.txt from API
+   * @param {FetchOptions} fetchOptions - The fetch options to be used for the request.
    * @returns text of robots.txt
    * @throws {Error} if the siteName is empty.
    */
