@@ -1,14 +1,13 @@
 ﻿import { Argv, CommandModule } from 'yargs';
-import {
-  setActiveTenant,
-  TenantArgs,
-  writeTenantAuthInfo,
-  writeTenantInfo,
-  clientCredentialsFlow,
-  AUTH0_DOMAIN,
-  AUTH0_AUDIENCE,
-  AUTH0_BASE_URL,
-} from '@sitecore-content-sdk/core/tools';
+import { auth, TenantArgs } from '@sitecore-content-sdk/core/tools';
+let { setActiveTenant, writeTenantAuthInfo, writeTenantInfo, clientCredentialsFlow } = auth;
+
+export const unitMock = (formModule: any) => {
+  setActiveTenant = formModule.setActiveTenant;
+  writeTenantAuthInfo = formModule.writeTenantAuthInfo;
+  writeTenantInfo = formModule.writeTenantInfo;
+  clientCredentialsFlow = formModule.clientCredentialsFlow;
+};
 
 export const login: CommandModule<object, TenantArgs> = {
   command: 'login',
@@ -107,9 +106,9 @@ export const login: CommandModule<object, TenantArgs> = {
       organizationId,
       clientId,
       tenantName,
-      authority: argv.authority || AUTH0_DOMAIN,
-      audience: argv.audience || AUTH0_AUDIENCE,
-      baseUrl: argv.baseUrl || AUTH0_BASE_URL,
+      authority: argv.authority || auth.AUTH0_DOMAIN,
+      audience: argv.audience || auth.AUTH0_AUDIENCE,
+      baseUrl: argv.baseUrl || auth.AUTH0_BASE_URL,
     });
 
     setActiveTenant(tenantId);

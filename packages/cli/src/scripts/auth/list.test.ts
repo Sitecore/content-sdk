@@ -1,7 +1,6 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
-import { list } from './list';
-import * as authTools from '@sitecore-content-sdk/core/tools';
+import { list, unitMock } from './list';
 
 describe('list command', () => {
   let getAllTenantsStub: sinon.SinonStub;
@@ -21,8 +20,8 @@ describe('list command', () => {
   });
 
   it('should log message if no tenants are found', async () => {
-    getAllTenantsStub = sandbox.stub(authTools, 'getAllTenantsInfo').returns([]);
-
+    getAllTenantsStub = sandbox.stub().returns([]);
+    unitMock({ getAllTenantsInfo: getAllTenantsStub });
     await list.handler({} as any);
 
     expect(consoleLogStub.calledOnce).to.be.true;
@@ -42,7 +41,8 @@ describe('list command', () => {
       },
     ];
 
-    getAllTenantsStub = sandbox.stub(authTools, 'getAllTenantsInfo').returns(mockTenants);
+    getAllTenantsStub = sandbox.stub().returns(mockTenants);
+    unitMock({ getAllTenantsInfo: getAllTenantsStub });
 
     await list.handler({} as any);
 

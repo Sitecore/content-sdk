@@ -1,8 +1,6 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
-import { logout } from './logout';
-import * as tenantState from '@sitecore-content-sdk/core/tools';
-import * as tenantStore from '@sitecore-content-sdk/core/tools';
+import { logout, unitMock } from './logout';
 
 describe('logout command', () => {
   let getActiveTenantStub: sinon.SinonStub;
@@ -14,8 +12,12 @@ describe('logout command', () => {
   beforeEach(() => {
     consoleInfoStub = sinon.stub(console, 'info');
     consoleErrorStub = sinon.stub(console, 'error');
-    clearActiveTenantStub = sinon.stub(tenantState, 'clearActiveTenant');
-    deleteTenantAuthInfoStub = sinon.stub(tenantStore, 'deleteTenantAuthInfo');
+    clearActiveTenantStub = sinon.stub();
+    deleteTenantAuthInfoStub = sinon.stub();
+    unitMock({
+      clearActiveTenant: clearActiveTenantStub,
+      deleteTenantAuthInfo: deleteTenantAuthInfoStub,
+    });
   });
 
   afterEach(() => {
@@ -23,7 +25,8 @@ describe('logout command', () => {
   });
 
   it('should show error if no active tenant is found', async () => {
-    getActiveTenantStub = sinon.stub(tenantState, 'getActiveTenant').returns(null);
+    getActiveTenantStub = sinon.stub().returns(null);
+    unitMock({ getActiveTenant: getActiveTenantStub });
 
     await logout.handler({} as any);
 
@@ -35,7 +38,8 @@ describe('logout command', () => {
 
   it('should logout and clean up when active tenant exists', async () => {
     const mockTenantId = 'mock-tenant-id';
-    getActiveTenantStub = sinon.stub(tenantState, 'getActiveTenant').returns(mockTenantId);
+    getActiveTenantStub = sinon.stub().returns(mockTenantId);
+    unitMock({ getActiveTenant: getActiveTenantStub });
 
     await logout.handler({} as any);
 

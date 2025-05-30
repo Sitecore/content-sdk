@@ -1,5 +1,11 @@
 ﻿import { CommandModule } from 'yargs';
-import { getAllTenantsInfo } from '@sitecore-content-sdk/core/tools';
+import { auth } from '@sitecore-content-sdk/core/tools';
+
+let { getAllTenantsInfo } = auth;
+
+export const unitMock = (authModule: any) => {
+  getAllTenantsInfo = authModule.getAllTenantsInfo;
+};
 
 export const list: CommandModule = {
   command: 'list',

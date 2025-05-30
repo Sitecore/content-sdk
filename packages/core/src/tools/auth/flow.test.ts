@@ -1,6 +1,6 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
-import { clientCredentialsFlow, AUDIENCE, BASE_URL } from './flow';
+import { clientCredentialsFlow, AUTH0_AUDIENCE, AUTH0_BASE_URL } from './flow';
 import * as jwtUtil from './tenant-store';
 
 describe('clientCredentialsFlow', () => {
@@ -72,9 +72,9 @@ describe('clientCredentialsFlow', () => {
       client_secret: 'secret',
       organization_id: '',
       tenant_id: '',
-      audience: AUDIENCE,
+      audience: AUTH0_AUDIENCE,
       grant_type: 'client_credentials',
-      baseUrl: BASE_URL,
+      baseUrl: AUTH0_BASE_URL,
     }).toString();
 
     let actualRequestBody: string = '';
