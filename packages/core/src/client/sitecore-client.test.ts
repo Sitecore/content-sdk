@@ -853,7 +853,6 @@ describe('SitecoreClient', () => {
         renderingId: 'rendering-id',
         dataSourceId: 'datasource-id',
         version: '1',
-        pageState: LayoutServicePageState.Normal,
       };
 
       const fetchOptions = {

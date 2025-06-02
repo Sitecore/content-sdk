@@ -38,17 +38,6 @@ export type NativeDataFetcherError = Error & {
   response: NativeDataFetcherResponse<unknown>;
 };
 
-/**
- * A function that fetches data from a given URL and returns a `NativeDataFetcherResponse`.
- * @param {string} url The URL to request (can include query string parameters).
- * @param {unknown} [data] Optional data to send with the request (e.g., for POST or PUT requests).
- * @returns {Promise<NativeDataFetcherResponse<T>>} A promise that resolves to a `NativeDataFetcherResponse<T>`,
- */
-export type NativeDataFetcherFunction<T> = (
-  url: string,
-  data?: RequestInit
-) => Promise<NativeDataFetcherResponse<T>>;
-
 export type NativeDataFetcherConfig = NativeDataFetcherOptions & RequestInit;
 
 export class NativeDataFetcher {
