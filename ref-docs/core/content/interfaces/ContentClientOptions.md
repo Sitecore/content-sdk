@@ -6,7 +6,7 @@
 
 # Interface: ContentClientOptions
 
-Defined in: [packages/core/src/content/content-client.ts:23](https://github.com/Sitecore/content-sdk/blob/d1495c7bbdd615e47ac14c2a2a4b4272313631b3/packages/core/src/content/content-client.ts#L23)
+Defined in: [packages/core/src/content/content-client.ts:23](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/content-client.ts#L23)
 
 Interface representing the options for the ContentClient.
 
@@ -16,7 +16,7 @@ Interface representing the options for the ContentClient.
 
 > **environment**: `string`
 
-Defined in: [packages/core/src/content/content-client.ts:29](https://github.com/Sitecore/content-sdk/blob/d1495c7bbdd615e47ac14c2a2a4b4272313631b3/packages/core/src/content/content-client.ts#L29)
+Defined in: [packages/core/src/content/content-client.ts:29](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/content-client.ts#L29)
 
 The environment name.
 
@@ -26,7 +26,7 @@ The environment name.
 
 > `optional` **preview**: `boolean`
 
-Defined in: [packages/core/src/content/content-client.ts:31](https://github.com/Sitecore/content-sdk/blob/d1495c7bbdd615e47ac14c2a2a4b4272313631b3/packages/core/src/content/content-client.ts#L31)
+Defined in: [packages/core/src/content/content-client.ts:31](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/content-client.ts#L31)
 
 Indicates if preview mode is enabled.
 
@@ -36,7 +36,7 @@ Indicates if preview mode is enabled.
 
 > **tenant**: `string`
 
-Defined in: [packages/core/src/content/content-client.ts:27](https://github.com/Sitecore/content-sdk/blob/d1495c7bbdd615e47ac14c2a2a4b4272313631b3/packages/core/src/content/content-client.ts#L27)
+Defined in: [packages/core/src/content/content-client.ts:27](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/content-client.ts#L27)
 
 The tenant name.
 
@@ -46,7 +46,7 @@ The tenant name.
 
 > **token**: `string`
 
-Defined in: [packages/core/src/content/content-client.ts:33](https://github.com/Sitecore/content-sdk/blob/d1495c7bbdd615e47ac14c2a2a4b4272313631b3/packages/core/src/content/content-client.ts#L33)
+Defined in: [packages/core/src/content/content-client.ts:33](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/content-client.ts#L33)
 
 The authentication token.
 
@@ -56,6 +56,6 @@ The authentication token.
 
 > `optional` **url**: `string`
 
-Defined in: [packages/core/src/content/content-client.ts:25](https://github.com/Sitecore/content-sdk/blob/d1495c7bbdd615e47ac14c2a2a4b4272313631b3/packages/core/src/content/content-client.ts#L25)
+Defined in: [packages/core/src/content/content-client.ts:25](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/content-client.ts#L25)
 
 The base URL for the Content API.

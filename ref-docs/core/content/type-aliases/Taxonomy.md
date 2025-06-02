@@ -8,7 +8,7 @@
 
 > **Taxonomy** = `object`
 
-Defined in: [packages/core/src/content/taxonomies.ts:55](https://github.com/Sitecore/content-sdk/blob/d1495c7bbdd615e47ac14c2a2a4b4272313631b3/packages/core/src/content/taxonomies.ts#L55)
+Defined in: [packages/core/src/content/taxonomies.ts:55](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L55)
 
 Represents a taxonomy with its associated terms.
 Terms are paginated only in single-taxonomy queries (getTaxonomy).
@@ -19,7 +19,7 @@ Terms are paginated only in single-taxonomy queries (getTaxonomy).
 
 > **system**: [`TaxonomySystem`](TaxonomySystem.md)
 
-Defined in: [packages/core/src/content/taxonomies.ts:59](https://github.com/Sitecore/content-sdk/blob/d1495c7bbdd615e47ac14c2a2a4b4272313631b3/packages/core/src/content/taxonomies.ts#L59)
+Defined in: [packages/core/src/content/taxonomies.ts:59](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L59)
 
 The system metadata of the taxonomy.
 
@@ -29,6 +29,6 @@ The system metadata of the taxonomy.
 
 > **terms**: `TermList`
 
-Defined in: [packages/core/src/content/taxonomies.ts:57](https://github.com/Sitecore/content-sdk/blob/d1495c7bbdd615e47ac14c2a2a4b4272313631b3/packages/core/src/content/taxonomies.ts#L57)
+Defined in: [packages/core/src/content/taxonomies.ts:57](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L57)
 
 The list of terms within the taxonomy.

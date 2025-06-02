@@ -6,6 +6,10 @@
 
 # tools
 
+## Namespaces
+
+- [auth](namespaces/auth/README.md)
+
 ## Enumerations
 
 - [ModuleType](enumerations/ModuleType.md)
@@ -15,6 +19,10 @@
 - [ComponentFile](interfaces/ComponentFile.md)
 - [PackageDefinition](interfaces/PackageDefinition.md)
 - [PluginDefinition](interfaces/PluginDefinition.md)
+- [TenantArgs](interfaces/TenantArgs.md)
+- [TenantAuth](interfaces/TenantAuth.md)
+- [TenantInfo](interfaces/TenantInfo.md)
+- [TenantSettings](interfaces/TenantSettings.md)
 
 ## Type Aliases
 
@@ -22,7 +30,6 @@
 
 ## Functions
 
-- [fetchBearerToken](functions/fetchBearerToken.md)
 - [generateMetadata](functions/generateMetadata.md)
 - [generatePlugins](functions/generatePlugins.md)
 - [generateSites](functions/generateSites.md)
