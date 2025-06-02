@@ -27,6 +27,6 @@
 
 ## Functions
 
-- [extractComponents](functions/extractComponents.md)
+- [extractFiles](functions/extractFiles.md)
 - [generatePlugins](functions/generatePlugins.md)
 - [getComponentList](functions/getComponentList.md)
