@@ -8,7 +8,7 @@
 
 > `const` **GET\_TAXONOMY\_QUERY**: "\n  query GetTaxonomyById($id: ID!, $termsPageSize: Int, $termsAfter: String) \{\n    taxonomy(id: $id) \{\n      terms(minimumPageSize: $termsPageSize, after: $termsAfter) \{\n        cursor\n        hasMore\n        results \{\n          id\n          name\n          label\n        \}\n      \}\n      system \{\n        id\n        name\n        version\n        label\n        createdAt\n        createdBy\n        updatedAt\n        updatedBy\n        publishStatus\n      \}\n    \}\n  \}\n"
 
-Defined in: [packages/core/src/content/taxonomies.ts:167](https://github.com/Sitecore/content-sdk/blob/d69a0b2353c5248fbc2375e5024bac38d139f74b/packages/core/src/content/taxonomies.ts#L167)
+Defined in: [packages/core/src/content/taxonomies.ts:167](https://github.com/Sitecore/content-sdk/blob/d1495c7bbdd615e47ac14c2a2a4b4272313631b3/packages/core/src/content/taxonomies.ts#L167)
 
 GraphQL query to retrieve a specific taxonomy by its ID, with optional pagination for its terms.
 
