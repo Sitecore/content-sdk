@@ -1,7 +1,8 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
-import { clientCredentialsFlow, AUDIENCE, BASE_URL } from './flow';
+import { clientCredentialsFlow } from './flow';
 import * as jwtUtil from './tenant-store';
+import { DEFAULT_SITECORE_AUTH_AUDIENCE, DEFAULT_SITECORE_AUTH_BASE_URL } from '../../constants';
 
 describe('clientCredentialsFlow', () => {
   const fakeToken = 'fake.jwt.token';
@@ -25,7 +26,8 @@ describe('clientCredentialsFlow', () => {
 
   beforeEach(() => {
     fetchStub = sinon.stub(global, 'fetch' as any).resolves(fetchResponse as any);
-    decodeStub = sinon.stub(jwtUtil, 'decodeJwtPayload').returns(fakeDecoded);
+    decodeStub = sinon.stub().returns(fakeDecoded);
+    sinon.replace.usingAccessor(jwtUtil.unitMocks, 'decodeJwtPayload', decodeStub);
     consoleErrorStub = sinon.stub(console, 'error');
   });
 
@@ -71,9 +73,9 @@ describe('clientCredentialsFlow', () => {
       client_secret: 'secret',
       organization_id: '',
       tenant_id: '',
-      audience: AUDIENCE,
+      audience: DEFAULT_SITECORE_AUTH_AUDIENCE,
       grant_type: 'client_credentials',
-      baseUrl: BASE_URL,
+      baseUrl: DEFAULT_SITECORE_AUTH_BASE_URL,
     }).toString();
 
     let actualRequestBody: string = '';

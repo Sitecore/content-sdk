@@ -1,6 +1,13 @@
 ﻿import { CommandModule } from 'yargs';
-import { getActiveTenant, clearActiveTenant } from '../../utils/auth/tenant-state';
-import { deleteTenantAuthInfo } from '../../utils/auth/tenant-store';
+import { auth } from '@sitecore-content-sdk/core/tools';
+
+let { deleteTenantAuthInfo, getActiveTenant, clearActiveTenant } = auth;
+
+export const unitMock = (formModule: any) => {
+  deleteTenantAuthInfo = formModule.deleteTenantAuthInfo || deleteTenantAuthInfo;
+  getActiveTenant = formModule.getActiveTenant || getActiveTenant;
+  clearActiveTenant = formModule.clearActiveTenant || clearActiveTenant;
+};
 
 export const logout: CommandModule = {
   command: 'logout',

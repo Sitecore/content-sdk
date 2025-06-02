@@ -1,8 +1,6 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
-import { status } from './status';
-import * as auth from '../../utils/auth/renewal';
-import * as tenantStore from './../../utils/auth/tenant-store';
+import { status, unitMock } from './status';
 
 describe('status command', () => {
   let renewStub: sinon.SinonStub;
@@ -18,7 +16,8 @@ describe('status command', () => {
   });
 
   it('should prompt login if no valid auth is found', async () => {
-    renewStub = sinon.stub(auth, 'renewAuthIfExpired').resolves(null);
+    renewStub = sinon.stub().resolves(null);
+    unitMock({ renewAuthIfExpired: renewStub });
 
     await status.handler({} as any);
 
@@ -38,8 +37,12 @@ describe('status command', () => {
       baseUrl: 'https://sitecore.example.com',
     };
 
-    renewStub = sinon.stub(auth, 'renewAuthIfExpired').resolves({ tenantId: fakeTenantId });
-    readTenantInfoStub = sinon.stub(tenantStore, 'readTenantInfo').resolves(fakeTenantInfo);
+    renewStub = sinon.stub().resolves({ tenantId: fakeTenantId });
+    readTenantInfoStub = sinon.stub().resolves(fakeTenantInfo);
+    unitMock({
+      renewAuthIfExpired: renewStub,
+      readTenantInfo: readTenantInfoStub,
+    });
 
     await status.handler({} as any);
 

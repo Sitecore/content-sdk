@@ -1,8 +1,15 @@
 ﻿import { Argv, CommandModule } from 'yargs';
-import { clientCredentialsFlow, AUTH0_DOMAIN, AUDIENCE, BASE_URL } from '../../utils/auth/flow';
-import { writeTenantAuthInfo, writeTenantInfo } from '../../utils/auth/tenant-store';
-import { setActiveTenant } from '../../utils/auth/tenant-state';
-import { TenantArgs } from './models';
+import { auth, TenantArgs } from '@sitecore-content-sdk/core/tools';
+import { constants } from '@sitecore-content-sdk/core';
+
+let { setActiveTenant, writeTenantAuthInfo, writeTenantInfo, clientCredentialsFlow } = auth;
+
+export const unitMock = (formModule: any) => {
+  setActiveTenant = formModule.setActiveTenant;
+  writeTenantAuthInfo = formModule.writeTenantAuthInfo;
+  writeTenantInfo = formModule.writeTenantInfo;
+  clientCredentialsFlow = formModule.clientCredentialsFlow;
+};
 
 export const login: CommandModule<object, TenantArgs> = {
   command: 'login',
@@ -63,6 +70,12 @@ export const login: CommandModule<object, TenantArgs> = {
 
     let authResult, tenantId, organizationId, tenantName;
 
+    const {
+      DEFAULT_SITECORE_AUTH_DOMAIN,
+      DEFAULT_SITECORE_AUTH_AUDIENCE,
+      DEFAULT_SITECORE_AUTH_BASE_URL,
+    } = constants;
+
     if (argv.clientSecret) {
       try {
         const authData = await clientCredentialsFlow({
@@ -101,9 +114,9 @@ export const login: CommandModule<object, TenantArgs> = {
       organizationId,
       clientId,
       tenantName,
-      authority: argv.authority || AUTH0_DOMAIN,
-      audience: argv.audience || AUDIENCE,
-      baseUrl: argv.baseUrl || BASE_URL,
+      authority: argv.authority || DEFAULT_SITECORE_AUTH_DOMAIN,
+      audience: argv.audience || DEFAULT_SITECORE_AUTH_AUDIENCE,
+      baseUrl: argv.baseUrl || DEFAULT_SITECORE_AUTH_BASE_URL,
     });
 
     setActiveTenant(tenantId);

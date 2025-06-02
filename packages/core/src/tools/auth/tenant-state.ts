@@ -1,7 +1,8 @@
-﻿import * as fs from 'fs';
+﻿/* eslint-disable jsdoc/require-jsdoc */
+import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { TenantSettings } from '../../scripts/auth/models';
+import { TenantSettings } from './models';
 
 const configDir: string = path.join(os.homedir(), '.sitecore', 'sitecore-tools');
 const settingsFile: string = path.join(configDir, 'settings.json');
@@ -10,7 +11,31 @@ const settingsFile: string = path.join(configDir, 'settings.json');
  * Gets the ID of the currently active tenant from settings.json.
  * @returns The active tenant ID if present, otherwise null.
  */
-export function getActiveTenant(): string | null {
+export let getActiveTenant = _getActiveTenant;
+/**
+ * Clears the currently active tenant from settings.json by deleting the file.
+ */
+export let clearActiveTenant = _clearActiveTenant;
+
+// mock setup for unit tests to make sinon happy and mock-able with esbuild/tsx
+// https://sinonjs.org/how-to/typescript-swc/
+// This, plus the `_` names make the exports writable for sinon
+export const unitMocks = {
+  set clearActiveTenant(mockImplementation) {
+    clearActiveTenant = mockImplementation;
+  },
+  get clearActiveTenant() {
+    return _clearActiveTenant;
+  },
+  set getActiveTenant(mockImplementation) {
+    getActiveTenant = mockImplementation;
+  },
+  get getActiveTenant() {
+    return _getActiveTenant;
+  },
+};
+
+function _getActiveTenant(): string | null {
   if (!fs.existsSync(settingsFile)) {
     return null;
   }
@@ -42,10 +67,7 @@ export function setActiveTenant(tenantId: string): void {
   }
 }
 
-/**
- * Clears the currently active tenant from settings.json by deleting the file.
- */
-export function clearActiveTenant(): void {
+function _clearActiveTenant(): void {
   try {
     if (fs.existsSync(settingsFile)) {
       fs.unlinkSync(settingsFile);

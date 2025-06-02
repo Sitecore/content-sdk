@@ -2,11 +2,11 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import chalk from 'chalk';
 import fs from 'fs';
-import { extractFiles } from './extract-files';
-import { defineConfig } from '@sitecore-content-sdk/core/config';
 import nock from 'nock';
-import * as coreTools from '@sitecore-content-sdk/core/tools';
 import path from 'path';
+import { defineConfig } from '@sitecore-content-sdk/core/config';
+import { auth } from '@sitecore-content-sdk/core/tools';
+import { extractFiles } from './extract-files';
 
 describe('extract-files', () => {
   const sandbox = sinon.createSandbox();
@@ -52,17 +52,17 @@ describe('extract-files', () => {
     delete process.env.BuildMetadata_BuildId;
   });
 
-  it('should log when bearer is empty', async () => {
+  it('should log when access token is empty', async () => {
     const consoleErrorStub = sandbox.stub(console, 'error');
-    const fetchBearerTokenStub = sandbox.stub().resolves('');
-    sandbox.replaceGetter(coreTools, 'fetchBearerToken', () => fetchBearerTokenStub);
+    const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
+    sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
     const extractFilesCall = extractFiles(mockArgs);
     await extractFilesCall();
 
     expect(consoleErrorStub.calledOnce).to.be.true;
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
-      chalk.red('Failed to get bearer token, aborting code extraction')
+      chalk.red('Failed to get access token, aborting code extraction')
     );
   });
 
@@ -76,8 +76,8 @@ describe('extract-files', () => {
     );
     sandbox.stub(process, 'cwd').returns(appFolder);
 
-    const fetchBearerTokenStub = sandbox.stub().resolves('test-token');
-    sandbox.replaceGetter(coreTools, 'fetchBearerToken', () => fetchBearerTokenStub);
+    const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: 'test-token' });
+    sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
     const consoleErrorStub = sandbox.stub(console, 'error');
     const extractFilesCall = extractFiles(args);
@@ -104,8 +104,8 @@ describe('extract-files', () => {
     );
     sandbox.stub(process, 'cwd').returns(appFolder);
 
-    const fetchBearerTokenStub = sandbox.stub().resolves('test-token');
-    sandbox.replaceGetter(coreTools, 'fetchBearerToken', () => fetchBearerTokenStub);
+    const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: 'test-token' });
+    sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
     const consoleLogStub = sandbox.stub(console, 'log');
 

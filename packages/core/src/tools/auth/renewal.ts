@@ -1,6 +1,6 @@
 ﻿import { getActiveTenant, clearActiveTenant } from './tenant-state';
 import { clientCredentialsFlow } from './flow';
-import { TenantAuth, TenantInfo } from './../../scripts/auth/models';
+import { TenantAuth, TenantInfo } from './models';
 import {
   writeTenantAuthInfo,
   readTenantAuthInfo,
