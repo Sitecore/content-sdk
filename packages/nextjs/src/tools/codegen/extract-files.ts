@@ -42,7 +42,7 @@ export const extractFiles = (args: ExtractFilesConfig) => {
       const targetUrl = process.env.SITECORE_MESH_URL || args.scConfig.api.edge.edgeUrl;
       const { accessToken } = await auth.clientCredentialsFlow(authParams);
       if (!accessToken) {
-        console.error(chalk.red('Failed to get bearer token, aborting code extraction'));
+        console.error(chalk.red('Failed to get access token, aborting code extraction'));
         return;
       }
 

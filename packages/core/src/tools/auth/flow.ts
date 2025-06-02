@@ -17,9 +17,9 @@ const GRANT_TYPE = 'client_credentials';
  * @param {string} [args.clientSecret] - The client secret associated with the client ID
  * @param {string} [args.organizationId] - The ID of the organization the client belongs to
  * @param {string} [args.tenantId] - The tenant ID representing the specific Sitecore environment
- * @param {string} [args.audience] - The API audience the token is intended for. Defaults to `DEFAULT_SITECORE_AUTH_AUDIENCE`
- * @param {string} [args.authority] - The auth server base URL. Defaults to `DEFAULT_SITECORE_AUTH_DOMAIN`
- * @param {string} [args.baseUrl] - The base URL for the API, used to construct the audience
+ * @param {string} [args.audience] - The API audience the token is intended for. Defaults to `constants.DEFAULT_SITECORE_AUTH_AUDIENCE`
+ * @param {string} [args.authority] - The auth server base URL. Defaults to `constants.DEFAULT_SITECORE_AUTH_DOMAIN`
+ * @param {string} [args.baseUrl] - The base URL for the API, used to construct the audience. Defaults to `constants.DEFAULT_SITECORE_AUTH_BASE_URL`
  * @returns A Promise that resolves to the access token response (including access token, token type, expiry, etc.)
  * @throws Will log and exit the process if the request fails or returns a non-OK status
  */
@@ -27,6 +27,7 @@ export let clientCredentialsFlow = _clientCredentialsFlow;
 
 // mock setup for unit tests to make sinon happy and mock-able with esbuild/tsx
 // https://sinonjs.org/how-to/typescript-swc/
+// This, plus the `_` names make the exports writable for sinon
 export const unitMocks = {
   set clientCredentialsFlow(mockImplementation) {
     clientCredentialsFlow = mockImplementation;

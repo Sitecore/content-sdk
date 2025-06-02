@@ -56,6 +56,7 @@ export let getAllTenantsInfo = _getAllTenantsInfo;
 
 // mock setup for unit tests to make sinon happy and mock-able with esbuild/tsx
 // https://sinonjs.org/how-to/typescript-swc/
+// This, plus the `_` names make the exports writable for sinon
 export const unitMocks = {
   set decodeJwtPayload(mockImplementation) {
     decodeJwtPayload = mockImplementation;

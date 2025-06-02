@@ -19,6 +19,7 @@ export let clearActiveTenant = _clearActiveTenant;
 
 // mock setup for unit tests to make sinon happy and mock-able with esbuild/tsx
 // https://sinonjs.org/how-to/typescript-swc/
+// This, plus the `_` names make the exports writable for sinon
 export const unitMocks = {
   set clearActiveTenant(mockImplementation) {
     clearActiveTenant = mockImplementation;
