@@ -7,6 +7,7 @@ import {
   deleteTenantAuthInfo,
   readTenantInfo,
 } from './tenant-store';
+import { deleteKey } from './encryption';
 
 /**
  * Validates whether a given auth config is still valid (i.e., not expired).
@@ -55,7 +56,7 @@ export async function renewClientToken(
  * Ensures a valid token exists, renews it if expired.
  * Returns tenant context if successful, otherwise null.
  */
-export async function renewAuthIfExpired(): Promise<{ tenantId: string } | null> {
+export async function validateAndRenewAuthIfExpired(): Promise<{ tenantId: string } | null> {
   const tenantId = getActiveTenant();
   if (!tenantId) return null;
 
@@ -84,6 +85,7 @@ export async function renewAuthIfExpired(): Promise<{ tenantId: string } | null>
 
     console.warn(`\n Cleaning up stale authentication data for tenant '${tenantId}'...`);
     await deleteTenantAuthInfo(tenantId);
+    await deleteKey(`encryptionKey-${tenantId}`);
     clearActiveTenant();
 
     console.info('\n You will need to login again to re-authenticate.');

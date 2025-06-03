@@ -3,8 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { TenantAuth, TenantInfo } from './models';
-
-const CLAIMS = 'https://auth.sitecorecloud.io/claims';
+import { encryptData, decryptData } from './encryption';
+import { CLAIMS } from './../../constants';
 
 const rootDir = path.join(os.homedir(), '.sitecore', 'sitecore-tools');
 
@@ -115,7 +115,10 @@ async function _writeTenantAuthInfo(tenantId: string, authInfo: TenantAuth): Pro
   try {
     const dir = getTenantPath(tenantId);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'auth.json'), JSON.stringify(authInfo, null, 2));
+
+    const encrypted = await encryptData(JSON.stringify(authInfo), tenantId);
+    fs.writeFileSync(path.join(dir, 'auth.json'), JSON.stringify(encrypted));
+    // fs.writeFileSync(path.join(dir, 'auth.json'), JSON.stringify(authInfo, null, 2));
   } catch (error) {
     console.error(
       `\n Failed to write auth.json for tenant '${tenantId}': ${(error as Error).message}`
@@ -128,8 +131,15 @@ async function _readTenantAuthInfo(tenantId: string): Promise<TenantAuth | null>
   if (!fs.existsSync(filePath)) return null;
 
   try {
-    const raw = fs.readFileSync(filePath, 'utf-8');
-    return JSON.parse(raw);
+    const encryptedPayloadRaw = fs.readFileSync(filePath, 'utf8');
+    const encryptedPayload = JSON.parse(encryptedPayloadRaw);
+    const decryptedData = await decryptData(encryptedPayload, tenantId, true);
+    if (decryptedData === null) {
+      return null;
+    }
+    return JSON.parse(decryptedData) as TenantAuth;
+    // const raw = fs.readFileSync(filePath, 'utf-8');
+    // return JSON.parse(raw);
   } catch (error) {
     console.error(
       `\n Failed to read auth.json for tenant '${tenantId}': ${(error as Error).message}`

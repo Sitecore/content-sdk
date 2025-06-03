@@ -1,7 +1,7 @@
 ﻿import { CommandModule } from 'yargs';
 import { auth } from '@sitecore-content-sdk/core/tools';
 
-let { deleteTenantAuthInfo, getActiveTenant, clearActiveTenant } = auth;
+let { deleteTenantAuthInfo, getActiveTenant, clearActiveTenant, deleteKey } = auth;
 
 export const unitMock = (formModule: any) => {
   deleteTenantAuthInfo = formModule.deleteTenantAuthInfo || deleteTenantAuthInfo;
@@ -21,6 +21,7 @@ export const logout: CommandModule = {
 
     clearActiveTenant();
     deleteTenantAuthInfo(tenantId);
+    deleteKey(`encryptionKey-${tenantId}`);
 
     console.info(`\n Logged out from tenant ${tenantId}`);
   },

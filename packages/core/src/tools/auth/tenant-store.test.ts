@@ -12,6 +12,7 @@ import {
   getAllTenantsInfo,
   decodeJwtPayload,
 } from './tenant-store';
+import * as encryptionUtil from './encryption';
 
 describe('tenant-store utilities', () => {
   const tenantId = 'tenant-abc';
@@ -44,23 +45,33 @@ describe('tenant-store utilities', () => {
   });
 
   describe('writeTenantAuthInfo', () => {
-    it('should write auth.json file', async () => {
-      await writeTenantAuthInfo(tenantId, {
+    it('should write encrypted auth.json file', async () => {
+      const fakeAuth = {
         access_token: 'token',
-        clientId: 'cid',
         expires_in: 1234,
         expires_at: 'time',
-      });
+      };
+
+      const fakeEncrypted = {
+        iv: 'iv',
+        authTag: 'tag',
+        encryptedData: 'secret',
+      };
+
+      const encryptStub = sinon.stub().resolves(fakeEncrypted);
+      encryptionUtil.unitMock.encryptData = encryptStub;
+
+      await writeTenantAuthInfo(tenantId, fakeAuth);
 
       expect(mkdirStub.calledWith(tenantDir)).to.be.true;
-      expect(writeFileStub.calledWith(authPath)).to.be.true;
+      expect(encryptStub.calledOnceWithExactly(JSON.stringify(fakeAuth))).to.be.true;
+      expect(writeFileStub.calledWithExactly(authPath, JSON.stringify(fakeEncrypted))).to.be.true;
     });
 
     it('should log error if writing fails', async () => {
       writeFileStub.throws(new Error('fail'));
       await writeTenantAuthInfo(tenantId, {
         access_token: 'token',
-        clientId: 'cid',
         expires_in: 1234,
         expires_at: 'time',
       });
@@ -70,11 +81,30 @@ describe('tenant-store utilities', () => {
 
   describe('readTenantAuthInfo', () => {
     it('should return parsed auth info if file exists', async () => {
+      const fakeEncryptedPayload = {
+        iv: 'fake-iv',
+        authTag: 'fake-auth-tag',
+        encryptedData: 'fake-data',
+      };
+
+      const fakeDecryptedData = JSON.stringify({
+        access_token: 'test-token',
+        expires_in: 3600,
+        expires_at: '2025-12-12T12:00:00.000Z',
+        clientSecret: 'test-secret',
+        refresh_token: 'should-ignore',
+      });
+
       existsStub.withArgs(authPath).returns(true);
-      readFileStub.withArgs(authPath).returns(JSON.stringify({ clientId: 'cid' }));
+      readFileStub.withArgs(authPath).returns(JSON.stringify(fakeEncryptedPayload));
+
+      encryptionUtil.unitMock.decryptData = sinon.stub().resolves(fakeDecryptedData);
 
       const result = await readTenantAuthInfo(tenantId);
-      expect(result?.clientId).to.equal('cid');
+      const decryptStub = encryptionUtil.decryptData as sinon.SinonStub;
+
+      expect(decryptStub.calledOnceWithExactly(fakeEncryptedPayload)).to.be.true;
+      expect(result).to.deep.equal(JSON.parse(fakeDecryptedData));
     });
 
     it('should return null if file does not exist', async () => {

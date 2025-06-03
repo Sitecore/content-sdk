@@ -1,20 +1,20 @@
 ﻿import { CommandModule } from 'yargs';
 import { auth } from '@sitecore-content-sdk/core/tools';
-let { readTenantInfo, renewAuthIfExpired } = auth;
+let { readTenantInfo, validateAndRenewAuthIfExpired } = auth;
 
 export const unitMock = (formModule: any) => {
   readTenantInfo = formModule.readTenantInfo || readTenantInfo;
-  renewAuthIfExpired = formModule.renewAuthIfExpired || renewAuthIfExpired;
+  validateAndRenewAuthIfExpired = formModule.renewAuthIfExpired || validateAndRenewAuthIfExpired;
 };
 
 export const status: CommandModule = {
   command: 'status',
   describe: 'Show current status of active tenant',
   handler: async () => {
-    const context = await renewAuthIfExpired();
+    const context = await validateAndRenewAuthIfExpired();
 
     if (!context) {
-      console.log('\n No valid authentication found. Please login.');
+      console.log('\nNo valid authentication found. Please login.');
       return;
     }
 
