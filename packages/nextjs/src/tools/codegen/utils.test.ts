@@ -312,7 +312,7 @@ describe('codegen-utils', () => {
       delete process.env.SITECORE;
       delete process.env.BUILD_ID;
       delete process.env.VERCEL_REGION;
-      delete process.env.BuildMetadata_BuildId;
+      delete process.env.BuildMetadata__BuildId;
     });
 
     it('should return true when in Netlify build context', () => {
@@ -341,7 +341,7 @@ describe('codegen-utils', () => {
 
     it('should return true when in Sitecore build context', () => {
       process.env.SITECORE = 'true';
-      process.env.BuildMetadata_BuildId = '12345';
+      process.env.BuildMetadata__BuildId = '12345';
 
       const result = codegenUtils.validateDeployContext();
 

@@ -47,7 +47,7 @@ export const validateDeployContext = () => {
   if (process.env.VERCEL && !process.env.VERCEL_REGION) {
     return true;
   }
-  if (process.env.SITECORE && process.env.BuildMetadata_BuildId) {
+  if (process.env.SITECORE && process.env.BuildMetadata__BuildId) {
     return true;
   }
   return false;
@@ -248,6 +248,7 @@ export const sendCode = async ({
         url: response.url,
         headers: response.headers,
       });
+      return;
     }
   } catch (error) {
     console.error(

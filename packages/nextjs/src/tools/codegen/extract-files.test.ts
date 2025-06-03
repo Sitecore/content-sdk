@@ -37,7 +37,7 @@ describe('extract-files', () => {
   beforeEach(() => {
     process.env.EXTRACT_CONSENT = 'true';
     process.env.SITECORE = 'true';
-    process.env.BuildMetadata_BuildId = '0451';
+    process.env.BuildMetadata__BuildId = '0451';
     process.env.SITECORE_AUTH_CLIENT_ID = 'test-client-id';
     process.env.SITECORE_AUTH_CLIENT_SECRET = 'test-client-secret';
     sandbox.stub(fs, 'existsSync').returns(true);
@@ -49,7 +49,7 @@ describe('extract-files', () => {
     delete process.env.SITECORE;
     delete process.env.SITECORE_AUTH_CLIENT_ID;
     delete process.env.SITECORE_AUTH_CLIENT_SECRET;
-    delete process.env.BuildMetadata_BuildId;
+    delete process.env.BuildMetadata__BuildId;
   });
 
   it('should log when access token is empty', async () => {
