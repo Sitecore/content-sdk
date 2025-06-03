@@ -44,7 +44,7 @@ Our versioning strategy is as follows:
   - The `getRobots(siteName, fetchOptions?)` method centralizes logic for fetching `robots.txt` content.
   - A new `RobotsMiddleware` class encapsulates HTTP-level logic for generating `robots.txt` responses in Next.js apps.
   - These additions follow the same extensible architecture as existing features enabling custom behavior via service overrides and improving consistency across endpoints.
-* `[sitecore-jss-cli]` Code extraction feature for XMCloud code generation is added ([#71](https://github.com/Sitecore/jss/pull/71)[#113](https://github.com/Sitecore/content-sdk/pull/113))
+* `[sitecore-jss-cli]` Code extraction feature for XMCloud code generation is added ([#71](https://github.com/Sitecore/jss/pull/71)[#113](https://github.com/Sitecore/content-sdk/pull/113)[#114](https://github.com/Sitecore/content-sdk/pull/114))
 * `[all]` XM Cloud Content support
   * `[core]` Introduced /content submodule to interact with XM Cloud Content ([#65](https://github.com/Sitecore/content-sdk/pull/65)[#104](https://github.com/Sitecore/content-sdk/pull/104))
   * `[richtext]` Added new `richtext` package to enable Content SDK to work with TipTap Rich Text editors ([#85](https://github.com/Sitecore/content-sdk/pull/85))
