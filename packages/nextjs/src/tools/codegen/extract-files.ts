@@ -8,11 +8,13 @@ import {
 } from './utils';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { auth } from '@sitecore-content-sdk/core/tools';
+import { debug } from '@sitecore-content-sdk/core';
 import path from 'path';
 
 export type ExtractFilesConfig = {
   scConfig: SitecoreConfig;
   componentMapPath?: string;
+  customValidateDeployContext?: () => boolean;
 };
 
 /**
@@ -27,14 +29,18 @@ export const extractFiles = (args: ExtractFilesConfig) => {
     audience: process.env.SITECORE_AUTH_AUDIENCE,
   };
   return async () => {
-    if (!validateDeployContext()) {
-      console.log(chalk.yellow('Skipping code extraction, not in deploy context'));
+    if (
+      (args.customValidateDeployContext && !args.customValidateDeployContext()) ||
+      !validateDeployContext()
+    ) {
+      debug.common('Skipping code extraction, not in deploy context');
       return;
     }
     if (!validateConsent()) {
       console.log(chalk.yellow('Skipping code extraction, consent not given'));
       return;
     }
+    console.log(chalk.green('Code extraction started'));
     const basePath = process.cwd();
 
     try {
@@ -72,7 +78,14 @@ export const extractFiles = (args: ExtractFilesConfig) => {
         })
       );
 
-      await Promise.all(fileDispatches);
+      const files = await Promise.all(fileDispatches);
+      console.log(
+        chalk.green(
+          `Code extraction completed successfully, files extracted:\r\n${files
+            .filter((file) => file !== null)
+            .join('\r\n')}`
+        )
+      );
     } catch (error) {
       console.error(chalk.red('Error during component extraction:', error));
     }

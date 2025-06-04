@@ -27,8 +27,7 @@ export enum ExtractedFileType {
  * @returns {boolean} - true if consent is given, false otherwise
  */
 export const validateConsent = () => {
-  if (!process.env.EXTRACT_CONSENT) {
-    console.log(chalk.yellow('EXTRACT_CONSENT is not set'));
+  if (process.env.EXTRACT_CONSENT?.toLowerCase() !== 'true') {
     return false;
   }
   return true;
@@ -47,7 +46,7 @@ export const validateDeployContext = () => {
   if (process.env.VERCEL && !process.env.VERCEL_REGION) {
     return true;
   }
-  if (process.env.SITECORE && process.env.BuildMetadata__BuildId) {
+  if (process.env.SITECORE && process.env.SITECORE_BUILD) {
     return true;
   }
   return false;
@@ -218,7 +217,7 @@ export const sendCode = async ({
   const apiEndpoint = `${targetUrl}/api/v1/contentsdk/code/extracted`;
   if (!fs.existsSync(file.path)) {
     console.error(chalk.red(`File not found: ${file.path}`));
-    return;
+    return null;
   }
   const code = fs.readFileSync(file.path);
   try {
@@ -248,7 +247,7 @@ export const sendCode = async ({
         url: response.url,
         headers: response.headers,
       });
-      return;
+      return null;
     }
   } catch (error) {
     console.error(
@@ -256,7 +255,7 @@ export const sendCode = async ({
         `Fetch request to send extracted code from ${file.path} failed: ${JSON.stringify(error)}`
       )
     );
-    return;
+    return null;
   }
-  console.log(chalk.green(`Contents from ${file.path} extracted and sent to mesh endpoint`));
+  return file.path;
 };
