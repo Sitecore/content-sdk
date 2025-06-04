@@ -5,7 +5,9 @@ import { generateSites, generateMetadata } from '@sitecore-content-sdk/nextjs/to
 export default defineCliConfig({
   build: {
     commands: [
-      generateMetadata(),
+      generateMetadata({
+        allowWorkspaces: false,
+      }),
       generateSites({
         scConfig: config,
       }),

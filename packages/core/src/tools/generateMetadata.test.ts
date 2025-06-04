@@ -39,4 +39,16 @@ describe('generateMetadata', () => {
     expect(writeFileSyncStub.calledOnce).to.be.true;
     expect(writeFileSyncStub.getCall(0).args[0]).to.be.equal(path.resolve(config.destinationPath));
   });
+
+  it('should generate metadata with allowWorkspaces set to true', async () => {
+    const config = { allowWorkspaces: true };
+    const generate = generateMetadata(config);
+    await generate();
+
+    expect(execSyncStub.calledOnce).to.be.true;
+    expect(writeFileSyncStub.calledOnce).to.be.true;
+    expect(writeFileSyncStub.getCall(0).args[0]).to.be.equal(
+      path.resolve('.sitecore/metadata.json')
+    );
+  });
 });

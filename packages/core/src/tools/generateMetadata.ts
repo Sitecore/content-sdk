@@ -19,17 +19,22 @@ export type GenerateMetadataConfig = {
    * If not provided, the default '.sitecore/metadata.json' will be used.
    */
   destinationPath?: string;
+  /**
+   * Optional flag to allow workspaces in the metadata generation.
+   * If not provided, the default is false.
+   */
+  allowWorkspaces?: boolean;
 };
 
 /**
  * Generate application metadata
  * @param {GenerateMetadataConfig} config - Optional configuration for generating metadata.
- * If not provided, the default '.sitecore/metadata.json' will be used.
+ * If not provided, the default '.sitecore/metadata.json' will be used and allowWorkspaces will be set to false.
  * @returns {Promise<void>} A promise that resolves when the metadata generation is complete.
  */
 export const generateMetadata = (config?: GenerateMetadataConfig): (() => Promise<void>) => {
   return async () => {
-    const metadata: Metadata = getMetadata();
+    const metadata: Metadata = getMetadata(config?.allowWorkspaces ?? false);
     writeMetadata(metadata, config?.destinationPath ?? '.sitecore/metadata.json');
   };
 };
