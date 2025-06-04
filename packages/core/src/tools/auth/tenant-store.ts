@@ -118,7 +118,6 @@ async function _writeTenantAuthInfo(tenantId: string, authInfo: TenantAuth): Pro
 
     const encrypted = await encryptData(JSON.stringify(authInfo), tenantId);
     fs.writeFileSync(path.join(dir, 'auth.json'), JSON.stringify(encrypted));
-    // fs.writeFileSync(path.join(dir, 'auth.json'), JSON.stringify(authInfo, null, 2));
   } catch (error) {
     console.error(
       `\n Failed to write auth.json for tenant '${tenantId}': ${(error as Error).message}`
@@ -138,8 +137,6 @@ async function _readTenantAuthInfo(tenantId: string): Promise<TenantAuth | null>
       return null;
     }
     return JSON.parse(decryptedData) as TenantAuth;
-    // const raw = fs.readFileSync(filePath, 'utf-8');
-    // return JSON.parse(raw);
   } catch (error) {
     console.error(
       `\n Failed to read auth.json for tenant '${tenantId}': ${(error as Error).message}`

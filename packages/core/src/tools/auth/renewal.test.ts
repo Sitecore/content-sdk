@@ -1,6 +1,6 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
-import { validateAuthInfo, renewClientToken, renewAuthIfExpired } from './renewal';
+import { validateAuthInfo, renewClientToken, validateAndRenewAuthIfExpired } from './renewal';
 
 import * as authFlow from './flow';
 import * as tenantStore from './tenant-store';
@@ -105,11 +105,11 @@ describe('auth token renewal utilities', () => {
     });
   });
 
-  describe('renewAuthIfExpired', () => {
+  describe('validateAndRenewAuthIfExpired', () => {
     it('should return null if no active tenant', async () => {
       getTenantStub.returns(null);
 
-      const result = await renewAuthIfExpired();
+      const result = await validateAndRenewAuthIfExpired();
       expect(result).to.be.null;
     });
 
@@ -117,7 +117,7 @@ describe('auth token renewal utilities', () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves(null);
 
-      const result = await renewAuthIfExpired();
+      const result = await validateAndRenewAuthIfExpired();
       expect(result).to.be.null;
     });
 
@@ -126,7 +126,7 @@ describe('auth token renewal utilities', () => {
       readAuthStub.resolves({ ...authMock, expires_at: pastDate });
       readTenantInfoStub.resolves(null);
 
-      const result = await renewAuthIfExpired();
+      const result = await validateAndRenewAuthIfExpired();
 
       expect(result).to.be.null;
     });
@@ -135,7 +135,7 @@ describe('auth token renewal utilities', () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves({ ...authMock, expires_at: futureDate });
 
-      const result = await renewAuthIfExpired();
+      const result = await validateAndRenewAuthIfExpired();
       expect(result).to.deep.equal({ tenantId: 'tenant1' });
     });
 
@@ -150,7 +150,7 @@ describe('auth token renewal utilities', () => {
       });
 
       try {
-        await renewAuthIfExpired();
+        await validateAndRenewAuthIfExpired();
         throw new Error('Test failed: process.exit not triggered');
       } catch (err) {
         if (err instanceof Error) {

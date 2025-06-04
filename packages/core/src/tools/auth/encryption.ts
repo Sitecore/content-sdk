@@ -1,16 +1,62 @@
-﻿import keytar from 'keytar';
+﻿/* eslint-disable jsdoc/require-jsdoc */
+import keytar from 'keytar';
 import * as crypto from 'crypto';
 import { deleteTenantAuthInfo } from './tenant-store';
 import { clearActiveTenant } from './tenant-state';
+import { EncryptedPayload } from './models';
 
 const algorithm = 'aes-256-gcm';
 const SERVICE_NAME = 'sitecore-tools-cli';
 
-export interface EncryptedPayload {
-  iv: string;
-  authTag: string;
-  encryptedData: string;
-}
+/**
+ * Encrypts plaintext using AES-256-GCM for a given tenant.
+ * @param {string} plaintext
+ * @param {string} tenantId
+ */
+export let encryptData = _encryptData;
+/**
+ * Decrypts encrypted payload using AES-256-GCM for a specific tenant.
+ * If key is corrupted or invalid, optionally clears both key and tenant data.
+ * @param {EncryptedPayload} payload
+ * @param {string} tenantId
+ * @param {string} cleanupOnFailure
+ */
+export let decryptData = _decryptData;
+
+/**
+ * Deletes the encryption key for a tenant (useful for cleanup).
+ * @param {string} tenantId
+ */
+export let deleteKey = _deleteKey;
+
+// mock setup for unit tests to make sinon happy and mock-able with esbuild/tsx
+// https://sinonjs.org/how-to/typescript-swc/
+// This, plus the `_` names make the exports writable for sinon
+export const unitMocks = {
+  set encryptData(mockImplementation) {
+    encryptData = mockImplementation;
+  },
+
+  get encryptData() {
+    return _encryptData;
+  },
+
+  set decryptData(mockImplementation) {
+    decryptData = mockImplementation;
+  },
+
+  get decryptData() {
+    return _decryptData;
+  },
+
+  set deleteKey(mockImplementation) {
+    deleteKey = mockImplementation;
+  },
+
+  get deleteKey() {
+    return _deleteKey;
+  },
+};
 
 /**
  * Generates or retrieves a 32-byte AES key for a specific tenant.
@@ -27,12 +73,7 @@ export async function getKey(tenantId: string): Promise<Buffer> {
   return Buffer.from(key, 'base64');
 }
 
-/**
- * Encrypts plaintext using AES-256-GCM for a given tenant.
- * @param {string} plaintext
- * @param {string} tenantId
- */
-export async function encryptData(plaintext: string, tenantId: string): Promise<EncryptedPayload> {
+async function _encryptData(plaintext: string, tenantId: string): Promise<EncryptedPayload> {
   const key = await getKey(tenantId);
   const iv = crypto.randomBytes(12);
   const cipher = crypto.createCipheriv(algorithm, key, iv);
@@ -48,14 +89,7 @@ export async function encryptData(plaintext: string, tenantId: string): Promise<
   };
 }
 
-/**
- * Decrypts encrypted payload using AES-256-GCM for a specific tenant.
- * If key is corrupted or invalid, optionally clears both key and tenant data.
- * @param {EncryptedPayload} payload
- * @param {string} tenantId
- * @param {string} cleanupOnFailure
- */
-export async function decryptData(
+async function _decryptData(
   payload: EncryptedPayload,
   tenantId: string,
   cleanupOnFailure = true
@@ -87,11 +121,6 @@ export async function decryptData(
   }
 }
 
-/**
- * Deletes the encryption key for a tenant (useful for cleanup).
- * @param {string} tenantId
- */
-export async function deleteKey(tenantId: string): Promise<void> {
+async function _deleteKey(tenantId: string): Promise<void> {
   await keytar.deletePassword(SERVICE_NAME, `encryptionKey-${tenantId}`);
-  console.log(`\nEncryption key deleted for tenant '${tenantId}'.`);
 }
