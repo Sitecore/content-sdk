@@ -13,7 +13,7 @@ import {
   decodeJwtPayload,
 } from './tenant-store';
 
-describe('tenant-store utilities (unit)', () => {
+describe('tenant-store utils', () => {
   const tenantId = 'tenant-abc';
   const tenantDir = path.join(os.homedir(), '.sitecore', 'sitecore-tools', tenantId);
   const authPath = path.join(tenantDir, 'auth.json');
@@ -180,7 +180,7 @@ describe('tenant-store utilities (unit)', () => {
   });
 });
 
-describe('writeTenantAuthInfo', () => {
+describe('Tenant store: writeTenantAuthInfo', () => {
   const tenantId = 'test-tenant-1234';
   const tenantDir = path.join(os.homedir(), '.sitecore', 'sitecore-tools', tenantId);
   const authPath = path.join(tenantDir, 'auth.json');
@@ -212,7 +212,7 @@ describe('writeTenantAuthInfo', () => {
   });
 });
 
-describe('readTenantAuthInfo', () => {
+describe('Tenant store: readTenantAuthInfo', () => {
   const tenantId = 'test-tenant-1234';
   const tenantDir = path.join(os.homedir(), '.sitecore', 'sitecore-tools', tenantId);
   const authPath = path.join(tenantDir, 'auth.json');

@@ -2396,7 +2396,6 @@ __metadata:
     dotenv: ^16.5.0
     dotenv-expand: ^12.0.2
     eslint: ^8.56.0
-    keytar: ^7.9.0
     mocha: ^11.2.2
     nyc: ^17.1.0
     proxyquire: ^2.1.3
