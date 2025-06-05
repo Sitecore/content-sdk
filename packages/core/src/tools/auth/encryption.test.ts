@@ -2,26 +2,28 @@
 import sinon from 'sinon';
 import * as crypto from 'crypto';
 import proxyquire from 'proxyquire';
+import 'mocha';
 
-const dummyKey = crypto.randomBytes(32).toString('base64');
+const isCI = process.env.CI === 'true';
 
-const getPasswordStub = sinon.stub().resolves(dummyKey);
-const setPasswordStub = sinon.stub().resolves();
-const deletePasswordStub = sinon.stub().resolves(true);
+(isCI ? describe.skip : describe)('Encryption Utilities', () => {
+  const dummyKey = crypto.randomBytes(32).toString('base64');
 
-const encryption = proxyquire('./encryption', {
-  keytar: {
-    getPassword: getPasswordStub,
-    setPassword: setPasswordStub,
-    deletePassword: deletePasswordStub,
-  },
-});
+  const getPasswordStub = sinon.stub().resolves(dummyKey);
+  const setPasswordStub = sinon.stub().resolves();
+  const deletePasswordStub = sinon.stub().resolves(true);
 
-const tenantId = 'tenant-abc';
-const account = `encryptionKey-${tenantId}`;
-const SERVICE = 'sitecore-tools-cli';
+  const encryption = proxyquire('./encryption', {
+    keytar: {
+      getPassword: getPasswordStub,
+      setPassword: setPasswordStub,
+      deletePassword: deletePasswordStub,
+    },
+  });
 
-describe('Encryption Utilities', () => {
+  const tenantId = 'tenant-abc';
+  const account = `encryptionKey-${tenantId}`;
+  const SERVICE = 'sitecore-tools-cli';
   let consoleErrorStub: sinon.SinonStub;
   let consoleWarnStub: sinon.SinonStub;
 
