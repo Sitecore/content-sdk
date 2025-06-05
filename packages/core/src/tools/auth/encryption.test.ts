@@ -1,12 +1,9 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
 import * as crypto from 'crypto';
-import 'mocha';
+import proxyquire from 'proxyquire';
 
-const isCI = process.env.CI === 'true';
-
-(isCI ? describe.skip : describe.only)('Encryption Utilities', () => {
-  const proxyquire = require('proxyquire');
+describe('Encryption Utilities', () => {
   const dummyKey = crypto.randomBytes(32).toString('base64');
 
   const getPasswordStub = sinon.stub().resolves(dummyKey);
@@ -24,6 +21,7 @@ const isCI = process.env.CI === 'true';
   const tenantId = 'tenant-abc';
   const account = `encryptionKey-${tenantId}`;
   const SERVICE = 'sitecore-tools-cli';
+
   let consoleErrorStub: sinon.SinonStub;
   let consoleWarnStub: sinon.SinonStub;
 
