@@ -85,7 +85,7 @@ export async function validateAndRenewAuthIfExpired(): Promise<{ tenantId: strin
 
     console.warn(`\n Cleaning up stale authentication data for tenant '${tenantId}'...`);
     await deleteTenantAuthInfo(tenantId);
-    await deleteKey(`encryptionKey-${tenantId}`);
+    await deleteKey(tenantId);
     clearActiveTenant();
 
     console.info('\n You will need to login again to re-authenticate.');

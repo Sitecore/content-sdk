@@ -21,7 +21,7 @@ export const logout: CommandModule = {
     }
 
     deleteTenantAuthInfo(tenantId);
-    deleteKey(`encryptionKey-${tenantId}`);
+    deleteKey(tenantId);
     clearActiveTenant();
 
     console.info(`\n Logged out from tenant ${tenantId}`);

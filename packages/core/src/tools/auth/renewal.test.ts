@@ -167,7 +167,7 @@ describe('auth token renewal utilities', () => {
       expect(consoleErrorStub.calledWithMatch(/Failed to renew token/)).to.be.true;
       expect(consoleWarnStub.calledWithMatch(/Cleaning up stale/)).to.be.true;
       expect(deleteAuthStub.calledOnce).to.be.true;
-      expect(deleteKeyStub.calledOnceWithExactly('encryptionKey-tenant1')).to.be.true;
+      expect(deleteKeyStub.calledOnceWithExactly('tenant1')).to.be.true;
       expect(clearActiveStub.calledOnce).to.be.true;
       expect(exitStub.calledOnceWith(1)).to.be.true;
     });

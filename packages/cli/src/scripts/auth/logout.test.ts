@@ -49,7 +49,7 @@ describe('logout command', () => {
 
     expect(clearActiveTenantStub.calledOnce).to.be.true;
     expect(deleteTenantAuthInfoStub.calledWith(mockTenantId)).to.be.true;
-    expect(deleteKeyStub.calledWith(`encryptionKey-${mockTenantId}`)).to.be.true;
+    expect(deleteKeyStub.calledWith(mockTenantId)).to.be.true;
     expect(consoleInfoStub.calledWithMatch(`Logged out from tenant ${mockTenantId}`)).to.be.true;
   });
 });
