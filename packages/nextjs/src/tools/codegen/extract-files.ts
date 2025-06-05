@@ -87,7 +87,7 @@ export const extractFiles = (args: ExtractFilesConfig) => {
         )
       );
     } catch (error) {
-      console.error(chalk.red('Error during component extraction:', error));
+      console.error(chalk.red('Error during code extraction:', error));
     }
   };
 };

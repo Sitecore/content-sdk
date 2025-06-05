@@ -121,10 +121,7 @@ describe('extract-files', () => {
     expect(consoleErrorStub.calledOnce).to.be.true;
     const expectedPath = path.resolve(process.cwd(), './src/lib/component-map.ts');
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
-      chalk.red(
-        'Error during component extraction: ReferenceError: Failed to find file',
-        expectedPath
-      )
+      chalk.red('Error during code extraction: ReferenceError: Failed to find file', expectedPath)
     );
   });
 
