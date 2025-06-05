@@ -5,8 +5,9 @@ import { validateAuthInfo, renewClientToken, validateAndRenewAuthIfExpired } fro
 import * as authFlow from './flow';
 import * as tenantStore from './tenant-store';
 import * as tenantState from './tenant-state';
+import * as encryptionUtil from './encryption';
 
-describe('auth token renewal utilities', () => {
+describe.only('auth token renewal utilities', () => {
   const futureDate = new Date(Date.now() + 3600 * 1000).toISOString();
   const pastDate = new Date(Date.now() - 3600 * 1000).toISOString();
 
@@ -37,6 +38,7 @@ describe('auth token renewal utilities', () => {
   let consoleInfoStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
   let consoleWarnStub: sinon.SinonStub;
+  let deleteKeyStub: sinon.SinonStub;
 
   beforeEach(() => {
     flowStub = sinon.stub().resolves({
@@ -54,11 +56,13 @@ describe('auth token renewal utilities', () => {
     readAuthStub = sinon.stub();
     readTenantInfoStub = sinon.stub();
     deleteAuthStub = sinon.stub().resolves();
+    deleteKeyStub = sinon.stub().resolves();
 
     sinon.replace.usingAccessor(tenantStore.unitMocks, 'writeTenantAuthInfo', writeStub);
     sinon.replace.usingAccessor(tenantStore.unitMocks, 'readTenantAuthInfo', readAuthStub);
     sinon.replace.usingAccessor(tenantStore.unitMocks, 'readTenantInfo', readTenantInfoStub);
     sinon.replace.usingAccessor(tenantStore.unitMocks, 'deleteTenantAuthInfo', deleteAuthStub);
+    sinon.replace.usingAccessor(encryptionUtil.unitMocks, 'deleteKey', deleteKeyStub);
 
     getTenantStub = sinon.stub();
     clearActiveStub = sinon.stub().resolves();
@@ -163,6 +167,7 @@ describe('auth token renewal utilities', () => {
       expect(consoleErrorStub.calledWithMatch(/Failed to renew token/)).to.be.true;
       expect(consoleWarnStub.calledWithMatch(/Cleaning up stale/)).to.be.true;
       expect(deleteAuthStub.calledOnce).to.be.true;
+      expect(deleteKeyStub.calledOnceWithExactly('encryptionKey-tenant1')).to.be.true;
       expect(clearActiveStub.calledOnce).to.be.true;
       expect(exitStub.calledOnceWith(1)).to.be.true;
     });
