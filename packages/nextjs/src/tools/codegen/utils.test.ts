@@ -52,14 +52,9 @@ describe('codegen-utils', () => {
         .matchHeader('Authorization', `Bearer ${token}`)
         .reply(200);
 
-      const consoleLogStub = sandbox.spy(console, 'log');
+      const result = await codegenUtils.sendCode({ file, token, targetUrl: meshEndpoint });
 
-      await codegenUtils.sendCode({ file, token, targetUrl: meshEndpoint });
-
-      expect(consoleLogStub.called).to.be.true;
-      expect(consoleLogStub.firstCall.args[0]).to.equal(
-        chalk.green('Contents from /path/to/component.ts extracted and sent to mesh endpoint')
-      );
+      expect(result).to.equal(componentPath);
     });
 
     it('should log when componentPath file is not found', async () => {
@@ -312,7 +307,7 @@ describe('codegen-utils', () => {
       delete process.env.SITECORE;
       delete process.env.BUILD_ID;
       delete process.env.VERCEL_REGION;
-      delete process.env.BuildMetadata_BuildId;
+      delete process.env.SITECORE_BUILD;
     });
 
     it('should return true when in Netlify build context', () => {
@@ -341,7 +336,7 @@ describe('codegen-utils', () => {
 
     it('should return true when in Sitecore build context', () => {
       process.env.SITECORE = 'true';
-      process.env.BuildMetadata_BuildId = '12345';
+      process.env.SITECORE_BUILD = '12345';
 
       const result = codegenUtils.validateDeployContext();
 
@@ -362,7 +357,12 @@ describe('codegen-utils', () => {
       expect(codegenUtils.validateConsent()).to.be.false;
     });
 
-    it('should return true when EXTRACT_CONSENT is set', () => {
+    it('should return false when EXTRACT_CONSENT is set to false', () => {
+      process.env.EXTRACT_CONSENT = 'false';
+      expect(codegenUtils.validateConsent()).to.be.false;
+    });
+
+    it('should return true when EXTRACT_CONSENT is set to true', () => {
       process.env.EXTRACT_CONSENT = 'true';
 
       expect(codegenUtils.validateConsent()).to.be.true;
