@@ -1,5 +1,5 @@
 ﻿/* eslint-disable jsdoc/require-jsdoc */
-import keytar from 'keytar';
+const keytar = require('keytar');
 import * as crypto from 'crypto';
 import { deleteTenantAuthInfo } from './tenant-store';
 import { clearActiveTenant } from './tenant-state';
