@@ -6,7 +6,7 @@
 
 # Interface: TenantAuth
 
-Defined in: [packages/core/src/tools/auth/models.ts:45](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/tools/auth/models.ts#L45)
+Defined in: [packages/core/src/tools/auth/models.ts:45](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L45)
 
 Auth configuration stored per tenant for accessing Sitecore APIs.
 
@@ -16,7 +16,7 @@ Auth configuration stored per tenant for accessing Sitecore APIs.
 
 > **access\_token**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:49](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/tools/auth/models.ts#L49)
+Defined in: [packages/core/src/tools/auth/models.ts:49](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L49)
 
 Access token issued by the identity provider
 
@@ -26,7 +26,7 @@ Access token issued by the identity provider
 
 > `optional` **clientSecret**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:61](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/tools/auth/models.ts#L61)
+Defined in: [packages/core/src/tools/auth/models.ts:61](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L61)
 
 Secret used for client credentials flow and re-authenticate
 
@@ -36,7 +36,7 @@ Secret used for client credentials flow and re-authenticate
 
 > **expires\_at**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:57](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/tools/auth/models.ts#L57)
+Defined in: [packages/core/src/tools/auth/models.ts:57](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L57)
 
 Exact ISO timestamp when the token expires
 
@@ -46,7 +46,7 @@ Exact ISO timestamp when the token expires
 
 > **expires\_in**: `number`
 
-Defined in: [packages/core/src/tools/auth/models.ts:53](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/tools/auth/models.ts#L53)
+Defined in: [packages/core/src/tools/auth/models.ts:53](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L53)
 
 Token expiration duration in seconds
 
@@ -56,4 +56,4 @@ Token expiration duration in seconds
 
 > `optional` **refresh\_token**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:65](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/tools/auth/models.ts#L65)
+Defined in: [packages/core/src/tools/auth/models.ts:65](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L65)

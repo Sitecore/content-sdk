@@ -8,7 +8,7 @@
 
 > **TaxonomySystem** = `object`
 
-Defined in: [packages/core/src/content/taxonomies.ts:30](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L30)
+Defined in: [packages/core/src/content/taxonomies.ts:30](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/content/taxonomies.ts#L30)
 
 Represents the system metadata of a taxonomy.
 
@@ -18,7 +18,7 @@ Represents the system metadata of a taxonomy.
 
 > **createdAt**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:40](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L40)
+Defined in: [packages/core/src/content/taxonomies.ts:40](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/content/taxonomies.ts#L40)
 
 The timestamp when the taxonomy was created (ISO 8601 format).
 
@@ -28,7 +28,7 @@ The timestamp when the taxonomy was created (ISO 8601 format).
 
 > **createdBy**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:42](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L42)
+Defined in: [packages/core/src/content/taxonomies.ts:42](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/content/taxonomies.ts#L42)
 
 The user ID who created the taxonomy.
 
@@ -38,7 +38,7 @@ The user ID who created the taxonomy.
 
 > **id**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:32](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L32)
+Defined in: [packages/core/src/content/taxonomies.ts:32](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/content/taxonomies.ts#L32)
 
 The unique identifier of the taxonomy.
 
@@ -48,7 +48,7 @@ The unique identifier of the taxonomy.
 
 > **label**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:38](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L38)
+Defined in: [packages/core/src/content/taxonomies.ts:38](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/content/taxonomies.ts#L38)
 
 The display label of the taxonomy.
 
@@ -58,7 +58,7 @@ The display label of the taxonomy.
 
 > **name**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:34](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L34)
+Defined in: [packages/core/src/content/taxonomies.ts:34](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/content/taxonomies.ts#L34)
 
 The internal name of the taxonomy.
 
@@ -68,7 +68,7 @@ The internal name of the taxonomy.
 
 > **publishStatus**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:48](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L48)
+Defined in: [packages/core/src/content/taxonomies.ts:48](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/content/taxonomies.ts#L48)
 
 The publish status of the taxonomy (e.g., PREVIEW, PUBLISHED).
 
@@ -78,7 +78,7 @@ The publish status of the taxonomy (e.g., PREVIEW, PUBLISHED).
 
 > **updatedAt**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:44](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L44)
+Defined in: [packages/core/src/content/taxonomies.ts:44](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/content/taxonomies.ts#L44)
 
 The timestamp when the taxonomy was last updated (ISO 8601 format).
 
@@ -88,7 +88,7 @@ The timestamp when the taxonomy was last updated (ISO 8601 format).
 
 > **updatedBy**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:46](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L46)
+Defined in: [packages/core/src/content/taxonomies.ts:46](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/content/taxonomies.ts#L46)
 
 The user ID who last updated the taxonomy.
 
@@ -98,6 +98,6 @@ The user ID who last updated the taxonomy.
 
 > **version**: `number`
 
-Defined in: [packages/core/src/content/taxonomies.ts:36](https://github.com/Sitecore/content-sdk/blob/50867e76509dd936f2c5285752e0596a542ffb61/packages/core/src/content/taxonomies.ts#L36)
+Defined in: [packages/core/src/content/taxonomies.ts:36](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/content/taxonomies.ts#L36)
 
 The version of the taxonomy.
