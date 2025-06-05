@@ -7,7 +7,7 @@ import * as tenantStore from './tenant-store';
 import * as tenantState from './tenant-state';
 import * as encryptionUtil from './encryption';
 
-describe.only('auth token renewal utilities', () => {
+describe('auth token renewal utilities', () => {
   const futureDate = new Date(Date.now() + 3600 * 1000).toISOString();
   const pastDate = new Date(Date.now() - 3600 * 1000).toISOString();
 
