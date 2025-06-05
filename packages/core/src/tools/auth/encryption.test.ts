@@ -1,12 +1,12 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
 import * as crypto from 'crypto';
-import proxyquire from 'proxyquire';
 import 'mocha';
 
 const isCI = process.env.CI === 'true';
 
-(isCI ? describe.skip : describe)('Encryption Utilities', () => {
+(isCI ? describe.skip : describe.only)('Encryption Utilities', () => {
+  const proxyquire = require('proxyquire');
   const dummyKey = crypto.randomBytes(32).toString('base64');
 
   const getPasswordStub = sinon.stub().resolves(dummyKey);
