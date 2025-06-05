@@ -7,6 +7,7 @@ import path from 'path';
 import { defineConfig } from '@sitecore-content-sdk/core/config';
 import { auth } from '@sitecore-content-sdk/core/tools';
 import { extractFiles } from './extract-files';
+import { debug } from '@sitecore-content-sdk/core';
 
 describe('extract-files', () => {
   const sandbox = sinon.createSandbox();
@@ -37,7 +38,7 @@ describe('extract-files', () => {
   beforeEach(() => {
     process.env.EXTRACT_CONSENT = 'true';
     process.env.SITECORE = 'true';
-    process.env.BuildMetadata_BuildId = '0451';
+    process.env.SITECORE_BUILD = '0451';
     process.env.SITECORE_AUTH_CLIENT_ID = 'test-client-id';
     process.env.SITECORE_AUTH_CLIENT_SECRET = 'test-client-secret';
     sandbox.stub(fs, 'existsSync').returns(true);
@@ -49,7 +50,40 @@ describe('extract-files', () => {
     delete process.env.SITECORE;
     delete process.env.SITECORE_AUTH_CLIENT_ID;
     delete process.env.SITECORE_AUTH_CLIENT_SECRET;
-    delete process.env.BuildMetadata_BuildId;
+    delete process.env.SITECORE_BUILD;
+  });
+
+  it('should skip when not in deploy context', async () => {
+    const debugStub = sandbox.stub(debug, 'common');
+    const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
+    sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
+
+    delete process.env.SITECORE;
+    delete process.env.SITECORE_AUTH_CLIENT_ID;
+    delete process.env.SITECORE_AUTH_CLIENT_SECRET;
+    delete process.env.SITECORE_BUILD;
+
+    const extractFilesCall = extractFiles(mockArgs);
+    await extractFilesCall();
+
+    expect(debugStub.calledOnce).to.be.true;
+    expect(debugStub.firstCall.args[0]).to.equal('Skipping code extraction, not in deploy context');
+  });
+
+  it('should use customValidateDeployContext', async () => {
+    const debugStub = sandbox.stub(debug, 'common');
+    const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
+    sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
+    const args = {
+      ...mockArgs,
+      customValidateDeployContext: () => false,
+    };
+
+    const extractFilesCall = extractFiles(args);
+    await extractFilesCall();
+
+    expect(debugStub.calledOnce).to.be.true;
+    expect(debugStub.firstCall.args[0]).to.equal('Skipping code extraction, not in deploy context');
   });
 
   it('should log when access token is empty', async () => {
@@ -87,10 +121,7 @@ describe('extract-files', () => {
     expect(consoleErrorStub.calledOnce).to.be.true;
     const expectedPath = path.resolve(process.cwd(), './src/lib/component-map.ts');
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
-      chalk.red(
-        'Error during component extraction: ReferenceError: Failed to find file',
-        expectedPath
-      )
+      chalk.red('Error during code extraction: ReferenceError: Failed to find file', expectedPath)
     );
   });
 
@@ -125,18 +156,17 @@ describe('extract-files', () => {
 
     expect(fetchBearerTokenStub.calledOnce).to.be.true;
 
-    expect(consoleLogStub.callCount).to.equal(3);
-
-    expect(consoleLogStub.getCall(0).args[0]).to.equal(
-      chalk.green(`Contents from ${component1Path} extracted and sent to mesh endpoint`)
-    );
-
+    expect(consoleLogStub.callCount).to.equal(2);
+    expect(consoleLogStub.getCall(0).args[0]).to.equal(chalk.green('Code extraction started'));
     expect(consoleLogStub.getCall(1).args[0]).to.equal(
-      chalk.green(`Contents from ${component2Path} extracted and sent to mesh endpoint`)
-    );
-
-    expect(consoleLogStub.getCall(2).args[0]).to.equal(
-      chalk.green(`Contents from ${packageJsonPath} extracted and sent to mesh endpoint`)
+      chalk.green(
+        [
+          'Code extraction completed successfully, files extracted:',
+          component1Path,
+          component2Path,
+          packageJsonPath,
+        ].join('\r\n')
+      )
     );
   });
 });
