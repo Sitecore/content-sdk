@@ -8,15 +8,18 @@ describe('logout command', () => {
   let deleteTenantAuthInfoStub: sinon.SinonStub;
   let consoleInfoStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
+  let deleteKeyStub: sinon.SinonStub;
 
   beforeEach(() => {
     consoleInfoStub = sinon.stub(console, 'info');
     consoleErrorStub = sinon.stub(console, 'error');
     clearActiveTenantStub = sinon.stub();
     deleteTenantAuthInfoStub = sinon.stub();
+    deleteKeyStub = sinon.stub().resolves();
     unitMock({
       clearActiveTenant: clearActiveTenantStub,
       deleteTenantAuthInfo: deleteTenantAuthInfoStub,
+      deleteKey: deleteKeyStub,
     });
   });
 
@@ -34,6 +37,7 @@ describe('logout command', () => {
     expect(consoleErrorStub.firstCall.args[0]).to.include('No active tenant found');
     expect(clearActiveTenantStub.notCalled).to.be.true;
     expect(deleteTenantAuthInfoStub.notCalled).to.be.true;
+    expect(deleteKeyStub.notCalled).to.be.true;
   });
 
   it('should logout and clean up when active tenant exists', async () => {
@@ -45,6 +49,7 @@ describe('logout command', () => {
 
     expect(clearActiveTenantStub.calledOnce).to.be.true;
     expect(deleteTenantAuthInfoStub.calledWith(mockTenantId)).to.be.true;
+    expect(deleteKeyStub.calledWith(mockTenantId)).to.be.true;
     expect(consoleInfoStub.calledWithMatch(`Logged out from tenant ${mockTenantId}`)).to.be.true;
   });
 });

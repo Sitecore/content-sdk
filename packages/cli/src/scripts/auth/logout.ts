@@ -1,12 +1,13 @@
 ﻿import { CommandModule } from 'yargs';
 import { auth } from '@sitecore-content-sdk/core/tools';
 
-let { deleteTenantAuthInfo, getActiveTenant, clearActiveTenant } = auth;
+let { deleteTenantAuthInfo, getActiveTenant, clearActiveTenant, deleteKey } = auth;
 
 export const unitMock = (formModule: any) => {
   deleteTenantAuthInfo = formModule.deleteTenantAuthInfo || deleteTenantAuthInfo;
   getActiveTenant = formModule.getActiveTenant || getActiveTenant;
   clearActiveTenant = formModule.clearActiveTenant || clearActiveTenant;
+  deleteKey = formModule.deleteKey || deleteKey;
 };
 
 export const logout: CommandModule = {
@@ -19,8 +20,9 @@ export const logout: CommandModule = {
       return;
     }
 
-    clearActiveTenant();
     deleteTenantAuthInfo(tenantId);
+    deleteKey(tenantId);
+    clearActiveTenant();
 
     console.info(`\n Logged out from tenant ${tenantId}`);
   },

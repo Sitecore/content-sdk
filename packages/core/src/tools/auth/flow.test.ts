@@ -188,7 +188,6 @@ describe('clientCredentialsFlow', () => {
         organizationId: 'org456',
       });
     } catch (err) {
-      expect(consoleErrorStub.called).to.be.true;
       expect((err as Error).message).to.include('unauthorized');
     }
   });

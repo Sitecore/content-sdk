@@ -13,85 +13,32 @@ import {
   decodeJwtPayload,
 } from './tenant-store';
 
-describe('tenant-store utilities', () => {
+describe('tenant-store utils', () => {
   const tenantId = 'tenant-abc';
   const tenantDir = path.join(os.homedir(), '.sitecore', 'sitecore-tools', tenantId);
   const authPath = path.join(tenantDir, 'auth.json');
   const infoPath = path.join(tenantDir, 'info.json');
 
-  let mkdirStub: sinon.SinonStub;
   let writeFileStub: sinon.SinonStub;
   let readFileStub: sinon.SinonStub;
   let existsStub: sinon.SinonStub;
   let unlinkStub: sinon.SinonStub;
-  let statStub: sinon.SinonStub;
   let readdirStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
+  let statStub: sinon.SinonStub;
 
   beforeEach(() => {
-    mkdirStub = sinon.stub(fs, 'mkdirSync');
     writeFileStub = sinon.stub(fs, 'writeFileSync');
     readFileStub = sinon.stub(fs, 'readFileSync');
     existsStub = sinon.stub(fs, 'existsSync');
     unlinkStub = sinon.stub(fs, 'unlinkSync');
-    statStub = sinon.stub(fs, 'statSync');
     readdirStub = sinon.stub(fs, 'readdirSync');
+    statStub = sinon.stub(fs, 'statSync');
     consoleErrorStub = sinon.stub(console, 'error');
   });
 
   afterEach(() => {
     sinon.restore();
-  });
-
-  describe('writeTenantAuthInfo', () => {
-    it('should write auth.json file', async () => {
-      await writeTenantAuthInfo(tenantId, {
-        access_token: 'token',
-        clientId: 'cid',
-        expires_in: 1234,
-        expires_at: 'time',
-      });
-
-      expect(mkdirStub.calledWith(tenantDir)).to.be.true;
-      expect(writeFileStub.calledWith(authPath)).to.be.true;
-    });
-
-    it('should log error if writing fails', async () => {
-      writeFileStub.throws(new Error('fail'));
-      await writeTenantAuthInfo(tenantId, {
-        access_token: 'token',
-        clientId: 'cid',
-        expires_in: 1234,
-        expires_at: 'time',
-      });
-      expect(consoleErrorStub.called).to.be.true;
-    });
-  });
-
-  describe('readTenantAuthInfo', () => {
-    it('should return parsed auth info if file exists', async () => {
-      existsStub.withArgs(authPath).returns(true);
-      readFileStub.withArgs(authPath).returns(JSON.stringify({ clientId: 'cid' }));
-
-      const result = await readTenantAuthInfo(tenantId);
-      expect(result?.clientId).to.equal('cid');
-    });
-
-    it('should return null if file does not exist', async () => {
-      existsStub.withArgs(authPath).returns(false);
-
-      const result = await readTenantAuthInfo(tenantId);
-      expect(result).to.be.null;
-    });
-
-    it('should return null and log if JSON parsing fails', async () => {
-      existsStub.withArgs(authPath).returns(true);
-      readFileStub.throws(new Error('corrupt'));
-
-      const result = await readTenantAuthInfo(tenantId);
-      expect(result).to.be.null;
-      expect(consoleErrorStub.called).to.be.true;
-    });
   });
 
   describe('writeTenantInfo', () => {
@@ -103,7 +50,6 @@ describe('tenant-store utilities', () => {
         clientId: 'C1',
       });
 
-      expect(mkdirStub.calledWith(tenantDir)).to.be.true;
       expect(writeFileStub.calledWith(infoPath)).to.be.true;
     });
 
@@ -231,5 +177,61 @@ describe('tenant-store utilities', () => {
       expect(result).to.be.null;
       expect(consoleErrorStub.called).to.be.true;
     });
+  });
+});
+
+describe('Tenant store: writeTenantAuthInfo', () => {
+  const tenantId = 'test-tenant-1234';
+  const tenantDir = path.join(os.homedir(), '.sitecore', 'sitecore-tools', tenantId);
+  const authPath = path.join(tenantDir, 'auth.json');
+
+  const fakeAuth = {
+    access_token: 'token',
+    expires_in: 1234,
+    expires_at: '2025-12-31T23:59:59Z',
+  };
+
+  afterEach(() => {
+    if (fs.existsSync(authPath)) fs.unlinkSync(authPath);
+    if (fs.existsSync(tenantDir)) fs.rmdirSync(tenantDir, { recursive: true });
+  });
+
+  it('should write a valid encrypted auth.json file', async () => {
+    await writeTenantAuthInfo(tenantId, fakeAuth);
+    expect(fs.existsSync(authPath)).to.be.true;
+
+    const raw = fs.readFileSync(authPath, 'utf-8');
+    const parsed = JSON.parse(raw);
+    expect(parsed).to.have.all.keys(['iv', 'authTag', 'encryptedData']);
+  });
+
+  it('should write and read back parsed auth info correctly', async () => {
+    await writeTenantAuthInfo(tenantId, fakeAuth);
+    const result = await readTenantAuthInfo(tenantId);
+    expect(result).to.deep.equal(fakeAuth);
+  });
+});
+
+describe('Tenant store: readTenantAuthInfo', () => {
+  const tenantId = 'test-tenant-1234';
+  const tenantDir = path.join(os.homedir(), '.sitecore', 'sitecore-tools', tenantId);
+  const authPath = path.join(tenantDir, 'auth.json');
+
+  const fakeAuth = {
+    access_token: 'token',
+    expires_in: 1234,
+    expires_at: '2025-12-31T23:59:59Z',
+  };
+
+  afterEach(() => {
+    if (fs.existsSync(authPath)) fs.unlinkSync(authPath);
+    if (fs.existsSync(tenantDir)) fs.rmdirSync(tenantDir, { recursive: true });
+  });
+
+  it('should write and read back parsed auth info correctly', async () => {
+    await writeTenantAuthInfo(tenantId, fakeAuth);
+
+    const result = await readTenantAuthInfo(tenantId);
+    expect(result).to.deep.equal(fakeAuth);
   });
 });

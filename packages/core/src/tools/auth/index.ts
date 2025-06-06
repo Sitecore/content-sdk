@@ -1,5 +1,5 @@
 export { clientCredentialsFlow } from './flow';
-export { renewClientToken, renewAuthIfExpired, validateAuthInfo } from './renewal';
+export { renewClientToken, validateAndRenewAuthIfExpired, validateAuthInfo } from './renewal';
 export { getActiveTenant, setActiveTenant, clearActiveTenant } from './tenant-state';
 export {
   writeTenantAuthInfo,
@@ -9,3 +9,4 @@ export {
   getAllTenantsInfo,
   writeTenantInfo,
 } from './tenant-store';
+export { encryptData, decryptData, deleteKey } from './encryption';

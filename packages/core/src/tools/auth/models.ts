@@ -98,3 +98,18 @@ export interface TenantInfo {
    */
   baseUrl: string;
 }
+
+export type EncryptedPayload = {
+  /*
+   * Initialization vector used for AES encryption
+   */
+  iv: string;
+  /**
+   * Authentication tag for integrity verification
+   */
+  authTag: string;
+  /**
+   * Base64-encoded encrypted data
+   */
+  encryptedData: string;
+};

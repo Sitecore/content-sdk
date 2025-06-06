@@ -44,6 +44,11 @@ steps:
 - task: NodeTool@0
   inputs:
     versionSpec: '22.x'
+# Keytar requires libsecret-1 for native bindings. This step ensures it can be built/loaded in CI.
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y libsecret-1-dev
+  displayName: 'Install system dependencies for keytar'
 - script: |
     yarn cache clean --all && yarn install --immutable
   displayName: 'yarn install - initial'
