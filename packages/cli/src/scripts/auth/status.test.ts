@@ -2,7 +2,7 @@
 import sinon from 'sinon';
 import { status, unitMock } from './status';
 
-describe.only('status command', () => {
+describe('status command', () => {
   let validateAndRenewAuthIfExpiredStub: sinon.SinonStub;
   let readTenantInfoStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
