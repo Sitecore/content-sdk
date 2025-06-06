@@ -14,6 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* `[create-sitecore-jss]`: Refactoring/Cleanup for scss files in SXA components ([#117](https://github.com/Sitecore/content-sdk/pull/117))
 * `[Content - Name TBD] Support`:
   - Introduced get taxonomy/taxonomies functionality on content client ([#99](https://github.com/Sitecore/content-sdk/pull/99)):
     - Introduced `getTaxonomy` and `getTaxonomies` methods on Content Client class
