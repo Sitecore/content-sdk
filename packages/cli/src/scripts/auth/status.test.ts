@@ -2,22 +2,23 @@
 import sinon from 'sinon';
 import { status, unitMock } from './status';
 
-describe('status command', () => {
-  let renewStub: sinon.SinonStub;
+describe.only('status command', () => {
+  let validateAndRenewAuthIfExpiredStub: sinon.SinonStub;
   let readTenantInfoStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
 
   beforeEach(() => {
+    validateAndRenewAuthIfExpiredStub = sinon.stub();
     consoleLogStub = sinon.stub(console, 'log');
   });
 
   afterEach(() => {
     sinon.restore();
   });
-
   it('should prompt login if no valid auth is found', async () => {
-    renewStub = sinon.stub().resolves(null);
-    unitMock({ renewAuthIfExpired: renewStub });
+    validateAndRenewAuthIfExpiredStub.resolves(null);
+    unitMock({ validateAndRenewAuthIfExpired: validateAndRenewAuthIfExpiredStub });
+    unitMock({ validateAndRenewAuthIfExpired: validateAndRenewAuthIfExpiredStub });
 
     await status.handler({} as any);
 
@@ -37,10 +38,10 @@ describe('status command', () => {
       baseUrl: 'https://sitecore.example.com',
     };
 
-    renewStub = sinon.stub().resolves({ tenantId: fakeTenantId });
+    validateAndRenewAuthIfExpiredStub = sinon.stub().resolves({ tenantId: fakeTenantId });
     readTenantInfoStub = sinon.stub().resolves(fakeTenantInfo);
     unitMock({
-      renewAuthIfExpired: renewStub,
+      validateAndRenewAuthIfExpired: validateAndRenewAuthIfExpiredStub,
       readTenantInfo: readTenantInfoStub,
     });
 

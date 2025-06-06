@@ -4,7 +4,8 @@ let { readTenantInfo, validateAndRenewAuthIfExpired } = auth;
 
 export const unitMock = (formModule: any) => {
   readTenantInfo = formModule.readTenantInfo || readTenantInfo;
-  validateAndRenewAuthIfExpired = formModule.renewAuthIfExpired || validateAndRenewAuthIfExpired;
+  validateAndRenewAuthIfExpired =
+    formModule.validateAndRenewAuthIfExpired || validateAndRenewAuthIfExpired;
 };
 
 export const status: CommandModule = {
