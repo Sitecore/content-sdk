@@ -8,7 +8,7 @@
 
 > **isDynamicPlaceholder**(`placeholder`): `boolean`
 
-Defined in: [packages/core/src/layout/utils.ts:90](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/layout/utils.ts#L90)
+Defined in: [packages/core/src/layout/utils.ts:90](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/layout/utils.ts#L90)
 
 Checks if the placeholder name is dynamic.
 

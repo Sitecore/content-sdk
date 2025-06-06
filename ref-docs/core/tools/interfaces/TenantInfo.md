@@ -6,7 +6,7 @@
 
 # Interface: TenantInfo
 
-Defined in: [packages/core/src/tools/auth/models.ts:71](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L71)
+Defined in: [packages/core/src/tools/auth/models.ts:71](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/models.ts#L71)
 
 Public metadata for a known tenant.
 
@@ -16,7 +16,7 @@ Public metadata for a known tenant.
 
 > **audience**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:91](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L91)
+Defined in: [packages/core/src/tools/auth/models.ts:91](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/models.ts#L91)
 
 OAuth2 audience (e.g., API base URL the token is intended for)
 
@@ -26,7 +26,7 @@ OAuth2 audience (e.g., API base URL the token is intended for)
 
 > **authority**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:95](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L95)
+Defined in: [packages/core/src/tools/auth/models.ts:95](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/models.ts#L95)
 
 Auth authority/issuer URL (e.g., Sitecore identity endpoint)
 
@@ -36,7 +36,7 @@ Auth authority/issuer URL (e.g., Sitecore identity endpoint)
 
 > **baseUrl**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:99](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L99)
+Defined in: [packages/core/src/tools/auth/models.ts:99](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/models.ts#L99)
 
 Base URL for the target Sitecore Content Management API
 
@@ -46,7 +46,7 @@ Base URL for the target Sitecore Content Management API
 
 > **clientId**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:87](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L87)
+Defined in: [packages/core/src/tools/auth/models.ts:87](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/models.ts#L87)
 
 Client ID associated with this tenant's authentication
 
@@ -56,7 +56,7 @@ Client ID associated with this tenant's authentication
 
 > **organizationId**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:83](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L83)
+Defined in: [packages/core/src/tools/auth/models.ts:83](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/models.ts#L83)
 
 Organization ID the tenant belongs to
 
@@ -66,7 +66,7 @@ Organization ID the tenant belongs to
 
 > **tenantId**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:75](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L75)
+Defined in: [packages/core/src/tools/auth/models.ts:75](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/models.ts#L75)
 
 Unique ID of the tenant
 
@@ -76,6 +76,6 @@ Unique ID of the tenant
 
 > **tenantName**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:79](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/models.ts#L79)
+Defined in: [packages/core/src/tools/auth/models.ts:79](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/models.ts#L79)
 
 Human-readable name of the tenant

@@ -26,6 +26,7 @@
 
 ## Type Aliases
 
+- [EncryptedPayload](type-aliases/EncryptedPayload.md)
 - [GenerateSitesConfig](type-aliases/GenerateSitesConfig.md)
 
 ## Functions

@@ -10,7 +10,10 @@
 
 - [clearActiveTenant](variables/clearActiveTenant.md)
 - [clientCredentialsFlow](variables/clientCredentialsFlow.md)
+- [decryptData](variables/decryptData.md)
+- [deleteKey](variables/deleteKey.md)
 - [deleteTenantAuthInfo](variables/deleteTenantAuthInfo.md)
+- [encryptData](variables/encryptData.md)
 - [getActiveTenant](variables/getActiveTenant.md)
 - [getAllTenantsInfo](variables/getAllTenantsInfo.md)
 - [readTenantAuthInfo](variables/readTenantAuthInfo.md)
@@ -20,7 +23,7 @@
 
 ## Functions
 
-- [renewAuthIfExpired](functions/renewAuthIfExpired.md)
 - [renewClientToken](functions/renewClientToken.md)
 - [setActiveTenant](functions/setActiveTenant.md)
+- [validateAndRenewAuthIfExpired](functions/validateAndRenewAuthIfExpired.md)
 - [validateAuthInfo](functions/validateAuthInfo.md)

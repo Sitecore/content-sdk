@@ -8,7 +8,7 @@
 
 > **validateAuthInfo**(`authInfo`): `boolean`
 
-Defined in: [packages/core/src/tools/auth/renewal.ts:16](https://github.com/Sitecore/content-sdk/blob/458187ff9fb374e734a531d840a9956b30fbb79e/packages/core/src/tools/auth/renewal.ts#L16)
+Defined in: [packages/core/src/tools/auth/renewal.ts:17](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/renewal.ts#L17)
 
 Validates whether a given auth config is still valid (i.e., not expired).
 
