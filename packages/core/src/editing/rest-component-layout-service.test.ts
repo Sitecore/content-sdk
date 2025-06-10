@@ -63,7 +63,7 @@ describe('RestComponentLayoutService', () => {
       },
     })
       .get(
-        '/layout/component?sitecoreContextId=test-context-id&item=123&uid=456&sc_site=supersite&sc_lang=en',
+        '/layout/component?sitecoreContextId=test-context-id&item=123&uid=456&sc_site=supersite&sc_lang=en'
       )
       .reply(200, () => defaultTestData);
 
