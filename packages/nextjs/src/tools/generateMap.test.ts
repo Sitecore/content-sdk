@@ -91,7 +91,7 @@ describe('generateMap', () => {
 
       expect(fs.writeFileSync).to.have.been.calledOnce;
       const [dest, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
-      expect(dest).to.equal('src/.sitecore');
+      expect(dest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
 
       expect(content).to.include(
         "import { BYOCWrapper, NextjsJssComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';"
@@ -134,8 +134,8 @@ describe('generateMap', () => {
 
     it('should use custom destination when provided', async () => {
       const paths = ['src/components'];
-      const customDest = 'custom/path/componentMap.ts';
-      await generateMap({ paths, destination: customDest });
+      const customDest = path.join(process.cwd(), 'custom/path', 'component-map.ts');
+      await generateMap({ paths, destination: 'custom/path' });
 
       expect(fs.writeFileSync).to.have.been.calledOnceWith(
         customDest,

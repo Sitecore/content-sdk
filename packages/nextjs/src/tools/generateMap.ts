@@ -58,7 +58,7 @@ export const matchPath = (componentPath: string, compare: string): boolean => {
  */
 export const generateMap = async ({
   paths,
-  destination = 'src/.sitecore',
+  destination = '.sitecore',
   exclude,
   packages,
 }: GenerateMapArgs): Promise<void> => {
@@ -73,8 +73,10 @@ export const generateMap = async ({
 
   const componentMapContent = mapTemplate(components, packages);
 
+  const componentMapFile = path.join(process.cwd(), destination, 'component-map.ts');
+
   try {
-    fs.writeFileSync(destination, componentMapContent, {
+    fs.writeFileSync(componentMapFile, componentMapContent, {
       encoding: 'utf8',
     });
   } catch (error) {
