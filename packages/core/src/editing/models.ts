@@ -12,7 +12,7 @@ export interface EditingRenderQueryParams {
   sc_itemid: string;
   sc_site: string;
   route: string;
-  mode: Exclude<LayoutServicePageState, 'normal'> | 'library';
+  mode: Exclude<LayoutServicePageState, 'normal'> | DesignLibraryMode;
   sc_layoutKind?: LayoutKind;
   sc_variant?: string;
   sc_version?: string;
@@ -30,7 +30,7 @@ export interface RenderComponentQueryParams {
   sc_renderingId: string;
   sc_uid: string;
   sc_site: string;
-  mode: 'library';
+  mode: DesignLibraryMode;
   sc_variant?: string;
   sc_version?: string;
 }
@@ -69,6 +69,20 @@ export type EditingPreviewData = {
 };
 
 /**
+ * Represents the mode of the Design Library.
+ */
+export enum DesignLibraryMode {
+  /**
+   * Normal mode
+   */
+  Normal = 'library',
+  /**
+   * Metadata mode
+   */
+  Metadata = 'library-metadata',
+}
+
+/**
  * Data for Design Library rendering mode
  */
 export interface DesignLibraryRenderPreviewData {
@@ -77,7 +91,7 @@ export interface DesignLibraryRenderPreviewData {
   renderingId: string;
   componentUid: string;
   language: string;
-  mode?: 'library';
+  mode?: DesignLibraryMode;
   variant?: string;
   version?: string;
   dataSourceId?: string;

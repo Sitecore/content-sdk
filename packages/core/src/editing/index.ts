@@ -22,6 +22,7 @@ export {
   MetadataKind,
   EditingPreviewData,
   DesignLibraryRenderPreviewData,
+  DesignLibraryMode,
 } from './models';
 export {
   addComponentUpdateHandler,
@@ -29,4 +30,5 @@ export {
   DesignLibraryStatusEvent,
   getDesignLibraryStatusEvent,
   getDesignLibraryScriptLink,
+  isDesignLibraryMode,
 } from './design-library';
