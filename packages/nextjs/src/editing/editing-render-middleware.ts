@@ -7,6 +7,7 @@ import {
   DesignLibraryRenderPreviewData,
   EditingPreviewData,
   PREVIEW_KEY,
+  isDesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { getJssEditingSecret } from '../utils/utils';
@@ -49,7 +50,7 @@ export const isDesignLibraryPreviewData = (
     typeof data === 'object' &&
     data !== null &&
     'mode' in data &&
-    (data as DesignLibraryRenderPreviewData).mode === 'library'
+    isDesignLibraryMode((data as DesignLibraryRenderPreviewData).mode)
   );
 };
 
@@ -146,8 +147,9 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       'sc_lang',
       'mode',
     ];
-    const requiredQueryParams =
-      mode === 'library' ? componentRequiredParams : defaultRequiredParams;
+    const requiredQueryParams = isDesignLibraryMode(mode)
+      ? componentRequiredParams
+      : defaultRequiredParams;
 
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
 
@@ -162,7 +164,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       });
     }
 
-    if (mode === 'library') {
+    if (isDesignLibraryMode(mode)) {
       res.setPreviewData(
         {
           itemId: query.sc_itemid,
@@ -170,7 +172,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           renderingId: query.sc_renderingId,
           language: query.sc_lang,
           site: query.sc_site,
-          mode: 'library',
+          mode,
           dataSourceId: query.dataSourceId,
           version: query.sc_version,
         } as DesignLibraryRenderPreviewData,

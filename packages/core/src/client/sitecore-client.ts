@@ -418,6 +418,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       renderingId,
       dataSourceId,
       version,
+      mode,
     } = designLibData;
 
     const componentData = await this.componentService.fetchComponentData({
@@ -428,6 +429,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       renderingId,
       dataSourceId,
       version,
+      mode,
     });
 
     const dictionaryData = await this.editingService.fetchDictionaryData(
