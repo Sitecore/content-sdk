@@ -104,9 +104,9 @@ Our versioning strategy is as follows:
     No longer required or used.
   - Removed `GRAPH_QL_SERVICE_RETRIES` environment variable
     This is not environment-specific and should be defined in the configuration instead.
-  - Removed `DISABLE_SSG_FETCH` environment variable
+  - Removed `GENERATE_STATIC_PATHS` environment variable
     - In XM Cloud, this is set to `true` by default as the application runs as an editing host.  
-    - It can still be configured via the `DISABLE_SSG_FETCH` environment variable or the `disableStaticPaths` config property if needed.
+    - It can still be configured via the `GENERATE_STATIC_PATHS` environment variable or the `disableStaticPaths` config property if needed.
     - By default, it is set to `false` in the configuration.
 * `[core]` `[nextjs]` Introduced `getRobots` method in `SitecoreClient` and a new `RobotsMiddleware` for Next.js API routes ([#83](https://github.com/Sitecore/content-sdk/pull/83))
   - The `getRobots(siteName, fetchOptions?)` method centralizes logic for fetching `robots.txt` content.

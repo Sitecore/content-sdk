@@ -252,11 +252,11 @@ describe('defineConfig', () => {
 
     describe('environment variable is set', () => {
       before(() => {
-        process.env.NEXT_PUBLIC_SITECORE_SITE_NAME = 'next-public-sitecore-site-name';
+        process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME = 'next-public-sitecore-site-name';
       });
 
       after(() => {
-        delete process.env.NEXT_PUBLIC_SITECORE_SITE_NAME;
+        delete process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME;
       });
 
       it('should use the value from the config if present', () => {
@@ -431,11 +431,11 @@ describe('defineConfig', () => {
 
     describe('environment variable is set', () => {
       afterEach(() => {
-        delete process.env.DISABLE_SSG_FETCH;
+        delete process.env.GENERATE_STATIC_PATHS;
       });
 
-      it('should return true when DISABLE_SSG_FETCH is set to true', () => {
-        process.env.DISABLE_SSG_FETCH = 'true';
+      it('should return true when GENERATE_STATIC_PATHS is set to true', () => {
+        process.env.GENERATE_STATIC_PATHS = 'true';
 
         defineConfigModule.defineConfig({
           disableStaticPaths: false,
@@ -445,8 +445,8 @@ describe('defineConfig', () => {
         expect(resultConfig.disableStaticPaths).to.equal(true);
       });
 
-      it('should return false when DISABLE_SSG_FETCH is set to false', () => {
-        process.env.DISABLE_SSG_FETCH = 'false';
+      it('should return false when GENERATE_STATIC_PATHS is set to false', () => {
+        process.env.GENERATE_STATIC_PATHS = 'false';
 
         defineConfigModule.defineConfig({
           disableStaticPaths: true,
@@ -456,8 +456,8 @@ describe('defineConfig', () => {
         expect(resultConfig.disableStaticPaths).to.equal(false);
       });
 
-      it('should return false when DISABLE_SSG_FETCH is set to any other value', () => {
-        process.env.DISABLE_SSG_FETCH = 'some-other-value';
+      it('should return false when GENERATE_STATIC_PATHS is set to any other value', () => {
+        process.env.GENERATE_STATIC_PATHS = 'some-other-value';
 
         defineConfigModule.defineConfig({
           disableStaticPaths: true,

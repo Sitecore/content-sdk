@@ -28,7 +28,7 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
         apiHost: config?.api?.local?.apiHost || process.env.NEXT_PUBLIC_SITECORE_API_HOST || '',
       },
     },
-    defaultSite: config?.defaultSite || process.env.NEXT_PUBLIC_SITECORE_SITE_NAME || '',
+    defaultSite: config?.defaultSite || process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME || '',
     defaultLanguage: config?.defaultLanguage || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
     multisite: {
       ...config?.multisite,
@@ -40,8 +40,8 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
       scope: config?.personalize?.scope || process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,
     },
     disableStaticPaths:
-      process.env.DISABLE_SSG_FETCH !== undefined
-        ? process.env.DISABLE_SSG_FETCH.toLowerCase() === 'true'
+      process.env.GENERATE_STATIC_PATHS !== undefined
+        ? process.env.GENERATE_STATIC_PATHS.toLowerCase() === 'true'
         : config?.disableStaticPaths ?? false,
   };
 };
@@ -53,7 +53,7 @@ export type SitecoreConfigInput = SitecoreConfigInputCore & {
   /**
    * Indicates whether SSG `getStaticPaths` pre-render any pages.
    *
-   * Set the environment variable `DISABLE_SSG_FETCH=true`
+   * Set the environment variable `GENERATE_STATIC_PATHS=true`
    * to disable static paths generation and enable full ISR (Incremental Static Regeneration) flow.
    *
    * By default, this is set to `false`.
