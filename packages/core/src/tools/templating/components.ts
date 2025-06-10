@@ -10,14 +10,20 @@ export interface ComponentFile {
 }
 
 /**
- * Describes a package and components to be imported
+ * Definition for custom components to be included in component map.
+ * Use this to define components imported from modules/dependencies/packages
+ * @typedef  PackageDefinition
+ * @property {string} name - Name of the import.
+ * @property {object} importInfo - Information about how to import the package.
+ * @property {string} importInfo.importFrom - The path from which to import the component(s).
+ * @property {string[] | '*'} importInfo.imports - The specific named components to import from the package, or set this to '*' to allow SXA variants support for component.
  */
 export interface PackageDefinition {
   name: string;
-  components: {
-    moduleName: string;
-    componentName: string;
-  }[];
+  importInfo: {
+    importFrom: string;
+    imports: string[] | '*';
+  };
 }
 
 /**

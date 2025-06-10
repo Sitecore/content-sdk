@@ -214,6 +214,9 @@ export type SitecoreCliConfigInput = {
      */
     templates?: ScaffoldTemplate[];
   };
+  generateComponentMap?: {
+    commands?: Array<() => Promise<void> | void>;
+  };
 };
 
 /**

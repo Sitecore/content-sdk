@@ -1,23 +1,10 @@
-import { ComponentFile, getComponentList } from '@sitecore-content-sdk/core/tools';
+import {
+  ComponentFile,
+  getComponentList,
+  PackageDefinition,
+} from '@sitecore-content-sdk/core/tools';
 import path from 'path';
 import fs from 'fs';
-
-/**
- * Definition for custom components to be included in component map.
- * Use this to define components imported from modules/dependencies/packages
- * @typedef  PackageDefinition
- * @property {string} name - Name of the import.
- * @property {object} importInfo - Information about how to import the package.
- * @property {string} importInfo.importFrom - The path from which to import the component(s).
- * @property {string[] | '*'} importInfo.imports - The specific named components to import from the package, or set this to '*' to allow SXA variants support for component.
- */
-export interface PackageDefinition {
-  name: string;
-  importInfo: {
-    importFrom: string;
-    imports: string[] | '*';
-  };
-}
 
 /**
  * Arguments for the generateMap function.
@@ -56,33 +43,38 @@ export const matchPath = (componentPath: string, compare: string): boolean => {
  * Generate and write componentMap.ts file based on provided params.
  * @param {GenerateMapArgs} param0 params for generateMap
  */
-export const generateMap = async ({
+export const generateMap = ({
   paths,
   destination = '.sitecore',
   exclude,
   packages,
-}: GenerateMapArgs): Promise<void> => {
-  const components = paths.reduce<ComponentFile[]>((result, componentPath) => {
-    for (const exclusion of exclude || []) {
-      if (matchPath(componentPath, exclusion)) {
-        return result;
+}: GenerateMapArgs) => {
+  return () => {
+    const components = paths.reduce<ComponentFile[]>((result, componentPath) => {
+      for (const exclusion of exclude || []) {
+        if (matchPath(componentPath, exclusion)) {
+          return result;
+        }
       }
+      return result.concat(...getComponentList(componentPath));
+    }, []);
+
+    const componentMapContent = mapTemplate(components, packages);
+
+    const componentMapFile = path.join(process.cwd(), destination, 'component-map.ts');
+
+    try {
+      fs.writeFileSync(componentMapFile, componentMapContent, {
+        encoding: 'utf8',
+      });
+    } catch (error) {
+      console.error(
+        `Component Map generation failed. Error writing to file ${destination}:`,
+        error
+      );
+      throw error;
     }
-    return result.concat(...getComponentList(componentPath));
-  }, []);
-
-  const componentMapContent = mapTemplate(components, packages);
-
-  const componentMapFile = path.join(process.cwd(), destination, 'component-map.ts');
-
-  try {
-    fs.writeFileSync(componentMapFile, componentMapContent, {
-      encoding: 'utf8',
-    });
-  } catch (error) {
-    console.error(`Component Map generation failed. Error writing to file ${destination}:`, error);
-    throw error;
-  }
+  };
 };
 
 const mapTemplate = (components: ComponentFile[], packages?: PackageDefinition[]): string => {

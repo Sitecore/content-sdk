@@ -2,8 +2,9 @@
 import path from 'path';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { generateMap, matchPath, PackageDefinition } from './generateMap';
+import { generateMap, matchPath } from './generateMap';
 import fs from 'fs';
+import { PackageDefinition } from '@sitecore-content-sdk/core/tools';
 import * as coreTools from '@sitecore-content-sdk/core/tools';
 import { ComponentFile } from '@sitecore-content-sdk/core/src/tools';
 
@@ -87,7 +88,7 @@ describe('generateMap', () => {
 
     it('should write componentMap.ts file with components from "paths" parameter', async () => {
       const paths = ['src/components'];
-      await generateMap({ paths });
+      generateMap({ paths })();
 
       expect(fs.writeFileSync).to.have.been.calledOnce;
       const [dest, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
@@ -112,7 +113,7 @@ describe('generateMap', () => {
 
     it('should write componentMap.ts file with components from "paths" and "packages" parameters, when provided', async () => {
       const paths = ['src/components'];
-      await generateMap({ paths, packages: fakePackages });
+      generateMap({ paths, packages: fakePackages })();
 
       expect(fs.writeFileSync).to.have.been.calledOnce;
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
@@ -135,7 +136,7 @@ describe('generateMap', () => {
     it('should use custom destination when provided', async () => {
       const paths = ['src/components'];
       const customDest = path.join(process.cwd(), 'custom/path', 'component-map.ts');
-      await generateMap({ paths, destination: 'custom/path' });
+      generateMap({ paths, destination: 'custom/path' })();
 
       expect(fs.writeFileSync).to.have.been.calledOnceWith(
         customDest,
@@ -149,7 +150,7 @@ describe('generateMap', () => {
       const paths = ['src/components'];
       let errorCaught = null;
       try {
-        await generateMap({ paths });
+        generateMap({ paths })();
       } catch (err) {
         errorCaught = err;
       }
@@ -168,7 +169,7 @@ describe('generateMap', () => {
           },
         },
       ];
-      await generateMap({ paths, packages: wildcardPackages });
+      generateMap({ paths, packages: wildcardPackages })();
 
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import * as WildcardLib from '@wildcard/lib';");
@@ -194,7 +195,7 @@ describe('generateMap', () => {
           },
         },
       ];
-      await generateMap({ paths, packages: namedPackages });
+      generateMap({ paths, packages: namedPackages })();
 
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import { NamedA, NamedB } from '@named/lib';");

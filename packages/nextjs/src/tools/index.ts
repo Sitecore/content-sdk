@@ -9,3 +9,5 @@ export {
   generatePlugins,
   ModuleType,
 } from '@sitecore-content-sdk/core/tools';
+
+export { matchPath, generateMap, GenerateMapArgs } from './generateMap';
