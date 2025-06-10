@@ -6,7 +6,7 @@
 
 # Interface: DictionaryPhrases
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:63](https://github.com/Sitecore/content-sdk/blob/ccaca47e1d3be54d4807fac59220b223d5ccd97e/packages/core/src/i18n/graphql-dictionary-service.ts#L63)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:63](https://github.com/Sitecore/content-sdk/blob/c391ebbca652ccbfd2e68ccb92fd93be8ee15d1c/packages/core/src/i18n/graphql-dictionary-service.ts#L63)
 
 Object model for Sitecore dictionary phrases
 
