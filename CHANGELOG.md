@@ -14,7 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* `[create-sitecore-jss]`: Refactoring/Cleanup for scss files in SXA components ([#117](https://github.com/Sitecore/content-sdk/pull/117))
+* `[create-sitecore-jss]`: Refactoring/Cleanup for scss files in SXA components ([#119](https://github.com/Sitecore/content-sdk/pull/119))
 * `[core]` [DesignLibrary] Call partial layout rendering endpoint via Envoy and ContextID ([#111](https://github.com/Sitecore/content-sdk/pull/111))
 
 ### 🛠 Breaking Changes
