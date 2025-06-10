@@ -68,17 +68,11 @@ export type EditingPreviewData = {
   layoutKind?: LayoutKind;
 };
 
-/**
- * Represents the mode of the Design Library.
- */
+/** Represents the mode of the Design Library */
 export enum DesignLibraryMode {
-  /**
-   * Normal mode
-   */
+  /** Normal mode */
   Normal = 'library',
-  /**
-   * Metadata mode
-   */
+  /** Metadata mode */
   Metadata = 'library-metadata',
 }
 
