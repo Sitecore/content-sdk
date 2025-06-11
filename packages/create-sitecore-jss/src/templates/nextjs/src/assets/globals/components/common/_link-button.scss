@@ -1,0 +1,16 @@
+@import "@globals/abstracts/mixins";
+
+.link-button {
+    @import "@globals/base/links/";
+}
+// Promo button
+.promo.link-button {
+    a {
+        @extend .button-default;
+    }
+}
+.link.link-button {
+    .is-empty-hint, .field-link span, a {
+        @include default-link-button();
+    }
+}
