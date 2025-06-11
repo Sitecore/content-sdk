@@ -71,6 +71,10 @@ Our versioning strategy is as follows:
 * `[nextjs]` `defineCliConfig` import has been moved to `@sitecore-content-sdk/nextjs/config-cli` submodule ([#128](https://github.com/Sitecore/content-sdk/pull/128)).
 * `[core][nextjs][cli]` Re-introduce component map generation logic ([#124](https://github.com/Sitecore/content-sdk/pull/124) [#139](https://github.com/Sitecore/content-sdk/pull/139))
 * `[create-content-sdk-app]` Remove SXA components and style files from default `nextjs` template ([#139](https://github.com/Sitecore/content-sdk/pull/139))
+* `[core]` `[nextjs]` `[templates/nextjs]` Environment variables' naming has been updated ([#120](https://github.com/Sitecore/content-sdk/pull/120))
+  * `JSS_EDITING_SECRET` → `SITECORE_EDITING_SECRET`
+  * `NEXT_PUBLIC_SITECORE_SITE_NAME` → `NEXT_PUBLIC_DEFAULT_SITE_NAME`
+  * `SITECORE_SITE_NAME` → `DEFAULT_SITE_NAME`
 
 ### 🐛 Bug Fixes
 
