@@ -8,7 +8,7 @@
 
 > **defineConfig**(`config`): `Required`
 
-Defined in: [packages/core/src/config/define-config.ts:137](https://github.com/Sitecore/content-sdk/blob/c391ebbca652ccbfd2e68ccb92fd93be8ee15d1c/packages/core/src/config/define-config.ts#L137)
+Defined in: [packages/core/src/config/define-config.ts:137](https://github.com/Sitecore/content-sdk/blob/1690917316a855b705382514afe809da648c7971/packages/core/src/config/define-config.ts#L137)
 
 Accepts a SitecoreConfigInput object and returns full sitecore configuration
 
