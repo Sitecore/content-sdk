@@ -74,7 +74,7 @@ Our versioning strategy is as follows:
 * `[core]` `[nextjs]` `[templates/nextjs]` Environment variables' naming has been updated ([#120](https://github.com/Sitecore/content-sdk/pull/120))
   * `JSS_EDITING_SECRET` → `SITECORE_EDITING_SECRET`
   * `NEXT_PUBLIC_SITECORE_SITE_NAME` → `NEXT_PUBLIC_DEFAULT_SITE_NAME`
-  * `SITECORE_SITE_NAME` → `DEFAULT_SITE_NAME`
+  * `DISABLE_SSG_FETCH` → `GENERATE_STATIC_PATHS`
 
 ### 🐛 Bug Fixes
 
