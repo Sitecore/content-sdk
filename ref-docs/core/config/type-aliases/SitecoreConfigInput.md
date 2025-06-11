@@ -143,7 +143,7 @@ configure local memory caching for Dictionary Service requests
 Defined in: [packages/core/src/config/models.ts:82](https://github.com/Sitecore/content-sdk/blob/7e22e55dd6d6099199b3ecca0f822efd1793c967/packages/core/src/config/models.ts#L82)
 
 Editing secret required to support Sitecore editing and preview functionality.
-by default set by the SITECORE_EDITING_SECRET environment variable
+by default set by the JSS_EDITING_SECRET environment variable
 
 ***
 
