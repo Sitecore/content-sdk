@@ -1,26 +1,12 @@
 import {
   ComponentFile,
+  GenerateMapArgs,
   GenerateMapFunction,
   getComponentList,
   PackageImport,
 } from '@sitecore-content-sdk/core/tools';
 import path from 'path';
 import fs from 'fs';
-
-/**
- * Arguments for the generateMap function.
- * @typedef GenerateMapArgs
- * @property {string[]} paths - Array of component paths to include in component map.
- * @property {string} [destination='src/.sitecore'] - Destination folder path for the generated map.
- * @property {PackageDefinition[]} [packages] - Optional array of package definitions to include in the map.
- * @property {string[]} [exclude] - Optional array of paths to exclude from the map.
- */
-export type GenerateMapArgs = {
-  paths: string[];
-  destination?: string;
-  packages?: PackageImport[];
-  exclude?: string[];
-};
 
 /**
  * Generate and write componentMap.ts file based on provided params.
@@ -31,6 +17,7 @@ export const generateMap: GenerateMapFunction = ({
   destination = '.sitecore',
   exclude,
   packages,
+  mapTemplate = nextjsMapTemplate,
 }: GenerateMapArgs) => {
   const components = paths.reduce<ComponentFile[]>((result, componentPath) => {
     return result.concat(...getComponentList(componentPath, exclude));
@@ -50,7 +37,10 @@ export const generateMap: GenerateMapFunction = ({
   }
 };
 
-const mapTemplate = (components: ComponentFile[], packages?: PackageImport[]): string => {
+const nextjsMapTemplate = (
+  components: ComponentFile[],
+  packageImports?: PackageImport[]
+): string => {
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];
 
@@ -61,7 +51,7 @@ const mapTemplate = (components: ComponentFile[], packages?: PackageImport[]): s
     componentMapEntries.push(`['${component.moduleName}', ${component.moduleName}]`);
   });
 
-  packages?.forEach((packageEntry) => {
+  packageImports?.forEach((packageEntry) => {
     if (packageEntry.importInfo.namedImports) {
       namedImports.push(
         `import { ${packageEntry.importInfo.namedImports.join(', ')} } from '${

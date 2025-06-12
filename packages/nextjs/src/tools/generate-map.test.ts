@@ -81,6 +81,75 @@ describe('generateMap', () => {
       expect(content).to.include('export default componentMap;');
     });
 
+    it('should use template from custom componentMap function, when provided', async () => {
+      const paths = ['src/components'];
+      const customTemplate = sinon.stub().returns('// custom template output');
+      const fakePackages = [
+        {
+          importName: 'CustomLib',
+          importInfo: {
+            importFrom: '@custom/lib',
+          },
+        },
+      ];
+      generateMap({ paths, packages: fakePackages, mapTemplate: customTemplate });
+
+      expect(customTemplate).to.have.been.calledOnce;
+      expect(customTemplate.getCall(0).args[0]).to.deep.equal(fakeComponentList);
+      expect(customTemplate.getCall(0).args[1]).to.deep.equal(fakePackages);
+      expect(fs.writeFileSync).to.have.been.calledOnce;
+      const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+      expect(content).to.equal('// custom template output');
+    });
+
+    it('should generate an empty component map if no components are found', async () => {
+      getComponentListStub.returns([]);
+      const paths = ['src/components'];
+      generateMap({ paths });
+
+      expect(fs.writeFileSync).to.have.been.calledOnce;
+      const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+      expect(content).to.include(
+        'export const componentMap = new Map<string, NextjsJssComponent>('
+      );
+      expect(content).to.include("['BYOCWrapper', BYOCWrapper],");
+      expect(content).to.include("['FEaaSWrapper', FEaaSWrapper],");
+      expect(content).to.include("['Form', Form],");
+    });
+
+    it('should handle multiple paths and merge their components', async () => {
+      const paths = ['src/components', 'src/other-components'];
+      // Simulate different components for each path
+      getComponentListStub.onFirstCall().returns([
+        {
+          componentName: 'Button',
+          moduleName: 'Button',
+          path: './src/components/Button',
+        },
+      ]);
+      getComponentListStub.onSecondCall().returns([
+        {
+          componentName: 'Card',
+          moduleName: 'Card',
+          path: './src/other-components/Card',
+        },
+      ]);
+      generateMap({ paths });
+
+      expect(getComponentListStub).to.have.been.calledTwice;
+      const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+      expect(content).to.include("import * as Button from './src/components/Button';");
+      expect(content).to.include("import * as Card from './src/other-components/Card';");
+      expect(content).to.include("['Button', Button],");
+      expect(content).to.include("['Card', Card],");
+    });
+
+    it('should not fail if packages is undefined', async () => {
+      const paths = ['src/components'];
+      expect(() => generateMap({ paths, packages: undefined })).to.not.throw();
+      expect(fs.writeFileSync).to.have.been.calledOnce;
+    });
+
     it('should write componentMap.ts file with components from "paths" and "packages" parameters, when provided', async () => {
       const paths = ['src/components'];
       generateMap({ paths, packages: fakePackages });
