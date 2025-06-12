@@ -1,5 +1,6 @@
 @import "@globals/abstracts/mixins";
 @import "@globals/abstracts/vars";
+@import "@globals/components/navigation/";
 
 .navigation {
   background: $nav-bg;
@@ -48,4 +49,3 @@
       padding-left: 10px;
   }
 }
-@import "@globals/components/navigation/";
