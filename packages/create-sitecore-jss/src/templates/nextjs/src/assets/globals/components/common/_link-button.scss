@@ -1,8 +1,6 @@
 @import "@globals/abstracts/mixins";
+@import "@globals/base/links/";
 
-.link-button {
-    @import "@globals/base/links/";
-}
 // Promo button
 .promo.link-button {
     a {

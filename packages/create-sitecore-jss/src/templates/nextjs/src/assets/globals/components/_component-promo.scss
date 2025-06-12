@@ -1,5 +1,6 @@
 @import "@globals/abstracts/vars";
 @import "@globals/abstracts/mixins";
+@import "@globals/base/richtext/richtext";
 
 .promo {
     background: $promo-bg;
@@ -37,6 +38,5 @@
             margin-bottom: 10px;
         }
     }
-    @import "@globals/base/richtext/richtext";
 }
 

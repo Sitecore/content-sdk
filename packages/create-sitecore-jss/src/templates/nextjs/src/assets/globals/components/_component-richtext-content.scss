@@ -1,5 +1,6 @@
 @import "@globals/abstracts/vars";
 @import "@globals/abstracts/mixins";
+@import "@globals/base/richtext";
 
 .content, .rich-text {
     border: $rich-content-border;
@@ -9,6 +10,5 @@
     * {
         max-width: 100%;
     }
-    @import "@globals/base/richtext";
 }
 
