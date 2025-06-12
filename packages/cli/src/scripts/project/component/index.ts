@@ -18,6 +18,7 @@ export function builder(yargs: Argv) {
         .demandCommand(1, 'You need to specify a command to run');
 
       _yargs = scaffold.builder(_yargs as any);
+      _yargs = generateMap.builder(_yargs as any);
 
       return _yargs;
     },

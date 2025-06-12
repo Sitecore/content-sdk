@@ -7,7 +7,7 @@ import loadCliConfig from '../../../utils/load-config';
  */
 export function builder(yargs: Argv<GenerateMapCliArgs>) {
   return yargs.command<GenerateMapCliArgs>(
-    'generate-map --paths <path1> <path2>',
+    'generate-map',
     'Generates component map based on provided paths',
     args,
     handler
