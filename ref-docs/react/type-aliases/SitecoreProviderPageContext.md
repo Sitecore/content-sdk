@@ -8,7 +8,7 @@
 
 > **SitecoreProviderPageContext** = [`LayoutServiceContext`](../interfaces/LayoutServiceContext.md) & `object`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:50](https://github.com/Sitecore/content-sdk/blob/1690917316a855b705382514afe809da648c7971/packages/react/src/components/SitecoreProvider.tsx#L50)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:50](https://github.com/Sitecore/content-sdk/blob/470be402934dbc14c631d24f46582617f7ea8694/packages/react/src/components/SitecoreProvider.tsx#L50)
 
 The page context provided by the SitecoreProvider.
 
