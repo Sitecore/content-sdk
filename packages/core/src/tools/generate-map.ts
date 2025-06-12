@@ -8,7 +8,7 @@ export type GenerateMapFunction = (args: GenerateMapArgs) => void;
  * @property {string[]} paths - Array of component paths to include in component map.
  * @property {string} [destination='src/.sitecore'] - Destination folder path for the generated map.
  * @property {PackageDefinition[]} [packages] - Optional array of package definitions to include in the map.
- * @property {string[]} [exclude] - Optional array of paths to exclude from the map.
+ * @property {string[]} [exclude] - Optional array of glob paths to exclude from the map.
  * @property {function} [mapTemplate] - Optional custom template function to generate the component map content.
  */
 export type GenerateMapArgs = {
