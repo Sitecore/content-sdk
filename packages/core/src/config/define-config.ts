@@ -116,16 +116,29 @@ const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): Sit
 };
 
 const validateConfig = (config: SitecoreConfigInput) => {
-  if (
-    !config.api?.edge?.contextId &&
-    (!config?.api?.local?.apiHost || !config?.api?.local?.apiKey)
-  ) {
-    // consider client-side usecase
-    if (!config.api?.edge?.clientContextId) {
-      throw new Error(
-        'Configuration error: either context ID or API key and host must be specified in sitecore.config'
-      );
-    }
+  // Skip validation in browser - only validate on server side
+  if (typeof window !== 'undefined') {
+    return; // We're in the browser, skip validation
+  }
+
+  const hasEdgeContextId = !!config.api?.edge?.contextId;
+  const hasLocalApi = !!(config?.api?.local?.apiHost && config?.api?.local?.apiKey);
+  const hasClientContextId = !!config.api?.edge?.clientContextId;
+
+  // Only validate on server-side where we have access to server env vars
+  if (!hasEdgeContextId && !hasLocalApi && !hasClientContextId) {
+    throw new Error(
+      'Configuration error: at least one API configuration must be specified: ' +
+        'contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
+    );
+  }
+
+  // Warn if middleware features might not work (optional warning)
+  if (!hasEdgeContextId && !hasClientContextId && hasLocalApi) {
+    console.warn(
+      'Warning: Redirects and Personalization middleware require Edge API configuration. ' +
+        'Consider setting SITECORE_EDGE_CONTEXT_ID or NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID.'
+    );
   }
 };
 

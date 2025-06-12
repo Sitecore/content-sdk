@@ -21,6 +21,11 @@ export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
       endpoint: `${options.api.local.apiHost}${options.api.local.path}`,
       apiKey: options.api.local.apiKey,
     };
+  } else if (typeof window !== 'undefined') {
+    // In browser, don't throw error - assume server-side config is valid
+    clientConfig = {
+      endpoint: '/api/graphql', // dummy endpoint for browser
+    };
   } else {
     throw new Error(
       'Please configure and use either your sitecoreEdgeContextId, or your graphQLEndpoint and sitecoreApiKey.'
