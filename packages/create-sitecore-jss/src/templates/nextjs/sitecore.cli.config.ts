@@ -11,7 +11,7 @@ export default defineCliConfig({
       }),
     ],
   },
-  generateComponentMap: {
+  componentMap: {
     args: {
       paths: ['src/components'],
     },

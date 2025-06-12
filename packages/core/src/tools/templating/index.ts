@@ -1,3 +1,3 @@
-export { ComponentFile, PackageImport, getComponentList } from './components';
+export { ComponentFile, ComponentImport, getComponentList } from './components';
 export { PluginDefinition, generatePlugins, ModuleType } from './plugins';
 export { matchPath } from './utils';

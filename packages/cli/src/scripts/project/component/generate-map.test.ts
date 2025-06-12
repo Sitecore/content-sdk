@@ -28,13 +28,13 @@ describe('generate-map CLI', () => {
     generateMapModule.handler({});
     expect(consoleErrorStub.calledOnce).to.be.true;
     expect(consoleErrorStub.firstCall.args[0]).to.match(
-      /The `sitecore.cli.config` file is missing a `generateComponentMap` configuration. Please add it to use this command./
+      /The `sitecore.cli.config` file is missing a `componentMap` configuration. Please add it to use this command./
     );
   });
 
   it('should use custom config when provided', () => {
     const fakeConfig = {
-      generateComponentMap: {
+      componentMap: {
         generator: sinon.stub(),
         args: { paths: ['src'], destination: 'dest', packages: [], exclude: [] },
       },
@@ -47,7 +47,7 @@ describe('generate-map CLI', () => {
   it('should launch watch function when watch is true', () => {
     const generatorStub = sinon.stub();
     const fakeConfig = {
-      generateComponentMap: {
+      componentMap: {
         generator: generatorStub,
         args: { paths: ['src'], destination: 'dest', packages: [], exclude: [] },
       },
@@ -63,7 +63,7 @@ describe('generate-map CLI', () => {
     const generatorStub = sinon.stub();
     const args = { paths: ['src'], destination: 'dest', packages: ['pkg'], exclude: ['ex'] };
     const fakeConfig = {
-      generateComponentMap: {
+      componentMap: {
         generator: generatorStub,
         args,
       },

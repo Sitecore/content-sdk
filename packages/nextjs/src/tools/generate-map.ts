@@ -3,7 +3,7 @@ import {
   GenerateMapArgs,
   GenerateMapFunction,
   getComponentList,
-  PackageImport,
+  ComponentImport,
 } from '@sitecore-content-sdk/core/tools';
 import path from 'path';
 import fs from 'fs';
@@ -19,9 +19,7 @@ export const generateMap: GenerateMapFunction = ({
   packages,
   mapTemplate = nextjsMapTemplate,
 }: GenerateMapArgs) => {
-  const components = paths.reduce<ComponentFile[]>((result, componentPath) => {
-    return result.concat(...getComponentList(componentPath, exclude));
-  }, []);
+  const components = getComponentList(paths, exclude);
 
   const componentMapContent = mapTemplate(components, packages);
 
@@ -39,7 +37,7 @@ export const generateMap: GenerateMapFunction = ({
 
 const nextjsMapTemplate = (
   components: ComponentFile[],
-  packageImports?: PackageImport[]
+  packageImports?: ComponentImport[]
 ): string => {
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];

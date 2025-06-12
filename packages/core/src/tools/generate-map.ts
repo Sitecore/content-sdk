@@ -1,4 +1,4 @@
-import { ComponentFile, PackageImport } from './templating';
+import { ComponentFile, ComponentImport } from './templating';
 
 export type GenerateMapFunction = (args: GenerateMapArgs) => void;
 
@@ -14,7 +14,7 @@ export type GenerateMapFunction = (args: GenerateMapArgs) => void;
 export type GenerateMapArgs = {
   paths: string[];
   destination?: string;
-  packages?: PackageImport[];
+  packages?: ComponentImport[];
   exclude?: string[];
-  mapTemplate?: (components: ComponentFile[], packages?: PackageImport[]) => string;
+  mapTemplate?: (components: ComponentFile[], packages?: ComponentImport[]) => string;
 };

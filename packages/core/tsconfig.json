@@ -26,6 +26,7 @@
     "feaas.d.ts",
     "config/cli.d.ts",
     "src/**/*.test.ts",
-    "src/test-data/*"
+    "src/test-data/*",
+    "src/tools/templating/test-data/*",
   ]
 }

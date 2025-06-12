@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { generateMap } from './generate-map';
 import fs from 'fs';
-import { PackageImport } from '@sitecore-content-sdk/core/tools';
+import { ComponentImport } from '@sitecore-content-sdk/core/tools';
 import * as coreTools from '@sitecore-content-sdk/core/tools';
 import { ComponentFile } from '@sitecore-content-sdk/core/src/tools';
 
@@ -25,7 +25,7 @@ describe('generateMap', () => {
       },
     ];
 
-    const fakePackages: PackageImport[] = [
+    const fakePackages: ComponentImport[] = [
       {
         importName: 'MyLib',
         importInfo: {
@@ -120,14 +120,12 @@ describe('generateMap', () => {
     it('should handle multiple paths and merge their components', async () => {
       const paths = ['src/components', 'src/other-components'];
       // Simulate different components for each path
-      getComponentListStub.onFirstCall().returns([
+      getComponentListStub.returns([
         {
           componentName: 'Button',
           moduleName: 'Button',
           path: './src/components/Button',
         },
-      ]);
-      getComponentListStub.onSecondCall().returns([
         {
           componentName: 'Card',
           moduleName: 'Card',
@@ -136,7 +134,7 @@ describe('generateMap', () => {
       ]);
       generateMap({ paths });
 
-      expect(getComponentListStub).to.have.been.calledTwice;
+      expect(getComponentListStub).to.have.been.calledOnce;
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import * as Button from './src/components/Button';");
       expect(content).to.include("import * as Card from './src/other-components/Card';");
@@ -203,7 +201,7 @@ describe('generateMap', () => {
 
     it('should import components from "packages" as wildcard when namedImports are not specified', async () => {
       const paths = ['src/components'];
-      const wildcardPackages: PackageImport[] = [
+      const wildcardPackages: ComponentImport[] = [
         {
           importName: 'WildcardLib',
           importInfo: {
@@ -223,7 +221,7 @@ describe('generateMap', () => {
 
     it('should use named component imports when "packages" contain them', async () => {
       const paths = ['src/components'];
-      const namedPackages: PackageImport[] = [
+      const namedPackages: ComponentImport[] = [
         {
           importName: 'NamedLib',
           importInfo: {

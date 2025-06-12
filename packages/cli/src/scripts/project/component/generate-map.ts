@@ -55,14 +55,14 @@ export function args(yargs: Argv<GenerateMapCliArgs>) {
  */
 export function handler(argv: GenerateMapCliArgs) {
   const cliConfig = loadCliConfig(argv.config);
-  if (!cliConfig.generateComponentMap) {
+  if (!cliConfig.componentMap) {
     console.error(
-      'The `sitecore.cli.config` file is missing a `generateComponentMap` configuration. Please add it to use this command.'
+      'The `sitecore.cli.config` file is missing a `componentMap` configuration. Please add it to use this command.'
     );
     return;
   }
-  const componentMapGenerator = cliConfig.generateComponentMap.generator;
-  const { paths, destination, packages, exclude } = cliConfig.generateComponentMap.args;
+  const componentMapGenerator = cliConfig.componentMap.generator;
+  const { paths, destination, packages, exclude } = cliConfig.componentMap.args;
   if (argv.watch) {
     console.log(
       `Watching for component changes to component builder sources in:\n ${paths.join('\n')}`

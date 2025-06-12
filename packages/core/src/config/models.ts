@@ -218,7 +218,7 @@ export type SitecoreCliConfigInput = {
   /**
    * Configuration for the `sitecore-tools component generate-map` cli command
    */
-  generateComponentMap?: {
+  componentMap?: {
     /**
      * Function implementationt for generating a component map.
      */
