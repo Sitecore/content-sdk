@@ -23,14 +23,12 @@ export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
       apiKey: options.api.local.apiKey,
     };
   } else if (typeof window !== 'undefined') {
-    // In browser without config - return a factory that fails when used
+    // In browser, create a client that won't be used for real requests
     console.warn(
-      'GraphQL client created without proper configuration - client-side requests will fail'
+      'GraphQL client created without proper configuration - client-side requests may fail'
     );
-    return () => {
-      throw new Error(
-        'GraphQL client not configured for browser use. Please set NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID or configure local API settings.'
-      );
+    clientConfig = {
+      endpoint: '/api/graphql', // Dummy endpoint for browser initialization
     };
   } else {
     throw new Error(

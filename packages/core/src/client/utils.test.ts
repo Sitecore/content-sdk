@@ -41,11 +41,10 @@ describe('createGraphQLClientFactory', () => {
     expect(factory).to.not.be.undefined;
   });
 
-  it('should handle browser environment gracefully without throwing during creation', () => {
+  it('should handle browser environment gracefully without throwing', () => {
     // Simulate browser environment
     (global as any).window = {};
 
-    // Factory creation should not throw
     expect(() => {
       const factory = createGraphQLClientFactory({
         api: {
@@ -59,12 +58,12 @@ describe('createGraphQLClientFactory', () => {
         },
       });
 
-      // But using the factory should throw
-      expect(() => {
-        factory();
-      }).to.throw(
-        'GraphQL client not configured for browser use. Please set NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID or configure local API settings.'
-      );
+      // Factory should be created successfully
+      expect(factory).to.not.be.undefined;
+
+      // Using the factory should also work (creates client with dummy endpoint)
+      const client = factory();
+      expect(client).to.not.be.undefined;
     }).to.not.throw();
   });
 
