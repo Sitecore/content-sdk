@@ -12,6 +12,7 @@ export type GraphQLClientOptions = Pick<SitecoreConfigInput, 'api'> & FetchOptio
  */
 export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
   let clientConfig: GraphQLRequestClientFactoryConfig;
+
   if (options.api?.edge?.contextId) {
     clientConfig = {
       endpoint: getEdgeProxyContentUrl(options.api.edge.contextId, options.api.edge.edgeUrl),
@@ -22,9 +23,14 @@ export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
       apiKey: options.api.local.apiKey,
     };
   } else if (typeof window !== 'undefined') {
-    // In browser, don't throw error - assume server-side config is valid
-    clientConfig = {
-      endpoint: '/api/graphql', // dummy endpoint for browser
+    // In browser without config - return a factory that fails when used
+    console.warn(
+      'GraphQL client created without proper configuration - client-side requests will fail'
+    );
+    return () => {
+      throw new Error(
+        'GraphQL client not configured for browser use. Please set NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID or configure local API settings.'
+      );
     };
   } else {
     throw new Error(

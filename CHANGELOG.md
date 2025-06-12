@@ -60,6 +60,7 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
+* `[core]` `[create-sitecore-config]` Fix for making clientContextId optional for client-side execution to avoid runtime errors, fix for scss variant imports ([#121](https://github.com/Sitecore/content-sdk/pull/121))
 * `[core]` `[sitecore.config]` Fallback values are not respected when framework specific value is empty & validate resolved config instead of base ([#97](https://github.com/Sitecore/content-sdk/pull/97))
 
 ## 0.2.0

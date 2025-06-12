@@ -133,7 +133,7 @@ const validateConfig = (config: SitecoreConfigInput) => {
     );
   }
 
-  // Warn if middleware features might not work (optional warning)
+  // Warn if middleware features might not work
   if (!hasEdgeContextId && !hasClientContextId && hasLocalApi) {
     console.warn(
       'Warning: Redirects and Personalization middleware require Edge API configuration. ' +
