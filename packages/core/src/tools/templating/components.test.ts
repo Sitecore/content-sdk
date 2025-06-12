@@ -50,5 +50,19 @@ describe('components', () => {
 
       expect(logStub.calledOnceWith('Registering Content SDK component FooBar')).to.be.true;
     });
+
+    it('should pass exclude param into getItems call', () => {
+      const getItemsStub = sinon.stub();
+      const componentsModule = proxyquire('./components', {
+        './utils': { getItems: getItemsStub },
+      });
+      const getComponentList = componentsModule.getComponentList;
+
+      const exclude = ['**/exclude/**', 'test'];
+      getComponentList('src/components', exclude);
+
+      const getItemsStubArgs = getItemsStub.getCall(0).args[0];
+      expect(getItemsStubArgs.exclude).to.equal(exclude);
+    });
   });
 });

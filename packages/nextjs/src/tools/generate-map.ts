@@ -1,7 +1,8 @@
 import {
   ComponentFile,
+  GenerateMapFunction,
   getComponentList,
-  PackageDefinition,
+  PackageImport,
 } from '@sitecore-content-sdk/core/tools';
 import path from 'path';
 import fs from 'fs';
@@ -17,67 +18,39 @@ import fs from 'fs';
 export type GenerateMapArgs = {
   paths: string[];
   destination?: string;
-  packages?: PackageDefinition[];
+  packages?: PackageImport[];
   exclude?: string[];
-};
-
-/**
- * Compares two paths to determine if they match.
- * @param {string} componentPath base path to compare against, can be absolute or relative
- * @param {string} compare comparer, can be relate, absolute or regex string
- * @returns true if paths match, false otherwise
- */
-export const matchPath = (componentPath: string, compare: string): boolean => {
-  if (
-    compare === componentPath ||
-    path.join(process.cwd(), componentPath) === compare ||
-    componentPath === path.join(process.cwd(), compare) ||
-    new RegExp(compare).test(componentPath)
-  ) {
-    return true;
-  }
-  return false;
 };
 
 /**
  * Generate and write componentMap.ts file based on provided params.
  * @param {GenerateMapArgs} param0 params for generateMap
  */
-export const generateMap = ({
+export const generateMap: GenerateMapFunction = ({
   paths,
   destination = '.sitecore',
   exclude,
   packages,
 }: GenerateMapArgs) => {
-  return () => {
-    const components = paths.reduce<ComponentFile[]>((result, componentPath) => {
-      for (const exclusion of exclude || []) {
-        if (matchPath(componentPath, exclusion)) {
-          return result;
-        }
-      }
-      return result.concat(...getComponentList(componentPath));
-    }, []);
+  const components = paths.reduce<ComponentFile[]>((result, componentPath) => {
+    return result.concat(...getComponentList(componentPath, exclude));
+  }, []);
 
-    const componentMapContent = mapTemplate(components, packages);
+  const componentMapContent = mapTemplate(components, packages);
 
-    const componentMapFile = path.join(process.cwd(), destination, 'component-map.ts');
+  const componentMapFile = path.join(process.cwd(), destination, 'component-map.ts');
 
-    try {
-      fs.writeFileSync(componentMapFile, componentMapContent, {
-        encoding: 'utf8',
-      });
-    } catch (error) {
-      console.error(
-        `Component Map generation failed. Error writing to file ${destination}:`,
-        error
-      );
-      throw error;
-    }
-  };
+  try {
+    fs.writeFileSync(componentMapFile, componentMapContent, {
+      encoding: 'utf8',
+    });
+  } catch (error) {
+    console.error(`Component Map generation failed. Error writing to file ${destination}:`, error);
+    throw error;
+  }
 };
 
-const mapTemplate = (components: ComponentFile[], packages?: PackageDefinition[]): string => {
+const mapTemplate = (components: ComponentFile[], packages?: PackageImport[]): string => {
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];
 
@@ -89,25 +62,26 @@ const mapTemplate = (components: ComponentFile[], packages?: PackageDefinition[]
   });
 
   packages?.forEach((packageEntry) => {
-    if (packageEntry.importInfo.imports === '*') {
-      wildcardImports.push(
-        `import * as ${packageEntry.name} from '${packageEntry.importInfo.importFrom}';`
-      );
-      componentMapEntries.push(`['${packageEntry.name}', ${packageEntry.name}]`);
-    } else {
+    if (packageEntry.importInfo.namedImports) {
       namedImports.push(
-        `import { ${packageEntry.importInfo.imports.join(', ')} } from '${
+        `import { ${packageEntry.importInfo.namedImports.join(', ')} } from '${
           packageEntry.importInfo.importFrom
         }';`
       );
-      packageEntry.importInfo.imports.forEach((importName) => {
+      packageEntry.importInfo.namedImports.forEach((importName) => {
         componentMapEntries.push(`['${importName}', ${importName}]`);
       });
+    } else {
+      wildcardImports.push(
+        `import * as ${packageEntry.importName} from '${packageEntry.importInfo.importFrom}';`
+      );
+      componentMapEntries.push(`['${packageEntry.importName}', ${packageEntry.importName}]`);
     }
   });
 
   return `// Below are built-in components that are available in the app, it's recommended to keep them as is
 import { BYOCWrapper, NextjsJssComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
+import { Form } from '@sitecore-content-sdk/nextjs';
 // end of built-in components
 
 // Components imported from the app itself
@@ -116,6 +90,9 @@ ${namedImports.join('\n')}
 
 // Components must be registered with to match the string key with component name in Sitecore
 export const componentMap = new Map<string, NextjsJssComponent>([
+  ['BYOCWrapper', BYOCWrapper],
+  ['FEaaSWrapper', FEaaSWrapper],
+  ['Form', Form],
 ${componentMapEntries
   .map((component) => {
     return `  ${component},\n`;

@@ -4,7 +4,7 @@
 import { expect } from 'chai';
 import chokidar from 'chokidar';
 import sinon from 'sinon';
-import { watchItems } from './utils';
+import { watchItems } from './watch-items';
 
 describe('utils', () => {
   afterEach(() => {

@@ -2,45 +2,14 @@
 import path from 'path';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { generateMap, matchPath } from './generateMap';
+import { generateMap } from './generate-map';
 import fs from 'fs';
-import { PackageDefinition } from '@sitecore-content-sdk/core/tools';
+import { PackageImport } from '@sitecore-content-sdk/core/tools';
 import * as coreTools from '@sitecore-content-sdk/core/tools';
 import { ComponentFile } from '@sitecore-content-sdk/core/src/tools';
 
 describe('generateMap', () => {
   const sandbox = sinon.createSandbox();
-
-  describe('matchPath', () => {
-    it('should return true when both paths are matching relative path', () => {
-      const relPath = 'src/components/Button.tsx';
-      expect(matchPath(relPath, relPath)).to.be.true;
-    });
-
-    it('should return true if componentPath is relative and matches to absolute "compare" path', () => {
-      const relPath = 'src/components/Button.tsx';
-      const absPath = path.join(process.cwd(), relPath);
-      expect(matchPath(relPath, absPath)).to.be.true;
-    });
-
-    it('should return true if "compare" path is relative and matches to absolute componentPath', () => {
-      const relPath = 'src/components/Button.tsx';
-      const absPath = path.join(process.cwd(), relPath);
-      expect(matchPath(absPath, relPath)).to.be.true;
-    });
-
-    it('should return true if "compare" is a matching regex string', () => {
-      const componentPath = 'src/components/Button.tsx';
-      const regexString = 'Button\\.tsx$';
-      expect(matchPath(componentPath, regexString)).to.be.true;
-    });
-
-    it('should return false if paths do not match', () => {
-      const componentPath = 'src/components/Button.tsx';
-      const comparePath = 'src/components/Link.tsx';
-      expect(matchPath(componentPath, comparePath)).to.be.false;
-    });
-  });
 
   describe('generateMap', () => {
     const fakeComponentList: ComponentFile[] = [
@@ -56,29 +25,27 @@ describe('generateMap', () => {
       },
     ];
 
-    const fakePackages: PackageDefinition[] = [
+    const fakePackages: PackageImport[] = [
       {
-        name: 'MyLib',
+        importName: 'MyLib',
         importInfo: {
           importFrom: '@my/lib',
-          imports: '*',
         },
       },
       {
-        name: 'OtherLib',
+        importName: 'OtherLib',
         importInfo: {
           importFrom: '@other/lib',
-          imports: ['CompA', 'CompB'],
+          namedImports: ['CompA', 'CompB'],
         },
       },
     ];
 
+    let getComponentListStub = sandbox.stub().returns(fakeComponentList);
+
     beforeEach(() => {
-      sandbox.replaceGetter(coreTools, 'getComponentList', () => (componentPath: string) => {
-        console.log(componentPath);
-        // Return fakeComponentList for any path
-        return fakeComponentList;
-      });
+      getComponentListStub = sandbox.stub().returns(fakeComponentList);
+      sandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
       sandbox.stub(fs, 'writeFileSync');
     });
 
@@ -88,7 +55,7 @@ describe('generateMap', () => {
 
     it('should write componentMap.ts file with components from "paths" parameter', async () => {
       const paths = ['src/components'];
-      generateMap({ paths })();
+      generateMap({ paths });
 
       expect(fs.writeFileSync).to.have.been.calledOnce;
       const [dest, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
@@ -103,6 +70,8 @@ describe('generateMap', () => {
       expect(content).to.include(
         [
           'export const componentMap = new Map<string, NextjsJssComponent>([',
+          "  ['BYOCWrapper', BYOCWrapper],",
+          "  ['FEaaSWrapper', FEaaSWrapper],",
           "  ['Button', Button],",
           "  ['Link', Link],",
           ']);',
@@ -113,7 +82,7 @@ describe('generateMap', () => {
 
     it('should write componentMap.ts file with components from "paths" and "packages" parameters, when provided', async () => {
       const paths = ['src/components'];
-      generateMap({ paths, packages: fakePackages })();
+      generateMap({ paths, packages: fakePackages });
 
       expect(fs.writeFileSync).to.have.been.calledOnce;
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
@@ -123,6 +92,8 @@ describe('generateMap', () => {
       expect(content).to.include(
         [
           'export const componentMap = new Map<string, NextjsJssComponent>([',
+          "  ['BYOCWrapper', BYOCWrapper],",
+          "  ['FEaaSWrapper', FEaaSWrapper],",
           "  ['Button', Button],",
           "  ['Link', Link],",
           "  ['MyLib', MyLib],",
@@ -136,7 +107,7 @@ describe('generateMap', () => {
     it('should use custom destination when provided', async () => {
       const paths = ['src/components'];
       const customDest = path.join(process.cwd(), 'custom/path', 'component-map.ts');
-      generateMap({ paths, destination: 'custom/path' })();
+      generateMap({ paths, destination: 'custom/path' });
 
       expect(fs.writeFileSync).to.have.been.calledOnceWith(
         customDest,
@@ -145,12 +116,21 @@ describe('generateMap', () => {
       );
     });
 
+    it('should pass exclude param into getComponentList call', async () => {
+      const paths = ['src/components'];
+      const exclude = ['**/*.stories.tsx', '**/*.test.tsx'];
+      generateMap({ paths, exclude });
+
+      expect(getComponentListStub).to.have.been.calledOnce;
+      expect(getComponentListStub.getCall(0).args[1]).to.deep.equals(exclude);
+    });
+
     it('should throw error when destination cannot be written to', async () => {
       (fs.writeFileSync as sinon.SinonStub).throws(new Error('Disk full'));
       const paths = ['src/components'];
       let errorCaught = null;
       try {
-        generateMap({ paths })();
+        generateMap({ paths });
       } catch (err) {
         errorCaught = err;
       }
@@ -158,24 +138,25 @@ describe('generateMap', () => {
       expect((errorCaught as Error).message).to.equal('Disk full');
     });
 
-    it('should import components from "packages" as wildcard when imports are specified as such', async () => {
+    it('should import components from "packages" as wildcard when namedImports are not specified', async () => {
       const paths = ['src/components'];
-      const wildcardPackages: PackageDefinition[] = [
+      const wildcardPackages: PackageImport[] = [
         {
-          name: 'WildcardLib',
+          importName: 'WildcardLib',
           importInfo: {
             importFrom: '@wildcard/lib',
-            imports: '*',
           },
         },
       ];
-      generateMap({ paths, packages: wildcardPackages })();
+      generateMap({ paths, packages: wildcardPackages });
 
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import * as WildcardLib from '@wildcard/lib';");
       expect(content).to.include(
         [
           'export const componentMap = new Map<string, NextjsJssComponent>([',
+          "  ['BYOCWrapper', BYOCWrapper],",
+          "  ['FEaaSWrapper', FEaaSWrapper],",
           "  ['Button', Button],",
           "  ['Link', Link],",
           "  ['WildcardLib', WildcardLib],",
@@ -186,22 +167,24 @@ describe('generateMap', () => {
 
     it('should use named component imports when "packages" contain them', async () => {
       const paths = ['src/components'];
-      const namedPackages: PackageDefinition[] = [
+      const namedPackages: PackageImport[] = [
         {
-          name: 'NamedLib',
+          importName: 'NamedLib',
           importInfo: {
             importFrom: '@named/lib',
-            imports: ['NamedA', 'NamedB'],
+            namedImports: ['NamedA', 'NamedB'],
           },
         },
       ];
-      generateMap({ paths, packages: namedPackages })();
+      generateMap({ paths, packages: namedPackages });
 
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import { NamedA, NamedB } from '@named/lib';");
       expect(content).to.include(
         [
           'export const componentMap = new Map<string, NextjsJssComponent>([',
+          "  ['BYOCWrapper', BYOCWrapper],",
+          "  ['FEaaSWrapper', FEaaSWrapper],",
           "  ['Button', Button],",
           "  ['Link', Link],",
           "  ['NamedA', NamedA],",

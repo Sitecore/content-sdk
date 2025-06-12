@@ -12,17 +12,17 @@ export interface ComponentFile {
 /**
  * Definition for custom components to be included in component map.
  * Use this to define components imported from modules/dependencies/packages
- * @typedef  PackageDefinition
- * @property {string} name - Name of the import.
+ * @typedef PackageImport
+ * @property {string} importName - Name of the import.
  * @property {object} importInfo - Information about how to import the package.
  * @property {string} importInfo.importFrom - The path from which to import the component(s).
- * @property {string[] | '*'} importInfo.imports - The specific named components to import from the package, or set this to '*' to allow SXA variants support for component.
+ * @property {string[]} [importInfo.namedImports] - The specific named components to import from the package. Leave empty to have whole package be imported as wildcard and allow SXA variants support for component.
  */
-export interface PackageDefinition {
-  name: string;
+export interface PackageImport {
+  importName: string;
   importInfo: {
     importFrom: string;
-    imports: string[] | '*';
+    namedImports?: string[];
   };
 }
 
@@ -35,10 +35,12 @@ export interface PackageDefinition {
  *  moduleName: 'ComponentName'
  * }
  * @param {string} path path to search
+ * @param {string[]} [exclude] paths and patterns to exclude from final result
  */
-export function getComponentList(path: string): ComponentFile[] {
+export function getComponentList(path: string, exclude?: string[]): ComponentFile[] {
   const components = getItems<ComponentFile>({
     path,
+    exclude,
     resolveItem: (path, name) => ({
       path: `${path}/${name}`,
       componentName: name,
