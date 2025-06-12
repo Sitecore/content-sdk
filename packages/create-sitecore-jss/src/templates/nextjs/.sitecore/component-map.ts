@@ -20,7 +20,7 @@ import * as RowSplitter from 'src/components/RowSplitter';
 import * as SitecoreStyles from 'src/components/SitecoreStyles';
 import * as Title from 'src/components/Title';
 
-// Components must be registered with to match the string key with component name in Sitecore
+// Components must be registered within the map to match the string key with component name in Sitecore
 export const componentMap = new Map<string, NextjsJssComponent>([
   ['BYOCWrapper', BYOCWrapper],
   ['FEaaSWrapper', FEaaSWrapper],

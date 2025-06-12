@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { defineCliConfig } from './define-cli-config';
-import { SitecoreCliConfigInput } from './models';
+import { SitecoreCliConfigInput } from '../models';
 
 describe('defineCliConfig', () => {
   it('should return the cliConfig if it is valid', () => {

@@ -1,12 +1,8 @@
-import {
-  defineCliConfig as defineCliConfigCore,
-  SitecoreCliConfigInput,
-  SitecoreCliConfig,
-} from '@sitecore-content-sdk/core/config';
-
-import { byocTemplate } from '../tools/templating/byoc-component';
-import { defaultTemplate } from '../tools/templating/default-component';
-// import { generateMap } from '../tools/generate-map';
+import { SitecoreCliConfigInput, SitecoreCliConfig } from '@sitecore-content-sdk/core/config';
+import { defineCliConfig as defineCliConfigCore } from '@sitecore-content-sdk/core/config/cli';
+import { byocTemplate } from '../../tools/templating/byoc-component';
+import { defaultTemplate } from '../../tools/templating/default-component';
+import { generateMap } from '../../tools/generate-map';
 
 /**
  * Accepts a `SitecoreCliConfigInput` object and returns the Sitecore Content SDK CLI configuration from the specified file,
@@ -16,7 +12,7 @@ import { defaultTemplate } from '../tools/templating/default-component';
  */
 export const defineCliConfig = (cliConfig: SitecoreCliConfigInput): SitecoreCliConfig => {
   addDefaultScaffoldTemplates(cliConfig);
-  // addDefaultComponentMapGenerator(cliConfig);
+  addDefaultComponentMapGenerator(cliConfig);
   return defineCliConfigCore(cliConfig);
 };
 
@@ -36,16 +32,16 @@ function addDefaultScaffoldTemplates(cliConfig: SitecoreCliConfigInput) {
   cliConfig.scaffold.templates.unshift(defaultTemplate, byocTemplate);
 }
 
-// /**
-//  * Add the framework-specific implementaion of the component map generator to the CLI configuration.
-//  * @param {SitecoreCliConfigInput} cliConfig - The CLI configuration object
-//  */
-// function addDefaultComponentMapGenerator(cliConfig: SitecoreCliConfigInput) {
-//   cliConfig.generateComponentMap = {
-//     generator: generateMap,
-//     args: {
-//       paths: ['src/components'],
-//     },
-//     ...cliConfig.generateComponentMap,
-//   };
-// }
+/**
+ * Add the framework-specific implementaion of the component map generator to the CLI configuration.
+ * @param {SitecoreCliConfigInput} cliConfig - The CLI configuration object
+ */
+function addDefaultComponentMapGenerator(cliConfig: SitecoreCliConfigInput) {
+  cliConfig.generateComponentMap = {
+    generator: generateMap,
+    args: {
+      paths: ['src/components'],
+    },
+    ...cliConfig.generateComponentMap,
+  };
+}
