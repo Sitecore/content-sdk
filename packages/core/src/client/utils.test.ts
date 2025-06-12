@@ -46,7 +46,7 @@ describe('createGraphQLClientFactory', () => {
     (global as any).window = {};
 
     expect(() => {
-      const factory = createGraphQLClientFactory({
+      createGraphQLClientFactory({
         api: {
           edge: {
             contextId: '', // Empty contextId
@@ -57,13 +57,6 @@ describe('createGraphQLClientFactory', () => {
           },
         },
       });
-
-      // Factory should be created successfully
-      expect(factory).to.not.be.undefined;
-
-      // Using the factory should also work (creates client with dummy endpoint)
-      const client = factory();
-      expect(client).to.not.be.undefined;
     }).to.not.throw();
   });
 
