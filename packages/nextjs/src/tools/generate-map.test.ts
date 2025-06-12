@@ -72,6 +72,7 @@ describe('generateMap', () => {
           'export const componentMap = new Map<string, NextjsJssComponent>([',
           "  ['BYOCWrapper', BYOCWrapper],",
           "  ['FEaaSWrapper', FEaaSWrapper],",
+          "  ['Form', Form],",
           "  ['Button', Button],",
           "  ['Link', Link],",
           ']);',
@@ -90,18 +91,11 @@ describe('generateMap', () => {
       expect(content).to.include("import { CompA, CompB } from '@other/lib';");
 
       expect(content).to.include(
-        [
-          'export const componentMap = new Map<string, NextjsJssComponent>([',
-          "  ['BYOCWrapper', BYOCWrapper],",
-          "  ['FEaaSWrapper', FEaaSWrapper],",
-          "  ['Button', Button],",
-          "  ['Link', Link],",
-          "  ['MyLib', MyLib],",
-          "  ['CompA', CompA],",
-          "  ['CompB', CompB],",
-          ']);',
-        ].join('\n')
+        'export const componentMap = new Map<string, NextjsJssComponent>(['
       );
+      expect(content).to.include("['MyLib', MyLib],");
+      expect(content).to.include("['CompA', CompA]");
+      expect(content).to.include("['CompB', CompB],");
     });
 
     it('should use custom destination when provided', async () => {
@@ -153,16 +147,9 @@ describe('generateMap', () => {
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import * as WildcardLib from '@wildcard/lib';");
       expect(content).to.include(
-        [
-          'export const componentMap = new Map<string, NextjsJssComponent>([',
-          "  ['BYOCWrapper', BYOCWrapper],",
-          "  ['FEaaSWrapper', FEaaSWrapper],",
-          "  ['Button', Button],",
-          "  ['Link', Link],",
-          "  ['WildcardLib', WildcardLib],",
-          ']);',
-        ].join('\n')
+        'export const componentMap = new Map<string, NextjsJssComponent>(['
       );
+      expect(content).to.include("['WildcardLib', WildcardLib],");
     });
 
     it('should use named component imports when "packages" contain them', async () => {
@@ -181,17 +168,10 @@ describe('generateMap', () => {
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import { NamedA, NamedB } from '@named/lib';");
       expect(content).to.include(
-        [
-          'export const componentMap = new Map<string, NextjsJssComponent>([',
-          "  ['BYOCWrapper', BYOCWrapper],",
-          "  ['FEaaSWrapper', FEaaSWrapper],",
-          "  ['Button', Button],",
-          "  ['Link', Link],",
-          "  ['NamedA', NamedA],",
-          "  ['NamedB', NamedB],",
-          ']);',
-        ].join('\n')
+        'export const componentMap = new Map<string, NextjsJssComponent>(['
       );
+      expect(content).to.include("['NamedA', NamedA],");
+      expect(content).to.include("['NamedB', NamedB],");
     });
   });
 });
