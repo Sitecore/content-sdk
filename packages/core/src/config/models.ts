@@ -1,4 +1,5 @@
 import { RetryStrategy } from '../models';
+import { GenerateMapFunction, GenerateMapArgs } from '../tools';
 
 /**
  * Utility type to make every property in a type required
@@ -213,6 +214,15 @@ export type SitecoreCliConfigInput = {
      * List of scaffold templates that can be used for generating components
      */
     templates?: ScaffoldTemplate[];
+  };
+  /**
+   * Configuration for the `sitecore-tools component generate-map` cli command
+   */
+  componentMap?: GenerateMapArgs & {
+    /**
+     * Function implementationt for generating a component map.
+     */
+    generator?: GenerateMapFunction;
   };
 };
 

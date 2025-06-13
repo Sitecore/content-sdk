@@ -2422,6 +2422,7 @@ __metadata:
     del-cli: ^6.0.0
     eslint: ^8.56.0
     eslint-plugin-jsdoc: 50.6.11
+    glob: ^11.0.2
     graphql: ^16.11.0
     graphql-request: ^6.1.0
     jsdom: ^26.1.0
