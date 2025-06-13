@@ -35,7 +35,6 @@ describe('auth token renewal utilities', () => {
   let getTenantStub: sinon.SinonStub;
   let deleteAuthStub: sinon.SinonStub;
   let clearActiveStub: sinon.SinonStub;
-  let consoleInfoStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
   let consoleWarnStub: sinon.SinonStub;
   let deleteKeyStub: sinon.SinonStub;
@@ -143,33 +142,20 @@ describe('auth token renewal utilities', () => {
       expect(result).to.deep.equal({ tenantId: 'tenant1' });
     });
 
-    it('should exit if token renewal fails unexpectedly', async () => {
+    it('should return null if token renewal fails unexpectedly', async () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves({ ...authMock, expires_at: pastDate });
       readTenantInfoStub.resolves(tenantMock);
       flowStub.rejects(new Error('Unexpected failure'));
 
-      const exitStub = sinon.stub(process, 'exit').callsFake(() => {
-        throw new Error('EXIT_CALLED');
-      });
-
-      try {
-        await validateAndRenewAuthIfExpired();
-        throw new Error('Test failed: process.exit not triggered');
-      } catch (err) {
-        if (err instanceof Error) {
-          expect(err.message).to.equal('EXIT_CALLED');
-        } else {
-          throw err;
-        }
-      }
+      const result = await validateAndRenewAuthIfExpired();
 
       expect(consoleErrorStub.calledWithMatch(/Failed to renew token/)).to.be.true;
       expect(consoleWarnStub.calledWithMatch(/Cleaning up stale/)).to.be.true;
       expect(deleteAuthStub.calledOnce).to.be.true;
       expect(deleteKeyStub.calledOnceWithExactly('tenant1')).to.be.true;
       expect(clearActiveStub.calledOnce).to.be.true;
-      expect(exitStub.calledOnceWith(1)).to.be.true;
+      expect(result).to.be.null;
     });
   });
 });

@@ -3,6 +3,7 @@ import { login } from './login';
 import { logout } from './logout';
 import { status } from './status';
 import { list } from './list';
+import { switchTenant } from './switch';
 
 /**
  * Registers the `auth` command group and its subcommands (`login`, `logout`, `status`, `list`) with Yargs.
@@ -15,7 +16,7 @@ export function builder(yargs: Argv) {
     describe: 'Performs authentication for content services',
     builder: (_yargs: Argv) => {
       return _yargs
-        .command([login, logout, status, list] as any)
+        .command([login, logout, status, list, switchTenant] as any)
         .strict()
         .demandCommand(1, 'You need to specify a command to run')
         .help();

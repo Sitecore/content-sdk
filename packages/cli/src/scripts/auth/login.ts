@@ -4,11 +4,11 @@ import { constants } from '@sitecore-content-sdk/core';
 
 let { setActiveTenant, writeTenantAuthInfo, writeTenantInfo, clientCredentialsFlow } = auth;
 
-export const unitMock = (formModule: any) => {
-  setActiveTenant = formModule.setActiveTenant;
-  writeTenantAuthInfo = formModule.writeTenantAuthInfo;
-  writeTenantInfo = formModule.writeTenantInfo;
-  clientCredentialsFlow = formModule.clientCredentialsFlow;
+export const unitMock = (authModule: any) => {
+  setActiveTenant = authModule.setActiveTenant;
+  writeTenantAuthInfo = authModule.writeTenantAuthInfo;
+  writeTenantInfo = authModule.writeTenantInfo;
+  clientCredentialsFlow = authModule.clientCredentialsFlow;
 };
 
 export const login: CommandModule<object, TenantArgs> = {
