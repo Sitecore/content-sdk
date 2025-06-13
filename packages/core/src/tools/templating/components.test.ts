@@ -62,5 +62,49 @@ describe('components', () => {
       const exclude = ['src/test-data/components/Foo.jsx'];
       getComponentList(['src/test-data/components/*.tsx'], exclude);
     });
+
+    it('should return correct result in unix file systems', () => {
+      const stubbedPaths = [
+        'src/test-data/components/Foo.jsx',
+        'src/test-data/components/Bar.tsx',
+        'src/test-data/components/Baz.ts',
+        'src/test-data/components/Qux.js',
+      ];
+      const expected = [
+        { path: 'src/test-data/components/Foo', componentName: 'Foo', moduleName: 'Foo' },
+        { path: 'src/test-data/components/Bar', componentName: 'Bar', moduleName: 'Bar' },
+        { path: 'src/test-data/components/Baz', componentName: 'Baz', moduleName: 'Baz' },
+        { path: 'src/test-data/components/Qux', componentName: 'Qux', moduleName: 'Qux' },
+      ];
+
+      const globSyncStub = sandbox.stub(require('glob'), 'sync').returns(stubbedPaths);
+
+      const result = getComponentList(['src/test-data/components/*.tsx']);
+      expect(result).to.deep.equal(expected);
+
+      globSyncStub.restore();
+    });
+
+    it('should return correct result in windows file systems', () => {
+      const stubbedPaths = [
+        'src\\test-data\\components\\Foo.jsx',
+        'src\\test-data\\components\\Bar.tsx',
+        'src\\test-data\\components\\Baz.ts',
+        'src\\test-data\\components\\Qux.js',
+      ];
+      const expected = [
+        { path: 'src/test-data/components/Foo', componentName: 'Foo', moduleName: 'Foo' },
+        { path: 'src/test-data/components/Bar', componentName: 'Bar', moduleName: 'Bar' },
+        { path: 'src/test-data/components/Baz', componentName: 'Baz', moduleName: 'Baz' },
+        { path: 'src/test-data/components/Qux', componentName: 'Qux', moduleName: 'Qux' },
+      ];
+
+      const globSyncStub = sandbox.stub(require('glob'), 'sync').returns(stubbedPaths);
+
+      const result = getComponentList(['src/test-data/components/*.tsx']);
+      expect(result).to.deep.equal(expected);
+
+      globSyncStub.restore();
+    });
   });
 });

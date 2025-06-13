@@ -1,8 +1,8 @@
 import * as glob from 'glob';
 
-const componentNamePattern = /^[\/]*(.+\\)*(.+)\.[jt]sx?$/;
+const componentNamePattern = /^[\/]*(.+[\/\\])*(.+)\.[jt]sx?$/;
 
-const componentPathPattern = /^([\/]*(.+\\)*(.+))\.(.+)$/;
+const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
 
 /**
  * Describes a file that represents a component definition
