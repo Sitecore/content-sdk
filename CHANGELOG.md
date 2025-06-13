@@ -20,11 +20,12 @@ Our versioning strategy is as follows:
     - Support pagination for the above methods by implementing an internal `fetchNext` method to handle this in each method
   - Introduced `getLocale/getLocales` functionality on content client: 
     - Initial implementation of `getLocale/getLocales` ([#74](https://github.com/Sitecore/content-sdk/pull/74)) ([#78](https://github.com/Sitecore/content-sdk/pull/78)) ([#105](https://github.com/Sitecore/content-sdk/pull/105))
-* `[cli]` Introduce Sitecore Content Services Auth CLI commands ([106](https://github.com/Sitecore/content-sdk/pull/106)) ([116](https://github.com/Sitecore/content-sdk/pull/116)):
+* `[cli]` Introduce Sitecore Content Services Auth CLI commands ([#106](https://github.com/Sitecore/content-sdk/pull/106)) ([#116](https://github.com/Sitecore/content-sdk/pull/116))([#125](https://github.com/Sitecore/content-sdk/pull/125)):
     - auth login: Authenticate using client credentials and store token info.
     - auth status: Show active tenant and auto-renew token if expired.
     - auth logout: Clear active tenant and delete stored credentials.
     - auth list: List all known tenants from local storage.
+    - auth switch: switch auth context into the new tenant, specified by tenant ID.
   - Token validation and renewal support.
   - Token and tenant metadata storage and active tenant tracking under `~/.sitecore/sitecore-tools/`.
   - Securely encrypts and decrypts authentication data file with AES-256-GCM and 256-bit keys. The encryption keys are stored per tenant in the OS keychain, ensuring credentials are safely persisted across sessions.
