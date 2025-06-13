@@ -8,4 +8,4 @@
 
 > `const` **RichText**: `React.FC`\<[`RichTextProps`](../interfaces/RichTextProps.md)\>
 
-Defined in: [packages/react/src/components/RichText.tsx:23](https://github.com/Sitecore/content-sdk/blob/6d6c27ab12c91080f3e62160b838dfb29dea8b52/packages/react/src/components/RichText.tsx#L23)
+Defined in: [packages/react/src/components/RichText.tsx:23](https://github.com/Sitecore/content-sdk/blob/d4cd22bf5a3ce46c0788d7f3685bca4d16dcca42/packages/react/src/components/RichText.tsx#L23)
