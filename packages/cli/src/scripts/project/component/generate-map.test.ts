@@ -38,7 +38,7 @@ describe('generate-map CLI', () => {
         generator: sinon.stub(),
         paths: ['src'],
         destination: 'dest',
-        packages: [],
+        componentImports: [],
         exclude: [],
       },
     };
@@ -54,7 +54,7 @@ describe('generate-map CLI', () => {
         generator: generatorStub,
         paths: ['src'],
         destination: 'dest',
-        packages: [],
+        componentImports: [],
         exclude: [],
       },
     };
@@ -67,7 +67,12 @@ describe('generate-map CLI', () => {
 
   it('should launch component map generator with args from cli config', () => {
     const generatorStub = sinon.stub();
-    const args = { paths: ['src'], destination: 'dest', packages: ['pkg'], exclude: ['ex'] };
+    const args = {
+      paths: ['src'],
+      destination: 'dest',
+      componentImports: ['pkg'],
+      exclude: ['ex'],
+    };
     const fakeConfig = {
       componentMap: {
         generator: generatorStub,
