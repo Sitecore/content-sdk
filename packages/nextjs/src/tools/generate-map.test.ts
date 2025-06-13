@@ -92,7 +92,7 @@ describe('generateMap', () => {
           },
         },
       ];
-      generateMap({ paths, packages: fakePackages, mapTemplate: customTemplate });
+      generateMap({ paths, componentImports: fakePackages, mapTemplate: customTemplate });
 
       expect(customTemplate).to.have.been.calledOnce;
       expect(customTemplate.getCall(0).args[0]).to.deep.equal(fakeComponentList);
@@ -144,13 +144,13 @@ describe('generateMap', () => {
 
     it('should not fail if packages is undefined', async () => {
       const paths = ['src/components'];
-      expect(() => generateMap({ paths, packages: undefined })).to.not.throw();
+      expect(() => generateMap({ paths, componentImports: undefined })).to.not.throw();
       expect(fs.writeFileSync).to.have.been.calledOnce;
     });
 
     it('should write componentMap.ts file with components from "paths" and "packages" parameters, when provided', async () => {
       const paths = ['src/components'];
-      generateMap({ paths, packages: fakePackages });
+      generateMap({ paths, componentImports: fakePackages });
 
       expect(fs.writeFileSync).to.have.been.calledOnce;
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
@@ -209,7 +209,7 @@ describe('generateMap', () => {
           },
         },
       ];
-      generateMap({ paths, packages: wildcardPackages });
+      generateMap({ paths, componentImports: wildcardPackages });
 
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import * as WildcardLib from '@wildcard/lib';");
@@ -230,7 +230,7 @@ describe('generateMap', () => {
           },
         },
       ];
-      generateMap({ paths, packages: namedPackages });
+      generateMap({ paths, componentImports: namedPackages });
 
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import { NamedA, NamedB } from '@named/lib';");

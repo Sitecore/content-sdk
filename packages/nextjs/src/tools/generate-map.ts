@@ -16,12 +16,12 @@ export const generateMap: GenerateMapFunction = ({
   paths,
   destination = '.sitecore',
   exclude,
-  packages,
+  componentImports,
   mapTemplate = nextjsMapTemplate,
 }: GenerateMapArgs) => {
   const components = getComponentList(paths, exclude);
 
-  const componentMapContent = mapTemplate(components, packages);
+  const componentMapContent = mapTemplate(components, componentImports);
 
   const componentMapFile = path.join(process.cwd(), destination, 'component-map.ts');
 
@@ -37,7 +37,7 @@ export const generateMap: GenerateMapFunction = ({
 
 const nextjsMapTemplate = (
   components: ComponentFile[],
-  packageImports?: ComponentImport[]
+  componentImports?: ComponentImport[]
 ): string => {
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];
@@ -49,7 +49,7 @@ const nextjsMapTemplate = (
     componentMapEntries.push(`['${component.moduleName}', ${component.moduleName}]`);
   });
 
-  packageImports?.forEach((packageEntry) => {
+  componentImports?.forEach((packageEntry) => {
     if (packageEntry.importInfo.namedImports) {
       namedImports.push(
         `import { ${packageEntry.importInfo.namedImports.join(', ')} } from '${
