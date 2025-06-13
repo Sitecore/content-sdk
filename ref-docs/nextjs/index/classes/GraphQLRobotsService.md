@@ -58,15 +58,15 @@ Defined in: core/types/site/graphql-robots-service.d.ts:35
 
 > **fetchRobots**(`fetchOptions?`): `Promise`\<`string`\>
 
-Defined in: core/types/site/graphql-robots-service.d.ts:41
+Defined in: core/types/site/graphql-robots-service.d.ts:42
 
 Fetch a data of robots.txt from API
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `fetchOptions?` | `FetchOptions` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `fetchOptions?` | `FetchOptions` | The fetch options to be used for the request. |
 
 #### Returns
 
@@ -84,7 +84,7 @@ if the siteName is empty.
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/site/graphql-robots-service.d.ts:48
+Defined in: core/types/site/graphql-robots-service.d.ts:49
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
