@@ -12,6 +12,12 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+## 0.2.1
+
+### 🎉 New Features & Improvements
+
+* `[core]` [DesignLibrary] Call partial layout rendering endpoint via Envoy and ContextID ([#111](https://github.com/Sitecore/content-sdk/pull/111))
+
 ## 0.2.0
 
 ### 🎉 New Features & Improvements
