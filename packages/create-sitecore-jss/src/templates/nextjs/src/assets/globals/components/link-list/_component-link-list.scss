@@ -2,6 +2,7 @@
 @import "@globals/abstracts/vars";
 @import '~font-awesome/scss/mixins';
 @import "~font-awesome/scss/variables";
+@import "../../base/links";
 
 .link-list {
     background: $link-list-bg;
@@ -40,5 +41,4 @@
             }
         }
     }
-    @import "../../base/links";
 }
