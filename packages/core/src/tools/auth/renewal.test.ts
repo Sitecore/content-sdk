@@ -9,7 +9,7 @@ import * as encryptionUtil from './encryption';
 import * as renewalUtils from './renewal';
 import * as fetcherUtil from './fetcher';
 
-describe.only('Auth Token Renewal Utilities', () => {
+describe('Auth Token Renewal Utilities', () => {
   const futureDate = new Date(Date.now() + 3600 * 1000).toISOString();
   const pastDate = new Date(Date.now() - 3600 * 1000).toISOString();
 

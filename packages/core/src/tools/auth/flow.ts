@@ -108,7 +108,7 @@ async function _clientCredentialsFlow({
     throw new Error('\n Mismatch: Provided organization ID does not match claims organization ID.');
   }
 
-  return { data, tokenOrgId, tokenTenantId, tokenTenantName };
+  return { data, tokenOrgId, tokenTenantId, tokenTenantName, accessToken: data.access_token };
 }
 
 export async function _startDeviceAuthFlow({

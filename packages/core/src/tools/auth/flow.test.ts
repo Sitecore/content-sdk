@@ -84,7 +84,7 @@ describe('Auth flows', () => {
 
       console.log('test', result);
 
-      expect(result.data.access_token).to.equal(fakeToken);
+      expect(result.accessToken).to.equal(fakeToken);
       expect(result.tokenTenantId).to.equal('tenant123');
       expect(result.tokenOrgId).to.equal('org456');
       expect(result.tokenTenantName).to.equal('FakeTenant');
