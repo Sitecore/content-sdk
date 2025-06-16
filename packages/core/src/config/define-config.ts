@@ -137,7 +137,7 @@ const validateConfig = (config: SitecoreConfigInput) => {
   if (!hasEdgeContextId && !hasClientContextId && hasLocalApi) {
     console.warn(
       'Warning: Redirects and Personalization middleware require Edge API configuration. ' +
-        'Consider setting SITECORE_EDGE_CONTEXT_ID or NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID.'
+        'Please ensure that either an Edge context ID (for server-side) or a client context ID (for client-side) is provided in your configuration'
     );
   }
 };
