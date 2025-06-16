@@ -11,7 +11,7 @@ describe('logout command', () => {
   let deleteKeyStub: sinon.SinonStub;
 
   beforeEach(() => {
-    consoleLogStub = sinon.stub(console, 'info');
+    consoleLogStub = sinon.stub(console, 'log');
     consoleErrorStub = sinon.stub(console, 'error');
     clearActiveTenantStub = sinon.stub();
     deleteTenantAuthInfoStub = sinon.stub();

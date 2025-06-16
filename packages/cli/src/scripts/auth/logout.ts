@@ -20,8 +20,8 @@ export const logout: CommandModule = {
       return;
     }
 
-    deleteTenantAuthInfo(tenantId);
-    deleteKey(tenantId);
+    await deleteTenantAuthInfo(tenantId);
+    await deleteKey(tenantId);
     clearActiveTenant();
 
     console.log(`\n Logged out from tenant ${tenantId}`);

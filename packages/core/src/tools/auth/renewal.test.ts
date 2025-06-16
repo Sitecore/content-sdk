@@ -183,7 +183,7 @@ describe('Auth Token Renewal Utilities', () => {
 
     it('should exit if no valid credentials for renewal are present', async () => {
       getTenantStub.returns('tenant1');
-      readAuthStub.resolves({ expires_at: pastDate }); // no clientSecret or refresh_token
+      readAuthStub.resolves({ expires_at: pastDate });
       readTenantInfoStub.resolves(tenantMock);
 
       const exitStub = sinon.stub(process, 'exit').callsFake(() => {
