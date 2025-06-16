@@ -15,20 +15,17 @@ export const switchTenant: CommandModule<object, SwitchArgs> = {
   command: 'switch <tenantId>',
   describe: 'Switch into another tenant that you have logged into previously',
   builder: (yargs: Argv<object>): Argv<SwitchArgs> =>
-    yargs.option('tenantId', {
-      type: 'string',
+    yargs.positional('tenantId', {
+      positional: true,
       demandOption: true,
+      type: 'string',
       describe: 'Tenant ID to switch into.',
     }),
   handler: async (argv: SwitchArgs) => {
     const tenantId = argv.tenantId;
-    if (!tenantId) {
-      console.error('Please provide tenant ID to switch into.');
-      return;
-    }
     const currentContext = await validateAndRenewAuthIfExpired();
     if (!currentContext) {
-      console.log('\nNo valid authentication found. Please login.');
+      console.warn('\nNo valid authentication found. Please login.');
       return;
     }
 

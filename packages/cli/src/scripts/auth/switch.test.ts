@@ -4,7 +4,7 @@ import { switchTenant, unitMock } from './switch';
 
 describe('switch tenant command', () => {
   let sandbox: sinon.SinonSandbox;
-  let readTenantInfoStub: sinon.SinonStub;
+  let readTenantAuthInfoStub: sinon.SinonStub;
   let setActiveTenantStub: sinon.SinonStub;
   let validateAndRenewAuthIfExpiredStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
@@ -17,13 +17,13 @@ describe('switch tenant command', () => {
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
-    readTenantInfoStub = sandbox.stub().resolves(newTenantInfo);
+    readTenantAuthInfoStub = sandbox.stub().resolves(newTenantInfo);
     setActiveTenantStub = sandbox.stub();
     validateAndRenewAuthIfExpiredStub = sandbox.stub();
     consoleLogStub = sandbox.stub(console, 'log');
     consoleErrorStub = sandbox.stub(console, 'error');
     unitMock({
-      readTenantInfo: readTenantInfoStub,
+      readTenantAuthInfo: readTenantAuthInfoStub,
       setActiveTenant: setActiveTenantStub,
       validateAndRenewAuthIfExpired: validateAndRenewAuthIfExpiredStub,
     });
@@ -39,16 +39,9 @@ describe('switch tenant command', () => {
 
     await switchTenant.handler({ tenantId: otherTenantId } as any);
 
-    expect(readTenantInfoStub.calledWith(otherTenantId)).to.be.true;
+    expect(readTenantAuthInfoStub.calledWith(otherTenantId)).to.be.true;
     expect(setActiveTenantStub.calledWith(otherTenantId)).to.be.true;
     expect(consoleLogStub.calledWith(`Switched to tenant: ${otherTenantId}`)).to.be.true;
-  });
-
-  it('should log error and abort if tenantId is empty or not provided', async () => {
-    await switchTenant.handler({ tenantId: '' } as any);
-
-    expect(consoleErrorStub.calledWith('Please provide tenant ID to switch into.')).to.be.true;
-    expect(setActiveTenantStub.notCalled).to.be.true;
   });
 
   it('should log error and abort if renewing current login fails', async () => {
@@ -56,7 +49,7 @@ describe('switch tenant command', () => {
 
     await switchTenant.handler({ tenantId: otherTenantId } as any);
 
-    expect(consoleLogStub.calledWith('\nNo valid authentication found. Please login.')).to.be.true;
+    expect(consoleErrorStub.calledWith('\nNo valid authentication found. Please login.')).to.be.true;
     expect(setActiveTenantStub.notCalled).to.be.true;
   });
 
@@ -71,7 +64,7 @@ describe('switch tenant command', () => {
 
   it('should log error and abort if tenant info is not found for provided tenantId', async () => {
     validateAndRenewAuthIfExpiredStub.resolves(currentContext);
-    readTenantInfoStub.resolves(undefined);
+    readTenantAuthInfoStub.resolves(undefined);
 
     await switchTenant.handler({ tenantId: otherTenantId } as any);
 
@@ -88,7 +81,7 @@ describe('switch tenant command', () => {
   it('should log error, stay in current tenant and abort if logging into new tenant fails', async () => {
     validateAndRenewAuthIfExpiredStub.onFirstCall().resolves(currentContext);
     validateAndRenewAuthIfExpiredStub.onSecondCall().returns(null);
-    readTenantInfoStub.resolves(newTenantInfo);
+    readTenantAuthInfoStub.resolves(newTenantInfo);
 
     await switchTenant.handler({ tenantId: otherTenantId } as any);
 
