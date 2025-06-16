@@ -1,9 +1,9 @@
 import { Argv, CommandModule } from 'yargs';
 import { auth, TenantInfo } from '@sitecore-content-sdk/core/tools';
-let { readTenantInfo, validateAndRenewAuthIfExpired, setActiveTenant } = auth;
+let { readTenantAuthInfo, validateAndRenewAuthIfExpired, setActiveTenant } = auth;
 
 export const unitMock = (authModule: any) => {
-  readTenantInfo = authModule.readTenantInfo || readTenantInfo;
+  readTenantAuthInfo = authModule.readTenantAuthInfo || readTenantAuthInfo;
   setActiveTenant = authModule.setActiveTenant || setActiveTenant;
   validateAndRenewAuthIfExpired =
     authModule.validateAndRenewAuthIfExpired || validateAndRenewAuthIfExpired;
@@ -25,7 +25,7 @@ export const switchTenant: CommandModule<object, SwitchArgs> = {
     const tenantId = argv.tenantId;
     const currentContext = await validateAndRenewAuthIfExpired();
     if (!currentContext) {
-      console.warn('\nNo valid authentication found. Please login.');
+      console.error('\nNo valid authentication found. Please login.');
       return;
     }
 
@@ -34,7 +34,7 @@ export const switchTenant: CommandModule<object, SwitchArgs> = {
       return;
     }
 
-    const newTenantInfo = await readTenantInfo(tenantId);
+    const newTenantInfo = await readTenantAuthInfo(tenantId);
     if (!newTenantInfo) {
       console.error(`Tenant info for ID '${tenantId}' not found in local storage.`);
       console.error(
