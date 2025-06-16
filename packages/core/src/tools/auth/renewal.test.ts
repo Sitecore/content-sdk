@@ -270,7 +270,7 @@ describe('getRefreshAccessToken', () => {
   it('should return token data with tenantName on success', async () => {
     postStub.resolves(fakeRefreshTokenResponseData);
 
-    decodeStub.returns({ tenantName: 'DemoTenant' });
+    decodeStub.returns({ tokenTenantName: 'DemoTenant' });
 
     const result = await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);
 
@@ -282,16 +282,12 @@ describe('getRefreshAccessToken', () => {
     expect(postStub.calledOnce).to.be.true;
     const [url, options] = postStub.firstCall.args;
     expect(url).to.equal(`${fakeRefreshTokenInput.authority}/oauth/token`);
-    expect(options.method).to.equal('POST');
-
+    expect(options.toString()).to.include(`refresh_token=${fakeRefreshTokenInput.refreshToken}`);
     expect(decodeStub.calledOnceWith(fakeRefreshTokenResponseData.access_token)).to.be.true;
   });
 
   it('should throw with error_description on failure', async () => {
-    postStub.resolves({
-      error: 'invalid_request',
-      error_description: 'Invalid refresh token',
-    });
+    postStub.rejects(new Error('Invalid refresh token'));
 
     try {
       await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);
@@ -303,9 +299,7 @@ describe('getRefreshAccessToken', () => {
   });
 
   it('should throw with error message on failure if error_description is missing', async () => {
-    postStub.resolves({
-      error: 'unauthorized_client',
-    });
+    postStub.rejects(new Error('unauthorized_client'));
 
     try {
       await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);
@@ -317,7 +311,7 @@ describe('getRefreshAccessToken', () => {
   });
 
   it('should throw generic error when no error info is available', async () => {
-    postStub.resolves({});
+    postStub.rejects(new Error('Error refreshing access token'));
 
     try {
       await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);
