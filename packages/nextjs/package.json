@@ -20,6 +20,19 @@
   "engines": {
     "node": ">=22"
   },
+  "exports": {
+    "./config/cli": {
+      "import": "./dist/esm/config/cli/index.js",
+      "require": "./dist/cjs/config/cli/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "config/cli": [
+        "./types/config/cli/index.d.ts"
+      ]
+    }
+  },
   "author": {
     "name": "Sitecore Corporation",
     "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
