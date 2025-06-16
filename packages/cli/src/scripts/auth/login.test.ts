@@ -13,7 +13,7 @@ describe('login command', () => {
     baseUrl: 'https://api.example.com',
   };
 
-  const fakeAuthResponse = {
+  const fakeClientAuthResponse = {
     data: {
       access_token: 'test-access-token',
       expires_in: 3600,
@@ -23,16 +23,47 @@ describe('login command', () => {
     tokenTenantName: 'TestTenant',
   };
 
+  const fakeDeviceAuthResponse = {
+    device_code: 'device-code-123',
+    user_code: 'user-code-456',
+    verification_uri: 'https://verify.example.com',
+    verification_uri_complete: 'https://verify.example.com/complete',
+    expires_in: 900,
+    interval: 5,
+  };
+
+  const fakePolledTokenResponse = {
+    access_token: 'access-token-from-poll',
+    refresh_token: 'refresh-token-from-poll',
+    expires_in: 3600,
+    token_type: 'Bearer',
+  };
+
+  const fakeRefreshedTokenResponse = {
+    access_token: 'refreshed-access-token',
+    refresh_token: 'refreshed-refresh-token',
+    expires_in: 3600,
+    token_type: 'Bearer',
+    tenantName: 'TestTenant',
+  };
+
   let clientCredentialsStub: sinon.SinonStub;
+  let startDeviceAuthStub: sinon.SinonStub;
+  let pollForTokenStub: sinon.SinonStub;
+  let refreshAccessTokenStub: sinon.SinonStub;
+
   let writeTenantAuthStub: sinon.SinonStub;
   let writeTenantInfoStub: sinon.SinonStub;
   let setActiveTenantStub: sinon.SinonStub;
-  let consoleInfoStub: sinon.SinonStub;
   let processExitStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
+  let consoleLogStub: sinon.SinonStub;
 
   beforeEach(() => {
-    clientCredentialsStub = sinon.stub().resolves(fakeAuthResponse);
+    clientCredentialsStub = sinon.stub().resolves(fakeClientAuthResponse);
+    startDeviceAuthStub = sinon.stub().resolves(fakeDeviceAuthResponse);
+    pollForTokenStub = sinon.stub().resolves(fakePolledTokenResponse);
+    refreshAccessTokenStub = sinon.stub().resolves(fakeRefreshedTokenResponse);
     writeTenantAuthStub = sinon.stub().resolves();
     writeTenantInfoStub = sinon.stub().resolves();
     setActiveTenantStub = sinon.stub();
@@ -41,11 +72,14 @@ describe('login command', () => {
       writeTenantAuthInfo: writeTenantAuthStub,
       writeTenantInfo: writeTenantInfoStub,
       setActiveTenant: setActiveTenantStub,
+      startDeviceAuthFlow: startDeviceAuthStub,
+      pollForDeviceToken: pollForTokenStub,
+      getRefreshAccessToken: refreshAccessTokenStub,
     });
 
-    consoleInfoStub = sinon.stub(console, 'info');
     processExitStub = sinon.stub(process, 'exit');
     consoleErrorStub = sinon.stub(console, 'error');
+    consoleLogStub = sinon.stub(console, 'log');
   });
 
   afterEach(() => {
@@ -68,8 +102,88 @@ describe('login command', () => {
 
     expect(writeTenantAuthStub.calledOnce).to.be.true;
     expect(writeTenantInfoStub.calledOnce).to.be.true;
-    expect(setActiveTenantStub.calledWith(fakeAuthResponse.tokenTenantId)).to.be.true;
-    expect(consoleInfoStub.calledWithMatch(/Logged in successfully/)).to.be.true;
+    expect(setActiveTenantStub.calledWith(fakeClientAuthResponse.tokenTenantId)).to.be.true;
+    expect(consoleLogStub.calledWithMatch(/Logged in successfully/)).to.be.true;
+  });
+
+  it('should perform login using device flow and refresh token', async () => {
+    const deviceFlowArgs = {
+      clientId: 'test-client-id',
+      tenantId: 'test-tenant-id',
+      organizationId: 'test-org-id',
+      authority: 'https://auth.example.com',
+      audience: 'https://api.example.com',
+      baseUrl: 'https://api.example.com',
+    };
+
+    await login.handler(deviceFlowArgs as any);
+
+    expect(startDeviceAuthStub.calledOnce).to.be.true;
+    expect(
+      pollForTokenStub.calledWith({
+        clientId: deviceFlowArgs.clientId,
+        device_code: fakeDeviceAuthResponse.device_code,
+        authority: deviceFlowArgs.authority,
+        interval: fakeDeviceAuthResponse.interval,
+      })
+    ).to.be.true;
+
+    expect(
+      refreshAccessTokenStub.calledWith({
+        clientId: deviceFlowArgs.clientId,
+        refreshToken: fakePolledTokenResponse.refresh_token,
+        tenantId: deviceFlowArgs.tenantId,
+        organizationId: deviceFlowArgs.organizationId,
+        authority: deviceFlowArgs.authority,
+      })
+    ).to.be.true;
+
+    expect(writeTenantAuthStub.calledOnce).to.be.true;
+    expect(writeTenantInfoStub.calledOnce).to.be.true;
+    expect(setActiveTenantStub.calledWith(deviceFlowArgs.tenantId)).to.be.true;
+    expect(consoleLogStub.calledWithMatch(/Logged in successfully/)).to.be.true;
+  });
+
+  it('should exit if tenantId is missing in device flow', async () => {
+    const args = {
+      clientId: 'test-client-id',
+      organizationId: 'test-org-id',
+    };
+
+    processExitStub.callsFake(() => {
+      throw new Error('EXIT_CALLED');
+    });
+
+    try {
+      await login.handler(args as any);
+      throw new Error('Test failed: process.exit was not called');
+    } catch (err) {
+      expect((err as Error).message).to.equal('EXIT_CALLED');
+      expect(consoleErrorStub.calledWithMatch(/Tenant ID is required/)).to.be.true;
+    }
+
+    expect(processExitStub.calledOnceWith(1)).to.be.true;
+  });
+
+  it('should exit if organizationId is missing in device flow', async () => {
+    const args = {
+      clientId: 'test-client-id',
+      tenantId: 'test-tenant-id',
+    };
+
+    processExitStub.callsFake(() => {
+      throw new Error('EXIT_CALLED');
+    });
+
+    try {
+      await login.handler(args as any);
+      throw new Error('Test failed: process.exit was not called');
+    } catch (err) {
+      expect((err as Error).message).to.equal('EXIT_CALLED');
+      expect(consoleErrorStub.calledWithMatch(/Organization ID is required/)).to.be.true;
+    }
+
+    expect(processExitStub.calledOnceWith(1)).to.be.true;
   });
 
   it('should exit when clientCredentialsFlow throws', async () => {

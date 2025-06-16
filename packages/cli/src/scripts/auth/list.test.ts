@@ -47,7 +47,7 @@ describe('list command', () => {
     await list.handler({} as any);
 
     const expectedLogs = [
-      '\n Known tenants:\n',
+      '\nKnown tenants:\n',
       'Tenant 1:',
       '  Tenant ID       : t1',
       '  Tenant Name     : Tenant One',

@@ -18,7 +18,7 @@ export const list: CommandModule = {
       return;
     }
 
-    console.log('\n Known tenants:\n');
+    console.log('\nKnown tenants:\n');
 
     tenants.forEach((tenant, index) => {
       console.log(`Tenant ${index + 1}:`);

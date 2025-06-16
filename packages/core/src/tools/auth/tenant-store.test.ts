@@ -13,7 +13,7 @@ import {
   decodeJwtPayload,
 } from './tenant-store';
 
-describe('tenant-store utils', () => {
+describe('Tenant-Store Utils', () => {
   const tenantId = 'tenant-abc';
   const tenantDir = path.join(os.homedir(), '.sitecore', 'sitecore-tools', tenantId);
   const authPath = path.join(tenantDir, 'auth.json');
