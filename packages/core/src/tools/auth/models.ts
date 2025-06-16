@@ -170,23 +170,23 @@ export interface DeviceAuthResponse {
   /**
    * Code the device will use to poll the token endpoint.
    */
-  deviceCode: string;
+  device_code: string;
   /**
    * Code shown to the user for manual input during verification.
    */
-  userCode: string;
+  user_code: string;
   /**
    * URI where the user should go to complete authentication.
    */
-  verificationUri: string;
+  verification_uri: string;
   /**
    * Optional URI that includes the user code, allowing for a streamlined login experience.
    */
-  verificationUriComplete?: string;
+  verification_uri_complete?: string;
   /**
    * Time (in seconds) until the device code expires.
    */
-  expiresIn: number;
+  expires_in: number;
   /**
    * Recommended polling interval (in seconds) for token requests.
    */
@@ -204,7 +204,7 @@ export interface DeviceTokenPollRequest {
   /**
    * Device code previously obtained from the device authorization flow.
    */
-  deviceCode: string;
+  device_code: string;
   /**
    * Optional polling interval in seconds. If not provided, a default is used.
    */
@@ -213,4 +213,38 @@ export interface DeviceTokenPollRequest {
    * Optional OAuth 2.0 authority endpoint for token polling.
    */
   authority?: string;
+}
+
+/**
+ * Represents the raw OAuth token response returned by the authorization server.
+ * This includes the access token, refresh token, and optional ID token and scope.
+ */
+export interface TokenResponse {
+  /** The access token used for authenticating API requests */
+  access_token: string;
+  /** The refresh token used to obtain a new access token when it expires */
+  refresh_token: string;
+  /** The number of seconds until the access token expires */
+  expires_in: number;
+  /** The type of token issued, typically "Bearer" */
+  token_type: string;
+  /** An optional ID token containing user identity claims (usually JWT) */
+  id_token?: string;
+  /** The scopes granted for the access token, space-delimited */
+  scope?: string;
+}
+
+/**
+ * Represents the application-specific token response returned by `_getRefreshAccessToken`.
+ * In addition to the raw OAuth tokens, it includes the decoded `tenantName` for convenience.
+ */
+export interface RefreshAccessTokenResponse extends TokenResponse {
+  /** The tenant name extracted from the decoded access token payload */
+  tenantName?: string;
+}
+
+export interface AuthResponse {
+  [key: string]: any;
+  access_token: string;
+  expires_in: number;
 }

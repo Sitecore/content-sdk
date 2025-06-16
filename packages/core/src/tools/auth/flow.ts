@@ -4,8 +4,10 @@ import {
   DeviceAuthResponse,
   DeviceTokenPollRequest,
   TenantArgs,
+  AuthResponse,
 } from './models';
 import { decodeJwtPayload } from './tenant-store';
+import { sendPostRequest } from './fetcher';
 import {
   DEFAULT_SITECORE_AUTH_DOMAIN,
   DEFAULT_SITECORE_AUTH_AUDIENCE,
@@ -20,14 +22,7 @@ import {
 /**
  * Performs the OAuth 2.0 client credentials flow to obtain a JWT access token
  * from the Sitecore Identity Provider using the provided client credentials.
- * @param {object} [args] - The arguments for client credentials flow
- * @param {string} [args.clientId] - The client ID registered with Sitecore Identity
- * @param {string} [args.clientSecret] - The client secret associated with the client ID
- * @param {string} [args.organizationId] - The ID of the organization the client belongs to
- * @param {string} [args.tenantId] - The tenant ID representing the specific Sitecore environment
- * @param {string} [args.audience] - The API audience the token is intended for. Defaults to `constants.DEFAULT_SITECORE_AUTH_AUDIENCE`
- * @param {string} [args.authority] - The auth server base URL. Defaults to `constants.DEFAULT_SITECORE_AUTH_DOMAIN`
- * @param {string} [args.baseUrl] - The base URL for the API, used to construct the audience. Defaults to `constants.DEFAULT_SITECORE_AUTH_BASE_URL`
+ * @param {TenantArgs} params - Parameters including clientId, clientSecret, organizationId, tenantId, audience, authority, and baseUrl.
  * @returns A Promise that resolves to the access token response (including access token, token type, expiry, etc.)
  * @throws Will log and exit the process if the request fails or returns a non-OK status
  */
@@ -94,17 +89,8 @@ async function _clientCredentialsFlow({
     baseUrl: baseUrl ?? '',
   });
 
-  const response = await fetch(`${authority}/oauth/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString(),
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.error_description || data.error || 'Error during client credentials flow');
-  }
+  const url = `${authority}/oauth/token`;
+  const data = await sendPostRequest<AuthResponse>(url, params);
 
   const decodedPayload = decodeJwtPayload(data.access_token) || {};
 
@@ -122,7 +108,7 @@ async function _clientCredentialsFlow({
     throw new Error('\n Mismatch: Provided organization ID does not match claims organization ID.');
   }
 
-  return { data, tokenOrgId, tokenTenantId, tokenTenantName, accessToken: data.access_token };
+  return { data, tokenOrgId, tokenTenantId, tokenTenantName };
 }
 
 export async function _startDeviceAuthFlow({
@@ -138,87 +124,53 @@ export async function _startDeviceAuthFlow({
     baseUrl,
   });
 
-  const response = await fetch(`${authority}/oauth/device/code`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString(),
-  });
+  const url = `${authority}/oauth/device/code`;
+  const responseBody = (await sendPostRequest(url, params)) as DeviceAuthResponse;
 
-  const responseBody = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      responseBody.error_description ||
-        responseBody.error ||
-        'Error during device authorization flow'
-    );
-  }
-
-  const {
-    device_code: deviceCode,
-    user_code: userCode,
-    verification_uri: verificationUri,
-    verification_uri_complete: verificationUriComplete,
-    expires_in: expiresIn,
-    interval,
-  } = responseBody;
-
-  return {
-    deviceCode,
-    userCode,
-    verificationUri,
-    verificationUriComplete,
-    expiresIn,
-    interval,
-  };
+  return responseBody;
 }
 
 export async function _pollForDeviceToken({
   clientId,
-  deviceCode,
+  device_code,
   interval = DEFAULT_INTERVAL,
   authority = DEFAULT_SITECORE_AUTH_DOMAIN,
-}: DeviceTokenPollRequest) {
+}: DeviceTokenPollRequest): Promise<AuthResponse> {
   const startTime = Date.now();
 
   while (Date.now() - startTime < TIMEOUT * 1000) {
     const params = new URLSearchParams({
       grant_type: DEVICE_GRANT_TYPE,
-      device_code: deviceCode,
+      device_code,
       client_id: clientId,
     });
 
-    const response = await fetch(`${authority}/oauth/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params.toString(),
-    });
+    const url = `${authority}/oauth/token`;
+    const responseBody = await sendPostRequest<AuthResponse>(url, params, false);
 
-    const responseBody = await response.json();
+    if ('error' in responseBody) {
+      switch (responseBody.error) {
+        case 'authorization_pending':
+          console.log('\n ⌛ Waiting for user authorization...');
+          break;
 
-    if (response.ok) {
+        case 'slow_down':
+          console.log('🐢 Slowing down polling interval...');
+          interval += 5;
+          break;
+
+        default:
+          throw new Error(
+            responseBody.error_description ||
+              responseBody.error ||
+              'Unknown error during device token polling.'
+          );
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, interval * 1000));
+    } else {
       return responseBody;
     }
-
-    switch (responseBody.error) {
-      case 'authorization_pending':
-        console.log('\n ⌛ Waiting for user authorization...');
-        break;
-
-      case 'slow_down':
-        console.log('🐢 Slowing down polling interval...');
-        interval += 5;
-        break;
-
-      default:
-        throw new Error(
-          responseBody.error_description ||
-            responseBody.error ||
-            'Unknown error during device token polling.'
-        );
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, interval * 1000));
   }
 
   throw new Error('⏳ Timeout: User did not complete authorization in time.');

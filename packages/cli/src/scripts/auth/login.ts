@@ -116,7 +116,7 @@ export const login: CommandModule<object, TenantArgs> = {
         orgId = tokenOrgId;
         tenantName = tokenTenantName;
       } else {
-        console.log('\n Using Device Code Flow...');
+        console.log('\n Using Device Authorization Flow...');
 
         if (!inputTenantId) {
           throw new Error('\n Tenant ID is required for Device Code Flow.');
@@ -134,26 +134,27 @@ export const login: CommandModule<object, TenantArgs> = {
         });
 
         const {
-          deviceCode,
-          userCode,
-          verificationUri,
-          verificationUriComplete,
+          device_code,
+          user_code,
+          verification_uri,
+          verification_uri_complete,
           interval,
         } = deviceAuthData;
 
         console.log('\n🔐 Device Authorization Started');
-        if (verificationUriComplete) {
+
+        if (verification_uri_complete) {
           console.log(
-            `\n 👉 Open the following URL to authenticate:\n  ${verificationUriComplete}`
+            `\n 👉 Open the following URL to authenticate:\n  ${verification_uri_complete}`
           );
         } else {
-          console.log(`👉 Visit: ${verificationUri}`);
-          console.log(`🔑 Then enter the code: ${userCode}`);
+          console.log(`👉 Visit: ${verification_uri}`);
+          console.log(`🔑 Then enter the code: ${user_code}`);
         }
 
         const { refresh_token } = await pollForDeviceToken({
           clientId,
-          deviceCode,
+          device_code,
           authority,
           interval,
         });

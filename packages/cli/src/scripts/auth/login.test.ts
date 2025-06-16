@@ -24,11 +24,11 @@ describe('login command', () => {
   };
 
   const fakeDeviceAuthResponse = {
-    deviceCode: 'device-code-123',
-    userCode: 'user-code-456',
-    verificationUri: 'https://verify.example.com',
-    verificationUriComplete: 'https://verify.example.com/complete',
-    expiresIn: 900,
+    device_code: 'device-code-123',
+    user_code: 'user-code-456',
+    verification_uri: 'https://verify.example.com',
+    verification_uri_complete: 'https://verify.example.com/complete',
+    expires_in: 900,
     interval: 5,
   };
 
@@ -122,7 +122,7 @@ describe('login command', () => {
     expect(
       pollForTokenStub.calledWith({
         clientId: deviceFlowArgs.clientId,
-        deviceCode: fakeDeviceAuthResponse.deviceCode,
+        device_code: fakeDeviceAuthResponse.device_code,
         authority: deviceFlowArgs.authority,
         interval: fakeDeviceAuthResponse.interval,
       })

@@ -1,6 +1,12 @@
 ﻿import { getActiveTenant, clearActiveTenant } from './tenant-state';
 import { clientCredentialsFlow } from './flow';
-import { RefreshTokenRequest, TenantAuthInfo, TenantInfo } from './models';
+import {
+  RefreshAccessTokenResponse,
+  RefreshTokenRequest,
+  TenantAuthInfo,
+  TenantInfo,
+  TokenResponse,
+} from './models';
 import {
   writeTenantAuthInfo,
   readTenantAuthInfo,
@@ -10,6 +16,7 @@ import {
 import { deleteKey } from './encryption';
 import { DEFAULT_SITECORE_AUTH_DOMAIN, REFRESH_GRANT_TYPE } from './../../constants';
 import { decodeJwtPayload } from './tenant-store';
+import { sendPostRequest } from './fetcher';
 
 /**
  * Requests a new access token using the OAuth 2.0 refresh token grant type.
@@ -96,6 +103,7 @@ export async function validateAndRenewAuthIfExpired(): Promise<{ tenantId: strin
   try {
     if (authInfo.clientSecret) {
       await renewClientToken(authInfo, tenantInfo);
+      return { tenantId };
     } else if (authInfo.refresh_token) {
       const refreshTokenResponse = await getRefreshAccessToken({
         clientId: tenantInfo.clientId,
@@ -106,17 +114,16 @@ export async function validateAndRenewAuthIfExpired(): Promise<{ tenantId: strin
       });
 
       await writeTenantAuthInfo(tenantId, {
-        expires_at: new Date(
-          Date.now() + refreshTokenResponse.data.expires_in * 1000
-        ).toISOString(),
-        ...refreshTokenResponse.data,
+        expires_at: new Date(Date.now() + refreshTokenResponse.expires_in * 1000).toISOString(),
+        ...refreshTokenResponse,
       });
 
       console.log(`\n Token for tenant ${tenantId} renewed.`);
+
+      return { tenantId };
     } else {
       throw new Error('\n No valid credentials found for token renewal.');
     }
-    return { tenantId };
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
     console.error(`\n Failed to renew token for tenant '${tenantId}: ${errorMessage}'`);
@@ -138,7 +145,7 @@ async function _getRefreshAccessToken({
   tenantId,
   organizationId,
   authority = DEFAULT_SITECORE_AUTH_DOMAIN,
-}: RefreshTokenRequest) {
+}: RefreshTokenRequest): Promise<RefreshAccessTokenResponse> {
   const params = new URLSearchParams({
     client_id: clientId,
     grant_type: REFRESH_GRANT_TYPE,
@@ -147,19 +154,10 @@ async function _getRefreshAccessToken({
     organization_id: organizationId,
   });
 
-  const response = await fetch(`${authority}/oauth/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString(),
-  });
+  const url = `${authority}/oauth/token`;
+  const data = await sendPostRequest<TokenResponse>(url, params);
 
-  const data = await response.json();
+  const { tokenTenantName } = decodeJwtPayload(data.access_token) || {};
 
-  if (!response.ok) {
-    throw new Error(data.error_description || data.error || 'Error refreshing access token');
-  }
-
-  const { tenantName } = decodeJwtPayload(data.access_token) || {};
-
-  return { ...data, tenantName };
+  return { ...data, tenantName: tokenTenantName };
 }

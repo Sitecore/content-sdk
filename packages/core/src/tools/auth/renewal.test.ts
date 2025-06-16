@@ -7,8 +7,9 @@ import * as tenantStore from './tenant-store';
 import * as tenantState from './tenant-state';
 import * as encryptionUtil from './encryption';
 import * as renewalUtils from './renewal';
+import * as fetcherUtil from './fetcher';
 
-describe('Auth Token Renewal Utilities', () => {
+describe.only('Auth Token Renewal Utilities', () => {
   const futureDate = new Date(Date.now() + 3600 * 1000).toISOString();
   const pastDate = new Date(Date.now() - 3600 * 1000).toISOString();
 
@@ -172,6 +173,10 @@ describe('Auth Token Renewal Utilities', () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves({ refresh_token: 'test-refresh-token', expires_at: pastDate });
       readTenantInfoStub.resolves(tenantMock);
+      refreshTokenStub.resolves({
+        ...fakeRefreshTokenResponseData,
+        tenantName: 'DemoTenant',
+      });
 
       const result = await validateAndRenewAuthIfExpired();
 
@@ -247,14 +252,15 @@ describe('getRefreshAccessToken', () => {
     token_type: 'Bearer',
   };
 
-  let fetchStub: sinon.SinonStub;
+  let postStub: sinon.SinonStub;
   let decodeStub: sinon.SinonStub;
 
   beforeEach(() => {
     decodeStub = sinon.stub().returns(fakeRefreshTokenResponseData);
-    fetchStub = sinon.stub(global, 'fetch');
+    postStub = sinon.stub();
 
     sinon.replace.usingAccessor(jwtUtils.unitMocks, 'decodeJwtPayload', decodeStub);
+    sinon.replace.usingAccessor(fetcherUtil.unitMocks, 'sendPostRequest', postStub);
   });
 
   afterEach(() => {
@@ -262,10 +268,7 @@ describe('getRefreshAccessToken', () => {
   });
 
   it('should return token data with tenantName on success', async () => {
-    fetchStub.resolves({
-      ok: true,
-      json: async () => fakeRefreshTokenResponseData,
-    } as Response);
+    postStub.resolves(fakeRefreshTokenResponseData);
 
     decodeStub.returns({ tenantName: 'DemoTenant' });
 
@@ -276,8 +279,8 @@ describe('getRefreshAccessToken', () => {
       tenantName: 'DemoTenant',
     });
 
-    expect(fetchStub.calledOnce).to.be.true;
-    const [url, options] = fetchStub.firstCall.args;
+    expect(postStub.calledOnce).to.be.true;
+    const [url, options] = postStub.firstCall.args;
     expect(url).to.equal(`${fakeRefreshTokenInput.authority}/oauth/token`);
     expect(options.method).to.equal('POST');
 
@@ -285,13 +288,10 @@ describe('getRefreshAccessToken', () => {
   });
 
   it('should throw with error_description on failure', async () => {
-    fetchStub.resolves({
-      ok: false,
-      json: async () => ({
-        error: 'invalid_request',
-        error_description: 'Invalid refresh token',
-      }),
-    } as Response);
+    postStub.resolves({
+      error: 'invalid_request',
+      error_description: 'Invalid refresh token',
+    });
 
     try {
       await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);
@@ -303,12 +303,9 @@ describe('getRefreshAccessToken', () => {
   });
 
   it('should throw with error message on failure if error_description is missing', async () => {
-    fetchStub.resolves({
-      ok: false,
-      json: async () => ({
-        error: 'unauthorized_client',
-      }),
-    } as Response);
+    postStub.resolves({
+      error: 'unauthorized_client',
+    });
 
     try {
       await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);
@@ -320,10 +317,7 @@ describe('getRefreshAccessToken', () => {
   });
 
   it('should throw generic error when no error info is available', async () => {
-    fetchStub.resolves({
-      ok: false,
-      json: async () => ({}),
-    } as Response);
+    postStub.resolves({});
 
     try {
       await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);

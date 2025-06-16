@@ -2,7 +2,7 @@
 import sinon from 'sinon';
 import { clientCredentialsFlow, startDeviceAuthFlow, pollForDeviceToken } from './flow';
 import * as jwtUtil from './tenant-store';
-import { DEFAULT_SITECORE_AUTH_AUDIENCE, DEFAULT_SITECORE_AUTH_BASE_URL } from '../../constants';
+import * as fetcherUtil from './fetcher';
 
 describe('Auth flows', () => {
   const fakeToken = 'fake.jwt.token';
@@ -36,16 +36,17 @@ describe('Auth flows', () => {
     }),
   };
 
-  let fetchStub: sinon.SinonStub;
+  let postStub: sinon.SinonStub;
   let decodeStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
   let clock: sinon.SinonFakeTimers;
 
   beforeEach(() => {
-    fetchStub = sinon.stub(global, 'fetch' as any).resolves(fetchClientResponse as any);
+    postStub = sinon.stub();
     decodeStub = sinon.stub().returns(fakeDecoded);
     sinon.replace.usingAccessor(jwtUtil.unitMocks, 'decodeJwtPayload', decodeStub);
+    sinon.replace.usingAccessor(fetcherUtil.unitMocks, 'sendPostRequest', postStub);
 
     consoleErrorStub = sinon.stub(console, 'error');
     consoleLogStub = sinon.stub(console, 'log');
@@ -58,10 +59,7 @@ describe('Auth flows', () => {
 
   describe('clientCredentialsFlow', () => {
     it('should succeed without tenantId/orgId using token claims', async () => {
-      fetchStub.resolves({
-        ok: true,
-        json: async () => ({ access_token: fakeToken, expires_in: 3600 }),
-      });
+      postStub.resolves({ access_token: fakeToken });
 
       const result = await clientCredentialsFlow({ clientId: 'id', clientSecret: 'secret' });
 
@@ -75,6 +73,7 @@ describe('Auth flows', () => {
         tokenOrgId: 'org456',
         tokenTenantName: 'FakeTenant',
       });
+      postStub.resolves({ access_token: fakeToken });
 
       const result = await clientCredentialsFlow({
         clientId: 'id',
@@ -82,6 +81,8 @@ describe('Auth flows', () => {
         tenantId: 'tenant123',
         organizationId: 'org456',
       });
+
+      console.log('test', result);
 
       expect(result.data.access_token).to.equal(fakeToken);
       expect(result.tokenTenantId).to.equal('tenant123');
@@ -95,21 +96,24 @@ describe('Auth flows', () => {
         client_secret: 'secret',
         organization_id: '',
         tenant_id: '',
-        audience: DEFAULT_SITECORE_AUTH_AUDIENCE,
+        audience: 'https://custom-authority',
         grant_type: 'client_credentials',
-        baseUrl: DEFAULT_SITECORE_AUTH_BASE_URL,
+        baseUrl: 'https://custom-base',
       }).toString();
 
-      let actualRequestBody: string = '';
+      let actualRequestBody = '';
 
-      fetchStub.callsFake(async (_url: string, options: any) => {
-        actualRequestBody = options.body;
-        return fetchClientResponse as any;
+      postStub.callsFake(async (url: string, params: URLSearchParams) => {
+        actualRequestBody = params.toString(); // capture the request body
+        return fetchClientResponse;
       });
 
       await clientCredentialsFlow({
         clientId: 'id',
         clientSecret: 'secret',
+        audience: 'https://custom-authority',
+        authority: 'https://custom-authority',
+        baseUrl: 'https://custom-base',
       });
 
       expect(actualRequestBody).to.equal(expectedParams);
@@ -122,10 +126,11 @@ describe('Auth flows', () => {
 
       let actualUrl = '';
       let actualBody = '';
-      fetchStub.callsFake(async (url: string, options: any) => {
+
+      postStub.callsFake(async (url: string, params: URLSearchParams) => {
         actualUrl = url;
-        actualBody = options.body;
-        return { ok: true, json: async () => ({ access_token: fakeToken, expires_in: 3600 }) };
+        actualBody = params.toString();
+        return { access_token: fakeToken };
       });
 
       await clientCredentialsFlow({
@@ -138,10 +143,12 @@ describe('Auth flows', () => {
 
       expect(actualUrl).to.equal(`${authority}/oauth/token`);
       expect(actualBody).to.include(`audience=${encodeURIComponent(audience)}`);
+      expect(actualBody).to.include(`baseUrl=${encodeURIComponent(baseUrl)}`);
     });
 
     it('should throw if token is missing required claims', async () => {
       decodeStub.returns({});
+      postStub.resolves({ access_token: null });
 
       try {
         await clientCredentialsFlow({
@@ -158,6 +165,8 @@ describe('Auth flows', () => {
     it('should throw if tenantId/orgId do not match token', async () => {
       decodeStub.returns({ ...fakeDecoded, tokenTenantId: 'wrong-id' });
 
+      postStub.resolves({ access_token: fakeToken });
+
       try {
         await clientCredentialsFlow({
           clientId: 'id',
@@ -171,7 +180,7 @@ describe('Auth flows', () => {
     });
 
     it('should throw if fetch fails', async () => {
-      fetchStub.resolves({ ok: false, json: async () => ({ error: 'unauthorized' }) });
+      postStub.resolves({ error: 'unauthorized' });
 
       try {
         await clientCredentialsFlow({
@@ -186,7 +195,7 @@ describe('Auth flows', () => {
 
   describe('startDeviceAuthFlow', () => {
     it('should return expected values on success', async () => {
-      fetchStub.resolves({ ok: true, json: async () => deviceAuthMock });
+      postStub.resolves(deviceAuthMock);
 
       const result = await startDeviceAuthFlow({
         clientId: 'abc',
@@ -195,21 +204,11 @@ describe('Auth flows', () => {
         baseUrl: 'https://api.example.com',
       });
 
-      expect(result).to.deep.equal({
-        deviceCode: 'device123',
-        userCode: 'user123',
-        verificationUri: 'https://verify.uri',
-        verificationUriComplete: 'https://verify.uri/complete',
-        expiresIn: 900,
-        interval: 5,
-      });
+      expect(result).to.deep.equal(deviceAuthMock);
     });
 
     it('should throw if response is not ok', async () => {
-      fetchStub.resolves({
-        ok: false,
-        json: async () => ({ error_description: 'Invalid client ID' }),
-      });
+      postStub.resolves({ error_description: 'Invalid client ID' });
 
       try {
         await startDeviceAuthFlow({
@@ -226,26 +225,26 @@ describe('Auth flows', () => {
 
   describe('pollForDeviceToken', () => {
     it('should return token on first success', async () => {
-      fetchStub.resolves({ ok: true, json: async () => tokenResponse });
+      postStub.resolves(tokenResponse);
 
       const result = await pollForDeviceToken({
         clientId: 'client123',
-        deviceCode: 'device456',
+        device_code: 'device456',
       });
 
       expect(result).to.deep.equal(tokenResponse);
     });
 
     it('should poll through authorization_pending and return token', async () => {
-      fetchStub
+      postStub
         .onCall(0)
-        .resolves({ ok: false, json: async () => ({ error: 'authorization_pending' }) })
+        .resolves({ error: 'authorization_pending' })
         .onCall(1)
-        .resolves({ ok: true, json: async () => tokenResponse });
+        .resolves(tokenResponse);
 
       const promise = pollForDeviceToken({
         clientId: 'client123',
-        deviceCode: 'device456',
+        device_code: 'device456',
         interval: 1,
       });
 
@@ -257,15 +256,15 @@ describe('Auth flows', () => {
     });
 
     it('should increase interval on slow_down', async () => {
-      fetchStub
+      postStub
         .onCall(0)
-        .resolves({ ok: false, json: async () => ({ error: 'slow_down' }) })
+        .resolves({ error: 'slow_down' })
         .onCall(1)
-        .resolves({ ok: true, json: async () => tokenResponse });
+        .resolves(tokenResponse);
 
       const promise = pollForDeviceToken({
         clientId: 'client123',
-        deviceCode: 'device456',
+        device_code: 'device456',
         interval: 1,
       });
 
@@ -277,21 +276,21 @@ describe('Auth flows', () => {
     });
 
     it('should throw for unknown error', async () => {
-      fetchStub.resolves({ ok: false, json: async () => ({ error: 'invalid_grant' }) });
+      postStub.resolves({ error: 'invalid_grant' });
 
       try {
-        await pollForDeviceToken({ clientId: 'client123', deviceCode: 'device456' });
+        await pollForDeviceToken({ clientId: 'client123', device_code: 'device456' });
       } catch (err) {
         expect((err as Error).message).to.equal('invalid_grant');
       }
     });
 
     it('should throw timeout error after polling', async () => {
-      fetchStub.resolves({ ok: false, json: async () => ({ error: 'authorization_pending' }) });
+      postStub.resolves({ error: 'authorization_pending' });
 
       const promise = pollForDeviceToken({
         clientId: 'client123',
-        deviceCode: 'device456',
+        device_code: 'device456',
         interval: 1,
       });
 
