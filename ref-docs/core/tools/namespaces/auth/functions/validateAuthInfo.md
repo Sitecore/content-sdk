@@ -8,7 +8,7 @@
 
 > **validateAuthInfo**(`authInfo`): `boolean`
 
-Defined in: [packages/core/src/tools/auth/renewal.ts:17](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/renewal.ts#L17)
+Defined in: [packages/core/src/tools/auth/renewal.ts:44](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/renewal.ts#L44)
 
 Validates whether a given auth config is still valid (i.e., not expired).
 
@@ -16,7 +16,7 @@ Validates whether a given auth config is still valid (i.e., not expired).
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `authInfo` | [`TenantAuth`](../../../interfaces/TenantAuth.md) | The tenant auth configuration. |
+| `authInfo` | [`TenantAuthInfo`](../../../interfaces/TenantAuthInfo.md) | The tenant auth configuration. |
 
 ## Returns
 

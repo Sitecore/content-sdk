@@ -8,11 +8,16 @@
 
 > **validateAndRenewAuthIfExpired**(): `Promise`\<`null` \| \{ `tenantId`: `string`; \}\>
 
-Defined in: [packages/core/src/tools/auth/renewal.ts:59](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/renewal.ts#L59)
+Defined in: [packages/core/src/tools/auth/renewal.ts:87](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/renewal.ts#L87)
 
 Ensures a valid token exists, renews it if expired.
-Returns tenant context if successful, otherwise null.
 
 ## Returns
 
 `Promise`\<`null` \| \{ `tenantId`: `string`; \}\>
+
+returns tenant context if successful, otherwise null.
+
+## Throws
+
+If renewal fails or credentials are missing.

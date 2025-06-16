@@ -6,9 +6,9 @@
 
 # Variable: readTenantAuthInfo()
 
-> **readTenantAuthInfo**: (`tenantId`) => `Promise`\<`null` \| [`TenantAuth`](../../../interfaces/TenantAuth.md)\> = `_readTenantAuthInfo`
+> **readTenantAuthInfo**: (`tenantId`) => `Promise`\<`null` \| [`TenantAuthInfo`](../../../interfaces/TenantAuthInfo.md)\> = `_readTenantAuthInfo`
 
-Defined in: [packages/core/src/tools/auth/tenant-store.ts:30](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/tenant-store.ts#L30)
+Defined in: [packages/core/src/tools/auth/tenant-store.ts:30](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/tenant-store.ts#L30)
 
 Read the authentication configuration for a tenant.
 
@@ -20,6 +20,6 @@ Read the authentication configuration for a tenant.
 
 ## Returns
 
-`Promise`\<`null` \| [`TenantAuth`](../../../interfaces/TenantAuth.md)\>
+`Promise`\<`null` \| [`TenantAuthInfo`](../../../interfaces/TenantAuthInfo.md)\>
 
 Parsed auth config or null if not found or failed to read.

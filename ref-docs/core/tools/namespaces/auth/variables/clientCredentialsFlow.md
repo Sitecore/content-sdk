@@ -6,9 +6,9 @@
 
 # Variable: clientCredentialsFlow()
 
-> **clientCredentialsFlow**: (`args`) => `Promise`\<\{ `accessToken`: `any`; `data`: `any`; `tokenOrgId`: `any`; `tokenTenantId`: `any`; `tokenTenantName`: `any`; \}\> = `_clientCredentialsFlow`
+> **clientCredentialsFlow**: (`params`) => `Promise`\<\{ `accessToken`: `string`; `data`: [`AuthResponse`](../../../interfaces/AuthResponse.md); `tokenOrgId`: `any`; `tokenTenantId`: `any`; `tokenTenantName`: `any`; \}\> = `_clientCredentialsFlow`
 
-Defined in: [packages/core/src/tools/auth/flow.ts:26](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/flow.ts#L26)
+Defined in: [packages/core/src/tools/auth/flow.ts:29](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/flow.ts#L29)
 
 Performs the OAuth 2.0 client credentials flow to obtain a JWT access token
 from the Sitecore Identity Provider using the provided client credentials.
@@ -17,11 +17,11 @@ from the Sitecore Identity Provider using the provided client credentials.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `args` | [`TenantArgs`](../../../interfaces/TenantArgs.md) | The arguments for client credentials flow |
+| `params` | [`TenantArgs`](../../../interfaces/TenantArgs.md) | Parameters including clientId, clientSecret, organizationId, tenantId, audience, authority, and baseUrl. |
 
 ## Returns
 
-`Promise`\<\{ `accessToken`: `any`; `data`: `any`; `tokenOrgId`: `any`; `tokenTenantId`: `any`; `tokenTenantName`: `any`; \}\>
+`Promise`\<\{ `accessToken`: `string`; `data`: [`AuthResponse`](../../../interfaces/AuthResponse.md); `tokenOrgId`: `any`; `tokenTenantId`: `any`; `tokenTenantName`: `any`; \}\>
 
 A Promise that resolves to the access token response (including access token, token type, expiry, etc.)
 
