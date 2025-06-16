@@ -17,19 +17,6 @@
     "coverage": "nyc npm test",
     "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/core --entryPoints src/index.ts --entryPoints src/config/index.ts --entryPoints src/client/index.ts --entryPoints src/i18n/index.ts --entryPoints src/layout/index.ts --entryPoints src/media/index.ts --entryPoints src/personalize/index.ts --entryPoints src/site/index.ts --entryPoints src/tracking/index.ts --entryPoints src/utils/index.ts --entryPoints src/editing/index.ts --entryPoints src/tools/index.ts --githubPages false"
   },
-  "exports": {
-    "./config/cli": {
-      "import": "./dist/esm/config/cli/index.js",
-      "require": "./dist/cjs/config/cli/index.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "config/cli": [
-        "./types/config/cli/index.d.ts"
-      ]
-    }
-  },
   "engines": {
     "node": ">=22"
   },
