@@ -49,7 +49,8 @@ describe('switch tenant command', () => {
 
     await switchTenant.handler({ tenantId: otherTenantId } as any);
 
-    expect(consoleErrorStub.calledWith('\nNo valid authentication found. Please login.')).to.be.true;
+    expect(consoleErrorStub.calledWith('\nNo valid authentication found. Please login.')).to.be
+      .true;
     expect(setActiveTenantStub.notCalled).to.be.true;
   });
 
