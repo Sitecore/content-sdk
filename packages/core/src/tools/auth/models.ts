@@ -42,7 +42,7 @@ export interface TenantSettings {
 /**
  * Auth configuration stored per tenant for accessing Sitecore APIs.
  */
-export interface TenantAuth {
+export interface TenantAuthInfo {
   /**
    * Access token issued by the identity provider
    */
@@ -113,3 +113,104 @@ export type EncryptedPayload = {
    */
   encryptedData: string;
 };
+
+/**
+ * Input parameters for exchanging a refresh token for a new access token.
+ */
+export interface RefreshTokenRequest {
+  /**
+   * OAuth 2.0 client identifier.
+   */
+  clientId: string;
+  /**
+   * Refresh token previously issued by the authorization server.
+   */
+  refreshToken: string;
+  /**
+   * Tenant identifier to bind the request to a specific tenant context.
+   */
+  tenantId: string;
+  /**
+   * Organization identifier for multi-tenant authorization scope.
+   */
+  organizationId: string;
+  /**
+   * Optional OAuth 2.0 authority endpoint (token issuer URL).
+   * Defaults to the Sitecore standard authority if not provided.
+   */
+  authority?: string;
+}
+
+/**
+ * Input parameters for initiating the OAuth 2.0 Device Authorization flow.
+ */
+export interface DeviceAuthRequest {
+  /**
+   * OAuth 2.0 client identifier.
+   */
+  clientId: string;
+  /**
+   * The intended recipient of the token (usually your protected resource or API).
+   */
+  audience: string;
+  /**
+   * OAuth 2.0 authority URL (token issuer).
+   */
+  authority: string;
+  /**
+   * Base URL for your API, used to build custom claims or context if needed.
+   */
+  baseUrl: string;
+}
+
+/**
+ * Response structure returned after initiating the device authorization flow.
+ */
+export interface DeviceAuthResponse {
+  /**
+   * Code the device will use to poll the token endpoint.
+   */
+  deviceCode: string;
+  /**
+   * Code shown to the user for manual input during verification.
+   */
+  userCode: string;
+  /**
+   * URI where the user should go to complete authentication.
+   */
+  verificationUri: string;
+  /**
+   * Optional URI that includes the user code, allowing for a streamlined login experience.
+   */
+  verificationUriComplete?: string;
+  /**
+   * Time (in seconds) until the device code expires.
+   */
+  expiresIn: number;
+  /**
+   * Recommended polling interval (in seconds) for token requests.
+   */
+  interval: number;
+}
+
+/**
+ * Input parameters for polling the OAuth 2.0 device token endpoint.
+ */
+export interface DeviceTokenPollRequest {
+  /**
+   * OAuth 2.0 client identifier.
+   */
+  clientId: string;
+  /**
+   * Device code previously obtained from the device authorization flow.
+   */
+  deviceCode: string;
+  /**
+   * Optional polling interval in seconds. If not provided, a default is used.
+   */
+  interval?: number;
+  /**
+   * Optional OAuth 2.0 authority endpoint for token polling.
+   */
+  authority?: string;
+}

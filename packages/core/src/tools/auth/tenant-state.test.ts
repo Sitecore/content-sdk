@@ -5,7 +5,7 @@ import path from 'path';
 import os from 'os';
 import { getActiveTenant, setActiveTenant, clearActiveTenant } from './tenant-state';
 
-describe('tenant-state utils', () => {
+describe('Tenant-State Utils', () => {
   const settingsFile = path.join(os.homedir(), '.sitecore', 'sitecore-tools', 'settings.json');
 
   let existsStub: sinon.SinonStub;

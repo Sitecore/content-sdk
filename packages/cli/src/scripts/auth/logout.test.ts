@@ -6,12 +6,12 @@ describe('logout command', () => {
   let getActiveTenantStub: sinon.SinonStub;
   let clearActiveTenantStub: sinon.SinonStub;
   let deleteTenantAuthInfoStub: sinon.SinonStub;
-  let consoleInfoStub: sinon.SinonStub;
+  let consoleLogStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
   let deleteKeyStub: sinon.SinonStub;
 
   beforeEach(() => {
-    consoleInfoStub = sinon.stub(console, 'info');
+    consoleLogStub = sinon.stub(console, 'info');
     consoleErrorStub = sinon.stub(console, 'error');
     clearActiveTenantStub = sinon.stub();
     deleteTenantAuthInfoStub = sinon.stub();
@@ -50,6 +50,6 @@ describe('logout command', () => {
     expect(clearActiveTenantStub.calledOnce).to.be.true;
     expect(deleteTenantAuthInfoStub.calledWith(mockTenantId)).to.be.true;
     expect(deleteKeyStub.calledWith(mockTenantId)).to.be.true;
-    expect(consoleInfoStub.calledWithMatch(`Logged out from tenant ${mockTenantId}`)).to.be.true;
+    expect(consoleLogStub.calledWithMatch(`Logged out from tenant ${mockTenantId}`)).to.be.true;
   });
 });
