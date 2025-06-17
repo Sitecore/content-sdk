@@ -1,13 +1,15 @@
 ﻿import { expect } from 'chai';
 import sinon from 'sinon';
-import { validateAuthInfo, renewClientToken, validateAndRenewAuthIfExpired } from './renewal';
-
+import { validateAuthInfo, validateAndRenewAuthIfExpired, renewClientToken } from './renewal';
+import * as jwtUtils from './tenant-store';
 import * as authFlow from './flow';
 import * as tenantStore from './tenant-store';
 import * as tenantState from './tenant-state';
 import * as encryptionUtil from './encryption';
+import * as renewalUtils from './renewal';
+import * as fetcherUtil from './fetcher';
 
-describe('auth token renewal utilities', () => {
+describe('Auth Token Renewal Utilities', () => {
   const futureDate = new Date(Date.now() + 3600 * 1000).toISOString();
   const pastDate = new Date(Date.now() - 3600 * 1000).toISOString();
 
@@ -28,19 +30,27 @@ describe('auth token renewal utilities', () => {
     baseUrl: 'https://fake.base.url',
   };
 
-  let flowStub: sinon.SinonStub;
+  const fakeRefreshTokenResponseData = {
+    access_token: 'fake-access-token',
+    refresh_token: 'new-refresh-token',
+    expires_in: 3600,
+    token_type: 'Bearer',
+  };
+
+  let clientCredentialsFlowStub: sinon.SinonStub;
   let writeStub: sinon.SinonStub;
   let readAuthStub: sinon.SinonStub;
   let readTenantInfoStub: sinon.SinonStub;
   let getTenantStub: sinon.SinonStub;
   let deleteAuthStub: sinon.SinonStub;
   let clearActiveStub: sinon.SinonStub;
+  let consoleLogStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
-  let consoleWarnStub: sinon.SinonStub;
   let deleteKeyStub: sinon.SinonStub;
+  let refreshTokenStub: sinon.SinonStub;
 
   beforeEach(() => {
-    flowStub = sinon.stub().resolves({
+    clientCredentialsFlowStub = sinon.stub().resolves({
       data: {
         access_token: 'new-token',
         expires_in: 3600,
@@ -49,29 +59,35 @@ describe('auth token renewal utilities', () => {
       tokenTenantId: 'tenant1',
       tokenTenantName: 'DemoTenant',
     });
-    sinon.replace.usingAccessor(authFlow.unitMocks, 'clientCredentialsFlow', flowStub);
 
     writeStub = sinon.stub().resolves();
     readAuthStub = sinon.stub();
     readTenantInfoStub = sinon.stub();
     deleteAuthStub = sinon.stub().resolves();
     deleteKeyStub = sinon.stub().resolves();
+    clearActiveStub = sinon.stub().resolves();
+    getTenantStub = sinon.stub();
+    refreshTokenStub = sinon.stub().resolves({
+      data: fakeRefreshTokenResponseData,
+      tenantName: 'DemoTenant',
+    });
 
     sinon.replace.usingAccessor(tenantStore.unitMocks, 'writeTenantAuthInfo', writeStub);
     sinon.replace.usingAccessor(tenantStore.unitMocks, 'readTenantAuthInfo', readAuthStub);
     sinon.replace.usingAccessor(tenantStore.unitMocks, 'readTenantInfo', readTenantInfoStub);
     sinon.replace.usingAccessor(tenantStore.unitMocks, 'deleteTenantAuthInfo', deleteAuthStub);
     sinon.replace.usingAccessor(encryptionUtil.unitMocks, 'deleteKey', deleteKeyStub);
-
-    getTenantStub = sinon.stub();
-    clearActiveStub = sinon.stub().resolves();
-
     sinon.replace.usingAccessor(tenantState.unitMocks, 'getActiveTenant', getTenantStub);
     sinon.replace.usingAccessor(tenantState.unitMocks, 'clearActiveTenant', clearActiveStub);
+    sinon.replace.usingAccessor(
+      authFlow.unitMocks,
+      'clientCredentialsFlow',
+      clientCredentialsFlowStub
+    );
+    sinon.replace.usingAccessor(renewalUtils.unitMocks, 'getRefreshAccessToken', refreshTokenStub);
 
-    consoleInfoStub = sinon.stub(console, 'info');
+    consoleLogStub = sinon.stub(console, 'log');
     consoleErrorStub = sinon.stub(console, 'error');
-    consoleWarnStub = sinon.stub(console, 'warn');
   });
 
   afterEach(() => {
@@ -94,7 +110,7 @@ describe('auth token renewal utilities', () => {
     it('should call flow and update auth file with new token', async () => {
       await renewClientToken(authMock, tenantMock);
 
-      expect(flowStub.calledOnce).to.be.true;
+      expect(clientCredentialsFlowStub.calledOnce).to.be.true;
       expect(writeStub.calledOnce).to.be.true;
       expect(writeStub.firstCall.args[0]).to.equal('tenant1');
 
@@ -142,20 +158,146 @@ describe('auth token renewal utilities', () => {
       expect(result).to.deep.equal({ tenantId: 'tenant1' });
     });
 
+    it('should renew token using client credentials flow if clientSecret is present', async () => {
+      getTenantStub.returns('tenant1');
+      readAuthStub.resolves({ ...authMock, expires_at: pastDate });
+      readTenantInfoStub.resolves(tenantMock);
+
+      const result = await validateAndRenewAuthIfExpired();
+
+      expect(clientCredentialsFlowStub.calledOnce).to.be.true;
+      expect(result).to.deep.equal({ tenantId: 'tenant1' });
+    });
+
+    it('should renew token using refresh token if present', async () => {
+      getTenantStub.returns('tenant1');
+      readAuthStub.resolves({ refresh_token: 'test-refresh-token', expires_at: pastDate });
+      readTenantInfoStub.resolves(tenantMock);
+      refreshTokenStub.resolves({
+        ...fakeRefreshTokenResponseData,
+        tenantName: 'DemoTenant',
+      });
+
+      const result = await validateAndRenewAuthIfExpired();
+
+      expect(writeStub.calledOnce).to.be.true;
+      expect(writeStub.firstCall.args[0]).to.equal('tenant1');
+      expect(writeStub.firstCall.args[1]).to.have.property('access_token', 'fake-access-token');
+      expect(result).to.deep.equal({ tenantId: 'tenant1' });
+    });
+
+    it('should return null if no valid credentials for renewal are present', async () => {
+      getTenantStub.returns('tenant1');
+      readAuthStub.resolves({ expires_at: pastDate });
+      readTenantInfoStub.resolves(tenantMock);
+
+      const result = await validateAndRenewAuthIfExpired();
+
+      expect(consoleErrorStub.calledWithMatch(/No valid credentials/)).to.be.true;
+      expect(result).to.be.null;
+    });
+
     it('should return null if token renewal fails unexpectedly', async () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves({ ...authMock, expires_at: pastDate });
       readTenantInfoStub.resolves(tenantMock);
-      flowStub.rejects(new Error('Unexpected failure'));
+      clientCredentialsFlowStub.rejects(new Error('Unexpected failure'));
 
       const result = await validateAndRenewAuthIfExpired();
 
       expect(consoleErrorStub.calledWithMatch(/Failed to renew token/)).to.be.true;
-      expect(consoleWarnStub.calledWithMatch(/Cleaning up stale/)).to.be.true;
+      expect(consoleLogStub.calledWithMatch(/Cleaning up stale/)).to.be.true;
       expect(deleteAuthStub.calledOnce).to.be.true;
       expect(deleteKeyStub.calledOnceWithExactly('tenant1')).to.be.true;
       expect(clearActiveStub.calledOnce).to.be.true;
       expect(result).to.be.null;
     });
+  });
+});
+
+describe('getRefreshAccessToken', () => {
+  const fakeRefreshTokenInput = {
+    clientId: 'test-client-id',
+    refreshToken: 'test-refresh-token',
+    tenantId: 'test-tenant-id',
+    organizationId: 'test-org-id',
+    authority: 'https://auth.example.com',
+  };
+
+  const fakeRefreshTokenResponseData = {
+    access_token: 'fake-access-token',
+    refresh_token: 'new-refresh-token',
+    expires_in: 3600,
+    token_type: 'Bearer',
+  };
+
+  let postStub: sinon.SinonStub;
+  let decodeStub: sinon.SinonStub;
+
+  beforeEach(() => {
+    decodeStub = sinon.stub().returns(fakeRefreshTokenResponseData);
+    postStub = sinon.stub();
+
+    sinon.replace.usingAccessor(jwtUtils.unitMocks, 'decodeJwtPayload', decodeStub);
+    sinon.replace.usingAccessor(fetcherUtil.unitMocks, 'sendPostRequest', postStub);
+  });
+
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  it('should return token data with tenantName on success', async () => {
+    postStub.resolves(fakeRefreshTokenResponseData);
+
+    decodeStub.returns({ tokenTenantName: 'DemoTenant' });
+
+    const result = await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);
+
+    expect(result).to.deep.equal({
+      ...fakeRefreshTokenResponseData,
+      tenantName: 'DemoTenant',
+    });
+
+    expect(postStub.calledOnce).to.be.true;
+    const [url, options] = postStub.firstCall.args;
+    expect(url).to.equal(`${fakeRefreshTokenInput.authority}/oauth/token`);
+    expect(options.toString()).to.include(`refresh_token=${fakeRefreshTokenInput.refreshToken}`);
+    expect(decodeStub.calledOnceWith(fakeRefreshTokenResponseData.access_token)).to.be.true;
+  });
+
+  it('should throw with error_description on failure', async () => {
+    postStub.rejects(new Error('Invalid refresh token'));
+
+    try {
+      await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);
+      expect.fail('Expected function to throw');
+    } catch (err) {
+      expect(err).to.be.instanceOf(Error);
+      expect((err as Error).message).to.equal('Invalid refresh token');
+    }
+  });
+
+  it('should throw with error message on failure if error_description is missing', async () => {
+    postStub.rejects(new Error('unauthorized_client'));
+
+    try {
+      await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);
+      expect.fail('Expected function to throw');
+    } catch (err) {
+      expect(err).to.be.instanceOf(Error);
+      expect((err as Error).message).to.equal('unauthorized_client');
+    }
+  });
+
+  it('should throw generic error when no error info is available', async () => {
+    postStub.rejects(new Error('Error refreshing access token'));
+
+    try {
+      await renewalUtils.getRefreshAccessToken(fakeRefreshTokenInput);
+      expect.fail('Expected function to throw');
+    } catch (err) {
+      expect(err).to.be.instanceOf(Error);
+      expect((err as Error).message).to.equal('Error refreshing access token');
+    }
   });
 });

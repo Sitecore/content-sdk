@@ -2,7 +2,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { TenantAuth, TenantInfo } from './models';
+import { TenantAuthInfo, TenantInfo } from './models';
 import { encryptData, decryptData } from './encryption';
 import { CLAIMS } from './../../constants';
 
@@ -111,7 +111,7 @@ export function getTenantPath(tenantId: string): string {
   return path.join(rootDir, tenantId);
 }
 
-async function _writeTenantAuthInfo(tenantId: string, authInfo: TenantAuth): Promise<void> {
+async function _writeTenantAuthInfo(tenantId: string, authInfo: TenantAuthInfo): Promise<void> {
   try {
     const dir = getTenantPath(tenantId);
     fs.mkdirSync(dir, { recursive: true });
@@ -125,7 +125,7 @@ async function _writeTenantAuthInfo(tenantId: string, authInfo: TenantAuth): Pro
   }
 }
 
-async function _readTenantAuthInfo(tenantId: string): Promise<TenantAuth | null> {
+async function _readTenantAuthInfo(tenantId: string): Promise<TenantAuthInfo | null> {
   const filePath = path.join(getTenantPath(tenantId), 'auth.json');
   if (!fs.existsSync(filePath)) return null;
 
@@ -136,7 +136,7 @@ async function _readTenantAuthInfo(tenantId: string): Promise<TenantAuth | null>
     if (decryptedData === null) {
       return null;
     }
-    return JSON.parse(decryptedData) as TenantAuth;
+    return JSON.parse(decryptedData) as TenantAuthInfo;
   } catch (error) {
     console.error(
       `\n Failed to read auth.json for tenant '${tenantId}': ${(error as Error).message}`
@@ -205,7 +205,7 @@ function _getAllTenantsInfo(): TenantInfo[] {
         const content = fs.readFileSync(infoPath, 'utf-8');
         const data = JSON.parse(content);
 
-        if (data.tenantId && data.tenantName && data.organizationId && data.clientId) {
+        if (data.tenantId && data.tenantName && data.organizationId) {
           tenants.push({
             tenantId: data.tenantId,
             tenantName: data.tenantName,

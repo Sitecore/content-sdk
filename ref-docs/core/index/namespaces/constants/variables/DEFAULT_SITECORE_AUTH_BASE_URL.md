@@ -8,4 +8,4 @@
 
 > `const` **DEFAULT\_SITECORE\_AUTH\_BASE\_URL**: `"https://edge-platform.sitecorecloud.io/cs/api"` = `'https://edge-platform.sitecorecloud.io/cs/api'`
 
-Defined in: [packages/core/src/constants.ts:18](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/constants.ts#L18)
+Defined in: [packages/core/src/constants.ts:18](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/constants.ts#L18)

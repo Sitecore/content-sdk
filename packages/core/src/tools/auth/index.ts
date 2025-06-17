@@ -1,5 +1,10 @@
-export { clientCredentialsFlow } from './flow';
-export { renewClientToken, validateAndRenewAuthIfExpired, validateAuthInfo } from './renewal';
+export { clientCredentialsFlow, startDeviceAuthFlow, pollForDeviceToken } from './flow';
+export {
+  renewClientToken,
+  validateAndRenewAuthIfExpired,
+  validateAuthInfo,
+  getRefreshAccessToken,
+} from './renewal';
 export { getActiveTenant, setActiveTenant, clearActiveTenant } from './tenant-state';
 export {
   writeTenantAuthInfo,

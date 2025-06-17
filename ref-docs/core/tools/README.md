@@ -16,13 +16,20 @@
 
 ## Interfaces
 
+- [AuthResponse](interfaces/AuthResponse.md)
 - [ComponentFile](interfaces/ComponentFile.md)
+- [DeviceAuthRequest](interfaces/DeviceAuthRequest.md)
+- [DeviceAuthResponse](interfaces/DeviceAuthResponse.md)
+- [DeviceTokenPollRequest](interfaces/DeviceTokenPollRequest.md)
 - [PackageDefinition](interfaces/PackageDefinition.md)
 - [PluginDefinition](interfaces/PluginDefinition.md)
+- [RefreshAccessTokenResponse](interfaces/RefreshAccessTokenResponse.md)
+- [RefreshTokenRequest](interfaces/RefreshTokenRequest.md)
 - [TenantArgs](interfaces/TenantArgs.md)
-- [TenantAuth](interfaces/TenantAuth.md)
+- [TenantAuthInfo](interfaces/TenantAuthInfo.md)
 - [TenantInfo](interfaces/TenantInfo.md)
 - [TenantSettings](interfaces/TenantSettings.md)
+- [TokenResponse](interfaces/TokenResponse.md)
 
 ## Type Aliases
 

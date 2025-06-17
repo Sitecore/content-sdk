@@ -15,7 +15,7 @@ export const status: CommandModule = {
     const context = await validateAndRenewAuthIfExpired();
 
     if (!context) {
-      console.log('\nNo valid authentication found. Please login.');
+      console.log('\n No valid authentication found. Please login.');
       return;
     }
 

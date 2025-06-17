@@ -6,7 +6,7 @@
 
 # Interface: TaxonomiesQueryResponse
 
-Defined in: [packages/core/src/content/taxonomies.ts:82](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/content/taxonomies.ts#L82)
+Defined in: [packages/core/src/content/taxonomies.ts:82](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/content/taxonomies.ts#L82)
 
 Represents the response structure for a query that retrieves multiple taxonomies.
 
@@ -16,7 +16,7 @@ Represents the response structure for a query that retrieves multiple taxonomies
 
 > **manyTaxonomy**: `object`
 
-Defined in: [packages/core/src/content/taxonomies.ts:84](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/content/taxonomies.ts#L84)
+Defined in: [packages/core/src/content/taxonomies.ts:84](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/content/taxonomies.ts#L84)
 
 The list of retrieved taxonomies, with pagination metadata.
 

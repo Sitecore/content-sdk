@@ -8,7 +8,7 @@
 
 > `const` **GET\_TAXONOMIES\_QUERY**: "\n  query GetAllTaxonomies(\n    $pageSize: Int\n    $after: String\n  ) \{\n    manyTaxonomy(minimumPageSize: $pageSize, after: $after) \{\n      cursor\n      hasMore\n      results \{\n        terms \{\n          cursor\n          hasMore\n          results \{\n            id\n            name\n            label\n          \}\n        \}\n        system \{\n          id\n          name\n          version\n          label\n          createdAt\n          createdBy\n          updatedAt\n          updatedBy\n          publishStatus\n        \}\n      \}\n    \}\n  \}\n"
 
-Defined in: [packages/core/src/content/taxonomies.ts:125](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/content/taxonomies.ts#L125)
+Defined in: [packages/core/src/content/taxonomies.ts:125](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/content/taxonomies.ts#L125)
 
 GraphQL query to retrieve all taxonomies with optional pagination for taxonomies only.
 

@@ -8,7 +8,7 @@
 
 > **renewClientToken**(`authInfo`, `tenantInfo`): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/tools/auth/renewal.ts:30](https://github.com/Sitecore/content-sdk/blob/c4877aff000b8d9a8895579af6291c408f942c16/packages/core/src/tools/auth/renewal.ts#L30)
+Defined in: [packages/core/src/tools/auth/renewal.ts:57](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/renewal.ts#L57)
 
 Renews the token for a given tenant using stored credentials.
 
@@ -16,14 +16,14 @@ Renews the token for a given tenant using stored credentials.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `authInfo` | [`TenantAuth`](../../../interfaces/TenantAuth.md) | Current authentication info for the tenant. |
+| `authInfo` | [`TenantAuthInfo`](../../../interfaces/TenantAuthInfo.md) | Current authentication info for the tenant. |
 | `tenantInfo` | [`TenantInfo`](../../../interfaces/TenantInfo.md) | Public metadata about the tenant (e.g., clientId). |
 
 ## Returns
 
 `Promise`\<`void`\>
 
-Promise<void>
+resolving when the token is successfully renewed.
 
 ## Throws
 

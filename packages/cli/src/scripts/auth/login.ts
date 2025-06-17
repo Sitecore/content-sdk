@@ -1,14 +1,25 @@
 ﻿import { Argv, CommandModule } from 'yargs';
-import { auth, TenantArgs } from '@sitecore-content-sdk/core/tools';
+import { TenantArgs, auth } from '@sitecore-content-sdk/core/tools';
 import { constants } from '@sitecore-content-sdk/core';
 
-let { setActiveTenant, writeTenantAuthInfo, writeTenantInfo, clientCredentialsFlow } = auth;
+let {
+  setActiveTenant,
+  writeTenantAuthInfo,
+  writeTenantInfo,
+  clientCredentialsFlow,
+  getRefreshAccessToken,
+  pollForDeviceToken,
+  startDeviceAuthFlow,
+} = auth;
 
-export const unitMock = (authModule: any) => {
-  setActiveTenant = authModule.setActiveTenant;
-  writeTenantAuthInfo = authModule.writeTenantAuthInfo;
-  writeTenantInfo = authModule.writeTenantInfo;
-  clientCredentialsFlow = authModule.clientCredentialsFlow;
+export const unitMock = (formModule: any) => {
+  setActiveTenant = formModule.setActiveTenant;
+  writeTenantAuthInfo = formModule.writeTenantAuthInfo;
+  writeTenantInfo = formModule.writeTenantInfo;
+  clientCredentialsFlow = formModule.clientCredentialsFlow;
+  getRefreshAccessToken = formModule.getRefreshAccessToken;
+  pollForDeviceToken = formModule.pollForDeviceToken;
+  startDeviceAuthFlow = formModule.startDeviceAuthFlow;
 };
 
 export const login: CommandModule<object, TenantArgs> = {
@@ -66,61 +77,128 @@ export const login: CommandModule<object, TenantArgs> = {
       ),
 
   handler: async (argv: TenantArgs) => {
-    const { clientId } = argv;
-
-    let authResult, tenantId, organizationId, tenantName;
-
     const {
       DEFAULT_SITECORE_AUTH_DOMAIN,
       DEFAULT_SITECORE_AUTH_AUDIENCE,
       DEFAULT_SITECORE_AUTH_BASE_URL,
     } = constants;
+    const {
+      clientId,
+      clientSecret,
+      organizationId,
+      tenantId: inputTenantId,
+      audience = DEFAULT_SITECORE_AUTH_AUDIENCE,
+      authority = DEFAULT_SITECORE_AUTH_DOMAIN,
+      baseUrl = DEFAULT_SITECORE_AUTH_BASE_URL,
+    } = argv;
 
-    if (argv.clientSecret) {
-      try {
-        const authData = await clientCredentialsFlow({
+    let authResponse;
+    let tenantId;
+    let tenantName;
+    let orgId;
+
+    try {
+      if (clientSecret) {
+        console.log('\n Using Client Credentials Flow...');
+
+        const { data, tokenTenantId, tokenOrgId, tokenTenantName } = await clientCredentialsFlow({
           clientId,
-          clientSecret: argv.clientSecret,
-          organizationId: argv.organizationId,
-          tenantId: argv.tenantId,
-          audience: argv.audience,
-          authority: argv.authority,
-          baseUrl: argv.baseUrl,
+          clientSecret,
+          organizationId,
+          tenantId: inputTenantId,
+          audience,
+          authority,
+          baseUrl,
         });
 
-        authResult = authData.data;
-        tenantId = authData.tokenTenantId;
-        organizationId = authData.tokenOrgId;
-        tenantName = authData.tokenTenantName;
-      } catch (err) {
-        console.error(`\n Login failed: ${(err as Error).message}`);
-        process.exit(1);
+        authResponse = data;
+        tenantId = tokenTenantId;
+        orgId = tokenOrgId;
+        tenantName = tokenTenantName;
+      } else {
+        console.log('\n Using Device Authorization Flow...');
+
+        if (!inputTenantId) {
+          throw new Error('\n Tenant ID is required for Device Code Flow.');
+        }
+
+        if (!organizationId) {
+          throw new Error('\n Organization ID is required for Device Code Flow.');
+        }
+
+        const deviceAuthData = await startDeviceAuthFlow({
+          clientId,
+          audience,
+          authority,
+          baseUrl,
+        });
+
+        const {
+          device_code,
+          user_code,
+          verification_uri,
+          verification_uri_complete,
+          interval,
+        } = deviceAuthData;
+
+        console.log('\n🔐 Device Authorization Started');
+
+        if (verification_uri_complete) {
+          console.log(
+            `\n 👉 Open the following URL to authenticate:\n  ${verification_uri_complete}`
+          );
+        } else {
+          console.log(`👉 Visit: ${verification_uri}`);
+          console.log(`🔑 Then enter the code: ${user_code}`);
+        }
+
+        const { refresh_token } = await pollForDeviceToken({
+          clientId,
+          device_code,
+          authority,
+          interval,
+        });
+
+        // The initial device code flow does not support custom claims (e.g., tenantId, organizationId),
+        // which are required for proper token validation in our multi-tenant system.
+        // To include these claims, we immediately use the returned refresh_token to request a new
+        // access token with tenantId and organizationId explicitly provided.
+        authResponse = await getRefreshAccessToken({
+          clientId,
+          refreshToken: refresh_token,
+          tenantId: inputTenantId,
+          organizationId,
+          authority,
+        });
+
+        tenantId = inputTenantId;
+        orgId = organizationId;
+        tenantName = authResponse.tenantName;
+
+        console.log('\n Device Authorization Completed');
       }
-    } else {
-      // TODO: Implement Device Authorization Flow when clientSecret is not provided.
-      console.log('\n Please provide client secret for authentication.');
+
+      await writeTenantAuthInfo(tenantId || inputTenantId, {
+        expires_at: new Date(Date.now() + authResponse.expires_in * 1000).toISOString(),
+        ...authResponse,
+      });
+
+      await writeTenantInfo({
+        tenantId,
+        organizationId: orgId,
+        clientId,
+        tenantName,
+        authority,
+        audience,
+        baseUrl,
+      });
+
+      setActiveTenant(tenantId);
+
+      console.log(`\n Logged in successfully to tenant: ${tenantId}`);
+    } catch (error) {
+      console.error(`\n Login failed: ${(error as Error).message}`);
       process.exit(1);
     }
-
-    await writeTenantAuthInfo(tenantId, {
-      clientSecret: argv.clientSecret,
-      access_token: authResult.access_token,
-      expires_in: authResult.expires_in,
-      expires_at: new Date(Date.now() + authResult.expires_in * 1000).toISOString(),
-    });
-
-    await writeTenantInfo({
-      tenantId,
-      organizationId,
-      clientId,
-      tenantName,
-      authority: argv.authority || DEFAULT_SITECORE_AUTH_DOMAIN,
-      audience: argv.audience || DEFAULT_SITECORE_AUTH_AUDIENCE,
-      baseUrl: argv.baseUrl || DEFAULT_SITECORE_AUTH_BASE_URL,
-    });
-
-    setActiveTenant(tenantId);
-
-    console.info(`\n Logged in successfully to tenant ${tenantId}.`);
   },
 };

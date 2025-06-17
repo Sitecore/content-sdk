@@ -16,8 +16,11 @@
 - [encryptData](variables/encryptData.md)
 - [getActiveTenant](variables/getActiveTenant.md)
 - [getAllTenantsInfo](variables/getAllTenantsInfo.md)
+- [getRefreshAccessToken](variables/getRefreshAccessToken.md)
+- [pollForDeviceToken](variables/pollForDeviceToken.md)
 - [readTenantAuthInfo](variables/readTenantAuthInfo.md)
 - [readTenantInfo](variables/readTenantInfo.md)
+- [startDeviceAuthFlow](variables/startDeviceAuthFlow.md)
 - [writeTenantAuthInfo](variables/writeTenantAuthInfo.md)
 - [writeTenantInfo](variables/writeTenantInfo.md)
 
