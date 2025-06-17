@@ -3,11 +3,11 @@ import { auth } from '@sitecore-content-sdk/core/tools';
 
 let { deleteTenantAuthInfo, getActiveTenant, clearActiveTenant, deleteKey } = auth;
 
-export const unitMock = (formModule: any) => {
-  deleteTenantAuthInfo = formModule.deleteTenantAuthInfo || deleteTenantAuthInfo;
-  getActiveTenant = formModule.getActiveTenant || getActiveTenant;
-  clearActiveTenant = formModule.clearActiveTenant || clearActiveTenant;
-  deleteKey = formModule.deleteKey || deleteKey;
+export const unitMock = (authModule: any) => {
+  deleteTenantAuthInfo = authModule.deleteTenantAuthInfo || deleteTenantAuthInfo;
+  getActiveTenant = authModule.getActiveTenant || getActiveTenant;
+  clearActiveTenant = authModule.clearActiveTenant || clearActiveTenant;
+  deleteKey = authModule.deleteKey || deleteKey;
 };
 
 export const logout: CommandModule = {

@@ -186,52 +186,31 @@ describe('Auth Token Renewal Utilities', () => {
       expect(result).to.deep.equal({ tenantId: 'tenant1' });
     });
 
-    it('should exit if no valid credentials for renewal are present', async () => {
+    it('should return null if no valid credentials for renewal are present', async () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves({ expires_at: pastDate });
       readTenantInfoStub.resolves(tenantMock);
 
-      const exitStub = sinon.stub(process, 'exit').callsFake(() => {
-        throw new Error('EXIT_CALLED');
-      });
-
-      try {
-        await validateAndRenewAuthIfExpired();
-        throw new Error('Test failed');
-      } catch (err) {
-        expect((err as Error).message).to.equal('EXIT_CALLED');
-      }
+      const result = await validateAndRenewAuthIfExpired();
 
       expect(consoleErrorStub.calledWithMatch(/No valid credentials/)).to.be.true;
+      expect(result).to.be.null;
     });
 
-    it('should exit if token renewal fails unexpectedly', async () => {
+    it('should return null if token renewal fails unexpectedly', async () => {
       getTenantStub.returns('tenant1');
       readAuthStub.resolves({ ...authMock, expires_at: pastDate });
       readTenantInfoStub.resolves(tenantMock);
       clientCredentialsFlowStub.rejects(new Error('Unexpected failure'));
 
-      const exitStub = sinon.stub(process, 'exit').callsFake(() => {
-        throw new Error('EXIT_CALLED');
-      });
-
-      try {
-        await validateAndRenewAuthIfExpired();
-        throw new Error('Test failed: process.exit not triggered');
-      } catch (err) {
-        if (err instanceof Error) {
-          expect(err.message).to.equal('EXIT_CALLED');
-        } else {
-          throw err;
-        }
-      }
+      const result = await validateAndRenewAuthIfExpired();
 
       expect(consoleErrorStub.calledWithMatch(/Failed to renew token/)).to.be.true;
       expect(consoleLogStub.calledWithMatch(/Cleaning up stale/)).to.be.true;
       expect(deleteAuthStub.calledOnce).to.be.true;
       expect(deleteKeyStub.calledOnceWithExactly('tenant1')).to.be.true;
       expect(clearActiveStub.calledOnce).to.be.true;
-      expect(exitStub.calledOnceWith(1)).to.be.true;
+      expect(result).to.be.null;
     });
   });
 });

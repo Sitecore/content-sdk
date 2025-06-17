@@ -133,8 +133,7 @@ export async function validateAndRenewAuthIfExpired(): Promise<{ tenantId: strin
     await deleteKey(tenantId);
     clearActiveTenant();
 
-    console.log('\n You will need to login again to re-authenticate.');
-    process.exit(1);
+    return null;
   }
 }
 

@@ -2,10 +2,10 @@
 import { auth } from '@sitecore-content-sdk/core/tools';
 let { readTenantInfo, validateAndRenewAuthIfExpired } = auth;
 
-export const unitMock = (formModule: any) => {
-  readTenantInfo = formModule.readTenantInfo || readTenantInfo;
+export const unitMock = (authModule: any) => {
+  readTenantInfo = authModule.readTenantInfo || readTenantInfo;
   validateAndRenewAuthIfExpired =
-    formModule.validateAndRenewAuthIfExpired || validateAndRenewAuthIfExpired;
+    authModule.validateAndRenewAuthIfExpired || validateAndRenewAuthIfExpired;
 };
 
 export const status: CommandModule = {
