@@ -6,7 +6,7 @@
 
 # Interface: DeviceAuthResponse
 
-Defined in: [packages/core/src/tools/auth/models.ts:169](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/models.ts#L169)
+Defined in: [packages/core/src/tools/auth/models.ts:169](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L169)
 
 Response structure returned after initiating the device authorization flow.
 
@@ -16,7 +16,7 @@ Response structure returned after initiating the device authorization flow.
 
 > **device\_code**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:173](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/models.ts#L173)
+Defined in: [packages/core/src/tools/auth/models.ts:173](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L173)
 
 Code the device will use to poll the token endpoint.
 
@@ -26,7 +26,7 @@ Code the device will use to poll the token endpoint.
 
 > **expires\_in**: `number`
 
-Defined in: [packages/core/src/tools/auth/models.ts:189](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/models.ts#L189)
+Defined in: [packages/core/src/tools/auth/models.ts:189](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L189)
 
 Time (in seconds) until the device code expires.
 
@@ -36,7 +36,7 @@ Time (in seconds) until the device code expires.
 
 > **interval**: `number`
 
-Defined in: [packages/core/src/tools/auth/models.ts:193](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/models.ts#L193)
+Defined in: [packages/core/src/tools/auth/models.ts:193](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L193)
 
 Recommended polling interval (in seconds) for token requests.
 
@@ -46,7 +46,7 @@ Recommended polling interval (in seconds) for token requests.
 
 > **user\_code**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:177](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/models.ts#L177)
+Defined in: [packages/core/src/tools/auth/models.ts:177](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L177)
 
 Code shown to the user for manual input during verification.
 
@@ -56,7 +56,7 @@ Code shown to the user for manual input during verification.
 
 > **verification\_uri**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:181](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/models.ts#L181)
+Defined in: [packages/core/src/tools/auth/models.ts:181](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L181)
 
 URI where the user should go to complete authentication.
 
@@ -66,6 +66,6 @@ URI where the user should go to complete authentication.
 
 > `optional` **verification\_uri\_complete**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:185](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/models.ts#L185)
+Defined in: [packages/core/src/tools/auth/models.ts:185](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L185)
 
 Optional URI that includes the user code, allowing for a streamlined login experience.

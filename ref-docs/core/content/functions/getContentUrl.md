@@ -8,7 +8,7 @@
 
 > **getContentUrl**(`params`): `string`
 
-Defined in: [packages/core/src/content/utils.ts:12](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/content/utils.ts#L12)
+Defined in: [packages/core/src/content/utils.ts:12](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/content/utils.ts#L12)
 
 Get the Content graphql endpoint url
 

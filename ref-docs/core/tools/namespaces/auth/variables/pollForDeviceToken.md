@@ -8,7 +8,7 @@
 
 > **pollForDeviceToken**: (`params`) => `Promise`\<[`AuthResponse`](../../../interfaces/AuthResponse.md)\> = `_pollForDeviceToken`
 
-Defined in: [packages/core/src/tools/auth/flow.ts:47](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/flow.ts#L47)
+Defined in: [packages/core/src/tools/auth/flow.ts:47](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/flow.ts#L47)
 
 Polls the OAuth 2.0 device token endpoint to retrieve the access token once the user has authorized the device.
 This is typically used to continue the device authorization process after a user enters a code on a browser.

@@ -6,7 +6,7 @@
 
 # Interface: TenantSettings
 
-Defined in: [packages/core/src/tools/auth/models.ts:35](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/models.ts#L35)
+Defined in: [packages/core/src/tools/auth/models.ts:35](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L35)
 
 ## Properties
 
@@ -14,6 +14,6 @@ Defined in: [packages/core/src/tools/auth/models.ts:35](https://github.com/Sitec
 
 > `optional` **activeTenant**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:39](https://github.com/Sitecore/content-sdk/blob/dfabaa9ada9db515612e737f52c405833da25101/packages/core/src/tools/auth/models.ts#L39)
+Defined in: [packages/core/src/tools/auth/models.ts:39](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L39)
 
 Currently active tenant ID tracked by the CLI
