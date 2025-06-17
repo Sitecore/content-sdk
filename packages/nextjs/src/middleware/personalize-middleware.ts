@@ -131,7 +131,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         // Disable preflight caching to force revalidation on client-side navigation (personalization WILL be influenced).
         // Note the reason we don't move this any earlier in the middleware is that we would then be sacrificing performance for non-personalized pages.
         res.headers.set('x-middleware-cache', 'no-cache');
-        res.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.headers.set('Cache-Control', 'no-store, must-revalidate');
         return res;
       }
 

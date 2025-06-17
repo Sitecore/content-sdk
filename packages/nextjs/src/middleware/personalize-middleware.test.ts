@@ -613,7 +613,7 @@ describe('PersonalizeMiddleware', () => {
       validateDebugLog('skipped (prefetch)');
       expect(finalRes).to.deep.equal(res);
       expect(finalRes.headers['x-middleware-cache']).to.equal('no-cache');
-      expect(finalRes.headers['Cache-Control']).to.equal('no-cache, no-store, must-revalidate');
+      expect(finalRes.headers['Cache-Control']).to.equal('no-store, must-revalidate');
     });
   });
 
