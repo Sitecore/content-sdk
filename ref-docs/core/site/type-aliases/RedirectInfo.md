@@ -8,7 +8,7 @@
 
 > **RedirectInfo** = `object`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:11](https://github.com/Sitecore/content-sdk/blob/42904bfe07b60ed968d07e248d40878131abc780/packages/core/src/site/graphql-redirects-service.ts#L11)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:11](https://github.com/Sitecore/content-sdk/blob/1e3500690040b58b5f3f26b0a33f83b0cfa0d1d1/packages/core/src/site/graphql-redirects-service.ts#L11)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/core/src/site/graphql-redirects-service.ts:11](https://git
 
 > **isQueryStringPreserved**: `boolean`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:15](https://github.com/Sitecore/content-sdk/blob/42904bfe07b60ed968d07e248d40878131abc780/packages/core/src/site/graphql-redirects-service.ts#L15)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:15](https://github.com/Sitecore/content-sdk/blob/1e3500690040b58b5f3f26b0a33f83b0cfa0d1d1/packages/core/src/site/graphql-redirects-service.ts#L15)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/core/src/site/graphql-redirects-service.ts:15](https://git
 
 > **locale**: `string`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:16](https://github.com/Sitecore/content-sdk/blob/42904bfe07b60ed968d07e248d40878131abc780/packages/core/src/site/graphql-redirects-service.ts#L16)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:16](https://github.com/Sitecore/content-sdk/blob/1e3500690040b58b5f3f26b0a33f83b0cfa0d1d1/packages/core/src/site/graphql-redirects-service.ts#L16)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [packages/core/src/site/graphql-redirects-service.ts:16](https://git
 
 > **pattern**: `string`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:12](https://github.com/Sitecore/content-sdk/blob/42904bfe07b60ed968d07e248d40878131abc780/packages/core/src/site/graphql-redirects-service.ts#L12)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:12](https://github.com/Sitecore/content-sdk/blob/1e3500690040b58b5f3f26b0a33f83b0cfa0d1d1/packages/core/src/site/graphql-redirects-service.ts#L12)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [packages/core/src/site/graphql-redirects-service.ts:12](https://git
 
 > **redirectType**: `string`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:14](https://github.com/Sitecore/content-sdk/blob/42904bfe07b60ed968d07e248d40878131abc780/packages/core/src/site/graphql-redirects-service.ts#L14)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:14](https://github.com/Sitecore/content-sdk/blob/1e3500690040b58b5f3f26b0a33f83b0cfa0d1d1/packages/core/src/site/graphql-redirects-service.ts#L14)
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: [packages/core/src/site/graphql-redirects-service.ts:14](https://git
 
 > **target**: `string`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:13](https://github.com/Sitecore/content-sdk/blob/42904bfe07b60ed968d07e248d40878131abc780/packages/core/src/site/graphql-redirects-service.ts#L13)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:13](https://github.com/Sitecore/content-sdk/blob/1e3500690040b58b5f3f26b0a33f83b0cfa0d1d1/packages/core/src/site/graphql-redirects-service.ts#L13)

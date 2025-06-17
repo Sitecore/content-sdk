@@ -8,4 +8,4 @@
 
 > **GraphQLLayoutServiceConfig** = `GraphQLServiceConfig` & `Partial`\<[`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md)\[`"layout"`\]\>
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:10](https://github.com/Sitecore/content-sdk/blob/42904bfe07b60ed968d07e248d40878131abc780/packages/core/src/layout/graphql-layout-service.ts#L10)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:10](https://github.com/Sitecore/content-sdk/blob/1e3500690040b58b5f3f26b0a33f83b0cfa0d1d1/packages/core/src/layout/graphql-layout-service.ts#L10)
