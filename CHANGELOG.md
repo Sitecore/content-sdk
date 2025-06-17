@@ -56,6 +56,7 @@ Our versioning strategy is as follows:
 * `[nextjs]` [DesignLibrary] Script is requested from production even when a custom Edge URL is set ([#98](https://github.com/Sitecore/content-sdk/pull/98)):
   * The `EditingScripts` component doesn't accept `sitecoreEdgeUrl` property anymore.
   * The custom Edge URL is now accessed via the `api` property of the `SitecoreProvider` component.
+* `[nextjs]` `defineCliConfig` import has been moved to `@sitecore-content-sdk/nextjs/config-cli` submodule ([#128](https://github.com/Sitecore/content-sdk/pull/128)).
 
 ### 🐛 Bug Fixes
 
