@@ -1,5 +1,5 @@
 import config from './sitecore.config';
-import { defineCliConfig } from '@sitecore-content-sdk/nextjs/config/cli';
+import { defineCliConfig } from '@sitecore-content-sdk/nextjs/config-cli';
 import { generateSites, generateMetadata } from '@sitecore-content-sdk/nextjs/tools';
 
 export default defineCliConfig({
