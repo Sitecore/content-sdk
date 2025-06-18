@@ -14,4 +14,4 @@ Defined in: [packages/react/src/components/sharedTypes/components.ts:37](https:/
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `TComponent` *extends* [`ReactJssComponent`](ReactJssComponent.md) | [`ReactJssComponent`](ReactJssComponent.md) |
+| `TComponent` *extends* [`ReactContentSdkComponent`](ReactContentSdkComponent.md) | [`ReactContentSdkComponent`](ReactContentSdkComponent.md) |

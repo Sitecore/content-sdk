@@ -105,13 +105,13 @@ Optional. The template ID to use when searching for dictionary entries.
 
 ***
 
-### jssAppTemplateId?
+### contentSdkAppTemplateId?
 
-> `optional` **jssAppTemplateId**: `string`
+> `optional` **contentSdkAppTemplateId**: `string`
 
 Defined in: core/types/i18n/graphql-dictionary-service.d.ts:63
 
-Optional. The template ID of a JSS App to use when searching for the appRootId.
+Optional. The template ID of a Content SDK App to use when searching for the appRootId.
 
 #### Default
 

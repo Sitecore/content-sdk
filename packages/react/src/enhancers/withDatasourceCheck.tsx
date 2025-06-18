@@ -3,7 +3,7 @@ import { ComponentRendering, RenderingType } from '@sitecore-content-sdk/core/la
 import { useSitecore } from './withSitecore';
 
 export const DefaultEditingError = (): JSX.Element => (
-  <div className="sc-jss-editing-error" role="alert">
+  <div className="sc-content-sdk-editing-error" role="alert">
     Datasource is required. Please choose a content item for this component.
   </div>
 );

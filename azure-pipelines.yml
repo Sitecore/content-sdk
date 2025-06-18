@@ -36,7 +36,7 @@ variables:
     lernaSinceFlag: "--since=origin/dev"
 # disable `PublishCodeCoverageResults` report generation, as `reportgenerator` provides custom report
   disable.coverage.autogenerate: 'true'
-# Some steps here scaffold jss apps and check if they build and lint correctly
+# Some steps here scaffold content sdk apps and check if they build and lint correctly
 # build apps step currently excluded: RAV apps have issues with yarn build, nextjs has some with all builds without Sitecore connection
 # TODO: add step for lerna run build --scope sample-* when RAV and nextjs yarn build issues are resolved
 

@@ -46,7 +46,7 @@
 - [addComponentUpdateHandler](functions/addComponentUpdateHandler.md)
 - [getDesignLibraryScriptLink](functions/getDesignLibraryScriptLink.md)
 - [getDesignLibraryStatusEvent](functions/getDesignLibraryStatusEvent.md)
-- [getJssPagesClientData](functions/getJssPagesClientData.md)
+- [getContentSdkPagesClientData ](functions/getContentSdkPagesClientData .md)
 - [isDesignLibraryMode](functions/isDesignLibraryMode.md)
 - [isEditorActive](functions/isEditorActive.md)
 - [resetEditorChromes](functions/resetEditorChromes.md)

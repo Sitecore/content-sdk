@@ -183,7 +183,7 @@ and returns resulting props from components
 | ------ | ------ | ------ |
 | `layoutData` | [`LayoutServiceData`](../../index/interfaces/LayoutServiceData.md) | layout data to parse compnents from |
 | `context` | `GetServerSidePropsContext` \| `GetStaticPropsContext` | Nextjs preview data |
-| `components` | [`ComponentMap`](../../index/type-aliases/ComponentMap.md)\<[`NextjsJssComponent`](../../index/type-aliases/NextjsJssComponent.md)\> | component map to get props for |
+| `components` | [`ComponentMap`](../../index/type-aliases/ComponentMap.md)\<[`NextjsContentSdkComponent`](../../index/type-aliases/NextjsContentSdkComponent.md)\> | component map to get props for |
 
 #### Returns
 

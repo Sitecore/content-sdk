@@ -1,7 +1,7 @@
 ﻿import React, { JSX } from 'react';
 import { LayoutServicePageState, RenderingType } from '@sitecore-content-sdk/core/layout';
 import { useSitecore } from '../enhancers/withSitecore';
-import { getJssPagesClientData } from '@sitecore-content-sdk/core/editing';
+import { getContentSdkPagesClientData  } from '@sitecore-content-sdk/core/editing';
 import { getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
 
 /**
@@ -37,7 +37,7 @@ export const EditingScripts = (): JSX.Element => {
     );
   }
 
-  const jssClientData = { ...clientData, ...getJssPagesClientData() };
+  const jssClientData = { ...clientData, ...getContentSdkPagesClientData () };
 
   return (
     <>

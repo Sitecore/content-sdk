@@ -11,7 +11,7 @@
 Defined in: [packages/react/src/enhancers/withSitecore.tsx:84](https://github.com/Sitecore/content-sdk/blob/0b5dd8bac22c56f5e192dc58b2a7a23d366c7cc3/packages/react/src/enhancers/withSitecore.tsx#L84)
 
 This hook grants acсess to the current Sitecore page context and api.
-by default JSS includes the following properties in this context:
+by default Content SDK includes the following properties in this context:
 - pageEditing - Provided by Layout Service, a boolean indicating whether the route is being accessed via the Sitecore Editor.
 - pageState - Like pageEditing, but a string: normal, preview or edit.
 - site - Provided by Layout Service, an object containing the name of the current Sitecore site context.

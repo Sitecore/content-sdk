@@ -62,7 +62,7 @@ export const layoutData = {
     route: {
       name: 'landingpage',
       placeholders: {
-        'jss-main': [
+        'content-sdk-main': [
           {
             uid: '0b6d23d8-c50e-4e79-9eca-317ec43e82b0',
             componentName: 'ContentBlock',

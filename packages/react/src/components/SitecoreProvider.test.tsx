@@ -36,7 +36,7 @@ describe('SitecoreProvider', () => {
       route: {
         name: 'styleguide',
         placeholders: {
-          'JssTestWeb-jss-main': [],
+          'ContentSdkTestWeb-main': [],
         },
         itemId: 'testitemid',
       },
@@ -80,7 +80,7 @@ describe('SitecoreProvider', () => {
         itemId: 'testitemid',
         name: 'styleguide',
         placeholders: {
-          'JssTestWeb-jss-main': [],
+          'ContentSdkTestWeb-main': [],
         },
       },
       site: {

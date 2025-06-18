@@ -6,7 +6,7 @@
 
 # Variable: PAGES\_EDITING\_MARKER
 
-> `const` **PAGES\_EDITING\_MARKER**: `"jss-hrz-editing"` = `'jss-hrz-editing'`
+> `const` **PAGES\_EDITING\_MARKER**: `"content-sdk-hrz-editing"` = `'content-sdk-hrz-editing'`
 
 Defined in: [packages/core/src/editing/utils.ts:23](https://github.com/Sitecore/content-sdk/blob/0b5dd8bac22c56f5e192dc58b2a7a23d366c7cc3/packages/core/src/editing/utils.ts#L23)
 

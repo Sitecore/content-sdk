@@ -18,8 +18,8 @@ Defined in: core/types/constants.d.ts:3
 
 ***
 
-### JssApp
+### ContentSdkApp
 
-> **JssApp**: `"061cba1554744b918a0617903b102b82"`
+> **ContentSdkApp**: `"061cba1554744b918a0617903b102b82"`
 
 Defined in: core/types/constants.d.ts:2

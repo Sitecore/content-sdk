@@ -7,15 +7,15 @@ import { debug } from '@sitecore-content-sdk/core';
 import { Metadata } from '@sitecore-content-sdk/core/editing';
 import { enforceCors } from '@sitecore-content-sdk/core/utils';
 import { EditMode } from '@sitecore-content-sdk/core/layout';
-import { getJssEditingSecret } from '../utils/utils';
+import { getContentSdkEditingSecret } from '../utils/utils';
 import { ComponentMap } from '@sitecore-content-sdk/react';
-import { NextjsJssComponent } from '../sharedTypes/component-props';
+import { NextjsContentSdkComponent } from '../sharedTypes/component-props';
 
 export type EditingConfigMiddlewareConfig = {
   /**
    * Components available in the application
    */
-  components: ComponentMap<NextjsJssComponent>;
+  components: ComponentMap<NextjsContentSdkComponent>;
   /**
    * Application metadata
    */
@@ -48,11 +48,11 @@ export class EditingConfigMiddleware {
       );
       return res.status(401).json({ message: 'Invalid origin' });
     }
-    if (secret !== getJssEditingSecret()) {
+    if (secret !== getContentSdkEditingSecret()) {
       debug.editing(
         'invalid editing secret - sent "%s" expected "%s"',
         secret,
-        getJssEditingSecret()
+        getContentSdkEditingSecret()
       );
 
       return res.status(401).json({ message: 'Missing or invalid editing secret' });

@@ -96,7 +96,7 @@ describe('<FEaaSComponent />', () => {
     it('should send datasource fields', () => {
       const fields = {
         sampleText: {
-          value: 'Welcome-to-Sitecore-JSS',
+          value: 'Welcome-to-Sitecore-Content-SDK',
         },
         sampleImage: {
           value: {
@@ -142,7 +142,7 @@ describe('<FEaaSComponent />', () => {
     it('should combine fetched data with datasource fields', () => {
       const fields: ComponentFields = {
         fieldText: {
-          value: 'Welcome to Sitecore JSS',
+          value: 'Welcome to Sitecore Content SDK',
         },
       };
       const fetched = { customDatasourceId: { fetchedText: 'Welcome to FEAAS' } };
@@ -158,7 +158,7 @@ describe('<FEaaSComponent />', () => {
 
       const wrapper = render(<FEaaSComponent {...props} />, { container: document.body });
       expect(wrapper.baseElement.innerHTML).to.contain('Welcome to FEAAS');
-      expect(wrapper.baseElement.innerHTML).to.contain('Welcome to Sitecore JSS');
+      expect(wrapper.baseElement.innerHTML).to.contain('Welcome to Sitecore Content SDK');
     });
   });
 });

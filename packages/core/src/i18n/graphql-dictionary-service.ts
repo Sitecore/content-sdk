@@ -100,7 +100,7 @@ export interface GraphQLDictionaryServiceConfig extends CacheOptions, GraphQLSer
    * Optional. The template ID of a JSS App to use when searching for the appRootId.
    * @default '061cba1554744b918a0617903b102b82' (/sitecore/templates/Foundation/JavaScript Services/App)
    */
-  jssAppTemplateId?: string;
+  contentSdkAppTemplateId?: string;
   /**
    * common variable for all GraphQL queries
    * it will be used for every type of query to regulate result batch size
