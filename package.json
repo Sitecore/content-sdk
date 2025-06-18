@@ -41,7 +41,7 @@
   ],
   "packageManager": "yarn@3.1.0",
   "resolutions": {
-    "upath": "^2.0.1",
+    "upath": "2.0.1",
     "@unrs/resolver-binding-*": "1.9.0"
   }
 }
