@@ -5,14 +5,14 @@ const { getAppFolder } = require('./utils');
 const cliArgs = process.argv.slice(2);
 const lernaSinceFlag = cliArgs.length ? cliArgs[0].replace('--since=', '') : undefined;
 
-const runLintCommand = (scope) =>
-  execSync(`lerna run lint --scope ${scope} -- --fix`, {
+const runLintCommand = () =>
+  execSync('lerna run lint --scope content-sdk-* -- --fix', {
     stdio: 'inherit',
   });
 
 if (!lernaSinceFlag) {
   // lint all the samples
-  runLintCommand('jss-*');
+  runLintCommand();
 
   return;
 }
