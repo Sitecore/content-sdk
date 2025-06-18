@@ -25,6 +25,7 @@ import * as BYOCWrapper from './BYOCWrapper';
 import * as FEAASComponent from './FEaaSComponent';
 import * as FEAASWrapper from './FEaaSWrapper';
 import * as HiddenRendering from './HiddenRendering';
+import * as ErrorBoundary from './ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from './MissingComponent';
 import { Placeholder } from './Placeholder';
 import { ComponentProps } from './PlaceholderCommon';
@@ -416,14 +417,17 @@ describe('BYOC fallback', () => {
       </div>
     ));
 
-    const renderedComponent = mount(
-      <SitecoreContext componentFactory={componentFactory}>
+    const suspenseSpy = spy(React, 'Suspense');
+    const errorBoundarySpy = spy(ErrorBoundary, 'default');
+
+    render(
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
-    expect(renderedComponent.find('ErrorBoundary').length).to.equal(2);
-    expect(renderedComponent.find('Suspense').length).to.equal(1);
+    expect(errorBoundarySpy.called).to.be.true;
+    expect(suspenseSpy.called).to.be.false;
 
     byocComponentStub.restore();
     byocWrapperStub.restore();
