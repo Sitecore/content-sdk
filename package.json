@@ -39,5 +39,8 @@
     "packages/*",
     "samples/*"
   ],
-  "packageManager": "yarn@3.1.0"
+  "packageManager": "yarn@3.1.0",
+  "resolutions": {
+    "upath": "2.0.1"
+  }
 }
