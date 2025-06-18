@@ -1,4 +1,4 @@
-import { SitecoreCliConfig, SitecoreCliConfigInput } from '../models';
+import { SitecoreCliConfig, SitecoreCliConfigInput } from '../config/models';
 
 const validateConfig = (cliConfig: SitecoreCliConfigInput) => {
   if (!cliConfig.build?.commands?.length) {
