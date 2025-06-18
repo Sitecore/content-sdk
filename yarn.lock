@@ -8297,6 +8297,7 @@ __metadata:
   dependencies:
     "@sitecore-cloudsdk/core": ^0.5.1
     "@sitecore-cloudsdk/events": ^0.5.1
+    "@sitecore-cloudsdk/personalize": ^0.5.1
     "@sitecore-content-sdk/cli": 0.3.0-canary.10
     "@sitecore-content-sdk/nextjs": 0.3.0-canary.10
     "@sitecore-feaas/clientside": ^0.5.19
