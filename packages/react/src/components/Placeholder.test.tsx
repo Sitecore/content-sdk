@@ -403,7 +403,7 @@ describe('BYOC fallback', () => {
     byocWrapperStub.restore();
   });
 
-  it('should render ErrorBoundary without Suspense for byoc wrapper', () => {
+  it('should render ErrorBoundary with isDynamic prop for byoc wrapper', () => {
     const component = byocWrapperData.sitecore.route as RouteData;
     const phKey = 'main';
 
@@ -417,7 +417,6 @@ describe('BYOC fallback', () => {
       </div>
     ));
 
-    const suspenseSpy = spy(React, 'Suspense');
     const errorBoundarySpy = spy(ErrorBoundary, 'default');
 
     render(
@@ -426,8 +425,7 @@ describe('BYOC fallback', () => {
       </SitecoreProvider>
     );
 
-    expect(errorBoundarySpy.called).to.be.true;
-    expect(suspenseSpy.called).to.be.false;
+    expect(errorBoundarySpy.calledWithMatch({ isDynamic: true })).to.be.true;
 
     byocComponentStub.restore();
     byocWrapperStub.restore();
