@@ -25,7 +25,8 @@ describe('next', () => {
       });
       expect(
         calls.some(
-          (call) => call.args[0] === `Content SDK application ${chalk.green('my-cool-app')} is ready!`
+          (call) =>
+            call.args[0] === `Content SDK application ${chalk.green('my-cool-app')} is ready!`
         )
       ).to.equal(true);
     });
@@ -40,7 +41,8 @@ describe('next', () => {
       });
       expect(
         calls.some(
-          (call) => call.args[0] === `Content SDK application ${chalk.green('my-cool-app')} is ready!`
+          (call) =>
+            call.args[0] === `Content SDK application ${chalk.green('my-cool-app')} is ready!`
         )
       ).to.equal(true);
     });

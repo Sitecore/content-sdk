@@ -8,7 +8,7 @@ export const DEFAULT_EXPORT_NAME = 'Default';
 /**
  * React component import with account for custom exports
  */
-export type ReactContentSdkComponent= ComponentType | ReactModule;
+export type ReactContentSdkComponent = ComponentType | ReactModule;
 
 export type ReactModule = {
   /**
@@ -34,7 +34,6 @@ export type LazyComponentType = ComponentType & {
   render?: { [key: string]: unknown };
 };
 
-export type ComponentMap<TComponent extends ReactContentSdkComponent= ReactContentSdkComponent> = Map<
-  string,
-  TComponent
->;
+export type ComponentMap<
+  TComponent extends ReactContentSdkComponent = ReactContentSdkComponent
+> = Map<string, TComponent>;

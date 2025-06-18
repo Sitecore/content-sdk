@@ -165,7 +165,10 @@ export class ComponentPropsService {
     return allComponentRenderings;
   }
 
-  private async getModule(components: ComponentMap<NextjsContentSdkComponent>, componentName: string) {
+  private async getModule(
+    components: ComponentMap<NextjsContentSdkComponent>,
+    componentName: string
+  ) {
     const component = components.get(componentName);
 
     if (!component) return null;

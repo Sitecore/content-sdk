@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import { ComponentRendering, LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import { ReactContentSdkComponent} from '@sitecore-content-sdk/react';
+import { ReactContentSdkComponent } from '@sitecore-content-sdk/react';
 
 export type ComponentPropsError = { error: string; componentName: string };
 

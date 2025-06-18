@@ -487,9 +487,9 @@ it('should render error message on error', () => {
       <Placeholder name={phKey} rendering={route} />
     </SitecoreProvider>
   );
-  expect(renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length).to.equal(
-    1
-  );
+  expect(
+    renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+  ).to.equal(1);
 });
 
 it('should render error message on error, only for the errored component', () => {
@@ -524,9 +524,9 @@ it('should render error message on error, only for the errored component', () =>
   const renderedComponent = render(
     <Placeholder name={phKey} rendering={route} componentMap={components} />
   );
-  expect(renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length).to.equal(
-    1
-  );
+  expect(
+    renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+  ).to.equal(1);
   expect(renderedComponent.container.querySelectorAll('div.foo-class').length).to.equal(1);
 });
 

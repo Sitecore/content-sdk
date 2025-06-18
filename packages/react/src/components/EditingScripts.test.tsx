@@ -10,7 +10,7 @@ import {
 import { EditingScripts } from './EditingScripts';
 import { SitecoreProvider } from './SitecoreProvider';
 import {
-  getContentSdkPagesClientData ,
+  getContentSdkPagesClientData,
   getDesignLibraryScriptLink,
 } from '@sitecore-content-sdk/core/editing';
 
@@ -108,7 +108,7 @@ describe('<EditingScripts />', () => {
       );
 
       const scripts = component.baseElement;
-      const jssScriptsLength = Object.keys(getContentSdkPagesClientData ()).length;
+      const jssScriptsLength = Object.keys(getContentSdkPagesClientData()).length;
 
       expect(scripts?.querySelectorAll('script')).to.have.length(4 + jssScriptsLength);
 
@@ -148,7 +148,7 @@ describe('<EditingScripts />', () => {
       );
 
       const scripts = component.baseElement;
-      const ids = Object.keys(getContentSdkPagesClientData ());
+      const ids = Object.keys(getContentSdkPagesClientData());
       ids.forEach((id) => {
         expect(component.container.querySelector(`#${id}`)).to.not.be.null;
       });

@@ -114,7 +114,7 @@ export const resetEditorChromes = (): void => {
  * Gets extra Content SDK clientData scripts to render in XMC Pages in addition to clientData from Pages itself
  * @returns {Record} collection of clientData
  */
-export const getContentSdkPagesClientData  = () => {
+export const getContentSdkPagesClientData = () => {
   const clientData: Record<string, Record<string, unknown>> = {};
   clientData[PAGES_EDITING_MARKER] = {};
 
