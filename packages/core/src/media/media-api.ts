@@ -53,7 +53,7 @@ export const updateImageUrl = (
   mediaUrlPrefix: RegExp = mediaUrlPrefixRegex
 ) => {
   if (!params || Object.keys(params).length === 0) {
-    // if params aren't supplied, no need to run it through JSS media handler
+    // if params aren't supplied, no need to run it through Content SDK media handler
     return url;
   }
   // polyfill node `global` in browser to workaround https://github.com/unshiftio/url-parse/issues/150
