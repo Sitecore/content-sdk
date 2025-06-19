@@ -10,7 +10,7 @@ const contentBlock = {
       value: '<p>This is a live set of examples of how to use Content SDK</p>\r\n',
     },
     heading: {
-      value: 'JSS Styleguide',
+      value: 'Content SDK Styleguide',
     },
   },
   placeholders: {
