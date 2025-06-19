@@ -24,7 +24,7 @@ export default function componentPropsLoader(source: string) {
       // Get the variable declaration from the AST
       const isMethodFound = (path.node.declaration as VariableDeclaration)?.declarations?.find(
         (declaration) => {
-          // Check if the function is in the list of functions to strip
+          // Check if the function is the one we want to strip
           if (
             'id' in declaration &&
             'name' in declaration.id &&
