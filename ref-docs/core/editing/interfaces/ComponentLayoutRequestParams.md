@@ -6,7 +6,7 @@
 
 # Interface: ComponentLayoutRequestParams
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:50](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/core/src/editing/rest-component-layout-service.ts#L50)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:11](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/editing/rest-component-layout-service.ts#L11)
 
 Params for requesting component data from service in Design Library mode
 
@@ -16,7 +16,7 @@ Params for requesting component data from service in Design Library mode
 
 > **componentUid**: `string`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:59](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/core/src/editing/rest-component-layout-service.ts#L59)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:20](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/editing/rest-component-layout-service.ts#L20)
 
 Component identifier. Can be either taken from item's layout details or
 an arbitrary one (component renderingId and datasource would be used for identification then)
@@ -27,19 +27,9 @@ an arbitrary one (component renderingId and datasource would be used for identif
 
 > `optional` **dataSourceId**: `string`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:67](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/core/src/editing/rest-component-layout-service.ts#L67)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:28](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/editing/rest-component-layout-service.ts#L28)
 
 optional component datasource
-
-***
-
-### editMode?
-
-> `optional` **editMode**: [`Metadata`](../../layout/enumerations/EditMode.md#metadata)
-
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:79](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/core/src/editing/rest-component-layout-service.ts#L79)
-
-edit mode to be rendered component in. Component is rendered in normal mode by default
 
 ***
 
@@ -47,7 +37,7 @@ edit mode to be rendered component in. Component is rendered in normal mode by d
 
 > **itemId**: `string`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:54](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/core/src/editing/rest-component-layout-service.ts#L54)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:15](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/editing/rest-component-layout-service.ts#L15)
 
 Item id to be used as context for rendering the component
 
@@ -57,9 +47,19 @@ Item id to be used as context for rendering the component
 
 > `optional` **language**: `string`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:63](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/core/src/editing/rest-component-layout-service.ts#L63)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:24](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/editing/rest-component-layout-service.ts#L24)
 
 language to render component in
+
+***
+
+### mode?
+
+> `optional` **mode**: [`DesignLibraryMode`](../enumerations/DesignLibraryMode.md)
+
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:44](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/editing/rest-component-layout-service.ts#L44)
+
+mode to be used for rendering the component
 
 ***
 
@@ -67,17 +67,17 @@ language to render component in
 
 > `optional` **renderingId**: `string`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:71](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/core/src/editing/rest-component-layout-service.ts#L71)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:32](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/editing/rest-component-layout-service.ts#L32)
 
 ID of the component definition rendering item in Sitecore
 
 ***
 
-### siteName?
+### siteName
 
-> `optional` **siteName**: `string`
+> **siteName**: `string`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:83](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/core/src/editing/rest-component-layout-service.ts#L83)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:40](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/editing/rest-component-layout-service.ts#L40)
 
 site name to be used as context for rendering the component
 
@@ -87,6 +87,6 @@ site name to be used as context for rendering the component
 
 > `optional` **version**: `string`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:75](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/core/src/editing/rest-component-layout-service.ts#L75)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:36](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/editing/rest-component-layout-service.ts#L36)
 
 version of the context item (latest by default)

@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/core",
-  "version": "0.3.0-canary.4",
+  "version": "0.3.0-canary.20",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -69,6 +69,7 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "debug": "^4.4.0",
+    "glob": "^11.0.2",
     "graphql": "^16.11.0",
     "graphql-request": "^6.1.0",
     "memory-cache": "^0.2.0",

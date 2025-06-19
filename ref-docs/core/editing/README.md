@@ -8,6 +8,7 @@
 
 ## Enumerations
 
+- [DesignLibraryMode](enumerations/DesignLibraryMode.md)
 - [DesignLibraryStatus](enumerations/DesignLibraryStatus.md)
 - [LayoutKind](enumerations/LayoutKind.md)
 - [MetadataKind](enumerations/MetadataKind.md)
@@ -46,5 +47,6 @@
 - [getDesignLibraryScriptLink](functions/getDesignLibraryScriptLink.md)
 - [getDesignLibraryStatusEvent](functions/getDesignLibraryStatusEvent.md)
 - [getJssPagesClientData](functions/getJssPagesClientData.md)
+- [isDesignLibraryMode](functions/isDesignLibraryMode.md)
 - [isEditorActive](functions/isEditorActive.md)
 - [resetEditorChromes](functions/resetEditorChromes.md)

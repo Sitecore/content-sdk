@@ -6,7 +6,7 @@
 
 # Class: NativeDataFetcher
 
-Defined in: packages/core/types/native-fetcher.d.ts:44
+Defined in: packages/core/types/native-fetcher.d.ts:37
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: packages/core/types/native-fetcher.d.ts:44
 
 > **new NativeDataFetcher**(`config?`): `NativeDataFetcher`
 
-Defined in: packages/core/types/native-fetcher.d.ts:47
+Defined in: packages/core/types/native-fetcher.d.ts:40
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: packages/core/types/native-fetcher.d.ts:47
 
 > `protected` **config**: [`NativeDataFetcherConfig`](../type-aliases/NativeDataFetcherConfig.md)
 
-Defined in: packages/core/types/native-fetcher.d.ts:45
+Defined in: packages/core/types/native-fetcher.d.ts:38
 
 ## Methods
 
@@ -40,7 +40,7 @@ Defined in: packages/core/types/native-fetcher.d.ts:45
 
 > **delete**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: packages/core/types/native-fetcher.d.ts:76
+Defined in: packages/core/types/native-fetcher.d.ts:69
 
 Perform a DELETE request
 
@@ -69,7 +69,7 @@ response
 
 > `protected` **extractDebugHeaders**(`incomingHeaders?`): `object`
 
-Defined in: packages/core/types/native-fetcher.d.ts:103
+Defined in: packages/core/types/native-fetcher.d.ts:96
 
 Safely extract all headers for debug logging
 
@@ -91,7 +91,7 @@ Object with headers as key/value pairs
 
 > **fetch**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: packages/core/types/native-fetcher.d.ts:54
+Defined in: packages/core/types/native-fetcher.d.ts:47
 
 Implements a data fetcher.
 
@@ -120,7 +120,7 @@ response
 
 > **get**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: packages/core/types/native-fetcher.d.ts:61
+Defined in: packages/core/types/native-fetcher.d.ts:54
 
 Perform a GET request
 
@@ -149,7 +149,7 @@ response
 
 > `protected` **getRequestInit**(`init?`): `RequestInit`
 
-Defined in: packages/core/types/native-fetcher.d.ts:97
+Defined in: packages/core/types/native-fetcher.d.ts:90
 
 Determines settings for the request
 
@@ -171,7 +171,7 @@ The final request settings
 
 > **head**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: packages/core/types/native-fetcher.d.ts:91
+Defined in: packages/core/types/native-fetcher.d.ts:84
 
 Perform a HEAD request
 
@@ -200,7 +200,7 @@ response
 
 > **post**\<`T`\>(`url`, `body`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: packages/core/types/native-fetcher.d.ts:69
+Defined in: packages/core/types/native-fetcher.d.ts:62
 
 Perform a POST request
 
@@ -230,7 +230,7 @@ response
 
 > **put**\<`T`\>(`url`, `body`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: packages/core/types/native-fetcher.d.ts:84
+Defined in: packages/core/types/native-fetcher.d.ts:77
 
 Perform a PUT request
 

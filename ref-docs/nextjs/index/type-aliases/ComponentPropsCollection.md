@@ -8,7 +8,7 @@
 
 > **ComponentPropsCollection** = `object`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:10](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/nextjs/src/sharedTypes/component-props.ts#L10)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:10](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/nextjs/src/sharedTypes/component-props.ts#L10)
 
 Shape of component props storage
 

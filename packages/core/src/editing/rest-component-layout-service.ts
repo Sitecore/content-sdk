@@ -1,48 +1,9 @@
-import { LayoutServiceData, EditMode } from '../layout/models';
-import { IncomingMessage, ServerResponse } from 'http';
-import { debug, NativeDataFetcher, NativeDataFetcherConfig } from '..';
-import { fetchData, HttpDataFetcher } from '../data-fetcher';
-
-/**
- * Data fetcher resolver in order to provide custom data fetcher
- * @param {IncomingMessage} [req] Request instance
- * @param {ServerResponse} [res] Response instance
- */
-export type DataFetcherResolver = <T>(
-  req?: IncomingMessage,
-  res?: ServerResponse
-) => HttpDataFetcher<T>;
-
-export type RestLayoutServiceConfig = {
-  /**
-   * Your Sitecore instance hostname that is the backend for JSS
-   */
-  apiHost: string;
-  /**
-   * The Sitecore SSC API key your app uses
-   */
-  apiKey: string;
-  /**
-   * The JSS application name
-   */
-  siteName: string;
-  /**
-   * Enables/disables analytics tracking for the Layout Service invocation (default is true).
-   * More than likely, this would be set to false for SSG/hybrid implementations, and the
-   * JSS tracker would instead be used on the client-side
-   * @default true
-   */
-  tracking?: boolean;
-  /**
-   * Function that handles fetching API data
-   */
-  dataFetcherResolver?: DataFetcherResolver;
-
-  /**
-   * Layout Service "named" configuration
-   */
-  configurationName?: string;
-};
+import { LayoutServiceData } from '../layout/models';
+import { NativeDataFetcher, NativeDataFetcherConfig } from '../native-fetcher';
+import debug from '../debug';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
+import { resolveUrl } from '../utils';
+import { DesignLibraryMode } from './models';
 
 /**
  * Params for requesting component data from service in Design Library mode
@@ -74,94 +35,74 @@ export interface ComponentLayoutRequestParams {
    */
   version?: string;
   /**
-   * edit mode to be rendered component in. Component is rendered in normal mode by default
-   */
-  editMode?: EditMode;
-  /**
    * site name to be used as context for rendering the component
    */
-  siteName?: string;
+  siteName: string;
+  /**
+   * mode to be used for rendering the component
+   */
+  mode?: DesignLibraryMode;
 }
 
 /**
- * REST service that enables Design Library functioality
- * Makes a request to /sitecore/api/layout/component in 'library' mode in Pages.
+ * Config for the RestComponentLayoutService
+ */
+export interface RestComponentLayoutServiceConfig {
+  /**
+   * A unified identifier used to connect and retrieve data from XM Cloud instance
+   */
+  contextId: string;
+  /**
+   * XM Cloud endpoint that the app will communicate and retrieve data from
+   * @default https://edge-platform.sitecorecloud.io
+   */
+  edgeUrl?: string;
+}
+
+/**
+ * REST service that enables design Library functionality
  * Returns layoutData for one single rendered component
  */
 export class RestComponentLayoutService {
-  constructor(private config: RestLayoutServiceConfig) {}
+  constructor(private config: RestComponentLayoutServiceConfig) {}
 
-  fetchComponentData(
-    params: ComponentLayoutRequestParams,
-    req?: IncomingMessage,
-    res?: ServerResponse
-  ): Promise<LayoutServiceData> {
-    params.siteName = params.siteName || this.config.siteName;
-    const querystringParams = this.getComponentFetchParams(params);
+  fetchComponentData(params: ComponentLayoutRequestParams): Promise<LayoutServiceData> {
+    const config: NativeDataFetcherConfig = { debugger: debug.layout };
+
+    const fetcher = new NativeDataFetcher(config);
+
     debug.layout(
-      'fetching component with uid %s for %s %s %s',
+      'fetching component with uid %s for %s %s %s %s',
       params.componentUid,
       params.itemId,
       params.language,
-      params.siteName
+      params.siteName,
+      params.dataSourceId
     );
-    const fetcher = this.getFetcher(req, res);
 
-    const fetchUrl = this.resolveLayoutServiceUrl('component');
+    const fetchUrl = this.getFetchUrl(params);
 
-    return fetchData(fetchUrl, fetcher, querystringParams).catch((error) => {
-      if (error.response?.status === 404) {
-        return error.response.data;
-      }
+    return fetcher
+      .get<LayoutServiceData>(fetchUrl, {
+        headers: {
+          sc_editMode: `${params.mode === DesignLibraryMode.Metadata}`,
+        },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        if (error.response?.status === 404) {
+          return error.response.data;
+        }
 
-      throw error;
-    });
+        throw error;
+      });
   }
-
-  protected getFetcher = (req?: IncomingMessage, res?: ServerResponse) => {
-    return this.config.dataFetcherResolver
-      ? this.config.dataFetcherResolver<LayoutServiceData>(req, res)
-      : this.getDefaultFetcher<LayoutServiceData>(req);
-  };
-
-  /**
-   * Resolves layout service url
-   * @param {string} apiType which layout service API to call ('render' or 'placeholder')
-   * @returns the layout service url
-   */
-  protected resolveLayoutServiceUrl(apiType: string): string {
-    const { apiHost = '', configurationName = 'jss' } = this.config;
-
-    return `${apiHost}/sitecore/api/layout/${apiType}/${configurationName}`;
-  }
-
-  /**
-   * Provides default @see NativeDataFetcher data fetcher
-   * @param {IncomingMessage} [req] Request instance
-   * @returns default fetcher
-   */
-  protected getDefaultFetcher = <T>(req?: IncomingMessage) => {
-    const config = {
-      debugger: debug.editing,
-    } as NativeDataFetcherConfig;
-    const nativeFetcher = new NativeDataFetcher(config);
-    const headers = req && {
-      ...req.headers,
-      ...(req.socket?.remoteAddress ? { 'X-Forwarded-For': req.socket.remoteAddress } : {}),
-    };
-    const fetcher = (url: string, data?: RequestInit) => {
-      data = { ...data, ...{ headers: headers as HeadersInit } };
-      return nativeFetcher.fetch<T>(url, data);
-    };
-
-    return fetcher;
-  };
 
   protected getComponentFetchParams(params: ComponentLayoutRequestParams) {
     // exclude undefined params with this one simple trick
     return JSON.parse(
       JSON.stringify({
-        sc_apikey: this.config.apiKey,
+        sitecoreContextId: this.config.contextId,
         item: params.itemId,
         uid: params.componentUid,
         dataSourceId: params.dataSourceId,
@@ -169,8 +110,19 @@ export class RestComponentLayoutService {
         version: params.version,
         sc_site: params.siteName,
         sc_lang: params.language || 'en',
-        sc_mode: params.editMode,
       })
+    );
+  }
+
+  /**
+   * Get the fetch URL for the partial layout data endpoint
+   * @param {ComponentLayoutRequestParams} params - The parameters for the request
+   * @returns {string} The fetch URL for the component data
+   */
+  private getFetchUrl(params: ComponentLayoutRequestParams) {
+    return resolveUrl(
+      `${this.config.edgeUrl || SITECORE_EDGE_URL_DEFAULT}/layout/component`,
+      this.getComponentFetchParams(params)
     );
   }
 }

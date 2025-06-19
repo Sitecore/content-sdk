@@ -6,9 +6,9 @@
 
 # Function: getComponentList()
 
-> **getComponentList**(`path`): [`ComponentFile`](../interfaces/ComponentFile.md)[]
+> **getComponentList**(`paths`, `exclude?`): [`ComponentFile`](../interfaces/ComponentFile.md)[]
 
-Defined in: [packages/core/src/tools/templating/components.ts:33](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/core/src/tools/templating/components.ts#L33)
+Defined in: [packages/core/src/tools/templating/components.ts:44](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/tools/templating/components.ts#L44)
 
 Get list of components from
 
@@ -16,7 +16,8 @@ Get list of components from
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `path` | `string` | path to search |
+| `paths` | `string`[] | paths to search |
+| `exclude?` | `string`[] | paths and glob patterns to exclude from final result |
 
 ## Returns
 

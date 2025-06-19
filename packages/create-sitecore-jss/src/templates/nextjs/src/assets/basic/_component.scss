@@ -1,18 +1,12 @@
 .component-content {
   @include respond-to(mobile-large) {
     .row {
-      padding: 0;
       margin: 0;
-    }
-  }
-}
-@include respond-to(mobile-large) {
-  .row {
-    margin: 0;
-    padding: 0;
-    > * {
       padding: 0;
-      margin: 0;
+      > * {
+        margin: 0;
+        padding: 0;
+      }
     }
   }
 }
@@ -28,21 +22,8 @@
       height: 300px;
     }
   }
+  
   .sc-image-wrapper {
     opacity: 0;
-  }
-  &.scEnabledChrome {
-    &.hero-banner-empty {
-      .sc-image-wrapper {
-        display: block;
-        width: 100%;
-  
-        .scEmptyImage {
-          max-height: 800px;
-          max-width: 100%;
-          width: 100%;
-        }
-      }
-    }
   }
 }

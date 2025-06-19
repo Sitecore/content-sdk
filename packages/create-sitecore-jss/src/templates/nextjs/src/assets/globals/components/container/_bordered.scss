@@ -1,0 +1,21 @@
+@import "@globals/abstracts/vars";
+@import "@globals/abstracts/mixins";
+
+.sxa-bordered {
+  box-sizing: border-box;
+
+  > .component-content {
+    padding: 0;
+    @include border-basic();
+    border-radius: 5px;
+  }
+}
+
+.column-splitter,
+.row-splitter {
+  box-sizing: border-box;
+
+  .sxa-bordered {
+    padding: $default-padding !important;
+  }
+}

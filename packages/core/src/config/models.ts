@@ -1,4 +1,5 @@
 import { RetryStrategy } from '../models';
+import { GenerateMapFunction, GenerateMapArgs } from '../tools';
 
 /**
  * Utility type to make every property in a type required
@@ -8,6 +9,13 @@ export type DeepRequired<T> = Required<
     [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
   }
 >;
+
+/**
+ * Utility type to make all properties in a type optional, recursively.
+ */
+export type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+};
 
 /**
  * Type to be used as config input in sitecore.config
@@ -206,6 +214,15 @@ export type SitecoreCliConfigInput = {
      * List of scaffold templates that can be used for generating components
      */
     templates?: ScaffoldTemplate[];
+  };
+  /**
+   * Configuration for the `sitecore-tools component generate-map` cli command
+   */
+  componentMap?: GenerateMapArgs & {
+    /**
+     * Function implementationt for generating a component map.
+     */
+    generator?: GenerateMapFunction;
   };
 };
 

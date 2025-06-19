@@ -1,11 +1,8 @@
 ﻿import React, { JSX } from 'react';
-import { Placeholder, ComponentRendering } from '@sitecore-content-sdk/nextjs';
+import { Placeholder } from '@sitecore-content-sdk/nextjs';
+import { ComponentProps } from 'lib/component-props';
 
-type DynamicPlaceholderProps = {
-  rendering: ComponentRendering;
-};
-
-const PartialDesignDynamicPlaceholder = (props: DynamicPlaceholderProps): JSX.Element => (
+const PartialDesignDynamicPlaceholder = (props: ComponentProps): JSX.Element => (
   <Placeholder name={props.rendering?.params?.sig || ''} rendering={props.rendering} />
 );
 

@@ -6,10 +6,9 @@
 
 # Class: RestComponentLayoutService
 
-Defined in: core/types/editing/rest-component-layout-service.d.ts:82
+Defined in: core/types/editing/rest-component-layout-service.d.ts:59
 
-REST service that enables Design Library functioality
-Makes a request to /sitecore/api/layout/component in 'library' mode in Pages.
+REST service that enables design Library functionality
 Returns layoutData for one single rendered component
 
 ## Constructors
@@ -18,95 +17,31 @@ Returns layoutData for one single rendered component
 
 > **new RestComponentLayoutService**(`config`): `RestComponentLayoutService`
 
-Defined in: core/types/editing/rest-component-layout-service.d.ts:84
+Defined in: core/types/editing/rest-component-layout-service.d.ts:61
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `config` | `RestLayoutServiceConfig` |
+| `config` | `RestComponentLayoutServiceConfig` |
 
 #### Returns
 
 `RestComponentLayoutService`
 
-## Properties
-
-### getDefaultFetcher()
-
-> `protected` **getDefaultFetcher**: \<`T`\>(`req?`) => (`url`, `data?`) => `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
-
-Defined in: core/types/editing/rest-component-layout-service.d.ts:98
-
-Provides default
-
-#### Type Parameters
-
-| Type Parameter |
-| ------ |
-| `T` |
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `req?` | `IncomingMessage` | Request instance |
-
-#### Returns
-
-default fetcher
-
-> (`url`, `data?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
-
-##### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `url` | `string` |
-| `data?` | `RequestInit` |
-
-##### Returns
-
-`Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
-
-#### See
-
-NativeDataFetcher data fetcher
-
-***
-
-### getFetcher()
-
-> `protected` **getFetcher**: (`req?`, `res?`) => `HttpDataFetcher`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\> \| (`url`, `data?`) => `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>\>
-
-Defined in: core/types/editing/rest-component-layout-service.d.ts:86
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `req?` | `IncomingMessage` |
-| `res?` | `ServerResponse`\<`IncomingMessage`\> |
-
-#### Returns
-
-`HttpDataFetcher`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\> \| (`url`, `data?`) => `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>\>
-
 ## Methods
 
 ### fetchComponentData()
 
-> **fetchComponentData**(`params`, `req?`, `res?`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
+> **fetchComponentData**(`params`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
-Defined in: core/types/editing/rest-component-layout-service.d.ts:85
+Defined in: core/types/editing/rest-component-layout-service.d.ts:62
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
 | `params` | `ComponentLayoutRequestParams` |
-| `req?` | `IncomingMessage` |
-| `res?` | `ServerResponse`\<`IncomingMessage`\> |
 
 #### Returns
 
@@ -118,7 +53,7 @@ Defined in: core/types/editing/rest-component-layout-service.d.ts:85
 
 > `protected` **getComponentFetchParams**(`params`): `any`
 
-Defined in: core/types/editing/rest-component-layout-service.d.ts:99
+Defined in: core/types/editing/rest-component-layout-service.d.ts:63
 
 #### Parameters
 
@@ -129,25 +64,3 @@ Defined in: core/types/editing/rest-component-layout-service.d.ts:99
 #### Returns
 
 `any`
-
-***
-
-### resolveLayoutServiceUrl()
-
-> `protected` **resolveLayoutServiceUrl**(`apiType`): `string`
-
-Defined in: core/types/editing/rest-component-layout-service.d.ts:92
-
-Resolves layout service url
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `apiType` | `string` | which layout service API to call ('render' or 'placeholder') |
-
-#### Returns
-
-`string`
-
-the layout service url

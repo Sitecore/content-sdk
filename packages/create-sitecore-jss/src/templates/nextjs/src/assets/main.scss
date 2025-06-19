@@ -1,4 +1,7 @@
-@import "basic/fonts";
+// This file bootstraps our application styles by loading:
+// • Bootstrap: foundational grid system, utilities, and core components.
+// • globals/main.scss: aggregates design tokens (variables, mixins), global resets, and all component styles.
+// • basic/main.scss: starter-template overrides
 @import "bootstrap/scss/bootstrap";
-@import "sass/main.scss";
+@import "globals/main.scss";
 @import "basic/main.scss";

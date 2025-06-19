@@ -418,6 +418,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       renderingId,
       dataSourceId,
       version,
+      mode,
     } = designLibData;
 
     const componentData = await this.componentService.fetchComponentData({
@@ -428,6 +429,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       renderingId,
       dataSourceId,
       version,
+      mode,
     });
 
     const dictionaryData = await this.editingService.fetchDictionaryData(
@@ -593,11 +595,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   private getComponentService(): RestComponentLayoutService {
-    return new RestComponentLayoutService({
-      apiHost: this.initOptions.api.local?.apiHost,
-      apiKey: this.initOptions.api.local?.apiKey,
-      siteName: this.initOptions.defaultSite,
-    });
+    return new RestComponentLayoutService(this.initOptions.api.edge);
   }
 
   private getSitePathService(): GraphQLSitePathService {

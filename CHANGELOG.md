@@ -12,9 +12,11 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
-### 🐛 Bug Fixes
+### 🎉 New Features & Improvements
 
-* `[react]` Add an optional `disableSuspense` flag to the Placeholder component to prevent error boundaries from rendering Suspense which helps contain errors for components. This can help avoid hydration issues in connected mode. ([#96](https://github.com/Sitecore/content-sdk/pull/96)):
+* `[create-sitecore-jss]`: Refactoring/Cleanup for scss files in SXA components ([#119](https://github.com/Sitecore/content-sdk/pull/119))([#122](https://github.com/Sitecore/content-sdk/pull/122))
+* `[core]` `[nextjs]` [DesignLibrary] Include metadata in the Design Library rendering mechanism ([#118](https://github.com/Sitecore/content-sdk/pull/118))
+* `[core]` `[nextjs]` `[cli]` Add automatic component map generation ([#124](https://github.com/Sitecore/content-sdk/pull/124) [#128](https://github.com/Sitecore/content-sdk/pull/128) [#130](https://github.com/Sitecore/content-sdk/pull/130))
 
 ### 🛠 Breaking Changes
 
@@ -50,9 +52,26 @@ Our versioning strategy is as follows:
     - `WithSitecoreContextOptions` → `WithSitecoreOptions`
     - `WithSitecoreContextProps` → `WithSitecoreProps`
     - `WithSitecoreContextHocProps` → `WithSitecoreHocProps`
-
 * `[nextjs]` Component-level `getServerSideProps` and `getStaticProps` methods have been replaced by a single `getComponentServerProps` method for simplicity.
     * In case a separate logic is needed depending on SSR/SSG context, an `isServerSidePropsContext` helper method from `@sitecore-content-sdk/nextjs/utils` can now be used.
+* `[nextjs]` [DesignLibrary] Script is requested from production even when a custom Edge URL is set ([#98](https://github.com/Sitecore/content-sdk/pull/98)):
+  * The `EditingScripts` component doesn't accept `sitecoreEdgeUrl` property anymore.
+  * The custom Edge URL is now accessed via the `api` property of the `SitecoreProvider` component.
+* `[nextjs]` `defineCliConfig` import has been moved to `@sitecore-content-sdk/nextjs/config-cli` submodule ([#128](https://github.com/Sitecore/content-sdk/pull/128)).
+
+### 🐛 Bug Fixes
+
+* `[core]` Fix for making clientContextId optional for client-side execution to avoid runtime errors ([#121](https://github.com/Sitecore/content-sdk/pull/121))
+* `[core]` `[sitecore.config]` Fallback values are not respected when framework specific value is empty & validate resolved config instead of base ([#97](https://github.com/Sitecore/content-sdk/pull/97))
+* `[nextjs]` Improve device detection and prevent false prefetch handling in Personalize middleware and also ensure personalized responses are not served from prefetch cache and proper personalization was applied during client side navigation. ([#129](https://github.com/Sitecore/content-sdk/pull/129))
+* `[react]` Suspense in ErrorBoundary component is not rendered when it is wrapping a BYOCWrapper to prevent client side hydration errors ([#132](https://github.com/Sitecore/content-sdk/pull/132))
+* `[react]` Add an optional `disableSuspense` flag to the Placeholder component to prevent error boundaries from rendering Suspense which helps contain errors for components. This can help avoid hydration issues in connected mode. ([#96](https://github.com/Sitecore/content-sdk/pull/96))
+
+## 0.2.1
+
+### 🎉 New Features & Improvements
+
+* `[core]` [DesignLibrary] Call partial layout rendering endpoint via Envoy and ContextID ([#111](https://github.com/Sitecore/content-sdk/pull/111))
 
 ## 0.2.0
 
@@ -78,6 +97,10 @@ Our versioning strategy is as follows:
 * `[cli]` Introduce "project" subcommands ([#73](https://github.com/Sitecore/content-sdk/pull/73))
 * `[nextjs]` Enhance customizability for Sitecore Client and SDK Middlwares ([#87](https://github.com/Sitecore/content-sdk/pull/87))
 * `[core]` `[nextjs]` `[create-sitecore-jss]` Passing configuration object to `defineConfig` in _sitecore.config_ is now optional. Introduced _sitecore.config.ts.example_ ([#90](https://github.com/Sitecore/content-sdk/pull/90)) ([#93](https://github.com/Sitecore/content-sdk/pull/93))
+* `[nextjs]` Starter kit components clean up ([#107](https://github.com/Sitecore/content-sdk/pull/107)):
+  - Reduced code duplication
+  - Streamlined the implementation to improve consistency
+  - Removed outdated logic related to editing support
 
 ### 🛠 Breaking Changes
 

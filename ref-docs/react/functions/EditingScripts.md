@@ -6,18 +6,12 @@
 
 # Function: EditingScripts()
 
-> **EditingScripts**(`props`): `Element`
+> **EditingScripts**(): `Element`
 
-Defined in: [packages/react/src/components/EditingScripts.tsx:24](https://github.com/Sitecore/content-sdk/blob/fa1b220318e1d79a584586c245a9c86d9072126e/packages/react/src/components/EditingScripts.tsx#L24)
+Defined in: [packages/react/src/components/EditingScripts.tsx:12](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/react/src/components/EditingScripts.tsx#L12)
 
 Renders client scripts and data for editing/preview mode for Pages.
 Renders script required for the Design Library (when RenderingType is `component`).
-
-## Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `props` | `EditingScriptsProps` | The props for the EditingScripts component. |
 
 ## Returns
 
