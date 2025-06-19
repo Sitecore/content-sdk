@@ -36,7 +36,7 @@ describe('<EditingScripts />', () => {
         pageEditing,
         renderingType,
         site: {
-          name: 'JssTestWeb',
+          name: 'ContentSdkTestWeb',
         },
         language: 'en',
         clientData: clientData || {
@@ -108,9 +108,9 @@ describe('<EditingScripts />', () => {
       );
 
       const scripts = component.baseElement;
-      const jssScriptsLength = Object.keys(getContentSdkPagesClientData()).length;
+      const contentSdkScriptsLength = Object.keys(getContentSdkPagesClientData()).length;
 
-      expect(scripts?.querySelectorAll('script')).to.have.length(4 + jssScriptsLength);
+      expect(scripts?.querySelectorAll('script')).to.have.length(4 + contentSdkScriptsLength);
 
       const script1 = scripts?.querySelectorAll('script')[0];
       expect(script1?.getAttribute('src')).to.equal('http://test.foo/script1.js');

@@ -7,7 +7,7 @@ const contentBlock = {
   },
   fields: {
     content: {
-      value: '<p>This is a live set of examples of how to use JSS</p>\r\n',
+      value: '<p>This is a live set of examples of how to use Content SDK</p>\r\n',
     },
     heading: {
       value: 'JSS Styleguide',

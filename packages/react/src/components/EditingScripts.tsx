@@ -37,19 +37,19 @@ export const EditingScripts = (): JSX.Element => {
     );
   }
 
-  const jssClientData = { ...clientData, ...getContentSdkPagesClientData() };
+  const contentSdkClientData = { ...clientData, ...getContentSdkPagesClientData() };
 
   return (
     <>
       {clientScripts?.map((src, index) => (
         <script src={src} key={index} />
       ))}
-      {Object.keys(jssClientData).map((id) => (
+      {Object.keys(contentSdkClientData).map((id) => (
         <script
           key={id}
           id={id}
           type="application/json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jssClientData[id]) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(contentSdkClientData[id]) }}
         />
       ))}
     </>

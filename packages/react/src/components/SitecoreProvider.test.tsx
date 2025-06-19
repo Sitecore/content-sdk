@@ -29,7 +29,7 @@ describe('SitecoreProvider', () => {
       context: {
         pageEditing: false,
         site: {
-          name: 'JssTestWeb',
+          name: 'ContentSdkTestWeb',
         },
         language: 'en',
       },
@@ -84,7 +84,7 @@ describe('SitecoreProvider', () => {
         },
       },
       site: {
-        name: 'JssTestWeb',
+        name: 'ContentSdkTestWeb',
       },
     });
   });
