@@ -25,6 +25,7 @@ import * as BYOCWrapper from './BYOCWrapper';
 import * as FEAASComponent from './FEaaSComponent';
 import * as FEAASWrapper from './FEaaSWrapper';
 import * as HiddenRendering from './HiddenRendering';
+import * as ErrorBoundary from './ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from './MissingComponent';
 import { Placeholder } from './Placeholder';
 import { ComponentProps } from './PlaceholderCommon';
@@ -397,6 +398,34 @@ describe('BYOC fallback', () => {
 
     expect(renderedComponent.container.querySelectorAll('.byoc-component').length).to.equal(2);
     expect(renderedComponent.container.querySelectorAll('.byoc-wrapper').length).to.equal(1);
+
+    byocComponentStub.restore();
+    byocWrapperStub.restore();
+  });
+
+  it('should render ErrorBoundary with isDynamic prop for byoc wrapper', () => {
+    const component = byocWrapperData.sitecore.route as RouteData;
+    const phKey = 'main';
+
+    byocComponentStub = stub(BYOCComponent, 'BYOCComponent').callsFake(() => (
+      <p className="byoc-component">Foo</p>
+    ));
+
+    byocWrapperStub = stub(BYOCWrapper, 'BYOCWrapper').callsFake(() => (
+      <div className="byoc-wrapper">
+        <BYOCComponent.BYOCComponent />
+      </div>
+    ));
+
+    const errorBoundarySpy = spy(ErrorBoundary, 'default');
+
+    render(
+      <SitecoreProvider componentMap={componentMap}>
+        <Placeholder name={phKey} rendering={component} />
+      </SitecoreProvider>
+    );
+
+    expect(errorBoundarySpy.calledWithMatch({ isDynamic: true })).to.be.true;
 
     byocComponentStub.restore();
     byocWrapperStub.restore();
