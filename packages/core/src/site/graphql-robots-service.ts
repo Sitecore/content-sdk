@@ -16,7 +16,7 @@ const defaultQuery = /* GraphQL */ `
 
 export type GraphQLRobotsServiceConfig = {
   /**
-   * The Content SDK application name
+   * the Content SDK application name
    */
   siteName: string;
   /**
