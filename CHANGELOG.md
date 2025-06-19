@@ -17,7 +17,7 @@ Our versioning strategy is as follows:
 * Refactor and simplify service names ([#133](https://github.com/Sitecore/content-sdk/pull/133)):
 
   You will be affected by the following changes **only** if:
-  - You are referencing Content SDK services directly rather than using the SitecoreClient methods.
+  - You are referencing Content SDK services directly rather than using the `SitecoreClient` methods.
 
   If you're using the `SitecoreClient` to access services, **no changes** are required.
 
