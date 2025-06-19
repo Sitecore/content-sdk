@@ -3,17 +3,14 @@ import { expect, use } from 'chai';
 import spies from 'chai-spies';
 import nock from 'nock';
 import { NativeDataFetcherConfig } from '../native-fetcher';
-import {
-  ComponentLayoutRequestParams,
-  RestComponentLayoutService,
-} from './rest-component-layout-service';
+import { ComponentLayoutRequestParams, ComponentLayoutService } from './component-layout-service';
 import { LayoutServiceData } from '../layout/models';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { DesignLibraryMode } from './models';
 
 use(spies);
 
-describe('RestComponentLayoutService', () => {
+describe('ComponentLayoutService', () => {
   const defaultTestInput: ComponentLayoutRequestParams = {
     itemId: '123',
     componentUid: '456',
@@ -45,7 +42,7 @@ describe('RestComponentLayoutService', () => {
       )
       .reply(200, () => defaultTestData);
 
-    const service = new RestComponentLayoutService({
+    const service = new ComponentLayoutService({
       contextId,
     });
 
@@ -67,7 +64,7 @@ describe('RestComponentLayoutService', () => {
       )
       .reply(200, () => defaultTestData);
 
-    const service = new RestComponentLayoutService({
+    const service = new ComponentLayoutService({
       contextId,
     });
 
@@ -118,7 +115,7 @@ describe('RestComponentLayoutService', () => {
       )
       .reply(200, () => testExpectedData);
 
-    const service = new RestComponentLayoutService({
+    const service = new ComponentLayoutService({
       contextId,
     });
 
@@ -132,7 +129,7 @@ describe('RestComponentLayoutService', () => {
   it('should fetch component data from a custom edge endpoint', () => {
     const customEdgeUrl = 'https://custom-edge-url.com';
 
-    const service = new RestComponentLayoutService({
+    const service = new ComponentLayoutService({
       contextId,
       edgeUrl: customEdgeUrl,
     });
@@ -161,7 +158,7 @@ describe('RestComponentLayoutService', () => {
         },
       }));
 
-    const service = new RestComponentLayoutService({
+    const service = new ComponentLayoutService({
       contextId,
     });
 
@@ -189,7 +186,7 @@ describe('RestComponentLayoutService', () => {
       )
       .reply(401, { message: 'whoops' });
 
-    const service = new RestComponentLayoutService({
+    const service = new ComponentLayoutService({
       contextId,
     });
 
@@ -201,7 +198,7 @@ describe('RestComponentLayoutService', () => {
 
   describe('getComponentFetchParams', () => {
     it('should return params', () => {
-      const service = new RestComponentLayoutService({
+      const service = new ComponentLayoutService({
         contextId,
       });
       const testParams = {
@@ -230,7 +227,7 @@ describe('RestComponentLayoutService', () => {
     });
 
     it('should return params with no undefined params', () => {
-      const service = new RestComponentLayoutService({
+      const service = new ComponentLayoutService({
         contextId,
       });
 

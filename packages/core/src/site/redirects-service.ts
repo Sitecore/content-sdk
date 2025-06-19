@@ -33,7 +33,7 @@ const defaultQuery = /* GraphQL */ `
   }
 `;
 
-export type GraphQLRedirectsServiceConfig = CacheOptions & {
+export type RedirectsServiceConfig = CacheOptions & {
   /**
    * Override fetch method. Uses 'GraphQLRequestClient' default otherwise.
    */
@@ -53,17 +53,17 @@ export type RedirectsQueryResult = {
 };
 
 /**
- *  The GraphQLRedirectsService class is used to query the JSS redirects using Graphql endpoint
+ *  The RedirectsService class is used to query the JSS redirects using Graphql endpoint
  */
-export class GraphQLRedirectsService {
+export class RedirectsService {
   private graphQLClient: GraphQLClient;
   private cache: CacheClient<RedirectsQueryResult>;
 
   /**
    * Creates an instance of graphQL redirects service with the provided options
-   * @param {GraphQLRedirectsServiceConfig} options instance
+   * @param {RedirectsServiceConfig} options instance
    */
-  constructor(private options: GraphQLRedirectsServiceConfig) {
+  constructor(private options: RedirectsServiceConfig) {
     this.graphQLClient = this.getGraphQLClient();
     this.cache = this.getCacheClient();
   }

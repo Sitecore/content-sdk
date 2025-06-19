@@ -2,12 +2,12 @@
 import { expect, use } from 'chai';
 import spies from 'chai-spies';
 import nock from 'nock';
-import { GraphQLPersonalizeService } from './graphql-personalize-service';
+import { PersonalizeService } from './personalize-service';
 import { GraphQLRequestClient } from '../graphql-request-client';
 
 use(spies);
 
-describe('GraphQLPersonalizeService', () => {
+describe('PersonalizeService', () => {
   const endpoint = 'http://sctest/graphql';
   const siteName = 'sitecore';
   const apiKey = 'api-key';
@@ -66,7 +66,7 @@ describe('GraphQLPersonalizeService', () => {
   it('should return personalize info for a route', async () => {
     mockNonEmptyResponse();
 
-    const service = new GraphQLPersonalizeService(config);
+    const service = new PersonalizeService(config);
     const personalizeData = await service.getPersonalizeInfo(
       '/sitecore/content/home',
       'en',
@@ -82,7 +82,7 @@ describe('GraphQLPersonalizeService', () => {
   it('should return undefined if itemPath / language not found', async () => {
     mockEmptyResponse();
 
-    const service = new GraphQLPersonalizeService(config);
+    const service = new PersonalizeService(config);
     const personalizeData = await service.getPersonalizeInfo(
       '/sitecore/content/home',
       '',
@@ -100,7 +100,7 @@ describe('GraphQLPersonalizeService', () => {
     })
       .post('/graphql')
       .replyWithError('error_test');
-    const service = new GraphQLPersonalizeService(config);
+    const service = new PersonalizeService(config);
 
     await service.getPersonalizeInfo('/sitecore/content/home', 'en', siteName).catch((error) => {
       expect(error.message).to.contain('error_test');
@@ -117,7 +117,7 @@ describe('GraphQLPersonalizeService', () => {
       .delay(300)
       .reply(408);
 
-    const service = new GraphQLPersonalizeService(config);
+    const service = new PersonalizeService(config);
 
     const result = await service.getPersonalizeInfo('/sitecore/content/home', 'en', siteName);
     expect(result).to.equal(undefined);
@@ -132,7 +132,7 @@ describe('GraphQLPersonalizeService', () => {
       .delay(75)
       .reply(408);
 
-    const service = new GraphQLPersonalizeService({ ...config, timeout: 50 });
+    const service = new PersonalizeService({ ...config, timeout: 50 });
 
     const result = await service.getPersonalizeInfo('/sitecore/content/home', 'en', siteName);
     expect(result).to.equal(undefined);
@@ -146,7 +146,7 @@ describe('GraphQLPersonalizeService', () => {
       .post('/graphql')
       .reply(408);
 
-    const service = new GraphQLPersonalizeService({ ...config, timeout: 50 });
+    const service = new PersonalizeService({ ...config, timeout: 50 });
 
     const result = await service.getPersonalizeInfo('/sitecore/content/home', 'en', siteName);
 
@@ -159,7 +159,7 @@ describe('GraphQLPersonalizeService', () => {
     const itemPath = '/sitecore/content/home';
     const lang = 'en';
 
-    const service = new GraphQLPersonalizeService(config);
+    const service = new PersonalizeService(config);
     const firstResult = await service.getPersonalizeInfo(itemPath, lang, siteName);
 
     expect(firstResult).to.deep.equal({
@@ -180,7 +180,7 @@ describe('GraphQLPersonalizeService', () => {
     const itemPath = '/sitecore/content/home';
     const lang = 'en';
 
-    const service = new GraphQLPersonalizeService({
+    const service = new PersonalizeService({
       ...config,
       cacheEnabled: false,
     });
@@ -204,7 +204,7 @@ describe('GraphQLPersonalizeService', () => {
     const itemPath = '/sitecore/content/home';
     const lang = 'en';
 
-    const service = new GraphQLPersonalizeService({
+    const service = new PersonalizeService({
       ...config,
       cacheTimeout: 0.2,
     });

@@ -16,7 +16,7 @@ const siteQuery = /* GraphQL */ `
   }
 `;
 
-export type GraphQLSiteInfoServiceConfig = CacheOptions & {
+export type SiteInfoServiceConfig = CacheOptions & {
   /**
    * common variable for all GraphQL queries
    * it will be used for every type of query to regulate result batch size
@@ -43,15 +43,15 @@ export type GraphQLSiteInfoResult = {
   language: string;
 };
 
-export class GraphQLSiteInfoService {
+export class SiteInfoService {
   private graphQLClient: GraphQLClient;
   private cache: CacheClient<SiteInfo[]>;
 
   /**
    * Creates an instance of graphQL service to retrieve site configuration list from Sitecore
-   * @param {GraphQLSiteInfoServiceConfig} config instance
+   * @param {SiteInfoServiceConfig} config instance
    */
-  constructor(private config: GraphQLSiteInfoServiceConfig) {
+  constructor(private config: SiteInfoServiceConfig) {
     this.graphQLClient = this.getGraphQLClient();
     this.cache = this.getCacheClient();
   }

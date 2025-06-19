@@ -18,7 +18,7 @@ export {
   LayoutServicePageState,
   LayoutServiceContext,
   LayoutServiceContextData,
-  GraphQLLayoutService,
+  LayoutService,
   RouteData,
   Field,
   Item,
@@ -29,11 +29,7 @@ export {
   ComponentParams,
   EditMode,
 } from '@sitecore-content-sdk/core/layout';
-export {
-  DictionaryPhrases,
-  DictionaryService,
-  GraphQLDictionaryService,
-} from '@sitecore-content-sdk/core/i18n';
+export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/core/i18n';
 export {
   GraphQLClientError,
   RetryStrategy,
@@ -95,7 +91,4 @@ export {
   DefaultEmptyFieldEditingComponentText,
   DefaultEmptyFieldEditingComponentImage,
 } from './components/DefaultEmptyFieldEditingComponents';
-export {
-  GraphQLSitePathService,
-  GraphQLSitePathServiceConfig,
-} from '@sitecore-content-sdk/core/site';
+export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/core/site';

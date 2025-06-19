@@ -1,9 +1,9 @@
 ﻿export { personalizeLayout } from './layout-personalizer';
 export {
   PersonalizeInfo,
-  GraphQLPersonalizeService,
-  GraphQLPersonalizeServiceConfig,
-} from './graphql-personalize-service';
+  PersonalizeService,
+  PersonalizeServiceConfig,
+} from './personalize-service';
 export {
   getPersonalizedRewrite,
   getPersonalizedRewriteData,

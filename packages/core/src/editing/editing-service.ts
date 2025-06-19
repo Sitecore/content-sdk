@@ -87,7 +87,7 @@ export type GraphQLEditingQueryResponse = GraphQLDictionaryQueryResponse & {
   item: { rendered: LayoutServiceData };
 };
 
-export interface GraphQLEditingServiceConfig {
+export interface EditingServiceConfig {
   /**
    * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
    * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -108,14 +108,14 @@ export type EditingOptions = {
  * Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
  * Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
  */
-export class GraphQLEditingService {
+export class EditingService {
   private graphQLClient: GraphQLClient;
 
   /**
    * Fetch layout data using the Sitecore GraphQL endpoint.
-   * @param {GraphQLLayoutServiceConfig} serviceConfig configuration
+   * @param {EditingServiceConfig} serviceConfig configuration
    */
-  constructor(public serviceConfig: GraphQLEditingServiceConfig) {
+  constructor(public serviceConfig: EditingServiceConfig) {
     this.graphQLClient = this.getGraphQLClient();
   }
 

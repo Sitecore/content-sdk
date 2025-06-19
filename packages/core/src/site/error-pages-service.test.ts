@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import sinon, { SinonSpy } from 'sinon';
 import nock from 'nock';
-import { ErrorPages, GraphQLErrorPagesService } from './graphql-error-pages-service';
+import { ErrorPages, ErrorPagesService } from './error-pages-service';
 import { siteNameError } from '../constants';
 import { LayoutServiceData } from '../layout';
 import { GraphQLRequestClient } from '../graphql-request-client';
@@ -13,7 +13,7 @@ const errorQueryResultNull = {
   },
 };
 
-describe('GraphQLErrorPagesService', () => {
+describe('ErrorPagesService', () => {
   const endpoint = 'http://site';
   const apiKey = 'some-api-key';
   const clientFactory = GraphQLRequestClient.createClientFactory({
@@ -58,7 +58,7 @@ describe('GraphQLErrorPagesService', () => {
     it('should get error if sitename is empty', async () => {
       mockErrorPagesRequest();
 
-      const service = new GraphQLErrorPagesService({
+      const service = new ErrorPagesService({
         clientFactory,
         language,
       });
@@ -72,7 +72,7 @@ describe('GraphQLErrorPagesService', () => {
     it('should fetch error pages', async () => {
       mockErrorPagesRequest(mockErrorPages);
 
-      const service = new GraphQLErrorPagesService({
+      const service = new ErrorPagesService({
         clientFactory,
         language,
       });
@@ -91,7 +91,7 @@ describe('GraphQLErrorPagesService', () => {
         apiKey,
       });
 
-      const service = new GraphQLErrorPagesService({
+      const service = new ErrorPagesService({
         language,
         clientFactory,
       });
@@ -106,7 +106,7 @@ describe('GraphQLErrorPagesService', () => {
     it('should get null if error not exists', async () => {
       mockErrorPagesRequest();
 
-      const service = new GraphQLErrorPagesService({
+      const service = new ErrorPagesService({
         clientFactory,
         language,
       });
@@ -133,7 +133,7 @@ describe('GraphQLErrorPagesService', () => {
       },
     };
 
-    new GraphQLErrorPagesService(mockServiceConfig);
+    new ErrorPagesService(mockServiceConfig);
 
     expect(clientFactorySpy.calledOnce).to.be.true;
 

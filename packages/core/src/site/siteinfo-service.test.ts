@@ -3,14 +3,14 @@
 import { expect, spy, use } from 'chai';
 import spies from 'chai-spies';
 import nock from 'nock';
-import { GraphQLSiteInfoService, GraphQLSiteInfoResult } from './graphql-siteinfo-service';
+import { SiteInfoService, GraphQLSiteInfoResult } from './siteinfo-service';
 import { GraphQLRequestClient } from '../client';
 import debugApi from 'debug';
 import debug from '../debug';
 
 use(spies);
 
-describe('GraphQLSiteInfoService', () => {
+describe('SiteInfoService', () => {
   let debugNamespaces: string;
   const endpoint = 'http://site';
   const apiKey = 'some-api-key';
@@ -101,7 +101,7 @@ describe('GraphQLSiteInfoService', () => {
         ],
       })
     );
-    const service = new GraphQLSiteInfoService({ clientFactory });
+    const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     expect(result).to.be.deep.equal([
       {
@@ -133,7 +133,7 @@ describe('GraphQLSiteInfoService', () => {
       endpoint,
       apiKey,
     });
-    const service = new GraphQLSiteInfoService({ clientFactory });
+    const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     expect(result).to.be.deep.equal([
       {
@@ -152,14 +152,14 @@ describe('GraphQLSiteInfoService', () => {
     nock(endpoint)
       .post('/')
       .reply(200, emptyResponse);
-    const service = new GraphQLSiteInfoService({ clientFactory });
+    const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     expect(result).to.deep.equal([]);
   });
 
   it('should use caching by default', async () => {
     mockSiteInfoRequest(nonEmptyResponse());
-    const service = new GraphQLSiteInfoService({ clientFactory });
+    const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     nock.cleanAll();
     nock(endpoint)
@@ -181,7 +181,7 @@ describe('GraphQLSiteInfoService', () => {
         ],
       })
     );
-    const service = new GraphQLSiteInfoService({
+    const service = new SiteInfoService({
       clientFactory,
       cacheEnabled: false,
     });
@@ -211,7 +211,7 @@ describe('GraphQLSiteInfoService', () => {
     nock(endpoint)
       .post('/')
       .reply(200, emptyResponse);
-    const service = new GraphQLSiteInfoService({ clientFactory });
+    const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     expect(result).to.deep.equal([]);
     expect(debug.multisite.log, 'log debug message').to.be.called.once;
@@ -230,7 +230,7 @@ describe('GraphQLSiteInfoService', () => {
         ],
       })
     );
-    const service = new GraphQLSiteInfoService({ clientFactory });
+    const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     expect(result).to.be.deep.equal([
       {

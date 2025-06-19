@@ -124,9 +124,9 @@ export type RouteListQueryResult = {
 };
 
 /**
- * Configuration options for @see GraphQLSitePathService instances
+ * Configuration options for @see SitePathService instances
  */
-export interface GraphQLSitePathServiceConfig
+export interface SitePathServiceConfig
   extends Omit<SiteRouteQueryVariables, 'language' | 'siteName'> {
   /**
    * A flag for whether to include personalized routes in service output.
@@ -148,14 +148,14 @@ export interface GraphQLSitePathServiceConfig
  * This list is used for SSG and Export functionality.
  * @mixes SearchQueryService<PageListQueryResult>
  */
-export class GraphQLSitePathService {
+export class SitePathService {
   private _graphQLClient: GraphQLClient;
 
   /**
    * Creates an instance of graphQL sitemap service with the provided options
-   * @param {GraphQLSitePathServiceConfig} options instance
+   * @param {SitePathServiceConfig} options instance
    */
-  constructor(public options: GraphQLSitePathServiceConfig) {
+  constructor(public options: SitePathServiceConfig) {
     this._graphQLClient = this.getGraphQLClient();
   }
 

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import nock from 'nock';
-import { GraphQLRobotsService } from './graphql-robots-service';
+import { RobotsService } from './robots-service';
 import { siteNameError } from '../constants';
 import { GraphQLRequestClient } from '../graphql-request-client';
 import { FetchOptions } from '../../client';
@@ -11,7 +11,7 @@ const robotsQueryResultNull = {
   },
 };
 
-describe('GraphQLRobotsService', () => {
+describe('RobotsService', () => {
   const endpoint = 'http://site';
   const apiKey = 'some-api-key';
   const siteName = 'site-name';
@@ -51,7 +51,7 @@ describe('GraphQLRobotsService', () => {
     it('should get error if robots.txt has empty sitename', async () => {
       mockRobotsRequest();
 
-      const service = new GraphQLRobotsService({ clientFactory, siteName: '' });
+      const service = new RobotsService({ clientFactory, siteName: '' });
       await service.fetchRobots().catch((error: Error) => {
         expect(error.message).to.equal(siteNameError);
       });
@@ -62,7 +62,7 @@ describe('GraphQLRobotsService', () => {
     it('should get robots.txt', async () => {
       mockRobotsRequest(siteName);
 
-      const service = new GraphQLRobotsService({ clientFactory, siteName });
+      const service = new RobotsService({ clientFactory, siteName });
       const robots = await service.fetchRobots();
       expect(robots).to.equal(siteName);
 
@@ -77,7 +77,7 @@ describe('GraphQLRobotsService', () => {
 
       mockRobotsRequest('User-agent: *\nDisallow: /', fetchOptions);
 
-      const service = new GraphQLRobotsService({
+      const service = new RobotsService({
         siteName: 'test-site',
         clientFactory: () => new GraphQLRequestClient(endpoint),
       });

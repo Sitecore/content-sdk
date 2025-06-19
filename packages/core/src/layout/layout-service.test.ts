@@ -3,12 +3,12 @@ import { expect, use } from 'chai';
 import sinon, { SinonSpy } from 'sinon';
 import spies from 'chai-spies';
 import nock from 'nock';
-import { GRAPHQL_LAYOUT_QUERY_NAME, GraphQLLayoutService } from './graphql-layout-service';
+import { GRAPHQL_LAYOUT_QUERY_NAME, LayoutService } from './layout-service';
 import { GraphQLRequestClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 
 use(spies);
 
-describe('GraphQLLayoutService', () => {
+describe('LayoutService', () => {
   const apiKey = '0FBFF61E-267A-43E3-9252-B77E71CEE4BA';
   const endpoint = 'http://sctest/graphql';
   const site = 'supersite';
@@ -61,7 +61,7 @@ describe('GraphQLLayoutService', () => {
       endpoint: 'https://bar.com/graphql',
     });
 
-    const service = new GraphQLLayoutService({
+    const service = new LayoutService({
       clientFactory,
     });
 
@@ -114,7 +114,7 @@ describe('GraphQLLayoutService', () => {
         },
       });
 
-    const service = new GraphQLLayoutService({
+    const service = new LayoutService({
       clientFactory,
     });
 
@@ -167,7 +167,7 @@ describe('GraphQLLayoutService', () => {
         },
       });
 
-    const service = new GraphQLLayoutService({
+    const service = new LayoutService({
       clientFactory,
       formatLayoutQuery: (siteName, itemPath, locale) =>
         `layout111(site:"${siteName}",route:"${itemPath}",language:"${locale || 'en'}")`,
@@ -203,7 +203,7 @@ describe('GraphQLLayoutService', () => {
         },
       });
 
-    const service = new GraphQLLayoutService({
+    const service = new LayoutService({
       clientFactory,
     });
 
@@ -231,7 +231,7 @@ describe('GraphQLLayoutService', () => {
         error: 'whoops',
       });
 
-    const service = new GraphQLLayoutService({
+    const service = new LayoutService({
       clientFactory,
     });
 
@@ -255,7 +255,7 @@ describe('GraphQLLayoutService', () => {
       },
     };
 
-    new GraphQLLayoutService(mockServiceConfig);
+    new LayoutService(mockServiceConfig);
 
     expect(clientFactorySpy.calledOnce).to.be.true;
 
@@ -301,7 +301,7 @@ describe('GraphQLLayoutService', () => {
       endpoint: 'https://bar.com/graphql',
     });
 
-    const service = new GraphQLLayoutService({
+    const service = new LayoutService({
       clientFactory,
     });
 

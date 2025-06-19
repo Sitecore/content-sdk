@@ -14,7 +14,7 @@ const defaultQuery = /* GraphQL */ `
   }
 `;
 
-export type GraphQLRobotsServiceConfig = {
+export type RobotsServiceConfig = {
   /**
    * The JSS application name
    */
@@ -34,14 +34,14 @@ export type RobotsQueryResult = { site: { siteInfo: { robots: string } } };
 /**
  * Service that fetch the robots.txt data using Sitecore's GraphQL API.
  */
-export class GraphQLRobotsService {
+export class RobotsService {
   private graphQLClient: GraphQLClient;
 
   /**
    * Creates an instance of graphQL robots.txt service with the provided options
-   * @param {GraphQLRobotsServiceConfig} options instance
+   * @param {RobotsServiceConfig} options instance
    */
-  constructor(public options: GraphQLRobotsServiceConfig) {
+  constructor(public options: RobotsServiceConfig) {
     this.graphQLClient = this.getGraphQLClient();
   }
 

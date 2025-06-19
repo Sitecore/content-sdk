@@ -16,7 +16,7 @@ const defaultQuery = /* GraphQL */ `
   }
 `;
 
-export type GraphQLSitemapXmlServiceConfig = {
+export type SitemapXmlServiceConfig = {
   /**
    * The JSS application name
    */
@@ -36,14 +36,14 @@ export type SitemapQueryResult = { site: { siteInfo: { sitemap: string[] } } };
 /**
  * Service that fetch the sitemaps data using Sitecore's GraphQL API.
  */
-export class GraphQLSitemapXmlService {
+export class SitemapXmlService {
   private graphQLClient: GraphQLClient;
 
   /**
    * Creates an instance of graphQL sitemaps service with the provided options
-   * @param {GraphQLSitemapXmlServiceConfig} options instance
+   * @param {SitemapXmlServiceConfig} options instance
    */
-  constructor(public options: GraphQLSitemapXmlServiceConfig) {
+  constructor(public options: SitemapXmlServiceConfig) {
     this.graphQLClient = this.getGraphQLClient();
   }
 

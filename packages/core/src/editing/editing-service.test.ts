@@ -4,12 +4,7 @@ import sinon from 'sinon';
 import nock from 'nock';
 import spies from 'chai-spies';
 import { GraphQLRequestClient } from '../graphql-request-client';
-import {
-  GraphQLEditingService,
-  GraphQLEditingServiceConfig,
-  query,
-  dictionaryQuery,
-} from './graphql-editing-service';
+import { EditingService, EditingServiceConfig, query, dictionaryQuery } from './editing-service';
 import {
   mockEditingServiceDictionaryResponse,
   mockEditingServiceResponse,
@@ -20,7 +15,7 @@ import { LayoutServicePageState } from '../layout';
 
 use(spies);
 
-describe('GraphQLEditingService', () => {
+describe('EditingService', () => {
   const hostname = 'http://site';
   const endpointPath = '/?sitecoreContextId=context-id';
   const siteName = 'site-name';
@@ -69,7 +64,7 @@ describe('GraphQLEditingService', () => {
 
     const clientFactorySpy = sinon.spy(clientFactory);
 
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory: clientFactorySpy,
     });
 
@@ -124,7 +119,7 @@ describe('GraphQLEditingService', () => {
 
     const clientFactorySpy = sinon.spy(clientFactory);
 
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory: clientFactorySpy,
     });
 
@@ -188,7 +183,7 @@ describe('GraphQLEditingService', () => {
 
     const clientFactorySpy = sinon.spy(clientFactory);
 
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory: clientFactorySpy,
     });
 
@@ -245,7 +240,7 @@ describe('GraphQLEditingService', () => {
 
     const clientFactorySpy = sinon.spy(clientFactory);
 
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory: clientFactorySpy,
     });
 
@@ -299,7 +294,7 @@ describe('GraphQLEditingService', () => {
 
     const clientFactorySpy = sinon.spy(clientFactory);
 
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory: clientFactorySpy,
     });
 
@@ -358,7 +353,7 @@ describe('GraphQLEditingService', () => {
 
     const clientFactorySpy = sinon.spy(clientFactory);
 
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory: clientFactorySpy,
     });
 
@@ -428,7 +423,7 @@ describe('GraphQLEditingService', () => {
         .post(endpointPath, /DictionaryQuery/gi)
         .reply(200, mockEditingServiceDictionaryResponse.pageTwo);
 
-      const service = new GraphQLEditingService({
+      const service = new EditingService({
         clientFactory: clientFactory,
       });
 
@@ -473,7 +468,7 @@ describe('GraphQLEditingService', () => {
 
       sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
 
-      const service = new GraphQLEditingService({
+      const service = new EditingService({
         clientFactory: clientFactory,
       });
 
@@ -500,7 +495,7 @@ describe('GraphQLEditingService', () => {
 
     const clientFactorySpy = sinon.spy(clientFactory);
 
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory: clientFactorySpy,
     });
 
@@ -547,7 +542,7 @@ describe('GraphQLEditingService', () => {
 
   it('should throw an error when client factory is not provided', async () => {
     try {
-      const service = new GraphQLEditingService({} as GraphQLEditingServiceConfig);
+      const service = new EditingService({} as EditingServiceConfig);
 
       await service.fetchEditingData({
         language,
@@ -568,7 +563,7 @@ describe('GraphQLEditingService', () => {
       .post(endpointPath, /EditingQuery/gi)
       .reply(500, 'Internal server error');
 
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory,
     });
 
@@ -586,7 +581,7 @@ describe('GraphQLEditingService', () => {
   });
 
   it('should throw an error when siteName is not provided', async () => {
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory,
     });
 
@@ -604,7 +599,7 @@ describe('GraphQLEditingService', () => {
   });
 
   it('should throw an error when language is not provided', async () => {
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory,
     });
 
@@ -664,7 +659,7 @@ describe('GraphQLEditingService', () => {
 
     sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
 
-    const service = new GraphQLEditingService({
+    const service = new EditingService({
       clientFactory,
     });
 
