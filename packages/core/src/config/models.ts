@@ -77,7 +77,7 @@ export type SitecoreConfigInput = {
   defaultSite?: string;
   /**
    * Editing secret required to support Sitecore editing and preview functionality.
-   * by default set by the Content SDK_EDITING_SECRET environment variable
+   * by default set by the JSS_EDITING_SECRET environment variable
    */
   editingSecret?: string;
   /**

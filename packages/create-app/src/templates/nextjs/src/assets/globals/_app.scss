@@ -87,14 +87,14 @@ ul li {
   display: none;
 }
 
-#header, #content, #footer, .sc-content-sdk-empty-placeholder {
+#header, #content, #footer, .sc-jss-empty-placeholder {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   position: relative;
 }
 
-.sc-content-sdk-placeholder-error {
+.sc-jss-placeholder-error {
   background: #ff0000;
   outline: 5px solid #e36565;
   padding: 10px;

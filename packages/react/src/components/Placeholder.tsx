@@ -46,7 +46,7 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
    * @returns react node
    */
   renderEmptyPlaceholder(node: React.ReactNode | React.ReactElement[]) {
-    return <div className="sc-content-sdk-empty-placeholder">{node}</div>;
+    return <div className="sc-jss-empty-placeholder">{node}</div>;
   }
 
   render() {
@@ -60,7 +60,7 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
       }
 
       return (
-        <div className="sc-content-sdk-placeholder-error">
+        <div className="sc-jss-placeholder-error">
           A rendering error occurred: {this.state.error.message}.
         </div>
       );

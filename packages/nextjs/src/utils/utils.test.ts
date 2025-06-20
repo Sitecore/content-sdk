@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import { getContentSdkEditingSecret } from './utils';
+import { getEditingSecret} from './utils';
 
 describe('utils', () => {
   describe('getContentSdkEditingSecret', () => {

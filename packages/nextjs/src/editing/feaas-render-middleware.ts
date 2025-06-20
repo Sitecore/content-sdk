@@ -4,7 +4,7 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/core/editing';
-import { getContentSdkEditingSecret } from '../utils/utils';
+import { getEditingSecret} from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { enforceCors } from '@sitecore-content-sdk/core/utils';
 

@@ -61,7 +61,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
         if (this.showErrorDetails()) {
           return (
             <div>
-              <div className="sc-content-sdk-placeholder-error">
+              <div className="sc-jss-placeholder-error">
                 A rendering error occurred in component{' '}
                 <em>{this.props.rendering?.componentName}</em>
                 <br />
@@ -72,7 +72,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
         } else {
           return (
             <div>
-              <div className="sc-content-sdk-placeholder-error">{this.defaultErrorMessage}</div>
+              <div className="sc-jss-placeholder-error">{this.defaultErrorMessage}</div>
             </div>
           );
         }

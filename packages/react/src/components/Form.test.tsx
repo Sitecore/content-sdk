@@ -194,7 +194,7 @@ describe('Form', () => {
       expect(subscribeToFormSubmitEventSpy.notCalled).to.be.true;
       expect(executeScriptElementsSpy.notCalled).to.be.true;
       expect(rendered.baseElement.innerHTML).to.equal(
-        '<div class="sc-content-sdk-placeholder-error">There was a problem loading this section</div>'
+        '<div class="sc-jss-placeholder-error">There was a problem loading this section</div>'
       );
     });
   });

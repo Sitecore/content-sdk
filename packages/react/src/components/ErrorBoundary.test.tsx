@@ -70,7 +70,7 @@ describe('ErrorBoundary', () => {
         </SitecoreProviderReactContext.Provider>
       );
       const ems = rendered.container.querySelectorAll('em');
-      expect(rendered.baseElement.innerHTML).to.contain('class="sc-content-sdk-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
       expect(ems[0].textContent).to.equal(testComponentName);
@@ -104,7 +104,7 @@ describe('ErrorBoundary', () => {
       );
       const ems = rendered.container.querySelectorAll('em');
 
-      expect(rendered.baseElement.innerHTML).to.contain('class="sc-content-sdk-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
       expect(ems[0].textContent).to.equal(testComponentName);
@@ -167,7 +167,7 @@ describe('ErrorBoundary', () => {
         </SitecoreProviderReactContext.Provider>
       );
       const ems = rendered.container.querySelectorAll('em');
-      expect(rendered.baseElement.innerHTML).to.contain('class="sc-content-sdk-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
       expect(ems[0].textContent).to.equal(testComponentName);
@@ -201,7 +201,7 @@ describe('ErrorBoundary', () => {
       );
       const ems = rendered.container.querySelectorAll('em');
 
-      expect(rendered.baseElement.innerHTML).to.contain('class="sc-content-sdk-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
       expect(ems[0].textContent).to.equal(testComponentName);
@@ -284,7 +284,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(rendered.baseElement.innerHTML).to.contain('class="sc-content-sdk-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain(
         'There was a problem loading this section.' // eslint-disable-line
       );

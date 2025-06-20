@@ -68,7 +68,7 @@ export function withPlaceholder(
           }
 
           return (
-            <div className="sc-content-sdk-placeholder-error">
+            <div className="sc-jss-placeholder-error">
               A rendering error occurred: {this.state.error.message}.
             </div>
           );

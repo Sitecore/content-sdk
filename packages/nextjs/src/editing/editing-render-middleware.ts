@@ -10,7 +10,7 @@ import {
   isDesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
-import { getContentSdkEditingSecret } from '../utils/utils';
+import { getEditingSecret} from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { enforceCors, getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';

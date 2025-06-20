@@ -517,7 +517,7 @@ it('should render error message on error', () => {
     </SitecoreProvider>
   );
   expect(
-    renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+    renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length
   ).to.equal(1);
 });
 
@@ -554,7 +554,7 @@ it('should render error message on error, only for the errored component', () =>
     <Placeholder name={phKey} rendering={route} componentMap={components} />
   );
   expect(
-    renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+    renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length
   ).to.equal(1);
   expect(renderedComponent.container.querySelectorAll('div.foo-class').length).to.equal(1);
 });
@@ -769,7 +769,7 @@ describe('PlaceholderMetadata', () => {
 
     expect(wrapper.baseElement?.innerHTML).to.equal(
       [
-        '<div class="sc-content-sdk-empty-placeholder">',
+        '<div class="sc-jss-empty-placeholder">',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
         '</div>',
