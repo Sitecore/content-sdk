@@ -44,7 +44,7 @@ export const partialPkg = {
       'cross-env-shell JSS_MODE=disconnected "npm-run-all --serial bootstrap --parallel next:dev start:disconnected-proxy start:watch-components"',
   },
   config: {
-    rootPlaceholders: ['content-sdk-main', 'content-sdk-test'],
+    rootPlaceholders: ['content-sdk-main', 'jss-test'],
   },
   foo: {
     bar: [1, 2, 3, 4],

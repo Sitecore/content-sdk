@@ -1,21 +1,21 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import { getEditingSecret } from './utils';
+import { getContentSdkEditingSecret } from './utils';
 
 describe('utils', () => {
-  describe('getEditingSecret', () => {
+  describe('getContentSdkEditingSecret', () => {
     after(() => {
       delete process.env.JSS_EDITING_SECRET;
     });
 
     it('should throw if env variable missing', () => {
-      expect(() => getEditingSecret()).to.throw();
+      expect(() => getContentSdkEditingSecret()).to.throw();
     });
 
     it('should return env variable', () => {
       const secret = '1234abcd';
       process.env.JSS_EDITING_SECRET = secret;
-      const result = getEditingSecret();
+      const result = getContentSdkEditingSecret();
       expect(result).to.equal(secret);
     });
   });

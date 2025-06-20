@@ -71,7 +71,7 @@ describe('withDatasourceCheck', () => {
       </SitecoreProviderReactContext.Provider>
     );
 
-    expect(wrapper.container.querySelectorAll('div.sc-jss-editing-error')).to.have.length(
+    expect(wrapper.container.querySelectorAll('div.sc-content-sdk-editing-error')).to.have.length(
       1
     );
   });
