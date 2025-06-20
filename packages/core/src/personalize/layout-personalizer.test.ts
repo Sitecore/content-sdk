@@ -269,7 +269,7 @@ describe('layout-personalizer', () => {
             fields: {
               content: {
                 value:
-                  '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/JssNextWeb/Mountain-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
+                  '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/CsdkNextWeb/Mountain-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
               },
               heading: {
                 value: 'Mountain Bike',
@@ -284,7 +284,7 @@ describe('layout-personalizer', () => {
                   fields: {
                     content: {
                       value:
-                        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/JssNextWeb/Snow-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
+                        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/CsdkNextWeb/Snow-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
                     },
                     heading: {
                       value: 'Snow Bike',
@@ -298,7 +298,7 @@ describe('layout-personalizer', () => {
                   fields: {
                     content: {
                       value:
-                        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/JssNextWeb/Sand-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
+                        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/CsdkNextWeb/Sand-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
                     },
                     heading: {
                       value: 'Sand Bike',
