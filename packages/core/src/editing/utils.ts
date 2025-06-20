@@ -20,7 +20,7 @@ export const PREVIEW_KEY = 'sc_preview';
  * ID to be used as a marker for a script rendered in XMC Pages
  * Should identify app is in XM Cloud Pages editing mode
  */
-export const PAGES_EDITING_MARKER = 'content-sdk-hrz-editing';
+export const PAGES_EDITING_MARKER = 'jss-hrz-editing';
 
 /**
  * Default allowed origins for editing requests. This is used to enforce CORS, CSP headers.

@@ -4,7 +4,7 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/core/editing';
-import { getContentSdkEditingSecret } from '../utils/utils';
+import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { enforceCors } from '@sitecore-content-sdk/core/utils';
 
@@ -75,11 +75,11 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
 
     // Validate secret
     const secret = query[QUERY_PARAM_EDITING_SECRET];
-    if (secret !== getContentSdkEditingSecret()) {
+    if (secret !== getEditingSecret()) {
       debug.editing(
         'invalid editing secret - sent "%s" expected "%s"',
         secret,
-        getContentSdkEditingSecret()
+        getEditingSecret()
       );
       return res.status(401).send('<html><body>Missing or invalid secret</body></html>');
     }
