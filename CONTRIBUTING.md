@@ -55,19 +55,19 @@ yarn workspaces foreach -Rt --no-private run build
 
 For the creation of the samples we are using `initializers` approach.
 
-- `initializer` - the process for handling the creation of the appropriate template. See [initializers](https://github.com/Sitecore/content-sdk/tree/dev/packages/create-sitecore-content-sdk/src/initializers).
-- `template` - the sample populated by [ejs](https://ejs.co/) tokens. See [templates](https://github.com/Sitecore/content-sdk/tree/dev/packages/create-sitecore-content-sdk/src/templates). Templates can be for e.g. _nextjs_.
+- `initializer` - the process for handling the creation of the appropriate template. See [initializers](https://github.com/Sitecore/content-sdk/tree/dev/packages/create-app/src/initializers).
+- `template` - the sample populated by [ejs](https://ejs.co/) tokens. See [templates](https://github.com/Sitecore/content-sdk/tree/dev/packages/create-app/src/templates). Templates can be for e.g. _nextjs_.
 
-If you want to use [_create-sitecore-content-sdk_](https://github.com/Sitecore/content-sdk/tree/dev/packages/create-sitecore-content-sdk) from your local repository, run:
+If you want to use [_create-app_](https://github.com/Sitecore/content-sdk/tree/dev/packages/create-app) from your local repository, run:
 
 ```
-cd ./packages/create-sitecore-content-sdk
+cd ./packages/create-app
 npm i -g
 ```
 
 To start developing the sample you have to do next:
 
-- Copy [watch.json.example](https://github.com/Sitecore/content-sdk/blob/dev/packages/create-sitecore-content-sdk/watch.json.example) file and name it **watch.json**. You have to set up appropriate arguments for the sample which you want to start to develop. Monorepo symlinking will work if you specify a `destination` under the source root `samples` directory (i.e. `<root>\samples\<my-app>`).
+- Copy [watch.json.example](https://github.com/Sitecore/content-sdk/blob/dev/packages/create-app/watch.json.example) file and name it **watch.json**. You have to set up appropriate arguments for the sample which you want to start to develop. Monorepo symlinking will work if you specify a `destination` under the source root `samples` directory (i.e. `<root>\samples\<my-app>`).
 - Run `yarn watch`. A new sample will be created in the specified `destination` path. You can modify any file related to your sample under `src/templates` folder, and changed files will be automatically copied into your sample.
 
 ## Linting and Code Style guidelines

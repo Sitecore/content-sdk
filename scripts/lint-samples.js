@@ -19,12 +19,12 @@ if (!lernaSinceFlag) {
 
 /**
  * Start linting process only for the samples that were affected by the new changes in:
- * - create-sitecore-content-sdk/src/templates/**
- * - create-sitecore-content-sdk/src/initializers/**
+ * - create-app/src/templates/**
+ * - create-app/src/initializers/**
  */
 
 const affectedTemplates = execSync(
-  `git diff --name-only ${lernaSinceFlag}... -- packages/create-sitecore-content-sdk`,
+  `git diff --name-only ${lernaSinceFlag}... -- packages/create-app`,
   {
     encoding: 'utf-8',
   }
