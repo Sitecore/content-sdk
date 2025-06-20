@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 
-const { initialize } = require('../packages/create-sitecore-content-sdk/dist/initialize');
+const { initialize } = require('../packages/create-app/dist/initialize');
 const samplesToScaffold = require('./samples.json');
 const { getAppFolder } = require('./utils');
 
