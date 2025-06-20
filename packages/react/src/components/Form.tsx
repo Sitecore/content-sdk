@@ -53,7 +53,7 @@ export const Form = ({ params, rendering }: FormProps) => {
         .catch(() => {
           if (isEditing) {
             console.error(
-              `Failed to load form with id ${params.FormId}. Check debug logs for sitecore-jss:form for more details.`
+              `Failed to load form with id ${params.FormId}. Check debug logs for core:form for more details.`
             );
           }
           setError(true);
