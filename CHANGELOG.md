@@ -20,6 +20,11 @@ Our versioning strategy is as follows:
 
 ### 🛠 Breaking Changes
 
+* `[all]` Renamed all JSS references to Content SDK across the codebase: ([#131](https://github.com/Sitecore/content-sdk/pull/131))
+  - The create-sitecore-jss package has been renamed to create-app
+  - Component types and props renamed (e.g. `JssComponent` to `ContentSdkComponent`)
+  - Updated placeholder names in test data from `jss-test` to `content-sdk-test`
+  - Documentation references have also been updated to reflect the new content-sdk
 * `[react]` `[nextjs]` Refactor `SitecoreContext` naming to `SitecoreProvider` ([95](https://github.com/Sitecore/content-sdk/pull/95)):
 
   We’ve revisited and improved the `SitecoreContext` naming for clarity and consistency. This affects component names, types, hook, and HOC.

@@ -2434,9 +2434,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/create-sitecore-content-sdk@workspace:packages/create-sitecore-content-sdk":
+"@sitecore-content-sdk/create-sitecore-content-sdk@workspace:packages/create-app":
   version: 0.0.0-use.local
-  resolution: "@sitecore-content-sdk/create-sitecore-content-sdk@workspace:packages/create-sitecore-content-sdk"
+  resolution: "@sitecore-content-sdk/create-sitecore-content-sdk@workspace:packages/create-app"
   dependencies:
     "@types/chai": ^5.2.2
     "@types/cross-spawn": ^6.0.6

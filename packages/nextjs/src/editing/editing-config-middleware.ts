@@ -48,11 +48,11 @@ export class EditingConfigMiddleware {
       );
       return res.status(401).json({ message: 'Invalid origin' });
     }
-    if (secret !== getContentSdkEditingSecret()) {
+    if (secret !== getEditingSecret()) {
       debug.editing(
         'invalid editing secret - sent "%s" expected "%s"',
         secret,
-        getContentSdkEditingSecret()
+        getEditingSecret()
       );
 
       return res.status(401).json({ message: 'Missing or invalid editing secret' });

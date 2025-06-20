@@ -106,11 +106,11 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     // Validate secret
     const secret = query[QUERY_PARAM_EDITING_SECRET] ?? body?.jssEditingSecret;
-    if (secret !== getContentSdkEditingSecret()) {
+    if (secret !== getEditingSecret()) {
       debug.editing(
         'invalid editing secret - sent "%s" expected "%s"',
         secret,
-        getContentSdkEditingSecret()
+        getEditingSecret()
       );
       return res.status(401).json({
         html: '<html><body>Missing or invalid secret</body></html>',
