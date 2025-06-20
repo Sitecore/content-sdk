@@ -38,7 +38,7 @@ export const handleEditorFastRefresh = (forceReload = false): void => {
   };
 };
 
-export const getEditingSecret= (): string => {
+export const getEditingSecret = (): string => {
   const secret = process.env.JSS_EDITING_SECRET;
   if (!secret || secret.length === 0) {
     throw new Error('The JSS_EDITING_SECRET environment variable is missing or invalid.');

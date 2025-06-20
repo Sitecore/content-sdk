@@ -10,7 +10,7 @@ import {
   isDesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
-import { getEditingSecret} from '../utils/utils';
+import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { enforceCors, getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';
@@ -107,11 +107,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     // Validate secret
     const secret = query[QUERY_PARAM_EDITING_SECRET] ?? body?.jssEditingSecret;
     if (secret !== getEditingSecret()) {
-      debug.editing(
-        'invalid editing secret - sent "%s" expected "%s"',
-        secret,
-        getEditingSecret()
-      );
+      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
       return res.status(401).json({
         html: '<html><body>Missing or invalid secret</body></html>',
       });

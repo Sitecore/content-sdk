@@ -71,9 +71,7 @@ export const Form = ({ params, rendering }: FormProps) => {
   if (isEditing) {
     if (error) {
       return (
-        <div className="sc-jss-placeholder-error">
-          There was a problem loading this section
-        </div>
+        <div className="sc-jss-placeholder-error">There was a problem loading this section</div>
       );
     }
   }

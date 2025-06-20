@@ -71,9 +71,7 @@ describe('withDatasourceCheck', () => {
       </SitecoreProviderReactContext.Provider>
     );
 
-    expect(wrapper.container.querySelectorAll('div.sc-jss-editing-error')).to.have.length(
-      1
-    );
+    expect(wrapper.container.querySelectorAll('div.sc-jss-editing-error')).to.have.length(1);
   });
 
   it('should return custom error component if specified', () => {
