@@ -34,10 +34,16 @@ export const nextSteps = async (appName: string, nextStepsText?: string) => {
   console.log(chalk.red('             :sdMMMMMMMMMMMMMMMMMMMMds:            '));
   console.log(chalk.red('                `-/oyhdmNNNNmdhyo/-                '));
   console.log();
-  console.log(chalk.white('                      __________'));
-  console.log(chalk.white('                  __ / / __/ __/'));
-  console.log(chalk.white('                 / // /\\ \\_\\ \\  '));
-  console.log(chalk.white('                 \\___/___/___/'));
+  // CONTENT-SDK banner (5 lines, dropped-in)
+  console.log(
+    chalk.white(`
+    ____ ___  _   _ _____ _____ _   _ _____    ____  ____  _  __
+     / ___/ _ \\| \\ | |_   _| ____| \\ | |_   _|  / ___||  _ \\| |/ /
+    | |  | | | |  \\| | | | |  _| |  \\| | | |____\\___ \\| | | | ' / 
+    | |__| |_| | |\\  | | | | |___| |\\  | | |_____|__) | |_| | . \\ 
+     \\____\\___/|_| \\_| |_| |_____|_| \\_| |_|    |____/|____/|_|\\_\\
+      `)
+  );
   console.log();
   console.log(successMessage);
   console.log();
