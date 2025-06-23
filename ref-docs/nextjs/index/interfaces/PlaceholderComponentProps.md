@@ -47,6 +47,26 @@ When rendered within a <SitecoreProvider> component, defaults to the context com
 
 ***
 
+### disableSuspense?
+
+> `optional` **disableSuspense**: `boolean`
+
+Defined in: react/types/components/PlaceholderCommon.d.ts:72
+
+If true, disables Suspense in ErrorBoundary for the placeholder.
+
+#### Default
+
+```ts
+false
+```
+
+#### Inherited from
+
+`PlaceholderProps.disableSuspense`
+
+***
+
 ### errorComponent?
 
 > `optional` **errorComponent**: `ComponentClass`\<`ErrorComponentProps`, `any`\> \| `FC`\<`ErrorComponentProps`\>

@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/create-sitecore-jss",
-  "version": "0.3.0-canary.20",
+  "version": "0.3.0-canary.22",
   "description": "Sitecore Content SDK initializer",
   "bin": "./dist/index.js",
   "publishConfig": {
