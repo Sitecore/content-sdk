@@ -30,5 +30,13 @@ resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (error, project
   // in that case loading environment variables will be handled by the actual cli command
   processEnv(process.cwd());
 
+  // Re-enable debug logging after environment variables are loaded
+  // This ensures that DEBUG environment variables from .env files take effect
+  if (process.env.DEBUG) {
+    console.log(`Debug enabled: ${process.env.DEBUG}`);
+    const debug = require('debug');
+    debug.enable(process.env.DEBUG);
+  }
+
   cli(commands);
 });

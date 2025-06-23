@@ -1,6 +1,7 @@
 import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs';
+import debug from '../debug';
 
 import { SiteInfo, GraphQLSiteInfoService } from '../site';
 import { ensurePathExists } from '../utils/ensurePath';
@@ -39,6 +40,14 @@ export const generateSites = ({
   return async () => {
     let sites: SiteInfo[] = [];
     const sitesFilePath = path.resolve(destinationPath ?? DEFAULT_SITES_DIST_PATH);
+
+    debug.multisite('Starting site generation process');
+    debug.multisite('Multisite enabled: %s', scConfig.multisite.enabled);
+    debug.multisite('API configuration: %o', {
+      hasEdgeContextId: !!scConfig.api?.edge?.contextId,
+      hasLocalApiKey: !!scConfig.api?.local?.apiKey,
+      hasLocalApiHost: !!scConfig.api?.local?.apiHost,
+    });
 
     if (scConfig.multisite.enabled) {
       try {
