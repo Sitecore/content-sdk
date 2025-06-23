@@ -2,7 +2,7 @@ import React, { createContext, useContext, ReactNode, JSX } from 'react';
 import { ComponentPropsCollection } from '../sharedTypes/component-props';
 
 /**
- * Component props context which we are using in order to store data fetched on components level (getStaticProps/getServerSideProps)
+ * Component props context which we are using in order to store data fetched on components level (getComponentServerProps)
  */
 export const ComponentPropsReactContext = createContext<ComponentPropsCollection>({});
 
