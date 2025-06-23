@@ -12,6 +12,8 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+# Test
+
 ### 🎉 New Features & Improvements
 
 * `[create-sitecore-jss]`: Refactoring/Cleanup for scss files in SXA components ([#119](https://github.com/Sitecore/content-sdk/pull/119))([#122](https://github.com/Sitecore/content-sdk/pull/122))
