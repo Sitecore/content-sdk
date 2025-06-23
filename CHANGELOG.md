@@ -58,6 +58,8 @@ Our versioning strategy is as follows:
   * The `EditingScripts` component doesn't accept `sitecoreEdgeUrl` property anymore.
   * The custom Edge URL is now accessed via the `api` property of the `SitecoreProvider` component.
 * `[nextjs]` `defineCliConfig` import has been moved to `@sitecore-content-sdk/nextjs/config-cli` submodule ([#128](https://github.com/Sitecore/content-sdk/pull/128)).
+* `[core][nextjs][cli]` Re-introduce component map generation logic ([#124](https://github.com/Sitecore/content-sdk/pull/124) [#139](https://github.com/Sitecore/content-sdk/pull/139))
+* `[create-content-sdk-app]` Remove SXA components and style files from default `nextjs` template ([#139](https://github.com/Sitecore/content-sdk/pull/139))
 
 ### 🐛 Bug Fixes
 
