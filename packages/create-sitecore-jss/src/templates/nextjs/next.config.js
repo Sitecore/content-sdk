@@ -68,7 +68,7 @@ const nextConfig = {
 
   webpack: (config, options) => {
     if (!options.isServer) {
-      // Add a loader to strip out getServerSideProps and getStaticProps from components in the client bundle
+      // Add a loader to strip out getComponentServerProps from components in the client bundle
       config.module.rules.unshift({
         test: /src\\components\\.*\.tsx$/,
         use: ['@sitecore-content-sdk\\nextjs\\component-props-loader'],

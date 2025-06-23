@@ -7,13 +7,7 @@ describe('component-props.loader', () => {
 
 console.log('Hello, world!');
 
-export const getServerSideProps = async () => {
-  return {
-    props: { test: true },
-  };
-}
-
-export const getStaticProps = async () => {
+export const getComponentServerProps = async () => {
   return {
     props: { test: true },
   };
@@ -33,13 +27,7 @@ console.log('Hello, world!');`;
 
 console.log('Hello, world!');
 
-export async function getServerSideProps() {
-  return {
-    props: { test: true },
-  };
-}
-
-export async function getStaticProps() {
+export async function getComponentServerProps() {
   return {
     props: { test: true },
   };
@@ -48,8 +36,6 @@ export async function getStaticProps() {
     const expected = `import { foo } from 'module';
 
 console.log('Hello, world!');
-
-export {};
 
 export {};`;
 
