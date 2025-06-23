@@ -5,7 +5,7 @@ const samplesToScaffold = require('./samples.json');
 const { getAppFolder } = require('./utils');
 
 for (const sample of samplesToScaffold) {
-  const appFolder = getAppFolder(sample.args);
+  const appFolder = getAppFolder({ ...sample.args, template: sample.template });
   sample.args.destination = `./samples/${appFolder}`;
   console.log(chalk.green(`Initializing sample ${appFolder} ...`));
   let scaffoldArgs = {
