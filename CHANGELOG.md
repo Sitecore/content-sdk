@@ -17,6 +17,7 @@ Our versioning strategy is as follows:
 * `[create-sitecore-jss]`: Refactoring/Cleanup for scss files in SXA components ([#119](https://github.com/Sitecore/content-sdk/pull/119))([#122](https://github.com/Sitecore/content-sdk/pull/122))
 * `[core]` `[nextjs]` [DesignLibrary] Include metadata in the Design Library rendering mechanism ([#118](https://github.com/Sitecore/content-sdk/pull/118))
 * `[core]` `[nextjs]` `[cli]` Add automatic component map generation ([#124](https://github.com/Sitecore/content-sdk/pull/124) [#128](https://github.com/Sitecore/content-sdk/pull/128) [#130](https://github.com/Sitecore/content-sdk/pull/130))
+* `[create-sitecore-jss]` Remove graphql introspection sample and scripts folder from next starter application ([#135](https://github.com/Sitecore/content-sdk/pull/135))
 
 ### 🛠 Breaking Changes
 
