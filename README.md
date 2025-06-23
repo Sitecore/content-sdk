@@ -24,7 +24,7 @@ To develop a Sitecore Content SDK application, you need:
 To create a Sitecore Content SDK project in a terminal, run one of the following command and follow the prompts:
 
 ```
-npx @sitecore-content-sdk/create-app
+npx create-content-sdk-app
 ```
 
 For more information check out our [Getting Started Guide](https://doc.sitecore.com/xmc/en/developers/content-sdk/creating-a-jss-app-for-xm-cloud.html)
@@ -34,7 +34,7 @@ For more information check out our [Getting Started Guide](https://doc.sitecore.
 - Official documentation:
 - [XM Cloud](https://doc.sitecore.com/xmc/en/developers/jss/latest/jss-xmc/index-en.html)
 - [StackExchange](https://sitecore.stackexchange.com/)
-- [Community Slack](https://sitecorechat.slack.com/messages/jss)
+- [Community Slack](https://sitecorechat.slack.com/messages/content-sdk)
 - [Sitecore Community Forum](https://community.sitecore.net/developers/f/40)
 
 ## Contributions
@@ -51,6 +51,6 @@ Read our [contributing guide](CONTRIBUTING.md) to learn about our development pr
 
 ### License
 
-Sitecore JavaScript Services is using the [Apache 2.0 license](LICENSE.MD).
+Sitecore JavaScript Content SDK is using the [Apache 2.0 license](LICENSE.MD).
 
 ## [Support](SUPPORT.md)

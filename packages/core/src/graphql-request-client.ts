@@ -37,7 +37,7 @@ export type GraphQLRequestClientConfig = {
    */
   apiKey?: string;
   /**
-   * Override debugger for logging. Uses 'core:http' by default.
+   * Override debugger for logging. Uses 'content-sdk:http' by default.
    */
   debugger?: Debugger;
   /**

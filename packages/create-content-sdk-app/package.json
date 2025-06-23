@@ -1,12 +1,8 @@
 {
-  "name": "@sitecore-content-sdk/create-app",
+  "name": "create-content-sdk-app",
   "version": "0.3.0-canary.15",
   "description": "Sitecore Content SDK initializer",
   "bin": "./dist/index.js",
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
   "scripts": {
     "build": "npm run clean && tsc && ts-node ./scripts/build-templates.ts",
     "clean": "del-cli dist types",
@@ -21,7 +17,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Sitecore/content-sdk.git",
-    "directory": "packages/create-app"
+    "directory": "packages/create-content-sdk-app"
   },
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
   "author": "Sitecore Corporation",

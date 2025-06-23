@@ -12,7 +12,7 @@ use(spies);
 describe('form', () => {
   let dom: JSDOM;
 
-  process.env.DEBUG = 'core:form';
+  process.env.DEBUG = 'content-sdk:form';
 
   beforeEach(() => {
     dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {

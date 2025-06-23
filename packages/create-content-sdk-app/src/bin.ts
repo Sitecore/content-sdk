@@ -7,7 +7,7 @@ import minimist, { ParsedArgs } from 'minimist';
 import { getAllTemplates } from './common';
 
 export const parseArgs = (): ParsedArgs => {
-  // parse any command line arguments passed into `init sitecore-jss`
+  // parse any command line arguments passed into `npx create-content-sdk-app`
   // to pass to the generator prompts and skip them.
   // useful for CI and testing purposes
   const options = {

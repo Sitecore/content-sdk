@@ -17,6 +17,7 @@
     "src/templates/**/*",
     "src/test",
     "src/**/*.test.ts",
-    "src/**/test-data/**/*"
+    "src/**/test-data/**/*",
+    "nextjs/**/*"
   ]
 }

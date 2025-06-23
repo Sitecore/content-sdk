@@ -98,7 +98,7 @@ describe('withPlaceholder HOC', () => {
         </SitecoreProvider>
       );
       expect(
-        renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length
+        renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
       ).to.equal(1);
     });
 
@@ -142,7 +142,7 @@ describe('withPlaceholder HOC', () => {
         renderedComponent.container.querySelectorAll('.download-callout-mock').length
       ).to.equal(1);
       expect(
-        renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length
+        renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
       ).to.equal(1);
       expect(renderedComponent.container.querySelectorAll('h4').length).to.equal(1);
       expect(renderedComponent.container.querySelector('h4')?.outerHTML).to.equal(
