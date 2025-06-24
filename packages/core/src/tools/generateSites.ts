@@ -41,12 +41,13 @@ export const generateSites = ({
     let sites: SiteInfo[] = [];
     const sitesFilePath = path.resolve(destinationPath ?? DEFAULT_SITES_DIST_PATH);
 
-    if (!scConfig.multisite.enabled) {
-      debug.multisite('Multisite is disabled)');
-      console.log('Multisite is disabled');
-    } else {
-      debug.multisite('Site information generation start');
-      console.log('Multisite is enabled, fetching site information');
+    debug.multisite(
+      scConfig.multisite.enabled
+        ? 'Multisite Enabled: Generating site information'
+        : 'Multisite Disabled'
+    );
+
+    if (scConfig.multisite.enabled) {
       try {
         const siteInfoService = new GraphQLSiteInfoService({
           clientFactory: createGraphQLClientFactory({
@@ -73,7 +74,6 @@ export const generateSites = ({
 
     ensurePathExists(sitesFilePath);
 
-    console.log(`Writing site information to ${sitesFilePath}`);
     fs.writeFileSync(sitesFilePath, JSON.stringify(sites, null, 2), { encoding: 'utf8' });
   };
 };

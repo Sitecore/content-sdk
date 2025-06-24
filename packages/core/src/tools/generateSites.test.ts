@@ -67,7 +67,6 @@ describe('generateSites', () => {
         encoding: 'utf8',
       })
     ).to.be.true;
-    expect(consoleLogStub.calledWith(`Writing site information to ${expectedPath}`)).to.be.true;
   });
 
   it('should write site info to the provided destinationPath', async () => {
@@ -88,7 +87,6 @@ describe('generateSites', () => {
         encoding: 'utf8',
       })
     ).to.be.true;
-    expect(consoleLogStub.calledWith(`Writing site information to ${expectedPath}`)).to.be.true;
   });
 
   it('should fetch site information when multisiteEnabled is true', async () => {
@@ -115,8 +113,6 @@ describe('generateSites', () => {
         encoding: 'utf8',
       })
     ).to.be.true;
-    expect(consoleLogStub.calledWith('Multisite is enabled, fetching site information')).to.be.true;
-    expect(consoleLogStub.calledWith(`Writing site information to ${expectedPath}`)).to.be.true;
   });
 
   it('should log an error when fetching site information fails', async () => {
@@ -137,7 +133,6 @@ describe('generateSites', () => {
         encoding: 'utf8',
       })
     ).to.be.true;
-    expect(consoleLogStub.calledWith('Multisite is enabled, fetching site information')).to.be.true;
     expect(consoleErrorStub.calledWith(chalk.red('Error fetching site information'))).to.be.true;
     expect(consoleErrorStub.calledWith(sinon.match.instanceOf(Error))).to.be.true;
   });
