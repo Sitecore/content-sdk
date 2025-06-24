@@ -8,7 +8,7 @@
 
 > **SitecorePageProps** = [`NextjsPage`](../../client/type-aliases/NextjsPage.md) & `object`
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:4](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L4)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:4](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L4)
 
 ## Type declaration
 

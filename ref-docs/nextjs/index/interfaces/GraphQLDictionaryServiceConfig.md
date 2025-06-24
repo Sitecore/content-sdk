@@ -105,27 +105,11 @@ Optional. The template ID to use when searching for dictionary entries.
 
 ***
 
-### contentSdkAppTemplateId?
-
-> `optional` **contentSdkAppTemplateId**: `string`
-
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:63
-
-Optional. The template ID of a Content SDK App to use when searching for the appRootId.
-
-#### Default
-
-```ts
-'061cba1554744b918a0617903b102b82' (/sitecore/templates/Foundation/JavaScript Services/App)
-```
-
-***
-
 ### pageSize?
 
 > `optional` **pageSize**: `number`
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:70
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:65
 
 common variable for all GraphQL queries
 it will be used for every type of query to regulate result batch size

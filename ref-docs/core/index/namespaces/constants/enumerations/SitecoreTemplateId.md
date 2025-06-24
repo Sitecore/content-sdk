@@ -6,20 +6,20 @@
 
 # Enumeration: SitecoreTemplateId
 
-Defined in: [packages/core/src/constants.ts:1](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/constants.ts#L1)
+Defined in: [packages/core/src/constants.ts:1](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/constants.ts#L1)
 
 ## Enumeration Members
-
-### DictionaryEntry
-
-> **DictionaryEntry**: `"6d1cd89719364a3aa511289a94c2a7b1"`
-
-Defined in: [packages/core/src/constants.ts:6](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/constants.ts#L6)
-
-***
 
 ### ContentSdkApp
 
 > **ContentSdkApp**: `"061cba1554744b918a0617903b102b82"`
 
-Defined in: [packages/core/src/constants.ts:3](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/constants.ts#L3)
+Defined in: [packages/core/src/constants.ts:3](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/constants.ts#L3)
+
+***
+
+### DictionaryEntry
+
+> **DictionaryEntry**: `"6d1cd89719364a3aa511289a94c2a7b1"`
+
+Defined in: [packages/core/src/constants.ts:6](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/constants.ts#L6)

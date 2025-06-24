@@ -44,9 +44,9 @@
 ## Functions
 
 - [addComponentUpdateHandler](functions/addComponentUpdateHandler.md)
+- [getContentSdkPagesClientData](functions/getContentSdkPagesClientData.md)
 - [getDesignLibraryScriptLink](functions/getDesignLibraryScriptLink.md)
 - [getDesignLibraryStatusEvent](functions/getDesignLibraryStatusEvent.md)
-- [getContentSdkPagesClientData ](functions/getContentSdkPagesClientData .md)
 - [isDesignLibraryMode](functions/isDesignLibraryMode.md)
 - [isEditorActive](functions/isEditorActive.md)
 - [resetEditorChromes](functions/resetEditorChromes.md)
