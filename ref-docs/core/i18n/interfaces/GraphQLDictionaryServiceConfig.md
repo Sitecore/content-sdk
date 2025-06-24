@@ -6,7 +6,7 @@
 
 # Interface: GraphQLDictionaryServiceConfig
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:86](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/i18n/graphql-dictionary-service.ts#L86)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:86](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/i18n/graphql-dictionary-service.ts#L86)
 
 Configuration options for
 
@@ -24,7 +24,7 @@ GraphQLDictionaryService instances
 
 > `optional` **cacheEnabled**: `boolean`
 
-Defined in: [packages/core/src/cache-client.ts:40](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/cache-client.ts#L40)
+Defined in: [packages/core/src/cache-client.ts:40](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/cache-client.ts#L40)
 
 Enable/disable caching mechanism
 
@@ -44,7 +44,7 @@ true
 
 > `optional` **cacheTimeout**: `number`
 
-Defined in: [packages/core/src/cache-client.ts:45](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/cache-client.ts#L45)
+Defined in: [packages/core/src/cache-client.ts:45](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/cache-client.ts#L45)
 
 Cache timeout (sec)
 
@@ -64,7 +64,7 @@ Cache timeout (sec)
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:91](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/i18n/graphql-dictionary-service.ts#L91)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:91](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/i18n/graphql-dictionary-service.ts#L91)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -79,7 +79,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > `optional` **debugger**: `Debugger`
 
-Defined in: [packages/core/src/sitecore-service-base.ts:14](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/sitecore-service-base.ts#L14)
+Defined in: [packages/core/src/sitecore-service-base.ts:14](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/sitecore-service-base.ts#L14)
 
 Optional debug logger override
 
@@ -93,7 +93,7 @@ Optional debug logger override
 
 > `optional` **dictionaryEntryTemplateId**: `string`
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:97](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/i18n/graphql-dictionary-service.ts#L97)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:97](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/i18n/graphql-dictionary-service.ts#L97)
 
 Optional. The template ID to use when searching for dictionary entries.
 
@@ -109,7 +109,7 @@ Optional. The template ID to use when searching for dictionary entries.
 
 > `optional` **pageSize**: `number`
 
-Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:105](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/i18n/graphql-dictionary-service.ts#L105)
+Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:105](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/i18n/graphql-dictionary-service.ts#L105)
 
 common variable for all GraphQL queries
 it will be used for every type of query to regulate result batch size
@@ -127,7 +127,7 @@ Optional. How many result items to fetch in each GraphQL call. This is needed fo
 
 > `optional` **retries**: `object`
 
-Defined in: [packages/core/src/config/models.ts:86](https://github.com/Sitecore/content-sdk/blob/f57bc8718d87466761a2bacb9ed6d8e3e334389d/packages/core/src/config/models.ts#L86)
+Defined in: [packages/core/src/config/models.ts:86](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/config/models.ts#L86)
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
 
