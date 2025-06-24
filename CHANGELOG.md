@@ -14,15 +14,25 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* `[create-sitecore-jss]`: Refactoring/Cleanup for scss files in SXA components ([#119](https://github.com/Sitecore/content-sdk/pull/119))([#122](https://github.com/Sitecore/content-sdk/pull/122))
+* `[create-content-sdk-app]`: Refactoring/Cleanup for scss files in SXA components ([#119](https://github.com/Sitecore/content-sdk/pull/119))([#122](https://github.com/Sitecore/content-sdk/pull/122))
 * `[core]` `[nextjs]` [DesignLibrary] Include metadata in the Design Library rendering mechanism ([#118](https://github.com/Sitecore/content-sdk/pull/118))
 * `[core]` `[nextjs]` `[cli]` Add automatic component map generation ([#124](https://github.com/Sitecore/content-sdk/pull/124) [#128](https://github.com/Sitecore/content-sdk/pull/128) [#130](https://github.com/Sitecore/content-sdk/pull/130))
+* `[create-sitecore-jss]` Remove graphql introspection sample and scripts folder from next starter application ([#135](https://github.com/Sitecore/content-sdk/pull/135))
 
 ### 🛠 Breaking Changes
 
+* `[create-content-sdk-app]` Renamed package from `@sitecore-content-sdk/create-app` to `create-content-sdk-app` (unscoped package)
+  - Users can now run `npx create-content-sdk-app` instead of `npx @sitecore-content-sdk/create-app`
+  - Follows the same pattern as other popular initializers like `create-react-app` and `create-next-app`
+* `[all]` Renamed all JSS references to Content SDK across the codebase: ([#131](https://github.com/Sitecore/content-sdk/pull/131))
+  - The create-sitecore-jss package has been renamed to create-content-sdk-app (unscoped package)
+  - Component types and props renamed:
+    - `JssComponent` → `ContentSdkComponent`
+    - `ReactJssComponent` → `ReactContentSdkComponent`
+    - `NextJssComponent` → `NextjsContentSdkComponent`
 * `[react]` `[nextjs]` Refactor `SitecoreContext` naming to `SitecoreProvider` ([95](https://github.com/Sitecore/content-sdk/pull/95)):
 
-  We’ve revisited and improved the `SitecoreContext` naming for clarity and consistency. This affects component names, types, hook, and HOC.
+  We've revisited and improved the `SitecoreContext` naming for clarity and consistency. This affects component names, types, hook, and HOC.
   
   #### Component Renames
 
@@ -58,6 +68,8 @@ Our versioning strategy is as follows:
   * The `EditingScripts` component doesn't accept `sitecoreEdgeUrl` property anymore.
   * The custom Edge URL is now accessed via the `api` property of the `SitecoreProvider` component.
 * `[nextjs]` `defineCliConfig` import has been moved to `@sitecore-content-sdk/nextjs/config-cli` submodule ([#128](https://github.com/Sitecore/content-sdk/pull/128)).
+* `[core][nextjs][cli]` Re-introduce component map generation logic ([#124](https://github.com/Sitecore/content-sdk/pull/124) [#139](https://github.com/Sitecore/content-sdk/pull/139))
+* `[create-content-sdk-app]` Remove SXA components and style files from default `nextjs` template ([#139](https://github.com/Sitecore/content-sdk/pull/139))
 
 ### 🐛 Bug Fixes
 
@@ -101,7 +113,7 @@ Our versioning strategy is as follows:
   - These additions follow the same extensible architecture as existing features enabling custom behavior via service overrides and improving consistency across endpoints.
 * `[cli]` Introduce "project" subcommands ([#73](https://github.com/Sitecore/content-sdk/pull/73))
 * `[nextjs]` Enhance customizability for Sitecore Client and SDK Middlwares ([#87](https://github.com/Sitecore/content-sdk/pull/87))
-* `[core]` `[nextjs]` `[create-sitecore-jss]` Passing configuration object to `defineConfig` in _sitecore.config_ is now optional. Introduced _sitecore.config.ts.example_ ([#90](https://github.com/Sitecore/content-sdk/pull/90)) ([#93](https://github.com/Sitecore/content-sdk/pull/93))
+* `[core]` `[nextjs]` `[create-content-sdk-app]` Passing configuration object to `defineConfig` in _sitecore.config_ is now optional. Introduced _sitecore.config.ts.example_ ([#90](https://github.com/Sitecore/content-sdk/pull/90)) ([#93](https://github.com/Sitecore/content-sdk/pull/93))
 * `[nextjs]` Starter kit components clean up ([#107](https://github.com/Sitecore/content-sdk/pull/107)):
   - Reduced code duplication
   - Streamlined the implementation to improve consistency

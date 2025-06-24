@@ -110,7 +110,7 @@ describe('SitecoreClient', () => {
       const result = await sitecoreClient.getPage(path, { locale });
 
       expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
-        'jss-main': [...componentsWithExperiencesArray],
+        'content-sdk-main': [...componentsWithExperiencesArray],
       });
     });
 
@@ -135,7 +135,7 @@ describe('SitecoreClient', () => {
       });
 
       expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
-        'jss-main': [...componentsWithExperiencesArray],
+        'content-sdk-main': [...componentsWithExperiencesArray],
       });
     });
 

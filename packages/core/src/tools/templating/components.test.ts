@@ -24,15 +24,37 @@ describe('components', () => {
       expect(result).to.deep.equal(items);
     });
 
-    it('should return results when path is a non-glob path', () => {
+    it('should return results with all folded paths when path is a non-glob path', () => {
       const items = [
         { path: 'src/test-data/components/Qux', componentName: 'Qux', moduleName: 'Qux' },
         { path: 'src/test-data/components/Foo', componentName: 'Foo', moduleName: 'Foo' },
         { path: 'src/test-data/components/Baz', componentName: 'Baz', moduleName: 'Baz' },
         { path: 'src/test-data/components/Bar', componentName: 'Bar', moduleName: 'Bar' },
+        {
+          path: 'src/test-data/components/folded/Folded',
+          componentName: 'Folded',
+          moduleName: 'Folded',
+        },
       ] as ComponentFile[];
 
       const result = getComponentList(['src/test-data/components']);
+      expect(result).to.deep.equal(items);
+    });
+
+    it('should filter out results that are not components', () => {
+      const items = [
+        { path: 'src/test-data/components/Qux', componentName: 'Qux', moduleName: 'Qux' },
+        { path: 'src/test-data/components/Foo', componentName: 'Foo', moduleName: 'Foo' },
+        { path: 'src/test-data/components/Baz', componentName: 'Baz', moduleName: 'Baz' },
+        { path: 'src/test-data/components/Bar', componentName: 'Bar', moduleName: 'Bar' },
+        {
+          path: 'src/test-data/components/folded/Folded',
+          componentName: 'Folded',
+          moduleName: 'Folded',
+        },
+      ] as ComponentFile[];
+
+      const result = getComponentList(['src/test-data/components/**/*']);
       expect(result).to.deep.equal(items);
     });
 

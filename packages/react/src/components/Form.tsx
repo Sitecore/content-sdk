@@ -53,7 +53,7 @@ export const Form = ({ params, rendering }: FormProps) => {
         .catch(() => {
           if (isEditing) {
             console.error(
-              `Failed to load form with id ${params.FormId}. Check debug logs for sitecore-jss:form for more details.`
+              `Failed to load form with id ${params.FormId}. Check debug logs for content-sdk:form for more details.`
             );
           }
           setError(true);
@@ -71,7 +71,9 @@ export const Form = ({ params, rendering }: FormProps) => {
   if (isEditing) {
     if (error) {
       return (
-        <div className="sc-jss-placeholder-error">There was a problem loading this section</div>
+        <div className="sc-content-sdk-placeholder-error">
+          There was a problem loading this section
+        </div>
       );
     }
   }

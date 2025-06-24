@@ -23,7 +23,7 @@ export type DeepPartial<T> = {
 export type SitecoreConfigInput = {
   /**
    * API settings required to connect to Sitecore.
-   * Both edge and local set can be specified as JSS app will use API Key for component library
+   * Both edge and local set can be specified as Content SDK app will use API Key for component library
    */
   api?: {
     /**
