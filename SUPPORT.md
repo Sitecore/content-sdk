@@ -8,8 +8,8 @@ https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html
 
 ### Questions or help
 
-- [Sitecore Stack Exchange](https://sitecore.stackexchange.com/questions/tagged/jss)
-  - Be sure to tag your question with the `jss` tag.
+- [Sitecore Stack Exchange](https://sitecore.stackexchange.com/questions/tagged/content-sdk)
+  - Be sure to tag your question with the `content-sdk` tag.
 - [Sitecore Community Slack](https://sitecorechat.slack.com)
   - Use the dedicated `#headless` channel
   - If you're not already a member of the Sitecore Community Slack, you can find more information here: https://siteco.re/sitecoreslack

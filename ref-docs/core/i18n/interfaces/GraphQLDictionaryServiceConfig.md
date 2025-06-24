@@ -105,13 +105,13 @@ Optional. The template ID to use when searching for dictionary entries.
 
 ***
 
-### jssAppTemplateId?
+### contentSdkAppTemplateId?
 
-> `optional` **jssAppTemplateId**: `string`
+> `optional` **contentSdkAppTemplateId**: `string`
 
 Defined in: [packages/core/src/i18n/graphql-dictionary-service.ts:103](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/i18n/graphql-dictionary-service.ts#L103)
 
-Optional. The template ID of a JSS App to use when searching for the appRootId.
+Optional. The template ID of a Content SDK App to use when searching for the appRootId.
 
 #### Default
 

@@ -60,7 +60,7 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
       }
 
       return (
-        <div className="sc-jss-placeholder-error">
+        <div className="sc-content-sdk-placeholder-error">
           A rendering error occurred: {this.state.error.message}.
         </div>
       );

@@ -33,8 +33,8 @@ Write result in requests variable
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `params` | \{ `components`: [`ComponentMap`](../type-aliases/ComponentMap.md)\<[`NextjsJssComponent`](../type-aliases/NextjsJssComponent.md)\>; `context`: `NextContext`; `layoutData`: [`LayoutServiceData`](../interfaces/LayoutServiceData.md); `placeholders?`: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md); `requests?`: `ComponentPropsRequest`[]; \} | params |
-| `params.components` | [`ComponentMap`](../type-aliases/ComponentMap.md)\<[`NextjsJssComponent`](../type-aliases/NextjsJssComponent.md)\> |  |
+| `params` | \{ `components`: [`ComponentMap`](../type-aliases/ComponentMap.md)\<[`NextjsContentSdkComponent`](../type-aliases/NextjsContentSdkComponent.md)\>; `context`: `NextContext`; `layoutData`: [`LayoutServiceData`](../interfaces/LayoutServiceData.md); `placeholders?`: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md); `requests?`: `ComponentPropsRequest`[]; \} | params |
+| `params.components` | [`ComponentMap`](../type-aliases/ComponentMap.md)\<[`NextjsContentSdkComponent`](../type-aliases/NextjsContentSdkComponent.md)\> |  |
 | `params.context` | `NextContext` |  |
 | `params.layoutData` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |  |
 | `params.placeholders?` | [`PlaceholdersData`](../type-aliases/PlaceholdersData.md) |  |

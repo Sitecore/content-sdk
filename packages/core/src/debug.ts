@@ -1,7 +1,7 @@
 import debug from 'debug';
 import isServer from './utils/is-server';
 
-const rootNamespace = 'core';
+const rootNamespace = 'content-sdk';
 
 export type Debugger = debug.Debugger;
 
@@ -24,7 +24,7 @@ if (
 export const enableDebug = (namespaces: string) => debug.enable(namespaces);
 
 /**
- * Default Sitecore Content SDK 'debug' module debuggers. Uses namespace prefix 'core:'.
+ * Default Sitecore Content SDK 'debug' module debuggers. Uses namespace prefix 'content-sdk:'.
  * See {@link https://www.npmjs.com/package/debug} for details.
  */
 export default {

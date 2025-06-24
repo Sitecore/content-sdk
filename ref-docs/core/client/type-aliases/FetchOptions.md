@@ -18,7 +18,7 @@ Defined in: [packages/core/src/models.ts:69](https://github.com/Sitecore/content
 
 Defined in: [packages/core/src/models.ts:89](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/models.ts#L89)
 
-Override debugger for logging. Uses 'core:http' by default.
+Override debugger for logging. Uses 'content-sdk:http' by default.
 
 ***
 

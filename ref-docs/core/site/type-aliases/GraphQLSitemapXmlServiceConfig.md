@@ -29,4 +29,4 @@ This factory function is used to create and configure GraphQL clients for making
 
 Defined in: [packages/core/src/site/graphql-sitemap-xml-service.ts:23](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/site/graphql-sitemap-xml-service.ts#L23)
 
-The JSS application name
+the Content SDK application name

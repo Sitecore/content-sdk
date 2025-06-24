@@ -8,7 +8,7 @@
 
 Defined in: [packages/core/src/site/graphql-redirects-service.ts:58](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/site/graphql-redirects-service.ts#L58)
 
-The GraphQLRedirectsService class is used to query the JSS redirects using Graphql endpoint
+The GraphQLRedirectsService class is used to query the Content SDK redirects using Graphql endpoint
 
 ## Constructors
 

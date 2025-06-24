@@ -29,14 +29,14 @@ describe('SitecoreProvider', () => {
       context: {
         pageEditing: false,
         site: {
-          name: 'JssTestWeb',
+          name: 'ContentSdkTestWeb',
         },
         language: 'en',
       },
       route: {
         name: 'styleguide',
         placeholders: {
-          'JssTestWeb-jss-main': [],
+          'ContentSdkTestWeb-main': [],
         },
         itemId: 'testitemid',
       },
@@ -80,11 +80,11 @@ describe('SitecoreProvider', () => {
         itemId: 'testitemid',
         name: 'styleguide',
         placeholders: {
-          'JssTestWeb-jss-main': [],
+          'ContentSdkTestWeb-main': [],
         },
       },
       site: {
-        name: 'JssTestWeb',
+        name: 'ContentSdkTestWeb',
       },
     });
   });

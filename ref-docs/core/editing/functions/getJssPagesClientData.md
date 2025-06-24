@@ -2,15 +2,15 @@
 
 ***
 
-[@sitecore-content-sdk/core](../../README.md) / [editing](../README.md) / getJssPagesClientData
+[@sitecore-content-sdk/core](../../README.md) / [editing](../README.md) / getContentSdkPagesClientData 
 
-# Function: getJssPagesClientData()
+# Function: getContentSdkPagesClientData ()
 
-> **getJssPagesClientData**(): `Record`\<`string`, `Record`\<`string`, `unknown`\>\>
+> **getContentSdkPagesClientData **(): `Record`\<`string`, `Record`\<`string`, `unknown`\>\>
 
 Defined in: [packages/core/src/editing/utils.ts:117](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/editing/utils.ts#L117)
 
-Gets extra JSS clientData scripts to render in XMC Pages in addition to clientData from Pages itself
+Gets extra Content SDK clientData scripts to render in XMC Pages in addition to clientData from Pages itself
 
 ## Returns
 

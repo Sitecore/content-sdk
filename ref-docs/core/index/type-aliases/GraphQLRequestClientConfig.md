@@ -34,7 +34,7 @@ The API key to use for authentication. This will be added as an 'sc_apikey' head
 
 Defined in: [packages/core/src/graphql-request-client.ts:42](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/graphql-request-client.ts#L42)
 
-Override debugger for logging. Uses 'core:http' by default.
+Override debugger for logging. Uses 'content-sdk:http' by default.
 
 ***
 

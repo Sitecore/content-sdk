@@ -18,8 +18,8 @@ Defined in: [packages/core/src/constants.ts:6](https://github.com/Sitecore/conte
 
 ***
 
-### JssApp
+### ContentSdkApp
 
-> **JssApp**: `"061cba1554744b918a0617903b102b82"`
+> **ContentSdkApp**: `"061cba1554744b918a0617903b102b82"`
 
 Defined in: [packages/core/src/constants.ts:3](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/constants.ts#L3)

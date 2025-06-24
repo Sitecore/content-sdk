@@ -558,9 +558,9 @@ it('should render error message on error', () => {
       <Placeholder name={phKey} rendering={route} />
     </SitecoreProvider>
   );
-  expect(renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length).to.equal(
-    1
-  );
+  expect(
+    renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+  ).to.equal(1);
 });
 
 it('should render error message on error, only for the errored component', () => {
@@ -595,9 +595,9 @@ it('should render error message on error, only for the errored component', () =>
   const renderedComponent = render(
     <Placeholder name={phKey} rendering={route} componentMap={components} />
   );
-  expect(renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length).to.equal(
-    1
-  );
+  expect(
+    renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+  ).to.equal(1);
   expect(renderedComponent.container.querySelectorAll('div.foo-class').length).to.equal(1);
 });
 
@@ -830,7 +830,7 @@ describe('PlaceholderMetadata', () => {
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
         '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123"></code>',
-        '<div style="background: darkorange; outline: 5px solid orange; padding: 10px; color: white; max-width: 500px;"><h2>Unknown</h2><p>JSS component is missing React implementation. See the developer console for more information.</p></div>',
+        '<div style="background: darkorange; outline: 5px solid orange; padding: 10px; color: white; max-width: 500px;"><h2>Unknown</h2><p>Content SDK component is missing React implementation. See the developer console for more information.</p></div>',
         '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
       ].join('')

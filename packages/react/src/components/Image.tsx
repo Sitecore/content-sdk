@@ -84,7 +84,7 @@ const getImageAttrs = (
     ...otherAttrs,
   };
 
-  // update image URL for jss handler and image rendering params
+  // update image URL for content sdk handler and image rendering params
   const resolvedSrc = mediaApi.updateImageUrl(src, imageParams, mediaUrlPrefix);
   if (srcSet) {
     // replace with HTML-formatted srcset, including updated image URLs

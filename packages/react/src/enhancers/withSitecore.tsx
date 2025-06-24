@@ -63,7 +63,7 @@ export function withSitecore(options?: WithSitecoreOptions) {
 
 /**
  * This hook grants acсess to the current Sitecore page context and api.
- * by default JSS includes the following properties in this context:
+ * by default Content SDK includes the following properties in this context:
  * - pageEditing - Provided by Layout Service, a boolean indicating whether the route is being accessed via the Sitecore Editor.
  * - pageState - Like pageEditing, but a string: normal, preview or edit.
  * - site - Provided by Layout Service, an object containing the name of the current Sitecore site context.

@@ -21,7 +21,7 @@ Type to be used as config input in sitecore.config
 Defined in: [packages/core/src/config/models.ts:28](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/core/src/config/models.ts#L28)
 
 API settings required to connect to Sitecore.
-Both edge and local set can be specified as JSS app will use API Key for component library
+Both edge and local set can be specified as Content SDK app will use API Key for component library
 
 #### edge?
 
