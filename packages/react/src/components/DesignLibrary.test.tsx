@@ -72,7 +72,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div></div></div></main>',
       ].join('')
     );
@@ -91,7 +91,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div>',
         '<div class="inner">',
         'Its an inner component',
@@ -118,7 +118,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div></div></div></main>',
       ].join('')
     );
@@ -143,7 +143,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div></div></div></main>',
       ].join('')
     );
@@ -177,7 +177,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div>',
         '<div class="inner">',
         'Its an inner component',
@@ -195,7 +195,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div>',
         '<div class="inner">',
         'new inner content!',

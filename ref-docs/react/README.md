@@ -74,7 +74,7 @@
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
 - [LinkProps](type-aliases/LinkProps.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
-- [ReactJssComponent](type-aliases/ReactJssComponent.md)
+- [ReactContentSdkComponent](type-aliases/ReactContentSdkComponent.md)
 - [ReactModule](type-aliases/ReactModule.md)
 - [SitecoreProviderPageContext](type-aliases/SitecoreProviderPageContext.md)
 - [WithSitecoreHocProps](type-aliases/WithSitecoreHocProps.md)

@@ -19,7 +19,7 @@ describe('<FEaaSWrapper />', () => {
 
   const fields: ComponentFields = {
     sampleText: {
-      value: 'Welcome-to-Sitecore-JSS',
+      value: 'Welcome-to-Sitecore-Content-SDK',
     },
   };
 
@@ -50,7 +50,7 @@ describe('<FEaaSWrapper />', () => {
     });
     expect(props.fields).to.deep.equal({
       sampleText: {
-        value: 'Welcome-to-Sitecore-JSS',
+        value: 'Welcome-to-Sitecore-Content-SDK',
       },
     });
     expect(props.fetchedData).to.deep.equal({

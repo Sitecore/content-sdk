@@ -6,7 +6,7 @@ import { ParsedUrlQuery } from 'querystring';
 import { ComponentPropsService } from './component-props-service';
 import { spy } from 'sinon';
 import { ComponentMap } from '@sitecore-content-sdk/react';
-import { NextjsJssComponent } from '../../types';
+import { NextjsContentSdkComponent } from '../../types';
 
 describe('ComponentPropsService', () => {
   const service = new ComponentPropsService();
@@ -109,7 +109,7 @@ describe('ComponentPropsService', () => {
     ]);
 
     const result = await service.fetchComponentProps({
-      components: (ssrComponentMap as unknown) as ComponentMap<NextjsJssComponent>,
+      components: (ssrComponentMap as unknown) as ComponentMap<NextjsContentSdkComponent>,
       context: ssrContext,
       layoutData,
     });
@@ -158,7 +158,7 @@ describe('ComponentPropsService', () => {
           getComponentServerProps: fetchFn('x24SSRData'),
         },
       ],
-    ]) as unknown) as ComponentMap<NextjsJssComponent>;
+    ]) as unknown) as ComponentMap<NextjsContentSdkComponent>;
 
     const result = await service.fetchComponentProps({
       components: ssrComponentMap,
@@ -208,7 +208,7 @@ describe('ComponentPropsService', () => {
           getComponentServerProps: fetchFn('x24StaticData'),
         },
       ],
-    ]) as unknown) as ComponentMap<NextjsJssComponent>;
+    ]) as unknown) as ComponentMap<NextjsContentSdkComponent>;
 
     const result = await service.fetchComponentProps({
       components: ssgComponentMap,
@@ -260,7 +260,7 @@ describe('ComponentPropsService', () => {
           getComponentServerProps: fetchFn('x24StaticData'),
         },
       ],
-    ]) as unknown) as ComponentMap<NextjsJssComponent>;
+    ]) as unknown) as ComponentMap<NextjsContentSdkComponent>;
 
     const result = await service.fetchComponentProps({
       components: ssgComponentMap,
