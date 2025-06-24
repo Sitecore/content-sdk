@@ -29,7 +29,6 @@ Our versioning strategy is as follows:
     - `JssComponent` → `ContentSdkComponent`
     - `ReactJssComponent` → `ReactContentSdkComponent`
     - `NextJssComponent` → `NextjsContentSdkComponent`
-  - Note: Some internal references to JSS remain in environment variables (JSS_EDITING_SECRET, JSS_ALLOWED_ORIGINS), CSS classes, and media URL patterns for backward compatibility
 * `[react]` `[nextjs]` Refactor `SitecoreContext` naming to `SitecoreProvider` ([95](https://github.com/Sitecore/content-sdk/pull/95)):
 
   We've revisited and improved the `SitecoreContext` naming for clarity and consistency. This affects component names, types, hook, and HOC.

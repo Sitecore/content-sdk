@@ -34,7 +34,6 @@ export const nextSteps = async (appName: string, nextStepsText?: string) => {
   console.log(chalk.red('             :sdMMMMMMMMMMMMMMMMMMMMds:            '));
   console.log(chalk.red('                `-/oyhdmNNNNmdhyo/-                '));
   console.log();
-  // CONTENT-SDK banner (5 lines, dropped-in)
   console.log(
     chalk.white(`
     ____ ___  _   _ _____ _____ _   _ _____    ____  ____  _  __

@@ -29,4 +29,4 @@ This factory function is used to create and configure GraphQL clients for making
 
 Defined in: core/types/site/graphql-robots-service.d.ts:7
 
-the Content SDK application name
+The Content SDK application name

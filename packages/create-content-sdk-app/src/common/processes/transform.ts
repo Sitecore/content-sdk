@@ -17,7 +17,7 @@ export type JsonObjectType = {
 export const populateEjsData = (args: BaseAppArgs, destination?: string) => {
   // pass in helper to args object
 
-  // Use exact version for content sdk dependencies in beta and canary versions
+  // Use exact version for Content SDK dependencies in beta and canary versions
   const contentSdkVersion: string = version.match(/(\-[a-zA-Z]+\.\d+)$/) ? version : `~${version}`;
 
   const ejsData: Data = {

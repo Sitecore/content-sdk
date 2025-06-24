@@ -1,6 +1,6 @@
-# Contributing to Sitecore Content Sdk
+# Contributing to Sitecore Content SDK
 
-Want to contribute to Sitecore Content Sdk? There are a few things you need to know.
+Want to contribute to Sitecore Content SDK? There are a few things you need to know.
 
 ## Pre-requisites:
 
