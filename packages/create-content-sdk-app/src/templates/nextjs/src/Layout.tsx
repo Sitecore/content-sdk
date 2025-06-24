@@ -11,7 +11,7 @@ import {
   RenderingType,
 } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
-import SitecoreStyles from 'src/components/SitecoreStyles';
+import SitecoreStyles from 'src/components/content-sdk/SitecoreStyles';
 
 interface LayoutProps {
   layoutData: LayoutServiceData;
