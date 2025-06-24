@@ -4,7 +4,7 @@ type VariableDeclaration = recast.types.namedTypes.VariableDeclaration;
 
 /**
  * Webpack loader to strip functions from the source code
- * Strips the `getServerSideProps` and `getStaticProps` functions from the source code
+ * Strips the `getComponentServerProps` function from the source code
  * @param {string} source file source code
  * @returns {string} output file source code with stripped functions
  */
@@ -14,37 +14,36 @@ export default function componentPropsLoader(source: string) {
     parser: require('recast/parsers/babel-ts'),
   });
 
-  // List of functions to strip from the AST
-  const functionsToStrip = ['getServerSideProps', 'getStaticProps'];
+  // The method to strip from the AST
+  const method = 'getComponentServerProps';
 
-  // Remove the function from the list of functions to strip
-  const updateList = (functionName: string) => {
-    // Remove the function from the list of functions to strip
-    functionsToStrip.splice(functionsToStrip.indexOf(functionName), 1);
-  };
-
-  // Traverse the AST and strip the functions
+  // Traverse the AST and find the method to strip
   recast.visit(ast, {
     // Visit the named export function expression
     visitExportNamedDeclaration: function(path): boolean | void {
       // Get the variable declaration from the AST
-      (path.node.declaration as VariableDeclaration)?.declarations?.forEach((declaration) => {
-        // Check if the function is in the list of functions to strip
-        if (
-          'id' in declaration &&
-          'name' in declaration.id &&
-          typeof declaration.id.name === 'string' &&
-          functionsToStrip.includes(declaration.id.name)
-        ) {
-          updateList(declaration.id.name);
+      const isMethodFound = (path.node.declaration as VariableDeclaration)?.declarations?.find(
+        (declaration) => {
+          // Check if the function is the one we want to strip
+          if (
+            'id' in declaration &&
+            'name' in declaration.id &&
+            typeof declaration.id.name === 'string' &&
+            declaration.id.name === method
+          ) {
+            // Strip the function from the AST
+            path.prune();
 
-          // Strip the function from the AST
-          path.prune();
+            // We have pruned the method, so we can stop iterating over the declarations
+            return true;
+          }
+
+          return false;
         }
-      });
+      );
 
-      if (functionsToStrip.length === 0) {
-        // We have pruned all the functions we need to, so we can stop traversing the AST
+      if (isMethodFound) {
+        // We have pruned the method, so we can stop traversing the AST
         return false;
       }
 
@@ -53,21 +52,17 @@ export default function componentPropsLoader(source: string) {
     },
     // Visit the named export function declaration
     visitFunctionDeclaration: function(path): boolean | void {
-      // Check if the function is in the list of functions to strip
+      // Check if the function is the one we want to strip
       if (
         path.node.id &&
         'name' in path.node.id &&
         typeof path.node.id.name === 'string' &&
-        functionsToStrip.includes(path.node.id.name)
+        path.node.id.name === method
       ) {
-        updateList(path.node.id.name);
-
         // Strip the function from the AST
         path.prune();
-      }
 
-      if (functionsToStrip.length === 0) {
-        // We have pruned all the functions we need to, so we can stop traversing the AST
+        // We have pruned the method, so we can stop traversing the AST
         return false;
       }
 

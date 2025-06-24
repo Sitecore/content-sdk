@@ -6,7 +6,7 @@
  * @param {Object} payload - The payload object containing release information.
  */
 function transformPayload(payload) {
-  const title = `JSS Release: ${payload.tag_name}`;
+  const title = `Content SDK Release: ${payload.tag_name}`;
   const releaseUrl = payload.html_url;
   const publishedBy = payload.author.login;
   const body = payload.body;

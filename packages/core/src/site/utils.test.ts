@@ -4,7 +4,7 @@ import { getSiteRewrite, getSiteRewriteData, normalizeSiteRewrite, SITE_PREFIX }
 describe('utils', () => {
   describe('getSiteRewrite', () => {
     const data = {
-      siteName: 'jss',
+      siteName: 'content-sdk',
     };
 
     it('should return a string', () => {

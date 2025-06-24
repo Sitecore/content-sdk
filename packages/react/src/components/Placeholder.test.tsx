@@ -4,7 +4,7 @@
 /* eslint-disable react/prop-types */
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
 import { expect } from 'chai';
-import { render } from '@testing-library/react';
+import { findByText, render } from '@testing-library/react';
 import React from 'react';
 import { spy, stub } from 'sinon';
 import {
@@ -32,6 +32,7 @@ import { ComponentProps } from './PlaceholderCommon';
 import { SitecoreProvider } from './SitecoreProvider';
 
 const componentMap = new Map<string, React.FC>();
+const dynamicComponent = React.lazy(() => import('../test-data/test-dynamic-component'));
 
 // pass otherProps to page-content to test property cascading through the Placeholder
 
@@ -63,6 +64,7 @@ const DownloadCallout: React.FC<{
 
 componentMap.set('DownloadCallout', DownloadCallout);
 componentMap.set('Jumbotron', () => <div className="jumbotron-mock" />);
+componentMap.set('DynamicComponent', dynamicComponent);
 
 describe('<Placeholder />', () => {
   const testData = [
@@ -403,7 +405,7 @@ describe('BYOC fallback', () => {
     byocWrapperStub.restore();
   });
 
-  it('should render ErrorBoundary with isDynamic prop for byoc wrapper', () => {
+  it('should render ErrorBoundary without Suspense for byoc wrapper', () => {
     const component = byocWrapperData.sitecore.route as RouteData;
     const phKey = 'main';
 
@@ -419,13 +421,23 @@ describe('BYOC fallback', () => {
 
     const errorBoundarySpy = spy(ErrorBoundary, 'default');
 
-    render(
+    const renderedComponent = render(
       <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreProvider>
     );
 
     expect(errorBoundarySpy.calledWithMatch({ isDynamic: true })).to.be.true;
+    expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
+
+    expect(renderedComponent.container.querySelectorAll('.byoc-wrapper').length).to.equal(1);
+
+    const components = renderedComponent.container.querySelectorAll('.byoc-component');
+
+    expect(components.length).to.equal(2);
+
+    expect(components[0].textContent).to.equal('Foo');
+    expect(components[1].textContent).to.equal('Foo');
 
     byocComponentStub.restore();
     byocWrapperStub.restore();
@@ -464,6 +476,36 @@ describe('FEaaS fallback', () => {
     feaasComponentStub.restore();
     feaasWrapperStub.restore();
   });
+});
+
+it('should render Suspense when disableSuspense is false', async () => {
+  const component = normalModeDevData.sitecore.route as RouteData;
+  const phKey = 'main';
+
+  const renderedComponent = render(
+    <SitecoreProvider componentMap={componentMap}>
+      <Placeholder name={phKey} disableSuspense={false} rendering={component} />
+    </SitecoreProvider>
+  );
+
+  expect(renderedComponent.container.innerHTML).to.contain('Loading component...');
+
+  await findByText(renderedComponent.container, 'No error');
+});
+
+it('should not render Suspense when disableSuspense is true', async () => {
+  const component = normalModeDevData.sitecore.route as RouteData;
+  const phKey = 'main';
+
+  const renderedComponent = render(
+    <SitecoreProvider componentMap={componentMap}>
+      <Placeholder name={phKey} disableSuspense={true} rendering={component} />
+    </SitecoreProvider>
+  );
+
+  expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
+
+  await findByText(renderedComponent.container, 'No error');
 });
 
 it('should render null for unknown placeholder', () => {
@@ -516,9 +558,9 @@ it('should render error message on error', () => {
       <Placeholder name={phKey} rendering={route} />
     </SitecoreProvider>
   );
-  expect(renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length).to.equal(
-    1
-  );
+  expect(
+    renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+  ).to.equal(1);
 });
 
 it('should render error message on error, only for the errored component', () => {
@@ -553,9 +595,9 @@ it('should render error message on error, only for the errored component', () =>
   const renderedComponent = render(
     <Placeholder name={phKey} rendering={route} componentMap={components} />
   );
-  expect(renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length).to.equal(
-    1
-  );
+  expect(
+    renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+  ).to.equal(1);
   expect(renderedComponent.container.querySelectorAll('div.foo-class').length).to.equal(1);
 });
 
@@ -788,7 +830,7 @@ describe('PlaceholderMetadata', () => {
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
         '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123"></code>',
-        '<div style="background: darkorange; outline: 5px solid orange; padding: 10px; color: white; max-width: 500px;"><h2>Unknown</h2><p>JSS component is missing React implementation. See the developer console for more information.</p></div>',
+        '<div style="background: darkorange; outline: 5px solid orange; padding: 10px; color: white; max-width: 500px;"><h2>Unknown</h2><p>Content SDK component is missing React implementation. See the developer console for more information.</p></div>',
         '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
       ].join('')

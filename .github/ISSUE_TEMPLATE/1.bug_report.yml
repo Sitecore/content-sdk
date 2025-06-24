@@ -1,5 +1,5 @@
 name: Bug Report
-description: Create a bug report for the Content SDK
+description: Create a bug report for The Content SDK
 labels: ['🐞 bug']
 body:
   - type: textarea

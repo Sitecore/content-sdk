@@ -12,7 +12,7 @@ const basicPage = {
           name: 'Admin',
         },
         site: {
-          name: 'JssNextWeb',
+          name: 'Content SDKNextWeb',
         },
         pageState: LayoutServicePageState.Normal,
         language: 'en',
@@ -23,7 +23,7 @@ const basicPage = {
         displayName: 'Styleguide',
         fields: {
           pageTitle: {
-            value: 'Styleguide | Sitecore JSS',
+            value: 'Styleguide | Sitecore Content SDK',
           },
         },
         databaseName: 'master',
@@ -49,10 +49,10 @@ const contentBlock = [
     params: {},
     fields: {
       content: {
-        value: '<p>This is a live set of examples of how to use JSS</p>\r\n',
+        value: '<p>This is a live set of examples of how to use Content SDK</p>\r\n',
       },
       heading: {
-        value: 'JSS Styleguide',
+        value: 'Content SDK Styleguide',
       },
     },
     placeholders: {},

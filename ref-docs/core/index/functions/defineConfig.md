@@ -6,9 +6,9 @@
 
 # Function: defineConfig()
 
-> **defineConfig**(`config`): `Required`
+> **defineConfig**(`config`): [`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md)
 
-Defined in: [packages/core/src/config/define-config.ts:150](https://github.com/Sitecore/content-sdk/blob/c644f919e6e71787647374ddbb3224c935de3638/packages/core/src/config/define-config.ts#L150)
+Defined in: [packages/core/src/config/define-config.ts:150](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/config/define-config.ts#L150)
 
 Accepts a SitecoreConfigInput object and returns full sitecore configuration
 
@@ -20,6 +20,6 @@ Accepts a SitecoreConfigInput object and returns full sitecore configuration
 
 ## Returns
 
-`Required`
+[`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md)
 
 full sitecore configuration to use in application
