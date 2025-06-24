@@ -84,7 +84,7 @@ export type FetchOptions = {
    */
   headers?: Record<string, string>;
   /**
-   * Override debugger for logging. Uses 'core:http' by default.
+   * Override debugger for logging. Uses 'content-sdk:http' by default.
    */
   debugger?: Debugger;
 };

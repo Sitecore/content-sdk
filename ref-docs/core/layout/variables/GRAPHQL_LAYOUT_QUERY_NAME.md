@@ -6,6 +6,6 @@
 
 # Variable: GRAPHQL\_LAYOUT\_QUERY\_NAME
 
-> `const` **GRAPHQL\_LAYOUT\_QUERY\_NAME**: `"JssLayoutQuery"` = `'JssLayoutQuery'`
+> `const` **GRAPHQL\_LAYOUT\_QUERY\_NAME**: `"ContentSdkLayoutQuery"` = `'ContentSdkLayoutQuery'`
 
-Defined in: [packages/core/src/layout/graphql-layout-service.ts:8](https://github.com/Sitecore/content-sdk/blob/48f6e96b5604a2e6fad496f40949746e41ce959f/packages/core/src/layout/graphql-layout-service.ts#L8)
+Defined in: [packages/core/src/layout/graphql-layout-service.ts:8](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/layout/graphql-layout-service.ts#L8)

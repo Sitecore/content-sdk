@@ -94,7 +94,7 @@
 - [LinkProps](type-aliases/LinkProps.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
 - [NativeDataFetcherError](type-aliases/NativeDataFetcherError.md)
-- [NextjsJssComponent](type-aliases/NextjsJssComponent.md)
+- [NextjsContentSdkComponent](type-aliases/NextjsContentSdkComponent.md)
 - [PlaceholdersData](type-aliases/PlaceholdersData.md)
 - [RedirectInfo](type-aliases/RedirectInfo.md)
 - [RichTextProps](type-aliases/RichTextProps.md)

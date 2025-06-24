@@ -8,10 +8,10 @@
 
 > **useSitecore**(`options?`): [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:84](https://github.com/Sitecore/content-sdk/blob/48f6e96b5604a2e6fad496f40949746e41ce959f/packages/react/src/enhancers/withSitecore.tsx#L84)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:84](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/react/src/enhancers/withSitecore.tsx#L84)
 
 This hook grants acсess to the current Sitecore page context and api.
-by default JSS includes the following properties in this context:
+by default Content SDK includes the following properties in this context:
 - pageEditing - Provided by Layout Service, a boolean indicating whether the route is being accessed via the Sitecore Editor.
 - pageState - Like pageEditing, but a string: normal, preview or edit.
 - site - Provided by Layout Service, an object containing the name of the current Sitecore site context.

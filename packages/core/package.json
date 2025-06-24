@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/core",
-  "version": "0.3.0-canary.19",
+  "version": "0.3.0-canary.25",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,

@@ -6,7 +6,7 @@
 
 # Class: GraphQLDictionaryService
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:101
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:96
 
 Service that fetch dictionary data using Sitecore's GraphQL API.
 
@@ -25,7 +25,7 @@ SearchQueryService<DictionaryQueryResult>
 
 > **new GraphQLDictionaryService**(`options`): `GraphQLDictionaryService`
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:109
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:104
 
 Creates an instance of graphQL dictionary service with the provided options
 
@@ -45,7 +45,7 @@ Creates an instance of graphQL dictionary service with the provided options
 
 > **options**: [`GraphQLDictionaryServiceConfig`](../interfaces/GraphQLDictionaryServiceConfig.md)
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:102
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:97
 
 ## Methods
 
@@ -53,7 +53,7 @@ Defined in: core/types/i18n/graphql-dictionary-service.d.ts:102
 
 > **fetchDictionaryData**(`language`, `site`, `fetchOptions?`): `Promise`\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:118
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:113
 
 Fetches dictionary data for internalization. Uses search query by default
 
@@ -85,7 +85,7 @@ if the app root was not found for the specified site and language.
 
 > `protected` **getCacheClient**(): [`CacheClient`](../interfaces/CacheClient.md)\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:139
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:134
 
 Gets a cache client that can cache data. Uses memory-cache as the default
 library for caching (@see MemoryCacheClient). Override this method if you
@@ -103,7 +103,7 @@ implementation
 
 > **getCacheValue**(`key`): `null` \| [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:132
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:127
 
 Retrieves a
 
@@ -134,7 +134,7 @@ The
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:146
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:141
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -152,7 +152,7 @@ implementation
 
 > **setCacheValue**(`key`, `value`): [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:126
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:121
 
 Caches a
 

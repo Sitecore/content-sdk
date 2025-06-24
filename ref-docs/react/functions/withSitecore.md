@@ -8,7 +8,7 @@
 
 > **withSitecore**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:43](https://github.com/Sitecore/content-sdk/blob/48f6e96b5604a2e6fad496f40949746e41ce959f/packages/react/src/enhancers/withSitecore.tsx#L43)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:43](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/react/src/enhancers/withSitecore.tsx#L43)
 
 ## Parameters
 
@@ -40,7 +40,7 @@ Defined in: [packages/react/src/enhancers/withSitecore.tsx:43](https://github.co
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<`ComponentProps`\> |
+| `props` | [`WithSitecoreHocProps`](../type-aliases/WithSitecoreHocProps.md)\<`ComponentProps`\> |
 
 #### Returns
 

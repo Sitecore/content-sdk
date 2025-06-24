@@ -8,7 +8,7 @@
 
 > **getSiteRewriteData**(`pathname`, `defaultSiteName`): [`SiteRewriteData`](../type-aliases/SiteRewriteData.md)
 
-Defined in: [packages/core/src/site/utils.ts:30](https://github.com/Sitecore/content-sdk/blob/48f6e96b5604a2e6fad496f40949746e41ce959f/packages/core/src/site/utils.ts#L30)
+Defined in: [packages/core/src/site/utils.ts:30](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/site/utils.ts#L30)
 
 Get site data from the rewrite path
 

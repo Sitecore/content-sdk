@@ -8,7 +8,7 @@
 
 > **withPlaceholder**(`placeholders`, `options?`): (`WrappedComponent`) => (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github.com/Sitecore/content-sdk/blob/48f6e96b5604a2e6fad496f40949746e41ce959f/packages/react/src/enhancers/withPlaceholder.tsx#L42)
+Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/react/src/enhancers/withPlaceholder.tsx#L42)
 
 ## Parameters
 
@@ -35,7 +35,7 @@ Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<`PlaceholderProps`\> |
+| `props` | [`WithSitecoreHocProps`](../type-aliases/WithSitecoreHocProps.md)\<`ComponentProps`\> |
 
 #### Returns
 

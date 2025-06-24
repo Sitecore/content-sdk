@@ -8,7 +8,7 @@
 
 > **GenerateMapFunction** = (`args`) => `void`
 
-Defined in: [packages/core/src/tools/generate-map.ts:3](https://github.com/Sitecore/content-sdk/blob/48f6e96b5604a2e6fad496f40949746e41ce959f/packages/core/src/tools/generate-map.ts#L3)
+Defined in: [packages/core/src/tools/generate-map.ts:3](https://github.com/Sitecore/content-sdk/blob/f9d5b3e377170953992073150d6c307020953b03/packages/core/src/tools/generate-map.ts#L3)
 
 ## Parameters
 
