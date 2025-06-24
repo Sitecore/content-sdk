@@ -33,7 +33,10 @@ resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (error, project
   // Re-enable debug logging after environment variables are loaded
   // This ensures that DEBUG environment variables from .env files take effect
   if (process.env.DEBUG) {
-    console.log(`Debug enabled: ${process.env.DEBUG}`);
+    const debugScopes = process.env.DEBUG.split(',')
+      .map((scope) => scope.trim())
+      .filter(Boolean);
+    console.log(`Debug enabled for scopes: [${debugScopes.join(', ')}]`);
     const debug = require('debug');
     debug.enable(process.env.DEBUG);
   }

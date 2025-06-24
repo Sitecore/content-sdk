@@ -41,15 +41,12 @@ export const generateSites = ({
     let sites: SiteInfo[] = [];
     const sitesFilePath = path.resolve(destinationPath ?? DEFAULT_SITES_DIST_PATH);
 
-    debug.multisite('Starting site generation process');
-    debug.multisite('Multisite enabled: %s', scConfig.multisite.enabled);
-    debug.multisite('API configuration: %o', {
-      hasEdgeContextId: !!scConfig.api?.edge?.contextId,
-      hasLocalApiKey: !!scConfig.api?.local?.apiKey,
-      hasLocalApiHost: !!scConfig.api?.local?.apiHost,
-    });
-
-    if (scConfig.multisite.enabled) {
+    if (!scConfig.multisite.enabled) {
+      debug.multisite('Multisite is disabled)');
+      console.log('Multisite is disabled');
+    } else {
+      debug.multisite('Site information generation start');
+      console.log('Multisite is enabled, fetching site information');
       try {
         const siteInfoService = new GraphQLSiteInfoService({
           clientFactory: createGraphQLClientFactory({
@@ -59,7 +56,6 @@ export const generateSites = ({
           }),
         });
 
-        console.log('Fetching site information');
         sites = await siteInfoService.fetchSiteInfo();
       } catch (error) {
         console.error(chalk.red('Error fetching site information'));
@@ -77,7 +73,7 @@ export const generateSites = ({
 
     ensurePathExists(sitesFilePath);
 
-    console.log(`Writing site info to ${sitesFilePath}`);
+    console.log(`Writing site information to ${sitesFilePath}`);
     fs.writeFileSync(sitesFilePath, JSON.stringify(sites, null, 2), { encoding: 'utf8' });
   };
 };
