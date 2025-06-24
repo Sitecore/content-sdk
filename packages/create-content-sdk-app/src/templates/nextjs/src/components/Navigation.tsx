@@ -1,11 +1,5 @@
 ﻿import React, { useState, JSX } from 'react';
-import {
-  Link,
-  LinkField,
-  Text,
-  TextField,
-  useSitecore,
-} from '@sitecore-content-sdk/nextjs';
+import { Link, LinkField, Text, TextField, useSitecore } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from 'lib/component-props';
 
 interface Fields {
@@ -38,22 +32,25 @@ const getTextContent = (fields: Fields): JSX.Element | string => {
 const getLinkField = (fields: Fields): LinkField => ({
   value: {
     href: fields.Href,
-    title: fields.NavigationTitle?.value?.toString() 
-      ?? fields.Title?.value?.toString() 
-      ?? fields.DisplayName,
+    title:
+      fields.NavigationTitle?.value?.toString() ??
+      fields.Title?.value?.toString() ??
+      fields.DisplayName,
     querystring: fields.Querystring,
   },
 });
 
-const NavigationListItem: React.FC<NavigationListItemProps> = ({ fields, handleClick, relativeLevel }) => {
+const NavigationListItem: React.FC<NavigationListItemProps> = ({
+  fields,
+  handleClick,
+  relativeLevel,
+}) => {
   const [isActive, setIsActive] = useState(false);
   const { pageContext } = useSitecore();
-  
-  const classNames = [
-    ...fields.Styles,
-    `rel-level${relativeLevel}`,
-    isActive ? 'active' : '',
-  ].join(' ');
+
+  const classNames = [...fields.Styles, `rel-level${relativeLevel}`, isActive ? 'active' : ''].join(
+    ' '
+  );
 
   const hasChildren = fields.Children?.length > 0;
   const children = hasChildren
@@ -73,11 +70,7 @@ const NavigationListItem: React.FC<NavigationListItemProps> = ({ fields, handleC
         className={`navigation-title ${hasChildren ? 'child' : ''}`}
         onClick={() => setIsActive(!isActive)}
       >
-        <Link
-          field={getLinkField(fields)}
-          editable={pageContext.pageEditing}
-          onClick={handleClick}
-        >
+        <Link field={getLinkField(fields)} editable={pageContext.pageEditing} onClick={handleClick}>
           {getTextContent(fields)}
         </Link>
       </div>
@@ -113,7 +106,7 @@ export const Default = ({ params, fields }: NavigationProps) => {
       <NavigationListItem
         key={`${index}-${item.Id}`}
         fields={item}
-        handleClick={(event) => handleToggleMenu(event, false)}
+        handleClick={event => handleToggleMenu(event, false)}
         relativeLevel={1}
       />
     ));

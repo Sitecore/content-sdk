@@ -1,10 +1,5 @@
 ﻿import React from 'react';
-import {
-  Link as ContentSdkLink,
-  Text,
-  LinkField,
-  TextField,
-} from '@sitecore-content-sdk/nextjs';
+import { Link as ContentSdkLink, Text, LinkField, TextField } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from 'lib/component-props';
 
 interface LinkListProps extends ComponentProps {
@@ -29,13 +24,23 @@ interface LinkListProps extends ComponentProps {
   };
 }
 
-const LinkListItem = ({ index, total, field }: { index: number; total: number; field: LinkField }) => {
+const LinkListItem = ({
+  index,
+  total,
+  field,
+}: {
+  index: number;
+  total: number;
+  field: LinkField;
+}) => {
   const classNames = [
     `item${index}`,
     index % 2 === 0 ? 'odd' : 'even',
     index === 0 ? 'first' : '',
     index === total - 1 ? 'last' : '',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <li className={classNames}>
@@ -77,9 +82,7 @@ export const Default = ({ params, fields }: LinkListProps) => {
 
   return (
     <div className={styles} id={id}>
-      <div className="component-content">
-        {renderContent()}
-      </div>
+      <div className="component-content">{renderContent()}</div>
     </div>
   );
 };

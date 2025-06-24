@@ -3,7 +3,13 @@
  */
 import React, { JSX } from 'react';
 import Head from 'next/head';
-import { Placeholder, LayoutServiceData, Field, DesignLibrary, RenderingType } from '@sitecore-content-sdk/nextjs';
+import {
+  Placeholder,
+  LayoutServiceData,
+  Field,
+  DesignLibrary,
+  RenderingType,
+} from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/SitecoreStyles';
 

@@ -14,5 +14,6 @@ const ClientsideComponent = (props: FEAAS.ExternalComponentProps) => FEAAS.Exter
  * - Can have access to DOM apis, including network requests
  * - Use clientside react hooks like useEffect.
  * - Be implemented as web components.
-*/ 
+ */
+
 export default ClientsideComponent;
