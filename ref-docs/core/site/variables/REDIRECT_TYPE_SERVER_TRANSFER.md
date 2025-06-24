@@ -8,4 +8,4 @@
 
 > `const` **REDIRECT\_TYPE\_SERVER\_TRANSFER**: `"SERVER_TRANSFER"` = `'SERVER_TRANSFER'`
 
-Defined in: [packages/core/src/site/graphql-redirects-service.ts:9](https://github.com/Sitecore/content-sdk/blob/c1e8f5dceb0bc5e009d61cb62c2b97f4e403f87e/packages/core/src/site/graphql-redirects-service.ts#L9)
+Defined in: [packages/core/src/site/graphql-redirects-service.ts:9](https://github.com/Sitecore/content-sdk/blob/804feba3605142f34785b51bc867898fc80618d4/packages/core/src/site/graphql-redirects-service.ts#L9)
