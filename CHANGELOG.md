@@ -81,6 +81,10 @@ Our versioning strategy is as follows:
 * `[nextjs]` Fix component-level data fetching method is exposed in client bundle ([#134](https://github.com/Sitecore/content-sdk/pull/134))
 * `[react]` Add an optional `disableSuspense` flag to the Placeholder component to prevent error boundaries from rendering Suspense which helps contain errors for components. This can help avoid hydration issues in connected mode. ([#96](https://github.com/Sitecore/content-sdk/pull/96))
 
+### Chores
+
+* `[react]` Update feaas dependencies ([#138](https://github.com/Sitecore/content-sdk/pull/138))
+
 ## 0.2.1
 
 ### 🎉 New Features & Improvements

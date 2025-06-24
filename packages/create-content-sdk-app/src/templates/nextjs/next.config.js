@@ -95,6 +95,11 @@ const nextConfig = {
     config.resolve.alias['@sitecore-cloudsdk/events'] = path.resolve(
       process.cwd(), './node_modules/@sitecore-cloudsdk/events'
     );
+    config.resolve.alias['@sitecore-feaas/clientside/react'] = path.resolve(
+      process.cwd(), options.isServer ? 
+        './node_modules/@sitecore-feaas/clientside/dist/node/react.cjs' :
+        './node_modules/@sitecore-feaas/clientside/dist/browser/react.esm.js'
+    );
     // monorepo configuration end
     <% } -%>
 
