@@ -54,10 +54,6 @@ describe('SitecoreClient', () => {
     fetchEditingData: sandbox.stub(),
     fetchDictionaryData: sandbox.stub(),
   };
-  let siteResolverStub = {
-    getByHost: sandbox.stub(),
-    getByName: sandbox.stub(),
-  };
   let restComponentServiceStub = {
     fetchComponentData: sandbox.stub(),
   };
@@ -86,10 +82,6 @@ describe('SitecoreClient', () => {
       fetchEditingData: sandbox.stub(),
       fetchDictionaryData: sandbox.stub(),
     };
-    siteResolverStub = {
-      getByHost: sandbox.stub(),
-      getByName: sandbox.stub(),
-    };
     restComponentServiceStub = {
       fetchComponentData: sandbox.stub(),
     };
@@ -110,7 +102,6 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).dictionaryService = dictionaryServiceStub;
     (sitecoreClient as any).errorPagesService = errorPagesServiceStub;
     (sitecoreClient as any).editingService = editingServiceStub;
-    (sitecoreClient as any).siteResolver = siteResolverStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
     (sitecoreClient as any).sitePathService = sitePathServiceStub;
     (sitecoreClient as any).sitemapXmlService = sitemapXmlServiceStub;
@@ -253,16 +244,6 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('resolveSite', () => {
-    it('should resolve site by hostname with SiteResolver', () => {
-      const hostname = 'http://unit.test';
-      const expectedSiteInfo = { name: 'test', hostName: hostname, language: 'es-ES' };
-      // eslint-disable-next-line
-      siteResolverStub.getByHost.returns(expectedSiteInfo);
-      expect(sitecoreClient.resolveSite(hostname)).to.deep.equal(expectedSiteInfo);
-    });
-  });
-
   describe('getPage', () => {
     it('should return page data when route exists', async () => {
       const path = '/test/path';
@@ -281,14 +262,12 @@ describe('SitecoreClient', () => {
           context: { site: siteInfo },
         },
       };
-      siteResolverStub.getByName.returns(siteInfo);
       layoutServiceStub.fetchLayoutData.returns(layoutData);
 
       const result = await sitecoreClient.getPage(path, { locale });
 
       expect(result).to.deep.include({
         layout: layoutData,
-        site: siteInfo,
         locale: locale,
       });
       expect(
@@ -316,14 +295,12 @@ describe('SitecoreClient', () => {
           context: { site: siteInfo },
         },
       };
-      siteResolverStub.getByName.returns(undefined);
       layoutServiceStub.fetchLayoutData.returns(layoutData);
 
       const result = await sitecoreClient.getPage(path, { locale });
 
       expect(result).to.deep.include({
         layout: layoutData,
-        site: siteInfo,
         locale: locale,
       });
       expect(
@@ -348,8 +325,6 @@ describe('SitecoreClient', () => {
         },
       };
 
-      siteResolverStub.getByName.returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.resolves(layoutData);
 
       const result = await sitecoreClient.getPage(path, {});
@@ -374,8 +349,6 @@ describe('SitecoreClient', () => {
         },
       };
 
-      siteResolverStub.getByName.returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.resolves(layoutData);
 
       await sitecoreClient.getPage(path);
@@ -398,8 +371,6 @@ describe('SitecoreClient', () => {
         hostName: 'example.com',
         language: 'en',
       };
-      siteResolverStub.getByName.returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
 
       const result = await sitecoreClient.getPage(path, {
@@ -440,9 +411,6 @@ describe('SitecoreClient', () => {
           context: { site: siteInfo },
         },
       };
-
-      siteResolverStub.getByName.returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
 
       layoutServiceStub.fetchLayoutData.resolves(layoutData);
 
@@ -570,15 +538,16 @@ describe('SitecoreClient', () => {
 
   describe('getPagePaths', () => {
     it('should return page paths', async () => {
+      const sites = ['default-site', 'other-site'];
       const languages = ['en', 'fr'];
       const expectedPaths = [
         { params: { path: ['home'] }, locale: 'en' },
         { params: { path: ['accueil'] }, locale: 'fr' },
       ];
       sitePathServiceStub.fetchSiteRoutes.resolves([]);
-      sitePathServiceStub.fetchSiteRoutes.withArgs(languages).resolves(expectedPaths);
+      sitePathServiceStub.fetchSiteRoutes.withArgs(sites, languages).resolves(expectedPaths);
 
-      const result = await sitecoreClient.getPagePaths(languages);
+      const result = await sitecoreClient.getPagePaths(sites, languages);
 
       expect(result).to.deep.equal(expectedPaths);
     });
@@ -614,7 +583,6 @@ describe('SitecoreClient', () => {
         locale: previewData.language,
         layout: editingData.layoutData,
         dictionary: editingData.dictionary,
-        site: editingData.layoutData.sitecore.context.site,
       });
 
       expect(editingServiceStub.fetchEditingData.calledOnce).to.be.true;

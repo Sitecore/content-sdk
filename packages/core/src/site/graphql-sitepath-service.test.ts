@@ -22,8 +22,7 @@ class TestService extends GraphQLSitePathService {
 describe('GraphQLSitePathService', () => {
   const endpoint = 'http://site';
   const apiKey = 'some-api-key';
-  const defaultSiteDeets = { hostName: 'tes.com', language: 'en' };
-  const sites = [{ name: 'site-name', ...defaultSiteDeets }];
+  const sites = ['site-name'];
   const clientFactory = GraphQLRequestClient.createClientFactory({
     endpoint,
     apiKey,
@@ -61,8 +60,8 @@ describe('GraphQLSitePathService', () => {
     it('should work when 1 language is requested', async () => {
       mockPathsRequest();
 
-      const service = new GraphQLSitePathService({ clientFactory, sites });
-      const sitemap = await service.fetchSiteRoutes(['ua']);
+      const service = new GraphQLSitePathService({ clientFactory });
+      const sitemap = await service.fetchSiteRoutes(sites, ['ua']);
       expect(sitemap).to.deep.equal(sitemapServiceMultisiteResult);
 
       return expect(nock.isDone()).to.be.true;
@@ -129,11 +128,10 @@ describe('GraphQLSitePathService', () => {
 
       const service = new GraphQLSitePathService({
         clientFactory,
-        sites,
         includedPaths,
         excludedPaths,
       });
-      const sitemap = await service.fetchSiteRoutes(['en']);
+      const sitemap = await service.fetchSiteRoutes(sites, ['en']);
 
       return expect(sitemap).to.deep.equal([
         {
@@ -146,16 +144,13 @@ describe('GraphQLSitePathService', () => {
     });
 
     it('should return aggregated paths for multiple sites with no personalization', async () => {
-      const multipleSites = [
-        { name: 'site1', ...defaultSiteDeets },
-        { name: 'site2', ...defaultSiteDeets },
-      ];
+      const multipleSites = ['site1', 'site2'];
       const lang = 'ua';
 
       nock(endpoint)
         .persist()
         .post('/', (body) => {
-          return body.variables.siteName === multipleSites[0].name;
+          return body.variables.siteName === multipleSites[0];
         })
         .reply(200, {
           data: {
@@ -189,7 +184,7 @@ describe('GraphQLSitePathService', () => {
       nock(endpoint)
         .persist()
         .post('/', (body) => {
-          return body.variables.siteName === multipleSites[1].name;
+          return body.variables.siteName === multipleSites[1];
         })
         .reply(200, {
           data: {
@@ -216,9 +211,8 @@ describe('GraphQLSitePathService', () => {
 
       const service = new GraphQLSitePathService({
         clientFactory,
-        sites: multipleSites,
       });
-      const sitemap = await service.fetchSiteRoutes([lang]);
+      const sitemap = await service.fetchSiteRoutes(multipleSites, [lang]);
 
       expect(sitemap).to.deep.equal([
         {
@@ -262,10 +256,7 @@ describe('GraphQLSitePathService', () => {
     });
 
     it('should return aggregated paths for multiple sites and personalized sites', async () => {
-      const multipleSites = [
-        { name: 'site1', ...defaultSiteDeets },
-        { name: 'site2', ...defaultSiteDeets },
-      ];
+      const multipleSites = ['site1', 'site2'];
       const lang = 'ua';
 
       nock(endpoint)
@@ -275,7 +266,7 @@ describe('GraphQLSitePathService', () => {
       nock(endpoint)
         .persist()
         .post('/', (body) => {
-          return body.variables.siteName === multipleSites[1].name;
+          return body.variables.siteName === multipleSites[1];
         })
         .reply(200, {
           data: {
@@ -308,10 +299,9 @@ describe('GraphQLSitePathService', () => {
 
       const service = new GraphQLSitePathService({
         clientFactory,
-        sites: multipleSites,
         includePersonalizedRoutes: true,
       });
-      const sitemap = await service.fetchSiteRoutes([lang]);
+      const sitemap = await service.fetchSiteRoutes(multipleSites, [lang]);
 
       expect(sitemap).to.deep.equal([
         {
@@ -448,8 +438,8 @@ describe('GraphQLSitePathService', () => {
           },
         });
 
-      const service = new GraphQLSitePathService({ clientFactory, sites });
-      const sitemap = await service.fetchSiteRoutes([lang1, lang2]);
+      const service = new GraphQLSitePathService({ clientFactory });
+      const sitemap = await service.fetchSiteRoutes(sites, [lang1, lang2]);
 
       expect(sitemap).to.deep.equal([
         {
@@ -537,8 +527,8 @@ describe('GraphQLSitePathService', () => {
           },
         });
 
-      const service = new GraphQLSitePathService({ clientFactory, sites });
-      const sitemap = await service.fetchSiteRoutes([lang]);
+      const service = new GraphQLSitePathService({ clientFactory });
+      const sitemap = await service.fetchSiteRoutes(sites, [lang]);
 
       expect(sitemap).to.deep.equal([
         {
@@ -559,17 +549,17 @@ describe('GraphQLSitePathService', () => {
     });
 
     it('should throw error if valid language is not provided', async () => {
-      const service = new GraphQLSitePathService({ clientFactory, sites });
-      await service.fetchSiteRoutes([]).catch((error: RangeError) => {
+      const service = new GraphQLSitePathService({ clientFactory });
+      await service.fetchSiteRoutes(sites, []).catch((error: RangeError) => {
         expect(error.message).to.equal(languageError);
       });
     });
 
     it('should throw error if query returns nothing for a provided site name', async () => {
-      const service = new GraphQLSitePathService({ clientFactory, sites });
+      const service = new GraphQLSitePathService({ clientFactory });
       nock(endpoint)
         .post('/', (body) => {
-          return body.variables.siteName === sites[0].name;
+          return body.variables.siteName === sites[0];
         })
         .reply(200, {
           data: {
@@ -578,8 +568,8 @@ describe('GraphQLSitePathService', () => {
             },
           },
         });
-      await service.fetchSiteRoutes(['en']).catch((error: RangeError) => {
-        expect(error.message).to.equal(getSiteEmptyError(sites[0].name));
+      await service.fetchSiteRoutes(sites, ['en']).catch((error: RangeError) => {
+        expect(error.message).to.equal(getSiteEmptyError(sites[0]));
       });
     });
 
@@ -592,10 +582,9 @@ describe('GraphQLSitePathService', () => {
 
       const service = new GraphQLSitePathService({
         clientFactory,
-        sites,
         pageSize: customPageSize,
       });
-      const sitemap = await service.fetchSiteRoutes(['ua']);
+      const sitemap = await service.fetchSiteRoutes(sites, ['ua']);
 
       expect(sitemap).to.deep.equal(sitemapServiceMultisiteResult);
       return expect(nock.isDone()).to.be.true;
@@ -612,10 +601,9 @@ describe('GraphQLSitePathService', () => {
 
       const service = new GraphQLSitePathService({
         clientFactory,
-        sites,
         pageSize: undefined,
       });
-      const sitemap = await service.fetchSiteRoutes(['ua']);
+      const sitemap = await service.fetchSiteRoutes(sites, ['ua']);
 
       expect(sitemap).to.deep.equal(sitemapServiceMultisiteResult);
       return expect(nock.isDone()).to.be.true;
@@ -624,8 +612,8 @@ describe('GraphQLSitePathService', () => {
     it('should work if sitemap has 0 pages', async () => {
       mockPathsRequest([]);
 
-      const service = new GraphQLSitePathService({ clientFactory, sites });
-      const sitemap = await service.fetchSiteRoutes(['ua']);
+      const service = new GraphQLSitePathService({ clientFactory });
+      const sitemap = await service.fetchSiteRoutes(sites, ['ua']);
       expect(sitemap).to.deep.equal([]);
       return expect(nock.isDone()).to.be.true;
     });
@@ -635,8 +623,8 @@ describe('GraphQLSitePathService', () => {
         .post('/', /DefaultSitemapQuery/gi)
         .reply(500, 'Error 😥');
 
-      const service = new GraphQLSitePathService({ clientFactory, sites });
-      await service.fetchSiteRoutes(['ua']).catch((error: RangeError) => {
+      const service = new GraphQLSitePathService({ clientFactory });
+      await service.fetchSiteRoutes(sites, ['ua']).catch((error: RangeError) => {
         expect(error.message).to.contain('SitemapQuery');
         expect(error.message).to.contain('Error 😥');
       });
