@@ -21,7 +21,6 @@ import {
   GraphQLErrorPagesService,
   GraphQLSitePathService,
   GraphQLSitemapXmlService,
-  SiteInfo,
 } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
@@ -124,12 +123,12 @@ export interface BaseSitecoreClient {
   ): Promise<Page | null>;
   /**
    * Get route paths for all pages in the site. Can be used for static site generation.
-   * @param {SiteInfo[]} sites - sites to fetch routes for
+   * @param {string[]} sites - sites to fetch routes for
    * @param {string[]} [languages] languages to fetch routes in
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
   getPagePaths(
-    sites: SiteInfo[],
+    sites: string[],
     languages?: string[],
     fetchOptions?: FetchOptions
   ): Promise<StaticPath[]>;
@@ -430,13 +429,13 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves the static paths for pages based on the given languages.
-   * @param {SiteInfo[]} sites - An array of site information objects to fetch routes for.
+   * @param {string[]} sites - An array of site names to fetch routes for.
    * @param {string[]} [languages] - An optional array of language codes to generate paths for.
    * @param {FetchOptions} [fetchOptions] - Additional fetch options.
    * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
    */
   async getPagePaths(
-    sites: SiteInfo[],
+    sites: string[],
     languages?: string[],
     fetchOptions?: FetchOptions
   ): Promise<StaticPath[]> {

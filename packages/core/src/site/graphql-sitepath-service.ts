@@ -2,7 +2,7 @@
 import { StaticPath } from '../models';
 import debug from '../debug';
 import { getPersonalizedRewrite } from '../personalize';
-import { getSiteRewrite, SiteInfo } from '../site';
+import { getSiteRewrite } from '../site';
 
 /** @private */
 export const languageError = 'The list of languages cannot be empty';
@@ -183,7 +183,7 @@ export class GraphQLSitePathService {
    * @throws {RangeError} if the any of the languages is an empty string.
    */
   async fetchSiteRoutes(
-    sites: SiteInfo[],
+    sites: string[],
     languages: string[],
     fetchOptions?: FetchOptions
   ): Promise<StaticPath[]> {
@@ -205,9 +205,8 @@ export class GraphQLSitePathService {
     // Fetch paths for each site
     for (let i = 0; i < sites.length; i++) {
       for (const language of languages) {
-        const siteName = sites[i].name;
         // Fetch paths using all locales
-        const sitePaths = await this.fetchLanguageSitePaths(language, siteName, fetchOptions);
+        const sitePaths = await this.fetchLanguageSitePaths(language, sites[i], fetchOptions);
         const transformedPaths = await this.transformLanguageSitePaths(
           sitePaths,
           formatPath,
