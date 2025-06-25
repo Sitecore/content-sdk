@@ -1,24 +1,20 @@
-﻿- name: Post PR comment (bundle size)
-  uses: marocchino/sticky-pull-request-comment@v2
-  with:
-    header: bundle-size
-    path: bundle-size-report.md
-name: Bundle Size Check
+﻿name: Bundle Size Check
 
 on:
   pull_request:
-    branches: [main]
+    branches: [dev]
 
 jobs:
-  bundle-check:
+  check-bundle-size:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repo
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Required for comparing with base branch
+          fetch-depth: 0 # Required for full git history & branch comparison
 
-      - name: Set up Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -29,7 +25,8 @@ jobs:
       - name: Run bundle size comparison
         run: node ./scripts/check-bundle-size.js
 
-      - name: Add comment to PR
+      - name: Post PR comment (bundle size)
         uses: marocchino/sticky-pull-request-comment@v2
         with:
+          header: bundle-size
           path: bundle-size-report.md
