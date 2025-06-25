@@ -139,7 +139,6 @@ export interface GraphQLSitePathServiceConfig
    * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
    */
   clientFactory: GraphQLRequestClientFactory;
-  sites: SiteInfo[];
 }
 
 /**
@@ -176,13 +175,18 @@ export class GraphQLSitePathService {
   /**
    * Fetch a flat list of all pages that belong to all the requested sites and have a
    * version in the specified language(s).
+   * @param {string[]} sites Fetch pages for these sites.
    * @param {string[]} languages Fetch pages that have versions in this language(s).
    * @param {FetchOptions} fetchOptions Options to override graphQL client details like retries and fetch implementation
    * @returns list of pages
    * @throws {RangeError} if the list of languages is empty.
    * @throws {RangeError} if the any of the languages is an empty string.
    */
-  async fetchSiteRoutes(languages: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
+  async fetchSiteRoutes(
+    sites: SiteInfo[],
+    languages: string[],
+    fetchOptions?: FetchOptions
+  ): Promise<StaticPath[]> {
     const formatPath = (path: string[], locale: string) => ({
       params: {
         path,
@@ -194,7 +198,6 @@ export class GraphQLSitePathService {
       throw new RangeError(languageError);
     }
     // Get all sites
-    const sites = this.options.sites;
     if (!sites || !sites.length) {
       throw new RangeError(sitesError);
     }

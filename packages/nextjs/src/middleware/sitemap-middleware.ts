@@ -1,26 +1,25 @@
 ﻿import { NextApiRequest, NextApiResponse } from 'next';
 import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/core/client';
+import { SiteInfo } from '../site';
+import { ApiMiddlewareBase } from './api-middleware';
 
 /**
  * Middleware for handling sitemap requests in a Next.js application.
  * Encapsulates all HTTP-related logic for sitemap generation and delivery.
  */
-export class SitemapMiddleware {
-  private client: SitecoreClient;
-
-  constructor(client: SitecoreClient) {
-    this.client = client;
+export class SitemapMiddleware extends ApiMiddlewareBase {
+  constructor(client: SitecoreClient, sites: SiteInfo[]) {
+    super(client, sites);
   }
 
-  getHandler() {
-    return this.handler.bind(this);
-  }
-
-  private async handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  protected async handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
     const reqHost = req.headers.host || '';
     const reqProtocol = req.headers['x-forwarded-proto'] || 'https';
-    const site = this.client.resolveSite(reqHost);
+    const site = this.getSite(reqHost);
+
+    console.log('resolved site');
+    console.log(site);
 
     const options: SitemapXmlOptions = { reqHost, reqProtocol, id, siteName: site.name };
 

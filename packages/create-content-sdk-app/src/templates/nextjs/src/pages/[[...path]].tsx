@@ -19,6 +19,7 @@ import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing
 import client from 'lib/sitecore-client';
 import components from '.sitecore/component-map';
 import scConfig from 'sitecore.config';
+import sites from '.sitecore/sites.json';
 
 
 const SitecorePage = ({ notFound, componentProps, layout }: SitecorePageProps): JSX.Element => {
@@ -62,7 +63,7 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 
   if (process.env.NODE_ENV !== 'development' && !scConfig.disableStaticPaths) {
     try {
-      paths = await client.getPagePaths(context?.locales || []);
+      paths = await client.getPagePaths(sites, context?.locales || []);
     } catch (error) {
       console.log('Error occurred while fetching static paths');
       console.log(error);
@@ -99,7 +100,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (page) {
     props = {
       ...page,
-      dictionary: await client.getDictionary({ site: page.site?.name, locale: page.locale }),
+      dictionary: await client.getDictionary({
+        site: page.layout.sitecore.context.site?.name,
+        locale: page.locale,
+      }),
       componentProps: await client.getComponentData(page.layout, context, components),
     }
   }
