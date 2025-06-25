@@ -430,6 +430,7 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves the static paths for pages based on the given languages.
+   * @param {SiteInfo[]} sites - An array of site information objects to fetch routes for.
    * @param {string[]} [languages] - An optional array of language codes to generate paths for.
    * @param {FetchOptions} [fetchOptions] - Additional fetch options.
    * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
