@@ -2,12 +2,34 @@
 const path = require('path');
 const { execSync } = require('child_process');
 
-const packages = ['nextjs', 'cli', 'core']; // Add more if needed
+const packages = ['nextjs', 'cli', 'core']; // List all workspace packages
 const baseBranch = process.env.BASE_BRANCH || 'origin/dev';
-const distPath = (pkg) => path.resolve(__dirname, `../packages/${pkg}/dist/index.js`);
 const tempDir = path.resolve(__dirname, '../.tmp-bundle-sizes');
 
-// Run yarn build at root
+// Recursively calculate total folder size in KB
+/**
+ *
+ * @param folderPath
+ */
+function getFolderSizeInKB(folderPath) {
+  if (!fs.existsSync(folderPath)) return null;
+
+  let totalSize = 0;
+  const entries = fs.readdirSync(folderPath, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(folderPath, entry.name);
+    if (entry.isDirectory()) {
+      totalSize += getFolderSizeInKB(fullPath) || 0;
+    } else if (entry.isFile()) {
+      totalSize += fs.statSync(fullPath).size;
+    }
+  }
+
+  return +(totalSize / 1024).toFixed(2);
+}
+
+// Build all packages at once
 /**
  *
  */
@@ -15,26 +37,18 @@ function buildAll() {
   execSync('yarn build', { stdio: 'ignore' });
 }
 
-// Get file size in KB
+// Save all package folder sizes to JSON
 /**
  *
- * @param filePath
+ * @param outputFile
  */
-function getSizeInKB(filePath) {
-  return fs.existsSync(filePath) ? +(fs.statSync(filePath).size / 1024).toFixed(2) : null;
-}
-
-// Save sizes to file
-/**
- *
- * @param file
- */
-function recordSizes(file) {
-  const result = {};
+function recordSizes(outputFile) {
+  const sizes = {};
   for (const pkg of packages) {
-    result[pkg] = getSizeInKB(distPath(pkg));
+    const distPath = path.resolve(__dirname, `../packages/${pkg}/dist`);
+    sizes[pkg] = getFolderSizeInKB(distPath);
   }
-  fs.writeFileSync(file, JSON.stringify(result, null, 2));
+  fs.writeFileSync(outputFile, JSON.stringify(sizes, null, 2));
 }
 
 // Format delta
@@ -50,46 +64,43 @@ function formatDelta(delta) {
   return `${emoji} ${sign}${delta.toFixed(2)} KB`;
 }
 
-// Main execution
+// Main script
 /**
  *
  */
 function run() {
   if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
 
-  // Checkout base and record sizes
+  // Checkout base and build
   execSync(`git checkout ${baseBranch}`, { stdio: 'ignore' });
   buildAll();
-  const baseFile = path.join(tempDir, 'base.json');
+  const baseFile = path.join(tempDir, 'base-sizes.json');
   recordSizes(baseFile);
 
-  // Checkout back to PR branch and record sizes
+  // Checkout back and build PR branch
   execSync('git checkout -', { stdio: 'ignore' });
   buildAll();
-  const prFile = path.join(tempDir, 'pr.json');
+  const prFile = path.join(tempDir, 'pr-sizes.json');
   recordSizes(prFile);
 
   const baseSizes = JSON.parse(fs.readFileSync(baseFile));
   const prSizes = JSON.parse(fs.readFileSync(prFile));
 
-  // Generate report
-  let report =
-    '### 📦 Bundle Size Report\n\n| Package | Base Size | PR Size | Δ Change |\n|--------|-----------|---------|----------|\n';
+  // Generate markdown report
+  let markdown =
+    '### 📦 Bundle Size Report (Folder: `dist/`)\n\n| Package | Base Size | PR Size | Δ Change |\n|--------|-----------|---------|----------|\n';
   let totalDelta = 0;
 
   for (const pkg of packages) {
     const base = baseSizes[pkg];
     const pr = prSizes[pkg];
     const delta = base !== null && pr !== null ? pr - base : null;
-
     if (delta !== null) totalDelta += delta;
-
-    report += `| ${pkg} | ${base ?? 'N/A'} KB | ${pr ?? 'N/A'} KB | ${formatDelta(delta)} |\n`;
+    markdown += `| ${pkg} | ${base ?? 'N/A'} KB | ${pr ?? 'N/A'} KB | ${formatDelta(delta)} |\n`;
   }
 
-  report += `| **Total** | — | — | ${formatDelta(totalDelta)} |\n`;
-
-  fs.writeFileSync('bundle-size-report.md', report);
+  markdown += `| **Total** | — | — | ${formatDelta(totalDelta)} |\n`;
+  fs.writeFileSync('bundle-size-report.md', markdown, 'utf8');
 }
 
 run();
