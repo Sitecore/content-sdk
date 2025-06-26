@@ -456,7 +456,7 @@ describe('defineConfig', () => {
         expect(resultConfig.disableStaticPaths).to.equal(false);
       });
 
-      it('should return true when GENERATE_STATIC_PATHS is set to any other value', () => {
+      it('should return false when GENERATE_STATIC_PATHS is set to any other value', () => {
         process.env.GENERATE_STATIC_PATHS = 'some-other-value';
 
         defineConfigModule.defineConfig({

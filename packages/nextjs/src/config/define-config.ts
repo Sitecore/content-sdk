@@ -41,7 +41,7 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
     },
     disableStaticPaths:
       process.env.GENERATE_STATIC_PATHS !== undefined
-        ? process.env.GENERATE_STATIC_PATHS.toLowerCase() !== 'true'
+        ? process.env.GENERATE_STATIC_PATHS.toLowerCase() === 'false'
         : config?.disableStaticPaths ?? false,
   };
 };
