@@ -22,6 +22,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # 🔹 BUNDLE SIZE
       - name: Run bundle size comparison
         run: node ./scripts/check-bundle-size.js
 
@@ -30,3 +31,13 @@ jobs:
         with:
           header: bundle-size
           path: bundle-size-report.md
+
+      # 🔹 TEST COVERAGE
+      - name: Generate coverage markdown
+        run: node ./scripts/generate-coverage-report.js
+
+      - name: Post PR comment (test coverage)
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: test-coverage
+          path: coverage-report.md
