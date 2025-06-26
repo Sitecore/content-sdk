@@ -34,7 +34,7 @@ jobs:
 
       # 🔹 TEST COVERAGE
       - name: Generate coverage markdown
-        run: node ./scripts/generate-coverage-report.js
+        run: node ./scripts/generate-test-coverage.js
 
       - name: Post PR comment (test coverage)
         uses: marocchino/sticky-pull-request-comment@v2
