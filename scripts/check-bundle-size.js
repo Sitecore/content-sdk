@@ -60,7 +60,7 @@ function recordSizes(outputFile) {
   const sizes = {};
   for (const pkg of packages) {
     const distPath = path.resolve(__dirname, `../packages/${pkg}/dist`);
-    sizes[pkg] = getFolderSizeInKB(distPath);
+    sizes[pkg] = getFolderSizeInMB(distPath);
   }
   fs.writeFileSync(outputFile, JSON.stringify(sizes, null, 2));
 }
