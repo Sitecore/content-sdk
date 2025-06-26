@@ -5,6 +5,7 @@ const { execSync } = require('child_process');
 const packages = ['cli', 'core', 'create-content-sdk-app', 'nextjs', 'react'];
 const baseBranch = process.env.BASE_BRANCH || 'origin/dev';
 const tempDir = path.resolve(__dirname, '../.tmp-bundle-sizes');
+const coverageRegex = /All files\s+\|\s+([\d.]+)\s+\|/;
 
 // Recursively calculate total folder size in KB
 /**
@@ -100,32 +101,10 @@ function run() {
   const baseSizes = JSON.parse(fs.readFileSync(baseFile));
   const prSizes = JSON.parse(fs.readFileSync(prFile));
 
-  // Run coverage and collect coverage per package
-  let packageCoverage = {};
-  try {
-    const coverageOutput = execSync('yarn coverage-packages', { encoding: 'utf8' });
-    for (const pkg of packages) {
-      const regex = new RegExp(`${pkg}.*?All files\\s+\\|\\s+([\\d.]+)`, 'i');
-      const match = coverageOutput.match(regex);
-      if (match) {
-        const value = parseFloat(match[1]);
-        const colored = value >= 80 ? `🟢 **${value}%**` : `🔴 **${value}%**`;
-        packageCoverage[pkg] = colored;
-      } else {
-        packageCoverage[pkg] = '⚠️ N/A';
-      }
-    }
-  } catch (err) {
-    console.error('Failed to compute test coverage:', err.message);
-    for (const pkg of packages) {
-      packageCoverage[pkg] = '⚠️ N/A';
-    }
-  }
-
   // Generate markdown report
   let markdown = '### 📦 Bundle Size Report (Folder: `dist/`, in KB)\n\n';
-  markdown += '| Package | Base Size | PR Size | Δ Change | Coverage % |\n';
-  markdown += '|---------|-----------|---------|----------|-------------|\n';
+  markdown += '| Package | Base Size | PR Size | Δ Change |\n';
+  markdown += '|---------|-----------|---------|----------|\n';
 
   let totalDelta = 0;
 
@@ -137,10 +116,10 @@ function run() {
     if (delta !== null) totalDelta += delta;
 
     markdown += `| ${pkg} | ${base?.toFixed(2) ?? 'N/A'} KB | ${pr?.toFixed(2) ??
-      'N/A'} KB | ${formatDelta(delta)} | ${packageCoverage[pkg]} |\n`;
+      'N/A'} KB | ${formatDelta(delta)} |\n`;
   }
 
-  markdown += `| **Total** | — | — | ${formatDelta(totalDelta)} | — |\n`;
+  markdown += `| **Total** | — | — | ${formatDelta(totalDelta)} |\n`;
 
   fs.writeFileSync('bundle-size-report.md', markdown, 'utf8');
 }
