@@ -75,13 +75,13 @@ describe('EditingRenderMiddleware', () => {
   const secret = 'secret1234';
 
   beforeEach(() => {
-    process.env.JSS_EDITING_SECRET = secret;
+    process.env.SITECORE_EDITING_SECRET = secret;
     process.env.JSS_ALLOWED_ORIGINS = allowedOrigin;
     delete process.env.VERCEL;
   });
 
   after(() => {
-    delete process.env.JSS_EDITING_SECRET;
+    delete process.env.SITECORE_EDITING_SECRET;
     delete process.env.VERCEL;
     delete process.env.JSS_ALLOWED_ORIGINS;
   });
