@@ -38,7 +38,7 @@ const Custom500 = (props: SitecorePageProps): JSX.Element => {
 export const getStaticProps: GetStaticProps = async context => {
   let resultErrorPages: ErrorPages | null = null;
 
-  if (!scConfig.generateStaticPaths) {
+  if (scConfig.generateStaticPaths) {
     try {
       resultErrorPages = await client.getErrorPages({
         site: scConfig.defaultSite,
