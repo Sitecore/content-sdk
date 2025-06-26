@@ -411,21 +411,21 @@ describe('defineConfig', () => {
     });
   });
 
-  describe('config.disableStaticPaths', () => {
+  describe('config.generateStaticPaths', () => {
     describe('environment variable is not set', () => {
-      it('should default to false', () => {
+      it('should default to true', () => {
         defineConfigModule.defineConfig(defaultConfig());
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(false);
+        expect(resultConfig.generateStaticPaths).to.equal(true);
       });
 
       it('should use the value from the config', () => {
         defineConfigModule.defineConfig({
-          disableStaticPaths: true,
+          generateStaticPaths: false,
           ...defaultConfig(),
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(true);
+        expect(resultConfig.generateStaticPaths).to.equal(false);
       });
     });
 
@@ -434,37 +434,37 @@ describe('defineConfig', () => {
         delete process.env.GENERATE_STATIC_PATHS;
       });
 
-      it('should return true when GENERATE_STATIC_PATHS is set to false', () => {
+      it('should return false when GENERATE_STATIC_PATHS is set to false', () => {
         process.env.GENERATE_STATIC_PATHS = 'false';
 
         defineConfigModule.defineConfig({
-          disableStaticPaths: false,
+          generateStaticPaths: true,
           ...defaultConfig(),
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(true);
+        expect(resultConfig.generateStaticPaths).to.equal(false);
       });
 
-      it('should return false when GENERATE_STATIC_PATHS is set to true', () => {
+      it('should return true when GENERATE_STATIC_PATHS is set to true', () => {
         process.env.GENERATE_STATIC_PATHS = 'true';
 
         defineConfigModule.defineConfig({
-          disableStaticPaths: true,
+          generateStaticPaths: false,
           ...defaultConfig(),
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(false);
+        expect(resultConfig.generateStaticPaths).to.equal(true);
       });
 
       it('should return false when GENERATE_STATIC_PATHS is set to any other value', () => {
         process.env.GENERATE_STATIC_PATHS = 'some-other-value';
 
         defineConfigModule.defineConfig({
-          disableStaticPaths: true,
+          generateStaticPaths: true,
           ...defaultConfig(),
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(false);
+        expect(resultConfig.generateStaticPaths).to.equal(false);
       });
     });
   });

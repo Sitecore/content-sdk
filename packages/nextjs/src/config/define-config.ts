@@ -39,10 +39,10 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
       ...config?.personalize,
       scope: config?.personalize?.scope || process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,
     },
-    disableStaticPaths:
+    generateStaticPaths:
       process.env.GENERATE_STATIC_PATHS !== undefined
-        ? process.env.GENERATE_STATIC_PATHS.toLowerCase() === 'false'
-        : config?.disableStaticPaths ?? false,
+        ? process.env.GENERATE_STATIC_PATHS.toLowerCase() === 'true'
+        : config?.generateStaticPaths ?? true,
   };
 };
 
@@ -53,14 +53,14 @@ export type SitecoreConfigInput = SitecoreConfigInputCore & {
   /**
    * Indicates whether SSG `getStaticPaths` pre-render any pages.
    *
-   * Set the environment variable `GENERATE_STATIC_PATHS=false`
-   * to disable static paths generation and enable full ISR (Incremental Static Regeneration) flow.
+   * Set the environment variable `GENERATE_STATIC_PATHS=true`
+   * to enable static paths generation.
    *
-   * By default, this is set to `false`.
+   * By default, this is set to `true`.
    *
-   * This is set to `true` when the application is deployed and used as editing host in Sitecore.
+   * This is set to `false` when the application is deployed and used as editing host in Sitecore.
    */
-  disableStaticPaths?: boolean;
+  generateStaticPaths?: boolean;
 };
 
 /**
