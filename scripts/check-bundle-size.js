@@ -6,6 +6,9 @@ const packages = ['cli', 'core', 'create-content-sdk-app', 'nextjs', 'react'];
 const baseBranch = process.env.BASE_BRANCH || 'origin/dev';
 const tempDir = path.resolve(__dirname, '../.tmp-bundle-sizes');
 
+// Regex to extract coverage from the coverage table
+const coverageRegex = /All files\s+\|\s+([\d.]+)\s+\|/;
+
 // Recursively calculate total folder size in KB
 /**
  *
@@ -119,6 +122,27 @@ function run() {
   }
 
   markdown += `| **Total** | — | — | ${formatDelta(totalDelta)} |\n`;
+
+  let coveragePercent = null;
+  let coverageDisplay = '**N/A**';
+
+  try {
+    const coverageOutput = execSync('yarn coverage-packages', { encoding: 'utf8' });
+    const match = coverageOutput.match(coverageRegex);
+    if (match) {
+      coveragePercent = parseFloat(match[1]);
+      const colored =
+        coveragePercent >= 80 ? `🟢 **${coveragePercent}%**` : `🔴 **${coveragePercent}%**`;
+      coverageDisplay = colored;
+    }
+  } catch (error) {
+    console.error('Failed to compute coverage:', error.message);
+  }
+
+  markdown += '\n\n### ✅ Test Coverage Summary\n\n';
+  markdown += '| Coverage % |\n';
+  markdown += '|-------------|\n';
+  markdown += `| ${coverageDisplay} |\n`;
 
   fs.writeFileSync('bundle-size-report.md', markdown, 'utf8');
 }

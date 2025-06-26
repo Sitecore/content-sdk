@@ -1,4 +1,4 @@
-﻿name: Bundle Size Check
+﻿name: Bundle size and Test coverage
 
 on:
   pull_request:
