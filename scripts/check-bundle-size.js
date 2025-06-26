@@ -11,22 +11,36 @@ const tempDir = path.resolve(__dirname, '../.tmp-bundle-sizes');
  *
  * @param folderPath
  */
-function getFolderSizeInKB(folderPath) {
+function getFolderSizeInMB(folderPath) {
   if (!fs.existsSync(folderPath)) return null;
 
-  let totalSize = 0;
-  const entries = fs.readdirSync(folderPath, { withFileTypes: true });
+  let totalBytes = 0;
 
-  for (const entry of entries) {
-    const fullPath = path.join(folderPath, entry.name);
-    if (entry.isDirectory()) {
-      totalSize += getFolderSizeInKB(fullPath) || 0;
-    } else if (entry.isFile()) {
-      totalSize += fs.statSync(fullPath).size;
+  /**
+   *
+   * @param dir
+   */
+  function walk(dir) {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+
+      if (entry.isSymbolicLink()) {
+        continue; // skip symlinks
+      } else if (entry.isDirectory()) {
+        walk(fullPath);
+      } else if (entry.isFile()) {
+        if (!fullPath.endsWith('.map')) {
+          totalBytes += fs.statSync(fullPath).size;
+        }
+      }
     }
   }
 
-  return +(totalSize / 1024).toFixed(2);
+  walk(folderPath);
+
+  return +(totalBytes / (1024 * 1024)).toFixed(2); // return in MB
 }
 
 // Build all packages at once
