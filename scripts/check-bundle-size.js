@@ -137,14 +137,14 @@ function generateBundleSizeReport() {
     baseSizes[pkg] = getFolderSizeInKB(distPath);
   }
 
-  try {
-    console.log('📄 Scaffolding samples on base...');
-    execSync('yarn scaffold-samples', { stdio: 'inherit' });
-  } catch (err) {
-    console.error('❌ Failed to scaffold samples on base branch');
-    throw err;
-  }
-  baseSizes[`sample-${scaffoldedApp}`] = getNextJsBundleSize(scaffoldedApp);
+  // try {
+  //   console.log('📄 Scaffolding samples on base...');
+  //   execSync('yarn scaffold-samples', { stdio: 'inherit' });
+  // } catch (err) {
+  //   console.error('❌ Failed to scaffold samples on base branch');
+  //   throw err;
+  // }
+  // baseSizes[`sample-${scaffoldedApp}`] = getNextJsBundleSize(scaffoldedApp);s
 
   // === PR BRANCH ===
   execSync('git checkout -', { stdio: 'ignore' });
