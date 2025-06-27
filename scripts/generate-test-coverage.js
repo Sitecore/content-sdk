@@ -48,8 +48,7 @@ function runCoverage(packageName) {
  *
  */
 function generateReport() {
-  let markdown =
-    '### ✅ Test Coverage Report (averaged across Statements, Branches, Functions, and Lines)\n\n';
+  let markdown = '### ✅ Test Coverage Report \n\n';
   markdown += '| Package | Avg Coverage |\n';
   markdown += '|---------|--------------|\n';
 
