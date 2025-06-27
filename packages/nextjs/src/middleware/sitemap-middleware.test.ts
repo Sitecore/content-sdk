@@ -13,6 +13,10 @@ describe('SitemapMiddleware', () => {
   let middleware: SitemapMiddleware;
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
+  let siteResolverStub = {
+    getByHost: sandbox.stub(),
+    getByName: sandbox.stub(),
+  };
 
   const sites = [
     { name: 'test-site', hostName: 'example.com', language: 'en' },
@@ -37,7 +41,16 @@ describe('SitemapMiddleware', () => {
       },
     };
 
+    siteResolverStub = {
+      getByHost: sandbox.stub(),
+      getByName: sandbox.stub(),
+    };
+
     middleware = new SitemapMiddleware((sitecoreClientStub as unknown) as SitecoreClient, sites);
+    (middleware as any).siteResolver = siteResolverStub;
+    siteResolverStub.getByHost.callsFake((hostName) =>
+      sites.find((site) => site.hostName === hostName)
+    );
   });
 
   afterEach(() => {

@@ -14,6 +14,10 @@ describe('RobotsMiddleware', () => {
   let middleware: RobotsMiddleware;
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
+  let siteResolverStub = {
+    getByHost: sandbox.stub(),
+    getByName: sandbox.stub(),
+  };
 
   const mockSiteInfo: SiteInfo = {
     name: 'test-site',
@@ -25,6 +29,10 @@ describe('RobotsMiddleware', () => {
 
   beforeEach(() => {
     sitecoreClientStub = sandbox.createStubInstance(SitecoreClient);
+    siteResolverStub = {
+      getByHost: sandbox.stub(),
+      getByName: sandbox.stub(),
+    };
 
     res = {
       setHeader: sandbox.stub(),
@@ -39,6 +47,10 @@ describe('RobotsMiddleware', () => {
     };
 
     middleware = new RobotsMiddleware((sitecoreClientStub as unknown) as SitecoreClient, sites);
+    (middleware as any).siteResolver = siteResolverStub;
+    siteResolverStub.getByHost.callsFake((hostName) =>
+      sites.find((site) => site.hostName === hostName)
+    );
   });
 
   afterEach(() => {
