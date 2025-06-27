@@ -13,6 +13,7 @@ for (const sample of samplesToScaffold) {
     yes: true,
     force: true,
     silent: true,
+    noInstall: true,
     ...sample.args,
   };
   initialize(sample.template, scaffoldArgs);
