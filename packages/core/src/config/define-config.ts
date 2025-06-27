@@ -19,7 +19,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       path: '/sitecore/api/graph/edge',
     },
   },
-  editingSecret: process.env.JSS_EDITING_SECRET || 'editing-secret-missing',
+  editingSecret: process.env.SITECORE_EDITING_SECRET || 'editing-secret-missing',
   retries: {
     count: 3,
     retryStrategy: new DefaultRetryStrategy({

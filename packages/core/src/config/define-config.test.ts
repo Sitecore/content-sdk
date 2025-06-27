@@ -160,7 +160,7 @@ describe('define-config', () => {
 
       process.env.SITECORE_EDGE_CONTEXT_ID = contextId;
       process.env.SITECORE_EDGE_URL = edgeUrl;
-      process.env.JSS_EDITING_SECRET = contentSdkEditingSecret;
+      process.env.SITECORE_EDITING_SECRET = contentSdkEditingSecret;
       process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT = personalizeMiddlewareEdgeTimeout.toString();
       process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT = personalizeMiddlewareCdpTimeout.toString();
 
@@ -175,7 +175,7 @@ describe('define-config', () => {
     it('should use falback values when env variables are not present', () => {
       delete process.env.SITECORE_EDGE_CONTEXT_ID;
       delete process.env.SITECORE_EDGE_URL;
-      delete process.env.JSS_EDITING_SECRET;
+      delete process.env.SITECORE_EDITING_SECRET;
       delete process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT;
       delete process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT;
 
