@@ -1,0 +1,14 @@
+@import "@globals/abstracts/vars";
+@import "@globals/abstracts/mixins";
+@import "@globals/base/richtext";
+
+.content, .rich-text {
+    border: $rich-content-border;
+    line-height: 1.5;
+    font-size: 12px;
+    overflow: hidden;
+    * {
+        max-width: 100%;
+    }
+}
+
