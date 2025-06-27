@@ -2,12 +2,19 @@
 const path = require('path');
 const { execSync } = require('child_process');
 
+// CONFIG
 const packages = ['cli', 'core', 'create-content-sdk-app', 'nextjs', 'react'];
 const baseBranch = process.env.BASE_BRANCH || 'origin/dev';
 const tempDir = path.resolve(__dirname, '../.tmp-bundle-sizes');
 
-// === UTILS ===
+// SAMPLES
+const sampleManifest = require('./samples.json');
+const { getAppFolder } = require('./utils');
+const scaffoldedSamples = sampleManifest.map((sample) =>
+  getAppFolder({ ...sample.args, template: sample.template })
+);
 
+// UTILS
 /**
  *
  * @param folderPath
@@ -54,28 +61,7 @@ function colorizeCoverage(avg) {
   return avg >= 80 ? `🟢 **${avg.toFixed(2)}%**` : `🔴 **${avg.toFixed(2)}%**`;
 }
 
-// === BUNDLE SIZE ===
-
-/**
- *
- */
-function buildAll() {
-  execSync('yarn build', { stdio: 'ignore' });
-}
-
-/**
- *
- * @param outputFile
- */
-function recordSizes(outputFile) {
-  const sizes = {};
-  for (const pkg of packages) {
-    const distPath = path.resolve(__dirname, `../packages/${pkg}/dist`);
-    sizes[pkg] = getFolderSizeInKB(distPath);
-  }
-  fs.writeFileSync(outputFile, JSON.stringify(sizes, null, 2));
-}
-
+// COVERAGE
 const coverageRegex = /All files\s+\|\s+([\d.]+)\s+\|\s+([\d.]+)\s+\|\s+([\d.]+)\s+\|\s+([\d.]+)/;
 
 /**
@@ -84,73 +70,104 @@ const coverageRegex = /All files\s+\|\s+([\d.]+)\s+\|\s+([\d.]+)\s+\|\s+([\d.]+)
  */
 function runCoverage(packageName) {
   const pkgPath = path.resolve(__dirname, `../packages/${packageName}`);
-  console.log(`→ Running coverage in ${packageName}...`);
-
   try {
     const result = execSync('yarn run coverage', {
       cwd: pkgPath,
       encoding: 'utf-8',
       stdio: ['pipe', 'pipe', 'pipe'],
     });
-
     const match = result.match(coverageRegex);
     if (match) {
       const [stmts, branch, funcs, lines] = match.slice(1).map(parseFloat);
       const avg = (stmts + branch + funcs + lines) / 4;
       return { avg, display: colorizeCoverage(avg) };
-    } else {
-      return { avg: 0, display: '⚠️ N/A' };
     }
   } catch (err) {
-    console.warn(`⚠️ Failed in ${packageName}: ${err.message}`);
-    return { avg: 0, display: '⚠️ N/A' };
+    console.warn(`⚠️ Coverage failed for ${packageName}: ${err.message}`);
   }
+  return { avg: 0, display: '⚠️ N/A' };
 }
 
+// BUILD
+/**
+ *
+ */
+function buildAll() {
+  execSync('yarn build', { stdio: 'ignore' });
+}
+
+// MAIN
 /**
  *
  */
 function generateBundleSizeReport() {
+  const baseSizes = {};
+  const prSizes = {};
+
   if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
 
-  // Build and measure base branch
+  // === Base Branch ===
   execSync(`git checkout ${baseBranch}`, { stdio: 'ignore' });
+  console.log(`📦 Building base branch (${baseBranch})...`);
   buildAll();
-  const baseFile = path.join(tempDir, 'base-sizes.json');
-  recordSizes(baseFile);
 
-  // Build and measure current branch
+  console.log('📁 Measuring base dist sizes...');
+  for (const pkg of packages) {
+    const distPath = path.resolve(__dirname, `../packages/${pkg}/dist`);
+    baseSizes[pkg] = getFolderSizeInKB(distPath);
+  }
+
+  console.log('📄 Scaffolding samples on base...');
+  execSync('yarn scaffold-samples', { stdio: 'ignore' });
+  for (const app of scaffoldedSamples) {
+    const distPath = path.resolve(__dirname, `../samples/${app}/dist`);
+    baseSizes[`sample-${app}`] = getFolderSizeInKB(distPath);
+  }
+
+  // === PR Branch ===
   execSync('git checkout -', { stdio: 'ignore' });
+  console.log('📦 Building PR branch...');
   buildAll();
-  const prFile = path.join(tempDir, 'pr-sizes.json');
-  recordSizes(prFile);
 
-  const baseSizes = JSON.parse(fs.readFileSync(baseFile));
-  const prSizes = JSON.parse(fs.readFileSync(prFile));
+  console.log('📁 Measuring PR dist sizes...');
+  for (const pkg of packages) {
+    const distPath = path.resolve(__dirname, `../packages/${pkg}/dist`);
+    prSizes[pkg] = getFolderSizeInKB(distPath);
+  }
 
+  console.log('📄 Scaffolding samples on PR...');
+  execSync('yarn scaffold-samples', { stdio: 'ignore' });
+  for (const app of scaffoldedSamples) {
+    const distPath = path.resolve(__dirname, `../samples/${app}/dist`);
+    prSizes[`sample-${app}`] = getFolderSizeInKB(distPath);
+  }
+
+  // === Report ===
+  const allKeys = [...packages, ...scaffoldedSamples.map((name) => `sample-${name}`)];
   let markdown = '### 📦 Bundle Size Report (Folder: `dist/`, in KB, with Test Coverage)\n\n';
   markdown += '| Package | Base Size | PR Size | Δ Change | Test Coverage |\n';
   markdown += '|---------|-----------|---------|----------|----------------|\n';
 
   let totalDelta = 0;
 
-  for (const pkg of packages) {
-    const base = baseSizes[pkg];
-    const pr = prSizes[pkg];
+  for (const key of allKeys) {
+    const label = key.startsWith('sample-') ? key.replace('sample-', '') : key;
+    const base = baseSizes[key];
+    const pr = prSizes[key];
     const delta = base !== null && pr !== null ? pr - base : null;
     if (delta !== null) totalDelta += delta;
 
-    // Run coverage inline
-    const { display: coverageDisplay } = runCoverage(pkg);
+    const coverage = key.startsWith('sample-') ? '—' : runCoverage(label).display;
 
-    markdown += `| ${pkg} | ${base?.toFixed(2) ?? 'N/A'} KB | ${pr?.toFixed(2) ??
-      'N/A'} KB | ${formatDelta(delta)} | ${coverageDisplay} |\n`;
+    markdown += `| ${label} | ${base?.toFixed(2) ?? 'N/A'} KB | ${pr?.toFixed(2) ??
+      'N/A'} KB | ${formatDelta(delta)} | ${coverage} |\n`;
   }
 
   markdown += `| **Total** | — | — | ${formatDelta(totalDelta)} | — |\n`;
 
   fs.writeFileSync('bundle-size-report.md', markdown, 'utf8');
-  console.log('✅ Combined bundle size & coverage report written to bundle-size-report.md');
+  console.log('✅ Report written to bundle-size-report.md');
 }
 
+// RUN
 generateBundleSizeReport();
