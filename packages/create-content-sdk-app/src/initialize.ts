@@ -13,6 +13,7 @@ export const initialize = async (template: string, args: BaseAppArgs) => {
   const initializer = await getInitializer(template);
   args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
   const response = await initializer.init(args);
+  console.log('args', args);
 
   // final steps (install, lint)
   if (!args.noInstall) {
