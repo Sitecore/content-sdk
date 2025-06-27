@@ -268,6 +268,7 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.include({
         layout: layoutData,
+        siteName: siteInfo.name,
         locale: locale,
       });
       expect(
@@ -301,6 +302,7 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.include({
         layout: layoutData,
+        siteName: siteInfo.name,
         locale: locale,
       });
       expect(
@@ -366,11 +368,6 @@ describe('SitecoreClient', () => {
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
 
-      const siteInfo = {
-        name: 'default-site',
-        hostName: 'example.com',
-        language: 'en',
-      };
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
 
       const result = await sitecoreClient.getPage(path, {

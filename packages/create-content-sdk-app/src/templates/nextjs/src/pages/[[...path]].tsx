@@ -1,6 +1,7 @@
 ﻿import { useEffect, JSX } from 'react';
 <% if (prerender === 'SSG') { -%>
 import { GetStaticPaths, GetStaticProps } from 'next';
+import sites from '.sitecore/sites.json';
 <% } else if (prerender === 'SSR') { -%>
 import { GetServerSideProps } from 'next';
 <% } -%>
@@ -20,7 +21,6 @@ import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing
 import client from 'lib/sitecore-client';
 import components from '.sitecore/component-map';
 import scConfig from 'sitecore.config';
-import sites from '.sitecore/sites.json';
 
 
 const SitecorePage = ({ notFound, componentProps, layout }: SitecorePageProps): JSX.Element => {
@@ -105,7 +105,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props = {
       ...page,
       dictionary: await client.getDictionary({
-        site: page.layout.sitecore.context.site?.name,
+        site: page.siteName,
         locale: page.locale,
       }),
       componentProps: await client.getComponentData(page.layout, context, components),

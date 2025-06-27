@@ -36,6 +36,10 @@ export type Page = {
    */
   layout: LayoutServiceData;
   /**
+   * Site name for current page / route
+   */
+  siteName?: string;
+  /**
    * Route locale
    */
   locale: string;
@@ -258,6 +262,7 @@ export class SitecoreClient implements BaseSitecoreClient {
 
       return {
         layout,
+        siteName: layout.sitecore.context.site?.name || site,
         locale,
       };
     }
@@ -365,6 +370,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       locale: language,
       layout: data.layoutData,
       dictionary: data.dictionary,
+      siteName: data.layoutData.sitecore.context.site?.name || site,
     } as Page;
     const personalizeData = getGroomedVariantIds(variantIds);
     personalizeLayout(page.layout, personalizeData.variantId, personalizeData.componentVariantIds);
