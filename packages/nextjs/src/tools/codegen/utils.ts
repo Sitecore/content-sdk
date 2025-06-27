@@ -23,17 +23,6 @@ export enum ExtractedFileType {
 }
 
 /**
- * Validates consent for code extraction procedures
- * @returns {boolean} - true if consent is given, false otherwise
- */
-export const validateConsent = () => {
-  if (process.env.EXTRACT_CONSENT?.toLowerCase() !== 'true') {
-    return false;
-  }
-  return true;
-};
-
-/**
  * Validates if the current operation is done in Vercel, Netlify or XMCloud
  * deploy context
  * @returns {boolean} - true if in deploy context, false otherwise

@@ -3,7 +3,6 @@ import {
   ExtractedFileType,
   resolveComponentImportFiles,
   sendCode,
-  validateConsent,
   validateDeployContext,
 } from './utils';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
@@ -36,8 +35,8 @@ export const extractFiles = (args: ExtractFilesConfig) => {
       debug.common('Skipping code extraction, not in deploy context');
       return;
     }
-    if (!validateConsent()) {
-      console.log(chalk.yellow('Skipping code extraction, consent not given'));
+    if (args.scConfig.codeGenerationOptOut) {
+      debug.common('Skipping code extraction, code generation has been opted out of');
       return;
     }
     console.log(chalk.green('Code extraction started'));
