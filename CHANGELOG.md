@@ -70,6 +70,13 @@ Our versioning strategy is as follows:
 * `[nextjs]` `defineCliConfig` import has been moved to `@sitecore-content-sdk/nextjs/config-cli` submodule ([#128](https://github.com/Sitecore/content-sdk/pull/128)).
 * `[core][nextjs][cli]` Re-introduce component map generation logic ([#124](https://github.com/Sitecore/content-sdk/pull/124) [#139](https://github.com/Sitecore/content-sdk/pull/139))
 * `[create-content-sdk-app]` Remove SXA components and style files from default `nextjs` template ([#139](https://github.com/Sitecore/content-sdk/pull/139))
+* `[core]` `[nextjs]` `[templates/nextjs]` Streamlined site resolution logic ([#141](https://github.com/Sitecore/content-sdk/pull/141))
+  - Removed `SiteResolver` dependency and `resolveSite()` from `SitecoreClient`
+  - Renamed Page type's `site` to `siteName`, which now holds only the site name
+  - Updated SitecoreClient's `getPagePaths()` to accept a sites parameter
+  - Modified site paths service to receive `sites` in fetchSiteRoutes() instead of via constructor
+  - Adjusted Next.js API middlewares (sitemap, robots) to use their own SiteResolver
+  - Synced Next.js template with the above changes
 
 ### 🐛 Bug Fixes
 
