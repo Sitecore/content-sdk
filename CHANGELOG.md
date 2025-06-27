@@ -76,13 +76,13 @@ Our versioning strategy is as follows:
   * `NEXT_PUBLIC_SITECORE_SITE_NAME` → `NEXT_PUBLIC_DEFAULT_SITE_NAME`
   * `DISABLE_SSG_FETCH` → `GENERATE_STATIC_PATHS`
   * `disableStaticPaths` config property → `generateStaticPaths` (with inverted logic for clarity)
-* `[core]` `[nextjs]` `[templates/nextjs]` Streamlined site resolution logic ([#141](https://github.com/Sitecore/content-sdk/pull/141))
-  - Removed `SiteResolver` dependency and `resolveSite()` from `SitecoreClient`
-  - Renamed Page type's `site` to `siteName`, which now holds only the site name
-  - Updated SitecoreClient's `getPagePaths()` to accept a sites parameter
-  - Modified site paths service to receive `sites` in fetchSiteRoutes() instead of via constructor
-  - Adjusted Next.js API middlewares (sitemap, robots) to use their own SiteResolver
-  - Synced Next.js template with the above changes
+* `[core]` `[nextjs]` `[templates/nextjs]` Refactor site resolution logic across packages ([#141](https://github.com/Sitecore/content-sdk/pull/141))
+  * Removed `SiteResolver` dependency and `resolveSite()` from `SitecoreClient`
+  * Renamed Page type's `site` to `siteName`, which now holds only the site name
+  * Updated SitecoreClient's `getPagePaths()` to accept a sites parameter
+  * Modified site paths service to receive `sites` in fetchSiteRoutes() instead of via constructor
+  * Adjusted Next.js API middlewares (sitemap, robots) to use their own SiteResolver
+  * Synced Next.js template with the above changes
 
 ### 🐛 Bug Fixes
 
