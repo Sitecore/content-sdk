@@ -13,7 +13,6 @@ chai.use(sinonChai);
 
 describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
-  const defaultSiteDeets = { hostName: 'http://unit.test', language: 'ua' };
   const defaultInitOptions = {
     api: {
       edge: {
@@ -29,10 +28,6 @@ describe('SitecoreClient', () => {
     },
     editingSecret: '********-****',
     retries: { count: 3, retryStrategy: sinon.createStubInstance(DefaultRetryStrategy) },
-    sites: [
-      { name: 'default-site', ...defaultSiteDeets },
-      { name: 'other-site', ...defaultSiteDeets },
-    ],
     defaultSite: 'default-site',
     defaultLanguage: 'en',
     layout: { formatLayoutQuery: sandbox.stub() },
