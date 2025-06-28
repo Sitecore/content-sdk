@@ -1,14 +1,12 @@
 ﻿const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const glob = require('glob');
 
 const packages = ['cli', 'core', 'create-content-sdk-app', 'nextjs', 'react'];
 const tempDir = path.resolve(__dirname, '../.tmp-bundle-sizes');
 const baseBranch = process.env.BASE_BRANCH || 'origin/dev';
 const scaffoldScript = 'yarn scaffold-samples';
-
-const scaffoldedSampleApp = 'sample-nextjs-SSG'; // name must match folder created in samples/
+const scaffoldedSampleApp = 'sample-nextjs-SSG';
 
 /**
  *
@@ -35,7 +33,7 @@ function getFolderSizeInKB(folderPath) {
   }
 
   walk(folderPath);
-  return +(totalBytes / 1024).toFixed(2); // in KB
+  return +(totalBytes / 1024).toFixed(2);
 }
 
 /**
@@ -52,7 +50,7 @@ function scaffoldSamples() {
   try {
     execSync(scaffoldScript, { stdio: 'inherit' });
   } catch (err) {
-    throw new Error('❌ Failed to scaffold samples on base branch');
+    throw new Error('❌ Failed to scaffold samples');
   }
 }
 
@@ -86,11 +84,11 @@ function getNextJsBundleSize(appName) {
  * @param packagesList
  * @param isSample
  */
-function recordSizes(packagesList, isSample = false) {
+function recordPackageSizes() {
   const sizes = {};
-  for (const pkg of packagesList) {
-    const distPath = isSample ? null : path.resolve(__dirname, `../packages/${pkg}/dist`);
-    sizes[pkg] = isSample ? getNextJsBundleSize(pkg) : getFolderSizeInKB(distPath);
+  for (const pkg of packages) {
+    const distPath = path.resolve(__dirname, `../packages/${pkg}/dist`);
+    sizes[pkg] = getFolderSizeInKB(distPath);
   }
   return sizes;
 }
@@ -125,7 +123,7 @@ function generateCoverage(pkg) {
     const avg = match ? parseFloat(match[1]) : 0;
     return avg >= 80 ? `🟢 ${avg.toFixed(2)}%` : `🔴 ${avg.toFixed(2)}%`;
   } catch (err) {
-    console.warn(`⚠️ Coverage failed for ${pkg}: ${err}`);
+    console.warn(`⚠️ Coverage failed for ${pkg}: ${err.message}`);
     return '⚠️ N/A';
   }
 }
@@ -146,7 +144,7 @@ function generateBundleSizeReport(baseSizes, prSizes) {
     const base = baseSizes[pkg];
     const pr = prSizes[pkg];
     const delta = base !== null && pr !== null ? pr - base : null;
-    const coverage = pkg === scaffoldedSampleApp ? '—' : generateCoverage(pkg);
+    const coverage = pkg === scaffoldedSampleApp ? '🚫 Not applicable' : generateCoverage(pkg);
 
     if (delta !== null) totalDelta += delta;
 
@@ -155,7 +153,6 @@ function generateBundleSizeReport(baseSizes, prSizes) {
   }
 
   markdown += `| **Total** | — | — | ${formatDelta(totalDelta)} | — |\n`;
-
   fs.writeFileSync('bundle-size-report.md', markdown, 'utf8');
 }
 
@@ -165,21 +162,18 @@ function generateBundleSizeReport(baseSizes, prSizes) {
 function run() {
   if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
 
-  // ✅ Base branch: checkout & build
   execSync(`git checkout ${baseBranch}`, { stdio: 'ignore' });
   buildAll();
-  const baseSizes = recordSizes(packages);
+  const baseSizes = recordPackageSizes();
   // scaffoldSamples();
   // baseSizes[scaffoldedSampleApp] = getNextJsBundleSize(scaffoldedSampleApp);
 
-  // ✅ Back to PR branch & build
   execSync('git checkout -', { stdio: 'ignore' });
   buildAll();
-  const prSizes = recordSizes(packages);
+  const prSizes = recordPackageSizes();
   scaffoldSamples();
   prSizes[scaffoldedSampleApp] = getNextJsBundleSize(scaffoldedSampleApp);
 
-  // ✅ Report (coverage only on PR)
   generateBundleSizeReport(baseSizes, prSizes);
   console.log('✅ Report written to bundle-size-report.md');
 }
