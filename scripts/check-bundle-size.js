@@ -59,6 +59,10 @@ function scaffoldSamples() {
  * @param appName
  */
 function getNextJsBundleSize(appName) {
+  execSync('yarn install', {
+    cwd: path.resolve(__dirname, `../samples/${appName}`),
+    stdio: 'inherit',
+  });
   execSync('yarn build', {
     cwd: path.resolve(__dirname, `../samples/${appName}`),
     stdio: 'inherit',
