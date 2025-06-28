@@ -59,26 +59,38 @@ function scaffoldSamples() {
  * @param appName
  */
 function getNextJsBundleSize(appName) {
-  execSync('yarn install', {
-    cwd: path.resolve(__dirname, `../samples/${appName}`),
-    stdio: 'inherit',
-  });
-  execSync('yarn build', {
-    cwd: path.resolve(__dirname, `../samples/${appName}`),
-    stdio: 'inherit',
-  });
-  const mainJsPath = path.resolve(__dirname, `../samples/${appName}/.next/static/chunks/main.js`);
+  const appPath = path.resolve(__dirname, `../samples/${appName}`);
+
   try {
+    // Try installing dependencies
+    console.log(`📦 Installing dependencies in ${appName}`);
+    execSync('yarn install --ignore-scripts', {
+      cwd: appPath,
+      stdio: 'inherit',
+    });
+
+    // Build Next.js app
+    console.log(`🔧 Building ${appName}`);
+    execSync('yarn build', {
+      cwd: appPath,
+      stdio: 'inherit',
+    });
+
+    const mainJsPath = path.join(appPath, '.next/static/chunks/main.js');
+
+    // Analyze bundle
     const result = execSync(`npx source-map-explorer "${mainJsPath}" --json`, {
       encoding: 'utf-8',
       stdio: ['pipe', 'pipe', 'pipe'],
     });
+
     const parsed = JSON.parse(result);
     const bundle = Object.values(parsed)[0];
     const totalBytes = bundle?.bundles?.[0]?.totalBytes;
+
     return totalBytes ? +(totalBytes / 1024).toFixed(2) : null;
   } catch (err) {
-    console.warn(`⚠️ Failed to analyze bundle size for ${appName}: ${err.message}`);
+    console.warn(`⚠️ Failed to analyze bundle size for ${appName}: ${err}`);
     return null;
   }
 }
