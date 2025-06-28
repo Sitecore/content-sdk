@@ -139,7 +139,7 @@ function generateCoverage(pkg) {
     const avg = match ? parseFloat(match[1]) : 0;
     return avg >= 80 ? `🟢 ${avg.toFixed(2)}%` : `🔴 ${avg.toFixed(2)}%`;
   } catch (err) {
-    console.warn(`⚠️ Coverage failed for ${pkg}: ${err.message}`);
+    console.warn(`⚠️ Coverage failed for ${pkg}: ${err}`);
     return '⚠️ N/A';
   }
 }
