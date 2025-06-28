@@ -1,33 +1,65 @@
-﻿name: Bundle size and Test coverage
+﻿# name: Bundle size and Test coverage
+
+# on:
+#   pull_request:
+#     branches: [dev]
+
+# jobs:
+#   check-bundle-size:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0 # Required for full git history & branch comparison
+
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 18
+
+#       - name: Install dependencies
+#         run: yarn install --frozen-lockfile
+
+#       # 🔹 BUNDLE SIZE
+#       - name: Run bundle size comparison
+#         run: node ./scripts/check-bundle-size.js
+
+#       - name: Post PR comment (bundle size)
+#         uses: marocchino/sticky-pull-request-comment@v2
+#         with:
+#           header: bundle-size
+#           path: bundle-size-report.md
+
+name: Sample App Bundle Size
 
 on:
   pull_request:
     branches: [dev]
 
 jobs:
-  check-bundle-size:
+  check-sample-size:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Required for full git history & branch comparison
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: Install root dependencies
         run: yarn install --frozen-lockfile
 
-      # 🔹 BUNDLE SIZE
-      - name: Run bundle size comparison
-        run: node ./scripts/check-bundle-size.js
+      - name: Run sample app bundle size check
+        run: node ./scripts/check-next-bundle.js
 
-      - name: Post PR comment (bundle size)
+      - name: Post PR comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: bundle-size
-          path: bundle-size-report.md
+          header: sample-app-bundle
+          path: sample-bundle-size.md
+
