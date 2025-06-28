@@ -58,30 +58,25 @@ function scaffoldSamples() {
 
 /**
  *
- * @param appFolder
+ * @param appName
  */
-function getNextJsBundleFiles(appFolder) {
-  const pattern = path.resolve(__dirname, `../samples/${appFolder}/.next/static/chunks/*.js`);
-  return glob.sync(pattern);
-}
-
-/**
- *
- * @param appFolder
- */
-function getNextJsBundleSize(appFolder) {
+function getNextJsBundleSize(appName) {
+  execSync('yarn build', {
+    cwd: path.resolve(__dirname, `../samples/${appName}`),
+    stdio: 'inherit',
+  });
+  const mainJsPath = path.resolve(__dirname, `../samples/${appName}/.next/static/chunks/main.js`);
   try {
-    const files = getNextJsBundleFiles(appFolder);
-    if (!files.length) throw new Error('No JS files found');
-
-    const output = execSync(`npx source-map-explorer ${files.join(' ')} --json`, {
+    const result = execSync(`npx source-map-explorer "${mainJsPath}" --json`, {
       encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
     });
-    const result = JSON.parse(output);
-    const totalBytes = Object.values(result.bundles).reduce((sum, b) => sum + b.totalBytes, 0);
-    return +(totalBytes / 1024).toFixed(2);
+    const parsed = JSON.parse(result);
+    const bundle = Object.values(parsed)[0];
+    const totalBytes = bundle?.bundles?.[0]?.totalBytes;
+    return totalBytes ? +(totalBytes / 1024).toFixed(2) : null;
   } catch (err) {
-    console.warn(`⚠️ Failed to analyze bundle size for ${appFolder}: ${err.message}`);
+    console.warn(`⚠️ Failed to analyze bundle size for ${appName}: ${err.message}`);
     return null;
   }
 }
