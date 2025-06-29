@@ -62,11 +62,6 @@ function getNextJsBundleSize(appName) {
   const appPath = path.resolve(__dirname, `../samples/${appName}`);
 
   try {
-    console.log('📦 Resetting workspace at root');
-    execSync('yarn reset', {
-      cwd: path.resolve(__dirname, '..'),
-      stdio: 'inherit',
-    });
     // Try installing dependencies
     console.log(`📦 Installing dependencies in ${appName}`);
     execSync('yarn install', {
