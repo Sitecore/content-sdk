@@ -20,6 +20,13 @@ function scaffoldSamples() {
 
 /**
  *
+ */
+function buildAll() {
+  execSync('yarn build', { stdio: 'ignore' });
+}
+
+/**
+ *
  * @param appPath
  */
 function getNextJsBundleSize(appPath) {
@@ -68,6 +75,7 @@ function generateReport(sizeInKB) {
   console.log(`✅ Report written to ${reportPath}`);
 }
 
+buildAll();
 scaffoldSamples();
 const size = getNextJsBundleSize(appPath);
 generateReport(size);
