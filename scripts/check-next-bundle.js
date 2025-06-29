@@ -57,7 +57,7 @@ function getNextJsBundleSize(appPath) {
     const totalBytes = bundle?.bundles?.[0]?.totalBytes;
     return totalBytes ? +(totalBytes / 1024).toFixed(2) : null;
   } catch (err) {
-    console.warn(`⚠️ Failed to analyze bundle size for ${appName}: ${err.message}`);
+    console.warn(`⚠️ Failed to analyze bundle size for ${appName}: ${err}`);
     return null;
   }
 }
