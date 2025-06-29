@@ -33,6 +33,7 @@ function getNextJsBundleSize(appPath) {
   // Run yarn install and build in the app folder
   try {
     console.log(`📦 Installing dependencies in ${appName}`);
+    console.log(`Path: ${appPath}`);
     execSync('yarn install', {
       cwd: appPath,
       stdio: 'inherit',
