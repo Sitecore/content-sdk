@@ -34,10 +34,6 @@ function getNextJsBundleSize(appPath) {
   try {
     console.log(`📦 Installing dependencies in ${appName}`);
     console.log(`Path: ${appPath}`);
-    execSync('yarn install', {
-      cwd: appPath,
-      stdio: 'inherit',
-    });
 
     console.log(`🏗️ Building ${appName}`);
     execSync('yarn build', {
@@ -78,5 +74,10 @@ function generateReport(sizeInKB) {
 
 buildAll();
 scaffoldSamples();
+
+execSync('yarn install', {
+  stdio: 'inherit',
+});
+
 const size = getNextJsBundleSize(appPath);
 generateReport(size);
