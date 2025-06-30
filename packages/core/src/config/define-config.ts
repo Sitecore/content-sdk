@@ -53,7 +53,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       timeout: 60,
     },
   },
-  codeGenerationOptOut: false,
+  disableCodeGeneration: false,
 });
 
 /**

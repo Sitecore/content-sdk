@@ -181,7 +181,7 @@ export type SitecoreConfigInput = {
    * Opt-out setting for code generation feature
    * Disables code extraction procedure
    */
-  codeGenerationOptOut?: boolean;
+  disableCodeGeneration?: boolean;
 };
 
 /**

@@ -32,7 +32,7 @@ describe('extract-files', () => {
           ...defaultConfig.api.edge,
         },
       },
-      codeGenerationOptOut: false,
+      disableCodeGeneration: false,
     },
   };
 
@@ -78,7 +78,7 @@ describe('extract-files', () => {
       ...mockArgs,
       scConfig: {
         ...mockArgs.scConfig,
-        codeGenerationOptOut: true,
+        disableCodeGeneration: true,
       },
     };
 
@@ -87,7 +87,7 @@ describe('extract-files', () => {
 
     expect(debugStub.calledOnce).to.be.true;
     expect(debugStub.firstCall.args[0]).to.equal(
-      'Skipping code extraction, code generation has been opted out of'
+      'Skipping code extraction, code generation has been disabled'
     );
   });
 

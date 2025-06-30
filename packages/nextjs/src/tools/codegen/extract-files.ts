@@ -35,8 +35,8 @@ export const extractFiles = (args: ExtractFilesConfig) => {
       debug.common('Skipping code extraction, not in deploy context');
       return;
     }
-    if (args.scConfig.codeGenerationOptOut) {
-      debug.common('Skipping code extraction, code generation has been opted out of');
+    if (args.scConfig.disableCodeGeneration) {
+      debug.common('Skipping code extraction, code generation has been disabled');
       return;
     }
     console.log(chalk.green('Code extraction started'));
