@@ -26,7 +26,7 @@ jobs:
 
       # 🔹 BUNDLE SIZE
       - name: Run bundle size comparison
-        run: node ./scripts/check-next-bundle.js
+        run: node ./scripts/check-bundle-size.js
 
       - name: Post PR comment (bundle size)
         uses: marocchino/sticky-pull-request-comment@v2

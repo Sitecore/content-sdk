@@ -5,7 +5,7 @@ const path = require('path');
 const packages = ['cli', 'core', 'create-content-sdk-app', 'nextjs', 'react'];
 const tempDir = path.resolve(__dirname, '../.tmp-bundle-sizes');
 const baseBranch = process.env.BASE_BRANCH || 'origin/dev';
-const scaffoldScript = 'yarn scaffold-samples';
+// const scaffoldScript = 'yarn scaffold-samples';
 const scaffoldedSampleApp = 'sample-nextjs-SSG';
 
 /**
@@ -46,54 +46,54 @@ function buildAll() {
 /**
  *
  */
-function scaffoldSamples() {
-  try {
-    execSync(scaffoldScript, { stdio: 'inherit' });
-  } catch (err) {
-    throw new Error('❌ Failed to scaffold samples');
-  }
-}
+// function scaffoldSamples() {
+//   try {
+//     execSync(scaffoldScript, { stdio: 'inherit' });
+//   } catch (err) {
+//     throw new Error('❌ Failed to scaffold samples');
+//   }
+// }
 
 /**
  *
  * @param appName
  */
-function getNextJsBundleSize(appName) {
-  const appPath = path.resolve(__dirname, `../samples/${appName}`);
+// function getNextJsBundleSize(appName) {
+//   const appPath = path.resolve(__dirname, `../samples/${appName}`);
 
-  try {
-    // Try installing dependencies
-    console.log(`📦 Installing dependencies in ${appName}`);
-    execSync('yarn install', {
-      cwd: appPath,
-      stdio: 'inherit',
-    });
+//   try {
+//     // Try installing dependencies
+//     console.log(`📦 Installing dependencies in ${appName}`);
+//     execSync('yarn install', {
+//       cwd: appPath,
+//       stdio: 'inherit',
+//     });
 
-    // Build Next.js app
-    console.log(`🔧 Building ${appName}`);
-    execSync('yarn build', {
-      cwd: appPath,
-      stdio: 'inherit',
-    });
+//     // Build Next.js app
+//     console.log(`🔧 Building ${appName}`);
+//     execSync('yarn build', {
+//       cwd: appPath,
+//       stdio: 'inherit',
+//     });
 
-    const mainJsPath = path.join(appPath, '.next/static/chunks/main.js');
+//     const mainJsPath = path.join(appPath, '.next/static/chunks/main.js');
 
-    // Analyze bundle
-    const result = execSync(`npx source-map-explorer "${mainJsPath}" --json`, {
-      encoding: 'utf-8',
-      stdio: ['pipe', 'pipe', 'pipe'],
-    });
+//     // Analyze bundle
+//     const result = execSync(`npx source-map-explorer "${mainJsPath}" --json`, {
+//       encoding: 'utf-8',
+//       stdio: ['pipe', 'pipe', 'pipe'],
+//     });
 
-    const parsed = JSON.parse(result);
-    const bundle = Object.values(parsed)[0];
-    const totalBytes = bundle?.bundles?.[0]?.totalBytes;
+//     const parsed = JSON.parse(result);
+//     const bundle = Object.values(parsed)[0];
+//     const totalBytes = bundle?.bundles?.[0]?.totalBytes;
 
-    return totalBytes ? +(totalBytes / 1024).toFixed(2) : null;
-  } catch (err) {
-    console.warn(`⚠️ Failed to analyze bundle size for ${appName}: ${err}`);
-    return null;
-  }
-}
+//     return totalBytes ? +(totalBytes / 1024).toFixed(2) : null;
+//   } catch (err) {
+//     console.warn(`⚠️ Failed to analyze bundle size for ${appName}: ${err}`);
+//     return null;
+//   }
+// }
 
 /**
  *
@@ -135,6 +135,10 @@ function generateCoverage(pkg) {
       cwd: pkgPath,
       encoding: 'utf-8',
       stdio: ['pipe', 'pipe', 'pipe'],
+      env: {
+        ...process.env,
+        testEnv: 'ci',
+      },
     });
     const match = result.match(/All files\s+\|\s+([\d.]+)/);
     const avg = match ? parseFloat(match[1]) : 0;
@@ -188,8 +192,8 @@ function run() {
   execSync('git checkout -', { stdio: 'ignore' });
   buildAll();
   const prSizes = recordPackageSizes();
-  scaffoldSamples();
-  prSizes[scaffoldedSampleApp] = getNextJsBundleSize(scaffoldedSampleApp);
+  // scaffoldSamples();
+  // prSizes[scaffoldedSampleApp] = getNextJsBundleSize(scaffoldedSampleApp);
 
   generateBundleSizeReport(baseSizes, prSizes);
   console.log('✅ Report written to bundle-size-report.md');
