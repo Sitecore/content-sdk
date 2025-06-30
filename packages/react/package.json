@@ -30,7 +30,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@sitecore-feaas/clientside": "0.5.20-alpha.1",
+    "@sitecore-feaas/clientside": "0.5.20",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
     "@types/chai": "^5.2.2",
@@ -58,7 +58,7 @@
   },
   "peerDependencies": {
     "@sitecore-cloudsdk/events": "^0.5.1",
-    "@sitecore-feaas/clientside": "0.5.20-alpha.1",
+    "@sitecore-feaas/clientside": "0.5.20",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

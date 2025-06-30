@@ -2491,7 +2491,7 @@ __metadata:
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
     "@sitecore-content-sdk/core": 0.3.0-canary.31
-    "@sitecore-feaas/clientside": 0.5.20-alpha.1
+    "@sitecore-feaas/clientside": 0.5.20
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.3.0
     "@types/chai": ^5.2.2
@@ -2519,30 +2519,30 @@ __metadata:
     typescript: ~5.8.3
   peerDependencies:
     "@sitecore-cloudsdk/events": ^0.5.1
-    "@sitecore-feaas/clientside": 0.5.20-alpha.1
+    "@sitecore-feaas/clientside": 0.5.20
     react: ^19.1.0
     react-dom: ^19.1.0
   languageName: unknown
   linkType: soft
 
-"@sitecore-feaas/clientside@npm:0.5.20-alpha.1":
-  version: 0.5.20-alpha.1
-  resolution: "@sitecore-feaas/clientside@npm:0.5.20-alpha.1"
+"@sitecore-feaas/clientside@npm:0.5.20":
+  version: 0.5.20
+  resolution: "@sitecore-feaas/clientside@npm:0.5.20"
   dependencies:
-    "@sitecore/byoc": ^0.2.17-alpha.0
+    "@sitecore/byoc": ^0.2.17
   peerDependencies:
     react-dom: ">=16.8.0"
-  checksum: 73e3093591d1b2f0d6508fcf0231dd2699845208e1ff79f822e5e7945e86e335d9fced4e4d00f08d4515bf46328d6399ed7e96e9fd461d6d25e36945ef263422
+  checksum: 1bfff3f74185b74e1419106f8186614f8b058c9b114b4cdd41e3874cf5015cc3c368982cf263fbbed6518351b9d001ce710919d95248e19161761934be7263cc
   languageName: node
   linkType: hard
 
-"@sitecore/byoc@npm:^0.2.17-alpha.0":
-  version: 0.2.17-alpha.0
-  resolution: "@sitecore/byoc@npm:0.2.17-alpha.0"
+"@sitecore/byoc@npm:^0.2.17":
+  version: 0.2.17
+  resolution: "@sitecore/byoc@npm:0.2.17"
   dependencies:
     "@rjsf/utils": "*"
     json-schema: ^0.4.0
-  checksum: 4dae0849fb4da0b46c40bc655ee73d4e202c7e7af169cf6797284c2d155c0a727a70cf91489e4fb707e7a77eefdd5bec47f1a7f98c37fc473d975f8349e938f9
+  checksum: 93c74825e95d24c855fabe0d9dd6814451282aa8565487f4ac375faf2d86b990b18fe83257371d777691b7f0f3b9553b6c2e0a6e9b6701b538d8bbff0badf850
   languageName: node
   linkType: hard
 
