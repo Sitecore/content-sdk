@@ -1,8 +1,11 @@
-﻿import { expect } from 'chai';
+﻿import chai, { expect } from 'chai';
 import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { SitemapMiddleware } from './sitemap-middleware';
 import { SitecoreClient } from '@sitecore-content-sdk/core/client';
+
+chai.use(sinonChai);
 
 describe('SitemapMiddleware', () => {
   const sandbox = sinon.createSandbox();
@@ -10,6 +13,15 @@ describe('SitemapMiddleware', () => {
   let middleware: SitemapMiddleware;
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
+  let siteResolverStub = {
+    getByHost: sandbox.stub(),
+    getByName: sandbox.stub(),
+  };
+
+  const sites = [
+    { name: 'test-site', hostName: 'example.com', language: 'en' },
+    { name: 'test-site-two', hostName: '*', language: 'da' },
+  ];
 
   beforeEach(() => {
     sitecoreClientStub = sandbox.createStubInstance(SitecoreClient);
@@ -29,7 +41,16 @@ describe('SitemapMiddleware', () => {
       },
     };
 
-    middleware = new SitemapMiddleware((sitecoreClientStub as unknown) as SitecoreClient);
+    siteResolverStub = {
+      getByHost: sandbox.stub(),
+      getByName: sandbox.stub(),
+    };
+
+    middleware = new SitemapMiddleware((sitecoreClientStub as unknown) as SitecoreClient, sites);
+    (middleware as any).siteResolver = siteResolverStub;
+    siteResolverStub.getByHost.callsFake((hostName) =>
+      sites.find((site) => site.hostName === hostName)
+    );
   });
 
   afterEach(() => {
@@ -45,20 +66,14 @@ describe('SitemapMiddleware', () => {
 
   describe('handler', () => {
     it('should process sitemap request without id parameter', async () => {
-      const siteName = 'test-site';
+      const siteName = sites[0].name;
       const xmlContent = '<sitemapindex>...</sitemapindex>';
 
-      sitecoreClientStub.resolveSite.returns({
-        name: siteName,
-        hostName: 'example.com',
-        language: 'en',
-      });
       sitecoreClientStub.getSiteMap.resolves(xmlContent);
 
       const handler = middleware.getHandler();
       await handler(req as NextApiRequest, res as NextApiResponse);
 
-      expect(sitecoreClientStub.resolveSite.calledWith('example.com')).to.be.true;
       expect(sitecoreClientStub.getSiteMap.calledOnce).to.be.true;
       expect(sitecoreClientStub.getSiteMap.firstCall.args[0]).to.deep.include({
         reqHost: 'example.com',
@@ -74,14 +89,9 @@ describe('SitemapMiddleware', () => {
     it('should handle sitemap request with specific id parameter', async () => {
       const sitemapId = '1';
       req.query = { id: sitemapId };
-      const siteName = 'test-site';
+      const siteName = sites[0].name;
       const xmlContent = '<urlset>...</urlset>';
 
-      sitecoreClientStub.resolveSite.returns({
-        name: siteName,
-        hostName: 'example.com',
-        language: 'en',
-      });
       sitecoreClientStub.getSiteMap.resolves(xmlContent);
 
       const handler = middleware.getHandler();
@@ -99,14 +109,9 @@ describe('SitemapMiddleware', () => {
     it('should handle array of id parameters by using the first value', async () => {
       const sitemapIds = ['1', '2', '3'];
       req.query = { id: sitemapIds };
-      const siteName = 'test-site';
+      const siteName = sites[0].name;
       const xmlContent = '<urlset>...</urlset>';
 
-      sitecoreClientStub.resolveSite.returns({
-        name: siteName,
-        hostName: 'example.com',
-        language: 'en',
-      });
       sitecoreClientStub.getSiteMap.resolves(xmlContent);
 
       const handler = middleware.getHandler();
@@ -120,14 +125,9 @@ describe('SitemapMiddleware', () => {
 
     it('should default to https protocol when x-forwarded-proto header is missing', async () => {
       const reqWithoutProto = { ...req, headers: { host: 'example.com' } };
-      const siteName = 'test-site';
+      const siteName = sites[0].name;
       const xmlContent = '<sitemapindex>...</sitemapindex>';
 
-      sitecoreClientStub.resolveSite.returns({
-        name: siteName,
-        hostName: 'example.com',
-        language: 'en',
-      });
       sitecoreClientStub.getSiteMap.resolves(xmlContent);
 
       const handler = middleware.getHandler();
@@ -142,11 +142,7 @@ describe('SitemapMiddleware', () => {
 
     it('should redirect to 404 when REDIRECT_404 error is thrown', async () => {
       const error = new Error('REDIRECT_404');
-      sitecoreClientStub.resolveSite.returns({
-        name: 'test-site',
-        hostName: 'example.com',
-        language: 'en',
-      });
+
       sitecoreClientStub.getSiteMap.rejects(error);
 
       const handler = middleware.getHandler();
@@ -158,11 +154,7 @@ describe('SitemapMiddleware', () => {
 
     it('should return 500 error when any other error occurs', async () => {
       const error = new Error('Unexpected error');
-      sitecoreClientStub.resolveSite.returns({
-        name: 'test-site',
-        hostName: 'example.com',
-        language: 'en',
-      });
+
       sitecoreClientStub.getSiteMap.rejects(error);
 
       const handler = middleware.getHandler();

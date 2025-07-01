@@ -16,14 +16,7 @@ import {
 import { HTMLLink, FetchOptions, StaticPath, RetryStrategy } from '../models';
 import { getGroomedVariantIds, PersonalizedRewriteData } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
-import {
-  ErrorPages,
-  SiteInfo,
-  SiteResolver,
-  ErrorPagesService,
-  SitePathService,
-  SitemapXmlService,
-} from '../site';
+import { ErrorPages, ErrorPagesService, SitePathService, SitemapXmlService } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { NativeDataFetcher } from '../native-fetcher';
@@ -38,9 +31,9 @@ export type Page = {
    */
   layout: LayoutServiceData;
   /**
-   * Site info for current page / route
+   * Site name for current page / route
    */
-  site?: SiteInfo;
+  siteName?: string;
   /**
    * Route locale
    */
@@ -79,12 +72,6 @@ export type RobotsOptions = {
  * Contract for the Sitecore Client implementations
  */
 export interface BaseSitecoreClient {
-  /**
-   * Resolves site by request hostaname
-   * @param {string} hostname incoming request host name
-   * @returns {SiteInfo} site details including name, language and hostname
-   */
-  resolveSite(hostname: string): SiteInfo;
   /**
    * Retrieves page layoutData and returns page details like language, layoutData and site info for current request
    * @param {string} path current request path
@@ -135,10 +122,15 @@ export interface BaseSitecoreClient {
   ): Promise<Page | null>;
   /**
    * Get route paths for all pages in the site. Can be used for static site generation.
+   * @param {string[]} sites - sites to fetch routes for
    * @param {string[]} [languages] languages to fetch routes in
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
-  getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
+  getPagePaths(
+    sites: string[],
+    languages?: string[],
+    fetchOptions?: FetchOptions
+  ): Promise<StaticPath[]>;
   /**
    * Retrieves the links to be loaded in app's <head> element for each page.
    * @param {LayoutServiceData} layoutData - The layout data containing styles and themes.
@@ -183,7 +175,6 @@ export interface BaseServiceOptions {
 export class SitecoreClient implements BaseSitecoreClient {
   protected layoutService: LayoutService;
   protected dictionaryService: DictionaryService;
-  protected siteResolver: SiteResolver;
   protected editingService: EditingService;
   protected clientFactory: GraphQLRequestClientFactory;
   protected errorPagesService: ErrorPagesService;
@@ -196,7 +187,6 @@ export class SitecoreClient implements BaseSitecoreClient {
    */
   constructor(protected initOptions: SitecoreClientInit) {
     this.clientFactory = this.getClientFactory();
-    this.siteResolver = initOptions.custom?.siteResolver ?? this.getSiteResolver();
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
@@ -208,16 +198,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     this.errorPagesService = initOptions.custom?.errorPagesService ?? this.getErrorPagesService();
     this.sitePathService = initOptions.custom?.sitePathService ?? this.getSitePathService();
     this.componentService = this.getComponentService();
-  }
-
-  /**
-   * Resolve site by hostname
-   * @param {string} hostname site hostname
-   * @returns {SiteInfo} site details matching the hostname
-   */
-  resolveSite(hostname: string): SiteInfo {
-    const site = this.siteResolver.getByHost(hostname);
-    return site;
   }
 
   /**
@@ -264,9 +244,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!layout.sitecore.route) {
       return null;
     } else {
-      const siteInfo =
-        this.siteResolver.getByName(site) || (layout.sitecore.context.site as SiteInfo);
-
       // Initialize links to be inserted on the page
       if (pageOptions?.personalize?.variantId) {
         // Modify layoutData to use specific variant(s) instead of default
@@ -280,7 +257,7 @@ export class SitecoreClient implements BaseSitecoreClient {
 
       return {
         layout,
-        site: siteInfo,
+        siteName: layout.sitecore.context.site?.name || site,
         locale,
       };
     }
@@ -388,7 +365,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       locale: language,
       layout: data.layoutData,
       dictionary: data.dictionary,
-      site: data.layoutData.sitecore.context.site as SiteInfo,
+      siteName: data.layoutData.sitecore.context.site?.name || site,
     } as Page;
     const personalizeData = getGroomedVariantIds(variantIds);
     personalizeLayout(page.layout, personalizeData.variantId, personalizeData.componentVariantIds);
@@ -453,12 +430,17 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves the static paths for pages based on the given languages.
+   * @param {string[]} sites - An array of site names to fetch routes for.
    * @param {string[]} [languages] - An optional array of language codes to generate paths for.
    * @param {FetchOptions} [fetchOptions] - Additional fetch options.
    * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
    */
-  async getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
-    return this.sitePathService.fetchSiteRoutes(languages || [], fetchOptions);
+  async getPagePaths(
+    sites: string[],
+    languages?: string[],
+    fetchOptions?: FetchOptions
+  ): Promise<StaticPath[]> {
+    return this.sitePathService.fetchSiteRoutes(sites, languages || [], fetchOptions);
   }
 
   /**
@@ -563,10 +545,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     return createGraphQLClientFactory(graphQLOptions);
   }
 
-  private getSiteResolver(): SiteResolver {
-    return new SiteResolver(this.initOptions.sites);
-  }
-
   private getLayoutService(baseOptions: BaseServiceOptions): LayoutService {
     return new LayoutService({
       ...baseOptions,
@@ -601,7 +579,6 @@ export class SitecoreClient implements BaseSitecoreClient {
   private getSitePathService(): SitePathService {
     return new SitePathService({
       clientFactory: this.clientFactory,
-      sites: this.siteResolver.sites,
     });
   }
 }
