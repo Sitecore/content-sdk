@@ -111,31 +111,28 @@ const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): Sit
   return result;
 };
 
-const validateConfig = (config: SitecoreConfigInput) => {
-  // Skip validation in browser - only validate on server side
-  if (typeof window !== 'undefined') {
-    return; // We're in the browser, skip validation
-  }
+const validateConfig = (config: SitecoreConfigInput): void => {
+  const hasEdgeContextId   = !!config.api?.edge?.contextId;
+  const hasClientContextId = !!config.api?.edge?.clientContextId;
 
-  const hasEdgeContextId = !!config.api?.edge?.contextId;
-  const hasLocalApi = !!(config?.api?.local?.apiHost && config?.api?.local?.apiKey);
-
-  // Server-side contextId OR local API is mandatory
-  if (!hasEdgeContextId && !hasLocalApi) {
-    throw new Error(
-      'Configuration error: server-side contextId or local API settings (apiHost + apiKey) must be specified. ' +
-      'Client-side contextId alone is not sufficient.'
-    );
+  // ─── Server-side check ─────────────────────────────────────
+  if (typeof window === 'undefined') {
+    if (!hasEdgeContextId) {
+      throw new Error(
+        'Configuration error: a server-side Edge `contextId` (api.edge.contextId) is required. ' +
+        'Supplying only clientContextId or local-API credentials is not sufficient.'
+      );
+    }
+    if (!hasClientContextId) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'Warning: only a server-side `contextId` is provided. If your app makes ' +
+        'client-side Edge requests, also supply `clientContextId`.'
+      );
+    }
+    return; // validation complete on the server
   }
-
-  // Warn if middleware features might not work without server-side contextId
-  if (!hasEdgeContextId && hasLocalApi) {
-    console.warn(
-      'Warning: Redirects and Personalization middleware require Edge API configuration with server-side contextId. ' +
-        'Please ensure that a server-side contextId is provided in your configuration.'
-    );
-  }
-};
+}
 
 /**
  * Accepts a SitecoreConfigInput object and returns full sitecore configuration
