@@ -85,7 +85,7 @@ describe('define-config', () => {
       },
     };
     expect(() => defineConfig(failingConfig)).to.throw(
-      'Configuration error: at least one API configuration must be specified: contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
+      'Configuration error: server-side contextId or local API settings (apiHost + apiKey) must be specified. Client-side contextId alone is not sufficient.'
     );
   });
 
@@ -116,22 +116,6 @@ describe('define-config', () => {
 
     expect(config.personalize.edgeTimeout).to.equal(fallbackConfig.personalize.edgeTimeout);
     expect(config.personalize.cdpTimeout).to.equal(fallbackConfig.personalize.cdpTimeout);
-  });
-
-  it('should throw when api.edge is empty and api.local is partially empty', () => {
-    const failingConfig: SitecoreConfigInput = {
-      ...mockConfig,
-      api: {
-        edge: undefined,
-        local: {
-          apiKey: 'not-empty',
-          apiHost: undefined as any,
-        },
-      },
-    };
-    expect(() => defineConfig(failingConfig)).to.throw(
-      'Configuration error: at least one API configuration must be specified: contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
-    );
   });
 
   it('should use DefaultRetryStrategy with correct error codes', () => {
@@ -294,7 +278,7 @@ describe('define-config', () => {
     expect(() => defineConfig(configWithoutClientContextId)).to.not.throw();
   });
 
-  it('should allow client-only context configuration', () => {
+  it('should NOT allow client-only context configuration', () => {
     const clientOnlyConfig: SitecoreConfigInput = {
       api: {
         edge: {
@@ -304,12 +288,10 @@ describe('define-config', () => {
       },
     };
 
-    expect(() => defineConfig(clientOnlyConfig)).to.not.throw();
-
-    const config = defineConfig(clientOnlyConfig);
-    expect(config.api.edge.clientContextId).to.equal('client-context-id');
-    // Should fallback from clientContextId to contextId
-    expect(config.api.edge.contextId).to.equal('client-context-id');
+    expect(() => defineConfig(clientOnlyConfig)).to.throw(
+      'Configuration error: server-side contextId or local API settings (apiHost + apiKey) must be specified. ' +
+        'Client-side contextId alone is not sufficient.'
+    );
   });
 
   it('should allow local API configuration without edge context', () => {
@@ -344,7 +326,8 @@ describe('define-config', () => {
     };
 
     expect(() => defineConfig(noValidConfig)).to.throw(
-      'Configuration error: at least one API configuration must be specified: contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
+      'Configuration error: server-side contextId or local API settings (apiHost + apiKey) must be specified. ' +
+        'Client-side contextId alone is not sufficient.'
     );
   });
 
@@ -355,7 +338,8 @@ describe('define-config', () => {
     } as SitecoreConfigInput;
 
     expect(() => defineConfig(noValidConfig)).to.throw(
-      'Configuration error: at least one API configuration must be specified: contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
+      'Configuration error: server-side contextId or local API settings (apiHost + apiKey) must be specified. ' +
+        'Client-side contextId alone is not sufficient.'
     );
   });
 });

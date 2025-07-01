@@ -107,10 +107,6 @@ const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): Sit
   if (Number.isNaN(result.personalize.edgeTimeout) || !result.personalize.edgeTimeout) {
     result.personalize.edgeTimeout = base.personalize.edgeTimeout;
   }
-  // fallback in case only one context provided
-  if (result.api.edge?.clientContextId && !result.api.edge.contextId) {
-    result.api.edge.contextId = result.api.edge.clientContextId;
-  }
 
   return result;
 };
@@ -123,21 +119,20 @@ const validateConfig = (config: SitecoreConfigInput) => {
 
   const hasEdgeContextId = !!config.api?.edge?.contextId;
   const hasLocalApi = !!(config?.api?.local?.apiHost && config?.api?.local?.apiKey);
-  const hasClientContextId = !!config.api?.edge?.clientContextId;
 
-  // Only validate on server-side where we have access to server env vars
-  if (!hasEdgeContextId && !hasLocalApi && !hasClientContextId) {
+  // Server-side contextId OR local API is mandatory
+  if (!hasEdgeContextId && !hasLocalApi) {
     throw new Error(
-      'Configuration error: at least one API configuration must be specified: ' +
-        'contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
+      'Configuration error: server-side contextId or local API settings (apiHost + apiKey) must be specified. ' +
+      'Client-side contextId alone is not sufficient.'
     );
   }
 
-  // Warn if middleware features might not work
-  if (!hasEdgeContextId && !hasClientContextId && hasLocalApi) {
+  // Warn if middleware features might not work without server-side contextId
+  if (!hasEdgeContextId && hasLocalApi) {
     console.warn(
-      'Warning: Redirects and Personalization middleware require Edge API configuration. ' +
-        'Please ensure that either an Edge context ID (for server-side) or a client context ID (for client-side) is provided in your configuration'
+      'Warning: Redirects and Personalization middleware require Edge API configuration with server-side contextId. ' +
+        'Please ensure that a server-side contextId is provided in your configuration.'
     );
   }
 };
