@@ -22,7 +22,7 @@ the default value to return if the field is not defined
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`): `undefined` \| `T`
 
-Defined in: [packages/core/src/layout/utils.ts:10](https://github.com/Sitecore/content-sdk/blob/439267f739dcf95c3ad760634459881e9038f20d/packages/core/src/layout/utils.ts#L10)
+Defined in: [packages/core/src/layout/utils.ts:10](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/layout/utils.ts#L10)
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.
@@ -44,25 +44,13 @@ Null will be returned if the field is not defined.
 
 `undefined` \| `T`
 
-the field value or the default value if the field is not defined
-
-### Param
-
-the rendering or fields object to extract the field from
-
-### Param
-
-the name of the field to extract
-
-### Param
-
-the default value to return if the field is not defined
+the field value or null if the field is not defined
 
 ## Call Signature
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`, `defaultValue`): `T`
 
-Defined in: [packages/core/src/layout/utils.ts:15](https://github.com/Sitecore/content-sdk/blob/439267f739dcf95c3ad760634459881e9038f20d/packages/core/src/layout/utils.ts#L15)
+Defined in: [packages/core/src/layout/utils.ts:15](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/layout/utils.ts#L15)
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.
@@ -85,16 +73,4 @@ Null will be returned if the field is not defined.
 
 `T`
 
-the field value or the default value if the field is not defined
-
-### Param
-
-the rendering or fields object to extract the field from
-
-### Param
-
-the name of the field to extract
-
-### Param
-
-the default value to return if the field is not defined
+the field value or null if the field is not defined

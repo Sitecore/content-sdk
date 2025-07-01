@@ -35,7 +35,7 @@ Defined in: react/types/enhancers/withPlaceholder.d.ts:34
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | `EnhancedOmit`\<`PlaceholderProps`, keyof [`WithSitecoreContextProps`](../interfaces/WithSitecoreContextProps.md)\> |
+| `props` | `EnhancedOmit`\<`PlaceholderProps`, keyof [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)\> |
 
 #### Returns
 

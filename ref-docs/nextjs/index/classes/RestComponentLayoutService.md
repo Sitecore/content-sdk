@@ -6,7 +6,7 @@
 
 # Class: RestComponentLayoutService
 
-Defined in: core/types/editing/rest-component-layout-service.d.ts:54
+Defined in: core/types/editing/rest-component-layout-service.d.ts:59
 
 REST service that enables design Library functionality
 Returns layoutData for one single rendered component
@@ -17,7 +17,7 @@ Returns layoutData for one single rendered component
 
 > **new RestComponentLayoutService**(`config`): `RestComponentLayoutService`
 
-Defined in: core/types/editing/rest-component-layout-service.d.ts:56
+Defined in: core/types/editing/rest-component-layout-service.d.ts:61
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: core/types/editing/rest-component-layout-service.d.ts:56
 
 > **fetchComponentData**(`params`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
-Defined in: core/types/editing/rest-component-layout-service.d.ts:57
+Defined in: core/types/editing/rest-component-layout-service.d.ts:62
 
 #### Parameters
 
@@ -53,7 +53,7 @@ Defined in: core/types/editing/rest-component-layout-service.d.ts:57
 
 > `protected` **getComponentFetchParams**(`params`): `any`
 
-Defined in: core/types/editing/rest-component-layout-service.d.ts:58
+Defined in: core/types/editing/rest-component-layout-service.d.ts:63
 
 #### Parameters
 

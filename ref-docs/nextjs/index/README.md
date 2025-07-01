@@ -36,7 +36,7 @@
 - [MemoryCacheClient](classes/MemoryCacheClient.md)
 - [NativeDataFetcher](classes/NativeDataFetcher.md)
 - [RestComponentLayoutService](classes/RestComponentLayoutService.md)
-- [SitecoreContext](classes/SitecoreContext.md)
+- [SitecoreProvider](classes/SitecoreProvider.md)
 - [SiteResolver](classes/SiteResolver.md)
 
 ## Interfaces
@@ -68,10 +68,10 @@
 - [PlaceholderData](interfaces/PlaceholderData.md)
 - [RichTextField](interfaces/RichTextField.md)
 - [RouteData](interfaces/RouteData.md)
-- [SitecoreContextState](interfaces/SitecoreContextState.md)
+- [SitecoreProviderState](interfaces/SitecoreProviderState.md)
 - [TextField](interfaces/TextField.md)
-- [WithSitecoreContextOptions](interfaces/WithSitecoreContextOptions.md)
-- [WithSitecoreContextProps](interfaces/WithSitecoreContextProps.md)
+- [WithSitecoreOptions](interfaces/WithSitecoreOptions.md)
+- [WithSitecoreProps](interfaces/WithSitecoreProps.md)
 
 ## Type Aliases
 
@@ -84,8 +84,7 @@
 - [ErrorPages](type-aliases/ErrorPages.md)
 - [FEaaSComponentParams](type-aliases/FEaaSComponentParams.md)
 - [FEaaSComponentProps](type-aliases/FEaaSComponentProps.md)
-- [GetServerSideComponentProps](type-aliases/GetServerSideComponentProps.md)
-- [GetStaticComponentProps](type-aliases/GetStaticComponentProps.md)
+- [GetComponentServerProps](type-aliases/GetComponentServerProps.md)
 - [GraphQLLayoutServiceConfig](type-aliases/GraphQLLayoutServiceConfig.md)
 - [GraphQLRedirectsServiceConfig](type-aliases/GraphQLRedirectsServiceConfig.md)
 - [GraphQLRobotsServiceConfig](type-aliases/GraphQLRobotsServiceConfig.md)
@@ -95,16 +94,16 @@
 - [LinkProps](type-aliases/LinkProps.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
 - [NativeDataFetcherError](type-aliases/NativeDataFetcherError.md)
-- [NextjsJssComponent](type-aliases/NextjsJssComponent.md)
+- [NextjsContentSdkComponent](type-aliases/NextjsContentSdkComponent.md)
 - [PlaceholdersData](type-aliases/PlaceholdersData.md)
 - [RedirectInfo](type-aliases/RedirectInfo.md)
 - [RichTextProps](type-aliases/RichTextProps.md)
 - [RobotsQueryResult](type-aliases/RobotsQueryResult.md)
-- [SitecoreContextValue](type-aliases/SitecoreContextValue.md)
 - [SitecorePageProps](type-aliases/SitecorePageProps.md)
+- [SitecoreProviderPageContext](type-aliases/SitecoreProviderPageContext.md)
 - [SiteInfo](type-aliases/SiteInfo.md)
 - [StaticPath](type-aliases/StaticPath.md)
-- [WithSitecoreContextHocProps](type-aliases/WithSitecoreContextHocProps.md)
+- [WithSitecoreHocProps](type-aliases/WithSitecoreHocProps.md)
 
 ## Variables
 
@@ -126,7 +125,7 @@
 - [REDIRECT\_TYPE\_301](variables/REDIRECT_TYPE_301.md)
 - [REDIRECT\_TYPE\_302](variables/REDIRECT_TYPE_302.md)
 - [REDIRECT\_TYPE\_SERVER\_TRANSFER](variables/REDIRECT_TYPE_SERVER_TRANSFER.md)
-- [SitecoreContextReactContext](variables/SitecoreContextReactContext.md)
+- [SitecoreProviderReactContext](variables/SitecoreProviderReactContext.md)
 - [Text](variables/Text.md)
 - [withEditorChromes](variables/withEditorChromes.md)
 
@@ -148,9 +147,9 @@
 - [Placeholder](functions/Placeholder.md)
 - [RichText](functions/RichText.md)
 - [useComponentProps](functions/useComponentProps.md)
-- [useSitecoreContext](functions/useSitecoreContext.md)
+- [useSitecore](functions/useSitecore.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEmptyFieldEditingComponent](functions/withEmptyFieldEditingComponent.md)
 - [withFieldMetadata](functions/withFieldMetadata.md)
 - [withPlaceholder](functions/withPlaceholder.md)
-- [withSitecoreContext](functions/withSitecoreContext.md)
+- [withSitecore](functions/withSitecore.md)

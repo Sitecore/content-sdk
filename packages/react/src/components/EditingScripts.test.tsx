@@ -8,9 +8,9 @@ import {
   RenderingType,
 } from '@sitecore-content-sdk/core/layout';
 import { EditingScripts } from './EditingScripts';
-import { SitecoreContext } from './SitecoreContext';
+import { SitecoreProvider } from './SitecoreProvider';
 import {
-  getJssPagesClientData,
+  getContentSdkPagesClientData,
   getDesignLibraryScriptLink,
 } from '@sitecore-content-sdk/core/editing';
 
@@ -36,7 +36,7 @@ describe('<EditingScripts />', () => {
         pageEditing,
         renderingType,
         site: {
-          name: 'JssTestWeb',
+          name: 'ContentSdkTestWeb',
         },
         language: 'en',
         clientData: clientData || {
@@ -67,9 +67,9 @@ describe('<EditingScripts />', () => {
     });
 
     const component = render(
-      <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+      <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
         <EditingScripts />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -84,9 +84,9 @@ describe('<EditingScripts />', () => {
     });
 
     const component = render(
-      <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+      <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
         <EditingScripts />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -102,15 +102,15 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
           <EditingScripts />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
 
       const scripts = component.baseElement;
-      const jssScriptsLength = Object.keys(getJssPagesClientData()).length;
+      const contentSdkScriptsLength = Object.keys(getContentSdkPagesClientData()).length;
 
-      expect(scripts?.querySelectorAll('script')).to.have.length(4 + jssScriptsLength);
+      expect(scripts?.querySelectorAll('script')).to.have.length(4 + contentSdkScriptsLength);
 
       const script1 = scripts?.querySelectorAll('script')[0];
       expect(script1?.getAttribute('src')).to.equal('http://test.foo/script1.js');
@@ -133,7 +133,7 @@ describe('<EditingScripts />', () => {
       );
     });
 
-    it('should render jss pages script elements when data is not provided', () => {
+    it('should render content sdk pages script elements when data is not provided', () => {
       const layoutData = getLayoutData({
         pageState: LayoutServicePageState.Edit,
         pageEditing: true,
@@ -142,13 +142,13 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
           <EditingScripts />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
 
       const scripts = component.baseElement;
-      const ids = Object.keys(getJssPagesClientData());
+      const ids = Object.keys(getContentSdkPagesClientData());
       ids.forEach((id) => {
         expect(component.container.querySelector(`#${id}`)).to.not.be.null;
       });
@@ -167,9 +167,9 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
           <EditingScripts />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
 
       const scripts = component.baseElement;
@@ -190,9 +190,13 @@ describe('<EditingScripts />', () => {
       const stagingEdgeUrl = 'http://edge-staging';
 
       const component = render(
-        <SitecoreContext componentMap={mockComponentMap} layoutData={layoutData}>
-          <EditingScripts sitecoreEdgeUrl={stagingEdgeUrl} />
-        </SitecoreContext>
+        <SitecoreProvider
+          componentMap={mockComponentMap}
+          layoutData={layoutData}
+          api={{ edge: { edgeUrl: stagingEdgeUrl, contextId: 'id' } }}
+        >
+          <EditingScripts />
+        </SitecoreProvider>
       );
 
       const scripts = component.baseElement;

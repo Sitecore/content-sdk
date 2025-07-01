@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { fireEvent, render } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../test-data/component-editing-data';
-import { SitecoreContext } from './SitecoreContext';
+import { SitecoreProvider } from './SitecoreProvider';
 import { RichText } from './RichText';
 import { Text } from './Text';
 import { Placeholder } from '..';
@@ -63,16 +63,16 @@ describe('<DesignLibrary />', () => {
     const basicPage = getTestLayoutData();
     // don't wrap the content in divs
     const rendered = render(
-      <SitecoreContext componentMap={components}>
+      <SitecoreProvider componentMap={components}>
         <DesignLibrary {...basicPage.layoutData} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
     expect(rendered.baseElement.innerHTML).to.equal(
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div></div></div></main>',
       ].join('')
     );
@@ -81,9 +81,9 @@ describe('<DesignLibrary />', () => {
   it('should render component with placeholders', () => {
     const placeholderPage = getTestLayoutData(true);
     const rendered = render(
-      <SitecoreContext componentMap={components} layoutData={placeholderPage.layoutData}>
+      <SitecoreProvider componentMap={components} layoutData={placeholderPage.layoutData}>
         <DesignLibrary {...placeholderPage.layoutData} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -91,7 +91,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div>',
         '<div class="inner">',
         'Its an inner component',
@@ -108,9 +108,9 @@ describe('<DesignLibrary />', () => {
       'test-content'
     );
     const rendered = render(
-      <SitecoreContext componentMap={components} layoutData={basicPage.layoutData}>
+      <SitecoreProvider componentMap={components} layoutData={basicPage.layoutData}>
         <DesignLibrary {...basicPage.layoutData} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -118,7 +118,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div></div></div></main>',
       ].join('')
     );
@@ -133,9 +133,9 @@ describe('<DesignLibrary />', () => {
   it('should update root component', async () => {
     const basicPage = getTestLayoutData();
     const rendered = render(
-      <SitecoreContext componentMap={components} layoutData={basicPage.layoutData}>
+      <SitecoreProvider componentMap={components} layoutData={basicPage.layoutData}>
         <DesignLibrary {...basicPage.layoutData} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -143,7 +143,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div></div></div></main>',
       ].join('')
     );
@@ -167,9 +167,9 @@ describe('<DesignLibrary />', () => {
     const basicPage = getTestLayoutData();
     const placeholderPage = getTestLayoutData(true);
     const rendered = render(
-      <SitecoreContext componentMap={components} layoutData={basicPage.layoutData}>
+      <SitecoreProvider componentMap={components} layoutData={basicPage.layoutData}>
         <DesignLibrary {...placeholderPage.layoutData} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -177,7 +177,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div>',
         '<div class="inner">',
         'Its an inner component',
@@ -195,7 +195,7 @@ describe('<DesignLibrary />', () => {
       [
         '<main><div id="editing-component">',
         '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use JSS</p>\n',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
         '</div>',
         '<div class="inner">',
         'new inner content!',
@@ -208,9 +208,9 @@ describe('<DesignLibrary />', () => {
   it('should send render event when component is updated', async () => {
     const basicPage = getTestLayoutData();
     const rendered = render(
-      <SitecoreContext componentMap={components}>
+      <SitecoreProvider componentMap={components}>
         <DesignLibrary {...basicPage.layoutData} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     await sendUpdateEvent({

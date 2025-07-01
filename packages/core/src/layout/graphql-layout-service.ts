@@ -5,7 +5,7 @@ import { GraphQLServiceConfig } from '../sitecore-service-base';
 import { LayoutServiceBase } from './layout-service';
 import { FetchOptions } from '../models';
 
-export const GRAPHQL_LAYOUT_QUERY_NAME = 'JssLayoutQuery';
+export const GRAPHQL_LAYOUT_QUERY_NAME = 'ContentSdkLayoutQuery';
 
 export type GraphQLLayoutServiceConfig = GraphQLServiceConfig &
   Partial<SitecoreConfigInput['layout']>;

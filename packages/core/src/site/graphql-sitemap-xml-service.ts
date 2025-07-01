@@ -18,7 +18,7 @@ const defaultQuery = /* GraphQL */ `
 
 export type GraphQLSitemapXmlServiceConfig = {
   /**
-   * The JSS application name
+   * The Content SDK application name
    */
   siteName: string;
   /**

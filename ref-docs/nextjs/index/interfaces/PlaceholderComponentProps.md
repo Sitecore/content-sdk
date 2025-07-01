@@ -22,7 +22,7 @@ Defined in: react/types/components/Placeholder.d.ts:4
 
 > `optional` **componentLoadingMessage**: `string`
 
-Defined in: react/types/components/PlaceholderCommon.d.ts:66
+Defined in: react/types/components/PlaceholderCommon.d.ts:67
 
 The message that gets displayed while component is loading
 
@@ -39,11 +39,31 @@ The message that gets displayed while component is loading
 Defined in: react/types/components/PlaceholderCommon.d.ts:23
 
 Component Map will be used to map Sitecore component names to app implementation
-When rendered within a <SitecoreContext> component, defaults to the context componentMap.
+When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
 
 #### Inherited from
 
 `PlaceholderProps.componentMap`
+
+***
+
+### disableSuspense?
+
+> `optional` **disableSuspense**: `boolean`
+
+Defined in: react/types/components/PlaceholderCommon.d.ts:72
+
+If true, disables Suspense in ErrorBoundary for the placeholder.
+
+#### Default
+
+```ts
+false
+```
+
+#### Inherited from
+
+`PlaceholderProps.disableSuspense`
 
 ***
 
@@ -151,6 +171,21 @@ Name of the placeholder to render.
 
 ***
 
+### pageContext
+
+> **pageContext**: [`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md)
+
+Defined in: react/types/components/PlaceholderCommon.d.ts:63
+
+Page context data.
+This data is passed by the SitecoreProvider.
+
+#### Inherited from
+
+`PlaceholderProps.pageContext`
+
+***
+
 ### params?
 
 > `optional` **params**: `object`
@@ -246,17 +281,3 @@ Rendering data to be used when rendering the placeholder.
 #### Inherited from
 
 `PlaceholderProps.rendering`
-
-***
-
-### sitecoreContext
-
-> **sitecoreContext**: [`SitecoreContextValue`](../type-aliases/SitecoreContextValue.md)
-
-Defined in: react/types/components/PlaceholderCommon.d.ts:62
-
-Context data from the Sitecore Layout Service
-
-#### Inherited from
-
-`PlaceholderProps.sitecoreContext`

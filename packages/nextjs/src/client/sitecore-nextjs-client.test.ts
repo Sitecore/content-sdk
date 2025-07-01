@@ -110,7 +110,7 @@ describe('SitecoreClient', () => {
       const result = await sitecoreClient.getPage(path, { locale });
 
       expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
-        'jss-main': [...componentsWithExperiencesArray],
+        'content-sdk-main': [...componentsWithExperiencesArray],
       });
     });
 
@@ -135,7 +135,7 @@ describe('SitecoreClient', () => {
       });
 
       expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
-        'jss-main': [...componentsWithExperiencesArray],
+        'content-sdk-main': [...componentsWithExperiencesArray],
       });
     });
 
@@ -247,7 +247,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getComponentData', () => {
-    it('should return componentData when component has getServerSideProps method', async () => {
+    it('should return componentData when component has getComponentsProps method', async () => {
       const context = ({
         params: { path: ['test', 'path'] },
         query: {},
@@ -273,7 +273,7 @@ describe('SitecoreClient', () => {
       };
 
       const mockComponent = {
-        getServerSideProps: sandbox.stub().resolves({ props: { data: 'test-data' } }),
+        getComponentServerProps: sandbox.stub().resolves({ props: { data: 'test-data' } }),
       };
 
       const componentMap = new Map([['TestComponent', mockComponent]]);
@@ -283,7 +283,7 @@ describe('SitecoreClient', () => {
       expect(result).to.deep.equal({
         'test-uid': { props: { data: 'test-data' } },
       });
-      expect(mockComponent.getServerSideProps.calledOnce).to.be.true;
+      expect(mockComponent.getComponentServerProps.calledOnce).to.be.true;
     });
   });
 });

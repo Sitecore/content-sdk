@@ -19,10 +19,6 @@
 - [SitecoreConfig](type-aliases/SitecoreConfig.md)
 - [SitecoreConfigInput](type-aliases/SitecoreConfigInput.md)
 
-## Functions
-
-- [defineCliConfig](functions/defineCliConfig.md)
-
 ## References
 
 ### defineConfig
