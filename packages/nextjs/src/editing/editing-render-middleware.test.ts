@@ -7,6 +7,7 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   EditingRenderQueryParams,
+  DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { EditingRenderMiddleware, EditingNextApiRequest } from './editing-render-middleware';
 import { spy } from 'sinon';
@@ -74,13 +75,13 @@ describe('EditingRenderMiddleware', () => {
   const secret = 'secret1234';
 
   beforeEach(() => {
-    process.env.JSS_EDITING_SECRET = secret;
+    process.env.SITECORE_EDITING_SECRET = secret;
     process.env.JSS_ALLOWED_ORIGINS = allowedOrigin;
     delete process.env.VERCEL;
   });
 
   after(() => {
-    delete process.env.JSS_EDITING_SECRET;
+    delete process.env.SITECORE_EDITING_SECRET;
     delete process.env.VERCEL;
     delete process.env.JSS_ALLOWED_ORIGINS;
   });
@@ -371,7 +372,7 @@ describe('EditingRenderMiddleware', () => {
 
   describe('Design Library handling', () => {
     const query = {
-      mode: 'library',
+      mode: DesignLibraryMode.Normal,
       sc_itemid: '{11111111-1111-1111-1111-111111111111}',
       sc_lang: 'en',
       sc_site: 'website',
@@ -398,7 +399,34 @@ describe('EditingRenderMiddleware', () => {
         renderingId: query.sc_renderingId,
         language: query.sc_lang,
         site: query.sc_site,
-        mode: 'library',
+        mode: DesignLibraryMode.Normal,
+        dataSourceId: query.dataSourceId,
+        version: query.sc_version,
+      });
+
+      expect(res.redirect).to.have.been.calledOnce;
+      expect(res.setHeader).to.have.been.calledWith(
+        'Content-Security-Policy',
+        `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
+      );
+    });
+
+    it('should handle request with mode=library-metadata', async () => {
+      const req = mockRequest({ query: { ...query, mode: DesignLibraryMode.Metadata } });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
+
+      await handler(req, res);
+
+      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
+        itemId: query.sc_itemid,
+        componentUid: query.sc_uid,
+        renderingId: query.sc_renderingId,
+        language: query.sc_lang,
+        site: query.sc_site,
+        mode: DesignLibraryMode.Metadata,
         dataSourceId: query.dataSourceId,
         version: query.sc_version,
       });

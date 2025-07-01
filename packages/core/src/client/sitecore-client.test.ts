@@ -2,7 +2,7 @@
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import { SitecoreClient } from './sitecore-client';
-import { LayoutKind } from '../../editing';
+import { LayoutKind, DesignLibraryMode } from '../../editing';
 import { LayoutServiceData } from '../../layout';
 import { DefaultRetryStrategy } from '../retries';
 import { LayoutServicePageState } from '../layout';
@@ -408,7 +408,7 @@ describe('SitecoreClient', () => {
       });
 
       expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
-        'jss-main': [...componentsWithExperiencesArray],
+        'content-sdk-main': [...componentsWithExperiencesArray],
       });
     });
 
@@ -654,7 +654,7 @@ describe('SitecoreClient', () => {
       const result = await sitecoreClient.getPreview(previewData);
 
       expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
-        'jss-main': [...componentsWithExperiencesArray],
+        'content-sdk-main': [...componentsWithExperiencesArray],
       });
     });
 
@@ -760,6 +760,7 @@ describe('SitecoreClient', () => {
         dataSourceId: 'datasource-id',
         version: '1',
         pageState: LayoutServicePageState.Normal,
+        mode: DesignLibraryMode.Normal,
       };
 
       const componentData = {
@@ -806,6 +807,7 @@ describe('SitecoreClient', () => {
           renderingId: componentLibData.renderingId,
           dataSourceId: componentLibData.dataSourceId,
           version: componentLibData.version,
+          mode: componentLibData.mode,
         })
       ).to.be.true;
     });

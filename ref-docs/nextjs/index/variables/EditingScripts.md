@@ -6,18 +6,12 @@
 
 # Variable: EditingScripts()
 
-> `const` **EditingScripts**: (`props`) => `JSX.Element`
+> `const` **EditingScripts**: () => `JSX.Element`
 
-Defined in: react/types/components/EditingScripts.d.ts:18
+Defined in: react/types/components/EditingScripts.d.ts:7
 
 Renders client scripts and data for editing/preview mode for Pages.
 Renders script required for the Design Library (when RenderingType is `component`).
-
-## Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `props` | `EditingScriptsProps` | The props for the EditingScripts component. |
 
 ## Returns
 

@@ -105,27 +105,11 @@ Optional. The template ID to use when searching for dictionary entries.
 
 ***
 
-### jssAppTemplateId?
-
-> `optional` **jssAppTemplateId**: `string`
-
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:63
-
-Optional. The template ID of a JSS App to use when searching for the appRootId.
-
-#### Default
-
-```ts
-'061cba1554744b918a0617903b102b82' (/sitecore/templates/Foundation/JavaScript Services/App)
-```
-
-***
-
 ### pageSize?
 
 > `optional` **pageSize**: `number`
 
-Defined in: core/types/i18n/graphql-dictionary-service.d.ts:70
+Defined in: core/types/i18n/graphql-dictionary-service.d.ts:65
 
 common variable for all GraphQL queries
 it will be used for every type of query to regulate result batch size
@@ -143,7 +127,7 @@ Optional. How many result items to fetch in each GraphQL call. This is needed fo
 
 > `optional` **retries**: `object`
 
-Defined in: core/types/config/models.d.ts:72
+Defined in: core/types/config/models.d.ts:79
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
 

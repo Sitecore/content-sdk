@@ -2,12 +2,12 @@
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
 import { PlaceholderProps, PlaceholderCommon } from '../components/PlaceholderCommon';
 import { withComponentMap } from './withComponentMap';
-import { withSitecoreContext } from './withSitecoreContext';
+import { withSitecore } from './withSitecore';
 
 export interface WithPlaceholderOptions {
   /**
    * Function to map incoming placeholder props into rendering data to use for the placeholder data.
-   * Normally in a JSS component, props.rendering is passed the component data, and that is the default.
+   * Normally in a Content SDK component, props.rendering is passed the component data, and that is the default.
    * However, if your component data is in a different prop, like say 'route' in a sample app,
    * this lets you map that.
    */
@@ -68,7 +68,7 @@ export function withPlaceholder(
           }
 
           return (
-            <div className="sc-jss-placeholder-error">
+            <div className="sc-content-sdk-placeholder-error">
               A rendering error occurred: {this.state.error.message}.
             </div>
           );
@@ -90,7 +90,7 @@ export function withPlaceholder(
             placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
               renderingData,
               placeholder.placeholder,
-              childProps.sitecoreContext.pageEditing
+              childProps.pageContext.pageEditing
             );
             if (placeholderData) {
               childProps[placeholder.prop] = this.getComponentsForRenderingData(placeholderData);
@@ -99,7 +99,7 @@ export function withPlaceholder(
             placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
               renderingData,
               placeholder as string,
-              childProps.sitecoreContext.pageEditing
+              childProps.pageContext.pageEditing
             );
             if (placeholderData) {
               childProps[placeholder as string] = this.getComponentsForRenderingData(
@@ -113,6 +113,6 @@ export function withPlaceholder(
       }
     }
 
-    return withSitecoreContext()(withComponentMap(WithPlaceholder));
+    return withSitecore()(withComponentMap(WithPlaceholder));
   };
 }

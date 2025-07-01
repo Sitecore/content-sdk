@@ -3,7 +3,7 @@ import { PlaceholderCommon, PlaceholderProps } from './PlaceholderCommon';
 import { withComponentMap } from '../enhancers/withComponentMap';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PagesEditor } from '@sitecore-content-sdk/core/editing';
-import { withSitecoreContext } from '../enhancers/withSitecoreContext';
+import { withSitecore } from '../enhancers/withSitecore';
 
 export interface PlaceholderComponentProps extends PlaceholderProps {
   /**
@@ -60,7 +60,7 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
       }
 
       return (
-        <div className="sc-jss-placeholder-error">
+        <div className="sc-content-sdk-placeholder-error">
           A rendering error occurred: {this.state.error.message}.
         </div>
       );
@@ -71,7 +71,7 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
     const placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
       renderingData,
       this.props.name,
-      this.props.sitecoreContext?.pageEditing
+      this.props.pageContext?.pageEditing
     );
 
     this.isEmpty = !placeholderData.length;
@@ -81,9 +81,7 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
     if (this.isEmpty) {
       const rendered = this.props.renderEmpty ? this.props.renderEmpty(components) : components;
 
-      return this.props.sitecoreContext?.pageEditing
-        ? this.renderEmptyPlaceholder(rendered)
-        : rendered;
+      return this.props.pageContext?.pageEditing ? this.renderEmptyPlaceholder(rendered) : rendered;
     } else if (this.props.render) {
       return this.props.render(components, placeholderData, childProps);
     } else if (this.props.renderEach) {
@@ -104,4 +102,4 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
 
 const PlaceholderWithComponentMap = withComponentMap(PlaceholderComponent);
 
-export const Placeholder = withSitecoreContext()(PlaceholderWithComponentMap);
+export const Placeholder = withSitecore()(PlaceholderWithComponentMap);

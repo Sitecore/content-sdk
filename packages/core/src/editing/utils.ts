@@ -79,7 +79,7 @@ export class PagesEditor {
     }
     // Check for Chromes mode
     const chromesCheck = window.location.search.indexOf('sc_headless_mode=edit') > -1;
-    // JSS will render a jss-exclusive script element in Metadata mode to indicate edit mode in Pages
+    // Content SDK will render a content-sdk-exclusive script element in Metadata mode to indicate edit mode in Pages
     return chromesCheck || !!window.document.getElementById(PAGES_EDITING_MARKER);
   }
   static resetChromes(): void {
@@ -111,10 +111,10 @@ export const resetEditorChromes = (): void => {
 };
 
 /**
- * Gets extra JSS clientData scripts to render in XMC Pages in addition to clientData from Pages itself
+ * Gets extra Content SDK clientData scripts to render in XMC Pages in addition to clientData from Pages itself
  * @returns {Record} collection of clientData
  */
-export const getJssPagesClientData = () => {
+export const getContentSdkPagesClientData = () => {
   const clientData: Record<string, Record<string, unknown>> = {};
   clientData[PAGES_EDITING_MARKER] = {};
 

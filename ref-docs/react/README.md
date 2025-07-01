@@ -26,7 +26,7 @@
 - [GraphQLSitePathService](classes/GraphQLSitePathService.md)
 - [MemoryCacheClient](classes/MemoryCacheClient.md)
 - [NativeDataFetcher](classes/NativeDataFetcher.md)
-- [SitecoreContext](classes/SitecoreContext.md)
+- [SitecoreProvider](classes/SitecoreProvider.md)
 
 ## Interfaces
 
@@ -57,10 +57,10 @@
 - [RichTextField](interfaces/RichTextField.md)
 - [RichTextProps](interfaces/RichTextProps.md)
 - [RouteData](interfaces/RouteData.md)
-- [SitecoreContextState](interfaces/SitecoreContextState.md)
+- [SitecoreProviderState](interfaces/SitecoreProviderState.md)
 - [TextField](interfaces/TextField.md)
-- [WithSitecoreContextOptions](interfaces/WithSitecoreContextOptions.md)
-- [WithSitecoreContextProps](interfaces/WithSitecoreContextProps.md)
+- [WithSitecoreOptions](interfaces/WithSitecoreOptions.md)
+- [WithSitecoreProps](interfaces/WithSitecoreProps.md)
 
 ## Type Aliases
 
@@ -74,10 +74,10 @@
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
 - [LinkProps](type-aliases/LinkProps.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
-- [ReactJssComponent](type-aliases/ReactJssComponent.md)
+- [ReactContentSdkComponent](type-aliases/ReactContentSdkComponent.md)
 - [ReactModule](type-aliases/ReactModule.md)
-- [SitecoreContextValue](type-aliases/SitecoreContextValue.md)
-- [WithSitecoreContextHocProps](type-aliases/WithSitecoreContextHocProps.md)
+- [SitecoreProviderPageContext](type-aliases/SitecoreProviderPageContext.md)
+- [WithSitecoreHocProps](type-aliases/WithSitecoreHocProps.md)
 
 ## Variables
 
@@ -93,7 +93,7 @@
 - [Placeholder](variables/Placeholder.md)
 - [resetEditorChromes](variables/resetEditorChromes.md)
 - [RichText](variables/RichText.md)
-- [SitecoreContextReactContext](variables/SitecoreContextReactContext.md)
+- [SitecoreProviderReactContext](variables/SitecoreProviderReactContext.md)
 - [Text](variables/Text.md)
 
 ## Functions
@@ -109,10 +109,10 @@
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getFieldValue](functions/getFieldValue.md)
-- [useSitecoreContext](functions/useSitecoreContext.md)
+- [useSitecore](functions/useSitecore.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEditorChromes](functions/withEditorChromes.md)
 - [withEmptyFieldEditingComponent](functions/withEmptyFieldEditingComponent.md)
 - [withFieldMetadata](functions/withFieldMetadata.md)
 - [withPlaceholder](functions/withPlaceholder.md)
-- [withSitecoreContext](functions/withSitecoreContext.md)
+- [withSitecore](functions/withSitecore.md)

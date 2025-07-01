@@ -6,9 +6,6 @@
 !.yarn/sdks
 !.yarn/versions
 
-scjssconfig.json
-scjssconfig.bak
-
 *.pfx
 *.publishsettings
 node_modules/

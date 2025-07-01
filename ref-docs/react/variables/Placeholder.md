@@ -8,13 +8,13 @@
 
 > `const` **Placeholder**: (`props`) => `Element`
 
-Defined in: [packages/react/src/components/Placeholder.tsx:107](https://github.com/Sitecore/content-sdk/blob/439267f739dcf95c3ad760634459881e9038f20d/packages/react/src/components/Placeholder.tsx#L107)
+Defined in: [packages/react/src/components/Placeholder.tsx:105](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/react/src/components/Placeholder.tsx#L105)
 
 ## Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | [`EnhancedOmit`](../type-aliases/EnhancedOmit.md)\<[`PlaceholderComponentProps`](../interfaces/PlaceholderComponentProps.md)\> |
+| `props` | [`WithSitecoreHocProps`](../type-aliases/WithSitecoreHocProps.md)\<`ComponentProps`\> |
 
 ## Returns
 

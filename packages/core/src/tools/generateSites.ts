@@ -1,6 +1,7 @@
 import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs';
+import debug from '../debug';
 
 import { SiteInfo, GraphQLSiteInfoService } from '../site';
 import { ensurePathExists } from '../utils/ensurePath';
@@ -40,6 +41,12 @@ export const generateSites = ({
     let sites: SiteInfo[] = [];
     const sitesFilePath = path.resolve(destinationPath ?? DEFAULT_SITES_DIST_PATH);
 
+    debug.multisite(
+      scConfig.multisite.enabled
+        ? 'Multisite Enabled: Generating site information'
+        : 'Multisite Disabled'
+    );
+
     if (scConfig.multisite.enabled) {
       try {
         const siteInfoService = new GraphQLSiteInfoService({
@@ -50,7 +57,6 @@ export const generateSites = ({
           }),
         });
 
-        console.log('Fetching site information');
         sites = await siteInfoService.fetchSiteInfo();
       } catch (error) {
         console.error(chalk.red('Error fetching site information'));
@@ -68,7 +74,6 @@ export const generateSites = ({
 
     ensurePathExists(sitesFilePath);
 
-    console.log(`Writing site info to ${sitesFilePath}`);
     fs.writeFileSync(sitesFilePath, JSON.stringify(sites, null, 2), { encoding: 'utf8' });
   };
 };

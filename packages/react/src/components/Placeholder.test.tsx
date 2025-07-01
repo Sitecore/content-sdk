@@ -4,7 +4,7 @@
 /* eslint-disable react/prop-types */
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
 import { expect } from 'chai';
-import { render } from '@testing-library/react';
+import { findByText, render } from '@testing-library/react';
 import React from 'react';
 import { spy, stub } from 'sinon';
 import {
@@ -25,12 +25,14 @@ import * as BYOCWrapper from './BYOCWrapper';
 import * as FEAASComponent from './FEaaSComponent';
 import * as FEAASWrapper from './FEaaSWrapper';
 import * as HiddenRendering from './HiddenRendering';
+import * as ErrorBoundary from './ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from './MissingComponent';
 import { Placeholder } from './Placeholder';
 import { ComponentProps } from './PlaceholderCommon';
-import { SitecoreContext } from './SitecoreContext';
+import { SitecoreProvider } from './SitecoreProvider';
 
 const componentMap = new Map<string, React.FC>();
+const dynamicComponent = React.lazy(() => import('../test-data/test-dynamic-component'));
 
 // pass otherProps to page-content to test property cascading through the Placeholder
 
@@ -62,6 +64,7 @@ const DownloadCallout: React.FC<{
 
 componentMap.set('DownloadCallout', DownloadCallout);
 componentMap.set('Jumbotron', () => <div className="jumbotron-mock" />);
+componentMap.set('DynamicComponent', dynamicComponent);
 
 describe('<Placeholder />', () => {
   const testData = [
@@ -79,9 +82,9 @@ describe('<Placeholder />', () => {
         const phKey = 'page-content';
 
         const renderedComponent = render(
-          <SitecoreContext componentMap={componentMap}>
+          <SitecoreProvider componentMap={componentMap}>
             <Placeholder name={phKey} rendering={component} />
-          </SitecoreContext>
+          </SitecoreProvider>
         );
 
         expect(
@@ -94,9 +97,9 @@ describe('<Placeholder />', () => {
         const phKey = 'main';
 
         const renderedComponent = render(
-          <SitecoreContext componentMap={componentMap}>
+          <SitecoreProvider componentMap={componentMap}>
             <Placeholder name={phKey} rendering={component} />
-          </SitecoreContext>
+          </SitecoreProvider>
         );
 
         expect(
@@ -109,13 +112,13 @@ describe('<Placeholder />', () => {
         const phKey = 'main';
 
         const renderedComponent = render(
-          <SitecoreContext componentMap={componentMap}>
+          <SitecoreProvider componentMap={componentMap}>
             <Placeholder
               name={phKey}
               rendering={component}
               renderEach={(comp) => <div className="wrapper">{comp}</div>}
             />
-          </SitecoreContext>
+          </SitecoreProvider>
         );
 
         expect(renderedComponent.container.querySelectorAll('.wrapper').length).to.equal(1);
@@ -126,13 +129,13 @@ describe('<Placeholder />', () => {
         const phKey = 'main';
 
         const renderedComponent = render(
-          <SitecoreContext componentMap={componentMap}>
+          <SitecoreProvider componentMap={componentMap}>
             <Placeholder
               name={phKey}
               rendering={component}
               render={(comp) => <div className="wrapper">{comp}</div>}
             />
-          </SitecoreContext>
+          </SitecoreProvider>
         );
 
         expect(renderedComponent.container.querySelectorAll('.wrapper').length).to.equal(1);
@@ -143,9 +146,9 @@ describe('<Placeholder />', () => {
         const phKey = 'mainEmpty';
 
         const renderedComponent = render(
-          <SitecoreContext componentMap={componentMap}>
+          <SitecoreProvider componentMap={componentMap}>
             <Placeholder name={phKey} rendering={component} render={() => null} />
-          </SitecoreContext>
+          </SitecoreProvider>
         );
 
         expect(renderedComponent.container.innerHTML).to.be.equal('');
@@ -168,13 +171,13 @@ describe('<Placeholder />', () => {
       const phKey = 'main';
 
       const renderedComponent = render(
-        <SitecoreContext componentMap={componentMap}>
+        <SitecoreProvider componentMap={componentMap}>
           <Placeholder
             name={phKey}
             rendering={myComponent}
             renderEmpty={(comp) => <div className="wrapper">{comp}</div>}
           />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
 
       expect(renderedComponent.container.querySelectorAll('.wrapper').length).to.equal(1);
@@ -192,9 +195,9 @@ describe('<Placeholder />', () => {
         .fields.message;
 
       const renderedComponent = render(
-        <SitecoreContext componentMap={componentMap}>
+        <SitecoreProvider componentMap={componentMap}>
           <Placeholder name={phKey} rendering={component} />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
 
       expect(
@@ -222,13 +225,13 @@ describe('<Placeholder />', () => {
       };
 
       const renderedComponent = render(
-        <SitecoreContext componentMap={componentMap}>
+        <SitecoreProvider componentMap={componentMap}>
           <Placeholder
             name={phKey}
             rendering={component}
             modifyComponentProps={modifyComponentProps}
           />
-        </SitecoreContext>
+        </SitecoreProvider>
       );
 
       expect(
@@ -251,9 +254,9 @@ describe('SXA rendering variants', () => {
     const phKey = 'main';
 
     const renderedComponent = render(
-      <SitecoreContext componentMap={componentMap}>
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(renderedComponent.container.querySelectorAll('.rendering-variant').length).to.equal(1);
@@ -277,9 +280,9 @@ describe('SXA rendering variants', () => {
     const phKey = 'container-1';
 
     const renderedComponent = render(
-      <SitecoreContext componentMap={componentMap}>
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(renderedComponent.container.querySelectorAll('.rendering-variant').length).to.equal(1);
@@ -299,9 +302,9 @@ describe('SXA rendering variants', () => {
     const phKey = 'richText';
 
     const renderedComponent = render(
-      <SitecoreContext componentMap={componentMap}>
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(renderedComponent.container.querySelectorAll('.rendering-variant').length).to.equal(0);
@@ -313,9 +316,9 @@ describe('SXA rendering variants', () => {
     const phKey = 'dynamic-1-{*}';
 
     const renderedComponent = render(
-      <SitecoreContext componentMap={componentMap}>
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(renderedComponent.container.querySelectorAll('.rendering-variant').length).to.equal(1);
@@ -335,9 +338,9 @@ describe('SXA rendering variants', () => {
     const phKey = 'main-second';
 
     const renderedComponent = render(
-      <SitecoreContext componentMap={componentMap}>
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(renderedComponent.container.querySelectorAll('.rendering-variant').length).to.equal(1);
@@ -354,9 +357,9 @@ describe('SXA rendering variants', () => {
     const phKey = 'column-1-{*}';
 
     const renderedComponent = render(
-      <SitecoreContext componentMap={componentMap}>
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(renderedComponent.container.querySelectorAll('.rendering-variant').length).to.equal(1);
@@ -390,13 +393,51 @@ describe('BYOC fallback', () => {
     ));
 
     const renderedComponent = render(
-      <SitecoreContext componentMap={componentMap}>
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(renderedComponent.container.querySelectorAll('.byoc-component').length).to.equal(2);
     expect(renderedComponent.container.querySelectorAll('.byoc-wrapper').length).to.equal(1);
+
+    byocComponentStub.restore();
+    byocWrapperStub.restore();
+  });
+
+  it('should render ErrorBoundary without Suspense for byoc wrapper', () => {
+    const component = byocWrapperData.sitecore.route as RouteData;
+    const phKey = 'main';
+
+    byocComponentStub = stub(BYOCComponent, 'BYOCComponent').callsFake(() => (
+      <p className="byoc-component">Foo</p>
+    ));
+
+    byocWrapperStub = stub(BYOCWrapper, 'BYOCWrapper').callsFake(() => (
+      <div className="byoc-wrapper">
+        <BYOCComponent.BYOCComponent />
+      </div>
+    ));
+
+    const errorBoundarySpy = spy(ErrorBoundary, 'default');
+
+    const renderedComponent = render(
+      <SitecoreProvider componentMap={componentMap}>
+        <Placeholder name={phKey} rendering={component} />
+      </SitecoreProvider>
+    );
+
+    expect(errorBoundarySpy.calledWithMatch({ isDynamic: true })).to.be.true;
+    expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
+
+    expect(renderedComponent.container.querySelectorAll('.byoc-wrapper').length).to.equal(1);
+
+    const components = renderedComponent.container.querySelectorAll('.byoc-component');
+
+    expect(components.length).to.equal(2);
+
+    expect(components[0].textContent).to.equal('Foo');
+    expect(components[1].textContent).to.equal('Foo');
 
     byocComponentStub.restore();
     byocWrapperStub.restore();
@@ -424,9 +465,9 @@ describe('FEaaS fallback', () => {
     ));
 
     const renderedComponent = render(
-      <SitecoreContext componentMap={componentMap}>
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={component} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(renderedComponent.container.querySelectorAll('.feaas-component').length).to.equal(2);
@@ -435,6 +476,36 @@ describe('FEaaS fallback', () => {
     feaasComponentStub.restore();
     feaasWrapperStub.restore();
   });
+});
+
+it('should render Suspense when disableSuspense is false', async () => {
+  const component = normalModeDevData.sitecore.route as RouteData;
+  const phKey = 'main';
+
+  const renderedComponent = render(
+    <SitecoreProvider componentMap={componentMap}>
+      <Placeholder name={phKey} disableSuspense={false} rendering={component} />
+    </SitecoreProvider>
+  );
+
+  expect(renderedComponent.container.innerHTML).to.contain('Loading component...');
+
+  await findByText(renderedComponent.container, 'No error');
+});
+
+it('should not render Suspense when disableSuspense is true', async () => {
+  const component = normalModeDevData.sitecore.route as RouteData;
+  const phKey = 'main';
+
+  const renderedComponent = render(
+    <SitecoreProvider componentMap={componentMap}>
+      <Placeholder name={phKey} disableSuspense={true} rendering={component} />
+    </SitecoreProvider>
+  );
+
+  expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
+
+  await findByText(renderedComponent.container, 'No error');
 });
 
 it('should render null for unknown placeholder', () => {
@@ -450,9 +521,9 @@ it('should render null for unknown placeholder', () => {
   const phKey = 'unknown';
 
   const renderedComponent = render(
-    <SitecoreContext componentMap={componentMap}>
+    <SitecoreProvider componentMap={componentMap}>
       <Placeholder name={phKey} rendering={route} />
-    </SitecoreContext>
+    </SitecoreProvider>
   );
   expect(renderedComponent?.container.innerHTML).to.be.empty;
 });
@@ -483,13 +554,13 @@ it('should render error message on error', () => {
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreContext componentMap={components}>
+    <SitecoreProvider componentMap={components}>
       <Placeholder name={phKey} rendering={route} />
-    </SitecoreContext>
+    </SitecoreProvider>
   );
-  expect(renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length).to.equal(
-    1
-  );
+  expect(
+    renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+  ).to.equal(1);
 });
 
 it('should render error message on error, only for the errored component', () => {
@@ -524,9 +595,9 @@ it('should render error message on error, only for the errored component', () =>
   const renderedComponent = render(
     <Placeholder name={phKey} rendering={route} componentMap={components} />
   );
-  expect(renderedComponent.container.querySelectorAll('.sc-jss-placeholder-error').length).to.equal(
-    1
-  );
+  expect(
+    renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+  ).to.equal(1);
   expect(renderedComponent.container.querySelectorAll('div.foo-class').length).to.equal(1);
 });
 
@@ -535,9 +606,9 @@ it('should render custom errorComponent on error, if provided', () => {
 
   const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
     <div className="home-mock">
-      <SitecoreContext componentMap={componentMap}>
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name="main" rendering={rendering} />
-      </SitecoreContext>
+      </SitecoreProvider>
     </div>
   );
 
@@ -560,9 +631,9 @@ it('should render custom errorComponent on error, if provided', () => {
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreContext componentMap={components}>
+    <SitecoreProvider componentMap={components}>
       <Placeholder name={phKey} rendering={route} errorComponent={CustomError} />
-    </SitecoreContext>
+    </SitecoreProvider>
   );
   expect(renderedComponent.container.querySelectorAll('.custom-error').length).to.equal(1);
 });
@@ -586,13 +657,13 @@ it('should render MissingComponent for unknown rendering', () => {
   );
 
   const renderedComponent = render(
-    <SitecoreContext componentMap={componentMap}>
+    <SitecoreProvider componentMap={componentMap}>
       <Placeholder
         name={phKey}
         rendering={route}
         missingComponentComponent={CustomMissingComponent}
       />
-    </SitecoreContext>
+    </SitecoreProvider>
   );
   expect(renderedComponent.container.querySelectorAll('.missing-component').length).to.equal(1);
 });
@@ -620,9 +691,9 @@ it('should render nothing for rendering without a name', () => {
 
   const renderedComponent = render(
     <div className="empty-test">
-      <SitecoreContext componentMap={componentMap}>
+      <SitecoreProvider componentMap={componentMap}>
         <Placeholder name={phKey} rendering={route} />
-      </SitecoreContext>
+      </SitecoreProvider>
     </div>
   );
   expect(renderedComponent.container.children.length).to.equal(1);
@@ -641,9 +712,9 @@ it('should render HiddenRendering when rendering is hidden', () => {
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreContext componentMap={componentMap}>
+    <SitecoreProvider componentMap={componentMap}>
       <Placeholder name={phKey} rendering={route} />
-    </SitecoreContext>
+    </SitecoreProvider>
   );
   expect(renderedComponent.getAllByText('The component is hidden').length).to.equal(1);
 });
@@ -670,13 +741,13 @@ it('should render custom HiddenRendering when rendering is hidden', () => {
   );
 
   const renderedComponent = render(
-    <SitecoreContext componentMap={componentMap}>
+    <SitecoreProvider componentMap={componentMap}>
       <Placeholder
         name={phKey}
         rendering={route}
         hiddenRenderingComponent={CustomHiddenRendering}
       />
-    </SitecoreContext>
+    </SitecoreProvider>
   );
   expect(renderedComponent.container.querySelectorAll('.hidden-rendering').length).to.equal(1);
   expect(
@@ -705,9 +776,9 @@ describe('PlaceholderMetadata', () => {
 
   it('should render <PlaceholderMetadata> with nested placeholder components', () => {
     const wrapper = render(
-      <SitecoreContext componentMap={componentMap} layoutData={layoutData}>
+      <SitecoreProvider componentMap={componentMap} layoutData={layoutData}>
         <Placeholder name="main" rendering={layoutData.sitecore.route} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -732,9 +803,9 @@ describe('PlaceholderMetadata', () => {
 
   it('should render code blocks even if placeholder is empty', () => {
     const wrapper = render(
-      <SitecoreContext componentMap={componentMap} layoutData={layoutDataWithEmptyPlaceholder}>
+      <SitecoreProvider componentMap={componentMap} layoutData={layoutDataWithEmptyPlaceholder}>
         <Placeholder name="main" rendering={layoutDataWithEmptyPlaceholder.sitecore.route} />
-      </SitecoreContext>,
+      </SitecoreProvider>,
       { container: document.body }
     );
 
@@ -750,16 +821,16 @@ describe('PlaceholderMetadata', () => {
 
   it('should render missing component with code blocks if component is not registered', () => {
     const wrapper = render(
-      <SitecoreContext componentMap={componentMap} layoutData={layoutDataWithUnknownComponent}>
+      <SitecoreProvider componentMap={componentMap} layoutData={layoutDataWithUnknownComponent}>
         <Placeholder name="main" rendering={layoutDataWithUnknownComponent.sitecore.route} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(wrapper?.container.innerHTML).to.equal(
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
         '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123"></code>',
-        '<div style="background: darkorange; outline: 5px solid orange; padding: 10px; color: white; max-width: 500px;"><h2>Unknown</h2><p>JSS component is missing React implementation. See the developer console for more information.</p></div>',
+        '<div style="background: darkorange; outline: 5px solid orange; padding: 10px; color: white; max-width: 500px;"><h2>Unknown</h2><p>Content SDK component is missing React implementation. See the developer console for more information.</p></div>',
         '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
       ].join('')
@@ -770,9 +841,9 @@ describe('PlaceholderMetadata', () => {
     const phKey = 'container-1';
     const layoutData = layoutDataForNestedDynamicPlaceholder('container-{*}');
     const wrapper = render(
-      <SitecoreContext componentMap={componentMap} layoutData={layoutData}>
+      <SitecoreProvider componentMap={componentMap} layoutData={layoutData}>
         <Placeholder name={phKey} rendering={layoutData.sitecore.route} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(wrapper?.container.innerHTML).to.equal(
@@ -797,9 +868,9 @@ describe('PlaceholderMetadata', () => {
     const phKey = 'container-1-2';
     const layoutData = layoutDataForNestedDynamicPlaceholder('container-1-{*}');
     const wrapper = render(
-      <SitecoreContext componentMap={componentMap} layoutData={layoutData}>
+      <SitecoreProvider componentMap={componentMap} layoutData={layoutData}>
         <Placeholder name={phKey} rendering={layoutData.sitecore.route} />
-      </SitecoreContext>
+      </SitecoreProvider>
     );
 
     expect(wrapper?.container.innerHTML).to.equal(
