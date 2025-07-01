@@ -25,7 +25,7 @@ const defaultQuery = /* GraphQL */ `
   }
 `;
 
-export interface GraphQLErrorPagesServiceConfig extends GraphQLServiceConfig {
+export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
   /**
    * The language
    */
@@ -57,14 +57,14 @@ type ErrorPagesQueryResult = {
 /**
  * Service that fetch the error pages data using Sitecore's GraphQL API.
  */
-export class GraphQLErrorPagesService {
+export class ErrorPagesService {
   private graphQLClient: GraphQLClient;
 
   /**
    * Creates an instance of graphQL error pages service with the provided options
-   * @param {GraphQLErrorPagesServiceConfig} options instance
+   * @param {ErrorPagesServiceConfig} options instance
    */
-  constructor(public options: GraphQLErrorPagesServiceConfig) {
+  constructor(public options: ErrorPagesServiceConfig) {
     this.graphQLClient = this.getGraphQLClient();
   }
 

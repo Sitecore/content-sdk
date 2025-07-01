@@ -1,15 +1,15 @@
 import {
   DesignLibraryRenderPreviewData,
   EditingPreviewData,
-  GraphQLEditingService,
-  RestComponentLayoutService,
+  EditingService,
+  ComponentLayoutService,
 } from '../editing';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
-import { DictionaryPhrases, GraphQLDictionaryService } from '../i18n';
+import { DictionaryPhrases, DictionaryService } from '../i18n';
 import {
   getDesignLibraryStylesheetLinks,
   getContentStylesheetLink,
-  GraphQLLayoutService,
+  LayoutService,
   LayoutServiceData,
   RouteOptions,
 } from '../layout';
@@ -20,14 +20,14 @@ import {
   ErrorPages,
   SiteInfo,
   SiteResolver,
-  GraphQLErrorPagesService,
-  GraphQLSitePathService,
-  GraphQLSitemapXmlService,
+  ErrorPagesService,
+  SitePathService,
+  SitemapXmlService,
 } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { NativeDataFetcher } from '../native-fetcher';
-import { GraphQLRobotsService } from '../site/graphql-robots-service';
+import { RobotsService } from '../site/robots-service';
 
 /**
  * Represent a Page model returned from Edge endpoint
@@ -181,14 +181,14 @@ export interface BaseServiceOptions {
  * Use it to retrieve pages, preview data, dictionary and other data
  */
 export class SitecoreClient implements BaseSitecoreClient {
-  protected layoutService: GraphQLLayoutService;
-  protected dictionaryService: GraphQLDictionaryService;
+  protected layoutService: LayoutService;
+  protected dictionaryService: DictionaryService;
   protected siteResolver: SiteResolver;
-  protected editingService: GraphQLEditingService;
+  protected editingService: EditingService;
   protected clientFactory: GraphQLRequestClientFactory;
-  protected errorPagesService: GraphQLErrorPagesService;
-  protected componentService: RestComponentLayoutService;
-  protected sitePathService: GraphQLSitePathService;
+  protected errorPagesService: ErrorPagesService;
+  protected componentService: ComponentLayoutService;
+  protected sitePathService: SitePathService;
 
   /**
    * Init SitecoreClient
@@ -532,15 +532,15 @@ export class SitecoreClient implements BaseSitecoreClient {
    * Subclasses can override these to provide custom implementations.
    */
 
-  protected getGraphqlSitemapXMLService(siteName: string): GraphQLSitemapXmlService {
-    return new GraphQLSitemapXmlService({
+  protected getGraphqlSitemapXMLService(siteName: string): SitemapXmlService {
+    return new SitemapXmlService({
       clientFactory: this.clientFactory,
       siteName,
     });
   }
 
-  protected getRobotsService(siteName: string): GraphQLRobotsService {
-    return new GraphQLRobotsService({
+  protected getRobotsService(siteName: string): RobotsService {
+    return new RobotsService({
       clientFactory: this.clientFactory,
       siteName,
     });
@@ -567,39 +567,39 @@ export class SitecoreClient implements BaseSitecoreClient {
     return new SiteResolver(this.initOptions.sites);
   }
 
-  private getLayoutService(baseOptions: BaseServiceOptions): GraphQLLayoutService {
-    return new GraphQLLayoutService({
+  private getLayoutService(baseOptions: BaseServiceOptions): LayoutService {
+    return new LayoutService({
       ...baseOptions,
       formatLayoutQuery: this.initOptions.layout.formatLayoutQuery,
     });
   }
 
-  private getDictionaryService(baseOptions: BaseServiceOptions): GraphQLDictionaryService {
-    return new GraphQLDictionaryService({
+  private getDictionaryService(baseOptions: BaseServiceOptions): DictionaryService {
+    return new DictionaryService({
       ...baseOptions,
       cacheEnabled: this.initOptions.dictionary.caching.enabled,
       cacheTimeout: this.initOptions.dictionary.caching.timeout,
     });
   }
 
-  private getEditingService(): GraphQLEditingService {
-    return new GraphQLEditingService({ clientFactory: this.clientFactory });
+  private getEditingService(): EditingService {
+    return new EditingService({ clientFactory: this.clientFactory });
   }
 
-  private getErrorPagesService(): GraphQLErrorPagesService {
-    return new GraphQLErrorPagesService({
+  private getErrorPagesService(): ErrorPagesService {
+    return new ErrorPagesService({
       ...this.initOptions,
       language: this.initOptions.defaultLanguage,
       clientFactory: this.clientFactory,
     });
   }
 
-  private getComponentService(): RestComponentLayoutService {
-    return new RestComponentLayoutService(this.initOptions.api.edge);
+  private getComponentService(): ComponentLayoutService {
+    return new ComponentLayoutService(this.initOptions.api.edge);
   }
 
-  private getSitePathService(): GraphQLSitePathService {
-    return new GraphQLSitePathService({
+  private getSitePathService(): SitePathService {
+    return new SitePathService({
       clientFactory: this.clientFactory,
       sites: this.siteResolver.sites,
     });

@@ -1,25 +1,25 @@
 ﻿import { expect } from 'chai';
 import nock from 'nock';
 import {
-  GraphQLSitePathService,
-  GraphQLSitePathServiceConfig,
+  SitePathService,
+  SitePathServiceConfig,
   getSiteEmptyError,
   languageError,
-} from './graphql-sitepath-service';
+} from './sitepath-service';
 import sitemapDefaultQueryResult from '../test-data/sitemapDefaultQueryResult.json';
 import sitemapPersonalizeQueryResult from '../test-data/sitemapPersonalizeQueryResult.json';
 import sitemapServiceMultisiteResult from '../test-data/sitemapServiceMultisiteResult';
 import { GraphQLClient, GraphQLRequestClient } from '../client';
 
-class TestService extends GraphQLSitePathService {
+class TestService extends SitePathService {
   public client: GraphQLClient;
-  constructor(options: GraphQLSitePathServiceConfig) {
+  constructor(options: SitePathServiceConfig) {
     super(options);
     this.client = this.getGraphQLClient();
   }
 }
 
-describe('GraphQLSitePathService', () => {
+describe('SitePathService', () => {
   const endpoint = 'http://site';
   const apiKey = 'some-api-key';
   const defaultSiteDeets = { hostName: 'tes.com', language: 'en' };
@@ -61,7 +61,7 @@ describe('GraphQLSitePathService', () => {
     it('should work when 1 language is requested', async () => {
       mockPathsRequest();
 
-      const service = new GraphQLSitePathService({ clientFactory, sites });
+      const service = new SitePathService({ clientFactory, sites });
       const sitemap = await service.fetchSiteRoutes(['ua']);
       expect(sitemap).to.deep.equal(sitemapServiceMultisiteResult);
 
@@ -127,7 +127,7 @@ describe('GraphQLSitePathService', () => {
           },
         });
 
-      const service = new GraphQLSitePathService({
+      const service = new SitePathService({
         clientFactory,
         sites,
         includedPaths,
@@ -214,7 +214,7 @@ describe('GraphQLSitePathService', () => {
           },
         });
 
-      const service = new GraphQLSitePathService({
+      const service = new SitePathService({
         clientFactory,
         sites: multipleSites,
       });
@@ -306,7 +306,7 @@ describe('GraphQLSitePathService', () => {
           },
         });
 
-      const service = new GraphQLSitePathService({
+      const service = new SitePathService({
         clientFactory,
         sites: multipleSites,
         includePersonalizedRoutes: true,
@@ -448,7 +448,7 @@ describe('GraphQLSitePathService', () => {
           },
         });
 
-      const service = new GraphQLSitePathService({ clientFactory, sites });
+      const service = new SitePathService({ clientFactory, sites });
       const sitemap = await service.fetchSiteRoutes([lang1, lang2]);
 
       expect(sitemap).to.deep.equal([
@@ -537,7 +537,7 @@ describe('GraphQLSitePathService', () => {
           },
         });
 
-      const service = new GraphQLSitePathService({ clientFactory, sites });
+      const service = new SitePathService({ clientFactory, sites });
       const sitemap = await service.fetchSiteRoutes([lang]);
 
       expect(sitemap).to.deep.equal([
@@ -559,14 +559,14 @@ describe('GraphQLSitePathService', () => {
     });
 
     it('should throw error if valid language is not provided', async () => {
-      const service = new GraphQLSitePathService({ clientFactory, sites });
+      const service = new SitePathService({ clientFactory, sites });
       await service.fetchSiteRoutes([]).catch((error: RangeError) => {
         expect(error.message).to.equal(languageError);
       });
     });
 
     it('should throw error if query returns nothing for a provided site name', async () => {
-      const service = new GraphQLSitePathService({ clientFactory, sites });
+      const service = new SitePathService({ clientFactory, sites });
       nock(endpoint)
         .post('/', (body) => {
           return body.variables.siteName === sites[0].name;
@@ -590,7 +590,7 @@ describe('GraphQLSitePathService', () => {
         .post('/', (body) => body.variables.pageSize === customPageSize)
         .reply(200, sitemapDefaultQueryResult);
 
-      const service = new GraphQLSitePathService({
+      const service = new SitePathService({
         clientFactory,
         sites,
         pageSize: customPageSize,
@@ -610,7 +610,7 @@ describe('GraphQLSitePathService', () => {
         )
         .reply(200, sitemapDefaultQueryResult);
 
-      const service = new GraphQLSitePathService({
+      const service = new SitePathService({
         clientFactory,
         sites,
         pageSize: undefined,
@@ -624,7 +624,7 @@ describe('GraphQLSitePathService', () => {
     it('should work if sitemap has 0 pages', async () => {
       mockPathsRequest([]);
 
-      const service = new GraphQLSitePathService({ clientFactory, sites });
+      const service = new SitePathService({ clientFactory, sites });
       const sitemap = await service.fetchSiteRoutes(['ua']);
       expect(sitemap).to.deep.equal([]);
       return expect(nock.isDone()).to.be.true;
@@ -635,7 +635,7 @@ describe('GraphQLSitePathService', () => {
         .post('/', /DefaultSitemapQuery/gi)
         .reply(500, 'Error 😥');
 
-      const service = new GraphQLSitePathService({ clientFactory, sites });
+      const service = new SitePathService({ clientFactory, sites });
       await service.fetchSiteRoutes(['ua']).catch((error: RangeError) => {
         expect(error.message).to.contain('SitemapQuery');
         expect(error.message).to.contain('Error 😥');

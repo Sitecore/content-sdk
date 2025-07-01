@@ -45,9 +45,9 @@ export interface ComponentLayoutRequestParams {
 }
 
 /**
- * Config for the RestComponentLayoutService
+ * Config for the ComponentLayoutService
  */
-export interface RestComponentLayoutServiceConfig {
+export interface ComponentLayoutServiceConfig {
   /**
    * A unified identifier used to connect and retrieve data from XM Cloud instance
    */
@@ -63,8 +63,8 @@ export interface RestComponentLayoutServiceConfig {
  * REST service that enables design Library functionality
  * Returns layoutData for one single rendered component
  */
-export class RestComponentLayoutService {
-  constructor(private config: RestComponentLayoutServiceConfig) {}
+export class ComponentLayoutService {
+  constructor(private config: ComponentLayoutServiceConfig) {}
 
   fetchComponentData(params: ComponentLayoutRequestParams): Promise<LayoutServiceData> {
     const config: NativeDataFetcherConfig = { debugger: debug.layout };

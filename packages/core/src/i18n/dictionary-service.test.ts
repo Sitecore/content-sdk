@@ -3,19 +3,19 @@ import { expect } from 'chai';
 import sinon, { SinonSpy } from 'sinon';
 import nock from 'nock';
 import { GraphQLClient, GraphQLRequestClient } from '../graphql-request-client';
-import { GraphQLDictionaryServiceConfig } from './graphql-dictionary-service';
-import { GraphQLDictionaryService } from '.';
+import { DictionaryServiceConfig } from './dictionary-service';
+import { DictionaryService } from '.';
 import dictionarySiteQueryResponse from '../test-data/mockDictionarySiteQueryResponse.json';
 
-class TestService extends GraphQLDictionaryService {
+class TestService extends DictionaryService {
   public client: GraphQLClient;
-  constructor(options: GraphQLDictionaryServiceConfig) {
+  constructor(options: DictionaryServiceConfig) {
     super(options);
     this.client = this.getGraphQLClient();
   }
 }
 
-describe('GraphQLDictionaryService', () => {
+describe('DictionaryService', () => {
   const endpoint = 'http://site';
   const defaultSite = 'site-name';
   const apiKey = 'api-key';
@@ -34,7 +34,7 @@ describe('GraphQLDictionaryService', () => {
       .post('/', /DictionarySiteQuery/gi)
       .reply(200, dictionarySiteQueryResponse.singlepage);
 
-    const service = new GraphQLDictionaryService({
+    const service = new DictionaryService({
       clientFactory,
       cacheEnabled: true,
       cacheTimeout: 2,
@@ -75,7 +75,7 @@ describe('GraphQLDictionaryService', () => {
       },
     };
 
-    new GraphQLDictionaryService(mockServiceConfig);
+    new DictionaryService(mockServiceConfig);
 
     expect(clientFactorySpy.calledOnce).to.be.true;
 
@@ -90,7 +90,7 @@ describe('GraphQLDictionaryService', () => {
       .post('/')
       .reply(200, dictionarySiteQueryResponse.singlepage);
 
-    const service = new GraphQLDictionaryService({
+    const service = new DictionaryService({
       cacheEnabled: false,
       clientFactory,
     });
@@ -109,7 +109,7 @@ describe('GraphQLDictionaryService', () => {
       )
       .reply(200, dictionarySiteQueryResponse.singlepage);
 
-    const service = new GraphQLDictionaryService({
+    const service = new DictionaryService({
       clientFactory,
       cacheEnabled: false,
       pageSize: undefined,
@@ -130,7 +130,7 @@ describe('GraphQLDictionaryService', () => {
       )
       .reply(200, dictionarySiteQueryResponse.multipage.page2);
 
-    const service = new GraphQLDictionaryService({
+    const service = new DictionaryService({
       clientFactory,
       cacheEnabled: false,
       pageSize: customPageSize,
@@ -146,7 +146,7 @@ describe('GraphQLDictionaryService', () => {
         error: 'whoops',
       });
 
-    const service = new GraphQLDictionaryService({
+    const service = new DictionaryService({
       clientFactory,
       cacheEnabled: false,
     });
@@ -168,7 +168,7 @@ describe('GraphQLDictionaryService', () => {
         },
       });
 
-    const service = new GraphQLDictionaryService({
+    const service = new DictionaryService({
       clientFactory,
       cacheEnabled: false,
     });
@@ -178,7 +178,7 @@ describe('GraphQLDictionaryService', () => {
   });
 
   it('should throw error if siteName is not provided', async () => {
-    const service = new GraphQLDictionaryService({
+    const service = new DictionaryService({
       clientFactory,
       cacheEnabled: false,
     });
@@ -189,7 +189,7 @@ describe('GraphQLDictionaryService', () => {
   });
 
   it('should throw error if language is not provided', async () => {
-    const service = new GraphQLDictionaryService({
+    const service = new DictionaryService({
       clientFactory,
       cacheEnabled: false,
     });
@@ -232,7 +232,7 @@ describe('GraphQLDictionaryService', () => {
 
     sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
 
-    const service = new GraphQLDictionaryService({
+    const service = new DictionaryService({
       clientFactory,
       cacheEnabled: false,
     });

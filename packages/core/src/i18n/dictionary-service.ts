@@ -65,25 +65,9 @@ export interface DictionaryPhrases {
 }
 
 /**
- * Service that fetches dictionary data using Sitecore's GraphQL API.
+ * Configuration options for @see DictionaryService instances
  */
-export interface DictionaryService {
-  /**
-   * Fetch dictionary data for a language.
-   * @param {string} language the language to be used to fetch the dictionary
-   * @param {string} site site name to fetch data for.
-   */
-  fetchDictionaryData(
-    language: string,
-    site?: string,
-    fetchOptions?: FetchOptions
-  ): Promise<DictionaryPhrases>;
-}
-
-/**
- * Configuration options for @see GraphQLDictionaryService instances
- */
-export interface GraphQLDictionaryServiceConfig extends CacheOptions, GraphQLServiceConfig {
+export interface DictionaryServiceConfig extends CacheOptions, GraphQLServiceConfig {
   /**
    * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
    * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -129,14 +113,14 @@ export type DictionarySiteQueryResponse = {
  * @augments DictionaryServiceBase
  * @mixes SearchQueryService<DictionaryQueryResult>
  */
-export class GraphQLDictionaryService implements DictionaryService, CacheClient<DictionaryPhrases> {
+export class DictionaryService implements CacheClient<DictionaryPhrases> {
   private graphQLClient: GraphQLClient;
   private cache: CacheClient<DictionaryPhrases>;
   /**
    * Creates an instance of graphQL dictionary service with the provided options
-   * @param {GraphQLDictionaryService} options instance
+   * @param {DictionaryService} options instance
    */
-  constructor(public options: GraphQLDictionaryServiceConfig) {
+  constructor(public options: DictionaryServiceConfig) {
     this.cache = this.getCacheClient();
     this.graphQLClient = this.getGraphQLClient();
   }
