@@ -3,9 +3,12 @@ export {
   GenerateSitesConfig,
   generateMetadata,
   ComponentFile,
-  PackageDefinition,
+  ComponentImport,
   getComponentList,
   PluginDefinition,
   generatePlugins,
   ModuleType,
+  GenerateMapArgs,
 } from '@sitecore-content-sdk/core/tools';
+
+export { generateMap } from './generate-map';

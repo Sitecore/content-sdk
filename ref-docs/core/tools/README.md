@@ -13,11 +13,13 @@
 ## Interfaces
 
 - [ComponentFile](interfaces/ComponentFile.md)
-- [PackageDefinition](interfaces/PackageDefinition.md)
+- [ComponentImport](interfaces/ComponentImport.md)
 - [PluginDefinition](interfaces/PluginDefinition.md)
 
 ## Type Aliases
 
+- [GenerateMapArgs](type-aliases/GenerateMapArgs.md)
+- [GenerateMapFunction](type-aliases/GenerateMapFunction.md)
 - [GenerateSitesConfig](type-aliases/GenerateSitesConfig.md)
 
 ## Functions
@@ -26,4 +28,5 @@
 - [generatePlugins](functions/generatePlugins.md)
 - [generateSites](functions/generateSites.md)
 - [getComponentList](functions/getComponentList.md)
+- [matchPath](functions/matchPath.md)
 - [scaffoldComponent](functions/scaffoldComponent.md)

@@ -10,7 +10,7 @@
 
 Defined in: core/types/media/media-api.d.ts:34
 
-Prepares a Sitecore media URL with `params` for use by the JSS media handler.
+Prepares a Sitecore media URL with `params` for use by the Content SDK media handler.
 This is done by replacing `/~/media` or `/-/media` with `/~/jssmedia` or `/-/jssmedia`, respectively.
 Provided `params` are used as the querystring parameters for the media URL.
 Can use `mediaUrlPrefix` in order to use a custom prefix.

@@ -1,4 +1,5 @@
 import { RetryStrategy } from '../models';
+import { GenerateMapFunction, GenerateMapArgs } from '../tools';
 
 /**
  * Utility type to make every property in a type required
@@ -10,12 +11,19 @@ export type DeepRequired<T> = Required<
 >;
 
 /**
+ * Utility type to make all properties in a type optional, recursively.
+ */
+export type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+};
+
+/**
  * Type to be used as config input in sitecore.config
  */
 export type SitecoreConfigInput = {
   /**
    * API settings required to connect to Sitecore.
-   * Both edge and local set can be specified as JSS app will use API Key for component library
+   * Both edge and local set can be specified as Content SDK app will use API Key for component library
    */
   api?: {
     /**
@@ -69,7 +77,7 @@ export type SitecoreConfigInput = {
   defaultSite?: string;
   /**
    * Editing secret required to support Sitecore editing and preview functionality.
-   * by default set by the JSS_EDITING_SECRET environment variable
+   * by default set by the SITECORE_EDITING_SECRET environment variable
    */
   editingSecret?: string;
   /**
@@ -206,6 +214,15 @@ export type SitecoreCliConfigInput = {
      * List of scaffold templates that can be used for generating components
      */
     templates?: ScaffoldTemplate[];
+  };
+  /**
+   * Configuration for the `sitecore-tools component generate-map` cli command
+   */
+  componentMap?: GenerateMapArgs & {
+    /**
+     * Function implementationt for generating a component map.
+     */
+    generator?: GenerateMapFunction;
   };
 };
 

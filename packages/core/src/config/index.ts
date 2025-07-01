@@ -8,4 +8,3 @@ export {
   DeepRequired,
 } from './models';
 export { defineConfig } from './define-config';
-export { defineCliConfig } from './define-cli-config';

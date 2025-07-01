@@ -1,7 +1,7 @@
 ﻿import React, { ReactNode, Suspense } from 'react';
 import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
-import { withSitecoreContext } from '../enhancers/withSitecoreContext';
-import { SitecoreContextValue } from './SitecoreContext';
+import { withSitecore } from '../enhancers/withSitecore';
+import { SitecoreProviderPageContext } from './SitecoreProvider';
 
 type ErrorComponentProps = {
   [prop: string]: unknown;
@@ -9,12 +9,13 @@ type ErrorComponentProps = {
 
 export type ErrorBoundaryProps = {
   children: ReactNode;
-  sitecoreContext: SitecoreContextValue;
+  pageContext: SitecoreProviderPageContext;
   type: string;
   isDynamic?: boolean;
   errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
   rendering?: ComponentRendering;
   componentLoadingMessage?: string;
+  disableSuspense?: boolean;
 };
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
@@ -48,8 +49,8 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   showErrorDetails(): boolean {
     return (
       this.isInDevMode() ||
-      this.props.sitecoreContext?.pageState === LayoutServicePageState.Edit ||
-      this.props.sitecoreContext?.pageState === LayoutServicePageState.Preview
+      this.props.pageContext?.pageState === LayoutServicePageState.Edit ||
+      this.props.pageContext?.pageState === LayoutServicePageState.Preview
     );
   }
 
@@ -61,7 +62,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
         if (this.showErrorDetails()) {
           return (
             <div>
-              <div className="sc-jss-placeholder-error">
+              <div className="sc-content-sdk-placeholder-error">
                 A rendering error occurred in component{' '}
                 <em>{this.props.rendering?.componentName}</em>
                 <br />
@@ -72,15 +73,15 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
         } else {
           return (
             <div>
-              <div className="sc-jss-placeholder-error">{this.defaultErrorMessage}</div>
+              <div className="sc-content-sdk-placeholder-error">{this.defaultErrorMessage}</div>
             </div>
           );
         }
       }
     }
 
-    // do not apply suspense on already dynamic components
-    if (this.props.isDynamic) {
+    // do not apply suspense when suspense is disabled or when on already dynamic components
+    if (this.props.disableSuspense || this.props.isDynamic) {
       return this.props.children;
     }
 
@@ -94,4 +95,4 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
 }
 
-export default withSitecoreContext()(ErrorBoundary);
+export default withSitecore()(ErrorBoundary);

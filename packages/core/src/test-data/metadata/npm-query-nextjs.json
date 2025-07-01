@@ -116,7 +116,7 @@
   {
     "name": "@sitecore-content-sdk/cli",
     "version": "22.2.0-canary.69",
-    "description": "Sitecore JSS command-line",
+    "description": "Sitecore Content SDK command-line",
     "main": "dist/cjs/cli.js",
     "module": "dist/esm/cli.js",
     "sideEffects": false,
@@ -224,7 +224,7 @@
   {
     "name": "@sitecore-content-sdk/nextjs",
     "version": "22.2.0-canary.69",
-    "description": "Utilities to assist in the development and deployment of Sitecore JSS apps.",
+    "description": "Utilities to assist in the development and deployment of Sitecore Content SDK apps.",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
     "sideEffects": false,

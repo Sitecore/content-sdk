@@ -38,10 +38,10 @@ export const handleEditorFastRefresh = (forceReload = false): void => {
   };
 };
 
-export const getJssEditingSecret = (): string => {
-  const secret = process.env.JSS_EDITING_SECRET;
+export const getEditingSecret = (): string => {
+  const secret = process.env.SITECORE_EDITING_SECRET;
   if (!secret || secret.length === 0) {
-    throw new Error('The JSS_EDITING_SECRET environment variable is missing or invalid.');
+    throw new Error('The SITECORE_EDITING_SECRET environment variable is missing or invalid.');
   }
   return secret;
 };
@@ -52,4 +52,14 @@ export const extractPath = (context: GetStaticPropsContext | GetServerSidePropsC
     : Array.isArray(context.params.path)
     ? context.params.path.join('/')
     : context.params.path ?? '/';
+};
+
+/**
+ * Determines whether context is GetServerSidePropsContext (SSR) or GetStaticPropsContext (SSG)
+ * @param {GetServerSidePropsContext | GetStaticPropsContext} context
+ */
+export const isServerSidePropsContext = (
+  context: GetServerSidePropsContext | GetStaticPropsContext
+): context is GetServerSidePropsContext => {
+  return (<GetServerSidePropsContext>context).req !== undefined;
 };

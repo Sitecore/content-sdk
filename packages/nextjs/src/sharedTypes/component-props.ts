@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import { ComponentRendering, LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import { ReactJssComponent } from '@sitecore-content-sdk/react';
+import { ReactContentSdkComponent } from '@sitecore-content-sdk/react';
 
 export type ComponentPropsError = { error: string; componentName: string };
 
@@ -11,39 +11,42 @@ export type ComponentPropsCollection = {
   [componentUid: string]: unknown | ComponentPropsError;
 };
 
+export type NextContext = GetServerSidePropsContext | GetStaticPropsContext;
+
 /**
- * Type of side effect function which could be invoked on component level (getStaticProps/getServerSideProps)
+ * Type of side effect function which could be invoked on component level (getComponentServerProps)
  */
-export type ComponentPropsFetchFunction<NextContext, FetchedProps = unknown> = {
+export type ComponentPropsFetchFunction<FetchedProps = unknown> = {
   (rendering: ComponentRendering, layoutData: LayoutServiceData, context: NextContext): Promise<
     FetchedProps
   >;
 };
 
 /**
- * Shape of getServerSideProps function on component level
+ * Defines the shape of a data-fetching function used at the component level.
+ *
+ * This function can be used in both **Server-Side Rendering (SSR)** and **Static Site Generation (SSG)** contexts.
+ * It enables component-specific data loading that integrates with Next.js rendering flows.
+ *
+ * The returned props are passed directly to the component at render time.
  */
-export type GetServerSideComponentProps = ComponentPropsFetchFunction<GetServerSidePropsContext>;
-
-/**
- * Shape of getStaticProps function on component level
- */
-export type GetStaticComponentProps = ComponentPropsFetchFunction<GetStaticPropsContext>;
+export type GetComponentServerProps = ComponentPropsFetchFunction;
 
 /**
  * Represents a nextjs component import
  */
-export type NextjsJssComponent = ReactJssComponent & {
+export type NextjsContentSdkComponent = ReactContentSdkComponent & {
   /**
-   * function for component level data fetching in SSR mode
+   * Defines the shape of a data-fetching function used at the component level.
+   *
+   * This function can be used in both **Server-Side Rendering (SSR)** and **Static Site Generation (SSG)** contexts.
+   * It enables component-specific data loading that integrates with Next.js rendering flows.
+   *
+   * The returned props are passed directly to the component at render time.
    */
-  getServerSideProps?: GetServerSideComponentProps;
-  /**
-   * function for component level data fetching in SSG mode
-   */
-  getStaticProps?: GetStaticComponentProps;
+  getComponentServerProps?: GetComponentServerProps;
   /**
    * Optional dynamic import for lazy components - allows component props retrieval
    */
-  dynamicModule?: () => Promise<ReactJssComponent>;
+  dynamicModule?: () => Promise<ReactContentSdkComponent>;
 };

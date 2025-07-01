@@ -5,7 +5,7 @@ export {
   isEditorActive,
   resetEditorChromes,
   Metadata,
-  getJssPagesClientData,
+  getContentSdkPagesClientData,
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   PAGES_EDITING_MARKER,
@@ -22,6 +22,7 @@ export {
   MetadataKind,
   EditingPreviewData,
   DesignLibraryRenderPreviewData,
+  DesignLibraryMode,
 } from './models';
 export {
   addComponentUpdateHandler,
@@ -29,4 +30,5 @@ export {
   DesignLibraryStatusEvent,
   getDesignLibraryStatusEvent,
   getDesignLibraryScriptLink,
+  isDesignLibraryMode,
 } from './design-library';

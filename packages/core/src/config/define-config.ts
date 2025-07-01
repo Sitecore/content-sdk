@@ -1,6 +1,6 @@
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { DefaultRetryStrategy } from '../retries';
-import { SitecoreConfig, SitecoreConfigInput } from './models';
+import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 
 /**
  * Provides default initial values for SitecoreConfig
@@ -19,7 +19,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       path: '/sitecore/api/graph/edge',
     },
   },
-  editingSecret: process.env.JSS_EDITING_SECRET || 'editing-secret-missing',
+  editingSecret: process.env.SITECORE_EDITING_SECRET || 'editing-secret-missing',
   retries: {
     count: 3,
     retryStrategy: new DefaultRetryStrategy({
@@ -56,26 +56,51 @@ export const getFallbackConfig = (): SitecoreConfig => ({
 });
 
 /**
- * Merges two SitecoreConfig objects
+ * Deep merge utility that skips undefined or empty string values in the override.
+ * @param {T} base base value
+ * @param {DeepPartial<T>} [override] override value
+ */
+export function deepMerge<T>(base: T, override?: DeepPartial<T>): T {
+  if (!override) return base;
+
+  const result: T = { ...base };
+
+  for (const key in override) {
+    if (!Object.prototype.hasOwnProperty.call(override, key)) continue;
+
+    const typedKey = key as keyof T;
+    const baseValue = base[typedKey];
+    const overrideValue = override[typedKey];
+
+    // Skip undefined and empty string overrides
+    if (overrideValue === undefined || overrideValue === '') {
+      continue;
+    }
+
+    if (
+      typeof overrideValue === 'object' &&
+      overrideValue !== null &&
+      !Array.isArray(overrideValue) &&
+      Object.getPrototypeOf(overrideValue) === Object.prototype
+    ) {
+      result[typedKey] = deepMerge(baseValue, overrideValue);
+    } else {
+      result[typedKey] = overrideValue as T[typeof typedKey];
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Resolves sitecore config based on base config and overrides
  * @param {SitecoreConfig} base base sitecore config object
  * @param {SitecoreConfig} override override sitecore config object
- * @returns merged SitecoreConfig object
+ * @returns resolved SitecoreConfig object
  */
-const deepMerge = (base: SitecoreConfig, override: SitecoreConfigInput) => {
-  const result = {
-    ...base,
-    ...override,
-    api: {
-      edge: { ...base.api?.edge, ...override.api?.edge },
-      local: { ...base.api?.local, ...override.api?.local },
-    },
-    retries: { ...base.retries, ...override.retries },
-    layout: { ...base.layout, ...override.layout },
-    multisite: { ...base.multisite, ...override.multisite },
-    personalize: { ...base.personalize, ...override.personalize },
-    redirects: { ...base.redirects, ...override.redirects },
-    dictionary: { ...base.dictionary, ...override.dictionary },
-  };
+const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): SitecoreConfig => {
+  const result: SitecoreConfig = deepMerge(base, override);
+
   if (Number.isNaN(result.personalize.cdpTimeout) || !result.personalize.cdpTimeout) {
     result.personalize.cdpTimeout = base.personalize.cdpTimeout;
   }
@@ -91,16 +116,29 @@ const deepMerge = (base: SitecoreConfig, override: SitecoreConfigInput) => {
 };
 
 const validateConfig = (config: SitecoreConfigInput) => {
-  if (
-    !config.api?.edge?.contextId &&
-    (!config?.api?.local?.apiHost || !config?.api?.local?.apiKey)
-  ) {
-    // consider client-side usecase
-    if (!config.api?.edge?.clientContextId) {
-      throw new Error(
-        'Configuration error: either context ID or API key and host must be specified in sitecore.config'
-      );
-    }
+  // Skip validation in browser - only validate on server side
+  if (typeof window !== 'undefined') {
+    return; // We're in the browser, skip validation
+  }
+
+  const hasEdgeContextId = !!config.api?.edge?.contextId;
+  const hasLocalApi = !!(config?.api?.local?.apiHost && config?.api?.local?.apiKey);
+  const hasClientContextId = !!config.api?.edge?.clientContextId;
+
+  // Only validate on server-side where we have access to server env vars
+  if (!hasEdgeContextId && !hasLocalApi && !hasClientContextId) {
+    throw new Error(
+      'Configuration error: at least one API configuration must be specified: ' +
+        'contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
+    );
+  }
+
+  // Warn if middleware features might not work
+  if (!hasEdgeContextId && !hasClientContextId && hasLocalApi) {
+    console.warn(
+      'Warning: Redirects and Personalization middleware require Edge API configuration. ' +
+        'Please ensure that either an Edge context ID (for server-side) or a client context ID (for client-side) is provided in your configuration'
+    );
   }
 };
 
@@ -109,7 +147,10 @@ const validateConfig = (config: SitecoreConfigInput) => {
  * @param {SitecoreConfigInput} config override values to be written over default config settings
  * @returns {SitecoreConfig} full sitecore configuration to use in application
  */
-export const defineConfig = (config: SitecoreConfigInput) => {
-  validateConfig(config);
-  return deepMerge(getFallbackConfig(), config) as SitecoreConfig;
+export const defineConfig = (config: SitecoreConfigInput): SitecoreConfig => {
+  const resolvedConfig = resolveConfig(getFallbackConfig(), config);
+
+  validateConfig(resolvedConfig);
+
+  return resolvedConfig;
 };
