@@ -10,8 +10,8 @@
 
 - [EditingConfigMiddleware](classes/EditingConfigMiddleware.md)
 - [EditingRenderMiddleware](classes/EditingRenderMiddleware.md)
+- [EditingService](classes/EditingService.md)
 - [FEAASRenderMiddleware](classes/FEAASRenderMiddleware.md)
-- [GraphQLEditingService](classes/GraphQLEditingService.md)
 
 ## Interfaces
 

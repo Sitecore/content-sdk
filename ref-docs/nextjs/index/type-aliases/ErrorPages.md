@@ -8,7 +8,7 @@
 
 > **ErrorPages** = `object`
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:19
+Defined in: core/types/site/error-pages-service.d.ts:19
 
 Object model of Error Pages result
 
@@ -18,7 +18,7 @@ Object model of Error Pages result
 
 > **notFoundPage**: `object`
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:20
+Defined in: core/types/site/error-pages-service.d.ts:20
 
 #### rendered
 
@@ -30,7 +30,7 @@ Defined in: core/types/site/graphql-error-pages-service.d.ts:20
 
 > **notFoundPagePath**: `string`
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:23
+Defined in: core/types/site/error-pages-service.d.ts:23
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: core/types/site/graphql-error-pages-service.d.ts:23
 
 > **serverErrorPage**: `object`
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:24
+Defined in: core/types/site/error-pages-service.d.ts:24
 
 #### rendered
 
@@ -50,4 +50,4 @@ Defined in: core/types/site/graphql-error-pages-service.d.ts:24
 
 > **serverErrorPagePath**: `string`
 
-Defined in: core/types/site/graphql-error-pages-service.d.ts:27
+Defined in: core/types/site/error-pages-service.d.ts:27

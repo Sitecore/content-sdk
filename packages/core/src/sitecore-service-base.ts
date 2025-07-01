@@ -22,7 +22,7 @@ export abstract class SitecoreServiceBase {
 
   /**
    * Fetch layout data using the Sitecore GraphQL endpoint.
-   * @param {GraphQLLayoutServiceConfig} serviceConfig configuration
+   * @param {GraphQLServiceConfig} serviceConfig configuration
    */
   constructor(public serviceConfig: GraphQLServiceConfig) {
     this.graphQLClient = this.getGraphQLClient();

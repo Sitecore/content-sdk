@@ -1,6 +1,6 @@
 ﻿import { NextResponse, NextRequest } from 'next/server';
 import {
-  GraphQLPersonalizeService,
+  PersonalizeService,
   getPersonalizedRewrite,
   PersonalizeInfo,
   CdpHelper,
@@ -15,7 +15,7 @@ import { SitecoreConfig } from '../config';
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['api']['edge'] &
   SitecoreConfig['personalize'] & {
-    personalizeService?: GraphQLPersonalizeService;
+    personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
   };
 
@@ -45,7 +45,7 @@ type PersonalizeExecution = {
  * Middleware / handler to support Sitecore Personalize
  */
 export class PersonalizeMiddleware extends MiddlewareBase {
-  protected personalizeService: GraphQLPersonalizeService;
+  protected personalizeService: PersonalizeService;
 
   /**
    * @param {PersonalizeMiddlewareConfig} [config] Personalize middleware config
@@ -65,7 +65,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
     this.personalizeService =
       this.config.personalizeService ??
-      new GraphQLPersonalizeService({
+      new PersonalizeService({
         clientFactory: this.getClientFactory(graphQLOptions),
         timeout: this.config.edgeTimeout,
         scope: this.config.scope,

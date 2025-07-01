@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import debug from '../debug';
 
-import { SiteInfo, GraphQLSiteInfoService } from '../site';
+import { SiteInfo, SiteInfoService } from '../site';
 import { ensurePathExists } from '../utils/ensurePath';
 import { SitecoreConfig } from '../config';
 import { createGraphQLClientFactory } from '../client';
@@ -29,7 +29,7 @@ export type GenerateSitesConfig = {
 /**
  * Generates site information and writes it to a specified destination path.
  * @param {GenerateSitesConfig} config - The configuration for generating site info.
- * @param {GraphQLSiteInfoService} config.scConfig - The Sitecore configuration used at build and run time.
+ * @param {SiteInfoService} config.scConfig - The Sitecore configuration used at build and run time.
  * @param {string} config.destinationPath - The optional path where the generated sites file will be written. Defaults to '.sitecore/sites.json'.
  * @returns {Promise<Function>} - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
  */
@@ -49,7 +49,7 @@ export const generateSites = ({
 
     if (scConfig.multisite.enabled) {
       try {
-        const siteInfoService = new GraphQLSiteInfoService({
+        const siteInfoService = new SiteInfoService({
           clientFactory: createGraphQLClientFactory({
             api: scConfig.api,
             retries: scConfig.retries.count,

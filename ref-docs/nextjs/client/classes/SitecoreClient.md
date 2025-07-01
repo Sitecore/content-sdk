@@ -6,7 +6,7 @@
 
 # Class: SitecoreClient
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:29](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/client/sitecore-nextjs-client.ts#L29)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:29](https://github.com/Sitecore/content-sdk/blob/198cc35a9c2c536ffe2051f1f9ea44a3bcdb7a77/packages/nextjs/src/client/sitecore-nextjs-client.ts#L29)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:29](https://github.com/
 
 > **new SitecoreClient**(`initOptions`): `SitecoreNextjsClient`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:31](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/client/sitecore-nextjs-client.ts#L31)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:31](https://github.com/Sitecore/content-sdk/blob/198cc35a9c2c536ffe2051f1f9ea44a3bcdb7a77/packages/nextjs/src/client/sitecore-nextjs-client.ts#L31)
 
 #### Parameters
 
@@ -52,13 +52,13 @@ Defined in: core/types/client/sitecore-client.d.ts:141
 
 > `protected` **componentPropsService**: [`ComponentPropsService`](../../index/classes/ComponentPropsService.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:30](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/client/sitecore-nextjs-client.ts#L30)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:30](https://github.com/Sitecore/content-sdk/blob/198cc35a9c2c536ffe2051f1f9ea44a3bcdb7a77/packages/nextjs/src/client/sitecore-nextjs-client.ts#L30)
 
 ***
 
 ### componentService
 
-> `protected` **componentService**: [`RestComponentLayoutService`](../../index/classes/RestComponentLayoutService.md)
+> `protected` **componentService**: [`ComponentLayoutService`](../../index/classes/ComponentLayoutService.md)
 
 Defined in: core/types/client/sitecore-client.d.ts:143
 
@@ -70,7 +70,7 @@ Defined in: core/types/client/sitecore-client.d.ts:143
 
 ### dictionaryService
 
-> `protected` **dictionaryService**: [`GraphQLDictionaryService`](../../index/classes/GraphQLDictionaryService.md)
+> `protected` **dictionaryService**: [`DictionaryService`](../../index/classes/DictionaryService.md)
 
 Defined in: core/types/client/sitecore-client.d.ts:138
 
@@ -82,7 +82,7 @@ Defined in: core/types/client/sitecore-client.d.ts:138
 
 ### editingService
 
-> `protected` **editingService**: [`GraphQLEditingService`](../../editing/classes/GraphQLEditingService.md)
+> `protected` **editingService**: [`EditingService`](../../editing/classes/EditingService.md)
 
 Defined in: core/types/client/sitecore-client.d.ts:140
 
@@ -94,7 +94,7 @@ Defined in: core/types/client/sitecore-client.d.ts:140
 
 ### errorPagesService
 
-> `protected` **errorPagesService**: [`GraphQLErrorPagesService`](../../index/classes/GraphQLErrorPagesService.md)
+> `protected` **errorPagesService**: [`ErrorPagesService`](../../index/classes/ErrorPagesService.md)
 
 Defined in: core/types/client/sitecore-client.d.ts:142
 
@@ -108,7 +108,7 @@ Defined in: core/types/client/sitecore-client.d.ts:142
 
 > `protected` **initOptions**: [`SitecoreClientInit`](../type-aliases/SitecoreClientInit.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:31](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/client/sitecore-nextjs-client.ts#L31)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:31](https://github.com/Sitecore/content-sdk/blob/198cc35a9c2c536ffe2051f1f9ea44a3bcdb7a77/packages/nextjs/src/client/sitecore-nextjs-client.ts#L31)
 
 #### Inherited from
 
@@ -118,7 +118,7 @@ Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:31](https://github.com/
 
 ### layoutService
 
-> `protected` **layoutService**: [`GraphQLLayoutService`](../../index/classes/GraphQLLayoutService.md)
+> `protected` **layoutService**: [`LayoutService`](../../index/classes/LayoutService.md)
 
 Defined in: core/types/client/sitecore-client.d.ts:137
 
@@ -130,7 +130,7 @@ Defined in: core/types/client/sitecore-client.d.ts:137
 
 ### sitePathService
 
-> `protected` **sitePathService**: [`GraphQLSitePathService`](../../index/classes/GraphQLSitePathService.md)
+> `protected` **sitePathService**: [`SitePathService`](../../index/classes/SitePathService.md)
 
 Defined in: core/types/client/sitecore-client.d.ts:144
 
@@ -172,7 +172,7 @@ Defined in: core/types/client/sitecore-client.d.ts:239
 
 > **getComponentData**(`layoutData`, `context`, `components`): `Promise`\<[`ComponentPropsCollection`](../../index/type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:108](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/client/sitecore-nextjs-client.ts#L108)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:108](https://github.com/Sitecore/content-sdk/blob/198cc35a9c2c536ffe2051f1f9ea44a3bcdb7a77/packages/nextjs/src/client/sitecore-nextjs-client.ts#L108)
 
 Parses components from nextjs component map and layoutData, executes getServerProps/getStaticProps methods
 and returns resulting props from components
@@ -197,7 +197,7 @@ component props
 
 > `protected` **getComponentPropsService**(): [`ComponentPropsService`](../../index/classes/ComponentPropsService.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:139](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/client/sitecore-nextjs-client.ts#L139)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:139](https://github.com/Sitecore/content-sdk/blob/198cc35a9c2c536ffe2051f1f9ea44a3bcdb7a77/packages/nextjs/src/client/sitecore-nextjs-client.ts#L139)
 
 #### Returns
 
@@ -288,7 +288,7 @@ A promise that resolves to the error pages or null if not found.
 
 ### getGraphqlSitemapXMLService()
 
-> `protected` **getGraphqlSitemapXMLService**(`siteName`): [`GraphQLSitemapXmlService`](../../index/classes/GraphQLSitemapXmlService.md)
+> `protected` **getGraphqlSitemapXMLService**(`siteName`): [`SitemapXmlService`](../../index/classes/SitemapXmlService.md)
 
 Defined in: core/types/client/sitecore-client.d.ts:237
 
@@ -303,7 +303,7 @@ Subclasses can override these to provide custom implementations.
 
 #### Returns
 
-[`GraphQLSitemapXmlService`](../../index/classes/GraphQLSitemapXmlService.md)
+[`SitemapXmlService`](../../index/classes/SitemapXmlService.md)
 
 #### Inherited from
 
@@ -344,7 +344,7 @@ An array of `<link>` elements for stylesheets.
 
 > **getPage**(`path`, `pageOptions`, `options?`): `Promise`\<`null` \| [`NextjsPage`](../type-aliases/NextjsPage.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:65](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/client/sitecore-nextjs-client.ts#L65)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:65](https://github.com/Sitecore/content-sdk/blob/198cc35a9c2c536ffe2051f1f9ea44a3bcdb7a77/packages/nextjs/src/client/sitecore-nextjs-client.ts#L65)
 
 Get page details for a route, with layout and other details
 
@@ -399,7 +399,7 @@ A promise that resolves to an array of static paths.
 
 > **getPreview**(`previewData`, `fetchOptions?`): `Promise`\<`null` \| [`NextjsPage`](../type-aliases/NextjsPage.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:93](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/client/sitecore-nextjs-client.ts#L93)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:93](https://github.com/Sitecore/content-sdk/blob/198cc35a9c2c536ffe2051f1f9ea44a3bcdb7a77/packages/nextjs/src/client/sitecore-nextjs-client.ts#L93)
 
 Retrieves preview page and layout details
 
@@ -450,7 +450,7 @@ or null if no content is found.
 
 ### getRobotsService()
 
-> `protected` **getRobotsService**(`siteName`): [`GraphQLRobotsService`](../../index/classes/GraphQLRobotsService.md)
+> `protected` **getRobotsService**(`siteName`): [`RobotsService`](../../index/classes/RobotsService.md)
 
 Defined in: core/types/client/sitecore-client.d.ts:238
 
@@ -462,7 +462,7 @@ Defined in: core/types/client/sitecore-client.d.ts:238
 
 #### Returns
 
-[`GraphQLRobotsService`](../../index/classes/GraphQLRobotsService.md)
+[`RobotsService`](../../index/classes/RobotsService.md)
 
 #### Inherited from
 
@@ -505,7 +505,7 @@ Throws 'REDIRECT_404' if requested sitemap is not found
 
 > **parsePath**(`path`): `string`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:60](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/client/sitecore-nextjs-client.ts#L60)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:60](https://github.com/Sitecore/content-sdk/blob/198cc35a9c2c536ffe2051f1f9ea44a3bcdb7a77/packages/nextjs/src/client/sitecore-nextjs-client.ts#L60)
 
 Normalizes a nextjs path that could have been rewritten
 
@@ -557,7 +557,7 @@ site details matching the hostname
 
 > **resolveSiteFromPath**(`path`): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:41](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/client/sitecore-nextjs-client.ts#L41)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:41](https://github.com/Sitecore/content-sdk/blob/198cc35a9c2c536ffe2051f1f9ea44a3bcdb7a77/packages/nextjs/src/client/sitecore-nextjs-client.ts#L41)
 
 Resolves site based on the provided path
 

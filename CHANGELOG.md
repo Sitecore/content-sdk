@@ -12,6 +12,44 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🛠 Breaking Changes
+
+* Refactor and simplify service names ([#133](https://github.com/Sitecore/content-sdk/pull/133)):
+
+  You will be affected by the following changes **only** if:
+  - You are referencing Content SDK services directly rather than using the `SitecoreClient` methods.
+
+  If you're using the `SitecoreClient` to access services, **no changes** are required.
+
+  Service class and config names have been refactored for clarity and consistency:
+
+  * Renamed:
+    * `RestComponentLayoutService` → `ComponentLayoutService`
+    * `RestComponentLayoutServiceConfig` → `ComponentLayoutServiceConfig`
+    * `GraphQLEditingService` → `EditingService`
+    * `GraphQLEditingServiceConfig` → `EditingServiceConfig`
+    * `GraphQLDictionaryService` → `DictionaryService`
+    * `GraphQLDictionaryServiceConfig` → `DictionaryServiceConfig`
+    * `GraphQLLayoutService` → `LayoutService`
+    * `GraphQLLayoutServiceConfig` → `LayoutServiceConfig`
+    * `GraphQLPersonalizeService` → `PersonalizeService`
+    * `GraphQLPersonalizeServiceConfig` → `PersonalizeServiceConfig`
+    * `GraphQLErrorPagesService` → `ErrorPagesService`
+    * `GraphQLErrorPagesServiceConfig` → `ErrorPagesServiceConfig`
+    * `GraphQLRedirectsService` → `RedirectsService`
+    * `GraphQLRedirectsServiceConfig` → `RedirectsServiceConfig`
+    * `GraphQLRobotsService` → `RobotsService`
+    * `GraphQLRobotsServiceConfig` → `RobotsServiceConfig`
+    * `GraphQLSiteInfoService` → `SiteInfoService`
+    * `GraphQLSiteInfoServiceConfig` → `SiteInfoServiceConfig`
+    * `GraphQLSitemapXmlService` → `SitemapXmlService`
+    * `GraphQLSitemapXmlServiceConfig` → `SitemapXmlServiceConfig`
+    * `GraphQLSitePathService` → `SitePathService`
+    * `GraphQLSitePathServiceConfig` → `SitePathServiceConfig`
+  * Removed `DictionaryService` interface
+
+## 0.3.0
+
 ### 🎉 New Features & Improvements
 
 * `[create-content-sdk-app]`: Refactoring/Cleanup for scss files in SXA components ([#119](https://github.com/Sitecore/content-sdk/pull/119))([#122](https://github.com/Sitecore/content-sdk/pull/122))
@@ -94,7 +132,7 @@ Our versioning strategy is as follows:
 * `[nextjs]` Fix component-level data fetching method is exposed in client bundle ([#134](https://github.com/Sitecore/content-sdk/pull/134))
 * `[react]` Add an optional `disableSuspense` flag to the Placeholder component to prevent error boundaries from rendering Suspense which helps contain errors for components. This can help avoid hydration issues in connected mode. ([#96](https://github.com/Sitecore/content-sdk/pull/96))
 
-### Chores
+### 🧹 Chores
 
 * `[react]` Update feaas dependencies ([#138](https://github.com/Sitecore/content-sdk/pull/138))
 
