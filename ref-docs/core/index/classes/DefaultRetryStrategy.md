@@ -6,7 +6,7 @@
 
 # Class: DefaultRetryStrategy
 
-Defined in: [packages/core/src/retries.ts:8](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/retries.ts#L8)
+Defined in: [packages/core/src/retries.ts:8](https://github.com/Sitecore/content-sdk/blob/367394a0df9691b8adb9bb5af6b78aa4093e395e/packages/core/src/retries.ts#L8)
 
 Represents a default retry strategy for handling retry attempts in case of specific HTTP status codes.
 This class implements the RetryStrategy interface and provides methods to determine whether a request
@@ -22,7 +22,7 @@ should be retried and calculates the delay before the next retry attempt.
 
 > **new DefaultRetryStrategy**(`options`): `DefaultRetryStrategy`
 
-Defined in: [packages/core/src/retries.ts:19](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/retries.ts#L19)
+Defined in: [packages/core/src/retries.ts:19](https://github.com/Sitecore/content-sdk/blob/367394a0df9691b8adb9bb5af6b78aa4093e395e/packages/core/src/retries.ts#L19)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [packages/core/src/retries.ts:19](https://github.com/Sitecore/conten
 
 > **getDelay**(`error`, `attempt`): `number`
 
-Defined in: [packages/core/src/retries.ts:32](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/retries.ts#L32)
+Defined in: [packages/core/src/retries.ts:32](https://github.com/Sitecore/content-sdk/blob/367394a0df9691b8adb9bb5af6b78aa4093e395e/packages/core/src/retries.ts#L32)
 
 Calculates the delay (in milliseconds) before the next retry based on the given error and attempt count.
 
@@ -70,7 +70,7 @@ The delay in milliseconds before the next retry.
 
 > **shouldRetry**(`error`, `attempt`, `retries`): `boolean`
 
-Defined in: [packages/core/src/retries.ts:25](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/retries.ts#L25)
+Defined in: [packages/core/src/retries.ts:25](https://github.com/Sitecore/content-sdk/blob/367394a0df9691b8adb9bb5af6b78aa4093e395e/packages/core/src/retries.ts#L25)
 
 Determines whether a request should be retried based on the given error and attempt count.
 
