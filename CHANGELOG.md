@@ -12,6 +12,8 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+## 0.3.0
+
 ### 🎉 New Features & Improvements
 
 * `[create-content-sdk-app]`: Refactoring/Cleanup for scss files in SXA components ([#119](https://github.com/Sitecore/content-sdk/pull/119))([#122](https://github.com/Sitecore/content-sdk/pull/122))
