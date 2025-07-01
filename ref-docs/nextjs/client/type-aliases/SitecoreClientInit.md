@@ -41,11 +41,3 @@ Init options for Sitecore Client that allows you to override services too
 #### custom.sitePathService?
 
 > `optional` **sitePathService**: [`SitePathService`](../../index/classes/SitePathService.md)
-
-#### custom.siteResolver?
-
-> `optional` **siteResolver**: [`SiteResolver`](../../index/classes/SiteResolver.md)
-
-### sites
-
-> **sites**: [`SiteInfo`](../../index/type-aliases/SiteInfo.md)[]
