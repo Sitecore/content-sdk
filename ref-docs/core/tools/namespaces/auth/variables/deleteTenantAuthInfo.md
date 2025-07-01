@@ -8,7 +8,7 @@
 
 > **deleteTenantAuthInfo**: (`tenantId`) => `Promise`\<`void`\> = `_deleteTenantAuthInfo`
 
-Defined in: [packages/core/src/tools/auth/tenant-store.ts:49](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/tenant-store.ts#L49)
+Defined in: [packages/core/src/tools/auth/tenant-store.ts:49](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/tenant-store.ts#L49)
 
 Deletes the stored auth.json file for the given tenant.
 

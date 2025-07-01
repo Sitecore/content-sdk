@@ -8,7 +8,7 @@
 
 > **Term** = `object`
 
-Defined in: [packages/core/src/content/taxonomies.ts:4](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/content/taxonomies.ts#L4)
+Defined in: [packages/core/src/content/taxonomies.ts:4](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/content/taxonomies.ts#L4)
 
 Represents a term within a taxonomy.
 
@@ -18,7 +18,7 @@ Represents a term within a taxonomy.
 
 > **id**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:6](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/content/taxonomies.ts#L6)
+Defined in: [packages/core/src/content/taxonomies.ts:6](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/content/taxonomies.ts#L6)
 
 The unique identifier of the term.
 
@@ -28,7 +28,7 @@ The unique identifier of the term.
 
 > **label**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:10](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/content/taxonomies.ts#L10)
+Defined in: [packages/core/src/content/taxonomies.ts:10](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/content/taxonomies.ts#L10)
 
 The display label of the term.
 
@@ -38,6 +38,6 @@ The display label of the term.
 
 > **name**: `string`
 
-Defined in: [packages/core/src/content/taxonomies.ts:8](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/content/taxonomies.ts#L8)
+Defined in: [packages/core/src/content/taxonomies.ts:8](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/content/taxonomies.ts#L8)
 
 The internal name of the term.

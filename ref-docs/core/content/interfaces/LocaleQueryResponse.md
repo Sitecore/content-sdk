@@ -6,7 +6,7 @@
 
 # Interface: LocaleQueryResponse
 
-Defined in: [packages/core/src/content/locales.ts:21](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/content/locales.ts#L21)
+Defined in: [packages/core/src/content/locales.ts:21](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/content/locales.ts#L21)
 
 Represents the response structure for a query that retrieves a single locale.
 
@@ -16,4 +16,4 @@ Represents the response structure for a query that retrieves a single locale.
 
 > **locale**: `null` \| `LocaleItem`
 
-Defined in: [packages/core/src/content/locales.ts:22](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/content/locales.ts#L22)
+Defined in: [packages/core/src/content/locales.ts:22](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/content/locales.ts#L22)

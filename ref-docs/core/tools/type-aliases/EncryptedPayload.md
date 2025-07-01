@@ -8,7 +8,7 @@
 
 > **EncryptedPayload** = `object`
 
-Defined in: [packages/core/src/tools/auth/models.ts:102](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L102)
+Defined in: [packages/core/src/tools/auth/models.ts:102](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L102)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/core/src/tools/auth/models.ts:102](https://github.com/Site
 
 > **authTag**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:110](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L110)
+Defined in: [packages/core/src/tools/auth/models.ts:110](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L110)
 
 Authentication tag for integrity verification
 
@@ -26,7 +26,7 @@ Authentication tag for integrity verification
 
 > **encryptedData**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:114](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L114)
+Defined in: [packages/core/src/tools/auth/models.ts:114](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L114)
 
 Base64-encoded encrypted data
 
@@ -36,4 +36,4 @@ Base64-encoded encrypted data
 
 > **iv**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:106](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/models.ts#L106)
+Defined in: [packages/core/src/tools/auth/models.ts:106](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L106)
