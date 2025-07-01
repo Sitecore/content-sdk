@@ -9,13 +9,13 @@
 ## Classes
 
 - [CdpHelper](classes/CdpHelper.md)
-- [GraphQLPersonalizeService](classes/GraphQLPersonalizeService.md)
+- [PersonalizeService](classes/PersonalizeService.md)
 
 ## Type Aliases
 
-- [GraphQLPersonalizeServiceConfig](type-aliases/GraphQLPersonalizeServiceConfig.md)
 - [PersonalizedRewriteData](type-aliases/PersonalizedRewriteData.md)
 - [PersonalizeInfo](type-aliases/PersonalizeInfo.md)
+- [PersonalizeServiceConfig](type-aliases/PersonalizeServiceConfig.md)
 
 ## Variables
 

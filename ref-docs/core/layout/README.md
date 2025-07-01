@@ -14,7 +14,7 @@
 
 ## Classes
 
-- [GraphQLLayoutService](classes/GraphQLLayoutService.md)
+- [LayoutService](classes/LayoutService.md)
 
 ## Interfaces
 
@@ -33,7 +33,7 @@
 ## Type Aliases
 
 - [GenericFieldValue](type-aliases/GenericFieldValue.md)
-- [GraphQLLayoutServiceConfig](type-aliases/GraphQLLayoutServiceConfig.md)
+- [LayoutServiceConfig](type-aliases/LayoutServiceConfig.md)
 - [PlaceholdersData](type-aliases/PlaceholdersData.md)
 - [RouteOptions](type-aliases/RouteOptions.md)
 
