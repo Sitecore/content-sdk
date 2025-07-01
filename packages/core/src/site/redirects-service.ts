@@ -53,7 +53,7 @@ export type RedirectsQueryResult = {
 };
 
 /**
- *  The RedirectsService class is used to query the JSS redirects using Graphql endpoint
+ *  The RedirectsService class is used to query the Content SDK redirects using Graphql endpoint
  */
 export class RedirectsService {
   private graphQLClient: GraphQLClient;

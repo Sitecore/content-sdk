@@ -86,7 +86,7 @@ export {
 export {
   ComponentPropsCollection,
   ComponentPropsError,
-  NextjsJssComponent,
+  NextjsContentSdkComponent,
   GetComponentServerProps,
 } from './sharedTypes/component-props';
 

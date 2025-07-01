@@ -154,20 +154,20 @@ describe('define-config', () => {
     it('should use populate env variables when present in fallback config', () => {
       const contextId = 'env-context-id';
       const edgeUrl = 'env-edge-url';
-      const jssEditingSecret = 'env-editing-secret';
+      const contentSdkEditingSecret = 'env-editing-secret';
       const personalizeMiddlewareEdgeTimeout = 111;
       const personalizeMiddlewareCdpTimeout = 222;
 
       process.env.SITECORE_EDGE_CONTEXT_ID = contextId;
       process.env.SITECORE_EDGE_URL = edgeUrl;
-      process.env.JSS_EDITING_SECRET = jssEditingSecret;
+      process.env.SITECORE_EDITING_SECRET = contentSdkEditingSecret;
       process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT = personalizeMiddlewareEdgeTimeout.toString();
       process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT = personalizeMiddlewareCdpTimeout.toString();
 
       const fallbackConfig = getFallbackConfig();
       expect(fallbackConfig.api.edge.contextId).to.equal(contextId);
       expect(fallbackConfig.api.edge.edgeUrl).to.equal(edgeUrl);
-      expect(fallbackConfig.editingSecret).to.equal(jssEditingSecret);
+      expect(fallbackConfig.editingSecret).to.equal(contentSdkEditingSecret);
       expect(fallbackConfig.personalize.edgeTimeout).to.equal(personalizeMiddlewareEdgeTimeout);
       expect(fallbackConfig.personalize.cdpTimeout).to.equal(personalizeMiddlewareCdpTimeout);
     });
@@ -175,7 +175,7 @@ describe('define-config', () => {
     it('should use falback values when env variables are not present', () => {
       delete process.env.SITECORE_EDGE_CONTEXT_ID;
       delete process.env.SITECORE_EDGE_URL;
-      delete process.env.JSS_EDITING_SECRET;
+      delete process.env.SITECORE_EDITING_SECRET;
       delete process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT;
       delete process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT;
 

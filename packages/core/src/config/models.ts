@@ -23,7 +23,7 @@ export type DeepPartial<T> = {
 export type SitecoreConfigInput = {
   /**
    * API settings required to connect to Sitecore.
-   * Both edge and local set can be specified as JSS app will use API Key for component library
+   * Both edge and local set can be specified as Content SDK app will use API Key for component library
    */
   api?: {
     /**
@@ -77,7 +77,7 @@ export type SitecoreConfigInput = {
   defaultSite?: string;
   /**
    * Editing secret required to support Sitecore editing and preview functionality.
-   * by default set by the JSS_EDITING_SECRET environment variable
+   * by default set by the SITECORE_EDITING_SECRET environment variable
    */
   editingSecret?: string;
   /**

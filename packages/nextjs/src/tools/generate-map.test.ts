@@ -62,14 +62,14 @@ describe('generateMap', () => {
       expect(dest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
 
       expect(content).to.include(
-        "import { BYOCWrapper, NextjsJssComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';"
+        "import { BYOCWrapper, NextjsContentSdkComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';"
       );
 
       expect(content).to.include("import * as Button from './src/components/Button';");
       expect(content).to.include("import * as Link from './src/components/Link';");
       expect(content).to.include(
         [
-          'export const componentMap = new Map<string, NextjsJssComponent>([',
+          'export const componentMap = new Map<string, NextjsContentSdkComponent>([',
           "  ['BYOCWrapper', BYOCWrapper],",
           "  ['FEaaSWrapper', FEaaSWrapper],",
           "  ['Form', Form],",
@@ -110,7 +110,7 @@ describe('generateMap', () => {
       expect(fs.writeFileSync).to.have.been.calledOnce;
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include(
-        'export const componentMap = new Map<string, NextjsJssComponent>('
+        'export const componentMap = new Map<string, NextjsContentSdkComponent>('
       );
       expect(content).to.include("['BYOCWrapper', BYOCWrapper],");
       expect(content).to.include("['FEaaSWrapper', FEaaSWrapper],");
@@ -158,7 +158,7 @@ describe('generateMap', () => {
       expect(content).to.include("import { CompA, CompB } from '@other/lib';");
 
       expect(content).to.include(
-        'export const componentMap = new Map<string, NextjsJssComponent>(['
+        'export const componentMap = new Map<string, NextjsContentSdkComponent>(['
       );
       expect(content).to.include("['MyLib', MyLib],");
       expect(content).to.include("['CompA', CompA]");
@@ -214,7 +214,7 @@ describe('generateMap', () => {
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import * as WildcardLib from '@wildcard/lib';");
       expect(content).to.include(
-        'export const componentMap = new Map<string, NextjsJssComponent>(['
+        'export const componentMap = new Map<string, NextjsContentSdkComponent>(['
       );
       expect(content).to.include("['WildcardLib', WildcardLib],");
     });
@@ -235,7 +235,7 @@ describe('generateMap', () => {
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import { NamedA, NamedB } from '@named/lib';");
       expect(content).to.include(
-        'export const componentMap = new Map<string, NextjsJssComponent>(['
+        'export const componentMap = new Map<string, NextjsContentSdkComponent>(['
       );
       expect(content).to.include("['NamedA', NamedA],");
       expect(content).to.include("['NamedB', NamedB],");

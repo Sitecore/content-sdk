@@ -2,7 +2,7 @@
 import { addClassName, getDataFromFields } from './utils';
 import { ComponentFields } from '@sitecore-content-sdk/core/layout';
 
-describe('jss-react utils', () => {
+describe('content-sdk-react utils', () => {
   describe('addClassName', () => {
     it('should add class attribute value to className', () => {
       const modifiableAttrs = {

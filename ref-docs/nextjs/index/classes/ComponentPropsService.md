@@ -6,7 +6,7 @@
 
 # Class: ComponentPropsService
 
-Defined in: [nextjs/src/services/component-props-service.ts:28](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/nextjs/src/services/component-props-service.ts#L28)
+Defined in: [nextjs/src/services/component-props-service.ts:28](https://github.com/Sitecore/content-sdk/blob/048cefc3cdc82ee8dd55415a0dd7b7e6f90c5073/packages/nextjs/src/services/component-props-service.ts#L28)
 
 ## Constructors
 
@@ -24,7 +24,7 @@ Defined in: [nextjs/src/services/component-props-service.ts:28](https://github.c
 
 > `protected` **collectRequests**(`params`): `Promise`\<`ComponentPropsRequest`[]\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:53](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/nextjs/src/services/component-props-service.ts#L53)
+Defined in: [nextjs/src/services/component-props-service.ts:53](https://github.com/Sitecore/content-sdk/blob/048cefc3cdc82ee8dd55415a0dd7b7e6f90c5073/packages/nextjs/src/services/component-props-service.ts#L53)
 
 Go through layout service data, check all renderings using displayName, which should make some side effects.
 Write result in requests variable
@@ -33,8 +33,8 @@ Write result in requests variable
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `params` | \{ `components`: [`ComponentMap`](../type-aliases/ComponentMap.md)\<[`NextjsJssComponent`](../type-aliases/NextjsJssComponent.md)\>; `context`: `NextContext`; `layoutData`: [`LayoutServiceData`](../interfaces/LayoutServiceData.md); `placeholders?`: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md); `requests?`: `ComponentPropsRequest`[]; \} | params |
-| `params.components` | [`ComponentMap`](../type-aliases/ComponentMap.md)\<[`NextjsJssComponent`](../type-aliases/NextjsJssComponent.md)\> |  |
+| `params` | \{ `components`: [`ComponentMap`](../type-aliases/ComponentMap.md)\<[`NextjsContentSdkComponent`](../type-aliases/NextjsContentSdkComponent.md)\>; `context`: `NextContext`; `layoutData`: [`LayoutServiceData`](../interfaces/LayoutServiceData.md); `placeholders?`: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md); `requests?`: `ComponentPropsRequest`[]; \} | params |
+| `params.components` | [`ComponentMap`](../type-aliases/ComponentMap.md)\<[`NextjsContentSdkComponent`](../type-aliases/NextjsContentSdkComponent.md)\> |  |
 | `params.context` | `NextContext` |  |
 | `params.layoutData` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |  |
 | `params.placeholders?` | [`PlaceholdersData`](../type-aliases/PlaceholdersData.md) |  |
@@ -52,7 +52,7 @@ array of requests
 
 > `protected` **execRequests**(`requests`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:102](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/nextjs/src/services/component-props-service.ts#L102)
+Defined in: [nextjs/src/services/component-props-service.ts:102](https://github.com/Sitecore/content-sdk/blob/048cefc3cdc82ee8dd55415a0dd7b7e6f90c5073/packages/nextjs/src/services/component-props-service.ts#L102)
 
 Execute request for component props
 
@@ -74,7 +74,7 @@ requests result
 
 > **fetchComponentProps**(`params`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/services/component-props-service.ts:29](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/nextjs/src/services/component-props-service.ts#L29)
+Defined in: [nextjs/src/services/component-props-service.ts:29](https://github.com/Sitecore/content-sdk/blob/048cefc3cdc82ee8dd55415a0dd7b7e6f90c5073/packages/nextjs/src/services/component-props-service.ts#L29)
 
 #### Parameters
 
@@ -92,7 +92,7 @@ Defined in: [nextjs/src/services/component-props-service.ts:29](https://github.c
 
 > `protected` **flatRenderings**(`placeholders`): [`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\>[]
 
-Defined in: [nextjs/src/services/component-props-service.ts:156](https://github.com/Sitecore/content-sdk/blob/3df14785f2b59cad81d791269b5f5c5e21cecb5b/packages/nextjs/src/services/component-props-service.ts#L156)
+Defined in: [nextjs/src/services/component-props-service.ts:156](https://github.com/Sitecore/content-sdk/blob/048cefc3cdc82ee8dd55415a0dd7b7e6f90c5073/packages/nextjs/src/services/component-props-service.ts#L156)
 
 Take renderings from all placeholders and returns a flat array of renderings.
 

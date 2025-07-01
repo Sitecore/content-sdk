@@ -46,17 +46,20 @@ export function getComponentList(paths: string[], exclude?: string[]): Component
     const globPath =
       glob.hasMagic(path, { magicalBraces: true }) || path.match(componentNamePattern)
         ? path
-        : path.replace(/\/$/, '').concat('/*.{js,jsx,ts,tsx}');
+        : path.replace(/\/$/, '').concat('/**/*.{js,jsx,ts,tsx}');
     return result.concat(
-      ...glob.sync(globPath, { ignore: exclude }).map((filePath) => {
-        const name = filePath.match(componentNamePattern)![2];
-        console.debug(`Registering Content SDK component ${name}`);
-        return {
-          path: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
-          componentName: name,
-          moduleName: name.replace(/[^\w]+/g, ''),
-        };
-      })
+      ...glob
+        .sync(globPath, { ignore: exclude, nodir: true })
+        .filter((path) => path.match(componentNamePattern))
+        .map((filePath) => {
+          const name = filePath.match(componentNamePattern)![2];
+          console.debug(`Registering Content SDK component ${name}`);
+          return {
+            path: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
+            componentName: name,
+            moduleName: name.replace(/[^\w]+/g, ''),
+          };
+        })
     );
   }, []);
 

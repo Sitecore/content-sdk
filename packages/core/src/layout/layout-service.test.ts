@@ -43,7 +43,7 @@ describe('LayoutService', () => {
                 sitecore: {
                   context: {
                     pageEditing: false,
-                    site: { name: 'JssNextWeb' },
+                    site: { name: 'CsdkNextWeb' },
                   },
                   route: {
                     name: 'styleguide',
@@ -71,7 +71,7 @@ describe('LayoutService', () => {
       sitecore: {
         context: {
           pageEditing: false,
-          site: { name: 'JssNextWeb' },
+          site: { name: 'CsdkNextWeb' },
         },
         route: {
           name: 'styleguide',
@@ -101,7 +101,7 @@ describe('LayoutService', () => {
                 sitecore: {
                   context: {
                     pageEditing: false,
-                    site: { name: 'JssNextWeb' },
+                    site: { name: 'CsdkNextWeb' },
                   },
                   route: {
                     name: 'styleguide',
@@ -124,7 +124,7 @@ describe('LayoutService', () => {
       sitecore: {
         context: {
           pageEditing: false,
-          site: { name: 'JssNextWeb' },
+          site: { name: 'CsdkNextWeb' },
         },
         route: {
           name: 'styleguide',
@@ -154,7 +154,7 @@ describe('LayoutService', () => {
                 sitecore: {
                   context: {
                     pageEditing: false,
-                    site: { name: 'JssNextWeb' },
+                    site: { name: 'CsdkNextWeb' },
                   },
                   route: {
                     name: 'styleguide',
@@ -179,7 +179,7 @@ describe('LayoutService', () => {
       sitecore: {
         context: {
           pageEditing: false,
-          site: { name: 'JssNextWeb' },
+          site: { name: 'CsdkNextWeb' },
         },
         route: {
           name: 'styleguide',

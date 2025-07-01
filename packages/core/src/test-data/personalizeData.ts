@@ -5,7 +5,7 @@
   fields: {
     content: {
       value:
-        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/JssNextWeb/Mountain-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
+        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/CsdkNextWeb/Mountain-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
     },
     heading: { value: 'Mountain Bike' },
   },
@@ -18,7 +18,7 @@ export const city_bike_audience = {
   fields: {
     content: {
       value:
-        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/JssNextWeb/Mountain-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
+        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/CsdkNextWeb/Mountain-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
     },
     heading: { value: 'Mountain Bike' },
   },
@@ -31,7 +31,7 @@ export const snow_bike_audience = {
   fields: {
     content: {
       value:
-        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/JssNextWeb/Snow-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
+        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/CsdkNextWeb/Snow-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
     },
     heading: { value: 'Snow Bike' },
   },
@@ -44,7 +44,7 @@ export const sand_bike_audience = {
   fields: {
     content: {
       value:
-        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/JssNextWeb/Sand-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
+        '<p><img src="https://edge-beta.sitecorecloud.io/ser-edge-personalization/media/CsdkNextWeb/Sand-Bike.jpg?h=675&amp;w=1200" style="width:1200px;height:675px;" /></p>',
     },
     heading: { value: 'Sand Bike' },
   },
@@ -54,7 +54,7 @@ export const layoutData = {
   sitecore: {
     context: {
       pageEditing: false,
-      site: { name: 'JssNextWeb' },
+      site: { name: 'CsdkNextWeb' },
       visitorIdentificationTimestamp: 1038543,
       language: 'en',
       variantId: undefined,
@@ -62,7 +62,7 @@ export const layoutData = {
     route: {
       name: 'landingpage',
       placeholders: {
-        'jss-main': [
+        'content-sdk-main': [
           {
             uid: '0b6d23d8-c50e-4e79-9eca-317ec43e82b0',
             componentName: 'ContentBlock',
@@ -83,7 +83,7 @@ export const layoutDataWithoutPlaceholder = {
   sitecore: {
     context: {
       pageEditing: false,
-      site: { name: 'JssNextWeb' },
+      site: { name: 'CsdkNextWeb' },
       visitorIdentificationTimestamp: 1038543,
       language: 'en',
     },

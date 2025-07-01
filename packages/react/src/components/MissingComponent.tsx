@@ -18,7 +18,7 @@ export const MissingComponent: React.FC<MissingComponentProps> = (props) => {
     console.log(`Component props for unimplemented '${componentName}' component`, props);
   const errorMessage =
     props.errorOverride ||
-    'JSS component is missing React implementation. See the developer console for more information.';
+    'Content SDK component is missing React implementation. See the developer console for more information.';
   return (
     <div
       style={{
