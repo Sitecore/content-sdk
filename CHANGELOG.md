@@ -77,7 +77,7 @@ Our versioning strategy is as follows:
   * `DISABLE_SSG_FETCH` → `GENERATE_STATIC_PATHS`
   * `disableStaticPaths` config property → `generateStaticPaths` (with inverted logic for clarity)
 * `[core]` `[nextjs]` `[templates/nextjs]` Refactor site resolution logic across packages ([#141](https://github.com/Sitecore/content-sdk/pull/141))
-  * Removed `sites` paramter from `SitecoreClientInit` type
+  * Removed `sites` parameter from `SitecoreClientInit` type
   * Removed `SiteResolver` dependency and `resolveSite()` from `SitecoreClient`
   * Renamed Page type's `site` to `siteName`, which now holds only the site name
   * Updated SitecoreClient's `getPagePaths()` to accept a sites parameter
