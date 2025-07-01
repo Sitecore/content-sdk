@@ -12,22 +12,6 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
-## 0.2.1
-
-### 🎉 New Features & Improvements
-
-* `[core]` [DesignLibrary] Call partial layout rendering endpoint via Envoy and ContextID ([#111](https://github.com/Sitecore/content-sdk/pull/111))
-
-## 0.2.0
-
-### 🎉 New Features & Improvements
-
-* `[create-content-sdk-app]`: Refactoring/Cleanup for scss files in SXA components ([#119](https://github.com/Sitecore/content-sdk/pull/119))([#122](https://github.com/Sitecore/content-sdk/pull/122))
-* `[core]` `[nextjs]` [DesignLibrary] Include metadata in the Design Library rendering mechanism ([#118](https://github.com/Sitecore/content-sdk/pull/118))
-* `[core]` `[nextjs]` `[cli]` Add automatic component map generation ([#124](https://github.com/Sitecore/content-sdk/pull/124) [#128](https://github.com/Sitecore/content-sdk/pull/128) [#130](https://github.com/Sitecore/content-sdk/pull/130))
-* `[create-sitecore-jss]` Remove graphql introspection sample and scripts folder from next starter application ([#135](https://github.com/Sitecore/content-sdk/pull/135))
-* `[core]` [Content SDK] Update environment variable naming and associated config property ([#143](https://github.com/Sitecore/content-sdk/pull/143))
-
 ### 🛠 Breaking Changes
 
 * `[create-content-sdk-app]` Renamed package from `@sitecore-content-sdk/create-app` to `create-content-sdk-app` (unscoped package)
