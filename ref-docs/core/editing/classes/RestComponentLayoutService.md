@@ -6,7 +6,7 @@
 
 # Class: RestComponentLayoutService
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:66](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/editing/rest-component-layout-service.ts#L66)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:66](https://github.com/Sitecore/content-sdk/blob/048cefc3cdc82ee8dd55415a0dd7b7e6f90c5073/packages/core/src/editing/rest-component-layout-service.ts#L66)
 
 REST service that enables design Library functionality
 Returns layoutData for one single rendered component
@@ -17,7 +17,7 @@ Returns layoutData for one single rendered component
 
 > **new RestComponentLayoutService**(`config`): `RestComponentLayoutService`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:67](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/editing/rest-component-layout-service.ts#L67)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:67](https://github.com/Sitecore/content-sdk/blob/048cefc3cdc82ee8dd55415a0dd7b7e6f90c5073/packages/core/src/editing/rest-component-layout-service.ts#L67)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [packages/core/src/editing/rest-component-layout-service.ts:67](http
 
 > **fetchComponentData**(`params`): `Promise`\<[`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)\>
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:69](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/editing/rest-component-layout-service.ts#L69)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:69](https://github.com/Sitecore/content-sdk/blob/048cefc3cdc82ee8dd55415a0dd7b7e6f90c5073/packages/core/src/editing/rest-component-layout-service.ts#L69)
 
 #### Parameters
 
@@ -53,7 +53,7 @@ Defined in: [packages/core/src/editing/rest-component-layout-service.ts:69](http
 
 > `protected` **getComponentFetchParams**(`params`): `any`
 
-Defined in: [packages/core/src/editing/rest-component-layout-service.ts:101](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/editing/rest-component-layout-service.ts#L101)
+Defined in: [packages/core/src/editing/rest-component-layout-service.ts:101](https://github.com/Sitecore/content-sdk/blob/048cefc3cdc82ee8dd55415a0dd7b7e6f90c5073/packages/core/src/editing/rest-component-layout-service.ts#L101)
 
 #### Parameters
 
