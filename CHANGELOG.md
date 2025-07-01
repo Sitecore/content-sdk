@@ -79,7 +79,7 @@ Our versioning strategy is as follows:
 * `[core]` `[nextjs]` `[templates/nextjs]` Refactor site resolution logic across packages ([#141](https://github.com/Sitecore/content-sdk/pull/141))
   * Removed `sites` parameter from `SitecoreClientInit` type
   * Removed `SiteResolver` dependency and `resolveSite()` from `SitecoreClient`
-  * Renamed Page type's `site` to `siteName`, which now holds only the site name
+  * Updated `SitecoreClient` to construct the `Page` using `siteName` instead of the full `SiteInfo`.
   * Updated SitecoreClient's `getPagePaths()` to accept a sites parameter
   * Modified site paths service to receive `sites` in fetchSiteRoutes() instead of via constructor
   * Adjusted Next.js API middlewares (sitemap, robots) to use their own SiteResolver
