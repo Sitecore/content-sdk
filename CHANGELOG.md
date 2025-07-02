@@ -90,7 +90,7 @@ Our versioning strategy is as follows:
 
 ### 🧹 Chores
 
-* `[react]` Update feaas dependencies ([#138](https://github.com/Sitecore/content-sdk/pull/138))
+* `[react]` Update feaas dependencies ([#149](https://github.com/Sitecore/content-sdk/pull/149))
 
 ## 0.2.1
 
