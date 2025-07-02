@@ -8,7 +8,7 @@
 
 > **decryptData**: (`payload`, `tenantId`, `cleanupOnFailure`) => `Promise`\<`null` \| `string`\> = `_decryptData`
 
-Defined in: [packages/core/src/tools/auth/encryption.ts:24](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/encryption.ts#L24)
+Defined in: [packages/core/src/tools/auth/encryption.ts:24](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/encryption.ts#L24)
 
 Decrypts encrypted payload using AES-256-GCM for a specific tenant.
 If key is corrupted or invalid, optionally clears both key and tenant data.

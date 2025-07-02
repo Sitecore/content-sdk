@@ -8,4 +8,4 @@
 
 > `const` **DEVICE\_GRANT\_TYPE**: `"urn:ietf:params:oauth:grant-type:device_code"` = `'urn:ietf:params:oauth:grant-type:device_code'`
 
-Defined in: [packages/core/src/constants.ts:21](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/constants.ts#L21)
+Defined in: [packages/core/src/constants.ts:21](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/constants.ts#L21)

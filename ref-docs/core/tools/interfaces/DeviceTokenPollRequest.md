@@ -6,7 +6,7 @@
 
 # Interface: DeviceTokenPollRequest
 
-Defined in: [packages/core/src/tools/auth/models.ts:199](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L199)
+Defined in: [packages/core/src/tools/auth/models.ts:199](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L199)
 
 Input parameters for polling the OAuth 2.0 device token endpoint.
 
@@ -16,7 +16,7 @@ Input parameters for polling the OAuth 2.0 device token endpoint.
 
 > `optional` **authority**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:215](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L215)
+Defined in: [packages/core/src/tools/auth/models.ts:215](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L215)
 
 Optional OAuth 2.0 authority endpoint for token polling.
 
@@ -26,7 +26,7 @@ Optional OAuth 2.0 authority endpoint for token polling.
 
 > **clientId**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:203](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L203)
+Defined in: [packages/core/src/tools/auth/models.ts:203](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L203)
 
 OAuth 2.0 client identifier.
 
@@ -36,7 +36,7 @@ OAuth 2.0 client identifier.
 
 > **device\_code**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:207](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L207)
+Defined in: [packages/core/src/tools/auth/models.ts:207](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L207)
 
 Device code previously obtained from the device authorization flow.
 
@@ -46,6 +46,6 @@ Device code previously obtained from the device authorization flow.
 
 > `optional` **interval**: `number`
 
-Defined in: [packages/core/src/tools/auth/models.ts:211](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L211)
+Defined in: [packages/core/src/tools/auth/models.ts:211](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L211)
 
 Optional polling interval in seconds. If not provided, a default is used.

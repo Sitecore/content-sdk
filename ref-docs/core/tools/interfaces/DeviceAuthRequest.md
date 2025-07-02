@@ -6,7 +6,7 @@
 
 # Interface: DeviceAuthRequest
 
-Defined in: [packages/core/src/tools/auth/models.ts:147](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L147)
+Defined in: [packages/core/src/tools/auth/models.ts:147](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L147)
 
 Input parameters for initiating the OAuth 2.0 Device Authorization flow.
 
@@ -16,7 +16,7 @@ Input parameters for initiating the OAuth 2.0 Device Authorization flow.
 
 > **audience**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:155](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L155)
+Defined in: [packages/core/src/tools/auth/models.ts:155](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L155)
 
 The intended recipient of the token (usually your protected resource or API).
 
@@ -26,7 +26,7 @@ The intended recipient of the token (usually your protected resource or API).
 
 > **authority**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:159](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L159)
+Defined in: [packages/core/src/tools/auth/models.ts:159](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L159)
 
 OAuth 2.0 authority URL (token issuer).
 
@@ -36,7 +36,7 @@ OAuth 2.0 authority URL (token issuer).
 
 > **baseUrl**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:163](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L163)
+Defined in: [packages/core/src/tools/auth/models.ts:163](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L163)
 
 Base URL for your API, used to build custom claims or context if needed.
 
@@ -46,6 +46,6 @@ Base URL for your API, used to build custom claims or context if needed.
 
 > **clientId**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:151](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L151)
+Defined in: [packages/core/src/tools/auth/models.ts:151](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L151)
 
 OAuth 2.0 client identifier.

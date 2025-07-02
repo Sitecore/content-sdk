@@ -6,7 +6,7 @@
 
 # Interface: TaxonomyQueryResponse
 
-Defined in: [packages/core/src/content/taxonomies.ts:65](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/content/taxonomies.ts#L65)
+Defined in: [packages/core/src/content/taxonomies.ts:65](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/content/taxonomies.ts#L65)
 
 Represents the response structure for a query that retrieves a specific taxonomy by ID.
 
@@ -16,7 +16,7 @@ Represents the response structure for a query that retrieves a specific taxonomy
 
 > **taxonomy**: `object`
 
-Defined in: [packages/core/src/content/taxonomies.ts:67](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/content/taxonomies.ts#L67)
+Defined in: [packages/core/src/content/taxonomies.ts:67](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/content/taxonomies.ts#L67)
 
 The retrieved taxonomy.
 

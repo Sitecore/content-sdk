@@ -6,7 +6,7 @@
 
 # Interface: TokenResponse
 
-Defined in: [packages/core/src/tools/auth/models.ts:222](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L222)
+Defined in: [packages/core/src/tools/auth/models.ts:222](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L222)
 
 Represents the raw OAuth token response returned by the authorization server.
 This includes the access token, refresh token, and optional ID token and scope.
@@ -21,7 +21,7 @@ This includes the access token, refresh token, and optional ID token and scope.
 
 > **access\_token**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:224](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L224)
+Defined in: [packages/core/src/tools/auth/models.ts:224](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L224)
 
 The access token used for authenticating API requests
 
@@ -31,7 +31,7 @@ The access token used for authenticating API requests
 
 > **expires\_in**: `number`
 
-Defined in: [packages/core/src/tools/auth/models.ts:228](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L228)
+Defined in: [packages/core/src/tools/auth/models.ts:228](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L228)
 
 The number of seconds until the access token expires
 
@@ -41,7 +41,7 @@ The number of seconds until the access token expires
 
 > `optional` **id\_token**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:232](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L232)
+Defined in: [packages/core/src/tools/auth/models.ts:232](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L232)
 
 An optional ID token containing user identity claims (usually JWT)
 
@@ -51,7 +51,7 @@ An optional ID token containing user identity claims (usually JWT)
 
 > **refresh\_token**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:226](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L226)
+Defined in: [packages/core/src/tools/auth/models.ts:226](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L226)
 
 The refresh token used to obtain a new access token when it expires
 
@@ -61,7 +61,7 @@ The refresh token used to obtain a new access token when it expires
 
 > `optional` **scope**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:234](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L234)
+Defined in: [packages/core/src/tools/auth/models.ts:234](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L234)
 
 The scopes granted for the access token, space-delimited
 
@@ -71,6 +71,6 @@ The scopes granted for the access token, space-delimited
 
 > **token\_type**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:230](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/models.ts#L230)
+Defined in: [packages/core/src/tools/auth/models.ts:230](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L230)
 
 The type of token issued, typically "Bearer"
