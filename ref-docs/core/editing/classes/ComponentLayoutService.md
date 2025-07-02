@@ -6,7 +6,7 @@
 
 # Class: ComponentLayoutService
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:66](https://github.com/Sitecore/content-sdk/blob/a2735a71df797576a45d3bb911b3f6b1fcfb8360/packages/core/src/editing/component-layout-service.ts#L66)
+Defined in: [packages/core/src/editing/component-layout-service.ts:66](https://github.com/Sitecore/content-sdk/blob/ac18aa626926b59845cdeeca2e9297ea0848eb52/packages/core/src/editing/component-layout-service.ts#L66)
 
 REST service that enables design Library functionality
 Returns layoutData for one single rendered component
@@ -17,7 +17,7 @@ Returns layoutData for one single rendered component
 
 > **new ComponentLayoutService**(`config`): `ComponentLayoutService`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:67](https://github.com/Sitecore/content-sdk/blob/a2735a71df797576a45d3bb911b3f6b1fcfb8360/packages/core/src/editing/component-layout-service.ts#L67)
+Defined in: [packages/core/src/editing/component-layout-service.ts:67](https://github.com/Sitecore/content-sdk/blob/ac18aa626926b59845cdeeca2e9297ea0848eb52/packages/core/src/editing/component-layout-service.ts#L67)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [packages/core/src/editing/component-layout-service.ts:67](https://g
 
 > **fetchComponentData**(`params`): `Promise`\<[`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)\>
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:69](https://github.com/Sitecore/content-sdk/blob/a2735a71df797576a45d3bb911b3f6b1fcfb8360/packages/core/src/editing/component-layout-service.ts#L69)
+Defined in: [packages/core/src/editing/component-layout-service.ts:69](https://github.com/Sitecore/content-sdk/blob/ac18aa626926b59845cdeeca2e9297ea0848eb52/packages/core/src/editing/component-layout-service.ts#L69)
 
 #### Parameters
 
@@ -53,7 +53,7 @@ Defined in: [packages/core/src/editing/component-layout-service.ts:69](https://g
 
 > `protected` **getComponentFetchParams**(`params`): `any`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:101](https://github.com/Sitecore/content-sdk/blob/a2735a71df797576a45d3bb911b3f6b1fcfb8360/packages/core/src/editing/component-layout-service.ts#L101)
+Defined in: [packages/core/src/editing/component-layout-service.ts:101](https://github.com/Sitecore/content-sdk/blob/ac18aa626926b59845cdeeca2e9297ea0848eb52/packages/core/src/editing/component-layout-service.ts#L101)
 
 #### Parameters
 
