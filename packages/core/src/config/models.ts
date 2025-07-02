@@ -185,6 +185,11 @@ export type SitecoreConfigInput = {
      */
     locales?: string[];
   };
+  /**
+   * Opt-out setting for code generation feature
+   * Disables code extraction procedure
+   */
+  disableCodeGeneration?: boolean;
 };
 
 /**
