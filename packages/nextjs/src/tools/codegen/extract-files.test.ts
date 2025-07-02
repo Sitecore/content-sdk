@@ -32,11 +32,11 @@ describe('extract-files', () => {
           ...defaultConfig.api.edge,
         },
       },
+      disableCodeGeneration: false,
     },
   };
 
   beforeEach(() => {
-    process.env.EXTRACT_CONSENT = 'true';
     process.env.SITECORE = 'true';
     process.env.SITECORE_BUILD = '0451';
     process.env.SITECORE_AUTH_CLIENT_ID = 'test-client-id';
@@ -46,7 +46,6 @@ describe('extract-files', () => {
 
   afterEach(() => {
     sandbox.restore();
-    delete process.env.EXTRACT_CONSENT;
     delete process.env.SITECORE;
     delete process.env.SITECORE_AUTH_CLIENT_ID;
     delete process.env.SITECORE_AUTH_CLIENT_SECRET;
@@ -68,6 +67,28 @@ describe('extract-files', () => {
 
     expect(debugStub.calledOnce).to.be.true;
     expect(debugStub.firstCall.args[0]).to.equal('Skipping code extraction, not in deploy context');
+  });
+
+  it('should skip when code generation is opted out', async () => {
+    const debugStub = sandbox.stub(debug, 'common');
+    const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
+    sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
+
+    const args = {
+      ...mockArgs,
+      scConfig: {
+        ...mockArgs.scConfig,
+        disableCodeGeneration: true,
+      },
+    };
+
+    const extractFilesCall = extractFiles(args);
+    await extractFilesCall();
+
+    expect(debugStub.calledOnce).to.be.true;
+    expect(debugStub.firstCall.args[0]).to.equal(
+      'Skipping code extraction, code generation has been disabled'
+    );
   });
 
   it('should use customValidateDeployContext', async () => {

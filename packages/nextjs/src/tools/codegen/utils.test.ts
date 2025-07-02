@@ -347,25 +347,4 @@ describe('codegen-utils', () => {
       expect(codegenUtils.validateDeployContext()).to.be.false;
     });
   });
-
-  describe('validateConsent', () => {
-    afterEach(() => {
-      delete process.env.EXTRACT_CONSENT;
-    });
-
-    it('should return false when EXTRACT_CONSENT is not set', () => {
-      expect(codegenUtils.validateConsent()).to.be.false;
-    });
-
-    it('should return false when EXTRACT_CONSENT is set to false', () => {
-      process.env.EXTRACT_CONSENT = 'false';
-      expect(codegenUtils.validateConsent()).to.be.false;
-    });
-
-    it('should return true when EXTRACT_CONSENT is set to true', () => {
-      process.env.EXTRACT_CONSENT = 'true';
-
-      expect(codegenUtils.validateConsent()).to.be.true;
-    });
-  });
 });
