@@ -6,7 +6,7 @@
 
 # Interface: ComponentFile
 
-Defined in: [packages/core/src/tools/templating/components.ts:10](https://github.com/Sitecore/content-sdk/blob/af8b412b06b078731c4e0c34b094b68cd0919267/packages/core/src/tools/templating/components.ts#L10)
+Defined in: [packages/core/src/tools/templating/components.ts:10](https://github.com/Sitecore/content-sdk/blob/8d05a52b17f702f1612165541cd16e172c22d839/packages/core/src/tools/templating/components.ts#L10)
 
 Describes a file that represents a component definition
 
@@ -16,7 +16,7 @@ Describes a file that represents a component definition
 
 > **componentName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:13](https://github.com/Sitecore/content-sdk/blob/af8b412b06b078731c4e0c34b094b68cd0919267/packages/core/src/tools/templating/components.ts#L13)
+Defined in: [packages/core/src/tools/templating/components.ts:13](https://github.com/Sitecore/content-sdk/blob/8d05a52b17f702f1612165541cd16e172c22d839/packages/core/src/tools/templating/components.ts#L13)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/core/src/tools/templating/components.ts:13](https://github
 
 > **moduleName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:12](https://github.com/Sitecore/content-sdk/blob/af8b412b06b078731c4e0c34b094b68cd0919267/packages/core/src/tools/templating/components.ts#L12)
+Defined in: [packages/core/src/tools/templating/components.ts:12](https://github.com/Sitecore/content-sdk/blob/8d05a52b17f702f1612165541cd16e172c22d839/packages/core/src/tools/templating/components.ts#L12)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [packages/core/src/tools/templating/components.ts:12](https://github
 
 > **path**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:11](https://github.com/Sitecore/content-sdk/blob/af8b412b06b078731c4e0c34b094b68cd0919267/packages/core/src/tools/templating/components.ts#L11)
+Defined in: [packages/core/src/tools/templating/components.ts:11](https://github.com/Sitecore/content-sdk/blob/8d05a52b17f702f1612165541cd16e172c22d839/packages/core/src/tools/templating/components.ts#L11)
