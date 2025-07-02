@@ -8,7 +8,7 @@
 
 > **startDeviceAuthFlow**: (`params`) => `Promise`\<[`DeviceAuthResponse`](../../../interfaces/DeviceAuthResponse.md)\> = `_startDeviceAuthFlow`
 
-Defined in: [packages/core/src/tools/auth/flow.ts:38](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/tools/auth/flow.ts#L38)
+Defined in: [packages/core/src/tools/auth/flow.ts:38](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/tools/auth/flow.ts#L38)
 
 Initiates the OAuth 2.0 Device Authorization flow by requesting a device and user code.
 This flow is typically used by devices or CLI apps that cannot input credentials directly.

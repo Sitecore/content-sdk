@@ -8,4 +8,4 @@
 
 > `const` **CLIENT\_GRANT\_TYPE**: `"client_credentials"` = `'client_credentials'`
 
-Defined in: [packages/core/src/constants.ts:20](https://github.com/Sitecore/content-sdk/blob/f2cd850e72d7bab103943f06c0941474a092fc1b/packages/core/src/constants.ts#L20)
+Defined in: [packages/core/src/constants.ts:20](https://github.com/Sitecore/content-sdk/blob/7ebeab3cd807229f59268e182358c9f141c84ddc/packages/core/src/constants.ts#L20)
