@@ -8,10 +8,9 @@
 
 ## Classes
 
-- [GraphQLDictionaryService](classes/GraphQLDictionaryService.md)
+- [DictionaryService](classes/DictionaryService.md)
 
 ## Interfaces
 
 - [DictionaryPhrases](interfaces/DictionaryPhrases.md)
-- [DictionaryService](interfaces/DictionaryService.md)
-- [GraphQLDictionaryServiceConfig](interfaces/GraphQLDictionaryServiceConfig.md)
+- [DictionaryServiceConfig](interfaces/DictionaryServiceConfig.md)

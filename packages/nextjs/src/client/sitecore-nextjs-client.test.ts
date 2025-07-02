@@ -1,5 +1,6 @@
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import { SitecoreNextjsClient } from './sitecore-nextjs-client';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
 import * as siteTools from '@sitecore-content-sdk/core/site';
@@ -8,9 +9,10 @@ import { GetServerSidePropsContext } from 'next';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
 
+chai.use(sinonChai);
+
 describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
-  const defaultSiteDeets = { hostName: 'http://unit.test', language: 'ua' };
   const defaultInitOptions = {
     api: {
       edge: {
@@ -26,10 +28,6 @@ describe('SitecoreClient', () => {
     },
     editingSecret: '********-****',
     retries: { count: 3, retryStrategy: sinon.createStubInstance(DefaultRetryStrategy) },
-    sites: [
-      { name: 'default-site', ...defaultSiteDeets },
-      { name: 'other-site', ...defaultSiteDeets },
-    ],
     defaultSite: 'default-site',
     defaultLanguage: 'en',
     layout: { formatLayoutQuery: sandbox.stub() },
@@ -51,10 +49,6 @@ describe('SitecoreClient', () => {
     fetchEditingData: sandbox.stub(),
     fetchDictionaryData: sandbox.stub(),
   };
-  let siteResolverStub = {
-    getByHost: sandbox.stub(),
-    getByName: sandbox.stub(),
-  };
   let restComponentServiceStub = {
     fetchComponentData: sandbox.stub(),
   };
@@ -73,10 +67,6 @@ describe('SitecoreClient', () => {
       fetchEditingData: sandbox.stub(),
       fetchDictionaryData: sandbox.stub(),
     };
-    siteResolverStub = {
-      getByHost: sandbox.stub(),
-      getByName: sandbox.stub(),
-    };
     restComponentServiceStub = {
       fetchComponentData: sandbox.stub(),
     };
@@ -87,7 +77,6 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).dictionaryService = dictionaryServiceStub;
     (sitecoreClient as any).errorPagesService = errorPagesServiceStub;
     (sitecoreClient as any).editingService = editingServiceStub;
-    (sitecoreClient as any).siteResolver = siteResolverStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
   });
 
@@ -102,8 +91,6 @@ describe('SitecoreClient', () => {
         hostName: 'example.com',
         language: 'en',
       };
-      siteResolverStub.getByName.returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
       sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
@@ -124,8 +111,6 @@ describe('SitecoreClient', () => {
         hostName: 'example.com',
         language: 'en',
       };
-      siteResolverStub.getByName.returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
       sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
@@ -144,13 +129,6 @@ describe('SitecoreClient', () => {
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
 
-      const siteInfo = {
-        name: 'mysite',
-        hostName: 'example.com',
-        language: 'en',
-      };
-      siteResolverStub.getByName.returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       sandbox.stub(sitecoreClient, 'parsePath').returns('/test/path');
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
 
@@ -169,13 +147,6 @@ describe('SitecoreClient', () => {
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
 
-      const siteInfo = {
-        name: 'mysite',
-        hostName: 'example.com',
-        language: 'en',
-      };
-      siteResolverStub.getByName.returns(siteInfo);
-      sandbox.stub(sitecoreClient, 'resolveSite').returns(siteInfo);
       sandbox.stub(sitecoreClient, 'parsePath').returns('/test/path');
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
 
@@ -191,38 +162,32 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('resolveSiteFromPath', () => {
-    it('should resolve site correctly with string path', () => {
+  describe('getSiteNameFromPath', () => {
+    it('should get site name correctly with string path', () => {
       const path = '/some/path';
       const siteInfo = { name: 'default-site', hostName: '*', language: 'en' };
       sandbox.stub(siteTools, 'getSiteRewriteData').returns({ siteName: 'default-site' });
-      siteResolverStub.getByName.returns(siteInfo);
 
-      const result = sitecoreClient.resolveSiteFromPath(path);
+      const result = sitecoreClient.getSiteNameFromPath(path);
 
-      expect(result).to.equal(siteInfo);
-      expect(siteResolverStub.getByName.calledWith('default-site')).to.be.true;
+      expect(result).to.equal(siteInfo.name);
     });
 
-    it('should resolve site correctly with array path', () => {
+    it('should get site name correctly with array path', () => {
       const path = [`${SITE_PREFIX}other-site`, '/some', 'path'];
       const siteInfo = { name: 'other-site', hostName: '*', language: 'en' };
-      siteResolverStub.getByName.returns(siteInfo);
 
-      const result = sitecoreClient.resolveSiteFromPath(path);
+      const result = sitecoreClient.getSiteNameFromPath(path);
 
-      expect(result).to.equal(siteInfo);
-      expect(siteResolverStub.getByName.calledWith('other-site')).to.be.true;
+      expect(result).to.equal(siteInfo.name);
     });
 
-    it('should resolve default site info when site not found', () => {
-      const path = [`${SITE_PREFIX}other-site`, '/some', 'path'];
-      siteResolverStub.getByName.returns(undefined);
+    it('should get default site name when site not found', () => {
+      const path = ['wrong-path-yet-anoother-site', '/some', 'path'];
 
-      const result = sitecoreClient.resolveSiteFromPath(path);
+      const result = sitecoreClient.getSiteNameFromPath(path);
 
-      expect(result).to.deep.equal({ name: 'other-site', hostName: '', language: '' });
-      expect(siteResolverStub.getByName.calledWith('other-site')).to.be.true;
+      expect(result).to.equal('default-site');
     });
   });
 

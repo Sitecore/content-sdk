@@ -1,5 +1,6 @@
 ﻿import { RobotsMiddleware } from '@sitecore-content-sdk/nextjs/middleware';
 import scClient from 'lib/sitecore-client';
+import sites from '.sitecore/sites.json';
 
 /**
  * API route for serving robots.txt
@@ -10,6 +11,6 @@ import scClient from 'lib/sitecore-client';
  */
 
 // Wire up the RobotsMiddleware handler
-const handler = new RobotsMiddleware(scClient).getHandler();
+const handler = new RobotsMiddleware(scClient, sites).getHandler();
 
 export default handler;

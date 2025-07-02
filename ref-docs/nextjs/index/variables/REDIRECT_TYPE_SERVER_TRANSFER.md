@@ -8,4 +8,4 @@
 
 > `const` **REDIRECT\_TYPE\_SERVER\_TRANSFER**: `"SERVER_TRANSFER"` = `"SERVER_TRANSFER"`
 
-Defined in: core/types/site/graphql-redirects-service.d.ts:6
+Defined in: core/types/site/redirects-service.d.ts:6

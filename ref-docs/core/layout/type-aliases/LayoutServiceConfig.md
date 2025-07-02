@@ -1,0 +1,11 @@
+[**@sitecore-content-sdk/core**](../../README.md)
+
+***
+
+[@sitecore-content-sdk/core](../../README.md) / [layout](../README.md) / LayoutServiceConfig
+
+# Type Alias: LayoutServiceConfig
+
+> **LayoutServiceConfig** = `GraphQLServiceConfig` & `Partial`\<[`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md)\[`"layout"`\]\>
+
+Defined in: [packages/core/src/layout/layout-service.ts:9](https://github.com/Sitecore/content-sdk/blob/a2735a71df797576a45d3bb911b3f6b1fcfb8360/packages/core/src/layout/layout-service.ts#L9)

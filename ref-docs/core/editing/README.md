@@ -15,9 +15,9 @@
 
 ## Classes
 
-- [GraphQLEditingService](classes/GraphQLEditingService.md)
+- [ComponentLayoutService](classes/ComponentLayoutService.md)
+- [EditingService](classes/EditingService.md)
 - [PagesEditor](classes/PagesEditor.md)
-- [RestComponentLayoutService](classes/RestComponentLayoutService.md)
 
 ## Interfaces
 

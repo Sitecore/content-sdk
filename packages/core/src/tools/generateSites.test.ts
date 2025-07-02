@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import chalk from 'chalk';
 import { GenerateSitesConfig } from './generateSites';
-import { SiteInfo, GraphQLSiteInfoService } from '../site';
+import { SiteInfo, SiteInfoService } from '../site';
 import { SitecoreConfigInput, defineConfig } from '../config';
 import proxyquire from 'proxyquire';
 
@@ -95,7 +95,7 @@ describe('generateSites', () => {
       { name: 'site2', hostName: 'site2.com', language: 'da/DK' },
     ];
 
-    sinon.stub(GraphQLSiteInfoService.prototype, 'fetchSiteInfo').resolves(fetchedSites);
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves(fetchedSites);
 
     const scConfig = defineConfig(mockConfig);
     const config: GenerateSitesConfig = {
@@ -116,7 +116,7 @@ describe('generateSites', () => {
   });
 
   it('should log an error when fetching site information fails', async () => {
-    sinon.stub(GraphQLSiteInfoService.prototype, 'fetchSiteInfo').rejects(new Error('Fetch error'));
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').rejects(new Error('Fetch error'));
     const scConfig = defineConfig(mockConfig);
 
     const config: GenerateSitesConfig = {
