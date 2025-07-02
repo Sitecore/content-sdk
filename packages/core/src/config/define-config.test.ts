@@ -76,16 +76,19 @@ describe('define-config', () => {
     expect(config.dictionary.caching.timeout).to.equal(fallbackConfig.dictionary.caching.timeout);
   });
 
-  it('should throw when both api.edge and api.local sets are missing', () => {
+  it('should throw when server-side edge contextId is missing', () => {
     const failingConfig: SitecoreConfigInput = {
       ...mockConfig,
       api: {
-        edge: undefined,
+        edge: {
+          contextId: '', // empty contextId should trigger validation error
+          clientContextId: 'client-id',
+        },
         local: undefined,
       },
     };
     expect(() => defineConfig(failingConfig)).to.throw(
-      'Configuration error: server-side contextId or local API settings (apiHost + apiKey) must be specified. Client-side contextId alone is not sufficient.'
+      'Configuration error: a server-side Edge `contextId` (api.edge.contextId) is required. Supplying only clientContextId or local-API credentials is not sufficient.'
     );
   });
 
@@ -289,15 +292,17 @@ describe('define-config', () => {
     };
 
     expect(() => defineConfig(clientOnlyConfig)).to.throw(
-      'Configuration error: server-side contextId or local API settings (apiHost + apiKey) must be specified. ' +
-        'Client-side contextId alone is not sufficient.'
+      'Configuration error: a server-side Edge `contextId` (api.edge.contextId) is required. ' +
+        'Supplying only clientContextId or local-API credentials is not sufficient.'
     );
   });
 
-  it('should allow local API configuration without edge context', () => {
+  it('should throw when no edge contextId is provided even with local API config', () => {
     const localApiConfig: SitecoreConfigInput = {
       api: {
-        edge: undefined,
+        edge: {
+          contextId: '', // empty contextId should still trigger validation error
+        },
         local: {
           apiKey: 'test-api-key',
           apiHost: 'test-api-host',
@@ -305,11 +310,10 @@ describe('define-config', () => {
       },
     };
 
-    expect(() => defineConfig(localApiConfig)).to.not.throw();
-
-    const config = defineConfig(localApiConfig);
-    expect(config.api.local.apiKey).to.equal('test-api-key');
-    expect(config.api.local.apiHost).to.equal('test-api-host');
+    expect(() => defineConfig(localApiConfig)).to.throw(
+      'Configuration error: a server-side Edge `contextId` (api.edge.contextId) is required. ' +
+        'Supplying only clientContextId or local-API credentials is not sufficient.'
+    );
   });
 
   it('should throw when no valid API configuration is provided', () => {
@@ -326,8 +330,8 @@ describe('define-config', () => {
     };
 
     expect(() => defineConfig(noValidConfig)).to.throw(
-      'Configuration error: server-side contextId or local API settings (apiHost + apiKey) must be specified. ' +
-        'Client-side contextId alone is not sufficient.'
+      'Configuration error: a server-side Edge `contextId` (api.edge.contextId) is required. ' +
+        'Supplying only clientContextId or local-API credentials is not sufficient.'
     );
   });
 
@@ -338,8 +342,59 @@ describe('define-config', () => {
     } as SitecoreConfigInput;
 
     expect(() => defineConfig(noValidConfig)).to.throw(
-      'Configuration error: server-side contextId or local API settings (apiHost + apiKey) must be specified. ' +
-        'Client-side contextId alone is not sufficient.'
+      'Configuration error: a server-side Edge `contextId` (api.edge.contextId) is required. ' +
+        'Supplying only clientContextId or local-API credentials is not sufficient.'
     );
+  });
+
+  describe('validateConfig server-side behavior', () => {
+    let originalWindow: any;
+
+    beforeEach(() => {
+      // Mock server-side environment by removing window
+      originalWindow = (global as any).window;
+      delete (global as any).window;
+    });
+
+    afterEach(() => {
+      // Restore window if it existed
+      if (originalWindow !== undefined) {
+        (global as any).window = originalWindow;
+      }
+    });
+
+    it('should warn when clientContextId is missing on server-side but not throw', () => {
+      const configWithoutClientId = {
+        api: {
+          edge: {
+            contextId: 'server-context-id',
+            // clientContextId intentionally omitted
+          },
+        },
+      };
+
+      // This should not throw an error, just log a warning
+      expect(() => defineConfig(configWithoutClientId)).to.not.throw();
+
+      const config = defineConfig(configWithoutClientId);
+      expect(config.api.edge.contextId).to.equal('server-context-id');
+      expect(config.api.edge.clientContextId).to.equal(''); // Should use fallback
+    });
+
+    it('should require server-side contextId even when clientContextId is provided', () => {
+      const clientOnlyConfig = {
+        api: {
+          edge: {
+            contextId: '',
+            clientContextId: 'client-context-id',
+          },
+        },
+      };
+
+      expect(() => defineConfig(clientOnlyConfig)).to.throw(
+        'Configuration error: a server-side Edge `contextId` (api.edge.contextId) is required. ' +
+          'Supplying only clientContextId or local-API credentials is not sufficient.'
+      );
+    });
   });
 });

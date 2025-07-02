@@ -77,7 +77,10 @@ describe('createGraphQLClientFactory', () => {
         },
       });
     }).to.throw(
-      'Please configure and use either your sitecoreEdgeContextId, or your graphQLEndpoint and sitecoreApiKey.'
+      'GraphQL client mis-configured. Provide one of:\n' +
+        '  • api.edge.contextId\n' +
+        '  • api.edge.clientContextId\n' +
+        '  • api.local.{apiHost, apiKey}'
     );
   });
 
