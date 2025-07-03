@@ -20,32 +20,24 @@ Init options for Sitecore Client that allows you to override services too
 
 #### custom.componentService?
 
-> `optional` **componentService**: [`RestComponentLayoutService`](../../index/classes/RestComponentLayoutService.md)
+> `optional` **componentService**: [`ComponentLayoutService`](../../index/classes/ComponentLayoutService.md)
 
 #### custom.dictionaryService?
 
-> `optional` **dictionaryService**: [`GraphQLDictionaryService`](../../index/classes/GraphQLDictionaryService.md)
+> `optional` **dictionaryService**: [`DictionaryService`](../../index/classes/DictionaryService.md)
 
 #### custom.editingService?
 
-> `optional` **editingService**: [`GraphQLEditingService`](../../editing/classes/GraphQLEditingService.md)
+> `optional` **editingService**: [`EditingService`](../../editing/classes/EditingService.md)
 
 #### custom.errorPagesService?
 
-> `optional` **errorPagesService**: [`GraphQLErrorPagesService`](../../index/classes/GraphQLErrorPagesService.md)
+> `optional` **errorPagesService**: [`ErrorPagesService`](../../index/classes/ErrorPagesService.md)
 
 #### custom.layoutService?
 
-> `optional` **layoutService**: [`GraphQLLayoutService`](../../index/classes/GraphQLLayoutService.md)
+> `optional` **layoutService**: [`LayoutService`](../../index/classes/LayoutService.md)
 
 #### custom.sitePathService?
 
-> `optional` **sitePathService**: [`GraphQLSitePathService`](../../index/classes/GraphQLSitePathService.md)
-
-#### custom.siteResolver?
-
-> `optional` **siteResolver**: [`SiteResolver`](../../index/classes/SiteResolver.md)
-
-### sites
-
-> **sites**: [`SiteInfo`](../../index/type-aliases/SiteInfo.md)[]
+> `optional` **sitePathService**: [`SitePathService`](../../index/classes/SitePathService.md)

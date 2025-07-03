@@ -1,5 +1,6 @@
 ﻿import { NextApiRequest, NextApiResponse } from 'next';
 import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/core/client';
+import { SiteInfo, SiteResolver } from '../site';
 
 /**
  * Middleware for handling sitemap requests in a Next.js application.
@@ -7,9 +8,11 @@ import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/core/cl
  */
 export class SitemapMiddleware {
   private client: SitecoreClient;
+  private siteResolver: SiteResolver;
 
-  constructor(client: SitecoreClient) {
+  constructor(client: SitecoreClient, sites: SiteInfo[]) {
     this.client = client;
+    this.siteResolver = new SiteResolver(sites);
   }
 
   getHandler() {
@@ -20,14 +23,13 @@ export class SitemapMiddleware {
     const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
     const reqHost = req.headers.host || '';
     const reqProtocol = req.headers['x-forwarded-proto'] || 'https';
-    const site = this.client.resolveSite(reqHost);
+    const site = this.siteResolver.getByHost(reqHost);
 
     const options: SitemapXmlOptions = { reqHost, reqProtocol, id, siteName: site.name };
 
     try {
       const xmlContent = await this.client.getSiteMap(options);
       res.setHeader('Content-Type', 'text/xml;charset=utf-8');
-
       res.send(xmlContent);
     } catch (error) {
       if (error instanceof Error && error.message === 'REDIRECT_404') {

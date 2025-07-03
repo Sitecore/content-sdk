@@ -8,7 +8,7 @@
 
 > **SitecoreClientInit** = `Omit`\<[`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md), `"multisite"` \| `"redirects"` \| `"personalize"`\> & `object`
 
-Defined in: [packages/core/src/client/models.ts:11](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/client/models.ts#L11)
+Defined in: [packages/core/src/client/models.ts:11](https://github.com/Sitecore/content-sdk/blob/ac18aa626926b59845cdeeca2e9297ea0848eb52/packages/core/src/client/models.ts#L11)
 
 Init options for Sitecore Client that allows you to override services too
 
@@ -20,32 +20,24 @@ Init options for Sitecore Client that allows you to override services too
 
 #### custom.componentService?
 
-> `optional` **componentService**: [`RestComponentLayoutService`](../../editing/classes/RestComponentLayoutService.md)
+> `optional` **componentService**: [`ComponentLayoutService`](../../editing/classes/ComponentLayoutService.md)
 
 #### custom.dictionaryService?
 
-> `optional` **dictionaryService**: [`GraphQLDictionaryService`](../../i18n/classes/GraphQLDictionaryService.md)
+> `optional` **dictionaryService**: [`DictionaryService`](../../i18n/classes/DictionaryService.md)
 
 #### custom.editingService?
 
-> `optional` **editingService**: [`GraphQLEditingService`](../../editing/classes/GraphQLEditingService.md)
+> `optional` **editingService**: [`EditingService`](../../editing/classes/EditingService.md)
 
 #### custom.errorPagesService?
 
-> `optional` **errorPagesService**: [`GraphQLErrorPagesService`](../../site/classes/GraphQLErrorPagesService.md)
+> `optional` **errorPagesService**: [`ErrorPagesService`](../../site/classes/ErrorPagesService.md)
 
 #### custom.layoutService?
 
-> `optional` **layoutService**: [`GraphQLLayoutService`](../../layout/classes/GraphQLLayoutService.md)
+> `optional` **layoutService**: [`LayoutService`](../../layout/classes/LayoutService.md)
 
 #### custom.sitePathService?
 
-> `optional` **sitePathService**: [`GraphQLSitePathService`](../../site/classes/GraphQLSitePathService.md)
-
-#### custom.siteResolver?
-
-> `optional` **siteResolver**: [`SiteResolver`](../../site/classes/SiteResolver.md)
-
-### sites
-
-> **sites**: [`SiteInfo`](../../site/type-aliases/SiteInfo.md)[]
+> `optional` **sitePathService**: [`SitePathService`](../../site/classes/SitePathService.md)

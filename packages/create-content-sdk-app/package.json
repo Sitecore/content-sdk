@@ -1,6 +1,6 @@
 {
   "name": "create-content-sdk-app",
-  "version": "0.3.0-canary.32",
+  "version": "1.0.0-canary.6",
   "description": "Sitecore Content SDK initializer",
   "bin": "./dist/index.js",
   "scripts": {

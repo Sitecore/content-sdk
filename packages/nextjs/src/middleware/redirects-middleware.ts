@@ -1,7 +1,7 @@
 ﻿import { debug } from '@sitecore-content-sdk/core';
 import {
-  GraphQLRedirectsService,
-  GraphQLRedirectsServiceConfig,
+  RedirectsService,
+  RedirectsServiceConfig,
   REDIRECT_TYPE_301,
   REDIRECT_TYPE_302,
   REDIRECT_TYPE_SERVER_TRANSFER,
@@ -28,21 +28,18 @@ type RedirectResult = RedirectInfo & { matchedQueryString?: string };
 /**
  * extended RedirectsMiddlewareConfig config type for RedirectsMiddleware
  */
-export type RedirectsMiddlewareConfig = Omit<
-  GraphQLRedirectsServiceConfig,
-  'fetch' | 'clientFactory'
-> &
+export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> &
   SitecoreConfig['api']['edge'] &
   MiddlewareBaseConfig &
   SitecoreConfig['redirects'] & {
-    redirectsService?: GraphQLRedirectsService;
+    redirectsService?: RedirectsService;
   };
 /**
  * Middleware / handler fetches all redirects from Sitecore instance by grapqhl service
  * compares with current url and redirects to target url
  */
 export class RedirectsMiddleware extends MiddlewareBase {
-  protected redirectsService: GraphQLRedirectsService;
+  protected redirectsService: RedirectsService;
   private locales: string[];
 
   /**
@@ -63,7 +60,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
     this.redirectsService =
       this.config.redirectsService ??
-      new GraphQLRedirectsService({
+      new RedirectsService({
         ...config,
         clientFactory: this.getClientFactory(graphQLOptions),
         fetch: fetch,
