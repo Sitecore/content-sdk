@@ -118,11 +118,11 @@ function formatCoverageDelta(base, pr) {
  */
 function generateMetricReport(baseSizes, prSizes, baseCoverage, prCoverage) {
   console.log('📝 Generating Markdown report...');
-  let markdown = '### 📦 Bundle Size Report (with Test Coverage)\n\n';
+  let markdown = '### 📦 Package Size and Test Coverage Report \n\n';
   markdown +=
-    '| Package | Base Size | PR Size | Δ Change | Base Test Coverage | PR Test Coverage | Δ Change |\n';
+    '| Package | Base Size | PR Size | Δ Change | **Coverage** - Base | **Coverage** - PR | Δ Change |\n';
   markdown +=
-    '|---------|-----------|---------|----------|---------------------|------------------|----------|\n';
+    '|---------|-----------|---------|----------|---------------------|-------------------|-----------|\n';
 
   let totalDelta = 0;
 

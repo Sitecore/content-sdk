@@ -1,4 +1,4 @@
-﻿name: Bundle size and Test coverage
+﻿name: Package Size and Test Coverage Report
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Required for full git history & branch comparison
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -24,11 +24,10 @@ jobs:
           yarn cache clean --all
           yarn install --immutable
 
-      # 🔹 BUNDLE SIZE
-      - name: Run bundle size comparison
+      - name: Run metric check
         run: node ./scripts/report-pr-metrics.js
 
-      - name: Post PR comment (bundle size)
+      - name: Post PR comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: bundle-size
