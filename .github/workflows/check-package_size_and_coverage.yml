@@ -25,7 +25,7 @@ jobs:
           yarn install --immutable
 
       - name: Run metric check
-        run: node ./scripts/report-pr-metrics.js
+        run: node ./scripts/metrics-report.js
 
       - name: Post PR comment
         uses: marocchino/sticky-pull-request-comment@v2

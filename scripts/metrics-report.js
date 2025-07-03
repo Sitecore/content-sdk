@@ -120,7 +120,7 @@ function generateMetricReport(baseSizes, prSizes, baseCoverage, prCoverage) {
   console.log('📝 Generating Markdown report...');
   let markdown = '### 📦 Package Size and Test Coverage Report \n\n';
   markdown +=
-    '| Package | Base Size | PR Size | Δ Change | **Coverage** - Base | **Coverage** - PR | Δ Change |\n';
+    '| Package | Base Size | PR Size | Δ Change | Base Coverage | PR Coverage | Δ Change |\n';
   markdown +=
     '|---------|-----------|---------|----------|---------------------|-------------------|-----------|\n';
 
