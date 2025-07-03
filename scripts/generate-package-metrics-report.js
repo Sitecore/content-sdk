@@ -143,7 +143,7 @@ function generateMetricReport(baseSizes, prSizes, baseCoverage, prCoverage) {
   }
 
   markdown += `| **Total** | — | — | ${formatPackageSizeDelta(totalDelta)} | — | — | — |\n`;
-  fs.writeFileSync('metric-reports.md', markdown, 'utf8');
+  fs.writeFileSync('metrics-reports.md', markdown, 'utf8');
   console.log('✅ Report written to metrics-report.md');
 }
 
