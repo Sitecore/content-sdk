@@ -1,11 +1,11 @@
-﻿name: Package Size and Test Coverage Report
+﻿name: Pull Request Metrics Report
 
 on:
   pull_request:
     branches: [dev]
 
 jobs:
-  check-bundle-size:
+  generate-package-metrics-report:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,10 +25,10 @@ jobs:
           yarn install --immutable
 
       - name: Run metric check
-        run: node ./scripts/metrics-report.js
+        run: node ./scripts/generate-package-metrics-report.js
 
       - name: Post PR comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: bundle-size
-          path: metric-report.md
+          header: Metrics Report
+          path: metrics-report.md
