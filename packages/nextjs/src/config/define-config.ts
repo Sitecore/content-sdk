@@ -16,8 +16,7 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
       ...config?.api,
       edge: {
         ...config?.api?.edge,
-        contextId:
-          config?.api?.edge?.contextId || '',
+        contextId: config?.api?.edge?.contextId || '',
         clientContextId:
           config?.api?.edge?.clientContextId || process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
         edgeUrl: config?.api?.edge?.edgeUrl || process.env.NEXT_PUBLIC_SITECORE_EDGE_URL,

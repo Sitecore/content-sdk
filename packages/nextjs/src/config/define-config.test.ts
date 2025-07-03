@@ -130,7 +130,9 @@ describe('defineConfig', () => {
         // Server-side contextId should be empty
         expect(resultConfig.api?.edge?.contextId).to.equal('');
         // Client-side contextId should use env var
-        expect(resultConfig.api?.edge?.clientContextId).to.equal('next-public-sitecore-edge-context-id');
+        expect(resultConfig.api?.edge?.clientContextId).to.equal(
+          'next-public-sitecore-edge-context-id'
+        );
       });
     });
   });
