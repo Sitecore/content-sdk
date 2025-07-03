@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const packages = ['cli', 'core', 'create-content-sdk-app', 'nextjs', 'react'];
-const tempDir = path.resolve(__dirname, '../.tmp-bundle-sizes');
+const tempDir = path.resolve(__dirname, '../.tmp-metric-report');
 const baseBranch = process.env.BASE_BRANCH || 'origin/dev';
 
 /**
@@ -143,8 +143,8 @@ function generateMetricReport(baseSizes, prSizes, baseCoverage, prCoverage) {
   }
 
   markdown += `| **Total** | — | — | ${formatPackageSizeDelta(totalDelta)} | — | — | — |\n`;
-  fs.writeFileSync('metric-report.md', markdown, 'utf8');
-  console.log('✅ Report written to metric-report.md');
+  fs.writeFileSync('metric-reports.md', markdown, 'utf8');
+  console.log('✅ Report written to metrics-report.md');
 }
 
 /**
