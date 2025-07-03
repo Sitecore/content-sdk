@@ -23,7 +23,7 @@ export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
       endpoint: getEdgeProxyContentUrl(edge.clientContextId, edge.edgeUrl),
     };
   } else if (local?.apiKey && local?.apiHost) {
-    // Fallback to local XM GraphQL endpoint
+    // Fallback to local API settings
     clientConfig = {
       endpoint: `${local.apiHost}${local.path}`,
       apiKey: local.apiKey,
@@ -36,7 +36,6 @@ export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
     );
     clientConfig = { endpoint: '/api/graphql' };
   } else {
-    // Server build mis-configured – hard fail
     throw new Error(
       'GraphQL client mis-configured. Provide one of:\n' +
         '  • api.edge.contextId\n' +
