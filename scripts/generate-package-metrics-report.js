@@ -62,13 +62,14 @@ function recordCoverage() {
   console.log('🧪 Measuring test coverage...');
   const coverage = {};
 
+  console.log('Running test coverage...');
+
   for (const pkg of packages) {
     try {
       const pkgPath = path.resolve(__dirname, `../packages/${pkg}`);
       const pkgJson = require(path.join(pkgPath, 'package.json'));
       if (!pkgJson.scripts?.coverage) throw new Error('No coverage script');
 
-      console.log('Running test coverage...');
       const result = execSync('yarn run coverage', {
         cwd: pkgPath,
         encoding: 'utf-8',
@@ -86,7 +87,7 @@ function recordCoverage() {
         const values = match.slice(1, 5).map(Number);
         const avg = values.reduce((a, b) => a + b, 0) / values.length;
         coverage[pkg] = avg;
-        console.log(`    → ${pkg}: ${avg.toFixed(2)}% avg coverage`);
+        console.log(`    → Avg for ${pkg}: ${avg.toFixed(2)}%`);
       } else {
         throw new Error('Coverage metrics not found');
       }
