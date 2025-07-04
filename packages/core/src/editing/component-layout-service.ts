@@ -1,5 +1,5 @@
 import { LayoutServiceData } from '../layout/models';
-import { NativeDataFetcher, NativeDataFetcherConfig } from '../native-fetcher';
+import { NativeDataFetcher } from '../native-fetcher';
 import debug from '../debug';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { resolveUrl } from '../utils';
