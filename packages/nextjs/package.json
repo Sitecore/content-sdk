@@ -85,7 +85,6 @@
   "files": [
     "dist",
     "types",
-    "/*.js",
     "/*.d.ts"
   ]
 }
