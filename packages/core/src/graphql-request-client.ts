@@ -1,10 +1,10 @@
 import { GraphQLClient as Client, ClientError } from 'graphql-request';
 import parse from 'url-parse';
 import { DocumentNode } from 'graphql';
-import debuggers, { Debugger } from './debug';
-import TimeoutPromise from './utils/timeout-promise';
-import { GenericGraphQLClientError, RetryStrategy, FetchOptions } from './models';
-import { DefaultRetryStrategy } from './retries';
+import debuggers, { Debugger } from './debug.js';
+import TimeoutPromise from './utils/timeout-promise.js';
+import { GenericGraphQLClientError, RetryStrategy, FetchOptions } from './models.js';
+import { DefaultRetryStrategy } from './retries.js';
 
 /**
  * An interface for GraphQL clients for Sitecore APIs
@@ -99,7 +99,10 @@ export class GraphQLRequestClient implements GraphQLClient {
    * @param {string} endpoint The Graphql endpoint
    * @param {GraphQLRequestClientConfig} [clientConfig] GraphQL request client configuration.
    */
-  constructor(private endpoint: string, clientConfig: GraphQLRequestClientConfig = {}) {
+  constructor(
+    private endpoint: string,
+    clientConfig: GraphQLRequestClientConfig = {}
+  ) {
     if (clientConfig.apiKey) {
       this.headers.sc_apikey = clientConfig.apiKey;
     }

@@ -3,11 +3,11 @@ import { stub } from 'sinon';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import { ComponentFields } from '@sitecore-content-sdk/core/layout';
-import { FEaaSWrapper } from './FEaaSWrapper';
-import * as FEaaSComponent from './FEaaSComponent';
+import * as td from 'testdouble';
+import type { FEaaSComponentParams, FEaaSComponentProps } from './FEaaSComponent.js';
 
 describe('<FEaaSWrapper />', () => {
-  const params: FEaaSComponent.FEaaSComponentParams = {
+  const params: FEaaSComponentParams = {
     LibraryId: 'library123',
     ComponentId: 'component123',
     ComponentVersion: 'version123',
@@ -28,10 +28,16 @@ describe('<FEaaSWrapper />', () => {
     baz: 42,
   };
 
-  it('should render', () => {
-    const feaasComponentStub = stub(FEaaSComponent, 'FEaaSComponent').callsFake(() => <p>Foo</p>);
+  it('should render', async () => {
+    const feaasComponentStub = stub().returns(<p>Foo</p>);
 
-    const mockProps: FEaaSComponent.FEaaSComponentProps = {
+    await td.replaceEsm('./FEaaSComponent.tsx', {
+      FEaaSComponent: feaasComponentStub,
+    });
+
+    const { FEaaSWrapper } = await import('./FEaaSWrapper.js');
+
+    const mockProps: FEaaSComponentProps = {
       params,
       fields,
       fetchedData,
@@ -62,7 +68,5 @@ describe('<FEaaSWrapper />', () => {
     expect(wrapper.container.querySelectorAll('.bar')).to.have.lengthOf(1);
     expect(root?.getAttribute('class')).to.equal('component feaas foo bar');
     expect(root?.getAttribute('id')).to.equal('foo-id');
-
-    feaasComponentStub.restore();
   });
 });

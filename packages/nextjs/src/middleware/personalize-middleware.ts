@@ -1,4 +1,4 @@
-﻿import { NextResponse, NextRequest } from 'next/server';
+﻿import { NextResponse, NextRequest } from 'next/server.js';
 import {
   GraphQLPersonalizeService,
   getPersonalizedRewrite,
@@ -7,10 +7,10 @@ import {
   DEFAULT_VARIANT,
 } from '@sitecore-content-sdk/core/personalize';
 import { debug } from '@sitecore-content-sdk/core';
-import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
+import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware.js';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
-import { SitecoreConfig } from '../config';
+import { SitecoreConfig } from '../config/index.js';
 
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['api']['edge'] &

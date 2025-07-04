@@ -1,3 +1,3 @@
-const loader = require('./dist/cjs/tools/component-props.loader');
+const loader = require('./dist/cjs/component-props.loader');
 
 module.exports = loader;

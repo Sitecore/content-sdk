@@ -1,5 +1,5 @@
-import debuggers, { Debugger } from './debug';
-import TimeoutPromise from './utils/timeout-promise';
+import debuggers, { Debugger } from './debug.js';
+import TimeoutPromise from './utils/timeout-promise.js';
 
 type NativeDataFetcherOptions = {
   /**

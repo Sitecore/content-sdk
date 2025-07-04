@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-expressions */
 
-// what is `import x = require('x');`? great question: https://github.com/Microsoft/TypeScript/issues/5073
-import chai from 'chai';
-import chaiString from 'chai-string';
+import { expect } from 'chai';
 import URL from 'url-parse';
-import { replaceMediaUrlPrefix, getSrcSet, updateImageUrl, getRequiredParams } from './media-api';
-
-const expect = chai.use(chaiString).expect;
+import {
+  replaceMediaUrlPrefix,
+  getSrcSet,
+  updateImageUrl,
+  getRequiredParams,
+} from './media-api.js';
 
 describe('getRequiredParams', () => {
   it('should return required query string params', () => {

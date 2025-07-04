@@ -9,7 +9,7 @@ import {
   ComponentPropsFetchFunction,
   NextContext,
   NextjsJssComponent,
-} from '../sharedTypes/component-props';
+} from '../sharedTypes/component-props.js';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 
 export type FetchComponentPropsArguments = {

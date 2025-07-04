@@ -1,7 +1,7 @@
-import { ComponentRendering, LayoutServiceData, RouteData, getFieldValue } from '.';
-import { HTMLLink } from '../models';
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import { normalizeUrl } from '../utils/normalize-url';
+import { ComponentRendering, LayoutServiceData, RouteData, getFieldValue } from './index.js';
+import { HTMLLink } from '../models.js';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
+import { normalizeUrl } from '../utils/normalize-url.js';
 
 /**
  * Pattern for library ids

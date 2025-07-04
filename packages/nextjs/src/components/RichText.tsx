@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useRef, JSX } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router.js';
 import {
   RichText as ReactRichText,
   RichTextProps as ReactRichTextProps,

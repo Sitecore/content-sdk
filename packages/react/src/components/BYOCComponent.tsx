@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import { ComponentFields, ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import { getDataFromFields } from '../utils';
-import { MissingComponent, MissingComponentProps } from './MissingComponent';
+import { getDataFromFields } from '../utils.js';
+import { MissingComponent, MissingComponentProps } from './MissingComponent.js';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 
 export const BYOC_COMPONENT_RENDERING_NAME = 'BYOCComponent';
@@ -90,12 +90,7 @@ const DefaultErrorComponent = (props: ErrorComponentProps) => (
  * @returns dynamicly rendered component or Missing Component error frame
  */
 export class BYOCComponent extends React.Component<BYOCComponentProps> {
-  state: Readonly<{ error?: Error }>;
-
-  constructor(props: BYOCComponentProps) {
-    super(props);
-    this.state = {};
-  }
+  state: Readonly<{ error?: Error }> = {};
 
   static getDerivedStateFromError(error: Error) {
     // Update state so the next render will show the fallback UI.

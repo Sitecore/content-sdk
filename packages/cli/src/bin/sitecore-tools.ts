@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
 import resolve from 'resolve';
-import processEnv from '../utils/process-env';
-import * as commands from '../scripts';
+import processEnv from '../utils/process-env.js';
+import * as commands from '../scripts/index.js';
+import { pathToFileURL } from 'url';
 
 /**
  * Resolves and executes the locally installed version of the sitecore content sdk CLI (sitecore-tools).
  */
-resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (error, projectLocalCli) => {
+resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, async (error, projectLocalCli) => {
   let cli;
   if (error) {
     // If there is an error, resolve could not find the cli
@@ -15,14 +16,15 @@ resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (error, project
     // path to this script file (which is likely a globally installed
     // npm package).
     // Not erroring here because cli can be used in global mode.
-    cli = require('../cli').default;
+    cli = await import('../cli.js').then((m) => m.default);
     console.warn(
       'Sitecore Content SDK CLI is running in global mode because it was not installed in the local node_modules folder.'
     );
   } else {
     // No error implies a projectLocalCli, which will load whatever
     // version of content sdk cli you have installed in a local package.json
-    cli = require(projectLocalCli as string).default;
+    const cliUrl = pathToFileURL(projectLocalCli as string).href;
+    cli = await import(cliUrl).then((m) => m.default);
   }
 
   // load environment variables from current working directory
@@ -30,5 +32,5 @@ resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (error, project
   // in that case loading environment variables will be handled by the actual cli command
   processEnv(process.cwd());
 
-  cli(commands);
+  await cli(commands);
 });

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { form } from '@sitecore-content-sdk/core';
-import { useSitecore } from '../enhancers/withSitecore';
+import { useSitecore } from '../enhancers/withSitecore.js';
 
 let { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
 

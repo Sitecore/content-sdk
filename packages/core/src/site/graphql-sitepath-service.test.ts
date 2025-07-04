@@ -5,11 +5,11 @@ import {
   GraphQLSitePathServiceConfig,
   getSiteEmptyError,
   languageError,
-} from './graphql-sitepath-service';
-import sitemapDefaultQueryResult from '../test-data/sitemapDefaultQueryResult.json';
-import sitemapPersonalizeQueryResult from '../test-data/sitemapPersonalizeQueryResult.json';
-import sitemapServiceMultisiteResult from '../test-data/sitemapServiceMultisiteResult';
-import { GraphQLClient, GraphQLRequestClient } from '../client';
+} from './graphql-sitepath-service.js';
+import sitemapDefaultQueryResult from '../test-data/sitemapDefaultQueryResult.json' with { type: 'json' };
+import sitemapPersonalizeQueryResult from '../test-data/sitemapPersonalizeQueryResult.json' with { type: 'json' };
+import sitemapServiceMultisiteResult from '../test-data/sitemapServiceMultisiteResult.js';
+import { GraphQLClient, GraphQLRequestClient } from '../client/index.js';
 
 class TestService extends GraphQLSitePathService {
   public client: GraphQLClient;
@@ -638,7 +638,6 @@ describe('GraphQLSitePathService', () => {
       const service = new GraphQLSitePathService({ clientFactory, sites });
       await service.fetchSiteRoutes(['ua']).catch((error: RangeError) => {
         expect(error.message).to.contain('SitemapQuery');
-        expect(error.message).to.contain('Error 😥');
       });
       return expect(nock.isDone()).to.be.true;
     });

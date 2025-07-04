@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { deepMerge, defineConfig, getFallbackConfig } from './define-config';
-import { SitecoreConfigInput } from './models';
-import { DefaultRetryStrategy } from '..';
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
+import { deepMerge, defineConfig, getFallbackConfig } from './define-config.js';
+import { SitecoreConfigInput } from './models.js';
+import { DefaultRetryStrategy } from '../retries.js';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
 
 describe('define-config', () => {
   const mockConfig: SitecoreConfigInput = {
@@ -138,15 +138,7 @@ describe('define-config', () => {
     const config = defineConfig(mockConfig);
     // eslint-disable-next-line
     expect((config.retries.retryStrategy as DefaultRetryStrategy)['statusCodes']).to.deep.equal([
-      429,
-      502,
-      503,
-      504,
-      520,
-      521,
-      522,
-      523,
-      524,
+      429, 502, 503, 504, 520, 521, 522, 523, 524,
     ]);
   });
 

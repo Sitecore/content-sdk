@@ -1,6 +1,6 @@
-export {
+export { GraphQLDictionaryService } from './graphql-dictionary-service.js';
+export type {
   DictionaryService,
   DictionaryPhrases,
   GraphQLDictionaryServiceConfig,
-  GraphQLDictionaryService,
-} from './graphql-dictionary-service';
+} from './graphql-dictionary-service.js';

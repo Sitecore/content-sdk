@@ -7,10 +7,10 @@ import {
   DesignLibraryStatus,
   getDesignLibraryScriptLink,
   isDesignLibraryMode,
-} from './design-library';
-import testComponent from '../test-data/component-editing-data';
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import { DesignLibraryMode } from './models';
+} from './design-library.js';
+import testComponent from '../test-data/component-editing-data.js';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
+import { DesignLibraryMode } from './models.js';
 
 describe('component library utils', () => {
   const debugSpy = sinon.spy(console, 'debug');

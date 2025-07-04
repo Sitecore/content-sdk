@@ -1,8 +1,6 @@
-import { expect, use, spy } from 'chai';
-import spies from 'chai-spies';
-import { tryParseEnvValue } from './env';
-
-use(spies);
+import { expect } from 'chai';
+import sinon from 'sinon';
+import { tryParseEnvValue } from './env.js';
 
 describe('env', () => {
   describe('tryParseEnvValue', () => {
@@ -19,20 +17,16 @@ describe('env', () => {
     });
 
     it('should throw error when cant parse provided value', () => {
-      const logSpy = spy.on(console, 'log');
+      const logSpy = sinon.spy(console, 'log');
 
       try {
         tryParseEnvValue('{ TEST: true }', {});
       } catch (err) {
         expect(err.message).to.equal('Unexpected token T in JSON at position 2');
-        expect(logSpy)
-          .on.nth(1)
-          .to.be.called.with('Parsing of multivalue env variable failed');
-        expect(logSpy)
-          .on.nth(2)
-          .to.be.called.with('Attempted to parse { TEST: true }');
+        expect(logSpy).to.have.been.calledWith('Parsing of multivalue env variable failed');
+        expect(logSpy).to.have.been.calledWith('Attempted to parse { TEST: true }');
 
-        spy.restore(console.log);
+        logSpy.restore();
       }
     });
   });

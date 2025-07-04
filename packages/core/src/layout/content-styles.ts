@@ -1,7 +1,7 @@
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import { ComponentRendering, Field, Item, LayoutServiceData, RouteData } from './index';
-import { HTMLLink } from '../models';
-import { normalizeUrl } from '../utils/normalize-url';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
+import { ComponentRendering, Field, Item, LayoutServiceData, RouteData } from './index.js';
+import { HTMLLink } from '../models.js';
+import { normalizeUrl } from '../utils/normalize-url.js';
 
 /**
  * Regular expression to check if the content styles are used in the field value

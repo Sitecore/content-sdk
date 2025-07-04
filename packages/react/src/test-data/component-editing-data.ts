@@ -1,5 +1,7 @@
-﻿import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/core/layout';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/src/layout';
+﻿import {
+  LayoutServicePageState,
+  EDITING_COMPONENT_PLACEHOLDER,
+} from '@sitecore-content-sdk/core/layout';
 
 const basicPage = {
   path: '/Styleguide',

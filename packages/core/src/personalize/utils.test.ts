@@ -8,7 +8,7 @@ import {
   DEFAULT_VARIANT,
   PersonalizedRewriteData,
   getGroomedVariantIds,
-} from './utils';
+} from './utils.js';
 
 describe('utils', () => {
   describe('getPersonalizedRewrite', () => {

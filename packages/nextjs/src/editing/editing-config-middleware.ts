@@ -7,9 +7,9 @@ import { debug } from '@sitecore-content-sdk/core';
 import { Metadata } from '@sitecore-content-sdk/core/editing';
 import { enforceCors } from '@sitecore-content-sdk/core/utils';
 import { EditMode } from '@sitecore-content-sdk/core/layout';
-import { getJssEditingSecret } from '../utils/utils';
+import { getJssEditingSecret } from '../utils/utils.js';
 import { ComponentMap } from '@sitecore-content-sdk/react';
-import { NextjsJssComponent } from '../sharedTypes/component-props';
+import { NextjsJssComponent } from '../sharedTypes/component-props.js';
 
 export type EditingConfigMiddlewareConfig = {
   /**

@@ -1,6 +1,6 @@
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import { DefaultRetryStrategy } from '../retries';
-import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
+import { DefaultRetryStrategy } from '../retries.js';
+import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models.js';
 
 /**
  * Provides default initial values for SitecoreConfig

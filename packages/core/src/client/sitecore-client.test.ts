@@ -1,15 +1,12 @@
-﻿import chai, { expect } from 'chai';
-import sinonChai from 'sinon-chai';
+﻿import { expect } from 'chai';
 import sinon from 'sinon';
-import { SitecoreClient } from './sitecore-client';
-import { LayoutKind, DesignLibraryMode } from '../../editing';
-import { LayoutServiceData } from '../../layout';
-import { DefaultRetryStrategy } from '../retries';
-import { LayoutServicePageState } from '../layout';
-import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
-import { NativeDataFetcher } from '../native-fetcher';
-
-chai.use(sinonChai);
+import { SitecoreClient } from './sitecore-client.js';
+import { LayoutKind, DesignLibraryMode } from '../editing/index.js';
+import { LayoutServiceData } from '../layout/index.js';
+import { DefaultRetryStrategy } from '../retries.js';
+import { LayoutServicePageState } from '../layout/index.js';
+import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData.js';
+import { NativeDataFetcher } from '../native-fetcher.js';
 
 describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
@@ -901,7 +898,7 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getHeadLinks', function() {
+  describe('getHeadLinks', function () {
     const truthyValue = {
       value: '<div class="test bar"><p class="foo ck-content">bar</p></div>',
     };
@@ -943,13 +940,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
         {
-          href:
-            'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);
@@ -962,8 +957,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);
@@ -976,8 +970,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);

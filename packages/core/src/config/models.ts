@@ -1,14 +1,12 @@
-import { RetryStrategy } from '../models';
-import { GenerateMapFunction, GenerateMapArgs } from '../tools';
+import { RetryStrategy } from '../models.js';
+import { GenerateMapFunction, GenerateMapArgs } from '../tools/index.js';
 
 /**
  * Utility type to make every property in a type required
  */
-export type DeepRequired<T> = Required<
-  {
-    [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
-  }
->;
+export type DeepRequired<T> = Required<{
+  [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
+}>;
 
 /**
  * Utility type to make all properties in a type optional, recursively.

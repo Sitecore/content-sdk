@@ -4,7 +4,7 @@
 
 // eslint-disable-next-line no-var
 declare var global: NodeJS.Global;
-const { JSDOM } = require('jsdom');
+import { JSDOM } from 'jsdom';
 
 const jsdom = new JSDOM('<!doctype html><html><body></body></html>', {
   url: 'http://localhost',

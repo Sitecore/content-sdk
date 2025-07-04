@@ -1,34 +1,48 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
+import * as td from 'testdouble';
 import path from 'path';
-import loadCliConfig from './load-config';
-import fs from 'fs';
-import * as processEnv from './process-env';
+import { fileURLToPath, pathToFileURL } from 'url';
 
-const tsx = require('tsx/cjs/api');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 describe('loadCliConfig', () => {
   let tsxRequireStub: sinon.SinonStub;
   const mockConfigExport = { default: { build: { commmands: [], scaffold: {} } } };
   let processEnvStub: sinon.SinonStub;
+  let loadCliConfig: typeof import('./load-config.js').default;
+  let existsSyncStub: sinon.SinonStub;
 
-  beforeEach(() => {
-    tsxRequireStub = sinon.stub(tsx, 'require');
-    processEnvStub = sinon.stub(processEnv, 'default');
+  beforeEach(async () => {
+    tsxRequireStub = sinon.stub();
+    await td.replaceEsm('tsx/esm/api', {
+      tsImport: tsxRequireStub,
+    });
+
+    existsSyncStub = sinon.stub();
+    await td.replaceEsm('fs', undefined, {
+      existsSync: existsSyncStub,
+    });
+
+    processEnvStub = sinon.stub();
+    await td.replaceEsm('./process-env.ts', undefined, processEnvStub);
+
+    loadCliConfig = await import('./load-config.js').then((m) => m.default);
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it('should load the default .ts configuration file if no configFile is provided', () => {
-    sinon.stub(fs, 'existsSync').returns(true);
+  it('should load the default .ts configuration file if no configFile is provided', async () => {
+    existsSyncStub.returns(true);
     tsxRequireStub.returns(mockConfigExport);
-    const config = loadCliConfig('');
+    const config = await loadCliConfig('');
 
     expect(
       tsxRequireStub.calledOnceWith(
-        path.resolve(process.cwd(), './sitecore.cli.config.ts'),
+        pathToFileURL(path.resolve(process.cwd(), './sitecore.cli.config.ts')).href,
         path.resolve(__dirname, './load-config.ts')
       )
     ).to.be.true;
@@ -36,14 +50,14 @@ describe('loadCliConfig', () => {
     expect(processEnvStub.notCalled).to.be.true;
   });
 
-  it('should load the default .js configuration file if no configFile is provided and the .ts is missing', () => {
-    sinon.stub(fs, 'existsSync').returns(false);
+  it('should load the default .js configuration file if no configFile is provided and the .ts is missing', async () => {
+    existsSyncStub.returns(false);
     tsxRequireStub.returns(mockConfigExport);
-    const config = loadCliConfig('');
+    const config = await loadCliConfig('');
 
     expect(
       tsxRequireStub.calledOnceWith(
-        path.resolve(process.cwd(), './sitecore.cli.config.js'),
+        pathToFileURL(path.resolve(process.cwd(), './sitecore.cli.config.js')).href,
         path.resolve(__dirname, './load-config.ts')
       )
     ).to.be.true;
@@ -51,13 +65,13 @@ describe('loadCliConfig', () => {
     expect(processEnvStub.notCalled).to.be.true;
   });
 
-  it('should load the specified configuration file from same directory', () => {
+  it('should load the specified configuration file from same directory', async () => {
     tsxRequireStub.returns(mockConfigExport);
-    const config = loadCliConfig('./some-config.ts');
+    const config = await loadCliConfig('./some-config.ts');
 
     expect(
       tsxRequireStub.calledOnceWith(
-        path.resolve(process.cwd(), './some-config.ts'),
+        pathToFileURL(path.resolve(process.cwd(), './some-config.ts')).href,
         path.resolve(__dirname, './load-config.ts')
       )
     ).to.be.true;
@@ -65,13 +79,13 @@ describe('loadCliConfig', () => {
     expect(processEnvStub.notCalled).to.be.true;
   });
 
-  it('should load the specified configuration file from different directory, and load env vars from there', () => {
+  it('should load the specified configuration file from different directory, and load env vars from there', async () => {
     tsxRequireStub.returns(mockConfigExport);
-    const config = loadCliConfig('./some-dr/some-config.ts');
+    const config = await loadCliConfig('./some-dr/some-config.ts');
 
     expect(
       tsxRequireStub.calledOnceWith(
-        path.resolve(process.cwd(), './some-dr/some-config.ts'),
+        pathToFileURL(path.resolve(process.cwd(), './some-dr/some-config.ts')).href,
         path.resolve(__dirname, './load-config.ts')
       )
     ).to.be.true;
@@ -83,12 +97,12 @@ describe('loadCliConfig', () => {
     ).to.be.true;
   });
 
-  it('should throw an error if the configuration file does not exist', () => {
+  it('should throw an error if the configuration file does not exist', async () => {
     const invalidConfig = './invalid-config.ts';
     const errorMessage = 'cannot find cli config';
     tsxRequireStub.throws(new Error(errorMessage));
 
-    expect(() => loadCliConfig(invalidConfig)).to.throw(
+    await expect(loadCliConfig(invalidConfig)).to.be.rejectedWith(
       `Error while trying to load the cli configuration from ${invalidConfig}. Error message: ${errorMessage}`
     );
   });

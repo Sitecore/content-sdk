@@ -14,11 +14,11 @@ import {
   isRegexOrUrl,
   mergeURLSearchParams,
 } from '@sitecore-content-sdk/core/utils';
-import { NextURL } from 'next/dist/server/web/next-url';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextURL } from 'next/dist/server/web/next-url.js';
+import { NextRequest, NextResponse } from 'next/server.js';
 import regexParser from 'regex-parser';
-import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
-import { SitecoreConfig } from '../config';
+import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware.js';
+import { SitecoreConfig } from '../config/index.js';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');

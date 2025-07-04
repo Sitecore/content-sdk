@@ -1,7 +1,7 @@
 import {
   GraphQLDictionaryQueryResponse,
   GraphQLEditingQueryResponse,
-} from '../editing/graphql-editing-service';
+} from '../editing/graphql-editing-service.js';
 
 export const mockEditingServiceResponse = (
   hasNext = false

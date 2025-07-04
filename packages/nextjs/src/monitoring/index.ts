@@ -1,1 +1,1 @@
-export { HealthcheckMiddleware } from './healthcheck-middleware';
+export { HealthcheckMiddleware } from './healthcheck-middleware.js';

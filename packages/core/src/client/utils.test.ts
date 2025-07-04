@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { createGraphQLClientFactory } from './utils';
+import { createGraphQLClientFactory } from './utils.js';
 
 describe('createGraphQLClientFactory', () => {
   const originalWindow = global.window;

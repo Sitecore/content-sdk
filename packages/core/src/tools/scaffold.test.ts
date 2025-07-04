@@ -2,7 +2,7 @@ import fs from 'fs';
 import { expect } from 'chai';
 import path from 'path';
 import sinon from 'sinon';
-import { scaffoldFile, editLineEndings, scaffoldComponent } from './scaffold';
+import { scaffoldFile, editLineEndings, scaffoldComponent } from './scaffold.js';
 
 describe('scaffold', () => {
   afterEach(() => {

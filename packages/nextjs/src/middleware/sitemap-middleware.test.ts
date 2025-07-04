@@ -29,7 +29,7 @@ describe('SitemapMiddleware', () => {
       },
     };
 
-    middleware = new SitemapMiddleware((sitecoreClientStub as unknown) as SitecoreClient);
+    middleware = new SitemapMiddleware(sitecoreClientStub as unknown as SitecoreClient);
   });
 
   afterEach(() => {

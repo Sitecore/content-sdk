@@ -2,100 +2,104 @@
   constants,
   enableDebug,
   ClientError,
-  CacheClient,
-  CacheOptions,
+  type CacheClient,
+  type CacheOptions,
   MemoryCacheClient,
   NativeDataFetcher,
-  NativeDataFetcherResponse,
-  NativeDataFetcherConfig,
+  type NativeDataFetcherResponse,
+  type NativeDataFetcherConfig,
 } from '@sitecore-content-sdk/core';
-export { EnhancedOmit } from '@sitecore-content-sdk/core/utils';
+export { type EnhancedOmit } from '@sitecore-content-sdk/core/utils';
 export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,
-  LayoutServiceData,
+  type LayoutServiceData,
   LayoutServicePageState,
-  LayoutServiceContext,
-  LayoutServiceContextData,
+  type LayoutServiceContext,
+  type LayoutServiceContextData,
   GraphQLLayoutService,
-  RouteData,
-  Field,
-  Item,
+  type RouteData,
+  type Field,
+  type Item,
   getChildPlaceholder,
   getFieldValue,
-  ComponentRendering,
-  ComponentFields,
-  ComponentParams,
+  type ComponentRendering,
+  type ComponentFields,
+  type ComponentParams,
   EditMode,
 } from '@sitecore-content-sdk/core/layout';
 export {
-  DictionaryPhrases,
-  DictionaryService,
+  type DictionaryPhrases,
+  type DictionaryService,
   GraphQLDictionaryService,
 } from '@sitecore-content-sdk/core/i18n';
 export {
-  GraphQLClientError,
-  RetryStrategy,
+  type GraphQLClientError,
+  type RetryStrategy,
   DefaultRetryStrategy,
-  GraphQLRequestClientFactoryConfig,
+  type GraphQLRequestClientFactoryConfig,
   GraphQLRequestClient,
 } from '@sitecore-content-sdk/core/client';
 export { mediaApi } from '@sitecore-content-sdk/core/media';
-export { Form } from './components/Form';
-export { ReactJssComponent, ComponentMap, ReactModule } from './components/sharedTypes';
-export { Placeholder, PlaceholderComponentProps } from './components/Placeholder';
+export { Form } from './components/Form.js';
+export {
+  type ReactJssComponent,
+  type ComponentMap,
+  type ReactModule,
+} from './components/sharedTypes/index.js';
+export { Placeholder, type PlaceholderComponentProps } from './components/Placeholder.js';
 export {
   Image,
-  ImageProps,
-  ImageField,
-  ImageFieldValue,
-  ImageSizeParameters,
-} from './components/Image';
-export { RichText, RichTextProps, RichTextField } from './components/RichText';
-export { Text, TextField } from './components/Text';
-export { DateField, DateFieldProps } from './components/Date';
+  type ImageProps,
+  type ImageField,
+  type ImageFieldValue,
+  type ImageSizeParameters,
+} from './components/Image.js';
+export { RichText, type RichTextProps, type RichTextField } from './components/RichText.js';
+export { Text, type TextField } from './components/Text.js';
+export { type DateField, type DateFieldProps } from './components/Date.js';
 export {
   FEaaSComponent,
-  FEaaSComponentProps,
-  FEaaSComponentParams,
+  type FEaaSComponentProps,
+  type FEaaSComponentParams,
   fetchFEaaSComponentServerProps,
-} from './components/FEaaSComponent';
-export { FEaaSWrapper } from './components/FEaaSWrapper';
-export { DesignLibrary } from './components/DesignLibrary';
+} from './components/FEaaSComponent.js';
+export { FEaaSWrapper } from './components/FEaaSWrapper.js';
+export { DesignLibrary } from './components/DesignLibrary.js';
 export {
   BYOCComponent,
-  BYOCComponentParams,
-  BYOCComponentProps,
+  type BYOCComponentParams,
+  type BYOCComponentProps,
   fetchBYOCComponentServerProps,
-} from './components/BYOCComponent';
-export { BYOCWrapper } from './components/BYOCWrapper';
-export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';
-export { File, FileField } from './components/File';
+} from './components/BYOCComponent.js';
+export { BYOCWrapper } from './components/BYOCWrapper.js';
+export { Link, type LinkField, type LinkFieldValue, type LinkProps } from './components/Link.js';
+export { File, type FileField } from './components/File.js';
 export {
   SitecoreProvider,
-  SitecoreProviderState,
-  SitecoreProviderPageContext,
+  type SitecoreProviderState,
+  type SitecoreProviderPageContext,
   SitecoreProviderReactContext,
-} from './components/SitecoreProvider';
+} from './components/SitecoreProvider.js';
 export {
   withSitecore,
   useSitecore,
-  WithSitecoreOptions,
-  WithSitecoreProps,
-  WithSitecoreHocProps,
-} from './enhancers/withSitecore';
-export { withEditorChromes } from './enhancers/withEditorChromes';
-export { withPlaceholder } from './enhancers/withPlaceholder';
-export { withDatasourceCheck } from './enhancers/withDatasourceCheck';
-export { withFieldMetadata } from './enhancers/withFieldMetadata';
-export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditingComponent';
-export { EditingScripts } from './components/EditingScripts';
+  type WithSitecoreOptions,
+  type WithSitecoreProps,
+  type WithSitecoreHocProps,
+} from './enhancers/withSitecore.js';
+export { withEditorChromes } from './enhancers/withEditorChromes.js';
+export { withPlaceholder } from './enhancers/withPlaceholder.js';
+export { withDatasourceCheck } from './enhancers/withDatasourceCheck.js';
+export { withFieldMetadata } from './enhancers/withFieldMetadata.js';
+export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditingComponent.js';
+export { EditingScripts } from './components/EditingScripts.js';
 export {
   DefaultEmptyFieldEditingComponentText,
   DefaultEmptyFieldEditingComponentImage,
-} from './components/DefaultEmptyFieldEditingComponents';
+} from './components/DefaultEmptyFieldEditingComponents.js';
 export {
   GraphQLSitePathService,
-  GraphQLSitePathServiceConfig,
+  type GraphQLSitePathServiceConfig,
 } from '@sitecore-content-sdk/core/site';

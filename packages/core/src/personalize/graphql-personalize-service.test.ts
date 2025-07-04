@@ -1,11 +1,8 @@
 ﻿/* eslint-disable dot-notation */
-import { expect, use } from 'chai';
-import spies from 'chai-spies';
+import { expect } from 'chai';
 import nock from 'nock';
-import { GraphQLPersonalizeService } from './graphql-personalize-service';
-import { GraphQLRequestClient } from '../graphql-request-client';
-
-use(spies);
+import { GraphQLPersonalizeService } from './graphql-personalize-service.js';
+import { GraphQLRequestClient } from '../graphql-request-client.js';
 
 describe('GraphQLPersonalizeService', () => {
   const endpoint = 'http://sctest/graphql';

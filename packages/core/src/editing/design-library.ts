@@ -1,7 +1,7 @@
-import { ComponentRendering, Field, GenericFieldValue } from '../layout/models';
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import { normalizeUrl } from '../utils/normalize-url';
-import { DesignLibraryMode } from './models';
+import { ComponentRendering, Field, GenericFieldValue } from '../layout/models.js';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
+import { normalizeUrl } from '../utils/normalize-url.js';
+import { DesignLibraryMode } from './models.js';
 
 /**
  * Event to be sent when report status to design library

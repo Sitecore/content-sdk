@@ -1,8 +1,8 @@
 // Mock fetch/Request for nextjs middleware
 
-const crossFetch = require('cross-fetch');
+// import * as crossFetch from 'cross-fetch';
 
-global.fetch = crossFetch;
-global.Headers = crossFetch.Headers;
-global.Request = crossFetch.Request;
-global.Response = crossFetch.Response;
+// global.fetch = crossFetch.fetch;
+// global.Headers = crossFetch.Headers;
+// global.Request = crossFetch.Request;
+// global.Response = crossFetch.Response;

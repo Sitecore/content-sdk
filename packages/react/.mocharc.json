@@ -1,0 +1,5 @@
+{
+  "import": ["tsx/esm"],
+  "spec": "./src/**/*.test.{ts,tsx}",
+  "require": ["./test/setup.js"]
+}

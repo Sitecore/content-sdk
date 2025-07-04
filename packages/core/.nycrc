@@ -20,6 +20,5 @@
   "reporter": [
     "cobertura",
     "text"
-  ],
-  "import": ["tsx"]
+  ]
 }

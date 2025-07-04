@@ -1,7 +1,7 @@
 import fs from 'fs';
 import chalk from 'chalk';
 import path from 'path';
-import { ScaffoldTemplate } from '../config';
+import { ScaffoldTemplate } from '../config/index.js';
 
 /**
  * Force to use `crlf` line endings, we are using `crlf` across the project.

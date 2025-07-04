@@ -1,4 +1,4 @@
-import loadCliConfig from '../../utils/load-config';
+import loadCliConfig from '../../utils/load-config.js';
 
 export const command = 'build';
 
@@ -29,7 +29,8 @@ export type BuildArgs = {
  * @param {BuildArgs} argv - The arguments passed to the command.
  */
 export async function handler(argv: BuildArgs) {
-  const cliConfig = loadCliConfig(argv.config);
+  console.log('BUILDING');
+  const cliConfig = await loadCliConfig(argv.config);
 
   if (cliConfig.build && Array.isArray(cliConfig.build.commands)) {
     for (const command of cliConfig.build.commands) {

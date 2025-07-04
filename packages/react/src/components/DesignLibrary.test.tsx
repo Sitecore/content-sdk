@@ -1,5 +1,4 @@
 ﻿/* eslint-disable no-unused-expressions */
-/* eslint-disable react/prop-types */
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
@@ -15,6 +14,7 @@ import {
   ComponentUpdateEventArgs,
   getDesignLibraryStatusEvent,
 } from '@sitecore-content-sdk/core/editing';
+import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 
 describe('<DesignLibrary />', () => {
   const postMessageSpy = sinon.spy(global.window, 'postMessage');
@@ -23,6 +23,7 @@ describe('<DesignLibrary />', () => {
   const ContentBlock: React.FC<{
     [prop: string]: unknown;
     fields?: { content: { value: string }; heading: { value: string } };
+    rendering: ComponentRendering;
   }> = (props) => (
     <div className="test">
       <RichText field={props.fields?.content} />

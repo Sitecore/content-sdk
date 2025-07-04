@@ -1,5 +1,5 @@
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import { normalizeUrl } from '../utils/normalize-url';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
+import { normalizeUrl } from '../utils/normalize-url.js';
 /**
  * Generates a URL for accessing Sitecore Edge Platform Content using the provided endpoint and context ID.
  * @param {string} sitecoreEdgeContextId - The unique context id.

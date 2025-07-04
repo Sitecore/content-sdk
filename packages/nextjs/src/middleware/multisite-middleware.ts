@@ -1,10 +1,10 @@
 ﻿/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
-import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server.js';
 import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/core/site';
 import { debug } from '@sitecore-content-sdk/core';
-import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
-import { SitecoreConfig } from '../config';
+import { MiddlewareBase, MiddlewareBaseConfig } from './middleware.js';
+import { SitecoreConfig } from '../config/index.js';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/core/editing';
 
 export type CookieAttributes = {

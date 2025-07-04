@@ -1,9 +1,9 @@
 ﻿import React from 'react';
-import { PlaceholderCommon, PlaceholderProps } from './PlaceholderCommon';
-import { withComponentMap } from '../enhancers/withComponentMap';
+import { PlaceholderCommon, PlaceholderProps } from './PlaceholderCommon.js';
+import { withComponentMap } from '../enhancers/withComponentMap.js';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PagesEditor } from '@sitecore-content-sdk/core/editing';
-import { withSitecore } from '../enhancers/withSitecore';
+import { withSitecore } from '../enhancers/withSitecore.js';
 
 export interface PlaceholderComponentProps extends PlaceholderProps {
   /**

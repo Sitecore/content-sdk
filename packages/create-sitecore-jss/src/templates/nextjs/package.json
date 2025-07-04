@@ -3,6 +3,7 @@
   "description": "Application utilizing Sitecore JavaScript Services and Next.js",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "config": {
     "appName": "jss-nextjs",
     "graphQLEndpointPath": "/sitecore/api/graph/edge",

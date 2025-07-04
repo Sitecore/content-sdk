@@ -1,17 +1,14 @@
 /* eslint-disable no-unused-expressions */
-import { expect, use } from 'chai';
-import spies from 'chai-spies';
+import { expect } from 'chai';
 import nock from 'nock';
-import { NativeDataFetcherConfig } from '../native-fetcher';
+import { NativeDataFetcherConfig } from '../native-fetcher.js';
 import {
   ComponentLayoutRequestParams,
   RestComponentLayoutService,
-} from './rest-component-layout-service';
-import { LayoutServiceData } from '../layout/models';
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import { DesignLibraryMode } from './models';
-
-use(spies);
+} from './rest-component-layout-service.js';
+import { LayoutServiceData } from '../layout/models.js';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
+import { DesignLibraryMode } from './models.js';
 
 describe('RestComponentLayoutService', () => {
   const defaultTestInput: ComponentLayoutRequestParams = {

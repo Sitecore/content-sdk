@@ -1,5 +1,5 @@
-import { Field, GenericFieldValue } from '../layout/models';
-import isServer from '../utils/is-server';
+import { Field, GenericFieldValue } from '../layout/models.js';
+import isServer from '../utils/is-server.js';
 
 /**
  * Default value of uid for root placeholder when uid is not present.

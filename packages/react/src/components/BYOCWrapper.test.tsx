@@ -2,12 +2,18 @@ import React from 'react';
 import { stub } from 'sinon';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import { BYOCWrapper } from './BYOCWrapper';
-import * as BYOCComponent from './BYOCComponent';
+import * as td from 'testdouble';
 
 describe('<BYOCWrapper />', () => {
   it('should render', async () => {
-    const byocComponentStub = stub(BYOCComponent, 'BYOCComponent').callsFake(() => <p>Foo</p>);
+    const byocComponentStub = stub().returns(<p>Foo</p>);
+
+    await td.replaceEsm('./BYOCComponent.tsx', {
+      BYOCComponent: byocComponentStub,
+    });
+
+    const { BYOCWrapper } = await import('./BYOCWrapper.js');
+
     const mockProps = {
       params: {
         ComponentName: 'xxx',
@@ -30,7 +36,5 @@ describe('<BYOCWrapper />', () => {
     expect(root).to.have.lengthOf(1);
     expect(root[0].getAttribute('class')).to.equal('bar car');
     expect(root[0].getAttribute('id')).to.equal('foo-id');
-
-    byocComponentStub.restore();
   });
 });

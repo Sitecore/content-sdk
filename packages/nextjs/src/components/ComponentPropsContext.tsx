@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode, JSX } from 'react';
-import { ComponentPropsCollection } from '../sharedTypes/component-props';
+import { ComponentPropsCollection } from '../sharedTypes/component-props.js';
 
 /**
  * Component props context which we are using in order to store data fetched on components level (getComponentServerProps)

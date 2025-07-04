@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import fastDeepEqual from 'fast-deep-equal/es6/react';
+import fastDeepEqual from 'fast-deep-equal/es6/react.js';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
-import { LayoutServiceContext, LayoutServiceData, RouteData } from '../index';
+import { LayoutServiceContext, LayoutServiceData, RouteData } from '../index.js';
 import { constants } from '@sitecore-content-sdk/core';
-import { ComponentMap } from './sharedTypes';
+import { ComponentMap } from './sharedTypes/index.js';
 
 export interface SitecoreProviderProps {
   /**

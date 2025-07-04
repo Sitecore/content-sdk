@@ -2,10 +2,10 @@
 import { expect } from 'chai';
 import sinon, { SinonSpy } from 'sinon';
 import nock from 'nock';
-import { GraphQLClient, GraphQLRequestClient } from '../graphql-request-client';
-import { GraphQLDictionaryServiceConfig } from './graphql-dictionary-service';
-import { GraphQLDictionaryService } from '.';
-import dictionarySiteQueryResponse from '../test-data/mockDictionarySiteQueryResponse.json';
+import { GraphQLClient, GraphQLRequestClient } from '../graphql-request-client.js';
+import { GraphQLDictionaryServiceConfig } from './graphql-dictionary-service.js';
+import { GraphQLDictionaryService } from './graphql-dictionary-service.js';
+import dictionarySiteQueryResponse from '../test-data/mockDictionarySiteQueryResponse.json' with { type: 'json' };
 
 class TestService extends GraphQLDictionaryService {
   public client: GraphQLClient;
@@ -140,11 +140,9 @@ describe('GraphQLDictionaryService', () => {
   });
 
   it('should throw when getting http errors', async () => {
-    nock(endpoint)
-      .post('/')
-      .reply(401, {
-        error: 'whoops',
-      });
+    nock(endpoint).post('/').reply(401, {
+      error: 'whoops',
+    });
 
     const service = new GraphQLDictionaryService({
       clientFactory,
@@ -152,8 +150,7 @@ describe('GraphQLDictionaryService', () => {
     });
 
     await service.fetchDictionaryData('en', defaultSite).catch((error) => {
-      expect(error.response.status).to.equal(401);
-      expect(error.response.error).to.equal('whoops');
+      expect(error.message).to.include('GraphQL Error (Code: 401)');
     });
   });
 

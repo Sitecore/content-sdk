@@ -1,7 +1,7 @@
 ﻿import React, { ReactNode, Suspense } from 'react';
 import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
-import { withSitecore } from '../enhancers/withSitecore';
-import { SitecoreProviderPageContext } from './SitecoreProvider';
+import { withSitecore } from '../enhancers/withSitecore.js';
+import { SitecoreProviderPageContext } from './SitecoreProvider.js';
 
 type ErrorComponentProps = {
   [prop: string]: unknown;
@@ -21,12 +21,7 @@ export type ErrorBoundaryProps = {
 class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   defaultErrorMessage = 'There was a problem loading this section.';
   defaultLoadingMessage = 'Loading component...';
-  state: { error: Error };
-
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { error: null };
-  }
+  state: { error: Error } = { error: null };
 
   static getDerivedStateFromError(error: Error) {
     return { error: error };

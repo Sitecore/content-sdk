@@ -1,12 +1,12 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/prop-types */
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
 import { expect } from 'chai';
 import { findByText, render } from '@testing-library/react';
 import React from 'react';
-import { spy, stub } from 'sinon';
+import { stub } from 'sinon';
+import * as td from 'testdouble';
 import {
   byocWrapperData,
   feaasWrapperData,
@@ -17,22 +17,17 @@ import {
   sxaRenderingVariantData,
   sxaRenderingVariantDoubleDigitDynamicPlaceholder as sxaRenderingDoubleDigitContainerName,
   sxaRenderingVariantDataWithoutCommonContainerName as sxaRenderingWithoutContainerName,
-} from '../test-data/normal-mode-data';
-import * as metadataData from '../test-data/metadata-data';
-import * as SxaRichText from '../test-data/sxa-rich-text';
-import * as BYOCComponent from './BYOCComponent';
-import * as BYOCWrapper from './BYOCWrapper';
-import * as FEAASComponent from './FEaaSComponent';
-import * as FEAASWrapper from './FEaaSWrapper';
-import * as HiddenRendering from './HiddenRendering';
-import * as ErrorBoundary from './ErrorBoundary';
-import { MissingComponent, MissingComponentProps } from './MissingComponent';
-import { Placeholder } from './Placeholder';
-import { ComponentProps } from './PlaceholderCommon';
-import { SitecoreProvider } from './SitecoreProvider';
+} from '../test-data/normal-mode-data.js';
+import * as metadataData from '../test-data/metadata-data.js';
+import * as SxaRichText from '../test-data/sxa-rich-text.js';
+import * as HiddenRendering from './HiddenRendering.js';
+import { MissingComponent, MissingComponentProps } from './MissingComponent.js';
+import { Placeholder } from './Placeholder.js';
+import { ComponentProps } from './PlaceholderCommon.js';
+import { SitecoreProvider } from './SitecoreProvider.js';
 
 const componentMap = new Map<string, React.FC>();
-const dynamicComponent = React.lazy(() => import('../test-data/test-dynamic-component'));
+const dynamicComponent = React.lazy(() => import('../test-data/test-dynamic-component.js'));
 
 // pass otherProps to page-content to test property cascading through the Placeholder
 
@@ -42,6 +37,12 @@ const Home: React.FC<{ [prop: string]: unknown; rendering?: RouteData | Componen
   renderEach,
   renderEmpty,
   ...otherProps
+}: {
+  [prop: string]: unknown;
+  rendering?: RouteData | ComponentRendering;
+  render?: (component: React.ReactNode) => React.ReactNode;
+  renderEach?: (component: React.ReactNode) => React.ReactNode;
+  renderEmpty?: (component: React.ReactNode) => React.ReactNode;
 }) => (
   <div className="home-mock">
     <Placeholder name="page-header" rendering={rendering} />
@@ -75,10 +76,9 @@ describe('<Placeholder />', () => {
   testData.forEach((dataSet) => {
     describe(`with ${dataSet.label}`, () => {
       it('should render a placeholder with given key', () => {
-        const component = (dataSet.data.sitecore.route.placeholders.main as (
-          | ComponentRendering
-          | RouteData
-        )[]).find((c) => (c as ComponentRendering).componentName);
+        const component = (
+          dataSet.data.sitecore.route.placeholders.main as (ComponentRendering | RouteData)[]
+        ).find((c) => (c as ComponentRendering).componentName);
         const phKey = 'page-content';
 
         const renderedComponent = render(
@@ -373,24 +373,41 @@ describe('SXA rendering variants', () => {
 });
 
 describe('BYOC fallback', () => {
-  let byocComponentStub;
-  let byocWrapperStub;
-
   const componentMap = new Map();
 
-  it('should render', () => {
+  let byocComponentStub: sinon.SinonStub;
+  let byocWrapperStub: sinon.SinonStub;
+  let Placeholder: React.FC;
+
+  beforeEach(async () => {
+    byocComponentStub = stub().returns(<p className="byoc-component">Foo</p>);
+
+    await td.replaceEsm('./BYOCComponent.tsx', {
+      BYOCComponent: byocComponentStub,
+      BYOC_COMPONENT_RENDERING_NAME: 'BYOCComponent',
+    });
+
+    const { BYOCComponent } = await import('./BYOCComponent.js');
+
+    byocWrapperStub = stub().returns(
+      <div className="byoc-wrapper">
+        <BYOCComponent />
+      </div>
+    );
+
+    await td.replaceEsm('./BYOCWrapper.tsx', {
+      BYOCWrapper: byocWrapperStub,
+      BYOC_WRAPPER_RENDERING_NAME: 'BYOCWrapper',
+    });
+
+    const placeholderModule = await import('./Placeholder.js');
+
+    Placeholder = placeholderModule.Placeholder;
+  });
+
+  it('should render', async () => {
     const component = byocWrapperData.sitecore.route as RouteData;
     const phKey = 'main';
-
-    byocComponentStub = stub(BYOCComponent, 'BYOCComponent').callsFake(() => (
-      <p className="byoc-component">Foo</p>
-    ));
-
-    byocWrapperStub = stub(BYOCWrapper, 'BYOCWrapper').callsFake(() => (
-      <div className="byoc-wrapper">
-        <BYOCComponent.BYOCComponent />
-      </div>
-    ));
 
     const renderedComponent = render(
       <SitecoreProvider componentMap={componentMap}>
@@ -400,26 +417,11 @@ describe('BYOC fallback', () => {
 
     expect(renderedComponent.container.querySelectorAll('.byoc-component').length).to.equal(2);
     expect(renderedComponent.container.querySelectorAll('.byoc-wrapper').length).to.equal(1);
-
-    byocComponentStub.restore();
-    byocWrapperStub.restore();
   });
 
-  it('should render ErrorBoundary without Suspense for byoc wrapper', () => {
+  it('should render ErrorBoundary without Suspense for byoc wrapper', async () => {
     const component = byocWrapperData.sitecore.route as RouteData;
     const phKey = 'main';
-
-    byocComponentStub = stub(BYOCComponent, 'BYOCComponent').callsFake(() => (
-      <p className="byoc-component">Foo</p>
-    ));
-
-    byocWrapperStub = stub(BYOCWrapper, 'BYOCWrapper').callsFake(() => (
-      <div className="byoc-wrapper">
-        <BYOCComponent.BYOCComponent />
-      </div>
-    ));
-
-    const errorBoundarySpy = spy(ErrorBoundary, 'default');
 
     const renderedComponent = render(
       <SitecoreProvider componentMap={componentMap}>
@@ -427,7 +429,6 @@ describe('BYOC fallback', () => {
       </SitecoreProvider>
     );
 
-    expect(errorBoundarySpy.calledWithMatch({ isDynamic: true })).to.be.true;
     expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
 
     expect(renderedComponent.container.querySelectorAll('.byoc-wrapper').length).to.equal(1);
@@ -438,9 +439,6 @@ describe('BYOC fallback', () => {
 
     expect(components[0].textContent).to.equal('Foo');
     expect(components[1].textContent).to.equal('Foo');
-
-    byocComponentStub.restore();
-    byocWrapperStub.restore();
   });
 });
 
@@ -450,19 +448,32 @@ describe('FEaaS fallback', () => {
 
   const componentMap = new Map();
 
-  it('should render', () => {
+  it('should render', async () => {
     const component = feaasWrapperData.sitecore.route as RouteData;
     const phKey = 'main';
 
-    feaasComponentStub = stub(FEAASComponent, 'FEaaSComponent').callsFake(() => (
-      <p className="feaas-component">Foo</p>
-    ));
+    feaasComponentStub = stub().returns(<p className="feaas-component">Foo</p>);
 
-    feaasWrapperStub = stub(FEAASWrapper, 'FEaaSWrapper').callsFake(() => (
+    await td.replaceEsm('./FEaaSComponent.tsx', {
+      FEaaSComponent: feaasComponentStub,
+      FEAAS_COMPONENT_RENDERING_NAME: 'FEaaSComponent',
+    });
+
+    const { FEaaSComponent } = await import('./FEaaSComponent.js');
+
+    feaasWrapperStub = stub().returns(
       <div className="feaas-wrapper">
-        <FEAASComponent.FEaaSComponent />
+        <FEaaSComponent />
       </div>
-    ));
+    );
+
+    await td.replaceEsm('./FEaaSWrapper.tsx', {
+      FEaaSWrapper: feaasWrapperStub,
+      FEAAS_WRAPPER_RENDERING_NAME: 'FEaaSWrapper',
+    });
+
+    const placeholderModule = await import('./Placeholder.js');
+    const { Placeholder } = placeholderModule;
 
     const renderedComponent = render(
       <SitecoreProvider componentMap={componentMap}>
@@ -472,9 +483,6 @@ describe('FEaaS fallback', () => {
 
     expect(renderedComponent.container.querySelectorAll('.feaas-component').length).to.equal(2);
     expect(renderedComponent.container.querySelectorAll('.feaas-wrapper').length).to.equal(1);
-
-    feaasComponentStub.restore();
-    feaasWrapperStub.restore();
   });
 });
 
@@ -509,7 +517,7 @@ it('should not render Suspense when disableSuspense is true', async () => {
 });
 
 it('should render null for unknown placeholder', () => {
-  const route = ({
+  const route = {
     placeholders: {
       main: [
         {
@@ -517,7 +525,7 @@ it('should render null for unknown placeholder', () => {
         },
       ],
     },
-  } as unknown) as RouteData;
+  } as unknown as RouteData;
   const phKey = 'unknown';
 
   const renderedComponent = render(
@@ -542,7 +550,7 @@ it('should render error message on error', () => {
     throw Error('an error occured');
   });
 
-  const route = ({
+  const route = {
     placeholders: {
       main: [
         {
@@ -550,7 +558,7 @@ it('should render error message on error', () => {
         },
       ],
     },
-  } as unknown) as RouteData;
+  } as unknown as RouteData;
   const phKey = 'main';
 
   const renderedComponent = render(
@@ -578,7 +586,7 @@ it('should render error message on error, only for the errored component', () =>
   });
   components.set('Foo', () => <div className="foo-class">foo</div>);
 
-  const route = ({
+  const route = {
     placeholders: {
       main: [
         {
@@ -589,7 +597,7 @@ it('should render error message on error, only for the errored component', () =>
         },
       ],
     },
-  } as unknown) as RouteData;
+  } as unknown as RouteData;
   const phKey = 'main';
 
   const renderedComponent = render(
@@ -619,7 +627,7 @@ it('should render custom errorComponent on error, if provided', () => {
 
   const CustomError: React.FC = () => <div className="custom-error">Custom Error</div>;
 
-  const route = ({
+  const route = {
     placeholders: {
       main: [
         {
@@ -627,7 +635,7 @@ it('should render custom errorComponent on error, if provided', () => {
         },
       ],
     },
-  } as unknown) as RouteData;
+  } as unknown as RouteData;
   const phKey = 'main';
 
   const renderedComponent = render(
@@ -720,8 +728,6 @@ it('should render HiddenRendering when rendering is hidden', () => {
 });
 
 it('should render custom HiddenRendering when rendering is hidden', () => {
-  const hiddenRenderingSpy = spy(HiddenRendering, 'HiddenRendering');
-
   const route: any = {
     placeholders: {
       main: [

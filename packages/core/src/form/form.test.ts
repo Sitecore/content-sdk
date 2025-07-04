@@ -1,29 +1,37 @@
-import { expect, use } from 'chai';
-import nock from 'nock';
-import spies from 'chai-spies';
-import { JSDOM } from 'jsdom';
-import proxyquire from 'proxyquire';
-import { executeScriptElements, loadForm, subscribeToFormSubmitEvent } from './form';
-import { getEdgeProxyFormsUrl } from '../client';
+import { expect } from 'chai';
 import sinon from 'sinon';
-
-use(spies);
+import nock from 'nock';
+import { JSDOM } from 'jsdom';
+import * as td from 'testdouble';
+import { getEdgeProxyFormsUrl } from '../client/index.js';
 
 describe('form', () => {
   let dom: JSDOM;
+  let formEvent: sinon.SinonStub;
+  let formModule: any;
 
   process.env.DEBUG = 'sitecore-jss:form';
 
-  beforeEach(() => {
+  beforeEach(async () => {
     dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
       url: 'http://localhost',
       runScripts: 'dangerously',
     });
     global.document = dom.window.document;
+
+    formEvent = sinon.stub();
+
+    await td.replaceEsm('@sitecore-cloudsdk/events/browser', {
+      form: formEvent,
+    });
+
+    formModule = await import('./form.js');
   });
 
   afterEach(() => {
     nock.cleanAll();
+    sinon.restore();
+    td.reset();
   });
 
   describe('loadForm', () => {
@@ -33,7 +41,7 @@ describe('form', () => {
         .query({ sitecoreContextId: 'contextId' })
         .reply(200, 'form data');
 
-      const result = await loadForm('contextId', 'formId', 'https://bar.com');
+      const result = await formModule.loadForm('contextId', 'formId', 'https://bar.com');
 
       expect(result).to.equal('form data');
     });
@@ -45,7 +53,7 @@ describe('form', () => {
         .reply(500);
 
       try {
-        await loadForm('contextId', 'formId', 'https://bar.com');
+        await formModule.loadForm('contextId', 'formId', 'https://bar.com');
       } catch (error) {
         expect(error).to.be.an('error');
       }
@@ -64,7 +72,7 @@ describe('form', () => {
 
       const consoleLogSpy = sinon.spy(console, 'log');
 
-      executeScriptElements(form);
+      formModule.executeScriptElements(form);
 
       expect(consoleLogSpy.calledOnce).to.be.true;
       expect(consoleLogSpy.calledWith('test')).to.be.true;
@@ -82,16 +90,9 @@ describe('form', () => {
 
       const addEventListenerSpy = sinon.spy(form, 'addEventListener');
 
-      subscribeToFormSubmitEvent(form, 'component-id');
+      formModule.subscribeToFormSubmitEvent(form, 'component-id');
 
       expect(addEventListenerSpy.calledWith('form:engage'));
-      const formEvent = sinon.stub();
-
-      proxyquire('./form', {
-        '@sitecore-cloudsdk/events/browser': {
-          form: formEvent,
-        },
-      });
 
       form.dispatchEvent(
         new dom.window.CustomEvent('form:engage', {

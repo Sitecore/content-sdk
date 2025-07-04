@@ -1,7 +1,10 @@
-import { SitecoreConfigInput } from '../config';
-import { GraphQLRequestClient, GraphQLRequestClientFactoryConfig } from '../graphql-request-client';
-import { getEdgeProxyContentUrl } from './graphql-edge-proxy';
-import { FetchOptions } from '../models';
+import { SitecoreConfigInput } from '../config/index.js';
+import {
+  GraphQLRequestClient,
+  GraphQLRequestClientFactoryConfig,
+} from '../graphql-request-client.js';
+import { getEdgeProxyContentUrl } from './graphql-edge-proxy.js';
+import { FetchOptions } from '../models.js';
 
 export type GraphQLClientOptions = Pick<SitecoreConfigInput, 'api'> & FetchOptions;
 

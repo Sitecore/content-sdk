@@ -1,4 +1,4 @@
-﻿import { Metadata } from './';
+﻿import { Metadata } from './index.js';
 import { execSync } from 'child_process';
 
 type Package = {

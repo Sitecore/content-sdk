@@ -1,14 +1,12 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { expect, spy, use } from 'chai';
-import spies from 'chai-spies';
+import { expect } from 'chai';
+import sinon from 'sinon';
 import nock from 'nock';
-import { GraphQLSiteInfoService, GraphQLSiteInfoResult } from './graphql-siteinfo-service';
-import { GraphQLRequestClient } from '../client';
+import { GraphQLSiteInfoService, GraphQLSiteInfoResult } from './graphql-siteinfo-service.js';
+import { GraphQLRequestClient } from '../client/index.js';
 import debugApi from 'debug';
-import debug from '../debug';
-
-use(spies);
+import debug from '../debug.js';
 
 describe('GraphQLSiteInfoService', () => {
   let debugNamespaces: string;
@@ -70,12 +68,13 @@ describe('GraphQLSiteInfoService', () => {
   });
 
   beforeEach(() => {
-    spy.on(debug.multisite, 'log', () => true);
+    debug.multisite.log = () => true;
+    sinon.spy(debug.multisite, 'log');
   });
 
   afterEach(() => {
     nock.cleanAll();
-    spy.restore(debug.multisite);
+    debug.multisite.log.restore();
     delete process.env.SITECORE;
   });
 
@@ -84,9 +83,7 @@ describe('GraphQLSiteInfoService', () => {
   });
 
   const mockSiteInfoRequest = (response: { [key: string]: unknown }) => {
-    nock(endpoint)
-      .post('/')
-      .reply(200, response);
+    nock(endpoint).post('/').reply(200, response);
   };
 
   it('should return correct result', async () => {
@@ -149,9 +146,7 @@ describe('GraphQLSiteInfoService', () => {
     ]);
   });
   it('should return empty array when empty result received', async () => {
-    nock(endpoint)
-      .post('/')
-      .reply(200, emptyResponse);
+    nock(endpoint).post('/').reply(200, emptyResponse);
     const service = new GraphQLSiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     expect(result).to.deep.equal([]);
@@ -162,9 +157,7 @@ describe('GraphQLSiteInfoService', () => {
     const service = new GraphQLSiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     nock.cleanAll();
-    nock(endpoint)
-      .post('/')
-      .reply(200, emptyResponse);
+    nock(endpoint).post('/').reply(200, emptyResponse);
     const resultCached = await service.fetchSiteInfo();
     expect(resultCached).to.deep.equal(result);
   });
@@ -199,22 +192,18 @@ describe('GraphQLSiteInfoService', () => {
       },
     ]);
     nock.cleanAll();
-    nock(endpoint)
-      .post('/')
-      .reply(200, emptyResponse);
+    nock(endpoint).post('/').reply(200, emptyResponse);
     const resultCached = await service.fetchSiteInfo();
     expect(resultCached).to.deep.equal([]);
   });
 
   it('should skip on XM Cloud', async () => {
     process.env.SITECORE = 'true';
-    nock(endpoint)
-      .post('/')
-      .reply(200, emptyResponse);
+    nock(endpoint).post('/').reply(200, emptyResponse);
     const service = new GraphQLSiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     expect(result).to.deep.equal([]);
-    expect(debug.multisite.log, 'log debug message').to.be.called.once;
+    expect(debug.multisite.log).to.have.been.calledOnce;
     expect(nock.isDone(), 'skip request').to.be.false;
   });
 

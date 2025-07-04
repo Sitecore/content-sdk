@@ -2,10 +2,10 @@ import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs';
 
-import { SiteInfo, GraphQLSiteInfoService } from '../site';
-import { ensurePathExists } from '../utils/ensurePath';
-import { SitecoreConfig } from '../config';
-import { createGraphQLClientFactory } from '../client';
+import { SiteInfo, GraphQLSiteInfoService } from '../site/index.js';
+import { ensurePathExists } from '../utils/ensurePath.js';
+import { SitecoreConfig } from '../config/index.js';
+import { createGraphQLClientFactory } from '../client/index.js';
 
 const DEFAULT_SITES_DIST_PATH = '.sitecore/sites.json';
 

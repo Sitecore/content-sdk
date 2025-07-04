@@ -1,9 +1,9 @@
 ﻿import React, { RefAttributes, forwardRef } from 'react';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
-import { withFieldMetadata } from '../enhancers/withFieldMetadata';
-import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
-import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
-import { EditableFieldProps } from './sharedTypes';
+import { withFieldMetadata } from '../enhancers/withFieldMetadata.js';
+import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent.js';
+import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents.js';
+import { EditableFieldProps } from './sharedTypes/index.js';
 
 export interface LinkFieldValue {
   [attributeName: string]: unknown;

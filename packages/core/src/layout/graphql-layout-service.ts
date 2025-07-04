@@ -1,9 +1,9 @@
-import { LayoutServiceData, RouteOptions } from './models';
-import debug from '../debug';
-import { SitecoreConfigInput } from '../config';
-import { GraphQLServiceConfig } from '../sitecore-service-base';
-import { LayoutServiceBase } from './layout-service';
-import { FetchOptions } from '../models';
+import { LayoutServiceData, RouteOptions } from './models.js';
+import debug from '../debug.js';
+import { SitecoreConfigInput } from '../config/index.js';
+import { GraphQLServiceConfig } from '../sitecore-service-base.js';
+import { LayoutServiceBase } from './layout-service.js';
+import { FetchOptions } from '../models.js';
 
 export const GRAPHQL_LAYOUT_QUERY_NAME = 'JssLayoutQuery';
 

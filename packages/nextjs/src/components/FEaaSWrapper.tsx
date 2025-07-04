@@ -3,7 +3,7 @@
   FEaaSComponentParams,
   fetchFEaaSComponentServerProps,
 } from '@sitecore-content-sdk/react';
-import { GetComponentServerProps } from '../sharedTypes/component-props';
+import { GetComponentServerProps } from '../sharedTypes/component-props.js';
 
 /**
  * TODO: remove when framework agnostic forms implemented

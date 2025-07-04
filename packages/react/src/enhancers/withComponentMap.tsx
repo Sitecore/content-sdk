@@ -1,7 +1,7 @@
 import React, { JSX } from 'react';
-import { ComponentMapReactContext } from '../components/SitecoreProvider';
 import { useContext } from 'react';
-import { ComponentMap } from '../components/sharedTypes';
+import { ComponentMap } from '../components/sharedTypes/index.js';
+import { ComponentMapReactContext } from '../components/SitecoreProvider.js';
 
 export interface WithComponentMapProps {
   componentMap?: ComponentMap;
@@ -23,9 +23,9 @@ export function withComponentMap<T extends WithComponentMapProps>(
     return <Component {...props} componentMap={props.componentMap || context} />;
   }
 
-  WithComponentMap.displayName = `withComponentMap(${Component.displayName ||
-    Component.name ||
-    'Anonymous'})`;
+  WithComponentMap.displayName = `withComponentMap(${
+    Component.displayName || Component.name || 'Anonymous'
+  })`;
 
   return WithComponentMap;
 }

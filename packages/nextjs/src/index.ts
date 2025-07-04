@@ -89,25 +89,25 @@ export {
   ComponentPropsError,
   NextjsJssComponent,
   GetComponentServerProps,
-} from './sharedTypes/component-props';
+} from './sharedTypes/component-props.js';
 
-export { SitecorePageProps } from './sharedTypes/sitecore-page-props';
+export { SitecorePageProps } from './sharedTypes/sitecore-page-props.js';
 
-export { ComponentPropsService } from './services/component-props-service';
+export { ComponentPropsService } from './services/component-props-service.js';
 
 export {
   ComponentPropsReactContext,
   ComponentPropsContextProps,
   ComponentPropsContext,
   useComponentProps,
-} from './components/ComponentPropsContext';
+} from './components/ComponentPropsContext.js';
 
-export { Link, LinkProps } from './components/Link';
-export { RichText, RichTextProps } from './components/RichText';
-export { Placeholder } from './components/Placeholder';
-export { NextImage } from './components/NextImage';
-import * as FEaaSWrapper from './components/FEaaSWrapper';
-import * as BYOCWrapper from './components/BYOCWrapper';
+export { Link, LinkProps } from './components/Link.js';
+export { RichText, RichTextProps } from './components/RichText.js';
+export { Placeholder } from './components/Placeholder.js';
+export { NextImage } from './components/NextImage.js';
+import * as FEaaSWrapper from './components/FEaaSWrapper.js';
+import * as BYOCWrapper from './components/BYOCWrapper.js';
 export { FEaaSWrapper };
 export { BYOCWrapper };
 

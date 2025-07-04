@@ -1,9 +1,9 @@
-import { LayoutServiceData } from '../layout/models';
-import { NativeDataFetcher, NativeDataFetcherConfig } from '../native-fetcher';
-import debug from '../debug';
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import { resolveUrl } from '../utils';
-import { DesignLibraryMode } from './models';
+import { LayoutServiceData } from '../layout/models.js';
+import { NativeDataFetcher, NativeDataFetcherConfig } from '../native-fetcher.js';
+import debug from '../debug.js';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
+import { resolveUrl } from '../utils/index.js';
+import { DesignLibraryMode } from './models.js';
 
 /**
  * Params for requesting component data from service in Design Library mode

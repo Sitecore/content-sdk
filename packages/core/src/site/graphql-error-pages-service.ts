@@ -1,9 +1,9 @@
-import { FetchOptions, GraphQLClient } from '../client';
-import { siteNameError } from '../constants';
-import debug from '../debug';
-import { LayoutServiceData } from '../layout';
-import { GraphQLRequestClientFactory } from '../graphql-request-client';
-import { GraphQLServiceConfig } from '../sitecore-service-base';
+import { FetchOptions, GraphQLClient } from '../client/index.js';
+import { siteNameError } from '../constants.js';
+import debug from '../debug.js';
+import { LayoutServiceData } from '../layout/index.js';
+import { GraphQLRequestClientFactory } from '../graphql-request-client.js';
+import { GraphQLServiceConfig } from '../sitecore-service-base.js';
 
 // The default query for request error handling
 const defaultQuery = /* GraphQL */ `

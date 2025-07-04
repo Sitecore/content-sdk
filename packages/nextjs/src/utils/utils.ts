@@ -50,8 +50,8 @@ export const extractPath = (context: GetStaticPropsContext | GetServerSidePropsC
   return context.params === undefined
     ? '/'
     : Array.isArray(context.params.path)
-    ? context.params.path.join('/')
-    : context.params.path ?? '/';
+      ? context.params.path.join('/')
+      : (context.params.path ?? '/');
 };
 
 /**

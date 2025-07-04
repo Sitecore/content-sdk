@@ -1,4 +1,4 @@
-import { ensurePathExists } from './ensurePath';
+import { ensurePathExists } from './ensurePath.js';
 import fs from 'fs';
 import sinon from 'sinon';
 import path from 'path';

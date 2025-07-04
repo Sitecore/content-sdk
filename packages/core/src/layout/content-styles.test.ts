@@ -6,9 +6,9 @@ import {
   getContentStylesheetUrl,
   traversePlaceholder,
   getContentStylesheetLink,
-} from './content-styles';
-import { ComponentRendering, Field, Item, LayoutServiceData } from './models';
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
+} from './content-styles.js';
+import { ComponentRendering, Field, Item, LayoutServiceData } from './models.js';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
 
 describe('content-styles', () => {
   const truthyValue = { value: '<div class="test bar"><p class="foo ck-content">bar</p></div>' };

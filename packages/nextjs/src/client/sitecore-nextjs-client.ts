@@ -9,10 +9,10 @@ import {
   ComponentPropsCollection,
   ComponentPropsError,
   NextjsJssComponent,
-} from '../sharedTypes/component-props';
+} from '../sharedTypes/component-props.js';
 import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import { ComponentPropsService } from '../services/component-props-service';
+import { ComponentPropsService } from '../services/component-props-service.js';
 import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
 import {

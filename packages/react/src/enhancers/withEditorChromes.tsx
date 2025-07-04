@@ -1,5 +1,5 @@
 import React, { ComponentType } from 'react';
-import { resetEditorChromes } from '..';
+import { resetEditorChromes } from '../index.js';
 
 export const withEditorChromes = (
   WrappedComponent: React.ComponentClass<unknown> | React.FC<unknown>

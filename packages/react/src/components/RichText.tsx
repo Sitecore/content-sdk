@@ -1,8 +1,8 @@
 ﻿import React, { ForwardedRef, forwardRef } from 'react';
-import { withFieldMetadata } from '../enhancers/withFieldMetadata';
-import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
-import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
-import { EditableFieldProps } from './sharedTypes';
+import { withFieldMetadata } from '../enhancers/withFieldMetadata.js';
+import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent.js';
+import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents.js';
+import { EditableFieldProps } from './sharedTypes/index.js';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 
 export interface RichTextField extends FieldMetadata {

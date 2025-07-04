@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-expressions */
-import { expect, spy } from 'chai';
+import { expect } from 'chai';
+import sinon from 'sinon';
 import {
   isEditorActive,
   resetEditorChromes,
   ChromeRediscoveryGlobalFunctionName,
   PAGES_EDITING_MARKER,
-} from './utils';
+} from './utils.js';
 
 // must make TypeScript happy with `global` variable modification
 interface CustomWindow {
@@ -71,7 +72,7 @@ describe('utils', () => {
     });
 
     it('should reset chromes when edit mode is active', () => {
-      const resetChromes = spy();
+      const resetChromes = sinon.spy();
       global.window = {
         document: pagesEditingDocument,
         location: { search: '' },
@@ -79,7 +80,7 @@ describe('utils', () => {
       };
       global.window[ChromeRediscoveryGlobalFunctionName.name] = resetChromes;
       resetEditorChromes();
-      expect(resetChromes).to.have.been.called.once;
+      expect(resetChromes.calledOnce).to.be.true;
     });
 
     it('should not throw when edit mode is not active', () => {

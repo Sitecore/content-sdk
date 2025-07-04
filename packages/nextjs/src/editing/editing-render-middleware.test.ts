@@ -9,7 +9,7 @@ import {
   EditingRenderQueryParams,
   DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
-import { EditingRenderMiddleware, EditingNextApiRequest } from './editing-render-middleware';
+import { EditingRenderMiddleware, EditingNextApiRequest } from './editing-render-middleware.js';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 
@@ -332,8 +332,7 @@ describe('EditingRenderMiddleware', () => {
     expect(res.status).to.have.been.calledWith(400);
     expect(res.json).to.have.been.calledOnce;
     expect(res.json).to.have.been.calledWith({
-      html:
-        '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
+      html: '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
     });
   });
 
@@ -453,8 +452,7 @@ describe('EditingRenderMiddleware', () => {
       expect(res.status).to.have.been.calledWith(400);
       expect(res.json).to.have.been.calledOnce;
       expect(res.json).to.have.been.calledWith({
-        html:
-          '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
+        html: '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
       });
     });
   });

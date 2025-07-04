@@ -1,27 +1,17 @@
 import { Argv } from 'yargs';
 
-import * as scaffold from './scaffold';
+import * as scaffold from './scaffold.js';
+import * as generateMap from './generate-map.js';
 
-import * as generateMap from './generate-map';
+export const command = 'component';
+export const describe = 'Performs component level operations';
 
 /**
  * @param {Argv} yargs
  */
 export function builder(yargs: Argv) {
-  return yargs.command({
-    command: 'component',
-    describe: 'Performs component level operations',
-    builder: (_yargs: Argv) => {
-      _yargs = _yargs
-        .command([scaffold, generateMap] as any)
-        .strict()
-        .demandCommand(1, 'You need to specify a command to run');
-
-      _yargs = scaffold.builder(_yargs as any);
-      _yargs = generateMap.builder(_yargs as any);
-
-      return _yargs;
-    },
-    handler: () => {},
-  });
+  return yargs
+    .command([scaffold, generateMap] as any)
+    .strict()
+    .demandCommand(1, 'You need to specify a command to run');
 }

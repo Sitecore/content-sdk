@@ -1,18 +1,10 @@
 import { Argv } from 'yargs';
-import { watchItems } from '../../../utils/watch-items';
-import loadCliConfig from '../../../utils/load-config';
+import { watchItems } from '../../../utils/watch-items.js';
+import loadCliConfig from '../../../utils/load-config.js';
 
-/**
- * @param {Argv} yargs
- */
-export function builder(yargs: Argv<GenerateMapCliArgs>) {
-  return yargs.command<GenerateMapCliArgs>(
-    'generate-map',
-    'Generates component map based on provided paths',
-    args,
-    handler
-  );
-}
+export const command = 'generate-map';
+
+export const describe = 'Generates component map based on provided paths';
 
 /**
  * The arguments for the build command.
@@ -32,7 +24,7 @@ export type GenerateMapCliArgs = {
 /**
  * @param {Argv} yargs
  */
-export function args(yargs: Argv<GenerateMapCliArgs>) {
+export function builder(yargs: Argv<GenerateMapCliArgs>) {
   return yargs
     .option('watch', {
       requiresArg: false,
@@ -53,8 +45,8 @@ export function args(yargs: Argv<GenerateMapCliArgs>) {
  * Handler for the `generate-map` command.
  * @param {GenerateMapCliArgs} argv Cli arguments for the command
  */
-export function handler(argv: GenerateMapCliArgs) {
-  const cliConfig = loadCliConfig(argv.config);
+export async function handler(argv: GenerateMapCliArgs) {
+  const cliConfig = await loadCliConfig(argv.config);
   if (!cliConfig.componentMap) {
     console.error(
       'The `sitecore.cli.config` file is missing a `componentMap` configuration. Please add it to use this command.'

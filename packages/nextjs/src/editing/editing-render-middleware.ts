@@ -10,8 +10,8 @@ import {
   isDesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
-import { getJssEditingSecret } from '../utils/utils';
-import { RenderMiddlewareBase } from './render-middleware';
+import { getJssEditingSecret } from '../utils/utils.js';
+import { RenderMiddlewareBase } from './render-middleware.js';
 import { enforceCors, getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';
 import { SITE_KEY } from '@sitecore-content-sdk/core/site';

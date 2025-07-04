@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import { getEdgeProxyContentUrl, getEdgeProxyFormsUrl } from './graphql-edge-proxy';
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
+import { getEdgeProxyContentUrl, getEdgeProxyFormsUrl } from './graphql-edge-proxy.js';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants.js';
 
 describe('graphql-edge-proxy', () => {
   const sitecoreEdgeContextId = '0730fc5a-3333-5555-5555-08db6d7ddb49';

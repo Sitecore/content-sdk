@@ -1,6 +1,6 @@
 import { form } from '@sitecore-cloudsdk/events/browser';
-import { getEdgeProxyFormsUrl } from '../client';
-import debug from '../debug';
+import { getEdgeProxyFormsUrl } from '../client/index.js';
+import debug from '../debug.js';
 
 /**
  * Fetches the form markup from the Sitecore Edge service and renders it in the component's template.

@@ -1,8 +1,8 @@
-import { FetchOptions, GraphQLClient } from '../client';
-import debug from '../debug';
-import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
-import { GraphQLRequestClientFactory } from '../graphql-request-client';
-import { SiteInfo } from './models';
+import { FetchOptions, GraphQLClient } from '../client/index.js';
+import debug from '../debug.js';
+import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client.js';
+import { GraphQLRequestClientFactory } from '../graphql-request-client.js';
+import { SiteInfo } from './models.js';
 
 const siteQuery = /* GraphQL */ `
   query {

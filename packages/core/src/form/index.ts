@@ -1,1 +1,1 @@
-export { executeScriptElements, loadForm, subscribeToFormSubmitEvent } from './form';
+export { executeScriptElements, loadForm, subscribeToFormSubmitEvent } from './form.js';

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getSiteRewrite, getSiteRewriteData, normalizeSiteRewrite, SITE_PREFIX } from './utils';
+import { getSiteRewrite, getSiteRewriteData, normalizeSiteRewrite, SITE_PREFIX } from './utils.js';
 
 describe('utils', () => {
   describe('getSiteRewrite', () => {

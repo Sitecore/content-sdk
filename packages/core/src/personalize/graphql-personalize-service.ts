@@ -1,7 +1,7 @@
-import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
-import debug from '../debug';
-import { isTimeoutError } from '../utils';
-import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
+import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client.js';
+import debug from '../debug.js';
+import { isTimeoutError } from '../utils/index.js';
+import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client.js';
 
 export type GraphQLPersonalizeServiceConfig = CacheOptions & {
   /**
@@ -58,7 +58,7 @@ export class GraphQLPersonalizeService {
 
   protected get query(): string {
     return /* GraphQL */ `
-      query($siteName: String!, $language: String!, $itemPath: String!) {
+      query ($siteName: String!, $language: String!, $itemPath: String!) {
         layout(site: $siteName, routePath: $itemPath, language: $language) {
           item {
             id

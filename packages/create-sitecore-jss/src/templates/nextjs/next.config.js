@@ -1,5 +1,5 @@
-const path = require('path');
-const SassAlias = require('sass-alias');
+import path from 'path';
+import SassAlias from 'sass-alias';
 
 /**
  * @type {import('next').NextConfig}
@@ -113,4 +113,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

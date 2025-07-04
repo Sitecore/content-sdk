@@ -1,12 +1,10 @@
 /* eslint-disable dot-notation */
-import { expect, use, spy } from 'chai';
-import spies from 'chai-spies';
+import { expect } from 'chai';
+import sinon from 'sinon';
 import nock from 'nock';
-import { GraphQLRedirectsService, RedirectsQueryResult } from './graphql-redirects-service';
-import { siteNameError } from '../constants';
-import { GraphQLRequestClient } from '../graphql-request-client';
-
-use(spies);
+import { GraphQLRedirectsService, RedirectsQueryResult } from './graphql-redirects-service.js';
+import { siteNameError } from '../constants.js';
+import { GraphQLRequestClient } from '../graphql-request-client.js';
 
 const redirectsQueryResultNull = {
   site: {
@@ -46,6 +44,7 @@ describe('GraphQLRedirectsService', () => {
 
   afterEach(() => {
     nock.cleanAll();
+    sinon.restore();
   });
 
   const mockRedirectsRequest = (siteName?: string) => {
@@ -146,13 +145,13 @@ describe('GraphQLRedirectsService', () => {
       mockRedirectsRequest(dynamicSiteName);
       const service = new GraphQLRedirectsService(config);
 
-      const getCacheValueSpy = spy.on(service['cache'], 'getCacheValue');
-      const setCacheValueSpy = spy.on(service['cache'], 'setCacheValue');
+      const getCacheValueSpy = sinon.spy(service['cache'], 'getCacheValue');
+      const setCacheValueSpy = sinon.spy(service['cache'], 'setCacheValue');
 
       const redirectsResponse = await service.fetchRedirects(dynamicSiteName);
 
-      expect(getCacheValueSpy).to.have.been.called.with('redirects-foo');
-      expect(setCacheValueSpy).to.have.been.called.with('redirects-foo', redirectsQueryResult);
+      expect(getCacheValueSpy).to.have.been.calledWith('redirects-foo');
+      expect(setCacheValueSpy).to.have.been.calledWith('redirects-foo', redirectsQueryResult);
 
       expect(redirectsResponse).to.deep.equal(redirectsQueryResult.site?.siteInfo?.redirects);
 
@@ -169,8 +168,6 @@ describe('GraphQLRedirectsService', () => {
       const cachedResponse = await service.fetchRedirects(dynamicSiteName);
 
       expect(cachedResponse).to.deep.equal(redirectsResponse);
-
-      spy.restore(service['cache']);
     });
   });
 });

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { getItems } from './utils';
+import { getItems } from './utils.js';
 
 /**
  * Identifies the format of the module to be compiled

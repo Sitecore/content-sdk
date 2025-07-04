@@ -3,12 +3,12 @@ export {
   EditingRenderMiddleware,
   EditingRenderMiddlewareConfig,
   isDesignLibraryPreviewData,
-} from './editing-render-middleware';
-export { FEAASRenderMiddleware, FEAASRenderMiddlewareConfig } from './feaas-render-middleware';
+} from './editing-render-middleware.js';
+export { FEAASRenderMiddleware, FEAASRenderMiddlewareConfig } from './feaas-render-middleware.js';
 export {
   EditingConfigMiddleware,
   EditingConfigMiddlewareConfig,
-} from './editing-config-middleware';
+} from './editing-config-middleware.js';
 export {
   RenderingType,
   EDITING_COMPONENT_PLACEHOLDER,

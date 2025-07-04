@@ -1,25 +1,27 @@
 // layout
 export {
-  LayoutServiceData,
   LayoutServicePageState,
-  LayoutServiceContext,
-  LayoutServiceContextData,
-  RouteData,
-  PlaceholderData,
-  ComponentRendering,
+  EditMode,
+  RenderingType,
+  EDITING_COMPONENT_PLACEHOLDER,
+  EDITING_COMPONENT_ID,
+} from './models.js';
+export type {
   Field,
   GenericFieldValue,
   Item,
   PlaceholdersData,
   ComponentFields,
   ComponentParams,
-  EditMode,
+  ComponentRendering,
+  PlaceholderData,
+  RouteData,
+  LayoutServiceData,
+  LayoutServiceContext,
+  LayoutServiceContextData,
   FieldMetadata,
-  RenderingType,
   RouteOptions,
-  EDITING_COMPONENT_PLACEHOLDER,
-  EDITING_COMPONENT_ID,
-} from './models';
+} from './models.js';
 
 export {
   getFieldValue,
@@ -28,14 +30,11 @@ export {
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
   EMPTY_DATE_FIELD_VALUE,
-} from './utils';
+} from './utils.js';
 
-export { getContentStylesheetLink } from './content-styles';
+export { getContentStylesheetLink } from './content-styles.js';
 
-export {
-  GraphQLLayoutService,
-  GraphQLLayoutServiceConfig,
-  GRAPHQL_LAYOUT_QUERY_NAME,
-} from './graphql-layout-service';
+export { GraphQLLayoutService, GRAPHQL_LAYOUT_QUERY_NAME } from './graphql-layout-service.js';
+export type { GraphQLLayoutServiceConfig } from './graphql-layout-service.js';
 
-export { getDesignLibraryStylesheetLinks } from './themes';
+export { getDesignLibraryStylesheetLinks } from './themes.js';

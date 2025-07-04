@@ -1,12 +1,10 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import path from 'path';
-import fs from 'fs';
 import chalk from 'chalk';
-import { GenerateSitesConfig } from './generateSites';
-import { SiteInfo, GraphQLSiteInfoService } from '../site';
-import { SitecoreConfigInput, defineConfig } from '../config';
-import proxyquire from 'proxyquire';
+import { type SiteInfo } from '../site/index.js';
+import { SitecoreConfigInput, defineConfig } from '../config/index.js';
+import * as td from 'testdouble';
 
 const defaultSite: SiteInfo = {
   name: 'defaultSite',
@@ -33,27 +31,46 @@ describe('generateSites', () => {
   let fsWriteFileSyncStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;
   let consoleErrorStub: sinon.SinonStub;
+  let mockGraphQLSiteInfoService: any;
+  let mockFetchSiteInfo: sinon.SinonStub;
   let generateSites: any;
 
-  beforeEach(() => {
-    ensurePathExistsStub = sinon.stub();
-    fsWriteFileSyncStub = sinon.stub(fs, 'writeFileSync');
+  beforeEach(async () => {
+    fsWriteFileSyncStub = sinon.stub();
+    await td.replaceEsm('fs', undefined, {
+      writeFileSync: fsWriteFileSyncStub,
+    });
     consoleLogStub = sinon.stub(console, 'log');
     consoleErrorStub = sinon.stub(console, 'error');
-
-    const generateSitesModule = proxyquire('./generateSites', {
-      '../utils/ensurePath': { ensurePathExists: ensurePathExistsStub },
+    ensurePathExistsStub = sinon.stub();
+    await td.replaceEsm('../utils/ensurePath.ts', {
+      ensurePathExists: ensurePathExistsStub,
     });
+
+    // Create a mock GraphQLSiteInfoService class
+    mockFetchSiteInfo = sinon.stub().resolves([]);
+    class MockGraphQLSiteInfoService {
+      fetchSiteInfo = mockFetchSiteInfo;
+    }
+    mockGraphQLSiteInfoService = MockGraphQLSiteInfoService;
+
+    // Replace the GraphQLSiteInfoService in the site module
+    await td.replaceEsm('../site/graphql-siteinfo-service.ts', {
+      GraphQLSiteInfoService: mockGraphQLSiteInfoService,
+    });
+
+    const generateSitesModule = await import('./generateSites.js');
     generateSites = generateSitesModule.generateSites;
   });
 
   afterEach(() => {
     sinon.restore();
+    td.reset();
   });
 
   it('should write site info to the default path when destinationPath is not provided', async () => {
     const scConfig = defineConfig(mockConfig);
-    const config: GenerateSitesConfig = {
+    const config: any = {
       scConfig,
     };
 
@@ -73,7 +90,7 @@ describe('generateSites', () => {
   it('should write site info to the provided destinationPath', async () => {
     const destinationPath = 'custom/path/sites.json';
     const scConfig = defineConfig(mockConfig);
-    const config: GenerateSitesConfig = {
+    const config: any = {
       scConfig,
       destinationPath: destinationPath,
     };
@@ -97,10 +114,11 @@ describe('generateSites', () => {
       { name: 'site2', hostName: 'site2.com', language: 'da/DK' },
     ];
 
-    sinon.stub(GraphQLSiteInfoService.prototype, 'fetchSiteInfo').resolves(fetchedSites);
+    // Setup the mock to return the fetched sites
+    mockFetchSiteInfo.resolves(fetchedSites);
 
     const scConfig = defineConfig(mockConfig);
-    const config: GenerateSitesConfig = {
+    const config: any = {
       scConfig,
     };
 
@@ -120,10 +138,12 @@ describe('generateSites', () => {
   });
 
   it('should log an error when fetching site information fails', async () => {
-    sinon.stub(GraphQLSiteInfoService.prototype, 'fetchSiteInfo').rejects(new Error('Fetch error'));
+    // Setup the mock to reject with an error
+    mockFetchSiteInfo.rejects(new Error('Fetch error'));
+
     const scConfig = defineConfig(mockConfig);
 
-    const config: GenerateSitesConfig = {
+    const config: any = {
       scConfig,
     };
 

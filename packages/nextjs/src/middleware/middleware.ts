@@ -1,6 +1,6 @@
 ﻿import { SITE_KEY, SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
 import { debug, GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
-import { NextRequest, NextFetchEvent, NextResponse } from 'next/server';
+import { NextRequest, NextFetchEvent, NextResponse } from 'next/server.js';
 import {
   createGraphQLClientFactory,
   GraphQLClientOptions,

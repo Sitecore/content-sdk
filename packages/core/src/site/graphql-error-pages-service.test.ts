@@ -2,10 +2,10 @@
 import { expect } from 'chai';
 import sinon, { SinonSpy } from 'sinon';
 import nock from 'nock';
-import { ErrorPages, GraphQLErrorPagesService } from './graphql-error-pages-service';
-import { siteNameError } from '../constants';
-import { LayoutServiceData } from '../layout';
-import { GraphQLRequestClient } from '../graphql-request-client';
+import { ErrorPages, GraphQLErrorPagesService } from './graphql-error-pages-service.js';
+import { siteNameError } from '../constants.js';
+import { LayoutServiceData } from '../layout/index.js';
+import { GraphQLRequestClient } from '../graphql-request-client.js';
 
 const errorQueryResultNull = {
   site: {

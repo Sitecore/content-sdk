@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useMemo, useState, JSX } from 'react';
-import { Placeholder } from './Placeholder';
+import { Placeholder } from './Placeholder.js';
 import {
   ComponentRendering,
   EDITING_COMPONENT_ID,
@@ -21,10 +21,10 @@ export const DesignLibrary = (layoutData: LayoutServiceData): JSX.Element => {
   let componentReady = false;
 
   // have an up-to-date layout state between re-renders (SSR re-render excluded)
-  const persistedRoot = useMemo(() => ({ ...(rootComponent || {}), ...rootUpdate }), [
-    rootComponent,
-    rootUpdate,
-  ]);
+  const persistedRoot = useMemo(
+    () => ({ ...(rootComponent || {}), ...rootUpdate }),
+    [rootComponent, rootUpdate]
+  );
   route.placeholders[EDITING_COMPONENT_PLACEHOLDER][0] = persistedRoot;
 
   useEffect(() => {

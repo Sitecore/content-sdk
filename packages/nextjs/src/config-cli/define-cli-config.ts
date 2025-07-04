@@ -1,8 +1,8 @@
 import { SitecoreCliConfigInput, SitecoreCliConfig } from '@sitecore-content-sdk/core/config';
 import { defineCliConfig as defineCliConfigCore } from '@sitecore-content-sdk/core/config-cli';
-import { byocTemplate } from '../tools/templating/byoc-component';
-import { defaultTemplate } from '../tools/templating/default-component';
-import { generateMap } from '../tools/generate-map';
+import { byocTemplate } from '../tools/templating/byoc-component.js';
+import { defaultTemplate } from '../tools/templating/default-component.js';
+import { generateMap } from '../tools/generate-map.js';
 
 /**
  * Accepts a `SitecoreCliConfigInput` object and returns the Sitecore Content SDK CLI configuration from the specified file,

@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-expressions */
-import { expect, spy } from 'chai';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import { IncomingMessage, OutgoingMessage } from 'http';
-import { isServer, resolveUrl } from '.';
+import { isServer, resolveUrl } from './index.js';
 import {
   enforceCors,
   getAllowedOriginsFromEnv,
@@ -11,7 +12,7 @@ import {
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
   mergeURLSearchParams,
-} from './utils';
+} from './utils.js';
 
 // must make TypeScript happy with `global` variable modification
 interface CustomWindow {
@@ -121,7 +122,7 @@ describe('utils', () => {
     };
 
     const mockResponse = (presetCors?: string) => {
-      const res = {} as OutgoingMessage;
+      const res = {} as OutgoingMessage & { setHeader: sinon.SinonSpy; getHeader: sinon.SinonSpy };
       res.setHeader = spy(() => {
         return res;
       });
@@ -181,11 +182,8 @@ describe('utils', () => {
       const res = mockResponse();
       const allowedMethods = 'GET, POST, OPTIONS, DELETE, PUT, PATCH';
       enforceCors(req, res, [mockOrigin]);
-      expect(res.setHeader).to.have.been.called.with('Access-Control-Allow-Origin', mockOrigin);
-      expect(res.setHeader).to.have.been.called.with(
-        'Access-Control-Allow-Methods',
-        allowedMethods
-      );
+      expect(res.setHeader.calledWith('Access-Control-Allow-Origin', mockOrigin)).to.be.true;
+      expect(res.setHeader.calledWith('Access-Control-Allow-Methods', allowedMethods)).to.be.true;
     });
 
     it('should set CORS headers for preflight OPTIONS request', () => {
@@ -193,15 +191,11 @@ describe('utils', () => {
       const res = mockResponse();
       const allowedMethods = 'GET, POST, OPTIONS, DELETE, PUT, PATCH';
       enforceCors(req, res, [mockOrigin]);
-      expect(res.setHeader).to.have.been.called.with('Access-Control-Allow-Origin', mockOrigin);
-      expect(res.setHeader).to.have.been.called.with(
-        'Access-Control-Allow-Methods',
-        allowedMethods
-      );
-      expect(res.setHeader).to.have.been.called.with(
-        'Access-Control-Allow-Headers',
-        'Content-Type, Authorization'
-      );
+      expect(res.setHeader.calledWith('Access-Control-Allow-Origin', mockOrigin)).to.be.true;
+      expect(res.setHeader.calledWith('Access-Control-Allow-Methods', allowedMethods)).to.be.true;
+      expect(
+        res.setHeader.calledWith('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+      ).to.be.true;
     });
 
     it('should consider existing CORS header when present', () => {

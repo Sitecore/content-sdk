@@ -1,5 +1,5 @@
 import React, { ComponentType, forwardRef } from 'react';
-import { FieldMetadata } from '../components/FieldMetadata';
+import { FieldMetadata } from '../components/FieldMetadata.js';
 
 interface WithMetadataProps {
   field?: {
@@ -15,7 +15,7 @@ interface WithMetadataProps {
  */
 export function withFieldMetadata<
   FieldComponentProps extends WithMetadataProps,
-  RefElementType = HTMLElement
+  RefElementType = HTMLElement,
 >(FieldComponent: ComponentType<FieldComponentProps>, isForwardRef = false) {
   if (isForwardRef) {
     // eslint-disable-next-line react/display-name

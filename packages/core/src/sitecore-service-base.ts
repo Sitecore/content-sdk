@@ -1,6 +1,6 @@
-import { GraphQLClient, GraphQLRequestClientFactory } from './graphql-request-client';
-import { SitecoreConfigInput } from './config';
-import debug from './debug';
+import { GraphQLClient, GraphQLRequestClientFactory } from './graphql-request-client.js';
+import { SitecoreConfigInput } from './config/index.js';
+import debug from './debug.js';
 
 export type GraphQLServiceConfig = Pick<SitecoreConfigInput, 'retries'> & {
   /**

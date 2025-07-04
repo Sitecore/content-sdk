@@ -1,6 +1,6 @@
 ﻿import { expect } from 'chai';
-import * as personalize from './layout-personalizer';
-import { ComponentRenderingWithExperiences } from './layout-personalizer';
+import * as personalize from './layout-personalizer.js';
+import { ComponentRenderingWithExperiences } from './layout-personalizer.js';
 import {
   layoutData,
   componentsArray,
@@ -15,8 +15,8 @@ import {
   component4,
   mountain_bike_audience,
   city_bike_audience,
-} from '../test-data/personalizeData';
-import { HIDDEN_RENDERING_NAME } from '../constants';
+} from '../test-data/personalizeData.js';
+import { HIDDEN_RENDERING_NAME } from '../constants.js';
 
 const { personalizeLayout, personalizePlaceholder, personalizeComponent } = personalize;
 
@@ -319,7 +319,7 @@ describe('layout-personalizer', () => {
       it('should return personalized component without experiences', () => {
         const variant = 'mountain_bike_audience';
         const personalizedComponentResult = personalizeComponent(
-          (testComponent as unknown) as ComponentRenderingWithExperiences,
+          testComponent as unknown as ComponentRenderingWithExperiences,
           [variant]
         );
         expect(personalizedComponentResult).to.deep.equal(componentWithExperiences);
@@ -331,7 +331,7 @@ describe('layout-personalizer', () => {
       it('should return default component without experiences when variant is undefined', () => {
         const variant = '_default';
         const personalizedComponentResult = personalizeComponent(
-          (testComponent as unknown) as ComponentRenderingWithExperiences,
+          testComponent as unknown as ComponentRenderingWithExperiences,
           [variant]
         );
         expect(personalizedComponentResult).to.deep.equal(testComponent);
@@ -343,7 +343,7 @@ describe('layout-personalizer', () => {
       it('should return null when variant is hidden', () => {
         const variant = 'mountain_bike_audience';
         const personalizedComponentResult = personalizeComponent(
-          (variantIsHidden as unknown) as ComponentRenderingWithExperiences,
+          variantIsHidden as unknown as ComponentRenderingWithExperiences,
           [variant]
         );
         expect(personalizedComponentResult).to.equal(null);
@@ -352,7 +352,7 @@ describe('layout-personalizer', () => {
       it('should return null when variant and componentName is undefined', () => {
         const variant = 'test';
         const personalizedComponentResult = personalizeComponent(
-          (withoutComponentName as unknown) as ComponentRenderingWithExperiences,
+          withoutComponentName as unknown as ComponentRenderingWithExperiences,
           [variant]
         );
         expect(personalizedComponentResult).to.equal(null);
@@ -362,7 +362,7 @@ describe('layout-personalizer', () => {
     it('should return HIDDEN_RENDERING variant in metadata mode with uid preserved', () => {
       const variant = 'mountain_bike_audience';
       const personalizedComponentResult = personalizeComponent(
-        (variantIsHidden as unknown) as ComponentRenderingWithExperiences,
+        variantIsHidden as unknown as ComponentRenderingWithExperiences,
         [variant],
         true
       );
@@ -372,7 +372,7 @@ describe('layout-personalizer', () => {
     it('should return HIDDEN_RENDERING variant in metadata edit mode when non-default variant is hidden', () => {
       const variant = 'mountain_bike_audience';
       const personalizedComponentResult = personalizeComponent(
-        (variantIsHidden as unknown) as ComponentRenderingWithExperiences,
+        variantIsHidden as unknown as ComponentRenderingWithExperiences,
         [variant],
         true
       );
@@ -382,7 +382,7 @@ describe('layout-personalizer', () => {
     it('should return HIDDEN_RENDERING variant in metadata edit mode when default variant is hidden', () => {
       const variant = 'will-not-match';
       const personalizedComponentResult = personalizeComponent(
-        (withoutComponentName as unknown) as ComponentRenderingWithExperiences,
+        withoutComponentName as unknown as ComponentRenderingWithExperiences,
         [variant],
         true
       );
@@ -394,7 +394,7 @@ describe('layout-personalizer', () => {
 
       it('should return personalized component without experiences', () => {
         const personalizedComponentResult = personalizeComponent(
-          (testComponent as unknown) as ComponentRenderingWithExperiences,
+          testComponent as unknown as ComponentRenderingWithExperiences,
           componentVariantIds
         );
         expect(personalizedComponentResult).to.deep.equal(componentWithExperiences);
@@ -406,7 +406,7 @@ describe('layout-personalizer', () => {
       it('should return default component without experiences when variant is undefined', () => {
         const variantIds = ['_default', 'another_variant', 'third_variant'];
         const personalizedComponentResult = personalizeComponent(
-          (testComponent as unknown) as ComponentRenderingWithExperiences,
+          testComponent as unknown as ComponentRenderingWithExperiences,
           variantIds
         );
         expect(personalizedComponentResult).to.deep.equal(testComponent);
@@ -418,7 +418,7 @@ describe('layout-personalizer', () => {
       it('should return null when variantVariant is hidden', () => {
         const variantIds = ['mountain_bike_audience', 'another_variant', 'third_variant'];
         const personalizedComponentResult = personalizeComponent(
-          (variantIsHidden as unknown) as ComponentRenderingWithExperiences,
+          variantIsHidden as unknown as ComponentRenderingWithExperiences,
           variantIds
         );
         expect(personalizedComponentResult).to.equal(null);
@@ -427,7 +427,7 @@ describe('layout-personalizer', () => {
       it('should return null when variantVariant and componentName is undefined', () => {
         const variantIds = ['test', 'another_variant', 'third_variant'];
         const personalizedComponentResult = personalizeComponent(
-          (withoutComponentName as unknown) as ComponentRenderingWithExperiences,
+          withoutComponentName as unknown as ComponentRenderingWithExperiences,
           variantIds
         );
         expect(personalizedComponentResult).to.equal(null);

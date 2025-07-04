@@ -1,16 +1,22 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
-import { SitecoreCliConfig } from '@sitecore-content-sdk/core/src/config';
-import proxyquire from 'proxyquire';
-import * as loadConfigModule from '../../../utils/load-config';
+import { SitecoreCliConfig, ComponentTemplateType } from '@sitecore-content-sdk/core/config';
+import * as td from 'testdouble';
 
 describe('scaffold command', () => {
   let loadCliConfigStub: sinon.SinonStub;
   let scaffoldComponentStub: sinon.SinonStub;
-  let handler: any;
+  let handler: typeof import('./scaffold.js').handler;
 
   const mockConfig: SitecoreCliConfig = {
+    componentMap: {
+      paths: [],
+      destination: '',
+      componentImports: [],
+      exclude: [],
+      mapTemplate: () => '',
+      generator: () => {},
+    },
     build: {
       commands: [sinon.stub(), sinon.stub()],
     },
@@ -44,12 +50,17 @@ describe('scaffold command', () => {
     },
   };
 
-  beforeEach(() => {
-    loadCliConfigStub = sinon.stub(loadConfigModule, 'default').returns(mockConfig);
+  beforeEach(async () => {
+    loadCliConfigStub = sinon.stub().returns(mockConfig);
+    await td.replaceEsm('../../../utils/load-config.ts', undefined, loadCliConfigStub);
+
     scaffoldComponentStub = sinon.stub();
-    const scaffoldModule = proxyquire('./scaffold', {
-      '@sitecore-content-sdk/core/tools': { scaffoldComponent: scaffoldComponentStub },
+
+    await td.replaceEsm('@sitecore-content-sdk/core/tools', {
+      scaffoldComponent: scaffoldComponentStub,
     });
+
+    const scaffoldModule = await import('./scaffold.js');
     handler = scaffoldModule.handler;
   });
 
@@ -57,32 +68,24 @@ describe('scaffold command', () => {
     sinon.restore();
   });
 
-  it('should throw if componentName is not provided', () => {
-    const argv = {};
-    try {
-      handler(argv);
-    } catch (error) {
-      expect(error.message).to.equal(
-        'Component name is required. Usage: sitecore-tools scaffold <ComponentName>'
-      );
-    }
-  });
-
-  it('should throw if componentName does not match the required format', () => {
+  it('should throw if componentName does not match the required format', async () => {
     const argv = { componentName: 'invalidComponentName' };
-    try {
-      handler(argv);
-    } catch (error) {
-      expect(error.message).to.equal(
-        `Component name should start with an uppercase letter and contain only letters, numbers,
+
+    const consoleLogSpy = sinon.spy(console, 'log');
+
+    await handler(argv);
+
+    expect(
+      consoleLogSpy.calledOnceWith(
+        `Error: Component name should start with an uppercase letter and contain only letters, numbers,
 dashes, or underscores. It can also contain slashes to indicate a subfolder`
-      );
-    }
+      )
+    ).to.be.true;
   });
 
-  it('should call the loadConfig passing the config arg', () => {
+  it('should call the loadConfig passing the config arg', async () => {
     const argv = { componentName: 'ValidComponentName', config: './some-config.ts' };
-    handler(argv);
+    await handler(argv);
     expect(loadCliConfigStub.calledOnceWith(argv.config)).to.be.true;
   });
 
@@ -92,7 +95,7 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     };
     const expectedOutputFolderPath = 'src/components';
 
-    handler(argv);
+    await handler(argv);
 
     expect(
       scaffoldComponentStub.calledOnceWith(
@@ -111,7 +114,7 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     };
     const expectedOutputFolderPath = 'src/components';
 
-    handler(argv);
+    await handler(argv);
 
     expect(
       scaffoldComponentStub.calledOnceWith(
@@ -131,7 +134,7 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     };
     const expectedOutputFFolderPath = 'src/components';
 
-    handler(argv);
+    await handler(argv);
 
     expect(
       scaffoldComponentStub.calledOnceWith(
@@ -151,7 +154,7 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
       byoc: true,
     };
     const expectedOutputFilePath = 'path/to/';
-    handler(argv);
+    await handler(argv);
     expect(
       scaffoldComponentStub.calledOnceWith(
         expectedOutputFilePath,

@@ -1,8 +1,13 @@
-﻿import { FetchOptions, GraphQLClient, GraphQLRequestClientFactory, PageInfo } from '../client';
-import { StaticPath } from '../models';
-import debug from '../debug';
-import { getPersonalizedRewrite } from '../personalize';
-import { getSiteRewrite, SiteInfo } from '../site';
+﻿import {
+  FetchOptions,
+  GraphQLClient,
+  GraphQLRequestClientFactory,
+  PageInfo,
+} from '../client/index.js';
+import { StaticPath } from '../models.js';
+import debug from '../debug.js';
+import { getPersonalizedRewrite } from '../personalize/index.js';
+import { getSiteRewrite, SiteInfo } from '../site/index.js';
 
 /** @private */
 export const languageError = 'The list of languages cannot be empty';

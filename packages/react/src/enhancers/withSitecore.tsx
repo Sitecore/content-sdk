@@ -4,7 +4,7 @@ import {
   SitecoreProviderReactContext,
   SitecoreProviderState,
   SitecoreProviderPageContext,
-} from '../components/SitecoreProvider';
+} from '../components/SitecoreProvider.js';
 
 export interface WithSitecoreOptions {
   /**

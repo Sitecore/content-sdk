@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import { Metadata } from '../editing';
-import { getMetadata } from '../editing/metadata';
-import { ensurePathExists } from '../utils/ensurePath';
+import { Metadata } from '../editing/index.js';
+import { getMetadata } from '../editing/metadata.js';
+import { ensurePathExists } from '../utils/ensurePath.js';
 
 /*
   METADATA GENERATION

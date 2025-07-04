@@ -37,7 +37,7 @@ interface WithEmptyFieldEditingComponentProps {
  */
 export function withEmptyFieldEditingComponent<
   FieldComponentProps extends WithEmptyFieldEditingComponentProps,
-  RefElementType = HTMLElement
+  RefElementType = HTMLElement,
 >(
   FieldComponent: ComponentType<FieldComponentProps>,
   options: WithEmptyFieldEditingComponentOptions

@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { ScaffoldTemplate, ComponentTemplateType } from '@sitecore-content-sdk/core/config';
-import { COMPONENT_FILE_EXTENSION } from './constants';
+import { COMPONENT_FILE_EXTENSION } from './constants.js';
 
 /**
  * Next.js component boilerplate

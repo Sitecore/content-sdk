@@ -9,14 +9,14 @@ import {
   DefaultEmptyFieldEditingComponentImage,
   withEmptyFieldEditingComponent,
 } from '@sitecore-content-sdk/react';
-import Image, { ImageProps as NextImageProperties } from 'next/image';
+import NextModule from 'next/image.js';
 import {
   isFieldValueEmpty,
   LayoutServicePageState,
   RenderingType,
 } from '@sitecore-content-sdk/core/layout';
 
-type NextImageProps = ImageProps & Partial<NextImageProperties>;
+type NextImageProps = ImageProps & Partial<NextModule.ImageProps>;
 export const NextImage: React.FC<NextImageProps> = withFieldMetadata<NextImageProps>(
   withEmptyFieldEditingComponent<NextImageProps>(
     ({ editable = true, imageParams, field, mediaUrlPrefix, fill, priority, ...otherProps }) => {
@@ -73,9 +73,11 @@ export const NextImage: React.FC<NextImageProps> = withFieldMetadata<NextImagePr
         delete imageProps.height;
       }
 
+      console.log('RENDERING');
+
       if (attrs) {
         return (
-          <Image
+          <NextModule.default
             alt=""
             {...imageProps}
             {...(process.env.TEST ? { 'data-unoptimized': unoptimized } : {})}

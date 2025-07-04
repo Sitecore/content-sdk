@@ -1,10 +1,10 @@
-import debug from '../debug';
-import { PageInfo } from '../client';
-import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
-import { DictionaryPhrases } from '../i18n';
-import { LayoutServiceData, LayoutServicePageState } from '../layout';
-import { LayoutKind } from './models';
-import { FetchOptions } from '../models';
+import debug from '../debug.js';
+import { PageInfo } from '../client/index.js';
+import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client.js';
+import { DictionaryPhrases } from '../i18n/index.js';
+import { LayoutServiceData, LayoutServicePageState } from '../layout/index.js';
+import { LayoutKind } from './models.js';
+import { FetchOptions } from '../models.js';
 
 /**
  * The dictionary query default page size.

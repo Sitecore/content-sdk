@@ -3,8 +3,8 @@ import { NextRouter } from 'next/router';
 import { LinkField } from '@sitecore-content-sdk/react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
-import { Link } from './Link';
+import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime.js';
+import { Link } from './Link.js';
 import { spy } from 'sinon';
 
 const Router = (): NextRouter => ({
@@ -385,7 +385,7 @@ describe('<Link />', () => {
   });
 
   it('should render nothing with missing field', () => {
-    const field = (null as unknown) as LinkField;
+    const field = null as unknown as LinkField;
 
     const rendered = render(<Link field={field} />);
 

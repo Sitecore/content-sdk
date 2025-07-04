@@ -1,12 +1,9 @@
 /* eslint-disable no-unused-expressions */
-import { expect, use } from 'chai';
+import { expect } from 'chai';
 import sinon, { SinonSpy } from 'sinon';
-import spies from 'chai-spies';
 import nock from 'nock';
-import { GRAPHQL_LAYOUT_QUERY_NAME, GraphQLLayoutService } from './graphql-layout-service';
-import { GraphQLRequestClient, GraphQLRequestClientFactory } from '../graphql-request-client';
-
-use(spies);
+import { GRAPHQL_LAYOUT_QUERY_NAME, GraphQLLayoutService } from './graphql-layout-service.js';
+import { GraphQLRequestClient, GraphQLRequestClientFactory } from '../graphql-request-client.js';
 
 describe('GraphQLLayoutService', () => {
   const apiKey = '0FBFF61E-267A-43E3-9252-B77E71CEE4BA';
@@ -236,8 +233,7 @@ describe('GraphQLLayoutService', () => {
     });
 
     await service.fetchLayoutData('/styleguide', { locale: 'da-DK', site }).catch((error) => {
-      expect(error.response.status).to.equal(401);
-      expect(error.response.error).to.equal('whoops');
+      expect(error.message).to.include('GraphQL Error (Code: 401)');
     });
   });
 

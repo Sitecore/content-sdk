@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { SitecoreNextjsClient } from './sitecore-nextjs-client';
+import * as td from 'testdouble';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
-import * as siteTools from '@sitecore-content-sdk/core/site';
+import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
 import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
 import { GetServerSidePropsContext } from 'next';
-import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
-import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
+import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData.js';
+import { SitecoreNextjsClient } from './sitecore-nextjs-client.js';
 
 describe('SitecoreClient', () => {
   const sandbox = sinon.createSandbox();
@@ -192,10 +192,14 @@ describe('SitecoreClient', () => {
   });
 
   describe('resolveSiteFromPath', () => {
-    it('should resolve site correctly with string path', () => {
+    it('should resolve site correctly with string path', async () => {
       const path = '/some/path';
       const siteInfo = { name: 'default-site', hostName: '*', language: 'en' };
-      sandbox.stub(siteTools, 'getSiteRewriteData').returns({ siteName: 'default-site' });
+
+      await td.replaceEsm('@sitecore-content-sdk/core/site', {
+        getSiteRewriteData: sandbox.stub().returns({ siteName: 'default-site' }),
+      });
+
       siteResolverStub.getByName.returns(siteInfo);
 
       const result = sitecoreClient.resolveSiteFromPath(path);
@@ -248,13 +252,13 @@ describe('SitecoreClient', () => {
 
   describe('getComponentData', () => {
     it('should return componentData when component has getComponentsProps method', async () => {
-      const context = ({
+      const context = {
         params: { path: ['test', 'path'] },
         query: {},
         req: {},
         res: {},
         resolvedUrl: '/test/path',
-      } as unknown) as GetServerSidePropsContext;
+      } as unknown as GetServerSidePropsContext;
       const layoutData = {
         sitecore: {
           context,

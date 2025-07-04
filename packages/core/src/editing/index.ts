@@ -1,34 +1,30 @@
-export { GraphQLEditingService } from './graphql-editing-service';
+export { GraphQLEditingService } from './graphql-editing-service.js';
 export {
   DEFAULT_PLACEHOLDER_UID,
   PagesEditor,
   isEditorActive,
   resetEditorChromes,
-  Metadata,
   getJssPagesClientData,
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   PAGES_EDITING_MARKER,
-  ComponentUpdateEventArgs,
   PREVIEW_KEY,
-} from './utils';
-export {
-  RestComponentLayoutService,
-  ComponentLayoutRequestParams,
-} from './rest-component-layout-service';
-export { EditingRenderQueryParams, RenderComponentQueryParams } from './models';
-export {
-  LayoutKind,
-  MetadataKind,
+} from './utils.js';
+export type { Metadata, ComponentUpdateEventArgs } from './utils.js';
+export { RestComponentLayoutService } from './rest-component-layout-service.js';
+export type { ComponentLayoutRequestParams } from './rest-component-layout-service.js';
+export { LayoutKind, MetadataKind, DesignLibraryMode } from './models.js';
+export type {
   EditingPreviewData,
   DesignLibraryRenderPreviewData,
-  DesignLibraryMode,
-} from './models';
+  EditingRenderQueryParams,
+  RenderComponentQueryParams,
+} from './models.js';
 export {
   addComponentUpdateHandler,
   DesignLibraryStatus,
-  DesignLibraryStatusEvent,
   getDesignLibraryStatusEvent,
   getDesignLibraryScriptLink,
   isDesignLibraryMode,
-} from './design-library';
+} from './design-library.js';
+export type { DesignLibraryStatusEvent } from './design-library.js';

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import { SiteResolver } from './site-resolver';
+import { SiteResolver } from './site-resolver.js';
 
 describe('SiteResolver', () => {
   describe('getByHost', () => {

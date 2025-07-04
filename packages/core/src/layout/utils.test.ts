@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import { ComponentRendering } from '../../layout';
+import { ComponentRendering } from './models.js';
 import {
   getFieldValue,
   getChildPlaceholder,
@@ -8,7 +8,7 @@ import {
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
   EMPTY_DATE_FIELD_VALUE,
-} from './utils';
+} from './utils.js';
 
 describe('core layout utils', () => {
   describe('getFieldValue', () => {

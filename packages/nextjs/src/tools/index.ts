@@ -11,4 +11,4 @@ export {
   GenerateMapArgs,
 } from '@sitecore-content-sdk/core/tools';
 
-export { generateMap } from './generate-map';
+export { generateMap } from './generate-map.js';

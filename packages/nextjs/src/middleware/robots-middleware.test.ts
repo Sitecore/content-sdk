@@ -33,7 +33,7 @@ describe('RobotsMiddleware', () => {
       },
     };
 
-    middleware = new RobotsMiddleware((sitecoreClientStub as unknown) as SitecoreClient);
+    middleware = new RobotsMiddleware(sitecoreClientStub as unknown as SitecoreClient);
   });
 
   afterEach(() => {

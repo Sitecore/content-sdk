@@ -1,10 +1,15 @@
 ﻿export { debug } from '@sitecore-content-sdk/core';
-export { MiddlewareBase, MiddlewareBaseConfig, Middleware, defineMiddleware } from './middleware';
-export { RedirectsMiddleware, RedirectsMiddlewareConfig } from './redirects-middleware';
-export { PersonalizeMiddleware, PersonalizeMiddlewareConfig } from './personalize-middleware';
-export { MultisiteMiddleware, MultisiteMiddlewareConfig } from './multisite-middleware';
-export { SitemapMiddleware } from './sitemap-middleware';
-export { RobotsMiddleware } from './robots-middleware';
+export {
+  MiddlewareBase,
+  MiddlewareBaseConfig,
+  Middleware,
+  defineMiddleware,
+} from './middleware.js';
+export { RedirectsMiddleware, RedirectsMiddlewareConfig } from './redirects-middleware.js';
+export { PersonalizeMiddleware, PersonalizeMiddlewareConfig } from './personalize-middleware.js';
+export { MultisiteMiddleware, MultisiteMiddlewareConfig } from './multisite-middleware.js';
+export { SitemapMiddleware } from './sitemap-middleware.js';
+export { RobotsMiddleware } from './robots-middleware.js';
 export {
   GraphQLPersonalizeService,
   GraphQLPersonalizeServiceConfig,

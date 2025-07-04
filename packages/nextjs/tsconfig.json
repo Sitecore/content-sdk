@@ -1,12 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "CommonJS",
+    "target": "es2022",
     "jsx": "react",
     "skipLibCheck": true,
-    "outDir": "dist/cjs",
-    "types": ["node"],
+    "outDir": "dist",
+    "types": ["node", "mocha"],
     "typeRoots": ["node_modules/@types"],
     "declarationDir": "./types"
   },
@@ -15,20 +14,10 @@
     "types",
     "typings",
     "dist",
-    "context.d.ts",
-    "config.d.ts",
-    "middleware.d.ts",
-    "editing.d.ts",
-    "monitoring.d.ts",
-    "component-props-loader.d.ts",
-    "site.d.ts",
-    "client.d.ts",
-    "utils.d.ts",
-    "tools.d.ts",
-    "config-cli.d.ts",
     "src/tests/*",
     "src/test-data/*",
     "**/*.test.ts",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "component-props-loader.d.ts"
   ]
 }

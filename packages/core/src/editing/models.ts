@@ -1,4 +1,4 @@
-import { LayoutServicePageState } from '../layout';
+import { LayoutServicePageState } from '../layout/index.js';
 
 /**
  * Query parameters appended to the page route URL

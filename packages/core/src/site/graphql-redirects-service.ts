@@ -1,8 +1,8 @@
-import { FetchOptions, GraphQLClient } from '../client';
-import { siteNameError } from '../constants';
-import debug from '../debug';
-import { MemoryCacheClient, CacheOptions, CacheClient } from '../cache-client';
-import { GraphQLRequestClientFactory } from '../graphql-request-client';
+import { FetchOptions, GraphQLClient } from '../client/index.js';
+import { siteNameError } from '../constants.js';
+import debug from '../debug.js';
+import { MemoryCacheClient, CacheOptions, CacheClient } from '../cache-client.js';
+import { GraphQLRequestClientFactory } from '../graphql-request-client.js';
 
 export const REDIRECT_TYPE_301 = 'REDIRECT_301';
 export const REDIRECT_TYPE_302 = 'REDIRECT_302';

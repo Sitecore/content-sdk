@@ -5,7 +5,7 @@ import {
   WithSitecoreProps,
   EnhancedOmit,
 } from '@sitecore-content-sdk/react';
-import { ComponentPropsReactContext } from './ComponentPropsContext';
+import { ComponentPropsReactContext } from './ComponentPropsContext.js';
 
 /**
  * React Placeholder component wrapped by withSitecore, so these properties shouldn't be passed to the Next.js Placeholder.

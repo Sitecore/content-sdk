@@ -1,6 +1,6 @@
-import { RouteOptions, LayoutServiceData } from './models';
-import { SitecoreServiceBase } from '../sitecore-service-base';
-import { FetchOptions } from '../models';
+import { RouteOptions, LayoutServiceData } from './models.js';
+import { SitecoreServiceBase } from '../sitecore-service-base.js';
+import { FetchOptions } from '../models.js';
 
 /**
  * Base abstraction to implement custom layout service

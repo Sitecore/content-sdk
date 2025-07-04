@@ -1,6 +1,11 @@
 ﻿import React, { ComponentType } from 'react';
-import { MissingComponent } from './MissingComponent';
-import { DEFAULT_EXPORT_NAME, ComponentMap, LazyComponentType, ReactModule } from './sharedTypes';
+import { MissingComponent } from './MissingComponent.js';
+import {
+  DEFAULT_EXPORT_NAME,
+  ComponentMap,
+  LazyComponentType,
+  ReactModule,
+} from './sharedTypes/index.js';
 import {
   ComponentRendering,
   RouteData,
@@ -10,14 +15,14 @@ import {
   getDynamicPlaceholderPattern,
 } from '@sitecore-content-sdk/core/layout';
 import { constants } from '@sitecore-content-sdk/core';
-import { HiddenRendering } from './HiddenRendering';
-import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from './FEaaSComponent';
-import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from './FEaaSWrapper';
-import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from './BYOCComponent';
-import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from './BYOCWrapper';
-import { SitecoreProviderPageContext } from './SitecoreProvider';
-import { PlaceholderMetadata } from './PlaceholderMetadata';
-import ErrorBoundary from './ErrorBoundary';
+import { HiddenRendering } from './HiddenRendering.js';
+import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from './FEaaSComponent.js';
+import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from './FEaaSWrapper.js';
+import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from './BYOCComponent.js';
+import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from './BYOCWrapper.js';
+import { SitecoreProviderPageContext } from './SitecoreProvider.js';
+import { PlaceholderMetadata } from './PlaceholderMetadata.js';
+import ErrorBoundary from './ErrorBoundary.js';
 
 type ErrorComponentProps = {
   [prop: string]: unknown;
@@ -94,12 +99,7 @@ export interface PlaceholderProps {
 }
 
 export class PlaceholderCommon<T extends PlaceholderProps> extends React.Component<T> {
-  state: Readonly<{ error?: Error }>;
-
-  constructor(props: T) {
-    super(props);
-    this.state = {};
-  }
+  state: Readonly<{ error?: Error }> = {};
 
   static getPlaceholderDataFromRenderingData(
     rendering: ComponentRendering | RouteData,

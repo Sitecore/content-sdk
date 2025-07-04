@@ -1,8 +1,8 @@
 ﻿import React from 'react';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
-import { PlaceholderProps, PlaceholderCommon } from '../components/PlaceholderCommon';
-import { withComponentMap } from './withComponentMap';
-import { withSitecore } from './withSitecore';
+import { PlaceholderProps, PlaceholderCommon } from '../components/PlaceholderCommon.js';
+import { withComponentMap } from './withComponentMap.js';
+import { withSitecore } from './withSitecore.js';
 
 export interface WithPlaceholderOptions {
   /**
@@ -102,9 +102,8 @@ export function withPlaceholder(
               childProps.pageContext.pageEditing
             );
             if (placeholderData) {
-              childProps[placeholder as string] = this.getComponentsForRenderingData(
-                placeholderData
-              );
+              childProps[placeholder as string] =
+                this.getComponentsForRenderingData(placeholderData);
             }
           }
         });

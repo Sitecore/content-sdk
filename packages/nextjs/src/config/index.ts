@@ -1,1 +1,1 @@
-export { SitecoreConfig, SitecoreConfigInput, defineConfig } from './define-config';
+export { SitecoreConfig, SitecoreConfigInput, defineConfig } from './define-config.js';

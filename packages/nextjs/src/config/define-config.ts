@@ -42,7 +42,7 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
     disableStaticPaths:
       process.env.DISABLE_SSG_FETCH !== undefined
         ? process.env.DISABLE_SSG_FETCH.toLowerCase() === 'true'
-        : config?.disableStaticPaths ?? false,
+        : (config?.disableStaticPaths ?? false),
   };
 };
 

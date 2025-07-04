@@ -1,5 +1,5 @@
-export { generateSites, GenerateSitesConfig } from './generateSites';
-export { generateMetadata } from './generateMetadata';
-export { scaffoldComponent } from './scaffold';
-export { GenerateMapFunction, GenerateMapArgs } from './generate-map';
-export * from './templating';
+export { generateSites, GenerateSitesConfig } from './generateSites.js';
+export { generateMetadata } from './generateMetadata.js';
+export { scaffoldComponent } from './scaffold.js';
+export { GenerateMapFunction, GenerateMapArgs } from './generate-map.js';
+export * from './templating/index.js';

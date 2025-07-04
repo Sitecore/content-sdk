@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import proxyquire from 'proxyquire';
+import * as td from 'testdouble';
 
 describe('defineConfig', () => {
   let defineConfigCoreStub: sinon.SinonStub;
@@ -13,11 +13,14 @@ describe('defineConfig', () => {
     defaultLanguage: 'en',
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     defineConfigCoreStub = sandbox.stub();
-    defineConfigModule = proxyquire('./define-config', {
-      '@sitecore-content-sdk/core/config': { defineConfig: defineConfigCoreStub },
+
+    await td.replaceEsm('@sitecore-content-sdk/core/config', {
+      defineConfig: defineConfigCoreStub,
     });
+
+    defineConfigModule = await import('./define-config.js');
   });
 
   afterEach(() => {

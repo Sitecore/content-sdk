@@ -3,19 +3,19 @@ import {
   EditingPreviewData,
   GraphQLEditingService,
   RestComponentLayoutService,
-} from '../editing';
-import { GraphQLRequestClientFactory } from '../graphql-request-client';
-import { DictionaryPhrases, GraphQLDictionaryService } from '../i18n';
+} from '../editing/index.js';
+import { GraphQLRequestClientFactory } from '../graphql-request-client.js';
+import { DictionaryPhrases, GraphQLDictionaryService } from '../i18n/index.js';
 import {
   getDesignLibraryStylesheetLinks,
   getContentStylesheetLink,
   GraphQLLayoutService,
   LayoutServiceData,
   RouteOptions,
-} from '../layout';
-import { HTMLLink, FetchOptions, StaticPath, RetryStrategy } from '../models';
-import { getGroomedVariantIds, PersonalizedRewriteData } from '../personalize/utils';
-import { personalizeLayout } from '../personalize/layout-personalizer';
+} from '../layout/index.js';
+import { HTMLLink, FetchOptions, StaticPath, RetryStrategy } from '../models.js';
+import { getGroomedVariantIds, PersonalizedRewriteData } from '../personalize/utils.js';
+import { personalizeLayout } from '../personalize/layout-personalizer.js';
 import {
   ErrorPages,
   SiteInfo,
@@ -23,11 +23,11 @@ import {
   GraphQLErrorPagesService,
   GraphQLSitePathService,
   GraphQLSitemapXmlService,
-} from '../site';
-import { SitecoreClientInit } from './models';
-import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
-import { NativeDataFetcher } from '../native-fetcher';
-import { GraphQLRobotsService } from '../site/graphql-robots-service';
+} from '../site/index.js';
+import { SitecoreClientInit } from './models.js';
+import { createGraphQLClientFactory, GraphQLClientOptions } from './utils.js';
+import { NativeDataFetcher } from '../native-fetcher.js';
+import { GraphQLRobotsService } from '../site/graphql-robots-service.js';
 
 /**
  * Represent a Page model returned from Edge endpoint
@@ -359,15 +359,8 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
     // If we're in Pages preview (editing) mode, prefetch the editing data
-    const {
-      site,
-      itemId,
-      language,
-      version,
-      variantIds,
-      layoutKind,
-      mode,
-    } = previewData as EditingPreviewData;
+    const { site, itemId, language, version, variantIds, layoutKind, mode } =
+      previewData as EditingPreviewData;
 
     const data = await this.editingService.fetchEditingData(
       {
@@ -410,16 +403,8 @@ export class SitecoreClient implements BaseSitecoreClient {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
 
-    const {
-      itemId,
-      componentUid,
-      site,
-      language,
-      renderingId,
-      dataSourceId,
-      version,
-      mode,
-    } = designLibData;
+    const { itemId, componentUid, site, language, renderingId, dataSourceId, version, mode } =
+      designLibData;
 
     const componentData = await this.componentService.fetchComponentData({
       siteName: site,

@@ -1,24 +1,16 @@
 import { scaffoldComponent } from '@sitecore-content-sdk/core/tools';
-import loadCliConfig from '../../../utils/load-config';
+import loadCliConfig from '../../../utils/load-config.js';
 import { Argv } from 'yargs';
 import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
+
+export const command = 'scaffold <componentName>';
+
+export const describe = 'Scaffolds a new component';
 
 /**
  * @param {Argv} yargs
  */
 export function builder(yargs: Argv<ScaffoldArgs>) {
-  return yargs.command<ScaffoldArgs>(
-    'scaffold <componentName>',
-    'Scaffolds a new component',
-    args,
-    handler
-  );
-}
-
-/**
- * @param {Argv} yargs
- */
-export function args(yargs: Argv<ScaffoldArgs>) {
   return yargs
     .positional('componentName', {
       requiresArg: true,
@@ -74,20 +66,18 @@ export type ScaffoldArgs = {
  * Handler for the scaffold command.
  * @param {ScaffoldArgs} argv - The arguments passed to the command.
  */
-export function handler(argv: ScaffoldArgs) {
-  if (!argv.componentName) {
-    throw new Error('Component name is required. Usage: sitecore-tools scaffold <ComponentName>');
-  }
-
+export async function handler(argv: ScaffoldArgs) {
   const nameParamFormat = new RegExp(/^((?:[\w\-]+\/)*)([A-Z][\w-]+)$/);
   const regExResult = nameParamFormat.exec(argv.componentName);
 
   if (regExResult === null) {
-    throw new Error(`Component name should start with an uppercase letter and contain only letters, numbers,
+    console.log(`Error: Component name should start with an uppercase letter and contain only letters, numbers,
 dashes, or underscores. It can also contain slashes to indicate a subfolder`);
+
+    return;
   }
 
-  const cliConfig = loadCliConfig(argv.config);
+  const cliConfig = await loadCliConfig(argv.config);
 
   const componentPath = regExResult[1];
   const componentName = regExResult[2];

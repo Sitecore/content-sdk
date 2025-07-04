@@ -1,10 +1,10 @@
-export {
+export { ComponentTemplateType } from './models.js';
+export type {
   SitecoreConfig,
   SitecoreConfigInput,
   SitecoreCliConfig,
   SitecoreCliConfigInput,
   ScaffoldTemplate,
-  ComponentTemplateType,
   DeepRequired,
-} from './models';
-export { defineConfig } from './define-config';
+} from './models.js';
+export { defineConfig } from './define-config.js';

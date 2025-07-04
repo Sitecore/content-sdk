@@ -4,8 +4,8 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/core/editing';
-import { getJssEditingSecret } from '../utils/utils';
-import { RenderMiddlewareBase } from './render-middleware';
+import { getJssEditingSecret } from '../utils/utils.js';
+import { RenderMiddlewareBase } from './render-middleware.js';
 import { enforceCors } from '@sitecore-content-sdk/core/utils';
 
 /**

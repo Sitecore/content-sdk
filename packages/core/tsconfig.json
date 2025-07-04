@@ -1,13 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2022",
     "skipLibCheck": true,
     "useUnknownInCatchVariables": false,
-    "module": "commonjs",
-    "outDir": "dist/cjs",
+    "outDir": "dist",
     "typeRoots": ["node_modules/@types"],
-    "declarationDir": "./types"
+    "declarationDir": "./types",
   },
   "exclude": [
     "node_modules",
@@ -27,6 +26,7 @@
     "config-cli.d.ts",
     "src/**/*.test.ts",
     "src/test-data/*",
+    "src/test-setup.ts",
     "src/tools/templating/test-data/*",
   ]
 }

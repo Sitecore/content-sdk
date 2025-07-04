@@ -39,9 +39,9 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       return null;
     }
 
-    const value = ((field as LinkFieldValue).href
-      ? field
-      : (field as LinkField).value) as LinkFieldValue;
+    const value = (
+      (field as LinkFieldValue).href ? field : (field as LinkField).value
+    ) as LinkFieldValue;
     // fallback to {} if value is undefined; could happen if field is LinkFieldValue, href is empty in metadata mode
     const { href, querystring, anchor } = value || {};
 
@@ -56,7 +56,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       // determine if a link is a route or not. File extensions are not routes and should not be pre-fetched.
       if (isMatching && !isFileUrl) {
         return (
-          <NextLink
+          <NextLink.default
             href={{ pathname: href, query: querystring, hash: anchor }}
             key="link"
             locale={false}
@@ -75,7 +75,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
           >
             {text}
             {children}
-          </NextLink>
+          </NextLink.default>
         );
       }
     }

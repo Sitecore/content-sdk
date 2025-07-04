@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import nock from 'nock';
-import { GraphQLSitemapXmlService } from './graphql-sitemap-xml-service';
-import { siteNameError } from '../constants';
-import { GraphQLRequestClient } from '../graphql-request-client';
+import { GraphQLSitemapXmlService } from './graphql-sitemap-xml-service.js';
+import { siteNameError } from '../constants.js';
+import { GraphQLRequestClient } from '../graphql-request-client.js';
 
 const sitemapQueryResultNull = {
   site: {

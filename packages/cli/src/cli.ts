@@ -1,12 +1,5 @@
 import yargs, { Argv, CommandModule } from 'yargs';
 
-// Makes the script crash on unhandled rejections instead of silently
-// ignoring them. In the future, promise rejections that are not handled will
-// terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', (err) => {
-  throw err;
-});
-
 /**
  * Initializes and configures the CLI application using yargs.
  * This function registers commands, sets up argument parsing, and handles command execution.
@@ -17,7 +10,7 @@ process.on('unhandledRejection', (err) => {
 export default async function cli(commands?: {
   [key: string]: CommandModule & { disableStrictArgs?: boolean };
 }) {
-  let appCommands: Argv = yargs.usage('$0 <command>');
+  let appCommands: Argv = yargs(process.argv.slice(2)).usage('$0 <command>');
 
   appCommands = appCommands.scriptName('sitecore-tools');
 
@@ -42,7 +35,7 @@ export default async function cli(commands?: {
     }
   }
 
-  appCommands
+  return await appCommands
     .command({
       command: '*',
       handler: (argv) => {
@@ -51,12 +44,10 @@ export default async function cli(commands?: {
         } else {
           console.error('No command provided');
         }
-        yargs.showHelp();
-        process.exit(1);
+        appCommands.showHelp();
       },
     })
     .demandCommand(1, 'You need to specify a command to run')
-    .strict();
-
-  await appCommands.argv;
+    .strict()
+    .parse();
 }

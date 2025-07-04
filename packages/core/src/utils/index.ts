@@ -1,14 +1,14 @@
-export { default as isServer } from './is-server';
+export { default as isServer } from './is-server.js';
 export {
   resolveUrl,
   isAbsoluteUrl,
   isTimeoutError,
   enforceCors,
-  EnhancedOmit,
   getAllowedOriginsFromEnv,
   isRegexOrUrl,
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
   mergeURLSearchParams,
-} from './utils';
-export { tryParseEnvValue } from './env';
+} from './utils.js';
+export type { EnhancedOmit } from './utils.js';
+export { tryParseEnvValue } from './env.js';

@@ -1,7 +1,7 @@
 ﻿import React, { JSX } from 'react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { ComponentFields, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
-import { getDataFromFields } from '../utils';
+import { getDataFromFields } from '../utils.js';
 
 export const FEAAS_COMPONENT_RENDERING_NAME = 'FEaaSComponent';
 
@@ -148,8 +148,9 @@ async function fetchComponentTemplate(
     return template;
   } catch (error) {
     console.error(
-      `Fetch FEAAS component from ${src} failed. Ensure the component revision "${params.ComponentRevision ||
-        revisionFallback}" is present`
+      `Fetch FEAAS component from ${src} failed. Ensure the component revision "${
+        params.ComponentRevision || revisionFallback
+      }" is present`
     );
     throw error;
   }

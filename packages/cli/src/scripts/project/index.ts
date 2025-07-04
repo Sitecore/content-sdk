@@ -1,7 +1,7 @@
 import { Argv } from 'yargs';
 
-import * as build from './build';
-import * as component from './component';
+import * as build from './build.js';
+import * as component from './component/index.js';
 
 /**
  * @param {Argv} yargs
@@ -15,8 +15,6 @@ export function builder(yargs: Argv) {
         .command([build, component] as any)
         .strict()
         .demandCommand(1, 'You need to specify a command to run');
-
-      _yargs = component.builder(_yargs as any);
 
       return _yargs;
     },

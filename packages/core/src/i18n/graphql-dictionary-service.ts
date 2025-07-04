@@ -1,10 +1,10 @@
-import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
-import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
-import { PageInfo } from '../client';
-import { siteNameError, languageError } from '../client/constants';
-import debug from '../debug';
-import { GraphQLServiceConfig } from '../sitecore-service-base';
-import { FetchOptions } from '../models';
+import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client.js';
+import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client.js';
+import { PageInfo } from '../client/index.js';
+import { siteNameError, languageError } from '../client/constants.js';
+import debug from '../debug.js';
+import { GraphQLServiceConfig } from '../sitecore-service-base.js';
+import { FetchOptions } from '../models.js';
 /** @private */
 export const queryError =
   'Valid value for rootItemId not provided and failed to auto-resolve app root item.';

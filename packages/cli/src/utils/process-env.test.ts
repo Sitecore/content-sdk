@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import fs from 'fs';
 import path from 'path';
 import tmp from 'tmp';
-import processEnv from './process-env';
+import processEnv from './process-env.js';
 
 interface EnvFile {
   name: string;

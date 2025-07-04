@@ -1,16 +1,16 @@
-﻿export { personalizeLayout } from './layout-personalizer';
-export {
+﻿export { personalizeLayout } from './layout-personalizer.js';
+export { GraphQLPersonalizeService } from './graphql-personalize-service.js';
+export type {
   PersonalizeInfo,
-  GraphQLPersonalizeService,
   GraphQLPersonalizeServiceConfig,
-} from './graphql-personalize-service';
+} from './graphql-personalize-service.js';
 export {
   getPersonalizedRewrite,
   getPersonalizedRewriteData,
   getGroomedVariantIds,
   normalizePersonalizedRewrite,
-  PersonalizedRewriteData,
   CdpHelper,
   DEFAULT_VARIANT,
   VARIANT_PREFIX,
-} from './utils';
+} from './utils.js';
+export type { PersonalizedRewriteData } from './utils.js';
