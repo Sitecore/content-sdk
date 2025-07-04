@@ -61,6 +61,7 @@ function recordPackageSizes() {
 function recordCoverage() {
   console.log('🧪 Measuring test coverage...');
   const coverage = {};
+
   for (const pkg of packages) {
     try {
       const pkgPath = path.resolve(__dirname, `../packages/${pkg}`);
@@ -78,15 +79,23 @@ function recordCoverage() {
         },
       });
 
-      const match = result.match(/All files\s+\|\s+([\d.]+)/);
-      const avg = match ? parseFloat(match[1]) : 0;
-      coverage[pkg] = avg;
-      console.log(`    → ${avg.toFixed(2)}%`);
+      const match = result.match(
+        /All files\s+\|\s+([\d.]+)\s+\|\s+([\d.]+)\s+\|\s+([\d.]+)\s+\|\s+([\d.]+)/
+      );
+      if (match) {
+        const values = match.slice(1, 5).map(Number); // Convert to numbers
+        const avg = values.reduce((a, b) => a + b, 0) / values.length;
+        coverage[pkg] = avg;
+        console.log(`    → ${avg.toFixed(2)}% avg from: ${values.join(', ')}`);
+      } else {
+        throw new Error('Coverage metrics not found');
+      }
     } catch (err) {
       console.warn(`⚠️ Coverage failed for ${pkg}: ${err.message}`);
       coverage[pkg] = null;
     }
   }
+
   return coverage;
 }
 
