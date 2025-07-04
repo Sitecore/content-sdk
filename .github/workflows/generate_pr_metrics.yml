@@ -1,0 +1,34 @@
+﻿name: Pull Request Metrics Report
+
+on:
+  pull_request:
+    branches: [dev]
+
+jobs:
+  generate-package-metrics-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: |
+          yarn cache clean --all
+          yarn install --immutable
+
+      - name: Run metric check
+        run: node ./scripts/generate-package-metrics-report.js
+
+      - name: Post PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: Metrics Report
+          path: metrics-report.md
