@@ -112,6 +112,7 @@ const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): Sit
 };
 
 const validateConfig = (config: SitecoreConfigInput): void => {
+  const isBrowser = typeof window !== 'undefined';
   const hasEdgeContextId = !!config.api?.edge?.contextId;
   const hasClientContextId = !!config.api?.edge?.clientContextId;
 
@@ -120,17 +121,26 @@ const validateConfig = (config: SitecoreConfigInput): void => {
     if (!hasEdgeContextId) {
       throw new Error(
         `Configuration error: a server-side Edge contextId (api.edge.contextId) is required.
-        Supplying only clientContextId or local-API credentials is not sufficient`
+Supplying only clientContextId or local-API credentials is not sufficient`
       );
     }
     if (!hasClientContextId) {
       // eslint-disable-next-line no-console
       console.warn(
         `Warning: only a server-side contextId is provided.
-        If your app makes client-side requests, they will fail unless you also set a clientContextId.`
+If your app makes client-side requests, they will fail unless you also set a clientContextId.`
       );
     }
     return; // validation complete on the server
+  }
+
+  // Browser-side warning (runs only if contextId exists but clientContextId is missing)
+  if (isBrowser && !hasClientContextId) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `Warning: clientContextId is missing. The browser will use contextId instead.
+Client Side functionalities (like Tracking and Personalization) may be limited.`
+    );
   }
 };
 
