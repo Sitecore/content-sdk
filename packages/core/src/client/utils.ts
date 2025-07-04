@@ -17,7 +17,7 @@ export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
     clientConfig = {
       endpoint: getEdgeProxyContentUrl(edge.contextId, edge.edgeUrl),
     };
-  } else if (edge?.clientContextId) {
+  } else if (isBrowser && edge?.clientContextId) {
     // Real client for client-side requests
     clientConfig = {
       endpoint: getEdgeProxyContentUrl(edge.clientContextId, edge.edgeUrl),
@@ -37,10 +37,11 @@ export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
     clientConfig = { endpoint: '/api/graphql' };
   } else {
     throw new Error(
-      'GraphQL client mis-configured. Provide one of:\n' +
-        '  • api.edge.contextId\n' +
-        '  • api.edge.clientContextId\n' +
-        '  • api.local.{apiHost, apiKey}'
+      `GraphQL client misconfigured.
+      Configure one of the following in sitecore.config or your .env file:
+      Edge mode: set both sitecore.edge.contextId (server-side) and sitecore.edge.clientContextId (browser).
+      Local API mode: set api.local.apiHost and api.local.apiKey.
+      Supplying only api.edge.clientContextId will cause the application to fail at runtime.`
     );
   }
 

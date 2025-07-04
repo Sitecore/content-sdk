@@ -7,35 +7,18 @@ import { constants } from '@sitecore-content-sdk/core';
 import { ComponentMap } from './sharedTypes';
 
 export interface SitecoreProviderProps {
-  /**
-   * The API configuration defined in the `SitecoreConfig`.
-   */
+  /** API configuration from SitecoreConfig */
   api: SitecoreConfig['api'];
-  /**
-   * The component map to use for rendering components.
-   */
+  /** Component map for rendering components */
   componentMap: ComponentMap;
-  /**
-   * The Sitecore Layout data.
-   */
+  /** Optional Sitecore Layout data */
   layoutData?: LayoutServiceData;
   children: React.ReactNode;
 }
 
 export interface SitecoreProviderState {
-  /**
-   * Method to set the page context.
-   * @param {SitecoreProviderPageContext | LayoutServiceData} value New page context value.
-   * @returns {void}
-   */
   setContext: (value: SitecoreProviderPageContext | LayoutServiceData) => void;
-  /**
-   * The current page context.
-   */
   pageContext: SitecoreProviderPageContext;
-  /**
-   * The API configuration defined in the `SitecoreConfig`.
-   */
   api?: SitecoreProviderProps['api'];
 }
 
@@ -44,9 +27,7 @@ export const SitecoreProviderReactContext = React.createContext<SitecoreProvider
 );
 export const ComponentMapReactContext = React.createContext<ComponentMap>(new Map());
 
-/**
- * The page context provided by the SitecoreProvider.
- */
+/** Page context provided by SitecoreProvider */
 export type SitecoreProviderPageContext = LayoutServiceContext & {
   itemId?: string;
   route?: RouteData;
@@ -63,9 +44,13 @@ export class SitecoreProvider extends React.Component<
 
     const pageContext: SitecoreProviderPageContext = this.constructContext(props.layoutData);
 
+    // If any Edge ID is present but no edgeUrl, apply the default
     let api = props.api;
-
-    if (props.api?.edge?.contextId && !props.api?.edge?.edgeUrl) {
+    if (
+      props.api?.edge &&
+      !props.api.edge.edgeUrl &&
+      (props.api.edge.contextId || props.api.edge.clientContextId)
+    ) {
       api = {
         ...props.api,
         edge: {
@@ -84,9 +69,7 @@ export class SitecoreProvider extends React.Component<
 
   constructContext(layoutData?: LayoutServiceData): SitecoreProviderPageContext {
     if (!layoutData) {
-      return {
-        pageEditing: false,
-      };
+      return { pageEditing: false };
     }
 
     return {
@@ -97,23 +80,15 @@ export class SitecoreProvider extends React.Component<
   }
 
   componentDidUpdate(prevProps: SitecoreProviderProps) {
-    // In case if somebody will manage SitecoreProvider state by passing fresh `layoutData` prop
-    // instead of using `updateContext`
+    // Refresh context if a new layoutData object is passed in
     if (!fastDeepEqual(prevProps.layoutData, this.props.layoutData)) {
       this.setContext(this.props.layoutData);
-
-      return;
     }
   }
 
-  /**
-   * Update context state. Value can be @type {LayoutServiceData} which will be automatically transformed
-   * or you can provide exact @type {SitecoreProviderPageContext}
-   * @param {SitecoreProviderPageContext | LayoutServiceData} value New context value
-   */
   setContext = (value: SitecoreProviderPageContext | LayoutServiceData) => {
     this.setState({
-      pageContext: value.sitecore
+      pageContext: (value as any).sitecore
         ? this.constructContext(value as LayoutServiceData)
         : { ...(value as SitecoreProviderPageContext) },
     });

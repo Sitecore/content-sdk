@@ -6,8 +6,7 @@ import { useSitecore } from '../enhancers/withSitecore';
 let { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
 
 /**
- * Mock function to replace the form module functions for `testing` purposes.
- * @param {any} formModule - The form module to mock
+ * Replace the form module functions for testing purposes.
  */
 export const mockFormModule = (formModule: any) => {
   executeScriptElements = formModule.executeScriptElements;
@@ -16,23 +15,13 @@ export const mockFormModule = (formModule: any) => {
 };
 
 /**
- * Shape of the Form component rendering data.
- * FormId is the rendering parameter that specifies the ID of the Sitecore Form to render.
+ * Rendering parameters for the Form component.
  */
 export type FormProps = {
   rendering: ComponentRendering;
   params: {
-    /**
-     * The ID of the Sitecore Form to render.
-     */
-    FormId: string;
-    /**
-     * The CSS class to apply to the form.
-     */
-    styles?: string;
-    /**
-     * The unique identifier of the rendering.
-     */
+    FormId: string; // Sitecore Form ID to render
+    styles?: string; // CSS class to apply to the form
     RenderingIdentifier?: string;
   };
 };
@@ -48,7 +37,10 @@ export const Form = ({ params, rendering }: FormProps) => {
 
   useEffect(() => {
     if (!content) {
-      loadForm(context.api?.edge?.contextId, params.FormId, context.api?.edge?.edgeUrl)
+      // In the browser prefer clientContextId; fall back to contextId if it exists
+      const edgeId = context.api?.edge?.clientContextId ?? context.api?.edge?.contextId;
+
+      loadForm(edgeId, params.FormId, context.api?.edge?.edgeUrl)
         .then(setContent)
         .catch(() => {
           if (isEditing) {
@@ -59,7 +51,7 @@ export const Form = ({ params, rendering }: FormProps) => {
           setError(true);
         });
     } else {
-      // If we are in editing mode, we don't want to send any events
+      // Do not send events while editing
       if (!isEditing) {
         subscribeToFormSubmitEvent(formRef.current, rendering.uid);
       }
@@ -68,14 +60,12 @@ export const Form = ({ params, rendering }: FormProps) => {
     }
   }, [content]);
 
-  if (isEditing) {
-    if (error) {
-      return (
-        <div className="sc-content-sdk-placeholder-error">
-          There was a problem loading this section
-        </div>
-      );
-    }
+  if (isEditing && error) {
+    return (
+      <div className="sc-content-sdk-placeholder-error">
+        There was a problem loading this section
+      </div>
+    );
   }
 
   return (

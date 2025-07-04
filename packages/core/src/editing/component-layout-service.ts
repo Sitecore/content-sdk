@@ -6,70 +6,38 @@ import { resolveUrl } from '../utils';
 import { DesignLibraryMode } from './models';
 
 /**
- * Params for requesting component data from service in Design Library mode
+ * Params for requesting component data in Design Library mode
  */
 export interface ComponentLayoutRequestParams {
-  /**
-   * Item id to be used as context for rendering the component
-   */
-  itemId: string;
-  /**
-   * Component identifier. Can be either taken from item's layout details or
-   * an arbitrary one (component renderingId and datasource would be used for identification then)
-   */
-  componentUid: string;
-  /**
-   * language to render component in
-   */
-  language?: string;
-  /**
-   * optional component datasource
-   */
-  dataSourceId?: string;
-  /**
-   * ID of the component definition rendering item in Sitecore
-   */
-  renderingId?: string;
-  /**
-   * version of the context item (latest by default)
-   */
-  version?: string;
-  /**
-   * site name to be used as context for rendering the component
-   */
-  siteName: string;
-  /**
-   * mode to be used for rendering the component
-   */
-  mode?: DesignLibraryMode;
+  itemId: string; // context item ID
+  componentUid: string; // component UID
+  language?: string; // language to render in
+  dataSourceId?: string; // optional datasource ID
+  renderingId?: string; // component definition item ID
+  version?: string; // item version (latest by default)
+  siteName: string; // site context
+  mode?: DesignLibraryMode; // render mode
 }
 
 /**
- * Config for the ComponentLayoutService
+ * Config for ComponentLayoutService.
+ * Provide contextId (server) and optionally clientContextId (browser).
  */
 export interface ComponentLayoutServiceConfig {
-  /**
-   * A unified identifier used to connect and retrieve data from XM Cloud instance
-   */
-  contextId: string;
-  /**
-   * XM Cloud endpoint that the app will communicate and retrieve data from
-   * @default https://edge-platform.sitecorecloud.io
-   */
-  edgeUrl?: string;
+  contextId?: string; // server-side Edge context ID
+  clientContextId?: string; // browser-side Edge context ID
+  edgeUrl?: string; // XM Cloud endpoint (default provided)
 }
 
 /**
- * REST service that enables design Library functionality
- * Returns layoutData for one single rendered component
+ * REST service that enables Design Library functionality.
+ * Returns layout data for a single rendered component.
  */
 export class ComponentLayoutService {
   constructor(private config: ComponentLayoutServiceConfig) {}
 
   fetchComponentData(params: ComponentLayoutRequestParams): Promise<LayoutServiceData> {
-    const config: NativeDataFetcherConfig = { debugger: debug.layout };
-
-    const fetcher = new NativeDataFetcher(config);
+    const fetcher = new NativeDataFetcher({ debugger: debug.layout });
 
     debug.layout(
       'fetching component with uid %s for %s %s %s %s',
@@ -80,29 +48,38 @@ export class ComponentLayoutService {
       params.dataSourceId
     );
 
-    const fetchUrl = this.getFetchUrl(params);
-
     return fetcher
-      .get<LayoutServiceData>(fetchUrl, {
-        headers: {
-          sc_editMode: `${params.mode === DesignLibraryMode.Metadata}`,
-        },
+      .get<LayoutServiceData>(this.getFetchUrl(params), {
+        headers: { sc_editMode: `${params.mode === DesignLibraryMode.Metadata}` },
       })
-      .then((response) => response.data)
-      .catch((error) => {
-        if (error.response?.status === 404) {
-          return error.response.data;
+      .then((r) => r.data)
+      .catch((err) => {
+        if (err.response?.status === 404) {
+          return err.response.data;
         }
-
-        throw error;
+        throw err;
       });
   }
 
+  /** Assemble query-string parameters for the component endpoint */
   protected getComponentFetchParams(params: ComponentLayoutRequestParams) {
-    // exclude undefined params with this one simple trick
+    const isBrowser = typeof window !== 'undefined';
+
+    // Choose the correct Edge ID per environment
+    const sitecoreContextId =
+      this.config.contextId ?? (isBrowser ? this.config.clientContextId : undefined);
+
+    if (!sitecoreContextId) {
+      throw new Error(
+        `ComponentLayoutService misconfigured: contextId is missing.
+         Provide contextId on the server, and clientContextId in the browser if you need to full client-side functionality.`
+      );
+    }
+
+    // strip undefined fields
     return JSON.parse(
       JSON.stringify({
-        sitecoreContextId: this.config.contextId,
+        sitecoreContextId,
         item: params.itemId,
         uid: params.componentUid,
         dataSourceId: params.dataSourceId,
@@ -114,11 +91,7 @@ export class ComponentLayoutService {
     );
   }
 
-  /**
-   * Get the fetch URL for the partial layout data endpoint
-   * @param {ComponentLayoutRequestParams} params - The parameters for the request
-   * @returns {string} The fetch URL for the component data
-   */
+  /** Build the HTTP URL for the partial-layout endpoint */
   private getFetchUrl(params: ComponentLayoutRequestParams) {
     return resolveUrl(
       `${this.config.edgeUrl || SITECORE_EDGE_URL_DEFAULT}/layout/component`,

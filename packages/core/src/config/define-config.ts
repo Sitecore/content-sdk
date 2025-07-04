@@ -119,15 +119,15 @@ const validateConfig = (config: SitecoreConfigInput): void => {
   if (typeof window === 'undefined') {
     if (!hasEdgeContextId) {
       throw new Error(
-        'Configuration error: a server-side Edge `contextId` (api.edge.contextId) is required. ' +
-          'Supplying only clientContextId or local-API credentials is not sufficient.'
+        `Configuration error: a server-side Edge contextId (api.edge.contextId) is required.
+        Supplying only clientContextId or local-API credentials is not sufficient`
       );
     }
     if (!hasClientContextId) {
       // eslint-disable-next-line no-console
       console.warn(
-        'Warning: only a server-side `contextId` is provided. If your app makes ' +
-          'client-side Edge requests, also supply `clientContextId`.'
+        `Warning: only a server-side contextId is provided.
+        If your app makes client-side requests, they will fail unless you also set a clientContextId.`
       );
     }
     return; // validation complete on the server
