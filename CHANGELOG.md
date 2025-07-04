@@ -48,6 +48,10 @@ Our versioning strategy is as follows:
     * `GraphQLSitePathServiceConfig` → `SitePathServiceConfig`
   * Removed `DictionaryService` interface
 
+### 🧹 Chores
+
+* Add Github action workflow to generate package size and test coverage metrics report  ([#151](https://github.com/Sitecore/content-sdk/pull/151))
+
 ## 0.3.0
 
 ### 🎉 New Features & Improvements

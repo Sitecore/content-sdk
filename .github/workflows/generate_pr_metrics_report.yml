@@ -24,7 +24,7 @@ jobs:
           yarn cache clean --all
           yarn install --immutable
 
-      - name: Run metric check
+      - name: Generate Report
         run: node ./scripts/generate-package-metrics-report.js
 
       - name: Post PR comment
