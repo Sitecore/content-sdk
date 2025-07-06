@@ -23,6 +23,14 @@ export enum ExtractedFileType {
 }
 
 /**
+ * Describes individual entries in import map file
+ */
+export type ImportMapEntry = {
+  module: string;
+  namedExports: string[];
+};
+
+/**
  * Validates if the current operation is done in Vercel, Netlify or XMCloud
  * deploy context
  * @returns {boolean} - true if in deploy context, false otherwise
