@@ -63,9 +63,12 @@ export class SitecoreProvider extends React.Component<
 
     const pageContext: SitecoreProviderPageContext = this.constructContext(props.layoutData);
 
+    // If any Edge ID is present but no edgeUrl, apply the default
     let api = props.api;
-
-    if (props.api?.edge?.contextId && !props.api?.edge?.edgeUrl) {
+    if (
+      (props.api?.edge?.contextId || props.api?.edge?.clientContextId) &&
+      !props.api?.edge?.edgeUrl
+    ) {
       api = {
         ...props.api,
         edge: {
@@ -84,9 +87,7 @@ export class SitecoreProvider extends React.Component<
 
   constructContext(layoutData?: LayoutServiceData): SitecoreProviderPageContext {
     if (!layoutData) {
-      return {
-        pageEditing: false,
-      };
+      return { pageEditing: false };
     }
 
     return {

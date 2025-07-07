@@ -69,7 +69,7 @@ describe('defineConfig', () => {
         expect(resultConfig.api?.edge?.contextId).to.equal('custom-context-id');
       });
 
-      it('should use the env var if present', () => {
+      it('should NOT use the env var for server-side contextId', () => {
         defineConfigModule.defineConfig({
           api: {
             local: { apiHost: 'apihost', apiKey: 'apikey' },
@@ -77,7 +77,7 @@ describe('defineConfig', () => {
           defaultLanguage: 'en',
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.edge?.contextId).to.equal('next-public-sitecore-edge-context-id');
+        expect(resultConfig.api?.edge?.contextId).to.equal('');
       });
     });
   });
@@ -119,7 +119,7 @@ describe('defineConfig', () => {
         expect(resultConfig.api?.edge?.clientContextId).to.equal('custom-client-context-id');
       });
 
-      it('should use the env var if present', () => {
+      it('should use the env var for client-side contextId only', () => {
         defineConfigModule.defineConfig({
           api: {
             local: { apiHost: 'apihost', apiKey: 'apikey' },
@@ -127,7 +127,12 @@ describe('defineConfig', () => {
           defaultLanguage: 'en',
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.edge?.contextId).to.equal('next-public-sitecore-edge-context-id');
+        // Server-side contextId should be empty
+        expect(resultConfig.api?.edge?.contextId).to.equal('');
+        // Client-side contextId should use env var
+        expect(resultConfig.api?.edge?.clientContextId).to.equal(
+          'next-public-sitecore-edge-context-id'
+        );
       });
     });
   });

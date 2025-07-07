@@ -18,40 +18,32 @@ describe('define-config', () => {
     },
     defaultSite: 'unit-site',
     defaultLanguage: 'en',
-    multisite: {
-      enabled: true,
-    },
+    multisite: { enabled: true },
     personalize: {
       enabled: false,
       edgeTimeout: 1000,
       cdpTimeout: 1000,
       scope: 'unit-scope',
     },
-    redirects: {
-      enabled: true,
-      locales: ['en'],
-    },
+    redirects: { enabled: true, locales: ['en'] },
   };
 
-  it('should merge config from sitecore.config with default values', () => {
+  it('merges config from sitecore.config with default values', () => {
     const config = defineConfig(mockConfig);
-    const fallbackConfig = getFallbackConfig();
+    const fallback = getFallbackConfig();
+
     // api.edge
     expect(config.api.edge.contextId).to.equal(mockConfig.api?.edge?.contextId);
     expect(config.api.edge.clientContextId).to.equal(mockConfig.api?.edge?.clientContextId);
-    expect(config.api.edge.edgeUrl).to.equal(fallbackConfig.api.edge.edgeUrl);
+    expect(config.api.edge.edgeUrl).to.equal(fallback.api.edge.edgeUrl);
 
     // api.local
     expect(config.api.local.apiHost).to.equal(mockConfig.api?.local?.apiHost);
     expect(config.api.local.apiKey).to.equal(mockConfig.api?.local?.apiKey);
 
-    // defaultSite
+    // misc root settings
     expect(config.defaultSite).to.equal(mockConfig.defaultSite);
-
-    // defaultLanguage
     expect(config.defaultLanguage).to.equal(mockConfig.defaultLanguage);
-
-    // multisite
     expect(config.multisite.enabled).to.equal(mockConfig.multisite?.enabled);
     expect(config.multisite.useCookieResolution()).to.equal(false);
 
@@ -60,84 +52,59 @@ describe('define-config', () => {
     expect(config.personalize.edgeTimeout).to.equal(mockConfig.personalize?.edgeTimeout);
     expect(config.personalize.cdpTimeout).to.equal(mockConfig.personalize?.cdpTimeout);
     expect(config.personalize.scope).to.equal(mockConfig.personalize?.scope);
-    expect(config.personalize.currency).to.equal(fallbackConfig.personalize.currency);
-    expect(config.personalize.channel).to.equal(fallbackConfig.personalize.channel);
+    expect(config.personalize.currency).to.equal(fallback.personalize.currency);
+    expect(config.personalize.channel).to.equal(fallback.personalize.channel);
 
     // redirects
     expect(config.redirects.enabled).to.equal(mockConfig.redirects?.enabled);
     expect(config.redirects.locales).to.deep.equal(mockConfig.redirects?.locales);
 
-    // retries (fallback config values)
-    expect(config.retries?.count).to.equal(fallbackConfig.retries.count);
+    // retries (fallback values)
+    expect(config.retries?.count).to.equal(fallback.retries.count);
     expect(config.retries?.retryStrategy).to.not.be.undefined;
 
     // dictionary caching
-    expect(config.dictionary.caching.enabled).to.equal(fallbackConfig.dictionary.caching.enabled);
-    expect(config.dictionary.caching.timeout).to.equal(fallbackConfig.dictionary.caching.timeout);
+    expect(config.dictionary.caching.enabled).to.equal(fallback.dictionary.caching.enabled);
+    expect(config.dictionary.caching.timeout).to.equal(fallback.dictionary.caching.timeout);
   });
 
-  it('should throw when both api.edge and api.local sets are missing', () => {
-    const failingConfig: SitecoreConfigInput = {
+  it('throws when server-side contextId is missing', () => {
+    const badConfig: SitecoreConfigInput = {
       ...mockConfig,
       api: {
-        edge: undefined,
-        local: undefined,
-      },
-    };
-    expect(() => defineConfig(failingConfig)).to.throw(
-      'Configuration error: at least one API configuration must be specified: contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
-    );
-  });
-
-  it('should apply default config values when personalize timeouts are falsy', () => {
-    const zeroTimeoutConfig = {
-      ...mockConfig,
-      personalize: {
-        cdpTimeout: 0,
-        edgeTimeout: 0,
-      },
-    };
-    const fallbackConfig = getFallbackConfig();
-
-    let config = defineConfig(zeroTimeoutConfig);
-
-    expect(config.personalize.edgeTimeout).to.equal(fallbackConfig.personalize.edgeTimeout);
-    expect(config.personalize.cdpTimeout).to.equal(fallbackConfig.personalize.cdpTimeout);
-
-    const undefinedTimeoutConfig = {
-      ...mockConfig,
-      personalize: {
-        cdpTimeout: undefined,
-        edgeTimeout: undefined,
-      },
-    };
-
-    config = defineConfig(undefinedTimeoutConfig);
-
-    expect(config.personalize.edgeTimeout).to.equal(fallbackConfig.personalize.edgeTimeout);
-    expect(config.personalize.cdpTimeout).to.equal(fallbackConfig.personalize.cdpTimeout);
-  });
-
-  it('should throw when api.edge is empty and api.local is partially empty', () => {
-    const failingConfig: SitecoreConfigInput = {
-      ...mockConfig,
-      api: {
-        edge: undefined,
-        local: {
-          apiKey: 'not-empty',
-          apiHost: undefined as any,
+        edge: {
+          contextId: '',
+          clientContextId: 'client-id',
         },
       },
     };
-    expect(() => defineConfig(failingConfig)).to.throw(
-      'Configuration error: at least one API configuration must be specified: contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
+
+    expect(() => defineConfig(badConfig)).to.throw(
+      'Configuration error: a server-side Edge contextId'
     );
   });
 
-  it('should use DefaultRetryStrategy with correct error codes', () => {
-    const config = defineConfig(mockConfig);
+  it('applies fallback personalize timeouts when values are falsy', () => {
+    const zeroTimeout = { ...mockConfig, personalize: { cdpTimeout: 0, edgeTimeout: 0 } };
+    const fallback = getFallbackConfig();
+
+    let cfg = defineConfig(zeroTimeout);
+    expect(cfg.personalize.edgeTimeout).to.equal(fallback.personalize.edgeTimeout);
+    expect(cfg.personalize.cdpTimeout).to.equal(fallback.personalize.cdpTimeout);
+
+    const undefinedTimeout = {
+      ...mockConfig,
+      personalize: { cdpTimeout: undefined, edgeTimeout: undefined },
+    };
+    cfg = defineConfig(undefinedTimeout);
+    expect(cfg.personalize.edgeTimeout).to.equal(fallback.personalize.edgeTimeout);
+    expect(cfg.personalize.cdpTimeout).to.equal(fallback.personalize.cdpTimeout);
+  });
+
+  it('uses DefaultRetryStrategy with correct status codes', () => {
+    const cfg = defineConfig(mockConfig);
     // eslint-disable-next-line
-    expect((config.retries.retryStrategy as DefaultRetryStrategy)['statusCodes']).to.deep.equal([
+    expect((cfg.retries.retryStrategy as DefaultRetryStrategy)['statusCodes']).to.deep.equal([
       429,
       502,
       503,
@@ -151,90 +118,59 @@ describe('define-config', () => {
   });
 
   describe('getFallbackConfig', () => {
-    it('should use populate env variables when present in fallback config', () => {
-      const contextId = 'env-context-id';
-      const edgeUrl = 'env-edge-url';
-      const contentSdkEditingSecret = 'env-editing-secret';
-      const personalizeMiddlewareEdgeTimeout = 111;
-      const personalizeMiddlewareCdpTimeout = 222;
+    it('populates env variables in fallback config', () => {
+      process.env.SITECORE_EDGE_CONTEXT_ID = 'env-context';
+      process.env.SITECORE_EDGE_URL = 'env-edge-url';
+      process.env.SITECORE_EDITING_SECRET = 'env-secret';
+      process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT = '111';
+      process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT = '222';
 
-      process.env.SITECORE_EDGE_CONTEXT_ID = contextId;
-      process.env.SITECORE_EDGE_URL = edgeUrl;
-      process.env.SITECORE_EDITING_SECRET = contentSdkEditingSecret;
-      process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT = personalizeMiddlewareEdgeTimeout.toString();
-      process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT = personalizeMiddlewareCdpTimeout.toString();
-
-      const fallbackConfig = getFallbackConfig();
-      expect(fallbackConfig.api.edge.contextId).to.equal(contextId);
-      expect(fallbackConfig.api.edge.edgeUrl).to.equal(edgeUrl);
-      expect(fallbackConfig.editingSecret).to.equal(contentSdkEditingSecret);
-      expect(fallbackConfig.personalize.edgeTimeout).to.equal(personalizeMiddlewareEdgeTimeout);
-      expect(fallbackConfig.personalize.cdpTimeout).to.equal(personalizeMiddlewareCdpTimeout);
+      const cfg = getFallbackConfig();
+      expect(cfg.api.edge.contextId).to.equal('env-context');
+      expect(cfg.api.edge.edgeUrl).to.equal('env-edge-url');
+      expect(cfg.editingSecret).to.equal('env-secret');
+      expect(cfg.personalize.edgeTimeout).to.equal(111);
+      expect(cfg.personalize.cdpTimeout).to.equal(222);
     });
 
-    it('should use falback values when env variables are not present', () => {
+    it('falls back to defaults when env variables are absent', () => {
       delete process.env.SITECORE_EDGE_CONTEXT_ID;
       delete process.env.SITECORE_EDGE_URL;
       delete process.env.SITECORE_EDITING_SECRET;
       delete process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT;
       delete process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT;
 
-      const fallbackConfig = getFallbackConfig();
-      expect(fallbackConfig.api.edge.contextId).to.equal('');
-      expect(fallbackConfig.api.edge.edgeUrl).to.equal(SITECORE_EDGE_URL_DEFAULT);
-      expect(fallbackConfig.editingSecret).to.equal('editing-secret-missing');
-      expect(fallbackConfig.personalize.edgeTimeout).to.equal(400);
-      expect(fallbackConfig.personalize.cdpTimeout).to.equal(400);
+      const cfg = getFallbackConfig();
+      expect(cfg.api.edge.contextId).to.equal('');
+      expect(cfg.api.edge.edgeUrl).to.equal(SITECORE_EDGE_URL_DEFAULT);
+      expect(cfg.editingSecret).to.equal('editing-secret-missing');
+      expect(cfg.personalize.edgeTimeout).to.equal(400);
+      expect(cfg.personalize.cdpTimeout).to.equal(400);
     });
   });
 
   describe('deepMerge', () => {
-    it('should fallback to base when override value is empty', () => {
-      expect(
-        deepMerge(
-          {
-            deep: {
-              test: 'base',
-            },
-          },
-          {
-            deep: {
-              test: '',
-            },
-          }
-        )
-      ).to.deep.equal({ deep: { test: 'base' } });
+    it('keeps base value when override is empty or undefined', () => {
+      expect(deepMerge({ deep: { test: 'base' } }, { deep: { test: '' } })).to.deep.equal({
+        deep: { test: 'base' },
+      });
 
-      expect(
-        deepMerge(
-          {
-            deep: {
-              test: 'base',
-            },
-          },
-          {
-            deep: {
-              test: undefined,
-            },
-          }
-        )
-      ).to.deep.equal({ deep: { test: 'base' } });
+      expect(deepMerge({ deep: { test: 'base' } }, { deep: { test: undefined } })).to.deep.equal({
+        deep: { test: 'base' },
+      });
     });
 
-    it('should traverse nested objects and merge', () => {
+    it('merges nested objects correctly', () => {
       class Test {
         a = true;
       }
-
       class BaseTest extends Test {
         b = true;
       }
 
       const base = {
         deep: {
-          fn: () => {
-            return false;
-          },
+          fn: () => false,
           class: new BaseTest(),
           array: [4, 5, 6],
           number: 5,
@@ -245,9 +181,7 @@ describe('define-config', () => {
 
       const override = {
         deep: {
-          fn: () => {
-            return true;
-          },
+          fn: () => true,
           class: new Test(),
           nullValue: null,
           array: [1, 2, 3],
@@ -257,105 +191,63 @@ describe('define-config', () => {
         boolean: false,
       };
 
-      console.log(override);
-
       expect(deepMerge(base, override)).to.deep.equal(override);
     });
   });
 
-  it('should allow missing clientContextId when contextId is provided', () => {
-    const configWithServerSideOnly = {
-      api: {
-        edge: {
-          contextId: 'server-context-id',
-          // clientContextId intentionally omitted
-        },
-      },
-    };
-
-    // This should not throw an error
-    expect(() => defineConfig(configWithServerSideOnly)).to.not.throw();
-
-    const config = defineConfig(configWithServerSideOnly);
-    expect(config.api.edge.contextId).to.equal('server-context-id');
-    expect(config.api.edge.clientContextId).to.equal(''); // Should use fallback
+  it('allows missing clientContextId when contextId is provided', () => {
+    const cfg = { api: { edge: { contextId: 'server-id' } } };
+    expect(() => defineConfig(cfg)).to.not.throw();
+    expect(defineConfig(cfg).api.edge.clientContextId).to.equal('');
   });
 
-  it('should allow empty clientContextId for client-side execution', () => {
-    const configWithoutClientContextId = {
-      api: {
-        edge: {
-          contextId: 'server-context-id',
-          clientContextId: undefined, // or empty string
-        },
-      },
-    };
-
-    expect(() => defineConfig(configWithoutClientContextId)).to.not.throw();
+  it('allows empty clientContextId in browser builds', () => {
+    const cfg = { api: { edge: { contextId: 'server-id', clientContextId: '' } } };
+    expect(() => defineConfig(cfg)).to.not.throw();
   });
 
-  it('should allow client-only context configuration', () => {
-    const clientOnlyConfig: SitecoreConfigInput = {
-      api: {
-        edge: {
-          contextId: '',
-          clientContextId: 'client-context-id',
-        },
-      },
+  it('fails when only clientContextId is provided', () => {
+    const cfg: SitecoreConfigInput = {
+      api: { edge: { contextId: '', clientContextId: 'client-id' } },
     };
-
-    expect(() => defineConfig(clientOnlyConfig)).to.not.throw();
-
-    const config = defineConfig(clientOnlyConfig);
-    expect(config.api.edge.clientContextId).to.equal('client-context-id');
-    // Should fallback from clientContextId to contextId
-    expect(config.api.edge.contextId).to.equal('client-context-id');
+    expect(() => defineConfig(cfg)).to.throw('Configuration error: a server-side Edge contextId');
   });
 
-  it('should allow local API configuration without edge context', () => {
-    const localApiConfig: SitecoreConfigInput = {
+  it('fails when contextId is missing even with local API creds', () => {
+    const cfg: SitecoreConfigInput = {
       api: {
-        edge: undefined,
-        local: {
-          apiKey: 'test-api-key',
-          apiHost: 'test-api-host',
-        },
+        edge: { contextId: '' },
+        local: { apiKey: 'key', apiHost: 'host' },
       },
     };
-
-    expect(() => defineConfig(localApiConfig)).to.not.throw();
-
-    const config = defineConfig(localApiConfig);
-    expect(config.api.local.apiKey).to.equal('test-api-key');
-    expect(config.api.local.apiHost).to.equal('test-api-host');
+    expect(() => defineConfig(cfg)).to.throw('Configuration error: a server-side Edge contextId');
   });
 
-  it('should throw when no valid API configuration is provided', () => {
-    const noValidConfig: SitecoreConfigInput = {
-      api: {
-        edge: {
-          contextId: '',
-        },
-        local: {
-          apiKey: '',
-          apiHost: '',
-        } as any,
-      },
-    };
-
-    expect(() => defineConfig(noValidConfig)).to.throw(
-      'Configuration error: at least one API configuration must be specified: contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
-    );
+  it('fails when API configuration is empty', () => {
+    const cfg = { api: {} } as SitecoreConfigInput;
+    expect(() => defineConfig(cfg)).to.throw('Configuration error: a server-side Edge contextId');
   });
 
-  it('should throw when completely empty API configuration is provided', () => {
-    // Use type assertion to bypass TypeScript validation for testing invalid configs
-    const noValidConfig = {
-      api: {},
-    } as SitecoreConfigInput;
+  describe('validateConfig server-side behaviour', () => {
+    let originalWindow: any;
 
-    expect(() => defineConfig(noValidConfig)).to.throw(
-      'Configuration error: at least one API configuration must be specified: contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
-    );
+    beforeEach(() => {
+      originalWindow = (global as any).window;
+      delete (global as any).window;
+    });
+    afterEach(() => {
+      if (originalWindow !== undefined) (global as any).window = originalWindow;
+    });
+
+    it('logs warning but does not throw when clientContextId is missing', () => {
+      const cfg = { api: { edge: { contextId: 'server-id' } } };
+      expect(() => defineConfig(cfg)).to.not.throw();
+      expect(defineConfig(cfg).api.edge.clientContextId).to.equal('');
+    });
+
+    it('requires contextId even if clientContextId is present', () => {
+      const cfg = { api: { edge: { contextId: '', clientContextId: 'client-id' } } };
+      expect(() => defineConfig(cfg)).to.throw('Configuration error: a server-side Edge contextId');
+    });
   });
 });

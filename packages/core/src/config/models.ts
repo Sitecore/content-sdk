@@ -11,7 +11,7 @@ export type DeepRequired<T> = Required<
 >;
 
 /**
- * Utility type to make all properties in a type optional, recursively.
+ * Utility type to make all properties in a type optional, recursively
  */
 export type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
@@ -23,19 +23,20 @@ export type DeepPartial<T> = {
 export type SitecoreConfigInput = {
   /**
    * API settings required to connect to Sitecore.
-   * Both edge and local set can be specified as Content SDK app will use API Key for component library
+   * Both edge and local sets can be specified; the Content SDK app will choose
+   * the correct credentials (Edge or local) at runtime.
    */
   api?: {
     /**
-     * Edge endpoint credentials for Sitecore connection. Will be used to connect to SaaS XMCloud instance
+     * Edge endpoint credentials for connecting to an XM Cloud instance.
      */
     edge?: {
-      // for now contextID will take the role of both server and client IDs
       /**
        * A unified identifier used to connect and retrieve data from XM Cloud instance
+       * Must be provided together with `clientContextId` to support both server-
+       * side and browser-side data fetching.
        */
       contextId: string;
-      // clientContextId will be utilized when we know more specifics about it
       /**
        * Optional identifier used to connect and retrieve data from XM Cloud instance in client-side functionality
        */
@@ -47,24 +48,25 @@ export type SitecoreConfigInput = {
       edgeUrl?: string;
     };
     /**
-     * API endpoint credentials for connection to local Sitecore instance
+     * API endpoint credentials for connecting to a local Sitecore instance.
      */
     local?: {
       /**
-       * Sitecore API key identifier used to connect to the GraphQL endpoint
+       * Sitecore API key used to connect to the GraphQL endpoint
        */
       apiKey: string;
       /**
-       * Sitecore API hostname that the app will connect and retrieve data from
+       * Sitecore API hostname that the app connects to
        */
       apiHost: string;
       /**
-       * GraphQL endpoint path, will be appended to apiHost to form full enpoint URL ($apiHost/$path)
+       * GraphQL endpoint path (appended to `apiHost` to form the full URL).
        * @default /sitecore/api/graph/edge
        */
       path?: string;
     };
   };
+
   /**
    * The default and fallback locale for your site.
    * Ensure it aligns with the framework-specific settings used in your application.
@@ -72,23 +74,23 @@ export type SitecoreConfigInput = {
   defaultLanguage?: string;
   /**
    * Your default site name. When using the multisite feature this variable defines the fallback site.
-   * @default empty string
    */
   defaultSite?: string;
   /**
-   * Editing secret required to support Sitecore editing and preview functionality.
-   * by default set by the SITECORE_EDITING_SECRET environment variable
+   * Editing secret required for Sitecore editing and preview functionality.
+   * Default comes from the SITECORE_EDITING_SECRET environment variable.
    */
   editingSecret?: string;
   /**
-   * Retry configuration applied to Layout, Dictionary and ErrorPages services out of the box
+   * Retry configuration applied to Layout, Dictionary and ErrorPages services
    */
   retries?: {
     /**
-     * Number of retries for graphql client. Will use the specified `retryStrategy`.
+     * Number of retries for the GraphQL client.
      * @default 3
      */
     count?: number;
+
     /**
      * Retry strategy for the client. By default, uses exponential
      * back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
@@ -96,6 +98,7 @@ export type SitecoreConfigInput = {
      */
     retryStrategy?: RetryStrategy;
   };
+
   /**
    * Settings for Layout Service
    */
@@ -110,20 +113,22 @@ export type SitecoreConfigInput = {
      */
     formatLayoutQuery?: ((siteName: string, itemPath: string, locale?: string) => string) | null;
   };
+
   /**
    * Settings for Dictionary Service
    */
   dictionary?: {
     /**
-     * configure local memory caching for Dictionary Service requests
+     * Configure local memory caching for Dictionary Service requests
      */
     caching?: {
       enabled?: boolean;
       timeout?: number;
     };
   };
+
   /**
-   * Settings for multisite functionaliry
+   * Settings for multisite functionality
    */
   multisite?: {
     /**
@@ -136,8 +141,9 @@ export type SitecoreConfigInput = {
      */
     useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
   };
+
   /**
-   * Setting for personalize functionality
+   * Settings for Personalize functionality
    */
   personalize?: {
     /**
@@ -158,7 +164,7 @@ export type SitecoreConfigInput = {
      */
     cdpTimeout?: number;
     /**
-     * Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
+     * Optional Sitecore Personalize scope ID (to isolate data between environments)
      */
     scope?: string;
     /**
@@ -166,7 +172,8 @@ export type SitecoreConfigInput = {
      */
     channel?: string;
     /**
-     * Currency for CDP request. Uses 'USA' as default.
+     * Currency for CDP requests
+     * @default 'USA'
      */
     currency?: string;
   };
@@ -188,62 +195,58 @@ export type SitecoreConfigInput = {
 };
 
 /**
- * Final sitecore config type used at runtime
- * Every property should be populated, either from sitecore.config or built-in fallback values
+ * Final Sitecore config type used at runtime.
+ * Every property is populated, either from sitecore.config or fallback values.
  */
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
 
 /**
- * Type to be used as cli config input in sitecore.cli.config
+ * Type used as CLI config input in sitecore.cli.config
  */
 export type SitecoreCliConfigInput = {
   /**
-   * Configuration for the `sitecore-tools build` cli command
+   * Configuration for the `sitecore-tools build` CLI command
    */
   build?: {
     /**
-     * List of commands to run during the build process
+     * Commands to run during the build process
      */
     commands?: Array<() => Promise<void>>;
   };
   /**
-   * Configuration for the `sitecore-tools scaffold` cli command
+   * Configuration for the `sitecore-tools scaffold` CLI command
    */
   scaffold?: {
     /**
-     * List of scaffold templates that can be used for generating components
+     * Scaffold templates available for generating components
      */
     templates?: ScaffoldTemplate[];
   };
   /**
-   * Configuration for the `sitecore-tools component generate-map` cli command
+   * Configuration for the `sitecore-tools component generate-map` CLI command
    */
   componentMap?: GenerateMapArgs & {
     /**
-     * Function implementationt for generating a component map.
+     * Function implementation for generating a component map
      */
     generator?: GenerateMapFunction;
   };
 };
 
 /**
- * Final sitecore cli config type used required by the cli
+ * Final Sitecore CLI config type required by the CLI
  */
 export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;
-
 /**
- * Scaffold template type
- */
-/**
- * Represents a scaffold template used for generating components.
+ * Represents a scaffold template used for generating components
  */
 export type ScaffoldTemplate = {
   /**
-   * Name of the template.
+   * Name of the template
    */
   name: string;
   /**
-   * File extension for the generated component.
+   * File extension for the generated component
    */
   fileExtension: string;
   /**
@@ -261,7 +264,7 @@ export type ScaffoldTemplate = {
 };
 
 /**
- * Enumeration of the default component templates.
+ * Enumeration of default component templates
  */
 export enum ComponentTemplateType {
   BYOC = 'byoc',
