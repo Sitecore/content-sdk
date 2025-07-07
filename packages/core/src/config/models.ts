@@ -32,21 +32,19 @@ export type SitecoreConfigInput = {
      */
     edge?: {
       /**
-       * **Server-side Edge context ID** used for SSR and API-route requests.
+       * A unified identifier used to connect and retrieve data from XM Cloud instance
        * Must be provided together with `clientContextId` to support both server-
        * side and browser-side data fetching.
        */
       contextId: string;
 
       /**
-       * **Browser-side Edge context ID** used for client-side GraphQL calls.
-       * Required alongside `contextId`; supplying only this ID will cause
-       * server-side requests to fail at runtime.
+       * Optional identifier used to connect and retrieve data from XM Cloud instance in client-side functionality
        */
       clientContextId?: string;
 
       /**
-       * Custom XM Cloud endpoint the app communicates with.
+       * XM Cloud endpoint that the app will communicate and retrieve data from
        * @default https://edge-platform.sitecorecloud.io
        */
       edgeUrl?: string;
@@ -103,7 +101,8 @@ export type SitecoreConfigInput = {
     count?: number;
 
     /**
-     * Retry strategy for the client.
+     * Retry strategy for the client. By default, uses exponential
+     * back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
      * @default DefaultRetryStrategy
      */
     retryStrategy?: RetryStrategy;
@@ -128,7 +127,7 @@ export type SitecoreConfigInput = {
    */
   dictionary?: {
     /**
-     * Configure local-memory caching for Dictionary Service requests
+     * Configure local memory caching for Dictionary Service requests
      */
     caching?: {
       enabled?: boolean;

@@ -17,6 +17,11 @@ export interface SitecoreProviderProps {
 }
 
 export interface SitecoreProviderState {
+  /**
+   * Method to set the page context.
+   * @param {SitecoreProviderPageContext | LayoutServiceData} value New page context value.
+   * @returns {void}
+   */
   setContext: (value: SitecoreProviderPageContext | LayoutServiceData) => void;
   pageContext: SitecoreProviderPageContext;
   api?: SitecoreProviderProps['api'];
@@ -47,9 +52,8 @@ export class SitecoreProvider extends React.Component<
     // If any Edge ID is present but no edgeUrl, apply the default
     let api = props.api;
     if (
-      props.api?.edge &&
-      !props.api.edge.edgeUrl &&
-      (props.api.edge.contextId || props.api.edge.clientContextId)
+      (props.api?.edge?.contextId || props.api?.edge?.clientContextId) &&
+      !props.api?.edge?.edgeUrl
     ) {
       api = {
         ...props.api,
@@ -80,15 +84,21 @@ export class SitecoreProvider extends React.Component<
   }
 
   componentDidUpdate(prevProps: SitecoreProviderProps) {
-    // Refresh context if a new layoutData object is passed in
+    // In case if somebody will manage SitecoreProvider state by passing fresh `layoutData` prop
+    // instead of using `updateContext`
     if (!fastDeepEqual(prevProps.layoutData, this.props.layoutData)) {
       this.setContext(this.props.layoutData);
     }
   }
 
+  /**
+   * Update context state. Value can be @type {LayoutServiceData} which will be automatically transformed
+   * or you can provide exact @type {SitecoreProviderPageContext}
+   * @param {SitecoreProviderPageContext | LayoutServiceData} value New context value
+   */
   setContext = (value: SitecoreProviderPageContext | LayoutServiceData) => {
     this.setState({
-      pageContext: (value as any).sitecore
+      pageContext: value.sitecore
         ? this.constructContext(value as LayoutServiceData)
         : { ...(value as SitecoreProviderPageContext) },
     });

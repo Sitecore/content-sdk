@@ -9,14 +9,39 @@ import { DesignLibraryMode } from './models';
  * Params for requesting component data in Design Library mode
  */
 export interface ComponentLayoutRequestParams {
-  itemId: string; // context item ID
-  componentUid: string; // component UID
-  language?: string; // language to render in
-  dataSourceId?: string; // optional datasource ID
-  renderingId?: string; // component definition item ID
-  version?: string; // item version (latest by default)
-  siteName: string; // site context
-  mode?: DesignLibraryMode; // render mode
+  /**
+   * Item id to be used as context for rendering the component
+   */
+  itemId: string;
+  /**
+   * Component identifier. Can be either taken from item's layout details or
+   * an arbitrary one (component renderingId and datasource would be used for identification then)
+   */
+  componentUid: string;
+  /**
+   * language to render component in
+   */
+  language?: string;
+  /**
+   * optional component datasource
+   */
+  dataSourceId?: string;
+  /**
+   * ID of the component definition rendering item in Sitecore
+   */
+  renderingId?: string;
+  /**
+   * version of the context item (latest by default)
+   */
+  version?: string;
+  /**
+   * site name to be used as context for rendering the component
+   */
+  siteName: string;
+  /**
+   * mode to be used for rendering the component
+   */
+  mode?: DesignLibraryMode;
 }
 
 /**
@@ -24,9 +49,19 @@ export interface ComponentLayoutRequestParams {
  * Provide contextId (server) and optionally clientContextId (browser).
  */
 export interface ComponentLayoutServiceConfig {
-  contextId?: string; // server-side Edge context ID
-  clientContextId?: string; // browser-side Edge context ID
-  edgeUrl?: string; // XM Cloud endpoint (default provided)
+  /**
+   * A unified identifier used to connect and retrieve data from XM Cloud instance used on the client
+   */
+  clientContextId?: string;
+  /**
+   * A unified identifier used to connect and retrieve data from XM Cloud instance used on the server
+   */
+  contextId: string;
+  /**
+   * XM Cloud endpoint that the app will communicate and retrieve data from
+   * @default https://edge-platform.sitecorecloud.io
+   */
+  edgeUrl?: string;
 }
 
 /**
@@ -52,22 +87,19 @@ export class ComponentLayoutService {
       .get<LayoutServiceData>(this.getFetchUrl(params), {
         headers: { sc_editMode: `${params.mode === DesignLibraryMode.Metadata}` },
       })
-      .then((r) => r.data)
-      .catch((err) => {
-        if (err.response?.status === 404) {
-          return err.response.data;
+      .then((response) => response.data)
+      .catch((error) => {
+        if (error.response?.status === 404) {
+          return error.response.data;
         }
-        throw err;
+        throw error;
       });
   }
 
   /** Assemble query-string parameters for the component endpoint */
   protected getComponentFetchParams(params: ComponentLayoutRequestParams) {
-    const isBrowser = typeof window !== 'undefined';
-
     // Choose the correct Edge ID per environment
-    const sitecoreContextId =
-      this.config.contextId ?? (isBrowser ? this.config.clientContextId : undefined);
+    const sitecoreContextId = this.config.contextId || this.config.clientContextId;
 
     if (!sitecoreContextId) {
       throw new Error(

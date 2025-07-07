@@ -20,6 +20,9 @@ export const mockFormModule = (formModule: any) => {
 export type FormProps = {
   rendering: ComponentRendering;
   params: {
+    /**
+     * The unique identifier of the rendering.
+     */
     FormId: string; // Sitecore Form ID to render
     styles?: string; // CSS class to apply to the form
     RenderingIdentifier?: string;
@@ -37,8 +40,16 @@ export const Form = ({ params, rendering }: FormProps) => {
 
   useEffect(() => {
     if (!content) {
-      // In the browser prefer clientContextId; fall back to contextId if it exists
-      const edgeId = context.api?.edge?.clientContextId ?? context.api?.edge?.contextId;
+      // Forms must use clientContextId since they are rendered client-side
+      const edgeId = context.api?.edge?.clientContextId;
+
+      if (!edgeId) {
+        /* eslint-disable no-console */
+        console.warn(
+          'Warning: clientContextId is missing – form cannot be loaded properly on the client'
+        );
+        return;
+      }
 
       loadForm(edgeId, params.FormId, context.api?.edge?.edgeUrl)
         .then(setContent)
