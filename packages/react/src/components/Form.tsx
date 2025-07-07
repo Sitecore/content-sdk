@@ -24,7 +24,13 @@ export type FormProps = {
      * The unique identifier of the rendering.
      */
     FormId: string; // Sitecore Form ID to render
-    styles?: string; // CSS class to apply to the form
+    /**
+     * CSS class to apply to the form
+     */
+    styles?: string;
+    /**
+     * The unique identifier of the rendering.
+     */
     RenderingIdentifier?: string;
   };
 };
