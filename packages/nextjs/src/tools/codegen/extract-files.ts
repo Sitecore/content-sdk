@@ -6,9 +6,8 @@ import {
   validateConsent,
   validateDeployContext,
 } from './utils';
-import { constants } from '@sitecore-content-sdk/core';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
-import { fetchBearerToken } from '@sitecore-content-sdk/core/tools';
+import { auth } from '@sitecore-content-sdk/core/tools';
 import path from 'path';
 
 export type ExtractFilesConfig = {
@@ -24,8 +23,8 @@ export const extractFiles = (args: ExtractFilesConfig) => {
   const authParams = {
     clientId: process.env.SITECORE_AUTH_CLIENT_ID || '',
     clientSecret: process.env.SITECORE_AUTH_CLIENT_SECRET || '',
-    endpoint: process.env.SITECORE_AUTH_ENDPOINT || constants.DEFAULT_SITECORE_AUTH_ENDPOINT,
-    audience: process.env.SITECORE_AUTH_AUDIENCE || constants.DEFAULT_SITECORE_AUTH_AUDIENCE,
+    authority: process.env.SITECORE_AUTH_AUTHORITY,
+    audience: process.env.SITECORE_AUTH_AUDIENCE,
   };
   return async () => {
     if (!validateDeployContext()) {
@@ -41,9 +40,9 @@ export const extractFiles = (args: ExtractFilesConfig) => {
     try {
       // MESH_URL is temporary option to use until mesh is onboarded into Edge Proxy
       const targetUrl = process.env.SITECORE_MESH_URL || args.scConfig.api.edge.edgeUrl;
-      const bearer = await fetchBearerToken(authParams);
-      if (!bearer) {
-        console.error(chalk.red('Failed to get bearer token, aborting code extraction'));
+      const { accessToken } = await auth.clientCredentialsFlow(authParams);
+      if (!accessToken) {
+        console.error(chalk.red('Failed to get access token, aborting code extraction'));
         return;
       }
 
@@ -56,7 +55,7 @@ export const extractFiles = (args: ExtractFilesConfig) => {
             path: mapEntry[1],
             type: ExtractedFileType.Component,
           },
-          token: bearer,
+          token: accessToken,
           targetUrl,
         })
       );
@@ -68,7 +67,7 @@ export const extractFiles = (args: ExtractFilesConfig) => {
             path: path.resolve(basePath, './package.json'),
             type: ExtractedFileType.PackageJson,
           },
-          token: bearer,
+          token: accessToken,
           targetUrl,
         })
       );
