@@ -52,9 +52,13 @@ Our versioning strategy is as follows:
     * `GraphQLSitePathServiceConfig` → `SitePathServiceConfig`
   * Removed `DictionaryService` interface
 
-  ### 🐛 Bug Fixes
+### 🐛 Bug Fixes
 
-  * `[core]` `[nextjs]`Standardized way of handling contextId/clientContextId and related fallbacks ([#150](https://github.com/Sitecore/content-sdk/pull/150))
+* `[core]` `[nextjs]`Standardized way of handling contextId/clientContextId and related fallbacks ([#150](https://github.com/Sitecore/content-sdk/pull/150))
+
+### 🧹 Chores
+
+* Add Github action workflow to generate package size and test coverage metrics report ([#151](https://github.com/Sitecore/content-sdk/pull/151))
 
 ## 0.3.0
 
