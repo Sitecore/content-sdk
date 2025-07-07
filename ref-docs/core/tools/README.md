@@ -6,6 +6,10 @@
 
 # tools
 
+## Namespaces
+
+- [auth](namespaces/auth/README.md)
+
 ## Enumerations
 
 - [ModuleType](enumerations/ModuleType.md)
@@ -15,6 +19,7 @@
 - [ComponentFile](interfaces/ComponentFile.md)
 - [ComponentImport](interfaces/ComponentImport.md)
 - [PluginDefinition](interfaces/PluginDefinition.md)
+- [TenantArgs](interfaces/TenantArgs.md)
 
 ## Type Aliases
 

@@ -3,3 +3,6 @@ export { generateMetadata } from './generateMetadata';
 export { scaffoldComponent } from './scaffold';
 export { GenerateMapFunction, GenerateMapArgs } from './generate-map';
 export * from './templating';
+export * from './auth/models';
+import * as auth from './auth';
+export { auth };

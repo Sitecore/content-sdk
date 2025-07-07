@@ -12,6 +12,10 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🎉 New Features & Improvements
+
+`[cli]` Code Extraction for XM Cloud code generation ([#71](https://github.com/Sitecore/content-sdk/pull/71))([#113](https://github.com/Sitecore/content-sdk/pull/113))([#114](https://github.com/Sitecore/content-sdk/pull/114))
+
 ### 🛠 Breaking Changes
 
 - Refactor and simplify service names ([#133](https://github.com/Sitecore/content-sdk/pull/133)):
