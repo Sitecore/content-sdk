@@ -37,19 +37,16 @@ export type SitecoreConfigInput = {
        * side and browser-side data fetching.
        */
       contextId: string;
-
       /**
        * Optional identifier used to connect and retrieve data from XM Cloud instance in client-side functionality
        */
       clientContextId?: string;
-
       /**
        * XM Cloud endpoint that the app will communicate and retrieve data from
        * @default https://edge-platform.sitecorecloud.io
        */
       edgeUrl?: string;
     };
-
     /**
      * API endpoint credentials for connecting to a local Sitecore instance.
      */
@@ -58,12 +55,10 @@ export type SitecoreConfigInput = {
        * Sitecore API key used to connect to the GraphQL endpoint
        */
       apiKey: string;
-
       /**
        * Sitecore API hostname that the app connects to
        */
       apiHost: string;
-
       /**
        * GraphQL endpoint path (appended to `apiHost` to form the full URL).
        * @default /sitecore/api/graph/edge
@@ -77,19 +72,15 @@ export type SitecoreConfigInput = {
    * Ensure it aligns with the framework-specific settings used in your application.
    */
   defaultLanguage?: string;
-
   /**
-   * Default site name. When using multisite, this is the fallback site.
-   * @default empty string
+   * Your default site name. When using the multisite feature this variable defines the fallback site.
    */
   defaultSite?: string;
-
   /**
    * Editing secret required for Sitecore editing and preview functionality.
    * Default comes from the SITECORE_EDITING_SECRET environment variable.
    */
   editingSecret?: string;
-
   /**
    * Retry configuration applied to Layout, Dictionary and ErrorPages services
    */
@@ -113,11 +104,12 @@ export type SitecoreConfigInput = {
    */
   layout?: {
     /**
-     * Override the first part of the GraphQL query for Layout Service
-     * (excluding the fields part).
-     * @param siteName  The site name
-     * @param itemPath  Full path to the Sitecore item/route
-     * @param locale    Item/route language
+     * Override the first part of graphQL query for Layout Service (excluding the fields part)
+     * @param {string} siteName your site name
+     * @param {string} itemPath full path to Sitecore item/route
+     * @param {string} [locale] item/route language
+     * @returns {string} custom layout query
+     * @default 'layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")'
      */
     formatLayoutQuery?: ((siteName: string, itemPath: string, locale?: string) => string) | null;
   };
@@ -144,9 +136,8 @@ export type SitecoreConfigInput = {
      * @default true
      */
     enabled?: boolean;
-
     /**
-     * Determines if the site should be resolved from the sc_site cookie
+     * Function used to determine if site should be resolved from sc_site cookie when present
      */
     useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
   };
@@ -156,41 +147,36 @@ export type SitecoreConfigInput = {
    */
   personalize?: {
     /**
-     * Enable Personalize middleware
+     * Enable personalize middleware
      * @default process.env.NODE_ENV !== 'development'
      */
     enabled?: boolean;
-
     /**
-     * Timeout for your Sitecore Experience Edge endpoint
-     * @default 400ms
+     * Configuration for your Sitecore Experience Edge endpoint
+     * by default set by the PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT environment variable
+     * if not set, will use the default value of 400ms
      */
     edgeTimeout?: number;
-
     /**
-     * Timeout for your Sitecore CDP endpoint
-     * @default 400ms
+     * Configuration for your Sitecore CDP endpoint
+     * by default set by the PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT environment variable
+     * if not set, will use the default value of 400ms
      */
     cdpTimeout?: number;
-
     /**
      * Optional Sitecore Personalize scope ID (to isolate data between environments)
      */
     scope?: string;
-
     /**
-     * Sitecore CDP channel to use for events
-     * @default 'WEB'
+     * The Sitecore CDP channel to use for events. Uses 'WEB' by default.
      */
     channel?: string;
-
     /**
      * Currency for CDP requests
      * @default 'USA'
      */
     currency?: string;
   };
-
   /**
    * Settings for redirects functionality
    */
@@ -200,9 +186,9 @@ export type SitecoreConfigInput = {
      * @default process.env.NODE_ENV !== 'development'
      */
     enabled?: boolean;
-
     /**
-     * Locales supported by your application
+     * These are all the locales you support in your application.
+     * These should match those in framework-specific configuration of your app.
      */
     locales?: string[];
   };
@@ -227,7 +213,6 @@ export type SitecoreCliConfigInput = {
      */
     commands?: Array<() => Promise<void>>;
   };
-
   /**
    * Configuration for the `sitecore-tools scaffold` CLI command
    */
@@ -237,7 +222,6 @@ export type SitecoreCliConfigInput = {
      */
     templates?: ScaffoldTemplate[];
   };
-
   /**
    * Configuration for the `sitecore-tools component generate-map` CLI command
    */
@@ -253,7 +237,6 @@ export type SitecoreCliConfigInput = {
  * Final Sitecore CLI config type required by the CLI
  */
 export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;
-
 /**
  * Represents a scaffold template used for generating components
  */
@@ -262,19 +245,20 @@ export type ScaffoldTemplate = {
    * Name of the template
    */
   name: string;
-
   /**
    * File extension for the generated component
    */
   fileExtension: string;
-
   /**
-   * Function to generate the component file contents
+   * Function to generate the component file contents based on the component name.
+   * @param componentName - The name of the component.
+   * @returns The generated content as a string.
    */
   generateTemplate: (componentName: string) => string;
-
   /**
-   * Optional function to return the next steps shown after generating the component
+   * Optional function to get the next steps to be shown by the cli after generating the component.
+   * @param componentOutputPath - The output path of the generated component.
+   * @returns An array of strings representing the next steps.
    */
   getNextSteps?: (componentOutputPath: string) => string[];
 };

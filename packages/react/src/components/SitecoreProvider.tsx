@@ -7,11 +7,17 @@ import { constants } from '@sitecore-content-sdk/core';
 import { ComponentMap } from './sharedTypes';
 
 export interface SitecoreProviderProps {
-  /** API configuration from SitecoreConfig */
+  /**
+   * The API configuration defined in the `SitecoreConfig`.
+   */
   api: SitecoreConfig['api'];
-  /** Component map for rendering components */
+  /**
+   * The component map to use for rendering components.
+   */
   componentMap: ComponentMap;
-  /** Optional Sitecore Layout data */
+  /**
+   * The Sitecore Layout data.
+   */
   layoutData?: LayoutServiceData;
   children: React.ReactNode;
 }
@@ -23,7 +29,13 @@ export interface SitecoreProviderState {
    * @returns {void}
    */
   setContext: (value: SitecoreProviderPageContext | LayoutServiceData) => void;
+  /**
+   * The current page context.
+   */
   pageContext: SitecoreProviderPageContext;
+  /**
+   * The API configuration defined in the `SitecoreConfig`.
+   */
   api?: SitecoreProviderProps['api'];
 }
 
@@ -32,7 +44,9 @@ export const SitecoreProviderReactContext = React.createContext<SitecoreProvider
 );
 export const ComponentMapReactContext = React.createContext<ComponentMap>(new Map());
 
-/** Page context provided by SitecoreProvider */
+/**
+ * The page context provided by the SitecoreProvider.
+ */
 export type SitecoreProviderPageContext = LayoutServiceContext & {
   itemId?: string;
   route?: RouteData;
@@ -88,6 +102,8 @@ export class SitecoreProvider extends React.Component<
     // instead of using `updateContext`
     if (!fastDeepEqual(prevProps.layoutData, this.props.layoutData)) {
       this.setContext(this.props.layoutData);
+
+      return;
     }
   }
 

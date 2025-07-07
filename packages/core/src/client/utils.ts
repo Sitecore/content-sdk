@@ -5,6 +5,11 @@ import { FetchOptions } from '../models';
 
 export type GraphQLClientOptions = Pick<SitecoreConfigInput, 'api'> & FetchOptions;
 
+/**
+ * Creates a new GraphQLRequestClientFactory instance
+ * @param {GraphQLClientOptions} options content sdk config
+ * @returns GraphQLRequestClientFactory instance
+ */
 export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
   let clientConfig: GraphQLRequestClientFactoryConfig | undefined;
 

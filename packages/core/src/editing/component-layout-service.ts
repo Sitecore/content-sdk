@@ -96,7 +96,6 @@ export class ComponentLayoutService {
       });
   }
 
-  /** Assemble query-string parameters for the component endpoint */
   protected getComponentFetchParams(params: ComponentLayoutRequestParams) {
     // Choose the correct Edge ID per environment
     const sitecoreContextId = this.config.contextId || this.config.clientContextId;
@@ -123,7 +122,11 @@ export class ComponentLayoutService {
     );
   }
 
-  /** Build the HTTP URL for the partial-layout endpoint */
+  /**
+   * Get the fetch URL for the partial layout data endpoint
+   * @param {ComponentLayoutRequestParams} params - The parameters for the request
+   * @returns {string} The fetch URL for the component data
+   */
   private getFetchUrl(params: ComponentLayoutRequestParams) {
     return resolveUrl(
       `${this.config.edgeUrl || SITECORE_EDGE_URL_DEFAULT}/layout/component`,

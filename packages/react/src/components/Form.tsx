@@ -6,7 +6,8 @@ import { useSitecore } from '../enhancers/withSitecore';
 let { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
 
 /**
- * Replace the form module functions for testing purposes.
+ * Mock function to replace the form module functions for `testing` purposes.
+ * @param {any} formModule - The form module to mock
  */
 export const mockFormModule = (formModule: any) => {
   executeScriptElements = formModule.executeScriptElements;
@@ -15,15 +16,16 @@ export const mockFormModule = (formModule: any) => {
 };
 
 /**
- * Rendering parameters for the Form component.
+ * Shape of the Form component rendering data.
+ * FormId is the rendering parameter that specifies the ID of the Sitecore Form to render.
  */
 export type FormProps = {
   rendering: ComponentRendering;
   params: {
     /**
-     * The unique identifier of the rendering.
+     * The ID of the Sitecore Form to render.
      */
-    FormId: string; // Sitecore Form ID to render
+    FormId: string;
     /**
      * CSS class to apply to the form
      */
@@ -68,7 +70,7 @@ export const Form = ({ params, rendering }: FormProps) => {
           setError(true);
         });
     } else {
-      // Do not send events while editing
+      // If we are in editing mode, we don't want to send any events
       if (!isEditing) {
         subscribeToFormSubmitEvent(formRef.current, rendering.uid);
       }
