@@ -3,9 +3,18 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const packages = ['cli', 'core', 'create-content-sdk-app', 'nextjs', 'react'];
 const tempDir = path.resolve(__dirname, '../.tmp-metric-report');
 const baseBranch = process.env.BASE_BRANCH || 'origin/dev';
+
+/**
+ * Get a list of all package directories in the `packages` folder.
+ */
+const getPackages = () => {
+  const pkgPath = path.resolve(__dirname, '../packages/');
+  return fs.readdirSync(pkgPath);
+};
+
+const packages = getPackages();
 
 /**
  * Calculate the total size of a given folder in kilobytes,
