@@ -65,7 +65,7 @@ describe('Form', () => {
     });
   });
 
-  it('falls back to contextId when clientContextId is missing', async () => {
+  it('does not load form when clientContextId is missing', async () => {
     const apiNoClientId = {
       edge: {
         contextId: 'server-only',
@@ -73,8 +73,7 @@ describe('Form', () => {
       },
     };
 
-    const loadFormSpy = sinon.spy((edgeId: string) => {
-      expect(edgeId).to.equal('server-only');
+    const loadFormSpy = sinon.spy(() => {
       return Promise.resolve('<form></form>');
     });
 
@@ -84,13 +83,16 @@ describe('Form', () => {
       executeScriptElements: sinon.spy(),
     });
 
-    await render(
+    const rendered = await render(
       <SitecoreProvider api={apiNoClientId} layoutData={ctx.layoutData.normal}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>
     );
 
-    await waitFor(() => expect(loadFormSpy.calledOnce).to.be.true);
+    await waitFor(() => {
+      expect(loadFormSpy.notCalled).to.be.true;
+      expect(rendered.container.innerHTML).to.equal('<div class="form-class" id="form-id"></div>');
+    });
   });
 
   it('renders form in edit mode (scripts executed, no submit subscription)', async () => {
