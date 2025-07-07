@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 
-const CLAIMS = 'https://auth.sitecorecloud.io/claims';
+import { CLAIMS } from './../../constants';
 
 /**
  * Decodes a JWT without verifying its signature.

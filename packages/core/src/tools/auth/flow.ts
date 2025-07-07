@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/require-jsdoc */
+﻿/* eslint-disable jsdoc/require-jsdoc */
 import { TenantArgs } from './models';
 import { decodeJwtPayload } from './tenant-store';
 import {
@@ -56,45 +56,33 @@ async function _clientCredentialsFlow({
     baseUrl: baseUrl ?? '',
   });
 
-  try {
-    const response = await fetch(`${authority}/oauth/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params.toString(),
-    });
+  const response = await fetch(`${authority}/oauth/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString(),
+  });
 
-    const data = await response.json();
+  const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(
-        data.error_description || data.error || 'Error during client credentials flow'
-      );
-    }
-
-    const decodedPayload = decodeJwtPayload(data.access_token) || {};
-
-    if (!decodedPayload?.tokenTenantId || !decodedPayload.tokenOrgId) {
-      throw new Error('\n Token is missing required claims tenant_id or org_id.');
-    }
-
-    const { tokenTenantId, tokenOrgId, tokenTenantName } = decodedPayload;
-
-    if (tenantId && tenantId !== tokenTenantId) {
-      throw new Error('\n Mismatch: Provided tenant ID does not match claims tenant ID.');
-    }
-
-    if (organizationId && organizationId !== tokenOrgId) {
-      throw new Error(
-        '\n Mismatch: Provided organization ID does not match claims organization ID.'
-      );
-    }
-
-    return { data, tokenOrgId, tokenTenantId, tokenTenantName, accessToken: data.access_token };
-  } catch (error) {
-    console.error(
-      '\n Error during client credentials flow:',
-      error instanceof Error ? error.message : error
-    );
-    throw error;
+  if (!response.ok) {
+    throw new Error(data.error_description || data.error || 'Error during client credentials flow');
   }
+
+  const decodedPayload = decodeJwtPayload(data.access_token) || {};
+
+  if (!decodedPayload?.tokenTenantId || !decodedPayload.tokenOrgId) {
+    throw new Error('\n Token is missing required claims tenant_id or org_id.');
+  }
+
+  const { tokenTenantId, tokenOrgId, tokenTenantName } = decodedPayload;
+
+  if (tenantId && tenantId !== tokenTenantId) {
+    throw new Error('\n Mismatch: Provided tenant ID does not match claims tenant ID.');
+  }
+
+  if (organizationId && organizationId !== tokenOrgId) {
+    throw new Error('\n Mismatch: Provided organization ID does not match claims organization ID.');
+  }
+
+  return { data, tokenOrgId, tokenTenantId, tokenTenantName, accessToken: data.access_token };
 }
