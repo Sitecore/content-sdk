@@ -14,7 +14,7 @@ describe('createGraphQLClientFactory', () => {
     global.window = originalWindow;
   });
 
-  it('should create client with edge context when contextId provided', () => {
+  it('creates client with edge context when contextId is provided (server side)', () => {
     const factory = createGraphQLClientFactory({
       api: {
         edge: {
@@ -27,7 +27,23 @@ describe('createGraphQLClientFactory', () => {
     expect(factory).to.not.be.undefined;
   });
 
-  it('should create client with local API when provided', () => {
+  it('creates client with clientContextId in a browser environment', () => {
+    // Simulate browser
+    (global as any).window = {};
+
+    const factory = createGraphQLClientFactory({
+      api: {
+        edge: {
+          clientContextId: 'browser-id',
+          edgeUrl: 'https://test.edge.url',
+        },
+      },
+    });
+
+    expect(factory).to.not.be.undefined;
+  });
+
+  it('creates client with local API settings when provided', () => {
     const factory = createGraphQLClientFactory({
       api: {
         local: {
@@ -41,59 +57,43 @@ describe('createGraphQLClientFactory', () => {
     expect(factory).to.not.be.undefined;
   });
 
-  it('should handle browser environment gracefully without throwing', () => {
-    // Simulate browser environment
+  it('handles browser environment with no valid IDs by falling back (does not throw)', () => {
+    // Browser
     (global as any).window = {};
 
-    expect(() => {
+    expect(() =>
       createGraphQLClientFactory({
         api: {
-          edge: {
-            contextId: '', // Empty contextId
-          },
-          local: {
-            apiKey: '', // Empty local config
-            apiHost: '',
-          },
+          // empty configs trigger the warning branch
         },
-      });
-    }).to.not.throw();
+      })
+    ).to.not.throw();
   });
 
-  it('should throw error on server when no valid config provided', () => {
-    // Ensure we're in server environment (no window)
+  it('throws error on server when no valid configuration is provided', () => {
+    // Server (no window)
     delete (global as any).window;
 
-    expect(() => {
+    expect(() =>
       createGraphQLClientFactory({
         api: {
-          edge: {
-            contextId: '', // Empty contextId
-          },
-          local: {
-            apiKey: '', // Empty local config
-            apiHost: '',
-          },
+          // empty configs
         },
-      });
-    }).to.throw(
-      'Please configure and use either your sitecoreEdgeContextId, or your graphQLEndpoint and sitecoreApiKey.'
-    );
+      })
+    ).to.throw('GraphQL client misconfigured.');
   });
 
-  it('should work with minimal edge config', () => {
+  it('works with minimal edge config (contextId only)', () => {
     const factory = createGraphQLClientFactory({
       api: {
-        edge: {
-          contextId: 'test-context',
-        },
+        edge: { contextId: 'test-context' },
       },
     });
 
     expect(factory).to.not.be.undefined;
   });
 
-  it('should work with minimal local config', () => {
+  it('works with minimal local config', () => {
     const factory = createGraphQLClientFactory({
       api: {
         local: {

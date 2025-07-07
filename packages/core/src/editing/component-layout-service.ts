@@ -1,12 +1,12 @@
 import { LayoutServiceData } from '../layout/models';
-import { NativeDataFetcher, NativeDataFetcherConfig } from '../native-fetcher';
+import { NativeDataFetcher } from '../native-fetcher';
 import debug from '../debug';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { resolveUrl } from '../utils';
 import { DesignLibraryMode } from './models';
 
 /**
- * Params for requesting component data from service in Design Library mode
+ * Params for requesting component data in Design Library mode
  */
 export interface ComponentLayoutRequestParams {
   /**
@@ -45,11 +45,16 @@ export interface ComponentLayoutRequestParams {
 }
 
 /**
- * Config for the ComponentLayoutService
+ * Config for ComponentLayoutService.
+ * Provide contextId (server) and optionally clientContextId (browser).
  */
 export interface ComponentLayoutServiceConfig {
   /**
-   * A unified identifier used to connect and retrieve data from XM Cloud instance
+   * A unified identifier used to connect and retrieve data from XM Cloud instance used on the client
+   */
+  clientContextId?: string;
+  /**
+   * A unified identifier used to connect and retrieve data from XM Cloud instance used on the server
    */
   contextId: string;
   /**
@@ -60,16 +65,14 @@ export interface ComponentLayoutServiceConfig {
 }
 
 /**
- * REST service that enables design Library functionality
- * Returns layoutData for one single rendered component
+ * REST service that enables Design Library functionality.
+ * Returns layout data for a single rendered component.
  */
 export class ComponentLayoutService {
   constructor(private config: ComponentLayoutServiceConfig) {}
 
   fetchComponentData(params: ComponentLayoutRequestParams): Promise<LayoutServiceData> {
-    const config: NativeDataFetcherConfig = { debugger: debug.layout };
-
-    const fetcher = new NativeDataFetcher(config);
+    const fetcher = new NativeDataFetcher({ debugger: debug.layout });
 
     debug.layout(
       'fetching component with uid %s for %s %s %s %s',
@@ -80,29 +83,34 @@ export class ComponentLayoutService {
       params.dataSourceId
     );
 
-    const fetchUrl = this.getFetchUrl(params);
-
     return fetcher
-      .get<LayoutServiceData>(fetchUrl, {
-        headers: {
-          sc_editMode: `${params.mode === DesignLibraryMode.Metadata}`,
-        },
+      .get<LayoutServiceData>(this.getFetchUrl(params), {
+        headers: { sc_editMode: `${params.mode === DesignLibraryMode.Metadata}` },
       })
       .then((response) => response.data)
       .catch((error) => {
         if (error.response?.status === 404) {
           return error.response.data;
         }
-
         throw error;
       });
   }
 
   protected getComponentFetchParams(params: ComponentLayoutRequestParams) {
-    // exclude undefined params with this one simple trick
+    // Choose the correct Edge ID per environment
+    const sitecoreContextId = this.config.contextId || this.config.clientContextId;
+
+    if (!sitecoreContextId) {
+      throw new Error(
+        `ComponentLayoutService misconfigured: contextId is missing.
+         Provide contextId on the server, and clientContextId in the browser if you need to full client-side functionality.`
+      );
+    }
+
+    // strip undefined fields
     return JSON.parse(
       JSON.stringify({
-        sitecoreContextId: this.config.contextId,
+        sitecoreContextId,
         item: params.itemId,
         uid: params.componentUid,
         dataSourceId: params.dataSourceId,
