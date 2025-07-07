@@ -14,3 +14,4 @@ export {
   EDITING_COMPONENT_PLACEHOLDER,
   EDITING_COMPONENT_ID,
 } from '@sitecore-content-sdk/core/layout';
+export { importEntries } from './default-import-map';
