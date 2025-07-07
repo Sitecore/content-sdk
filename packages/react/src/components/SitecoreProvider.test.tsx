@@ -12,62 +12,54 @@ describe('SitecoreProvider', () => {
     anotherProperty?: string;
   }
 
-  const NestedComponent: FC<NestedComponentProps> = (props: NestedComponentProps) => {
+  const NestedComponent: FC<NestedComponentProps> = () => {
     const { pageContext } = useSitecore();
-
     nestedContext = pageContext;
-
-    <div>{props.pageContext && 'test'}</div>;
+    return null;
   };
 
   const NestedComponentWithContext = withSitecore()(NestedComponent);
-
   const components = new Map();
+
+  // minimal API stub – details don’t matter for these tests
+  const apiStub = {} as any;
 
   const mockLayoutData: LayoutServiceData = {
     sitecore: {
       context: {
         pageEditing: false,
-        site: {
-          name: 'ContentSdkTestWeb',
-        },
+        site: { name: 'ContentSdkTestWeb' },
         language: 'en',
       },
       route: {
         name: 'styleguide',
-        placeholders: {
-          'ContentSdkTestWeb-main': [],
-        },
+        placeholders: { 'ContentSdkTestWeb-main': [] },
         itemId: 'testitemid',
       },
     },
   };
 
-  it('should set default context', () => {
+  it('sets default context when no layoutData is supplied', () => {
     render(
-      <SitecoreProvider componentMap={components}>
+      <SitecoreProvider api={apiStub} componentMap={components}>
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
 
-    expect(nestedContext).deep.equal({
-      pageEditing: false,
-    });
+    expect(nestedContext).to.deep.equal({ pageEditing: false });
   });
 
-  it('should update state when new context as prop received', () => {
-    const component = render(
-      <SitecoreProvider componentMap={components}>
+  it('updates state when new layoutData is received via props', () => {
+    const rendered = render(
+      <SitecoreProvider api={apiStub} componentMap={components}>
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
 
-    expect(nestedContext).deep.equal({
-      pageEditing: false,
-    });
+    expect(nestedContext).to.deep.equal({ pageEditing: false });
 
-    component.rerender(
-      <SitecoreProvider componentMap={components} layoutData={mockLayoutData}>
+    rendered.rerender(
+      <SitecoreProvider api={apiStub} componentMap={components} layoutData={mockLayoutData}>
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
@@ -79,13 +71,9 @@ describe('SitecoreProvider', () => {
       route: {
         itemId: 'testitemid',
         name: 'styleguide',
-        placeholders: {
-          'ContentSdkTestWeb-main': [],
-        },
+        placeholders: { 'ContentSdkTestWeb-main': [] },
       },
-      site: {
-        name: 'ContentSdkTestWeb',
-      },
+      site: { name: 'ContentSdkTestWeb' },
     });
   });
 });
