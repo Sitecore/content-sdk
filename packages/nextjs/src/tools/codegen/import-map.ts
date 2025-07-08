@@ -8,18 +8,7 @@ export type ImportMapEntry = {
   namedImports: string[];
 };
 
-/**
- * {
- *   key(resolvedModule): {
- *     key(localModuleString):{
- *       namedImports: Set<string>
- *     }
- *   }
- * }
- */
-export type ImportMapRecord = Record<string, Set<string>>;
-
-export type getImportMapArgs = {
+export type GetImportMapArgs = {
   codePaths: string[];
   exclude: string[];
 };
@@ -64,7 +53,9 @@ export const getImportMap = (paths: string[]) => {
   if (tsConfig.error) {
     throw new Error(`Error reading tsconfig.json from JSS app root: ${tsConfig.error.messageText}`);
   }
-  const importMapRecord: ImportMapRecord = {};
+
+  // store unique import paths and their imports
+  const importMapRecord: Record<string, Set<string>> = {};
 
   paths.forEach((codeFilePath) => {
     const codeFileFullPath = path.isAbsolute(codeFilePath)
@@ -74,19 +65,30 @@ export const getImportMap = (paths: string[]) => {
     const cliCompilerOptions = {
       ...tsConfig.config.compilerOptions,
       baseUrl: appPath,
+      allowJs: true,
+      target: ts.ScriptTarget.ESNext,
     };
 
     const tsHost = ts.createCompilerHost(cliCompilerOptions, true);
-    const componentMapSourceFile = tsHost.getSourceFile(
-      codeFileFullPath,
-      ts.ScriptTarget.Latest,
-      (msg) => {
-        throw new Error(`Failed to parse ${codeFileFullPath}: ${msg}`);
-      }
+
+    const tsCodeSource = tsHost.getSourceFile(codeFileFullPath, ts.ScriptTarget.Latest, (msg) => {
+      throw new Error(`Failed to parse ${codeFileFullPath}: ${msg}`);
+    });
+
+    if (!tsCodeSource) throw ReferenceError(`Failed to find file ${codeFileFullPath}`);
+
+    // Get rid of type imports and unused imports by compling to JS
+    const jsCode = ts.transpileModule(tsCodeSource.getFullText(), {
+      compilerOptions: cliCompilerOptions,
+    });
+    const jsCodeSource = ts.createSourceFile(
+      'code.js',
+      jsCode.outputText,
+      ts.ScriptTarget.ESNext,
+      true
     );
 
-    if (!componentMapSourceFile) throw ReferenceError(`Failed to find file ${codeFileFullPath}`);
-    ts.forEachChild(componentMapSourceFile, (childNode) => {
+    ts.forEachChild(jsCodeSource, (childNode) => {
       if (ts.isImportDeclaration(childNode) && childNode.importClause) {
         const imports = parseImportString(childNode.importClause.getText());
         // import path is extracted
@@ -104,8 +106,10 @@ export const getImportMap = (paths: string[]) => {
         const resolvedFile = resolvedModule?.resolvedModule?.resolvedFileName;
         // module imports will be resolved to /node_modules location - we don't support that yet
         if (resolvedFile && imports) {
-          // TODO: take tsconfig into account
-          const localModuleName = resolvedFile.indexOf('node_modules') > -1 ? moduleName : resolveLocalModulePath(resolvedFile, appPath);
+          const localModuleName =
+            resolvedFile.indexOf('node_modules') > -1
+              ? moduleName
+              : resolveLocalModulePath(resolvedFile, appPath);
           if (importMapRecord[localModuleName]) {
             imports.forEach((value) => {
               importMapRecord[localModuleName].add(value);
@@ -128,7 +132,7 @@ export const getImportMap = (paths: string[]) => {
   });
 };
 
-export const writeImportMap = (args: getImportMapArgs) => {
+export const writeImportMap = (args: GetImportMapArgs) => {
   const paths = getFilesList(args.codePaths, args.exclude);
   const importMap = getImportMap(paths);
   const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
