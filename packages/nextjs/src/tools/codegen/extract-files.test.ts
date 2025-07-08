@@ -140,7 +140,7 @@ describe('extract-files', () => {
 
     expect(fetchBearerTokenStub.calledOnce).to.be.true;
     expect(consoleErrorStub.calledOnce).to.be.true;
-    const expectedPath = path.resolve(process.cwd(), './src/lib/component-map.ts');
+    const expectedPath = path.resolve(process.cwd(), './.sitecore/component-map.ts');
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
       chalk.red('Error during code extraction: ReferenceError: Failed to find file', expectedPath)
     );
