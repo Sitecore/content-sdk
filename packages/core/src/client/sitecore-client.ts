@@ -424,6 +424,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       locale: designLibData.language,
       layout: componentData,
       dictionary: dictionaryData,
+      siteName: componentData.sitecore.context.site?.name || site,
     } as Page;
     return page;
   }
