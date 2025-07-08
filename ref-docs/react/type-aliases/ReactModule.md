@@ -8,7 +8,7 @@
 
 > **ReactModule** = `object`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:13](https://github.com/Sitecore/content-sdk/blob/e183f504380cd8705d5fd7089079527d29433aad/packages/react/src/components/sharedTypes/components.ts#L13)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:13](https://github.com/Sitecore/content-sdk/blob/2ea055af383b53f68fcd7168099686aef354fdf1/packages/react/src/components/sharedTypes/components.ts#L13)
 
 ## Indexable
 
@@ -22,7 +22,7 @@ Custom exports
 
 > `optional` **default**: `ComponentType`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:25](https://github.com/Sitecore/content-sdk/blob/e183f504380cd8705d5fd7089079527d29433aad/packages/react/src/components/sharedTypes/components.ts#L25)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:25](https://github.com/Sitecore/content-sdk/blob/2ea055af383b53f68fcd7168099686aef354fdf1/packages/react/src/components/sharedTypes/components.ts#L25)
 
 Default non-standard export
 
@@ -32,6 +32,6 @@ Default non-standard export
 
 > `optional` **Default**: `ComponentType`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:21](https://github.com/Sitecore/content-sdk/blob/e183f504380cd8705d5fd7089079527d29433aad/packages/react/src/components/sharedTypes/components.ts#L21)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:21](https://github.com/Sitecore/content-sdk/blob/2ea055af383b53f68fcd7168099686aef354fdf1/packages/react/src/components/sharedTypes/components.ts#L21)
 
 Default module export

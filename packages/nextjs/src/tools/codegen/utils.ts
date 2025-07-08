@@ -53,12 +53,12 @@ export const validateDeployContext = () => {
  * Parses the componentBuilder.ts file and returns a map of component names
  * and their respective import strings
  * @param {string} appPath path to the JSS app root
- * @param {string} [componentMapPath] path to the app's component map file. Default: 'src/lib/component-map.ts'
+ * @param {string} [componentMapPath] path to the app's component map file. Default: '.sitecore/component-map.ts'
  * @returns map of component names and their respective import strings
  */
 export const resolveComponentImportFiles = (
   appPath: string,
-  componentMapPath: string = './src/lib/component-map.ts'
+  componentMapPath: string = './.sitecore/component-map.ts'
 ) => {
   appPath = path.isAbsolute(appPath) ? appPath : path.resolve(process.cwd(), appPath);
   const tsConfig = ts.readConfigFile(path.resolve(appPath, 'tsconfig.json'), ts.sys.readFile);

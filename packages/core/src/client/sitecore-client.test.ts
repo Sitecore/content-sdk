@@ -749,6 +749,7 @@ describe('SitecoreClient', () => {
         locale: componentLibData.language,
         layout: componentData,
         dictionary: dictionaryData,
+        siteName: componentData.sitecore.context.site?.name,
       });
 
       expect(
