@@ -2,7 +2,7 @@ import * as glob from 'glob';
 
 const componentNamePattern = /^[\/]*(.+[\/\\])*(.+)\.[jt]sx?$/;
 
-const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
+// const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
 
 // TODO: use imports from core after beta-dev sync
 
