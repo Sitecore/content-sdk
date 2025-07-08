@@ -1,1 +1,1 @@
-export { importEntries } from './default-import-map';
+export { defaultImportEntries } from './default-import-map';

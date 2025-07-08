@@ -19,7 +19,7 @@ export interface ImportEntry {
   exports: { name: string | 'default' | '*'; value: unknown }[];
 }
 
-export const importEntries: ImportEntry[] = [
+export const defaultImportEntries: ImportEntry[] = [
   /* -------------------- React -------------------- */
   {
     module: 'react',
