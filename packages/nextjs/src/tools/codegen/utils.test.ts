@@ -141,12 +141,12 @@ describe('codegen-utils', () => {
       );
     });
 
-    it('should throw when src/lib/component-map.ts is not found', () => {
+    it('should throw when .sitecore/component-map.ts is not found', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/no-componentBuilder';
       const appRoot = process.cwd();
       const expectedPath = path.resolve(
         appRoot,
-        './src/tools/codegen/test-data/extract-components/no-componentBuilder/src/lib/component-map.ts'
+        './src/tools/codegen/test-data/extract-components/no-componentBuilder/.sitecore/component-map.ts'
       );
       expect(() => codegenUtils.resolveComponentImportFiles(appPath)).to.throw(
         ReferenceError,
