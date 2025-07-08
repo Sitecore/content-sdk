@@ -52,6 +52,14 @@ Our versioning strategy is as follows:
     * `GraphQLSitePathService` → `SitePathService`
     * `GraphQLSitePathServiceConfig` → `SitePathServiceConfig`
   * Removed `DictionaryService` interface
+* `[core]` `[nextjs]` `[templates/nextjs]` Refactor site resolution logic across packages ([#141](https://github.com/Sitecore/content-sdk/pull/141))([#155](https://github.com/Sitecore/content-sdk/pull/155))
+  * Removed `sites` parameter from `SitecoreClientInit` type
+  * Removed `SiteResolver` dependency and `resolveSite()` from `SitecoreClient`
+  * Removed support for passing a custom siteResolver to `SitecoreClient`
+  * Updated `SitecoreClient` to construct the `Page` using `siteName` instead of the full `SiteInfo`.
+  * Updated SitecoreClient's `getPagePaths()` to accept a `sites` parameter
+  * Modified the `getPagePaths` method in `SitecoreClient` to accept a `sites` parameter.
+  * Updated Next.js `SitemapMiddleware` and `RobotsMiddleware` to use their own instance of `SiteResolver` and accept a `sites` parameter via the constructor.
 
 ### 🐛 Bug Fixes
 
@@ -126,14 +134,6 @@ Our versioning strategy is as follows:
   * `NEXT_PUBLIC_SITECORE_SITE_NAME` → `NEXT_PUBLIC_DEFAULT_SITE_NAME`
   * `DISABLE_SSG_FETCH` → `GENERATE_STATIC_PATHS`
   * `disableStaticPaths` config property → `generateStaticPaths` (with inverted logic for clarity)
-* `[core]` `[nextjs]` `[templates/nextjs]` Refactor site resolution logic across packages ([#141](https://github.com/Sitecore/content-sdk/pull/141))
-  * Removed `sites` parameter from `SitecoreClientInit` type
-  * Removed `SiteResolver` dependency and `resolveSite()` from `SitecoreClient`
-  * Removed support for passing a custom siteResolver to `SitecoreClient`
-  * Updated `SitecoreClient` to construct the `Page` using `siteName` instead of the full `SiteInfo`.
-  * Updated SitecoreClient's `getPagePaths()` to accept a `sites` parameter
-  * Modified the `getPagePaths` method in `SitecoreClient` to accept a `sites` parameter.
-  * Updated Next.js `SitemapMiddleware` and `RobotsMiddleware` to use their own instance of `SiteResolver` and accept a `sites` parameter via the constructor.
 
 ### 🐛 Bug Fixes
 
