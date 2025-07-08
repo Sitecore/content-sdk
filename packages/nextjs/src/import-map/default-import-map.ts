@@ -31,7 +31,6 @@ export const importEntries: ImportEntry[] = [
       { name: 'createElement', value: React.createElement },
       { name: 'cloneElement', value: React.cloneElement },
       { name: 'isValidElement', value: React.isValidElement },
-
       /* Hooks */
       { name: 'useActionState', value: React.useActionState },
       { name: 'useCallback', value: React.useCallback },
@@ -47,7 +46,6 @@ export const importEntries: ImportEntry[] = [
       { name: 'useState', value: React.useState },
       { name: 'useSyncExternalStore', value: React.useSyncExternalStore },
       { name: 'useTransition', value: React.useTransition },
-
       /* Performance helpers */
       { name: 'forwardRef', value: React.forwardRef },
       { name: 'lazy', value: React.lazy },
@@ -67,7 +65,6 @@ export const importEntries: ImportEntry[] = [
       { name: 'NextImage', value: NextImage },
       { name: 'Image', value: Image },
       { name: 'File', value: File },
-
       { name: 'useSitecore', value: useSitecore },
       { name: 'withSitecore', value: withSitecore },
       { name: 'useComponentProps', value: useComponentProps },
