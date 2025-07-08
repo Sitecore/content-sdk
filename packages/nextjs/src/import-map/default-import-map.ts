@@ -20,65 +20,58 @@ export interface ImportEntry {
 }
 
 export const importEntries: ImportEntry[] = [
+  /* -------------------- React -------------------- */
   {
     module: 'react',
     exports: [
       { name: 'default', value: React },
       { name: '*', value: React },
-      { name: 'createElement', value: React.createElement },
-      { name: 'Fragment', value: React.Fragment },
       { name: 'Children', value: React.Children },
+      { name: 'Fragment', value: React.Fragment },
+      { name: 'createElement', value: React.createElement },
       { name: 'cloneElement', value: React.cloneElement },
       { name: 'isValidElement', value: React.isValidElement },
 
       /* Hooks */
-      { name: 'useState', value: React.useState },
-      { name: 'useEffect', value: React.useEffect },
-      { name: 'useLayoutEffect', value: React.useLayoutEffect },
-      { name: 'useContext', value: React.useContext },
-      { name: 'useMemo', value: React.useMemo },
-      { name: 'useCallback', value: React.useCallback },
-      { name: 'useRef', value: React.useRef },
-      { name: 'useId', value: React.useId },
-      { name: 'useTransition', value: React.useTransition },
-      { name: 'useDeferredValue', value: React.useDeferredValue },
-      { name: 'useReducer', value: React.useReducer },
-      { name: 'useSyncExternalStore', value: React.useSyncExternalStore },
       { name: 'useActionState', value: React.useActionState },
+      { name: 'useCallback', value: React.useCallback },
+      { name: 'useContext', value: React.useContext },
+      { name: 'useDeferredValue', value: React.useDeferredValue },
+      { name: 'useEffect', value: React.useEffect },
+      { name: 'useId', value: React.useId },
+      { name: 'useLayoutEffect', value: React.useLayoutEffect },
+      { name: 'useMemo', value: React.useMemo },
       { name: 'useOptimistic', value: React.useOptimistic },
+      { name: 'useReducer', value: React.useReducer },
+      { name: 'useRef', value: React.useRef },
+      { name: 'useState', value: React.useState },
+      { name: 'useSyncExternalStore', value: React.useSyncExternalStore },
+      { name: 'useTransition', value: React.useTransition },
 
-      /* Performance / async helpers */
-      { name: 'memo', value: React.memo },
+      /* Performance helpers */
       { name: 'forwardRef', value: React.forwardRef },
       { name: 'lazy', value: React.lazy },
+      { name: 'memo', value: React.memo },
       { name: 'Suspense', value: React.Suspense },
     ],
   },
+
+  /* ------------- Sitecore Content‑SDK ------------- */
   {
     module: '@sitecore-content-sdk/nextjs',
     exports: [
-      // Visual/content helpers
       { name: 'Link', value: Link },
       { name: 'Text', value: Text },
-      { name: 'useSitecore', value: useSitecore },
-      { name: 'Placeholder', value: Placeholder },
       { name: 'RichText', value: RichText },
+      { name: 'Placeholder', value: Placeholder },
       { name: 'NextImage', value: NextImage },
-      { name: 'withDatasourceCheck', value: withDatasourceCheck },
-      { name: 'CdpHelper', value: CdpHelper },
-      { name: 'File', value: File },
-      { name: 'useComponentProps', value: useComponentProps },
       { name: 'Image', value: Image },
+      { name: 'File', value: File },
 
-      // Sitecore context
-      { name: 'withSitecore', value: withSitecore },
       { name: 'useSitecore', value: useSitecore },
-
-      // Datasource & editing
+      { name: 'withSitecore', value: withSitecore },
       { name: 'useComponentProps', value: useComponentProps },
       { name: 'withDatasourceCheck', value: withDatasourceCheck },
-
-      // Utility helpers
       { name: 'CdpHelper', value: CdpHelper },
     ],
   },
