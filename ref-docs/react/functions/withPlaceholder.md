@@ -8,7 +8,7 @@
 
 > **withPlaceholder**(`placeholders`, `options?`): (`WrappedComponent`) => (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github.com/Sitecore/content-sdk/blob/e183f504380cd8705d5fd7089079527d29433aad/packages/react/src/enhancers/withPlaceholder.tsx#L42)
+Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:42](https://github.com/Sitecore/content-sdk/blob/36810f8c429f339af6f9756746b5943c961fd167/packages/react/src/enhancers/withPlaceholder.tsx#L42)
 
 ## Parameters
 

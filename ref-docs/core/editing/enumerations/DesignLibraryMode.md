@@ -6,7 +6,7 @@
 
 # Enumeration: DesignLibraryMode
 
-Defined in: [packages/core/src/editing/models.ts:72](https://github.com/Sitecore/content-sdk/blob/e183f504380cd8705d5fd7089079527d29433aad/packages/core/src/editing/models.ts#L72)
+Defined in: [packages/core/src/editing/models.ts:72](https://github.com/Sitecore/content-sdk/blob/36810f8c429f339af6f9756746b5943c961fd167/packages/core/src/editing/models.ts#L72)
 
 Represents the mode of the Design Library
 
@@ -16,7 +16,7 @@ Represents the mode of the Design Library
 
 > **Metadata**: `"library-metadata"`
 
-Defined in: [packages/core/src/editing/models.ts:76](https://github.com/Sitecore/content-sdk/blob/e183f504380cd8705d5fd7089079527d29433aad/packages/core/src/editing/models.ts#L76)
+Defined in: [packages/core/src/editing/models.ts:76](https://github.com/Sitecore/content-sdk/blob/36810f8c429f339af6f9756746b5943c961fd167/packages/core/src/editing/models.ts#L76)
 
 Metadata mode
 
@@ -26,6 +26,6 @@ Metadata mode
 
 > **Normal**: `"library"`
 
-Defined in: [packages/core/src/editing/models.ts:74](https://github.com/Sitecore/content-sdk/blob/e183f504380cd8705d5fd7089079527d29433aad/packages/core/src/editing/models.ts#L74)
+Defined in: [packages/core/src/editing/models.ts:74](https://github.com/Sitecore/content-sdk/blob/36810f8c429f339af6f9756746b5943c961fd167/packages/core/src/editing/models.ts#L74)
 
 Normal mode
