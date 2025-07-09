@@ -5,38 +5,66 @@ import fs from 'fs';
 
 export type ImportMapEntry = {
   module: string;
-  namedImports: string[];
+  imports: string[];
 };
 
 export type GetImportMapArgs = {
-  codePaths: string[];
-  exclude: string[];
+  paths: string[];
+  exclude?: string[];
 };
 
-export const parseImportString = (importString: string): string[] | null => {
-  const namedImport = /\{.*\}/;
-  const wildcardImport = /\* as .*/;
-  const aliasImport = /^\s*[a-zA-Z0-9]+(\s*(as .+)\s*)*$/;
+export type ImportWithAlias = {
+  importName: string;
+  alias?: string;
+};
+
+export type ImportModule = {
+  // import { import1, import2 as imp3 }
+  namedImports: Map<string, ImportWithAlias>;
+  // import coolName or import * as coolName or import coolName as coolerName
+  defaultImports: Map<string, ImportWithAlias>;
+};
+
+export const parseImportString = (
+  importString: string
+): ImportWithAlias | ImportWithAlias[] | null => {
+  const namedImport = /\{.*\}/g;
+  const aliasImport = /^\s*([a-zA-Z0-9]+|\*)\s*as (.+)\s*$/g;
+  const regularImport = /^\s*[a-zA-Z0-9]+\s*$/g;
 
   if (namedImport.test(importString)) {
-    // import { import1, import2, ...}
+    // import { import1, import2, import3 as imp ...}
     return importString
       .replace(/[import]*\s*\{/, '')
       .replace(/\}/, '')
       .split(',')
-      .reduce<string[]>((acc, value) => {
-        const importName = parseImportString(value.trim());
-        if (importName) {
-          acc.push(...importName);
+      .reduce<ImportWithAlias[]>((acc, value) => {
+        const maybeAlias = aliasImport.exec(value);
+        console.log(maybeAlias);
+        if (maybeAlias) {
+          acc.push({
+            importName: maybeAlias[2].trim(),
+            alias: maybeAlias[1].trim(),
+          });
+        } else {
+          acc.push({
+            importName: value.trim(),
+          });
         }
         return acc;
       }, []);
-  } else if (wildcardImport.test(importString)) {
-    // import * as coolName
-    return [importString.replace('* as ', '')];
-  } else if (aliasImport.test(importString)) {
-    // import coolName[ as coolerName]
-    return [importString.replace(/[a-zA-Z0-9]+\s+(as)+/g, '').replace(/\s*/, '')];
+  } else if (importString.match(aliasImport)) {
+    // import * as coolName or import coolName as coolerName
+    const importNames = aliasImport.exec(importString);
+    return {
+      importName: importNames![1].trim(),
+      alias: importNames![2].trim(),
+    };
+  } else if (regularImport.test(importString)) {
+    // import coolName
+    return {
+      importName: importString.trim(),
+    };
   }
   console.warn('Cannot parse import string: %s', importString);
   return null;
@@ -44,7 +72,8 @@ export const parseImportString = (importString: string): string[] | null => {
 
 export const resolveLocalModulePath = (fullModulePath: string, appPath?: string) => {
   appPath = appPath || process.cwd();
-  return `./${path.relative(appPath, fullModulePath).replace(/\\/g, '/')}`;
+  // account for imports being done from .sitecore folder
+  return `../${path.relative(appPath, fullModulePath).replace(/\\/g, '/')}`;
 };
 
 export const getImportMap = (paths: string[]) => {
@@ -55,7 +84,7 @@ export const getImportMap = (paths: string[]) => {
   }
 
   // store unique import paths and their imports
-  const importMapRecord: Record<string, Set<string>> = {};
+  const importMapRecord: Map<string, ImportModule> = new Map();
 
   paths.forEach((codeFilePath) => {
     const codeFileFullPath = path.isAbsolute(codeFilePath)
@@ -107,15 +136,24 @@ export const getImportMap = (paths: string[]) => {
         // module imports will be resolved to /node_modules location - we don't support that yet
         if (resolvedFile && imports) {
           const localModuleName =
-            resolvedFile.indexOf('node_modules') > -1
+            resolvedFile.indexOf('node_modules') > -1 || resolvedFile.endsWith('.d.ts')
               ? moduleName
               : resolveLocalModulePath(resolvedFile, appPath);
-          if (importMapRecord[localModuleName]) {
+          if (!importMapRecord.has(localModuleName)) {
+            importMapRecord.set(localModuleName, {
+              namedImports: new Map(),
+              defaultImports: new Map(),
+            });
+          }
+          // named imports are array, default are not
+          if (Array.isArray(imports)) {
             imports.forEach((value) => {
-              importMapRecord[localModuleName].add(value);
+              const importKey = value.alias || value.importName;
+              importMapRecord.get(localModuleName)!.namedImports.set(importKey, value);
             });
           } else {
-            importMapRecord[localModuleName] = new Set(imports);
+            const importKey = imports.alias || imports.importName;
+            importMapRecord.get(localModuleName)!.defaultImports.set(importKey, imports);
           }
         } else {
           console.warn('Could not resolve a file for import %s', moduleName);
@@ -124,50 +162,92 @@ export const getImportMap = (paths: string[]) => {
     });
   });
 
-  return Object.keys(importMapRecord).map((modulePath) => {
-    return {
-      module: modulePath,
-      namedImports: Array.from(importMapRecord[modulePath]),
-    };
-  });
+  return importMapRecord;
 };
 
 export const writeImportMap = (args: GetImportMapArgs) => {
-  const paths = getFilesList(args.codePaths, args.exclude);
-  const importMap = getImportMap(paths);
-  const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
-  const importMapContent = nextJsMapTemplate(importMap);
-  try {
-    fs.writeFileSync(importMapFile, importMapContent, {
-      encoding: 'utf8',
-    });
-  } catch (error) {
-    console.error(`Import Map generation failed. Error writing to file ${importMapFile}:`, error);
-    throw error;
-  }
+  return async () => {
+    const paths = getFilesList(args.paths, args.exclude);
+    const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
+    console.log(
+      `Generating import map for paths: ${paths.join(', ')}. Writing into ${importMapFile}`
+    );
+    const importMap = getImportMap(paths);
+    const importMapContent = nextJsMapTemplate(importMap);
+    try {
+      fs.writeFileSync(importMapFile, importMapContent, {
+        encoding: 'utf8',
+      });
+    } catch (error) {
+      console.error(`Import Map generation failed. Error writing to file ${importMapFile}:`, error);
+      throw error;
+    }
+  };
 };
 
-export const nextJsMapTemplate = (importMap: ImportMapEntry[]) => {
-  const importStatements = importMap.map((entry) => {
-    const namedImports = entry.namedImports.length ? `{ ${entry.namedImports.join(', ')} }` : '*';
-    return `import ${namedImports} from '${entry.module}';`;
+export const nextJsMapTemplate = (importMap: Map<string, ImportModule>) => {
+  const getSingleImport = (importObj: ImportWithAlias) => {
+    const { alias, importName } = importObj;
+    return alias ? `${importName} as ${alias}` : importName;
+  };
+
+  const convertNamedImports = (namedImports: Map<string, ImportWithAlias>) => {
+    return Array.from(namedImports)
+      .map(([_, importDef]) => {
+        return getSingleImport(importDef);
+      })
+      .join(', ');
+  };
+
+  const importStatements: string[] = [];
+  const importMapArray = Array.from(importMap);
+
+  // build import statements first
+  for (const [modulePath, imports] of importMapArray) {
+    if (imports.namedImports.size > 0) {
+      importStatements.push(
+        `import { ${convertNamedImports(imports.namedImports)} } from '${modulePath}';`
+      );
+    }
+    if (imports.defaultImports.size > 0) {
+      imports.defaultImports.forEach((importEntry) => {
+        importStatements.push(`import ${getSingleImport(importEntry)} from '${modulePath}';`);
+      });
+    }
+  }
+
+  // get import map entries after
+  const finalImportMap: ImportMapEntry[] = importMapArray.map(([modulePath, imports]) => {
+    const defaultImports = Array.from(imports.defaultImports).map(([_, importInfo]) => {
+      return importInfo.alias || importInfo.importName;
+    });
+    const namedImports = Array.from(imports.namedImports).map(([_, importInfo]) => {
+      return importInfo.alias || importInfo.importName;
+    });
+    return {
+      module: modulePath,
+      imports: [...defaultImports, ...namedImports],
+    };
   });
 
   return `${importStatements.join('\n')}
     
-    export const importMap = [
-        ${importMap
-          .map(
-            (entry) =>
-              `  {
-                    module: '${entry.module}', exports: [
-                        ${entry.namedImports
-                          .map(
-                            (namedImport) => `    { name: '${namedImport}', value: ${namedImport} }`
-                          )
-                          .join(',\n        ')},]}`
-          )
-          .join(',\n        ')}
-    ]
-    `;
+export const importMap = [
+${finalImportMap
+  .map((entry) =>
+    [
+      '  {',
+      `    module: '${entry.module}',`,
+      '    exports: [',
+      entry.imports.length
+        ? entry.imports
+            .map((namedImport) => `      { name: '${namedImport}', value: ${namedImport} }`)
+            .join(',\n')
+        : '    *',
+      '    ]',
+      '  }',
+    ].join('\n')
+  )
+  .join(',\n')}
+]`;
 };

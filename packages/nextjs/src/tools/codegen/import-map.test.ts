@@ -1,6 +1,6 @@
 /* eslint-disable quotes */
 import { expect } from 'chai';
-import { parseImportString } from './import-map';
+import { ImportModule, parseImportString } from './import-map';
 import sinon from 'sinon';
 import { getImportMap } from './import-map';
 import path from 'path';
@@ -38,6 +38,29 @@ describe('Import Map Generation', () => {
     const sandbox = sinon.createSandbox();
     let cwdStub: sinon.SinonStub;
 
+    const convertToTestable = (importMap: Map<string, ImportModule>) =>
+      Array.from(importMap).map(([modulePath, imports]) => {
+        const defaultImports = Array.from(imports.defaultImports).map(([key, importInfo]) => {
+          return {
+            valueName: key,
+            importName: importInfo.importName,
+            aliasName: importInfo.alias,
+          };
+        });
+        const namedImports = Array.from(imports.namedImports).map(([key, importInfo]) => {
+          return {
+            valueName: key,
+            importName: importInfo.importName,
+            aliasName: importInfo.alias,
+          };
+        });
+        return {
+          module: modulePath,
+          defaultImports,
+          namedImports,
+        };
+      });
+
     beforeEach(() => {
       const appFolder = path.resolve(process.cwd(), './src/tools/codegen/test-data/import-map');
       cwdStub = sandbox.stub(process, 'cwd').returns(appFolder);
@@ -49,66 +72,96 @@ describe('Import Map Generation', () => {
 
     it('should return map with named imports (named.ts)', () => {
       const result = getImportMap(['named.ts']);
-      expect(result).to.deep.equal([
+      const expected = [
         {
-          module: './test-exports.ts',
-          namedImports: ['funco', 'TestClass', 'testo'],
+          module: '../test-exports.ts',
+          namedImports: [
+            { valueName: 'funco', importName: 'funco', aliasName: undefined },
+            { valueName: 'TestClass', importName: 'TestClass', aliasName: undefined },
+            {
+              aliasName: 'testClassInstance',
+              importName: 'testo',
+              valueName: 'testClassInstance',
+            },
+          ],
+          defaultImports: [],
         },
-      ]);
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
     });
 
     it('should return map from wildcard imports (wildcard.ts)', () => {
       const result = getImportMap(['wildcard.ts']);
-      expect(result).to.deep.equal([
+      const expected = [
         {
           module: 'react',
-          namedImports: ['React'],
+          namedImports: [],
+          defaultImports: [{ valueName: 'React', importName: '*', aliasName: 'React' }],
         },
         {
-          module: './test-exports.ts',
-          namedImports: ['everything'],
+          module: '../test-exports.ts',
+          namedImports: [],
+          defaultImports: [{ valueName: 'everything', importName: '*', aliasName: 'everything' }],
         },
-      ]);
+      ];
+
+      expect(convertToTestable(result)).to.deep.equal(expected);
     });
 
     it('should return map from mixed imports (mixed.ts)', () => {
       const result = getImportMap(['mixed.ts']);
-      expect(result).to.deep.equal([
+      const expected = [
         {
-          module: './test-exports.ts',
-          namedImports: ['funco', 'TestClass', 'testo', 'everything'],
+          module: '../test-exports.ts',
+          namedImports: [
+            { valueName: 'funco', importName: 'funco', aliasName: undefined },
+            { valueName: 'TestClass', importName: 'TestClass', aliasName: undefined },
+            {
+              aliasName: 'testClassInstance',
+              importName: 'testo',
+              valueName: 'testClassInstance',
+            },
+          ],
+          defaultImports: [{ valueName: 'everything', importName: '*', aliasName: 'everything' }],
         },
-      ]);
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
     });
 
     it('should exclude types from import map (with-types.ts)', () => {
       const result = getImportMap(['with-types.ts']);
-      expect(result).to.deep.equal([
+      const expected = [
         {
-          module: './test-exports.ts',
-          namedImports: ['funco'],
+          module: '../test-exports.ts',
+          namedImports: [{ valueName: 'funco', importName: 'funco', aliasName: undefined }],
+          defaultImports: [],
         },
-      ]);
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
     });
 
     it('should return imports from tsx, jsx components', () => {
       const tsxResult = getImportMap(['tsx-component.tsx', 'jsx-component.jsx']);
-      expect(tsxResult).to.deep.equal([
+      const expected = [
         {
-          module: './test-exports.ts',
-          namedImports: ['funco'],
+          module: '../test-exports.ts',
+          namedImports: [{ valueName: 'funco', importName: 'funco', aliasName: undefined }],
+          defaultImports: [],
         },
-      ]);
+      ];
+      expect(convertToTestable(tsxResult)).to.deep.equal(expected);
     });
 
     it('should return map from js file (js-file.js)', () => {
       const result = getImportMap(['js-file.js']);
-      expect(result).to.deep.equal([
+      const expected = [
         {
-          module: './test-exports.ts',
-          namedImports: ['funco'],
+          module: '../test-exports.ts',
+          namedImports: [{ valueName: 'funco', importName: 'funco', aliasName: undefined }],
+          defaultImports: [],
         },
-      ]);
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
     });
   });
 });
