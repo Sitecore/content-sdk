@@ -6,11 +6,11 @@ import { spy } from 'sinon';
 
 import { withDatasourceCheck, WithDatasourceCheckProps } from '../enhancers/withDatasourceCheck';
 import { SitecoreProviderReactContext } from '../components/SitecoreProvider';
-import { RenderingType } from '@sitecore-content-sdk/core/layout';
+import { PageMode } from '@sitecore-content-sdk/core/client';
 
-const mockContext = (editing: boolean, renderingType?: RenderingType) => {
+const mockContext = (editing: boolean) => {
   return {
-    pageContext: { pageEditing: editing, renderingType },
+    pageContext: { mode: { isEditing: editing } as PageMode },
     setContext: spy(),
   };
 };
@@ -104,8 +104,12 @@ describe('withDatasourceCheck', () => {
       },
     };
 
+    const context = mockContext(false);
+
+    context.pageContext.mode.isDesignLibrary = true;
+
     const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={mockContext(false, RenderingType.Component)}>
+      <SitecoreProviderReactContext.Provider value={context}>
         <TestComponentWithDatasourceCheck {...props} />
       </SitecoreProviderReactContext.Provider>
     );
@@ -161,7 +165,11 @@ describe('withDatasourceCheck', () => {
       },
     };
 
-    const wrapper = render(<TestComponentWithDatasourceCheck {...props} />);
+    const wrapper = render(
+      <SitecoreProviderReactContext.Provider value={mockContext(false)}>
+        <TestComponentWithDatasourceCheck {...props} />
+      </SitecoreProviderReactContext.Provider>
+    );
 
     expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
     expect(wrapper.container.innerHTML).to.contain(props.rendering.dataSource);

@@ -8,13 +8,14 @@ import {
   LayoutServiceData,
   Field,
   DesignLibrary,
-  RenderingType,
+  PageMode,
 } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/content-sdk/SitecoreStyles';
 
 interface LayoutProps {
   layoutData: LayoutServiceData;
+  mode: PageMode;
 }
 
 interface RouteFields {
@@ -22,11 +23,10 @@ interface RouteFields {
   Title?: Field;
 }
 
-const Layout = ({ layoutData }: LayoutProps): JSX.Element => {
+const Layout = ({ layoutData, mode }: LayoutProps): JSX.Element => {
   const { route } = layoutData.sitecore;
   const fields = route?.fields as RouteFields;
-  const isPageEditing = layoutData.sitecore.context.pageEditing;
-  const mainClassPageEditing = isPageEditing ? 'editing-mode' : 'prod-mode';
+  const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
 
   return (
     <>
@@ -39,8 +39,8 @@ const Layout = ({ layoutData }: LayoutProps): JSX.Element => {
 
       {/* root placeholder for the app, which we add components to using route data */}
       <div className={mainClassPageEditing}>
-        {layoutData.sitecore.context.renderingType === RenderingType.Component ? (
-          <DesignLibrary {...layoutData} />
+        {mode.isDesignLibrary ? (
+          <DesignLibrary />
         ) : (
           <>
             <header>

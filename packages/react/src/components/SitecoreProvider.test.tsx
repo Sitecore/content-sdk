@@ -1,12 +1,17 @@
 import React, { FC } from 'react';
 import { expect } from 'chai';
+import { PageMode } from '@sitecore-content-sdk/core/client';
 import { SitecoreProvider } from './SitecoreProvider';
 import { WithSitecoreProps, withSitecore, useSitecore } from '../enhancers/withSitecore';
-import { LayoutServiceData } from '../index';
+import { LayoutServiceData, LayoutServicePageState } from '../index';
 import { render } from '@testing-library/react';
 
 describe('SitecoreProvider', () => {
   let nestedContext = {};
+
+  const mode: PageMode = {
+    name: LayoutServicePageState.Normal,
+  };
 
   interface NestedComponentProps extends WithSitecoreProps {
     anotherProperty?: string;
@@ -41,30 +46,36 @@ describe('SitecoreProvider', () => {
 
   it('sets default context when no layoutData is supplied', () => {
     render(
-      <SitecoreProvider api={apiStub} componentMap={components}>
+      <SitecoreProvider api={apiStub} componentMap={components} mode={mode}>
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
 
-    expect(nestedContext).to.deep.equal({ pageEditing: false });
+    expect(nestedContext).to.deep.equal({ mode: { name: 'normal' } });
   });
 
   it('updates state when new layoutData is received via props', () => {
     const rendered = render(
-      <SitecoreProvider api={apiStub} componentMap={components}>
+      <SitecoreProvider api={apiStub} componentMap={components} mode={mode}>
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
 
-    expect(nestedContext).to.deep.equal({ pageEditing: false });
+    expect(nestedContext).to.deep.equal({ mode: { name: 'normal' } });
 
     rendered.rerender(
-      <SitecoreProvider api={apiStub} componentMap={components} layoutData={mockLayoutData}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={components}
+        layoutData={mockLayoutData}
+        mode={mode}
+      >
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
 
     expect(nestedContext).to.deep.equal({
+      mode: { name: 'normal' },
       pageEditing: false,
       itemId: 'testitemid',
       language: 'en',

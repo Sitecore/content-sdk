@@ -10,11 +10,11 @@ import {
   LayoutServicePageState,
   SitecoreProviderReactContext,
 } from '@sitecore-content-sdk/react';
-import { RenderingType } from '@sitecore-content-sdk/core/layout';
 import { ImageLoader } from 'next/image';
 import { spy, match } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SinonSpy } from 'sinon';
+import { DesignLibraryMode } from '@sitecore-content-sdk/core/editing';
 
 use(sinonChai);
 const setContext = spy();
@@ -22,6 +22,10 @@ const expect = chai.use(chaiString).expect;
 const testContextProps = {
   pageContext: {
     pageState: LayoutServicePageState.Normal,
+    mode: {
+      name: LayoutServicePageState.Normal,
+      isNormal: true,
+    },
   },
   setContext,
 };
@@ -356,7 +360,10 @@ describe('<NextImage />', () => {
     const testEditingContext = {
       ...testContextProps,
       pageContext: {
-        pageState: LayoutServicePageState.Edit,
+        mode: {
+          name: LayoutServicePageState.Edit,
+          isEditing: true,
+        },
       },
     };
     const testMetadata = {
@@ -538,7 +545,10 @@ describe('<NextImage />', () => {
       const testEditingContext = {
         ...testContextProps,
         pageContext: {
-          pageState: LayoutServicePageState.Edit,
+          mode: {
+            name: LayoutServicePageState.Edit,
+            isEditing: true,
+          },
         },
       };
       const rendered = render(
@@ -553,7 +563,10 @@ describe('<NextImage />', () => {
       const testEditingContext = {
         ...testContextProps,
         pageContext: {
-          pageState: LayoutServicePageState.Preview,
+          mode: {
+            name: LayoutServicePageState.Preview,
+            isPreview: true,
+          },
         },
       };
       const rendered = render(
@@ -564,12 +577,15 @@ describe('<NextImage />', () => {
       expect(rendered?.getAttribute('data-unoptimized')).to.equal('true');
     });
 
-    it('should render unoptimized image in component rendering type', () => {
+    it('should render unoptimized image in Design Library mode', () => {
       const testEditingContext = {
         ...testContextProps,
         pageContext: {
           ...testContextProps.pageContext,
-          renderingType: RenderingType.Component,
+          mode: {
+            name: DesignLibraryMode.Normal,
+            isDesignLibrary: true,
+          },
         },
       };
       const rendered = render(

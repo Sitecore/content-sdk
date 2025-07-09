@@ -4,7 +4,7 @@ import { render, waitFor } from '@testing-library/react';
 import { spy } from 'sinon';
 import ErrorBoundary from './ErrorBoundary';
 import { SitecoreProviderReactContext } from '../components/SitecoreProvider';
-import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 
 describe('ErrorBoundary', () => {
   describe('when in page editing or preview mode', () => {
@@ -12,8 +12,8 @@ describe('ErrorBoundary', () => {
       const setContext = spy();
 
       const testComponentProps = {
-        context: {
-          pageState: LayoutServicePageState.Preview,
+        pageContext: {
+          mode: { isPreview: true },
         },
         setContext,
       };
@@ -49,7 +49,7 @@ describe('ErrorBoundary', () => {
 
       const testComponentProps = {
         pageContext: {
-          pageState: LayoutServicePageState.Edit,
+          mode: { isEditing: true },
         },
         setContext,
       };
@@ -82,7 +82,7 @@ describe('ErrorBoundary', () => {
 
       const testComponentProps = {
         pageContext: {
-          pageState: LayoutServicePageState.Preview,
+          mode: { isPreview: true },
         },
         setContext,
       };
@@ -146,7 +146,7 @@ describe('ErrorBoundary', () => {
 
       const testComponentProps = {
         pageContext: {
-          pageEditing: true,
+          mode: { isEditing: true },
         },
         setContext,
       };

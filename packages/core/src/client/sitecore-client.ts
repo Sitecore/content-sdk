@@ -3,6 +3,7 @@ import {
   EditingPreviewData,
   EditingService,
   ComponentLayoutService,
+  DesignLibraryMode,
 } from '../editing';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases, DictionaryService } from '../i18n';
@@ -12,6 +13,7 @@ import {
   LayoutService,
   LayoutServiceData,
   RouteOptions,
+  LayoutServicePageState,
 } from '../layout';
 import { HTMLLink, FetchOptions, StaticPath, RetryStrategy } from '../models';
 import { getGroomedVariantIds, PersonalizedRewriteData } from '../personalize/utils';
@@ -21,6 +23,41 @@ import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { NativeDataFetcher } from '../native-fetcher';
 import { RobotsService } from '../site/robots-service';
+
+/**
+ * Represents the mode of the page
+ */
+export type PageMode = {
+  /**
+   * Page mode name
+   */
+  name: LayoutServicePageState | DesignLibraryMode;
+  /**
+   * Design Library related properties. Only available in Design Library mode.
+   */
+  designLibrary?: {
+    /**
+     * Whether the page is in variant generation mode
+     */
+    isVariantGeneration: boolean;
+  };
+  /**
+   * Whether the page is in normal mode
+   */
+  isNormal?: boolean;
+  /**
+   * Whether the page is in preview mode
+   */
+  isPreview?: boolean;
+  /**
+   * Whether the page is in editing mode
+   */
+  isEditing?: boolean;
+  /**
+   * Whether the page is in Design Library mode
+   */
+  isDesignLibrary?: boolean;
+};
 
 /**
  * Represent a Page model returned from Edge endpoint
@@ -38,6 +75,10 @@ export type Page = {
    * Route locale
    */
   locale: string;
+  /**
+   * Page mode
+   */
+  mode: PageMode;
 };
 
 export type PageOptions = Partial<RouteOptions> & {
@@ -259,6 +300,10 @@ export class SitecoreClient implements BaseSitecoreClient {
         layout,
         siteName: layout.sitecore.context.site?.name || site,
         locale,
+        mode: {
+          name: layout.sitecore.context.pageState || LayoutServicePageState.Normal,
+          isNormal: true,
+        },
       };
     }
   }
@@ -366,6 +411,11 @@ export class SitecoreClient implements BaseSitecoreClient {
       layout: data.layoutData,
       dictionary: data.dictionary,
       siteName: data.layoutData.sitecore.context.site?.name || site,
+      mode: {
+        name: mode,
+        isPreview: mode === LayoutServicePageState.Preview,
+        isEditing: mode === LayoutServicePageState.Edit,
+      },
     } as Page;
     const personalizeData = getGroomedVariantIds(variantIds);
     personalizeLayout(page.layout, personalizeData.variantId, personalizeData.componentVariantIds);
@@ -425,6 +475,13 @@ export class SitecoreClient implements BaseSitecoreClient {
       layout: componentData,
       dictionary: dictionaryData,
       siteName: componentData.sitecore.context.site?.name || site,
+      mode: {
+        name: mode,
+        isDesignLibrary: true,
+        designLibrary: {
+          isVariantGeneration: mode === DesignLibraryMode.VariantGeneration,
+        },
+      },
     } as Page;
     return page;
   }

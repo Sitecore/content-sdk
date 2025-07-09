@@ -2,11 +2,7 @@
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
-import {
-  LayoutServicePageState,
-  SitecorePageProps,
-  RenderingType,
-} from '@sitecore-content-sdk/nextjs';
+import { SitecorePageProps } from '@sitecore-content-sdk/nextjs';
 
 /**
  * The Bootstrap component is the entry point for performing any initialization logic
@@ -15,14 +11,10 @@ import {
 const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
   // Browser ClientSDK init allows for page view events to be tracked
   useEffect(() => {
-    const pageState = props.layout?.sitecore?.context.pageState;
-    const renderingType = props.layout?.sitecore?.context.renderingType;
+    const mode = props.mode;
     if (process.env.NODE_ENV === 'development')
       console.debug('Browser Events SDK is not initialized in development environment');
-    else if (
-      pageState !== LayoutServicePageState.Normal ||
-      renderingType === RenderingType.Component
-    )
+    else if (!mode.isNormal)
       console.debug('Browser Events SDK is not initialized in edit and preview modes');
     else {
       if (config.api.edge?.clientContextId) {

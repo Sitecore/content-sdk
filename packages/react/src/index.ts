@@ -36,6 +36,7 @@ export {
   DefaultRetryStrategy,
   GraphQLRequestClientFactoryConfig,
   GraphQLRequestClient,
+  PageMode,
 } from '@sitecore-content-sdk/core/client';
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export { Form } from './components/Form';

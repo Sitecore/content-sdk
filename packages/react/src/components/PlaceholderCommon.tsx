@@ -271,7 +271,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
         }
 
         // if in edit mode then emit shallow chromes for hydration in Pages
-        if (this.props.pageContext?.pageEditing) {
+        if (this.props.pageContext?.mode.isEditing) {
           return (
             <PlaceholderMetadata key={key} rendering={rendering as ComponentRendering}>
               {rendered}
@@ -283,7 +283,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
       })
       .filter((element) => element); // remove nulls
 
-    if (this.props.pageContext?.pageEditing) {
+    if (this.props.pageContext?.mode.isEditing) {
       return [
         <PlaceholderMetadata
           key={(this.props.rendering as ComponentRendering).uid}

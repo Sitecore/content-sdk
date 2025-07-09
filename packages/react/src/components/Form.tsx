@@ -44,7 +44,7 @@ export const Form = ({ params, rendering }: FormProps) => {
   const context = useSitecore();
   const formRef = useRef<HTMLDivElement>(null);
 
-  const isEditing = context.pageContext.pageEditing;
+  const isEditing = context.pageContext.mode.isEditing;
 
   useEffect(() => {
     if (!content) {

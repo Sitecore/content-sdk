@@ -1,5 +1,10 @@
 ﻿import Head from 'next/head';
-import { SitecoreProvider, ErrorPages, SitecorePageProps } from '@sitecore-content-sdk/nextjs';
+import {
+  SitecoreProvider,
+  ErrorPages,
+  SitecorePageProps,
+  LayoutServicePageState,
+} from '@sitecore-content-sdk/nextjs';
 import Layout from 'src/Layout';
 import { GetStaticProps } from 'next';
 import scConfig from 'sitecore.config';
@@ -29,8 +34,13 @@ const Custom500 = (props: SitecorePageProps): JSX.Element => {
   }
 
   return (
-    <SitecoreProvider api={scConfig.api} componentMap={components} layoutData={props.layout}>
-      <Layout layoutData={props.layout} />
+    <SitecoreProvider
+      api={scConfig.api}
+      componentMap={components}
+      layoutData={props.layout}
+      mode={props.mode}
+    >
+      <Layout layoutData={props.layout} mode={props.mode} />
     </SitecoreProvider>
   );
 };
@@ -53,6 +63,10 @@ export const getStaticProps: GetStaticProps = async context => {
   return {
     props: {
       layout: resultErrorPages?.serverErrorPage?.rendered || null,
+      mode: {
+        name: LayoutServicePageState.Normal,
+        isNormal: true,
+      },
     },
   };
 };

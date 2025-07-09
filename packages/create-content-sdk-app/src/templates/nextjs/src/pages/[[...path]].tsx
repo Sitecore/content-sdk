@@ -23,7 +23,7 @@ import components from '.sitecore/component-map';
 import scConfig from 'sitecore.config';
 
 
-const SitecorePage = ({ notFound, componentProps, layout }: SitecorePageProps): JSX.Element => {
+const SitecorePage = ({ notFound, componentProps, layout, mode }: SitecorePageProps): JSX.Element => {
   useEffect(() => {
     // Since Sitecore Editor does not support Fast Refresh, need to refresh editor chromes after Fast Refresh finished
     handleEditorFastRefresh();
@@ -40,8 +40,9 @@ const SitecorePage = ({ notFound, componentProps, layout }: SitecorePageProps): 
         componentMap={components}
         layoutData={layout}
         api={scConfig.api}
+        mode={mode}
       >
-        <Layout layoutData={layout} />
+        <Layout layoutData={layout} mode={mode} />
       </SitecoreProvider>
     </ComponentPropsContext>
   );

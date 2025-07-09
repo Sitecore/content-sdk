@@ -1,5 +1,5 @@
 ﻿import React, { ReactNode, Suspense } from 'react';
-import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { withSitecore } from '../enhancers/withSitecore';
 import { SitecoreProviderPageContext } from './SitecoreProvider';
 
@@ -49,8 +49,8 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   showErrorDetails(): boolean {
     return (
       this.isInDevMode() ||
-      this.props.pageContext?.pageState === LayoutServicePageState.Edit ||
-      this.props.pageContext?.pageState === LayoutServicePageState.Preview
+      this.props.pageContext?.mode.isEditing ||
+      this.props.pageContext?.mode.isPreview
     );
   }
 

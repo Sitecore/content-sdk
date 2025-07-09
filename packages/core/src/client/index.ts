@@ -9,6 +9,6 @@ export {
 export { DefaultRetryStrategy } from '../retries';
 export { RetryStrategy, PageInfo, FetchOptions } from '../models';
 export { getEdgeProxyContentUrl, getEdgeProxyFormsUrl } from './edge-proxy';
-export { SitecoreClient, Page, PageOptions, SitemapXmlOptions } from './sitecore-client';
+export { SitecoreClient, Page, PageOptions, SitemapXmlOptions, PageMode } from './sitecore-client';
 export { SitecoreClientInit } from './models';
 export { createGraphQLClientFactory, GraphQLClientOptions } from './utils';

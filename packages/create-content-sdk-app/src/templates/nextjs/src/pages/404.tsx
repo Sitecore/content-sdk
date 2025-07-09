@@ -1,5 +1,10 @@
 import config from 'sitecore.config';
-import { SitecoreProvider, ErrorPages, SitecorePageProps } from '@sitecore-content-sdk/nextjs';
+import {
+  SitecoreProvider,
+  ErrorPages,
+  SitecorePageProps,
+  LayoutServicePageState,
+} from '@sitecore-content-sdk/nextjs';
 import NotFound from 'src/NotFound';
 import Layout from 'src/Layout';
 import { GetStaticProps } from 'next';
@@ -14,8 +19,13 @@ const Custom404 = (props: SitecorePageProps): JSX.Element => {
   }
 
   return (
-    <SitecoreProvider api={scConfig.api} componentMap={components} layoutData={props.layout}>
-      <Layout layoutData={props.layout} />
+    <SitecoreProvider
+      api={scConfig.api}
+      componentMap={components}
+      layoutData={props.layout}
+      mode={props.mode}
+    >
+      <Layout layoutData={props.layout} mode={props.mode} />
     </SitecoreProvider>
   );
 };
@@ -38,6 +48,10 @@ export const getStaticProps: GetStaticProps = async context => {
   return {
     props: {
       layout: resultErrorPages?.notFoundPage?.rendered || null,
+      mode: {
+        name: LayoutServicePageState.Normal,
+        isNormal: true,
+      },
     },
   };
 };

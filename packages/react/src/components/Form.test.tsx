@@ -4,6 +4,8 @@ import { expect } from 'chai';
 import { SitecoreProvider } from './SitecoreProvider';
 import { Form, mockFormModule } from './Form';
 import sinon from 'sinon';
+import { PageMode } from '@sitecore-content-sdk/core/client';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 
 describe('Form', () => {
   const ctx = {
@@ -29,6 +31,11 @@ describe('Form', () => {
     },
   };
 
+  const mode: PageMode = {
+    name: LayoutServicePageState.Normal,
+    isNormal: true,
+  };
+
   it('renders form using clientContextId when both IDs are present', async () => {
     const loadFormSpy = sinon.spy((edgeId: string, formId: string, edgeUrl?: string) => {
       expect(edgeId).to.equal('client-id');
@@ -48,7 +55,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.normal}>
+      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.normal} mode={mode}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>,
       { container: document.body }
@@ -84,7 +91,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={apiNoClientId} layoutData={ctx.layoutData.normal}>
+      <SitecoreProvider api={apiNoClientId} layoutData={ctx.layoutData.normal} mode={mode}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>
     );
@@ -102,6 +109,11 @@ describe('Form', () => {
     const subscribeSpy = sinon.spy();
     const execSpy = sinon.spy();
 
+    const mode: PageMode = {
+      name: LayoutServicePageState.Edit,
+      isEditing: true,
+    };
+
     mockFormModule({
       loadForm: loadFormSpy,
       subscribeToFormSubmitEvent: subscribeSpy,
@@ -109,7 +121,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing}>
+      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing} mode={mode}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>
     );
@@ -131,7 +143,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.normal}>
+      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.normal} mode={mode}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>
     );
@@ -148,8 +160,13 @@ describe('Form', () => {
       executeScriptElements: sinon.spy(),
     });
 
+    const mode: PageMode = {
+      name: LayoutServicePageState.Edit,
+      isEditing: true,
+    };
+
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing}>
+      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing} mode={mode}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>,
       { container: document.body }
@@ -157,7 +174,7 @@ describe('Form', () => {
 
     await waitFor(() => {
       rendered.rerender(
-        <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing}>
+        <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing} mode={mode}>
           <Form rendering={rendering} params={rendering.params} />
         </SitecoreProvider>
       );

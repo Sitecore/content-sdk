@@ -5,6 +5,7 @@ import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { LayoutServiceContext, LayoutServiceData, RouteData } from '../index';
 import { constants } from '@sitecore-content-sdk/core';
 import { ComponentMap } from './sharedTypes';
+import { PageMode } from '@sitecore-content-sdk/core/client';
 
 export interface SitecoreProviderProps {
   /**
@@ -19,6 +20,10 @@ export interface SitecoreProviderProps {
    * The Sitecore Layout data.
    */
   layoutData?: LayoutServiceData;
+  /**
+   * Page mode
+   */
+  mode: PageMode;
   children: React.ReactNode;
 }
 
@@ -50,6 +55,7 @@ export const ComponentMapReactContext = React.createContext<ComponentMap>(new Ma
 export type SitecoreProviderPageContext = LayoutServiceContext & {
   itemId?: string;
   route?: RouteData;
+  mode: PageMode;
 };
 
 export class SitecoreProvider extends React.Component<
@@ -87,13 +93,14 @@ export class SitecoreProvider extends React.Component<
 
   constructContext(layoutData?: LayoutServiceData): SitecoreProviderPageContext {
     if (!layoutData) {
-      return { pageEditing: false };
+      return { mode: this.props.mode };
     }
 
     return {
       route: layoutData.sitecore.route,
       itemId: layoutData.sitecore.route?.itemId,
       ...layoutData.sitecore.context,
+      mode: this.props.mode,
     };
   }
 
@@ -116,7 +123,7 @@ export class SitecoreProvider extends React.Component<
     this.setState({
       pageContext: value.sitecore
         ? this.constructContext(value as LayoutServiceData)
-        : { ...(value as SitecoreProviderPageContext) },
+        : { ...(value as SitecoreProviderPageContext), mode: this.props.mode },
     });
   };
 

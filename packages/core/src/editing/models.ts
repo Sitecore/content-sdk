@@ -74,6 +74,8 @@ export enum DesignLibraryMode {
   Normal = 'library',
   /** Metadata mode */
   Metadata = 'library-metadata',
+  /** Variant generation mode */
+  VariantGeneration = 'library-variant-generation',
 }
 
 /**

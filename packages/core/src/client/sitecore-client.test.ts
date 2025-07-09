@@ -254,7 +254,7 @@ describe('SitecoreClient', () => {
             name: 'home',
             placeholders: {},
           },
-          context: { site: siteInfo },
+          context: { site: siteInfo, pageState: LayoutServicePageState.Normal },
         },
       };
       layoutServiceStub.fetchLayoutData.returns(layoutData);
@@ -265,6 +265,10 @@ describe('SitecoreClient', () => {
         layout: layoutData,
         siteName: siteInfo.name,
         locale: locale,
+        mode: {
+          name: LayoutServicePageState.Normal,
+          isNormal: true,
+        },
       });
       expect(
         layoutServiceStub.fetchLayoutData.calledWithMatch(path, {
@@ -299,6 +303,10 @@ describe('SitecoreClient', () => {
         layout: layoutData,
         siteName: siteInfo.name,
         locale: locale,
+        mode: {
+          name: LayoutServicePageState.Normal,
+          isNormal: true,
+        },
       });
       expect(
         layoutServiceStub.fetchLayoutData.calledWithMatch(path, {
@@ -546,7 +554,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getPreview', () => {
-    it('should fetch and return preview data correctly', async () => {
+    it('should fetch and return preview data correctly in edit mode', async () => {
       const previewData = {
         site: 'default-site',
         itemId: 'test-item-id',
@@ -575,6 +583,60 @@ describe('SitecoreClient', () => {
         locale: previewData.language,
         layout: editingData.layoutData,
         dictionary: editingData.dictionary,
+        mode: {
+          name: LayoutServicePageState.Edit,
+          isEditing: true,
+          isPreview: false,
+        },
+      });
+
+      expect(editingServiceStub.fetchEditingData.calledOnce).to.be.true;
+      expect(
+        editingServiceStub.fetchEditingData.calledWith({
+          siteName: previewData.site,
+          itemId: previewData.itemId,
+          language: previewData.language,
+          version: previewData.version,
+          layoutKind: previewData.layoutKind,
+          mode: previewData.mode,
+        })
+      ).to.be.true;
+    });
+
+    it('should fetch and return preview data correctly in preview mode', async () => {
+      const previewData = {
+        site: 'default-site',
+        itemId: 'test-item-id',
+        mode: LayoutServicePageState.Preview,
+        language: 'en',
+        version: '1',
+        variantIds: ['variant1', 'comp_variant2'],
+        layoutKind: LayoutKind.Final,
+      };
+
+      const editingData = {
+        layoutData: {
+          sitecore: {
+            route: { name: 'home', placeholders: {} },
+            context: { site: { name: 'default-site' } },
+          },
+        },
+        dictionary: { key1: 'value1', key2: 'value2' },
+      };
+
+      editingServiceStub.fetchEditingData.resolves(editingData);
+
+      const result = await sitecoreClient.getPreview(previewData);
+
+      expect(result).to.deep.include({
+        locale: previewData.language,
+        layout: editingData.layoutData,
+        dictionary: editingData.dictionary,
+        mode: {
+          name: LayoutServicePageState.Preview,
+          isPreview: true,
+          isEditing: false,
+        },
       });
 
       expect(editingServiceStub.fetchEditingData.calledOnce).to.be.true;
@@ -750,6 +812,83 @@ describe('SitecoreClient', () => {
         layout: componentData,
         dictionary: dictionaryData,
         siteName: componentData.sitecore.context.site?.name,
+        mode: {
+          name: DesignLibraryMode.Normal,
+          isDesignLibrary: true,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
+        },
+      });
+
+      expect(
+        editingServiceStub.fetchDictionaryData.calledWithMatch({
+          siteName: componentLibData.site,
+          language: componentLibData.language,
+        })
+      ).to.be.true;
+
+      expect(
+        restComponentServiceStub.fetchComponentData.calledWith({
+          itemId: componentLibData.itemId,
+          componentUid: componentLibData.componentUid,
+          siteName: componentLibData.site,
+          language: componentLibData.language,
+          renderingId: componentLibData.renderingId,
+          dataSourceId: componentLibData.dataSourceId,
+          version: componentLibData.version,
+          mode: componentLibData.mode,
+        })
+      ).to.be.true;
+    });
+
+    it('should fetch component library data', async () => {
+      const componentLibData = {
+        itemId: 'item-id',
+        componentUid: 'comp-uid',
+        site: 'test-site',
+        language: 'en',
+        renderingId: 'rendering-id',
+        dataSourceId: 'datasource-id',
+        version: '1',
+        pageState: LayoutServicePageState.Normal,
+        mode: DesignLibraryMode.VariantGeneration,
+      };
+
+      const componentData = {
+        sitecore: {
+          route: { name: 'home', placeholders: {} },
+          context: {
+            site: {
+              name: 'test-site',
+              hostName: 'example.com',
+              language: 'en',
+            },
+          },
+        },
+      };
+      const dictionaryData = { key: 'value' };
+
+      restComponentServiceStub.fetchComponentData.resolves(componentData);
+
+      editingServiceStub.fetchDictionaryData
+        .withArgs({ siteName: componentLibData.site, language: componentLibData.language })
+        .resolves(dictionaryData);
+
+      const result = await sitecoreClient.getDesignLibraryData(componentLibData);
+
+      expect(result).to.deep.include({
+        locale: componentLibData.language,
+        layout: componentData,
+        dictionary: dictionaryData,
+        siteName: componentData.sitecore.context.site?.name,
+        mode: {
+          name: DesignLibraryMode.VariantGeneration,
+          isDesignLibrary: true,
+          designLibrary: {
+            isVariantGeneration: true,
+          },
+        },
       });
 
       expect(

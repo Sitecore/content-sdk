@@ -63,21 +63,17 @@ export function withSitecore(options?: WithSitecoreOptions) {
 
 /**
  * This hook grants acсess to the current Sitecore page context and api.
- * by default Content SDK includes the following properties in this context:
- * - pageEditing - Provided by Layout Service, a boolean indicating whether the route is being accessed via the Sitecore Editor.
- * - pageState - Like pageEditing, but a string: normal, preview or edit.
- * - site - Provided by Layout Service, an object containing the name of the current Sitecore site context.
  * @param {WithSitecoreOptions} [options] hook options
  * @example
  * const EditMode = () => {
  *    const { pageContext } = useSitecore();
- *    return <span>Edit Mode is {pageContext.pageEditing ? 'active' : 'inactive'}</span>
+ *    return <span>Edit Mode is {pageContext.mode.isEditing ? 'active' : 'inactive'}</span>
  * }
  * @example
  * const EditMode = () => {
  *    const { pageContext, updateContext } = useSitecore({ updatable: true });
- *    const onClick = () => updateContext({ pageEditing: true });
- *    return <span onClick={onClick}>Edit Mode is {pageContext.pageEditing ? 'active' : 'inactive'}</span>
+ *    const onClick = () => updateContext({ itemId: '123' });
+ *    return <span onClick={onClick}>Item id is {pageContext.itemId}</span>
  * }
  * @returns {object} { api, pageContext, updateContext }
  */

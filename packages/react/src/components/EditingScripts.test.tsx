@@ -12,10 +12,17 @@ import { SitecoreProvider } from './SitecoreProvider';
 import {
   getContentSdkPagesClientData,
   getDesignLibraryScriptLink,
+  DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
+import { PageMode } from '@sitecore-content-sdk/core/client';
 
 describe('<EditingScripts />', () => {
   const mockComponentMap = new Map();
+
+  const mode: PageMode = {
+    name: LayoutServicePageState.Edit,
+    isEditing: true,
+  };
 
   const getLayoutData = ({
     pageState,
@@ -66,25 +73,13 @@ describe('<EditingScripts />', () => {
       pageEditing: false,
     });
 
-    const component = render(
-      <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
-        <EditingScripts />
-      </SitecoreProvider>,
-      { container: document.body }
-    );
-
-    expect(component.baseElement.innerHTML).to.be.empty;
-    expect(component.container.querySelectorAll('script')).to.have.length(0);
-  });
-
-  it('should render nothing when pageState is undefined', () => {
-    const layoutData = getLayoutData({
-      pageState: undefined,
-      pageEditing: false,
-    });
+    const mode: PageMode = {
+      name: LayoutServicePageState.Normal,
+      isNormal: true,
+    };
 
     const component = render(
-      <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
+      <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData} mode={mode}>
         <EditingScripts />
       </SitecoreProvider>,
       { container: document.body }
@@ -102,7 +97,7 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData} mode={mode}>
           <EditingScripts />
         </SitecoreProvider>
       );
@@ -142,7 +137,7 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData} mode={mode}>
           <EditingScripts />
         </SitecoreProvider>
       );
@@ -157,6 +152,11 @@ describe('<EditingScripts />', () => {
   });
 
   describe('Design Library scripts', () => {
+    const mode: PageMode = {
+      name: DesignLibraryMode.Normal,
+      isDesignLibrary: true,
+    };
+
     it('should render Design Library script when rendering type is component', () => {
       const layoutData = getLayoutData({
         pageEditing: false,
@@ -167,7 +167,7 @@ describe('<EditingScripts />', () => {
       });
 
       const component = render(
-        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData} mode={mode}>
           <EditingScripts />
         </SitecoreProvider>
       );
@@ -194,6 +194,7 @@ describe('<EditingScripts />', () => {
           componentMap={mockComponentMap}
           layoutData={layoutData}
           api={{ edge: { edgeUrl: stagingEdgeUrl, contextId: 'id' } }}
+          mode={mode}
         >
           <EditingScripts />
         </SitecoreProvider>

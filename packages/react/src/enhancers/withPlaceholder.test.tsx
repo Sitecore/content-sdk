@@ -4,6 +4,8 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
+import { PageMode } from '@sitecore-content-sdk/core/client';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { convertedDevData as normalModeDevData } from '../test-data/normal-mode-data';
 import * as metadataData from '../test-data/metadata-data';
 import { withPlaceholder } from '../enhancers/withPlaceholder';
@@ -76,6 +78,8 @@ componentMap.set(
 const testData = [{ label: 'Dev data', data: normalModeDevData }];
 
 describe('withPlaceholder HOC', () => {
+  const mode: PageMode = { name: LayoutServicePageState.Normal, isEditing: false };
+
   describe('Error handling', () => {
     before(() => {
       // Set to development mode to show error details
@@ -93,6 +97,7 @@ describe('withPlaceholder HOC', () => {
         <SitecoreProvider
           layoutData={(normalModeDevData as unknown) as LayoutServiceData}
           componentMap={componentMap}
+          mode={mode}
         >
           <Element {...props} />
         </SitecoreProvider>
@@ -114,6 +119,7 @@ describe('withPlaceholder HOC', () => {
         <SitecoreProvider
           layoutData={(normalModeDevData as unknown) as LayoutServiceData}
           componentMap={componentMap}
+          mode={mode}
         >
           <Element {...props} />
         </SitecoreProvider>
@@ -133,7 +139,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={normalModeDevData} componentMap={componentMap}>
+        <SitecoreProvider layoutData={normalModeDevData} componentMap={componentMap} mode={mode}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -164,7 +170,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={normalModeDevData} componentMap={componentMap}>
+        <SitecoreProvider layoutData={normalModeDevData} componentMap={componentMap} mode={mode}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -197,6 +203,7 @@ describe('withPlaceholder HOC', () => {
           <SitecoreProvider
             layoutData={dataSet.data as LayoutServiceData}
             componentMap={componentMap}
+            mode={mode}
           >
             <Element {...props} />
           </SitecoreProvider>
@@ -224,6 +231,7 @@ describe('withPlaceholder HOC', () => {
           <SitecoreProvider
             layoutData={dataSet.data as LayoutServiceData}
             componentMap={componentMap}
+            mode={mode}
           >
             <Element {...props} />
           </SitecoreProvider>
@@ -257,6 +265,7 @@ describe('withPlaceholder HOC', () => {
           <SitecoreProvider
             layoutData={dataSet.data as LayoutServiceData}
             componentMap={componentMap}
+            mode={mode}
           >
             <Element {...props} />
           </SitecoreProvider>
@@ -270,6 +279,10 @@ describe('withPlaceholder HOC', () => {
   });
 
   describe('Metadata Mode', () => {
+    const mode: PageMode = {
+      name: LayoutServicePageState.Edit,
+      isEditing: true,
+    };
     const {
       layoutData,
       layoutDataWithEmptyPlaceholder,
@@ -298,7 +311,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutData} componentMap={componentMap}>
+        <SitecoreProvider layoutData={layoutData} componentMap={componentMap} mode={mode}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -334,7 +347,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKeyAndProp)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutData} componentMap={componentMap}>
+        <SitecoreProvider layoutData={layoutData} componentMap={componentMap} mode={mode}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -367,7 +380,11 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutDataWithEmptyPlaceholder} componentMap={componentMap}>
+        <SitecoreProvider
+          layoutData={layoutDataWithEmptyPlaceholder}
+          componentMap={componentMap}
+          mode={mode}
+        >
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -391,7 +408,11 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutDataWithUnknownComponent} componentMap={componentMap}>
+        <SitecoreProvider
+          layoutData={layoutDataWithUnknownComponent}
+          componentMap={componentMap}
+          mode={mode}
+        >
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -419,7 +440,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutData} componentMap={componentMap}>
+        <SitecoreProvider layoutData={layoutData} componentMap={componentMap} mode={mode}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -452,7 +473,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutData} componentMap={componentMap}>
+        <SitecoreProvider layoutData={layoutData} componentMap={componentMap} mode={mode}>
           <Element {...props} />
         </SitecoreProvider>
       );
