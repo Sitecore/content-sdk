@@ -16,6 +16,22 @@ import {
   TaxonomyQueryResponse,
   TaxonomiesQueryResponse,
 } from './taxonomies';
+import {
+  paginateAll,
+  paginateAllWithNested,
+  paginateAllWithConditionalNested,
+  PaginationOptions,
+  PaginationArgs,
+  PaginatedResponse,
+  NestedPaginationOptions,
+} from './pagination';
+import {
+  executeDynamicPagination,
+  simpleDynamicPagination,
+  autoDetectPagination,
+  DynamicPaginationConfig,
+  DynamicPaginationResult,
+} from './dynamic-pagination';
 
 /**
  * Interface representing the options for the ContentClient.
@@ -133,7 +149,28 @@ export class ContentClient {
     debug.content('Getting all locales');
 
     const response = await this.get<LocalesQueryResponse>(GET_LOCALES_QUERY);
-    return response?.manyLocale?.map((entry) => entry.system) ?? [];
+    return response?.manyLocale?.results?.map((entry) => entry.system) ?? [];
+  }
+
+  /**
+   * Retrieves all available locales using pagination utility.
+   * This method automatically fetches all pages and returns all locales.
+   * @param {PaginationOptions} [options] - Optional pagination options.
+   * @returns A promise that resolves to an array of all locales.
+   */
+  async getAllLocales(options?: PaginationOptions) {
+    debug.content('Getting all locales with pagination');
+
+    const fetchLocales = async (args: PaginationArgs): Promise<PaginatedResponse<any>> => {
+      const response = await this.get<LocalesQueryResponse>(GET_LOCALES_QUERY, {
+        pageSize: args.pageSize,
+        after: args.after,
+      });
+      return response.manyLocale;
+    };
+
+    const allLocales = await paginateAll(fetchLocales, options);
+    return allLocales.map((entry: any) => entry.system);
   }
 
   /**
@@ -166,6 +203,30 @@ export class ContentClient {
       cursor: data?.cursor,
       hasMore: data?.hasMore ?? false,
     };
+  }
+
+  /**
+   * Retrieves all available taxonomies using pagination utility.
+   * This method automatically fetches all pages and returns all taxonomies.
+   * @param {PaginationOptions} [options] - Optional pagination options.
+   * @returns A promise that resolves to an array of all taxonomies with their terms.
+   */
+  async getAllTaxonomies(options?: PaginationOptions) {
+    debug.content('Getting all taxonomies with pagination');
+
+    const fetchTaxonomies = async (args: PaginationArgs): Promise<PaginatedResponse<any>> => {
+      const response = await this.get<TaxonomiesQueryResponse>(GET_TAXONOMIES_QUERY, {
+        pageSize: args.pageSize,
+        after: args.after,
+      });
+      return response.manyTaxonomy;
+    };
+
+    const allTaxonomies = await paginateAll(fetchTaxonomies, options);
+    return allTaxonomies.map((taxonomy: any) => ({
+      system: taxonomy.system,
+      terms: taxonomy.terms?.results ?? [],
+    }));
   }
 
   /**
@@ -213,5 +274,213 @@ export class ContentClient {
         hasMore: taxonomy.terms?.hasMore ?? false,
       },
     };
+  }
+
+  /**
+   * Retrieves a taxonomy by its ID with all terms using pagination utility.
+   * This method automatically fetches all pages of terms and returns the complete taxonomy.
+   * @param {object} options - Options for fetching the taxonomy.
+   * @param {string} options.id - The unique identifier of the taxonomy.
+   * @param {PaginationOptions} [options.termsOptions] - Optional pagination options for terms.
+   * @returns A promise that resolves to the taxonomy object with all terms. Returns `null` if the taxonomy is not found.
+   */
+  async getTaxonomyWithAllTerms({
+    id,
+    termsOptions,
+  }: {
+    id: string;
+    termsOptions?: PaginationOptions;
+  }): Promise<Taxonomy | null> {
+    debug.content('Getting taxonomy with all terms for id: %s', id);
+
+    // First, get the taxonomy structure
+    const taxonomy = await this.getTaxonomy({ id });
+    if (!taxonomy) return null;
+
+    // If the taxonomy has terms with pagination, fetch all terms
+    if (taxonomy.terms.hasMore) {
+      const fetchTerms = async (args: PaginationArgs): Promise<PaginatedResponse<any>> => {
+        const response = await this.get<TaxonomyQueryResponse>(GET_TAXONOMY_QUERY, {
+          id,
+          termsPageSize: args.pageSize,
+          termsAfter: args.after,
+        });
+        return {
+          results: response.taxonomy.terms.results,
+          cursor: response.taxonomy.terms.cursor || undefined,
+          hasMore: response.taxonomy.terms.hasMore,
+        };
+      };
+
+      const allTerms = await paginateAll(fetchTerms, termsOptions);
+
+      return {
+        system: taxonomy.system,
+        terms: {
+          results: allTerms as any,
+          cursor: undefined,
+          hasMore: false,
+        },
+      };
+    }
+
+    return taxonomy;
+  }
+
+  /**
+   * Retrieves all taxonomies with all their terms using nested pagination.
+   * This method demonstrates how to handle nested pagination scenarios.
+   * @param {NestedPaginationOptions} [options] - Optional pagination options for both taxonomies and terms.
+   * @returns A promise that resolves to an array of taxonomies with all their terms.
+   */
+  async getAllTaxonomiesWithAllTerms(options?: NestedPaginationOptions) {
+    debug.content('Getting all taxonomies with all terms using nested pagination');
+
+    const fetchTaxonomies = async (args: PaginationArgs): Promise<PaginatedResponse<any>> => {
+      const response = await this.get<TaxonomiesQueryResponse>(GET_TAXONOMIES_QUERY, {
+        pageSize: args.pageSize,
+        after: args.after,
+      });
+      return response.manyTaxonomy;
+    };
+
+    const fetchTermsForTaxonomy = async (taxonomy: any) => {
+      const taxonomyWithTerms = await this.getTaxonomyWithAllTerms({
+        id: taxonomy.system.id,
+        termsOptions: options?.nested,
+      });
+      return taxonomyWithTerms?.terms.results || [];
+    };
+
+    return paginateAllWithNested(fetchTaxonomies, fetchTermsForTaxonomy, options);
+  }
+
+  /**
+   * Retrieves all taxonomies with conditional nested pagination.
+   * This method demonstrates how to fetch nested items only for specific parent items.
+   * @param {object} options - Options for conditional nested pagination.
+   * @param {PaginationOptions} [options.pagination] - Pagination options for taxonomies.
+   * @param {function} [options.shouldFetchTerms] - Predicate to determine if terms should be fetched for a taxonomy.
+   * @returns A promise that resolves to an array of taxonomies with terms (if applicable).
+   */
+  async getAllTaxonomiesWithConditionalTerms(options?: {
+    pagination?: PaginationOptions;
+    shouldFetchTerms?: (taxonomy: any) => boolean;
+  }) {
+    debug.content('Getting all taxonomies with conditional terms pagination');
+
+    const fetchTaxonomies = async (args: PaginationArgs): Promise<PaginatedResponse<any>> => {
+      const response = await this.get<TaxonomiesQueryResponse>(GET_TAXONOMIES_QUERY, {
+        pageSize: args.pageSize,
+        after: args.after,
+      });
+      return response.manyTaxonomy;
+    };
+
+    const fetchTermsForTaxonomy = async (taxonomy: any) => {
+      const taxonomyWithTerms = await this.getTaxonomyWithAllTerms({
+        id: taxonomy.system.id,
+      });
+      return taxonomyWithTerms?.terms.results || [];
+    };
+
+    const shouldFetchTerms = options?.shouldFetchTerms || ((taxonomy: any) => taxonomy.terms.results.length > 10);
+
+    return paginateAllWithConditionalNested(
+      fetchTaxonomies,
+      shouldFetchTerms,
+      fetchTermsForTaxonomy,
+      options?.pagination,
+    );
+  }
+
+  /**
+   * Execute dynamic pagination for any GraphQL query.
+   * This method allows you to paginate through any query that returns paginated results.
+   * 
+   * @param config - Configuration for the dynamic pagination
+   * @returns Promise that resolves to paginated results with metadata
+   * 
+   * @example
+   * ```typescript
+   * // Simple dynamic pagination
+   * const result = await client.executeDynamicPagination({
+   *   query: `
+   *     query GetProducts($pageSize: Int, $after: String) {
+   *       manyProduct(minimumPageSize: $pageSize, after: $after) {
+   *         results { id name price }
+   *         cursor hasMore
+   *       }
+   *     }
+   *   `,
+   *   paginatedFieldPath: 'manyProduct',
+   *   pagination: { pageSize: 50 }
+   * });
+   * 
+   * console.log(`Fetched ${result.totalItems} items in ${result.totalPages} pages`);
+   * console.log(`API calls: ${result.metadata.apiCalls}, Duration: ${result.metadata.duration}ms`);
+   * ```
+   */
+  async executeDynamicPagination<T = any>(config: DynamicPaginationConfig): Promise<DynamicPaginationResult<T>> {
+    return executeDynamicPagination(this, config);
+  }
+
+  /**
+   * Simplified dynamic pagination for common use cases.
+   * Returns just the items array without metadata.
+   * 
+   * @param query - The GraphQL query string
+   * @param fieldPath - Path to the paginated field
+   * @param options - Pagination options
+   * @returns Promise that resolves to array of items
+   * 
+   * @example
+   * ```typescript
+   * const products = await client.simpleDynamicPagination(
+   *   `query GetProducts($pageSize: Int, $after: String) {
+   *     manyProduct(minimumPageSize: $pageSize, after: $after) {
+   *       results { id name }
+   *       cursor hasMore
+   *     }
+   *   }`,
+   *   'manyProduct',
+   *   { pageSize: 50 }
+   * );
+   * ```
+   */
+  async simpleDynamicPagination<T = any>(
+    query: string,
+    fieldPath: string,
+    options: { pageSize?: number; maxPages?: number } = {}
+  ): Promise<T[]> {
+    return simpleDynamicPagination(this, query, fieldPath, options);
+  }
+
+  /**
+   * Auto-detect pagination for any GraphQL query.
+   * This method automatically finds paginated fields in the response and paginates through them.
+   * 
+   * @param query - The GraphQL query string
+   * @param variables - Query variables
+   * @param options - Pagination options
+   * @returns Promise that resolves to paginated results
+   * 
+   * @example
+   * ```typescript
+   * // Auto-detect pagination - useful for exploratory queries
+   * const result = await client.autoDetectPagination(
+   *   `query GetData {
+   *     manyProduct { results { id name } cursor hasMore }
+   *     manyCategory { results { id name } cursor hasMore }
+   *   }`
+   * );
+   * ```
+   */
+  async autoDetectPagination<T = any>(
+    query: string,
+    variables: Record<string, any> = {},
+    options: { pageSize?: number; maxPages?: number } = {}
+  ): Promise<DynamicPaginationResult<T>> {
+    return autoDetectPagination(this, query, variables, options);
   }
 }

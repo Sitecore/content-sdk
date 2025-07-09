@@ -26,7 +26,11 @@ export interface LocaleQueryResponse {
  * Represents the response structure for a query that retrieves multiple locales.
  */
 export interface LocalesQueryResponse {
-  manyLocale: LocaleItem[];
+  manyLocale: {
+    results: LocaleItem[];
+    cursor?: string;
+    hasMore: boolean;
+  };
 }
 
 /**
@@ -50,12 +54,14 @@ export const GET_LOCALE_QUERY = `
  * GraphQL query to retrieve all available locales.
  */
 export const GET_LOCALES_QUERY = `
-  query GetAllLocales {
-    manyLocale {
+  query GetAllLocales($pageSize: Int, $after: String) {
+    manyLocale(minimumPageSize: $pageSize, after: $after) {
       system {
         id
         label
       }
+      cursor
+      hasMore
     }
   }
 `;
