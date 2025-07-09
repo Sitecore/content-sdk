@@ -1,23 +1,39 @@
 import * as ts from 'typescript';
 import path from 'path';
-import { getFilesList } from './component-utils';
 import fs from 'fs';
+import { debug } from '@sitecore-content-sdk/core';
+import { getComponentList } from '@sitecore-content-sdk/core/tools';
+import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
+import { xmCloudDeploy } from './utils';
 
 export type ImportMapEntry = {
   module: string;
   imports: string[];
 };
 
-export type GetImportMapArgs = {
+/**
+ * Args for import map generation
+ * Specifies paths to include and exclude when generating imports
+ */
+export type WriteImportMapArgs = {
   paths: string[];
   exclude?: string[];
 };
 
+/**
+ * Import names definition
+ * @typedef ImportWithAlias
+ * @property {string} importName - the original name of the import
+ * @property {string} [alias] - alias for the import
+ */
 export type ImportWithAlias = {
   importName: string;
   alias?: string;
 };
 
+/**
+ * Import module definition, specifying all the imports for a given import path
+ */
 export type ImportModule = {
   // import { import1, import2 as imp3 }
   namedImports: Map<string, ImportWithAlias>;
@@ -25,11 +41,16 @@ export type ImportModule = {
   defaultImports: Map<string, ImportWithAlias>;
 };
 
+/**
+ * Gets an import string and outputs import info with aliases, if present
+ * @param {string} importString import definition string
+ * @returns {ImportWithAlias | ImportWithAlias[]} object(s) with import and alias names
+ */
 export const parseImportString = (
   importString: string
 ): ImportWithAlias | ImportWithAlias[] | null => {
   const namedImport = /\{.*\}/g;
-  const aliasImport = /^\s*([a-zA-Z0-9]+|\*)\s*as (.+)\s*$/g;
+  const aliasImport = /^\s*([a-zA-Z0-9]+|\*) as (.+)\s*$/g;
   const regularImport = /^\s*[a-zA-Z0-9]+\s*$/g;
 
   if (namedImport.test(importString)) {
@@ -40,11 +61,10 @@ export const parseImportString = (
       .split(',')
       .reduce<ImportWithAlias[]>((acc, value) => {
         const maybeAlias = aliasImport.exec(value);
-        console.log(maybeAlias);
         if (maybeAlias) {
           acc.push({
-            importName: maybeAlias[2].trim(),
-            alias: maybeAlias[1].trim(),
+            importName: maybeAlias[1].trim(),
+            alias: maybeAlias[2].trim(),
           });
         } else {
           acc.push({
@@ -70,12 +90,23 @@ export const parseImportString = (
   return null;
 };
 
+/**
+ * Converts a module import path from an import statement to a path relative to .sitecore folder, where import-map will be
+ * @param {string} fullModulePath absolute path to imported module
+ * @param {string} appPath absolute path to app root
+ * @returns {string} path relative to {approot}/.sitecore
+ */
 export const resolveLocalModulePath = (fullModulePath: string, appPath?: string) => {
   appPath = appPath || process.cwd();
   // account for imports being done from .sitecore folder
   return `../${path.relative(appPath, fullModulePath).replace(/\\/g, '/')}`;
 };
 
+/**
+ * Gets a Map object with import modules and their respective exports present throughout the paths specified
+ * @param {string} paths paths to files to be processed for import-map
+ * @returns {Map<string, ImportModule>} collection of keys and values, where keys refer to modules being processed and values are collections of exports for each module
+ */
 export const getImportMap = (paths: string[]) => {
   const appPath = process.cwd();
   const tsConfig = ts.readConfigFile(path.resolve(appPath, 'tsconfig.json'), ts.sys.readFile);
@@ -106,7 +137,7 @@ export const getImportMap = (paths: string[]) => {
 
     if (!tsCodeSource) throw ReferenceError(`Failed to find file ${codeFileFullPath}`);
 
-    // Get rid of type imports and unused imports by compling to JS
+    // Get rid of types and unused imports by compling to JS
     const jsCode = ts.transpileModule(tsCodeSource.getFullText(), {
       compilerOptions: cliCompilerOptions,
     });
@@ -122,10 +153,6 @@ export const getImportMap = (paths: string[]) => {
         const imports = parseImportString(childNode.importClause.getText());
         // import path is extracted
         const moduleName = childNode.moduleSpecifier.getText().replace(/['"]/g, '');
-        // unless the import is a nodeJS one, or points to dependency package, resolve full path to the imported source file
-        if (moduleName.startsWith('node:') || moduleName.indexOf('/node_modules') > -1) {
-          return;
-        }
         const resolvedModule = ts.nodeModuleNameResolver(
           moduleName,
           codeFileFullPath,
@@ -165,12 +192,27 @@ export const getImportMap = (paths: string[]) => {
   return importMapRecord;
 };
 
-export const writeImportMap = (args: GetImportMapArgs) => {
+/**
+ * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
+ * @param {WriteImportMapArgs} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration
+ * @param {SitecoreConfig} scConfig Sitecore configuration from sitecore.config.ts
+ */
+export const writeImportMap = (args: WriteImportMapArgs, scConfig: SitecoreConfig) => {
   return async () => {
-    const paths = getFilesList(args.paths, args.exclude);
+    if (scConfig.disableCodeGeneration) {
+      debug.common('Skipping import map generation. Code generation functionality is disabled.');
+      return;
+    }
+    if (!xmCloudDeploy) {
+      debug.common('Skipping import map generation. Not in XMCloud deploy context.');
+      return;
+    }
+    const paths = getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
     const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
     console.log(
-      `Generating import map for paths: ${paths.join(', ')}. Writing into ${importMapFile}`
+      `Generating import map for paths: ${JSON.stringify(
+        args
+      )}.\n Writing into ${importMapFile} ...`
     );
     const importMap = getImportMap(paths);
     const importMapContent = nextJsMapTemplate(importMap);
@@ -185,6 +227,11 @@ export const writeImportMap = (args: GetImportMapArgs) => {
   };
 };
 
+/**
+ * Builds file contents for component map based on the default template
+ * @param {Map<string, ImportModule>} importMap map to be processed into final component-map.ts file
+ * @returns {string} file code for component-map.ts
+ */
 export const nextJsMapTemplate = (importMap: Map<string, ImportModule>) => {
   const getSingleImport = (importObj: ImportWithAlias) => {
     const { alias, importName } = importObj;

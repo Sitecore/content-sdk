@@ -6,22 +6,21 @@ import { generateMap } from './generate-map';
 import fs from 'fs';
 import { ComponentImport } from '@sitecore-content-sdk/core/tools';
 import * as coreTools from '@sitecore-content-sdk/core/tools';
-import { ComponentFile } from '@sitecore-content-sdk/core/src/tools';
 
 describe('generateMap', () => {
   const sandbox = sinon.createSandbox();
 
   describe('generateMap', () => {
-    const fakeComponentList: ComponentFile[] = [
+    const fakeComponentList = [
       {
         componentName: 'Button',
         moduleName: 'Button',
-        path: './src/components/Button',
+        importPath: './src/components/Button',
       },
       {
         componentName: 'Link',
         moduleName: 'Link',
-        path: './src/components/Link',
+        importPath: './src/components/Link',
       },
     ];
 
@@ -124,12 +123,12 @@ describe('generateMap', () => {
         {
           componentName: 'Button',
           moduleName: 'Button',
-          path: './src/components/Button',
+          importPath: './src/components/Button',
         },
         {
           componentName: 'Card',
           moduleName: 'Card',
-          path: './src/other-components/Card',
+          importPath: './src/other-components/Card',
         },
       ]);
       generateMap({ paths });
