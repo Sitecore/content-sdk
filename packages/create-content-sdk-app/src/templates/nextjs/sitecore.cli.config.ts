@@ -14,7 +14,9 @@ export default defineCliConfig({
       }),
       writeImportMap({
         paths: ['src/components'],
-      }),
+      },
+      config
+      ),
     ],
   },
   componentMap: {
