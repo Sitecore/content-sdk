@@ -14,3 +14,4 @@ export {
 export { generateMap } from './generate-map';
 export { extractFiles } from './codegen/extract-files';
 export { writeImportMap } from './codegen/import-map';
+export { defaultImportEntries } from './codegen/default-import-map';

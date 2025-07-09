@@ -5,10 +5,32 @@ import { debug } from '@sitecore-content-sdk/core';
 import { getComponentList } from '@sitecore-content-sdk/core/tools';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { xmCloudDeploy } from './utils';
+import { defaultImportEntries, ImportEntry } from './default-import-map';
 
+let _defaultImportEntries = defaultImportEntries;
+let _getComponentList = getComponentList;
+
+export const unitMocks = ({
+  mockDefaultImportEntries,
+  getComponentListStub,
+}: {
+  mockDefaultImportEntries?: ImportEntry[];
+  getComponentListStub?: typeof getComponentList;
+}) => {
+  mockDefaultImportEntries && (_defaultImportEntries = mockDefaultImportEntries);
+  getComponentListStub && (_getComponentList = getComponentListStub);
+};
+
+/**
+ * Type describing import map entry in final file
+ * Represents structure i.e.
+ * {module: '/import-path',
+ * exports: [{ name: 'myName1', value: myName1 },..]}
+ * Note that string name and implementation (value) name would be the same
+ */
 export type ImportMapEntry = {
   module: string;
-  imports: string[];
+  exports: string[];
 };
 
 /**
@@ -34,17 +56,17 @@ export type ImportWithAlias = {
 /**
  * Import module definition, specifying all the imports for a given import path
  */
-export type ImportModule = {
+export type ModuleExports = {
   // import { import1, import2 as imp3 }
-  namedImports: Map<string, ImportWithAlias>;
+  namedExports: Map<string, string>;
   // import coolName or import * as coolName or import coolName as coolerName
-  defaultImports: Map<string, ImportWithAlias>;
+  defaultExports: Map<string, string>;
 };
 
 /**
  * Gets an import string and outputs import info with aliases, if present
  * @param {string} importString import definition string
- * @returns {ImportWithAlias | ImportWithAlias[]} object(s) with import and alias names
+ * @returns {Set<string,string>[]} object(s) with definition name (alias or import) and actual import
  */
 export const parseImportString = (
   importString: string
@@ -108,39 +130,42 @@ export const resolveLocalModulePath = (fullModulePath: string, appPath?: string)
  * @returns {Map<string, ImportModule>} collection of keys and values, where keys refer to modules being processed and values are collections of exports for each module
  */
 export const getImportMap = (paths: string[]) => {
+  // make preparations for handling ts/js files
   const appPath = process.cwd();
   const tsConfig = ts.readConfigFile(path.resolve(appPath, 'tsconfig.json'), ts.sys.readFile);
+  const cliCompilerOptions = {
+    ...tsConfig.config.compilerOptions,
+    baseUrl: appPath,
+    allowJs: true,
+    target: ts.ScriptTarget.ESNext,
+  };
+  const tsHost = ts.createCompilerHost(cliCompilerOptions, true);
+
   if (tsConfig.error) {
     throw new Error(`Error reading tsconfig.json from JSS app root: ${tsConfig.error.messageText}`);
   }
 
-  // store unique import paths and their imports
-  const importMapRecord: Map<string, ImportModule> = new Map();
+  // we are parsing import statements (import { imports } frim 'import path')
+  // we will store and aggregate unique import paths and their imports here
+  const importMapRecord: Map<string, ModuleExports> = new Map();
 
   paths.forEach((codeFilePath) => {
     const codeFileFullPath = path.isAbsolute(codeFilePath)
       ? codeFilePath
       : path.resolve(appPath, codeFilePath);
 
-    const cliCompilerOptions = {
-      ...tsConfig.config.compilerOptions,
-      baseUrl: appPath,
-      allowJs: true,
-      target: ts.ScriptTarget.ESNext,
-    };
-
-    const tsHost = ts.createCompilerHost(cliCompilerOptions, true);
-
+    // attempt to parse current file to extract imports from
     const tsCodeSource = tsHost.getSourceFile(codeFileFullPath, ts.ScriptTarget.Latest, (msg) => {
       throw new Error(`Failed to parse ${codeFileFullPath}: ${msg}`);
     });
 
     if (!tsCodeSource) throw ReferenceError(`Failed to find file ${codeFileFullPath}`);
 
-    // Get rid of types and unused imports by compling to JS
+    // By transpiling the code from current file to JS we get rid of unused imports and the type imports
     const jsCode = ts.transpileModule(tsCodeSource.getFullText(), {
       compilerOptions: cliCompilerOptions,
     });
+    // despite the name, ts.createSourceFile only creates SourceFile instance in runtime. Go figure ¯\_(ツ)_/¯
     const jsCodeSource = ts.createSourceFile(
       'code.js',
       jsCode.outputText,
@@ -148,6 +173,7 @@ export const getImportMap = (paths: string[]) => {
       true
     );
 
+    // finally, we parse the final, parsed js code and process import statements
     ts.forEachChild(jsCodeSource, (childNode) => {
       if (ts.isImportDeclaration(childNode) && childNode.importClause) {
         const imports = parseImportString(childNode.importClause.getText());
@@ -159,28 +185,32 @@ export const getImportMap = (paths: string[]) => {
           cliCompilerOptions,
           tsHost
         );
+        // get import path and check if its import target exists
         const resolvedFile = resolvedModule?.resolvedModule?.resolvedFileName;
-        // module imports will be resolved to /node_modules location - we don't support that yet
         if (resolvedFile && imports) {
+          // if import path points to a file in local app - process import path to the file (i.e. ./myComponent)
+          // if it points to node_modules or a file in monorepo - parse import path as dependency module name (i.e. React)
           const localModuleName =
             resolvedFile.indexOf('node_modules') > -1 || resolvedFile.endsWith('.d.ts')
               ? moduleName
               : resolveLocalModulePath(resolvedFile, appPath);
+          // Set module import info in the map. If module import exists - add entries to existing entry
+          // Otherwise, add new entry
           if (!importMapRecord.has(localModuleName)) {
             importMapRecord.set(localModuleName, {
-              namedImports: new Map(),
-              defaultImports: new Map(),
+              namedExports: new Map(),
+              defaultExports: new Map(),
             });
           }
-          // named imports are array, default are not
+          // named imports in import statements have many values, default imports do not
           if (Array.isArray(imports)) {
             imports.forEach((value) => {
               const importKey = value.alias || value.importName;
-              importMapRecord.get(localModuleName)!.namedImports.set(importKey, value);
+              importMapRecord.get(localModuleName)!.namedExports.set(importKey, value.importName);
             });
           } else {
             const importKey = imports.alias || imports.importName;
-            importMapRecord.get(localModuleName)!.defaultImports.set(importKey, imports);
+            importMapRecord.get(localModuleName)!.defaultExports.set(importKey, imports.importName);
           }
         } else {
           console.warn('Could not resolve a file for import %s', moduleName);
@@ -203,18 +233,50 @@ export const writeImportMap = (args: WriteImportMapArgs, scConfig: SitecoreConfi
       debug.common('Skipping import map generation. Code generation functionality is disabled.');
       return;
     }
-    if (!xmCloudDeploy) {
+    if (!xmCloudDeploy()) {
       debug.common('Skipping import map generation. Not in XMCloud deploy context.');
       return;
     }
-    const paths = getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
+    const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
     const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
     console.log(
       `Generating import map for paths: ${JSON.stringify(
         args
       )}.\n Writing into ${importMapFile} ...`
     );
+    // get generated map and combine with default one
     const importMap = getImportMap(paths);
+
+    // populate values from defauly map, if not present already
+    _defaultImportEntries.forEach((defaultMapEntry) => {
+      let maybeModuleExportsList = importMap.get(defaultMapEntry.module);
+
+      if (!maybeModuleExportsList) {
+        maybeModuleExportsList = {
+          namedExports: new Map(),
+          defaultExports: new Map(),
+        };
+        importMap.set(defaultMapEntry.module, maybeModuleExportsList);
+      }
+      // if module entry from default map is already present
+      defaultMapEntry.exports.forEach((defaultMapExportEntry) => {
+        // if default export (import React from React)
+        if (
+          defaultMapExportEntry.name.toLowerCase() === defaultMapEntry.module.toLowerCase() &&
+          !maybeModuleExportsList.defaultExports.has(defaultMapExportEntry.name)
+        ) {
+          maybeModuleExportsList.defaultExports.set(
+            defaultMapExportEntry.name,
+            defaultMapExportEntry.name
+          );
+        } else if (!maybeModuleExportsList.namedExports.has(defaultMapExportEntry.name)) {
+          maybeModuleExportsList.namedExports.set(
+            defaultMapExportEntry.name,
+            defaultMapExportEntry.name
+          );
+        }
+      });
+    });
     const importMapContent = nextJsMapTemplate(importMap);
     try {
       fs.writeFileSync(importMapFile, importMapContent, {
@@ -232,16 +294,15 @@ export const writeImportMap = (args: WriteImportMapArgs, scConfig: SitecoreConfi
  * @param {Map<string, ImportModule>} importMap map to be processed into final component-map.ts file
  * @returns {string} file code for component-map.ts
  */
-export const nextJsMapTemplate = (importMap: Map<string, ImportModule>) => {
-  const getSingleImport = (importObj: ImportWithAlias) => {
-    const { alias, importName } = importObj;
-    return alias ? `${importName} as ${alias}` : importName;
+export const nextJsMapTemplate = (importMap: Map<string, ModuleExports>) => {
+  const getSingleImport = (exportAlias: string, exportName: string) => {
+    return exportAlias !== exportName ? `${exportName} as ${exportAlias}` : exportName;
   };
 
-  const convertNamedImports = (namedImports: Map<string, ImportWithAlias>) => {
+  const convertNamedImports = (namedImports: Map<string, string>) => {
     return Array.from(namedImports)
-      .map(([_, importDef]) => {
-        return getSingleImport(importDef);
+      .map(([exportAlias, exportName]) => {
+        return getSingleImport(exportAlias, exportName);
       })
       .join(', ');
   };
@@ -251,29 +312,31 @@ export const nextJsMapTemplate = (importMap: Map<string, ImportModule>) => {
 
   // build import statements first
   for (const [modulePath, imports] of importMapArray) {
-    if (imports.namedImports.size > 0) {
+    if (imports.namedExports.size > 0) {
       importStatements.push(
-        `import { ${convertNamedImports(imports.namedImports)} } from '${modulePath}';`
+        `import { ${convertNamedImports(imports.namedExports)} } from '${modulePath}';`
       );
     }
-    if (imports.defaultImports.size > 0) {
-      imports.defaultImports.forEach((importEntry) => {
-        importStatements.push(`import ${getSingleImport(importEntry)} from '${modulePath}';`);
+    if (imports.defaultExports.size > 0) {
+      Array.from(imports.defaultExports).forEach(([exportAlias, exportName]) => {
+        importStatements.push(
+          `import ${getSingleImport(exportAlias, exportName)} from '${modulePath}';`
+        );
       });
     }
   }
 
   // get import map entries after
   const finalImportMap: ImportMapEntry[] = importMapArray.map(([modulePath, imports]) => {
-    const defaultImports = Array.from(imports.defaultImports).map(([_, importInfo]) => {
-      return importInfo.alias || importInfo.importName;
+    const defaultImports = Array.from(imports.defaultExports).map(([exportAlias, exportName]) => {
+      return exportAlias || exportName;
     });
-    const namedImports = Array.from(imports.namedImports).map(([_, importInfo]) => {
-      return importInfo.alias || importInfo.importName;
+    const namedImports = Array.from(imports.namedExports).map(([exportAlias, exportName]) => {
+      return exportAlias || exportName;
     });
     return {
       module: modulePath,
-      imports: [...defaultImports, ...namedImports],
+      exports: [...defaultImports, ...namedImports],
     };
   });
 
@@ -286,9 +349,9 @@ ${finalImportMap
       '  {',
       `    module: '${entry.module}',`,
       '    exports: [',
-      entry.imports.length
-        ? entry.imports
-            .map((namedImport) => `      { name: '${namedImport}', value: ${namedImport} }`)
+      entry.exports.length
+        ? entry.exports
+            .map((namedExport) => `      { name: '${namedExport}', value: ${namedExport} }`)
             .join(',\n')
         : '    *',
       '    ]',
@@ -296,5 +359,6 @@ ${finalImportMap
     ].join('\n')
   )
   .join(',\n')}
-]`;
+];
+`;
 };
