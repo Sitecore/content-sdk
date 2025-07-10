@@ -63,8 +63,9 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
-* `[core]` `[nextjs]`Standardized way of handling contextId/clientContextId and related fallbacks ([#150](https://github.com/Sitecore/content-sdk/pull/150))
 * `[nextjs]` Ensure Redirect Middleware handles case-insensitive path matching to prevent missed redirects due to casing differences ([#159](https://github.com/Sitecore/jss/pull/159))
+* `[core]` `[nextjs]`Standardized way of handling contextId/clientContextId and related fallbacks ([#150](https://github.com/Sitecore/content-sdk/pull/150))
+
 
 ### 🧹 Chores
 
