@@ -8,7 +8,7 @@
 
 > **ComponentPropsError** = `object`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/nextjs/src/sharedTypes/component-props.ts#L5)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/1895b0f9c2d1368b07383f85311d808a73aac7bd/packages/nextjs/src/sharedTypes/component-props.ts#L5)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sit
 
 > **componentName**: `string`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/nextjs/src/sharedTypes/component-props.ts#L5)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/1895b0f9c2d1368b07383f85311d808a73aac7bd/packages/nextjs/src/sharedTypes/component-props.ts#L5)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sit
 
 > **error**: `string`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/nextjs/src/sharedTypes/component-props.ts#L5)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/1895b0f9c2d1368b07383f85311d808a73aac7bd/packages/nextjs/src/sharedTypes/component-props.ts#L5)
