@@ -6,7 +6,7 @@
 
 # Enumeration: SitecoreTemplateId
 
-Defined in: [packages/core/src/constants.ts:1](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/constants.ts#L1)
+Defined in: [packages/core/src/constants.ts:1](https://github.com/Sitecore/content-sdk/blob/1895b0f9c2d1368b07383f85311d808a73aac7bd/packages/core/src/constants.ts#L1)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [packages/core/src/constants.ts:1](https://github.com/Sitecore/conte
 
 > **ContentSdkApp**: `"061cba1554744b918a0617903b102b82"`
 
-Defined in: [packages/core/src/constants.ts:3](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/constants.ts#L3)
+Defined in: [packages/core/src/constants.ts:3](https://github.com/Sitecore/content-sdk/blob/1895b0f9c2d1368b07383f85311d808a73aac7bd/packages/core/src/constants.ts#L3)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [packages/core/src/constants.ts:3](https://github.com/Sitecore/conte
 
 > **DictionaryEntry**: `"6d1cd89719364a3aa511289a94c2a7b1"`
 
-Defined in: [packages/core/src/constants.ts:6](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/constants.ts#L6)
+Defined in: [packages/core/src/constants.ts:6](https://github.com/Sitecore/content-sdk/blob/1895b0f9c2d1368b07383f85311d808a73aac7bd/packages/core/src/constants.ts#L6)
