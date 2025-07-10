@@ -21,6 +21,12 @@ export const unitMocks = ({
   getComponentListStub && (_getComponentList = getComponentListStub);
 };
 
+type ExportDefinition = {
+  originalName: string;
+  exportAlias: string;
+  importMapValue: string;
+};
+
 /**
  * Type describing import map entry in final file
  * Represents structure i.e.
@@ -30,7 +36,8 @@ export const unitMocks = ({
  */
 export type ImportMapEntry = {
   module: string;
-  exports: string[];
+  namedExports: ExportDefinition[];
+  defaultExports: ExportDefinition[];
 };
 
 /**
@@ -222,6 +229,13 @@ export const getImportMap = (paths: string[]) => {
   return importMapRecord;
 };
 
+// return alias-like name for an import value/variable name
+// this helps alleviate duplicate import names in import-map.ts
+const getImportValueAlias = (importValue: string, moduleName: string) => {
+  const prefix = moduleName.replace(/[^0-9a-z]/gi, '').replace(/^src/, '');
+  return `${prefix}_${importValue}`;
+};
+
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
  * @param {WriteImportMapArgs} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration
@@ -295,49 +309,73 @@ export const writeImportMap = (args: WriteImportMapArgs, scConfig: SitecoreConfi
  * @returns {string} file code for component-map.ts
  */
 export const nextJsMapTemplate = (importMap: Map<string, ModuleExports>) => {
-  const getSingleImport = (exportAlias: string, exportName: string) => {
-    return exportAlias !== exportName ? `${exportName} as ${exportAlias}` : exportName;
+  const getSingleImport = (aliasName: string, originalName: string) => {
+    return originalName !== aliasName ? `${originalName} as ${aliasName}` : originalName;
   };
 
-  const convertNamedImports = (namedImports: Map<string, string>) => {
-    return Array.from(namedImports)
-      .map(([exportAlias, exportName]) => {
-        return getSingleImport(exportAlias, exportName);
+  const convertNamedImports = (namedImports: ExportDefinition[]) => {
+    return namedImports
+      .map((entry) => {
+        return getSingleImport(entry.importMapValue, entry.originalName);
       })
       .join(', ');
+  };
+
+  const outputExportEntries = (exports: ExportDefinition[]) => {
+    return exports.length
+      ? exports
+          .map(
+            (namedExport) =>
+              `      { name: '${namedExport.exportAlias}', value: ${namedExport.importMapValue} }`
+          )
+          .join(',\n')
+      : '';
   };
 
   const importStatements: string[] = [];
   const importMapArray = Array.from(importMap);
 
-  // build import statements first
-  for (const [modulePath, imports] of importMapArray) {
-    if (imports.namedExports.size > 0) {
-      importStatements.push(
-        `import { ${convertNamedImports(imports.namedExports)} } from '${modulePath}';`
-      );
-    }
-    if (imports.defaultExports.size > 0) {
-      Array.from(imports.defaultExports).forEach(([exportAlias, exportName]) => {
-        importStatements.push(
-          `import ${getSingleImport(exportAlias, exportName)} from '${modulePath}';`
-        );
-      });
-    }
-  }
-
   // get import map entries after
   const finalImportMap: ImportMapEntry[] = importMapArray.map(([modulePath, imports]) => {
-    const defaultImports = Array.from(imports.defaultExports).map(([exportAlias, exportName]) => {
-      return exportAlias || exportName;
+    const defaultExports = Array.from(imports.defaultExports).map(([exportAlias, exportName]) => {
+      const exportEntryName = exportAlias || exportName;
+      return {
+        originalName: exportName,
+        exportAlias: exportEntryName,
+        importMapValue: getImportValueAlias(exportEntryName, modulePath),
+      };
     });
-    const namedImports = Array.from(imports.namedExports).map(([exportAlias, exportName]) => {
-      return exportAlias || exportName;
+    const namedExports = Array.from(imports.namedExports).map(([exportAlias, exportName]) => {
+      const exportEntryName = exportAlias || exportName;
+      return {
+        originalName: exportName,
+        exportAlias: exportEntryName,
+        importMapValue: getImportValueAlias(exportEntryName, modulePath),
+      };
     });
     return {
       module: modulePath,
-      exports: [...defaultImports, ...namedImports],
+      defaultExports,
+      namedExports,
     };
+  });
+
+  finalImportMap.forEach((entry) => {
+    if (entry.namedExports.length > 0) {
+      importStatements.push(
+        `import { ${convertNamedImports(entry.namedExports)} } from '${entry.module}';`
+      );
+    }
+    if (entry.defaultExports.length > 0) {
+      Array.from(entry.defaultExports).forEach((defaultExportEntry) => {
+        importStatements.push(
+          `import ${getSingleImport(
+            defaultExportEntry.importMapValue,
+            defaultExportEntry.originalName
+          )} from '${entry.module}';`
+        );
+      });
+    }
   });
 
   return `${importStatements.join('\n')}
@@ -349,11 +387,8 @@ ${finalImportMap
       '  {',
       `    module: '${entry.module}',`,
       '    exports: [',
-      entry.exports.length
-        ? entry.exports
-            .map((namedExport) => `      { name: '${namedExport}', value: ${namedExport} }`)
-            .join(',\n')
-        : '    *',
+      outputExportEntries(entry.namedExports),
+      outputExportEntries(entry.defaultExports),
       '    ]',
       '  }',
     ].join('\n')

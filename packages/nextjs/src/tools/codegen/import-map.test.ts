@@ -203,7 +203,7 @@ describe('Import Map Generation', () => {
     it('should accept a Map object and transform it into file content with imports', () => {
       // Prepare a fake import map with both named and default imports
       const importMap = new Map<string, ModuleExports>();
-      importMap.set('../test-exports.ts', {
+      importMap.set('../test-exports', {
         namedExports: new Map([
           ['funco', 'funco'],
           ['TestClass', 'TestClass'],
@@ -220,16 +220,16 @@ describe('Import Map Generation', () => {
 
       // Check that import statements are present
       expect(output).to.include(
-        "import { funco, TestClass, testClassInstance as testo } from '../test-exports.ts';"
+        "import { funco as testexports_funco, TestClass as testexports_TestClass, testClassInstance as testexports_testo } from '../test-exports';"
       );
-      expect(output).to.include("import * as everything from '../test-exports.ts';");
-      expect(output).to.include("import * as React from 'react';");
+      expect(output).to.include("import * as testexports_everything from '../test-exports';");
+      expect(output).to.include("import * as react_React from 'react';");
     });
 
     it('should accept a Map object and transform it into file content with component map entries', () => {
       // Prepare a fake import map with both named and default imports
       const importMap = new Map<string, ModuleExports>();
-      importMap.set('../test-exports.ts', {
+      importMap.set('../test-exports', {
         namedExports: new Map([
           ['funco', 'funco'],
           ['TestClass', 'TestClass'],
@@ -242,11 +242,11 @@ describe('Import Map Generation', () => {
 
       // Check that the export const importMap is present and contains correct entries
       expect(output).to.include('export const importMap = [');
-      expect(output).to.match(/module: '\.\.\/test-exports\.ts'/);
-      expect(output).to.match(/name: 'everything', value: everything/);
-      expect(output).to.match(/name: 'funco', value: funco/);
-      expect(output).to.match(/name: 'TestClass', value: TestClass/);
-      expect(output).to.match(/name: 'testo', value: testo/);
+      expect(output).to.match(/module: '\.\.\/test-exports'/);
+      expect(output).to.match(/name: 'everything', value: testexports_everything/);
+      expect(output).to.match(/name: 'funco', value: testexports_funco/);
+      expect(output).to.match(/name: 'TestClass', value: testexports_TestClass/);
+      expect(output).to.match(/name: 'testo', value: testexports_testo/);
     });
   });
 
@@ -259,7 +259,7 @@ describe('Import Map Generation', () => {
     it('should skip when code generation is disabled', async () => {
       const debugStub = sandbox.stub(debug, 'common');
       const scConfig = { disableCodeGeneration: true } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').value(true);
+      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
       const getComponentListStub = sandbox.stub(
         require('@sitecore-content-sdk/core/tools'),
         'getComponentList'
@@ -280,7 +280,7 @@ describe('Import Map Generation', () => {
     it('should skip when not in xm cloud deploy context', async () => {
       const debugStub = sandbox.stub(debug, 'common');
       const scConfig = { disableCodeGeneration: false } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').value(false);
+      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(false);
       const getComponentListStub = sandbox.stub(
         require('@sitecore-content-sdk/core/tools'),
         'getComponentList'
@@ -298,7 +298,7 @@ describe('Import Map Generation', () => {
 
     it('should retrieve and parse paths based on inputs from "paths" and "exclude"', async () => {
       const scConfig = { disableCodeGeneration: false } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').value(true);
+      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
 
       const fakeEntries = [{ filePath: 'component1.tsx' }, { filePath: 'component2.tsx' }];
       const getComponentListStub = sandbox.stub().returns(fakeEntries);
@@ -322,7 +322,7 @@ describe('Import Map Generation', () => {
 
     it('should write output into import-map file', async () => {
       const scConfig = { disableCodeGeneration: false } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').value(true);
+      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
 
       const fakeEntries = [{ filePath: 'component1.tsx' }];
       sandbox
@@ -344,7 +344,7 @@ describe('Import Map Generation', () => {
 
     it('should consider default import map when writing output into import-map file', async () => {
       const scConfig = { disableCodeGeneration: false } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').value(true);
+      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
 
       const defaultMap = [
         {
@@ -393,7 +393,7 @@ describe('Import Map Generation', () => {
 
     it('should throw when file write operation fails', async () => {
       const scConfig = { disableCodeGeneration: false } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').value(true);
+      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
 
       const fakeEntries = [{ filePath: 'component1.tsx' }];
       sandbox
