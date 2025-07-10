@@ -38,9 +38,5 @@
   "workspaces": [
     "packages/*",
     "samples/*"
-  ],
-  "packageManager": "yarn@3.1.0",
-  "dependencies": {
-    "keytar": "^7.9.0"
-  }
+  ]
 }
