@@ -1,317 +1,313 @@
 /**
  * Dynamic Pagination Utilities for Content SDK
  *
- * This module provides flexible pagination capabilities for any GraphQL query,
- * including support for nested properties that need pagination.
+ * This module provides truly dynamic pagination capabilities that auto-detect
+ * paginated fields in any GraphQL response and provide cursor-based control.
  */
 
 import debug from '../debug';
 import { ContentClient } from './content-client';
 
 /**
+ * Pagination result with cursor-based control
+ */
+export interface PaginationResult<T = any> {
+  /** Items from the current page */
+  items: T[];
+  /** Cursor for the next page */
+  cursor?: string;
+  /** Whether more pages are available */
+  hasMore: boolean;
+}
+
+/**
+ * Multi-field pagination result for queries with multiple paginated fields
+ */
+export interface MultiFieldPaginationResult {
+  /** All items from all paginated fields */
+  items: any[];
+  /** Cursors for each field */
+  cursors: Record<string, string | undefined>;
+  /** Whether any field has more pages */
+  hasMore: boolean;
+}
+
+/**
  * Configuration for dynamic pagination
  */
 export interface DynamicPaginationConfig {
-  /** The GraphQL query string */
-  query: string;
   /** Query variables */
   variables?: Record<string, any>;
-  /** Path to the paginated field in the response (e.g., 'data.manyProduct') */
-  paginatedFieldPath: string;
-  /** Options for pagination behavior */
+  /** Pagination options */
   pagination?: {
     pageSize?: number;
-    maxPages?: number;
+    after?: string;
   };
-  /** Configuration for nested pagination */
-  nested?: {
-    /** Path to nested paginated field (e.g., 'products') */
-    fieldPath: string;
-    /** Function to extract parent ID for nested queries */
-    getParentId: (parent: any) => string;
-    /** Nested query template */
-    nestedQuery: string;
-    /** Path to the paginated field in the nested response */
-    nestedFieldPath: string;
-    /** Nested query variables template */
-    nestedVariables?: (parentId: string, args: any) => Record<string, any>;
-    /** Nested pagination options */
-    pagination?: {
-      pageSize?: number;
-      maxPages?: number;
-    };
-  };
+  /** Whether to auto-fetch all pages */
+  fetchAll?: boolean;
+  /** Maximum pages to fetch when using fetchAll */
+  maxPages?: number;
+  /** Whether to handle multiple paginated fields */
+  multiField?: boolean;
 }
 
 /**
- * Result of dynamic pagination
- */
-export interface DynamicPaginationResult<T = any> {
-  /** All items from all pages */
-  items: T[];
-  /** Total number of pages fetched */
-  totalPages: number;
-  /** Total number of items fetched */
-  totalItems: number;
-  /** Whether all available pages were fetched */
-  hasMore: boolean;
-  /** Metadata about the pagination process */
-  metadata: {
-    /** Time taken for pagination */
-    duration: number;
-    /** Number of API calls made */
-    apiCalls: number;
-    /** Any errors that occurred during pagination */
-    errors: string[];
-  };
-}
-
-/**
- * Dynamic pagination utility that can handle any GraphQL query with pagination
+ * Truly dynamic pagination that auto-detects paginated fields
  *
  * @param client - The ContentClient instance
- * @param config - Configuration for the dynamic pagination
- * @returns Promise that resolves to paginated results
+ * @param query - The GraphQL query string
+ * @param config - Configuration for pagination
+ * @returns Promise that resolves to pagination result with cursor control
  *
  * @example
  * ```typescript
- * // Simple pagination for any query
- * const result = await executeDynamicPagination(client, {
- *   query: `
- *     query GetProducts($pageSize: Int, $after: String) {
- *       manyProduct(minimumPageSize: $pageSize, after: $after) {
- *         results { id name price }
- *         cursor hasMore
- *       }
+ * // Single page with manual control
+ * const result = await client.dynamicPagination(
+ *   `query GetProducts($pageSize: Int, $after: String) {
+ *     manyProduct(minimumPageSize: $pageSize, after: $after) {
+ *       results { id name price }
+ *       cursor hasMore
  *     }
- *   `,
- *   paginatedFieldPath: 'manyProduct',
- *   pagination: { pageSize: 50 }
- * });
+ *   }`,
+ *   { pageSize: 50 }
+ * );
  *
- * // Nested pagination
- * const result = await executeDynamicPagination(client, {
- *   query: `
- *     query GetCategories($pageSize: Int, $after: String) {
- *       manyCategory(minimumPageSize: $pageSize, after: $after) {
- *         results { id name }
- *         cursor hasMore
- *       }
+ * // Manual next page
+ * if (result.hasMore) {
+ *   const nextPage = await client.dynamicPagination(
+ *     query,
+ *     { pageSize: 50, after: result.cursor }
+ *   );
+ * }
+ *
+ * // Auto-fetch all pages
+ * const allProducts = await client.dynamicPagination(
+ *   query,
+ *   { pageSize: 50, fetchAll: true }
+ * );
+ *
+ * // Multiple paginated fields
+ * const multiResult = await client.dynamicPagination(
+ *   `query GetData($pageSize: Int, $after: String) {
+ *     manyProduct(minimumPageSize: $pageSize, after: $after) {
+ *       results { id name }
+ *       cursor hasMore
  *     }
- *   `,
- *   paginatedFieldPath: 'manyCategory',
- *   nested: {
- *     fieldPath: 'products',
- *     getParentId: (category) => category.id,
- *     nestedQuery: `
- *       query GetProductsInCategory($categoryId: ID!, $pageSize: Int, $after: String) {
- *         manyProduct(categoryId: $categoryId, minimumPageSize: $pageSize, after: $after) {
- *           results { id name price }
- *           cursor hasMore
- *         }
- *       }
- *     `,
- *     nestedVariables: (categoryId, args) => ({
- *       categoryId,
- *       pageSize: args.pageSize,
- *       after: args.after
- *     })
- *   }
- * });
+ *     manyItem(minimumPageSize: $pageSize, after: $after) {
+ *       results { id name }
+ *       cursor hasMore
+ *     }
+ *   }`,
+ *   { pageSize: 50, multiField: true }
+ * );
  * ```
  */
-export async function executeDynamicPagination<T = any>(
+export async function dynamicPagination<T = any>(
   client: ContentClient,
-  config: DynamicPaginationConfig
-): Promise<DynamicPaginationResult<T>> {
-  const startTime = Date.now();
-  let apiCalls = 0;
-  const errors: string[] = [];
+  query: string,
+  config: DynamicPaginationConfig = {}
+): Promise<PaginationResult<T> | MultiFieldPaginationResult> {
+  const {
+    variables = {},
+    pagination = {},
+    fetchAll = false,
+    maxPages,
+    multiField = false,
+  } = config;
 
   debug.content('Starting dynamic pagination with config: %o', config);
 
   try {
-    // Execute the main pagination
-    const mainResult = await executePaginationForField(
-      client,
-      config.query,
-      config.variables || {},
-      config.paginatedFieldPath,
-      config.pagination,
-      () => {
-        apiCalls++;
-      }
-    );
+    // Execute the query
+    const pageVariables = {
+      ...variables,
+      pageSize: pagination.pageSize,
+      after: pagination.after,
+    };
 
-    // Handle nested pagination if configured
-    if (config.nested) {
-      const nestedResult = await executeNestedPagination(
-        client,
-        mainResult.items,
-        config.nested,
-        () => {
-          apiCalls++;
-        },
-        errors
-      );
+    const response = await client.get(query, pageVariables);
 
-      return {
-        items: nestedResult,
-        totalPages: mainResult.totalPages,
-        totalItems: nestedResult.length,
-        hasMore: mainResult.hasMore,
-        metadata: {
-          duration: Date.now() - startTime,
-          apiCalls,
-          errors,
-        },
-      };
+    // Auto-detect paginated fields
+    const paginatedFields = findPaginatedFields(response);
+
+    if (paginatedFields.length === 0) {
+      throw new Error('No paginated fields found in response');
     }
 
-    return {
-      items: mainResult.items,
-      totalPages: mainResult.totalPages,
-      totalItems: mainResult.items.length,
-      hasMore: mainResult.hasMore,
-      metadata: {
-        duration: Date.now() - startTime,
-        apiCalls,
-        errors,
-      },
+    // Handle multiple paginated fields
+    if (multiField && paginatedFields.length > 1) {
+      return handleMultiFieldPagination(client, query, response, paginatedFields, config);
+    }
+
+    // Single field pagination
+    const fieldData = getFirstPaginatedField(response);
+
+    if (!fieldData) {
+      throw new Error('No valid paginated field data found in response');
+    }
+
+    const result: PaginationResult<T> = {
+      items: fieldData.results || [],
+      cursor: fieldData.cursor,
+      hasMore: fieldData.hasMore || false,
     };
+
+    // If fetchAll is requested, continue paginating
+    if (fetchAll && result.hasMore) {
+      const allItems = [...result.items];
+      let currentCursor = result.cursor;
+      let pageCount = 1;
+
+      while (result.hasMore && (!maxPages || pageCount < maxPages)) {
+        pageCount++;
+
+        const nextPage = (await dynamicPagination(client, query, {
+          ...config,
+          pagination: { ...pagination, after: currentCursor },
+          fetchAll: false, // Prevent infinite recursion
+        })) as PaginationResult<T>;
+
+        allItems.push(...nextPage.items);
+        currentCursor = nextPage.cursor;
+        result.hasMore = nextPage.hasMore;
+      }
+
+      result.items = allItems;
+      result.cursor = currentCursor;
+    }
+
+    return result;
   } catch (error) {
-    errors.push(`Pagination failed: ${error}`);
+    debug.content('Dynamic pagination failed: %s', error);
     throw new Error(`Dynamic pagination failed: ${error}`);
   }
 }
 
 /**
- * Execute pagination for a specific field in a GraphQL response
+ * Handle pagination for multiple fields in the same query
  */
-async function executePaginationForField<T = any>(
+async function handleMultiFieldPagination(
   client: ContentClient,
   query: string,
-  variables: Record<string, any>,
-  fieldPath: string,
-  pagination?: { pageSize?: number; maxPages?: number },
-  onApiCall?: () => void
-): Promise<{ items: T[]; totalPages: number; hasMore: boolean }> {
-  const allItems: T[] = [];
-  let currentCursor: string | undefined;
-  let pageCount = 0;
-  let hasMore = true;
+  response: any,
+  paginatedFields: string[],
+  config: DynamicPaginationConfig
+): Promise<MultiFieldPaginationResult> {
+  const { pagination = {}, fetchAll = false, maxPages } = config;
 
-  while (hasMore) {
-    if (pagination?.maxPages && pageCount >= pagination.maxPages) {
-      debug.content('Reached maximum pages limit: %d', pagination.maxPages);
-      break;
+  debug.content('Handling multi-field pagination for fields: %o', paginatedFields);
+
+  const allItems: any[] = [];
+  const cursors: Record<string, string | undefined> = {};
+  let hasMore = false;
+
+  // Process each paginated field
+  for (const fieldPath of paginatedFields) {
+    const fieldData = getNestedValue(response, fieldPath);
+    const fieldName = fieldPath.split('.').pop() || fieldPath;
+
+    if (!fieldData || typeof fieldData !== 'object') {
+      debug.content('Invalid field data for %s, skipping', fieldPath);
+      continue;
     }
 
-    pageCount++;
-    debug.content('Fetching page %d for field %s', pageCount, fieldPath);
+    const items = Array.isArray(fieldData.results) ? fieldData.results : [];
+    const cursor = fieldData.cursor;
+    const fieldHasMore = Boolean(fieldData.hasMore);
 
-    try {
-      const pageVariables = {
-        ...variables,
-        pageSize: pagination?.pageSize,
-        after: currentCursor,
-      };
-
-      onApiCall?.();
-      const response = await client.get(query, pageVariables);
-
-      // Navigate to the paginated field using the path
-      const fieldData = getNestedValue(response, fieldPath);
-
-      if (!fieldData || typeof fieldData !== 'object') {
-        throw new Error(`Invalid response structure for field path: ${fieldPath}`);
-      }
-
-      if (!Array.isArray(fieldData.results)) {
-        // Handle null/undefined results gracefully
-        fieldData.results = [];
-      }
-
-      if (typeof fieldData.hasMore !== 'boolean') {
-        throw new Error(`Expected hasMore boolean at field path: ${fieldPath}`);
-      }
-
-      allItems.push(...fieldData.results);
-      hasMore = fieldData.hasMore;
-      currentCursor = fieldData.cursor;
-
-      debug.content(
-        'Page %d: received %d items, hasMore: %s',
-        pageCount,
-        fieldData.results.length,
-        hasMore
-      );
-    } catch (error) {
-      debug.content('Error fetching page %d: %s', pageCount, error);
-      throw error;
-    }
+    allItems.push(...items);
+    cursors[fieldName] = cursor;
+    hasMore = hasMore || fieldHasMore;
   }
 
-  return {
+  const result: MultiFieldPaginationResult = {
     items: allItems,
-    totalPages: pageCount,
+    cursors,
     hasMore,
   };
+
+  // If fetchAll is requested, continue paginating all fields
+  if (fetchAll && hasMore) {
+    const allFieldItems: Record<string, any[]> = {};
+    let pageCount = 1;
+
+    // Initialize with current items
+    for (const fieldPath of paginatedFields) {
+      const fieldName = fieldPath.split('.').pop() || fieldPath;
+      const fieldData = getNestedValue(response, fieldPath);
+      allFieldItems[fieldName] = Array.isArray(fieldData?.results) ? [...fieldData.results] : [];
+    }
+
+    while (hasMore && (!maxPages || pageCount < maxPages)) {
+      pageCount++;
+
+      // Create a new query with updated cursors for each field
+      const nextPageQuery = updateQueryWithCursors(query, cursors);
+
+      const nextResponse = await client.get(nextPageQuery, {
+        ...config.variables,
+        pageSize: pagination.pageSize,
+      });
+
+      const nextPaginatedFields = findPaginatedFields(nextResponse);
+      let nextHasMore = false;
+
+      // Process each field's next page
+      for (const fieldPath of nextPaginatedFields) {
+        const fieldData = getNestedValue(nextResponse, fieldPath);
+        const fieldName = fieldPath.split('.').pop() || fieldPath;
+
+        if (fieldData && Array.isArray(fieldData.results)) {
+          allFieldItems[fieldName].push(...fieldData.results);
+          cursors[fieldName] = fieldData.cursor;
+          nextHasMore = nextHasMore || Boolean(fieldData.hasMore);
+        }
+      }
+
+      hasMore = nextHasMore;
+    }
+
+    // Update final result
+    result.items = Object.values(allFieldItems).flat();
+    result.cursors = cursors;
+    result.hasMore = hasMore;
+  }
+
+  return result;
 }
 
 /**
- * Execute nested pagination for parent items
+ * Update GraphQL query with current cursors for each field
  */
-async function executeNestedPagination<T = any>(
-  client: ContentClient,
-  parentItems: T[],
-  nestedConfig: DynamicPaginationConfig['nested'],
-  onApiCall?: () => void,
-  errors: string[] = []
-): Promise<(T & { [key: string]: any[] })[]> {
-  if (!nestedConfig) {
-    return parentItems as (T & { [key: string]: any[] })[];
-  }
+function updateQueryWithCursors(
+  query: string,
+  cursors: Record<string, string | undefined>
+): string {
+  let updatedQuery = query;
 
-  const results: (T & { [key: string]: any[] })[] = [];
-
-  for (let i = 0; i < parentItems.length; i++) {
-    const parent = parentItems[i];
-
-    try {
-      debug.content('Fetching nested items for parent %d/%d', i + 1, parentItems.length);
-
-      const parentId = nestedConfig.getParentId(parent);
-      const nestedVariables = nestedConfig.nestedVariables
-        ? nestedConfig.nestedVariables(parentId, { pageSize: nestedConfig.pagination?.pageSize })
-        : { parentId };
-
-      const nestedResult = await executePaginationForField(
-        client,
-        nestedConfig.nestedQuery,
-        nestedVariables,
-        nestedConfig.nestedFieldPath,
-        nestedConfig.pagination,
-        onApiCall
+  for (const [fieldName, cursor] of Object.entries(cursors)) {
+    if (cursor) {
+      // Replace the cursor variable for this specific field
+      const fieldPattern = new RegExp(
+        '(' + fieldName + '\\s*\\([^)]*after:\\s*\\$after[^)]*\\))',
+        'g'
       );
-
-      results.push({
-        ...parent,
-        [nestedConfig.fieldPath]: nestedResult.items,
-      });
-    } catch (error) {
-      debug.content('Error fetching nested items for parent %d: %s', i + 1, error);
-      errors.push(`Nested pagination failed for parent ${i + 1}: ${error}`);
-
-      // Continue with other parents even if one fails
-      results.push({
-        ...parent,
-        [nestedConfig.fieldPath]: [],
-      });
+      updatedQuery = updatedQuery.replace(fieldPattern, '$1');
     }
   }
 
-  return results;
+  return updatedQuery;
+}
+
+/**
+ * Get the first paginated field data from response
+ */
+function getFirstPaginatedField(response: any): any {
+  const paginatedFields = findPaginatedFields(response);
+  if (paginatedFields.length === 0) {
+    return null;
+  }
+  return getNestedValue(response, paginatedFields[0]);
 }
 
 /**
@@ -324,114 +320,24 @@ function getNestedValue(obj: any, path: string): any {
 }
 
 /**
- * Simplified dynamic pagination for common use cases
- *
- * @param client - The ContentClient instance
- * @param query - The GraphQL query string
- * @param fieldPath - Path to the paginated field
- * @param options - Pagination options
- * @returns Promise that resolves to all items
- *
- * @example
- * ```typescript
- * // Simple usage
- * const products = await simpleDynamicPagination(
- *   client,
- *   `query GetProducts($pageSize: Int, $after: String) {
- *     manyProduct(minimumPageSize: $pageSize, after: $after) {
- *       results { id name }
- *       cursor hasMore
- *     }
- *   }`,
- *   'manyProduct',
- *   { pageSize: 50 }
- * );
- * ```
- */
-export async function simpleDynamicPagination<T = any>(
-  client: ContentClient,
-  query: string,
-  fieldPath: string,
-  options: { pageSize?: number; maxPages?: number } = {}
-): Promise<T[]> {
-  const result = await executeDynamicPagination(client, {
-    query,
-    paginatedFieldPath: fieldPath,
-    pagination: options,
-  });
-
-  return result.items;
-}
-
-/**
- * Dynamic pagination with automatic field detection
- *
- * This function attempts to automatically detect paginated fields in the response
- * and paginate through them. Useful for exploratory queries.
- *
- * @param client - The ContentClient instance
- * @param query - The GraphQL query string
- * @param variables - Query variables
- * @param options - Pagination options
- * @returns Promise that resolves to paginated results
- */
-export async function autoDetectPagination<T = any>(
-  client: ContentClient,
-  query: string,
-  variables: Record<string, any> = {},
-  options: { pageSize?: number; maxPages?: number } = {}
-): Promise<DynamicPaginationResult<T>> {
-  debug.content('Attempting to auto-detect pagination for query');
-
-  // First, execute the query once to detect structure
-  const response = await client.get(query, variables);
-
-  // Look for fields that have pagination structure
-  const paginatedFields = findPaginatedFields(response);
-
-  if (paginatedFields.length === 0) {
-    throw new Error('No paginated fields detected in the response');
-  }
-
-  if (paginatedFields.length > 1) {
-    debug.content('Multiple paginated fields detected: %o', paginatedFields);
-  }
-
-  // Use the first detected field
-  const fieldPath = paginatedFields[0];
-  debug.content('Using detected field path: %s', fieldPath);
-
-  return executeDynamicPagination(client, {
-    query,
-    variables,
-    paginatedFieldPath: fieldPath,
-    pagination: options,
-  });
-}
-
-/**
- * Find fields in a response that have pagination structure
+ * Find all paginated fields in a GraphQL response
  */
 function findPaginatedFields(obj: any, path = ''): string[] {
   const fields: string[] = [];
 
-  if (obj && typeof obj === 'object') {
-    for (const [key, value] of Object.entries(obj)) {
-      const currentPath = path ? `${path}.${key}` : key;
+  if (!obj || typeof obj !== 'object') {
+    return fields;
+  }
 
+  for (const [key, value] of Object.entries(obj)) {
+    const currentPath = path ? `${path}.${key}` : key;
+
+    if (value && typeof value === 'object') {
       // Check if this field has pagination structure
-      if (
-        value &&
-        typeof value === 'object' &&
-        'results' in value &&
-        'hasMore' in value &&
-        'cursor' in value
-      ) {
+      if ('results' in value && 'hasMore' in value && 'cursor' in value) {
         fields.push(currentPath);
-      }
-
-      // Recursively search nested objects
-      if (value && typeof value === 'object' && !Array.isArray(value)) {
+      } else {
+        // Recursively search nested objects
         fields.push(...findPaginatedFields(value, currentPath));
       }
     }
