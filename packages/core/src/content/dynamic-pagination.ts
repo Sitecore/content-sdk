@@ -203,7 +203,7 @@ async function handleMultiFieldPagination(
 
   // Process each paginated field
   for (const fieldPath of paginatedFields) {
-    const fieldData = getNestedValue(response, fieldPath);
+    const fieldData = getValueByPath(response, fieldPath);
     const fieldName = fieldPath.split('.').pop() || fieldPath;
 
     if (!fieldData || typeof fieldData !== 'object') {
@@ -234,7 +234,7 @@ async function handleMultiFieldPagination(
     // Initialize with current items
     for (const fieldPath of paginatedFields) {
       const fieldName = fieldPath.split('.').pop() || fieldPath;
-      const fieldData = getNestedValue(response, fieldPath);
+      const fieldData = getValueByPath(response, fieldPath);
       allFieldItems[fieldName] = Array.isArray(fieldData?.results) ? [...fieldData.results] : [];
     }
 
@@ -254,7 +254,7 @@ async function handleMultiFieldPagination(
 
       // Process each field's next page
       for (const fieldPath of nextPaginatedFields) {
-        const fieldData = getNestedValue(nextResponse, fieldPath);
+        const fieldData = getValueByPath(nextResponse, fieldPath);
         const fieldName = fieldPath.split('.').pop() || fieldPath;
 
         if (fieldData && Array.isArray(fieldData.results)) {
@@ -307,13 +307,13 @@ function getFirstPaginatedField(response: any): any {
   if (paginatedFields.length === 0) {
     return null;
   }
-  return getNestedValue(response, paginatedFields[0]);
+  return getValueByPath(response, paginatedFields[0]);
 }
 
 /**
- * Utility function to get nested object values by path
+ * Utility function to get object values by dot notation path
  */
-function getNestedValue(obj: any, path: string): any {
+function getValueByPath(obj: any, path: string): any {
   return path.split('.').reduce((current, key) => {
     return current && current[key] !== undefined ? current[key] : undefined;
   }, obj);
