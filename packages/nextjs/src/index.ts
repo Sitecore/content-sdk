@@ -34,7 +34,10 @@ export {
   EditMode,
   RenderingType,
 } from '@sitecore-content-sdk/core/layout';
-export { RestComponentLayoutService } from '@sitecore-content-sdk/core/editing';
+export {
+  RestComponentLayoutService,
+  isDesignLibraryMode,
+} from '@sitecore-content-sdk/core/editing';
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export {
   DictionaryPhrases,
@@ -144,7 +147,6 @@ export {
   withSitecore,
   useSitecore,
   withEditorChromes,
-  withPlaceholder,
   withDatasourceCheck,
   ImageSizeParameters,
   WithSitecoreOptions,
@@ -154,4 +156,6 @@ export {
   withEmptyFieldEditingComponent,
   EditingScripts,
   Form,
+  ServerPlaceholder,
+  BasePlaceholder,
 } from '@sitecore-content-sdk/react';

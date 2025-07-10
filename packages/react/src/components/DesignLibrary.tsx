@@ -1,4 +1,6 @@
-﻿import React, { useEffect, useMemo, useState, JSX } from 'react';
+﻿'use client';
+
+import React, { useEffect, useMemo, useState, JSX } from 'react';
 import { Placeholder } from './Placeholder';
 import {
   ComponentRendering,

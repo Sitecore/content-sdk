@@ -1,6 +1,7 @@
+'use client';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import fastDeepEqual from 'fast-deep-equal/es6/react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { LayoutServiceContext, LayoutServiceData, RouteData } from '../index';
 import { constants } from '@sitecore-content-sdk/core';
@@ -52,80 +53,74 @@ export type SitecoreProviderPageContext = LayoutServiceContext & {
   route?: RouteData;
 };
 
-export class SitecoreProvider extends React.Component<
-  SitecoreProviderProps,
-  SitecoreProviderState
-> {
-  static displayName = 'SitecoreProvider';
+export const SitecoreProvider: React.FC<SitecoreProviderProps> = ({
+  api: apiProp,
+  componentMap,
+  layoutData,
+  children,
+}) => {
+  const constructContext = useCallback(
+    (layoutData?: LayoutServiceData): SitecoreProviderPageContext => {
+      if (!layoutData) {
+        return {
+          pageEditing: false,
+        };
+      }
 
-  constructor(props: SitecoreProviderProps) {
-    super(props);
+      return {
+        route: layoutData.sitecore.route,
+        itemId: layoutData.sitecore.route?.itemId,
+        ...layoutData.sitecore.context,
+      };
+    },
+    []
+  );
 
-    const pageContext: SitecoreProviderPageContext = this.constructContext(props.layoutData);
+  const [pageContext, setPageContext] = useState<SitecoreProviderPageContext>(() =>
+    constructContext(layoutData)
+  );
 
-    let api = props.api;
-
-    if (props.api?.edge?.contextId && !props.api?.edge?.edgeUrl) {
-      api = {
-        ...props.api,
+  const api = useMemo(() => {
+    if (apiProp?.edge?.contextId && !apiProp?.edge?.edgeUrl) {
+      return {
+        ...apiProp,
         edge: {
-          ...props.api.edge,
+          ...apiProp.edge,
           edgeUrl: constants.SITECORE_EDGE_URL_DEFAULT,
         },
       };
     }
+    return apiProp;
+  }, [apiProp]);
 
-    this.state = {
-      pageContext,
-      setContext: this.setContext,
-      api,
-    };
-  }
+  const setContext = useCallback(
+    (value: SitecoreProviderPageContext | LayoutServiceData) => {
+      setPageContext(
+        value.sitecore
+          ? constructContext(value as LayoutServiceData)
+          : { ...(value as SitecoreProviderPageContext) }
+      );
+    },
+    [constructContext]
+  );
 
-  constructContext(layoutData?: LayoutServiceData): SitecoreProviderPageContext {
-    if (!layoutData) {
-      return {
-        pageEditing: false,
-      };
-    }
+  useEffect(() => {
+    setContext(layoutData);
+  }, [layoutData, setContext]);
 
-    return {
-      route: layoutData.sitecore.route,
-      itemId: layoutData.sitecore.route?.itemId,
-      ...layoutData.sitecore.context,
-    };
-  }
-
-  componentDidUpdate(prevProps: SitecoreProviderProps) {
-    // In case if somebody will manage SitecoreProvider state by passing fresh `layoutData` prop
-    // instead of using `updateContext`
-    if (!fastDeepEqual(prevProps.layoutData, this.props.layoutData)) {
-      this.setContext(this.props.layoutData);
-
-      return;
-    }
-  }
-
-  /**
-   * Update context state. Value can be @type {LayoutServiceData} which will be automatically transformed
-   * or you can provide exact @type {SitecoreProviderPageContext}
-   * @param {SitecoreProviderPageContext | LayoutServiceData} value New context value
-   */
-  setContext = (value: SitecoreProviderPageContext | LayoutServiceData) => {
-    this.setState({
-      pageContext: value.sitecore
-        ? this.constructContext(value as LayoutServiceData)
-        : { ...(value as SitecoreProviderPageContext) },
-    });
+  const contextValue: SitecoreProviderState = {
+    pageContext,
+    setContext,
+    api,
   };
 
-  render() {
-    return (
-      <ComponentMapReactContext.Provider value={this.props.componentMap}>
-        <SitecoreProviderReactContext.Provider value={this.state}>
-          {this.props.children}
-        </SitecoreProviderReactContext.Provider>
-      </ComponentMapReactContext.Provider>
-    );
-  }
-}
+  return (
+    <ComponentMapReactContext.Provider value={componentMap}>
+      <SitecoreProviderReactContext.Provider value={contextValue}>
+        {children}
+      </SitecoreProviderReactContext.Provider>
+    </ComponentMapReactContext.Provider>
+  );
+};
+
+SitecoreProvider.displayName = 'SitecoreProvider';

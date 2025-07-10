@@ -17,8 +17,9 @@ export type SiteRewriteData = {
  */
 export function getSiteRewrite(pathname: string, data: SiteRewriteData): string {
   const path = pathname.startsWith('/') ? pathname : '/' + pathname;
+  const pathWithoutTrailingSlash = path.endsWith('/') ? path.slice(0, -1) : path;
 
-  return `/${SITE_PREFIX}${data.siteName}${path}`;
+  return `${pathWithoutTrailingSlash}/${SITE_PREFIX}${data.siteName}`;
 }
 
 /**
@@ -33,7 +34,7 @@ export function getSiteRewriteData(pathname: string, defaultSiteName: string): S
   };
 
   const path = pathname.endsWith('/') ? pathname : pathname + '/';
-  const result = path.match(`${SITE_PREFIX}(.*?)\\/`);
+  const result = path.match(`${SITE_PREFIX}(.*?)(?=/|$)`);
 
   if (result && result[1] !== '') {
     data.siteName = result[1];

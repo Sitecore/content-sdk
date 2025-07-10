@@ -1,3 +1,4 @@
+'use client';
 import React, { createContext, useContext, ReactNode, JSX } from 'react';
 import { ComponentPropsCollection } from '../sharedTypes/component-props';
 

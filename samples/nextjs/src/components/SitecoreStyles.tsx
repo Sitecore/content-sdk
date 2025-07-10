@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import client from 'lib/sitecore-client';
 import { LayoutServiceData, HTMLLink } from '@sitecore-content-sdk/nextjs';
 
@@ -21,11 +20,11 @@ const SitecoreStyles = ({
   }
 
   return (
-    <Head>
+    <>
       {headLinks.map(({ rel, href }: HTMLLink) => (
         <link rel={rel} key={href} href={href} />
       ))}
-    </Head>
+    </>
   );
 };
 

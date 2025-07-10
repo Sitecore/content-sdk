@@ -1,9 +1,17 @@
-﻿import React from 'react';
-import { PlaceholderCommon, PlaceholderProps } from './PlaceholderCommon';
+﻿'use client';
+
+import React from 'react';
+import {
+  getPlaceholderDataFromRenderingData,
+  PaththroughPlaceholderProps,
+  PlaceholderProps,
+} from './PlaceholderCommon';
 import { withComponentMap } from '../enhancers/withComponentMap';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PagesEditor } from '@sitecore-content-sdk/core/editing';
 import { withSitecore } from '../enhancers/withSitecore';
+import { BasePlaceholder } from './BasePlaceholder';
+import { knownPhProps } from './placeholder-utils';
 
 export interface PlaceholderComponentProps extends PlaceholderProps {
   /**
@@ -27,11 +35,19 @@ export interface PlaceholderComponentProps extends PlaceholderProps {
   renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
 }
 
-class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> {
+class PlaceholderComponent extends React.Component<
+  PlaceholderComponentProps & PaththroughPlaceholderProps
+> {
   isEmpty = false;
+  state: Readonly<{ error?: Error }>;
 
-  constructor(props: PlaceholderComponentProps) {
+  constructor(props: PlaceholderComponentProps & PaththroughPlaceholderProps) {
     super(props);
+    this.state = {};
+  }
+
+  componentDidCatch(error: Error) {
+    this.setState({ error });
   }
 
   componentDidMount() {
@@ -40,23 +56,18 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
     }
   }
 
-  /**
-   * Renders the placeholder when it is empty. The required CSS styles are applied to the placeholder in edit mode.
-   * @param {React.ReactNode | React.ReactElement[]} node react node
-   * @returns react node
-   */
-  renderEmptyPlaceholder(node: React.ReactNode | React.ReactElement[]) {
-    return <div className="sc-jss-empty-placeholder">{node}</div>;
-  }
-
   render() {
-    const childProps: PlaceholderComponentProps = { ...this.props };
-
-    delete childProps.componentMap;
+    const paththroughProps = knownPhProps.reduce(
+      (acc, prop) => {
+        delete acc[prop];
+        return acc;
+      },
+      { ...this.props }
+    );
 
     if (this.state.error) {
-      if (childProps.errorComponent) {
-        return <childProps.errorComponent error={this.state.error} />;
+      if (this.props.errorComponent) {
+        return <this.props.errorComponent error={this.state.error} />;
       }
 
       return (
@@ -66,37 +77,15 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
       );
     }
 
-    const renderingData = childProps.rendering;
-
-    const placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
-      renderingData,
+    const placeholderData = getPlaceholderDataFromRenderingData(
+      this.props.rendering,
       this.props.name,
       this.props.pageContext?.pageEditing
     );
 
     this.isEmpty = !placeholderData.length;
 
-    const components = this.getComponentsForRenderingData(placeholderData);
-
-    if (this.isEmpty) {
-      const rendered = this.props.renderEmpty ? this.props.renderEmpty(components) : components;
-
-      return this.props.pageContext?.pageEditing ? this.renderEmptyPlaceholder(rendered) : rendered;
-    } else if (this.props.render) {
-      return this.props.render(components, placeholderData, childProps);
-    } else if (this.props.renderEach) {
-      const renderEach = this.props.renderEach;
-
-      return components.map((component, index) => {
-        if (component && component.props && component.props.type === 'text/sitecore') {
-          return component;
-        }
-
-        return renderEach(component, index);
-      });
-    } else {
-      return components;
-    }
+    return <BasePlaceholder placeholderProps={this.props} paththroughProps={paththroughProps} />;
   }
 }
 

@@ -5,17 +5,9 @@ const SassAlias = require('sass-alias');
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  productionBrowserSourceMaps: true,
   // Allow specifying a distinct distDir when concurrently running app in a container
   distDir: process.env.NEXTJS_DIST_DIR || '.next',
-
-  i18n: {
-    // These are all the locales you want to support in your application.
-    // These should generally match (or at least be a subset of) those in Sitecore.
-    locales: ['en'],
-    // This is the locale that will be used when visiting a non-locale
-    // prefixed path e.g. `/about`.
-    defaultLocale: process.env.DEFAULT_LANGUAGE || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
-  },
 
   // Enable React Strict Mode
   reactStrictMode: true,

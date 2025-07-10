@@ -8,7 +8,7 @@ export const DEFAULT_EXPORT_NAME = 'Default';
 /**
  * React component import with account for custom exports
  */
-export type ReactJssComponent = ComponentType | ReactModule;
+export type ReactJssComponent = (ComponentType | ReactModule) & { isRsc?: boolean };
 
 export type ReactModule = {
   /**

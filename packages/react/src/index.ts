@@ -45,6 +45,8 @@ export { mediaApi } from '@sitecore-content-sdk/core/media';
 export { Form } from './components/Form';
 export { ReactJssComponent, ComponentMap, ReactModule } from './components/sharedTypes';
 export { Placeholder, PlaceholderComponentProps } from './components/Placeholder';
+export { ServerPlaceholder } from './components/ServerPlaceholder';
+export { BasePlaceholder } from './components/BasePlaceholder';
 export {
   Image,
   ImageProps,
@@ -86,7 +88,6 @@ export {
   WithSitecoreHocProps,
 } from './enhancers/withSitecore';
 export { withEditorChromes } from './enhancers/withEditorChromes';
-export { withPlaceholder } from './enhancers/withPlaceholder';
 export { withDatasourceCheck } from './enhancers/withDatasourceCheck';
 export { withFieldMetadata } from './enhancers/withFieldMetadata';
 export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditingComponent';

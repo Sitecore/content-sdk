@@ -3,7 +3,6 @@ import {
   defineMiddleware,
   MultisiteMiddleware,
   PersonalizeMiddleware,
-  RedirectsMiddleware,
 } from '@sitecore-content-sdk/nextjs/middleware';
 import sites from '.sitecore/sites.json';
 import scConfig from 'sitecore.config';
@@ -17,19 +16,6 @@ const multisite = new MultisiteMiddleware({
   ...scConfig.multisite,
   // This function determines if the middleware should be turned off on per-request basis.
   // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to disable more.
-  // This is an important performance consideration since Next.js Edge middleware runs on every request.
-  skip: () => false,
-});
-const redirects = new RedirectsMiddleware({
-  /**
-   * List of sites for site resolver to work with
-   */
-  sites,
-  ...scConfig.api.edge,
-  ...scConfig.redirects,
-  // This function determines if the middleware should be turned off on per-request basis.
-  // Certain paths are ignored by default (e.g. Next.js API routes), but you may wish to disable more.
-  // By default it is disabled while in development mode.
   // This is an important performance consideration since Next.js Edge middleware runs on every request.
   skip: () => false,
 });
@@ -48,8 +34,10 @@ const personalize = new PersonalizeMiddleware({
   skip: () => false,
 });
 
+//const langMiddleware = new LangRoutingMiddleware();
+
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
-  return defineMiddleware(multisite, redirects, personalize).exec(req, ev);
+  return defineMiddleware(multisite, personalize).exec(req, ev);
 }
 
 export const config = {

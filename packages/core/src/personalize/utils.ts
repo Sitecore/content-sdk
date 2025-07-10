@@ -13,8 +13,8 @@ export type PersonalizedRewriteData = {
  * @returns {string} the rewrite path
  */
 export function getPersonalizedRewrite(pathname: string, variantIds: string[]): string {
-  const path = pathname.startsWith('/') ? pathname : '/' + pathname;
-  return `${variantIds.map((variantId) => `/${VARIANT_PREFIX}${variantId}`).join('')}${path}`;
+  const path = pathname.endsWith('/') ? pathname : pathname + '/';
+  return `${path}${variantIds.map((variantId) => `/${VARIANT_PREFIX}${variantId}`).join('')}`;
 }
 
 /**

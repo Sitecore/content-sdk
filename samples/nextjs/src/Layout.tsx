@@ -4,14 +4,13 @@
 import React, { JSX } from 'react';
 import Head from 'next/head';
 import {
-  Placeholder,
   LayoutServiceData,
   Field,
   DesignLibrary,
   RenderingType,
   ServerPlaceholder,
-  NextjsJssComponent,
   ComponentMap,
+  SitecoreProviderPageContext,
 } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/SitecoreStyles';
@@ -19,14 +18,15 @@ import SitecoreStyles from 'src/components/SitecoreStyles';
 interface LayoutProps {
   layoutData: LayoutServiceData;
   componentMap?: ComponentMap;
+  pageContext: SitecoreProviderPageContext;
 }
 
-interface RouteFields {
+export interface RouteFields {
   [key: string]: unknown;
   Title?: Field;
 }
 
-const Layout = ({ layoutData, componentMap }: LayoutProps): JSX.Element => {
+const Layout = ({ layoutData, componentMap, pageContext }: LayoutProps): JSX.Element => {
   const { route } = layoutData.sitecore;
   const fields = route?.fields as RouteFields;
   const isPageEditing = layoutData.sitecore.context.pageEditing;
@@ -51,7 +51,7 @@ const Layout = ({ layoutData, componentMap }: LayoutProps): JSX.Element => {
               <div id="header">
                 {route && (
                   <ServerPlaceholder
-                    pageContext={}
+                    pageContext={pageContext}
                     componentMap={componentMap!}
                     name="headless-header"
                     rendering={route}
@@ -61,12 +61,26 @@ const Layout = ({ layoutData, componentMap }: LayoutProps): JSX.Element => {
             </header>
             <main>
               <div id="content">
-                {route && <ServerPlaceholder name="headless-main" rendering={route} />}
+                {route && (
+                  <ServerPlaceholder
+                    pageContext={pageContext}
+                    componentMap={componentMap!}
+                    name="headless-main"
+                    rendering={route}
+                  />
+                )}
               </div>
             </main>
             <footer>
               <div id="footer">
-                {route && <ServerPlaceholder name="headless-footer" rendering={route} />}
+                {route && (
+                  <ServerPlaceholder
+                    pageContext={pageContext}
+                    componentMap={componentMap!}
+                    name="headless-footer"
+                    rendering={route}
+                  />
+                )}
               </div>
             </footer>
           </>
