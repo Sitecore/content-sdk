@@ -1,6 +1,6 @@
 /**
  * Dynamic Pagination Utilities for Content SDK
- * 
+ *
  * This module provides flexible pagination capabilities for any GraphQL query,
  * including support for nested properties that need pagination.
  */
@@ -31,6 +31,8 @@ export interface DynamicPaginationConfig {
     getParentId: (parent: any) => string;
     /** Nested query template */
     nestedQuery: string;
+    /** Path to the paginated field in the nested response */
+    nestedFieldPath: string;
     /** Nested query variables template */
     nestedVariables?: (parentId: string, args: any) => Record<string, any>;
     /** Nested pagination options */
@@ -66,11 +68,11 @@ export interface DynamicPaginationResult<T = any> {
 
 /**
  * Dynamic pagination utility that can handle any GraphQL query with pagination
- * 
+ *
  * @param client - The ContentClient instance
  * @param config - Configuration for the dynamic pagination
  * @returns Promise that resolves to paginated results
- * 
+ *
  * @example
  * ```typescript
  * // Simple pagination for any query
@@ -86,7 +88,7 @@ export interface DynamicPaginationResult<T = any> {
  *   paginatedFieldPath: 'manyProduct',
  *   pagination: { pageSize: 50 }
  * });
- * 
+ *
  * // Nested pagination
  * const result = await executeDynamicPagination(client, {
  *   query: `
@@ -136,7 +138,9 @@ export async function executeDynamicPagination<T = any>(
       config.variables || {},
       config.paginatedFieldPath,
       config.pagination,
-      () => { apiCalls++; }
+      () => {
+        apiCalls++;
+      }
     );
 
     // Handle nested pagination if configured
@@ -145,7 +149,9 @@ export async function executeDynamicPagination<T = any>(
         client,
         mainResult.items,
         config.nested,
-        () => { apiCalls++; },
+        () => {
+          apiCalls++;
+        },
         errors
       );
 
@@ -157,8 +163,8 @@ export async function executeDynamicPagination<T = any>(
         metadata: {
           duration: Date.now() - startTime,
           apiCalls,
-          errors
-        }
+          errors,
+        },
       };
     }
 
@@ -170,10 +176,9 @@ export async function executeDynamicPagination<T = any>(
       metadata: {
         duration: Date.now() - startTime,
         apiCalls,
-        errors
-      }
+        errors,
+      },
     };
-
   } catch (error) {
     errors.push(`Pagination failed: ${error}`);
     throw new Error(`Dynamic pagination failed: ${error}`);
@@ -217,13 +222,14 @@ async function executePaginationForField<T = any>(
 
       // Navigate to the paginated field using the path
       const fieldData = getNestedValue(response, fieldPath);
-      
+
       if (!fieldData || typeof fieldData !== 'object') {
         throw new Error(`Invalid response structure for field path: ${fieldPath}`);
       }
 
       if (!Array.isArray(fieldData.results)) {
-        throw new Error(`Expected results array at field path: ${fieldPath}`);
+        // Handle null/undefined results gracefully
+        fieldData.results = [];
       }
 
       if (typeof fieldData.hasMore !== 'boolean') {
@@ -240,7 +246,6 @@ async function executePaginationForField<T = any>(
         fieldData.results.length,
         hasMore
       );
-
     } catch (error) {
       debug.content('Error fetching page %d: %s', pageCount, error);
       throw error;
@@ -250,7 +255,7 @@ async function executePaginationForField<T = any>(
   return {
     items: allItems,
     totalPages: pageCount,
-    hasMore
+    hasMore,
   };
 }
 
@@ -272,12 +277,12 @@ async function executeNestedPagination<T = any>(
 
   for (let i = 0; i < parentItems.length; i++) {
     const parent = parentItems[i];
-    
+
     try {
       debug.content('Fetching nested items for parent %d/%d', i + 1, parentItems.length);
-      
+
       const parentId = nestedConfig.getParentId(parent);
-      const nestedVariables = nestedConfig.nestedVariables 
+      const nestedVariables = nestedConfig.nestedVariables
         ? nestedConfig.nestedVariables(parentId, { pageSize: nestedConfig.pagination?.pageSize })
         : { parentId };
 
@@ -285,24 +290,23 @@ async function executeNestedPagination<T = any>(
         client,
         nestedConfig.nestedQuery,
         nestedVariables,
-        'results', // Assuming nested query returns results directly
+        nestedConfig.nestedFieldPath,
         nestedConfig.pagination,
         onApiCall
       );
 
       results.push({
         ...parent,
-        [nestedConfig.fieldPath]: nestedResult.items
+        [nestedConfig.fieldPath]: nestedResult.items,
       });
-
     } catch (error) {
       debug.content('Error fetching nested items for parent %d: %s', i + 1, error);
       errors.push(`Nested pagination failed for parent ${i + 1}: ${error}`);
-      
+
       // Continue with other parents even if one fails
       results.push({
         ...parent,
-        [nestedConfig.fieldPath]: []
+        [nestedConfig.fieldPath]: [],
       });
     }
   }
@@ -321,13 +325,13 @@ function getNestedValue(obj: any, path: string): any {
 
 /**
  * Simplified dynamic pagination for common use cases
- * 
+ *
  * @param client - The ContentClient instance
  * @param query - The GraphQL query string
  * @param fieldPath - Path to the paginated field
  * @param options - Pagination options
  * @returns Promise that resolves to all items
- * 
+ *
  * @example
  * ```typescript
  * // Simple usage
@@ -353,7 +357,7 @@ export async function simpleDynamicPagination<T = any>(
   const result = await executeDynamicPagination(client, {
     query,
     paginatedFieldPath: fieldPath,
-    pagination: options
+    pagination: options,
   });
 
   return result.items;
@@ -361,10 +365,10 @@ export async function simpleDynamicPagination<T = any>(
 
 /**
  * Dynamic pagination with automatic field detection
- * 
+ *
  * This function attempts to automatically detect paginated fields in the response
  * and paginate through them. Useful for exploratory queries.
- * 
+ *
  * @param client - The ContentClient instance
  * @param query - The GraphQL query string
  * @param variables - Query variables
@@ -381,10 +385,10 @@ export async function autoDetectPagination<T = any>(
 
   // First, execute the query once to detect structure
   const response = await client.get(query, variables);
-  
+
   // Look for fields that have pagination structure
   const paginatedFields = findPaginatedFields(response);
-  
+
   if (paginatedFields.length === 0) {
     throw new Error('No paginated fields detected in the response');
   }
@@ -401,7 +405,7 @@ export async function autoDetectPagination<T = any>(
     query,
     variables,
     paginatedFieldPath: fieldPath,
-    pagination: options
+    pagination: options,
   });
 }
 
@@ -414,13 +418,18 @@ function findPaginatedFields(obj: any, path = ''): string[] {
   if (obj && typeof obj === 'object') {
     for (const [key, value] of Object.entries(obj)) {
       const currentPath = path ? `${path}.${key}` : key;
-      
+
       // Check if this field has pagination structure
-      if (value && typeof value === 'object' && 
-          'results' in value && 'hasMore' in value && 'cursor' in value) {
+      if (
+        value &&
+        typeof value === 'object' &&
+        'results' in value &&
+        'hasMore' in value &&
+        'cursor' in value
+      ) {
         fields.push(currentPath);
       }
-      
+
       // Recursively search nested objects
       if (value && typeof value === 'object' && !Array.isArray(value)) {
         fields.push(...findPaginatedFields(value, currentPath));
@@ -429,4 +438,4 @@ function findPaginatedFields(obj: any, path = ''): string[] {
   }
 
   return fields;
-} 
+}

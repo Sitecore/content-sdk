@@ -17,9 +17,9 @@ export {
 } from './taxonomies';
 export { getContentUrl } from './utils';
 export {
-  paginateAll,
-  PaginationOptions,
-  PaginatedResponse,
-  PaginationArgs,
-  isPaginatedResponse,
-} from './pagination';
+  executeDynamicPagination,
+  simpleDynamicPagination,
+  autoDetectPagination,
+  DynamicPaginationConfig,
+  DynamicPaginationResult,
+} from './dynamic-pagination';
