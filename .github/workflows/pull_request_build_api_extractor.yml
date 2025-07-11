@@ -62,13 +62,41 @@ jobs:
 
       - name: Upload API reports on failure
         if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: api-reports
-          path: |
-            packages/*/api/*.api.md
-            packages/*/temp/*.api.md
-          retention-days: 7
+        run: |
+          echo "## 🔍 API Changes Detected" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The following API changes were detected:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Find all temp API files and show diffs
+          for temp_file in packages/*/temp/*.api.md; do
+            if [ -f "$temp_file" ]; then
+              package_name=$(basename $(dirname $(dirname "$temp_file")))
+              api_file="${temp_file/temp/api}"
+              
+              echo "### 📦 Package: $package_name" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "<details>" >> $GITHUB_STEP_SUMMARY
+              echo "<summary>Click to view API changes</summary>" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`diff" >> $GITHUB_STEP_SUMMARY
+              if [ -f "$api_file" ]; then
+                diff -u "$api_file" "$temp_file" | head -100 >> $GITHUB_STEP_SUMMARY || true
+              else
+                echo "New API file detected" >> $GITHUB_STEP_SUMMARY
+                head -50 "$temp_file" >> $GITHUB_STEP_SUMMARY
+              fi
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "</details>" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+          
+          echo "## 🔧 How to fix" >> $GITHUB_STEP_SUMMARY
+          echo "1. Run \`yarn api-extractor\` locally to update API reports" >> $GITHUB_STEP_SUMMARY
+          echo "2. Review the changes in the generated .api.md files" >> $GITHUB_STEP_SUMMARY
+          echo "3. Commit the updated API reports if the changes are intentional" >> $GITHUB_STEP_SUMMARY
 
       - name: Lint packages
         run: |
