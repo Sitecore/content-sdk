@@ -6,4 +6,8 @@
     "declaration": true,
     "declarationMap": true,
   },
+  "include": [
+    "api/api-surface.ts"
+  ],
+  "exclude": []
 }

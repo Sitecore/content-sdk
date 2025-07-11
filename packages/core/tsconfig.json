@@ -28,5 +28,6 @@
     "src/**/*.test.ts",
     "src/test-data/*",
     "src/tools/templating/test-data/*",
+    "api"
   ]
 }
