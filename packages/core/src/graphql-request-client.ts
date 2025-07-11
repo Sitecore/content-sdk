@@ -8,6 +8,7 @@ import { DefaultRetryStrategy } from './retries';
 
 /**
  * An interface for GraphQL clients for Sitecore APIs
+ * @public
  */
 export interface GraphQLClient {
   /**
@@ -25,11 +26,13 @@ export interface GraphQLClient {
 /**
  * This type represents errors that can occur in a GraphQL client.
  * In cases where an error status was sent back from the server (`!response.ok`), the `response` will be populated with details. In cases where a response was never received, the `code` can be populated with the error code (e.g. Node's 'ECONNRESET', 'ETIMEDOUT', etc).
+ * @public
  */
 export type GraphQLClientError = Partial<ClientError> & GenericGraphQLClientError;
 
 /**
  * Minimum configuration options for classes that implement @see GraphQLClient
+ * @public
  */
 export type GraphQLRequestClientConfig = {
   /**
@@ -68,6 +71,7 @@ export type GraphQLRequestClientConfig = {
  * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
  * @param config - The configuration object that specifies how the GraphQL client should be set up.
  * @returns An instance of a GraphQL Request Client ready to send GraphQL requests.
+ * @public
  */
 export type GraphQLRequestClientFactory = (
   config?: Omit<GraphQLRequestClientConfig, 'apiKey'>
@@ -75,6 +79,7 @@ export type GraphQLRequestClientFactory = (
 
 /**
  * Configuration type for @type GraphQLRequestClientFactory
+ * @public
  */
 export type GraphQLRequestClientFactoryConfig = {
   endpoint: string;
@@ -84,6 +89,7 @@ export type GraphQLRequestClientFactoryConfig = {
 /**
  * A GraphQL client for Sitecore APIs that uses the 'graphql-request' library.
  * https://github.com/prisma-labs/graphql-request
+ * @public
  */
 export class GraphQLRequestClient implements GraphQLClient {
   private client: Client;

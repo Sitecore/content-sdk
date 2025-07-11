@@ -149,6 +149,7 @@ Client Side functionalities (like Tracking and Personalization) may be limited.`
  * Accepts a SitecoreConfigInput object and returns full sitecore configuration
  * @param {SitecoreConfigInput} config override values to be written over default config settings
  * @returns {SitecoreConfig} full sitecore configuration to use in application
+ * @public
  */
 export const defineConfig = (config: SitecoreConfigInput): SitecoreConfig => {
   const resolvedConfig = resolveConfig(getFallbackConfig(), config);

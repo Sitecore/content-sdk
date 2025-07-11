@@ -2,6 +2,10 @@ import { GraphQLClient, GraphQLRequestClientFactory } from './graphql-request-cl
 import { SitecoreConfigInput } from './config';
 import debug from './debug';
 
+/**
+ * GraphQL Service Configuration
+ * @public
+ */
 export type GraphQLServiceConfig = Pick<SitecoreConfigInput, 'retries'> & {
   /**
    * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.

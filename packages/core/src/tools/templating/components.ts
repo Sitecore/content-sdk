@@ -6,6 +6,7 @@ const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
 
 /**
  * Describes a file that represents a component definition
+ * @public
  */
 export interface ComponentFile {
   path: string;
@@ -21,6 +22,7 @@ export interface ComponentFile {
  * @property {object} importInfo - Information about how to import the package.
  * @property {string} importInfo.importFrom - The path from which to import the component(s).
  * @property {string[]} [importInfo.namedImports] - The specific named components to import from the package. Leave empty to have whole package be imported as wildcard and allow SXA variants support for component.
+ * @public
  */
 export interface ComponentImport {
   importName: string;

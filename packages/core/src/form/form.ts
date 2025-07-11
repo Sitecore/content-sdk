@@ -7,6 +7,7 @@ import debug from '../debug';
  * @param {string} contextId - The unique identifier of the current context
  * @param {string} formId - The unique identifier of the form
  * @param {string} [edgeUrl] - The URL of the Sitecore Edge Platform
+ * @public
  */
 export const loadForm = async (contextId: string, formId: string, edgeUrl?: string) => {
   if (!contextId) {
@@ -46,6 +47,7 @@ export const loadForm = async (contextId: string, formId: string, edgeUrl?: stri
  * This method ensures that any <script> elements within the loaded HTML are executed.
  * It re-creates the script elements and appends the to the component's template, then removes old script elements to avoid duplication.
  * @param {HTMLElement} rootElement - The root element to execute script elements within
+ * @internal
  */
 export const executeScriptElements = (rootElement: HTMLElement) => {
   const scriptElements = rootElement.querySelectorAll('script');
@@ -72,6 +74,7 @@ export const executeScriptElements = (rootElement: HTMLElement) => {
  * This listener captures interactions such as form views or submissions
  * @param {HTMLElement} formElement - The form element to subscribe to events on
  * @param {string} [componentId] - The unique identifier of the component
+ * @internal
  */
 export const subscribeToFormSubmitEvent = (formElement: HTMLElement, componentId?: string) => {
   formElement.addEventListener('form:engage', ((

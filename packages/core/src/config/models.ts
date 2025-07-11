@@ -3,6 +3,7 @@ import { GenerateMapFunction, GenerateMapArgs } from '../tools';
 
 /**
  * Utility type to make every property in a type required
+ * @internal
  */
 export type DeepRequired<T> = Required<
   {
@@ -12,6 +13,7 @@ export type DeepRequired<T> = Required<
 
 /**
  * Utility type to make all properties in a type optional, recursively
+ * @internal
  */
 export type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
@@ -19,6 +21,7 @@ export type DeepPartial<T> = {
 
 /**
  * Type to be used as config input in sitecore.config
+ * @public
  */
 export type SitecoreConfigInput = {
   /**
@@ -202,11 +205,13 @@ export type SitecoreConfigInput = {
 /**
  * Final Sitecore config type used at runtime.
  * Every property is populated, either from sitecore.config or fallback values.
+ * @public
  */
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
 
 /**
  * Type used as CLI config input in sitecore.cli.config
+ * @public
  */
 export type SitecoreCliConfigInput = {
   /**
@@ -240,10 +245,12 @@ export type SitecoreCliConfigInput = {
 
 /**
  * Final Sitecore CLI config type required by the CLI
+ * @public
  */
 export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;
 /**
  * Represents a scaffold template used for generating components
+ * @public
  */
 export type ScaffoldTemplate = {
   /**
@@ -270,6 +277,7 @@ export type ScaffoldTemplate = {
 
 /**
  * Enumeration of default component templates
+ * @internal
  */
 export enum ComponentTemplateType {
   BYOC = 'byoc',

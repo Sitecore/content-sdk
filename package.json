@@ -10,6 +10,8 @@
     "test-packages": "lerna run test",
     "install-git-hooks": "node ./scripts/install-hooks.js",
     "generate-docs": "lerna run generate-docs",
+    "api-extractor": "lerna run api-extractor",
+    "api-extractor:verify": "lerna run api-extractor:verify",
     "version": "yarn install && git stage yarn.lock"
   },
   "author": {
@@ -22,6 +24,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.52.8",
     "@stylistic/eslint-plugin-ts": "^2.10.1",
     "@typescript-eslint/eslint-plugin": "^8.14.0",
     "@typescript-eslint/parser": "^8.14.0",
