@@ -1,4 +1,4 @@
-name: Pull Request Build
+name: Pull Request Build - chore/api-extractor
 
 on:
   pull_request:
@@ -37,6 +37,38 @@ jobs:
 
       - name: Build packages
         run: npm run build
+
+      # API Extractor verifies that public API changes are properly documented
+      # and helps prevent accidental breaking changes to the public API surface
+      - name: Verify API surface
+        run: |
+          echo "🔍 Checking API Extractor configuration..."
+          echo ""
+          echo "🔍 Verifying API surface compatibility..."
+          if ! yarn api-extractor:verify; then
+            echo ""
+            echo "❌ API Extractor verification failed!"
+            echo ""
+            echo "🔧 To fix this issue:"
+            echo "   1. Run 'yarn api-extractor' locally to update API reports"
+            echo "   2. Review the changes in the generated .api.md files"
+            echo "   3. Commit the updated API reports if the changes are intentional"
+            echo ""
+            echo "📋 This ensures API changes are properly reviewed and documented."
+            echo ""
+            exit 1
+          fi
+          echo "✅ API surface verification passed!"
+
+      - name: Upload API reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-reports
+          path: |
+            packages/*/api/*.api.md
+            packages/*/temp/*.api.md
+          retention-days: 7
 
       - name: Lint packages
         run: |
