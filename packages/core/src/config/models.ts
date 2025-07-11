@@ -226,7 +226,7 @@ export type SitecoreCliConfigInput = {
   /**
    * Configuration for the `sitecore-tools scaffold` CLI command
    */
-  scaffold?: {
+  scaffold: {
     /**
      * Scaffold templates available for generating components
      */
