@@ -11,7 +11,6 @@ declare module 'sync-disk-cache' {
 
 declare namespace NodeJS {
   export interface Global {
-    [x: string]: {};
     [key: string]: unknown;
     requestAnimationFrame: (callback: () => void) => void;
     window: Window;
