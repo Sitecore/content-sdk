@@ -25,17 +25,30 @@ import { NativeDataFetcher } from '../native-fetcher';
 import { RobotsService } from '../site/robots-service';
 
 /**
+ * Error page codes
+ */
+export enum ErrorPage {
+  NotFound = '404',
+  InternalServerError = '500',
+}
+
+/**
+ * Page mode name
+ */
+type PageModeName = LayoutServicePageState | DesignLibraryMode;
+
+/**
  * Represents the mode of the page
  */
 export type PageMode = {
   /**
-   * Page mode name
+   * Page mode. Defines the specific identifiers for the page.
    */
-  name: LayoutServicePageState | DesignLibraryMode;
+  name: PageModeName;
   /**
    * Design Library related properties. Only available in Design Library mode.
    */
-  designLibrary?: {
+  designLibrary: {
     /**
      * Whether the page is in variant generation mode
      */
@@ -44,19 +57,19 @@ export type PageMode = {
   /**
    * Whether the page is in normal mode
    */
-  isNormal?: boolean;
+  isNormal: boolean;
   /**
    * Whether the page is in preview mode
    */
-  isPreview?: boolean;
+  isPreview: boolean;
   /**
    * Whether the page is in editing mode
    */
-  isEditing?: boolean;
+  isEditing: boolean;
   /**
    * Whether the page is in Design Library mode
    */
-  isDesignLibrary?: boolean;
+  isDesignLibrary: boolean;
 };
 
 /**
@@ -125,7 +138,6 @@ export interface BaseSitecoreClient {
     pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
-
   /**
    * Retrieves the robots.txt content for a given site name.
    * @param {string} siteName - The name of the site for which to fetch robots.txt content.
@@ -159,6 +171,18 @@ export interface BaseSitecoreClient {
    */
   getPreview(
     previewData: EditingPreviewData | undefined,
+    fetchOptions?: FetchOptions
+  ): Promise<Page | null>;
+  /**
+   * Get error page details for a given error code
+   * @param {ErrorPage} code - The error code to get the error page for
+   * @param {Partial<RouteOptions>} [pageOptions] - The page options to get the error page for
+   * @param {FetchOptions} [fetchOptions] - Additional fetch fetch options to override GraphQL requests
+   * @returns {Promise<Page | null>} A promise that resolves to the error page details or null if not found
+   */
+  getErrorPage(
+    code: ErrorPage,
+    pageOptions?: Partial<RouteOptions>,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
   /**
@@ -300,10 +324,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         layout,
         siteName: layout.sitecore.context.site?.name || site,
         locale,
-        mode: {
-          name: layout.sitecore.context.pageState || LayoutServicePageState.Normal,
-          isNormal: true,
-        },
+        mode: this.getPageMode(LayoutServicePageState.Normal),
       };
     }
   }
@@ -411,11 +432,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       layout: data.layoutData,
       dictionary: data.dictionary,
       siteName: data.layoutData.sitecore.context.site?.name || site,
-      mode: {
-        name: mode,
-        isPreview: mode === LayoutServicePageState.Preview,
-        isEditing: mode === LayoutServicePageState.Edit,
-      },
+      mode: this.getPageMode(mode),
     } as Page;
     const personalizeData = getGroomedVariantIds(variantIds);
     personalizeLayout(page.layout, personalizeData.variantId, personalizeData.componentVariantIds);
@@ -475,15 +492,57 @@ export class SitecoreClient implements BaseSitecoreClient {
       layout: componentData,
       dictionary: dictionaryData,
       siteName: componentData.sitecore.context.site?.name || site,
-      mode: {
-        name: mode,
-        isDesignLibrary: true,
-        designLibrary: {
-          isVariantGeneration: mode === DesignLibraryMode.VariantGeneration,
-        },
-      },
+      mode: this.getPageMode(mode),
     } as Page;
     return page;
+  }
+
+  /**
+   * Get error page details for a given error code
+   * @param {ErrorPage} code - The error code to get the error page for
+   * @param {Partial<RouteOptions>} pageOptions - The page options to get the error page for
+   * @param {FetchOptions} [fetchOptions] - Additional fetch fetch options to override GraphQL requests
+   * @returns {Promise<Page | null>} A promise that resolves to the error page details or null if not found
+   */
+  async getErrorPage(
+    code: ErrorPage,
+    pageOptions?: Partial<RouteOptions>,
+    fetchOptions?: FetchOptions
+  ): Promise<Page | null> {
+    const locale = pageOptions?.locale || this.initOptions.defaultLanguage;
+    const site = pageOptions?.site || this.initOptions.defaultSite;
+
+    const result = await this.getErrorPages(
+      {
+        site,
+        locale,
+      },
+      fetchOptions
+    );
+
+    let layout = null;
+
+    switch (code) {
+      case ErrorPage.NotFound:
+        layout = result?.notFoundPage?.rendered || null;
+        break;
+      case ErrorPage.InternalServerError:
+        layout = result?.serverErrorPage?.rendered || null;
+        break;
+      default:
+        return null;
+    }
+
+    if (!layout) {
+      return null;
+    }
+
+    return {
+      layout,
+      locale,
+      mode: this.getPageMode(LayoutServicePageState.Normal),
+      siteName: site,
+    };
   }
 
   /**
@@ -592,6 +651,48 @@ export class SitecoreClient implements BaseSitecoreClient {
       clientFactory: this.clientFactory,
       retries: this.initOptions.retries,
     };
+  }
+
+  /**
+   * Get page mode based on mode name
+   * @param {PageModeName} mode - The mode name to get the page mode for
+   * @returns {PageMode} The page mode
+   */
+  private getPageMode(mode: PageModeName): PageMode {
+    const pageMode: PageMode = {
+      name: mode,
+      isNormal: false,
+      isPreview: false,
+      isEditing: false,
+      isDesignLibrary: false,
+      designLibrary: {
+        isVariantGeneration: false,
+      },
+    };
+
+    switch (mode) {
+      case LayoutServicePageState.Normal:
+        pageMode.isNormal = true;
+        break;
+      case LayoutServicePageState.Preview:
+        pageMode.isPreview = true;
+        break;
+      case LayoutServicePageState.Edit:
+        pageMode.isEditing = true;
+        break;
+      case DesignLibraryMode.Normal:
+      case DesignLibraryMode.Metadata:
+        pageMode.isDesignLibrary = true;
+        break;
+      case DesignLibraryMode.VariantGeneration:
+        pageMode.isDesignLibrary = true;
+        pageMode.designLibrary.isVariantGeneration = true;
+        break;
+      default:
+        break;
+    }
+
+    return pageMode;
   }
 
   private getClientFactory(): GraphQLRequestClientFactory {

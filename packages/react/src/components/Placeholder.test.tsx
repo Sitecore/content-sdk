@@ -34,15 +34,30 @@ import { MissingComponent, MissingComponentProps } from './MissingComponent';
 import { Placeholder } from './Placeholder';
 import { ComponentProps } from './PlaceholderCommon';
 import { SitecoreProvider } from './SitecoreProvider';
-import { PageMode } from '@sitecore-content-sdk/core/client';
+import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 
 const componentMap = new Map<string, React.FC>();
 const dynamicComponent = React.lazy(() => import('../test-data/test-dynamic-component'));
 
-const mode: PageMode = {
-  name: LayoutServicePageState.Normal,
-  isNormal: true,
-};
+const getPage = (): Page => ({
+  locale: 'en',
+  layout: {
+    sitecore: {
+      context: {},
+      route: null,
+    },
+  },
+  mode: {
+    name: LayoutServicePageState.Normal,
+    isNormal: true,
+    isPreview: false,
+    isEditing: false,
+    isDesignLibrary: false,
+    designLibrary: {
+      isVariantGeneration: false,
+    },
+  },
+});
 
 // pass otherProps to page-content to test property cascading through the Placeholder
 
@@ -85,6 +100,8 @@ describe('<Placeholder />', () => {
   testData.forEach((dataSet) => {
     describe(`with ${dataSet.label}`, () => {
       it('should render a placeholder with given key', () => {
+        const page = getPage();
+        page.layout = dataSet.data;
         const component = (dataSet.data.sitecore.route.placeholders.main as (
           | ComponentRendering
           | RouteData
@@ -92,7 +109,7 @@ describe('<Placeholder />', () => {
         const phKey = 'page-content';
 
         const renderedComponent = render(
-          <SitecoreProvider componentMap={componentMap} mode={mode}>
+          <SitecoreProvider componentMap={componentMap} page={page}>
             <Placeholder name={phKey} rendering={component} />
           </SitecoreProvider>
         );
@@ -103,11 +120,13 @@ describe('<Placeholder />', () => {
       });
 
       it('should render nested placeholders', () => {
+        const page = getPage();
+        page.layout = dataSet.data;
         const component = dataSet.data.sitecore.route as RouteData;
         const phKey = 'main';
 
         const renderedComponent = render(
-          <SitecoreProvider componentMap={componentMap} mode={mode}>
+          <SitecoreProvider componentMap={componentMap} page={page}>
             <Placeholder name={phKey} rendering={component} />
           </SitecoreProvider>
         );
@@ -118,11 +137,13 @@ describe('<Placeholder />', () => {
       });
 
       it('should render components based on the rendereach function', () => {
+        const page = getPage();
+        page.layout = dataSet.data;
         const component = dataSet.data.sitecore.route as RouteData;
         const phKey = 'main';
 
         const renderedComponent = render(
-          <SitecoreProvider componentMap={componentMap} mode={mode}>
+          <SitecoreProvider componentMap={componentMap} page={page}>
             <Placeholder
               name={phKey}
               rendering={component}
@@ -135,11 +156,13 @@ describe('<Placeholder />', () => {
       });
 
       it('should render components based on the render function', () => {
+        const page = getPage();
+        page.layout = dataSet.data;
         const component = dataSet.data.sitecore.route as RouteData;
         const phKey = 'main';
 
         const renderedComponent = render(
-          <SitecoreProvider componentMap={componentMap} mode={mode}>
+          <SitecoreProvider componentMap={componentMap} page={page}>
             <Placeholder
               name={phKey}
               rendering={component}
@@ -152,11 +175,13 @@ describe('<Placeholder />', () => {
       });
 
       it('should render empty placeholder', () => {
+        const page = getPage();
+        page.layout = dataSet.data;
         const component = dataSet.data.sitecore.route as RouteData;
         const phKey = 'mainEmpty';
 
         const renderedComponent = render(
-          <SitecoreProvider componentMap={componentMap} mode={mode}>
+          <SitecoreProvider componentMap={componentMap} page={page}>
             <Placeholder name={phKey} rendering={component} render={() => null} />
           </SitecoreProvider>
         );
@@ -166,6 +191,8 @@ describe('<Placeholder />', () => {
     });
 
     it('should render output based on the renderEmpty function in case of no renderings', () => {
+      const page = getPage();
+      page.layout = dataSet.data;
       const component = dataSet.data.sitecore.route as RouteData;
       const renderings = component.placeholders.main.filter(
         (c) => !(c as ComponentRendering).componentName
@@ -181,7 +208,7 @@ describe('<Placeholder />', () => {
       const phKey = 'main';
 
       const renderedComponent = render(
-        <SitecoreProvider componentMap={componentMap} mode={mode}>
+        <SitecoreProvider componentMap={componentMap} page={page}>
           <Placeholder
             name={phKey}
             rendering={myComponent}
@@ -199,13 +226,15 @@ describe('<Placeholder />', () => {
     });
 
     it('should pass properties to nested components', () => {
+      const page = getPage();
+      page.layout = dataSet.data;
       const component = dataSet.data.sitecore.route as any;
       const phKey = 'main';
       const expectedMessage = (component.placeholders.main as any[]).find((c) => c.componentName)
         .fields.message;
 
       const renderedComponent = render(
-        <SitecoreProvider componentMap={componentMap} mode={mode}>
+        <SitecoreProvider componentMap={componentMap} page={page}>
           <Placeholder name={phKey} rendering={component} />
         </SitecoreProvider>
       );
@@ -218,6 +247,8 @@ describe('<Placeholder />', () => {
     });
 
     it('should apply modifyComponentProps to the final props', () => {
+      const page = getPage();
+      page.layout = dataSet.data;
       const component = dataSet.data.sitecore.route as any;
       const phKey = 'main';
       const expectedMessage = (component.placeholders.main as any[]).find((c) => c.componentName)
@@ -235,7 +266,7 @@ describe('<Placeholder />', () => {
       };
 
       const renderedComponent = render(
-        <SitecoreProvider componentMap={componentMap} mode={mode}>
+        <SitecoreProvider componentMap={componentMap} page={page}>
           <Placeholder
             name={phKey}
             rendering={component}
@@ -257,19 +288,16 @@ describe('<Placeholder />', () => {
 describe('SXA rendering variants', () => {
   const componentMap = new Map();
 
-  const mode: PageMode = {
-    name: LayoutServicePageState.Normal,
-    isNormal: true,
-  };
-
   componentMap.set('RichText', SxaRichText);
 
   it('should render', () => {
+    const page = getPage();
+    page.layout = sxaRenderingVariantData;
     const component = sxaRenderingVariantData.sitecore.route as RouteData;
     const phKey = 'main';
 
     const renderedComponent = render(
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreProvider>
     );
@@ -291,11 +319,13 @@ describe('SXA rendering variants', () => {
   });
 
   it('should render with container-{*} type dynamic placeholder', () => {
+    const page = getPage();
+    page.layout = sxaRenderingCommonContainerName;
     const component = sxaRenderingCommonContainerName.sitecore.route as RouteData;
     const phKey = 'container-1';
 
     const renderedComponent = render(
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreProvider>
     );
@@ -313,11 +343,13 @@ describe('SXA rendering variants', () => {
   });
 
   it('should not render without container-{*} type dynamic placeholder', () => {
+    const page = getPage();
+    page.layout = sxaRenderingWithoutContainerName;
     const component = sxaRenderingWithoutContainerName.sitecore.route as RouteData;
     const phKey = 'richText';
 
     const renderedComponent = render(
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreProvider>
     );
@@ -327,11 +359,13 @@ describe('SXA rendering variants', () => {
   });
 
   it('should render with dynamic-1-{*} type dynamic placeholder', () => {
+    const page = getPage();
+    page.layout = sxaRenderingDoubleDigitContainerName;
     const component = sxaRenderingDoubleDigitContainerName.sitecore.route as RouteData;
     const phKey = 'dynamic-1-{*}';
 
     const renderedComponent = render(
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreProvider>
     );
@@ -349,11 +383,13 @@ describe('SXA rendering variants', () => {
   });
 
   it('should render another rendering variant', () => {
+    const page = getPage();
+    page.layout = sxaRenderingVariantData;
     const component = sxaRenderingVariantData.sitecore.route as RouteData;
     const phKey = 'main-second';
 
     const renderedComponent = render(
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreProvider>
     );
@@ -368,11 +404,13 @@ describe('SXA rendering variants', () => {
   });
 
   it('should render column splitter rendering variant', () => {
+    const page = getPage();
+    page.layout = sxaRenderingColumnSplitterVariant;
     const component = sxaRenderingColumnSplitterVariant.sitecore.route as RouteData;
     const phKey = 'column-1-{*}';
 
     const renderedComponent = render(
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreProvider>
     );
@@ -388,17 +426,14 @@ describe('SXA rendering variants', () => {
 });
 
 describe('BYOC fallback', () => {
-  const mode: PageMode = {
-    name: LayoutServicePageState.Normal,
-    isNormal: true,
-  };
-
   let byocComponentStub;
   let byocWrapperStub;
 
   const componentMap = new Map();
 
   it('should render', () => {
+    const page = getPage();
+    page.layout = byocWrapperData;
     const component = byocWrapperData.sitecore.route as RouteData;
     const phKey = 'main';
 
@@ -413,7 +448,7 @@ describe('BYOC fallback', () => {
     ));
 
     const renderedComponent = render(
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreProvider>
     );
@@ -426,6 +461,8 @@ describe('BYOC fallback', () => {
   });
 
   it('should render ErrorBoundary without Suspense for byoc wrapper', () => {
+    const page = getPage();
+    page.layout = byocWrapperData;
     const component = byocWrapperData.sitecore.route as RouteData;
     const phKey = 'main';
 
@@ -442,7 +479,7 @@ describe('BYOC fallback', () => {
     const errorBoundarySpy = spy(ErrorBoundary, 'default');
 
     const renderedComponent = render(
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreProvider>
     );
@@ -465,17 +502,14 @@ describe('BYOC fallback', () => {
 });
 
 describe('FEaaS fallback', () => {
-  const mode: PageMode = {
-    name: LayoutServicePageState.Normal,
-    isNormal: true,
-  };
-
   let feaasComponentStub;
   let feaasWrapperStub;
 
   const componentMap = new Map();
 
   it('should render', () => {
+    const page = getPage();
+    page.layout = feaasWrapperData;
     const component = feaasWrapperData.sitecore.route as RouteData;
     const phKey = 'main';
 
@@ -490,7 +524,7 @@ describe('FEaaS fallback', () => {
     ));
 
     const renderedComponent = render(
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={component} />
       </SitecoreProvider>
     );
@@ -504,11 +538,13 @@ describe('FEaaS fallback', () => {
 });
 
 it('should render Suspense when disableSuspense is false', async () => {
+  const page = getPage();
+  page.layout = normalModeDevData;
   const component = normalModeDevData.sitecore.route as RouteData;
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreProvider componentMap={componentMap} mode={mode}>
+    <SitecoreProvider componentMap={componentMap} page={page}>
       <Placeholder name={phKey} disableSuspense={false} rendering={component} />
     </SitecoreProvider>
   );
@@ -519,11 +555,13 @@ it('should render Suspense when disableSuspense is false', async () => {
 });
 
 it('should not render Suspense when disableSuspense is true', async () => {
+  const page = getPage();
+  page.layout = normalModeDevData;
   const component = normalModeDevData.sitecore.route as RouteData;
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreProvider componentMap={componentMap} mode={mode}>
+    <SitecoreProvider componentMap={componentMap} page={page}>
       <Placeholder name={phKey} disableSuspense={true} rendering={component} />
     </SitecoreProvider>
   );
@@ -534,6 +572,7 @@ it('should not render Suspense when disableSuspense is true', async () => {
 });
 
 it('should render null for unknown placeholder', () => {
+  const page = getPage();
   const route = ({
     placeholders: {
       main: [
@@ -543,10 +582,16 @@ it('should render null for unknown placeholder', () => {
       ],
     },
   } as unknown) as RouteData;
+  page.layout = {
+    sitecore: {
+      context: {},
+      route,
+    },
+  };
   const phKey = 'unknown';
 
   const renderedComponent = render(
-    <SitecoreProvider componentMap={componentMap} mode={mode}>
+    <SitecoreProvider componentMap={componentMap} page={page}>
       <Placeholder name={phKey} rendering={route} />
     </SitecoreProvider>
   );
@@ -576,10 +621,17 @@ it('should render error message on error', () => {
       ],
     },
   } as unknown) as RouteData;
+  const page = getPage();
+  page.layout = {
+    sitecore: {
+      context: {},
+      route,
+    },
+  };
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreProvider componentMap={components} mode={mode}>
+    <SitecoreProvider componentMap={components} page={page}>
       <Placeholder name={phKey} rendering={route} />
     </SitecoreProvider>
   );
@@ -615,10 +667,19 @@ it('should render error message on error, only for the errored component', () =>
       ],
     },
   } as unknown) as RouteData;
+  const page = getPage();
+  page.layout = {
+    sitecore: {
+      context: {},
+      route,
+    },
+  };
   const phKey = 'main';
 
   const renderedComponent = render(
-    <Placeholder name={phKey} rendering={route} componentMap={components} mode={mode} />
+    <SitecoreProvider componentMap={components} page={page}>
+      <Placeholder name={phKey} rendering={route} />
+    </SitecoreProvider>
   );
   expect(
     renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
@@ -627,11 +688,12 @@ it('should render error message on error, only for the errored component', () =>
 });
 
 it('should render custom errorComponent on error, if provided', () => {
+  const page = getPage();
   const components = new Map<string, React.FC<{ [key: string]: unknown }>>();
 
   const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
     <div className="home-mock">
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name="main" rendering={rendering} />
       </SitecoreProvider>
     </div>
@@ -653,10 +715,16 @@ it('should render custom errorComponent on error, if provided', () => {
       ],
     },
   } as unknown) as RouteData;
+  page.layout = {
+    sitecore: {
+      context: {},
+      route,
+    },
+  };
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreProvider componentMap={components} mode={mode}>
+    <SitecoreProvider componentMap={components} page={page}>
       <Placeholder name={phKey} rendering={route} errorComponent={CustomError} />
     </SitecoreProvider>
   );
@@ -664,6 +732,7 @@ it('should render custom errorComponent on error, if provided', () => {
 });
 
 it('should render MissingComponent for unknown rendering', () => {
+  const page = getPage();
   const route: any = {
     placeholders: {
       main: [
@@ -671,6 +740,12 @@ it('should render MissingComponent for unknown rendering', () => {
           componentName: 'Unknown',
         },
       ],
+    },
+  };
+  page.layout = {
+    sitecore: {
+      context: {},
+      route,
     },
   };
   const phKey = 'main';
@@ -682,7 +757,7 @@ it('should render MissingComponent for unknown rendering', () => {
   );
 
   const renderedComponent = render(
-    <SitecoreProvider componentMap={componentMap} mode={mode}>
+    <SitecoreProvider componentMap={componentMap} page={page}>
       <Placeholder
         name={phKey}
         rendering={route}
@@ -694,6 +769,7 @@ it('should render MissingComponent for unknown rendering', () => {
 });
 
 it('should render nothing for rendering without a name', () => {
+  const page = getPage();
   const componentMap = new Map<string, React.FC<{ [key: string]: unknown }>>();
 
   const Home: React.FC<{ rendering?: RouteData }> = () => <div className="home-mock"></div>;
@@ -712,11 +788,17 @@ it('should render nothing for rendering without a name', () => {
       ],
     },
   };
+  page.layout = {
+    sitecore: {
+      context: {},
+      route,
+    },
+  };
   const phKey = 'main';
 
   const renderedComponent = render(
     <div className="empty-test">
-      <SitecoreProvider componentMap={componentMap} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={route} />
       </SitecoreProvider>
     </div>
@@ -725,6 +807,7 @@ it('should render nothing for rendering without a name', () => {
 });
 
 it('should render HiddenRendering when rendering is hidden', () => {
+  const page = getPage();
   const route: any = {
     placeholders: {
       main: [
@@ -734,10 +817,16 @@ it('should render HiddenRendering when rendering is hidden', () => {
       ],
     },
   };
+  page.layout = {
+    sitecore: {
+      context: {},
+      route,
+    },
+  };
   const phKey = 'main';
 
   const renderedComponent = render(
-    <SitecoreProvider componentMap={componentMap} mode={mode}>
+    <SitecoreProvider componentMap={componentMap} page={page}>
       <Placeholder name={phKey} rendering={route} />
     </SitecoreProvider>
   );
@@ -745,7 +834,8 @@ it('should render HiddenRendering when rendering is hidden', () => {
 });
 
 it('should render custom HiddenRendering when rendering is hidden', () => {
-  const hiddenRenderingSpy = spy(HiddenRendering, 'HiddenRendering');
+  const page = getPage();
+  spy(HiddenRendering, 'HiddenRendering');
 
   const route: any = {
     placeholders: {
@@ -754,6 +844,12 @@ it('should render custom HiddenRendering when rendering is hidden', () => {
           componentName: 'Hidden Rendering',
         },
       ],
+    },
+  };
+  page.layout = {
+    sitecore: {
+      context: {},
+      route,
     },
   };
   const phKey = 'main';
@@ -766,7 +862,7 @@ it('should render custom HiddenRendering when rendering is hidden', () => {
   );
 
   const renderedComponent = render(
-    <SitecoreProvider componentMap={componentMap} mode={mode}>
+    <SitecoreProvider componentMap={componentMap} page={page}>
       <Placeholder
         name={phKey}
         rendering={route}
@@ -793,7 +889,21 @@ describe('PlaceholderMetadata', () => {
   const mode: PageMode = {
     name: LayoutServicePageState.Edit,
     isEditing: true,
+    isNormal: false,
+    isPreview: false,
+    isDesignLibrary: false,
+    designLibrary: {
+      isVariantGeneration: false,
+    },
   };
+
+  let page: Page;
+
+  beforeEach(() => {
+    page = getPage();
+    page.layout = layoutData;
+    page.mode = mode;
+  });
 
   const componentMap = new Map<string, React.FC>();
 
@@ -806,7 +916,7 @@ describe('PlaceholderMetadata', () => {
 
   it('should render <PlaceholderMetadata> with nested placeholder components', () => {
     const wrapper = render(
-      <SitecoreProvider componentMap={componentMap} layoutData={layoutData} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name="main" rendering={layoutData.sitecore.route} />
       </SitecoreProvider>,
       { container: document.body }
@@ -832,12 +942,9 @@ describe('PlaceholderMetadata', () => {
   });
 
   it('should render code blocks even if placeholder is empty', () => {
+    page.layout = layoutDataWithEmptyPlaceholder;
     const wrapper = render(
-      <SitecoreProvider
-        componentMap={componentMap}
-        layoutData={layoutDataWithEmptyPlaceholder}
-        mode={mode}
-      >
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name="main" rendering={layoutDataWithEmptyPlaceholder.sitecore.route} />
       </SitecoreProvider>,
       { container: document.body }
@@ -854,12 +961,10 @@ describe('PlaceholderMetadata', () => {
   });
 
   it('should render missing component with code blocks if component is not registered', () => {
+    page.layout = layoutDataWithUnknownComponent;
+
     const wrapper = render(
-      <SitecoreProvider
-        componentMap={componentMap}
-        layoutData={layoutDataWithUnknownComponent}
-        mode={mode}
-      >
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name="main" rendering={layoutDataWithUnknownComponent.sitecore.route} />
       </SitecoreProvider>
     );
@@ -878,8 +983,10 @@ describe('PlaceholderMetadata', () => {
   it('should render dynamic placeholder', () => {
     const phKey = 'container-1';
     const layoutData = layoutDataForNestedDynamicPlaceholder('container-{*}');
+    page.layout = layoutData;
+
     const wrapper = render(
-      <SitecoreProvider componentMap={componentMap} layoutData={layoutData} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={layoutData.sitecore.route} />
       </SitecoreProvider>
     );
@@ -905,8 +1012,9 @@ describe('PlaceholderMetadata', () => {
   it('should render double digit dynamic placeholder', () => {
     const phKey = 'container-1-2';
     const layoutData = layoutDataForNestedDynamicPlaceholder('container-1-{*}');
+    page.layout = layoutData;
     const wrapper = render(
-      <SitecoreProvider componentMap={componentMap} layoutData={layoutData} mode={mode}>
+      <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name={phKey} rendering={layoutData.sitecore.route} />
       </SitecoreProvider>
     );

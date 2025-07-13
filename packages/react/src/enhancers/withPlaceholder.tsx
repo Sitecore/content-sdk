@@ -90,7 +90,7 @@ export function withPlaceholder(
             placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
               renderingData,
               placeholder.placeholder,
-              childProps.pageContext.mode.isEditing
+              childProps.page.mode.isEditing
             );
             if (placeholderData) {
               childProps[placeholder.prop] = this.getComponentsForRenderingData(placeholderData);
@@ -99,7 +99,7 @@ export function withPlaceholder(
             placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
               renderingData,
               placeholder as string,
-              childProps.pageContext.mode.isEditing
+              childProps.page.mode.isEditing
             );
             if (placeholderData) {
               childProps[placeholder as string] = this.getComponentsForRenderingData(

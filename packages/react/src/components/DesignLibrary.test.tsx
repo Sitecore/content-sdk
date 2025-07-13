@@ -4,7 +4,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { PageMode } from '@sitecore-content-sdk/core/client';
+import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../test-data/component-editing-data';
@@ -41,6 +41,17 @@ describe('<DesignLibrary />', () => {
     },
   };
 
+  const getPage = (): Page => ({
+    locale: 'en',
+    layout: {
+      sitecore: {
+        context: {},
+        route: null,
+      },
+    },
+    mode,
+  });
+
   const api = {
     edge: {
       contextId: 'test-context-id',
@@ -55,20 +66,20 @@ describe('<DesignLibrary />', () => {
   };
 
   it('should render null if not in design library mode', () => {
-    const mode = {
+    const page = getPage();
+
+    page.mode = {
       name: DesignLibraryMode.Normal,
       isDesignLibrary: false,
       designLibrary: {
         isVariantGeneration: false,
       },
+      isNormal: false,
+      isPreview: false,
+      isEditing: false,
     };
     const rendered = render(
-      <SitecoreProvider
-        componentMap={components}
-        layoutData={getTestLayoutData().layoutData}
-        api={api}
-        mode={mode}
-      >
+      <SitecoreProvider componentMap={components} api={api} page={page}>
         <DesignLibrary />
       </SitecoreProvider>,
       { container: document.body }
@@ -117,15 +128,14 @@ describe('<DesignLibrary />', () => {
     }
 
     it('should render', () => {
+      const page = getPage();
       const basicPage = getTestLayoutData();
+
+      page.layout = basicPage.layoutData;
+
       // don't wrap the content in divs
       const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          layoutData={basicPage.layoutData}
-          api={api}
-          mode={mode}
-        >
+        <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
         { container: document.body }
@@ -141,14 +151,11 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should render component with placeholders', () => {
+      const page = getPage();
       const placeholderPage = getTestLayoutData(true);
+      page.layout = placeholderPage.layoutData;
       const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          layoutData={placeholderPage.layoutData}
-          api={api}
-          mode={mode}
-        >
+        <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
         { container: document.body }
@@ -169,18 +176,15 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should fire component:ready event', () => {
+      const page = getPage();
       const basicPage = getTestLayoutData();
       const expectedReadyMessage = getDesignLibraryStatusEvent(
         DesignLibraryStatus.READY,
         'test-content'
       );
+      page.layout = basicPage.layoutData;
       const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          layoutData={basicPage.layoutData}
-          api={api}
-          mode={mode}
-        >
+        <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
         { container: document.body }
@@ -203,14 +207,11 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should update root component', async () => {
+      const page = getPage();
       const basicPage = getTestLayoutData();
+      page.layout = basicPage.layoutData;
       const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          layoutData={basicPage.layoutData}
-          api={api}
-          mode={mode}
-        >
+        <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
         { container: document.body }
@@ -241,15 +242,11 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should update nested component', async () => {
-      // const basicPage = getTestLayoutData();
+      const page = getPage();
       const placeholderPage = getTestLayoutData(true);
+      page.layout = placeholderPage.layoutData;
       const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          layoutData={placeholderPage.layoutData}
-          api={api}
-          mode={mode}
-        >
+        <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
         { container: document.body }
@@ -288,14 +285,11 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should send render event when component is updated', async () => {
+      const page = getPage();
       const basicPage = getTestLayoutData();
+      page.layout = basicPage.layoutData;
       render(
-        <SitecoreProvider
-          componentMap={components}
-          layoutData={basicPage.layoutData}
-          api={api}
-          mode={mode}
-        >
+        <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>
       );
@@ -341,14 +335,12 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should render component when provided', async () => {
+      const page = getPage();
       const basicPage = getTestLayoutData();
+      page.layout = basicPage.layoutData;
+      page.mode = variantGenerationMode;
       const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          layoutData={basicPage.layoutData}
-          api={api}
-          mode={variantGenerationMode}
-        >
+        <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
         { container: document.body }
@@ -361,8 +353,10 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should render loading preview when no component is provided', () => {
+      const page = getPage();
       const basicPage = getTestLayoutData();
-
+      page.layout = basicPage.layoutData;
+      page.mode = variantGenerationMode;
       addComponentPreviewHandlerSpy.callsFake((callback) => {
         callback(null);
 
@@ -370,12 +364,7 @@ describe('<DesignLibrary />', () => {
       });
 
       const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          layoutData={basicPage.layoutData}
-          api={api}
-          mode={variantGenerationMode}
-        >
+        <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
         { container: document.body }
@@ -386,17 +375,15 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should render error message when no rendering is found', () => {
+      const page = getPage();
       const emptyPage = getTestLayoutData();
+      page.layout = emptyPage.layoutData;
+      page.mode = variantGenerationMode;
       // Set to empty array to simulate no rendering found
       emptyPage.layoutData.sitecore.route.placeholders['editing-componentmode-placeholder'] = [];
 
       const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          layoutData={emptyPage.layoutData}
-          api={api}
-          mode={variantGenerationMode}
-        >
+        <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
         { container: document.body }
@@ -408,14 +395,11 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should send postMessage events for import-map and component-props', () => {
+      const page = getPage();
       const basicPage = getTestLayoutData();
+      page.layout = basicPage.layoutData;
       render(
-        <SitecoreProvider
-          componentMap={components}
-          layoutData={basicPage.layoutData}
-          api={api}
-          mode={variantGenerationMode}
-        >
+        <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
         { container: document.body }

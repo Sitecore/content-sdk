@@ -1,7 +1,7 @@
 ﻿import React, { ReactNode, Suspense } from 'react';
+import { Page } from '@sitecore-content-sdk/core/client';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { withSitecore } from '../enhancers/withSitecore';
-import { SitecoreProviderPageContext } from './SitecoreProvider';
 
 type ErrorComponentProps = {
   [prop: string]: unknown;
@@ -9,7 +9,7 @@ type ErrorComponentProps = {
 
 export type ErrorBoundaryProps = {
   children: ReactNode;
-  pageContext: SitecoreProviderPageContext;
+  page: Page;
   type: string;
   isDynamic?: boolean;
   errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
@@ -47,11 +47,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
 
   showErrorDetails(): boolean {
-    return (
-      this.isInDevMode() ||
-      this.props.pageContext?.mode.isEditing ||
-      this.props.pageContext?.mode.isPreview
-    );
+    return this.isInDevMode() || this.props.page.mode.isEditing || this.props.page.mode.isPreview;
   }
 
   render() {

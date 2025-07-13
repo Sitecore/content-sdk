@@ -71,7 +71,7 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
     const placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
       renderingData,
       this.props.name,
-      this.props.pageContext?.mode.isEditing
+      this.props.page.mode.isEditing
     );
 
     this.isEmpty = !placeholderData.length;
@@ -81,9 +81,7 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
     if (this.isEmpty) {
       const rendered = this.props.renderEmpty ? this.props.renderEmpty(components) : components;
 
-      return this.props.pageContext?.mode.isEditing
-        ? this.renderEmptyPlaceholder(rendered)
-        : rendered;
+      return this.props.page.mode.isEditing ? this.renderEmptyPlaceholder(rendered) : rendered;
     } else if (this.props.render) {
       return this.props.render(components, placeholderData, childProps);
     } else if (this.props.renderEach) {

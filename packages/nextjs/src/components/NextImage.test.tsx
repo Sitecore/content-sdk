@@ -17,17 +17,17 @@ import { SinonSpy } from 'sinon';
 import { DesignLibraryMode } from '@sitecore-content-sdk/core/editing';
 
 use(sinonChai);
-const setContext = spy();
+const setPage = spy();
 const expect = chai.use(chaiString).expect;
 const testContextProps = {
-  pageContext: {
+  page: {
     pageState: LayoutServicePageState.Normal,
     mode: {
       name: LayoutServicePageState.Normal,
       isNormal: true,
     },
   },
-  setContext,
+  setPage,
 };
 
 describe('<NextImage />', () => {
@@ -359,7 +359,7 @@ describe('<NextImage />', () => {
   describe('editMode metadata', () => {
     const testEditingContext = {
       ...testContextProps,
-      pageContext: {
+      page: {
         mode: {
           name: LayoutServicePageState.Edit,
           isEditing: true,
@@ -544,7 +544,7 @@ describe('<NextImage />', () => {
     it('should render unoptimized image in edit mode', () => {
       const testEditingContext = {
         ...testContextProps,
-        pageContext: {
+        page: {
           mode: {
             name: LayoutServicePageState.Edit,
             isEditing: true,
@@ -562,7 +562,7 @@ describe('<NextImage />', () => {
     it('should render unoptimized image in preview mode', () => {
       const testEditingContext = {
         ...testContextProps,
-        pageContext: {
+        page: {
           mode: {
             name: LayoutServicePageState.Preview,
             isPreview: true,
@@ -580,8 +580,8 @@ describe('<NextImage />', () => {
     it('should render unoptimized image in Design Library mode', () => {
       const testEditingContext = {
         ...testContextProps,
-        pageContext: {
-          ...testContextProps.pageContext,
+        page: {
+          ...testContextProps.page,
           mode: {
             name: DesignLibraryMode.Normal,
             isDesignLibrary: true,

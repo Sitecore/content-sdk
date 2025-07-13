@@ -21,11 +21,6 @@ import {
 } from '@sitecore-content-sdk/core/personalize';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 
-export type NextjsPage = Page & {
-  componentProps?: ComponentPropsCollection;
-  notFound?: boolean;
-};
-
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
   constructor(protected initOptions: SitecoreClientInit) {
@@ -59,7 +54,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
     path: string | string[],
     pageOptions: PageOptions,
     options?: FetchOptions
-  ): Promise<NextjsPage | null> {
+  ): Promise<Page | null> {
     const resolvedPath = this.parsePath(path);
     // Get variant(s) for personalization (from path), must ensure path is of type string
     const personalizeData =
@@ -83,10 +78,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
    * @param {PreviewData} previewData - The editing preview data for metadata mode.
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
    */
-  async getPreview(
-    previewData: PreviewData,
-    fetchOptions?: FetchOptions
-  ): Promise<NextjsPage | null> {
+  async getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null> {
     return super.getPreview(previewData as EditingPreviewData, fetchOptions);
   }
 

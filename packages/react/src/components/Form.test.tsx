@@ -16,9 +16,45 @@ describe('Form', () => {
         edgeUrl: 'edge-url',
       },
     },
-    layoutData: {
-      normal: { sitecore: { context: { pageEditing: false } } },
-      editing: { sitecore: { context: { pageEditing: true } } },
+    page: {
+      normal: {
+        locale: 'en',
+        layout: {
+          sitecore: {
+            context: { pageEditing: false },
+            route: null,
+          },
+        },
+        mode: {
+          name: LayoutServicePageState.Normal,
+          isNormal: true,
+          isPreview: false,
+          isEditing: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
+        },
+      },
+      editing: {
+        locale: 'en',
+        layout: {
+          sitecore: {
+            context: { pageEditing: true },
+            route: null,
+          },
+        },
+        mode: {
+          name: LayoutServicePageState.Edit,
+          isEditing: true,
+          isNormal: false,
+          isPreview: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
+        },
+      },
     },
   };
 
@@ -29,11 +65,6 @@ describe('Form', () => {
       styles: 'form-class',
       RenderingIdentifier: 'form-id',
     },
-  };
-
-  const mode: PageMode = {
-    name: LayoutServicePageState.Normal,
-    isNormal: true,
   };
 
   it('renders form using clientContextId when both IDs are present', async () => {
@@ -55,7 +86,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.normal} mode={mode}>
+      <SitecoreProvider api={ctx.api} page={ctx.page.normal}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>,
       { container: document.body }
@@ -91,7 +122,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={apiNoClientId} layoutData={ctx.layoutData.normal} mode={mode}>
+      <SitecoreProvider api={apiNoClientId} page={ctx.page.normal}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>
     );
@@ -121,7 +152,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing} mode={mode}>
+      <SitecoreProvider api={ctx.api} page={ctx.page.editing}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>
     );
@@ -143,7 +174,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.normal} mode={mode}>
+      <SitecoreProvider api={ctx.api} page={ctx.page.normal}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>
     );
@@ -166,7 +197,7 @@ describe('Form', () => {
     };
 
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing} mode={mode}>
+      <SitecoreProvider api={ctx.api} page={ctx.page.editing}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>,
       { container: document.body }
@@ -174,7 +205,7 @@ describe('Form', () => {
 
     await waitFor(() => {
       rendered.rerender(
-        <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing} mode={mode}>
+        <SitecoreProvider api={ctx.api} page={ctx.page.editing}>
           <Form rendering={rendering} params={rendering.params} />
         </SitecoreProvider>
       );

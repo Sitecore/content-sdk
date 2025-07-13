@@ -10,9 +10,11 @@ import { getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
  */
 export const EditingScripts = (): JSX.Element => {
   const {
-    pageContext: { mode, clientData, clientScripts },
+    page: { mode, layout },
     api,
   } = useSitecore();
+
+  const { clientData, clientScripts } = layout.sitecore.context;
 
   // Don't render anything if not in editing/preview mode and rendering type is not component
   if (mode.isNormal) {

@@ -22,27 +22,21 @@ import client from 'lib/sitecore-client';
 import components from '.sitecore/component-map';
 import scConfig from 'sitecore.config';
 
-
-const SitecorePage = ({ notFound, componentProps, layout, mode }: SitecorePageProps): JSX.Element => {
+const SitecorePage = ({ page, notFound, componentProps }: SitecorePageProps): JSX.Element => {
   useEffect(() => {
     // Since Sitecore Editor does not support Fast Refresh, need to refresh editor chromes after Fast Refresh finished
     handleEditorFastRefresh();
   }, []);
 
-  if (notFound || !layout.sitecore.route) {
+  if (notFound || !page) {
     // Shouldn't hit this (as long as 'notFound' is being returned below), but just to be safe
     return <NotFound />;
   }
 
   return (
     <ComponentPropsContext value={componentProps || {}}>
-      <SitecoreProvider
-        componentMap={components}
-        layoutData={layout}
-        api={scConfig.api}
-        mode={mode}
-      >
-        <Layout layoutData={layout} mode={mode} />
+      <SitecoreProvider componentMap={components} api={scConfig.api} page={page}>
+        <Layout page={page} />
       </SitecoreProvider>
     </ComponentPropsContext>
   );
@@ -104,7 +98,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   if (page) {
     props = {
-      ...page,
+      page,
       dictionary: await client.getDictionary({
         site: page.siteName,
         locale: page.locale,

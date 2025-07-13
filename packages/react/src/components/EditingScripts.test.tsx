@@ -76,10 +76,27 @@ describe('<EditingScripts />', () => {
     const mode: PageMode = {
       name: LayoutServicePageState.Normal,
       isNormal: true,
+      isPreview: false,
+      isEditing: false,
+      isDesignLibrary: false,
+      designLibrary: {
+        isVariantGeneration: false,
+      },
+    };
+
+    const page = {
+      locale: 'en',
+      layout: {
+        sitecore: {
+          context: {},
+          route: null,
+        },
+      },
+      mode,
     };
 
     const component = render(
-      <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData} mode={mode}>
+      <SitecoreProvider componentMap={mockComponentMap} page={page}>
         <EditingScripts />
       </SitecoreProvider>,
       { container: document.body }
@@ -96,8 +113,14 @@ describe('<EditingScripts />', () => {
         pageEditing: true,
       });
 
+      const page = {
+        locale: 'en',
+        layout: layoutData,
+        mode,
+      };
+
       const component = render(
-        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData} mode={mode}>
+        <SitecoreProvider componentMap={mockComponentMap} page={page}>
           <EditingScripts />
         </SitecoreProvider>
       );
@@ -136,8 +159,14 @@ describe('<EditingScripts />', () => {
         clientScripts: [],
       });
 
+      const page = {
+        locale: 'en',
+        layout: layoutData,
+        mode,
+      };
+
       const component = render(
-        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData} mode={mode}>
+        <SitecoreProvider componentMap={mockComponentMap} page={page}>
           <EditingScripts />
         </SitecoreProvider>
       );
@@ -166,8 +195,14 @@ describe('<EditingScripts />', () => {
         clientScripts: [],
       });
 
+      const page = {
+        locale: 'en',
+        layout: layoutData,
+        mode,
+      };
+
       const component = render(
-        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData} mode={mode}>
+        <SitecoreProvider componentMap={mockComponentMap} page={page}>
           <EditingScripts />
         </SitecoreProvider>
       );
@@ -187,14 +222,19 @@ describe('<EditingScripts />', () => {
         clientScripts: [],
       });
 
+      const page = {
+        locale: 'en',
+        layout: layoutData,
+        mode,
+      };
+
       const stagingEdgeUrl = 'http://edge-staging';
 
       const component = render(
         <SitecoreProvider
           componentMap={mockComponentMap}
-          layoutData={layoutData}
+          page={page}
           api={{ edge: { edgeUrl: stagingEdgeUrl, contextId: 'id' } }}
-          mode={mode}
         >
           <EditingScripts />
         </SitecoreProvider>

@@ -12,8 +12,9 @@ import { JSX } from 'react';
  */
 const CdpPageView = (): JSX.Element => {
   const {
-    pageContext: { route, variantId, site, mode },
+    page: { layout, siteName, mode },
   } = useSitecore();
+  const { route, context } = layout.sitecore;
 
   /**
    * Determines if the page view events should be turned off.
@@ -40,7 +41,7 @@ const CdpPageView = (): JSX.Element => {
     const pageVariantId = CdpHelper.getPageVariantId(
       route.itemId,
       language,
-      variantId as string,
+      context.variantId as string,
       scope
     );
     // there can be cases where Events are not initialized which are expected to reject
@@ -50,8 +51,8 @@ const CdpPageView = (): JSX.Element => {
       page: route.name,
       pageVariantId,
       language,
-    }).catch(e => console.debug(e));
-  }, [mode, route, variantId, site]);
+    }).catch((e) => console.debug(e));
+  }, [mode, route, context.variantId, siteName]);
 
   return <></>;
 };

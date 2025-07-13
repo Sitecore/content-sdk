@@ -87,7 +87,7 @@ export interface DesignLibraryRenderPreviewData {
   renderingId: string;
   componentUid: string;
   language: string;
-  mode?: DesignLibraryMode;
+  mode: DesignLibraryMode;
   variant?: string;
   version?: string;
   dataSourceId?: string;

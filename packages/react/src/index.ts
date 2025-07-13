@@ -37,6 +37,8 @@ export {
   GraphQLRequestClientFactoryConfig,
   GraphQLRequestClient,
   PageMode,
+  ErrorPage,
+  Page,
 } from '@sitecore-content-sdk/core/client';
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export { Form } from './components/Form';
@@ -72,7 +74,6 @@ export { File, FileField } from './components/File';
 export {
   SitecoreProvider,
   SitecoreProviderState,
-  SitecoreProviderPageContext,
   SitecoreProviderReactContext,
 } from './components/SitecoreProvider';
 export {

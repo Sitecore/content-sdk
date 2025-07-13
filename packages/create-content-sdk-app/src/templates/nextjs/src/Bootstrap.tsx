@@ -1,17 +1,24 @@
 ﻿import { useEffect, JSX } from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { SitecorePageProps } from '@sitecore-content-sdk/nextjs';
 import '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
-import { SitecorePageProps } from '@sitecore-content-sdk/nextjs';
 
 /**
  * The Bootstrap component is the entry point for performing any initialization logic
  * that needs to happen early in the application's lifecycle.
  */
 const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
+  const { page } = props;
+
   // Browser ClientSDK init allows for page view events to be tracked
+
   useEffect(() => {
-    const mode = props.mode;
+    if (!page) {
+      return;
+    }
+
+    const mode = page.mode;
     if (process.env.NODE_ENV === 'development')
       console.debug('Browser Events SDK is not initialized in development environment');
     else if (!mode.isNormal)
@@ -21,7 +28,7 @@ const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
         CloudSDK({
           sitecoreEdgeUrl: config.api.edge.edgeUrl,
           sitecoreEdgeContextId: config.api.edge.clientContextId,
-          siteName: props.siteName || config.defaultSite,
+          siteName: page.siteName || config.defaultSite,
           enableBrowserCookie: true,
           // Replace with the top level cookie domain of the website that is being integrated e.g ".example.com" and not "www.example.com"
           cookieDomain: window.location.hostname.replace(/^www\./, ''),
@@ -33,7 +40,7 @@ const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.siteName]);
+  }, [page?.siteName]);
 
   return null;
 };

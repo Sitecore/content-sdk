@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
+import { Page } from '@sitecore-content-sdk/core/client';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
-import { LayoutServiceContext, LayoutServiceData, RouteData } from '../index';
 import { constants } from '@sitecore-content-sdk/core';
 import { ComponentMap } from './sharedTypes';
-import { PageMode } from '@sitecore-content-sdk/core/client';
 
 export interface SitecoreProviderProps {
   /**
@@ -17,27 +15,23 @@ export interface SitecoreProviderProps {
    */
   componentMap: ComponentMap;
   /**
-   * The Sitecore Layout data.
+   * The page data.
    */
-  layoutData?: LayoutServiceData;
-  /**
-   * Page mode
-   */
-  mode: PageMode;
+  page: Page;
   children: React.ReactNode;
 }
 
 export interface SitecoreProviderState {
   /**
-   * Method to set the page context.
-   * @param {SitecoreProviderPageContext | LayoutServiceData} value New page context value.
+   * Method to set the page.
+   * @param {Page} value New page  value.
    * @returns {void}
    */
-  setContext: (value: SitecoreProviderPageContext | LayoutServiceData) => void;
+  setPage: (value: Page) => void;
   /**
-   * The current page context.
+   * The current page.
    */
-  pageContext: SitecoreProviderPageContext;
+  page: Page;
   /**
    * The API configuration defined in the `SitecoreConfig`.
    */
@@ -49,15 +43,6 @@ export const SitecoreProviderReactContext = React.createContext<SitecoreProvider
 );
 export const ComponentMapReactContext = React.createContext<ComponentMap>(new Map());
 
-/**
- * The page context provided by the SitecoreProvider.
- */
-export type SitecoreProviderPageContext = LayoutServiceContext & {
-  itemId?: string;
-  route?: RouteData;
-  mode: PageMode;
-};
-
 export class SitecoreProvider extends React.Component<
   SitecoreProviderProps,
   SitecoreProviderState
@@ -66,8 +51,6 @@ export class SitecoreProvider extends React.Component<
 
   constructor(props: SitecoreProviderProps) {
     super(props);
-
-    const pageContext: SitecoreProviderPageContext = this.constructContext(props.layoutData);
 
     // If any Edge ID is present but no edgeUrl, apply the default
     let api = props.api;
@@ -85,45 +68,29 @@ export class SitecoreProvider extends React.Component<
     }
 
     this.state = {
-      pageContext,
-      setContext: this.setContext,
+      page: props.page,
+      setPage: this.setPage,
       api,
     };
   }
 
-  constructContext(layoutData?: LayoutServiceData): SitecoreProviderPageContext {
-    if (!layoutData) {
-      return { mode: this.props.mode };
-    }
-
-    return {
-      route: layoutData.sitecore.route,
-      itemId: layoutData.sitecore.route?.itemId,
-      ...layoutData.sitecore.context,
-      mode: this.props.mode,
-    };
-  }
-
   componentDidUpdate(prevProps: SitecoreProviderProps) {
-    // In case if somebody will manage SitecoreProvider state by passing fresh `layoutData` prop
+    // In case if somebody will manage SitecoreProvider state by passing fresh `page` prop
     // instead of using `updateContext`
-    if (!fastDeepEqual(prevProps.layoutData, this.props.layoutData)) {
-      this.setContext(this.props.layoutData);
+    if (!fastDeepEqual(prevProps.page, this.props.page)) {
+      this.setPage(this.props.page);
 
       return;
     }
   }
 
   /**
-   * Update context state. Value can be @type {LayoutServiceData} which will be automatically transformed
-   * or you can provide exact @type {SitecoreProviderPageContext}
-   * @param {SitecoreProviderPageContext | LayoutServiceData} value New context value
+   * Update page state.
+   * @param {Page} value New page value
    */
-  setContext = (value: SitecoreProviderPageContext | LayoutServiceData) => {
+  setPage = (value: Page) => {
     this.setState({
-      pageContext: value.sitecore
-        ? this.constructContext(value as LayoutServiceData)
-        : { ...(value as SitecoreProviderPageContext), mode: this.props.mode },
+      page: value,
     });
   };
 

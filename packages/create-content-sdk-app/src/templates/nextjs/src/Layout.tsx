@@ -3,19 +3,12 @@
  */
 import React, { JSX } from 'react';
 import Head from 'next/head';
-import {
-  Placeholder,
-  LayoutServiceData,
-  Field,
-  DesignLibrary,
-  PageMode,
-} from '@sitecore-content-sdk/nextjs';
+import { Placeholder, Field, DesignLibrary, Page } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/content-sdk/SitecoreStyles';
 
 interface LayoutProps {
-  layoutData: LayoutServiceData;
-  mode: PageMode;
+  page: Page;
 }
 
 interface RouteFields {
@@ -23,15 +16,16 @@ interface RouteFields {
   Title?: Field;
 }
 
-const Layout = ({ layoutData, mode }: LayoutProps): JSX.Element => {
-  const { route } = layoutData.sitecore;
+const Layout = ({ page }: LayoutProps): JSX.Element => {
+  const { layout, mode } = page;
+  const { route } = layout.sitecore;
   const fields = route?.fields as RouteFields;
   const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
 
   return (
     <>
       <Scripts />
-      <SitecoreStyles layoutData={layoutData} />
+      <SitecoreStyles layoutData={layout} />
       <Head>
         <title>{fields?.Title?.value?.toString() || 'Page'}</title>
         <link rel="icon" href="/favicon.ico" />

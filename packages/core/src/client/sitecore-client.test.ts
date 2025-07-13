@@ -1,7 +1,8 @@
-﻿import chai, { expect } from 'chai';
+﻿/* eslint-disable dot-notation */
+import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
-import { SitecoreClient } from './sitecore-client';
+import { ErrorPage, SitecoreClient } from './sitecore-client';
 import { LayoutKind, DesignLibraryMode } from '../../editing';
 import { LayoutServiceData } from '../../layout';
 import { DefaultRetryStrategy } from '../retries';
@@ -32,6 +33,7 @@ describe('SitecoreClient', () => {
     defaultLanguage: 'en',
     layout: { formatLayoutQuery: sandbox.stub() },
     dictionary: { caching: { enabled: true, timeout: 60000 } },
+    disableCodeGeneration: false,
   };
 
   let sitecoreClient = new SitecoreClient(defaultInitOptions);
@@ -268,6 +270,12 @@ describe('SitecoreClient', () => {
         mode: {
           name: LayoutServicePageState.Normal,
           isNormal: true,
+          isPreview: false,
+          isEditing: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
         },
       });
       expect(
@@ -306,6 +314,12 @@ describe('SitecoreClient', () => {
         mode: {
           name: LayoutServicePageState.Normal,
           isNormal: true,
+          isPreview: false,
+          isEditing: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
         },
       });
       expect(
@@ -423,6 +437,144 @@ describe('SitecoreClient', () => {
           fetchOptions
         )
       ).to.be.true;
+    });
+  });
+
+  describe('getErrorPage', () => {
+    it('should fetch error page with default site and language', async () => {
+      const errorPage = {
+        notFoundPage: { rendered: { sitecore: { route: { name: 'home' } } } },
+      };
+
+      errorPagesServiceStub.fetchErrorPages.resolves(errorPage);
+
+      const result = await sitecoreClient.getErrorPage(ErrorPage.NotFound);
+
+      expect(result).to.deep.equal({
+        layout: errorPage.notFoundPage?.rendered,
+        locale: defaultInitOptions.defaultLanguage,
+        siteName: defaultInitOptions.defaultSite,
+        mode: {
+          name: LayoutServicePageState.Normal,
+          isNormal: true,
+          isPreview: false,
+          isEditing: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
+        },
+      });
+
+      expect(
+        errorPagesServiceStub.fetchErrorPages.calledWith(
+          defaultInitOptions.defaultSite,
+          defaultInitOptions.defaultLanguage
+        )
+      ).to.be.true;
+      expect(errorPagesServiceStub.fetchErrorPages.calledOnce).to.be.true;
+    });
+
+    it('should return null when unknown error page is requested', async () => {
+      const result = await sitecoreClient.getErrorPage('unknown' as ErrorPage, {
+        site: 'test-site',
+        locale: 'fr-FR',
+      });
+      expect(result).to.be.null;
+    });
+
+    describe('404 page', () => {
+      it('should return not found page', async () => {
+        const site = 'test-site';
+        const locale = 'fr-FR';
+        const errorPage = {
+          notFoundPage: { rendered: { sitecore: { route: { name: 'home' } } } },
+        };
+
+        errorPagesServiceStub.fetchErrorPages.resolves(errorPage);
+
+        const result = await sitecoreClient.getErrorPage(ErrorPage.NotFound, { site, locale });
+
+        expect(result).to.deep.equal({
+          layout: errorPage.notFoundPage?.rendered,
+          locale,
+          siteName: site,
+          mode: {
+            name: LayoutServicePageState.Normal,
+            isNormal: true,
+            isPreview: false,
+            isEditing: false,
+            isDesignLibrary: false,
+            designLibrary: {
+              isVariantGeneration: false,
+            },
+          },
+        });
+      });
+
+      it('should return null when not found page is not found', async () => {
+        const site = 'test-site';
+        const locale = 'fr-FR';
+        const errorPage = {
+          notFoundPage: null,
+        };
+
+        errorPagesServiceStub.fetchErrorPages.resolves(errorPage);
+
+        const result = await sitecoreClient.getErrorPage(ErrorPage.NotFound, { site, locale });
+
+        expect(result).to.be.null;
+      });
+    });
+
+    describe('500 page', () => {
+      it('should return server error page', async () => {
+        const site = 'test-site';
+        const locale = 'fr-FR';
+        const errorPage = {
+          serverErrorPage: { rendered: { sitecore: { route: { name: 'home' } } } },
+        };
+
+        errorPagesServiceStub.fetchErrorPages.resolves(errorPage);
+
+        const result = await sitecoreClient.getErrorPage(ErrorPage.InternalServerError, {
+          site,
+          locale,
+        });
+
+        expect(result).to.deep.equal({
+          layout: errorPage.serverErrorPage?.rendered,
+          locale,
+          siteName: site,
+          mode: {
+            name: LayoutServicePageState.Normal,
+            isNormal: true,
+            isPreview: false,
+            isEditing: false,
+            isDesignLibrary: false,
+            designLibrary: {
+              isVariantGeneration: false,
+            },
+          },
+        });
+      });
+
+      it('should return null when server error page is not found', async () => {
+        const site = 'test-site';
+        const locale = 'fr-FR';
+        const errorPage = {
+          serverErrorPage: null,
+        };
+
+        errorPagesServiceStub.fetchErrorPages.resolves(errorPage);
+
+        const result = await sitecoreClient.getErrorPage(ErrorPage.InternalServerError, {
+          site,
+          locale,
+        });
+
+        expect(result).to.be.null;
+      });
     });
   });
 
@@ -586,7 +738,12 @@ describe('SitecoreClient', () => {
         mode: {
           name: LayoutServicePageState.Edit,
           isEditing: true,
+          isNormal: false,
           isPreview: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
         },
       });
 
@@ -634,8 +791,13 @@ describe('SitecoreClient', () => {
         dictionary: editingData.dictionary,
         mode: {
           name: LayoutServicePageState.Preview,
+          isNormal: false,
           isPreview: true,
           isEditing: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
         },
       });
 
@@ -815,6 +977,9 @@ describe('SitecoreClient', () => {
         mode: {
           name: DesignLibraryMode.Normal,
           isDesignLibrary: true,
+          isNormal: false,
+          isPreview: false,
+          isEditing: false,
           designLibrary: {
             isVariantGeneration: false,
           },
@@ -885,6 +1050,9 @@ describe('SitecoreClient', () => {
         mode: {
           name: DesignLibraryMode.VariantGeneration,
           isDesignLibrary: true,
+          isNormal: false,
+          isPreview: false,
+          isEditing: false,
           designLibrary: {
             isVariantGeneration: true,
           },
@@ -998,6 +1166,98 @@ describe('SitecoreClient', () => {
           fetchOptions
         )
       ).to.be.true;
+    });
+  });
+
+  describe('getPageMode', () => {
+    it('should return the correct page mode for a given mode name', () => {
+      expect(sitecoreClient['getPageMode'](LayoutServicePageState.Normal)).to.deep.equal({
+        name: LayoutServicePageState.Normal,
+        isNormal: true,
+        isPreview: false,
+        isEditing: false,
+        isDesignLibrary: false,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+      });
+
+      expect(sitecoreClient['getPageMode'](LayoutServicePageState.Preview)).to.deep.equal({
+        name: LayoutServicePageState.Preview,
+        isNormal: false,
+        isPreview: true,
+        isEditing: false,
+        isDesignLibrary: false,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+      });
+
+      expect(sitecoreClient['getPageMode'](LayoutServicePageState.Edit)).to.deep.equal({
+        name: LayoutServicePageState.Edit,
+        isNormal: false,
+        isPreview: false,
+        isEditing: true,
+        isDesignLibrary: false,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+      });
+
+      expect(sitecoreClient['getPageMode'](DesignLibraryMode.Normal)).to.deep.equal({
+        name: DesignLibraryMode.Normal,
+        isNormal: false,
+        isPreview: false,
+        isEditing: false,
+        isDesignLibrary: true,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+      });
+
+      expect(sitecoreClient['getPageMode'](DesignLibraryMode.Metadata)).to.deep.equal({
+        name: DesignLibraryMode.Metadata,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+        isNormal: false,
+        isPreview: false,
+        isEditing: false,
+        isDesignLibrary: true,
+      });
+
+      expect(sitecoreClient['getPageMode'](DesignLibraryMode.VariantGeneration)).to.deep.equal({
+        name: DesignLibraryMode.VariantGeneration,
+        designLibrary: {
+          isVariantGeneration: true,
+        },
+        isNormal: false,
+        isPreview: false,
+        isEditing: false,
+        isDesignLibrary: true,
+      });
+
+      expect(sitecoreClient['getPageMode'](DesignLibraryMode.Normal)).to.deep.equal({
+        name: DesignLibraryMode.Normal,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+        isNormal: false,
+        isPreview: false,
+        isEditing: false,
+        isDesignLibrary: true,
+      });
+
+      expect(sitecoreClient['getPageMode']('invalid-mode' as any)).to.deep.equal({
+        name: 'invalid-mode',
+        isNormal: false,
+        isPreview: false,
+        isEditing: false,
+        isDesignLibrary: false,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+      });
     });
   });
 

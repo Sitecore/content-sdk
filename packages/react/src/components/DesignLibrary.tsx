@@ -30,8 +30,12 @@ export const __mockDependencies = (mocks: any) => {
  * Reacts on the update event from the parent window and re-renders the component.
  */
 const Preview = (): JSX.Element => {
-  const { pageContext } = useSitecore();
-  const { route } = pageContext;
+  const { page } = useSitecore();
+  const {
+    layout: {
+      sitecore: { route },
+    },
+  } = page;
   const [renderKey, setRenderKey] = useState(0);
   const [rootUpdate, setRootUpdate] = useState(null);
   const rootComponent = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER][0];
@@ -98,8 +102,13 @@ type DynamicComponent = React.ComponentType<{
  * It is used to send the import-map and component-props events to the parent window and render the dynamic component.
  */
 export const VariantGeneration = () => {
-  const { pageContext } = useSitecore();
-  const rendering = pageContext.route?.placeholders[EDITING_COMPONENT_PLACEHOLDER][0];
+  const { page } = useSitecore();
+  const {
+    layout: {
+      sitecore: { route },
+    },
+  } = page;
+  const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER][0];
   const [Component, setComponent] = React.useState<DynamicComponent>(null);
 
   useEffect(() => {
@@ -146,9 +155,9 @@ export const VariantGeneration = () => {
 };
 
 export const DesignLibrary = (): JSX.Element => {
-  const { pageContext } = useSitecore();
-  const { isDesignLibrary } = pageContext.mode;
-  const isVariantGeneration = pageContext.mode.designLibrary?.isVariantGeneration;
+  const { page } = useSitecore();
+  const { isDesignLibrary } = page.mode;
+  const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
 
   if (!isDesignLibrary) {
     return null;

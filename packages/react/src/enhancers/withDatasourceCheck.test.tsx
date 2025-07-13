@@ -5,13 +5,34 @@ import { render } from '@testing-library/react';
 import { spy } from 'sinon';
 
 import { withDatasourceCheck, WithDatasourceCheckProps } from '../enhancers/withDatasourceCheck';
-import { SitecoreProviderReactContext } from '../components/SitecoreProvider';
-import { PageMode } from '@sitecore-content-sdk/core/client';
+import {
+  SitecoreProviderReactContext,
+  SitecoreProviderState,
+} from '../components/SitecoreProvider';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 
-const mockContext = (editing: boolean) => {
+const mockContext = (editing: boolean): SitecoreProviderState => {
   return {
-    pageContext: { mode: { isEditing: editing } as PageMode },
-    setContext: spy(),
+    page: {
+      locale: 'en',
+      layout: {
+        sitecore: {
+          context: {},
+          route: null,
+        },
+      },
+      mode: {
+        name: LayoutServicePageState.Normal,
+        isNormal: false,
+        isPreview: false,
+        isEditing: editing,
+        isDesignLibrary: false,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+      },
+    },
+    setPage: spy(),
   };
 };
 
@@ -106,7 +127,7 @@ describe('withDatasourceCheck', () => {
 
     const context = mockContext(false);
 
-    context.pageContext.mode.isDesignLibrary = true;
+    context.page.mode.isDesignLibrary = true;
 
     const wrapper = render(
       <SitecoreProviderReactContext.Provider value={context}>

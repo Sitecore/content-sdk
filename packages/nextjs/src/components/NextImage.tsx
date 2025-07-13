@@ -38,7 +38,7 @@ export const NextImage: React.FC<NextImageProps> = withFieldMetadata<NextImagePr
       }
 
       // disable image optimization for Edit / Preview / Component rendering, but preserve original value if true
-      const unoptimized = otherProps.unoptimized || !context.pageContext.mode.isNormal;
+      const unoptimized = otherProps.unoptimized || !context.page.mode.isNormal;
 
       const attrs = {
         ...img,

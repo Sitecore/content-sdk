@@ -32,15 +32,15 @@ export function withDatasourceCheck(options?: WithDatasourceCheckOptions) {
     Component: React.ComponentType<ComponentProps>
   ) {
     return function WithDatasourceCheck(props: ComponentProps) {
-      const { pageContext } = useSitecore();
+      const { page } = useSitecore();
       const EditingError = options?.editingErrorComponent ?? DefaultEditingError;
 
       // If the component is rendered in DesignLibrary, we don't need to check for datasource
-      const isDesignLibrary = pageContext.mode.isDesignLibrary;
+      const isDesignLibrary = page.mode.isDesignLibrary;
 
       return isDesignLibrary || props.rendering?.dataSource ? (
         <Component {...props} />
-      ) : pageContext.mode.isEditing ? (
+      ) : page.mode.isEditing ? (
         <EditingError />
       ) : null;
     };
