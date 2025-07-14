@@ -77,7 +77,7 @@ export enum DesignLibraryStatus {
 }
 
 /**
- * Represents an component preview event data sent from design library
+ * Represents a component preview event data sent from design library
  */
 export interface ComponentPreviewEventArgs {
   name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;

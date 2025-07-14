@@ -42,7 +42,7 @@ type PageModeName = LayoutServicePageState | DesignLibraryMode;
  */
 export type PageMode = {
   /**
-   * Page mode. Defines the specific identifiers for the page.
+   * Page mode name.
    */
   name: PageModeName;
   /**
