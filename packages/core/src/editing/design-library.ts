@@ -12,22 +12,22 @@ import { DesignLibraryMode } from './models';
 /**
  * Event to be sent when report status to design library
  */
-export const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
+const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
 
 /**
  * Event to send import map to design library
  */
-export const DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME = 'component:generation:import-map';
+const DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME = 'component:generation:import-map';
 
 /**
  * Event to send component props to design library
  */
-export const DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME = 'component:generation:component-props';
+const DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME = 'component:generation:component-props';
 
 /**
  * Event to receive component data from design library
  */
-export const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = 'component:generation:component-preview';
+const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = 'component:generation:component-preview';
 
 export interface ImportEntry {
   module: string;
@@ -214,7 +214,7 @@ export const addComponentPreviewHandler = (callback: (Component: unknown) => voi
 
   const handler = (e: MessageEvent) => {
     const eventArgs: ComponentPreviewEventArgs = e.data;
-    if (!e.origin || !eventArgs || eventArgs.name !== DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME) {
+    if (!e.origin || !eventArgs || eventArgs.name !== 'component:generation:component-preview') {
       // avoid extra noise in logs
       if (!validateOrigin(e)) {
         console.debug(
