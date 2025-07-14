@@ -20,29 +20,29 @@ The API configuration defined in the `SitecoreConfig`.
 
 ***
 
-### pageContext
+### page
 
-> **pageContext**: [`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md)
+> **page**: [`Page`](../type-aliases/Page.md)
 
 Defined in: react/types/components/SitecoreProvider.d.ts:30
 
-The current page context.
+The current page.
 
 ***
 
-### setContext()
+### setPage()
 
-> **setContext**: (`value`) => `void`
+> **setPage**: (`value`) => `void`
 
 Defined in: react/types/components/SitecoreProvider.d.ts:26
 
-Method to set the page context.
+Method to set the page.
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `value` | [`LayoutServiceData`](LayoutServiceData.md) \| [`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md) | New page context value. |
+| `value` | [`Page`](../type-aliases/Page.md) | New page value. |
 
 #### Returns
 

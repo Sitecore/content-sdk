@@ -16,6 +16,7 @@
 ## Enumerations
 
 - [EditMode](enumerations/EditMode.md)
+- [ErrorPage](enumerations/ErrorPage.md)
 - [LayoutServicePageState](enumerations/LayoutServicePageState.md)
 - [RenderingType](enumerations/RenderingType.md)
 
@@ -90,6 +91,8 @@
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
 - [NativeDataFetcherError](type-aliases/NativeDataFetcherError.md)
 - [NextjsContentSdkComponent](type-aliases/NextjsContentSdkComponent.md)
+- [Page](type-aliases/Page.md)
+- [PageMode](type-aliases/PageMode.md)
 - [PlaceholdersData](type-aliases/PlaceholdersData.md)
 - [RedirectInfo](type-aliases/RedirectInfo.md)
 - [RedirectsServiceConfig](type-aliases/RedirectsServiceConfig.md)
@@ -97,7 +100,6 @@
 - [RobotsQueryResult](type-aliases/RobotsQueryResult.md)
 - [RobotsServiceConfig](type-aliases/RobotsServiceConfig.md)
 - [SitecorePageProps](type-aliases/SitecorePageProps.md)
-- [SitecoreProviderPageContext](type-aliases/SitecoreProviderPageContext.md)
 - [SiteInfo](type-aliases/SiteInfo.md)
 - [SiteInfoServiceConfig](type-aliases/SiteInfoServiceConfig.md)
 - [SitemapXmlServiceConfig](type-aliases/SitemapXmlServiceConfig.md)

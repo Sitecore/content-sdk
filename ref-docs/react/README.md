@@ -13,6 +13,7 @@
 ## Enumerations
 
 - [EditMode](enumerations/EditMode.md)
+- [ErrorPage](enumerations/ErrorPage.md)
 - [LayoutServicePageState](enumerations/LayoutServicePageState.md)
 
 ## Classes
@@ -73,9 +74,10 @@
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
 - [LinkProps](type-aliases/LinkProps.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
+- [Page](type-aliases/Page.md)
+- [PageMode](type-aliases/PageMode.md)
 - [ReactContentSdkComponent](type-aliases/ReactContentSdkComponent.md)
 - [ReactModule](type-aliases/ReactModule.md)
-- [SitecoreProviderPageContext](type-aliases/SitecoreProviderPageContext.md)
 - [WithSitecoreHocProps](type-aliases/WithSitecoreHocProps.md)
 
 ## Variables
