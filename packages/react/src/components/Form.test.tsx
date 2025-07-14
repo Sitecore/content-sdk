@@ -4,6 +4,8 @@ import { expect } from 'chai';
 import { SitecoreProvider } from './SitecoreProvider';
 import { Form, mockFormModule } from './Form';
 import sinon from 'sinon';
+import { PageMode } from '@sitecore-content-sdk/core/client';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 
 describe('Form', () => {
   const ctx = {
@@ -14,9 +16,45 @@ describe('Form', () => {
         edgeUrl: 'edge-url',
       },
     },
-    layoutData: {
-      normal: { sitecore: { context: { pageEditing: false } } },
-      editing: { sitecore: { context: { pageEditing: true } } },
+    page: {
+      normal: {
+        locale: 'en',
+        layout: {
+          sitecore: {
+            context: { pageEditing: false },
+            route: null,
+          },
+        },
+        mode: {
+          name: LayoutServicePageState.Normal,
+          isNormal: true,
+          isPreview: false,
+          isEditing: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
+        },
+      },
+      editing: {
+        locale: 'en',
+        layout: {
+          sitecore: {
+            context: { pageEditing: true },
+            route: null,
+          },
+        },
+        mode: {
+          name: LayoutServicePageState.Edit,
+          isEditing: true,
+          isNormal: false,
+          isPreview: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
+        },
+      },
     },
   };
 
@@ -48,7 +86,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.normal}>
+      <SitecoreProvider api={ctx.api} page={ctx.page.normal}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>,
       { container: document.body }
@@ -84,7 +122,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={apiNoClientId} layoutData={ctx.layoutData.normal}>
+      <SitecoreProvider api={apiNoClientId} page={ctx.page.normal}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>
     );
@@ -102,6 +140,11 @@ describe('Form', () => {
     const subscribeSpy = sinon.spy();
     const execSpy = sinon.spy();
 
+    const mode: PageMode = {
+      name: LayoutServicePageState.Edit,
+      isEditing: true,
+    };
+
     mockFormModule({
       loadForm: loadFormSpy,
       subscribeToFormSubmitEvent: subscribeSpy,
@@ -109,7 +152,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing}>
+      <SitecoreProvider api={ctx.api} page={ctx.page.editing}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>
     );
@@ -131,7 +174,7 @@ describe('Form', () => {
     });
 
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.normal}>
+      <SitecoreProvider api={ctx.api} page={ctx.page.normal}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>
     );
@@ -148,8 +191,13 @@ describe('Form', () => {
       executeScriptElements: sinon.spy(),
     });
 
+    const mode: PageMode = {
+      name: LayoutServicePageState.Edit,
+      isEditing: true,
+    };
+
     const rendered = await render(
-      <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing}>
+      <SitecoreProvider api={ctx.api} page={ctx.page.editing}>
         <Form rendering={rendering} params={rendering.params} />
       </SitecoreProvider>,
       { container: document.body }
@@ -157,7 +205,7 @@ describe('Form', () => {
 
     await waitFor(() => {
       rendered.rerender(
-        <SitecoreProvider api={ctx.api} layoutData={ctx.layoutData.editing}>
+        <SitecoreProvider api={ctx.api} page={ctx.page.editing}>
           <Form rendering={rendering} params={rendering.params} />
         </SitecoreProvider>
       );

@@ -1,5 +1,5 @@
 ﻿import React, { JSX } from 'react';
-import { ComponentRendering, RenderingType } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { useSitecore } from './withSitecore';
 
 export const DefaultEditingError = (): JSX.Element => (
@@ -32,15 +32,15 @@ export function withDatasourceCheck(options?: WithDatasourceCheckOptions) {
     Component: React.ComponentType<ComponentProps>
   ) {
     return function WithDatasourceCheck(props: ComponentProps) {
-      const { pageContext } = useSitecore();
+      const { page } = useSitecore();
       const EditingError = options?.editingErrorComponent ?? DefaultEditingError;
 
       // If the component is rendered in DesignLibrary, we don't need to check for datasource
-      const isDesignLibrary = pageContext?.renderingType === RenderingType.Component;
+      const isDesignLibrary = page.mode.isDesignLibrary;
 
       return isDesignLibrary || props.rendering?.dataSource ? (
         <Component {...props} />
-      ) : pageContext.pageEditing ? (
+      ) : page.mode.isEditing ? (
         <EditingError />
       ) : null;
     };

@@ -3,8 +3,8 @@ import { EnhancedOmit } from '@sitecore-content-sdk/core/utils';
 import {
   SitecoreProviderReactContext,
   SitecoreProviderState,
-  SitecoreProviderPageContext,
 } from '../components/SitecoreProvider';
+import { Page } from '@sitecore-content-sdk/core/client';
 
 export interface WithSitecoreOptions {
   /**
@@ -18,17 +18,17 @@ export interface WithSitecoreProps {
   /**
    * The current page context.
    */
-  pageContext: SitecoreProviderPageContext;
+  page: Page;
   /**
    * The API configuration defined in the `SitecoreConfig`.
    */
   api?: SitecoreProviderState['api'];
   /**
-   * Method to update the page context. This is only available if `updatable` is set to true.
-   * @param {SitecoreProviderPageContext} value New page context value.
+   * Method to update the page. This is only available if `updatable` is set to true.
+   * @param {Page} value New page value.
    * @returns {void}
    */
-  updateContext?: ((value: SitecoreProviderPageContext) => void) | false;
+  updatePage?: ((value: Page) => void) | false;
 }
 
 // The props that HOC will receive.
@@ -50,9 +50,9 @@ export function withSitecore(options?: WithSitecoreOptions) {
           {(value) => (
             <Component
               {...(props as ComponentProps)}
-              pageContext={value.pageContext}
+              page={value.page}
               api={value.api}
-              updateContext={options && options.updatable && value.setContext}
+              updatePage={options && options.updatable && value.setPage}
             />
           )}
         </SitecoreProviderReactContext.Consumer>
@@ -62,24 +62,20 @@ export function withSitecore(options?: WithSitecoreOptions) {
 }
 
 /**
- * This hook grants acсess to the current Sitecore page context and api.
- * by default Content SDK includes the following properties in this context:
- * - pageEditing - Provided by Layout Service, a boolean indicating whether the route is being accessed via the Sitecore Editor.
- * - pageState - Like pageEditing, but a string: normal, preview or edit.
- * - site - Provided by Layout Service, an object containing the name of the current Sitecore site context.
+ * This hook grants acсess to the current Sitecore page and api.
  * @param {WithSitecoreOptions} [options] hook options
  * @example
  * const EditMode = () => {
- *    const { pageContext } = useSitecore();
- *    return <span>Edit Mode is {pageContext.pageEditing ? 'active' : 'inactive'}</span>
+ *    const { page } = useSitecore();
+ *    return <span>Edit Mode is {page.mode.isEditing ? 'active' : 'inactive'}</span>
  * }
  * @example
  * const EditMode = () => {
- *    const { pageContext, updateContext } = useSitecore({ updatable: true });
- *    const onClick = () => updateContext({ pageEditing: true });
- *    return <span onClick={onClick}>Edit Mode is {pageContext.pageEditing ? 'active' : 'inactive'}</span>
+ *    const { page, updatePage } = useSitecore({ updatable: true });
+ *    const onClick = () => updatePage({ itemId: '123' });
+ *    return <span onClick={onClick}>Item id is {page.itemId}</span>
  * }
- * @returns {object} { api, pageContext, updateContext }
+ * @returns {object} { api, page, updatePage }
  */
 export function useSitecore(options?: WithSitecoreOptions): WithSitecoreProps {
   const reactContext = React.useContext(SitecoreProviderReactContext);
@@ -87,7 +83,7 @@ export function useSitecore(options?: WithSitecoreOptions): WithSitecoreProps {
 
   return {
     api: reactContext.api,
-    pageContext: reactContext.pageContext,
-    updateContext: updatable ? reactContext.setContext : undefined,
+    page: reactContext.page,
+    updatePage: updatable ? reactContext.setPage : undefined,
   };
 }

@@ -34,6 +34,7 @@ export {
   EditMode,
   RenderingType,
 } from '@sitecore-content-sdk/core/layout';
+export { PageMode, ErrorPage, Page } from '@sitecore-content-sdk/core/client';
 export { ComponentLayoutService } from '@sitecore-content-sdk/core/editing';
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export {
@@ -138,7 +139,6 @@ export {
   PlaceholderComponentProps,
   SitecoreProvider,
   SitecoreProviderState,
-  SitecoreProviderPageContext,
   SitecoreProviderReactContext,
   withSitecore,
   useSitecore,

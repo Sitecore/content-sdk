@@ -14,10 +14,59 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-`[nextjs]` Default static import-map for AI component generation ([#153](https://github.com/Sitecore/content-sdk/pull/153))
-`[cli]` Code Extraction for XM Cloud code generation ([#71](https://github.com/Sitecore/content-sdk/pull/71))([#113](https://github.com/Sitecore/content-sdk/pull/113))([#114](https://github.com/Sitecore/content-sdk/pull/114))([#154](https://github.com/Sitecore/content-sdk/pull/154))
+* `[core]` `[nextjs]` Integrated new Design Library _VariantGeneration_ mode ([#158](https://github.com/Sitecore/content-sdk/pull/158))
+* `[nextjs]` Default static import-map for AI component generation ([#153](https://github.com/Sitecore/content-sdk/pull/153))
+* `[cli]` Code Extraction for XM Cloud code generation ([#71](https://github.com/Sitecore/content-sdk/pull/71))([#113](https://github.com/Sitecore/content-sdk/pull/113))([#114](https://github.com/Sitecore/content-sdk/pull/114))([#154](https://github.com/Sitecore/content-sdk/pull/154))
 
 ### 🛠 Breaking Changes
+
+* Refactored `SitecoreProvider` and enhanced `SitecoreClient` ([#158](https://github.com/Sitecore/content-sdk/pull/158)):
+
+  #### Reworked `SitecoreProvider` and Context
+
+  - Refactored components that use `SitecoreProvider` and related utilities.
+  - `SitecoreProvider` now accepts a `page` prop (`Page` type from `SitecoreClient`) instead of `layoutData`.
+  - Context state updates:
+    - `pageContext` → renamed to `page`. `page` represents `Page` interface.
+    - `setContext` → renamed to `setPage`. The method updates the `page` state.
+  - Removed `SitecoreProviderPageContext` interface.
+    - Consumers should now access `page` via the `Page` interface.
+
+  #### Updated `withSitecore` and `useSitecore` APIs
+
+  - Updated naming for clarity and consistency:
+    - `pageContext` → `page`
+    - `updateContext` → `updatePage`
+
+  #### Improvements to `SitecoreClient`
+
+  - **Type cleanup and consistency**:
+    - Removed `NextjsPage` interface.
+    - All methods that generate page data now return a consistent `Page` object.
+    - Properties `componentProps` and `notFound` are now part of the `SitecorePageProps` interface and are treated as optional.
+    - `SitecorePageProps` now requires a standalone `page` field instead of merging all data into one props object.
+
+  - **New `getErrorPage()` method**:
+    - Replaces `getErrorPages()`, exposing only necessary data.
+    - Introduces a new `ErrorPage` enum to select specific error types (e.g., `ErrorPage.NotFound`)
+  
+  - **New `PageMode` Type**
+    - The `Page` type now includes a `mode` field of type `PageMode`, providing runtime context (e.g. editing, design library, preview).
+    - Replaces older properties like `pageState`, `pageEditing`, `componentType`.
+
+    ```ts
+    mode: {
+      isNormal: boolean;
+      isPreview: boolean;
+      isEditing: boolean;
+      isDesignLibrary: boolean;
+    }
+    ```
+
+  #### DesignLibrary Component
+
+  - The `DesignLibrary` component no longer accepts a `layoutData` prop.
+  - It now accesses `page` directly from `SitecoreProvider`.
 
 * Refactor and simplify service names ([#133](https://github.com/Sitecore/content-sdk/pull/133)):
 
