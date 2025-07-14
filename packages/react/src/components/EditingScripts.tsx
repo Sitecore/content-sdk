@@ -16,8 +16,8 @@ export const EditingScripts = (): JSX.Element => {
 
   const { clientData, clientScripts } = layout.sitecore.context;
 
-  // Don't render anything if not in editing/preview mode and rendering type is not component
-  if (mode.isNormal) {
+  // Don't render anything if not in editing mode and rendering type is not component
+  if (mode.isNormal || mode.isPreview) {
     return <></>;
   }
 

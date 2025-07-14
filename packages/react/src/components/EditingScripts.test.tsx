@@ -68,11 +68,6 @@ describe('<EditingScripts />', () => {
   });
 
   it('should render nothing when not in editing', () => {
-    const layoutData = getLayoutData({
-      pageState: LayoutServicePageState.Normal,
-      pageEditing: false,
-    });
-
     const mode: PageMode = {
       name: LayoutServicePageState.Normal,
       isNormal: true,
