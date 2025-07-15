@@ -6,7 +6,7 @@
 
 # Interface: ComponentImport
 
-Defined in: [packages/core/src/tools/templating/components.ts:25](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/tools/templating/components.ts#L25)
+Defined in: [packages/core/src/tools/templating/components.ts:25](https://github.com/Sitecore/content-sdk/blob/42aee3f536f5272b3c6ccd994169ef4c19839501/packages/core/src/tools/templating/components.ts#L25)
 
 Definition for custom components to be included in component map.
 Use this to define components imported from modules/dependencies/packages
@@ -17,7 +17,7 @@ Use this to define components imported from modules/dependencies/packages
 
 > **importInfo**: `object`
 
-Defined in: [packages/core/src/tools/templating/components.ts:27](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/tools/templating/components.ts#L27)
+Defined in: [packages/core/src/tools/templating/components.ts:27](https://github.com/Sitecore/content-sdk/blob/42aee3f536f5272b3c6ccd994169ef4c19839501/packages/core/src/tools/templating/components.ts#L27)
 
 Information about how to import the package.
 
@@ -35,6 +35,6 @@ Information about how to import the package.
 
 > **importName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:26](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/tools/templating/components.ts#L26)
+Defined in: [packages/core/src/tools/templating/components.ts:26](https://github.com/Sitecore/content-sdk/blob/42aee3f536f5272b3c6ccd994169ef4c19839501/packages/core/src/tools/templating/components.ts#L26)
 
 Name of the import.
