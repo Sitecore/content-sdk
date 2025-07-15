@@ -10,20 +10,24 @@ import {
   LayoutServicePageState,
   SitecoreProviderReactContext,
 } from '@sitecore-content-sdk/react';
-import { RenderingType } from '@sitecore-content-sdk/core/layout';
 import { ImageLoader } from 'next/image';
 import { spy, match } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SinonSpy } from 'sinon';
+import { DesignLibraryMode } from '@sitecore-content-sdk/core/editing';
 
 use(sinonChai);
-const setContext = spy();
+const setPage = spy();
 const expect = chai.use(chaiString).expect;
 const testContextProps = {
-  pageContext: {
+  page: {
     pageState: LayoutServicePageState.Normal,
+    mode: {
+      name: LayoutServicePageState.Normal,
+      isNormal: true,
+    },
   },
-  setContext,
+  setPage,
 };
 
 describe('<NextImage />', () => {
@@ -355,8 +359,11 @@ describe('<NextImage />', () => {
   describe('editMode metadata', () => {
     const testEditingContext = {
       ...testContextProps,
-      pageContext: {
-        pageState: LayoutServicePageState.Edit,
+      page: {
+        mode: {
+          name: LayoutServicePageState.Edit,
+          isEditing: true,
+        },
       },
     };
     const testMetadata = {
@@ -537,8 +544,11 @@ describe('<NextImage />', () => {
     it('should render unoptimized image in edit mode', () => {
       const testEditingContext = {
         ...testContextProps,
-        pageContext: {
-          pageState: LayoutServicePageState.Edit,
+        page: {
+          mode: {
+            name: LayoutServicePageState.Edit,
+            isEditing: true,
+          },
         },
       };
       const rendered = render(
@@ -552,8 +562,11 @@ describe('<NextImage />', () => {
     it('should render unoptimized image in preview mode', () => {
       const testEditingContext = {
         ...testContextProps,
-        pageContext: {
-          pageState: LayoutServicePageState.Preview,
+        page: {
+          mode: {
+            name: LayoutServicePageState.Preview,
+            isPreview: true,
+          },
         },
       };
       const rendered = render(
@@ -564,12 +577,15 @@ describe('<NextImage />', () => {
       expect(rendered?.getAttribute('data-unoptimized')).to.equal('true');
     });
 
-    it('should render unoptimized image in component rendering type', () => {
+    it('should render unoptimized image in Design Library mode', () => {
       const testEditingContext = {
         ...testContextProps,
-        pageContext: {
-          ...testContextProps.pageContext,
-          renderingType: RenderingType.Component,
+        page: {
+          ...testContextProps.page,
+          mode: {
+            name: DesignLibraryMode.Normal,
+            isDesignLibrary: true,
+          },
         },
       };
       const rendered = render(

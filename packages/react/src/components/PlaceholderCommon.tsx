@@ -10,12 +10,12 @@ import {
   getDynamicPlaceholderPattern,
 } from '@sitecore-content-sdk/core/layout';
 import { constants } from '@sitecore-content-sdk/core';
+import { Page } from '@sitecore-content-sdk/core/client';
 import { HiddenRendering } from './HiddenRendering';
 import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from './FEaaSComponent';
 import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from './FEaaSWrapper';
 import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from './BYOCComponent';
 import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from './BYOCWrapper';
-import { SitecoreProviderPageContext } from './SitecoreProvider';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import ErrorBoundary from './ErrorBoundary';
 
@@ -78,10 +78,10 @@ export interface PlaceholderProps {
    */
   errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
   /**
-   * Page context data.
+   * Page data.
    * This data is passed by the SitecoreProvider.
    */
-  pageContext: SitecoreProviderPageContext;
+  page: Page;
   /**
    * The message that gets displayed while component is loading
    */
@@ -271,7 +271,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
         }
 
         // if in edit mode then emit shallow chromes for hydration in Pages
-        if (this.props.pageContext?.pageEditing) {
+        if (this.props.page.mode.isEditing) {
           return (
             <PlaceholderMetadata key={key} rendering={rendering as ComponentRendering}>
               {rendered}
@@ -283,7 +283,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
       })
       .filter((element) => element); // remove nulls
 
-    if (this.props.pageContext?.pageEditing) {
+    if (this.props.page.mode.isEditing) {
       return [
         <PlaceholderMetadata
           key={(this.props.rendering as ComponentRendering).uid}

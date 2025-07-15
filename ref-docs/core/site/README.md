@@ -8,31 +8,31 @@
 
 ## Classes
 
-- [GraphQLErrorPagesService](classes/GraphQLErrorPagesService.md)
-- [GraphQLRedirectsService](classes/GraphQLRedirectsService.md)
-- [GraphQLRobotsService](classes/GraphQLRobotsService.md)
-- [GraphQLSiteInfoService](classes/GraphQLSiteInfoService.md)
-- [GraphQLSitemapXmlService](classes/GraphQLSitemapXmlService.md)
-- [GraphQLSitePathService](classes/GraphQLSitePathService.md)
+- [ErrorPagesService](classes/ErrorPagesService.md)
+- [RedirectsService](classes/RedirectsService.md)
+- [RobotsService](classes/RobotsService.md)
+- [SiteInfoService](classes/SiteInfoService.md)
+- [SitemapXmlService](classes/SitemapXmlService.md)
+- [SitePathService](classes/SitePathService.md)
 - [SiteResolver](classes/SiteResolver.md)
 
 ## Interfaces
 
-- [GraphQLErrorPagesServiceConfig](interfaces/GraphQLErrorPagesServiceConfig.md)
-- [GraphQLSitePathServiceConfig](interfaces/GraphQLSitePathServiceConfig.md)
+- [ErrorPagesServiceConfig](interfaces/ErrorPagesServiceConfig.md)
+- [SitePathServiceConfig](interfaces/SitePathServiceConfig.md)
 
 ## Type Aliases
 
 - [ErrorPages](type-aliases/ErrorPages.md)
-- [GraphQLRedirectsServiceConfig](type-aliases/GraphQLRedirectsServiceConfig.md)
-- [GraphQLRobotsServiceConfig](type-aliases/GraphQLRobotsServiceConfig.md)
-- [GraphQLSiteInfoServiceConfig](type-aliases/GraphQLSiteInfoServiceConfig.md)
-- [GraphQLSitemapXmlServiceConfig](type-aliases/GraphQLSitemapXmlServiceConfig.md)
 - [RedirectInfo](type-aliases/RedirectInfo.md)
 - [RedirectsQueryResult](type-aliases/RedirectsQueryResult.md)
+- [RedirectsServiceConfig](type-aliases/RedirectsServiceConfig.md)
 - [RobotsQueryResult](type-aliases/RobotsQueryResult.md)
+- [RobotsServiceConfig](type-aliases/RobotsServiceConfig.md)
 - [SiteInfo](type-aliases/SiteInfo.md)
+- [SiteInfoServiceConfig](type-aliases/SiteInfoServiceConfig.md)
 - [SitemapQueryResult](type-aliases/SitemapQueryResult.md)
+- [SitemapXmlServiceConfig](type-aliases/SitemapXmlServiceConfig.md)
 - [SiteRewriteData](type-aliases/SiteRewriteData.md)
 
 ## Variables

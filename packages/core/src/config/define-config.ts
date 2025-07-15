@@ -53,6 +53,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       timeout: 60,
     },
   },
+  disableCodeGeneration: false,
 });
 
 /**
@@ -107,37 +108,39 @@ const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): Sit
   if (Number.isNaN(result.personalize.edgeTimeout) || !result.personalize.edgeTimeout) {
     result.personalize.edgeTimeout = base.personalize.edgeTimeout;
   }
-  // fallback in case only one context provided
-  if (result.api.edge?.clientContextId && !result.api.edge.contextId) {
-    result.api.edge.contextId = result.api.edge.clientContextId;
-  }
 
   return result;
 };
 
-const validateConfig = (config: SitecoreConfigInput) => {
-  // Skip validation in browser - only validate on server side
-  if (typeof window !== 'undefined') {
-    return; // We're in the browser, skip validation
-  }
-
+const validateConfig = (config: SitecoreConfigInput): void => {
+  const isBrowser = typeof window !== 'undefined';
   const hasEdgeContextId = !!config.api?.edge?.contextId;
-  const hasLocalApi = !!(config?.api?.local?.apiHost && config?.api?.local?.apiKey);
   const hasClientContextId = !!config.api?.edge?.clientContextId;
 
-  // Only validate on server-side where we have access to server env vars
-  if (!hasEdgeContextId && !hasLocalApi && !hasClientContextId) {
-    throw new Error(
-      'Configuration error: at least one API configuration must be specified: ' +
-        'contextId (server-side), clientContextId (client-side), or local API settings (apiHost + apiKey)'
-    );
+  // Server-side check
+  if (typeof window === 'undefined') {
+    if (!hasEdgeContextId) {
+      throw new Error(
+        `Configuration error: a server-side Edge contextId (api.edge.contextId) is required.
+Supplying only clientContextId or local-API credentials is not sufficient`
+      );
+    }
+    if (!hasClientContextId) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Warning: only a server-side contextId is provided.
+If your app makes client-side requests, they will fail unless you also set a clientContextId.`
+      );
+    }
+    return; // validation complete on the server
   }
 
-  // Warn if middleware features might not work
-  if (!hasEdgeContextId && !hasClientContextId && hasLocalApi) {
+  // Browser-side warning (runs only if contextId exists but clientContextId is missing)
+  if (isBrowser && !hasClientContextId) {
+    // eslint-disable-next-line no-console
     console.warn(
-      'Warning: Redirects and Personalization middleware require Edge API configuration. ' +
-        'Please ensure that either an Edge context ID (for server-side) or a client context ID (for client-side) is provided in your configuration'
+      `Warning: clientContextId is missing. The browser will use contextId instead.
+Client Side functionalities (like Tracking and Personalization) may be limited.`
     );
   }
 };

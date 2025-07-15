@@ -11,7 +11,7 @@
 Defined in: react/types/components/EditingScripts.d.ts:7
 
 Renders client scripts and data for editing/preview mode for Pages.
-Renders script required for the Design Library (when RenderingType is `component`).
+Renders script required for the Design Library (when mode.isDesignLibrary is true).
 
 ## Returns
 

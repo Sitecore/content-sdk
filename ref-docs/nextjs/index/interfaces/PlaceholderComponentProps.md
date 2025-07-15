@@ -171,18 +171,18 @@ Name of the placeholder to render.
 
 ***
 
-### pageContext
+### page
 
-> **pageContext**: [`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md)
+> **page**: [`Page`](../type-aliases/Page.md)
 
 Defined in: react/types/components/PlaceholderCommon.d.ts:63
 
-Page context data.
+Page data.
 This data is passed by the SitecoreProvider.
 
 #### Inherited from
 
-`PlaceholderProps.pageContext`
+`PlaceholderProps.page`
 
 ***
 

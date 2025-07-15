@@ -4,6 +4,8 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
+import { Page, PageMode } from '@sitecore-content-sdk/core/client';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { convertedDevData as normalModeDevData } from '../test-data/normal-mode-data';
 import * as metadataData from '../test-data/metadata-data';
 import { withPlaceholder } from '../enhancers/withPlaceholder';
@@ -76,6 +78,34 @@ componentMap.set(
 const testData = [{ label: 'Dev data', data: normalModeDevData }];
 
 describe('withPlaceholder HOC', () => {
+  const api = {
+    edge: {
+      contextId: 'id',
+      edgeUrl: 'url',
+      clientContextId: 'clientId',
+    },
+    local: {
+      apiKey: 'apiKey',
+      apiHost: 'apiHost',
+      path: 'path',
+    },
+  };
+
+  const getPage = (): Page => ({
+    layout: normalModeDevData,
+    locale: 'en',
+    mode: {
+      name: LayoutServicePageState.Normal,
+      isNormal: true,
+      isPreview: false,
+      isEditing: false,
+      isDesignLibrary: false,
+      designLibrary: {
+        isVariantGeneration: false,
+      },
+    },
+  });
+
   describe('Error handling', () => {
     before(() => {
       // Set to development mode to show error details
@@ -84,16 +114,13 @@ describe('withPlaceholder HOC', () => {
 
     it('should render default error component on wrapped component error', () => {
       const phKey = 'page-content';
-      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
         rendering: (null as unknown) as ComponentRendering,
       };
       const Element = withPlaceholder(phKey)(ErrorComponent);
       const renderedComponent = render(
-        <SitecoreProvider
-          layoutData={(normalModeDevData as unknown) as LayoutServiceData}
-          componentMap={componentMap}
-        >
+        <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -104,17 +131,14 @@ describe('withPlaceholder HOC', () => {
 
     it('should render custom component error on wrapped component error, when provided', () => {
       const phKey = 'page-content';
-      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
         rendering: (null as unknown) as ComponentRendering,
         errorComponent: ErrorMessageComponent,
       };
       const Element = withPlaceholder(phKey)(ErrorComponent);
       const renderedComponent = render(
-        <SitecoreProvider
-          layoutData={(normalModeDevData as unknown) as LayoutServiceData}
-          componentMap={componentMap}
-        >
+        <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -127,13 +151,13 @@ describe('withPlaceholder HOC', () => {
         | RouteData
       )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
       const phKey = 'page-content';
-      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={normalModeDevData} componentMap={componentMap}>
+        <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -156,7 +180,7 @@ describe('withPlaceholder HOC', () => {
         | RouteData
       )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
       const phKey = 'page-content';
-      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
         rendering: component,
         errorComponent: ErrorMessageComponent,
@@ -164,7 +188,7 @@ describe('withPlaceholder HOC', () => {
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={normalModeDevData} componentMap={componentMap}>
+        <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -188,16 +212,13 @@ describe('withPlaceholder HOC', () => {
           | RouteData
         )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
         const phKey = 'page-content';
-        const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+        const props: EnhancedOmit<PlaceholderProps, 'page'> = {
           name: phKey,
           rendering: component,
         };
         const Element = withPlaceholder(phKey)(Home);
         const renderedComponent = render(
-          <SitecoreProvider
-            layoutData={dataSet.data as LayoutServiceData}
-            componentMap={componentMap}
-          >
+          <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
             <Element {...props} />
           </SitecoreProvider>
         );
@@ -215,16 +236,13 @@ describe('withPlaceholder HOC', () => {
           placeholder: 'page-header',
           prop: 'subProp',
         };
-        const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+        const props: EnhancedOmit<PlaceholderProps, 'page'> = {
           name: 'page-header',
           rendering: component,
         };
         const Element = withPlaceholder(phKeyAndProp)(Home);
         const renderedComponent = render(
-          <SitecoreProvider
-            layoutData={dataSet.data as LayoutServiceData}
-            componentMap={componentMap}
-          >
+          <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
             <Element {...props} />
           </SitecoreProvider>
         );
@@ -248,16 +266,13 @@ describe('withPlaceholder HOC', () => {
             return { ...props, reset: true };
           },
         };
-        const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+        const props: EnhancedOmit<PlaceholderProps, 'page'> = {
           name: 'page-header',
           rendering: component,
         };
         const Element = withPlaceholder(phKeyAndProp, phOptions)(Home);
         const renderedComponent = render(
-          <SitecoreProvider
-            layoutData={dataSet.data as LayoutServiceData}
-            componentMap={componentMap}
-          >
+          <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
             <Element {...props} />
           </SitecoreProvider>
         );
@@ -270,6 +285,16 @@ describe('withPlaceholder HOC', () => {
   });
 
   describe('Metadata Mode', () => {
+    const defaultPage = getPage();
+    const editModePage: Page = {
+      ...defaultPage,
+      mode: {
+        ...defaultPage.mode,
+        name: LayoutServicePageState.Edit,
+        isEditing: true,
+      },
+    };
+
     const {
       layoutData,
       layoutDataWithEmptyPlaceholder,
@@ -292,13 +317,13 @@ describe('withPlaceholder HOC', () => {
     it('should render a placeholder with given key', () => {
       const component = layoutData.sitecore.route;
       const phKey = 'main';
-      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutData} componentMap={componentMap}>
+        <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -328,13 +353,13 @@ describe('withPlaceholder HOC', () => {
         placeholder: phKey,
         prop: 'subProp',
       };
-      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
         rendering: component,
       };
       const Element = withPlaceholder(phKeyAndProp)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutData} componentMap={componentMap}>
+        <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -361,13 +386,13 @@ describe('withPlaceholder HOC', () => {
     it('should render code blocks even if placeholder is empty', () => {
       const component = layoutDataWithEmptyPlaceholder.sitecore.route;
       const phKey = 'main';
-      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutDataWithEmptyPlaceholder} componentMap={componentMap}>
+        <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -385,13 +410,13 @@ describe('withPlaceholder HOC', () => {
     it('should render missing component with code blocks if component is not registered', () => {
       const component = layoutDataWithUnknownComponent.sitecore.route;
       const phKey = 'main';
-      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutDataWithUnknownComponent} componentMap={componentMap}>
+        <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -413,13 +438,13 @@ describe('withPlaceholder HOC', () => {
       const phKey = 'container-1';
       const layoutData = layoutDataForNestedDynamicPlaceholder('container-{*}');
       const component = layoutData.sitecore.route;
-      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutData} componentMap={componentMap}>
+        <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />
         </SitecoreProvider>
       );
@@ -446,13 +471,13 @@ describe('withPlaceholder HOC', () => {
       const phKey = 'container-1-2';
       const layoutData = layoutDataForNestedDynamicPlaceholder('container-1-{*}');
       const component = layoutData.sitecore.route;
-      const props: EnhancedOmit<PlaceholderProps, 'pageContext'> = {
+      const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
         rendering: component,
       };
       const Element = withPlaceholder(phKey)(Home);
       const renderedComponent = render(
-        <SitecoreProvider layoutData={layoutData} componentMap={componentMap}>
+        <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />
         </SitecoreProvider>
       );

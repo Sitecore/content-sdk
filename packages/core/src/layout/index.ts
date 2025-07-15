@@ -32,10 +32,6 @@ export {
 
 export { getContentStylesheetLink } from './content-styles';
 
-export {
-  GraphQLLayoutService,
-  GraphQLLayoutServiceConfig,
-  GRAPHQL_LAYOUT_QUERY_NAME,
-} from './graphql-layout-service';
+export { LayoutService, LayoutServiceConfig, GRAPHQL_LAYOUT_QUERY_NAME } from './layout-service';
 
 export { getDesignLibraryStylesheetLinks } from './themes';

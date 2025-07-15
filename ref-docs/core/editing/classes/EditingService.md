@@ -1,0 +1,105 @@
+[**@sitecore-content-sdk/core**](../../README.md)
+
+***
+
+[@sitecore-content-sdk/core](../../README.md) / [editing](../README.md) / EditingService
+
+# Class: EditingService
+
+Defined in: [packages/core/src/editing/editing-service.ts:111](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/editing/editing-service.ts#L111)
+
+Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
+Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
+
+## Constructors
+
+### Constructor
+
+> **new EditingService**(`serviceConfig`): `EditingService`
+
+Defined in: [packages/core/src/editing/editing-service.ts:118](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/editing/editing-service.ts#L118)
+
+Fetch layout data using the Sitecore GraphQL endpoint.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `serviceConfig` | `EditingServiceConfig` | configuration |
+
+#### Returns
+
+`EditingService`
+
+## Properties
+
+### serviceConfig
+
+> **serviceConfig**: `EditingServiceConfig`
+
+Defined in: [packages/core/src/editing/editing-service.ts:118](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/editing/editing-service.ts#L118)
+
+configuration
+
+## Methods
+
+### fetchDictionaryData()
+
+> **fetchDictionaryData**(`__namedParameters`, `fetchOptions?`): `Promise`\<[`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md)\>
+
+Defined in: [packages/core/src/editing/editing-service.ts:208](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/editing/editing-service.ts#L208)
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `__namedParameters` | \{ `after?`: `string`; `hasNext?`: `boolean`; `initDictionary?`: `object`[]; `language`: `string`; `siteName`: `string`; \} |
+| `__namedParameters.after?` | `string` |
+| `__namedParameters.hasNext?` | `boolean` |
+| `__namedParameters.initDictionary?` | `object`[] |
+| `__namedParameters.language?` | `string` |
+| `__namedParameters.siteName?` | `string` |
+| `fetchOptions?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) |
+
+#### Returns
+
+`Promise`\<[`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md)\>
+
+***
+
+### fetchEditingData()
+
+> **fetchEditingData**(`variables`, `fetchOptions?`): `Promise`\<\{ `dictionary`: [`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md); `layoutData`: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md); \}\>
+
+Defined in: [packages/core/src/editing/editing-service.ts:134](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/editing/editing-service.ts#L134)
+
+Fetches editing data. Provides the layout data and dictionary phrases
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `variables` | `EditingOptions` | The parameters for fetching editing data. |
+| `fetchOptions?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options to override graphQL client details like retries and fetch implementation |
+
+#### Returns
+
+`Promise`\<\{ `dictionary`: [`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md); `layoutData`: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md); \}\>
+
+The layout data and dictionary phrases.
+
+***
+
+### getGraphQLClient()
+
+> `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
+
+Defined in: [packages/core/src/editing/editing-service.ts:257](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/editing/editing-service.ts#L257)
+
+Gets a GraphQL client that can make requests to the API.
+
+#### Returns
+
+[`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
+
+implementation

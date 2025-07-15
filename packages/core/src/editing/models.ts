@@ -74,6 +74,8 @@ export enum DesignLibraryMode {
   Normal = 'library',
   /** Metadata mode */
   Metadata = 'library-metadata',
+  /** Variant generation mode */
+  VariantGeneration = 'library-variant-generation',
 }
 
 /**
@@ -85,7 +87,7 @@ export interface DesignLibraryRenderPreviewData {
   renderingId: string;
   componentUid: string;
   language: string;
-  mode?: DesignLibraryMode;
+  mode: DesignLibraryMode;
   variant?: string;
   version?: string;
   dataSourceId?: string;

@@ -27,7 +27,7 @@ export type FormProps = {
      */
     FormId: string;
     /**
-     * The CSS class to apply to the form.
+     * CSS class to apply to the form
      */
     styles?: string;
     /**
@@ -44,11 +44,22 @@ export const Form = ({ params, rendering }: FormProps) => {
   const context = useSitecore();
   const formRef = useRef<HTMLDivElement>(null);
 
-  const isEditing = context.pageContext.pageEditing;
+  const isEditing = context.page.mode.isEditing;
 
   useEffect(() => {
     if (!content) {
-      loadForm(context.api?.edge?.contextId, params.FormId, context.api?.edge?.edgeUrl)
+      // Forms must use clientContextId since they are rendered client-side
+      const edgeId = context.api?.edge?.clientContextId;
+
+      if (!edgeId) {
+        /* eslint-disable no-console */
+        console.warn(
+          'Warning: clientContextId is missing – form cannot be loaded properly on the client'
+        );
+        return;
+      }
+
+      loadForm(edgeId, params.FormId, context.api?.edge?.edgeUrl)
         .then(setContent)
         .catch(() => {
           if (isEditing) {
@@ -68,14 +79,12 @@ export const Form = ({ params, rendering }: FormProps) => {
     }
   }, [content]);
 
-  if (isEditing) {
-    if (error) {
-      return (
-        <div className="sc-content-sdk-placeholder-error">
-          There was a problem loading this section
-        </div>
-      );
-    }
+  if (isEditing && error) {
+    return (
+      <div className="sc-content-sdk-placeholder-error">
+        There was a problem loading this section
+      </div>
+    );
   }
 
   return (

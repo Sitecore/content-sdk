@@ -13,6 +13,7 @@
 ## Enumerations
 
 - [EditMode](enumerations/EditMode.md)
+- [ErrorPage](enumerations/ErrorPage.md)
 - [LayoutServicePageState](enumerations/LayoutServicePageState.md)
 
 ## Classes
@@ -20,13 +21,13 @@
 - [BYOCComponent](classes/BYOCComponent.md)
 - [ClientError](classes/ClientError.md)
 - [DefaultRetryStrategy](classes/DefaultRetryStrategy.md)
-- [GraphQLDictionaryService](classes/GraphQLDictionaryService.md)
-- [GraphQLLayoutService](classes/GraphQLLayoutService.md)
+- [DictionaryService](classes/DictionaryService.md)
 - [GraphQLRequestClient](classes/GraphQLRequestClient.md)
-- [GraphQLSitePathService](classes/GraphQLSitePathService.md)
+- [LayoutService](classes/LayoutService.md)
 - [MemoryCacheClient](classes/MemoryCacheClient.md)
 - [NativeDataFetcher](classes/NativeDataFetcher.md)
 - [SitecoreProvider](classes/SitecoreProvider.md)
+- [SitePathService](classes/SitePathService.md)
 
 ## Interfaces
 
@@ -37,10 +38,8 @@
 - [ComponentRendering](interfaces/ComponentRendering.md)
 - [DateFieldProps](interfaces/DateFieldProps.md)
 - [DictionaryPhrases](interfaces/DictionaryPhrases.md)
-- [DictionaryService](interfaces/DictionaryService.md)
 - [Field](interfaces/Field.md)
 - [FileField](interfaces/FileField.md)
-- [GraphQLSitePathServiceConfig](interfaces/GraphQLSitePathServiceConfig.md)
 - [ImageField](interfaces/ImageField.md)
 - [ImageFieldValue](interfaces/ImageFieldValue.md)
 - [ImageProps](interfaces/ImageProps.md)
@@ -58,6 +57,7 @@
 - [RichTextProps](interfaces/RichTextProps.md)
 - [RouteData](interfaces/RouteData.md)
 - [SitecoreProviderState](interfaces/SitecoreProviderState.md)
+- [SitePathServiceConfig](interfaces/SitePathServiceConfig.md)
 - [TextField](interfaces/TextField.md)
 - [WithSitecoreOptions](interfaces/WithSitecoreOptions.md)
 - [WithSitecoreProps](interfaces/WithSitecoreProps.md)
@@ -74,9 +74,10 @@
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
 - [LinkProps](type-aliases/LinkProps.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
+- [Page](type-aliases/Page.md)
+- [PageMode](type-aliases/PageMode.md)
 - [ReactContentSdkComponent](type-aliases/ReactContentSdkComponent.md)
 - [ReactModule](type-aliases/ReactModule.md)
-- [SitecoreProviderPageContext](type-aliases/SitecoreProviderPageContext.md)
 - [WithSitecoreHocProps](type-aliases/WithSitecoreHocProps.md)
 
 ## Variables

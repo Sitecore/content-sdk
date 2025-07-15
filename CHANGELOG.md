@@ -12,6 +12,116 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+## 1.0.0
+
+### 🎉 New Features & Improvements
+
+* Design Library Early Access enablers:
+  * `[core]` `[nextjs]` Integrated new _VariantGeneration_ mode ([#158](https://github.com/Sitecore/content-sdk/pull/158))
+  * `[nextjs]` Default static import-map ([#153](https://github.com/Sitecore/content-sdk/pull/153))
+  * `[cli]` Code Extraction ([#71](https://github.com/Sitecore/content-sdk/pull/71))([#113](https://github.com/Sitecore/content-sdk/pull/113))([#114](https://github.com/Sitecore/content-sdk/pull/114))([#154](https://github.com/Sitecore/content-sdk/pull/154))
+
+### 🛠 Breaking Changes
+
+* Refactored `SitecoreProvider` and enhanced `SitecoreClient` ([#158](https://github.com/Sitecore/content-sdk/pull/158)):
+
+  #### Reworked `SitecoreProvider` and Context
+
+  - Refactored components that use `SitecoreProvider` and related utilities.
+  - `SitecoreProvider` now accepts a `page` prop (`Page` type from `SitecoreClient`) instead of `layoutData`.
+  - Context state updates:
+    - `pageContext` → renamed to `page`. `page` represents `Page` interface.
+    - `setContext` → renamed to `setPage`. The method updates the `page` state.
+  - Removed `SitecoreProviderPageContext` interface.
+    - Consumers should now access `page` via the `Page` interface.
+
+  #### Updated `withSitecore` and `useSitecore` APIs
+
+  - Updated naming for clarity and consistency:
+    - `pageContext` → `page`
+    - `updateContext` → `updatePage`
+
+  #### Improvements to `SitecoreClient`
+
+  - **Type cleanup and consistency**:
+    - Removed `NextjsPage` interface.
+    - All methods that generate page data now return a consistent `Page` object.
+    - Properties `componentProps` and `notFound` are now part of the `SitecorePageProps` interface and are treated as optional.
+    - `SitecorePageProps` now requires a standalone `page` field instead of merging all data into one props object.
+
+  - **New `getErrorPage()` method**:
+    - Replaces `getErrorPages()`, exposing only necessary data.
+    - Introduces a new `ErrorPage` enum to select specific error types (e.g., `ErrorPage.NotFound`)
+  
+  - **New `PageMode` Type**
+    - The `Page` type now includes a `mode` field of type `PageMode`, providing runtime context (e.g. editing, design library, preview).
+    - Replaces older properties like `pageState`, `pageEditing`, `componentType`.
+
+    ```ts
+    mode: {
+      isNormal: boolean;
+      isPreview: boolean;
+      isEditing: boolean;
+      isDesignLibrary: boolean;
+    }
+    ```
+
+  #### DesignLibrary Component
+
+  - The `DesignLibrary` component no longer accepts a `layoutData` prop.
+  - It now accesses `page` directly from `SitecoreProvider`.
+
+* Refactor and simplify service names ([#133](https://github.com/Sitecore/content-sdk/pull/133)):
+
+  You will be affected by the following changes **only** if:
+  - You are referencing Content SDK services directly rather than using the `SitecoreClient` methods.
+
+  If you're using the `SitecoreClient` to access services, **no changes** are required.
+
+  Service class and config names have been refactored for clarity and consistency:
+
+  * Renamed:
+    * `RestComponentLayoutService` → `ComponentLayoutService`
+    * `RestComponentLayoutServiceConfig` → `ComponentLayoutServiceConfig`
+    * `GraphQLEditingService` → `EditingService`
+    * `GraphQLEditingServiceConfig` → `EditingServiceConfig`
+    * `GraphQLDictionaryService` → `DictionaryService`
+    * `GraphQLDictionaryServiceConfig` → `DictionaryServiceConfig`
+    * `GraphQLLayoutService` → `LayoutService`
+    * `GraphQLLayoutServiceConfig` → `LayoutServiceConfig`
+    * `GraphQLPersonalizeService` → `PersonalizeService`
+    * `GraphQLPersonalizeServiceConfig` → `PersonalizeServiceConfig`
+    * `GraphQLErrorPagesService` → `ErrorPagesService`
+    * `GraphQLErrorPagesServiceConfig` → `ErrorPagesServiceConfig`
+    * `GraphQLRedirectsService` → `RedirectsService`
+    * `GraphQLRedirectsServiceConfig` → `RedirectsServiceConfig`
+    * `GraphQLRobotsService` → `RobotsService`
+    * `GraphQLRobotsServiceConfig` → `RobotsServiceConfig`
+    * `GraphQLSiteInfoService` → `SiteInfoService`
+    * `GraphQLSiteInfoServiceConfig` → `SiteInfoServiceConfig`
+    * `GraphQLSitemapXmlService` → `SitemapXmlService`
+    * `GraphQLSitemapXmlServiceConfig` → `SitemapXmlServiceConfig`
+    * `GraphQLSitePathService` → `SitePathService`
+    * `GraphQLSitePathServiceConfig` → `SitePathServiceConfig`
+  * Removed `DictionaryService` interface
+* `[core]` `[nextjs]` `[templates/nextjs]` Refactor site resolution logic across packages ([#141](https://github.com/Sitecore/content-sdk/pull/141))([#155](https://github.com/Sitecore/content-sdk/pull/155))
+  * Removed `sites` parameter from `SitecoreClientInit` type
+  * Removed `SiteResolver` dependency and `resolveSite()` from `SitecoreClient`
+  * Removed support for passing a custom siteResolver to `SitecoreClient`
+  * Updated `SitecoreClient` to construct the `Page` using `siteName` instead of the full `SiteInfo`.
+  * Updated SitecoreClient's `getPagePaths()` to accept a `sites` parameter
+  * Modified the `getPagePaths` method in `SitecoreClient` to accept a `sites` parameter.
+  * Updated Next.js `SitemapMiddleware` and `RobotsMiddleware` to use their own instance of `SiteResolver` and accept a `sites` parameter via the constructor.
+
+### 🐛 Bug Fixes
+
+* `[nextjs]` Ensure Redirect Middleware handles case-insensitive path matching to prevent missed redirects due to casing differences ([#159](https://github.com/Sitecore/jss/pull/159))
+* `[core]` `[nextjs]`Standardized way of handling contextId/clientContextId and related fallbacks ([#150](https://github.com/Sitecore/content-sdk/pull/150))
+
+### 🧹 Chores
+
+* Add Github action workflow to generate package size and test coverage metrics report ([#151](https://github.com/Sitecore/content-sdk/pull/151))
+
 ## 0.3.0
 
 ### 🎉 New Features & Improvements

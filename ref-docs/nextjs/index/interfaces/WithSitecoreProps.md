@@ -6,7 +6,7 @@
 
 # Interface: WithSitecoreProps
 
-Defined in: react/types/enhancers/withSitecore.d.ts:10
+Defined in: react/types/enhancers/withSitecore.d.ts:11
 
 ## Properties
 
@@ -14,32 +14,32 @@ Defined in: react/types/enhancers/withSitecore.d.ts:10
 
 > `optional` **api**: `Required`\<\{ `edge?`: `Required`\<`undefined` \| \{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \}\>; `local?`: `Required`\<`undefined` \| \{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \}\>; \}\>
 
-Defined in: react/types/enhancers/withSitecore.d.ts:18
+Defined in: react/types/enhancers/withSitecore.d.ts:19
 
 The API configuration defined in the `SitecoreConfig`.
 
 ***
 
-### pageContext
+### page
 
-> **pageContext**: [`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md)
+> **page**: [`Page`](../type-aliases/Page.md)
 
-Defined in: react/types/enhancers/withSitecore.d.ts:14
+Defined in: react/types/enhancers/withSitecore.d.ts:15
 
 The current page context.
 
 ***
 
-### updateContext?
+### updatePage?
 
-> `optional` **updateContext**: `false` \| (`value`) => `void`
+> `optional` **updatePage**: `false` \| (`value`) => `void`
 
-Defined in: react/types/enhancers/withSitecore.d.ts:24
+Defined in: react/types/enhancers/withSitecore.d.ts:25
 
-Method to update the page context. This is only available if `updatable` is set to true.
+Method to update the page. This is only available if `updatable` is set to true.
 
 #### Param
 
-New page context value.
+New page value.
 
 #### Returns

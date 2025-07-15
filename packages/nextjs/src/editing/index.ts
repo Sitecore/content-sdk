@@ -1,4 +1,4 @@
-﻿export { GraphQLEditingService } from '@sitecore-content-sdk/core/editing';
+﻿export { EditingService } from '@sitecore-content-sdk/core/editing';
 export {
   EditingRenderMiddleware,
   EditingRenderMiddlewareConfig,

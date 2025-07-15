@@ -8,7 +8,7 @@
 
 > **RedirectInfo** = `object`
 
-Defined in: core/types/site/graphql-redirects-service.d.ts:7
+Defined in: core/types/site/redirects-service.d.ts:7
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: core/types/site/graphql-redirects-service.d.ts:7
 
 > **isQueryStringPreserved**: `boolean`
 
-Defined in: core/types/site/graphql-redirects-service.d.ts:11
+Defined in: core/types/site/redirects-service.d.ts:11
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: core/types/site/graphql-redirects-service.d.ts:11
 
 > **locale**: `string`
 
-Defined in: core/types/site/graphql-redirects-service.d.ts:12
+Defined in: core/types/site/redirects-service.d.ts:12
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: core/types/site/graphql-redirects-service.d.ts:12
 
 > **pattern**: `string`
 
-Defined in: core/types/site/graphql-redirects-service.d.ts:8
+Defined in: core/types/site/redirects-service.d.ts:8
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: core/types/site/graphql-redirects-service.d.ts:8
 
 > **redirectType**: `string`
 
-Defined in: core/types/site/graphql-redirects-service.d.ts:10
+Defined in: core/types/site/redirects-service.d.ts:10
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: core/types/site/graphql-redirects-service.d.ts:10
 
 > **target**: `string`
 
-Defined in: core/types/site/graphql-redirects-service.d.ts:9
+Defined in: core/types/site/redirects-service.d.ts:9

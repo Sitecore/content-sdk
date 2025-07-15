@@ -8,7 +8,7 @@
 
 > **SitecoreConfig** = [`DeepRequired`](DeepRequired.md)\<[`SitecoreConfigInput`](SitecoreConfigInput.md)\>
 
-Defined in: [packages/core/src/config/models.ts:194](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/core/src/config/models.ts#L194)
+Defined in: [packages/core/src/config/models.ts:206](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/config/models.ts#L206)
 
-Final sitecore config type used at runtime
-Every property should be populated, either from sitecore.config or built-in fallback values
+Final Sitecore config type used at runtime.
+Every property is populated, either from sitecore.config or fallback values.

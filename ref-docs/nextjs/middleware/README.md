@@ -18,10 +18,10 @@
 
 ## Type Aliases
 
-- [GraphQLPersonalizeServiceConfig](type-aliases/GraphQLPersonalizeServiceConfig.md)
 - [MiddlewareBaseConfig](type-aliases/MiddlewareBaseConfig.md)
 - [MultisiteMiddlewareConfig](type-aliases/MultisiteMiddlewareConfig.md)
 - [PersonalizeMiddlewareConfig](type-aliases/PersonalizeMiddlewareConfig.md)
+- [PersonalizeServiceConfig](type-aliases/PersonalizeServiceConfig.md)
 - [RedirectsMiddlewareConfig](type-aliases/RedirectsMiddlewareConfig.md)
 
 ## Functions
@@ -36,21 +36,9 @@ Re-exports [debug](../index/variables/debug.md)
 
 ***
 
-### GraphQLPersonalizeService
+### PersonalizeService
 
-Re-exports [GraphQLPersonalizeService](../index/classes/GraphQLPersonalizeService.md)
-
-***
-
-### GraphQLRedirectsService
-
-Re-exports [GraphQLRedirectsService](../index/classes/GraphQLRedirectsService.md)
-
-***
-
-### GraphQLRedirectsServiceConfig
-
-Re-exports [GraphQLRedirectsServiceConfig](../index/type-aliases/GraphQLRedirectsServiceConfig.md)
+Re-exports [PersonalizeService](../index/classes/PersonalizeService.md)
 
 ***
 
@@ -75,3 +63,15 @@ Re-exports [REDIRECT_TYPE_SERVER_TRANSFER](../index/variables/REDIRECT_TYPE_SERV
 ### RedirectInfo
 
 Re-exports [RedirectInfo](../index/type-aliases/RedirectInfo.md)
+
+***
+
+### RedirectsService
+
+Re-exports [RedirectsService](../index/classes/RedirectsService.md)
+
+***
+
+### RedirectsServiceConfig
+
+Re-exports [RedirectsServiceConfig](../index/type-aliases/RedirectsServiceConfig.md)

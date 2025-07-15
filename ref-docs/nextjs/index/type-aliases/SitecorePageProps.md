@@ -6,12 +6,38 @@
 
 # Type Alias: SitecorePageProps
 
-> **SitecorePageProps** = [`NextjsPage`](../../client/type-aliases/NextjsPage.md) & `object`
+> **SitecorePageProps** = `object`
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:4](https://github.com/Sitecore/content-sdk/blob/a01cc44e1fcc542a3a9ccd722895979634ef9b0a/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L4)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:5](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L5)
 
-## Type declaration
+## Properties
 
-### dictionary
+### componentProps?
 
-> **dictionary**: [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
+> `optional` **componentProps**: [`ComponentPropsCollection`](ComponentPropsCollection.md)
+
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:8](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L8)
+
+***
+
+### dictionary?
+
+> `optional` **dictionary**: [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
+
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:7](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L7)
+
+***
+
+### notFound?
+
+> `optional` **notFound**: `boolean`
+
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:9](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L9)
+
+***
+
+### page
+
+> **page**: [`Page`](Page.md) \| `null`
+
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:6](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L6)

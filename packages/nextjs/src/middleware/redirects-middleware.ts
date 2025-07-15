@@ -1,7 +1,7 @@
 ﻿import { debug } from '@sitecore-content-sdk/core';
 import {
-  GraphQLRedirectsService,
-  GraphQLRedirectsServiceConfig,
+  RedirectsService,
+  RedirectsServiceConfig,
   REDIRECT_TYPE_301,
   REDIRECT_TYPE_302,
   REDIRECT_TYPE_SERVER_TRANSFER,
@@ -28,21 +28,18 @@ type RedirectResult = RedirectInfo & { matchedQueryString?: string };
 /**
  * extended RedirectsMiddlewareConfig config type for RedirectsMiddleware
  */
-export type RedirectsMiddlewareConfig = Omit<
-  GraphQLRedirectsServiceConfig,
-  'fetch' | 'clientFactory'
-> &
+export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> &
   SitecoreConfig['api']['edge'] &
   MiddlewareBaseConfig &
   SitecoreConfig['redirects'] & {
-    redirectsService?: GraphQLRedirectsService;
+    redirectsService?: RedirectsService;
   };
 /**
  * Middleware / handler fetches all redirects from Sitecore instance by grapqhl service
  * compares with current url and redirects to target url
  */
 export class RedirectsMiddleware extends MiddlewareBase {
-  protected redirectsService: GraphQLRedirectsService;
+  protected redirectsService: RedirectsService;
   private locales: string[];
 
   /**
@@ -63,7 +60,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
     this.redirectsService =
       this.config.redirectsService ??
-      new GraphQLRedirectsService({
+      new RedirectsService({
         ...config,
         clientFactory: this.getClientFactory(graphQLOptions),
         fetch: fetch,
@@ -106,6 +103,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
         if (this.isPrefetch(req)) {
           debug.redirects('skipped (prefetch)');
           res.headers.set('x-middleware-cache', 'no-cache');
+          res.headers.set('Cache-Control', 'no-store, must-revalidate');
           return res;
         }
 
@@ -228,7 +226,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
       req.nextUrl.clone()
     );
     const locale = this.getLanguage(req);
-    const normalizedPath = incomingURL.replace(/\/*$/gi, '');
+    const normalizedPath = incomingURL.replace(/\/*$/gi, '').toLowerCase();
     const redirects = await this.redirectsService.fetchRedirects(siteName);
     const language = this.getLanguage(req);
     const modifyRedirects = structuredClone(redirects);
@@ -243,7 +241,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
               ? redirect.pattern.slice(0, -1).split('?')
               : redirect.pattern.split('?');
             const patternQS = urlArray[1];
-            let patternPath = urlArray[0];
+            let patternPath = urlArray[0].toLowerCase();
             // nextjs routes are case-sensitive, but locales should be compared case-insensitively
             const patternParts = patternPath.split('/');
             const maybeLocale = patternParts[1].toLowerCase();
