@@ -8,7 +8,7 @@
 
 > **addComponentPreviewHandler**(`callback`): `undefined` \| () => `void`
 
-Defined in: [packages/core/src/editing/design-library.ts:212](https://github.com/Sitecore/content-sdk/blob/e7191b106edfb83fec7098b422963cea8ee56b62/packages/core/src/editing/design-library.ts#L212)
+Defined in: [packages/core/src/editing/design-library.ts:212](https://github.com/Sitecore/content-sdk/blob/f408fe775581d33e134a5997639bb947204568fa/packages/core/src/editing/design-library.ts#L212)
 
 Adds the browser-side event handler for 'component:generation:component-preview' message used in Design Library
 The event should contain the component code, styles and imports.
