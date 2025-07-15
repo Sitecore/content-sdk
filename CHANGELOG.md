@@ -12,6 +12,8 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+## 1.0.0
+
 ### 🎉 New Features & Improvements
 
 * `[core]` `[nextjs]` Integrated new Design Library _VariantGeneration_ mode ([#158](https://github.com/Sitecore/content-sdk/pull/158))
