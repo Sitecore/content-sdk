@@ -16,9 +16,10 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* `[core]` `[nextjs]` Integrated new Design Library _VariantGeneration_ mode ([#158](https://github.com/Sitecore/content-sdk/pull/158))
-* `[nextjs]` Default static import-map for AI component generation ([#153](https://github.com/Sitecore/content-sdk/pull/153))
-* `[cli]` Code Extraction for XM Cloud code generation ([#71](https://github.com/Sitecore/content-sdk/pull/71))([#113](https://github.com/Sitecore/content-sdk/pull/113))([#114](https://github.com/Sitecore/content-sdk/pull/114))([#154](https://github.com/Sitecore/content-sdk/pull/154))
+* Design Library Early Access enablers:
+  * `[core]` `[nextjs]` Integrated new _VariantGeneration_ mode ([#158](https://github.com/Sitecore/content-sdk/pull/158))
+  * `[nextjs]` Default static import-map ([#153](https://github.com/Sitecore/content-sdk/pull/153))
+  * `[cli]` Code Extraction ([#71](https://github.com/Sitecore/content-sdk/pull/71))([#113](https://github.com/Sitecore/content-sdk/pull/113))([#114](https://github.com/Sitecore/content-sdk/pull/114))([#154](https://github.com/Sitecore/content-sdk/pull/154))
 
 ### 🛠 Breaking Changes
 
