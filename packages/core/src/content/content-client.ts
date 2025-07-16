@@ -17,7 +17,11 @@ import {
   TaxonomiesQueryResponse,
 } from './taxonomies';
 // Dynamic pagination utilities
-import { dynamicPagination, DynamicPaginationConfig, PaginationResult } from './dynamic-pagination';
+import {
+  dynamicPagination,
+  DynamicPaginationVariables,
+  DynamicPaginationResult,
+} from './dynamic-pagination';
 
 /**
  * Interface representing the options for the ContentClient.
@@ -116,9 +120,9 @@ export class ContentClient {
   }
 
   /**
-   * Dynamic pagination that auto-detects paginated fields
+   * Dynamic pagination for many GraphQL calls
    * @param {string} query - The GraphQL query string
-   * @param {DynamicPaginationConfig} config - Configuration for pagination
+   * @param {DynamicPaginationVariables} variables - Pagination variables
    * @returns Promise that resolves to pagination result with cursor control
    *
    * @example
@@ -141,19 +145,13 @@ export class ContentClient {
    *     { pageSize: 50, after: result.cursor }
    *   );
    * }
-   *
-   * // Auto-fetch all pages
-   * const allProducts = await client.dynamicPagination(
-   *   query,
-   *   { pageSize: 50, fetchAll: true }
-   * );
    * ```
    */
   async dynamicPagination<T = any>(
     query: string,
-    config: DynamicPaginationConfig = {}
-  ): Promise<PaginationResult<T>> {
-    return dynamicPagination(this, query, config);
+    variables: DynamicPaginationVariables
+  ): Promise<DynamicPaginationResult<T>> {
+    return dynamicPagination(this, query, variables);
   }
 
   /**

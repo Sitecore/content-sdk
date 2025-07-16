@@ -18,7 +18,6 @@ export {
 export { getContentUrl } from './utils';
 export {
   dynamicPagination,
-  DynamicPaginationConfig,
-  PaginationResult,
-  MultiFieldPaginationResult,
+  DynamicPaginationVariables,
+  DynamicPaginationResult,
 } from './dynamic-pagination';
