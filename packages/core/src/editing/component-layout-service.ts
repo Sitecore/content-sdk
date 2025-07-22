@@ -4,6 +4,7 @@ import debug from '../debug';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { resolveUrl } from '../utils';
 import { DesignLibraryMode } from './models';
+import { FetchOptions } from '../models';
 
 /**
  * Params for requesting component data in Design Library mode
@@ -71,7 +72,10 @@ export interface ComponentLayoutServiceConfig {
 export class ComponentLayoutService {
   constructor(private config: ComponentLayoutServiceConfig) {}
 
-  fetchComponentData(params: ComponentLayoutRequestParams): Promise<LayoutServiceData> {
+  fetchComponentData(
+    params: ComponentLayoutRequestParams,
+    fetchOptions?: FetchOptions
+  ): Promise<LayoutServiceData> {
     const fetcher = new NativeDataFetcher({ debugger: debug.layout });
 
     debug.layout(
@@ -85,7 +89,11 @@ export class ComponentLayoutService {
 
     return fetcher
       .get<LayoutServiceData>(this.getFetchUrl(params), {
-        headers: { sc_editMode: `${params.mode === DesignLibraryMode.Metadata}` },
+        ...fetchOptions,
+        headers: {
+          ...fetchOptions?.headers,
+          sc_editMode: `${params.mode === DesignLibraryMode.Metadata}`,
+        },
       })
       .then((response) => response.data)
       .catch((error) => {

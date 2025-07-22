@@ -414,7 +414,6 @@ export class SitecoreClient implements BaseSitecoreClient {
 
     const data = await this.editingService.fetchEditingData(
       {
-        siteName: site,
         itemId,
         language,
         version,
@@ -427,13 +426,12 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!data) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}`);
     }
-    const page = {
+    const page: Page = {
       locale: language,
       layout: data.layoutData,
-      dictionary: data.dictionary,
       siteName: data.layoutData.sitecore.context.site?.name || site,
       mode: this.getPageMode(mode),
-    } as Page;
+    };
     const personalizeData = getGroomedVariantIds(variantIds);
     personalizeLayout(page.layout, personalizeData.variantId, personalizeData.componentVariantIds);
 
@@ -465,21 +463,16 @@ export class SitecoreClient implements BaseSitecoreClient {
       mode,
     } = designLibData;
 
-    const componentData = await this.componentService.fetchComponentData({
-      siteName: site,
-      itemId,
-      language,
-      componentUid,
-      renderingId,
-      dataSourceId,
-      version,
-      mode,
-    });
-
-    const dictionaryData = await this.editingService.fetchDictionaryData(
+    const componentData = await this.componentService.fetchComponentData(
       {
         siteName: site,
+        itemId,
         language,
+        componentUid,
+        renderingId,
+        dataSourceId,
+        version,
+        mode,
       },
       fetchOptions
     );
@@ -487,13 +480,12 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!componentData) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(designLibData)}`);
     }
-    const page = {
+    const page: Page = {
       locale: designLibData.language,
       layout: componentData,
-      dictionary: dictionaryData,
       siteName: componentData.sitecore.context.site?.name || site,
       mode: this.getPageMode(mode),
-    } as Page;
+    };
     return page;
   }
 
