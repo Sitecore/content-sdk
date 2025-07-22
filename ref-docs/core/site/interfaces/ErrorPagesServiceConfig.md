@@ -6,7 +6,7 @@
 
 # Interface: ErrorPagesServiceConfig
 
-Defined in: [packages/core/src/site/error-pages-service.ts:28](https://github.com/Sitecore/content-sdk/blob/42aee3f536f5272b3c6ccd994169ef4c19839501/packages/core/src/site/error-pages-service.ts#L28)
+Defined in: [packages/core/src/site/error-pages-service.ts:28](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/site/error-pages-service.ts#L28)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/core/src/site/error-pages-service.ts:28](https://github.co
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/site/error-pages-service.ts:37](https://github.com/Sitecore/content-sdk/blob/42aee3f536f5272b3c6ccd994169ef4c19839501/packages/core/src/site/error-pages-service.ts#L37)
+Defined in: [packages/core/src/site/error-pages-service.ts:37](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/site/error-pages-service.ts#L37)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -33,7 +33,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > `optional` **debugger**: `Debugger`
 
-Defined in: [packages/core/src/sitecore-service-base.ts:14](https://github.com/Sitecore/content-sdk/blob/42aee3f536f5272b3c6ccd994169ef4c19839501/packages/core/src/sitecore-service-base.ts#L14)
+Defined in: [packages/core/src/sitecore-service-base.ts:14](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/sitecore-service-base.ts#L14)
 
 Optional debug logger override
 
@@ -47,7 +47,7 @@ Optional debug logger override
 
 > **language**: `string`
 
-Defined in: [packages/core/src/site/error-pages-service.ts:32](https://github.com/Sitecore/content-sdk/blob/42aee3f536f5272b3c6ccd994169ef4c19839501/packages/core/src/site/error-pages-service.ts#L32)
+Defined in: [packages/core/src/site/error-pages-service.ts:32](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/site/error-pages-service.ts#L32)
 
 The language
 
@@ -57,7 +57,7 @@ The language
 
 > `optional` **retries**: `object`
 
-Defined in: [packages/core/src/config/models.ts:87](https://github.com/Sitecore/content-sdk/blob/42aee3f536f5272b3c6ccd994169ef4c19839501/packages/core/src/config/models.ts#L87)
+Defined in: [packages/core/src/config/models.ts:87](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/config/models.ts#L87)
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services
 
