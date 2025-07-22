@@ -12,6 +12,14 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🐛 Bug Fixes
+
+* `[core]` Duplicate dictionary requests in editing, preview, and design library modes ([#161](https://github.com/Sitecore/content-sdk/pull/161))
+  - `SitecoreClient.getPreview` and `SitecoreClient.getDesignLibraryData` no longer request dictionary data. `Page` type is not affected.
+  - Updated `EditingService.fetchEditingData`:
+    - Removed `siteName` parameter.
+    - No longer requests and returns dictionary data.
+
 ## 1.0.0
 
 ### 🎉 New Features & Improvements

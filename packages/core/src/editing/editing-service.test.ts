@@ -4,11 +4,8 @@ import sinon from 'sinon';
 import nock from 'nock';
 import spies from 'chai-spies';
 import { GraphQLRequestClient } from '../graphql-request-client';
-import { EditingService, EditingServiceConfig, query, dictionaryQuery } from './editing-service';
-import {
-  mockEditingServiceDictionaryResponse,
-  mockEditingServiceResponse,
-} from '../test-data/mockEditingServiceResponse';
+import { EditingService, EditingServiceConfig, query } from './editing-service';
+import { mockEditingServiceResponse } from '../test-data/mockEditingServiceResponse';
 import { LayoutKind } from './models';
 import debug from '../debug';
 import { LayoutServicePageState } from '../layout';
@@ -18,7 +15,6 @@ use(spies);
 describe('EditingService', () => {
   const hostname = 'http://site';
   const endpointPath = '/?sitecoreContextId=context-id';
-  const siteName = 'site-name';
   const clientFactory = GraphQLRequestClient.createClientFactory({
     endpoint: hostname + endpointPath,
   });
@@ -74,7 +70,6 @@ describe('EditingService', () => {
       language,
       version,
       itemId,
-      siteName,
       mode: LayoutServicePageState.Edit,
     });
 
@@ -91,7 +86,6 @@ describe('EditingService', () => {
         language,
         version,
         itemId,
-        siteName,
       },
       {
         headers: {
@@ -103,10 +97,6 @@ describe('EditingService', () => {
 
     expect(result).to.deep.equal({
       layoutData: layoutDataResponse,
-      dictionary: {
-        foo: 'foo-phrase',
-        bar: 'bar-phrase',
-      },
     });
 
     spy.restore(clientFactorySpy);
@@ -129,7 +119,6 @@ describe('EditingService', () => {
       language,
       version,
       itemId,
-      siteName,
       mode: LayoutServicePageState.Preview,
     });
 
@@ -146,7 +135,6 @@ describe('EditingService', () => {
         language,
         version,
         itemId,
-        siteName,
       },
       {
         headers: {
@@ -158,26 +146,17 @@ describe('EditingService', () => {
 
     expect(result).to.deep.equal({
       layoutData: layoutDataResponse,
-      dictionary: {
-        foo: 'foo-phrase',
-        bar: 'bar-phrase',
-      },
     });
 
     spy.restore(clientFactorySpy);
   });
 
-  it('should return empty dictionary and layout', async () => {
+  it('should return empty layout', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true' } })
       .post(endpointPath, /EditingQuery/gi)
       .reply(200, {
         data: {
           item: null,
-          site: {
-            siteInfo: {
-              dictionary: null,
-            },
-          },
         },
       });
 
@@ -193,7 +172,6 @@ describe('EditingService', () => {
       language,
       version,
       itemId,
-      siteName,
       mode: LayoutServicePageState.Edit,
     });
 
@@ -210,7 +188,6 @@ describe('EditingService', () => {
         language,
         version,
         itemId,
-        siteName,
       },
       {
         headers: {
@@ -227,7 +204,6 @@ describe('EditingService', () => {
           route: null,
         },
       },
-      dictionary: {},
     });
 
     spy.restore(clientFactorySpy);
@@ -249,7 +225,6 @@ describe('EditingService', () => {
     const result = await service.fetchEditingData({
       language,
       itemId,
-      siteName,
       mode: LayoutServicePageState.Edit,
     });
 
@@ -265,7 +240,6 @@ describe('EditingService', () => {
       {
         language,
         itemId,
-        siteName,
         version: undefined,
       },
       {
@@ -278,10 +252,6 @@ describe('EditingService', () => {
 
     expect(result).to.deep.equal({
       layoutData: layoutDataResponse,
-      dictionary: {
-        foo: 'foo-phrase',
-        bar: 'bar-phrase',
-      },
     });
 
     spy.restore(clientFactorySpy);
@@ -304,7 +274,6 @@ describe('EditingService', () => {
       language,
       version,
       itemId,
-      siteName,
       layoutKind: LayoutKind.Shared,
       mode: LayoutServicePageState.Edit,
     });
@@ -317,7 +286,6 @@ describe('EditingService', () => {
         language,
         version,
         itemId,
-        siteName,
       },
       {
         headers: {
@@ -329,212 +297,6 @@ describe('EditingService', () => {
 
     expect(result).to.deep.equal({
       layoutData: layoutDataResponse,
-      dictionary: {
-        foo: 'foo-phrase',
-        bar: 'bar-phrase',
-      },
-    });
-
-    spy.restore(clientFactorySpy);
-  });
-
-  it('should fetch editing data when dicionary has multiple pages', async () => {
-    nock(hostname, { reqheaders: { sc_editMode: 'true' } })
-      .post(endpointPath, /EditingQuery/gi)
-      .reply(200, mockEditingServiceResponse(true));
-
-    nock(hostname)
-      .post(endpointPath, /DictionaryQuery/gi)
-      .reply(200, mockEditingServiceDictionaryResponse.pageOne);
-
-    nock(hostname)
-      .post(endpointPath, /DictionaryQuery/gi)
-      .reply(200, mockEditingServiceDictionaryResponse.pageTwo);
-
-    const clientFactorySpy = sinon.spy(clientFactory);
-
-    const service = new EditingService({
-      clientFactory: clientFactorySpy,
-    });
-
-    spy.on(clientFactorySpy.returnValues[0], 'request');
-
-    const result = await service.fetchEditingData({
-      language,
-      version,
-      itemId,
-      siteName,
-      mode: LayoutServicePageState.Edit,
-    });
-
-    expect(clientFactorySpy.called).to.be.true;
-    expect(
-      clientFactorySpy.calledWith({
-        debugger: debug.editing,
-      })
-    ).to.be.true;
-
-    expect(clientFactorySpy.returnValues[0].request).to.be.called.exactly(3);
-    expect(clientFactorySpy.returnValues[0].request).to.be.called.with(query, {
-      language,
-      version,
-      itemId,
-      siteName,
-    });
-
-    expect(clientFactorySpy.returnValues[0].request)
-      .on.nth(2)
-      .to.be.called.with(dictionaryQuery, {
-        language,
-        siteName,
-        after: 'cursor',
-      });
-
-    expect(clientFactorySpy.returnValues[0].request)
-      .on.nth(3)
-      .to.be.called.with(dictionaryQuery, {
-        language,
-        siteName,
-        after: 'cursor-one',
-      });
-
-    expect(result).to.deep.equal({
-      layoutData: layoutDataResponse,
-      dictionary: {
-        foo: 'foo-phrase',
-        bar: 'bar-phrase',
-        'foo-one': 'foo-one-phrase',
-        'bar-one': 'bar-one-phrase',
-        'foo-two': 'foo-two-phrase',
-        'bar-two': 'bar-two-phrase',
-      },
-    });
-
-    spy.restore(clientFactorySpy);
-  });
-
-  describe('fetchDictionaryData', () => {
-    it('should request dictionary from scratch when fetchDictionaryData called on its own', async () => {
-      nock(hostname)
-        .post(endpointPath, /DictionaryQuery/gi)
-        .reply(200, mockEditingServiceDictionaryResponse.pageOne);
-
-      nock(hostname)
-        .post(endpointPath, /DictionaryQuery/gi)
-        .reply(200, mockEditingServiceDictionaryResponse.pageTwo);
-
-      const service = new EditingService({
-        clientFactory: clientFactory,
-      });
-
-      const result = await service.fetchDictionaryData({
-        language,
-        siteName,
-      });
-
-      expect(result).to.deep.equal({
-        'foo-one': 'foo-one-phrase',
-        'bar-one': 'bar-one-phrase',
-        'foo-two': 'foo-two-phrase',
-        'bar-two': 'bar-two-phrase',
-      });
-    });
-
-    it('should pass fetchOptions to the GraphQL client', async () => {
-      const fetchOptions = {
-        retries: 3,
-        retryStrategy: {
-          shouldRetry: () => true,
-          getDelay: () => 1000,
-        },
-        fetch: globalThis.fetch,
-        headers: {
-          Authorization: 'Bearer test-token',
-          'Content-Type': 'application/json',
-        },
-      };
-      const requestMock = sinon.stub().resolves({
-        layout: {
-          item: {
-            rendered: {
-              sitecore: {
-                context: { pageEditing: false, language: 'en' },
-                route: null,
-              },
-            },
-          },
-        },
-      });
-
-      sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
-
-      const service = new EditingService({
-        clientFactory: clientFactory,
-      });
-
-      await service.fetchDictionaryData(
-        {
-          language,
-          siteName,
-        },
-        fetchOptions
-      );
-      expect(requestMock.calledOnce).to.be.true;
-      expect(requestMock.firstCall.args[2]).to.deep.equal(fetchOptions);
-    });
-  });
-
-  it('should return empty dictionary when dictionary is not provided', async () => {
-    const editingData = mockEditingServiceResponse();
-
-    (editingData.data.site.siteInfo as any) = null;
-
-    nock(hostname, { reqheaders: { sc_editMode: 'true' } })
-      .post(endpointPath, /EditingQuery/gi)
-      .reply(200, editingData);
-
-    const clientFactorySpy = sinon.spy(clientFactory);
-
-    const service = new EditingService({
-      clientFactory: clientFactorySpy,
-    });
-
-    spy.on(clientFactorySpy.returnValues[0], 'request');
-
-    const result = await service.fetchEditingData({
-      language,
-      version,
-      itemId,
-      siteName,
-      mode: LayoutServicePageState.Edit,
-    });
-
-    expect(clientFactorySpy.calledOnce).to.be.true;
-    expect(
-      clientFactorySpy.calledWith({
-        debugger: debug.editing,
-      })
-    ).to.be.true;
-    expect(clientFactorySpy.returnValues[0].request).to.be.called.exactly(1);
-    expect(clientFactorySpy.returnValues[0].request).to.be.called.with(
-      query,
-      {
-        language,
-        version,
-        itemId,
-        siteName,
-      },
-      {
-        headers: {
-          sc_layoutKind: 'final',
-          sc_editMode: 'true',
-        },
-      }
-    );
-
-    expect(result).to.deep.equal({
-      layoutData: layoutDataResponse,
-      dictionary: {},
     });
 
     spy.restore(clientFactorySpy);
@@ -548,7 +310,6 @@ describe('EditingService', () => {
         language,
         version,
         itemId,
-        siteName,
         mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
@@ -572,29 +333,10 @@ describe('EditingService', () => {
         language,
         version,
         itemId,
-        siteName,
         mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
       expect(error.response.error).to.equal('Internal server error');
-    }
-  });
-
-  it('should throw an error when siteName is not provided', async () => {
-    const service = new EditingService({
-      clientFactory,
-    });
-
-    try {
-      await service.fetchEditingData({
-        language,
-        version,
-        itemId,
-        siteName: '',
-        mode: LayoutServicePageState.Edit,
-      });
-    } catch (error) {
-      expect(error.message).to.equal('The site name must be a non-empty string');
     }
   });
 
@@ -608,7 +350,6 @@ describe('EditingService', () => {
         language: '',
         version,
         itemId,
-        siteName,
         mode: LayoutServicePageState.Edit,
       });
     } catch (error) {
@@ -630,7 +371,6 @@ describe('EditingService', () => {
       },
     };
     const editingOptions = {
-      siteName: 'example-site',
       itemId: 'item-123',
       language: 'en',
       version: '1',
@@ -644,14 +384,6 @@ describe('EditingService', () => {
           sitecore: {
             context: { pageEditing: true, language: 'en' },
             route: null,
-          },
-        },
-      },
-      site: {
-        siteInfo: {
-          dictionary: {
-            results: [],
-            pageInfo: { hasNext: false, endCursor: '' },
           },
         },
       },
