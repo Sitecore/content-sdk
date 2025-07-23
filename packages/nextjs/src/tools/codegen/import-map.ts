@@ -141,18 +141,24 @@ const getImportValueAlias = (importValue: string, moduleName: string) => {
 export const getImportMap = (paths: string[]) => {
   // make preparations for handling ts/js files
   const appPath = process.cwd();
-  const tsConfig = ts.readConfigFile(path.resolve(appPath, 'tsconfig.json'), ts.sys.readFile);
-  const cliCompilerOptions = {
-    ...tsConfig.config.compilerOptions,
+  let cliCompilerOptions = {
     baseUrl: appPath,
     allowJs: true,
     target: ts.ScriptTarget.ESNext,
   };
-  const tsHost = ts.createCompilerHost(cliCompilerOptions, true);
-
+  const tsConfig = ts.readConfigFile(path.resolve(appPath, 'tsconfig.json'), ts.sys.readFile);
   if (tsConfig.error) {
-    throw new Error(`Error reading tsconfig.json from JSS app root: ${tsConfig.error.messageText}`);
+    console.warn(
+      `[Codegen] Error reading tsconfig.json from app root: ${tsConfig.error.messageText}`
+    );
+  } else {
+    cliCompilerOptions = {
+      ...tsConfig.config.compilerOptions,
+      ...cliCompilerOptions,
+    };
   }
+
+  const tsHost = ts.createCompilerHost(cliCompilerOptions, true);
 
   // indexed version of import map - we will store and aggregate unique import paths and their imports here
   const importMap: Map<string, ModuleExports> = new Map();
@@ -169,10 +175,10 @@ export const getImportMap = (paths: string[]) => {
 
     // attempt to parse current file to extract imports from
     const tsCodeSource = tsHost.getSourceFile(codeFileFullPath, ts.ScriptTarget.Latest, (msg) => {
-      throw new Error(`Failed to parse ${codeFileFullPath}: ${msg}`);
+      throw new Error(`[Codegen] Failed to parse ${codeFileFullPath}: ${msg}`);
     });
 
-    if (!tsCodeSource) throw ReferenceError(`Failed to find file ${codeFileFullPath}`);
+    if (!tsCodeSource) throw ReferenceError(`[Codegen] Failed to find file ${codeFileFullPath}`);
 
     // By transpiling the code from current file to JS we get rid of unused imports and the type imports
     const jsCode = ts.transpileModule(tsCodeSource.getFullText(), {
@@ -239,7 +245,7 @@ export const getImportMap = (paths: string[]) => {
             importValuesIndex.set(importValue, importModuleName);
           }
         } else {
-          console.warn('Could not resolve a file for import %s', moduleName);
+          console.warn('[Codegen] Could not resolve a file for import %s', moduleName);
         }
       }
     });
@@ -294,7 +300,7 @@ export const writeImportMap = (args: WriteImportMapArgs, scConfig: SitecoreConfi
     const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
     const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
     console.log(
-      `Generating import map for paths: ${JSON.stringify(
+      `[Codegen] Generating import map for paths: ${JSON.stringify(
         args
       )}.\n Writing into ${importMapFile} ...`
     );
@@ -307,7 +313,10 @@ export const writeImportMap = (args: WriteImportMapArgs, scConfig: SitecoreConfi
         encoding: 'utf8',
       });
     } catch (error) {
-      console.error(`Import Map generation failed. Error writing to file ${importMapFile}:`, error);
+      console.error(
+        `[Codegen] Import Map generation failed. Error writing to file ${importMapFile}:`,
+        error
+      );
       throw error;
     }
   };
