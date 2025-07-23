@@ -1,9 +1,9 @@
 /* eslint-disable quotes */
 import { expect } from 'chai';
+import crypto from 'crypto';
 import {
   ModuleExports,
   nextJsMapTemplate,
-  parseImportString,
   getImportMap,
   unitMocks,
   writeImportMap,
@@ -20,74 +20,23 @@ describe('Import Map Generation', () => {
     unitMocks({ mockDefaultImportEntries: [], getComponentListStub: getComponentList });
   });
 
-  describe('parseImportString', () => {
-    it('should parse import string with named imports', () => {
-      const result = parseImportString('{ foo, bar }');
-      const expected = [
-        {
-          importName: 'foo',
-        },
-        {
-          importName: 'bar',
-        },
-      ];
-      expect(result).to.deep.equal(expected);
-    });
-
-    it('should parse import string with wildcard import and return single import entry', () => {
-      const result = parseImportString('* as utils');
-      const expected = {
-        importName: '*',
-        alias: 'utils',
-      };
-      expect(result).to.deep.equal(expected);
-    });
-
-    it('should parse import string with default import', () => {
-      const result = parseImportString('myDefault');
-      const expected = {
-        importName: 'myDefault',
-      };
-      expect(result).to.deep.equal(expected);
-    });
-
-    it('should parse import string with named import when alias is used', () => {
-      // This case is not handled by the current implementation, but let's test it
-      const result = parseImportString('{ baz, foo as bar }');
-      const expected = [
-        {
-          importName: 'baz',
-        },
-        {
-          importName: 'foo',
-          alias: 'bar',
-        },
-      ];
-      expect(result).to.deep.equal(expected);
-    });
-
-    it('should return null when not valid import string', () => {
-      const result = parseImportString('not an import');
-      expect(result).to.equal(null);
-    });
-  });
-
   describe('getImportMap', () => {
     const sandbox = sinon.createSandbox();
     let cwdStub: sinon.SinonStub;
+    let testExportsModulePath = '';
 
     const convertToTestable = (importMap: Map<string, ModuleExports>) =>
       Array.from(importMap).map(([modulePath, imports]) => {
-        const defaultImports = Array.from(imports.defaultExports).map(([key, importInfo]) => {
+        const defaultImports = Array.from(imports.defaultExports).map(([key, value]) => {
           return {
-            valueName: key,
-            importName: importInfo,
+            name: key,
+            value,
           };
         });
-        const namedImports = Array.from(imports.namedExports).map(([key, importInfo]) => {
+        const namedImports = Array.from(imports.namedExports).map(([key, value]) => {
           return {
-            valueName: key,
-            importName: importInfo,
+            name: key,
+            value,
           };
         });
         return {
@@ -100,6 +49,7 @@ describe('Import Map Generation', () => {
     beforeEach(() => {
       const appFolder = path.resolve(process.cwd(), './src/tools/codegen/test-data/import-map');
       cwdStub = sandbox.stub(process, 'cwd').returns(appFolder);
+      testExportsModulePath = path.resolve(process.cwd(), 'test-exports.ts').replace(/\\/g, '/');
     });
 
     afterEach(() => {
@@ -110,13 +60,13 @@ describe('Import Map Generation', () => {
       const result = getImportMap(['named.ts']);
       const expected = [
         {
-          module: '../test-exports.ts',
+          module: testExportsModulePath,
           namedImports: [
-            { valueName: 'funco', importName: 'funco' },
-            { valueName: 'TestClass', importName: 'TestClass' },
+            { name: 'funco', value: 'funco' },
+            { name: 'TestClass', value: 'TestClass' },
             {
-              importName: 'testClassInstance',
-              valueName: 'testo',
+              name: 'testClassInstance',
+              value: 'testClassInstance',
             },
           ],
           defaultImports: [],
@@ -131,12 +81,12 @@ describe('Import Map Generation', () => {
         {
           module: 'react',
           namedImports: [],
-          defaultImports: [{ valueName: 'React', importName: '*' }],
+          defaultImports: [{ name: '*', value: 'React' }],
         },
         {
-          module: '../test-exports.ts',
+          module: testExportsModulePath,
           namedImports: [],
-          defaultImports: [{ valueName: 'everything', importName: '*' }],
+          defaultImports: [{ name: '*', value: 'everything' }],
         },
       ];
 
@@ -147,16 +97,84 @@ describe('Import Map Generation', () => {
       const result = getImportMap(['mixed.ts']);
       const expected = [
         {
-          module: '../test-exports.ts',
+          module: testExportsModulePath,
           namedImports: [
-            { valueName: 'funco', importName: 'funco' },
-            { valueName: 'TestClass', importName: 'TestClass' },
+            { name: 'funco', value: 'funco' },
+            { name: 'TestClass', value: 'TestClass' },
             {
-              importName: 'testClassInstance',
-              valueName: 'testo',
+              name: 'testClassInstance',
+              value: 'testClassInstance',
             },
           ],
-          defaultImports: [{ valueName: 'everything', importName: '*' }],
+          defaultImports: [{ name: '*', value: 'everything' }],
+        },
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
+    });
+
+    it('should return map with default import map values', () => {
+      const defaultMap = [
+        {
+          module: 'test',
+          exports: [
+            {
+              name: 'testExport',
+              value: 'testExport',
+            },
+          ],
+        },
+      ] as ImportEntry[];
+
+      unitMocks({ mockDefaultImportEntries: defaultMap });
+
+      const result = getImportMap(['mixed.ts']);
+      const expected = [
+        {
+          module: testExportsModulePath,
+          namedImports: [
+            { name: 'funco', value: 'funco' },
+            { name: 'TestClass', value: 'TestClass' },
+            {
+              name: 'testClassInstance',
+              value: 'testClassInstance',
+            },
+          ],
+          defaultImports: [{ name: '*', value: 'everything' }],
+        },
+        {
+          module: 'test',
+          namedImports: [{ name: 'testExport', value: 'testExport' }],
+          defaultImports: [],
+        },
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
+    });
+
+    it('should return map from with aliased values when import getting duplicate import names', () => {
+      const result = getImportMap(['wildcard.ts', 'duplicates.ts']);
+      const testDuplicateImportModule = path
+        .resolve(process.cwd(), 'fake-react.ts')
+        .replace(/\\/g, '/');
+      const expected = [
+        {
+          module: 'react',
+          namedImports: [],
+          defaultImports: [{ name: '*', value: 'React' }],
+        },
+        {
+          module: testExportsModulePath,
+          namedImports: [],
+          defaultImports: [{ name: '*', value: 'everything' }],
+        },
+        {
+          defaultImports: [],
+          module: testDuplicateImportModule,
+          namedImports: [
+            {
+              name: 'React',
+              value: `${crypto.hash('sha1', testDuplicateImportModule)}_React`,
+            },
+          ],
         },
       ];
       expect(convertToTestable(result)).to.deep.equal(expected);
@@ -166,8 +184,8 @@ describe('Import Map Generation', () => {
       const result = getImportMap(['with-types.ts']);
       const expected = [
         {
-          module: '../test-exports.ts',
-          namedImports: [{ valueName: 'funco', importName: 'funco' }],
+          module: testExportsModulePath,
+          namedImports: [{ name: 'funco', value: 'funco' }],
           defaultImports: [],
         },
       ];
@@ -178,8 +196,8 @@ describe('Import Map Generation', () => {
       const tsxResult = getImportMap(['tsx-component.tsx', 'jsx-component.jsx']);
       const expected = [
         {
-          module: '../test-exports.ts',
-          namedImports: [{ valueName: 'funco', importName: 'funco' }],
+          module: testExportsModulePath,
+          namedImports: [{ name: 'funco', value: 'funco' }],
           defaultImports: [],
         },
       ];
@@ -190,8 +208,8 @@ describe('Import Map Generation', () => {
       const result = getImportMap(['js-file.js']);
       const expected = [
         {
-          module: '../test-exports.ts',
-          namedImports: [{ valueName: 'funco', importName: 'funco' }],
+          module: testExportsModulePath,
+          namedImports: [{ name: 'funco', value: 'funco' }],
           defaultImports: [],
         },
       ];
@@ -207,23 +225,23 @@ describe('Import Map Generation', () => {
         namedExports: new Map([
           ['funco', 'funco'],
           ['TestClass', 'TestClass'],
-          ['testo', 'testClassInstance'],
+          ['testo', 'aliased_testo'],
         ]),
-        defaultExports: new Map([['everything', '*']]),
+        defaultExports: new Map([['*', 'everything']]),
       });
       importMap.set('react', {
         namedExports: new Map(),
-        defaultExports: new Map([['React', '*']]),
+        defaultExports: new Map([['*', 'React']]),
       });
 
       const output = nextJsMapTemplate(importMap);
 
       // Check that import statements are present
       expect(output).to.include(
-        "import { funco as testexports_funco, TestClass as testexports_TestClass, testClassInstance as testexports_testo } from '../test-exports';"
+        "import { funco, TestClass, testo as aliased_testo } from '../test-exports';"
       );
-      expect(output).to.include("import * as testexports_everything from '../test-exports';");
-      expect(output).to.include("import * as react_React from 'react';");
+      expect(output).to.include("import * as everything from '../test-exports';");
+      expect(output).to.include("import * as React from 'react';");
     });
 
     it('should accept a Map object and transform it into file content with component map entries', () => {
@@ -233,9 +251,9 @@ describe('Import Map Generation', () => {
         namedExports: new Map([
           ['funco', 'funco'],
           ['TestClass', 'TestClass'],
-          ['testo', 'testClassInstance'],
+          ['testo', 'aliased_testo'],
         ]),
-        defaultExports: new Map([['everything', '*']]),
+        defaultExports: new Map([['*', 'everything']]),
       });
 
       const output = nextJsMapTemplate(importMap);
@@ -243,10 +261,10 @@ describe('Import Map Generation', () => {
       // Check that the export const importMap is present and contains correct entries
       expect(output).to.include('export const importMap = [');
       expect(output).to.match(/module: '\.\.\/test-exports'/);
-      expect(output).to.match(/name: 'everything', value: testexports_everything/);
-      expect(output).to.match(/name: 'funco', value: testexports_funco/);
-      expect(output).to.match(/name: 'TestClass', value: testexports_TestClass/);
-      expect(output).to.match(/name: 'testo', value: testexports_testo/);
+      expect(output).to.match(/name: '\*', value: everything/);
+      expect(output).to.match(/name: 'funco', value: funco/);
+      expect(output).to.match(/name: 'TestClass', value: TestClass/);
+      expect(output).to.match(/name: 'testo', value: aliased_testo/);
     });
   });
 
@@ -275,25 +293,6 @@ describe('Import Map Generation', () => {
       ).to.be.true;
       expect(getComponentListStub.notCalled).to.be.true;
       expect(fsWriteStub.called).to.be.false;
-    });
-
-    it('should skip when not in xm cloud deploy context', async () => {
-      const debugStub = sandbox.stub(debug, 'common');
-      const scConfig = { disableCodeGeneration: false } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(false);
-      const getComponentListStub = sandbox.stub(
-        require('@sitecore-content-sdk/core/tools'),
-        'getComponentList'
-      );
-      const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
-
-      await writeImportMap({ paths: ['foo'], exclude: [] }, scConfig)();
-
-      expect(
-        debugStub.calledWithMatch('Skipping import map generation. Not in XMCloud deploy context.')
-      ).to.be.true;
-      expect(getComponentListStub.notCalled).to.be.true;
-      expect(fsWriteStub.notCalled).to.be.true;
     });
 
     it('should retrieve and parse paths based on inputs from "paths" and "exclude"', async () => {
@@ -342,55 +341,6 @@ describe('Import Map Generation', () => {
       expect(fsWriteStub.getCall(0).args[2]).to.deep.include({ encoding: 'utf8' });
     });
 
-    it('should consider default import map when writing output into import-map file', async () => {
-      const scConfig = { disableCodeGeneration: false } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
-
-      const defaultMap = [
-        {
-          module: '/test',
-          exports: [
-            {
-              name: 'testExport',
-              value: 'testExport',
-            },
-          ],
-        },
-      ] as ImportEntry[];
-
-      const expectedMap = new Map([
-        [
-          '/test',
-          {
-            namedExports: new Map([['testExport', 'testExport']]),
-            defaultExports: new Map(),
-          },
-        ],
-      ]);
-
-      unitMocks({ mockDefaultImportEntries: defaultMap });
-
-      const fakeEntries = [{ filePath: 'component1.tsx' }];
-      sandbox
-        .stub(require('@sitecore-content-sdk/core/tools'), 'getComponentList')
-        .returns(fakeEntries);
-      sandbox.stub(require('./import-map'), 'getImportMap').returns(new Map());
-      const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
-      const mapTemplateStub = sandbox
-        .stub(require('./import-map'), 'nextJsMapTemplate')
-        .returns('// import map content');
-
-      await writeImportMap({ paths: ['foo'], exclude: [] }, scConfig)();
-
-      expect(fsWriteStub.calledOnce).to.be.true;
-      expect(mapTemplateStub).calledWithMatch(expectedMap);
-      const filePath = fsWriteStub.getCall(0).args[0];
-      expect(filePath).to.include('.sitecore');
-      expect(filePath).to.include('import-map.ts');
-      expect(fsWriteStub.getCall(0).args[1]).to.equal('// import map content');
-      expect(fsWriteStub.getCall(0).args[2]).to.deep.include({ encoding: 'utf8' });
-    });
-
     it('should throw when file write operation fails', async () => {
       const scConfig = { disableCodeGeneration: false } as any;
       sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
@@ -400,7 +350,7 @@ describe('Import Map Generation', () => {
         .stub(require('@sitecore-content-sdk/core/tools'), 'getComponentList')
         .returns(fakeEntries);
       sandbox.stub(require('./import-map'), 'getImportMap').returns(new Map());
-      const error = new Error('Write failed');
+      const error = new Error('Unit test mocks: write failed');
       sandbox.stub(require('fs'), 'writeFileSync').throws(error);
       sandbox.stub(require('./import-map'), 'nextJsMapTemplate').returns('// import map content');
 
