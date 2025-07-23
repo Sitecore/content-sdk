@@ -23,6 +23,7 @@ import React, {
   memo,
   Suspense,
 } from 'react';
+import { ImportEntry } from '@sitecore-content-sdk/core/editing';
 import {
   Link,
   Text,
@@ -37,11 +38,6 @@ import {
   CdpHelper,
   withSitecore,
 } from '../..';
-
-export interface ImportEntry {
-  module: string;
-  exports: { name: string | 'default' | '*'; value: unknown }[];
-}
 
 export const defaultImportEntries: ImportEntry[] = [
   /* -------------------- React -------------------- */

@@ -1,7 +1,5 @@
 # Sitecore Content SDK
 
-⚠️ **Disclaimer:** This project is currently in beta and under development, with ongoing updates and improvements. Until a stable and official release is available, please use it with caution in production.
-
 [![Publish](https://github.com/Sitecore/content-sdk/actions/workflows/publish.yml/badge.svg)](https://github.com/Sitecore/content-sdk/actions/workflows/publish.yml) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 This repository contains source code for all Sitecore Content SDK packages and templates to help you get started using Sitecore Content SDK.

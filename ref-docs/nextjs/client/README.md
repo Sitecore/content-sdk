@@ -21,7 +21,6 @@
 - [GraphQLClientError](type-aliases/GraphQLClientError.md)
 - [GraphQLRequestClientFactory](type-aliases/GraphQLRequestClientFactory.md)
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
-- [NextjsPage](type-aliases/NextjsPage.md)
 - [SitecoreClientInit](type-aliases/SitecoreClientInit.md)
 
 ## Variables

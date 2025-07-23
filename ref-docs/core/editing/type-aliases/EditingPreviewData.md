@@ -8,7 +8,7 @@
 
 > **EditingPreviewData** = `object`
 
-Defined in: [packages/core/src/editing/models.ts:61](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/editing/models.ts#L61)
+Defined in: [packages/core/src/editing/models.ts:61](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/models.ts#L61)
 
 Data for Preview (Editing) Mode.
 
@@ -18,7 +18,7 @@ Data for Preview (Editing) Mode.
 
 > **itemId**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:63](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/editing/models.ts#L63)
+Defined in: [packages/core/src/editing/models.ts:63](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/models.ts#L63)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/core/src/editing/models.ts:63](https://github.com/Sitecore
 
 > **language**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:64](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/editing/models.ts#L64)
+Defined in: [packages/core/src/editing/models.ts:64](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/models.ts#L64)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/editing/models.ts:64](https://github.com/Sitecore
 
 > `optional` **layoutKind**: [`LayoutKind`](../enumerations/LayoutKind.md)
 
-Defined in: [packages/core/src/editing/models.ts:68](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/editing/models.ts#L68)
+Defined in: [packages/core/src/editing/models.ts:68](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/models.ts#L68)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/core/src/editing/models.ts:68](https://github.com/Sitecore
 
 > **mode**: `Exclude`\<[`LayoutServicePageState`](../../layout/enumerations/LayoutServicePageState.md), `"Normal"`\>
 
-Defined in: [packages/core/src/editing/models.ts:65](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/editing/models.ts#L65)
+Defined in: [packages/core/src/editing/models.ts:65](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/models.ts#L65)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [packages/core/src/editing/models.ts:65](https://github.com/Sitecore
 
 > **site**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:62](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/editing/models.ts#L62)
+Defined in: [packages/core/src/editing/models.ts:62](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/models.ts#L62)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [packages/core/src/editing/models.ts:62](https://github.com/Sitecore
 
 > **variantIds**: `string`[]
 
-Defined in: [packages/core/src/editing/models.ts:66](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/editing/models.ts#L66)
+Defined in: [packages/core/src/editing/models.ts:66](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/models.ts#L66)
 
 ***
 
@@ -66,4 +66,4 @@ Defined in: [packages/core/src/editing/models.ts:66](https://github.com/Sitecore
 
 > `optional` **version**: `string`
 
-Defined in: [packages/core/src/editing/models.ts:67](https://github.com/Sitecore/content-sdk/blob/b2d213ecfbd5a338df44d9f44a7b99121af77dac/packages/core/src/editing/models.ts#L67)
+Defined in: [packages/core/src/editing/models.ts:67](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/models.ts#L67)

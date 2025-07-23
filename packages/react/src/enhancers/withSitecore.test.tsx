@@ -5,36 +5,66 @@ import { fireEvent, render } from '@testing-library/react';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { useSitecore, withSitecore } from '../enhancers/withSitecore';
-import { SitecoreProviderReactContext } from '../components/SitecoreProvider';
+import { useSitecore, withSitecore, WithSitecoreProps } from '../enhancers/withSitecore';
+import {
+  SitecoreProviderReactContext,
+  SitecoreProviderState,
+} from '../components/SitecoreProvider';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 
 use(sinonChai);
 
 describe('withSitecore', () => {
-  it('withSitecore()', () => {
-    const setContext = spy();
+  const setPage = spy();
 
-    const testComponentProps = {
-      pageContext: {
-        text: 'value',
-      },
-      api: {
-        edge: {
-          contextId: 'id',
-          edgeUrl: 'url',
+  const testComponentProps: SitecoreProviderState = {
+    page: {
+      layout: {
+        sitecore: {
+          context: {},
+          route: null,
         },
       },
-      setContext,
-    };
+      locale: 'en',
+      mode: {
+        name: LayoutServicePageState.Normal,
+        isNormal: true,
+        isPreview: false,
+        isEditing: false,
+        isDesignLibrary: false,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+      },
+    },
+    api: {
+      edge: {
+        contextId: 'id',
+        edgeUrl: 'url',
+        clientContextId: 'clientId',
+      },
+      local: {
+        apiKey: 'apiKey',
+        apiHost: 'apiHost',
+        path: 'path',
+      },
+    },
+    setPage,
+  };
 
-    const TestComponent: React.FC<any> = (props: any) => (
+  afterEach(() => {
+    setPage.resetHistory();
+  });
+
+  it('withSitecore()', () => {
+    const TestComponent: React.FC<any> = (props: WithSitecoreProps & { customProp: string }) => (
       <>
-        <div onClick={props.updateContext}>
-          {props.pageContext.text}
+        <div onClick={props.updatePage}>
+          {props.page.locale}
           {props.customProp}
         </div>
         <span>
-          {props.api.edge.contextId} {props.api.edge.edgeUrl}
+          {props.api?.edge.contextId} {props.api?.edge.edgeUrl}
         </span>
       </>
     );
@@ -49,12 +79,12 @@ describe('withSitecore', () => {
 
     expect(wrapper.container.querySelector('span')?.textContent).equal('id url');
     expect(wrapper.container.querySelector('div')?.textContent).equal(
-      testComponentProps.pageContext.text + 'xxx'
+      testComponentProps.page.locale + 'xxx'
     );
     fireEvent.click(wrapper.container.querySelector('div') as Element);
 
     // eslint-disable-next-line no-unused-expressions
-    expect(testComponentProps.setContext).not.to.be.called;
+    expect(testComponentProps.setPage).not.to.be.called;
 
     TestComponentWithContext = withSitecore({ updatable: true })(TestComponent);
 
@@ -67,34 +97,19 @@ describe('withSitecore', () => {
     fireEvent.click(wrapper.container.querySelector('div') as Element);
 
     // eslint-disable-next-line no-unused-expressions
-    expect(testComponentProps.setContext).to.have.been.called;
+    expect(testComponentProps.setPage).to.have.been.called;
   });
 
   describe('useSitecore()', () => {
     it('context access', () => {
-      const setContext = spy();
-
-      const testComponentProps = {
-        pageContext: {
-          text: 'value',
-        },
-        api: {
-          edge: {
-            contextId: 'id',
-            edgeUrl: 'url',
-          },
-        },
-        setContext,
-      };
-
       const TestComponent: React.FC<any> = (props: any) => {
         const reactContext = useSitecore();
-        const context = reactContext.pageContext as { text: string };
+        const page = reactContext.page;
 
         return (
           <>
-            <div onClick={reactContext.updateContext}>
-              {context.text}
+            <div onClick={reactContext.updatePage}>
+              {page.locale}
               {props.customProp}
             </div>
             <span>
@@ -111,32 +126,23 @@ describe('withSitecore', () => {
       );
 
       expect(wrapper.container.querySelector('div')?.textContent).equal(
-        testComponentProps.pageContext.text + 'xxx'
+        testComponentProps.page.locale + 'xxx'
       );
       expect(wrapper.container.querySelector('span')?.textContent).equal('id url');
       fireEvent.click(wrapper.container.querySelector('div') as Element);
 
       // eslint-disable-next-line no-unused-expressions
-      expect(testComponentProps.setContext).to.not.have.been.called;
+      expect(testComponentProps.setPage).to.not.have.been.called;
     });
 
     it('updatable', () => {
-      const setContext = spy();
-
-      const testComponentProps = {
-        pageContext: {
-          text: 'value',
-        },
-        setContext,
-      };
-
       const TestComponent: React.FC<any> = (props: any) => {
         const reactContext = useSitecore({ updatable: true });
-        const context = reactContext.pageContext as { text: string };
+        const context = reactContext.page;
 
         return (
-          <div onClick={reactContext.updateContext}>
-            {context.text}
+          <div onClick={reactContext.updatePage}>
+            {context.locale}
             {props.customProp}
           </div>
         );
@@ -149,12 +155,12 @@ describe('withSitecore', () => {
       );
 
       expect(wrapper.container.querySelector('div')?.textContent).equal(
-        testComponentProps.pageContext.text + 'bbb'
+        testComponentProps.page.locale + 'bbb'
       );
       fireEvent.click(wrapper.container.querySelector('div') as Element);
 
       // eslint-disable-next-line no-unused-expressions
-      expect(testComponentProps.setContext).to.have.been.called;
+      expect(testComponentProps.setPage).to.have.been.called;
     });
   });
 });

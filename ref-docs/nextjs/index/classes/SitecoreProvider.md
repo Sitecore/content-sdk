@@ -6,7 +6,7 @@
 
 # Class: SitecoreProvider
 
-Defined in: react/types/components/SitecoreProvider.d.ts:45
+Defined in: react/types/components/SitecoreProvider.d.ts:38
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: react/types/components/SitecoreProvider.d.ts:45
 
 > **new SitecoreProvider**(`props`): `SitecoreProvider`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:47
+Defined in: react/types/components/SitecoreProvider.d.ts:40
 
 #### Parameters
 
@@ -78,19 +78,19 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:970
 
 ***
 
-### setContext()
+### setPage()
 
-> **setContext**: (`value`) => `void`
+> **setPage**: (`value`) => `void`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:55
+Defined in: react/types/components/SitecoreProvider.d.ts:46
 
-Update context state. Value can be
+Update page state.
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `value` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) \| [`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md) | New context value |
+| `value` | [`Page`](../type-aliases/Page.md) | New page value |
 
 #### Returns
 
@@ -147,7 +147,7 @@ class Foo extends React.Component {
 
 > `static` **displayName**: `string`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:46
+Defined in: react/types/components/SitecoreProvider.d.ts:39
 
 ***
 
@@ -217,7 +217,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:49
+Defined in: react/types/components/SitecoreProvider.d.ts:41
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -373,24 +373,6 @@ this from being invoked.
 
 ***
 
-### constructContext()
-
-> **constructContext**(`layoutData?`): [`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md)
-
-Defined in: react/types/components/SitecoreProvider.d.ts:48
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `layoutData?` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |
-
-#### Returns
-
-[`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md)
-
-***
-
 ### forceUpdate()
 
 > **forceUpdate**(`callback?`): `void`
@@ -447,7 +429,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:56
+Defined in: react/types/components/SitecoreProvider.d.ts:47
 
 #### Returns
 
