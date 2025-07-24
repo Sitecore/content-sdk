@@ -75,6 +75,18 @@ describe('Import Map Generation', () => {
       expect(convertToTestable(result)).to.deep.equal(expected);
     });
 
+    it('should return map from JS file (js-file.js)', () => {
+      const result = getImportMap(['js-file.js']);
+      const expected = [
+        {
+          module: testExportsModulePath,
+          namedImports: [{ name: 'funco', value: 'funco' }],
+          defaultImports: [],
+        },
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
+    });
+
     it('should return map from wildcard imports (wildcard.ts)', () => {
       const result = getImportMap(['wildcard.ts']);
       const expected = [
