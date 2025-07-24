@@ -75,6 +75,21 @@ describe('Import Map Generation', () => {
       expect(convertToTestable(result)).to.deep.equal(expected);
     });
 
+    it('should return map with named imports when tsconfig paths is used (pathed.ts)', () => {
+      const result = getImportMap(['pathed.ts']);
+      testExportsModulePath = path
+        .resolve(process.cwd(), 'pathed/test-path-exports.ts')
+        .replace(/\\/g, '/');
+      const expected = [
+        {
+          module: testExportsModulePath,
+          namedImports: [{ name: 'pathedVariable', value: 'pathedVariable' }],
+          defaultImports: [],
+        },
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
+    });
+
     it('should return map from JS file (js-file.js)', () => {
       const result = getImportMap(['js-file.js']);
       const expected = [
