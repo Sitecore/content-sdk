@@ -1,6 +1,11 @@
 import scConfig from './sitecore.config';
 import { defineCliConfig } from '@sitecore-content-sdk/nextjs/config-cli';
-import { generateSites, generateMetadata, extractFiles, writeImportMap } from '@sitecore-content-sdk/nextjs/tools';
+import {
+  generateSites,
+  generateMetadata,
+  extractFiles,
+  writeImportMap,
+} from '@sitecore-content-sdk/nextjs/tools';
 
 export default defineCliConfig({
   build: {
@@ -14,9 +19,8 @@ export default defineCliConfig({
       }),
       writeImportMap({
         paths: ['src/components'],
-      },
-      scConfig
-      ),
+        scConfig,
+      }),
     ],
   },
   componentMap: {

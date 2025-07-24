@@ -324,7 +324,7 @@ describe('Import Map Generation', () => {
       );
       const fsWriteStub = sandbox.stub(fs, 'writeFileSync');
 
-      await writeImportMap({ paths: ['foo'], exclude: [] }, scConfig)();
+      await writeImportMap({ paths: ['foo'], exclude: [], scConfig })();
 
       expect(
         debugStub.calledWithMatch(
@@ -350,7 +350,7 @@ describe('Import Map Generation', () => {
         .stub(require('./import-map'), 'nextJsMapTemplate')
         .returns('// import map content');
 
-      await writeImportMap({ paths: ['foo'], exclude: ['bar'] }, scConfig)();
+      await writeImportMap({ paths: ['foo'], exclude: ['bar'], scConfig })();
 
       expect(getComponentListStub.called).to.be.true;
       expect(getComponentListStub.calledWith(['foo'], ['bar'])).to.be.true;
@@ -371,7 +371,7 @@ describe('Import Map Generation', () => {
       const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
       sandbox.stub(require('./import-map'), 'nextJsMapTemplate').returns('// import map content');
 
-      await writeImportMap({ paths: ['foo'], exclude: [] }, scConfig)();
+      await writeImportMap({ paths: ['foo'], exclude: [], scConfig })();
 
       expect(fsWriteStub.calledOnce).to.be.true;
       const filePath = fsWriteStub.getCall(0).args[0];
@@ -396,7 +396,7 @@ describe('Import Map Generation', () => {
 
       let thrownError: Error | undefined;
       try {
-        await writeImportMap({ paths: ['foo'], exclude: [] }, scConfig)();
+        await writeImportMap({ paths: ['foo'], exclude: [], scConfig })();
       } catch (e) {
         thrownError = e as Error;
       }
@@ -409,7 +409,6 @@ describe('Import Map Generation', () => {
     const B = 'B';
     const C = 'C';
     const D = 'D';
-    const C2 = 'C2';
     const E = 'E';
     it('should combine two import maps', () => {
       const defaultImportEntries: ImportEntry[] = [
