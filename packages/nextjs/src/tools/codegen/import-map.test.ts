@@ -184,7 +184,7 @@ describe('Import Map Generation', () => {
           namedImports: [
             {
               name: 'React',
-              value: `${crypto.hash('sha1', testDuplicateImportModule)}_React`,
+              value: `React_${crypto.hash('sha1', testDuplicateImportModule)}`,
             },
           ],
         },

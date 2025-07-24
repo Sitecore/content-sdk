@@ -130,8 +130,8 @@ const getComponentMapImportValueName = (
 // return alias-like name for an import value/variable name
 // this helps alleviate duplicate import names in import-map.ts
 const getImportValueAlias = (importValue: string, moduleName: string) => {
-  const prefix = crypto.hash('sha1', moduleName);
-  return `${prefix}_${importValue}`;
+  const suffix = crypto.hash('sha1', moduleName);
+  return `${importValue}_${suffix}`;
 };
 
 /**
