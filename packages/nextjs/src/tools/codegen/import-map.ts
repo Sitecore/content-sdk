@@ -5,7 +5,8 @@ import { debug } from '@sitecore-content-sdk/core';
 import { getComponentList } from '@sitecore-content-sdk/core/tools';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import crypto from 'crypto';
-import { defaultImportEntries, ImportEntry } from './default-import-map';
+import { defaultImportEntries } from './default-import-map';
+import { ImportEntry } from '@sitecore-content-sdk/core/editing';
 
 let _defaultImportEntries = defaultImportEntries;
 let _getComponentList = getComponentList;

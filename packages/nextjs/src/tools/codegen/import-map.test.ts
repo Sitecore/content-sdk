@@ -13,7 +13,7 @@ import sinon from 'sinon';
 import { getComponentList } from '@sitecore-content-sdk/core/tools';
 import path from 'path';
 import fs from 'fs';
-import { ImportEntry } from './default-import-map';
+import { ImportEntry } from '@sitecore-content-sdk/core/editing';
 
 describe('Import Map Generation', () => {
   beforeEach(() => {
