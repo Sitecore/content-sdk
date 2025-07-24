@@ -7,6 +7,7 @@ import {
   getImportMap,
   unitMocks,
   writeImportMap,
+  combineImportEntries,
 } from './import-map';
 import { debug } from '@sitecore-content-sdk/core';
 import sinon from 'sinon';
@@ -17,7 +18,7 @@ import { ImportEntry } from '@sitecore-content-sdk/core/editing';
 
 describe('Import Map Generation', () => {
   beforeEach(() => {
-    unitMocks({ mockDefaultImportEntries: [], getComponentListStub: getComponentList });
+    unitMocks({ getComponentListStub: getComponentList });
   });
 
   describe('getImportMap', () => {
@@ -162,44 +163,6 @@ describe('Import Map Generation', () => {
       expect(convertToTestable(result)).to.deep.equal(expected);
     });
 
-    it('should return map with default import map values', () => {
-      const defaultMap = [
-        {
-          module: 'test',
-          exports: [
-            {
-              name: 'testExport',
-              value: 'testExport',
-            },
-          ],
-        },
-      ] as ImportEntry[];
-
-      unitMocks({ mockDefaultImportEntries: defaultMap });
-
-      const result = getImportMap(['mixed.ts']);
-      const expected = [
-        {
-          module: testExportsModulePath,
-          namedImports: [
-            { name: 'funco', value: 'funco' },
-            { name: 'TestClass', value: 'TestClass' },
-            {
-              name: 'testClassInstance',
-              value: 'testClassInstance',
-            },
-          ],
-          defaultImports: [{ name: '*', value: 'everything' }],
-        },
-        {
-          module: 'test',
-          namedImports: [{ name: 'testExport', value: 'testExport' }],
-          defaultImports: [],
-        },
-      ];
-      expect(convertToTestable(result)).to.deep.equal(expected);
-    });
-
     it('should return map from with aliased values when import getting duplicate import names', () => {
       const result = getImportMap(['wildcard.ts', 'duplicates.ts']);
       const testDuplicateImportModule = path
@@ -309,12 +272,39 @@ describe('Import Map Generation', () => {
       const output = nextJsMapTemplate(importMap);
 
       // Check that the export const importMap is present and contains correct entries
-      expect(output).to.include('export const importMap = [');
+      expect(output).to.include('const importMap = [');
       expect(output).to.match(/module: '\.\.\/test-exports'/);
       expect(output).to.match(/name: '\*', value: everything/);
       expect(output).to.match(/name: 'funco', value: funco/);
       expect(output).to.match(/name: 'TestClass', value: TestClass/);
       expect(output).to.match(/name: 'testo', value: aliased_testo/);
+    });
+
+    it('should write default service imports', () => {
+      // Prepare a fake import map with no entries
+      const importMap = new Map<string, ModuleExports>();
+      const output = nextJsMapTemplate(importMap);
+
+      // Should always include default service imports at the top
+      expect(output).to.include(
+        "import { combineImportEntries, defaultImportEntries } from '@sitecore-content-sdk/nextjs/tools';"
+      );
+    });
+
+    it('final file should export function combining generated and default import maps', () => {
+      // Prepare a fake import map with one entry
+      const importMap = new Map<string, ModuleExports>();
+      importMap.set('../test-exports', {
+        namedExports: new Map([['funco', 'funco']]),
+        defaultExports: new Map(),
+      });
+
+      const output = nextJsMapTemplate(importMap);
+
+      // Should export default using combineImportEntries
+      expect(output).to.match(
+        /export default combineImportEntries\(defaultImportEntries, importMap\);/
+      );
     });
   });
 
@@ -411,6 +401,132 @@ describe('Import Map Generation', () => {
         thrownError = e as Error;
       }
       expect(thrownError).to.equal(error);
+    });
+  });
+
+  describe('combineImportEntries', () => {
+    const A = 'A';
+    const B = 'B';
+    const C = 'C';
+    const D = 'D';
+    const C2 = 'C2';
+    const E = 'E';
+    it('should combine two import maps', () => {
+      const defaultImportEntries: ImportEntry[] = [
+        {
+          module: 'module-a',
+          exports: [
+            { name: 'A', value: A },
+            { name: 'B', value: B },
+          ],
+        },
+        {
+          module: 'module-b',
+          exports: [{ name: 'C', value: C }],
+        },
+      ];
+      const generatedImportEntries: ImportEntry[] = [
+        {
+          module: 'module-b',
+          exports: [
+            { name: 'C', value: C },
+            { name: 'D', value: D },
+          ],
+        },
+        {
+          module: 'module-c',
+          exports: [{ name: 'E', value: E }],
+        },
+      ];
+
+      const result = combineImportEntries(defaultImportEntries, generatedImportEntries);
+
+      expect(result).to.deep.include.members([
+        {
+          module: 'module-a',
+          exports: [
+            { name: 'A', value: A },
+            { name: 'B', value: B },
+          ],
+        },
+        {
+          module: 'module-b',
+          exports: [
+            { name: 'C', value: C },
+            { name: 'D', value: D },
+          ],
+        },
+        {
+          module: 'module-c',
+          exports: [{ name: 'E', value: E }],
+        },
+      ]);
+    });
+
+    it('should prefer values from generated map when export names overlap', () => {
+      const A_default = 'A_default';
+      const B_default = 'B_default';
+      const A_generated = 'A_generated';
+      const C_generated = 'C_generated';
+      const defaultImportEntries: ImportEntry[] = [
+        {
+          module: 'module-x',
+          exports: [
+            { name: 'A', value: A_default },
+            { name: 'B', value: B_default },
+          ],
+        },
+      ];
+      const generatedImportEntries: ImportEntry[] = [
+        {
+          module: 'module-x',
+          exports: [
+            { name: 'A', value: A_generated },
+            { name: 'C', value: C_generated },
+          ],
+        },
+      ];
+
+      const result = combineImportEntries(defaultImportEntries, generatedImportEntries);
+
+      // Should use 'A_generated' for 'A', add 'B_default' (not present in generated), and 'C_generated'
+      expect(result).to.deep.include({
+        module: 'module-x',
+        exports: [
+          { name: 'A', value: A_generated },
+          { name: 'C', value: C_generated },
+          { name: 'B', value: B_default },
+        ],
+      });
+    });
+
+    it('should return default map when generated map is empty', () => {
+      const defaultImportEntries: ImportEntry[] = [
+        {
+          module: 'module-a',
+          exports: [{ name: 'A', value: A }],
+        },
+      ];
+      const generatedImportEntries: ImportEntry[] = [];
+
+      const result = combineImportEntries(defaultImportEntries, generatedImportEntries);
+
+      expect(result).to.deep.equal(defaultImportEntries);
+    });
+
+    it('should return generated map when default map is empty', () => {
+      const X = 'X';
+      const defaultImportEntries: ImportEntry[] = [];
+      const generatedImportEntries: ImportEntry[] = [
+        {
+          module: 'module-x',
+          exports: [{ name: 'Z', value: X }],
+        },
+      ];
+
+      const result = combineImportEntries(defaultImportEntries, generatedImportEntries);
+
+      expect(result).to.deep.equal(generatedImportEntries);
     });
   });
 });
