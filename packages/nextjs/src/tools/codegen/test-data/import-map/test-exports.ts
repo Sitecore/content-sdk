@@ -7,3 +7,5 @@ export class TestClass {
 }
 
 export const testClassInstance = new TestClass();
+
+export default {};

@@ -10,6 +10,7 @@ import { ImportEntry } from '@sitecore-content-sdk/core/editing';
 
 let _defaultImportEntries = defaultImportEntries;
 let _getComponentList = getComponentList;
+const aliasImport = /^([a-zA-Z0-9]+) as .+$/g;
 
 export const unitMocks = ({
   mockDefaultImportEntries,
@@ -55,9 +56,10 @@ export type WriteImportMapArgs = {
  * @property {string} name - the original name of the import
  * @property {boolean} [isWildcard] - if import is a wildcard import (import * as name from 'module')
  */
-export type ImportName = {
-  name: string;
-  isWildcard?: boolean;
+export type ImportNames = {
+  named: string[];
+  namespace: string | null;
+  default: string | null;
 };
 
 /**
@@ -71,47 +73,42 @@ export type ModuleExports = {
 };
 
 /**
- * Gets an import string and outputs import info with aliases, if present
- * @param {ts.ImportDeclaration} importNode import definition node
- * @returns {ImportName[] | ImportName | null} object(s) with definition name
+ * Parses and AST import node and extracts all imported values from it
+ * @param {ts.ImportDeclaration} importNode import node to be parsed
+ * @returns {ImportNames | null} object with named, default and namespace imported values, or null if import node is not valid
  */
-export const getImportedValues = (
-  importNode: ts.ImportDeclaration
-): ImportName[] | ImportName | null => {
-  const importClause = importNode.importClause?.getText();
-  const aliasImport = /^([a-zA-Z0-9]+) as .+$/g;
-  const namespaceImport = /^\* as (.+)$/g;
-
+export const getImportedValues = (importNode: ts.ImportDeclaration): ImportNames | null => {
+  const importClause = importNode.importClause;
   if (!importClause) {
     console.warn('Cannot parse import string from: %s', importNode.getText());
     return null;
   }
-  if (/^\{.*\}$/.test(importClause)) {
-    // import { a, b, c } from ..
-    // could use getChildren().map() but https://github.com/microsoft/TypeScript/issues/62112
-    const result: ImportName[] = [];
-    importNode.importClause!.namedBindings!.forEachChild((child) => {
-      const importText = child.getText();
-      const aliasMatch = aliasImport.exec(importText); // importText.match(aliasImport);
-      result.push({ name: aliasMatch ? aliasMatch[1] : importText });
-    });
-    return result;
-  } else if (importClause.match(namespaceImport)) {
-    // import * as coolName from ..
-    return {
-      name: namespaceImport.exec(importClause)![1],
-      isWildcard: true,
-    };
-  } else {
-    // import coolName from ..
-    return {
-      name: importClause,
-    };
-  }
+  const result: ImportNames = {
+    named: [] as string[],
+    default: null,
+    namespace: null,
+  };
+  importClause.getChildren().forEach((child) => {
+    if (child.kind === ts.SyntaxKind.NamedImports) {
+      // import [...,]{a,b,c}
+      child.forEachChild((namedChild) => {
+        const importText = namedChild.getText();
+        const aliasMatch = aliasImport.exec(importText);
+        result.named.push(aliasMatch ? aliasMatch[1] : importText);
+      });
+    } else if (child.kind === ts.SyntaxKind.NamespaceImport) {
+      // * as coolName
+      result.namespace = child.getText().replace('* as ', '');
+    } else if (child.kind === ts.SyntaxKind.Identifier) {
+      // import coolName
+      result.default = child.getText();
+    }
+  });
+  return result;
 };
 
 /**
- * Returns unique alias name for import value, if value was already encountered
+ * Returns unique alias name for import value, if value was already encountered while generating import map
  * @param {string} importName - import value name, i.e. 'myComponent'
  * @param {string} moduleName - import module name, i.e. 'my-module'
  * @param {Map<string, string>} importValuesIndex - Map of import values indexed by their names and modules
@@ -223,26 +220,31 @@ export const getImportMap = (paths: string[]) => {
             });
           }
 
-          // named imports in import statements have many values, default imports do not
-          if (Array.isArray(imports)) {
-            imports.forEach((importEntry) => {
-              // use unique import value name if we encountered import with same name before, from another module
-              const importValue = getComponentMapImportValueName(
-                importEntry.name,
-                importModuleName,
-                importValuesIndex
-              );
-              importMap.get(importModuleName)!.namedExports.set(importEntry.name, importValue);
-              importValuesIndex.set(importEntry.name, importModuleName);
-            });
-          } else {
+          imports.named.forEach((importEntry) => {
             const importValue = getComponentMapImportValueName(
-              imports.name,
+              importEntry,
               importModuleName,
               importValuesIndex
             );
-            const importName = imports.isWildcard ? '*' : imports.name;
-            importMap.get(importModuleName)!.defaultExports.set(importName, importValue);
+            importMap.get(importModuleName)!.namedExports.set(importEntry, importValue);
+            importValuesIndex.set(importEntry, importModuleName);
+          });
+          if (imports.namespace) {
+            const importValue = getComponentMapImportValueName(
+              imports.namespace,
+              importModuleName,
+              importValuesIndex
+            );
+            importMap.get(importModuleName)!.defaultExports.set('*', importValue);
+            importValuesIndex.set(importValue, importModuleName);
+          }
+          if (imports.default) {
+            const importValue = getComponentMapImportValueName(
+              imports.default,
+              importModuleName,
+              importValuesIndex
+            );
+            importMap.get(importModuleName)!.defaultExports.set(imports.default, importValue);
             importValuesIndex.set(importValue, importModuleName);
           }
         } else {

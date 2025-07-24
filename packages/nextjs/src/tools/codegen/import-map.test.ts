@@ -124,6 +124,29 @@ describe('Import Map Generation', () => {
       expect(convertToTestable(result)).to.deep.equal(expected);
     });
 
+    it('should handle mixed namespace, default and named imports in one line (mixed-namespace.ts)', () => {
+      const result = getImportMap(['mixed-namespace.ts']);
+      const expected = [
+        {
+          module: testExportsModulePath,
+          namedImports: [
+            { name: 'funco', value: 'funco' },
+            { name: 'TestClass', value: 'TestClass' },
+            {
+              name: 'testClassInstance',
+              value: 'testClassInstance',
+            },
+          ],
+          defaultImports: [
+            { name: 'defaultExport', value: 'defaultExport' },
+            { name: '*', value: 'everything' },
+            { name: 'defaultExport2', value: 'defaultExport2' },
+          ],
+        },
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
+    });
+
     it('should return map with default import map values', () => {
       const defaultMap = [
         {
