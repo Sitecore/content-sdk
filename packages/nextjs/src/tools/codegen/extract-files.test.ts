@@ -162,7 +162,7 @@ describe('extract-files', () => {
     const consoleLogStub = sandbox.stub(console, 'log');
 
     nock(edgeUrl)
-      .post('/api/v1/contentsdk/code/extracted')
+      .post('/mesh/push/api/v1/contentsdk/code/extracted')
       .reply(200)
       .persist();
 
