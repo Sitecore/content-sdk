@@ -8,19 +8,21 @@ import {
   EDITING_COMPONENT_ID,
   EDITING_COMPONENT_PLACEHOLDER,
 } from '@sitecore-content-sdk/core/layout';
-import * as editing from '@sitecore-content-sdk/core/editing';
+import {
+  DesignLibraryStatus,
+  getDesignLibraryStatusEvent,
+  addComponentUpdateHandler,
+} from '@sitecore-content-sdk/core/editing';
+import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { useSitecore } from '../enhancers/withSitecore';
 
 import { defaultImportEntries } from './import-map';
 
 let {
-  DesignLibraryStatus,
-  getDesignLibraryStatusEvent,
-  addComponentUpdateHandler,
   getDesignLibraryImportMapEvent,
   getDesignLibraryComponentPropsEvent,
   addComponentPreviewHandler,
-} = editing;
+} = codegen;
 
 export const __mockDependencies = (mocks: any) => {
   addComponentPreviewHandler = mocks.addComponentPreviewHandler;
@@ -121,13 +123,13 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
 
   componentDidCatch(error: Error) {
-    const errorEvent = editing.getDesignLibraryComponentPreviewErrorEvent(
+    const errorEvent = codegen.getDesignLibraryComponentPreviewErrorEvent(
       this.props.uid,
       error,
-      editing.DesignLibraryPreviewError.Render
+      codegen.DesignLibraryPreviewError.Render
     );
 
-    console.debug('Component Library: sending component-preview-error event', errorEvent);
+    console.debug('Component Library: sending error event', errorEvent);
 
     window.top.postMessage(errorEvent, '*');
   }
@@ -142,7 +144,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
 }
 
 type VariantGenerationProps = {
-  importMap?: editing.ImportEntry[];
+  importMap?: codegen.ImportEntry[];
 };
 
 /**
@@ -166,7 +168,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
   }
 
   useEffect(() => {
-    const importMap: editing.ImportEntry[] = props.importMap || defaultImportEntries;
+    const importMap: codegen.ImportEntry[] = props.importMap || defaultImportEntries;
 
     const unsubscribe = addComponentPreviewHandler(importMap, (error, Component) => {
       setRenderKey((key) => key + 1);
@@ -183,7 +185,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
 
     const importMapEvent = getDesignLibraryImportMapEvent(rendering.uid, importMap);
 
-    console.debug('Component Library: sending import-map event', importMapEvent);
+    console.debug('Component Library: sending event', importMapEvent);
 
     window.parent.postMessage(importMapEvent, '*');
 
@@ -193,7 +195,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
       rendering.params
     );
 
-    console.debug('Component Library: sending component-props event', componentPropsEvent);
+    console.debug('Component Library: sending event', componentPropsEvent);
 
     window.top.postMessage(componentPropsEvent, '*');
 
@@ -218,7 +220,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
 };
 
 type DesignLibraryProps = {
-  importMap?: editing.ImportEntry[];
+  importMap?: codegen.ImportEntry[];
 };
 
 export const DesignLibrary = ({ importMap }: DesignLibraryProps): JSX.Element => {

@@ -1,4 +1,4 @@
-import { ImportEntry } from '@sitecore-content-sdk/core/editing';
+import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
 import React, {
   Children,
   Fragment,
