@@ -50,6 +50,7 @@
     "del-cli": "^6.0.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.37.5",
+    "glob": "^11.0.2",
     "jsdom": "^26.1.0",
     "mocha": "^11.2.2",
     "next": "^15.3.2",
