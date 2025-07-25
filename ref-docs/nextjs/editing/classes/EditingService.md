@@ -6,7 +6,7 @@
 
 # Class: EditingService
 
-Defined in: core/types/editing/editing-service.d.ts:59
+Defined in: core/types/editing/editing-service.d.ts:35
 
 Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
 Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
@@ -17,7 +17,7 @@ Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
 
 > **new EditingService**(`serviceConfig`): `EditingService`
 
-Defined in: core/types/editing/editing-service.d.ts:66
+Defined in: core/types/editing/editing-service.d.ts:42
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -37,39 +37,15 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > **serviceConfig**: `EditingServiceConfig`
 
-Defined in: core/types/editing/editing-service.d.ts:60
+Defined in: core/types/editing/editing-service.d.ts:36
 
 ## Methods
 
-### fetchDictionaryData()
-
-> **fetchDictionaryData**(`__namedParameters`, `fetchOptions?`): `Promise`\<[`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md)\>
-
-Defined in: core/types/editing/editing-service.d.ts:83
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `__namedParameters` | \{ `after?`: `string`; `hasNext?`: `boolean`; `initDictionary?`: `object`[]; `language`: `string`; `siteName`: `string`; \} |
-| `__namedParameters.after?` | `string` |
-| `__namedParameters.hasNext?` | `boolean` |
-| `__namedParameters.initDictionary?` | `object`[] |
-| `__namedParameters.language?` | `string` |
-| `__namedParameters.siteName?` | `string` |
-| `fetchOptions?` | `FetchOptions` |
-
-#### Returns
-
-`Promise`\<[`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md)\>
-
-***
-
 ### fetchEditingData()
 
-> **fetchEditingData**(`variables`, `fetchOptions?`): `Promise`\<\{ `dictionary`: [`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md); `layoutData`: [`LayoutServiceData`](../../index/interfaces/LayoutServiceData.md); \}\>
+> **fetchEditingData**(`variables`, `fetchOptions?`): `Promise`\<\{ `layoutData`: [`LayoutServiceData`](../../index/interfaces/LayoutServiceData.md); \}\>
 
-Defined in: core/types/editing/editing-service.d.ts:79
+Defined in: core/types/editing/editing-service.d.ts:54
 
 Fetches editing data. Provides the layout data and dictionary phrases
 
@@ -82,7 +58,7 @@ Fetches editing data. Provides the layout data and dictionary phrases
 
 #### Returns
 
-`Promise`\<\{ `dictionary`: [`DictionaryPhrases`](../../index/interfaces/DictionaryPhrases.md); `layoutData`: [`LayoutServiceData`](../../index/interfaces/LayoutServiceData.md); \}\>
+`Promise`\<\{ `layoutData`: [`LayoutServiceData`](../../index/interfaces/LayoutServiceData.md); \}\>
 
 The layout data and dictionary phrases.
 
@@ -92,7 +68,7 @@ The layout data and dictionary phrases.
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/editing/editing-service.d.ts:97
+Defined in: core/types/editing/editing-service.d.ts:61
 
 Gets a GraphQL client that can make requests to the API.
 
