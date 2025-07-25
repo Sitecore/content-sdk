@@ -6,9 +6,15 @@ const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
 
 /**
  * Describes a file that represents a component definition
+ * @typedef ComponentFile
+ * @property {string} filePath - Path to the component or code file
+ * @property {string} importPath - Normalized path that can be used for import statements
+ * @property {string} moduleName - Normalized name that can be used as import
+ * @property {string} componentName - Name of the code file
  */
 export interface ComponentFile {
-  path: string;
+  filePath: string;
+  importPath: string;
   moduleName: string;
   componentName: string;
 }
@@ -55,7 +61,8 @@ export function getComponentList(paths: string[], exclude?: string[]): Component
           const name = filePath.match(componentNamePattern)![2];
           console.debug(`Registering Content SDK component ${name}`);
           return {
-            path: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
+            filePath,
+            importPath: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
             componentName: name,
             moduleName: name.replace(/[^\w]+/g, ''),
           };

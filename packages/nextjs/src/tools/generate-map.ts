@@ -45,7 +45,7 @@ const nextjsMapTemplate = (
   const componentMapEntries: string[] = [];
 
   components.forEach((component) => {
-    wildcardImports.push(`import * as ${component.moduleName} from '${component.path}';`);
+    wildcardImports.push(`import * as ${component.moduleName} from '${component.importPath}';`);
     componentMapEntries.push(`['${component.moduleName}', ${component.moduleName}]`);
   });
 

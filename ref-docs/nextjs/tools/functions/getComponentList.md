@@ -8,7 +8,7 @@
 
 > **getComponentList**(`paths`, `exclude?`): [`ComponentFile`](../interfaces/ComponentFile.md)[]
 
-Defined in: core/types/tools/templating/components.d.ts:36
+Defined in: core/types/tools/templating/components.d.ts:42
 
 Get list of components from
 

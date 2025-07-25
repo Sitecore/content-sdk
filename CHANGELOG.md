@@ -24,6 +24,11 @@ Our versioning strategy is as follows:
     - Removed `siteName` parameter.
     - No longer requests and returns dictionary data.
 
+### 🎉 New Features & Improvements
+
+* Code generation for Design Library enablers:
+    * `[nextjs]` Add import-map generation ([#157](https://github.com/Sitecore/content-sdk/pull/157))
+
 ## 1.0.0
 
 ### 🎉 New Features & Improvements

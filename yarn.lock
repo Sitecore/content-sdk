@@ -2360,7 +2360,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/core": 1.1.0-canary.2
+    "@sitecore-content-sdk/core": 1.1.0-canary.3
     "@types/chai": ^5.2.2
     "@types/mocha": ^10.0.10
     "@types/node": ^22.15.13
@@ -2389,7 +2389,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/core@1.1.0-canary.2, @sitecore-content-sdk/core@workspace:packages/core":
+"@sitecore-content-sdk/core@1.1.0-canary.3, @sitecore-content-sdk/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
@@ -2441,8 +2441,8 @@ __metadata:
     "@babel/parser": ^7.27.2
     "@sitecore-cloudsdk/core": ^0.5.1
     "@sitecore-cloudsdk/personalize": ^0.5.1
-    "@sitecore-content-sdk/core": 1.1.0-canary.2
-    "@sitecore-content-sdk/react": 1.1.0-canary.2
+    "@sitecore-content-sdk/core": 1.1.0-canary.3
+    "@sitecore-content-sdk/react": 1.1.0-canary.3
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.3.0
     "@types/chai": ^5.2.2
@@ -2461,6 +2461,7 @@ __metadata:
     del-cli: ^6.0.0
     eslint: ^8.56.0
     eslint-plugin-react: ^7.37.5
+    glob: ^11.0.2
     jsdom: ^26.1.0
     mocha: ^11.2.2
     next: ^15.3.2
@@ -2490,11 +2491,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/react@1.1.0-canary.2, @sitecore-content-sdk/react@workspace:packages/react":
+"@sitecore-content-sdk/react@1.1.0-canary.3, @sitecore-content-sdk/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
-    "@sitecore-content-sdk/core": 1.1.0-canary.2
+    "@sitecore-content-sdk/core": 1.1.0-canary.3
     "@sitecore-feaas/clientside": ^0.6.0
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.3.0

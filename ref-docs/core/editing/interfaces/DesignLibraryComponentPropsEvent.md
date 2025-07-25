@@ -6,7 +6,7 @@
 
 # Interface: DesignLibraryComponentPropsEvent
 
-Defined in: [packages/core/src/editing/design-library.ts:62](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/design-library.ts#L62)
+Defined in: [packages/core/src/editing/design-library.ts:62](https://github.com/Sitecore/content-sdk/blob/80b89910c9e4850adefbec5d6018229b48615fe3/packages/core/src/editing/design-library.ts#L62)
 
 Represents an event indicating the component props to be sent to design library
 
@@ -16,7 +16,7 @@ Represents an event indicating the component props to be sent to design library
 
 > **message**: `object`
 
-Defined in: [packages/core/src/editing/design-library.ts:64](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/design-library.ts#L64)
+Defined in: [packages/core/src/editing/design-library.ts:64](https://github.com/Sitecore/content-sdk/blob/80b89910c9e4850adefbec5d6018229b48615fe3/packages/core/src/editing/design-library.ts#L64)
 
 #### fields
 
@@ -36,4 +36,4 @@ Defined in: [packages/core/src/editing/design-library.ts:64](https://github.com/
 
 > **name**: `"component:generation:component-props"`
 
-Defined in: [packages/core/src/editing/design-library.ts:63](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/editing/design-library.ts#L63)
+Defined in: [packages/core/src/editing/design-library.ts:63](https://github.com/Sitecore/content-sdk/blob/80b89910c9e4850adefbec5d6018229b48615fe3/packages/core/src/editing/design-library.ts#L63)
