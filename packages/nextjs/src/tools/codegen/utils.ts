@@ -206,7 +206,8 @@ export const sendCode = async ({
   token: string;
   targetUrl: string;
 }) => {
-  const apiEndpoint = `${targetUrl}/api/v1/contentsdk/code/extracted`;
+  // Use the new Edge Platform mesh endpoint format
+  const apiEndpoint = `${targetUrl}/mesh/push/api/v1/contentsdk/code/extracted`;
   if (!fs.existsSync(file.path)) {
     console.error(chalk.red(`File not found: ${file.path}`));
     return null;
