@@ -1,0 +1,62 @@
+import { ImportEntry } from '@sitecore-content-sdk/core/editing';
+import React, {
+  Children,
+  Fragment,
+  createElement,
+  cloneElement,
+  isValidElement,
+  useActionState,
+  useCallback,
+  useContext,
+  useDeferredValue,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useOptimistic,
+  useReducer,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  useTransition,
+  forwardRef,
+  lazy,
+  memo,
+  Suspense,
+} from 'react';
+
+export const defaultImportEntries: ImportEntry[] = [
+  /* -------------------- React -------------------- */
+  {
+    module: 'react',
+    exports: [
+      { name: 'default', value: React },
+      { name: '*', value: React },
+      { name: 'Children', value: Children },
+      { name: 'Fragment', value: Fragment },
+      { name: 'createElement', value: createElement },
+      { name: 'cloneElement', value: cloneElement },
+      { name: 'isValidElement', value: isValidElement },
+      // Hooks
+      { name: 'useActionState', value: useActionState },
+      { name: 'useCallback', value: useCallback },
+      { name: 'useContext', value: useContext },
+      { name: 'useDeferredValue', value: useDeferredValue },
+      { name: 'useEffect', value: useEffect },
+      { name: 'useId', value: useId },
+      { name: 'useLayoutEffect', value: useLayoutEffect },
+      { name: 'useMemo', value: useMemo },
+      { name: 'useOptimistic', value: useOptimistic },
+      { name: 'useReducer', value: useReducer },
+      { name: 'useRef', value: useRef },
+      { name: 'useState', value: useState },
+      { name: 'useSyncExternalStore', value: useSyncExternalStore },
+      { name: 'useTransition', value: useTransition },
+      // Performance helpers
+      { name: 'forwardRef', value: forwardRef },
+      { name: 'lazy', value: lazy },
+      { name: 'memo', value: memo },
+      { name: 'Suspense', value: Suspense },
+    ],
+  },
+];

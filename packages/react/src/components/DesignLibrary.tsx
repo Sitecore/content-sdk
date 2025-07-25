@@ -1,5 +1,5 @@
-﻿/* eslint-disable prefer-const */
-
+﻿/* eslint-disable jsdoc/require-param */
+/* eslint-disable prefer-const */
 import React, { useEffect, useMemo, useState, JSX } from 'react';
 import { Placeholder } from './Placeholder';
 import {
@@ -10,6 +10,8 @@ import {
 } from '@sitecore-content-sdk/core/layout';
 import * as editing from '@sitecore-content-sdk/core/editing';
 import { useSitecore } from '../enhancers/withSitecore';
+
+import { defaultImportEntries } from './import-map';
 
 let {
   DesignLibraryStatus,
@@ -97,11 +99,57 @@ type DynamicComponent = React.ComponentType<{
   params: ComponentParams;
 }>;
 
+type ErrorBoundaryProps = {
+  uid: string;
+  children: React.ReactNode;
+  renderKey: number;
+};
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+  state = {
+    hasError: false,
+  };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidUpdate(prevProps: ErrorBoundaryProps) {
+    if (prevProps.renderKey !== this.props.renderKey) {
+      this.setState({ hasError: false });
+    }
+  }
+
+  componentDidCatch(error: Error) {
+    const errorEvent = editing.getDesignLibraryComponentPreviewErrorEvent(
+      this.props.uid,
+      error,
+      editing.DesignLibraryPreviewError.Render
+    );
+
+    console.debug('Component Library: sending component-preview-error event', errorEvent);
+
+    window.top.postMessage(errorEvent, '*');
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div>Error during component rendering</div>;
+    }
+
+    return this.props.children;
+  }
+}
+
+type VariantGenerationProps = {
+  importMap?: editing.ImportEntry[];
+};
+
 /**
  * This component is used to render the component in variant generation mode.
  * It is used to send the import-map and component-props events to the parent window and render the dynamic component.
  */
-export const VariantGeneration = () => {
+export const VariantGeneration = (props: VariantGenerationProps) => {
   const { page } = useSitecore();
   const {
     layout: {
@@ -109,24 +157,35 @@ export const VariantGeneration = () => {
     },
   } = page;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER][0];
-  const [Component, setComponent] = React.useState<DynamicComponent>(null);
+  const [renderKey, setRenderKey] = useState(0);
+  const [initError, setInitError] = useState<boolean>(false);
+  const [Component, setComponent] = useState<DynamicComponent>(null);
+
+  if (!rendering) {
+    return <div>No component found in layout data. Please check your layout data.</div>;
+  }
 
   useEffect(() => {
-    if (!rendering) {
-      return () => {};
-    }
+    const importMap: editing.ImportEntry[] = props.importMap || defaultImportEntries;
 
-    const unsubscribe = addComponentPreviewHandler((Component) => {
+    const unsubscribe = addComponentPreviewHandler(importMap, (error, Component) => {
+      setRenderKey((key) => key + 1);
+
+      if (error) {
+        setInitError(true);
+
+        return;
+      }
+
+      setInitError(false);
       setComponent(() => Component as DynamicComponent);
     });
-
-    const importMap: editing.ImportEntry[] = [];
 
     const importMapEvent = getDesignLibraryImportMapEvent(rendering.uid, importMap);
 
     console.debug('Component Library: sending import-map event', importMapEvent);
 
-    window.top.postMessage(importMapEvent, '*');
+    window.parent.postMessage(importMapEvent, '*');
 
     const componentPropsEvent = getDesignLibraryComponentPropsEvent(
       rendering.uid,
@@ -141,20 +200,28 @@ export const VariantGeneration = () => {
     return unsubscribe;
   }, []);
 
-  if (!rendering) {
-    return <div>No component found in layout data. Please check your layout data.</div>;
+  if (initError) {
+    return <div key={renderKey}>Error during component initialization</div>;
   }
 
-  return Component ? (
-    <div>
-      <Component fields={rendering.fields} params={rendering.params} />
-    </div>
-  ) : (
-    <div>Loading preview...</div>
+  return (
+    <main>
+      {Component ? (
+        <ErrorBoundary uid={rendering.uid} renderKey={renderKey}>
+          <Component fields={rendering.fields} params={rendering.params} key={renderKey} />
+        </ErrorBoundary>
+      ) : (
+        <div>Loading preview...</div>
+      )}
+    </main>
   );
 };
 
-export const DesignLibrary = (): JSX.Element => {
+type DesignLibraryProps = {
+  importMap?: editing.ImportEntry[];
+};
+
+export const DesignLibrary = ({ importMap }: DesignLibraryProps): JSX.Element => {
   const { page } = useSitecore();
   const { isDesignLibrary } = page.mode;
   const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
@@ -164,7 +231,7 @@ export const DesignLibrary = (): JSX.Element => {
   }
 
   if (isVariantGeneration) {
-    return <VariantGeneration />;
+    return <VariantGeneration importMap={importMap} />;
   }
 
   return <Preview />;

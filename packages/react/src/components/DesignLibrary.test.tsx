@@ -31,10 +31,16 @@ describe('<DesignLibrary />', () => {
     designLibrary: {
       isVariantGeneration: false,
     },
+    isNormal: false,
+    isPreview: false,
+    isEditing: false,
   };
 
   const variantGenerationMode: PageMode = {
     name: DesignLibraryMode.VariantGeneration,
+    isNormal: false,
+    isPreview: false,
+    isEditing: false,
     isDesignLibrary: true,
     designLibrary: {
       isVariantGeneration: true,
@@ -318,9 +324,11 @@ describe('<DesignLibrary />', () => {
     const unsubscribeSpy = sinon.spy();
     let addComponentPreviewHandlerSpy: sinon.SinonStub;
 
+    let fireEvent: any = null;
+
     beforeEach(() => {
-      addComponentPreviewHandlerSpy = sinon.stub().callsFake((callback) => {
-        callback(TestComponent);
+      addComponentPreviewHandlerSpy = sinon.stub().callsFake((_importMap, callback) => {
+        fireEvent = callback;
 
         return unsubscribeSpy;
       });
@@ -346,6 +354,8 @@ describe('<DesignLibrary />', () => {
         { container: document.body }
       );
 
+      fireEvent(null, TestComponent);
+
       // Wait for the useEffect to complete and component to render
       await waitFor(() => {
         expect(rendered.baseElement.innerHTML).to.contain('TestComponent');
@@ -357,11 +367,6 @@ describe('<DesignLibrary />', () => {
       const basicPage = getTestLayoutData();
       page.layout = basicPage.layoutData;
       page.mode = variantGenerationMode;
-      addComponentPreviewHandlerSpy.callsFake((callback) => {
-        callback(null);
-
-        return unsubscribeSpy;
-      });
 
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
@@ -372,6 +377,48 @@ describe('<DesignLibrary />', () => {
 
       // Check that we are in variant generation mode and rendering loading state
       expect(rendered.baseElement.innerHTML).to.contain('Loading preview...');
+    });
+
+    it('should render error message when component fails to initialize', async () => {
+      const page = getPage();
+      const basicPage = getTestLayoutData();
+      page.layout = basicPage.layoutData;
+      page.mode = variantGenerationMode;
+
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary />
+        </SitecoreProvider>,
+        { container: document.body }
+      );
+
+      fireEvent('Error', null);
+
+      await waitFor(() => {
+        expect(rendered.baseElement.innerHTML).to.contain('Error during component initialization');
+      });
+    });
+
+    it('should render error message when component fails to render', async () => {
+      const page = getPage();
+      const basicPage = getTestLayoutData();
+      page.layout = basicPage.layoutData;
+      page.mode = variantGenerationMode;
+
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary />
+        </SitecoreProvider>,
+        { container: document.body }
+      );
+
+      fireEvent(null, () => {
+        throw new Error('Error rendering component');
+      });
+
+      await waitFor(() => {
+        expect(rendered.baseElement.innerHTML).to.contain('Error during component rendering');
+      });
     });
 
     it('should render error message when no rendering is found', () => {

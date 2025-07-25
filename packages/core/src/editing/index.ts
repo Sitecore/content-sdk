@@ -27,6 +27,8 @@ export {
   DesignLibraryStatusEvent,
   getDesignLibraryStatusEvent,
   addComponentPreviewHandler,
+  getDesignLibraryComponentPreviewErrorEvent,
+  DesignLibraryPreviewError,
   DesignLibraryImportMapEvent,
   DesignLibraryComponentPropsEvent,
   getDesignLibraryComponentPropsEvent,
