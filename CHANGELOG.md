@@ -14,6 +14,8 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+- `[core]` `[nextjs]` Add import-map generation ([#157](https://github.com/Sitecore/content-sdk/pull/157))
+  - New `writeImportMap()`, `combineImportEntries()` methods and `defaultImportEntries` export available from `@sitecore-content-sdk/nextjs/tools`
 * `[nextjs]` `[Code Extraction]` Updated API endpoint to new Edge Platform format ([#162](https://github.com/Sitecore/content-sdk/pull/162))
 
 ### 🐛 Bug Fixes
@@ -24,11 +26,7 @@ Our versioning strategy is as follows:
     - Removed `siteName` parameter.
     - No longer requests and returns dictionary data.
 * `[core]` `[nextjs]` Refactor Codegen debug log to only include paths and exclude scConfig ([#165](https://github.com/Sitecore/content-sdk/pull/165))
-
-### 🎉 New Features & Improvements
-
-* Code generation for Design Library enablers:
-    * `[nextjs]` Add import-map generation ([#157](https://github.com/Sitecore/content-sdk/pull/157))
+* * `[core]` `[nextjs]` Update changelog to include new methods and export ([#165](https://github.com/Sitecore/content-sdk/pull/165))
 
 ## 1.0.0
 
