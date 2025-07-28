@@ -6,7 +6,7 @@
 
 # Interface: DesignLibraryImportMapEvent
 
-Defined in: [packages/core/src/editing/design-library.ts:51](https://github.com/Sitecore/content-sdk/blob/10296ceac10035fd92b1258d6f50ed951c5c7faf/packages/core/src/editing/design-library.ts#L51)
+Defined in: [packages/core/src/editing/design-library.ts:51](https://github.com/Sitecore/content-sdk/blob/07b4e06d905b3449e7af39083888c975ab2e1a04/packages/core/src/editing/design-library.ts#L51)
 
 Represents an event indicating the import map to be sent to design library
 
@@ -16,7 +16,7 @@ Represents an event indicating the import map to be sent to design library
 
 > **message**: `object`
 
-Defined in: [packages/core/src/editing/design-library.ts:53](https://github.com/Sitecore/content-sdk/blob/10296ceac10035fd92b1258d6f50ed951c5c7faf/packages/core/src/editing/design-library.ts#L53)
+Defined in: [packages/core/src/editing/design-library.ts:53](https://github.com/Sitecore/content-sdk/blob/07b4e06d905b3449e7af39083888c975ab2e1a04/packages/core/src/editing/design-library.ts#L53)
 
 #### importsMap
 
@@ -32,4 +32,4 @@ Defined in: [packages/core/src/editing/design-library.ts:53](https://github.com/
 
 > **name**: `"component:generation:import-map"`
 
-Defined in: [packages/core/src/editing/design-library.ts:52](https://github.com/Sitecore/content-sdk/blob/10296ceac10035fd92b1258d6f50ed951c5c7faf/packages/core/src/editing/design-library.ts#L52)
+Defined in: [packages/core/src/editing/design-library.ts:52](https://github.com/Sitecore/content-sdk/blob/07b4e06d905b3449e7af39083888c975ab2e1a04/packages/core/src/editing/design-library.ts#L52)
