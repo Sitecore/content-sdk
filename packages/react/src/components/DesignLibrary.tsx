@@ -16,8 +16,6 @@ import {
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { useSitecore } from '../enhancers/withSitecore';
 
-import { defaultImportEntries } from './import-map';
-
 let {
   getDesignLibraryImportMapEvent,
   getDesignLibraryComponentPropsEvent,
@@ -144,6 +142,9 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
 }
 
 type VariantGenerationProps = {
+  /**
+   * The import map to be used in variant generation mode.
+   */
   importMap?: codegen.ImportEntry[];
 };
 
@@ -163,14 +164,16 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
   const [initError, setInitError] = useState<boolean>(false);
   const [Component, setComponent] = useState<DynamicComponent>(null);
 
+  if (!props.importMap) {
+    return <div>No import map found. Please check your import map.</div>;
+  }
+
   if (!rendering) {
     return <div>No component found in layout data. Please check your layout data.</div>;
   }
 
   useEffect(() => {
-    const importMap: codegen.ImportEntry[] = props.importMap || defaultImportEntries;
-
-    const unsubscribe = addComponentPreviewHandler(importMap, (error, Component) => {
+    const unsubscribe = addComponentPreviewHandler(props.importMap, (error, Component) => {
       setRenderKey((key) => key + 1);
 
       if (error) {
@@ -183,7 +186,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
       setComponent(() => Component as DynamicComponent);
     });
 
-    const importMapEvent = getDesignLibraryImportMapEvent(rendering.uid, importMap);
+    const importMapEvent = getDesignLibraryImportMapEvent(rendering.uid, props.importMap);
 
     console.debug('Component Library: sending event', importMapEvent);
 
@@ -220,6 +223,10 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
 };
 
 type DesignLibraryProps = {
+  /**
+   * The import map to be used in variant generation mode.
+   * Currently it's optional but it will be required in the next major version.
+   */
   importMap?: codegen.ImportEntry[];
 };
 

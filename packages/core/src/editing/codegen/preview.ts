@@ -23,7 +23,7 @@ const DESIGN_LIBRARY_COMPONENT_PREVIEW_ERROR_EVENT_NAME =
   'component:generation:component-preview-error';
 
 /**
- * Represents an import entry.
+ * Represents an import map entry.
  */
 export interface ImportEntry {
   module: string;

@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { Placeholder, Field, DesignLibrary, Page } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/content-sdk/SitecoreStyles';
+import importMap from '.sitecore/import-map';
 
 interface LayoutProps {
   page: Page;
@@ -34,7 +35,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
       {/* root placeholder for the app, which we add components to using route data */}
       <div className={mainClassPageEditing}>
         {mode.isDesignLibrary ? (
-          <DesignLibrary />
+          <DesignLibrary importMap={importMap} />
         ) : (
           <>
             <header>
