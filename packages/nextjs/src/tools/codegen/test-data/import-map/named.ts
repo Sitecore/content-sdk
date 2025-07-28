@@ -1,4 +1,4 @@
 import { funco } from './test-exports';
-import { TestClass, testClassInstance as testo } from './test-exports';
+import { TestClass as AliasTestClass, testClassInstance as testo } from './test-exports';
 
-export { funco, testo, TestClass };
+export { funco, testo, AliasTestClass };
