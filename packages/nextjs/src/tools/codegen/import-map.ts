@@ -268,7 +268,7 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
     const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
     const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
     console.log(
-      `[Codegen] Generating import map for paths: ${JSON.stringify({
+      `[Codegen] Generating import map: ${JSON.stringify({
         paths: args.paths,
         exclude: args.exclude,
       })}.\n Writing into ${importMapFile} ...`
