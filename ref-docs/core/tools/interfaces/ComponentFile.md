@@ -6,7 +6,7 @@
 
 # Interface: ComponentFile
 
-Defined in: [packages/core/src/tools/templating/components.ts:10](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/tools/templating/components.ts#L10)
+Defined in: [packages/core/src/tools/templating/components.ts:15](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/core/src/tools/templating/components.ts#L15)
 
 Describes a file that represents a component definition
 
@@ -16,7 +16,29 @@ Describes a file that represents a component definition
 
 > **componentName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:13](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/tools/templating/components.ts#L13)
+Defined in: [packages/core/src/tools/templating/components.ts:19](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/core/src/tools/templating/components.ts#L19)
+
+Name of the code file
+
+***
+
+### filePath
+
+> **filePath**: `string`
+
+Defined in: [packages/core/src/tools/templating/components.ts:16](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/core/src/tools/templating/components.ts#L16)
+
+Path to the component or code file
+
+***
+
+### importPath
+
+> **importPath**: `string`
+
+Defined in: [packages/core/src/tools/templating/components.ts:17](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/core/src/tools/templating/components.ts#L17)
+
+Normalized path that can be used for import statements
 
 ***
 
@@ -24,12 +46,6 @@ Defined in: [packages/core/src/tools/templating/components.ts:13](https://github
 
 > **moduleName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:12](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/tools/templating/components.ts#L12)
+Defined in: [packages/core/src/tools/templating/components.ts:18](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/core/src/tools/templating/components.ts#L18)
 
-***
-
-### path
-
-> **path**: `string`
-
-Defined in: [packages/core/src/tools/templating/components.ts:11](https://github.com/Sitecore/content-sdk/blob/0eab6e2579c5bab6bcd53c634c22e999ba8a2793/packages/core/src/tools/templating/components.ts#L11)
+Normalized name that can be used as import

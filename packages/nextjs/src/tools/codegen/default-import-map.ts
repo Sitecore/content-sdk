@@ -37,15 +37,14 @@ import {
   withDatasourceCheck,
   CdpHelper,
   withSitecore,
-} from '..';
+} from '../..';
 
 export const defaultImportEntries: ImportEntry[] = [
   /* -------------------- React -------------------- */
   {
     module: 'react',
     exports: [
-      { name: 'default', value: React },
-      { name: '*', value: React },
+      { name: 'React', value: React },
       { name: 'Children', value: Children },
       { name: 'Fragment', value: Fragment },
       { name: 'createElement', value: createElement },

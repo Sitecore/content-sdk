@@ -39,7 +39,7 @@ describe('codegen-utils', () => {
 
       nock(meshEndpoint)
         .post(
-          '/api/v1/contentsdk/code/extracted',
+          '/mesh/push/api/v1/contentsdk/code/extracted',
           JSON.stringify({
             EnvironmentId: 'ContentSDK',
             name: file.name,
@@ -103,7 +103,7 @@ describe('codegen-utils', () => {
 
       nock(meshEndpoint)
         .post(
-          '/api/v1/contentsdk/code/extracted',
+          '/mesh/push/api/v1/contentsdk/code/extracted',
           JSON.stringify({
             EnvironmentId: 'ContentSDK',
             name: file.name,

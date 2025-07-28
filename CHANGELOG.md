@@ -12,6 +12,10 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🎉 New Features & Improvements
+
+* `[nextjs]``[Code Extraction]` Updated API endpoint to new Edge Platform format ([#162](https://github.com/Sitecore/content-sdk/pull/162))
+
 ### 🐛 Bug Fixes
 
 * `[core]` Duplicate dictionary requests in editing, preview, and design library modes ([#161](https://github.com/Sitecore/content-sdk/pull/161))
@@ -19,6 +23,11 @@ Our versioning strategy is as follows:
   - Updated `EditingService.fetchEditingData`:
     - Removed `siteName` parameter.
     - No longer requests and returns dictionary data.
+
+### 🎉 New Features & Improvements
+
+* Code generation for Design Library enablers:
+    * `[nextjs]` Add import-map generation ([#157](https://github.com/Sitecore/content-sdk/pull/157))
 
 ## 1.0.0
 
