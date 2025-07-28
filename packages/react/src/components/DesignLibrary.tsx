@@ -222,6 +222,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
   );
 };
 
+// @MAJOR-RELEASE-TODO - Make importMap required in next major version
 type DesignLibraryProps = {
   /**
    * The import map to be used in variant generation mode.
