@@ -8,7 +8,7 @@ import crypto from 'crypto';
 import { ImportEntry } from '@sitecore-content-sdk/core/editing';
 
 let _getComponentList = getComponentList;
-const aliasImport = /^([a-zA-Z0-9]+) as .+$/g;
+const aliasImport = /^([a-zA-Z0-9]+) as .+$/;
 
 export const unitMocks = ({
   getComponentListStub,
@@ -88,7 +88,7 @@ export const getImportedValues = (importNode: ts.ImportDeclaration): ImportNames
     if (child.kind === ts.SyntaxKind.NamedImports) {
       // import [...,]{a,b,c}
       child.forEachChild((namedChild) => {
-        const importText = namedChild.getText();
+        const importText = namedChild.getText().trim();
         const aliasMatch = aliasImport.exec(importText);
         result.named.push(aliasMatch ? aliasMatch[1] : importText);
       });
