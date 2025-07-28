@@ -23,6 +23,7 @@ Our versioning strategy is as follows:
   - Updated `EditingService.fetchEditingData`:
     - Removed `siteName` parameter.
     - No longer requests and returns dictionary data.
+* `[core]``[nextjs]` Refactor Codegen debug log to only include paths and exclude scConfig 
 
 ### 🎉 New Features & Improvements
 
