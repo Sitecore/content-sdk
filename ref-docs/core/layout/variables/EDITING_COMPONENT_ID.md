@@ -8,6 +8,6 @@
 
 > `const` **EDITING\_COMPONENT\_ID**: `"editing-component"` = `'editing-component'`
 
-Defined in: [packages/core/src/layout/models.ts:168](https://github.com/Sitecore/content-sdk/blob/07b4e06d905b3449e7af39083888c975ab2e1a04/packages/core/src/layout/models.ts#L168)
+Defined in: [packages/core/src/layout/models.ts:168](https://github.com/Sitecore/content-sdk/blob/db0340f489a1a48fba3b33f286fdd6dc507466bf/packages/core/src/layout/models.ts#L168)
 
 Id of wrapper for component rendering

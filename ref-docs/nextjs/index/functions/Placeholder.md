@@ -8,7 +8,7 @@
 
 > **Placeholder**(`props`): `Element`
 
-Defined in: [nextjs/src/components/Placeholder.tsx:15](https://github.com/Sitecore/content-sdk/blob/07b4e06d905b3449e7af39083888c975ab2e1a04/packages/nextjs/src/components/Placeholder.tsx#L15)
+Defined in: [nextjs/src/components/Placeholder.tsx:15](https://github.com/Sitecore/content-sdk/blob/db0340f489a1a48fba3b33f286fdd6dc507466bf/packages/nextjs/src/components/Placeholder.tsx#L15)
 
 ## Parameters
 
