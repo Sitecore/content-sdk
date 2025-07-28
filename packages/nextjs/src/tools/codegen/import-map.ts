@@ -315,7 +315,7 @@ export const nextJsMapTemplate = (indexedImportMap: Map<string, ModuleExports>) 
           .map(
             (namedExport) => `      { name: '${namedExport.name}', value: ${namedExport.value} }`
           )
-          .join(',\n')
+          .join(',\n') + ','
       : '';
   };
 
