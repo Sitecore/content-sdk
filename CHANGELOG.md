@@ -26,7 +26,7 @@ Our versioning strategy is as follows:
     - Removed `siteName` parameter.
     - No longer requests and returns dictionary data.
 * `[core]` `[nextjs]` Refactor Codegen debug log to only include paths and exclude scConfig ([#165](https://github.com/Sitecore/content-sdk/pull/165))
-* * `[core]` `[nextjs]` Update changelog to include new methods and export ([#165](https://github.com/Sitecore/content-sdk/pull/165))
+* `[core]` `[nextjs]` Update changelog to include new methods and export ([#166](https://github.com/Sitecore/content-sdk/pull/166))
 
 ## 1.0.0
 
