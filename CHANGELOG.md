@@ -28,6 +28,7 @@ Our versioning strategy is as follows:
 
 * Code generation for Design Library enablers:
     * `[nextjs]` Add import-map generation ([#157](https://github.com/Sitecore/content-sdk/pull/157))
+    * Dynamic component rendering ([#163](https://github.com/Sitecore/content-sdk/pull/163))
 
 ## 1.0.0
 
