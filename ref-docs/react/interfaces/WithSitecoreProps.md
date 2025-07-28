@@ -6,7 +6,7 @@
 
 # Interface: WithSitecoreProps
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:17](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/react/src/enhancers/withSitecore.tsx#L17)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:17](https://github.com/Sitecore/content-sdk/blob/10296ceac10035fd92b1258d6f50ed951c5c7faf/packages/react/src/enhancers/withSitecore.tsx#L17)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/react/src/enhancers/withSitecore.tsx:17](https://github.co
 
 > `optional` **api**: `Required`\<\{ `edge?`: `Required`\<\{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \}\>; `local?`: `Required`\<\{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \}\>; \}\>
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:25](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/react/src/enhancers/withSitecore.tsx#L25)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:25](https://github.com/Sitecore/content-sdk/blob/10296ceac10035fd92b1258d6f50ed951c5c7faf/packages/react/src/enhancers/withSitecore.tsx#L25)
 
 The API configuration defined in the `SitecoreConfig`.
 
@@ -24,7 +24,7 @@ The API configuration defined in the `SitecoreConfig`.
 
 > **page**: [`Page`](../type-aliases/Page.md)
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:21](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/react/src/enhancers/withSitecore.tsx#L21)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:21](https://github.com/Sitecore/content-sdk/blob/10296ceac10035fd92b1258d6f50ed951c5c7faf/packages/react/src/enhancers/withSitecore.tsx#L21)
 
 The current page context.
 
@@ -34,7 +34,7 @@ The current page context.
 
 > `optional` **updatePage**: `false` \| (`value`) => `void`
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:31](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/react/src/enhancers/withSitecore.tsx#L31)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:31](https://github.com/Sitecore/content-sdk/blob/10296ceac10035fd92b1258d6f50ed951c5c7faf/packages/react/src/enhancers/withSitecore.tsx#L31)
 
 Method to update the page. This is only available if `updatable` is set to true.
 

@@ -6,7 +6,7 @@
 
 # Interface: Field\<T\>
 
-Defined in: [packages/core/src/layout/models.ts:113](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/core/src/layout/models.ts#L113)
+Defined in: [packages/core/src/layout/models.ts:113](https://github.com/Sitecore/content-sdk/blob/10296ceac10035fd92b1258d6f50ed951c5c7faf/packages/core/src/layout/models.ts#L113)
 
 Field metadata in editing mode
 
@@ -26,7 +26,7 @@ Field metadata in editing mode
 
 > `optional` **metadata**: `object`
 
-Defined in: [packages/core/src/layout/models.ts:121](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/core/src/layout/models.ts#L121)
+Defined in: [packages/core/src/layout/models.ts:121](https://github.com/Sitecore/content-sdk/blob/10296ceac10035fd92b1258d6f50ed951c5c7faf/packages/core/src/layout/models.ts#L121)
 
 #### Index Signature
 
@@ -42,4 +42,4 @@ Defined in: [packages/core/src/layout/models.ts:121](https://github.com/Sitecore
 
 > **value**: `T`
 
-Defined in: [packages/core/src/layout/models.ts:114](https://github.com/Sitecore/content-sdk/blob/169fa6f8f7c780947b604fe2c86cd4df025f3748/packages/core/src/layout/models.ts#L114)
+Defined in: [packages/core/src/layout/models.ts:114](https://github.com/Sitecore/content-sdk/blob/10296ceac10035fd92b1258d6f50ed951c5c7faf/packages/core/src/layout/models.ts#L114)
