@@ -14,7 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* `[nextjs]``[Code Extraction]` Updated API endpoint to new Edge Platform format ([#162](https://github.com/Sitecore/content-sdk/pull/162))
+* `[nextjs]` `[Code Extraction]` Updated API endpoint to new Edge Platform format ([#162](https://github.com/Sitecore/content-sdk/pull/162))
 
 ### 🐛 Bug Fixes
 
@@ -23,7 +23,7 @@ Our versioning strategy is as follows:
   - Updated `EditingService.fetchEditingData`:
     - Removed `siteName` parameter.
     - No longer requests and returns dictionary data.
-* `[core]``[nextjs]` Refactor Codegen debug log to only include paths and exclude scConfig 
+* `[core]` `[nextjs]` Refactor Codegen debug log to only include paths and exclude scConfig ([#165](https://github.com/Sitecore/content-sdk/pull/165))
 
 ### 🎉 New Features & Improvements
 
