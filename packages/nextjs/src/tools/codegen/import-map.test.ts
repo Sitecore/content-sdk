@@ -50,7 +50,7 @@ describe('Import Map Generation', () => {
     beforeEach(() => {
       const appFolder = path.resolve(process.cwd(), './src/tools/codegen/test-data/import-map');
       cwdStub = sandbox.stub(process, 'cwd').returns(appFolder);
-      testExportsModulePath = path.resolve(process.cwd(), 'test-exports.ts').replace(/\\/g, '/');
+      testExportsModulePath = path.resolve(process.cwd(), 'test-exports').replace(/\\/g, '/');
     });
 
     afterEach(() => {
@@ -79,7 +79,7 @@ describe('Import Map Generation', () => {
     it('should return map with named imports when tsconfig paths is used (pathed.ts)', () => {
       const result = getImportMap(['pathed.ts']);
       testExportsModulePath = path
-        .resolve(process.cwd(), 'pathed/test-path-exports.ts')
+        .resolve(process.cwd(), 'pathed/test-path-exports')
         .replace(/\\/g, '/');
       const expected = [
         {
@@ -166,7 +166,7 @@ describe('Import Map Generation', () => {
     it('should return map from with aliased values when import getting duplicate import names', () => {
       const result = getImportMap(['wildcard.ts', 'duplicates.ts']);
       const testDuplicateImportModule = path
-        .resolve(process.cwd(), 'fake-react.ts')
+        .resolve(process.cwd(), 'fake-react')
         .replace(/\\/g, '/');
       const expected = [
         {

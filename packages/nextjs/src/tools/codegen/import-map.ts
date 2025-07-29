@@ -206,7 +206,7 @@ export const getImportMap = (paths: string[]) => {
           const importModuleName =
             resolvedImportPath.indexOf('node_modules') > -1 || resolvedImportPath.endsWith('.d.ts')
               ? moduleName
-              : resolvedImportPath;
+              : resolvedImportPath.replace(/\.[a-zA-Z]{2,4}$/, ''); // remove file extension
           // Set module import info in the map. If module import exists - add entries to existing entry
           // Otherwise, add new entry
           if (!importMap.has(importModuleName)) {
@@ -256,7 +256,6 @@ export const getImportMap = (paths: string[]) => {
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
  * @param {WriteImportMapArgs} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration
- * @param {SitecoreConfig} scConfig Sitecore configuration from sitecore.config.ts
  */
 export const writeImportMap = (args: WriteImportMapArgs) => {
   return async () => {
@@ -378,7 +377,9 @@ ${finalImportMap
       outputExportEntries(entry.defaultExports),
       '    ]',
       '  }',
-    ].join('\n')
+    ]
+      .filter(Boolean)
+      .join('\n')
   )
   .join(',\n')}
 ];
