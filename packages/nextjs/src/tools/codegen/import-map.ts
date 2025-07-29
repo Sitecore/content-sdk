@@ -8,7 +8,7 @@ import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
 import crypto from 'crypto';
 
 let _getComponentList = getComponentList;
-const aliasImport = /^([a-zA-Z0-9]+) as .+$/g;
+const aliasImport = /^([a-zA-Z0-9]+) as .+$/;
 
 export const unitMocks = ({
   getComponentListStub,
@@ -88,7 +88,7 @@ export const getImportedValues = (importNode: ts.ImportDeclaration): ImportNames
     if (child.kind === ts.SyntaxKind.NamedImports) {
       // import [...,]{a,b,c}
       child.forEachChild((namedChild) => {
-        const importText = namedChild.getText();
+        const importText = namedChild.getText().trim();
         const aliasMatch = aliasImport.exec(importText);
         result.named.push(aliasMatch ? aliasMatch[1] : importText);
       });
@@ -268,9 +268,10 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
     const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
     const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
     console.log(
-      `[Codegen] Generating import map for paths: ${JSON.stringify(
-        args
-      )}.\n Writing into ${importMapFile} ...`
+      `[Codegen] Generating import map: ${JSON.stringify({
+        paths: args.paths,
+        exclude: args.exclude,
+      })}.\n Writing into ${importMapFile} ...`
     );
     // get generated map and combine with default one
     const importMap = getImportMap(paths);

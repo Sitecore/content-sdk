@@ -15,7 +15,8 @@ Our versioning strategy is as follows:
 ### 🎉 New Features & Improvements
 
 * Code generation for Design Library enablers:
-  - `[nextjs]` Add import-map generation ([#157](https://github.com/Sitecore/content-sdk/pull/157))
+  - `[core]` `[nextjs]` Add import-map generation ([#157](https://github.com/Sitecore/content-sdk/pull/157)[#167](https://github.com/Sitecore/content-sdk/pull/167))
+    - New `writeImportMap()`, `combineImportEntries()` methods and `defaultImportEntries` export available from `@sitecore-content-sdk/nextjs/tools`
   - Dynamic component rendering ([#163](https://github.com/Sitecore/content-sdk/pull/163))
   - Updated API endpoint to new Edge Platform format ([#162](https://github.com/Sitecore/content-sdk/pull/162))
 
