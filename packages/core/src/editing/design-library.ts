@@ -1,10 +1,4 @@
-import {
-  ComponentFields,
-  ComponentParams,
-  ComponentRendering,
-  Field,
-  GenericFieldValue,
-} from '../layout/models';
+import { ComponentRendering, Field, GenericFieldValue } from '../layout/models';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { normalizeUrl } from '../utils/normalize-url';
 import { DesignLibraryMode } from './models';
@@ -13,26 +7,6 @@ import { DesignLibraryMode } from './models';
  * Event to be sent when report status to design library
  */
 const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
-
-/**
- * Event to send import map to design library
- */
-const DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME = 'component:generation:import-map';
-
-/**
- * Event to send component props to design library
- */
-const DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME = 'component:generation:component-props';
-
-/**
- * Event to receive component data from design library
- */
-const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = 'component:generation:component-preview';
-
-export interface ImportEntry {
-  module: string;
-  exports: { name: string | 'default' | '*'; value: unknown }[];
-}
 
 /**
  * Represents an event indicating the status of a component in the library.
@@ -46,61 +20,11 @@ export interface DesignLibraryStatusEvent {
 }
 
 /**
- * Represents an event indicating the import map to be sent to design library
- */
-export interface DesignLibraryImportMapEvent {
-  name: typeof DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME;
-  message: {
-    uid: string;
-    importsMap: ImportEntry[];
-  };
-}
-
-/**
- * Represents an event indicating the component props to be sent to design library
- */
-export interface DesignLibraryComponentPropsEvent {
-  name: typeof DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME;
-  message: {
-    uid: string;
-    fields: ComponentFields;
-    parameters: ComponentParams;
-  };
-}
-
-/**
  * Enumeration of statuses for the design library.
  */
 export enum DesignLibraryStatus {
   READY = 'ready',
   RENDERED = 'rendered',
-}
-
-/**
- * Represents a component preview event data sent from design library
- */
-export interface ComponentPreviewEventArgs {
-  name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
-  message: {
-    uid: string;
-    code: {
-      type: 'function';
-      content: string;
-    };
-    styles: {
-      type: 'style-element';
-      content: string;
-      styleImport: {
-        name: string;
-        content: unknown;
-      };
-    };
-    imports: {
-      module: string;
-      export: string;
-      alias: string;
-    };
-  };
 }
 
 /**
@@ -135,7 +59,7 @@ export const addComponentUpdateHandler = (
   return unsubscribe;
 };
 
-const validateOrigin = (event: MessageEvent) => {
+export const validateOrigin = (event: MessageEvent) => {
   // TODO: use `EDITING_ALLOWED_ORIGINS.concat(getAllowedOriginsFromEnv())` later
   // nextjs's JSS_ALLOWED_ORIGINS is not available on the client, need to use NEXT_PUBLIC_ variable, but it's a breaking change for Deploy
   const allowedOrigins = ['*'];
@@ -205,68 +129,6 @@ export const updateComponentHandler = (
 };
 
 /**
- * Adds the browser-side event handler for 'component:generation:component-preview' message used in Design Library
- * The event should contain the component code, styles and imports.
- * @param {Function} callback callback to be called after component is received
- */
-export const addComponentPreviewHandler = (callback: (Component: unknown) => void) => {
-  if (!window) return;
-
-  const handler = (e: MessageEvent) => {
-    const eventArgs: ComponentPreviewEventArgs = e.data;
-    if (!e.origin || !eventArgs || eventArgs.name !== 'component:generation:component-preview') {
-      // avoid extra noise in logs
-      if (!validateOrigin(e)) {
-        console.debug(
-          'Component Library: event skipped: message %s from origin %s',
-          eventArgs.name,
-          e.origin
-        );
-      }
-      return;
-    }
-
-    console.debug('Component Library: message received', eventArgs);
-
-    const exports: { [key: string]: unknown } = { Component: null };
-
-    // Component resolution will be done here
-
-    callback(exports.Component);
-  };
-
-  window.addEventListener('message', handler);
-
-  const unsubscribe = () => {
-    window.removeEventListener('message', handler);
-  };
-
-  return unsubscribe;
-};
-
-/**
- * Generates a DesignLibraryComponentPropsEvent with the given uid, fields and parameters.
- * @param {string} uid - The unique identifier for the event.
- * @param {ComponentFields} fields - The fields of the component.
- * @param {ComponentParams} parameters - The parameters of the component.
- * @returns An object representing the DesignLibraryComponentPropsEvent.
- */
-export function getDesignLibraryComponentPropsEvent(
-  uid: string,
-  fields: ComponentFields,
-  parameters: ComponentParams
-): DesignLibraryComponentPropsEvent {
-  return {
-    name: DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME,
-    message: {
-      uid,
-      fields,
-      parameters,
-    },
-  };
-}
-
-/**
  * Generates a DesignLibraryStatusEvent with the given status and uid.
  * @param {DesignLibraryStatus} status - The status of rendering.
  * @param {string} uid - The unique identifier for the event.
@@ -281,25 +143,6 @@ export function getDesignLibraryStatusEvent(
     message: {
       status,
       uid,
-    },
-  };
-}
-
-/**
- * Generates a DesignLibraryImportMapEvent with the given uid and importsMap.
- * @param {string} uid - The unique identifier for the event.
- * @param {ImportEntry[]} importsMap - The imports map to be sent.
- * @returns An object representing the DesignLibraryImportMapEvent.
- */
-export function getDesignLibraryImportMapEvent(
-  uid: string,
-  importsMap: ImportEntry[]
-): DesignLibraryImportMapEvent {
-  return {
-    name: DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME,
-    message: {
-      uid,
-      importsMap,
     },
   };
 }
