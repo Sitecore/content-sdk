@@ -23,7 +23,7 @@ import React, {
   memo,
   Suspense,
 } from 'react';
-import { ImportEntry } from '@sitecore-content-sdk/core/editing';
+import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
 import {
   Link,
   Text,

@@ -1,5 +1,5 @@
-﻿/* eslint-disable prefer-const */
-
+﻿/* eslint-disable jsdoc/require-param */
+/* eslint-disable prefer-const */
 import React, { useEffect, useMemo, useState, JSX } from 'react';
 import { Placeholder } from './Placeholder';
 import {
@@ -8,17 +8,19 @@ import {
   EDITING_COMPONENT_ID,
   EDITING_COMPONENT_PLACEHOLDER,
 } from '@sitecore-content-sdk/core/layout';
-import * as editing from '@sitecore-content-sdk/core/editing';
-import { useSitecore } from '../enhancers/withSitecore';
-
-let {
+import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
+} from '@sitecore-content-sdk/core/editing';
+import * as codegen from '@sitecore-content-sdk/core/codegen';
+import { useSitecore } from '../enhancers/withSitecore';
+
+let {
   getDesignLibraryImportMapEvent,
   getDesignLibraryComponentPropsEvent,
   addComponentPreviewHandler,
-} = editing;
+} = codegen;
 
 export const __mockDependencies = (mocks: any) => {
   addComponentPreviewHandler = mocks.addComponentPreviewHandler;
@@ -97,11 +99,60 @@ type DynamicComponent = React.ComponentType<{
   params: ComponentParams;
 }>;
 
+type ErrorBoundaryProps = {
+  uid: string;
+  children: React.ReactNode;
+  renderKey: number;
+};
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+  state = {
+    hasError: false,
+  };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidUpdate(prevProps: ErrorBoundaryProps) {
+    if (prevProps.renderKey !== this.props.renderKey) {
+      this.setState({ hasError: false });
+    }
+  }
+
+  componentDidCatch(error: Error) {
+    const errorEvent = codegen.getDesignLibraryComponentPreviewErrorEvent(
+      this.props.uid,
+      error,
+      codegen.DesignLibraryPreviewError.Render
+    );
+
+    console.debug('Component Library: sending error event', errorEvent);
+
+    window.top.postMessage(errorEvent, '*');
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div>Error during component rendering</div>;
+    }
+
+    return this.props.children;
+  }
+}
+
+type VariantGenerationProps = {
+  /**
+   * The import map to be used in variant generation mode.
+   */
+  importMap?: codegen.ImportEntry[];
+};
+
 /**
  * This component is used to render the component in variant generation mode.
  * It is used to send the import-map and component-props events to the parent window and render the dynamic component.
  */
-export const VariantGeneration = () => {
+export const VariantGeneration = (props: VariantGenerationProps) => {
   const { page } = useSitecore();
   const {
     layout: {
@@ -109,24 +160,37 @@ export const VariantGeneration = () => {
     },
   } = page;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER][0];
-  const [Component, setComponent] = React.useState<DynamicComponent>(null);
+  const [renderKey, setRenderKey] = useState(0);
+  const [initError, setInitError] = useState<boolean>(false);
+  const [Component, setComponent] = useState<DynamicComponent>(null);
+
+  if (!props.importMap) {
+    return <div>No import map found. Please check your import map.</div>;
+  }
+
+  if (!rendering) {
+    return <div>No component found in layout data. Please check your layout data.</div>;
+  }
 
   useEffect(() => {
-    if (!rendering) {
-      return () => {};
-    }
+    const unsubscribe = addComponentPreviewHandler(props.importMap, (error, Component) => {
+      setRenderKey((key) => key + 1);
 
-    const unsubscribe = addComponentPreviewHandler((Component) => {
+      if (error) {
+        setInitError(true);
+
+        return;
+      }
+
+      setInitError(false);
       setComponent(() => Component as DynamicComponent);
     });
 
-    const importMap: editing.ImportEntry[] = [];
+    const importMapEvent = getDesignLibraryImportMapEvent(rendering.uid, props.importMap);
 
-    const importMapEvent = getDesignLibraryImportMapEvent(rendering.uid, importMap);
+    console.debug('Component Library: sending event', importMapEvent);
 
-    console.debug('Component Library: sending import-map event', importMapEvent);
-
-    window.top.postMessage(importMapEvent, '*');
+    window.parent.postMessage(importMapEvent, '*');
 
     const componentPropsEvent = getDesignLibraryComponentPropsEvent(
       rendering.uid,
@@ -134,27 +198,40 @@ export const VariantGeneration = () => {
       rendering.params
     );
 
-    console.debug('Component Library: sending component-props event', componentPropsEvent);
+    console.debug('Component Library: sending event', componentPropsEvent);
 
     window.top.postMessage(componentPropsEvent, '*');
 
     return unsubscribe;
   }, []);
 
-  if (!rendering) {
-    return <div>No component found in layout data. Please check your layout data.</div>;
+  if (initError) {
+    return <div key={renderKey}>Error during component initialization</div>;
   }
 
-  return Component ? (
-    <div>
-      <Component fields={rendering.fields} params={rendering.params} />
-    </div>
-  ) : (
-    <div>Loading preview...</div>
+  return (
+    <main>
+      {Component ? (
+        <ErrorBoundary uid={rendering.uid} renderKey={renderKey}>
+          <Component fields={rendering.fields} params={rendering.params} key={renderKey} />
+        </ErrorBoundary>
+      ) : (
+        <div>Loading preview...</div>
+      )}
+    </main>
   );
 };
 
-export const DesignLibrary = (): JSX.Element => {
+// @MAJOR-RELEASE-TODO - Make importMap required in next major version
+type DesignLibraryProps = {
+  /**
+   * The import map to be used in variant generation mode.
+   * Currently it's optional but it will be required in the next major version.
+   */
+  importMap?: codegen.ImportEntry[];
+};
+
+export const DesignLibrary = ({ importMap }: DesignLibraryProps): JSX.Element => {
   const { page } = useSitecore();
   const { isDesignLibrary } = page.mode;
   const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
@@ -164,7 +241,7 @@ export const DesignLibrary = (): JSX.Element => {
   }
 
   if (isVariantGeneration) {
-    return <VariantGeneration />;
+    return <VariantGeneration importMap={importMap} />;
   }
 
   return <Preview />;
