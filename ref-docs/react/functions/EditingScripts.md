@@ -8,7 +8,7 @@
 
 > **EditingScripts**(): `Element`
 
-Defined in: [packages/react/src/components/EditingScripts.tsx:11](https://github.com/Sitecore/content-sdk/blob/48a62ac9202e17ce82f8b49dbe7816a096a9747e/packages/react/src/components/EditingScripts.tsx#L11)
+Defined in: [packages/react/src/components/EditingScripts.tsx:11](https://github.com/Sitecore/content-sdk/blob/2b23a4fced1896967711a97ca2ad0101e624fade/packages/react/src/components/EditingScripts.tsx#L11)
 
 Renders client scripts and data for editing/preview mode for Pages.
 Renders script required for the Design Library (when mode.isDesignLibrary is true).
