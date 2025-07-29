@@ -159,19 +159,57 @@ export enum DesignLibraryPreviewError {
 export function buildComponentDependencies(
   componentImports: ComponentImport[],
   importMap: ImportEntry[]
-): Array<{ name: string; value: unknown }> {
-  return componentImports.flatMap((componentImport) => {
+) {
+  const successful: Array<{ name: string; value: unknown }> = [];
+  const missing: {
+    modules: {
+      module: string;
+      alias: string;
+    }[];
+    exports: {
+      alias: string;
+      export: string;
+      module: string;
+    }[];
+  } = {
+    modules: [],
+    exports: [],
+  };
+
+  componentImports.forEach((componentImport) => {
     const moduleEntry = importMap.find((entry) => entry.module === componentImport.module);
 
-    const exportEntry = moduleEntry?.exports.find((exp) => exp.name === componentImport.export);
+    if (!moduleEntry) {
+      missing.modules.push({
+        module: componentImport.module,
+        alias: componentImport.alias,
+      });
 
-    return exportEntry
-      ? {
-          name: componentImport.alias,
-          value: exportEntry.value,
-        }
-      : [];
+      return;
+    }
+
+    const exportEntry = moduleEntry.exports.find((exp) => exp.name === componentImport.export);
+
+    if (!exportEntry) {
+      missing.exports.push({
+        alias: componentImport.alias,
+        export: componentImport.export,
+        module: componentImport.module,
+      });
+
+      return;
+    }
+
+    return successful.push({
+      name: componentImport.alias,
+      value: exportEntry.value,
+    });
   });
+
+  return {
+    successful,
+    missing,
+  };
 }
 
 /**
@@ -207,13 +245,37 @@ export const addComponentPreviewHandler = (
 
       const { message } = eventArgs;
 
-      const componentDepencencies = buildComponentDependencies(message.imports, importMap);
+      const dependencies = buildComponentDependencies(message.imports, importMap);
 
-      const importNames = componentDepencencies.map((entry) => entry.name);
-      const importInstances = componentDepencencies.map((entry) => entry.value);
+      if (dependencies.missing.modules.length > 0 || dependencies.missing.exports.length > 0) {
+        let errorMessage = '';
 
-      // get css file string from message and attach it to DOM
+        dependencies.missing.modules.forEach((mod) => {
+          errorMessage += `Missing module: '${mod.module}' with alias: '${mod.alias}'\n`;
+        });
+
+        dependencies.missing.exports.forEach((exp) => {
+          const alias = exp.export !== exp.alias ? ` with alias: '${exp.alias}'` : '';
+          errorMessage += `Missing export: '${exp.export}' from module: '${exp.module}'${alias}\n`;
+        });
+
+        throw errorMessage;
+      }
+
+      const importNames = dependencies.successful.map((entry) => entry.name);
+      const importInstances = dependencies.successful.map((entry) => entry.value);
+
+      const styleId = 'content-sdk-style-preview';
+      const styleElement = document.getElementById(styleId);
+
+      // remove existing style element if it exists to avoid duplicates
+      if (styleElement) {
+        styleElement.remove();
+      }
+
+      // create new style element and attach it to DOM
       const style = document.createElement('style');
+      style.setAttribute('id', styleId);
       style.innerHTML = message.styles.content;
       document.head.appendChild(style);
 

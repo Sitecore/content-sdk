@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -34,11 +35,15 @@ describe('design library codegen', () => {
     let removeEventListenerSpy: sinon.SinonSpy;
     let callbackStub: sinon.SinonStub;
     let appendChildSpy: sinon.SinonStub;
+    let getElementByIdSpy: sinon.SinonStub;
+    let setAttributeSpy: sinon.SinonStub;
     let createElementSpy: sinon.SinonStub;
     let postMessageSpy: sinon.SinonStub;
+    let removeSpy: sinon.SinonStub;
 
     const useMemoFn = sinon.stub();
     const useCallbackFn = sinon.stub();
+    const useStateFn = sinon.stub();
     const NextImage = sinon.stub();
     const stylesModule = sinon.stub();
 
@@ -48,6 +53,7 @@ describe('design library codegen', () => {
         exports: [
           { name: 'useMemo', value: useMemoFn },
           { name: 'useCallback', value: useCallbackFn },
+          { name: 'useState', value: useStateFn },
         ],
       },
       {
@@ -58,11 +64,12 @@ describe('design library codegen', () => {
 
     const code = `
     const Component = (props) => {
-      console.log(useMemoFn, useCallbackFn, NextImage, stylesModule);
+      console.log(useMemoFn, useCallback, useStateFn, NextImage, stylesModule);
       return {
         value: 'Test',
         useMemoFn,
-        useCallbackFn,
+        useCallback,
+        useStateFn,
         NextImage,
         stylesModule,
       }
@@ -73,11 +80,12 @@ describe('design library codegen', () => {
 
     const corruptedCode = `
     const Component = (props) => {
-      console.log(useMemoFn, useCallbackFn, NextImage, stylesModule, notExistingVariable);
+      console.log(useMemoFn, useCallback, useStateFn, NextImage, stylesModule, notExistingVariable);
       return {
         value: 'Test',
         useMemoFn,
-        useCallbackFn,
+        useCallback,
+        useStateFn,
         NextImage,
         stylesModule,
         notExistingVariable
@@ -105,7 +113,8 @@ describe('design library codegen', () => {
         },
         imports: [
           { module: 'react', export: 'useMemo', alias: 'useMemoFn' },
-          { module: 'react', export: 'useCallback', alias: 'useCallbackFn' },
+          { module: 'react', export: 'useCallback', alias: 'useCallback' },
+          { module: 'react', export: 'useState', alias: 'useStateFn' },
           { module: 'next/image', export: 'Image', alias: 'NextImage' },
         ],
       },
@@ -126,7 +135,12 @@ describe('design library codegen', () => {
       addEventListenerSpy = sinon.spy();
       removeEventListenerSpy = sinon.spy();
       appendChildSpy = sinon.stub();
-      createElementSpy = sinon.stub().returns({});
+      getElementByIdSpy = sinon.stub();
+      setAttributeSpy = sinon.stub();
+      removeSpy = sinon.stub();
+      createElementSpy = sinon.stub().returns({
+        setAttribute: setAttributeSpy,
+      });
       postMessageSpy = sinon.stub();
       global.window = {} as any;
       windowSpy = sinon.stub(global, 'window' as any).value({
@@ -142,6 +156,7 @@ describe('design library codegen', () => {
           appendChild: appendChildSpy,
         },
         createElement: createElementSpy,
+        getElementById: getElementByIdSpy,
       });
       callbackStub = sinon.stub();
     });
@@ -225,7 +240,49 @@ describe('design library codegen', () => {
       expect(generatedComponent()).to.deep.equal({
         value: 'Test',
         useMemoFn,
-        useCallbackFn,
+        useCallback: useCallbackFn,
+        useStateFn,
+        NextImage,
+        stylesModule,
+      });
+    });
+
+    it('should not insert style element if it already exists', () => {
+      getElementByIdSpy.returns({
+        remove: removeSpy,
+      });
+
+      addComponentPreviewHandler(importMap, callbackStub);
+      const handler = addEventListenerSpy.getCall(0).args[1];
+      const message = new MessageEvent('message', {
+        origin: 'http://localhost',
+        data: previewMessage,
+      });
+
+      handler(message);
+
+      expect(getElementByIdSpy.calledOnceWith('content-sdk-style-preview')).to.be.true;
+
+      expect(removeSpy.calledOnce).to.be.true;
+
+      expect(debugSpy.calledWith('Component Library: message received', previewMessage)).to.be.true;
+
+      expect(createElementSpy.calledOnceWith('style')).to.be.true;
+      const styleElement = createElementSpy.getCall(0).returnValue;
+      expect(styleElement.innerHTML).to.equal('body { background-color: red; }');
+      expect(appendChildSpy.calledOnceWith(styleElement)).to.be.true;
+
+      expect(callbackStub.calledOnce).to.be.true;
+      expect(callbackStub.calledWith(null, sinon.match.func)).to.be.true;
+
+      const generatedComponent = callbackStub.getCall(0).args[1];
+
+      expect(callbackStub.getCall(0).args[0]).to.be.null;
+      expect(generatedComponent()).to.deep.equal({
+        value: 'Test',
+        useMemoFn,
+        useCallback: useCallbackFn,
+        useStateFn,
         NextImage,
         stylesModule,
       });
@@ -258,6 +315,45 @@ describe('design library codegen', () => {
 
       expect(callbackStub.calledOnce).to.be.true;
       expect(callbackStub.getCall(0).args[0]).to.be.instanceOf(Error);
+      expect(callbackStub.getCall(0).args[1]).to.be.null;
+
+      expect(postMessageSpy.calledOnce).to.be.true;
+      expect(postMessageSpy.calledWith(errorEvent, '*')).to.be.true;
+    });
+
+    it('should send error when component dependencies are missing', () => {
+      addComponentPreviewHandler(
+        [{ module: 'react', exports: [{ name: 'useMemo', value: useMemoFn }] }],
+        callbackStub
+      );
+      const handler = addEventListenerSpy.getCall(0).args[1];
+      const message = new MessageEvent('message', {
+        origin: 'http://localhost',
+        data: corruptedPreviewMessage,
+      });
+
+      handler(message);
+
+      expect(debugSpy.calledWith('Component Library: message received', corruptedPreviewMessage)).to
+        .be.true;
+
+      const errorLogArgs = errorSpy.getCall(0).args;
+      expect(errorLogArgs[0]).to.equal('Component Library: sending error event');
+
+      const errorEvent = errorLogArgs[1];
+
+      expect(errorEvent.name).to.equal('component:generation:component-preview-error');
+      expect(errorEvent.message.uid).to.equal('test-uid');
+      expect(errorEvent.message.error.toString()).to.include(
+        [
+          "Missing module: 'next/image' with alias: 'NextImage'\n",
+          "Missing export: 'useCallback' from module: 'react'\n",
+          "Missing export: 'useState' from module: 'react' with alias: 'useStateFn'\n",
+        ].join('')
+      );
+      expect(errorEvent.message.type).to.equal(DesignLibraryPreviewError.RenderInit);
+
+      expect(callbackStub.calledOnce).to.be.true;
       expect(callbackStub.getCall(0).args[1]).to.be.null;
 
       expect(postMessageSpy.calledOnce).to.be.true;
@@ -330,7 +426,7 @@ describe('design library codegen', () => {
 
       const componentImports: ComponentImport[] = [
         { module: 'react', export: 'useMemo', alias: 'useMemoFn' },
-        { module: 'react', export: 'useCallback', alias: 'useCallbackFn' },
+        { module: 'react', export: 'useCallback', alias: 'useCallback' },
         { module: 'next/image', export: 'Image', alias: 'NextImage' },
       ];
       const importMap: ImportEntry[] = [
@@ -348,11 +444,13 @@ describe('design library codegen', () => {
         },
       ];
       const dependencies = buildComponentDependencies(componentImports, importMap);
-      expect(dependencies).to.deep.equal([
+      expect(dependencies.successful).to.deep.equal([
         { name: 'useMemoFn', value: useMemoStub },
-        { name: 'useCallbackFn', value: useCallbackStub },
+        { name: 'useCallback', value: useCallbackStub },
         { name: 'NextImage', value: nextImageStub },
       ]);
+      expect(dependencies.missing.modules).to.deep.equal([]);
+      expect(dependencies.missing.exports).to.deep.equal([]);
     });
 
     it('should return an empty array when no component imports are provided', () => {
@@ -364,19 +462,12 @@ describe('design library codegen', () => {
         },
       ];
       const dependencies = buildComponentDependencies(componentImports, importMap);
-      expect(dependencies).to.deep.equal([]);
+      expect(dependencies.missing.modules).to.deep.equal([]);
+      expect(dependencies.missing.exports).to.deep.equal([]);
+      expect(dependencies.successful).to.deep.equal([]);
     });
 
-    it('should return an empty array when no import map is provided', () => {
-      const componentImports: ComponentImport[] = [
-        { module: 'react', export: 'default', alias: 'React' },
-      ];
-      const importMap: ImportEntry[] = [];
-      const dependencies = buildComponentDependencies(componentImports, importMap);
-      expect(dependencies).to.deep.equal([]);
-    });
-
-    it('should return an empty array when no export is found in the import map', () => {
+    it('should handle when no export is found in the import map', () => {
       const componentImports: ComponentImport[] = [
         { module: 'react', export: 'useMemo', alias: 'useMemoFn' },
       ];
@@ -384,10 +475,18 @@ describe('design library codegen', () => {
         { module: 'react', exports: [{ name: 'useCallback', value: () => {} }] },
       ];
       const dependencies = buildComponentDependencies(componentImports, importMap);
-      expect(dependencies).to.deep.equal([]);
+      expect(dependencies.successful).to.deep.equal([]);
+      expect(dependencies.missing.modules).to.deep.equal([]);
+      expect(dependencies.missing.exports).to.deep.equal([
+        {
+          module: 'react',
+          export: 'useMemo',
+          alias: 'useMemoFn',
+        },
+      ]);
     });
 
-    it('should return an empty array when no module is found in the import map', () => {
+    it('should handle when no module is found in the import map', () => {
       const componentImports: ComponentImport[] = [
         { module: 'react', export: 'useMemo', alias: 'useMemoFn' },
       ];
@@ -395,7 +494,14 @@ describe('design library codegen', () => {
         { module: 'vue', exports: [{ name: 'render', value: () => {} }] },
       ];
       const dependencies = buildComponentDependencies(componentImports, importMap);
-      expect(dependencies).to.deep.equal([]);
+      expect(dependencies.successful).to.deep.equal([]);
+      expect(dependencies.missing.modules).to.deep.equal([
+        {
+          module: 'react',
+          alias: 'useMemoFn',
+        },
+      ]);
+      expect(dependencies.missing.exports).to.deep.equal([]);
     });
   });
 
