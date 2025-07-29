@@ -23,12 +23,9 @@
 
 - [ComponentLayoutRequestParams](interfaces/ComponentLayoutRequestParams.md)
 - [ComponentUpdateEventArgs](interfaces/ComponentUpdateEventArgs.md)
-- [DesignLibraryComponentPropsEvent](interfaces/DesignLibraryComponentPropsEvent.md)
-- [DesignLibraryImportMapEvent](interfaces/DesignLibraryImportMapEvent.md)
 - [DesignLibraryRenderPreviewData](interfaces/DesignLibraryRenderPreviewData.md)
 - [DesignLibraryStatusEvent](interfaces/DesignLibraryStatusEvent.md)
 - [EditingRenderQueryParams](interfaces/EditingRenderQueryParams.md)
-- [ImportEntry](interfaces/ImportEntry.md)
 - [Metadata](interfaces/Metadata.md)
 - [RenderComponentQueryParams](interfaces/RenderComponentQueryParams.md)
 
@@ -46,11 +43,8 @@
 
 ## Functions
 
-- [addComponentPreviewHandler](functions/addComponentPreviewHandler.md)
 - [addComponentUpdateHandler](functions/addComponentUpdateHandler.md)
 - [getContentSdkPagesClientData](functions/getContentSdkPagesClientData.md)
-- [getDesignLibraryComponentPropsEvent](functions/getDesignLibraryComponentPropsEvent.md)
-- [getDesignLibraryImportMapEvent](functions/getDesignLibraryImportMapEvent.md)
 - [getDesignLibraryScriptLink](functions/getDesignLibraryScriptLink.md)
 - [getDesignLibraryStatusEvent](functions/getDesignLibraryStatusEvent.md)
 - [isDesignLibraryMode](functions/isDesignLibraryMode.md)
