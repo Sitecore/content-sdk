@@ -3,6 +3,6 @@
 import { combineImportEntries, defaultImportEntries } from '@sitecore-content-sdk/nextjs/codegen';
 // end of built-in imports
 
-const importMap = [];
+const importMap: any[] = [];
 
 export default combineImportEntries(defaultImportEntries, importMap);
