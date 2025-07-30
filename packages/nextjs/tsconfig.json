@@ -15,6 +15,7 @@
     "types",
     "typings",
     "dist",
+    "codegen.d.ts",
     "context.d.ts",
     "config.d.ts",
     "middleware.d.ts",
