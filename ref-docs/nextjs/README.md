@@ -8,6 +8,7 @@
 
 - [client](client/README.md)
 - [editing](editing/README.md)
+- [editing/codegen](editing/codegen/README.md)
 - [index](index/README.md)
 - [middleware](middleware/README.md)
 - [monitoring](monitoring/README.md)
