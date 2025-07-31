@@ -14,6 +14,7 @@ describe('build command', () => {
       },
     };
     loadCliConfigStub = sinon.stub(loadConfigModule, 'default').returns(mockConfig);
+    sinon.stub(process, 'exit');
   });
 
   afterEach(() => {

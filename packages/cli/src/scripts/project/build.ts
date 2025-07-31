@@ -36,4 +36,7 @@ export async function handler(argv: BuildArgs) {
       await command();
     }
   }
+
+  // Exit the process to avoid hanging the process by custom build commands
+  process.exit(0);
 }
