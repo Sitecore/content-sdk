@@ -28,6 +28,7 @@ Our versioning strategy is as follows:
     - Removed `siteName` parameter.
     - No longer requests and returns dictionary data.
 * `[cli]` Code extraction extends XM Cloud Rendering Host build by several minutes ([#173](https://github.com/Sitecore/content-sdk/pull/173))
+* `[core]` Fix the redirect with the "?" bug ([#174](https://github.com/Sitecore/content-sdk/pull/174))
 
 ## 1.0.0
 
