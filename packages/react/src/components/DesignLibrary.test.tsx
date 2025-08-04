@@ -7,7 +7,7 @@ import { expect } from 'chai';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { DesignLibrary } from './DesignLibrary';
+import { DesignLibrary, ImportMapImport } from './DesignLibrary';
 import { getTestLayoutData } from '../test-data/component-editing-data';
 import { SitecoreProvider } from './SitecoreProvider';
 import { RichText } from './RichText';
@@ -21,7 +21,6 @@ import {
   DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { __mockDependencies } from './DesignLibrary';
-import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
 
 describe('<DesignLibrary />', () => {
   const postMessageSpy = sinon.spy(global.window, 'postMessage');
@@ -320,20 +319,25 @@ describe('<DesignLibrary />', () => {
     let addComponentPreviewHandlerSpy: sinon.SinonStub;
     let page: Page;
 
-    const defaultImportMap: ImportEntry[] = [
-      {
-        module: 'react',
-        exports: [{ name: 'default', value: React }],
-      },
-    ];
+    const defaultImportMap = () =>
+      new Promise((resolve) => {
+        resolve({
+          default: [
+            {
+              module: 'react',
+              exports: [{ name: 'default', value: React }],
+            },
+          ],
+        });
+      });
 
-    let fireEvent: any = null;
+    let callbackEvent: any = null;
 
     beforeEach(() => {
       page = getPage(getTestLayoutData().layoutData, variantGenerationMode);
 
       addComponentPreviewHandlerSpy = sinon.stub().callsFake((_importMap, callback) => {
-        fireEvent = callback;
+        callbackEvent = callback;
 
         return unsubscribeSpy;
       });
@@ -348,17 +352,17 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should render component when provided', async () => {
-      const rendered = render(
+      const rendered = await render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMap={defaultImportMap} />
+          <DesignLibrary importMapImport={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
 
-      fireEvent(null, TestComponent);
-
       // Wait for the useEffect to complete and component to render
       await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+        callbackEvent(null, TestComponent);
         expect(rendered.baseElement.innerHTML).to.contain('TestComponent');
       });
     });
@@ -366,7 +370,7 @@ describe('<DesignLibrary />', () => {
     it('should render loading preview when no component is provided', () => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMap={defaultImportMap} />
+          <DesignLibrary importMapImport={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
@@ -378,14 +382,13 @@ describe('<DesignLibrary />', () => {
     it('should render error message when component fails to initialize', async () => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMap={defaultImportMap} />
+          <DesignLibrary importMapImport={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
 
-      fireEvent('Error', null);
-
       await waitFor(() => {
+        callbackEvent('Error', null);
         expect(rendered.baseElement.innerHTML).to.contain('Error during component initialization');
       });
     });
@@ -393,16 +396,15 @@ describe('<DesignLibrary />', () => {
     it('should render error message when component fails to render', async () => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMap={defaultImportMap} />
+          <DesignLibrary importMapImport={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
 
-      fireEvent(null, () => {
-        throw new Error('Error rendering component');
-      });
-
       await waitFor(() => {
+        callbackEvent(null, () => {
+          throw new Error('Error rendering component');
+        });
         expect(rendered.baseElement.innerHTML).to.contain('Error during component rendering');
       });
     });
@@ -413,7 +415,7 @@ describe('<DesignLibrary />', () => {
 
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMap={defaultImportMap} />
+          <DesignLibrary importMapImport={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
@@ -433,22 +435,24 @@ describe('<DesignLibrary />', () => {
 
       await waitFor(() => {
         expect(rendered.baseElement.innerHTML).to.contain(
-          'No import map found. Please check your import map.'
+          'No dynamic import map loaded. Please check a dynamic import map function is passed into Design Library'
         );
       });
     });
 
-    it('should send postMessage events for import-map and component-props', () => {
+    it('should send postMessage events for import-map and component-props', async () => {
       render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMap={defaultImportMap} />
+          <DesignLibrary importMapImport={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
 
       // Check that postMessage was called (we can't easily mock the event functions)
-      expect(postMessageSpy.called).to.be.true;
-      expect(postMessageSpy.callCount).to.be.greaterThan(0);
+      await waitFor(() => {
+        expect(postMessageSpy.called).to.be.true;
+        expect(postMessageSpy.callCount).to.be.greaterThan(0);
+      });
     });
   });
 });
