@@ -267,6 +267,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
             redirect.pattern.replace(new RegExp(`^[^]?/${language}/`, 'gi'), '')
           );
 
+          // Prepare the redirect pattern as a regular expression, making it more flexible for matching URLs
           redirect.pattern = `/^\/${redirect.pattern
             .replace(/^\/|\/$/g, '') // Removes leading and trailing slashes
             .replace(/^\^\/|\/\$$/g, '') // Removes unnecessary start (^) and end ($) anchors
