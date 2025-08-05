@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import path from 'path';
@@ -51,7 +53,7 @@ describe('generateSites', () => {
     sinon.restore();
   });
 
-  it('should write site info to the default path when destinationPath is not provided', async () => {
+  it('should write site info to the default path when destinationPath is not provided', async() => {
     const scConfig = defineConfig(mockConfig);
     const config: GenerateSitesConfig = {
       scConfig,
@@ -69,7 +71,7 @@ describe('generateSites', () => {
     ).to.be.true;
   });
 
-  it('should write site info to the provided destinationPath', async () => {
+  it('should write site info to the provided destinationPath', async() => {
     const destinationPath = 'custom/path/sites.json';
     const scConfig = defineConfig(mockConfig);
     const config: GenerateSitesConfig = {
@@ -89,7 +91,7 @@ describe('generateSites', () => {
     ).to.be.true;
   });
 
-  it('should fetch site information when multisiteEnabled is true', async () => {
+  it('should fetch site information when multisiteEnabled is true', async() => {
     const fetchedSites: SiteInfo[] = [
       { name: 'site1', hostName: 'site1.com', language: 'de/DE' },
       { name: 'site2', hostName: 'site2.com', language: 'da/DK' },
@@ -115,7 +117,7 @@ describe('generateSites', () => {
     ).to.be.true;
   });
 
-  it('should log an error when fetching site information fails', async () => {
+  it('should log an error when fetching site information fails', async() => {
     sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').rejects(new Error('Fetch error'));
     const scConfig = defineConfig(mockConfig);
 

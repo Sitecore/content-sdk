@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import fs from 'fs';
@@ -19,7 +20,7 @@ describe('generateMetadata', () => {
     sinon.restore();
   });
 
-  it('should generate metadata and write to default path if no config is provided', async () => {
+  it('should generate metadata and write to default path if no config is provided', async() => {
     const generate = generateMetadata();
     await generate();
 
@@ -30,7 +31,7 @@ describe('generateMetadata', () => {
     );
   });
 
-  it('should generate metadata and write to specified path if config is provided', async () => {
+  it('should generate metadata and write to specified path if config is provided', async() => {
     const config = { destinationPath: 'custom/path/metadata.json' };
     const generate = generateMetadata(config);
     await generate();

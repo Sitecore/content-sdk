@@ -1,4 +1,5 @@
-﻿import fs from 'fs-extra';
+﻿/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
+import fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
 import ejs from 'ejs';
@@ -32,7 +33,7 @@ describe('transform', () => {
       log?.restore();
     });
 
-    it('should transform file', async () => {
+    it('should transform file', async() => {
       const templatePath = path.resolve('templates/next');
       const destinationPath = path.resolve('samples/next');
       const file = 'file.ts';
@@ -69,7 +70,7 @@ describe('transform', () => {
       );
     });
 
-    it('should skip if isFileForSkip', async () => {
+    it('should skip if isFileForSkip', async() => {
       const templatePath = path.resolve('templates/next');
       const destinationPath = path.resolve('samples/next');
       const file = 'file.ts';
@@ -92,7 +93,7 @@ describe('transform', () => {
       expect(writeFileToPathStub).to.not.have.been.called;
     });
 
-    it('should copy only special files', async () => {
+    it('should copy only special files', async() => {
       const templatePath = path.resolve('templates/next');
       const destinationPath = path.resolve('samples/next');
       const files = ['image.png', 'file.pdf'];
@@ -121,7 +122,7 @@ describe('transform', () => {
       expect(writeFileToPathStub).to.not.have.been.called;
     });
 
-    it('should skip if isFileForCopy', async () => {
+    it('should skip if isFileForCopy', async() => {
       const templatePath = path.resolve('templates/next');
       const destinationPath = path.resolve('samples/next');
       const file = 'file.ts';
@@ -149,7 +150,7 @@ describe('transform', () => {
       expect(writeFileToPathStub).to.not.have.been.called;
     });
 
-    it('should rename gitignore file', async () => {
+    it('should rename gitignore file', async() => {
       const templatePath = path.resolve('templates/next');
       const destinationPath = path.resolve('samples/next');
       const renderFileOutput = 'file output';
@@ -172,7 +173,7 @@ describe('transform', () => {
       );
     });
 
-    it('should handle error', async () => {
+    it('should handle error', async() => {
       const templatePath = path.resolve('templates/next');
       const destinationPath = path.resolve('samples/next');
       const file = 'file.ts';

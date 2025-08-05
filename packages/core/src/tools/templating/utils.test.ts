@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
-
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import fs from 'fs';
@@ -49,25 +49,25 @@ describe('utils', () => {
     });
 
     const baseDirent = {
-      isFile: function (): boolean {
+      isFile: function(): boolean {
         return false;
       },
-      isDirectory: function (): boolean {
+      isDirectory: function(): boolean {
         return false;
       },
-      isBlockDevice: function (): boolean {
+      isBlockDevice: function(): boolean {
         return false;
       },
-      isCharacterDevice: function (): boolean {
+      isCharacterDevice: function(): boolean {
         return false;
       },
-      isSymbolicLink: function (): boolean {
+      isSymbolicLink: function(): boolean {
         return false;
       },
-      isFIFO: function (): boolean {
+      isFIFO: function(): boolean {
         return false;
       },
-      isSocket: function (): boolean {
+      isSocket: function(): boolean {
         return false;
       },
       name: '',

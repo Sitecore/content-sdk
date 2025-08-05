@@ -565,6 +565,7 @@ export class SitecoreClient implements BaseSitecoreClient {
           throw new Error('REDIRECT_404');
         }
         return xmlResponse.data;
+      // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error('REDIRECT_404');
       }

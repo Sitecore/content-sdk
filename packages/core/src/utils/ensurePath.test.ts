@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { ensurePathExists } from './ensurePath';
 import fs from 'fs';
 import sinon from 'sinon';

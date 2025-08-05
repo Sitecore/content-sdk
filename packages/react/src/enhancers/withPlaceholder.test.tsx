@@ -4,7 +4,7 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import { Page, PageMode } from '@sitecore-content-sdk/core/client';
+import { Page } from '@sitecore-content-sdk/core/client';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { convertedDevData as normalModeDevData } from '../test-data/normal-mode-data';
 import * as metadataData from '../test-data/metadata-data';
@@ -13,7 +13,6 @@ import { SitecoreProvider } from '../components/SitecoreProvider';
 import { PlaceholderProps } from '../components/PlaceholderCommon';
 import {
   ComponentRendering,
-  LayoutServiceData,
   RouteData,
 } from '@sitecore-content-sdk/core/layout';
 import { Placeholder } from '../components/Placeholder';
@@ -37,7 +36,7 @@ const DownloadCallout: React.FC<CalloutProps> = (props) => (
   </div>
 );
 
-const Home: React.FC<HomeProps> = ({ rendering, name, subProp, ...otherProps }: HomeProps) => {
+const Home: React.FC<HomeProps> = ({ name, subProp, ...otherProps }: HomeProps) => {
   if (subProp && !otherProps.reset) {
     return <div className="home-mock-with-prop">{subProp}</div>;
   } else {

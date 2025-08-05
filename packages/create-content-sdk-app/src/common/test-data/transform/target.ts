@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const x = 15;
 const b = 20;
 

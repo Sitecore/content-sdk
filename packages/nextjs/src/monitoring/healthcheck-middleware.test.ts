@@ -24,7 +24,7 @@ const mockResponse = () => {
 };
 
 describe('HealthcheckMiddleware', () => {
-  it('should handle request', async () => {
+  it('should handle request', async() => {
     const req = mockRequest();
     const res = mockResponse();
 

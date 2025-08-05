@@ -66,7 +66,7 @@ export class ComponentPropsService {
 
     const renderings = this.flatRenderings(placeholders);
 
-    const actions = renderings.map(async (r) => {
+    const actions = renderings.map(async(r) => {
       const fetchFunc = (await this.getModule(components, r.componentName))
         ?.getComponentServerProps;
 

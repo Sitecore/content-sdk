@@ -37,7 +37,7 @@ export const generateSites = ({
   scConfig,
   destinationPath,
 }: GenerateSitesConfig): (() => Promise<void>) => {
-  return async () => {
+  return async() => {
     let sites: SiteInfo[] = [];
     const sitesFilePath = path.resolve(destinationPath ?? DEFAULT_SITES_DIST_PATH);
 

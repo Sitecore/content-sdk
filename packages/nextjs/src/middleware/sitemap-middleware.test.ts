@@ -1,4 +1,5 @@
-﻿import chai, { expect } from 'chai';
+﻿/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
+import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -65,7 +66,7 @@ describe('SitemapMiddleware', () => {
   });
 
   describe('handler', () => {
-    it('should process sitemap request without id parameter', async () => {
+    it('should process sitemap request without id parameter', async() => {
       const siteName = sites[0].name;
       const xmlContent = '<sitemapindex>...</sitemapindex>';
 
@@ -86,7 +87,7 @@ describe('SitemapMiddleware', () => {
       expect(res.send).to.have.been.calledWith(xmlContent);
     });
 
-    it('should handle sitemap request with specific id parameter', async () => {
+    it('should handle sitemap request with specific id parameter', async() => {
       const sitemapId = '1';
       req.query = { id: sitemapId };
       const siteName = sites[0].name;
@@ -106,7 +107,7 @@ describe('SitemapMiddleware', () => {
       expect(res.send).to.have.been.calledWith(xmlContent);
     });
 
-    it('should handle array of id parameters by using the first value', async () => {
+    it('should handle array of id parameters by using the first value', async() => {
       const sitemapIds = ['1', '2', '3'];
       req.query = { id: sitemapIds };
       const siteName = sites[0].name;
@@ -123,7 +124,7 @@ describe('SitemapMiddleware', () => {
       });
     });
 
-    it('should default to https protocol when x-forwarded-proto header is missing', async () => {
+    it('should default to https protocol when x-forwarded-proto header is missing', async() => {
       const reqWithoutProto = { ...req, headers: { host: 'example.com' } };
       const siteName = sites[0].name;
       const xmlContent = '<sitemapindex>...</sitemapindex>';
@@ -140,7 +141,7 @@ describe('SitemapMiddleware', () => {
       });
     });
 
-    it('should redirect to 404 when REDIRECT_404 error is thrown', async () => {
+    it('should redirect to 404 when REDIRECT_404 error is thrown', async() => {
       const error = new Error('REDIRECT_404');
 
       sitecoreClientStub.getSiteMap.rejects(error);
@@ -152,7 +153,7 @@ describe('SitemapMiddleware', () => {
       expect(res.send).not.to.have.been.called;
     });
 
-    it('should return 500 error when any other error occurs', async () => {
+    it('should return 500 error when any other error occurs', async() => {
       const error = new Error('Unexpected error');
 
       sitecoreClientStub.getSiteMap.rejects(error);

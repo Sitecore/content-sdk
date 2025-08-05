@@ -64,7 +64,7 @@ describe('RedirectsService', () => {
   };
 
   describe('fetch redirects from site by graphql', () => {
-    it('should get error if redirects has empty siteName', async () => {
+    it('should get error if redirects has empty siteName', async() => {
       mockRedirectsRequest();
 
       const service = new RedirectsService(config);
@@ -75,7 +75,7 @@ describe('RedirectsService', () => {
       return expect(nock.isDone()).to.be.false;
     });
 
-    it('should get redirects', async () => {
+    it('should get redirects', async() => {
       mockRedirectsRequest(siteName);
 
       const service = new RedirectsService(config);
@@ -86,7 +86,7 @@ describe('RedirectsService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should get no redirects', async () => {
+    it('should get no redirects', async() => {
       mockRedirectsRequest();
 
       const service = new RedirectsService(config);
@@ -97,7 +97,7 @@ describe('RedirectsService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should cache fetch response', async () => {
+    it('should cache fetch response', async() => {
       mockRedirectsRequest(siteName);
       const service = new RedirectsService(config);
       const redirectsResponse = await service.fetchRedirects(siteName);
@@ -119,7 +119,7 @@ describe('RedirectsService', () => {
       expect(cachedResponse).to.deep.equal(redirectsResponse);
     });
 
-    it('should be possible to disable cache', async () => {
+    it('should be possible to disable cache', async() => {
       mockRedirectsRequest(siteName);
       const service = new RedirectsService({ ...config, cacheEnabled: false });
       const redirectsResponse = await service.fetchRedirects(siteName);
@@ -141,7 +141,7 @@ describe('RedirectsService', () => {
       expect(cachedResponse).to.not.deep.equal(redirectsResponse);
     });
 
-    it('should use dynamic site name', async () => {
+    it('should use dynamic site name', async() => {
       const dynamicSiteName = 'foo';
       mockRedirectsRequest(dynamicSiteName);
       const service = new RedirectsService(config);

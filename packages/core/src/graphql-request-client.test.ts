@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */
 import { expect, use, spy } from 'chai';
@@ -39,7 +40,7 @@ describe('GraphQLRequestClient', () => {
     debugApi.enable(debugNamespaces);
   });
 
-  it('should execute graphql request', async () => {
+  it('should execute graphql request', async() => {
     nock('http://csdknextweb')
       .post('/graphql')
       .reply(200, {
@@ -54,7 +55,7 @@ describe('GraphQLRequestClient', () => {
     expect(data).to.deep.equal({ result: 'Hello world...' });
   });
 
-  it('should send sc_apikey header', async () => {
+  it('should send sc_apikey header', async() => {
     const apiKey = 'cjhNRWNVOHRFTklwUjhYa0RSTnBhSStIam1mNE1KN1pyeW13c3FnRVExTT18bXRzdC1kLTAxOQ==';
     nock('http://csdknextweb', {
       reqheaders: {
@@ -74,7 +75,7 @@ describe('GraphQLRequestClient', () => {
     expect(result).to.deep.equal({ result: 'Hello world...' });
   });
 
-  it('should send additional request headers configured through options', async () => {
+  it('should send additional request headers configured through options', async() => {
     const apiKey = 'cjhNRWNVOHRFTklwUjhYa0RSTnBhSStIam1mNE1KN1pyeW13c3FnRVExTT18bXRzdC1kLTAxOQ==';
     const customHeader = 'Custom-Header-Value';
     nock('http://csdknextweb', {
@@ -83,7 +84,7 @@ describe('GraphQLRequestClient', () => {
       },
     })
       .post('/graphql')
-      .reply(200, function () {
+      .reply(200, function() {
         const receivedHeaders = this.req.headers;
 
         expect(receivedHeaders['sc_apikey']).to.deep.equal([apiKey]);
@@ -106,7 +107,7 @@ describe('GraphQLRequestClient', () => {
     expect(result).to.deep.equal({ result: 'Hello world...' });
   });
 
-  it('should debug log request and response', async () => {
+  it('should debug log request and response', async() => {
     nock('http://csdknextweb')
       .post('/graphql')
       .reply(200, {
@@ -130,7 +131,7 @@ describe('GraphQLRequestClient', () => {
     });
   });
 
-  it('should use debugger override', async () => {
+  it('should use debugger override', async() => {
     nock('http://csdknextweb')
       .post('/graphql')
       .reply(200, {
@@ -157,7 +158,7 @@ describe('GraphQLRequestClient', () => {
     }
   });
 
-  it('should throw error when request is aborted with default timeout value', async () => {
+  it('should throw error when request is aborted with default timeout value', async() => {
     nock('http://csdknextweb')
       .post('/graphql')
       .delay(100)
@@ -173,7 +174,7 @@ describe('GraphQLRequestClient', () => {
     });
   });
 
-  it('should throw error upon request timeout using provided timeout value', async () => {
+  it('should throw error upon request timeout using provided timeout value', async() => {
     nock('http://csdknextweb')
       .post('/graphql')
       .delay(30)
@@ -231,7 +232,7 @@ describe('GraphQLRequestClient', () => {
       );
     });
 
-    it('should be enabled by default and use default value of 3 when retries are not configured', async function () {
+    it('should be enabled by default and use default value of 3 when retries are not configured', async function() {
       this.timeout(8000);
       nock('http://csdknextweb')
         .post('/graphql')
@@ -250,7 +251,7 @@ describe('GraphQLRequestClient', () => {
       });
     });
 
-    it('should be disabled when 0 retries are configured', async function () {
+    it('should be disabled when 0 retries are configured', async function() {
       this.timeout(8000);
       nock('http://csdknextweb')
         .post('/graphql')
@@ -269,7 +270,7 @@ describe('GraphQLRequestClient', () => {
       });
     });
 
-    it('should use retry and throw error when retries specified', async function () {
+    it('should use retry and throw error when retries specified', async function() {
       this.timeout(8000);
       nock('http://csdknextweb')
         .post('/graphql')
@@ -290,7 +291,7 @@ describe('GraphQLRequestClient', () => {
       });
     });
 
-    it('should use retry and resolve if one of the requests resolves', async function () {
+    it('should use retry and resolve if one of the requests resolves', async function() {
       this.timeout(8000);
       nock('http://csdknextweb')
         .post('/graphql')
@@ -313,7 +314,7 @@ describe('GraphQLRequestClient', () => {
       spy.restore(graphQLClient);
     });
 
-    it('should use [retry-after] header value when response is 429', async function () {
+    it('should use [retry-after] header value when response is 429', async function() {
       this.timeout(7000);
       nock('http://csdknextweb').post('/graphql').reply(429, {}, { 'Retry-After': '2' });
       const graphQLClient = new GraphQLRequestClient(endpoint, { retries: 1 });
@@ -330,7 +331,7 @@ describe('GraphQLRequestClient', () => {
       });
     });
 
-    it('should use default delay time when [retry-after] header comes out empty in response of 429', async function () {
+    it('should use default delay time when [retry-after] header comes out empty in response of 429', async function() {
       this.timeout(7000);
       nock('http://csdknextweb').post('/graphql').reply(429, {}, { 'Retry-After': '' });
       const graphQLClient = new GraphQLRequestClient(endpoint, { retries: 1 });
@@ -347,7 +348,7 @@ describe('GraphQLRequestClient', () => {
       });
     });
 
-    it('should throw error when request is aborted value after retry', async function () {
+    it('should throw error when request is aborted value after retry', async function() {
       this.timeout(3000);
       nock('http://csdknextweb')
         .post('/graphql')
@@ -375,7 +376,7 @@ describe('GraphQLRequestClient', () => {
     });
 
     describe('Retryable status codes', () => {
-      const retryableStatusCodeThrowError = async (statusCode: number) => {
+      const retryableStatusCodeThrowError = async(statusCode: number) => {
         nock('http://csdknextweb')
           .post('/graphql')
           .reply(statusCode)
@@ -401,13 +402,13 @@ describe('GraphQLRequestClient', () => {
 
       // Test cases for each retryable status code
       for (const statusCode of statusErrorCodes) {
-        it(`should retry and throw error for ${statusCode} when retries specified`, async function () {
+        it(`should retry and throw error for ${statusCode} when retries specified`, async function() {
           this.timeout(8000);
           await retryableStatusCodeThrowError(statusCode);
         });
       }
 
-      const retryableStatusCodeResolve = async (statusCode: number) => {
+      const retryableStatusCodeResolve = async(statusCode: number) => {
         nock('http://csdknextweb')
           .post('/graphql')
           .reply(statusCode)
@@ -439,13 +440,13 @@ describe('GraphQLRequestClient', () => {
 
       // Test cases for each retryable status code
       for (const statusCode of statusErrorCodes) {
-        it(`should retry and resolve for ${statusCode} if one of the request resolves`, async function () {
+        it(`should retry and resolve for ${statusCode} if one of the request resolves`, async function() {
           this.timeout(16000);
           await retryableStatusCodeResolve(statusCode);
         });
       }
 
-      const retryableErrorCodeThrowError = async (errorCode: string) => {
+      const retryableErrorCodeThrowError = async(errorCode: string) => {
         nock('http://csdknextweb')
           .post('/graphql')
           .replyWithError({ code: errorCode })
@@ -471,13 +472,13 @@ describe('GraphQLRequestClient', () => {
 
       // Test cases for each retryable error codes
       for (const errorCode of nodeStatusCode) {
-        it(`should retry and throw error for ${errorCode} when retries specified`, async function () {
+        it(`should retry and throw error for ${errorCode} when retries specified`, async function() {
           this.timeout(8000);
           await retryableErrorCodeThrowError(errorCode);
         });
       }
 
-      const retryableErrorCodeResolve = async (errorCode: string) => {
+      const retryableErrorCodeResolve = async(errorCode: string) => {
         nock('http://csdknextweb')
           .post('/graphql')
           .replyWithError({ code: errorCode })
@@ -508,13 +509,13 @@ describe('GraphQLRequestClient', () => {
       };
       // Test cases for each retryable status code
       for (const errorCode of nodeStatusCode) {
-        it(`should retry and resolve for ${errorCode} if one of the request resolves`, async function () {
+        it(`should retry and resolve for ${errorCode} if one of the request resolves`, async function() {
           this.timeout(16000);
           await retryableErrorCodeResolve(errorCode);
         });
       }
 
-      it('should retry based on custom retryStrategy', async function () {
+      it('should retry based on custom retryStrategy', async function() {
         this.timeout(8000);
 
         nock('http://csdknextweb')
@@ -546,7 +547,7 @@ describe('GraphQLRequestClient', () => {
         }
       });
 
-      it('should delay before retrying based on exponential backoff', async function () {
+      it('should delay before retrying based on exponential backoff', async function() {
         this.timeout(32000);
 
         nock('http://csdknextweb')

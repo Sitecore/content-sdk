@@ -57,7 +57,7 @@ describe('SitePathService', () => {
       );
   };
   describe('Fetch sitemap in SSG mode', () => {
-    it('should work when 1 language is requested', async () => {
+    it('should work when 1 language is requested', async() => {
       mockPathsRequest();
 
       const service = new SitePathService({ clientFactory });
@@ -67,7 +67,7 @@ describe('SitePathService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should work when includePaths and excludePaths are provided', async () => {
+    it('should work when includePaths and excludePaths are provided', async() => {
       const includedPaths = ['/y1/'];
       const excludedPaths = ['/y1/y2/y3/y4'];
 
@@ -143,7 +143,7 @@ describe('SitePathService', () => {
       ]);
     });
 
-    it('should return aggregated paths for multiple sites with no personalization', async () => {
+    it('should return aggregated paths for multiple sites with no personalization', async() => {
       const multipleSites = ['site1', 'site2'];
       const lang = 'ua';
 
@@ -255,7 +255,7 @@ describe('SitePathService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should return aggregated paths for multiple sites and personalized sites', async () => {
+    it('should return aggregated paths for multiple sites and personalized sites', async() => {
       const multipleSites = ['site1', 'site2'];
       const lang = 'ua';
 
@@ -368,7 +368,7 @@ describe('SitePathService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should work when multiple languages are requested', async () => {
+    it('should work when multiple languages are requested', async() => {
       const lang1 = 'ua';
       const lang2 = 'da-DK';
 
@@ -495,7 +495,7 @@ describe('SitePathService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should work when null results are present', async () => {
+    it('should work when null results are present', async() => {
       const lang = 'en';
 
       nock(endpoint)
@@ -548,14 +548,14 @@ describe('SitePathService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should throw error if valid language is not provided', async () => {
+    it('should throw error if valid language is not provided', async() => {
       const service = new SitePathService({ clientFactory });
       await service.fetchSiteRoutes(sites, []).catch((error: RangeError) => {
         expect(error.message).to.equal(languageError);
       });
     });
 
-    it('should throw error if query returns nothing for a provided site name', async () => {
+    it('should throw error if query returns nothing for a provided site name', async() => {
       const service = new SitePathService({ clientFactory });
       nock(endpoint)
         .post('/', (body) => {
@@ -573,7 +573,7 @@ describe('SitePathService', () => {
       });
     });
 
-    it('should use a custom pageSize, if provided', async () => {
+    it('should use a custom pageSize, if provided', async() => {
       const customPageSize = 20;
 
       nock(endpoint)
@@ -590,7 +590,7 @@ describe('SitePathService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should use default value if pageSize is not specified', async () => {
+    it('should use default value if pageSize is not specified', async() => {
       nock(endpoint)
         .post(
           '/',
@@ -609,7 +609,7 @@ describe('SitePathService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should work if sitemap has 0 pages', async () => {
+    it('should work if sitemap has 0 pages', async() => {
       mockPathsRequest([]);
 
       const service = new SitePathService({ clientFactory });
@@ -618,7 +618,7 @@ describe('SitePathService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should throw error if SitemapQuery fails', async () => {
+    it('should throw error if SitemapQuery fails', async() => {
       nock(endpoint)
         .post('/', /DefaultSitemapQuery/gi)
         .reply(500, 'Error 😥');

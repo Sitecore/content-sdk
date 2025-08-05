@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import chalk from 'chalk';
@@ -17,7 +18,7 @@ describe('codegen-utils', () => {
     const meshEndpoint = 'https://test-mesh-endpoint.com';
     const componentName = 'component';
 
-    it('should read file from componentPath and send code to meshEndpoint', async () => {
+    it('should read file from componentPath and send code to meshEndpoint', async() => {
       const componentPath = '/path/to/component.ts';
       const token = 'test-token';
       const fileContent = 'export const test = () => {};';
@@ -51,7 +52,7 @@ describe('codegen-utils', () => {
       expect(result).to.equal(componentPath);
     });
 
-    it('should log when componentPath file is not found', async () => {
+    it('should log when componentPath file is not found', async() => {
       const componentPath = '/path/to/nonexistent-component.ts';
       const token = 'test-token';
 
@@ -73,7 +74,7 @@ describe('codegen-utils', () => {
       );
     });
 
-    it('should log when meshEndpoint returns an error', async () => {
+    it('should log when meshEndpoint returns an error', async() => {
       const componentPath = '/path/to/component.ts';
       const token = 'test-token';
       const fileContent = 'export const test = () => {};';

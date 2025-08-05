@@ -15,7 +15,7 @@ describe('next', () => {
       log?.restore();
     });
 
-    it('displays appName in output', async () => {
+    it('displays appName in output', async() => {
       const appName = 'my-cool-app';
       await nextSteps(appName, '');
 
@@ -31,7 +31,7 @@ describe('next', () => {
       ).to.equal(true);
     });
 
-    it('displays single app name with single item wording in output', async () => {
+    it('displays single app name with single item wording in output', async() => {
       const appName = 'my-cool-app';
       await nextSteps(appName, '');
 
@@ -47,7 +47,7 @@ describe('next', () => {
       ).to.equal(true);
     });
 
-    it('displays next steps in output', async () => {
+    it('displays next steps in output', async() => {
       const nextStepsText = 'do this';
 
       await nextSteps('my-cool-app', nextStepsText);
@@ -60,7 +60,7 @@ describe('next', () => {
       expect(calls.some((call) => call.args[0] === nextStepsText)).to.equal(true);
     });
 
-    it('do not display empty line if nextStepsText is missing', async () => {
+    it('do not display empty line if nextStepsText is missing', async() => {
       const nextStepsText = '';
 
       await nextSteps('my-cool-app', nextStepsText);

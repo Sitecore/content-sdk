@@ -85,7 +85,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     ].join(' ')}`;
   }
 
-  private handler = async (req: EditingNextApiRequest, res: NextApiResponse): Promise<void> => {
+  private handler = async(req: EditingNextApiRequest, res: NextApiResponse): Promise<void> => {
     const { query, body, method, headers } = req;
 
     debug.editing('editing render middleware start: %o', {
@@ -209,7 +209,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           __next_preview_data: /^__next_preview_data=/,
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         for (const [_, regex] of Object.entries(cookieIdentifiers)) {
           if (cookie.match(regex)) {
             return cookie.replace(/SameSite=Lax/, 'SameSite=None; Secure');

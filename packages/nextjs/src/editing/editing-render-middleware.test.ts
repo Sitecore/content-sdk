@@ -86,7 +86,7 @@ describe('EditingRenderMiddleware', () => {
     delete process.env.JSS_ALLOWED_ORIGINS;
   });
 
-  it('should respond with 405 for unsupported method', async () => {
+  it('should respond with 405 for unsupported method', async() => {
     const query = {} as Query;
     query[QUERY_PARAM_EDITING_SECRET] = secret;
     const req = mockRequest({
@@ -106,7 +106,7 @@ describe('EditingRenderMiddleware', () => {
     expect(res.json).to.have.been.calledOnce;
   });
 
-  it('should respond with 204 for OPTIONS method', async () => {
+  it('should respond with 204 for OPTIONS method', async() => {
     const query = {} as Query;
     query[QUERY_PARAM_EDITING_SECRET] = secret;
     const req = mockRequest({
@@ -136,7 +136,7 @@ describe('EditingRenderMiddleware', () => {
     expect(res.send).to.have.been.calledOnceWith(null);
   });
 
-  it('should respond with 401 for invalid secret', async () => {
+  it('should respond with 401 for invalid secret', async() => {
     const query = {} as Query;
     query[QUERY_PARAM_EDITING_SECRET] = 'nope';
     const req = mockRequest({
@@ -154,7 +154,7 @@ describe('EditingRenderMiddleware', () => {
     expect(res.json).to.have.been.calledOnce;
   });
 
-  it('should stop request and return 401 when CORS match is not met', async () => {
+  it('should stop request and return 401 when CORS match is not met', async() => {
     const req = mockRequest({
       headers: { origin: 'https://notallowed.com' },
     });
@@ -172,7 +172,7 @@ describe('EditingRenderMiddleware', () => {
     });
   });
 
-  it('should respond with 401 for missing secret', async () => {
+  it('should respond with 401 for missing secret', async() => {
     const query = {} as Query;
     const req = mockRequest({ query });
     const res = mockResponse();
@@ -199,7 +199,7 @@ describe('EditingRenderMiddleware', () => {
     sc_layoutKind: 'shared',
   } as EditingRenderQueryParams;
 
-  it('should handle request', async () => {
+  it('should handle request', async() => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
@@ -226,7 +226,7 @@ describe('EditingRenderMiddleware', () => {
     );
   });
 
-  it('should pass multiple variant ids into setPreviewData when sc_variantId parameter has many values', async () => {
+  it('should pass multiple variant ids into setPreviewData when sc_variantId parameter has many values', async() => {
     const query = {
       mode: 'edit',
       route: '/styleguide',
@@ -256,7 +256,7 @@ describe('EditingRenderMiddleware', () => {
     });
   });
 
-  it('should handle request with missing optional parameters', async () => {
+  it('should handle request with missing optional parameters', async() => {
     const queryWithoutOptionalParams = {
       mode: 'edit',
       route: '/styleguide',
@@ -291,7 +291,7 @@ describe('EditingRenderMiddleware', () => {
     );
   });
 
-  it('should use custom resolvePageUrl', async () => {
+  it('should use custom resolvePageUrl', async() => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
@@ -319,7 +319,7 @@ describe('EditingRenderMiddleware', () => {
     expect(res.redirect).to.have.been.calledWith('/custom/path/styleguide');
   });
 
-  it('should response with 400 for missing query params', async () => {
+  it('should response with 400 for missing query params', async() => {
     const req = mockRequest({ query: { sc_site: 'website', secret } });
     const res = mockResponse();
 
@@ -336,7 +336,7 @@ describe('EditingRenderMiddleware', () => {
     });
   });
 
-  it('should modify the Set-Cookie header', async () => {
+  it('should modify the Set-Cookie header', async() => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
@@ -351,7 +351,7 @@ describe('EditingRenderMiddleware', () => {
     ]);
   });
 
-  it('should set allowed origins when multiple allowed origins are provided in env variable', async () => {
+  it('should set allowed origins when multiple allowed origins are provided in env variable', async() => {
     process.env.JSS_ALLOWED_ORIGINS = 'https://allowed.com,https://anotherallowed.com';
     const req = mockRequest({ query });
     const res = mockResponse();
@@ -383,7 +383,7 @@ describe('EditingRenderMiddleware', () => {
       sc_uid: '789',
     };
 
-    it('should handle request with mode=library', async () => {
+    it('should handle request with mode=library', async() => {
       const req = mockRequest({ query });
       const res = mockResponse();
 
@@ -410,7 +410,7 @@ describe('EditingRenderMiddleware', () => {
       );
     });
 
-    it('should handle request with mode=library-metadata', async () => {
+    it('should handle request with mode=library-metadata', async() => {
       const req = mockRequest({ query: { ...query, mode: DesignLibraryMode.Metadata } });
       const res = mockResponse();
 
@@ -437,7 +437,7 @@ describe('EditingRenderMiddleware', () => {
       );
     });
 
-    it('should response with 400 for missing query params', async () => {
+    it('should response with 400 for missing query params', async() => {
       const req = mockRequest({
         query: { sc_site: 'website', secret },
       });
@@ -470,7 +470,7 @@ describe('EditingRenderMiddleware', () => {
       sc_layoutKind: 'final',
     } as EditingRenderQueryParams;
 
-    it('should handle request', async () => {
+    it('should handle request', async() => {
       const req = mockRequest({ query });
       const res = mockResponse();
 

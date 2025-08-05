@@ -230,7 +230,7 @@ describe('ErrorBoundary', () => {
       delay(500, import('../test-data/test-dynamic-component'))
     );
 
-    it('should render a loading message', async () => {
+    it('should render a loading message', async() => {
       const rendered = render(
         <ErrorBoundary>
           <ItsADynamicComponent />
@@ -239,7 +239,7 @@ describe('ErrorBoundary', () => {
       expect(rendered.baseElement.textContent).to.equal('Loading component...');
     });
 
-    it('should render custom loading message', async () => {
+    it('should render custom loading message', async() => {
       const loading = 'I am customly loading...';
       const rendered = render(
         <ErrorBoundary componentLoadingMessage={loading}>
@@ -249,7 +249,7 @@ describe('ErrorBoundary', () => {
       expect(rendered.baseElement.textContent).to.equal(loading);
     });
 
-    it('should not render Suspense and default loading message when wrapping a dynamic component', async () => {
+    it('should not render Suspense and default loading message when wrapping a dynamic component', async() => {
       // mount fails with lazy component and no suspense
       const rendered = render(
         <Suspense>

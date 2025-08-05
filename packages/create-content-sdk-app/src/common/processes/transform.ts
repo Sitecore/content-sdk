@@ -59,7 +59,7 @@ type TransformOptions = {
  * @param {BaseArgs} args CLI arguments
  * @param {TransformOptions} options custom options
  */
-export const transform = async (
+export const transform = async(
   templatePath: string,
   args: BaseAppArgs,
   options: TransformOptions = {}
@@ -70,7 +70,11 @@ export const transform = async (
 
   const ejsData: Data = populateEjsData(args);
   // the templates to be run through ejs render or copied directly
-  const files = glob.sync('**/*', { cwd: templatePath, dot: true, nodir: true });
+  const files = glob.sync('**/*', {
+    cwd: templatePath,
+    dot: true,
+    nodir: true,
+  });
 
   for (const file of files) {
     try {

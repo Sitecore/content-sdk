@@ -1,4 +1,5 @@
 /* eslint-disable quotes */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import crypto from 'crypto';
 import {
@@ -312,7 +313,7 @@ describe('Import Map Generation', () => {
       sandbox.restore();
     });
 
-    it('should skip when code generation is disabled', async () => {
+    it('should skip when code generation is disabled', async() => {
       const debugStub = sandbox.stub(debug, 'common');
       const scConfig = { disableCodeGeneration: true } as any;
       sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
@@ -333,7 +334,7 @@ describe('Import Map Generation', () => {
       expect(fsWriteStub.called).to.be.false;
     });
 
-    it('should retrieve and parse paths based on inputs from "paths" and "exclude"', async () => {
+    it('should retrieve and parse paths based on inputs from "paths" and "exclude"', async() => {
       const scConfig = { disableCodeGeneration: false } as any;
       sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
 
@@ -357,7 +358,7 @@ describe('Import Map Generation', () => {
       expect(nextJsMapTemplateStub.calledOnce).to.be.true;
     });
 
-    it('should write output into import-map file', async () => {
+    it('should write output into import-map file', async() => {
       const scConfig = { disableCodeGeneration: false } as any;
       sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
 
@@ -379,7 +380,7 @@ describe('Import Map Generation', () => {
       expect(fsWriteStub.getCall(0).args[2]).to.deep.include({ encoding: 'utf8' });
     });
 
-    it('should throw when file write operation fails', async () => {
+    it('should throw when file write operation fails', async() => {
       const scConfig = { disableCodeGeneration: false } as any;
       sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
 

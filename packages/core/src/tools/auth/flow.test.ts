@@ -14,7 +14,7 @@ describe('clientCredentialsFlow', () => {
 
   const fetchResponse = {
     ok: true,
-    json: async () => ({
+    json: async() => ({
       access_token: fakeToken,
       expires_in: 3600,
     }),
@@ -22,6 +22,7 @@ describe('clientCredentialsFlow', () => {
 
   let fetchStub: sinon.SinonStub;
   let decodeStub: sinon.SinonStub;
+  // eslint-disable-next-line no-unused-vars
   let consoleErrorStub: sinon.SinonStub;
 
   beforeEach(() => {
@@ -35,7 +36,7 @@ describe('clientCredentialsFlow', () => {
     sinon.restore();
   });
 
-  it('should succeed when tenantId and organizationId are not passed and grab them from token claims', async () => {
+  it('should succeed when tenantId and organizationId are not passed and grab them from token claims', async() => {
     const result = await clientCredentialsFlow({
       clientId: 'id',
       clientSecret: 'secret',
@@ -47,7 +48,7 @@ describe('clientCredentialsFlow', () => {
     expect(result.tokenTenantName).to.equal(fakeDecoded.tokenTenantName);
   });
 
-  it('should succeed only if passed tenantId and organizationId match token claims', async () => {
+  it('should succeed only if passed tenantId and organizationId match token claims', async() => {
     decodeStub.returns({
       tokenTenantId: 'tenant123',
       tokenOrgId: 'org456',
@@ -67,7 +68,7 @@ describe('clientCredentialsFlow', () => {
     expect(result.tokenTenantName).to.equal('FakeTenant');
   });
 
-  it('should use default values when audience, authority, and baseUrl are not provided', async () => {
+  it('should use default values when audience, authority, and baseUrl are not provided', async() => {
     const expectedParams = new URLSearchParams({
       client_id: 'id',
       client_secret: 'secret',
@@ -80,7 +81,7 @@ describe('clientCredentialsFlow', () => {
 
     let actualRequestBody: string = '';
 
-    fetchStub.callsFake(async (_url: string, options: any) => {
+    fetchStub.callsFake(async(_url: string, options: any) => {
       actualRequestBody = options.body;
       return fetchResponse as any;
     });
@@ -93,7 +94,7 @@ describe('clientCredentialsFlow', () => {
     expect(actualRequestBody).to.equal(expectedParams);
   });
 
-  it('should override defaults when custom audience, authority, and baseUrl are provided', async () => {
+  it('should override defaults when custom audience, authority, and baseUrl are provided', async() => {
     const customAuthority = 'https://custom-authority.io';
     const customAudience = 'https://custom-api.io';
     const customBaseUrl = 'https://custom-base.io';
@@ -111,7 +112,7 @@ describe('clientCredentialsFlow', () => {
     let actualUrl: string = '';
     let actualRequestBody: string = '';
 
-    fetchStub.callsFake(async (url: string, options: any) => {
+    fetchStub.callsFake(async(url: string, options: any) => {
       actualUrl = url;
       actualRequestBody = options.body;
       return fetchResponse as any;
@@ -129,7 +130,7 @@ describe('clientCredentialsFlow', () => {
     expect(actualRequestBody).to.equal(expectedParams);
   });
 
-  it('should throw if token has missing claims', async () => {
+  it('should throw if token has missing claims', async() => {
     decodeStub.returns({});
 
     try {
@@ -144,7 +145,7 @@ describe('clientCredentialsFlow', () => {
     }
   });
 
-  it('should throw if tenantId does not match token', async () => {
+  it('should throw if tenantId does not match token', async() => {
     decodeStub.returns({ ...fakeDecoded, tokenTenantId: 'wrong-id' });
 
     try {
@@ -159,7 +160,7 @@ describe('clientCredentialsFlow', () => {
     }
   });
 
-  it('should throw if organizationId does not match token', async () => {
+  it('should throw if organizationId does not match token', async() => {
     decodeStub.returns({ ...fakeDecoded, tokenOrgId: 'wrong-org' });
 
     try {
@@ -174,10 +175,10 @@ describe('clientCredentialsFlow', () => {
     }
   });
 
-  it('should throw and log error on non-OK response', async () => {
+  it('should throw and log error on non-OK response', async() => {
     fetchStub.resolves({
       ok: false,
-      json: async () => ({ error: 'unauthorized' }),
+      json: async() => ({ error: 'unauthorized' }),
     });
 
     try {

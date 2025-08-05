@@ -1,6 +1,6 @@
 ﻿/* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable no-unused-expressions */
-/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
@@ -213,7 +213,7 @@ describe('<DesignLibrary />', () => {
       ).to.be.true;
     });
 
-    it('should update root component', async () => {
+    it('should update root component', async() => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
@@ -245,7 +245,7 @@ describe('<DesignLibrary />', () => {
       );
     });
 
-    it('should update nested component', async () => {
+    it('should update nested component', async() => {
       const placeholderPage = getTestLayoutData(true);
       page.layout = placeholderPage.layoutData;
 
@@ -288,7 +288,7 @@ describe('<DesignLibrary />', () => {
       );
     });
 
-    it('should send render event when component is updated', async () => {
+    it('should send render event when component is updated', async() => {
       render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
@@ -347,7 +347,7 @@ describe('<DesignLibrary />', () => {
       unsubscribeSpy.resetHistory();
     });
 
-    it('should render component when provided', async () => {
+    it('should render component when provided', async() => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary importMap={defaultImportMap} />
@@ -375,7 +375,7 @@ describe('<DesignLibrary />', () => {
       expect(rendered.baseElement.innerHTML).to.contain('Loading preview...');
     });
 
-    it('should render error message when component fails to initialize', async () => {
+    it('should render error message when component fails to initialize', async() => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary importMap={defaultImportMap} />
@@ -390,7 +390,7 @@ describe('<DesignLibrary />', () => {
       });
     });
 
-    it('should render error message when component fails to render', async () => {
+    it('should render error message when component fails to render', async() => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary importMap={defaultImportMap} />
@@ -423,7 +423,7 @@ describe('<DesignLibrary />', () => {
       );
     });
 
-    it('should render error message when no import map is provided', async () => {
+    it('should render error message when no import map is provided', async() => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />

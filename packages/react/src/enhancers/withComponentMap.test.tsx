@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect, use } from 'chai';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';

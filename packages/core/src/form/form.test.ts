@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect, use } from 'chai';
 import nock from 'nock';
 import spies from 'chai-spies';
@@ -27,7 +28,7 @@ describe('form', () => {
   });
 
   describe('loadForm', () => {
-    it('should load form', async () => {
+    it('should load form', async() => {
       nock(getEdgeProxyFormsUrl('contextId', 'formId', 'https://bar.com'))
         .get('')
         .query({ sitecoreContextId: 'contextId' })
@@ -38,7 +39,7 @@ describe('form', () => {
       expect(result).to.equal('form data');
     });
 
-    it('should throw error if form loading fails', async () => {
+    it('should throw error if form loading fails', async() => {
       nock(getEdgeProxyFormsUrl('contextId', 'formId', 'https://bar.com'))
         .get('')
         .query({ sitecoreContextId: 'contextId' })

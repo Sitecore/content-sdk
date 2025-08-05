@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import { deepMerge, defineConfig, getFallbackConfig } from './define-config';
 import { SitecoreConfigInput } from './models';

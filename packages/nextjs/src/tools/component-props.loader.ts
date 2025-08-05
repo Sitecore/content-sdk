@@ -20,7 +20,7 @@ export default function componentPropsLoader(source: string) {
   // Traverse the AST and find the method to strip
   recast.visit(ast, {
     // Visit the named export function expression
-    visitExportNamedDeclaration: function (path): boolean | void {
+    visitExportNamedDeclaration: function(path): boolean | void {
       // Get the variable declaration from the AST
       const isMethodFound = (path.node.declaration as VariableDeclaration)?.declarations?.find(
         (declaration) => {
@@ -51,7 +51,7 @@ export default function componentPropsLoader(source: string) {
       this.traverse(path);
     },
     // Visit the named export function declaration
-    visitFunctionDeclaration: function (path): boolean | void {
+    visitFunctionDeclaration: function(path): boolean | void {
       // Check if the function is the one we want to strip
       if (
         path.node.id &&

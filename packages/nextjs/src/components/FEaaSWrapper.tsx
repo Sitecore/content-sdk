@@ -17,7 +17,7 @@ import { GetComponentServerProps } from '../sharedTypes/component-props';
  * @param {LayoutServiceData} layoutData
  * @returns {GetStaticPropsContext | GetServerSideProps} context
  */
-export const getComponentServerProps: GetComponentServerProps = async (rendering, layoutData) => {
+export const getComponentServerProps: GetComponentServerProps = async(rendering, layoutData) => {
   const params: FEaaSComponentParams = rendering.params || {};
   const result = await fetchFEaaSComponentServerProps(
     params,

@@ -80,7 +80,7 @@ describe('ComponentPropsService', () => {
     componentPropsSpy.resetHistory();
   });
 
-  it('should fetch component props with SSR context', async () => {
+  it('should fetch component props with SSR context', async() => {
     const ssrComponentMap = new Map<string, unknown>([
       [
         'namex11',
@@ -130,7 +130,7 @@ describe('ComponentPropsService', () => {
     expect(componentPropsSpy.calledWith(ssgContext)).to.be.false;
   });
 
-  it('should fetch component props with SSR context using lazy loading module', async () => {
+  it('should fetch component props with SSR context using lazy loading module', async() => {
     const ssrComponentMap = new Map<string, unknown>([
       [
         'namex11',
@@ -141,7 +141,7 @@ describe('ComponentPropsService', () => {
       [
         'namex14',
         {
-          dynamicModule: async () => ({
+          dynamicModule: async() => ({
             getComponentServerProps: fetchFn('x14SSRData', 'whoops'),
           }),
         },
@@ -182,7 +182,7 @@ describe('ComponentPropsService', () => {
     expect(componentPropsSpy.calledWith(ssgContext)).to.be.false;
   });
 
-  it('should fetch component props with SSG context', async () => {
+  it('should fetch component props with SSG context', async() => {
     const ssgComponentMap = new Map<string, unknown>([
       [
         'namex11',
@@ -232,7 +232,7 @@ describe('ComponentPropsService', () => {
     expect(componentPropsSpy.calledWith(ssgContext)).to.be.true;
   });
 
-  it('should fetch component props with SSG context using lazy loading module', async () => {
+  it('should fetch component props with SSG context using lazy loading module', async() => {
     const ssgComponentMap = new Map<string, unknown>([
       [
         'namex11',
@@ -243,7 +243,7 @@ describe('ComponentPropsService', () => {
       [
         'namex14',
         {
-          dynamicModule: async () => ({
+          dynamicModule: async() => ({
             getComponentServerProps: fetchFn('x14SSRData', 'whoops'),
           }),
         },

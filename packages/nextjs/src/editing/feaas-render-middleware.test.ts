@@ -70,7 +70,7 @@ describe('FEAASRenderMiddleware', () => {
     delete process.env.JSS_ALLOWED_ORIGINS;
   });
 
-  it('should handle request', async () => {
+  it('should handle request', async() => {
     const query = {} as Query;
     query[QUERY_PARAM_EDITING_SECRET] = secret;
 
@@ -87,7 +87,7 @@ describe('FEAASRenderMiddleware', () => {
     expect(res.redirect).to.have.been.calledWith('/feaas/render');
   });
 
-  it('should handle request when feaasSrc query parameter is present', async () => {
+  it('should handle request when feaasSrc query parameter is present', async() => {
     const query = {
       feaasSrc: 'https://feaas.blob.core.windows.net/components/xxx/xyz/responsive/staged',
     } as Query;
@@ -108,7 +108,7 @@ describe('FEAASRenderMiddleware', () => {
     );
   });
 
-  it('should respond with 204 for preflight OPTIONS request', async () => {
+  it('should respond with 204 for preflight OPTIONS request', async() => {
     const query = {} as Query;
     query[QUERY_PARAM_EDITING_SECRET] = secret;
 
@@ -136,7 +136,7 @@ describe('FEAASRenderMiddleware', () => {
     expect(res.send).to.have.been.calledOnceWith(null);
   });
 
-  it('should throw error', async () => {
+  it('should throw error', async() => {
     const query = {} as Query;
     query[QUERY_PARAM_EDITING_SECRET] = secret;
 
@@ -159,7 +159,7 @@ describe('FEAASRenderMiddleware', () => {
     expect(res.send).to.have.been.calledWith('<html><body>Error: Test Error</body></html>');
   });
 
-  it('should respondWith 405 for unsupported method', async () => {
+  it('should respondWith 405 for unsupported method', async() => {
     const req = mockRequest({}, 'POST');
     const res = mockResponse();
 
@@ -177,7 +177,7 @@ describe('FEAASRenderMiddleware', () => {
     );
   });
 
-  it('should stop request and return 401 when CORS match is not met', async () => {
+  it('should stop request and return 401 when CORS match is not met', async() => {
     const req = mockRequest({}, 'POST', { origin: 'https://notallowed.com' });
     const res = mockResponse();
     const middleware = new FEAASRenderMiddleware();
@@ -193,7 +193,7 @@ describe('FEAASRenderMiddleware', () => {
     );
   });
 
-  it('should respond with 401 for missing secret', async () => {
+  it('should respond with 401 for missing secret', async() => {
     const query = {} as Query;
     const req = mockRequest(query);
     const res = mockResponse();
@@ -209,7 +209,7 @@ describe('FEAASRenderMiddleware', () => {
     expect(res.send).to.have.been.calledWith('<html><body>Missing or invalid secret</body></html>');
   });
 
-  it('should respond with 401 for invalid secret', async () => {
+  it('should respond with 401 for invalid secret', async() => {
     const query = {} as Query;
     query[QUERY_PARAM_EDITING_SECRET] = 'nope';
     const req = mockRequest(query);
@@ -226,7 +226,7 @@ describe('FEAASRenderMiddleware', () => {
     expect(res.send).to.have.been.calledWith('<html><body>Missing or invalid secret</body></html>');
   });
 
-  it('should use custom pageUrl', async () => {
+  it('should use custom pageUrl', async() => {
     const query = {} as Query;
     query[QUERY_PARAM_EDITING_SECRET] = secret;
     const req = mockRequest(query);
@@ -245,7 +245,7 @@ describe('FEAASRenderMiddleware', () => {
     expect(res.redirect).to.have.been.calledWith(pageUrl);
   });
 
-  it('should pass along protection bypass query parameters', async () => {
+  it('should pass along protection bypass query parameters', async() => {
     const query = {} as Query;
     const vercelBypassToken = 'token1234Vercel';
     const vercelBypassCookie = 'samesitenone';

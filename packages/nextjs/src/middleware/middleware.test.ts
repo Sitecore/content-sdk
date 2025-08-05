@@ -1,4 +1,5 @@
 ﻿/* eslint-disable dot-notation */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
@@ -341,6 +342,7 @@ describe('MiddlewareBase', () => {
 
     it('should get default site info when site cookie is provided', () => {
       class MockSiteResolver extends SiteResolver {
+        // eslint-disable-next-line no-unused-vars
         getByName = sinon.stub().callsFake((_siteName: string) => undefined);
       }
 
@@ -453,7 +455,7 @@ describe('MiddlewareBase', () => {
 });
 
 describe('defineMiddleware', () => {
-  it('should execute middlewares', async () => {
+  it('should execute middlewares', async() => {
     type CustomResponse = {
       params: string[];
     } & NextResponse;
@@ -494,7 +496,7 @@ describe('defineMiddleware', () => {
     });
   });
 
-  it('should execute middlewares with empty response', async () => {
+  it('should execute middlewares with empty response', async() => {
     class SampleMiddleware extends MiddlewareBase {
       handle(_req: NextRequest, res: NextResponse) {
         res.headers.set('m1', 'true');

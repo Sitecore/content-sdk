@@ -1,4 +1,5 @@
 /* eslint-disable quotes */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import path from 'path';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -52,7 +53,7 @@ describe('generateMap', () => {
       sandbox.restore();
     });
 
-    it('should write componentMap.ts file with components from "paths" parameter', async () => {
+    it('should write componentMap.ts file with components from "paths" parameter', async() => {
       const paths = ['src/components'];
       generateMap({ paths });
 
@@ -80,7 +81,7 @@ describe('generateMap', () => {
       expect(content).to.include('export default componentMap;');
     });
 
-    it('should use template from custom componentMap function, when provided', async () => {
+    it('should use template from custom componentMap function, when provided', async() => {
       const paths = ['src/components'];
       const customTemplate = sinon.stub().returns('// custom template output');
       const fakePackages = [
@@ -101,7 +102,7 @@ describe('generateMap', () => {
       expect(content).to.equal('// custom template output');
     });
 
-    it('should generate an empty component map if no components are found', async () => {
+    it('should generate an empty component map if no components are found', async() => {
       getComponentListStub.returns([]);
       const paths = ['src/components'];
       generateMap({ paths });
@@ -116,7 +117,7 @@ describe('generateMap', () => {
       expect(content).to.include("['Form', Form],");
     });
 
-    it('should handle multiple paths and merge their components', async () => {
+    it('should handle multiple paths and merge their components', async() => {
       const paths = ['src/components', 'src/other-components'];
       // Simulate different components for each path
       getComponentListStub.returns([
@@ -141,13 +142,13 @@ describe('generateMap', () => {
       expect(content).to.include("['Card', Card],");
     });
 
-    it('should not fail if packages is undefined', async () => {
+    it('should not fail if packages is undefined', async() => {
       const paths = ['src/components'];
       expect(() => generateMap({ paths, componentImports: undefined })).to.not.throw();
       expect(fs.writeFileSync).to.have.been.calledOnce;
     });
 
-    it('should write componentMap.ts file with components from "paths" and "packages" parameters, when provided', async () => {
+    it('should write componentMap.ts file with components from "paths" and "packages" parameters, when provided', async() => {
       const paths = ['src/components'];
       generateMap({ paths, componentImports: fakePackages });
 
@@ -164,7 +165,7 @@ describe('generateMap', () => {
       expect(content).to.include("['CompB', CompB],");
     });
 
-    it('should use custom destination when provided', async () => {
+    it('should use custom destination when provided', async() => {
       const paths = ['src/components'];
       const customDest = path.join(process.cwd(), 'custom/path', 'component-map.ts');
       generateMap({ paths, destination: 'custom/path' });
@@ -176,7 +177,7 @@ describe('generateMap', () => {
       );
     });
 
-    it('should pass exclude param into getComponentList call', async () => {
+    it('should pass exclude param into getComponentList call', async() => {
       const paths = ['src/components'];
       const exclude = ['**/*.stories.tsx', '**/*.test.tsx'];
       generateMap({ paths, exclude });
@@ -185,7 +186,7 @@ describe('generateMap', () => {
       expect(getComponentListStub.getCall(0).args[1]).to.deep.equals(exclude);
     });
 
-    it('should throw error when destination cannot be written to', async () => {
+    it('should throw error when destination cannot be written to', async() => {
       (fs.writeFileSync as sinon.SinonStub).throws(new Error('Disk full'));
       const paths = ['src/components'];
       let errorCaught = null;
@@ -198,7 +199,7 @@ describe('generateMap', () => {
       expect((errorCaught as Error).message).to.equal('Disk full');
     });
 
-    it('should import components from "packages" as wildcard when namedImports are not specified', async () => {
+    it('should import components from "packages" as wildcard when namedImports are not specified', async() => {
       const paths = ['src/components'];
       const wildcardPackages: ComponentImport[] = [
         {
@@ -218,7 +219,7 @@ describe('generateMap', () => {
       expect(content).to.include("['WildcardLib', WildcardLib],");
     });
 
-    it('should use named component imports when "packages" contain them', async () => {
+    it('should use named component imports when "packages" contain them', async() => {
       const paths = ['src/components'];
       const namedPackages: ComponentImport[] = [
         {

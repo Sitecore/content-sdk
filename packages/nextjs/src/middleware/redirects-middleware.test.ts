@@ -201,7 +201,7 @@ describe('RedirectsMiddleware', () => {
     });
   };
 
-  const runTestWithRedirect = async (middlewareOptions, req, res, _hostname = hostname) => {
+  const runTestWithRedirect = async(middlewareOptions, req, res, _hostname = hostname) => {
     const { middleware, fetchRedirects, siteResolver } = createMiddleware(middlewareOptions);
     const finalRes = await middleware.handle(req, res);
 
@@ -243,7 +243,7 @@ describe('RedirectsMiddleware', () => {
 
   describe('redirects middleware - handler', () => {
     describe('preview', () => {
-      it('prerender bypass cookie is present', async () => {
+      it('prerender bypass cookie is present', async() => {
         const { middleware } = createMiddleware();
         const res = NextResponse.next();
 
@@ -275,7 +275,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes).to.deep.equal(res);
       });
 
-      it('preview data cookie is present', async () => {
+      it('preview data cookie is present', async() => {
         const { middleware } = createMiddleware();
         const res = NextResponse.next();
 
@@ -309,7 +309,7 @@ describe('RedirectsMiddleware', () => {
     });
 
     describe('Extensibility', () => {
-      it('should use custom redirectsService when provided', async () => {
+      it('should use custom redirectsService when provided', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/custom-target',
@@ -380,10 +380,10 @@ describe('RedirectsMiddleware', () => {
       });
     });
 
-    it('should apply both default and custom rules when custom disabled function provided', async () => {
+    it('should apply both default and custom rules when custom disabled function provided', async() => {
       const res = NextResponse.next();
 
-      const test = async (pathname: string, middleware) => {
+      const test = async(pathname: string, middleware) => {
         const req = createRequest({
           nextUrl: {
             pathname,
@@ -417,7 +417,7 @@ describe('RedirectsMiddleware', () => {
       await test('/crazypath/luna', middleware);
     });
 
-    it('should return next response if disabled/skip is true', async () => {
+    it('should return next response if disabled/skip is true', async() => {
       const res = createResponse({
         url: 'http://localhost:3000',
       });
@@ -445,7 +445,7 @@ describe('RedirectsMiddleware', () => {
       nextStub.restore();
     });
 
-    it('should honor global "enabled" prop', async () => {
+    it('should honor global "enabled" prop', async() => {
       const res = createResponse({
         url: 'http://localhost:3000',
       });
@@ -466,7 +466,7 @@ describe('RedirectsMiddleware', () => {
       nextStub.restore();
     });
 
-    it('should return next response when redirects does not exist', async () => {
+    it('should return next response when redirects does not exist', async() => {
       const res = createResponse({
         url: 'http://localhost:3000/found',
       });
@@ -499,7 +499,7 @@ describe('RedirectsMiddleware', () => {
     });
 
     describe('should return appropriate redirect type when redirects exists', () => {
-      it('should return 301 redirect', async () => {
+      it('should return 301 redirect', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/found',
@@ -551,7 +551,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should override locale with locale parsed from target', async () => {
+      it('should override locale with locale parsed from target', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           pathname: 'http://localhost:3000/found',
@@ -603,7 +603,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should preserve query string on relative path redirect, when isQueryStringPreserved is true', async () => {
+      it('should preserve query string on relative path redirect, when isQueryStringPreserved is true', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           origin: 'http://localhost:3000',
@@ -655,7 +655,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should redirect, when pattern uses with query string', async () => {
+      it('should redirect, when pattern uses with query string', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/found?abc=def',
@@ -706,7 +706,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should not redirect, when pattern uses with query string', async () => {
+      it('should not redirect, when pattern uses with query string', async() => {
         const { res, req } = createTestRequestResponse({
           response: { url: {} },
           request: {
@@ -746,7 +746,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes).to.deep.equal(res);
       });
 
-      it('should redirect, when target uses query string', async () => {
+      it('should redirect, when target uses query string', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/found?abc=def',
@@ -798,7 +798,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should redirect without QS, when url has query string, pattern doesnt and query string not preserved', async () => {
+      it('should redirect without QS, when url has query string, pattern doesnt and query string not preserved', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/found',
@@ -850,7 +850,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should prefer pattern with locale when pattern is url', async () => {
+      it('should prefer pattern with locale when pattern is url', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/found',
@@ -903,7 +903,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should prefer pattern with locale when pattern is regex', async () => {
+      it('should prefer pattern with locale when pattern is regex', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/found/for-real',
@@ -954,7 +954,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should redirect uses token in target', async () => {
+      it('should redirect uses token in target', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/test1',
@@ -1007,7 +1007,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should return 302 redirect', async () => {
+      it('should return 302 redirect', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/found',
@@ -1058,7 +1058,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should redirect uses token $siteLang in target url', async () => {
+      it('should redirect uses token $siteLang in target url', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/da/found',
@@ -1110,7 +1110,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should return default response if no redirect type defined', async () => {
+      it('should return default response if no redirect type defined', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/found',
@@ -1162,7 +1162,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes).to.deep.equal(res);
       });
 
-      it('should rewrite path when redirect type is server transfer', async () => {
+      it('should rewrite path when redirect type is server transfer', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1209,7 +1209,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should use sc_site cookie', async () => {
+      it('should use sc_site cookie', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const siteName = 'foo';
         const res = NextResponse.redirect('http://localhost:3000/found', 301);
@@ -1264,7 +1264,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(expected.status);
       });
 
-      it('should preserve site name from response data when provided, if no redirect type defined', async () => {
+      it('should preserve site name from response data when provided, if no redirect type defined', async() => {
         const res = NextResponse.next();
         const site = 'learn2grow';
         res.cookies.set('sc_site', site);
@@ -1306,7 +1306,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.cookies.get('sc_site')?.value).to.equal(site);
       });
 
-      it('should preserve site name from response data when provided, if handler is disabled / skipped', async () => {
+      it('should preserve site name from response data when provided, if handler is disabled / skipped', async() => {
         const res = NextResponse.next();
         const site = 'learn2grow';
         res.cookies.set('sc_site', site);
@@ -1346,7 +1346,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.cookies.get('sc_site')?.value).to.equal(site);
       });
 
-      it('default fallback hostname is used', async () => {
+      it('default fallback hostname is used', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1398,7 +1398,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('custom fallback hostname is used', async () => {
+      it('custom fallback hostname is used', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1451,7 +1451,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should redirect, when next.config uses params trailingSlash is true', async () => {
+      it('should redirect, when next.config uses params trailingSlash is true', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1500,7 +1500,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should redirect when the isQueryStringPreserved parameter is true and the target URL contains query string parameters', async () => {
+      it('should redirect when the isQueryStringPreserved parameter is true and the target URL contains query string parameters', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1551,7 +1551,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should remove rewrite headers and redirect 301', async () => {
+      it('should remove rewrite headers and redirect 301', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1609,7 +1609,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should return 301 redirect when pattern has special symbols "?"', async () => {
+      it('should return 301 redirect when pattern has special symbols "?"', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1661,7 +1661,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should return 301 redirect when pattern has another order of query string', async () => {
+      it('should return 301 redirect when pattern has another order of query string', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1715,7 +1715,7 @@ describe('RedirectsMiddleware', () => {
     });
 
     describe('should redirect to normalized path when nextjs specific "path" query string parameter is provided', () => {
-      it('should return 301 redirect', async () => {
+      it('should return 301 redirect', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1767,7 +1767,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should return 301 redirect when trailingSlash is true', async () => {
+      it('should return 301 redirect when trailingSlash is true', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1818,7 +1818,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should clean redirect headers and return a 302 redirectt', async () => {
+      it('should clean redirect headers and return a 302 redirectt', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           clone: cloneUrl,
@@ -1878,7 +1878,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should redirect regardless of case in pattern and target', async () => {
+      it('should redirect regardless of case in pattern and target', async() => {
         // Set up a clone function (used by both req and res)
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
@@ -1935,7 +1935,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(301);
       });
 
-      it('should redirect to lowercase target even if incoming path is mixed-case', async () => {
+      it('should redirect to lowercase target even if incoming path is mixed-case', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/about',
@@ -1991,7 +1991,7 @@ describe('RedirectsMiddleware', () => {
       });
 
       // TODO: This test is failing because of this bug https://sitecore.atlassian.net/browse/JSS-3955
-      xit('should return rewrite', async () => {
+      xit('should return rewrite', async() => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           origin: 'http://localhost:3000',

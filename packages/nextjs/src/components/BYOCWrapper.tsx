@@ -16,7 +16,7 @@ import { GetComponentServerProps } from '../sharedTypes/component-props';
  * @param {ComponentRendering} rendering
  * @returns {GetStaticPropsContext | GetStaticPropsContext} context with type depending on SSR or SSG mode
  */
-export const getComponentServerProps: GetComponentServerProps = async (rendering) => {
+export const getComponentServerProps: GetComponentServerProps = async(rendering) => {
   const params: BYOCComponentParams = rendering.params || {};
   const result = await fetchBYOCComponentServerProps(params);
   return result;

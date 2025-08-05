@@ -12,6 +12,7 @@ export const tryParseEnvValue = <T>(envValue: string | undefined, defaultValue: 
   if (envValue.startsWith('{') && envValue.endsWith('}')) {
     try {
       return JSON.parse(envValue) as T;
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       console.warn('Parsing of env variable failed');
       console.warn(`Attempted to parse ${envValue}`);
