@@ -6,7 +6,7 @@
 
 # Enumeration: RenderingType
 
-Defined in: [packages/core/src/layout/models.ts:149](https://github.com/Sitecore/content-sdk/blob/5e55c39754f2929b3f730e2e68803a426b71941f/packages/core/src/layout/models.ts#L149)
+Defined in: [packages/core/src/layout/models.ts:149](https://github.com/Sitecore/content-sdk/blob/03f8a1f6efc59b796747b3b90d19db20763447a1/packages/core/src/layout/models.ts#L149)
 
 Editing rendering type
 
@@ -16,4 +16,4 @@ Editing rendering type
 
 > **Component**: `"component"`
 
-Defined in: [packages/core/src/layout/models.ts:150](https://github.com/Sitecore/content-sdk/blob/5e55c39754f2929b3f730e2e68803a426b71941f/packages/core/src/layout/models.ts#L150)
+Defined in: [packages/core/src/layout/models.ts:150](https://github.com/Sitecore/content-sdk/blob/03f8a1f6efc59b796747b3b90d19db20763447a1/packages/core/src/layout/models.ts#L150)

@@ -8,7 +8,7 @@
 
 > **executeScriptElements**(`rootElement`): `void`
 
-Defined in: [packages/core/src/form/form.ts:50](https://github.com/Sitecore/content-sdk/blob/5e55c39754f2929b3f730e2e68803a426b71941f/packages/core/src/form/form.ts#L50)
+Defined in: [packages/core/src/form/form.ts:50](https://github.com/Sitecore/content-sdk/blob/03f8a1f6efc59b796747b3b90d19db20763447a1/packages/core/src/form/form.ts#L50)
 
 When you set the innerHTML property of an element, the browser does not execute any <script> tags included in the HTML string
 This method ensures that any <script> elements within the loaded HTML are executed.
