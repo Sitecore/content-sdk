@@ -6313,15 +6313,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^4.5.0 || 5.0.0-canary-7118f5dd7-20230705":
-  version: 5.0.0-canary-7118f5dd7-20230705
-  resolution: "eslint-plugin-react-hooks@npm:5.0.0-canary-7118f5dd7-20230705"
-  peerDependencies:
-    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
-  checksum: 20e334e60bf5e56cf9f760598411847525c3ff826e6ae7757c8efdc60b33d47a97ddbe1b94ce95956ea9f7bbef37995b19c716be50bd44e6a1e789cba08b6224
-  languageName: node
-  linkType: hard
-
 "eslint-plugin-react@npm:7.37.1":
   version: 7.37.1
   resolution: "eslint-plugin-react@npm:7.37.1"
@@ -11133,7 +11124,7 @@ __metadata:
     eslint-plugin-jsdoc: 52.0.2
     eslint-plugin-prettier: ^5.0.0
     eslint-plugin-react: 7.37.1
-    eslint-plugin-react-hooks: 5.2.0
+    eslint-plugin-react-hooks: ^5.2.0
     lerna: ^5.6.2
     prettier: ^2.8.8
     typedoc: ^0.28.4
