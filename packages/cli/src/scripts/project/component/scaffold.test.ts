@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
