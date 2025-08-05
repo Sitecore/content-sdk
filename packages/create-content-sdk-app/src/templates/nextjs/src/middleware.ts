@@ -48,6 +48,11 @@ const personalize = new PersonalizeMiddleware({
   skip: () => false,
 });
 
+/**
+ *
+ * @param req
+ * @param ev
+ */
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
   return defineMiddleware(multisite, redirects, personalize).exec(req, ev);
 }

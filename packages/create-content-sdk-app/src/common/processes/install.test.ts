@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import chalk from 'chalk';
 import chai, { expect } from 'chai';
 import sinon, { SinonStub } from 'sinon';

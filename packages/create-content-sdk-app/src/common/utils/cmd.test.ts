@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import { expect, use } from 'chai';
 import sinon, { SinonStub } from 'sinon';
 import spawn from 'cross-spawn';

@@ -1,5 +1,4 @@
-﻿/* eslint-disable no-unused-expressions */
-import fs from 'fs-extra';
+﻿import fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
 import ejs from 'ejs';
