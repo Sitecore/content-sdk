@@ -10,6 +10,8 @@ import stylisticTs from '@stylistic/eslint-plugin-ts';
 
 import prettier from 'eslint-plugin-prettier';
 import jsdoc from 'eslint-plugin-jsdoc';
+import reactHooks from 'eslint-plugin-react-hooks';
+import importPlugin from 'eslint-plugin-import';
 import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -30,6 +32,12 @@ export default defineConfig([
     'packages/*/dist/',
     'packages/create-content-sdk-app/src/templates/**/*',
   ]),
+
+  // React hooks configuration for ESLint v9+
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    ...reactHooks.configs['recommended-latest'],
+  },
 
   // Global linter settings
   {
@@ -61,6 +69,7 @@ export default defineConfig([
       '@stylistic/ts': stylisticTs,
       prettier,
       jsdoc,
+      import: importPlugin,
     },
     rules: {
       // JSDoc relaxations
@@ -112,6 +121,9 @@ export default defineConfig([
           asyncArrow: 'always',
         },
       ],
+
+      // Import rules
+      'import/no-anonymous-default-export': 'warn',
     },
   },
 
