@@ -149,7 +149,7 @@ type VariantGenerationProps = {
   /**
    * The import map to be used in variant generation mode.
    */
-  importMapImport?: () => Promise<ImportMapImport>;
+  loadImportMap?: () => Promise<ImportMapImport>;
 };
 
 /**
@@ -168,7 +168,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
   const [initError, setInitError] = useState<boolean>(false);
   const [Component, setComponent] = useState<DynamicComponent>(null);
 
-  if (!props.importMapImport) {
+  if (!props.loadImportMap) {
     return (
       <div>
         No dynamic import map loaded. Please check a dynamic import map function is passed into
@@ -190,10 +190,11 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
     const init = async () => {
       let importMap: codegen.ImportEntry[] = undefined;
       try {
-        importMap = (await props.importMapImport()).default;
+        importMap = (await props.loadImportMap()).default;
       } catch (error) {
         console.error('Error loading import map:', error);
-        importMap = [];
+        setInitError(true);
+        return;
       }
       // account for component being unmounted while resolving async import map
       if (cancelled) return;
@@ -234,7 +235,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
         unsubscribe();
       }
     };
-  }, [props.importMapImport]);
+  }, []);
 
   if (initError) {
     return <div key={renderKey}>Error during component initialization</div>;
@@ -259,10 +260,10 @@ type DesignLibraryProps = {
    * The dynamic import for import map to be used in variant generation mode.
    * Currently it's optional but it will be required in the next major version.
    */
-  importMapImport?: () => Promise<ImportMapImport>;
+  loadImportMap?: () => Promise<ImportMapImport>;
 };
 
-export const DesignLibrary = ({ importMapImport }: DesignLibraryProps): JSX.Element => {
+export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps): JSX.Element => {
   const { page } = useSitecore();
   const { isDesignLibrary } = page.mode;
   const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
@@ -272,7 +273,7 @@ export const DesignLibrary = ({ importMapImport }: DesignLibraryProps): JSX.Elem
   }
 
   if (isVariantGeneration) {
-    return <VariantGeneration importMapImport={importMapImport} />;
+    return <VariantGeneration loadImportMap={loadImportMap} />;
   }
 
   return <Preview />;

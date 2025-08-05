@@ -23,7 +23,9 @@ import {
 import { __mockDependencies } from './DesignLibrary';
 
 describe('<DesignLibrary />', () => {
-  const postMessageSpy = sinon.spy(global.window, 'postMessage');
+  const sandbox = sinon.createSandbox();
+  const postMessageSpy = sandbox.spy(global.window, 'postMessage');
+  const consoleErrorSpy = sandbox.spy(console, 'error');
   const components = new Map<string, React.FC>();
 
   const mode: PageMode = {
@@ -315,8 +317,8 @@ describe('<DesignLibrary />', () => {
 
   describe('VariantGeneration', () => {
     const TestComponent = () => <div>TestComponent</div>;
-    const unsubscribeSpy = sinon.spy();
-    let addComponentPreviewHandlerSpy: sinon.SinonStub;
+    const unsubscribeSpy = sandbox.spy();
+    let addComponentPreviewHandlerSpy: sandbox.SinonStub;
     let page: Page;
 
     const defaultImportMap = () =>
@@ -336,7 +338,7 @@ describe('<DesignLibrary />', () => {
     beforeEach(() => {
       page = getPage(getTestLayoutData().layoutData, variantGenerationMode);
 
-      addComponentPreviewHandlerSpy = sinon.stub().callsFake((_importMap, callback) => {
+      addComponentPreviewHandlerSpy = sandbox.stub().callsFake((_importMap, callback) => {
         callbackEvent = callback;
 
         return unsubscribeSpy;
@@ -347,6 +349,7 @@ describe('<DesignLibrary />', () => {
 
     afterEach(() => {
       postMessageSpy.resetHistory();
+      consoleErrorSpy.resetHistory();
       addComponentPreviewHandlerSpy.resetHistory();
       unsubscribeSpy.resetHistory();
     });
@@ -354,7 +357,7 @@ describe('<DesignLibrary />', () => {
     it('should render component when provided', async () => {
       const rendered = await render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMapImport={defaultImportMap} />
+          <DesignLibrary loadImportMap={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
@@ -370,7 +373,7 @@ describe('<DesignLibrary />', () => {
     it('should render loading preview when no component is provided', () => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMapImport={defaultImportMap} />
+          <DesignLibrary loadImportMap={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
@@ -382,7 +385,7 @@ describe('<DesignLibrary />', () => {
     it('should render error message when component fails to initialize', async () => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMapImport={defaultImportMap} />
+          <DesignLibrary loadImportMap={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
@@ -393,10 +396,30 @@ describe('<DesignLibrary />', () => {
       });
     });
 
+    it('should render error message when component fails to initialize due to failing import map promise', async () => {
+      const initError = new Error('Failed to load import map');
+      const errorImportMap = () =>
+        new Promise((_, reject) => {
+          reject(initError);
+        });
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary loadImportMap={errorImportMap} />
+        </SitecoreProvider>,
+        { container: document.body }
+      );
+
+      await waitFor(() => {
+        callbackEvent('Error', null);
+        expect(rendered.baseElement.innerHTML).to.contain('Error during component initialization');
+        expect(consoleErrorSpy.calledWith('Error loading import map:', initError)).to.be.true;
+      });
+    });
+
     it('should render error message when component fails to render', async () => {
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMapImport={defaultImportMap} />
+          <DesignLibrary loadImportMap={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
@@ -415,7 +438,7 @@ describe('<DesignLibrary />', () => {
 
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMapImport={defaultImportMap} />
+          <DesignLibrary loadImportMap={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
@@ -443,7 +466,7 @@ describe('<DesignLibrary />', () => {
     it('should send postMessage events for import-map and component-props', async () => {
       render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary importMapImport={defaultImportMap} />
+          <DesignLibrary loadImportMap={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
