@@ -402,15 +402,8 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
     // If we're in Pages preview (editing) mode, prefetch the editing data
-    const {
-      site,
-      itemId,
-      language,
-      version,
-      variantIds,
-      layoutKind,
-      mode,
-    } = previewData as EditingPreviewData;
+    const { site, itemId, language, version, variantIds, layoutKind, mode } =
+      previewData as EditingPreviewData;
 
     const data = await this.editingService.fetchEditingData(
       {
@@ -452,16 +445,8 @@ export class SitecoreClient implements BaseSitecoreClient {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
 
-    const {
-      itemId,
-      componentUid,
-      site,
-      language,
-      renderingId,
-      dataSourceId,
-      version,
-      mode,
-    } = designLibData;
+    const { itemId, componentUid, site, language, renderingId, dataSourceId, version, mode } =
+      designLibData;
 
     const componentData = await this.componentService.fetchComponentData(
       {

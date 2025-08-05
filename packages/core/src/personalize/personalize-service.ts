@@ -58,7 +58,7 @@ export class PersonalizeService {
 
   protected get query(): string {
     return /* GraphQL */ `
-      query($siteName: String!, $language: String!, $itemPath: String!) {
+      query ($siteName: String!, $language: String!, $itemPath: String!) {
         layout(site: $siteName, routePath: $itemPath, language: $language) {
           item {
             id

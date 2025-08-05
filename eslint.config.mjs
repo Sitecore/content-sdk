@@ -4,6 +4,7 @@ import stylisticTs from "@stylistic/eslint-plugin-ts";
 import prettier from "eslint-plugin-prettier";
 import jsdoc from "eslint-plugin-jsdoc";
 import importPlugin from "eslint-plugin-import";
+import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 import tsParser from "@typescript-eslint/parser";
@@ -78,7 +79,14 @@ export default defineConfig([
             "jsdoc/require-returns": "off",
             "jsdoc/no-undefined-types": "off",
             "jsdoc/require-returns-type": "off",
-            "prettier/prettier": "error",
+            "prettier/prettier": ["error", {
+                "arrowParens": "always",
+                "singleQuote": true,
+                "trailingComma": "es5",
+                "tabWidth": 2,
+                "printWidth": 100,
+                "endOfLine": "crlf"
+            }],
             "no-use-before-define": "off",
             "no-useless-escape": "off",
             "spaced-comment": "error",
@@ -154,6 +162,59 @@ export default defineConfig([
                 React: "writable",
                 JSX: "readonly",
             },
+        },
+    },
+
+    // Samples configuration - simpler rules for sample projects
+    {
+        files: ["samples/**/*.{js,jsx,ts,tsx}"],
+        extends: compat.extends(
+            "eslint:recommended",
+            "plugin:@typescript-eslint/recommended",
+            "plugin:react/recommended",
+            "prettier",
+        ),
+        plugins: {
+            "@typescript-eslint": typescriptEslint,
+            prettier,
+            react,
+        },
+        languageOptions: {
+            globals: {
+                ...globals.browser,
+                ...globals.node,
+                React: "writable",
+                JSX: "readonly",
+            },
+            parser: tsParser,
+            ecmaVersion: 2022,
+            sourceType: "module",
+            parserOptions: {
+                ecmaFeatures: {
+                    jsx: true,
+                },
+            },
+        },
+        settings: {
+            react: {
+                version: "detect",
+            },
+        },
+        rules: {
+            "prettier/prettier": ["error", {
+                "arrowParens": "always",
+                "singleQuote": true,
+                "trailingComma": "es5",
+                "tabWidth": 2,
+                "printWidth": 100,
+                "endOfLine": "crlf"
+            }],
+            // Relaxed rules for samples
+            "@typescript-eslint/no-explicit-any": "off",
+            "@typescript-eslint/no-unused-vars": "warn",
+            "@typescript-eslint/explicit-module-boundary-types": "off",
+            "react/react-in-jsx-scope": "off", // Next.js doesn't require React import
+            "react/prop-types": "off", // TypeScript interfaces provide type validation
         },
     },
 ]);

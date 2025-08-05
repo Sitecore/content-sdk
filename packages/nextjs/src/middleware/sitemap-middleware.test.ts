@@ -46,7 +46,7 @@ describe('SitemapMiddleware', () => {
       getByName: sandbox.stub(),
     };
 
-    middleware = new SitemapMiddleware((sitecoreClientStub as unknown) as SitecoreClient, sites);
+    middleware = new SitemapMiddleware(sitecoreClientStub as unknown as SitecoreClient, sites);
     (middleware as any).siteResolver = siteResolverStub;
     siteResolverStub.getByHost.callsFake((hostName) =>
       sites.find((site) => site.hostName === hostName)

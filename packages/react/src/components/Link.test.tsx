@@ -6,7 +6,7 @@ import { Link, LinkField } from './Link';
 
 describe('<Link />', () => {
   it('should render nothing with missing field', () => {
-    const field = (null as unknown) as LinkField;
+    const field = null as unknown as LinkField;
     const rendered = render(<Link field={field} />);
     expect(rendered.container.innerHTML).to.equal('');
   });

@@ -84,9 +84,7 @@ describe('SiteInfoService', () => {
   });
 
   const mockSiteInfoRequest = (response: { [key: string]: unknown }) => {
-    nock(endpoint)
-      .post('/')
-      .reply(200, response);
+    nock(endpoint).post('/').reply(200, response);
   };
 
   it('should return correct result', async () => {
@@ -149,9 +147,7 @@ describe('SiteInfoService', () => {
     ]);
   });
   it('should return empty array when empty result received', async () => {
-    nock(endpoint)
-      .post('/')
-      .reply(200, emptyResponse);
+    nock(endpoint).post('/').reply(200, emptyResponse);
     const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     expect(result).to.deep.equal([]);
@@ -162,9 +158,7 @@ describe('SiteInfoService', () => {
     const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     nock.cleanAll();
-    nock(endpoint)
-      .post('/')
-      .reply(200, emptyResponse);
+    nock(endpoint).post('/').reply(200, emptyResponse);
     const resultCached = await service.fetchSiteInfo();
     expect(resultCached).to.deep.equal(result);
   });
@@ -199,18 +193,14 @@ describe('SiteInfoService', () => {
       },
     ]);
     nock.cleanAll();
-    nock(endpoint)
-      .post('/')
-      .reply(200, emptyResponse);
+    nock(endpoint).post('/').reply(200, emptyResponse);
     const resultCached = await service.fetchSiteInfo();
     expect(resultCached).to.deep.equal([]);
   });
 
   it('should skip on XM Cloud', async () => {
     process.env.SITECORE = 'true';
-    nock(endpoint)
-      .post('/')
-      .reply(200, emptyResponse);
+    nock(endpoint).post('/').reply(200, emptyResponse);
     const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     expect(result).to.deep.equal([]);

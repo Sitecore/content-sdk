@@ -28,14 +28,8 @@ describe('codegen-utils', () => {
         type: codegenUtils.ExtractedFileType.Component,
       };
 
-      sandbox
-        .stub(fs, 'existsSync')
-        .withArgs(componentPath)
-        .returns(true);
-      sandbox
-        .stub(fs, 'readFileSync')
-        .withArgs(componentPath)
-        .returns(fileContent);
+      sandbox.stub(fs, 'existsSync').withArgs(componentPath).returns(true);
+      sandbox.stub(fs, 'readFileSync').withArgs(componentPath).returns(fileContent);
 
       nock(meshEndpoint)
         .post(
@@ -67,10 +61,7 @@ describe('codegen-utils', () => {
         type: codegenUtils.ExtractedFileType.Component,
       };
 
-      sandbox
-        .stub(fs, 'existsSync')
-        .withArgs(componentPath)
-        .returns(false);
+      sandbox.stub(fs, 'existsSync').withArgs(componentPath).returns(false);
 
       const consoleErrorStub = sandbox.stub(console, 'error');
 
@@ -92,14 +83,8 @@ describe('codegen-utils', () => {
         type: codegenUtils.ExtractedFileType.Component,
       };
 
-      sandbox
-        .stub(fs, 'existsSync')
-        .withArgs(componentPath)
-        .returns(true);
-      sandbox
-        .stub(fs, 'readFileSync')
-        .withArgs(componentPath)
-        .returns(fileContent);
+      sandbox.stub(fs, 'existsSync').withArgs(componentPath).returns(true);
+      sandbox.stub(fs, 'readFileSync').withArgs(componentPath).returns(fileContent);
 
       nock(meshEndpoint)
         .post(

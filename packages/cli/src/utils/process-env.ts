@@ -24,7 +24,7 @@ export default function processEnv(dir: string) {
   ].filter(Boolean) as string[];
 
   // inspired by https://github.com/entropitor/dotenv-cli/blob/v4.0.0/cli.js#L53-L55
-  dotenvFiles.forEach(function(env) {
+  dotenvFiles.forEach(function (env) {
     dotenvExpand.expand(dotenv.config({ path: path.resolve(dir, env) }));
   });
 }

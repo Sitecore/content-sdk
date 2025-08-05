@@ -83,14 +83,7 @@ export const isTimeoutError = (error: unknown) => {
  * @returns {string} modified string that can be used as regexp input
  */
 const convertToWildcardRegex = (pattern: string) => {
-  return (
-    '^' +
-    pattern
-      .replace(/\//g, '\\/')
-      .replace(/\./g, '\\.')
-      .replace(/\*/g, '.*') +
-    '$'
-  );
+  return '^' + pattern.replace(/\//g, '\\/').replace(/\./g, '\\.').replace(/\*/g, '.*') + '$';
 };
 
 /**
@@ -164,7 +157,10 @@ export const isRegexOrUrl = (input: string): 'regex' | 'url' => {
   input = input.slice(0, -1);
 
   // Check if the string resembles a URL.
-  const isUrlLike = /^\/[a-zA-Z0-9\-\/]+(\?([a-zA-Z0-9\-_]+=[a-zA-Z0-9\-_]+)(&[a-zA-Z0-9\-_]+=[a-zA-Z0-9\-_]+)*)?$/.test(input);
+  const isUrlLike =
+    /^\/[a-zA-Z0-9\-\/]+(\?([a-zA-Z0-9\-_]+=[a-zA-Z0-9\-_]+)(&[a-zA-Z0-9\-_]+=[a-zA-Z0-9\-_]+)*)?$/.test(
+      input
+    );
 
   if (isUrlLike) {
     return 'url';
@@ -180,7 +176,10 @@ export const isRegexOrUrl = (input: string): 'regex' | 'url' => {
  * @param {URLSearchParams} params2 - The second set of URL search parameters.
  * @returns {boolean} - Returns true if the parameters are equal, otherwise false.
  */
-export const areURLSearchParamsEqual = (params1: URLSearchParams, params2: URLSearchParams): boolean => {
+export const areURLSearchParamsEqual = (
+  params1: URLSearchParams,
+  params2: URLSearchParams
+): boolean => {
   // Generates a sorted string representation of URL search parameters.
   const getSortedParamsString = (params: URLSearchParams): string => {
     return [...params.entries()]
@@ -246,7 +245,10 @@ export const escapeNonSpecialQuestionMarks = (input: string): string => {
  * @param {URLSearchParams} params2 - The second set of URL search parameters.
  * @returns {string} - A string representation of the merged URL search parameters.
  */
-export const mergeURLSearchParams = (params1: URLSearchParams, params2: URLSearchParams): string => {
+export const mergeURLSearchParams = (
+  params1: URLSearchParams,
+  params2: URLSearchParams
+): string => {
   const merged = new URLSearchParams();
 
   // Add all keys and values from the first object.
@@ -261,4 +263,3 @@ export const mergeURLSearchParams = (params1: URLSearchParams, params2: URLSearc
 
   return merged.toString();
 };
-

@@ -17,9 +17,11 @@ export type NextContext = GetServerSidePropsContext | GetStaticPropsContext;
  * Type of side effect function which could be invoked on component level (getComponentServerProps)
  */
 export type ComponentPropsFetchFunction<FetchedProps = unknown> = {
-  (rendering: ComponentRendering, layoutData: LayoutServiceData, context: NextContext): Promise<
-    FetchedProps
-  >;
+  (
+    rendering: ComponentRendering,
+    layoutData: LayoutServiceData,
+    context: NextContext
+  ): Promise<FetchedProps>;
 };
 
 /**

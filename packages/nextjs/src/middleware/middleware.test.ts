@@ -482,9 +482,9 @@ describe('defineMiddleware', () => {
     };
 
     const req = {} as NextRequest;
-    const res = ({
+    const res = {
       params: [],
-    } as unknown) as NextResponse;
+    } as unknown as NextResponse;
     const ev = {} as NextFetchEvent;
 
     const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev, res);

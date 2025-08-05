@@ -23,9 +23,9 @@ export function withComponentMap<T extends WithComponentMapProps>(
     return <Component {...props} componentMap={props.componentMap || context} />;
   }
 
-  WithComponentMap.displayName = `withComponentMap(${Component.displayName ||
-    Component.name ||
-    'Anonymous'})`;
+  WithComponentMap.displayName = `withComponentMap(${
+    Component.displayName || Component.name || 'Anonymous'
+  })`;
 
   return WithComponentMap;
 }

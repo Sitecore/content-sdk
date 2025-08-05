@@ -39,7 +39,7 @@ describe('<NextImage />', () => {
     const widthParam = isQsPresent ? `&w=${width}` : `?w=${width}`;
     return new URL(`${HOSTNAME}${src}`).href + widthParam;
   };
-  const mockLoader = (spy(customLoader) as unknown) as MockLoaderType;
+  const mockLoader = spy(customLoader) as unknown as MockLoaderType;
   afterEach(() => {
     () => mockLoader.resetHistory();
   });
@@ -326,7 +326,7 @@ describe('<NextImage />', () => {
 
   describe('With loader function passed by the user', () => {
     const userCustomLoader = ({ src }) => new URL(`https://cm.jss.localhost${src}`).href;
-    const userMockLoader = (spy(userCustomLoader) as unknown) as ImageLoader;
+    const userMockLoader = spy(userCustomLoader) as unknown as ImageLoader;
     const props = {
       field: {
         src: '/assets/img/test0.png',

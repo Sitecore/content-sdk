@@ -1229,7 +1229,7 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getHeadLinks', function() {
+  describe('getHeadLinks', function () {
     const truthyValue = {
       value: '<div class="test bar"><p class="foo ck-content">bar</p></div>',
     };
@@ -1271,13 +1271,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
         {
-          href:
-            'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);
@@ -1290,8 +1288,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);
@@ -1304,8 +1301,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);

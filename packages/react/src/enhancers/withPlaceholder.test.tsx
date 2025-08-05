@@ -116,7 +116,7 @@ describe('withPlaceholder HOC', () => {
       const phKey = 'page-content';
       const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
-        rendering: (null as unknown) as ComponentRendering,
+        rendering: null as unknown as ComponentRendering,
       };
       const Element = withPlaceholder(phKey)(ErrorComponent);
       const renderedComponent = render(
@@ -133,7 +133,7 @@ describe('withPlaceholder HOC', () => {
       const phKey = 'page-content';
       const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
-        rendering: (null as unknown) as ComponentRendering,
+        rendering: null as unknown as ComponentRendering,
         errorComponent: ErrorMessageComponent,
       };
       const Element = withPlaceholder(phKey)(ErrorComponent);
@@ -146,10 +146,9 @@ describe('withPlaceholder HOC', () => {
     });
 
     it('should render nested broken component', () => {
-      const component = (normalModeDevData.sitecore.route?.placeholders.main as (
-        | ComponentRendering
-        | RouteData
-      )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
+      const component = (
+        normalModeDevData.sitecore.route?.placeholders.main as (ComponentRendering | RouteData)[]
+      ).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
       const phKey = 'page-content';
       const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
@@ -175,10 +174,9 @@ describe('withPlaceholder HOC', () => {
     });
 
     it('should render nested components using custom error component', () => {
-      const component = (normalModeDevData.sitecore.route?.placeholders.main as (
-        | ComponentRendering
-        | RouteData
-      )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
+      const component = (
+        normalModeDevData.sitecore.route?.placeholders.main as (ComponentRendering | RouteData)[]
+      ).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
       const phKey = 'page-content';
       const props: EnhancedOmit<PlaceholderProps, 'page'> = {
         name: phKey,
@@ -207,10 +205,9 @@ describe('withPlaceholder HOC', () => {
   testData.forEach((dataSet) => {
     describe(`with ${dataSet.label}`, () => {
       it('should render a placeholder with given key', () => {
-        const component = (dataSet.data.sitecore.route?.placeholders.main as (
-          | ComponentRendering
-          | RouteData
-        )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
+        const component = (
+          dataSet.data.sitecore.route?.placeholders.main as (ComponentRendering | RouteData)[]
+        ).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
         const phKey = 'page-content';
         const props: EnhancedOmit<PlaceholderProps, 'page'> = {
           name: phKey,
@@ -228,10 +225,9 @@ describe('withPlaceholder HOC', () => {
       });
 
       it('should render a placeholder with given key and prop', () => {
-        const component = (dataSet.data.sitecore.route?.placeholders.main as (
-          | ComponentRendering
-          | RouteData
-        )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
+        const component = (
+          dataSet.data.sitecore.route?.placeholders.main as (ComponentRendering | RouteData)[]
+        ).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
         const phKeyAndProp = {
           placeholder: 'page-header',
           prop: 'subProp',
@@ -253,10 +249,9 @@ describe('withPlaceholder HOC', () => {
       });
 
       it('should use propsTransformer method when provided', () => {
-        const component = (dataSet.data.sitecore.route?.placeholders.main as (
-          | ComponentRendering
-          | RouteData
-        )[]).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
+        const component = (
+          dataSet.data.sitecore.route?.placeholders.main as (ComponentRendering | RouteData)[]
+        ).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
         const phKeyAndProp = {
           placeholder: 'page-header',
           prop: 'subProp',

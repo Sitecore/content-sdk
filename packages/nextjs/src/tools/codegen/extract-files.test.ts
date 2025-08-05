@@ -161,10 +161,7 @@ describe('extract-files', () => {
 
     const consoleLogStub = sandbox.stub(console, 'log');
 
-    nock(edgeUrl)
-      .post('/mesh/push/api/v1/contentsdk/code/extracted')
-      .reply(200)
-      .persist();
+    nock(edgeUrl).post('/mesh/push/api/v1/contentsdk/code/extracted').reply(200).persist();
 
     const component1Path = path.resolve(process.cwd(), './src/components/TestComponent.tsx');
 
