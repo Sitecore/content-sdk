@@ -1,220 +1,148 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import stylisticTs from "@stylistic/eslint-plugin-ts";
-import prettier from "eslint-plugin-prettier";
-import jsdoc from "eslint-plugin-jsdoc";
-import importPlugin from "eslint-plugin-import";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import globals from "globals";
-import tsParser from "@typescript-eslint/parser";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
+import { defineConfig, globalIgnores } from 'eslint/config';
+import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import tsParser from '@typescript-eslint/parser';
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
+import stylisticTs from '@stylistic/eslint-plugin-ts';
+
+import prettier from 'eslint-plugin-prettier';
+import jsdoc from 'eslint-plugin-jsdoc';
+import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
+  baseDirectory: __dirname,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
 });
 
 export default defineConfig([
-    globalIgnores([
-        "lib/", 
-        "packages/*/node_modules/", 
-        "packages/*/lib/", 
-        "packages/*/dist/",
-        "packages/create-content-sdk-app/src/templates/**/*",
-    ]),
-    
-    // Global settings
-    {
-        linterOptions: {
-            reportUnusedDisableDirectives: false,
-        },
+  // Global ignores
+  globalIgnores([
+    'lib/',
+    'packages/*/node_modules/',
+    'packages/*/lib/',
+    'packages/*/dist/',
+    'packages/create-content-sdk-app/src/templates/**/*',
+  ]),
+
+  // Global linter settings
+  {
+    linterOptions: {
+      reportUnusedDisableDirectives: false,
     },
-    
-    // Base configuration for all JavaScript/TypeScript files
-    {
-        files: ["**/*.{js,jsx,ts,tsx}"],
-        extends: compat.extends(
-            "eslint:recommended",
-            "plugin:jsdoc/recommended",
-            "prettier",
-        ),
+  },
 
-        plugins: {
-            "@typescript-eslint": typescriptEslint,
-            "@stylistic/ts": stylisticTs,
-            prettier,
-            import: importPlugin,
-            "react-hooks": reactHooks,
+  // Base JS/TS config
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      parser: tsParser,
+      ecmaVersion: 2020,
+      sourceType: 'module',
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
         },
-
-        languageOptions: {
-            globals: {
-                ...globals.browser,
-                ...globals.node,
-                RequestInit: "readonly", // From typescript config
-            },
-
-            parser: tsParser,
-            ecmaVersion: 2022,
-            sourceType: "module",
-
-            parserOptions: {
-                ecmaFeatures: {
-                    jsx: true,
-                },
-            },
-        },
-
-        rules: {
-            "jsdoc/newline-after-description": "off",
-            "jsdoc/require-property-description": "off",
-            "jsdoc/require-param-description": "off",
-            "jsdoc/require-returns": "off",
-            "jsdoc/no-undefined-types": "off",
-            "jsdoc/require-returns-type": "off",
-            "prettier/prettier": ["error", {
-                "arrowParens": "always",
-                "singleQuote": true,
-                "trailingComma": "es5",
-                "tabWidth": 2,
-                "printWidth": 100,
-                "endOfLine": "crlf"
-            }],
-            "no-use-before-define": "off",
-            "no-useless-escape": "off",
-            "spaced-comment": "error",
-            curly: ["error", "multi-line"],
-            "eol-last": ["error", "always"],
-            "linebreak-style": ["error", "windows"],
-            "guard-for-in": "error",
-            "no-unused-labels": "error",
-            "no-caller": "error",
-            "no-bitwise": "error",
-            "no-multiple-empty-lines": "error",
-            "no-new-wrappers": "error",
-            "no-eval": "error",
-            "dot-notation": "error",
-            "no-trailing-spaces": "error",
-
-            "no-unused-expressions": ["error", {
-                allowShortCircuit: true,
-                allowTernary: true,
-            }],
-
-            "no-unused-vars": ["error"],
-            "brace-style": "error",
-            quotes: ["error", "single"],
-            radix: "error",
-            "default-case": "error",
-            eqeqeq: "error",
-            "jsx-quotes": ["error", "prefer-double"],
-        },
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        es6: true,
+      },
     },
-
-    // TypeScript-specific configuration for all packages
-    {
-        files: ["packages/**/*.{ts,tsx}"],
-        extends: compat.extends("plugin:@typescript-eslint/recommended"),
-        rules: {
-            "@typescript-eslint/naming-convention": [
-                "error",
-                {
-                    format: ["PascalCase"],
-                    selector: "typeLike",
-                    custom: {
-                        regex: "^I[A-Z]",
-                        match: false,
-                    },
-                },
-            ],
-            "@typescript-eslint/member-ordering": "error",
-            "@typescript-eslint/no-use-before-define": ["error", { functions: false, variables: false }],
-            "@typescript-eslint/typedef": "error",
-            "@stylistic/ts/type-annotation-spacing": "error",
-            "@stylistic/ts/semi": "error",
-            "@typescript-eslint/no-require-imports": "off",
-            "@typescript-eslint/no-explicit-any": "off",
-            "@typescript-eslint/no-unused-expressions": "off",
-            "@typescript-eslint/no-unused-vars": "off",
-            "@typescript-eslint/explicit-module-boundary-types": "off",
-            "@typescript-eslint/no-non-null-assertion": "off",
-        },
+    plugins: {
+      '@typescript-eslint': typescriptEslint,
+      '@stylistic/ts': stylisticTs,
+      prettier,
+      jsdoc,
     },
+    rules: {
+      // JSDoc relaxations
+      'jsdoc/newline-after-description': 'off',
+      'jsdoc/require-property-description': 'off',
+      'jsdoc/require-param-description': 'off',
+      'jsdoc/require-returns': 'off',
+      'jsdoc/no-undefined-types': 'off',
+      'jsdoc/require-returns-type': 'off',
 
-    // React-specific configuration for React and NextJS packages
-    {
-        files: ["packages/react/**/*.{jsx,tsx}", "packages/nextjs/**/*.{jsx,tsx}"],
-        ...compat.extends("plugin:react/recommended")[0],
-        settings: {
-            react: {
-                version: "detect",
-            },
+      // General
+      'no-use-before-define': 'off',
+      'no-useless-escape': 'off',
+      'no-unused-vars': ['error'],
+      'no-unused-expressions': [
+        'error',
+        {
+          allowShortCircuit: true,
+          allowTernary: true,
         },
-        languageOptions: {
-            globals: {
-                React: "writable",
-                JSX: "readonly",
-            },
-        },
-    },
+      ],
+      'spaced-comment': 'error',
+      curly: ['error', 'multi-line'],
+      'eol-last': ['error', 'always'],
+      'linebreak-style': ['error', 'windows'],
+      'guard-for-in': 'error',
+      'no-unused-labels': 'error',
+      'no-caller': 'error',
+      'no-bitwise': 'error',
+      'no-multiple-empty-lines': 'error',
+      'no-new-wrappers': 'error',
+      'no-eval': 'error',
+      'dot-notation': 'error',
+      'no-trailing-spaces': 'error',
+      'brace-style': 'error',
+      quotes: ['error', 'single'],
+      radix: 'error',
+      'default-case': 'error',
+      eqeqeq: 'error',
+      'jsx-quotes': ['error', 'prefer-double'],
 
-    // Samples configuration - simpler rules for sample projects
-    {
-        files: ["samples/**/*.{js,jsx,ts,tsx}"],
-        extends: compat.extends(
-            "eslint:recommended",
-            "plugin:@typescript-eslint/recommended",
-            "plugin:react/recommended",
-            "prettier",
-        ),
-        plugins: {
-            "@typescript-eslint": typescriptEslint,
-            prettier,
-            react,
+      // Formatting
+      'prettier/prettier': 'off', // handled via specific rules below
+      '@stylistic/ts/space-before-function-paren': [
+        'error',
+        {
+          anonymous: 'never',
+          named: 'never',
+          asyncArrow: 'always',
         },
-        languageOptions: {
-            globals: {
-                ...globals.browser,
-                ...globals.node,
-                React: "writable",
-                JSX: "readonly",
-            },
-            parser: tsParser,
-            ecmaVersion: 2022,
-            sourceType: "module",
-            parserOptions: {
-                ecmaFeatures: {
-                    jsx: true,
-                },
-            },
-        },
-        settings: {
-            react: {
-                version: "detect",
-            },
-        },
-        rules: {
-            "prettier/prettier": ["error", {
-                "arrowParens": "always",
-                "singleQuote": true,
-                "trailingComma": "es5",
-                "tabWidth": 2,
-                "printWidth": 100,
-                "endOfLine": "crlf"
-            }],
-            // Relaxed rules for samples
-            "@typescript-eslint/no-explicit-any": "off",
-            "@typescript-eslint/no-unused-vars": "warn",
-            "@typescript-eslint/explicit-module-boundary-types": "off",
-            "react/react-in-jsx-scope": "off", // Next.js doesn't require React import
-            "react/prop-types": "off", // TypeScript interfaces provide type validation
-        },
+      ],
     },
+  },
+
+  // TypeScript-specific overrides
+  {
+    files: ['packages/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/naming-convention': [
+        'error',
+        {
+          selector: 'typeLike',
+          format: ['PascalCase'],
+          custom: {
+            regex: '^I[A-Z]',
+            match: false,
+          },
+        },
+      ],
+      '@typescript-eslint/member-ordering': 'error',
+      '@typescript-eslint/typedef': 'error',
+      '@typescript-eslint/no-use-before-define': ['error', { functions: false, variables: false }],
+      '@stylistic/ts/type-annotation-spacing': 'error',
+      '@stylistic/ts/semi': 'error',
+
+      // Relaxed TS rules
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+    },
+  },
 ]);

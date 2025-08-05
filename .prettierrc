@@ -4,5 +4,13 @@
   "tabWidth": 2,
   "arrowParens": "always",
   "printWidth": 100,
-  "endOfLine": "crlf"
+  "endOfLine": "crlf",
+  "overrides": [
+    {
+      "files": ["*.graphql"],
+      "options": {
+        "parser": "graphql"
+      }
+    }
+  ]
 }
