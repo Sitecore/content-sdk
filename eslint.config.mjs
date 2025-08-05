@@ -3,6 +3,8 @@ import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import reactHooks from 'eslint-plugin-react-hooks';
+import importPlugin from 'eslint-plugin-import';
 
 import tsParser from '@typescript-eslint/parser';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
@@ -59,6 +61,8 @@ export default defineConfig([
     plugins: {
       '@typescript-eslint': typescriptEslint,
       '@stylistic/ts': stylisticTs,
+      'react-hooks': reactHooks,
+      import: importPlugin,
       prettier,
       jsdoc,
     },
@@ -112,6 +116,9 @@ export default defineConfig([
           asyncArrow: 'always',
         },
       ],
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      'import/no-anonymous-default-export': 'error',
     },
   },
 
