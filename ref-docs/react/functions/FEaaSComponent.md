@@ -8,7 +8,7 @@
 
 > **FEaaSComponent**(`props`): `Element`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:64](https://github.com/Sitecore/content-sdk/blob/0104fee07cb6a0d1ee5c47a0cf6e259308ac7b0f/packages/react/src/components/FEaaSComponent.tsx#L64)
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:64](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/react/src/components/FEaaSComponent.tsx#L64)
 
 ## Parameters
 
