@@ -1,4 +1,5 @@
-﻿/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable dot-notation */
 import { debug, GraphQLRequestClient } from '@sitecore-content-sdk/core';

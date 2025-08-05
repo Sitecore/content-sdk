@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { expect, use, spy } from 'chai';
 import spies from 'chai-spies';
 import { tryParseEnvValue } from './env';

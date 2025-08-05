@@ -1,4 +1,5 @@
-﻿/* eslint-disable dot-notation */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable dot-notation */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect, use } from 'chai';

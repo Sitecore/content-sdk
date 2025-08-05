@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { expect, spy, use } from 'chai';

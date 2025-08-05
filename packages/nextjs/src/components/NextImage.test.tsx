@@ -1,4 +1,5 @@
-﻿/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-unused-expressions */
 import chai, { use } from 'chai';
 import chaiString from 'chai-string';
 import { render } from '@testing-library/react';

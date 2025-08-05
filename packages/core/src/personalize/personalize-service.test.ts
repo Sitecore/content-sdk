@@ -1,4 +1,5 @@
-﻿/* eslint-disable dot-notation */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable dot-notation */
 import { expect, use } from 'chai';
 import spies from 'chai-spies';
 import nock from 'nock';

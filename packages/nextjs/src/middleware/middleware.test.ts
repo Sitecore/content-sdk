@@ -1,4 +1,5 @@
-﻿/* eslint-disable dot-notation */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable dot-notation */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';

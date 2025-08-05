@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */

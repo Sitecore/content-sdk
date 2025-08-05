@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect, use } from 'chai';
 import nock from 'nock';

@@ -1,4 +1,5 @@
-﻿/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */
 import chai, { use } from 'chai';
 import chaiString from 'chai-string';

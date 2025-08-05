@@ -172,6 +172,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
     return <div>No component found in layout data. Please check your layout data.</div>;
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const unsubscribe = addComponentPreviewHandler(props.importMap, (error, Component) => {
       setRenderKey((key) => key + 1);
