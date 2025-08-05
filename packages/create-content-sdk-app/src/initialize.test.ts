@@ -49,7 +49,7 @@ describe('initialize', () => {
     openJsonFileStub?.restore();
   });
 
-  it('should run', async() => {
+  it('should run', async () => {
     const template = 'foo';
     const args = {
       silent: false,
@@ -70,7 +70,7 @@ describe('initialize', () => {
     expect(nextStepsStub).to.be.calledOnceWith(defaultAppName, undefined);
   });
 
-  it('should process nextSteps', async() => {
+  it('should process nextSteps', async () => {
     const template = 'foo';
     const args = {
       silent: false,
@@ -86,7 +86,7 @@ describe('initialize', () => {
     expect(nextStepsStub).to.be.calledOnceWith(defaultAppName, 'foo next step');
   });
 
-  it('should respect silent', async() => {
+  it('should respect silent', async () => {
     const template = 'foo';
     const args = {
       silent: true,
@@ -105,7 +105,7 @@ describe('initialize', () => {
     expect(nextStepsStub).to.not.have.been.called;
   });
 
-  it('should respect noInstall', async() => {
+  it('should respect noInstall', async () => {
     const template = 'foo';
     const args = {
       silent: false,
@@ -125,7 +125,7 @@ describe('initialize', () => {
 });
 
 describe('getInitializer', () => {
-  it('should return initializer', async() => {
+  it('should return initializer', async () => {
     const initializer = await getInitializer('./../../src/common/test-data/initializers/test');
 
     expect(initializer).to.not.be.undefined;

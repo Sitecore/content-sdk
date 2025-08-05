@@ -203,7 +203,7 @@ export const defineMiddleware = (...middlewares: Middleware[]) => {
      * @param {NextFetchEvent} ev fetch event
      * @param {NextResponse} [res] response
      */
-    exec: async(req: NextRequest, ev: NextFetchEvent, res?: NextResponse) => {
+    exec: async (req: NextRequest, ev: NextFetchEvent, res?: NextResponse) => {
       const response = res || NextResponse.next();
 
       debug.common('middleware start');

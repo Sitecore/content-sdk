@@ -78,7 +78,7 @@ describe('bin', () => {
     });
   });
 
-  describe('main', async() => {
+  describe('main', async () => {
     let getAllTemplatesStub: SinonStub;
     let inquirerPromptStub: SinonStub;
     let fsExistsSyncStub: SinonStub;
@@ -111,7 +111,7 @@ describe('bin', () => {
       processExitStub?.restore();
     });
 
-    it('should initialize with provided args', async() => {
+    it('should initialize with provided args', async () => {
       getAllTemplatesStub.returns(['foo', 'bar']);
       fsExistsSyncStub.returns(false);
       fsReaddirSyncStub.returns([]);
@@ -134,7 +134,7 @@ describe('bin', () => {
       });
     });
 
-    it('should accept template as positional parameter', async() => {
+    it('should accept template as positional parameter', async () => {
       getAllTemplatesStub.returns(['foo', 'bar']);
       fsExistsSyncStub.returns(false);
       fsReaddirSyncStub.returns([]);
@@ -154,7 +154,7 @@ describe('bin', () => {
       });
     });
 
-    it('should prompt for template if missing', async() => {
+    it('should prompt for template if missing', async () => {
       const allTemplates = ['nextjs', 'foo', 'bar'];
       getAllTemplatesStub.returns(allTemplates);
       fsExistsSyncStub.returns(false);
@@ -185,7 +185,7 @@ describe('bin', () => {
       });
     });
 
-    it('should prompt if provided template if wrong', async() => {
+    it('should prompt if provided template if wrong', async () => {
       const allTemplates = ['nextjs', 'foo', 'bar'];
       getAllTemplatesStub.returns(allTemplates);
       fsExistsSyncStub.returns(false);
@@ -221,7 +221,7 @@ describe('bin', () => {
       });
     });
 
-    it('should throw range error if unknown template and --yes is present', async() => {
+    it('should throw range error if unknown template and --yes is present', async () => {
       const allTemplates = ['nextjs', 'foo', 'bar'];
       getAllTemplatesStub.returns(allTemplates);
       fsExistsSyncStub.returns(false);
@@ -238,7 +238,7 @@ describe('bin', () => {
       });
     });
 
-    it('should throw range error if template is missing and --yes is present', async() => {
+    it('should throw range error if template is missing and --yes is present', async () => {
       const allTemplates = ['nextjs', 'foo', 'bar'];
       getAllTemplatesStub.returns(allTemplates);
       fsExistsSyncStub.returns(false);
@@ -255,7 +255,7 @@ describe('bin', () => {
     });
 
     describe('promptDestination', () => {
-      it('should prompt with provided prompt text and return input value', async() => {
+      it('should prompt with provided prompt text and return input value', async () => {
         const mockDestination = 'my\\path';
         const mockPrompt = 'Enter the mocking path';
         inquirerPromptStub.returns({
@@ -267,7 +267,7 @@ describe('bin', () => {
         expect(result).to.be.equal(mockDestination);
       });
 
-      it('should use default value', async() => {
+      it('should use default value', async () => {
         inquirerPromptStub.returns({
           destination: undefined,
         });
@@ -281,7 +281,7 @@ describe('bin', () => {
     describe('getDestination', () => {
       const testTemplate = 'foo';
 
-      it('should return base args.destination value only when provided', async() => {
+      it('should return base args.destination value only when provided', async () => {
         const testPath = 'test\\path';
         const testArgs = mockArgs({
           destination: testPath,
@@ -289,7 +289,7 @@ describe('bin', () => {
         expect(await getDestination(testArgs, testTemplate)).to.equal(testPath);
       });
 
-      it('should prompt to get base destination when args.destination is empty', async() => {
+      it('should prompt to get base destination when args.destination is empty', async () => {
         const testPath = 'test\\path';
         inquirerPromptStub.returns({
           destination: testPath,
@@ -304,7 +304,7 @@ describe('bin', () => {
         );
       });
 
-      it('should return default base destination with base template when --yes arg is used', async() => {
+      it('should return default base destination with base template when --yes arg is used', async () => {
         const testArgs = mockArgs({
           destination: undefined,
           yes: true,
@@ -313,7 +313,7 @@ describe('bin', () => {
         expect(await getDestination(testArgs, testTemplate)).to.deep.equal(expectedDestination);
       });
 
-      it('should return default base destination with args.template when provided and --yes arg is used', async() => {
+      it('should return default base destination with args.template when provided and --yes arg is used', async () => {
         const testTemplate = 'nextcontentsdk';
         const testArgs = mockArgs({
           destination: undefined,
@@ -324,7 +324,7 @@ describe('bin', () => {
         expect(await getDestination(testArgs, testTemplate)).to.deep.equal(expectedDestination);
       });
 
-      it('should throw when template is empty', async() => {
+      it('should throw when template is empty', async () => {
         const testArgs = mockArgs();
         await getDestination(testArgs, '').catch((error) => {
           expect(error.message).to.be.equal(
@@ -337,7 +337,7 @@ describe('bin', () => {
     // this partially duplicates tests for getDestinations, but we need to ensure initializeStub is called with correct values
     // no way around it however - sinon cannot mock getDestinations on its own, which could've prevented this
     describe('main with destinations from args', () => {
-      it('should call initializeStub with value from getDestination', async() => {
+      it('should call initializeStub with value from getDestination', async () => {
         getAllTemplatesStub.returns(['foo', 'bar']);
         fsExistsSyncStub.returns(false);
         fsReaddirSyncStub.returns([]);
@@ -359,7 +359,7 @@ describe('bin', () => {
         });
       });
 
-      it('should throw error if destination not empty and args.yes is used', async() => {
+      it('should throw error if destination not empty and args.yes is used', async () => {
         getAllTemplatesStub.returns(['foo', 'bar']);
         fsExistsSyncStub.returns(true);
         fsReaddirSyncStub.returns(['file.txt']);
@@ -381,7 +381,7 @@ describe('bin', () => {
     });
 
     describe('destination not empty', () => {
-      it('should prompt and continue if yes', async() => {
+      it('should prompt and continue if yes', async () => {
         getAllTemplatesStub.returns(['foo', 'bar']);
         fsExistsSyncStub.returns(true);
         fsReaddirSyncStub.returns(['file.txt']);
@@ -409,7 +409,7 @@ describe('bin', () => {
         });
       });
 
-      it('should prompt and exit if no', async() => {
+      it('should prompt and exit if no', async () => {
         getAllTemplatesStub.returns(['foo', 'bar']);
         fsExistsSyncStub.returns(true);
         fsReaddirSyncStub.returns(['file.txt']);
@@ -435,7 +435,7 @@ describe('bin', () => {
         });
       });
 
-      it('should respect force', async() => {
+      it('should respect force', async () => {
         getAllTemplatesStub.returns(['foo', 'bar']);
         fsExistsSyncStub.returns(true);
         fsReaddirSyncStub.returns(['file.txt']);
@@ -457,7 +457,7 @@ describe('bin', () => {
       });
     });
 
-    it('should handle initialize error', async() => {
+    it('should handle initialize error', async () => {
       getAllTemplatesStub.returns(['foo', 'bar']);
       fsExistsSyncStub.returns(false);
       fsReaddirSyncStub.returns([]);

@@ -68,7 +68,7 @@ describe('EditingConfigMiddleware', () => {
     delete process.env.JSS_ALLOWED_ORIGINS;
   });
 
-  it('should respond with 401 for missing secret', async() => {
+  it('should respond with 401 for missing secret', async () => {
     const key = 'wrongkey';
     const query = { key } as Query;
     const req = mockRequest('GET', query);
@@ -84,7 +84,7 @@ describe('EditingConfigMiddleware', () => {
     expect(res.json).to.have.been.calledWith(expectedResultForbidden);
   });
 
-  it('should stop request and return 401 when CORS match is not met', async() => {
+  it('should stop request and return 401 when CORS match is not met', async () => {
     const req = mockRequest('GET', {}, { origin: 'https://notallowed.com' });
     const res = mockResponse();
     const middleware = new EditingConfigMiddleware({ components: componentsMap, metadata });
@@ -98,7 +98,7 @@ describe('EditingConfigMiddleware', () => {
     expect(res.json).to.have.been.calledWith({ message: 'Invalid origin' });
   });
 
-  it('should respond with 401 for invalid secret', async() => {
+  it('should respond with 401 for invalid secret', async () => {
     const key = 'wrongkey';
     const query = { key } as Query;
     query[QUERY_PARAM_EDITING_SECRET] = 'wrongsekret';
@@ -115,7 +115,7 @@ describe('EditingConfigMiddleware', () => {
     expect(res.json).to.have.been.calledWith(expectedResultForbidden);
   });
 
-  it('should respond with 204 for preflight OPTIONS request', async() => {
+  it('should respond with 204 for preflight OPTIONS request', async () => {
     const query = {} as Query;
     query[QUERY_PARAM_EDITING_SECRET] = secret;
     const req = mockRequest('OPTIONS', query);
@@ -142,7 +142,7 @@ describe('EditingConfigMiddleware', () => {
     expect(res.send).to.have.been.calledOnceWith(null);
   });
 
-  const testEditingConfig = async(components: Map<string, unknown>, expectedResult) => {
+  const testEditingConfig = async (components: Map<string, unknown>, expectedResult) => {
     const key = 'wrongkey';
     const query = { key } as Query;
     query[QUERY_PARAM_EDITING_SECRET] = secret;
@@ -159,11 +159,11 @@ describe('EditingConfigMiddleware', () => {
     expect(res.json).to.have.been.calledWith(expectedResult);
   };
 
-  it('should respond with 200 and return config data with components array as argument', async() => {
+  it('should respond with 200 and return config data with components array as argument', async () => {
     await testEditingConfig(componentsMap, expectedResultWithMetadata);
   });
 
-  it('should respond with 200 and return config data with components map as argument', async() => {
+  it('should respond with 200 and return config data with components map as argument', async () => {
     await testEditingConfig(componentsMap, expectedResultWithMetadata);
   });
 });

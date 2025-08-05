@@ -47,7 +47,7 @@ describe('defineCliConfig', () => {
       build: {
         commands: [
           () => {
-            return async() => {
+            return async () => {
               Promise.resolve('test');
             };
           },
@@ -71,7 +71,7 @@ describe('defineCliConfig', () => {
       build: {
         commands: [
           () => {
-            return async() => {
+            return async () => {
               Promise.resolve('test');
             };
           },

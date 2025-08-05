@@ -9,7 +9,7 @@ import {
   Initializer,
 } from './common';
 
-export const initialize = async(template: string, args: BaseAppArgs) => {
+export const initialize = async (template: string, args: BaseAppArgs) => {
   const initializer = await getInitializer(template);
   args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
   const response = await initializer.init(args);
@@ -26,7 +26,7 @@ export const initialize = async(template: string, args: BaseAppArgs) => {
   }
 };
 
-export const getInitializer = async(template: string): Promise<Initializer> => {
+export const getInitializer = async (template: string): Promise<Initializer> => {
   const { default: Initializer } = await import(
     path.resolve(__dirname, 'initializers', template, 'index')
   );

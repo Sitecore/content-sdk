@@ -68,7 +68,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
     this.locales = config.locales;
   }
 
-  handle = async(req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.redirects('skipped (redirects middleware is disabled globally)');
       return res;
@@ -91,7 +91,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return res;
       }
 
-      const createResponse = async() => {
+      const createResponse = async () => {
         if (this.isPreview(req)) {
           debug.redirects('skipped (preview)');
 

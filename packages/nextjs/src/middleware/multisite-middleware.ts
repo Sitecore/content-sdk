@@ -35,7 +35,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
     super(config);
   }
 
-  handle = async(req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.multisite('skipped (multisite middleware is disabled globally)');
       return res;

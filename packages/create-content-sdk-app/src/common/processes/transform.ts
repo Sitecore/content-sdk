@@ -59,7 +59,7 @@ type TransformOptions = {
  * @param {BaseArgs} args CLI arguments
  * @param {TransformOptions} options custom options
  */
-export const transform = async(
+export const transform = async (
   templatePath: string,
   args: BaseAppArgs,
   options: TransformOptions = {}

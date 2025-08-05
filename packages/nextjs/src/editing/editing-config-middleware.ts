@@ -40,7 +40,7 @@ export class EditingConfigMiddleware {
     return this.handler;
   }
 
-  private handler = async(_req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+  private handler = async (_req: NextApiRequest, res: NextApiResponse): Promise<void> => {
     const secret = _req.query[QUERY_PARAM_EDITING_SECRET];
     if (!enforceCors(_req, res, EDITING_ALLOWED_ORIGINS)) {
       debug.editing(

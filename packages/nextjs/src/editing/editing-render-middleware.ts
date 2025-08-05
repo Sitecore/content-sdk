@@ -85,7 +85,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     ].join(' ')}`;
   }
 
-  private handler = async(req: EditingNextApiRequest, res: NextApiResponse): Promise<void> => {
+  private handler = async (req: EditingNextApiRequest, res: NextApiResponse): Promise<void> => {
     const { query, body, method, headers } = req;
 
     debug.editing('editing render middleware start: %o', {

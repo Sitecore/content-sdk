@@ -455,7 +455,7 @@ describe('MiddlewareBase', () => {
 });
 
 describe('defineMiddleware', () => {
-  it('should execute middlewares', async() => {
+  it('should execute middlewares', async () => {
     type CustomResponse = {
       params: string[];
     } & NextResponse;
@@ -496,7 +496,7 @@ describe('defineMiddleware', () => {
     });
   });
 
-  it('should execute middlewares with empty response', async() => {
+  it('should execute middlewares with empty response', async () => {
     class SampleMiddleware extends MiddlewareBase {
       handle(_req: NextRequest, res: NextResponse) {
         res.headers.set('m1', 'true');

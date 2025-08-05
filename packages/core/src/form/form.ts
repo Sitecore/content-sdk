@@ -8,7 +8,7 @@ import debug from '../debug';
  * @param {string} formId - The unique identifier of the form
  * @param {string} [edgeUrl] - The URL of the Sitecore Edge Platform
  */
-export const loadForm = async(contextId: string, formId: string, edgeUrl?: string) => {
+export const loadForm = async (contextId: string, formId: string, edgeUrl?: string) => {
   if (!contextId) {
     debug.form('Form was not able to render since context id was not provided');
 

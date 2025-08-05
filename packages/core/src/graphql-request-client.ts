@@ -151,7 +151,7 @@ export class GraphQLRequestClient implements GraphQLClient {
   ): Promise<T> {
     let attempt = 1;
 
-    const retryer = async(): Promise<T> => {
+    const retryer = async (): Promise<T> => {
       const retries = options?.retries || this.retries;
       const retryStrategy = options?.retryStrategy || this.retryStrategy;
       const debug = options?.debugger || this.debug;
@@ -178,7 +178,7 @@ export class GraphQLRequestClient implements GraphQLClient {
           this.debug('response in %dms: %o', Date.now() - startTimestamp, data);
           return Promise.resolve(data as T);
         },
-        async(error: GraphQLClientError) => {
+        async (error: GraphQLClientError) => {
           this.abortTimeout?.clear();
           debug('response error: %o', error.response || error.message || error);
           const status = error.response?.status || error.code;

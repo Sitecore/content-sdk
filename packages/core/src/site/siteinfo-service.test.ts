@@ -87,7 +87,7 @@ describe('SiteInfoService', () => {
     nock(endpoint).post('/').reply(200, response);
   };
 
-  it('should return correct result', async() => {
+  it('should return correct result', async () => {
     mockSiteInfoRequest(
       nonEmptyResponse({
         sites: [
@@ -115,7 +115,7 @@ describe('SiteInfoService', () => {
     ]);
   });
 
-  it('should return correct result using clientFactory', async() => {
+  it('should return correct result using clientFactory', async () => {
     mockSiteInfoRequest(
       nonEmptyResponse({
         sites: [
@@ -146,14 +146,14 @@ describe('SiteInfoService', () => {
       },
     ]);
   });
-  it('should return empty array when empty result received', async() => {
+  it('should return empty array when empty result received', async () => {
     nock(endpoint).post('/').reply(200, emptyResponse);
     const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
     expect(result).to.deep.equal([]);
   });
 
-  it('should use caching by default', async() => {
+  it('should use caching by default', async () => {
     mockSiteInfoRequest(nonEmptyResponse());
     const service = new SiteInfoService({ clientFactory });
     const result = await service.fetchSiteInfo();
@@ -163,7 +163,7 @@ describe('SiteInfoService', () => {
     expect(resultCached).to.deep.equal(result);
   });
 
-  it('should be possible to disable cache', async() => {
+  it('should be possible to disable cache', async () => {
     mockSiteInfoRequest(
       nonEmptyResponse({
         sites: [
@@ -198,7 +198,7 @@ describe('SiteInfoService', () => {
     expect(resultCached).to.deep.equal([]);
   });
 
-  it('should skip on XM Cloud', async() => {
+  it('should skip on XM Cloud', async () => {
     process.env.SITECORE = 'true';
     nock(endpoint).post('/').reply(200, emptyResponse);
     const service = new SiteInfoService({ clientFactory });
@@ -208,7 +208,7 @@ describe('SiteInfoService', () => {
     expect(nock.isDone(), 'skip request').to.be.false;
   });
 
-  it('should filter out default website', async() => {
+  it('should filter out default website', async () => {
     mockSiteInfoRequest(
       nonEmptyResponse({
         sites: [

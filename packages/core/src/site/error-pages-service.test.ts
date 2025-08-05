@@ -55,7 +55,7 @@ describe('ErrorPagesService', () => {
   };
 
   describe('Fetch error pages', () => {
-    it('should get error if sitename is empty', async() => {
+    it('should get error if sitename is empty', async () => {
       mockErrorPagesRequest();
 
       const service = new ErrorPagesService({
@@ -69,7 +69,7 @@ describe('ErrorPagesService', () => {
       return expect(nock.isDone()).to.be.false;
     });
 
-    it('should fetch error pages', async() => {
+    it('should fetch error pages', async () => {
       mockErrorPagesRequest(mockErrorPages);
 
       const service = new ErrorPagesService({
@@ -83,7 +83,7 @@ describe('ErrorPagesService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should fetch error pages using clientFactory', async() => {
+    it('should fetch error pages using clientFactory', async () => {
       mockErrorPagesRequest(mockErrorPages);
 
       const clientFactory = GraphQLRequestClient.createClientFactory({
@@ -103,7 +103,7 @@ describe('ErrorPagesService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should get null if error not exists', async() => {
+    it('should get null if error not exists', async () => {
       mockErrorPagesRequest();
 
       const service = new ErrorPagesService({

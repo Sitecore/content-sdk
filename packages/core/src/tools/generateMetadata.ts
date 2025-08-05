@@ -28,7 +28,7 @@ export type GenerateMetadataConfig = {
  * @returns {Promise<void>} A promise that resolves when the metadata generation is complete.
  */
 export const generateMetadata = (config?: GenerateMetadataConfig): (() => Promise<void>) => {
-  return async() => {
+  return async () => {
     const metadata: Metadata = getMetadata();
     writeMetadata(metadata, config?.destinationPath ?? '.sitecore/metadata.json');
   };

@@ -53,7 +53,7 @@ describe('EditingService', () => {
     sinon.restore();
   });
 
-  it('should fetch editing data', async() => {
+  it('should fetch editing data', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true' } })
       .post(endpointPath, /EditingQuery/gi)
       .reply(200, editingData);
@@ -102,7 +102,7 @@ describe('EditingService', () => {
     spy.restore(clientFactorySpy);
   });
 
-  it('should fetch preview data', async() => {
+  it('should fetch preview data', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'false' } })
       .post(endpointPath, /EditingQuery/gi)
       .reply(200, editingData);
@@ -151,7 +151,7 @@ describe('EditingService', () => {
     spy.restore(clientFactorySpy);
   });
 
-  it('should return empty layout', async() => {
+  it('should return empty layout', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true' } })
       .post(endpointPath, /EditingQuery/gi)
       .reply(200, {
@@ -209,7 +209,7 @@ describe('EditingService', () => {
     spy.restore(clientFactorySpy);
   });
 
-  it('should fetch editing data with missing optional params', async() => {
+  it('should fetch editing data with missing optional params', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true' } })
       .post(endpointPath, /EditingQuery/gi)
       .reply(200, editingData);
@@ -257,7 +257,7 @@ describe('EditingService', () => {
     spy.restore(clientFactorySpy);
   });
 
-  it('should fetch shared layout editing data', async() => {
+  it('should fetch shared layout editing data', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true', sc_layoutKind: 'shared' } })
       .post(endpointPath, /EditingQuery/gi)
       .reply(200, editingData);
@@ -302,7 +302,7 @@ describe('EditingService', () => {
     spy.restore(clientFactorySpy);
   });
 
-  it('should throw an error when client factory is not provided', async() => {
+  it('should throw an error when client factory is not provided', async () => {
     try {
       const service = new EditingService({} as EditingServiceConfig);
 
@@ -319,7 +319,7 @@ describe('EditingService', () => {
     }
   });
 
-  it('should throw an error when fetching editing data', async() => {
+  it('should throw an error when fetching editing data', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true' } })
       .post(endpointPath, /EditingQuery/gi)
       .reply(500, 'Internal server error');
@@ -340,7 +340,7 @@ describe('EditingService', () => {
     }
   });
 
-  it('should throw an error when language is not provided', async() => {
+  it('should throw an error when language is not provided', async () => {
     const service = new EditingService({
       clientFactory,
     });
@@ -357,7 +357,7 @@ describe('EditingService', () => {
     }
   });
 
-  it('should pass fetchOptions to the GraphQL client', async() => {
+  it('should pass fetchOptions to the GraphQL client', async () => {
     const fetchOptions = {
       retries: 3,
       retryStrategy: {

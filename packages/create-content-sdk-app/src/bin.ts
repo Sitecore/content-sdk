@@ -26,7 +26,7 @@ export const parseArgs = (): ParsedArgs => {
   return args;
 };
 
-export const getDestination = async(args: ParsedArgs, template: string) => {
+export const getDestination = async (args: ParsedArgs, template: string) => {
   if (!template) {
     throw new Error('Unable to get destinations, provided template is empty');
   }
@@ -47,7 +47,7 @@ export const getDestination = async(args: ParsedArgs, template: string) => {
   return destination;
 };
 
-export const promptDestination = async(prompt: string, defaultDestination: string) => {
+export const promptDestination = async (prompt: string, defaultDestination: string) => {
   return (
     await inquirer.prompt({
       type: 'input',
@@ -58,7 +58,7 @@ export const promptDestination = async(prompt: string, defaultDestination: strin
   ).destination;
 };
 
-export const main = async(args: ParsedArgs) => {
+export const main = async (args: ParsedArgs) => {
   let template: string = '';
 
   // check if template was provided

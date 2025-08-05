@@ -247,7 +247,7 @@ describe('PersonalizeMiddleware', () => {
   });
 
   describe('Extensibility', () => {
-    it('should apply custom experience params from getExtraUtmParams, when provided', async() => {
+    it('should apply custom experience params from getExtraUtmParams, when provided', async () => {
       const customParams = {
         campaign: 'custom_campaign',
         source: 'custom_source',
@@ -303,7 +303,7 @@ describe('PersonalizeMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('should use custom personalizeService when provided', async() => {
+    it('should use custom personalizeService when provided', async () => {
       const req = createRequest();
       const res = createResponse();
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
@@ -356,7 +356,7 @@ describe('PersonalizeMiddleware', () => {
   });
 
   describe('request skipped', () => {
-    it('redirected', async() => {
+    it('redirected', async () => {
       const req = createRequest();
 
       const res = createResponse({ redirected: true });
@@ -380,7 +380,7 @@ describe('PersonalizeMiddleware', () => {
     });
 
     describe('preview', () => {
-      it('prerender bypass cookie is present', async() => {
+      it('prerender bypass cookie is present', async () => {
         const req = createRequest({
           cookieValues: {
             __prerender_bypass: true,
@@ -404,7 +404,7 @@ describe('PersonalizeMiddleware', () => {
         expect(finalRes).to.deep.equal(res);
       });
 
-      it('preview data cookie is present', async() => {
+      it('preview data cookie is present', async () => {
         const req = createRequest({
           cookieValues: {
             __next_preview_data: true,
@@ -432,7 +432,7 @@ describe('PersonalizeMiddleware', () => {
     describe('disabled / skip', () => {
       const res = createResponse();
 
-      const test = async(pathname: string, middleware: PersonalizeMiddleware) => {
+      const test = async (pathname: string, middleware: PersonalizeMiddleware) => {
         const req = createRequest({
           nextUrl: {
             pathname,
@@ -458,14 +458,14 @@ describe('PersonalizeMiddleware', () => {
         debugSpy.resetHistory();
       };
 
-      it('default', async() => {
+      it('default', async () => {
         const { middleware } = createMiddleware();
         await test('/src/image.png', middleware);
         await test('/api/layout/render', middleware);
         await test('/sitecore/render', middleware);
         await test('/_next/webpack', middleware);
       });
-      it('should apply both default and custom rules when custom skip function provided', async() => {
+      it('should apply both default and custom rules when custom skip function provided', async () => {
         const skip = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
         const { middleware } = createMiddleware({
           config: { ...defaultConfig, skip },
@@ -476,7 +476,7 @@ describe('PersonalizeMiddleware', () => {
         await test('/_next/webpack', middleware);
         await test('/crazypath/luna', middleware);
       });
-      it('should be disable when "enable" prop is false', async() => {
+      it('should be disable when "enable" prop is false', async () => {
         const { middleware } = createMiddleware({
           config: { ...defaultConfig, enabled: false },
         });
@@ -487,7 +487,7 @@ describe('PersonalizeMiddleware', () => {
         await test('/crazypath/luna', middleware);
       });
     });
-    it('personalize info not found', async() => {
+    it('personalize info not found', async () => {
       const req = createRequest();
       const res = createResponse();
       const { middleware, getPersonalizeInfo } = createMiddleware({
@@ -506,7 +506,7 @@ describe('PersonalizeMiddleware', () => {
       validateDebugLog('skipped (personalize info not found)');
       expect(finalRes).to.deep.equal(res);
     });
-    it('no personalization configured', async() => {
+    it('no personalization configured', async () => {
       const req = createRequest();
       const res = createResponse();
       const { middleware, getPersonalizeInfo } = createMiddleware({
@@ -528,7 +528,7 @@ describe('PersonalizeMiddleware', () => {
       validateDebugLog('skipped (no personalization configured)');
       expect(finalRes).to.deep.equal(res);
     });
-    it('no variant identified', async() => {
+    it('no variant identified', async () => {
       const req = createRequest();
       const res = createResponse();
       const { middleware, getPersonalizeInfo, initPersonalizeServer, personalize } =
@@ -550,7 +550,7 @@ describe('PersonalizeMiddleware', () => {
       validateDebugLog('skipped (no variant(s) identified)');
       expect(finalRes).to.deep.equal(res);
     });
-    it('invalid variant', async() => {
+    it('invalid variant', async () => {
       const req = createRequest();
       const res = createResponse();
       const handleCookieStub = sandbox.stub().resolves();
@@ -580,7 +580,7 @@ describe('PersonalizeMiddleware', () => {
       expect(finalRes).to.deep.equal(res);
     });
 
-    it('prefetch', async() => {
+    it('prefetch', async () => {
       const req = createRequest({
         headerValues: {
           purpose: 'prefetch',
@@ -606,7 +606,7 @@ describe('PersonalizeMiddleware', () => {
   });
 
   describe('request passed', () => {
-    it('fallback defaultLocale is used', async() => {
+    it('fallback defaultLocale is used', async () => {
       const language = 'da-DK';
       const req = createRequest({
         nextUrl: {
@@ -651,7 +651,7 @@ describe('PersonalizeMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('fallback locale is used', async() => {
+    it('fallback locale is used', async () => {
       const req = createRequest({
         nextUrl: {
           locale: undefined,
@@ -690,7 +690,7 @@ describe('PersonalizeMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('custom response object is not provided', async() => {
+    it('custom response object is not provided', async () => {
       const req = createRequest();
       const res = createResponse();
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
@@ -724,7 +724,7 @@ describe('PersonalizeMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('optional experience params are not present', async() => {
+    it('optional experience params are not present', async () => {
       userAgentStub.returns({ ua: '' } as any);
       const req = createRequest({ headerValues: { referer: null } });
       const res = createResponse();
@@ -758,7 +758,7 @@ describe('PersonalizeMiddleware', () => {
       expect(finalRes).to.deep.equal(res);
       nextRewriteStub.restore();
     });
-    it('sc_site cookie is provided', async() => {
+    it('sc_site cookie is provided', async () => {
       const req = createRequest();
       const res = createResponse({
         cookieValues: {
@@ -798,7 +798,7 @@ describe('PersonalizeMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('x-sc-rewrite header is provided', async() => {
+    it('x-sc-rewrite header is provided', async () => {
       const req = createRequest();
       const res = createResponse({
         headerValues: {
@@ -836,7 +836,7 @@ describe('PersonalizeMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('default fallback hostname is used', async() => {
+    it('default fallback hostname is used', async () => {
       const req = createRequest({
         headerValues: {
           host: undefined,
@@ -874,7 +874,7 @@ describe('PersonalizeMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('custom fallback hostname is used', async() => {
+    it('custom fallback hostname is used', async () => {
       const req = createRequest({
         headerValues: {
           host: undefined,
@@ -910,7 +910,7 @@ describe('PersonalizeMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('configured scope is used', async() => {
+    it('configured scope is used', async () => {
       const pageId = 'item-id';
       const scope = 'myscope';
       const req = createRequest();
@@ -938,7 +938,7 @@ describe('PersonalizeMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('configured timeouts are used', async() => {
+    it('configured timeouts are used', async () => {
       const pageId = 'item-id';
       const edgeTimeout = 1000;
       const cdpTimeout = 1000;
@@ -963,7 +963,7 @@ describe('PersonalizeMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('component testing is executed', async() => {
+    it('component testing is executed', async () => {
       const pageId = 'item-id';
       const req = createRequest();
       const res = createResponse();
@@ -1063,7 +1063,7 @@ describe('PersonalizeMiddleware', () => {
       errorSpy.restore();
     });
 
-    it('should log error when getPersonalizeInfo throws', async() => {
+    it('should log error when getPersonalizeInfo throws', async () => {
       const error = new Error('Edge fails');
 
       const getPersonalizeInfoWithError = sandbox.stub().throws(error);

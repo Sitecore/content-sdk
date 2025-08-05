@@ -48,7 +48,7 @@ describe('RobotsService', () => {
   };
 
   describe('Fetch robots.txt', () => {
-    it('should get error if robots.txt has empty sitename', async() => {
+    it('should get error if robots.txt has empty sitename', async () => {
       mockRobotsRequest();
 
       const service = new RobotsService({ clientFactory, siteName: '' });
@@ -59,7 +59,7 @@ describe('RobotsService', () => {
       return expect(nock.isDone()).to.be.false;
     });
 
-    it('should get robots.txt', async() => {
+    it('should get robots.txt', async () => {
       mockRobotsRequest(siteName);
 
       const service = new RobotsService({ clientFactory, siteName });
@@ -69,7 +69,7 @@ describe('RobotsService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should pass fetchOptions to the GraphQL client request', async() => {
+    it('should pass fetchOptions to the GraphQL client request', async () => {
       const fetchOptions = {
         headers: { 'X-Test-Header': 'true' },
         cache: 'no-store' as RequestCache,

@@ -23,7 +23,7 @@ describe('LayoutService', () => {
     sinon.restore();
   });
 
-  it('should fetch layout data using clientFactory', async() => {
+  it('should fetch layout data using clientFactory', async () => {
     nock('https://bar.com', {
       reqheaders: {
         sc_apikey: apiKey,
@@ -81,7 +81,7 @@ describe('LayoutService', () => {
     });
   });
 
-  it('should fetch layout data if locale is not provided', async() => {
+  it('should fetch layout data if locale is not provided', async () => {
     nock('http://sctest', {
       reqheaders: {
         sc_apikey: apiKey,
@@ -134,7 +134,7 @@ describe('LayoutService', () => {
     });
   });
 
-  it('should fetch layout data using custom layout query', async() => {
+  it('should fetch layout data using custom layout query', async () => {
     nock('http://sctest', {
       reqheaders: {
         sc_apikey: apiKey,
@@ -189,7 +189,7 @@ describe('LayoutService', () => {
     });
   });
 
-  it('should handle not found', async() => {
+  it('should handle not found', async () => {
     nock('http://sctest')
       .post('/graphql', (body) => {
         return (
@@ -220,7 +220,7 @@ describe('LayoutService', () => {
     });
   });
 
-  it('should return error', async() => {
+  it('should return error', async () => {
     nock('http://sctest', {
       reqheaders: {
         sc_apikey: apiKey,
@@ -265,7 +265,7 @@ describe('LayoutService', () => {
     expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retries.retryStrategy);
   });
 
-  it('should pass fetchOptions to the GraphQL client', async() => {
+  it('should pass fetchOptions to the GraphQL client', async () => {
     const fetchOptions = {
       retries: 3,
       retryStrategy: {

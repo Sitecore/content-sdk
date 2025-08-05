@@ -29,7 +29,7 @@ describe('DictionaryService', () => {
     sinon.restore();
   });
 
-  it('should use cache', async() => {
+  it('should use cache', async () => {
     nock(endpoint, { reqheaders: { sc_apikey: apiKey } })
       .post('/', /DictionarySiteQuery/gi)
       .reply(200, dictionarySiteQueryResponse.singlepage);
@@ -85,7 +85,7 @@ describe('DictionaryService', () => {
     expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retries.retryStrategy);
   });
 
-  it('should fetch dictionary phrases using clientFactory', async() => {
+  it('should fetch dictionary phrases using clientFactory', async () => {
     nock(endpoint, { reqheaders: { sc_apikey: apiKey } })
       .post('/')
       .reply(200, dictionarySiteQueryResponse.singlepage);
@@ -99,7 +99,7 @@ describe('DictionaryService', () => {
     expect(result.bar).to.equal('bar');
   });
 
-  it('should use default pageSize of 500, if pageSize not provided in constructor', async() => {
+  it('should use default pageSize of 500, if pageSize not provided in constructor', async () => {
     nock(endpoint)
       .persist()
       .post(
@@ -118,7 +118,7 @@ describe('DictionaryService', () => {
     expect(result).to.have.all.keys('foo', 'bar');
   });
 
-  it('should use a custom pageSize, if provided', async() => {
+  it('should use a custom pageSize, if provided', async () => {
     const customPageSize = 1;
 
     nock(endpoint)
@@ -139,7 +139,7 @@ describe('DictionaryService', () => {
     expect(result).to.have.all.keys('foo', 'bar', 'baz');
   });
 
-  it('should throw when getting http errors', async() => {
+  it('should throw when getting http errors', async () => {
     nock(endpoint).post('/').reply(401, {
       error: 'whoops',
     });
@@ -155,7 +155,7 @@ describe('DictionaryService', () => {
     });
   });
 
-  it('should return empty result when no dictionary entries found', async() => {
+  it('should return empty result when no dictionary entries found', async () => {
     nock(endpoint)
       .post('/')
       .reply(200, {
@@ -175,7 +175,7 @@ describe('DictionaryService', () => {
     expect(result).to.deep.equal({});
   });
 
-  it('should throw error if siteName is not provided', async() => {
+  it('should throw error if siteName is not provided', async () => {
     const service = new DictionaryService({
       clientFactory,
       cacheEnabled: false,
@@ -186,7 +186,7 @@ describe('DictionaryService', () => {
     });
   });
 
-  it('should throw error if language is not provided', async() => {
+  it('should throw error if language is not provided', async () => {
     const service = new DictionaryService({
       clientFactory,
       cacheEnabled: false,
@@ -197,7 +197,7 @@ describe('DictionaryService', () => {
     });
   });
 
-  it('should pass fetchOptions to the GraphQL client', async() => {
+  it('should pass fetchOptions to the GraphQL client', async () => {
     const fetchOptions = {
       retries: 3,
       retryStrategy: {

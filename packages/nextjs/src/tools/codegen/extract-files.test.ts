@@ -53,7 +53,7 @@ describe('extract-files', () => {
     delete process.env.SITECORE_BUILD;
   });
 
-  it('should skip when not in deploy context', async() => {
+  it('should skip when not in deploy context', async () => {
     const debugStub = sandbox.stub(debug, 'common');
     const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
     sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
@@ -70,7 +70,7 @@ describe('extract-files', () => {
     expect(debugStub.firstCall.args[0]).to.equal('Skipping code extraction, not in deploy context');
   });
 
-  it('should skip when code generation is opted out', async() => {
+  it('should skip when code generation is opted out', async () => {
     const debugStub = sandbox.stub(debug, 'common');
     const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
     sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
@@ -92,7 +92,7 @@ describe('extract-files', () => {
     );
   });
 
-  it('should use customValidateDeployContext', async() => {
+  it('should use customValidateDeployContext', async () => {
     const debugStub = sandbox.stub(debug, 'common');
     const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
     sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
@@ -108,7 +108,7 @@ describe('extract-files', () => {
     expect(debugStub.firstCall.args[0]).to.equal('Skipping code extraction, not in deploy context');
   });
 
-  it('should log when access token is empty', async() => {
+  it('should log when access token is empty', async () => {
     const consoleErrorStub = sandbox.stub(console, 'error');
     const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
     sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
@@ -122,7 +122,7 @@ describe('extract-files', () => {
     );
   });
 
-  it('should catch exceptions from resolveImportFiles call', async() => {
+  it('should catch exceptions from resolveImportFiles call', async () => {
     const args = {
       ...mockArgs,
     };
@@ -147,7 +147,7 @@ describe('extract-files', () => {
     );
   });
 
-  it('should call sendCode for each component path and package.json', async() => {
+  it('should call sendCode for each component path and package.json', async () => {
     const args = {
       ...mockArgs,
     };

@@ -6,7 +6,7 @@ import { BYOCWrapper } from './BYOCWrapper';
 import * as BYOCComponent from './BYOCComponent';
 
 describe('<BYOCWrapper />', () => {
-  it('should render', async() => {
+  it('should render', async () => {
     const byocComponentStub = stub(BYOCComponent, 'BYOCComponent').callsFake(() => <p>Foo</p>);
     const mockProps = {
       params: {

@@ -106,7 +106,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('Extensibility', () => {
-    it('should use custom layoutService when provided', async() => {
+    it('should use custom layoutService when provided', async () => {
       const customLayoutService = {
         fetchLayoutData: sandbox.stub().resolves({
           sitecore: {
@@ -129,7 +129,7 @@ describe('SitecoreClient', () => {
       expect(customLayoutService.fetchLayoutData.calledOnce).to.be.true;
     });
 
-    it('should use custom dictionaryService when provided', async() => {
+    it('should use custom dictionaryService when provided', async () => {
       const customDictionaryService = {
         fetchDictionaryData: sandbox.stub().resolves({ key: 'custom-value' }),
       };
@@ -147,7 +147,7 @@ describe('SitecoreClient', () => {
       expect(customDictionaryService.fetchDictionaryData.calledOnce).to.be.true;
     });
 
-    it('should use custom editingService when provided', async() => {
+    it('should use custom editingService when provided', async () => {
       const customEditingService = {
         fetchEditingData: sandbox.stub().resolves({
           layoutData: {
@@ -182,7 +182,7 @@ describe('SitecoreClient', () => {
       expect(customEditingService.fetchEditingData.calledOnce).to.be.true;
     });
 
-    it('should use custom errorPagesService when provided', async() => {
+    it('should use custom errorPagesService when provided', async () => {
       const customErrorPagesService = {
         fetchErrorPages: sandbox.stub().resolves({
           notFoundPagePath: '/custom-not-found',
@@ -203,7 +203,7 @@ describe('SitecoreClient', () => {
       expect(customErrorPagesService.fetchErrorPages.calledOnce).to.be.true;
     });
 
-    it('should use custom sitePathService when provided', async() => {
+    it('should use custom sitePathService when provided', async () => {
       const customSitePathService = {
         fetchSiteRoutes: sandbox
           .stub()
@@ -242,7 +242,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getPage', () => {
-    it('should return page data when route exists', async() => {
+    it('should return page data when route exists', async () => {
       const path = '/test/path';
       const locale = 'en-US';
       const siteInfo = {
@@ -286,7 +286,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should return page data when site is not resolved', async() => {
+    it('should return page data when site is not resolved', async () => {
       const path = '/test/path';
       const locale = 'en-US';
       const siteInfo = {
@@ -330,7 +330,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should return null when route does not exist', async() => {
+    it('should return null when route does not exist', async () => {
       const path = '/test/non-existent';
       const siteInfo = {
         name: 'default-site',
@@ -351,7 +351,7 @@ describe('SitecoreClient', () => {
       expect(result).to.be.null;
     });
 
-    it('should use default language when locale not specified', async() => {
+    it('should use default language when locale not specified', async () => {
       const path = '/test/path';
       const siteInfo = {
         name: 'default-site',
@@ -380,7 +380,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should personalize page layout when variants are passed in page options', async() => {
+    it('should personalize page layout when variants are passed in page options', async () => {
       const path = '/test/path';
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
@@ -397,7 +397,7 @@ describe('SitecoreClient', () => {
       });
     });
 
-    it('should pass fetchOptions to layoutService when calling getPage', async() => {
+    it('should pass fetchOptions to layoutService when calling getPage', async () => {
       const path = '/test/path';
       const locale = 'en-US';
       const fetchOptions = {
@@ -441,7 +441,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getErrorPage', () => {
-    it('should fetch error page with default site and language', async() => {
+    it('should fetch error page with default site and language', async () => {
       const errorPage = {
         notFoundPage: { rendered: { sitecore: { route: { name: 'home' } } } },
       };
@@ -475,7 +475,7 @@ describe('SitecoreClient', () => {
       expect(errorPagesServiceStub.fetchErrorPages.calledOnce).to.be.true;
     });
 
-    it('should return null when unknown error page is requested', async() => {
+    it('should return null when unknown error page is requested', async () => {
       const result = await sitecoreClient.getErrorPage('unknown' as ErrorPage, {
         site: 'test-site',
         locale: 'fr-FR',
@@ -484,7 +484,7 @@ describe('SitecoreClient', () => {
     });
 
     describe('404 page', () => {
-      it('should return not found page', async() => {
+      it('should return not found page', async () => {
         const site = 'test-site';
         const locale = 'fr-FR';
         const errorPage = {
@@ -512,7 +512,7 @@ describe('SitecoreClient', () => {
         });
       });
 
-      it('should return null when not found page is not found', async() => {
+      it('should return null when not found page is not found', async () => {
         const site = 'test-site';
         const locale = 'fr-FR';
         const errorPage = {
@@ -528,7 +528,7 @@ describe('SitecoreClient', () => {
     });
 
     describe('500 page', () => {
-      it('should return server error page', async() => {
+      it('should return server error page', async () => {
         const site = 'test-site';
         const locale = 'fr-FR';
         const errorPage = {
@@ -559,7 +559,7 @@ describe('SitecoreClient', () => {
         });
       });
 
-      it('should return null when server error page is not found', async() => {
+      it('should return null when server error page is not found', async () => {
         const site = 'test-site';
         const locale = 'fr-FR';
         const errorPage = {
@@ -579,7 +579,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getDictionary', () => {
-    it('should fetch dictionary data with specified site and locale', async() => {
+    it('should fetch dictionary data with specified site and locale', async () => {
       const routeOptions = {
         site: 'test-site',
         locale: 'fr-FR',
@@ -596,7 +596,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should use default site and language when not specified', async() => {
+    it('should use default site and language when not specified', async () => {
       const dictionaryData = { key1: 'value1', key2: 'value2' };
       dictionaryServiceStub.fetchDictionaryData.resolves(dictionaryData);
 
@@ -611,7 +611,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should pass fetchOptions to dictionaryService when calling getDictionary', async() => {
+    it('should pass fetchOptions to dictionaryService when calling getDictionary', async () => {
       const locale = 'fr-FR';
       const site = 'test-site';
       const fetchOptions = {
@@ -638,7 +638,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getErrorPages', () => {
-    it('should fetch error pages with specified site and locale', async() => {
+    it('should fetch error pages with specified site and locale', async () => {
       const site = 'test-site';
       const locale = 'fr-FR';
       const mockErrorPages = {
@@ -656,7 +656,7 @@ describe('SitecoreClient', () => {
       expect(errorPagesServiceStub.fetchErrorPages.calledWith(site, locale)).to.be.true;
     });
 
-    it('should pass fetchOptions to errorPagesService when calling getErrorPages', async() => {
+    it('should pass fetchOptions to errorPagesService when calling getErrorPages', async () => {
       const site = 'test-site';
       const locale = 'fr-FR';
       const fetchOptions = {
@@ -689,7 +689,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getPagePaths', () => {
-    it('should return page paths', async() => {
+    it('should return page paths', async () => {
       const sites = ['default-site', 'other-site'];
       const languages = ['en', 'fr'];
       const expectedPaths = [
@@ -706,7 +706,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getPreview', () => {
-    it('should fetch and return preview data correctly in edit mode', async() => {
+    it('should fetch and return preview data correctly in edit mode', async () => {
       const previewData = {
         site: 'default-site',
         itemId: 'test-item-id',
@@ -757,7 +757,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should fetch and return preview data correctly in preview mode', async() => {
+    it('should fetch and return preview data correctly in preview mode', async () => {
       const previewData = {
         site: 'default-site',
         itemId: 'test-item-id',
@@ -808,7 +808,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should apply personalization', async() => {
+    it('should apply personalization', async () => {
       const variant = 'test';
       const testLayoutData = structuredClone(layoutData);
       const componentVariantIds = ['mountain_bike_audience', 'another_variant', 'third_variant'];
@@ -835,7 +835,7 @@ describe('SitecoreClient', () => {
       });
     });
 
-    it('should log error when preview data is missing', async() => {
+    it('should log error when preview data is missing', async () => {
       const consoleErrorStub = sandbox.stub(console, 'error');
 
       await sitecoreClient.getPreview(undefined);
@@ -845,7 +845,7 @@ describe('SitecoreClient', () => {
       consoleErrorStub.restore();
     });
 
-    it('should throw error when editing data fetch fails', async() => {
+    it('should throw error when editing data fetch fails', async () => {
       const previewData = {
         site: 'default-site',
         itemId: 'test-item-id',
@@ -866,7 +866,7 @@ describe('SitecoreClient', () => {
       }
     });
 
-    it('should use custom fetch options when provided', async() => {
+    it('should use custom fetch options when provided', async () => {
       const previewData = {
         site: 'default-site',
         itemId: 'test-item-id',
@@ -924,7 +924,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getDesignLibraryData', () => {
-    it('should fetch component library data', async() => {
+    it('should fetch component library data', async () => {
       const componentLibData = {
         itemId: 'item-id',
         componentUid: 'comp-uid',
@@ -984,7 +984,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should fetch component library data', async() => {
+    it('should fetch component library data', async () => {
       const componentLibData = {
         itemId: 'item-id',
         componentUid: 'comp-uid',
@@ -1044,7 +1044,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should throw error when local API settings are missing', async() => {
+    it('should throw error when local API settings are missing', async () => {
       const componentLibData = {
         itemId: 'item-id',
         componentUid: 'comp-uid',
@@ -1078,7 +1078,7 @@ describe('SitecoreClient', () => {
       }
     });
 
-    it('should pass fetchOptions to componentService when calling getDesignLibraryData', async() => {
+    it('should pass fetchOptions to componentService when calling getDesignLibraryData', async () => {
       const componentLibData = {
         itemId: 'item-id',
         componentUid: 'comp-uid',
@@ -1230,7 +1230,7 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getHeadLinks', function() {
+  describe('getHeadLinks', function () {
     const truthyValue = {
       value: '<div class="test bar"><p class="foo ck-content">bar</p></div>',
     };
@@ -1334,7 +1334,7 @@ describe('SitecoreClient', () => {
         .returns(sitemapXmlServiceStub);
     });
 
-    it('should fetch and return sitemap content when specific sitemap exists', async() => {
+    it('should fetch and return sitemap content when specific sitemap exists', async () => {
       const absoluteSitemapPath = 'https://cdn.example.com/sitemap.xml';
       const xmlContent = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">...</urlset>';
 
@@ -1350,7 +1350,7 @@ describe('SitecoreClient', () => {
       expect(result).to.equal(xmlContent);
     });
 
-    it('should fetch specific sitemap when ID is provided', async() => {
+    it('should fetch specific sitemap when ID is provided', async () => {
       const sitemapId = '1';
       const absoluteSitemapPath = 'https://cdn.example.com/sitemap-1.xml';
       const xmlContent = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">...</urlset>';
@@ -1367,7 +1367,7 @@ describe('SitecoreClient', () => {
       expect(result).to.equal(xmlContent);
     });
 
-    it('should generate sitemap index XML when no specific sitemap is found', async() => {
+    it('should generate sitemap index XML when no specific sitemap is found', async () => {
       const absoluteSitemapPaths = [
         'https://cdn.example.com/sitemap-0.xml',
         'https://cdn.example.com/sitemap-1.xml',
@@ -1388,7 +1388,7 @@ describe('SitecoreClient', () => {
       });
     });
 
-    it('should throw REDIRECT_404 error when sitemap fetch fails', async() => {
+    it('should throw REDIRECT_404 error when sitemap fetch fails', async () => {
       const sitemapId = '3';
       const absoluteSitemapPaths = ['https://cdn.example.com/sitemap-1.xml'];
 
@@ -1406,7 +1406,7 @@ describe('SitecoreClient', () => {
       }
     });
 
-    it('should throw REDIRECT_404 error when no sitemaps are found', async() => {
+    it('should throw REDIRECT_404 error when no sitemaps are found', async () => {
       sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
       sitemapXmlServiceStub.fetchSitemaps.resolves([]);
 
@@ -1419,7 +1419,7 @@ describe('SitecoreClient', () => {
       }
     });
 
-    it('should use specified protocol in generated sitemap index', async() => {
+    it('should use specified protocol in generated sitemap index', async () => {
       const absoluteSitemapPaths = ['https://cdn.example.com/sitemap-1.xml'];
       sitemapXmlServiceStub.getSitemap.resolves(undefined);
       sitemapXmlServiceStub.fetchSitemaps.resolves(absoluteSitemapPaths);
@@ -1432,7 +1432,7 @@ describe('SitecoreClient', () => {
       expect(result).to.include('<loc>http://example.com/sitemap-1.xml</loc>');
     });
 
-    it('should pass fetchOptions to fetchSitemaps method', async() => {
+    it('should pass fetchOptions to fetchSitemaps method', async () => {
       const absoluteSitemapPaths = ['https://cdn.example.com/sitemap-1.xml'];
       const fetchOptions = {
         headers: { 'Custom-Header': 'test' },
@@ -1448,7 +1448,7 @@ describe('SitecoreClient', () => {
       expect(sitemapXmlServiceStub.fetchSitemaps.calledWith(fetchOptions)).to.be.true;
     });
 
-    it('should properly escape special characters in sitemap URLs', async() => {
+    it('should properly escape special characters in sitemap URLs', async () => {
       const absoluteSitemapPath = 'https://cdn.example.com/sitemap.xml?param=value&other=value';
       sitemapXmlServiceStub.getSitemap.resolves(undefined);
       sitemapXmlServiceStub.fetchSitemaps.resolves([absoluteSitemapPath]);
@@ -1474,7 +1474,7 @@ describe('SitecoreClient', () => {
         .returns(mockRobotsService as any);
     });
 
-    it('should return robots.txt content if available', async() => {
+    it('should return robots.txt content if available', async () => {
       const content = 'User-agent: *\nDisallow: /';
       mockRobotsService.fetchRobots.resolves(content);
 
@@ -1484,7 +1484,7 @@ describe('SitecoreClient', () => {
       expect(result).to.equal(content);
     });
 
-    it('should return null if fetchRobots returns null or empty', async() => {
+    it('should return null if fetchRobots returns null or empty', async () => {
       mockRobotsService.fetchRobots.resolves(null);
 
       const result = await sitecoreClient.getRobots(siteName);
@@ -1493,7 +1493,7 @@ describe('SitecoreClient', () => {
       expect(result).to.be.null;
     });
 
-    it('should propagate errors from fetchRobots', async() => {
+    it('should propagate errors from fetchRobots', async () => {
       const error = new Error('Network error');
       mockRobotsService.fetchRobots.rejects(error);
 
@@ -1506,7 +1506,7 @@ describe('SitecoreClient', () => {
       }
     });
 
-    it('should pass fetchOptions to fetchRobots', async() => {
+    it('should pass fetchOptions to fetchRobots', async () => {
       const fetchOptions = {
         headers: { 'X-Test': 'true' },
         cache: 'no-store' as RequestCache,

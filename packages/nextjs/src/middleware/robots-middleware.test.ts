@@ -57,7 +57,7 @@ describe('RobotsMiddleware', () => {
     sandbox.restore();
   });
 
-  it('should set the content type header to text/plain', async() => {
+  it('should set the content type header to text/plain', async () => {
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
 
     await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
@@ -65,7 +65,7 @@ describe('RobotsMiddleware', () => {
     expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/plain');
   });
 
-  it('should call getRobots with the correct siteName', async() => {
+  it('should call getRobots with the correct siteName', async () => {
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
 
     await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
@@ -73,7 +73,7 @@ describe('RobotsMiddleware', () => {
     expect(sitecoreClientStub.getRobots).to.have.been.calledWith('test-site');
   });
 
-  it('should return 200 with robots content', async() => {
+  it('should return 200 with robots content', async () => {
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
 
     await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
@@ -82,7 +82,7 @@ describe('RobotsMiddleware', () => {
     expect(res.send).to.have.been.calledWith('User-agent: *\nDisallow: /');
   });
 
-  it('should return 404 if getRobots returns null', async() => {
+  it('should return 404 if getRobots returns null', async () => {
     sitecoreClientStub.getRobots.resolves(undefined);
 
     await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
@@ -91,7 +91,7 @@ describe('RobotsMiddleware', () => {
     expect(res.send).to.have.been.calledWith('User-agent: *\nDisallow: /');
   });
 
-  it('should return 500 if getRobots throws an error', async() => {
+  it('should return 500 if getRobots throws an error', async () => {
     sitecoreClientStub.getRobots.rejects(new Error('Unexpected failure'));
 
     await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
@@ -100,7 +100,7 @@ describe('RobotsMiddleware', () => {
     expect(res.send).to.have.been.calledWith('Internal Server Error');
   });
 
-  it('should use "localhost" as fallback when host header is missing', async() => {
+  it('should use "localhost" as fallback when host header is missing', async () => {
     req.headers = {}; // no host header
 
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');

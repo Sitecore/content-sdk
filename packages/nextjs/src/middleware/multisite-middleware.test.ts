@@ -136,7 +136,7 @@ describe('MultisiteMiddleware', () => {
     describe('disabled / skip', () => {
       const res = createResponse();
 
-      const test = async(pathname: string, middleware) => {
+      const test = async (pathname: string, middleware) => {
         const req = createRequest({
           nextUrl: {
             pathname,
@@ -164,7 +164,7 @@ describe('MultisiteMiddleware', () => {
         debugSpy.resetHistory();
       };
 
-      it('default', async() => {
+      it('default', async () => {
         const { middleware } = createMiddleware();
 
         await test('/src/image.png', middleware);
@@ -173,7 +173,7 @@ describe('MultisiteMiddleware', () => {
         await test('/_next/webpack', middleware);
       });
 
-      it('should apply both default and custom rules when custom disabled function provided', async() => {
+      it('should apply both default and custom rules when custom disabled function provided', async () => {
         const skip = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
 
         const { middleware } = createMiddleware({
@@ -189,7 +189,7 @@ describe('MultisiteMiddleware', () => {
     });
 
     describe('preview', () => {
-      it('prerender bypass cookie is present', async() => {
+      it('prerender bypass cookie is present', async () => {
         const { middleware } = createMiddleware();
         const res = NextResponse.next();
 
@@ -206,7 +206,7 @@ describe('MultisiteMiddleware', () => {
         expect(finalRes).to.deep.equal(res);
       });
 
-      it('preview data cookie is present', async() => {
+      it('preview data cookie is present', async () => {
         const { middleware } = createMiddleware();
         const res = NextResponse.next();
 
@@ -231,7 +231,7 @@ describe('MultisiteMiddleware', () => {
         nextRewriteStub.restore();
       });
 
-      it('request is passed', async() => {
+      it('request is passed', async () => {
         const defaultSiteCookieAttributes = {
           secure: true,
           httpOnly: true,
@@ -298,7 +298,7 @@ describe('MultisiteMiddleware', () => {
       nextRewriteStub.restore();
     });
 
-    it('fallback hostname is used', async() => {
+    it('fallback hostname is used', async () => {
       const req = createRequest({
         headerValues: { host: undefined },
       });
@@ -344,7 +344,7 @@ describe('MultisiteMiddleware', () => {
       });
     });
 
-    it('fallback default hostName is used', async() => {
+    it('fallback default hostName is used', async () => {
       const req = createRequest({
         headerValues: { host: undefined },
       });
@@ -388,7 +388,7 @@ describe('MultisiteMiddleware', () => {
       });
     });
 
-    it('host header is used', async() => {
+    it('host header is used', async () => {
       const req = createRequest();
 
       const res = createResponse();
@@ -430,7 +430,7 @@ describe('MultisiteMiddleware', () => {
       });
     });
 
-    it('custom response object is not provided', async() => {
+    it('custom response object is not provided', async () => {
       const req = createRequest();
 
       const res = createResponse();
@@ -472,7 +472,7 @@ describe('MultisiteMiddleware', () => {
       });
     });
 
-    it('sc_site querystring parameter is provided', async() => {
+    it('sc_site querystring parameter is provided', async () => {
       const req = createRequest({
         searchParams: { sc_site: 'qsFoo' },
       });
@@ -519,7 +519,7 @@ describe('MultisiteMiddleware', () => {
       });
     });
 
-    it('sc_site cookie is provided and its usage enabled', async() => {
+    it('sc_site cookie is provided and its usage enabled', async () => {
       const req = createRequest({
         cookieValues: { sc_site: 'foobar' },
       });
@@ -566,7 +566,7 @@ describe('MultisiteMiddleware', () => {
       });
     });
 
-    it('sc_site cookie is provided and its usage disabled', async() => {
+    it('sc_site cookie is provided and its usage disabled', async () => {
       const req = createRequest({
         cookieValues: { sc_site: 'foobar' },
       });
@@ -629,7 +629,7 @@ describe('MultisiteMiddleware', () => {
       errorSpy.restore();
     });
 
-    it('should handle error', async() => {
+    it('should handle error', async () => {
       const error = new Error('Custom error');
 
       class SampleSiteResolver extends SiteResolver {

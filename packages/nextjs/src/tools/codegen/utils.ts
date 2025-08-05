@@ -197,7 +197,7 @@ export const resolveComponentImportFiles = (
   return componentImportsMap;
 };
 
-export const sendCode = async({
+export const sendCode = async ({
   file,
   token,
   targetUrl,

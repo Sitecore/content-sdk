@@ -537,7 +537,7 @@ describe('FEaaS fallback', () => {
   });
 });
 
-it('should render Suspense when disableSuspense is false', async() => {
+it('should render Suspense when disableSuspense is false', async () => {
   const page = getPage();
   page.layout = normalModeDevData;
   const component = normalModeDevData.sitecore.route as RouteData;
@@ -554,7 +554,7 @@ it('should render Suspense when disableSuspense is false', async() => {
   await findByText(renderedComponent.container, 'No error');
 });
 
-it('should not render Suspense when disableSuspense is true', async() => {
+it('should not render Suspense when disableSuspense is true', async () => {
   const page = getPage();
   page.layout = normalModeDevData;
   const component = normalModeDevData.sitecore.route as RouteData;

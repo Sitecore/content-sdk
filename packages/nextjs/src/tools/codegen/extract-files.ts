@@ -27,7 +27,7 @@ export const extractFiles = (args: ExtractFilesConfig) => {
     authority: process.env.SITECORE_AUTH_AUTHORITY,
     audience: process.env.SITECORE_AUTH_AUDIENCE,
   };
-  return async() => {
+  return async () => {
     if (
       (args.customValidateDeployContext && !args.customValidateDeployContext()) ||
       !validateDeployContext()

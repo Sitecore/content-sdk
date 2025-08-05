@@ -45,7 +45,7 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
     return this.handler;
   }
 
-  private handler = async(req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+  private handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
     const { method, query, headers } = req;
 
     const startTimestamp = Date.now();

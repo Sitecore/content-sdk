@@ -22,13 +22,13 @@ describe('build command', () => {
     sinon.restore();
   });
 
-  it('should call the loadConfig passing the config arg', async() => {
+  it('should call the loadConfig passing the config arg', async () => {
     const argv = { config: './some-config.ts' };
     await handler(argv);
     expect(loadCliConfigStub.calledOnceWith(argv.config)).to.be.true;
   });
 
-  it('should execute all build commands', async() => {
+  it('should execute all build commands', async () => {
     const argv = { config: './some-config.ts' };
     await handler(argv);
     mockConfig.build.commands.forEach((command: sinon.SinonStub) => {

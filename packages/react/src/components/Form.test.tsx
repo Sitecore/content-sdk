@@ -69,7 +69,7 @@ describe('Form', () => {
     },
   };
 
-  it('renders form using clientContextId when both IDs are present', async() => {
+  it('renders form using clientContextId when both IDs are present', async () => {
     const loadFormSpy = sinon.spy((edgeId: string, formId: string, edgeUrl?: string) => {
       expect(edgeId).to.equal('client-id');
       expect(formId).to.equal('456');
@@ -105,7 +105,7 @@ describe('Form', () => {
     });
   });
 
-  it('does not load form when clientContextId is missing', async() => {
+  it('does not load form when clientContextId is missing', async () => {
     const apiNoClientId = {
       edge: {
         contextId: 'server-only',
@@ -135,7 +135,7 @@ describe('Form', () => {
     });
   });
 
-  it('renders form in edit mode (scripts executed, no submit subscription)', async() => {
+  it('renders form in edit mode (scripts executed, no submit subscription)', async () => {
     const loadFormSpy = sinon
       .stub()
       .resolves('<form id="test-form"><script>console.log(1);</script></form>');
@@ -168,7 +168,7 @@ describe('Form', () => {
     });
   });
 
-  it('renders empty component on load failure (non-edit mode)', async() => {
+  it('renders empty component on load failure (non-edit mode)', async () => {
     mockFormModule({
       loadForm: sinon.stub().rejects(),
       subscribeToFormSubmitEvent: sinon.spy(),
@@ -186,7 +186,7 @@ describe('Form', () => {
     });
   });
 
-  it('renders edit-mode error placeholder on load failure', async() => {
+  it('renders edit-mode error placeholder on load failure', async () => {
     mockFormModule({
       loadForm: sinon.stub().rejects(),
       subscribeToFormSubmitEvent: sinon.spy(),

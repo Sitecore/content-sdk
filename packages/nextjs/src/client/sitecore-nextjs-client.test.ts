@@ -83,7 +83,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getPage', () => {
-    it('should personalize page layout when variants present in path', async() => {
+    it('should personalize page layout when variants present in path', async () => {
       const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}mountain_bike_audience/test/path`;
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
@@ -103,7 +103,7 @@ describe('SitecoreClient', () => {
       });
     });
 
-    it('should use personalize details passed in page options over variants present in path', async() => {
+    it('should use personalize details passed in page options over variants present in path', async () => {
       const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}sand_bike_audience/test/path`;
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
@@ -126,7 +126,7 @@ describe('SitecoreClient', () => {
       });
     });
 
-    it('should pass site from path to base getPage method', async() => {
+    it('should pass site from path to base getPage method', async () => {
       const path = `${SITE_PREFIX}mysite/test/path`;
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
@@ -144,7 +144,7 @@ describe('SitecoreClient', () => {
       });
     });
 
-    it('should use site passed in page options over site parsed from path', async() => {
+    it('should use site passed in page options over site parsed from path', async () => {
       const path = `${SITE_PREFIX}mysite/test/path`;
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
@@ -214,7 +214,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getComponentData', () => {
-    it('should return componentData when component has getComponentsProps method', async() => {
+    it('should return componentData when component has getComponentsProps method', async () => {
       const context = {
         params: { path: ['test', 'path'] },
         query: {},

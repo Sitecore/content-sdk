@@ -63,7 +63,7 @@ describe('PersonalizeService', () => {
     nock.cleanAll();
   });
 
-  it('should return personalize info for a route', async() => {
+  it('should return personalize info for a route', async () => {
     mockNonEmptyResponse();
 
     const service = new PersonalizeService(config);
@@ -79,7 +79,7 @@ describe('PersonalizeService', () => {
     });
   });
 
-  it('should return undefined if itemPath / language not found', async() => {
+  it('should return undefined if itemPath / language not found', async () => {
     mockEmptyResponse();
 
     const service = new PersonalizeService(config);
@@ -92,7 +92,7 @@ describe('PersonalizeService', () => {
     expect(personalizeData).to.eql(undefined);
   });
 
-  it('should throw an error', async() => {
+  it('should throw an error', async () => {
     nock('http://sctest', {
       reqheaders: {
         sc_apikey: apiKey,
@@ -107,7 +107,7 @@ describe('PersonalizeService', () => {
     });
   });
 
-  it('should return fallback value when timeout is exceeded using default timeout', async() => {
+  it('should return fallback value when timeout is exceeded using default timeout', async () => {
     nock('http://sctest', {
       reqheaders: {
         sc_apikey: apiKey,
@@ -122,7 +122,7 @@ describe('PersonalizeService', () => {
     const result = await service.getPersonalizeInfo('/sitecore/content/home', 'en', siteName);
     expect(result).to.equal(undefined);
   });
-  it('should return fallback value when timeout is exceeded using provided timeout', async() => {
+  it('should return fallback value when timeout is exceeded using provided timeout', async () => {
     nock('http://sctest', {
       reqheaders: {
         sc_apikey: apiKey,
@@ -137,7 +137,7 @@ describe('PersonalizeService', () => {
     const result = await service.getPersonalizeInfo('/sitecore/content/home', 'en', siteName);
     expect(result).to.equal(undefined);
   });
-  it('should return fallback value when api returns timeout error', async() => {
+  it('should return fallback value when api returns timeout error', async () => {
     nock('http://sctest', {
       reqheaders: {
         sc_apikey: apiKey,
@@ -153,7 +153,7 @@ describe('PersonalizeService', () => {
     expect(result).to.equal(undefined);
   });
 
-  it('should cache service response by default', async() => {
+  it('should cache service response by default', async () => {
     mockNonEmptyResponse();
 
     const itemPath = '/sitecore/content/home';
@@ -174,7 +174,7 @@ describe('PersonalizeService', () => {
     expect(secondResult).to.deep.equal(firstResult);
   });
 
-  it('should be possible to disable cache', async() => {
+  it('should be possible to disable cache', async () => {
     mockNonEmptyResponse();
 
     const itemPath = '/sitecore/content/home';
@@ -198,7 +198,7 @@ describe('PersonalizeService', () => {
     expect(secondResult).to.not.deep.equal(firstResult);
   });
 
-  it('cache timeout should be used', async() => {
+  it('cache timeout should be used', async () => {
     mockNonEmptyResponse();
 
     const itemPath = '/sitecore/content/home';

@@ -257,7 +257,7 @@ export const getImportMap = (paths: string[]) => {
  * @param {WriteImportMapArgs} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration
  */
 export const writeImportMap = (args: WriteImportMapArgs) => {
-  return async() => {
+  return async () => {
     const scConfig = args.scConfig;
     if (scConfig.disableCodeGeneration) {
       debug.common('Skipping import map generation. Code generation functionality is disabled.');

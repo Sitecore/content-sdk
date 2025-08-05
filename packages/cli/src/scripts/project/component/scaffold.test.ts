@@ -87,7 +87,7 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     expect(loadCliConfigStub.calledOnceWith(argv.config)).to.be.true;
   });
 
-  it('should call scaffoldComponent with default template if template name not provided and byoc flag is missing', async() => {
+  it('should call scaffoldComponent with default template if template name not provided and byoc flag is missing', async () => {
     const argv = {
       componentName: 'ValidComponentName',
     };
@@ -105,7 +105,7 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     ).to.be.true;
   });
 
-  it('should call scaffoldComponent with byoc template if template name not provided and byoc flag is passed', async() => {
+  it('should call scaffoldComponent with byoc template if template name not provided and byoc flag is passed', async () => {
     const argv = {
       componentName: 'ValidComponentName',
       byoc: true,
@@ -124,7 +124,7 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     ).to.be.true;
   });
 
-  it('should call scaffoldComponent with template Name if provided', async() => {
+  it('should call scaffoldComponent with template Name if provided', async () => {
     const argv = {
       componentName: 'ValidComponentName',
       templateName: 'customTemplate',
@@ -144,7 +144,7 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     ).to.be.true;
   });
 
-  it('should handle passing component subfolder', async() => {
+  it('should handle passing component subfolder', async () => {
     const argv = {
       componentName: 'path/to/ValidComponentName',
       config: './some-config.ts',

@@ -50,7 +50,7 @@ describe('SitemapXmlService', () => {
   };
 
   describe('Fetch sitemap', () => {
-    it('should get error if sitemap has empty sitename', async() => {
+    it('should get error if sitemap has empty sitename', async () => {
       mockSitemapRequest();
 
       const service = new SitemapXmlService({ clientFactory, siteName: '' });
@@ -61,7 +61,7 @@ describe('SitemapXmlService', () => {
       return expect(nock.isDone()).to.be.false;
     });
 
-    it('should fetch sitemap', async() => {
+    it('should fetch sitemap', async () => {
       mockSitemapRequest(mockSitemap);
 
       const service = new SitemapXmlService({ clientFactory, siteName });
@@ -73,7 +73,7 @@ describe('SitemapXmlService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should fetch sitemaps', async() => {
+    it('should fetch sitemaps', async () => {
       mockSitemapRequest(mockSitemaps);
 
       const service = new SitemapXmlService({ clientFactory, siteName });
@@ -85,7 +85,7 @@ describe('SitemapXmlService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should get null if sitemap not exists', async() => {
+    it('should get null if sitemap not exists', async () => {
       const mockIdSitemap = '-5';
       mockSitemapRequest(mockSitemaps);
 
@@ -98,7 +98,7 @@ describe('SitemapXmlService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should fetch specific sitemap when id is provided', async() => {
+    it('should fetch specific sitemap when id is provided', async () => {
       const mockIdSitemap = '3';
       mockSitemapRequest(mockSitemaps);
 
@@ -110,7 +110,7 @@ describe('SitemapXmlService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should fetch default sitemap when no id is provided', async() => {
+    it('should fetch default sitemap when no id is provided', async () => {
       const defaultSitemap = 'sitemap.xml';
       const mockSitemapsWithDefault = [...mockSitemaps, defaultSitemap];
       mockSitemapRequest(mockSitemapsWithDefault);
@@ -122,7 +122,7 @@ describe('SitemapXmlService', () => {
       return expect(nock.isDone()).to.be.true;
     });
 
-    it('should normalize IDs with leading hyphens (e.g., "-1" → "1")', async() => {
+    it('should normalize IDs with leading hyphens (e.g., "-1" → "1")', async () => {
       const mockSitemapsWithHyphenId = [...mockSitemaps, 'sitemap-1.xml'];
       mockSitemapRequest(mockSitemapsWithHyphenId);
 
@@ -133,7 +133,7 @@ describe('SitemapXmlService', () => {
       expect(nock.isDone()).to.be.true;
     });
 
-    it('should return undefined if sitemap does not exist', async() => {
+    it('should return undefined if sitemap does not exist', async () => {
       mockSitemapRequest(mockSitemaps);
 
       const service = new SitemapXmlService({ clientFactory, siteName });
@@ -143,7 +143,7 @@ describe('SitemapXmlService', () => {
       expect(nock.isDone()).to.be.true;
     });
 
-    it('should return undefined when id is undefined', async() => {
+    it('should return undefined when id is undefined', async () => {
       mockSitemapRequest(mockSitemaps);
       const service = new SitemapXmlService({ clientFactory, siteName });
       const result = await service.getSitemap(undefined);
@@ -151,7 +151,7 @@ describe('SitemapXmlService', () => {
       expect(nock.isDone()).to.be.false;
     });
 
-    it('should find "sitemap.xml" when id is an empty string', async() => {
+    it('should find "sitemap.xml" when id is an empty string', async () => {
       mockSitemapRequest(mockSitemaps);
       const service = new SitemapXmlService({ clientFactory, siteName });
       const result = await service.getSitemap('');
@@ -159,7 +159,7 @@ describe('SitemapXmlService', () => {
       expect(nock.isDone()).to.be.true;
     });
 
-    it('should find "sitemap-1.xml" when id is "1"', async() => {
+    it('should find "sitemap-1.xml" when id is "1"', async () => {
       mockSitemapRequest(mockSitemaps);
       const service = new SitemapXmlService({ clientFactory, siteName });
       const result = await service.getSitemap('1');

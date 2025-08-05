@@ -92,7 +92,7 @@ describe('NativeDataFetcher', () => {
   });
 
   describe('fetch', () => {
-    it('should execute request with fetch method', async() => {
+    it('should execute request with fetch method', async () => {
       const fetcher = new NativeDataFetcher();
 
       spy.on(global, 'fetch', mockFetch(200));
@@ -104,7 +104,7 @@ describe('NativeDataFetcher', () => {
       expect(fetchInit?.body).to.be.undefined;
     });
 
-    it('should add headers dynamically and validate them', async() => {
+    it('should add headers dynamically and validate them', async () => {
       const fetcher = new NativeDataFetcher();
 
       spy.on(
@@ -123,7 +123,7 @@ describe('NativeDataFetcher', () => {
       expect(headers.get('X-Test-Header')).to.equal('InitialValue');
     });
 
-    it('should execute request with text response type', async() => {
+    it('should execute request with text response type', async () => {
       const fetcher = new NativeDataFetcher();
 
       spy.on(global, 'fetch', mockFetch(200, {}, { responseType: 'text' }));
@@ -135,7 +135,7 @@ describe('NativeDataFetcher', () => {
       expect(fetchInit?.body).to.be.undefined;
     });
 
-    it('should execute POST request with data', async() => {
+    it('should execute POST request with data', async () => {
       const fetcher = new NativeDataFetcher();
       const postData = { x: 'val1', y: 'val2' };
       const respData = { z: 'val3' };
@@ -150,7 +150,7 @@ describe('NativeDataFetcher', () => {
       expect(fetchInit?.body).to.equal(JSON.stringify(postData));
     });
 
-    it('should execute GET request without data', async() => {
+    it('should execute GET request without data', async () => {
       const fetcher = new NativeDataFetcher();
       const respData = { z: 'val3' };
 
@@ -164,7 +164,7 @@ describe('NativeDataFetcher', () => {
       expect(fetchInit?.body).to.be.undefined;
     });
 
-    it('should execute DELETE request without data', async() => {
+    it('should execute DELETE request without data', async () => {
       const fetcher = new NativeDataFetcher();
       const respData = { z: 'val3' };
 
@@ -178,7 +178,7 @@ describe('NativeDataFetcher', () => {
       expect(fetchInit?.body).to.be.undefined;
     });
 
-    it('should execute PUT request with data', async() => {
+    it('should execute PUT request with data', async () => {
       const fetcher = new NativeDataFetcher();
       const putData = { x: 'val1', y: 'val2' };
       const respData = { z: 'val3' };
@@ -193,7 +193,7 @@ describe('NativeDataFetcher', () => {
       expect(fetchInit?.body).to.equal(JSON.stringify(putData));
     });
 
-    it('should execute HEAD request without data', async() => {
+    it('should execute HEAD request without data', async () => {
       const fetcher = new NativeDataFetcher();
       const respData = { z: 'val3' };
 
@@ -207,7 +207,7 @@ describe('NativeDataFetcher', () => {
       expect(fetchInit?.body).to.be.undefined;
     });
 
-    it('should execute failed request with data', async() => {
+    it('should execute failed request with data', async () => {
       const fetcher = new NativeDataFetcher();
 
       spy.on(
@@ -222,7 +222,7 @@ describe('NativeDataFetcher', () => {
       });
     });
 
-    it('should execute request with custom init', async() => {
+    it('should execute request with custom init', async () => {
       const headers = {
         x: 'x',
         y: 'y',
@@ -243,7 +243,7 @@ describe('NativeDataFetcher', () => {
       expect(global.Headers).to.be.called.with(headers);
     });
 
-    it('should debug log request and response', async() => {
+    it('should debug log request and response', async () => {
       const fetcher = new NativeDataFetcher();
 
       spy.on(global, 'fetch', mockFetch(200));
@@ -252,7 +252,7 @@ describe('NativeDataFetcher', () => {
       expect(debug.http.log, 'request and response log').to.be.called.twice;
     });
 
-    it('should debug log request and response error', async() => {
+    it('should debug log request and response error', async () => {
       const fetcher = new NativeDataFetcher();
 
       spy.on(global, 'fetch', mockFetch(400));
@@ -262,7 +262,7 @@ describe('NativeDataFetcher', () => {
       });
     });
 
-    it('should use debugger override', async() => {
+    it('should use debugger override', async () => {
       const fetcher = new NativeDataFetcher({ debugger: debug.personalize });
 
       spy.on(global, 'fetch', mockFetch(200));
@@ -271,7 +271,7 @@ describe('NativeDataFetcher', () => {
       expect(debug.personalize.log, 'request and response log').to.be.called.twice;
     });
 
-    it('should use fetch override', async() => {
+    it('should use fetch override', async () => {
       const fetchOverride = spy(mockFetch(200));
       const fetcher = new NativeDataFetcher({ fetch: fetchOverride });
 
@@ -279,7 +279,7 @@ describe('NativeDataFetcher', () => {
       expect(fetchOverride).to.be.called;
     });
 
-    it('should handle response.json() error', async() => {
+    it('should handle response.json() error', async () => {
       const fetcher = new NativeDataFetcher();
 
       spy.on(global, 'fetch', mockFetch(200, {}, { jsonError: 'ERROR' }));
@@ -293,7 +293,7 @@ describe('NativeDataFetcher', () => {
       ).to.be.called.exactly(3);
     });
 
-    it('should handle response.text() error', async() => {
+    it('should handle response.text() error', async () => {
       const fetcher = new NativeDataFetcher();
 
       spy.on(global, 'fetch', mockFetch(200, {}, { jsonError: 'ERROR' }));
@@ -307,7 +307,7 @@ describe('NativeDataFetcher', () => {
       ).to.be.called.exactly(3);
     });
 
-    it('should return error upon request timeout', async() => {
+    it('should return error upon request timeout', async () => {
       const fetcher = new NativeDataFetcher({ timeout: 10 });
 
       spy.on(global, 'fetch', mockFetch(200));
