@@ -396,7 +396,7 @@ describe('<DesignLibrary />', () => {
       });
     });
 
-    it('should render error message when component fails to initialize due to failing import map promise', async () => {
+    it('should render error message when import map promise cannot be resolved', async () => {
       const initError = new Error('Failed to load import map');
       const errorImportMap = () =>
         new Promise((_, reject) => {
@@ -410,8 +410,9 @@ describe('<DesignLibrary />', () => {
       );
 
       await waitFor(() => {
-        callbackEvent('Error', null);
-        expect(rendered.baseElement.innerHTML).to.contain('Error during component initialization');
+        expect(rendered.baseElement.innerHTML).to.contain(
+          'No dynamic import map loaded. Please check a dynamic import map function is passed into Design Library'
+        );
         expect(consoleErrorSpy.calledWith('Error loading import map:', initError)).to.be.true;
       });
     });

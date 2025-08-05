@@ -166,16 +166,8 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER][0];
   const [renderKey, setRenderKey] = useState(0);
   const [initError, setInitError] = useState<boolean>(false);
+  const [importMapError, setImportMapError] = useState<boolean>(false);
   const [Component, setComponent] = useState<DynamicComponent>(null);
-
-  if (!props.loadImportMap) {
-    return (
-      <div>
-        No dynamic import map loaded. Please check a dynamic import map function is passed into
-        Design Library
-      </div>
-    );
-  }
 
   if (!rendering) {
     return <div>No component found in layout data. Please check your layout data.</div>;
@@ -189,11 +181,19 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
 
     const init = async () => {
       let importMap: codegen.ImportEntry[] = undefined;
+      if (!props.loadImportMap) {
+        console.error(
+          'No loadImportMap prop provided. Please provide a dynamic import map function for DesignLibrary.'
+        );
+        setImportMapError(true);
+        return;
+      }
       try {
-        importMap = (await props.loadImportMap()).default;
+        const importMapImport = await props.loadImportMap();
+        importMap = importMapImport.default;
       } catch (error) {
         console.error('Error loading import map:', error);
-        setInitError(true);
+        setImportMapError(true);
         return;
       }
       // account for component being unmounted while resolving async import map
@@ -236,6 +236,15 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
       }
     };
   }, []);
+
+  if (importMapError) {
+    return (
+      <div>
+        No dynamic import map loaded. Please check a dynamic import map function is passed into
+        Design Library
+      </div>
+    );
+  }
 
   if (initError) {
     return <div key={renderKey}>Error during component initialization</div>;
