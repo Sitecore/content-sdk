@@ -11,6 +11,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
@@ -64,5 +67,4 @@ jobs:
         run: |
           echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
           npx lerna publish from-git --exact --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    
