@@ -2817,7 +2817,7 @@ __metadata:
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
     "@sitecore-content-sdk/core": 1.1.0-canary.18
-    "@stylistic/eslint-plugin-ts": ^2.10.0
+    "@stylistic/eslint-plugin": ^5.2.2
     "@types/chai": ^5.2.2
     "@types/mocha": ^10.0.10
     "@types/node": ^22.15.13
@@ -2825,18 +2825,18 @@ __metadata:
     "@types/sinon": ^17.0.4
     "@types/tmp": ^0.2.6
     "@types/yargs": ^17.0.33
-    "@typescript-eslint/eslint-plugin": 8.38.0
-    "@typescript-eslint/parser": 8.38.0
+    "@typescript-eslint/eslint-plugin": 8.39.0
+    "@typescript-eslint/parser": 8.39.0
     chai: ^4.4.1
     chokidar: ^4.0.3
     del-cli: ^6.0.0
     dotenv: ^16.5.0
     dotenv-expand: ^12.0.2
-    eslint: ^9.0.0
-    eslint-config-prettier: ^9.0.0
-    eslint-plugin-import: 2.29.1
-    eslint-plugin-jsdoc: 52.0.2
-    eslint-plugin-prettier: ^5.0.0
+    eslint: ^9.32.0
+    eslint-config-prettier: ^10.1.8
+    eslint-plugin-import: 2.32.0
+    eslint-plugin-jsdoc: 52.0.3
+    eslint-plugin-prettier: ^5.5.3
     mocha: ^11.2.2
     nyc: ^17.1.0
     prettier: ^2.8.8
@@ -2858,7 +2858,7 @@ __metadata:
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
     "@sitecore-cloudsdk/events": ^0.5.1
-    "@stylistic/eslint-plugin-ts": ^2.10.0
+    "@stylistic/eslint-plugin": ^5.2.2
     "@types/chai": ^5.2.2
     "@types/chai-spies": ^1.0.6
     "@types/chai-string": ^1.4.5
@@ -2871,19 +2871,19 @@ __metadata:
     "@types/sinon": ^17.0.4
     "@types/sinon-chai": ^4.0.0
     "@types/url-parse": 1.4.11
-    "@typescript-eslint/eslint-plugin": 8.38.0
-    "@typescript-eslint/parser": 8.38.0
+    "@typescript-eslint/eslint-plugin": 8.39.0
+    "@typescript-eslint/parser": 8.39.0
     chai: ^4.4.1
     chai-spies: ^1.1.0
     chai-string: ^1.6.0
     chalk: ^4.1.2
     debug: ^4.4.0
     del-cli: ^6.0.0
-    eslint: ^9.0.0
-    eslint-config-prettier: ^9.0.0
-    eslint-plugin-import: 2.29.1
-    eslint-plugin-jsdoc: 52.0.2
-    eslint-plugin-prettier: ^5.0.0
+    eslint: ^9.32.0
+    eslint-config-prettier: ^10.1.8
+    eslint-plugin-import: 2.32.0
+    eslint-plugin-jsdoc: 52.0.3
+    eslint-plugin-prettier: ^5.5.3
     glob: ^11.0.2
     graphql: ^16.11.0
     graphql-request: ^6.1.0
@@ -2914,7 +2914,7 @@ __metadata:
     "@sitecore-cloudsdk/personalize": ^0.5.1
     "@sitecore-content-sdk/core": 1.1.0-canary.18
     "@sitecore-content-sdk/react": 1.1.0-canary.18
-    "@stylistic/eslint-plugin-ts": ^2.10.0
+    "@stylistic/eslint-plugin": ^5.2.2
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.3.0
     "@types/chai": ^5.2.2
@@ -2926,19 +2926,19 @@ __metadata:
     "@types/react-dom": ^19.1.3
     "@types/sinon": ^17.0.4
     "@types/sinon-chai": ^3.2.9
-    "@typescript-eslint/eslint-plugin": 8.38.0
-    "@typescript-eslint/parser": 8.38.0
+    "@typescript-eslint/eslint-plugin": 8.39.0
+    "@typescript-eslint/parser": 8.39.0
     chai: ^4.4.1
     chai-string: ^1.6.0
     chalk: ^4.1.2
     cross-fetch: ^4.1.0
     del-cli: ^6.0.0
-    eslint: ^9.0.0
-    eslint-config-prettier: ^9.0.0
-    eslint-plugin-import: 2.29.1
-    eslint-plugin-jsdoc: 52.0.2
-    eslint-plugin-prettier: ^5.0.0
-    eslint-plugin-react: 7.37.1
+    eslint: ^9.32.0
+    eslint-config-prettier: ^10.1.8
+    eslint-plugin-import: 2.32.0
+    eslint-plugin-jsdoc: 52.0.3
+    eslint-plugin-prettier: ^5.5.3
+    eslint-plugin-react: 7.37.5
     eslint-plugin-react-hooks: 5.2.0
     glob: ^11.0.2
     jsdom: ^26.1.0
@@ -2977,7 +2977,7 @@ __metadata:
   dependencies:
     "@sitecore-content-sdk/core": 1.1.0-canary.18
     "@sitecore-feaas/clientside": ^0.6.0
-    "@stylistic/eslint-plugin-ts": ^2.10.0
+    "@stylistic/eslint-plugin": ^5.2.2
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.3.0
     "@types/chai": ^5.2.2
@@ -2988,17 +2988,17 @@ __metadata:
     "@types/react-dom": ^19.1.3
     "@types/sinon": ^17.0.4
     "@types/sinon-chai": ^4.0.0
-    "@typescript-eslint/eslint-plugin": 8.38.0
-    "@typescript-eslint/parser": 8.38.0
+    "@typescript-eslint/eslint-plugin": 8.39.0
+    "@typescript-eslint/parser": 8.39.0
     chai: ^4.3.7
     chai-string: ^1.6.0
     del-cli: ^6.0.0
-    eslint: ^9.0.0
-    eslint-config-prettier: ^9.0.0
-    eslint-plugin-import: 2.29.1
-    eslint-plugin-jsdoc: 52.0.2
-    eslint-plugin-prettier: ^5.0.0
-    eslint-plugin-react: 7.37.1
+    eslint: ^9.32.0
+    eslint-config-prettier: ^10.1.8
+    eslint-plugin-import: 2.32.0
+    eslint-plugin-jsdoc: 52.0.3
+    eslint-plugin-prettier: ^5.5.3
+    eslint-plugin-react: 7.37.5
     eslint-plugin-react-hooks: 5.2.0
     fast-deep-equal: ^3.1.3
     jsdom: ^26.1.0
@@ -3059,6 +3059,22 @@ __metadata:
   peerDependencies:
     eslint: ">=8.40.0"
   checksum: 9c489836f2c7925fdd87c81afc6649a171880e5b34b9073b11917d0e815d701e63ad803293511c5228823eea7464be2d51548592b3c846504d9832b6bc167480
+  languageName: node
+  linkType: hard
+
+"@stylistic/eslint-plugin@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "@stylistic/eslint-plugin@npm:5.2.2"
+  dependencies:
+    "@eslint-community/eslint-utils": ^4.7.0
+    "@typescript-eslint/types": ^8.37.0
+    eslint-visitor-keys: ^4.2.1
+    espree: ^10.4.0
+    estraverse: ^5.3.0
+    picomatch: ^4.0.3
+  peerDependencies:
+    eslint: ">=9.0.0"
+  checksum: faeb1bf912a7ad37a84ab94b99501b8edac2a49502f459682aeab7d58c8d3237372348f3b3e8aae999c584d67befb3723454b576da3b0784a7841cecaba1beb8
   languageName: node
   linkType: hard
 
@@ -3531,6 +3547,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/eslint-plugin@npm:8.39.0":
+  version: 8.39.0
+  resolution: "@typescript-eslint/eslint-plugin@npm:8.39.0"
+  dependencies:
+    "@eslint-community/regexpp": ^4.10.0
+    "@typescript-eslint/scope-manager": 8.39.0
+    "@typescript-eslint/type-utils": 8.39.0
+    "@typescript-eslint/utils": 8.39.0
+    "@typescript-eslint/visitor-keys": 8.39.0
+    graphemer: ^1.4.0
+    ignore: ^7.0.0
+    natural-compare: ^1.4.0
+    ts-api-utils: ^2.1.0
+  peerDependencies:
+    "@typescript-eslint/parser": ^8.39.0
+    eslint: ^8.57.0 || ^9.0.0
+    typescript: ">=4.8.4 <6.0.0"
+  checksum: daf8e4089a9b203b101645dcf55e7df1359f0cf0a0b6f1a336a64fa25dd54ff5188c9aa3f3e4899d5d60bceb8ed059f4771fdf314e8c162e0c2c5194aade641e
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/parser@npm:8.38.0":
   version: 8.38.0
   resolution: "@typescript-eslint/parser@npm:8.38.0"
@@ -3544,6 +3581,22 @@ __metadata:
     eslint: ^8.57.0 || ^9.0.0
     typescript: ">=4.8.4 <5.9.0"
   checksum: 8964da26cef76509c4c6015ccf3eff3ab837676adb5fbe8da5ac6d95b08ddbf1c66946c9ce29c0e3b05fa9942632d7cd10c8376a073fbfdbfeb07f32a0d83336
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/parser@npm:8.39.0":
+  version: 8.39.0
+  resolution: "@typescript-eslint/parser@npm:8.39.0"
+  dependencies:
+    "@typescript-eslint/scope-manager": 8.39.0
+    "@typescript-eslint/types": 8.39.0
+    "@typescript-eslint/typescript-estree": 8.39.0
+    "@typescript-eslint/visitor-keys": 8.39.0
+    debug: ^4.3.4
+  peerDependencies:
+    eslint: ^8.57.0 || ^9.0.0
+    typescript: ">=4.8.4 <6.0.0"
+  checksum: 280a2953c4b186f5ce6f3081fc43a4d780d80622b20c23fd5544239df45debfc6ca78fbe4c7b649265f0645f8fa4c17337d2c9ac57e54ae2ff4682ced1f83e9e
   languageName: node
   linkType: hard
 
@@ -3655,6 +3708,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/type-utils@npm:8.39.0":
+  version: 8.39.0
+  resolution: "@typescript-eslint/type-utils@npm:8.39.0"
+  dependencies:
+    "@typescript-eslint/types": 8.39.0
+    "@typescript-eslint/typescript-estree": 8.39.0
+    "@typescript-eslint/utils": 8.39.0
+    debug: ^4.3.4
+    ts-api-utils: ^2.1.0
+  peerDependencies:
+    eslint: ^8.57.0 || ^9.0.0
+    typescript: ">=4.8.4 <6.0.0"
+  checksum: b587f9e8f01487d5b63b6c538a96478140eddd7689cefc3ed9b047d78f6cdeae5018138b5322c9bece8aad9ef6028fa8a47739eee4dd31ceb05e21be8667e92e
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/types@npm:6.21.0":
   version: 6.21.0
   resolution: "@typescript-eslint/types@npm:6.21.0"
@@ -3669,7 +3738,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/types@npm:8.39.0, @typescript-eslint/types@npm:^8.34.1, @typescript-eslint/types@npm:^8.38.0, @typescript-eslint/types@npm:^8.39.0":
+"@typescript-eslint/types@npm:8.39.0, @typescript-eslint/types@npm:^8.34.1, @typescript-eslint/types@npm:^8.37.0, @typescript-eslint/types@npm:^8.38.0, @typescript-eslint/types@npm:^8.39.0":
   version: 8.39.0
   resolution: "@typescript-eslint/types@npm:8.39.0"
   checksum: 283b674defc2ee7b88db7e6b7eb32c8da8cb96e14e39c155c6968043b27d2dbcbfaf5044cebe1d11baff66d92da8dac337cc0553ef9385a5030ad35e1fb7f41e
@@ -3750,7 +3819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/utils@npm:^8.13.0":
+"@typescript-eslint/utils@npm:8.39.0, @typescript-eslint/utils@npm:^8.13.0":
   version: 8.39.0
   resolution: "@typescript-eslint/utils@npm:8.39.0"
   dependencies:
@@ -5231,7 +5300,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "create-content-sdk-app@workspace:packages/create-content-sdk-app"
   dependencies:
-    "@stylistic/eslint-plugin-ts": ^2.10.0
+    "@stylistic/eslint-plugin": ^5.2.2
     "@types/chai": ^5.2.2
     "@types/cross-spawn": ^6.0.6
     "@types/ejs": ^3.1.5
@@ -5244,19 +5313,19 @@ __metadata:
     "@types/proxyquire": ^1.3.31
     "@types/sinon": 17.0.4
     "@types/sinon-chai": ^4.0.0
-    "@typescript-eslint/eslint-plugin": 8.38.0
-    "@typescript-eslint/parser": 8.38.0
+    "@typescript-eslint/eslint-plugin": 8.39.0
+    "@typescript-eslint/parser": 8.39.0
     chai: ^4.4.1
     chalk: ^4.1.2
     chokidar: ^4.0.3
     cross-spawn: ^7.0.6
     del-cli: ^6.0.0
     ejs: ^3.1.10
-    eslint: ^9.0.0
-    eslint-config-prettier: ^9.0.0
-    eslint-plugin-import: 2.29.1
-    eslint-plugin-jsdoc: 52.0.2
-    eslint-plugin-prettier: ^5.0.0
+    eslint: ^9.32.0
+    eslint-config-prettier: ^10.1.8
+    eslint-plugin-import: 2.32.0
+    eslint-plugin-jsdoc: 52.0.3
+    eslint-plugin-prettier: ^5.5.3
     fs-extra: ^11.3.0
     glob: ^11.0.2
     inquirer: ^8.2.4
@@ -6125,6 +6194,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-config-prettier@npm:^10.1.8":
+  version: 10.1.8
+  resolution: "eslint-config-prettier@npm:10.1.8"
+  peerDependencies:
+    eslint: ">=7.0.0"
+  bin:
+    eslint-config-prettier: bin/cli.js
+  checksum: 9140e19f78f0dbc888b160bb72b85f8043bada7b12a548faa56cea0ba74f8ef16653250ffd014d85d9a376a88c4941c96a3cdc9d39a07eb3def6967166635bd8
+  languageName: node
+  linkType: hard
+
 "eslint-config-prettier@npm:^9.0.0":
   version: 9.1.2
   resolution: "eslint-config-prettier@npm:9.1.2"
@@ -6210,7 +6290,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.28.1":
+"eslint-plugin-import@npm:2.32.0, eslint-plugin-import@npm:^2.28.1":
   version: 2.32.0
   resolution: "eslint-plugin-import@npm:2.32.0"
   dependencies:
@@ -6259,6 +6339,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-jsdoc@npm:52.0.3":
+  version: 52.0.3
+  resolution: "eslint-plugin-jsdoc@npm:52.0.3"
+  dependencies:
+    "@es-joy/jsdoccomment": ~0.52.0
+    are-docs-informative: ^0.0.2
+    comment-parser: 1.4.1
+    debug: ^4.4.1
+    escape-string-regexp: ^4.0.0
+    espree: ^10.4.0
+    esquery: ^1.6.0
+    parse-imports-exports: ^0.2.4
+    semver: ^7.7.2
+    spdx-expression-parse: ^4.0.0
+  peerDependencies:
+    eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
+  checksum: 571c808254e2183fd6d494beccf1f9e3390269f497212a1a2b8051352368be90d1ed1caaf72ca806bc368b934bcea8cf7aa6a41e639cd8f6cf9dee121de41d04
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-jsx-a11y@npm:^6.7.1":
   version: 6.10.2
   resolution: "eslint-plugin-jsx-a11y@npm:6.10.2"
@@ -6284,7 +6384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^5.0.0":
+"eslint-plugin-prettier@npm:^5.0.0, eslint-plugin-prettier@npm:^5.5.3":
   version: 5.5.3
   resolution: "eslint-plugin-prettier@npm:5.5.3"
   dependencies:
@@ -6341,7 +6441,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.33.2":
+"eslint-plugin-react@npm:7.37.5, eslint-plugin-react@npm:^7.33.2":
   version: 7.37.5
   resolution: "eslint-plugin-react@npm:7.37.5"
   dependencies:
@@ -6393,7 +6493,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^9.0.0":
+"eslint@npm:^9.0.0, eslint@npm:^9.32.0":
   version: 9.32.0
   resolution: "eslint@npm:9.32.0"
   dependencies:
@@ -10450,7 +10550,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"picomatch@npm:^4.0.2":
+"picomatch@npm:^4.0.2, picomatch@npm:^4.0.3":
   version: 4.0.3
   resolution: "picomatch@npm:4.0.3"
   checksum: 6817fb74eb745a71445debe1029768de55fd59a42b75606f478ee1d0dc1aa6e78b711d041a7c9d5550e042642029b7f373dc1a43b224c4b7f12d23436735dba0
@@ -11115,15 +11215,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@stylistic/eslint-plugin-ts": ^2.10.0
-    "@typescript-eslint/eslint-plugin": 8.38.0
-    "@typescript-eslint/parser": 8.38.0
-    eslint: ^9.0.0
-    eslint-config-prettier: ^9.0.0
-    eslint-plugin-import: 2.29.1
-    eslint-plugin-jsdoc: 52.0.2
-    eslint-plugin-prettier: ^5.0.0
-    eslint-plugin-react: 7.37.1
+    "@stylistic/eslint-plugin": ^5.2.2
+    "@typescript-eslint/eslint-plugin": 8.39.0
+    "@typescript-eslint/parser": 8.39.0
+    eslint: ^9.32.0
+    eslint-config-prettier: ^10.1.8
+    eslint-plugin-import: 2.32.0
+    eslint-plugin-jsdoc: 52.0.3
+    eslint-plugin-prettier: ^5.5.3
+    eslint-plugin-react: 7.37.5
     eslint-plugin-react-hooks: ^5.2.0
     lerna: ^5.6.2
     prettier: ^2.8.8

@@ -8,7 +8,7 @@ import importPlugin from 'eslint-plugin-import';
 
 import tsParser from '@typescript-eslint/parser';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import stylisticTs from '@stylistic/eslint-plugin-ts';
+import stylistic from '@stylistic/eslint-plugin';
 
 import prettier from 'eslint-plugin-prettier';
 import jsdoc from 'eslint-plugin-jsdoc';
@@ -60,7 +60,7 @@ export default defineConfig([
     },
     plugins: {
       '@typescript-eslint': typescriptEslint,
-      '@stylistic/ts': stylisticTs,
+      '@stylistic': stylistic,
       'react-hooks': reactHooks,
       import: importPlugin,
       prettier,
@@ -108,7 +108,7 @@ export default defineConfig([
 
       // Formatting
       'prettier/prettier': 'off', // handled via specific rules below
-      '@stylistic/ts/space-before-function-paren': [
+      '@stylistic/space-before-function-paren': [
         'error',
         {
           anonymous: 'never',
@@ -140,8 +140,8 @@ export default defineConfig([
       '@typescript-eslint/member-ordering': 'error',
       '@typescript-eslint/typedef': 'error',
       '@typescript-eslint/no-use-before-define': ['error', { functions: false, variables: false }],
-      '@stylistic/ts/type-annotation-spacing': 'error',
-      '@stylistic/ts/semi': 'error',
+      '@stylistic/type-annotation-spacing': 'error',
+      '@stylistic/semi': 'error',
 
       // Relaxed TS rules
       '@typescript-eslint/no-require-imports': 'off',
