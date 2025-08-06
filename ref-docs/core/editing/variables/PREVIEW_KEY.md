@@ -8,6 +8,6 @@
 
 > `const` **PREVIEW\_KEY**: `"sc_preview"` = `'sc_preview'`
 
-Defined in: [packages/core/src/editing/utils.ts:17](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/editing/utils.ts#L17)
+Defined in: [packages/core/src/editing/utils.ts:17](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/editing/utils.ts#L17)
 
 Key to identify whether the app is running in Sitecore Preview mode
