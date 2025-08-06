@@ -195,20 +195,32 @@ export const areURLSearchParamsEqual = (params1: URLSearchParams, params2: URLSe
 
 /**
  * Escapes non-special "?" characters in a string or regex.
- * - For regular strings, it escapes all unescaped "?" characters by adding a backslash (`\`).
- * - For regex patterns that start with `^` or end with `$`, it returns the pattern unchanged to avoid over-escaping.
+ * - For regex patterns that start with `^` or end with `$`, it returns the pattern unchanged.
+ * - For other strings, it escapes literal "?" characters but preserves regex quantifiers and special patterns.
  * @param {string} input - The input string or regex pattern.
  * @returns {string} - The modified string or regex with non-special "?" characters escaped.
  */
 export const escapeNonSpecialQuestionMarks = (input: string): string => {
   // If the input is already a regex pattern (starts with ^ or ends with $), return it unchanged
-  // to avoid over-escaping regex quantifiers and special characters
   if (input.startsWith('^') || input.endsWith('$')) {
     return input;
   }
 
-  // For non-regex patterns, escape all unescaped "?" characters
-  return input.replace(/(?<!\\)\?/g, '\\?');
+  // Simple approach: escape "?" unless it's already escaped or part of regex syntax
+  return input.replace(/\?/g, (match, offset, string) => {
+    const before = string.slice(0, offset);
+
+    // Don't escape if already escaped
+    if (before.endsWith('\\')) return match;
+
+    // Don't escape if it's a quantifier
+    if (['*', '+', ')', ']', '}'].includes(before.slice(-1))) return match;
+
+    // Don't escape if it's part of negative lookahead
+    if (before.endsWith('(')) return match;
+
+    return '\\?';
+  });
 };
 
 /**
