@@ -2588,7 +2588,10 @@ __metadata:
     "@sitecore-cloudsdk/personalize": ^0.5.1
     "@sitecore-content-sdk/core": 1.1.0-canary.19
     "@sitecore-content-sdk/react": 1.1.0-canary.19
+<<<<<<< HEAD
     "@stylistic/eslint-plugin": ^5.2.2
+=======
+>>>>>>> e9eabbfc1 (v1.1.0-canary.19 [skip ci])
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.3.0
     "@types/chai": ^5.2.2
