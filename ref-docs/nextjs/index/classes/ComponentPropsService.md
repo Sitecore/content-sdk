@@ -6,11 +6,7 @@
 
 # Class: ComponentPropsService
 
-<<<<<<< HEAD
-Defined in: [nextjs/src/services/component-props-service.ts:28](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/services/component-props-service.ts#L28)
-=======
 Defined in: [nextjs/src/services/component-props-service.ts:28](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/services/component-props-service.ts#L28)
->>>>>>> dd686bb50 (Update API docs)
 
 ## Constructors
 
@@ -28,11 +24,7 @@ Defined in: [nextjs/src/services/component-props-service.ts:28](https://github.c
 
 > `protected` **collectRequests**(`params`): `Promise`\<`ComponentPropsRequest`[]\>
 
-<<<<<<< HEAD
-Defined in: [nextjs/src/services/component-props-service.ts:53](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/services/component-props-service.ts#L53)
-=======
 Defined in: [nextjs/src/services/component-props-service.ts:53](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/services/component-props-service.ts#L53)
->>>>>>> dd686bb50 (Update API docs)
 
 Go through layout service data, check all renderings using displayName, which should make some side effects.
 Write result in requests variable
@@ -60,11 +52,7 @@ array of requests
 
 > `protected` **execRequests**(`requests`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-<<<<<<< HEAD
-Defined in: [nextjs/src/services/component-props-service.ts:102](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/services/component-props-service.ts#L102)
-=======
 Defined in: [nextjs/src/services/component-props-service.ts:102](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/services/component-props-service.ts#L102)
->>>>>>> dd686bb50 (Update API docs)
 
 Execute request for component props
 
@@ -86,11 +74,7 @@ requests result
 
 > **fetchComponentProps**(`params`): `Promise`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-<<<<<<< HEAD
-Defined in: [nextjs/src/services/component-props-service.ts:29](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/services/component-props-service.ts#L29)
-=======
 Defined in: [nextjs/src/services/component-props-service.ts:29](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/services/component-props-service.ts#L29)
->>>>>>> dd686bb50 (Update API docs)
 
 #### Parameters
 
@@ -108,11 +92,7 @@ Defined in: [nextjs/src/services/component-props-service.ts:29](https://github.c
 
 > `protected` **flatRenderings**(`placeholders`): [`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\>[]
 
-<<<<<<< HEAD
-Defined in: [nextjs/src/services/component-props-service.ts:156](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/services/component-props-service.ts#L156)
-=======
 Defined in: [nextjs/src/services/component-props-service.ts:156](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/services/component-props-service.ts#L156)
->>>>>>> dd686bb50 (Update API docs)
 
 Take renderings from all placeholders and returns a flat array of renderings.
 

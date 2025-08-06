@@ -6,11 +6,7 @@
 
 # Interface: RouteData\<Fields\>
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:54](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L54)
-=======
 Defined in: [packages/core/src/layout/models.ts:54](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L54)
->>>>>>> dd686bb50 (Update API docs)
 
 Shape of route data returned from Sitecore Layout Service
 
@@ -26,11 +22,7 @@ Shape of route data returned from Sitecore Layout Service
 
 > `optional` **databaseName**: `string`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:58](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L58)
-=======
 Defined in: [packages/core/src/layout/models.ts:58](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L58)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -38,11 +30,7 @@ Defined in: [packages/core/src/layout/models.ts:58](https://github.com/Sitecore/
 
 > `optional` **deviceId**: `string`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:59](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L59)
-=======
 Defined in: [packages/core/src/layout/models.ts:59](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L59)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -50,11 +38,7 @@ Defined in: [packages/core/src/layout/models.ts:59](https://github.com/Sitecore/
 
 > `optional` **displayName**: `string`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:56](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L56)
-=======
 Defined in: [packages/core/src/layout/models.ts:56](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L56)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -62,11 +46,7 @@ Defined in: [packages/core/src/layout/models.ts:56](https://github.com/Sitecore/
 
 > `optional` **fields**: `Fields`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:57](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L57)
-=======
 Defined in: [packages/core/src/layout/models.ts:57](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L57)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -74,11 +54,7 @@ Defined in: [packages/core/src/layout/models.ts:57](https://github.com/Sitecore/
 
 > `optional` **itemId**: `string`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:66](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L66)
-=======
 Defined in: [packages/core/src/layout/models.ts:66](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L66)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -86,11 +62,7 @@ Defined in: [packages/core/src/layout/models.ts:66](https://github.com/Sitecore/
 
 > `optional` **itemLanguage**: `string`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:60](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L60)
-=======
 Defined in: [packages/core/src/layout/models.ts:60](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L60)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -98,11 +70,7 @@ Defined in: [packages/core/src/layout/models.ts:60](https://github.com/Sitecore/
 
 > `optional` **itemVersion**: `number`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:61](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L61)
-=======
 Defined in: [packages/core/src/layout/models.ts:61](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L61)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -110,11 +78,7 @@ Defined in: [packages/core/src/layout/models.ts:61](https://github.com/Sitecore/
 
 > `optional` **layoutId**: `string`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:62](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L62)
-=======
 Defined in: [packages/core/src/layout/models.ts:62](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L62)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -122,11 +86,7 @@ Defined in: [packages/core/src/layout/models.ts:62](https://github.com/Sitecore/
 
 > **name**: `string`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:55](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L55)
-=======
 Defined in: [packages/core/src/layout/models.ts:55](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L55)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -134,11 +94,7 @@ Defined in: [packages/core/src/layout/models.ts:55](https://github.com/Sitecore/
 
 > **placeholders**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:65](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L65)
-=======
 Defined in: [packages/core/src/layout/models.ts:65](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L65)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -146,11 +102,7 @@ Defined in: [packages/core/src/layout/models.ts:65](https://github.com/Sitecore/
 
 > `optional` **templateId**: `string`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:63](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L63)
-=======
 Defined in: [packages/core/src/layout/models.ts:63](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L63)
->>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -158,8 +110,5 @@ Defined in: [packages/core/src/layout/models.ts:63](https://github.com/Sitecore/
 
 > `optional` **templateName**: `string`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/models.ts:64](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/models.ts#L64)
-=======
 Defined in: [packages/core/src/layout/models.ts:64](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/models.ts#L64)
->>>>>>> dd686bb50 (Update API docs)
+

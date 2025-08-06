@@ -6,11 +6,7 @@
 
 # Class: LayoutService
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/layout-service.ts:15](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/layout-service.ts#L15)
-=======
 Defined in: [packages/core/src/layout/layout-service.ts:15](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/layout-service.ts#L15)
->>>>>>> dd686bb50 (Update API docs)
 
 Service that fetch layout data using Sitecore's GraphQL API.
 
@@ -28,11 +24,7 @@ GraphQLRequestClient
 
 > **new LayoutService**(`serviceConfig`): `LayoutService`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/layout-service.ts:20](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/layout-service.ts#L20)
-=======
 Defined in: [packages/core/src/layout/layout-service.ts:20](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/layout-service.ts#L20)
->>>>>>> dd686bb50 (Update API docs)
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -56,11 +48,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > `protected` **graphQLClient**: [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/sitecore-service-base.ts:21](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/sitecore-service-base.ts#L21)
-=======
 Defined in: [packages/core/src/sitecore-service-base.ts:21](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/sitecore-service-base.ts#L21)
->>>>>>> dd686bb50 (Update API docs)
 
 #### Inherited from
 
@@ -72,11 +60,7 @@ Defined in: [packages/core/src/sitecore-service-base.ts:21](https://github.com/S
 
 > **serviceConfig**: `Pick`\<[`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md), `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\>
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/layout-service.ts:20](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/layout-service.ts#L20)
-=======
 Defined in: [packages/core/src/layout/layout-service.ts:20](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/layout-service.ts#L20)
->>>>>>> dd686bb50 (Update API docs)
 
 configuration
 
@@ -105,11 +89,7 @@ Optional debug logger override
 
 > **fetchLayoutData**(`itemPath`, `routeOptions?`, `fetchOptions?`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/layout-service.ts:31](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/layout-service.ts#L31)
-=======
 Defined in: [packages/core/src/layout/layout-service.ts:31](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/layout-service.ts#L31)
->>>>>>> dd686bb50 (Update API docs)
 
 Fetch layout data for an item.
 
@@ -133,11 +113,7 @@ layout service data
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/sitecore-service-base.ts:35](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/sitecore-service-base.ts#L35)
-=======
 Defined in: [packages/core/src/sitecore-service-base.ts:35](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/sitecore-service-base.ts#L35)
->>>>>>> dd686bb50 (Update API docs)
 
 Gets a GraphQL client that can make requests to the API.
 
@@ -157,11 +133,7 @@ implementation
 
 > `protected` **getLayoutQuery**(`itemPath`, `site?`, `language?`): `string`
 
-<<<<<<< HEAD
-Defined in: [packages/core/src/layout/layout-service.ts:58](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/layout/layout-service.ts#L58)
-=======
 Defined in: [packages/core/src/layout/layout-service.ts:58](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/layout/layout-service.ts#L58)
->>>>>>> dd686bb50 (Update API docs)
 
 Returns GraphQL Layout query
 
