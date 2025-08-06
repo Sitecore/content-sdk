@@ -68,5 +68,5 @@ jobs:
 
       - name: Pre-release canary publish
         run: |
-          npx lerna publish from-git --exact --canary --pre-dist-tag canary --preid canary --yes
+          npx lerna publish from-git --exact --canary --pre-dist-tag canary --preid canary --yes --concurrency 1
 
