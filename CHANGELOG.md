@@ -27,6 +27,7 @@ Our versioning strategy is as follows:
   - Updated `EditingService.fetchEditingData`:
     - Removed `siteName` parameter.
     - No longer requests and returns dictionary data.
+* `[cli]` Code extraction extends XM Cloud Rendering Host build by several minutes ([#173](https://github.com/Sitecore/content-sdk/pull/173))
 
 ## 1.0.0
 

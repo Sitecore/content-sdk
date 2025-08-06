@@ -6,6 +6,10 @@
 
 # editing/codegen
 
+## Interfaces
+
+- [ImportEntry](interfaces/ImportEntry.md)
+
 ## Variables
 
 - [defaultImportEntries](variables/defaultImportEntries.md)
