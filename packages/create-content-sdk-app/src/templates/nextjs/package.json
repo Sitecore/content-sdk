@@ -52,7 +52,7 @@
     "eslint-plugin-jsdoc": "52.0.3",
     "eslint-plugin-prettier": "^5.5.3",
     "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "5.2.0",
+    "eslint-plugin-react-hooks": "4.6.0",
     "npm-run-all2": "~8.0.1",
     "prettier": "^2.8.8",
     "typescript": "~5.8.3"
