@@ -8,7 +8,11 @@
 
 > **SitecoreCliConfigInput** = `object`
 
+<<<<<<< HEAD
 Defined in: [packages/core/src/config/models.ts:211](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/config/models.ts#L211)
+=======
+Defined in: [packages/core/src/config/models.ts:211](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/config/models.ts#L211)
+>>>>>>> dd686bb50 (Update API docs)
 
 Type used as CLI config input in sitecore.cli.config
 
@@ -18,7 +22,11 @@ Type used as CLI config input in sitecore.cli.config
 
 > `optional` **build**: `object`
 
+<<<<<<< HEAD
 Defined in: [packages/core/src/config/models.ts:215](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/config/models.ts#L215)
+=======
+Defined in: [packages/core/src/config/models.ts:215](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/config/models.ts#L215)
+>>>>>>> dd686bb50 (Update API docs)
 
 Configuration for the `sitecore-tools build` CLI command
 
@@ -38,7 +46,11 @@ Commands to run during the build process
 
 > `optional` **componentMap**: [`GenerateMapArgs`](../../tools/type-aliases/GenerateMapArgs.md) & `object`
 
+<<<<<<< HEAD
 Defined in: [packages/core/src/config/models.ts:233](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/config/models.ts#L233)
+=======
+Defined in: [packages/core/src/config/models.ts:233](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/config/models.ts#L233)
+>>>>>>> dd686bb50 (Update API docs)
 
 Configuration for the `sitecore-tools component generate-map` CLI command
 
@@ -56,7 +68,11 @@ Function implementation for generating a component map
 
 > `optional` **scaffold**: `object`
 
+<<<<<<< HEAD
 Defined in: [packages/core/src/config/models.ts:224](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/config/models.ts#L224)
+=======
+Defined in: [packages/core/src/config/models.ts:224](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/config/models.ts#L224)
+>>>>>>> dd686bb50 (Update API docs)
 
 Configuration for the `sitecore-tools scaffold` CLI command
 

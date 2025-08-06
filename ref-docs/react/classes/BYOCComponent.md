@@ -6,7 +6,11 @@
 
 # Class: BYOCComponent
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/BYOCComponent.tsx:92](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/BYOCComponent.tsx#L92)
+=======
+Defined in: [packages/react/src/components/BYOCComponent.tsx:92](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/BYOCComponent.tsx#L92)
+>>>>>>> dd686bb50 (Update API docs)
 
 BYOCComponent facilitate the rendering of external components. It manages potential errors,
 missing components, and customization of error messages or alternative rendering components.
@@ -25,7 +29,11 @@ component props
 
 > **new BYOCComponent**(`props`): `BYOCComponent`
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/BYOCComponent.tsx:95](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/BYOCComponent.tsx#L95)
+=======
+Defined in: [packages/react/src/components/BYOCComponent.tsx:95](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/BYOCComponent.tsx#L95)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Parameters
 
@@ -89,7 +97,11 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:970
 
 > **state**: `Readonly`\<\{ `error?`: `Error`; \}\>
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/BYOCComponent.tsx:93](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/BYOCComponent.tsx#L93)
+=======
+Defined in: [packages/react/src/components/BYOCComponent.tsx:93](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/BYOCComponent.tsx#L93)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Overrides
 
@@ -152,7 +164,11 @@ Only kept in types for backwards compatibility. Will be removed in a future majo
 
 > **componentDidCatch**(`error`): `void`
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/BYOCComponent.tsx:105](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/BYOCComponent.tsx#L105)
+=======
+Defined in: [packages/react/src/components/BYOCComponent.tsx:105](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/BYOCComponent.tsx#L105)
+>>>>>>> dd686bb50 (Update API docs)
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
@@ -409,7 +425,11 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/BYOCComponent.tsx:109](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/BYOCComponent.tsx#L109)
+=======
+Defined in: [packages/react/src/components/BYOCComponent.tsx:109](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/BYOCComponent.tsx#L109)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Returns
 
@@ -608,7 +628,11 @@ this from being invoked.
 
 > `static` **getDerivedStateFromError**(`error`): `object`
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/BYOCComponent.tsx:100](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/BYOCComponent.tsx#L100)
+=======
+Defined in: [packages/react/src/components/BYOCComponent.tsx:100](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/BYOCComponent.tsx#L100)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Parameters
 

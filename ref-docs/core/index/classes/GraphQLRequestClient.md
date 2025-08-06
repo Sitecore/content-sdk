@@ -6,7 +6,11 @@
 
 # Class: GraphQLRequestClient
 
+<<<<<<< HEAD
 Defined in: [packages/core/src/graphql-request-client.ts:88](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/graphql-request-client.ts#L88)
+=======
+Defined in: [packages/core/src/graphql-request-client.ts:88](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/graphql-request-client.ts#L88)
+>>>>>>> dd686bb50 (Update API docs)
 
 A GraphQL client for Sitecore APIs that uses the 'graphql-request' library.
 https://github.com/prisma-labs/graphql-request
@@ -21,7 +25,11 @@ https://github.com/prisma-labs/graphql-request
 
 > **new GraphQLRequestClient**(`endpoint`, `clientConfig?`): `GraphQLRequestClient`
 
+<<<<<<< HEAD
 Defined in: [packages/core/src/graphql-request-client.ts:102](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/graphql-request-client.ts#L102)
+=======
+Defined in: [packages/core/src/graphql-request-client.ts:102](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/graphql-request-client.ts#L102)
+>>>>>>> dd686bb50 (Update API docs)
 
 Provides ability to execute graphql query using given `endpoint`
 
@@ -42,7 +50,11 @@ Provides ability to execute graphql query using given `endpoint`
 
 > **request**\<`T`\>(`query`, `variables?`, `options?`): `Promise`\<`T`\>
 
+<<<<<<< HEAD
 Defined in: [packages/core/src/graphql-request-client.ts:147](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/graphql-request-client.ts#L147)
+=======
+Defined in: [packages/core/src/graphql-request-client.ts:147](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/graphql-request-client.ts#L147)
+>>>>>>> dd686bb50 (Update API docs)
 
 Execute graphql request
 
@@ -74,7 +86,11 @@ Execute graphql request
 
 > `static` **createClientFactory**(`config`): [`GraphQLRequestClientFactory`](../type-aliases/GraphQLRequestClientFactory.md)
 
+<<<<<<< HEAD
 Defined in: [packages/core/src/graphql-request-client.ts:134](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/graphql-request-client.ts#L134)
+=======
+Defined in: [packages/core/src/graphql-request-client.ts:134](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/core/src/graphql-request-client.ts#L134)
+>>>>>>> dd686bb50 (Update API docs)
 
 Factory method for creating a GraphQLRequestClientFactory.
 

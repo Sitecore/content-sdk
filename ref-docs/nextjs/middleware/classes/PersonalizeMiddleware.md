@@ -6,7 +6,11 @@
 
 # Class: PersonalizeMiddleware
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/personalize-middleware.ts:47](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/personalize-middleware.ts#L47)
+=======
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:47](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/personalize-middleware.ts#L47)
+>>>>>>> dd686bb50 (Update API docs)
 
 Middleware / handler to support Sitecore Personalize
 
@@ -20,7 +24,11 @@ Middleware / handler to support Sitecore Personalize
 
 > **new PersonalizeMiddleware**(`config?`): `PersonalizeMiddleware`
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/personalize-middleware.ts:53](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/personalize-middleware.ts#L53)
+=======
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:53](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/personalize-middleware.ts#L53)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Parameters
 
@@ -42,7 +50,11 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:53](https://github.
 
 > `protected` **config**: [`PersonalizeMiddlewareConfig`](../type-aliases/PersonalizeMiddlewareConfig.md)
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/personalize-middleware.ts:53](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/personalize-middleware.ts#L53)
+=======
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:53](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/personalize-middleware.ts#L53)
+>>>>>>> dd686bb50 (Update API docs)
 
 Personalize middleware config
 
@@ -56,7 +68,11 @@ Personalize middleware config
 
 > `protected` **defaultHostname**: `string`
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/middleware.ts:51](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/middleware.ts#L51)
+=======
+Defined in: [nextjs/src/middleware/middleware.ts:51](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/middleware.ts#L51)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Inherited from
 
@@ -68,7 +84,11 @@ Defined in: [nextjs/src/middleware/middleware.ts:51](https://github.com/Sitecore
 
 > `protected` **personalizeService**: [`PersonalizeService`](../../index/classes/PersonalizeService.md)
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/personalize-middleware.ts:48](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/personalize-middleware.ts#L48)
+=======
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:48](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/personalize-middleware.ts#L48)
+>>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -76,7 +96,11 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:48](https://github.
 
 > `protected` **siteResolver**: [`SiteResolver`](../../index/classes/SiteResolver.md)
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/middleware.ts:52](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/middleware.ts#L52)
+=======
+Defined in: [nextjs/src/middleware/middleware.ts:52](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/middleware.ts#L52)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Inherited from
 
@@ -88,7 +112,11 @@ Defined in: [nextjs/src/middleware/middleware.ts:52](https://github.com/Sitecore
 
 > `protected` **disabled**(`req`, `res`): `undefined` \| `boolean`
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/personalize-middleware.ts:220](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/personalize-middleware.ts#L220)
+=======
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:220](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/personalize-middleware.ts#L220)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Parameters
 
@@ -111,7 +139,11 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:220](https://github
 
 > `protected` **extractDebugHeaders**(`incomingHeaders`): `object`
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/middleware.ts:112](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/middleware.ts#L112)
+=======
+Defined in: [nextjs/src/middleware/middleware.ts:112](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/middleware.ts#L112)
+>>>>>>> dd686bb50 (Update API docs)
 
 Safely extract all headers for debug logging
 Necessary to avoid middleware issue https://github.com/vercel/next.js/issues/39765
@@ -138,7 +170,11 @@ Object with headers as key/value pairs
 
 > `protected` **getClientFactory**(`graphQLOptions`): [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/middleware.ts:163](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/middleware.ts#L163)
+=======
+Defined in: [nextjs/src/middleware/middleware.ts:163](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/middleware.ts#L163)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Parameters
 
@@ -160,7 +196,11 @@ Defined in: [nextjs/src/middleware/middleware.ts:163](https://github.com/Sitecor
 
 > `protected` **getExperienceParams**(`req`): `ExperienceParams`
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/personalize-middleware.ts:202](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/personalize-middleware.ts#L202)
+=======
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:202](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/personalize-middleware.ts#L202)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Parameters
 
@@ -178,7 +218,11 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:202](https://github
 
 > `protected` **getHostHeader**(`req`): `undefined` \| `string`
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/middleware.ts:131](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/middleware.ts#L131)
+=======
+Defined in: [nextjs/src/middleware/middleware.ts:131](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/middleware.ts#L131)
+>>>>>>> dd686bb50 (Update API docs)
 
 Extract 'host' header
 
@@ -202,7 +246,11 @@ Extract 'host' header
 
 > `protected` **getLanguage**(`req`): `string`
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/middleware.ts:123](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/middleware.ts#L123)
+=======
+Defined in: [nextjs/src/middleware/middleware.ts:123](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/middleware.ts#L123)
+>>>>>>> dd686bb50 (Update API docs)
 
 Provides used language
 
@@ -228,7 +276,11 @@ language
 
 > `protected` **getPersonalizeExecutions**(`personalizeInfo`, `language`): `PersonalizeExecution`[]
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/personalize-middleware.ts:287](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/personalize-middleware.ts#L287)
+=======
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:287](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/personalize-middleware.ts#L287)
+>>>>>>> dd686bb50 (Update API docs)
 
 Aggregates personalize executions based on the provided route personalize information and language
 
@@ -251,7 +303,11 @@ An array of personalize executions
 
 > `protected` **getSite**(`req`, `res?`): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/middleware.ts:143](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/middleware.ts#L143)
+=======
+Defined in: [nextjs/src/middleware/middleware.ts:143](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/middleware.ts#L143)
+>>>>>>> dd686bb50 (Update API docs)
 
 Get site information. If site name is stored in cookie, use it, otherwise resolve by hostname
 - If site can't be resolved by site name cookie use default site info based on provided parameters
@@ -280,7 +336,11 @@ site information
 
 > **handle**(`req`, `res`): `Promise`\<`NextResponse`\<`unknown`\>\>
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/personalize-middleware.ts:76](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/personalize-middleware.ts#L76)
+=======
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:76](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/personalize-middleware.ts#L76)
+>>>>>>> dd686bb50 (Update API docs)
 
 Handler method to execute middleware logic
 
@@ -305,7 +365,11 @@ Handler method to execute middleware logic
 
 > `protected` **initPersonalizeServer**(`__namedParameters`): `Promise`\<`void`\>
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/personalize-middleware.ts:225](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/personalize-middleware.ts#L225)
+=======
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:225](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/personalize-middleware.ts#L225)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Parameters
 
@@ -327,7 +391,11 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:225](https://github
 
 > `protected` **isPrefetch**(`req`): `boolean`
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/middleware.ts:76](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/middleware.ts#L76)
+=======
+Defined in: [nextjs/src/middleware/middleware.ts:76](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/middleware.ts#L76)
+>>>>>>> dd686bb50 (Update API docs)
 
 Determines if the request is a Next.js (next/link) prefetch request
 
@@ -353,7 +421,11 @@ is prefetch
 
 > `protected` **isPreview**(`req`): `boolean`
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/middleware.ts:65](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/middleware.ts#L65)
+=======
+Defined in: [nextjs/src/middleware/middleware.ts:65](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/middleware.ts#L65)
+>>>>>>> dd686bb50 (Update API docs)
 
 Determines if mode is preview
 
@@ -379,7 +451,11 @@ is preview
 
 > `protected` **personalize**(`__namedParameters`, `request`): `Promise`\<\{ `variantId`: `string`; \}\>
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/personalize-middleware.ts:247](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/personalize-middleware.ts#L247)
+=======
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:247](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/personalize-middleware.ts#L247)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Parameters
 
@@ -403,7 +479,11 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:247](https://github
 
 > `protected` **rewrite**(`rewritePath`, `req`, `res`, `skipHeader?`): `NextResponse`
 
+<<<<<<< HEAD
 Defined in: [nextjs/src/middleware/middleware.ts:174](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/nextjs/src/middleware/middleware.ts#L174)
+=======
+Defined in: [nextjs/src/middleware/middleware.ts:174](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/nextjs/src/middleware/middleware.ts#L174)
+>>>>>>> dd686bb50 (Update API docs)
 
 Create a rewrite response
 

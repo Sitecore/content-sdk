@@ -6,7 +6,11 @@
 
 # Class: SitecoreProvider
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/SitecoreProvider.tsx:46](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/SitecoreProvider.tsx#L46)
+=======
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:46](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/SitecoreProvider.tsx#L46)
+>>>>>>> dd686bb50 (Update API docs)
 
 ## Extends
 
@@ -18,7 +22,11 @@ Defined in: [packages/react/src/components/SitecoreProvider.tsx:46](https://gith
 
 > **new SitecoreProvider**(`props`): `SitecoreProvider`
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/SitecoreProvider.tsx:52](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/SitecoreProvider.tsx#L52)
+=======
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:52](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/SitecoreProvider.tsx#L52)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Parameters
 
@@ -127,7 +135,11 @@ class Foo extends React.Component {
 
 > `static` **displayName**: `string` = `'SitecoreProvider'`
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/SitecoreProvider.tsx:50](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/SitecoreProvider.tsx#L50)
+=======
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:50](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/SitecoreProvider.tsx#L50)
+>>>>>>> dd686bb50 (Update API docs)
 
 ***
 
@@ -197,7 +209,11 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/SitecoreProvider.tsx:77](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/SitecoreProvider.tsx#L77)
+=======
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:77](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/SitecoreProvider.tsx#L77)
+>>>>>>> dd686bb50 (Update API docs)
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -409,7 +425,11 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/SitecoreProvider.tsx:97](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/SitecoreProvider.tsx#L97)
+=======
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:97](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/SitecoreProvider.tsx#L97)
+>>>>>>> dd686bb50 (Update API docs)
 
 #### Returns
 
@@ -425,7 +445,11 @@ Defined in: [packages/react/src/components/SitecoreProvider.tsx:97](https://gith
 
 > **setPage**(`value`): `void`
 
+<<<<<<< HEAD
 Defined in: [packages/react/src/components/SitecoreProvider.tsx:91](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/react/src/components/SitecoreProvider.tsx#L91)
+=======
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:91](https://github.com/Sitecore/content-sdk/blob/d093cd1bcf7d9a0323a57fb257a3d2a6dc126908/packages/react/src/components/SitecoreProvider.tsx#L91)
+>>>>>>> dd686bb50 (Update API docs)
 
 Update page state.
 
