@@ -8,7 +8,7 @@
 
 > **StaticPath** = `object`
 
-Defined in: [packages/core/src/models.ts:48](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/models.ts#L48)
+Defined in: [packages/core/src/models.ts:48](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/models.ts#L48)
 
 Object model of a sitemap's site page item.
 
@@ -18,7 +18,7 @@ Object model of a sitemap's site page item.
 
 > `optional` **locale**: `string`
 
-Defined in: [packages/core/src/models.ts:52](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/models.ts#L52)
+Defined in: [packages/core/src/models.ts:52](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/models.ts#L52)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/core/src/models.ts:52](https://github.com/Sitecore/content
 
 > **params**: `object`
 
-Defined in: [packages/core/src/models.ts:49](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/models.ts#L49)
+Defined in: [packages/core/src/models.ts:49](https://github.com/Sitecore/content-sdk/blob/689229d984a9e94fa87b027562db80cf42927e21/packages/core/src/models.ts#L49)
 
 #### path
 

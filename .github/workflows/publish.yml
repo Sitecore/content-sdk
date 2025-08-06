@@ -11,6 +11,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write         
+      packages: write   
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
@@ -39,6 +43,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          registry-url: 'https://registry.npmjs.org/'
+          scope: '@content-sdk'
 
       - name: Install dependencies
         run: |
@@ -62,7 +68,5 @@ jobs:
 
       - name: Pre-release canary publish
         run: |
-          echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
-          npx lerna publish from-git --exact --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npx lerna publish from-git --exact --canary --pre-dist-tag canary --preid canary --yes
+
