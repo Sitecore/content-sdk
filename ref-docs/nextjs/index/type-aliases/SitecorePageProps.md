@@ -41,4 +41,3 @@ Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:9](https://github.com
 > **page**: [`Page`](Page.md) \| `null`
 
 Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:6](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L6)
-

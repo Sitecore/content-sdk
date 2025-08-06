@@ -67,4 +67,3 @@ Defined in: [packages/core/src/editing/models.ts:66](https://github.com/Sitecore
 > `optional` **version**: `string`
 
 Defined in: [packages/core/src/editing/models.ts:67](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/editing/models.ts#L67)
-

@@ -83,4 +83,3 @@ Defined in: [packages/react/src/components/Link.tsx:15](https://github.com/Sitec
 > `optional` **title**: `string`
 
 Defined in: [packages/react/src/components/Link.tsx:13](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/react/src/components/Link.tsx#L13)
-

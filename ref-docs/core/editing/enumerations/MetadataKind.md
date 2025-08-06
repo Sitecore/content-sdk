@@ -27,4 +27,3 @@ Defined in: [packages/core/src/editing/models.ts:55](https://github.com/Sitecore
 > **Open**: `"open"`
 
 Defined in: [packages/core/src/editing/models.ts:54](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/editing/models.ts#L54)
-

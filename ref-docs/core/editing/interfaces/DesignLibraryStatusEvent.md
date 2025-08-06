@@ -33,4 +33,3 @@ Defined in: [packages/core/src/editing/design-library.ts:16](https://github.com/
 > **name**: `"component:status"`
 
 Defined in: [packages/core/src/editing/design-library.ts:15](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/editing/design-library.ts#L15)
-

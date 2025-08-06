@@ -27,4 +27,3 @@ Defined in: [packages/core/src/graphql-request-client.ts:81](https://github.com/
 > **endpoint**: `string`
 
 Defined in: [packages/core/src/graphql-request-client.ts:80](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/graphql-request-client.ts#L80)
-

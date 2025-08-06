@@ -25,4 +25,3 @@ Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sit
 > **error**: `string`
 
 Defined in: [nextjs/src/sharedTypes/component-props.ts:5](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/nextjs/src/sharedTypes/component-props.ts#L5)
-

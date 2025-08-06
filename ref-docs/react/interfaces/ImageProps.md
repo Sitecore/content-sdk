@@ -99,4 +99,3 @@ Custom regexp that finds media URL prefix that will be replaced by `/-/jssmedia`
 > `optional` **srcSet**: [`ImageSizeParameters`](ImageSizeParameters.md)[]
 
 Defined in: [packages/react/src/components/Image.tsx:51](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/react/src/components/Image.tsx#L51)
-

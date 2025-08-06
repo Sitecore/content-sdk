@@ -51,4 +51,3 @@ Defined in: [packages/core/src/site/error-pages-service.ts:46](https://github.co
 > **serverErrorPagePath**: `string`
 
 Defined in: [packages/core/src/site/error-pages-service.ts:47](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/site/error-pages-service.ts#L47)
-

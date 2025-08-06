@@ -27,4 +27,3 @@ Defined in: [packages/core/src/editing/models.ts:44](https://github.com/Sitecore
 > **Shared**: `"shared"`
 
 Defined in: [packages/core/src/editing/models.ts:45](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/editing/models.ts#L45)
-

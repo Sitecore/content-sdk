@@ -89,4 +89,3 @@ Defined in: [packages/core/src/layout/models.ts:36](https://github.com/Sitecore/
 > `optional` **visitorIdentificationTimestamp**: `number`
 
 Defined in: [packages/core/src/layout/models.ts:35](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/layout/models.ts#L35)
-

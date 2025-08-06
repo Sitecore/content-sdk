@@ -81,4 +81,3 @@ Defined in: [packages/core/src/editing/models.ts:91](https://github.com/Sitecore
 > `optional` **version**: `string`
 
 Defined in: [packages/core/src/editing/models.ts:92](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/editing/models.ts#L92)
-

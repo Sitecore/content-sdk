@@ -37,4 +37,3 @@ Defined in: [packages/core/src/editing/utils.ts:47](https://github.com/Sitecore/
 > **name**: `string`
 
 Defined in: [packages/core/src/editing/utils.ts:46](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/editing/utils.ts#L46)
-

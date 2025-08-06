@@ -10,7 +10,7 @@
 
 Defined in: [packages/react/src/enhancers/withSitecore.tsx:80](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/react/src/enhancers/withSitecore.tsx#L80)
 
-This hook grants acсess to the current Sitecore page and api.
+This hook grants acΡess to the current Sitecore page and api.
 
 ## Parameters
 

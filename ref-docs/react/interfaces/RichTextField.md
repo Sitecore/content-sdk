@@ -35,4 +35,3 @@ Defined in: packages/core/types/layout/models.d.ts:107
 > `optional` **value**: `string`
 
 Defined in: [packages/react/src/components/RichText.tsx:9](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/react/src/components/RichText.tsx#L9)
-

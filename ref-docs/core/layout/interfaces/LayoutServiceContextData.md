@@ -17,4 +17,3 @@ Context information from the Sitecore Layout Service
 > **context**: [`LayoutServiceContext`](LayoutServiceContext.md)
 
 Defined in: [packages/core/src/layout/models.ts:48](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/layout/models.ts#L48)
-

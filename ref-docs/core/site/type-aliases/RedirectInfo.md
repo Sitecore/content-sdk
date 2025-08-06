@@ -49,4 +49,3 @@ Defined in: [packages/core/src/site/redirects-service.ts:14](https://github.com/
 > **target**: `string`
 
 Defined in: [packages/core/src/site/redirects-service.ts:13](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/site/redirects-service.ts#L13)
-

@@ -33,4 +33,3 @@ Defined in: [packages/core/src/layout/models.ts:16](https://github.com/Sitecore/
 > **Preview**: `"preview"`
 
 Defined in: [packages/core/src/layout/models.ts:14](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/layout/models.ts#L14)
-

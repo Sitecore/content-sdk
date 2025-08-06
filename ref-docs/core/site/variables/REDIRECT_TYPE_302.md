@@ -9,4 +9,3 @@
 > `const` **REDIRECT\_TYPE\_302**: `"REDIRECT_302"` = `'REDIRECT_302'`
 
 Defined in: [packages/core/src/site/redirects-service.ts:8](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/site/redirects-service.ts#L8)
-

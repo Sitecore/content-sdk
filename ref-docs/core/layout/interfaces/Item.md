@@ -53,4 +53,3 @@ Defined in: [packages/core/src/layout/models.ts:128](https://github.com/Sitecore
 > `optional` **url**: `string`
 
 Defined in: [packages/core/src/layout/models.ts:131](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/layout/models.ts#L131)
-
