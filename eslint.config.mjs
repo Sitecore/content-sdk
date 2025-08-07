@@ -1,5 +1,5 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
-import { FlatCompat } from '@eslint/eslintrc';
+// import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,16 +12,12 @@ import stylistic from '@stylistic/eslint-plugin';
 
 import prettier from 'eslint-plugin-prettier';
 import jsdoc from 'eslint-plugin-jsdoc';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import globals from 'globals';
+import pluginNext from '@next/eslint-plugin-next';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
 
 export default defineConfig([
   // Global ignores
@@ -31,6 +27,7 @@ export default defineConfig([
     'packages/*/lib/',
     'packages/*/dist/',
     'packages/create-content-sdk-app/src/templates/**/*',
+    'packages/create-content-sdk-app/src/templates/**/*.json',
   ]),
 
   // Global linter settings
@@ -59,6 +56,7 @@ export default defineConfig([
       },
     },
     plugins: {
+      '@next/next': pluginNext,
       '@typescript-eslint': typescriptEslint,
       '@stylistic': stylistic,
       'react-hooks': reactHooks,
@@ -67,6 +65,17 @@ export default defineConfig([
       jsdoc,
     },
     rules: {
+      ...pluginNext.configs.recommended.rules,
+      ...pluginNext.configs['core-web-vitals'].rules,
+      '@next/next/no-html-link-for-pages': 'off',
+      '@next/next/no-img-element': 'off',
+      '@next/next/no-sync-scripts': 'off',
+      'react-hooks/exhaustive-deps': 'off',
+      '@next/next/no-assign-module-variable': 'off',
+      // Include ESLint recommended rules
+      ...js.configs.recommended.rules,
+      // Include JSDoc recommended rules
+      ...jsdoc.configs.recommended.rules,
       // JSDoc relaxations
       'jsdoc/newline-after-description': 'off',
       'jsdoc/require-property-description': 'off',
@@ -119,6 +128,9 @@ export default defineConfig([
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'import/no-anonymous-default-export': 'error',
+
+      // Prettier conflict resolution - must come LAST to override conflicting rules
+      ...eslintConfigPrettier.rules,
     },
   },
 
@@ -131,12 +143,10 @@ export default defineConfig([
         {
           selector: 'typeLike',
           format: ['PascalCase'],
-          custom: {
-            regex: '^I[A-Z]',
-            match: false,
-          },
+          custom: { regex: '^I[A-Z]', match: false },
         },
       ],
+      'no-undef': 'off',
       '@typescript-eslint/member-ordering': 'error',
       '@typescript-eslint/typedef': 'error',
       '@typescript-eslint/no-use-before-define': ['error', { functions: false, variables: false }],
@@ -150,6 +160,16 @@ export default defineConfig([
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
+    },
+  },
+
+  // Jest test files: enable Jest globals (describe, it, beforeEach, etc.)
+  {
+    files: ['**/*.test.{js,jsx,ts,tsx}', '**/__tests__/**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.jest
+      },
     },
   },
 ]);
