@@ -8,7 +8,7 @@
 
 > **SitecoreCliConfigInput** = `object`
 
-Defined in: [packages/core/src/config/models.ts:211](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/config/models.ts#L211)
+Defined in: [packages/core/src/config/models.ts:211](https://github.com/Sitecore/content-sdk/blob/b5e6b15cea46ea739381f1bf5fbaaa2433c78d5f/packages/core/src/config/models.ts#L211)
 
 Type used as CLI config input in sitecore.cli.config
 
@@ -18,7 +18,7 @@ Type used as CLI config input in sitecore.cli.config
 
 > `optional` **build**: `object`
 
-Defined in: [packages/core/src/config/models.ts:215](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/config/models.ts#L215)
+Defined in: [packages/core/src/config/models.ts:215](https://github.com/Sitecore/content-sdk/blob/b5e6b15cea46ea739381f1bf5fbaaa2433c78d5f/packages/core/src/config/models.ts#L215)
 
 Configuration for the `sitecore-tools build` CLI command
 
@@ -38,7 +38,7 @@ Commands to run during the build process
 
 > `optional` **componentMap**: [`GenerateMapArgs`](../../tools/type-aliases/GenerateMapArgs.md) & `object`
 
-Defined in: [packages/core/src/config/models.ts:233](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/config/models.ts#L233)
+Defined in: [packages/core/src/config/models.ts:233](https://github.com/Sitecore/content-sdk/blob/b5e6b15cea46ea739381f1bf5fbaaa2433c78d5f/packages/core/src/config/models.ts#L233)
 
 Configuration for the `sitecore-tools component generate-map` CLI command
 
@@ -56,7 +56,7 @@ Function implementation for generating a component map
 
 > `optional` **scaffold**: `object`
 
-Defined in: [packages/core/src/config/models.ts:224](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/core/src/config/models.ts#L224)
+Defined in: [packages/core/src/config/models.ts:224](https://github.com/Sitecore/content-sdk/blob/b5e6b15cea46ea739381f1bf5fbaaa2433c78d5f/packages/core/src/config/models.ts#L224)
 
 Configuration for the `sitecore-tools scaffold` CLI command
 

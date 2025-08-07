@@ -8,4 +8,4 @@
 
 > **MultisiteMiddlewareConfig** = [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `SitecoreConfig`\[`"multisite"`\]
 
-Defined in: [nextjs/src/middleware/multisite-middleware.ts:25](https://github.com/Sitecore/content-sdk/blob/e2cfae3b839cc2bcfbb157002edaeb01a84aebb9/packages/nextjs/src/middleware/multisite-middleware.ts#L25)
+Defined in: [nextjs/src/middleware/multisite-middleware.ts:25](https://github.com/Sitecore/content-sdk/blob/b5e6b15cea46ea739381f1bf5fbaaa2433c78d5f/packages/nextjs/src/middleware/multisite-middleware.ts#L25)
