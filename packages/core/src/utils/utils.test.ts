@@ -298,8 +298,8 @@ describe('utils', () => {
 
   describe('escapeNonSpecialQuestionMarks', () => {
     it('should return regex patterns unchanged', () => {
-      expect(escapeNonSpecialQuestionMarks('^/meinezurich/?$')).to.equal('^/meinezurich/?$');
-      expect(escapeNonSpecialQuestionMarks('^/meinezurichtest/$')).to.equal('^/meinezurichtest/$');
+      expect(escapeNonSpecialQuestionMarks('^/testpage/?$')).to.equal('^/testpage/?$');
+      expect(escapeNonSpecialQuestionMarks('^/examplepage/$')).to.equal('^/examplepage/$');
       expect(escapeNonSpecialQuestionMarks('^/path(abc)?/def*?/ghi+?$')).to.equal(
         '^/path(abc)?/def*?/ghi+?$'
       );
