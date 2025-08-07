@@ -44,7 +44,7 @@ export const defaultImportEntries: ImportEntry[] = [
   {
     module: 'react',
     exports: [
-      { name: 'React', value: React },
+      { name: 'default', value: React },
       { name: 'Children', value: Children },
       { name: 'Fragment', value: Fragment },
       { name: 'createElement', value: createElement },
