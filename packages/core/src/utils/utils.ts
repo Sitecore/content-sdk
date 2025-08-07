@@ -206,21 +206,8 @@ export const escapeNonSpecialQuestionMarks = (input: string): string => {
     return input;
   }
 
-  // Simple approach: escape "?" unless it's already escaped or part of regex syntax
-  return input.replace(/\?/g, (match, offset, string) => {
-    const before = string.slice(0, offset);
-
-    // Don't escape if already escaped
-    if (before.endsWith('\\')) return match;
-
-    // Don't escape if it's a quantifier
-    if (['*', '+', ')', ']', '}'].includes(before.slice(-1))) return match;
-
-    // Don't escape if it's part of negative lookahead
-    if (before.endsWith('(')) return match;
-
-    return '\\?';
-  });
+  // For non-regex strings, escape literal "?" characters
+  return input.replace(/\?/g, '\\?');
 };
 
 /**
