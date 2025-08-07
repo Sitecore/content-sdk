@@ -153,9 +153,8 @@ describe('Import Map Generation', () => {
             },
           ],
           defaultImports: [
-            { name: 'defaultExport', value: 'defaultExport' },
+            { name: 'default', value: 'defaultExport2' },
             { name: '*', value: 'everything' },
-            { name: 'defaultExport2', value: 'defaultExport2' },
           ],
         },
       ];

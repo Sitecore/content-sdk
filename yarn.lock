@@ -2490,8 +2490,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/core": 1.1.0-canary.19
-    "@stylistic/eslint-plugin": ^5.2.2
+    "@sitecore-content-sdk/core": 1.1.0-canary.20
     "@types/chai": ^5.2.2
     "@types/mocha": ^10.0.10
     "@types/node": ^22.15.13
@@ -2527,7 +2526,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+<<<<<<< HEAD
 "@sitecore-content-sdk/core@1.1.0-canary.19, @sitecore-content-sdk/core@workspace:packages/core":
+=======
+"@sitecore-content-sdk/core@1.1.0-canary.20, @sitecore-content-sdk/core@workspace:packages/core":
+>>>>>>> dev
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
@@ -2586,9 +2589,14 @@ __metadata:
     "@babel/parser": ^7.27.2
     "@sitecore-cloudsdk/core": ^0.5.1
     "@sitecore-cloudsdk/personalize": ^0.5.1
+<<<<<<< HEAD
     "@sitecore-content-sdk/core": 1.1.0-canary.19
     "@sitecore-content-sdk/react": 1.1.0-canary.19
     "@stylistic/eslint-plugin": ^5.2.2
+=======
+    "@sitecore-content-sdk/core": 1.1.0-canary.20
+    "@sitecore-content-sdk/react": 1.1.0-canary.20
+>>>>>>> dev
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.3.0
     "@types/chai": ^5.2.2
@@ -2645,11 +2653,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+<<<<<<< HEAD
 "@sitecore-content-sdk/react@1.1.0-canary.19, @sitecore-content-sdk/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
     "@sitecore-content-sdk/core": 1.1.0-canary.19
+=======
+"@sitecore-content-sdk/react@1.1.0-canary.20, @sitecore-content-sdk/react@workspace:packages/react":
+  version: 0.0.0-use.local
+  resolution: "@sitecore-content-sdk/react@workspace:packages/react"
+  dependencies:
+    "@sitecore-content-sdk/core": 1.1.0-canary.20
+>>>>>>> dev
     "@sitecore-feaas/clientside": ^0.6.0
     "@stylistic/eslint-plugin": ^5.2.2
     "@testing-library/dom": ^10.4.0

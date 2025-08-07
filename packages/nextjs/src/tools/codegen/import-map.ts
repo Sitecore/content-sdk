@@ -239,7 +239,7 @@ export const getImportMap = (paths: string[]) => {
               importModuleName,
               importValuesIndex
             );
-            importMap.get(importModuleName)!.defaultExports.set(imports.default, importValue);
+            importMap.get(importModuleName)!.defaultExports.set('default', importValue);
             importValuesIndex.set(importValue, importModuleName);
           }
         } else {
@@ -349,11 +349,11 @@ export const nextJsMapTemplate = (indexedImportMap: Map<string, ModuleExports>) 
     }
     if (entry.defaultExports.length > 0) {
       Array.from(entry.defaultExports).forEach((defaultExportEntry) => {
-        importStatements.push(
-          `import ${getSingleImport(defaultExportEntry.name, defaultExportEntry.value)} from '${
-            entry.module
-          }';`
-        );
+        if (defaultExportEntry.name === 'default') {
+          importStatements.push(`import ${defaultExportEntry.value} from '${entry.module}';`);
+        } else {
+          importStatements.push(`import * as ${defaultExportEntry.value} from '${entry.module}';`);
+        }
       });
     }
   });

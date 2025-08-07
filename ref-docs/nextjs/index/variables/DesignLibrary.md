@@ -6,15 +6,15 @@
 
 # Variable: DesignLibrary()
 
-> `const` **DesignLibrary**: (`{ importMap }`) => `JSX.Element`
+> `const` **DesignLibrary**: (`{ loadImportMap }`) => `JSX.Element`
 
-Defined in: react/types/components/DesignLibrary.d.ts:22
+Defined in: react/types/components/DesignLibrary.d.ts:25
 
 ## Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `{ importMap }` | `DesignLibraryProps` |
+| `{ loadImportMap }` | `DesignLibraryProps` |
 
 ## Returns
 

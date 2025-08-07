@@ -26,6 +26,10 @@ export const __mockDependencies = (mocks: any) => {
   addComponentPreviewHandler = mocks.addComponentPreviewHandler;
 };
 
+export type ImportMapImport = {
+  default: codegen.ImportEntry[];
+};
+
 /**
  * This component is used to render the component in preview mode.
  * It is used to send the rendered event to the parent window and render the component.
@@ -145,7 +149,7 @@ type VariantGenerationProps = {
   /**
    * The import map to be used in variant generation mode.
    */
-  importMap?: codegen.ImportEntry[];
+  loadImportMap?: () => Promise<ImportMapImport>;
 };
 
 /**
@@ -162,11 +166,8 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER][0];
   const [renderKey, setRenderKey] = useState(0);
   const [initError, setInitError] = useState<boolean>(false);
+  const [importMapError, setImportMapError] = useState<boolean>(false);
   const [Component, setComponent] = useState<DynamicComponent>(null);
-
-  if (!props.importMap) {
-    return <div>No import map found. Please check your import map.</div>;
-  }
 
   if (!rendering) {
     return <div>No component found in layout data. Please check your layout data.</div>;
@@ -174,37 +175,77 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    const unsubscribe = addComponentPreviewHandler(props.importMap, (error, Component) => {
-      setRenderKey((key) => key + 1);
+    let cancelled = false;
+    // since import map is loaded lazily, we only need to add preview event handler once the import map is loaded
+    // unsubscribe function for useEffect cleanup will also be returned once importMap promise has been resolved or rejected
+    let unsubscribe: (() => void) | undefined = undefined;
 
-      if (error) {
-        setInitError(true);
-
+    const init = async () => {
+      let importMap: codegen.ImportEntry[] = undefined;
+      if (!props.loadImportMap) {
+        console.error(
+          'No loadImportMap prop provided. Please provide a dynamic import map function for DesignLibrary.'
+        );
+        setImportMapError(true);
         return;
       }
+      try {
+        const importMapImport = await props.loadImportMap();
+        importMap = importMapImport.default;
+      } catch (error) {
+        console.error('Error loading import map:', error);
+        setImportMapError(true);
+        return;
+      }
+      // account for component being unmounted while resolving async import map
+      if (cancelled) return;
 
-      setInitError(false);
-      setComponent(() => Component as DynamicComponent);
-    });
+      unsubscribe = addComponentPreviewHandler(importMap, (error, Component) => {
+        setRenderKey((key) => key + 1);
+        if (error) {
+          setInitError(true);
 
-    const importMapEvent = getDesignLibraryImportMapEvent(rendering.uid, props.importMap);
+          return;
+        }
+        setInitError(false);
+        setComponent(() => Component as DynamicComponent);
+      });
 
-    console.debug('Component Library: sending event', importMapEvent);
+      const importMapEvent = getDesignLibraryImportMapEvent(rendering.uid, importMap);
 
-    window.parent.postMessage(importMapEvent, '*');
+      console.debug('Component Library: sending event', importMapEvent);
 
-    const componentPropsEvent = getDesignLibraryComponentPropsEvent(
-      rendering.uid,
-      rendering.fields,
-      rendering.params
-    );
+      window.parent.postMessage(importMapEvent, '*');
 
-    console.debug('Component Library: sending event', componentPropsEvent);
+      const componentPropsEvent = getDesignLibraryComponentPropsEvent(
+        rendering.uid,
+        rendering.fields,
+        rendering.params
+      );
 
-    window.top.postMessage(componentPropsEvent, '*');
+      console.debug('Component Library: sending event', componentPropsEvent);
 
-    return unsubscribe;
+      window.top.postMessage(componentPropsEvent, '*');
+    };
+
+    init();
+    // return function that calls unsubsubribe - if the component was mounted correctly
+    return () => {
+      cancelled = true;
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
+
+  if (importMapError) {
+    return (
+      <div>
+        No dynamic import map loaded. Please check a dynamic import map function is passed into
+        Design Library
+      </div>
+    );
+  }
 
   if (initError) {
     return <div key={renderKey}>Error during component initialization</div>;
@@ -226,13 +267,13 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
 // @MAJOR-RELEASE-TODO - Make importMap required in next major version
 type DesignLibraryProps = {
   /**
-   * The import map to be used in variant generation mode.
+   * The dynamic import for import map to be used in variant generation mode.
    * Currently it's optional but it will be required in the next major version.
    */
-  importMap?: codegen.ImportEntry[];
+  loadImportMap?: () => Promise<ImportMapImport>;
 };
 
-export const DesignLibrary = ({ importMap }: DesignLibraryProps): JSX.Element => {
+export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps): JSX.Element => {
   const { page } = useSitecore();
   const { isDesignLibrary } = page.mode;
   const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
@@ -242,7 +283,7 @@ export const DesignLibrary = ({ importMap }: DesignLibraryProps): JSX.Element =>
   }
 
   if (isVariantGeneration) {
-    return <VariantGeneration importMap={importMap} />;
+    return <VariantGeneration loadImportMap={loadImportMap} />;
   }
 
   return <Preview />;
