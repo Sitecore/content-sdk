@@ -8,7 +8,7 @@
 
 > **isDesignLibraryPreviewData**(`data`): `data is DesignLibraryRenderPreviewData`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:46](https://github.com/Sitecore/content-sdk/blob/b5e6b15cea46ea739381f1bf5fbaaa2433c78d5f/packages/nextjs/src/editing/editing-render-middleware.ts#L46)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:46](https://github.com/Sitecore/content-sdk/blob/ae819759c6e7c39e054c147681b8ed7674a5243e/packages/nextjs/src/editing/editing-render-middleware.ts#L46)
 
 Type guard for Design Library mode
 
