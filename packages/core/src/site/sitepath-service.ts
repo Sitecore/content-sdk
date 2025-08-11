@@ -315,19 +315,19 @@ export class SitePathService {
       const allCombinations = generateCombinations(segments);
 
       // Add plain paths to the aggregated paths list
-      for (const combo of allCombinations) {
-        aggregatedPaths.push(formatStaticPath(combo, language));
+      for (const combination of allCombinations) {
+        aggregatedPaths.push(formatStaticPath(combination, language));
       }
 
       // Check for personalization variants
       const variantIds = item.route?.personalization?.variantIds?.filter(
-        (variantId) => !variantId.includes('_')
+        (variantId) => !variantId.includes('_') // exclude component A/B test
       );
 
       if (variantIds?.length) {
         for (const variantId of variantIds) {
-          for (const combo of allCombinations) {
-            const rewritePath = getPersonalizedRewrite('/' + combo.join('/'), [variantId]);
+          for (const combination of allCombinations) {
+            const rewritePath = getPersonalizedRewrite('/' + combination.join('/'), [variantId]);
             const variantSegments = rewritePath.replace(/^\/|\/$/g, '').split('/');
             aggregatedPaths.push(formatStaticPath(variantSegments, language));
           }
