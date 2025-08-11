@@ -46,7 +46,7 @@ describe('RobotsMiddleware', () => {
       },
     };
 
-    middleware = new RobotsMiddleware((sitecoreClientStub as unknown) as SitecoreClient, sites);
+    middleware = new RobotsMiddleware(sitecoreClientStub as unknown as SitecoreClient, sites);
     (middleware as any).siteResolver = siteResolverStub;
     siteResolverStub.getByHost.callsFake((hostName) =>
       sites.find((site) => site.hostName === hostName)

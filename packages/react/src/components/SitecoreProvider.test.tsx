@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React, { FC } from 'react';
 import { expect } from 'chai';
 import { Page } from '@sitecore-content-sdk/core/client';

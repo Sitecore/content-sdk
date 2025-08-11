@@ -1,4 +1,5 @@
-﻿/* eslint-disable @typescript-eslint/no-non-null-assertion */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ReactNode } from 'react';
 import { use, expect } from 'chai';
 import { NextRouter } from 'next/router';

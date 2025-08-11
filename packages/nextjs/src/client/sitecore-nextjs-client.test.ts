@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
@@ -213,13 +215,13 @@ describe('SitecoreClient', () => {
 
   describe('getComponentData', () => {
     it('should return componentData when component has getComponentsProps method', async () => {
-      const context = ({
+      const context = {
         params: { path: ['test', 'path'] },
         query: {},
         req: {},
         res: {},
         resolvedUrl: '/test/path',
-      } as unknown) as GetServerSidePropsContext;
+      } as unknown as GetServerSidePropsContext;
       const layoutData = {
         sitecore: {
           context,

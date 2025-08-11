@@ -102,9 +102,8 @@ export function withPlaceholder(
               childProps.page.mode.isEditing
             );
             if (placeholderData) {
-              childProps[placeholder as string] = this.getComponentsForRenderingData(
-                placeholderData
-              );
+              childProps[placeholder as string] =
+                this.getComponentsForRenderingData(placeholderData);
             }
           }
         });

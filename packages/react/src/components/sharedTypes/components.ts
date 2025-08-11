@@ -34,6 +34,5 @@ export type LazyComponentType = ComponentType & {
   render?: { [key: string]: unknown };
 };
 
-export type ComponentMap<
-  TComponent extends ReactContentSdkComponent = ReactContentSdkComponent
-> = Map<string, TComponent>;
+export type ComponentMap<TComponent extends ReactContentSdkComponent = ReactContentSdkComponent> =
+  Map<string, TComponent>;

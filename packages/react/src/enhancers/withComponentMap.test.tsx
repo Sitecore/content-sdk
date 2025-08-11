@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import { expect, use } from 'chai';
 import { spy } from 'sinon';

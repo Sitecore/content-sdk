@@ -18,7 +18,6 @@ export function withFieldMetadata<
   RefElementType = HTMLElement
 >(FieldComponent: ComponentType<FieldComponentProps>, isForwardRef = false) {
   if (isForwardRef) {
-    // eslint-disable-next-line react/display-name
     return forwardRef<RefElementType, FieldComponentProps>((props, ref) => {
       const { editable = true } = props;
       const metadata = props.field?.metadata;
@@ -35,7 +34,6 @@ export function withFieldMetadata<
     });
   }
 
-  // eslint-disable-next-line react/display-name
   return (props: FieldComponentProps) => {
     const { editable = true } = props;
     const metadata = props.field?.metadata;

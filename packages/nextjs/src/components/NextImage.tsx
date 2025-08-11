@@ -1,4 +1,5 @@
-﻿import { mediaApi } from '@sitecore-content-sdk/core/media';
+﻿/* eslint-disable no-unused-vars */
+import { mediaApi } from '@sitecore-content-sdk/core/media';
 import React from 'react';
 import {
   ImageProps,

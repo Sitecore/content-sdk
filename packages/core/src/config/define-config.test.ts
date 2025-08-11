@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import { deepMerge, defineConfig, getFallbackConfig } from './define-config';
 import { SitecoreConfigInput } from './models';
@@ -105,15 +106,7 @@ describe('define-config', () => {
     const cfg = defineConfig(mockConfig);
     // eslint-disable-next-line
     expect((cfg.retries.retryStrategy as DefaultRetryStrategy)['statusCodes']).to.deep.equal([
-      429,
-      502,
-      503,
-      504,
-      520,
-      521,
-      522,
-      523,
-      524,
+      429, 502, 503, 504, 520, 521, 522, 523, 524,
     ]);
   });
 

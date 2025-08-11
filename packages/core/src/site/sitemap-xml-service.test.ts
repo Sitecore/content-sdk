@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import nock from 'nock';
 import { SitemapXmlService } from './sitemap-xml-service';

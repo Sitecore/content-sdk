@@ -22,9 +22,9 @@ export interface RichTextProps extends EditableFieldProps {
 
 export const RichText: React.FC<RichTextProps> = withFieldMetadata<RichTextProps>(
   withEmptyFieldEditingComponent<RichTextProps>(
-    // eslint-disable-next-line react/display-name
     forwardRef(
       (
+        // eslint-disable-next-line no-unused-vars
         { field, tag = 'div', editable = true, ...otherProps }: RichTextProps,
         ref: ForwardedRef<HTMLElement>
       ) => {

@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import path from 'path';

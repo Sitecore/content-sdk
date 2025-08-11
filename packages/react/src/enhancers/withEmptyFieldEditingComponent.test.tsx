@@ -30,7 +30,7 @@ describe('withEmptyFieldEditingComponent', () => {
       editable?: boolean;
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     const TestComponent = (props: TestComponentProps) => {
       return (
         <div>
@@ -41,7 +41,6 @@ describe('withEmptyFieldEditingComponent', () => {
       );
     };
 
-    // eslint-disable-next-line react/display-name
     const TestComponentWithRef = forwardRef(
       (props: TestComponentProps, ref: React.ForwardedRef<HTMLDivElement>) => {
         return (

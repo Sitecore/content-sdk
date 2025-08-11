@@ -1,13 +1,13 @@
 ﻿/* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable no-unused-expressions */
-/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { DesignLibrary, ImportMapImport } from './DesignLibrary';
+import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../test-data/component-editing-data';
 import { SitecoreProvider } from './SitecoreProvider';
 import { RichText } from './RichText';

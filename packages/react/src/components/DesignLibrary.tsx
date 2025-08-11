@@ -49,10 +49,10 @@ const Preview = (): JSX.Element => {
   let componentReady = false;
 
   // have an up-to-date layout state between re-renders (SSR re-render excluded)
-  const persistedRoot = useMemo(() => ({ ...(rootComponent || {}), ...rootUpdate }), [
-    rootComponent,
-    rootUpdate,
-  ]);
+  const persistedRoot = useMemo(
+    () => ({ ...(rootComponent || {}), ...rootUpdate }),
+    [rootComponent, rootUpdate]
+  );
   route.placeholders[EDITING_COMPONENT_PLACEHOLDER][0] = persistedRoot;
 
   useEffect(() => {
@@ -173,6 +173,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
     return <div>No component found in layout data. Please check your layout data.</div>;
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     let cancelled = false;
     // since import map is loaded lazily, we only need to add preview event handler once the import map is loaded
