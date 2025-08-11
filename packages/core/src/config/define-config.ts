@@ -14,8 +14,8 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       edgeUrl: process.env.SITECORE_EDGE_URL || SITECORE_EDGE_URL_DEFAULT,
     },
     local: {
-      apiKey: '',
-      apiHost: '',
+      apiKey: process.env.NEXT_PUBLIC_SITECORE_API_KEY || '',
+      apiHost: process.env.NEXT_PUBLIC_SITECORE_API_HOST || '',
       path: '/sitecore/api/graph/edge',
     },
   },
@@ -116,21 +116,22 @@ const validateConfig = (config: SitecoreConfigInput): void => {
   const isBrowser = typeof window !== 'undefined';
   const hasEdgeContextId = !!config.api?.edge?.contextId;
   const hasClientContextId = !!config.api?.edge?.clientContextId;
+  const hasLocalCreds = !!config.api?.local?.apiHost && !!config.api?.local?.apiKey;
 
-  // Server-side check
-  if (typeof window === 'undefined') {
-    if (!hasEdgeContextId) {
+  // Server-side: allow Edge OR Local; clientContextId alone is NOT sufficient
+  if (!isBrowser) {
+    if (!hasEdgeContextId && !hasLocalCreds) {
       throw new Error(
-        `Configuration error: a server-side Edge contextId (api.edge.contextId) is required.
-Supplying only clientContextId or local-API credentials is not sufficient`
+        'Configuration error: provide either Edge contextId (api.edge.contextId) or local credentials (api.local.apiHost + api.local.apiKey).'
       );
     }
-    if (!hasClientContextId) {
+    if (hasEdgeContextId && !hasClientContextId) {
       // eslint-disable-next-line no-console
-      console.warn(
-        `Warning: only a server-side contextId is provided.
-If your app makes client-side requests, they will fail unless you also set a clientContextId.`
-      );
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(
+          'Warning: only a server-side edge contextId is provided. Client-side requests will require api.edge.clientContextId or a proxy.'
+        );
+      }
     }
     return; // validation complete on the server
   }
@@ -138,10 +139,12 @@ If your app makes client-side requests, they will fail unless you also set a cli
   // Browser-side warning (runs only if contextId exists but clientContextId is missing)
   if (isBrowser && !hasClientContextId) {
     // eslint-disable-next-line no-console
-    console.warn(
-      `Warning: clientContextId is missing. The browser will use contextId instead.
-Client Side functionalities (like Tracking and Personalization) may be limited.`
-    );
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        `Warning: clientContextId is missing. The browser will use contextId instead.
+  Client Side functionalities (like Tracking and Personalization) may be limited.`
+      );
+    }
   }
 };
 
