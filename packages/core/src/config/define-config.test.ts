@@ -69,19 +69,19 @@ describe('define-config', () => {
     expect(config.dictionary.caching.timeout).to.equal(fallback.dictionary.caching.timeout);
   });
 
-  it('throws when server-side contextId is missing', () => {
+  it('throws when server-side has neither Edge contextId nor Local credentials', () => {
     const badConfig: SitecoreConfigInput = {
-      ...mockConfig,
       api: {
         edge: {
           contextId: '',
-          clientContextId: 'client-id',
+          clientContextId: 'client-id', // client-only is NOT sufficient on the server
         },
+        // no local creds provided
       },
     };
 
     expect(() => defineConfig(badConfig)).to.throw(
-      'Configuration error: a server-side Edge contextId'
+      'Configuration error: provide either Edge contextId'
     );
   });
 
@@ -117,6 +117,8 @@ describe('define-config', () => {
       process.env.SITECORE_EDITING_SECRET = 'env-secret';
       process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT = '111';
       process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT = '222';
+      process.env.NEXT_PUBLIC_SITECORE_API_KEY = 'env-local-key';
+      process.env.NEXT_PUBLIC_SITECORE_API_HOST = 'https://env-local-host';
 
       const cfg = getFallbackConfig();
       expect(cfg.api.edge.contextId).to.equal('env-context');
@@ -124,6 +126,8 @@ describe('define-config', () => {
       expect(cfg.editingSecret).to.equal('env-secret');
       expect(cfg.personalize.edgeTimeout).to.equal(111);
       expect(cfg.personalize.cdpTimeout).to.equal(222);
+      expect(cfg.api.local.apiKey).to.equal('env-local-key');
+      expect(cfg.api.local.apiHost).to.equal('https://env-local-host');
     });
 
     it('falls back to defaults when env variables are absent', () => {
@@ -132,6 +136,8 @@ describe('define-config', () => {
       delete process.env.SITECORE_EDITING_SECRET;
       delete process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT;
       delete process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT;
+      delete process.env.NEXT_PUBLIC_SITECORE_API_KEY;
+      delete process.env.NEXT_PUBLIC_SITECORE_API_HOST;
 
       const cfg = getFallbackConfig();
       expect(cfg.api.edge.contextId).to.equal('');
@@ -139,6 +145,8 @@ describe('define-config', () => {
       expect(cfg.editingSecret).to.equal('editing-secret-missing');
       expect(cfg.personalize.edgeTimeout).to.equal(400);
       expect(cfg.personalize.cdpTimeout).to.equal(400);
+      expect(cfg.api.local.apiKey).to.equal('');
+      expect(cfg.api.local.apiHost).to.equal('');
     });
   });
 
@@ -199,26 +207,26 @@ describe('define-config', () => {
     expect(() => defineConfig(cfg)).to.not.throw();
   });
 
-  it('fails when only clientContextId is provided', () => {
+  it('fails when only clientContextId is provided (no local creds)', () => {
     const cfg: SitecoreConfigInput = {
       api: { edge: { contextId: '', clientContextId: 'client-id' } },
     };
-    expect(() => defineConfig(cfg)).to.throw('Configuration error: a server-side Edge contextId');
+    expect(() => defineConfig(cfg)).to.throw('Configuration error: provide either Edge contextId');
   });
 
-  it('fails when contextId is missing even with local API creds', () => {
+  it('allows local-only when contextId is missing', () => {
     const cfg: SitecoreConfigInput = {
       api: {
         edge: { contextId: '' },
         local: { apiKey: 'key', apiHost: 'host' },
       },
     };
-    expect(() => defineConfig(cfg)).to.throw('Configuration error: a server-side Edge contextId');
+    expect(() => defineConfig(cfg)).to.not.throw();
   });
 
   it('fails when API configuration is empty', () => {
     const cfg = { api: {} } as SitecoreConfigInput;
-    expect(() => defineConfig(cfg)).to.throw('Configuration error: a server-side Edge contextId');
+    expect(() => defineConfig(cfg)).to.throw('Configuration error: provide either Edge contextId');
   });
 
   describe('validateConfig server-side behaviour', () => {
@@ -226,21 +234,28 @@ describe('define-config', () => {
 
     beforeEach(() => {
       originalWindow = (global as any).window;
-      delete (global as any).window;
+      delete (global as any).window; // simulate server
     });
     afterEach(() => {
       if (originalWindow !== undefined) (global as any).window = originalWindow;
     });
 
-    it('logs warning but does not throw when clientContextId is missing', () => {
+    it('logs warning but does not throw when clientContextId is missing (Edge server-only)', () => {
       const cfg = { api: { edge: { contextId: 'server-id' } } };
       expect(() => defineConfig(cfg)).to.not.throw();
       expect(defineConfig(cfg).api.edge.clientContextId).to.equal('');
     });
 
-    it('requires contextId even if clientContextId is present', () => {
+    it('requires Edge or Local; clientContextId alone is insufficient', () => {
       const cfg = { api: { edge: { contextId: '', clientContextId: 'client-id' } } };
-      expect(() => defineConfig(cfg)).to.throw('Configuration error: a server-side Edge contextId');
+      expect(() => defineConfig(cfg)).to.throw(
+        'Configuration error: provide either Edge contextId'
+      );
+    });
+
+    it('accepts local-only on the server', () => {
+      const cfg = { api: { edge: { contextId: '' }, local: { apiKey: 'k', apiHost: 'h' } } };
+      expect(() => defineConfig(cfg as any)).to.not.throw();
     });
   });
 });
