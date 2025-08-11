@@ -14,8 +14,8 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       edgeUrl: process.env.SITECORE_EDGE_URL || SITECORE_EDGE_URL_DEFAULT,
     },
     local: {
-      apiKey: process.env.NEXT_PUBLIC_SITECORE_API_KEY || '',
-      apiHost: process.env.NEXT_PUBLIC_SITECORE_API_HOST || '',
+      apiKey: process.env.SITECORE_API_KEY || process.env.NEXT_PUBLIC_SITECORE_API_KEY || '',
+      apiHost: process.env.SITECORE_API_HOST || process.env.NEXT_PUBLIC_SITECORE_API_HOST || '',
       path: '/sitecore/api/graph/edge',
     },
   },
