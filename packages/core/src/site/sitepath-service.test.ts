@@ -32,7 +32,9 @@ describe('SitePathService', () => {
     nock.cleanAll();
   });
 
-  const mockPathsRequest = (results?: { url: { path: string } }[]) => {
+  const mockPathsRequest = (
+    results?: { path: string; route?: { displayName?: string | null } }[]
+  ) => {
     nock(endpoint)
       .post('/', /DefaultSitemapQuery/gi)
       .reply(
@@ -48,7 +50,10 @@ describe('SitePathService', () => {
                       pageInfo: {
                         hasNext: false,
                       },
-                      results,
+                      results: results.map((item) => ({
+                        path: item.path,
+                        route: item.route || { displayName: null },
+                      })),
                     },
                   },
                 },
@@ -56,6 +61,7 @@ describe('SitePathService', () => {
             }
       );
   };
+
   describe('Fetch sitemap in SSG mode', () => {
     it('should work when 1 language is requested', async () => {
       mockPathsRequest();
@@ -141,6 +147,201 @@ describe('SitePathService', () => {
           locale: 'en',
         },
       ]);
+    });
+
+    it('should return both itemName and encoded displayName paths for routes with displayName (no personalization)', async () => {
+      const multipleSites = ['site1', 'site2'];
+      const lang = 'en';
+
+      nock(endpoint)
+        .persist()
+        .post('/', (body) => body.variables.siteName === multipleSites[0])
+        .reply(200, {
+          data: {
+            site: {
+              siteInfo: {
+                routes: {
+                  total: 2,
+                  pageInfo: {
+                    hasNext: false,
+                  },
+                  results: [
+                    {
+                      path: '/About',
+                      route: { displayName: 'New-about' },
+                    },
+                    {
+                      path: '/',
+                      route: { displayName: 'Home' },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        });
+
+      nock(endpoint)
+        .persist()
+        .post('/', (body) => body.variables.siteName === multipleSites[1])
+        .reply(200, {
+          data: {
+            site: {
+              siteInfo: {
+                routes: {
+                  total: 2,
+                  pageInfo: {
+                    hasNext: false,
+                  },
+                  results: [
+                    {
+                      path: 'Test',
+                      route: { displayName: 'New-Test' },
+                    },
+                    {
+                      path: '/',
+                      route: { displayName: 'Home' },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        });
+
+      const service = new SitePathService({
+        clientFactory,
+        enableDisplayNameRouting: true,
+      });
+
+      const sitemap = await service.fetchSiteRoutes(multipleSites, [lang]);
+
+      expect(sitemap).to.have.deep.members([
+        {
+          params: { path: ['_site_site1', 'About'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site1', 'New-about'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['Home', 'About'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['Home', 'New-about'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site1'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['Home'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site2', 'Test'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site2', 'New-Test'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['Home', 'Test'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['Home', 'New-Test'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site2'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['Home'] },
+          locale: 'en',
+        },
+      ]);
+
+      return expect(nock.isDone()).to.be.true;
+    });
+
+    it('should return encoded displayName paths when special characters are used', async () => {
+      const lang = 'en';
+
+      // Å → %C3%85, ü → %C3%BC, ç → %C3%A7
+      const results = [
+        {
+          path: '/about',
+          route: { displayName: 'Åbout' },
+        },
+        {
+          path: '/team',
+          route: { displayName: 'Tëâm' },
+        },
+        {
+          path: '/',
+          route: { displayName: 'Hôme' },
+        },
+      ];
+
+      mockPathsRequest(results);
+
+      const service = new SitePathService({
+        clientFactory,
+        enableDisplayNameRouting: true,
+      });
+
+      const sitemap = await service.fetchSiteRoutes(sites, [lang]);
+
+      expect(sitemap).to.have.deep.members([
+        {
+          params: { path: ['_site_site-name', 'about'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site-name', '%C3%85bout'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['H%C3%B4me', 'about'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['H%C3%B4me', '%C3%85bout'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site-name', 'team'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site-name', 'T%C3%AB%C3%A2m'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['H%C3%B4me', 'team'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['H%C3%B4me', 'T%C3%AB%C3%A2m'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site-name'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['H%C3%B4me'] },
+          locale: 'en',
+        },
+      ]);
+
+      return expect(nock.isDone()).to.be.true;
     });
 
     it('should return aggregated paths for multiple sites with no personalization', async () => {
@@ -365,6 +566,209 @@ describe('SitePathService', () => {
           locale: lang,
         },
       ]);
+      return expect(nock.isDone()).to.be.true;
+    });
+
+    it('should return aggregated display name and item name paths for multiple sites and personalized sites', async () => {
+      const multipleSites = ['site1', 'site2'];
+      const lang = 'en';
+
+      nock(endpoint)
+        .post('/', (body) => {
+          return body.variables.siteName === multipleSites[0];
+        })
+        .reply(200, {
+          data: {
+            site: {
+              siteInfo: {
+                routes: {
+                  total: 2,
+                  pageInfo: {
+                    hasNext: false,
+                  },
+                  results: [
+                    {
+                      path: '/x1',
+                      route: {
+                        displayName: 'X-One',
+                        personalization: {
+                          variantIds: ['green'],
+                        },
+                      },
+                    },
+                    {
+                      path: '/y1/y2',
+                      route: {
+                        displayName: 'Y-Two',
+                        personalization: {
+                          variantIds: ['red', 'blue'],
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        });
+
+      nock(endpoint)
+        .post('/', (body) => {
+          return body.variables.siteName === multipleSites[1];
+        })
+        .reply(200, {
+          data: {
+            site: {
+              siteInfo: {
+                routes: {
+                  total: 2,
+                  pageInfo: {
+                    hasNext: false,
+                  },
+                  results: [
+                    {
+                      path: '/y1',
+                      route: {
+                        displayName: 'Y-One',
+                        personalization: {
+                          variantIds: ['green'],
+                        },
+                      },
+                    },
+                    {
+                      path: '/y1/y2',
+                      route: {
+                        displayName: 'Y-Two',
+                        personalization: {
+                          variantIds: ['red', 'blue'],
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        });
+
+      const service = new SitePathService({
+        clientFactory,
+        includePersonalizedRoutes: true,
+        enableDisplayNameRouting: true,
+      });
+
+      const sitemap = await service.fetchSiteRoutes(multipleSites, [lang]);
+
+      expect(sitemap).to.have.deep.members([
+        // Site1 paths
+        {
+          params: { path: ['_site_site1', 'x1'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site1', 'X-One'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_green', '_site_site1', 'x1'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_green', '_site_site1', 'X-One'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site1', 'y1', 'y2'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site1', 'y1', 'Y-Two'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_red', '_site_site1', 'y1', 'y2'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_red', '_site_site1', 'y1', 'Y-Two'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_blue', '_site_site1', 'y1', 'y2'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_blue', '_site_site1', 'y1', 'Y-Two'] },
+          locale: 'en',
+        },
+
+        // Site2 paths
+        {
+          params: { path: ['_site_site2', 'y1'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site2', 'Y-One'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_green', '_site_site2', 'y1'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_green', '_site_site2', 'Y-One'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site2', 'y1', 'y2'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site2', 'y1', 'Y-Two'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site2', 'Y-One', 'y2'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_site_site2', 'Y-One', 'Y-Two'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_red', '_site_site2', 'y1', 'y2'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_red', '_site_site2', 'y1', 'Y-Two'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_red', '_site_site2', 'Y-One', 'y2'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_red', '_site_site2', 'Y-One', 'Y-Two'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_blue', '_site_site2', 'y1', 'y2'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_blue', '_site_site2', 'y1', 'Y-Two'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_blue', '_site_site2', 'Y-One', 'y2'] },
+          locale: 'en',
+        },
+        {
+          params: { path: ['_variantId_blue', '_site_site2', 'Y-One', 'Y-Two'] },
+          locale: 'en',
+        },
+      ]);
+
       return expect(nock.isDone()).to.be.true;
     });
 
