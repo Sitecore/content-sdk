@@ -1,5 +1,4 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
-// import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -70,7 +69,6 @@ export default defineConfig([
       '@next/next/no-html-link-for-pages': 'off',
       '@next/next/no-img-element': 'off',
       '@next/next/no-sync-scripts': 'off',
-      'react-hooks/exhaustive-deps': 'off',
       '@next/next/no-assign-module-variable': 'off',
       // Include ESLint recommended rules
       ...js.configs.recommended.rules,
@@ -98,7 +96,6 @@ export default defineConfig([
       'spaced-comment': 'error',
       curly: ['error', 'multi-line'],
       'eol-last': ['error', 'always'],
-      'linebreak-style': ['error', 'windows'],
       'guard-for-in': 'error',
       'no-unused-labels': 'error',
       'no-caller': 'error',
