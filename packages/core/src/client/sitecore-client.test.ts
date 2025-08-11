@@ -1,4 +1,5 @@
 ﻿/* eslint-disable dot-notation */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
@@ -1271,13 +1272,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
         {
-          href:
-            'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);
@@ -1290,8 +1289,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);
@@ -1304,8 +1302,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);

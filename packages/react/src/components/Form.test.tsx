@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { expect } from 'chai';

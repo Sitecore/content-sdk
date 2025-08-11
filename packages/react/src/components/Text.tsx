@@ -32,7 +32,7 @@ export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
 
       // can't use editable value if we want to output unencoded
       if (!encode) {
-        // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line no-param-reassign, no-unused-vars
         editable = false;
       }
 

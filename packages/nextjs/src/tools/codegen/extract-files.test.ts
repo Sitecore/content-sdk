@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import chalk from 'chalk';
@@ -161,10 +162,7 @@ describe('extract-files', () => {
 
     const consoleLogStub = sandbox.stub(console, 'log');
 
-    nock(edgeUrl)
-      .post('/mesh/push/api/v1/contentsdk/code/extracted')
-      .reply(200)
-      .persist();
+    nock(edgeUrl).post('/mesh/push/api/v1/contentsdk/code/extracted').reply(200).persist();
 
     const component1Path = path.resolve(process.cwd(), './src/components/TestComponent.tsx');
 

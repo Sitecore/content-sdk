@@ -1,4 +1,5 @@
-﻿import chai, { expect } from 'chai';
+﻿/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
+import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -46,7 +47,7 @@ describe('SitemapMiddleware', () => {
       getByName: sandbox.stub(),
     };
 
-    middleware = new SitemapMiddleware((sitecoreClientStub as unknown) as SitecoreClient, sites);
+    middleware = new SitemapMiddleware(sitecoreClientStub as unknown as SitecoreClient, sites);
     (middleware as any).siteResolver = siteResolverStub;
     siteResolverStub.getByHost.callsFake((hostName) =>
       sites.find((site) => site.hostName === hostName)

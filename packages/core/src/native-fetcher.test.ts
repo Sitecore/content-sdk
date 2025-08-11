@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-expressions */
 import { expect, use, spy } from 'chai';
 import spies from 'chai-spies';
@@ -40,13 +41,13 @@ const mockFetch = (
       statusText: status === 200 ? 'OK' : 'ERROR',
       url: input,
       redirected: false,
-      headers: ({
+      headers: {
         get: (name: string) => allHeaders[name] || '',
         set: (name: string, value: string) => {
           allHeaders[name] = value;
         },
         entries: () => Object.entries(allHeaders),
-      } as unknown) as Headers,
+      } as unknown as Headers,
       json: () => {
         return jsonError ? Promise.reject(new Error(jsonError)) : Promise.resolve(response);
       },
@@ -115,7 +116,7 @@ describe('NativeDataFetcher', () => {
 
       const response = await fetcher.fetch('http://test.com/api');
 
-      const headers = (response.headers as unknown) as {
+      const headers = response.headers as unknown as {
         get: (name: string) => string;
         set: (name: string, value: string) => void;
       };

@@ -22,15 +22,20 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin-ts": "^2.10.1",
-    "@typescript-eslint/eslint-plugin": "^8.14.0",
-    "@typescript-eslint/parser": "^8.14.0",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-jsdoc": "^50.5.0",
-    "eslint-plugin-prettier": "^3.3.0",
+    "@rushstack/eslint-patch": "^1.10.3",
+    "@stylistic/eslint-plugin": "^5.2.2",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "eslint": "^9.32.0",
+    "eslint-config-next": "15.4.6",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-jsdoc": "52.0.3",
+    "eslint-plugin-prettier": "^5.5.3",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "lerna": "^5.6.2",
-    "prettier": "^1.14.3",
+    "prettier": "^3.6.2",
     "typedoc": "^0.28.4",
     "typedoc-plugin-markdown": "^4.6.3",
     "typescript": "~5.8.3"
@@ -39,5 +44,9 @@
     "packages/*",
     "samples/*"
   ],
+  "resolutions": {
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "@rushstack/eslint-patch": "1.12.0"
+  },
   "packageManager": "yarn@3.1.0"
 }

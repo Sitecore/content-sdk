@@ -1,4 +1,5 @@
-﻿import React, { RefAttributes, forwardRef } from 'react';
+﻿/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
+import React, { RefAttributes, forwardRef } from 'react';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
@@ -36,8 +37,8 @@ export type LinkProps = EditableFieldProps &
 
 export const Link: React.FC<LinkProps> = withFieldMetadata<LinkProps, HTMLAnchorElement>(
   withEmptyFieldEditingComponent<LinkProps, HTMLAnchorElement>(
-    // eslint-disable-next-line react/display-name
     forwardRef<HTMLAnchorElement, LinkProps>(
+      // eslint-disable-next-line no-unused-vars
       ({ field, editable = true, showLinkTextWithChildrenPresent, ...otherProps }, ref) => {
         const children = otherProps.children as React.ReactNode;
         const dynamicField: LinkField | LinkFieldValue = field;

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import { defaultTemplate } from './default-component';
 import chalk from 'chalk';

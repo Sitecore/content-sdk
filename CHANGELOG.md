@@ -14,6 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* Migration from ESlint 8 -> ESLint 9 and introduction of the new Flat Config file ([#176](https://github.com/Sitecore/content-sdk/pull/176))
 * Code generation for Design Library enablers:
   - `[core]` `[nextjs]` Add import-map generation ([#157](https://github.com/Sitecore/content-sdk/pull/157))([#167](https://github.com/Sitecore/content-sdk/pull/167))([#170](https://github.com/Sitecore/content-sdk/pull/170))([#171](https://github.com/Sitecore/content-sdk/pull/171))([#175](https://github.com/Sitecore/content-sdk/pull/175))([#177](https://github.com/Sitecore/content-sdk/pull/177))
     - New `writeImportMap()`, `combineImportEntries()` methods and `defaultImportEntries` export available from `@sitecore-content-sdk/nextjs/codegen`
@@ -23,6 +24,7 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
+* `[core]` `[nextjs]` Restore proper local connection fallback ([#178](https://github.com/Sitecore/content-sdk/pull/178))
 * `[core]` Duplicate dictionary requests in editing, preview, and design library modes ([#161](https://github.com/Sitecore/content-sdk/pull/161))
   - `SitecoreClient.getPreview` and `SitecoreClient.getDesignLibraryData` no longer request dictionary data. `Page` type is not affected.
   - Updated `EditingService.fetchEditingData`:

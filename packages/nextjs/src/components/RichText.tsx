@@ -43,6 +43,7 @@ export const RichText = (props: RichTextProps): JSX.Element => {
     if (hasText && !isEditing) {
       initializeLinks();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasText]);
 
   const routeHandler = (ev: MouseEvent) => {

@@ -8,4 +8,4 @@
 
 > `const` **REDIRECT\_TYPE\_301**: `"REDIRECT_301"` = `'REDIRECT_301'`
 
-Defined in: [packages/core/src/site/redirects-service.ts:7](https://github.com/Sitecore/content-sdk/blob/ae819759c6e7c39e054c147681b8ed7674a5243e/packages/core/src/site/redirects-service.ts#L7)
+Defined in: [packages/core/src/site/redirects-service.ts:7](https://github.com/Sitecore/content-sdk/blob/dc2fcfb78f06d81d0ee0dc2dbe001d506287e9c4/packages/core/src/site/redirects-service.ts#L7)

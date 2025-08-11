@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chalk from 'chalk';
 import chai, { expect } from 'chai';
 import sinon, { SinonStub } from 'sinon';
@@ -55,7 +55,11 @@ describe('install', () => {
       expect(run).to.have.been.calledOnceWith(
         'yarn',
         ['install'],
-        { cwd: projectFolder, encoding: 'utf8', env: { ...process.env, NODE_NO_WARNINGS: '1' } },
+        {
+          cwd: projectFolder,
+          encoding: 'utf8',
+          env: { ...process.env, NODE_NO_WARNINGS: '1' },
+        },
         undefined
       );
     });
@@ -87,7 +91,11 @@ describe('install', () => {
       expect(run).to.have.been.calledOnceWith(
         'yarn',
         ['install'],
-        { cwd: projectFolder, encoding: 'utf8', env: { ...process.env, NODE_NO_WARNINGS: '1' } },
+        {
+          cwd: projectFolder,
+          encoding: 'utf8',
+          env: { ...process.env, NODE_NO_WARNINGS: '1' },
+        },
         silent
       );
     });

@@ -1,4 +1,5 @@
-﻿/* eslint-disable quotes */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable quotes */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect, use } from 'chai';

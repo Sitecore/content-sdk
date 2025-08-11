@@ -36,7 +36,6 @@ describe('withFieldMetadata', () => {
     );
   };
 
-  // eslint-disable-next-line react/display-name
   const TestComponentWithRef = forwardRef(
     (props: TestComponentProps, ref: React.ForwardedRef<HTMLDivElement>) => {
       return (

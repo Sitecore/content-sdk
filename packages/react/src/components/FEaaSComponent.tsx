@@ -148,8 +148,9 @@ async function fetchComponentTemplate(
     return template;
   } catch (error) {
     console.error(
-      `Fetch FEAAS component from ${src} failed. Ensure the component revision "${params.ComponentRevision ||
-        revisionFallback}" is present`
+      `Fetch FEAAS component from ${src} failed. Ensure the component revision "${
+        params.ComponentRevision || revisionFallback
+      }" is present`
     );
     throw error;
   }

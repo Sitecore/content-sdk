@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */
 import { expect, use, spy } from 'chai';
@@ -122,9 +124,7 @@ describe('GraphQLRequestClient', () => {
   });
 
   it('should debug log request and response error', () => {
-    nock('http://csdknextweb')
-      .post('/graphql')
-      .reply(400);
+    nock('http://csdknextweb').post('/graphql').reply(400);
 
     const graphQLClient = new GraphQLRequestClient(endpoint);
     return graphQLClient.request('test').catch(() => {
@@ -317,9 +317,7 @@ describe('GraphQLRequestClient', () => {
 
     it('should use [retry-after] header value when response is 429', async function() {
       this.timeout(7000);
-      nock('http://csdknextweb')
-        .post('/graphql')
-        .reply(429, {}, { 'Retry-After': '2' });
+      nock('http://csdknextweb').post('/graphql').reply(429, {}, { 'Retry-After': '2' });
       const graphQLClient = new GraphQLRequestClient(endpoint, { retries: 1 });
       spy.on(graphQLClient, 'debug');
 
@@ -336,9 +334,7 @@ describe('GraphQLRequestClient', () => {
 
     it('should use default delay time when [retry-after] header comes out empty in response of 429', async function() {
       this.timeout(7000);
-      nock('http://csdknextweb')
-        .post('/graphql')
-        .reply(429, {}, { 'Retry-After': '' });
+      nock('http://csdknextweb').post('/graphql').reply(429, {}, { 'Retry-After': '' });
       const graphQLClient = new GraphQLRequestClient(endpoint, { retries: 1 });
       spy.on(graphQLClient, 'debug');
 

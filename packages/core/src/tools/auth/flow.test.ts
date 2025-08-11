@@ -22,6 +22,7 @@ describe('clientCredentialsFlow', () => {
 
   let fetchStub: sinon.SinonStub;
   let decodeStub: sinon.SinonStub;
+  // eslint-disable-next-line no-unused-vars
   let consoleErrorStub: sinon.SinonStub;
 
   beforeEach(() => {
