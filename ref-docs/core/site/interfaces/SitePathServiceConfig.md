@@ -6,7 +6,7 @@
 
 # Interface: SitePathServiceConfig
 
-Defined in: [packages/core/src/site/sitepath-service.ts:129](https://github.com/Sitecore/content-sdk/blob/e6ebeba37279f55318f267c7d79eaa147244174f/packages/core/src/site/sitepath-service.ts#L129)
+Defined in: [packages/core/src/site/sitepath-service.ts:133](https://github.com/Sitecore/content-sdk/blob/17b78a735074f73c0cdc6532a1d6a2c33949de59/packages/core/src/site/sitepath-service.ts#L133)
 
 Configuration options for
 
@@ -24,10 +24,20 @@ SitePathService instances
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/site/sitepath-service.ts:141](https://github.com/Sitecore/content-sdk/blob/e6ebeba37279f55318f267c7d79eaa147244174f/packages/core/src/site/sitepath-service.ts#L141)
+Defined in: [packages/core/src/site/sitepath-service.ts:149](https://github.com/Sitecore/content-sdk/blob/17b78a735074f73c0cdc6532a1d6a2c33949de59/packages/core/src/site/sitepath-service.ts#L149)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
+
+***
+
+### enableDisplayNameRouting?
+
+> `optional` **enableDisplayNameRouting**: `boolean`
+
+Defined in: [packages/core/src/site/sitepath-service.ts:144](https://github.com/Sitecore/content-sdk/blob/17b78a735074f73c0cdc6532a1d6a2c33949de59/packages/core/src/site/sitepath-service.ts#L144)
+
+Gets a flag indicating whether display name routing is enabled.
 
 ***
 
@@ -35,7 +45,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > `optional` **excludedPaths**: `string`[]
 
-Defined in: [packages/core/src/site/sitepath-service.ts:85](https://github.com/Sitecore/content-sdk/blob/e6ebeba37279f55318f267c7d79eaa147244174f/packages/core/src/site/sitepath-service.ts#L85)
+Defined in: [packages/core/src/site/sitepath-service.ts:88](https://github.com/Sitecore/content-sdk/blob/17b78a735074f73c0cdc6532a1d6a2c33949de59/packages/core/src/site/sitepath-service.ts#L88)
 
 Optional. Paths starting with these provided prefixes will be excluded from returned results.
 
@@ -49,7 +59,7 @@ Optional. Paths starting with these provided prefixes will be excluded from retu
 
 > `optional` **includedPaths**: `string`[]
 
-Defined in: [packages/core/src/site/sitepath-service.ts:81](https://github.com/Sitecore/content-sdk/blob/e6ebeba37279f55318f267c7d79eaa147244174f/packages/core/src/site/sitepath-service.ts#L81)
+Defined in: [packages/core/src/site/sitepath-service.ts:84](https://github.com/Sitecore/content-sdk/blob/17b78a735074f73c0cdc6532a1d6a2c33949de59/packages/core/src/site/sitepath-service.ts#L84)
 
 Optional. Only paths starting with these provided prefixes will be returned.
 
@@ -63,7 +73,7 @@ Optional. Only paths starting with these provided prefixes will be returned.
 
 > `optional` **includePersonalizedRoutes**: `boolean`
 
-Defined in: [packages/core/src/site/sitepath-service.ts:136](https://github.com/Sitecore/content-sdk/blob/e6ebeba37279f55318f267c7d79eaa147244174f/packages/core/src/site/sitepath-service.ts#L136)
+Defined in: [packages/core/src/site/sitepath-service.ts:140](https://github.com/Sitecore/content-sdk/blob/17b78a735074f73c0cdc6532a1d6a2c33949de59/packages/core/src/site/sitepath-service.ts#L140)
 
 A flag for whether to include personalized routes in service output.
 Only works on XM Cloud for pages using Embedded Personalization (not Component A/B testing).
@@ -75,7 +85,7 @@ Turned off by default.
 
 > `optional` **pageSize**: `number`
 
-Defined in: [packages/core/src/site/sitepath-service.ts:93](https://github.com/Sitecore/content-sdk/blob/e6ebeba37279f55318f267c7d79eaa147244174f/packages/core/src/site/sitepath-service.ts#L93)
+Defined in: [packages/core/src/site/sitepath-service.ts:96](https://github.com/Sitecore/content-sdk/blob/17b78a735074f73c0cdc6532a1d6a2c33949de59/packages/core/src/site/sitepath-service.ts#L96)
 
 common variable for all GraphQL queries
 it will be used for every type of query to regulate result batch size
