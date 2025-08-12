@@ -13,6 +13,8 @@
   MemoryCacheClient,
 } from '@sitecore-content-sdk/core';
 
+export { isOriginAllowed } from '@sitecore-content-sdk/core/utils';
+
 export {
   LayoutServiceData,
   LayoutServicePageState,
@@ -157,5 +159,6 @@ export {
   EditingScripts,
   Form,
   ServerPlaceholder,
+  ProjectedPlaceholder,
   BasePlaceholder,
 } from '@sitecore-content-sdk/react';

@@ -309,6 +309,7 @@ export function getComponentsForRenderingData(
           componentRendering={componentRendering}
           paththroughProps={paththroughProps}
           index={index}
+          key={index}
           modifyComponentProps={placeholderProps.modifyComponentProps}
           errorComponent={placeholderProps.errorComponent}
           componentLoadingMessage={placeholderProps.componentLoadingMessage}

@@ -44,7 +44,7 @@ export const BasePlaceholder: React.FC<{
   if (isEmpty) {
     renderedComponents = (
       <EmptyPlaceholder addWrapper={placeholderProps.pageContext?.pageEditing}>
-        {placeholderProps?.renderEmpty([])}
+        {placeholderProps?.renderEmpty?.([])}
       </EmptyPlaceholder>
     );
   } else if (placeholderProps.render) {

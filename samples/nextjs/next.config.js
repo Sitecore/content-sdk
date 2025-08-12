@@ -5,8 +5,7 @@ const SassAlias = require('sass-alias');
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  productionBrowserSourceMaps: true,
-  // Allow specifying a distinct distDir when concurrently running app in a container
+    // Allow specifying a distinct distDir when concurrently running app in a container
   distDir: process.env.NEXTJS_DIST_DIR || '.next',
 
   // Enable React Strict Mode
@@ -59,34 +58,34 @@ const nextConfig = {
   },
 
   webpack: (config, options) => {
-    if (!options.isServer) {
-      // Add a loader to strip out getServerSideProps and getStaticProps from components in the client bundle
-      config.module.rules.unshift({
-        test: /src\\components\\.*\.tsx$/,
-        use: ['@sitecore-content-sdk\\nextjs\\component-props-loader'],
-      });
-    } else {
-      // Force use of CommonJS on the server for FEAAS SDK since JSS also uses CommonJS entrypoint to FEAAS SDK.
-      // This prevents issues arising due to FEAAS SDK's dual CommonJS/ES module support on the server (via conditional exports).
-      // See https://nodejs.org/api/packages.html#dual-package-hazard.
-      config.externals = [
-        {
-          '@sitecore-feaas/clientside/react': 'commonjs @sitecore-feaas/clientside/react',
-          '@sitecore/byoc': 'commonjs @sitecore/byoc',
-          '@sitecore/byoc/react': 'commonjs @sitecore/byoc/react',
-        },
-        ...config.externals,
-      ];
-    }
-    // monorepo configuration start
-    if (options.isServer) {
-      config.externals = ['vertx', ...config.externals];
-    }
+    // if (!options.isServer) {
+    //   // Add a loader to strip out getServerSideProps and getStaticProps from components in the client bundle
+    //   config.module.rules.unshift({
+    //     test: /src\\components\\.*\.tsx$/,
+    //     use: ['@sitecore-content-sdk\\nextjs\\component-props-loader'],
+    //   });
+    // } else {
+    //   // Force use of CommonJS on the server for FEAAS SDK since JSS also uses CommonJS entrypoint to FEAAS SDK.
+    //   // This prevents issues arising due to FEAAS SDK's dual CommonJS/ES module support on the server (via conditional exports).
+    //   // See https://nodejs.org/api/packages.html#dual-package-hazard.
+    //   config.externals = [
+    //     {
+    //       '@sitecore-feaas/clientside/react': 'commonjs @sitecore-feaas/clientside/react',
+    //       '@sitecore/byoc': 'commonjs @sitecore/byoc',
+    //       '@sitecore/byoc/react': 'commonjs @sitecore/byoc/react',
+    //     },
+    //     ...config.externals,
+    //   ];
+    // }
+    // // monorepo configuration start
+    // if (options.isServer) {
+    //   config.externals = ['vertx', ...config.externals];
+    // }
 
-    config.resolve.alias['@sitecore-cloudsdk/events'] = path.resolve(
-      process.cwd(), './node_modules/@sitecore-cloudsdk/events'
-    );
-    // monorepo configuration end
+    // config.resolve.alias['@sitecore-cloudsdk/events'] = path.resolve(
+    //   process.cwd(), './node_modules/@sitecore-cloudsdk/events'
+    // );
+    // // monorepo configuration end
     
     return config;
   },

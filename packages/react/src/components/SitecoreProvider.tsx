@@ -1,11 +1,15 @@
 'use client';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
-import { LayoutServiceContext, LayoutServiceData, RouteData } from '../index';
 import { constants } from '@sitecore-content-sdk/core';
 import { ComponentMap } from './sharedTypes';
+import {
+  LayoutServiceContext,
+  LayoutServiceData,
+  RouteData,
+} from '@sitecore-content-sdk/core/layout';
 
 export interface SitecoreProviderProps {
   /**
@@ -53,32 +57,30 @@ export type SitecoreProviderPageContext = LayoutServiceContext & {
   route?: RouteData;
 };
 
+const constructContext = (layoutData?: LayoutServiceData): SitecoreProviderPageContext => {
+  if (!layoutData) {
+    return {
+      pageEditing: false,
+    };
+  }
+
+  return {
+    route: layoutData.sitecore.route,
+    itemId: layoutData.sitecore.route?.itemId,
+    ...layoutData.sitecore.context,
+  };
+};
+
 export const SitecoreProvider: React.FC<SitecoreProviderProps> = ({
   api: apiProp,
   componentMap,
   layoutData,
   children,
 }) => {
-  const constructContext = useCallback(
-    (layoutData?: LayoutServiceData): SitecoreProviderPageContext => {
-      if (!layoutData) {
-        return {
-          pageEditing: false,
-        };
-      }
-
-      return {
-        route: layoutData.sitecore.route,
-        itemId: layoutData.sitecore.route?.itemId,
-        ...layoutData.sitecore.context,
-      };
-    },
-    []
-  );
-
-  const [pageContext, setPageContext] = useState<SitecoreProviderPageContext>(() =>
-    constructContext(layoutData)
-  );
+  const [
+    updatedPageContext,
+    setUpdatedPageContext,
+  ] = useState<SitecoreProviderPageContext | null>();
 
   const api = useMemo(() => {
     if (apiProp?.edge?.contextId && !apiProp?.edge?.edgeUrl) {
@@ -93,23 +95,23 @@ export const SitecoreProvider: React.FC<SitecoreProviderProps> = ({
     return apiProp;
   }, [apiProp]);
 
-  const setContext = useCallback(
-    (value: SitecoreProviderPageContext | LayoutServiceData) => {
-      setPageContext(
-        value.sitecore
-          ? constructContext(value as LayoutServiceData)
-          : { ...(value as SitecoreProviderPageContext) }
-      );
-    },
-    [constructContext]
-  );
+  const setContext = useCallback((value: SitecoreProviderPageContext | LayoutServiceData) => {
+    setUpdatedPageContext(
+      value.sitecore
+        ? constructContext(value as LayoutServiceData)
+        : { ...(value as SitecoreProviderPageContext) }
+    );
+  }, []);
 
-  useEffect(() => {
-    setContext(layoutData);
-  }, [layoutData, setContext]);
+  const actualPageContext: SitecoreProviderPageContext = useMemo(() => {
+    if (updatedPageContext) {
+      return updatedPageContext;
+    }
+    return constructContext(layoutData);
+  }, [updatedPageContext, layoutData]);
 
   const contextValue: SitecoreProviderState = {
-    pageContext,
+    pageContext: actualPageContext,
     setContext,
     api,
   };

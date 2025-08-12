@@ -155,6 +155,35 @@ export const enforceCors = (
 };
 
 /**
+ * Checks if the given origin is allowed based on the allowed origins list.
+ * @param {string} origin - The origin to check.
+ * @param {string[]} allowedOrigins - The list of allowed origins.
+ * @returns {boolean} - True if the origin is allowed, false otherwise.
+ */
+export function isOriginAllowed(origin: string, allowedOrigins: string[]): boolean {
+  // origin in not present for non-CORS requests (e.g. server-side) - so we skip the checks
+  if (!origin) {
+    return true;
+  }
+  // 3 sources of allowed origins are considered:
+  // the env value
+  const defaultAllowedOrigins = getAllowedOriginsFromEnv();
+  // the allowedOrigins prop
+  allowedOrigins = defaultAllowedOrigins.concat(allowedOrigins || []);
+
+  if (
+    origin &&
+    allowedOrigins.some(
+      (allowedOrigin) =>
+        origin === allowedOrigin || new RegExp(convertToWildcardRegex(allowedOrigin)).test(origin)
+    )
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * Determines whether the given input is a regular expression or resembles a URL.
  * @param {string} input - The input string to evaluate.
  * @returns {'regex' | 'url'} - Returns 'url' if the input looks like a URL, otherwise 'regex'.

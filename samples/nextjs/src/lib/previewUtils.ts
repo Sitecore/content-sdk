@@ -21,8 +21,22 @@ export async function getPreviewData(
     };
   }
 
+  const processedParams: Record<string, string | string[] | undefined> = {
+    ...params,
+    variantIds: Array.isArray(params.variantIds)
+      ? params.variantIds
+      : params.variantIds
+        ? params.variantIds.split(',')
+        : [],
+  };
+  if (!processedParams.mode) {
+    return {
+      enabled: false,
+    };
+  }
+
   return {
     enabled: true,
-    data: params as EditingPreviewData,
+    data: processedParams as EditingPreviewData,
   };
 }

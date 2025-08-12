@@ -554,7 +554,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     };
   }
 
-  private getClientFactory(): GraphQLRequestClientFactory {
+  protected getClientFactory(): GraphQLRequestClientFactory {
     const graphQLOptions: GraphQLClientOptions = {
       api: this.initOptions.api,
       retries: this.initOptions.retries.count,

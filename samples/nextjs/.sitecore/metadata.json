@@ -1,0 +1,15 @@
+{
+  "packages": {
+    "@sitecore-cloudsdk/core": "0.5.2",
+    "@sitecore-cloudsdk/events": "0.5.2",
+    "@sitecore-cloudsdk/personalize": "0.5.2",
+    "@sitecore-cloudsdk/utils": "0.5.2",
+    "@sitecore-content-sdk/cli": "0.3.0",
+    "@sitecore-content-sdk/core": "0.3.0",
+    "@sitecore-content-sdk/nextjs": "0.3.0",
+    "@sitecore-content-sdk/react": "0.3.0",
+    "@sitecore-feaas/clientside": "0.6.0",
+    "@sitecore/byoc": "0.3.0",
+    "@sitecore/components": "2.1.0"
+  }
+}

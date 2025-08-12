@@ -8,9 +8,9 @@ import {
   Field,
   DesignLibrary,
   RenderingType,
-  ServerPlaceholder,
   ComponentMap,
   SitecoreProviderPageContext,
+  ProjectedPlaceholder,
 } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/SitecoreStyles';
@@ -50,7 +50,7 @@ const Layout = ({ layoutData, componentMap, pageContext }: LayoutProps): JSX.Ele
             <header>
               <div id="header">
                 {route && (
-                  <ServerPlaceholder
+                  <ProjectedPlaceholder
                     pageContext={pageContext}
                     componentMap={componentMap!}
                     name="headless-header"
@@ -62,7 +62,7 @@ const Layout = ({ layoutData, componentMap, pageContext }: LayoutProps): JSX.Ele
             <main>
               <div id="content">
                 {route && (
-                  <ServerPlaceholder
+                  <ProjectedPlaceholder
                     pageContext={pageContext}
                     componentMap={componentMap!}
                     name="headless-main"
@@ -74,7 +74,7 @@ const Layout = ({ layoutData, componentMap, pageContext }: LayoutProps): JSX.Ele
             <footer>
               <div id="footer">
                 {route && (
-                  <ServerPlaceholder
+                  <ProjectedPlaceholder
                     pageContext={pageContext}
                     componentMap={componentMap!}
                     name="headless-footer"

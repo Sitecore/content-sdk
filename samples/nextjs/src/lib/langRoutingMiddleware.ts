@@ -6,9 +6,10 @@ const locales = ['en', 'nl-NL', 'nl'];
 
 export class LangRoutingMiddleware extends Middleware {
   async handle(request: NextRequest, response: NextResponse): Promise<NextResponse> {
+    console.log('LangRoutingMiddleware pathname', request.nextUrl.pathname);
     const { pathname } = request.nextUrl;
     const pathnameHasLocale = locales.some(
-      (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+      (locale) => pathname.startsWith(`/${locale}`) || pathname === `/${locale}`
     );
 
     if (pathnameHasLocale) return response;

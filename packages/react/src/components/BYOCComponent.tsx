@@ -1,4 +1,6 @@
-﻿import React from 'react';
+﻿'use client';
+
+import React from 'react';
 import { ComponentFields, ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { getDataFromFields } from '../utils';
 import { MissingComponent, MissingComponentProps } from './MissingComponent';

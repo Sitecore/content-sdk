@@ -13,11 +13,14 @@ import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import { knownPhProps } from './placeholder-utils';
 
-export const ServerPlaceholder: React.FC<PlaceholderComponentProps &
+export type ServerPlaceholderProps = PlaceholderComponentProps &
   PaththroughPlaceholderProps & {
     componentMap: ComponentMap | undefined;
     pageContext: SitecoreProviderPageContext;
-  }> = (props) => {
+    recursive?: boolean;
+  };
+
+export const ServerPlaceholder: React.FC<ServerPlaceholderProps> = (props) => {
   const paththroughProps = knownPhProps.reduce(
     (acc, prop) => {
       delete acc[prop];
@@ -47,6 +50,23 @@ export const ServerPlaceholder: React.FC<PlaceholderComponentProps &
       // Exclude non serializable props when rendering non RSC components
       delete compPaththroughProps.componentMap;
       delete compPaththroughProps.pageContext;
+    }
+
+    if (props.recursive && componentRendering.placeholders) {
+      const innerPlaceholders: Record<string, React.ReactNode> = {};
+      for (const innerPlaceholderName of Object.keys(componentRendering.placeholders)) {
+        innerPlaceholders[innerPlaceholderName] = (
+          <ServerPlaceholder
+            componentMap={props.componentMap}
+            pageContext={props.pageContext}
+            name={innerPlaceholderName}
+            rendering={componentRendering}
+            recursive={true}
+          />
+        );
+      }
+
+      compPaththroughProps.placeholders = innerPlaceholders;
     }
 
     return (
@@ -98,4 +118,9 @@ export const ServerPlaceholder: React.FC<PlaceholderComponentProps &
     ];
   }
   return renderedComponents;
+};
+
+// Version of Server placeholder that recursivly renders placeholder content as render props  for the full tree
+export const ProjectedPlaceholder: React.FC<ServerPlaceholderProps> = (props) => {
+  return <ServerPlaceholder {...props} recursive={true} />;
 };

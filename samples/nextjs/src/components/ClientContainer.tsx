@@ -1,6 +1,6 @@
 'use client';
-import { Placeholder } from '@sitecore-content-sdk/nextjs';
-import React, { JSX } from 'react';
+
+import React, { JSX, useState } from 'react';
 import { ComponentProps } from 'lib/component-props';
 
 interface ContainerProps extends ComponentProps {
@@ -8,16 +8,13 @@ interface ContainerProps extends ComponentProps {
     BackgroundImage?: string;
     DynamicPlaceholderId: string;
   };
+  placeholders: Record<string, React.ReactNode>;
 }
 
-const Container = ({ params, rendering }: ContainerProps): JSX.Element => {
-  const {
-    styles,
-    RenderingIdentifier: id,
-    BackgroundImage: backgroundImage,
-    DynamicPlaceholderId,
-  } = params;
-  const phKey = `container-${DynamicPlaceholderId}`;
+const Container = ({ params, placeholders }: ContainerProps): JSX.Element => {
+  const { styles, RenderingIdentifier: id, BackgroundImage: backgroundImage } = params;
+  const phKey = `container-{*}`;
+  const [renderKey, setRenderKey] = useState(0);
 
   // Extract the mediaurl from rendering parameters
   const mediaUrlPattern = new RegExp(/mediaurl=\"([^"]*)\"/, 'i');
@@ -33,11 +30,11 @@ const Container = ({ params, rendering }: ContainerProps): JSX.Element => {
   }
 
   return (
-    <div className={`component container-default ${styles}`} id={id}>
+    <div key={renderKey} className={`component container-default ${styles}`} id={id}>
+      <button onClick={() => setRenderKey(renderKey + 1)}>Render Key: {renderKey}</button>
+      <p>Client Container</p>
       <div className="component-content" style={backgroundStyle}>
-        <div className="row">
-          <Placeholder name={phKey} rendering={rendering} />
-        </div>
+        <div className="row">{placeholders[phKey]}</div>
       </div>
     </div>
   );

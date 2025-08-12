@@ -1,15 +1,20 @@
 import Link from 'next/link';
-import { SitecoreProvider } from '@sitecore-content-sdk/nextjs';
+// import { SitecoreProvider } from '@sitecore-content-sdk/nextjs';
 import client from 'lib/sitecore-client';
+// import Layout from 'src/Layout';
+// import components from '.sitecore/component-map';
+import scConfig from 'sitecore.config';
+import { SitecoreProvider } from '@sitecore-content-sdk/nextjs';
 import Layout from 'src/Layout';
 import components from '.sitecore/component-map';
-import scConfig from 'sitecore.config';
 
 export default async function NotFound() {
   const errorPage = await client.getErrorPages({
     site: scConfig.defaultSite,
     locale: scConfig.defaultLanguage,
   });
+
+  console.log('errorPage', errorPage);
 
   if (errorPage?.notFoundPage?.rendered) {
     return (
@@ -31,7 +36,7 @@ export default async function NotFound() {
   }
   return (
     <div>
-      <h2>Not Found</h2>
+      <h2>Custom Not Found</h2>
       <p>Could not find requested resource</p>
       <Link href="/">Return Home</Link>
     </div>

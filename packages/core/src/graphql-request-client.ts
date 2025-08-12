@@ -199,4 +199,12 @@ export class GraphQLRequestClient implements GraphQLClient {
 
     return retryer();
   }
+
+
+  protected getClient(config: GraphQLRequestClientConfig): Client {
+    return new Client(this.endpoint, {
+      headers: this.headers,
+      fetch: config.fetch,
+    });
+  }
 }

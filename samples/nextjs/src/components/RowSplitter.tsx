@@ -1,5 +1,5 @@
 import React, { JSX } from 'react';
-import { ComponentRendering, Placeholder } from '@sitecore-content-sdk/nextjs';
+import { ComponentRendering } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from 'lib/component-props';
 
 /**
@@ -19,14 +19,18 @@ type RowStyles = {
 interface RowSplitterProps extends ComponentProps {
   rendering: ComponentRendering;
   params: ComponentProps['params'] & RowStyles;
+  placeholders: Record<string, React.ReactNode>;
 }
 
-export const Default = ({ params, rendering }: RowSplitterProps): JSX.Element => {
+export const Default = async ({ params, placeholders }: RowSplitterProps): Promise<JSX.Element> => {
   const enabledPlaceholders = params.EnabledPlaceholders?.split(',') ?? [];
   const id = params.RenderingIdentifier;
 
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
   return (
     <div className={`component row-splitter ${params.styles}`} id={id}>
+      <p>Async RowSplitter</p>
       {enabledPlaceholders.map((ph, index) => {
         const num = Number(ph) as RowNumber;
         const placeholderKey = `row-${num}-{*}`;
@@ -35,9 +39,7 @@ export const Default = ({ params, rendering }: RowSplitterProps): JSX.Element =>
         return (
           <div key={index} className={`container-fluid ${rowStyles}`.trimEnd()}>
             <div>
-              <div className="row">
-                <Placeholder name={placeholderKey} rendering={rendering} />
-              </div>
+              <div className="row">{placeholders[placeholderKey]}</div>
             </div>
           </div>
         );
@@ -45,3 +47,5 @@ export const Default = ({ params, rendering }: RowSplitterProps): JSX.Element =>
     </div>
   );
 };
+
+export const isRsc = true;

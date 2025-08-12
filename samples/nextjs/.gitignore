@@ -10,10 +10,6 @@
 # misc
 .DS_Store
 
-# local env files
-.env.local
-.env.*.local
-.env
 
 # Log files
 *.log*
@@ -21,5 +17,3 @@
 # vercel
 .vercel
 
-# sitecore temp files
-.sitecore

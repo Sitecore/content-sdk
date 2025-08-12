@@ -1,5 +1,8 @@
-import { isDesignLibraryMode } from '@sitecore-content-sdk/nextjs';
+import { PREVIEW_KEY, QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/core/editing';
+import { SITE_KEY } from '@sitecore-content-sdk/core/site';
+import { isDesignLibraryMode, LayoutServicePageState } from '@sitecore-content-sdk/nextjs';
 import { getJssEditingSecret } from '@sitecore-content-sdk/nextjs/utils';
+import { cookies, draftMode } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
 
@@ -7,7 +10,7 @@ export async function GET(request: NextRequest) {
   // Parse query string parameters
   const searchParams = request.nextUrl.searchParams;
 
-  const incommingSecret = searchParams.get('QUERY_PARAM_EDITING_SECRET');
+  const incommingSecret = searchParams.get(QUERY_PARAM_EDITING_SECRET);
 
   const editingSecret = getJssEditingSecret();
 
@@ -42,6 +45,32 @@ export async function GET(request: NextRequest) {
       `<html><body>Missing required query parameters: ${missingQueryParams.join(', ')}</body></html>`,
       { status: 400 }
     );
+  }
+
+  (await draftMode()).enable();
+
+  const cookieStore = await cookies();
+  cookieStore.set('__prerender_bypass', cookieStore.get('__prerender_bypass')?.value || '', {
+    httpOnly: true,
+    path: '/',
+    sameSite: 'none',
+    secure: true,
+  });
+
+  // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
+  if (mode === LayoutServicePageState.Preview) {
+    cookieStore.set(SITE_KEY, searchParams.get('sc_site') || '', {
+      httpOnly: true,
+      path: '/',
+      sameSite: 'none',
+      secure: true,
+    });
+    cookieStore.set(PREVIEW_KEY, 'true', {
+      httpOnly: true,
+      path: '/',
+      sameSite: 'none',
+      secure: true,
+    });
   }
 
   const route = searchParams.get('route') || '/';

@@ -1,5 +1,9 @@
 import React, { JSX } from 'react';
-import { Placeholder } from '@sitecore-content-sdk/nextjs';
+import {
+  ComponentMap,
+  ServerPlaceholder,
+  SitecoreProviderPageContext,
+} from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from 'lib/component-props';
 
 /**
@@ -26,9 +30,16 @@ type ColumnStyles = {
 
 interface ColumnSplitterProps extends ComponentProps {
   params: ComponentProps['params'] & ColumnWidths & ColumnStyles;
+  componentMap: ComponentMap;
+  pageContext: SitecoreProviderPageContext;
 }
 
-export const Default = ({ params, rendering }: ColumnSplitterProps): JSX.Element => {
+export const Default = ({
+  params,
+  rendering,
+  componentMap,
+  pageContext,
+}: ColumnSplitterProps): JSX.Element => {
   const { EnabledPlaceholders, RenderingIdentifier: id, styles } = params;
 
   const enabledColumns = EnabledPlaceholders?.split(',') ?? [];
@@ -44,7 +55,12 @@ export const Default = ({ params, rendering }: ColumnSplitterProps): JSX.Element
         return (
           <div key={index} className={columnClassNames}>
             <div className="row">
-              <Placeholder name={`column-${columnNum}-{*}`} rendering={rendering} />
+              <ServerPlaceholder
+                name={`column-${columnNum}-{*}`}
+                rendering={rendering}
+                componentMap={componentMap}
+                pageContext={pageContext}
+              />
             </div>
           </div>
         );
@@ -52,3 +68,5 @@ export const Default = ({ params, rendering }: ColumnSplitterProps): JSX.Element
     </div>
   );
 };
+
+export const isRsc = true;
