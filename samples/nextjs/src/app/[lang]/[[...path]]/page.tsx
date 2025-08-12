@@ -53,7 +53,11 @@ export default async function Page({ params, searchParams }: PageProps) {
   );
 }
 
-// list of page parameters to generate static pages for
+/* Force dynamic rendering of the page. Uncomment if SSR is needed
+export const dynamic = 'force-dynamic';
+*/
+
+// list of page parameters to generate static pages for. Remove if SSG is not needed
 export const generateStaticParams = async () => {
   const paths = await client.getPagePaths(['en']);
   return paths.map((path) => ({

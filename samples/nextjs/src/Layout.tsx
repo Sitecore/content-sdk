@@ -10,7 +10,7 @@ import {
   RenderingType,
   ComponentMap,
   SitecoreProviderPageContext,
-  ProjectedPlaceholder,
+  ServerPlaceholder,
 } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/SitecoreStyles';
@@ -28,7 +28,6 @@ export interface RouteFields {
 
 const Layout = ({ layoutData, componentMap, pageContext }: LayoutProps): JSX.Element => {
   const { route } = layoutData.sitecore;
-  const fields = route?.fields as RouteFields;
   const isPageEditing = layoutData.sitecore.context.pageEditing;
   const mainClassPageEditing = isPageEditing ? 'editing-mode' : 'prod-mode';
 
@@ -36,11 +35,6 @@ const Layout = ({ layoutData, componentMap, pageContext }: LayoutProps): JSX.Ele
     <>
       <Scripts />
       <SitecoreStyles layoutData={layoutData} />
-      <Head>
-        <title>{fields?.Title?.value?.toString() || 'Page'}</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       {/* root placeholder for the app, which we add components to using route data */}
       <div className={mainClassPageEditing}>
         {layoutData.sitecore.context.renderingType === RenderingType.Component ? (
@@ -50,7 +44,7 @@ const Layout = ({ layoutData, componentMap, pageContext }: LayoutProps): JSX.Ele
             <header>
               <div id="header">
                 {route && (
-                  <ProjectedPlaceholder
+                  <ServerPlaceholder
                     pageContext={pageContext}
                     componentMap={componentMap!}
                     name="headless-header"
@@ -62,7 +56,7 @@ const Layout = ({ layoutData, componentMap, pageContext }: LayoutProps): JSX.Ele
             <main>
               <div id="content">
                 {route && (
-                  <ProjectedPlaceholder
+                  <ServerPlaceholder
                     pageContext={pageContext}
                     componentMap={componentMap!}
                     name="headless-main"
@@ -74,7 +68,7 @@ const Layout = ({ layoutData, componentMap, pageContext }: LayoutProps): JSX.Ele
             <footer>
               <div id="footer">
                 {route && (
-                  <ProjectedPlaceholder
+                  <ServerPlaceholder
                     pageContext={pageContext}
                     componentMap={componentMap!}
                     name="headless-footer"
