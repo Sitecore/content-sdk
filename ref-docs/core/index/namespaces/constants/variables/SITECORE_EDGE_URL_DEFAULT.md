@@ -8,4 +8,4 @@
 
 > `const` **SITECORE\_EDGE\_URL\_DEFAULT**: `"https://edge-platform.sitecorecloud.io"` = `'https://edge-platform.sitecorecloud.io'`
 
-Defined in: [packages/core/src/constants.ts:11](https://github.com/Sitecore/content-sdk/blob/dc2fcfb78f06d81d0ee0dc2dbe001d506287e9c4/packages/core/src/constants.ts#L11)
+Defined in: [packages/core/src/constants.ts:11](https://github.com/Sitecore/content-sdk/blob/e6ebeba37279f55318f267c7d79eaa147244174f/packages/core/src/constants.ts#L11)
