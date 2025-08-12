@@ -659,11 +659,15 @@ export class SitecoreClient implements BaseSitecoreClient {
         pageMode.isEditing = true;
         break;
       case DesignLibraryMode.Normal:
+        pageMode.isDesignLibrary = true;
+        break;
       case DesignLibraryMode.Metadata:
         pageMode.isDesignLibrary = true;
+        pageMode.isEditing = true;
         break;
       case DesignLibraryMode.VariantGeneration:
         pageMode.isDesignLibrary = true;
+        pageMode.isEditing = true;
         pageMode.designLibrary.isVariantGeneration = true;
         break;
       default:
