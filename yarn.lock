@@ -2344,13 +2344,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pkgr/core@npm:^0.2.9":
-  version: 0.2.9
-  resolution: "@pkgr/core@npm:0.2.9"
-  checksum: bb2fb86977d63f836f8f5b09015d74e6af6488f7a411dcd2bfdca79d76b5a681a9112f41c45bdf88a9069f049718efc6f3900d7f1de66a2ec966068308ae517f
-  languageName: node
-  linkType: hard
-
 "@rjsf/utils@npm:*":
   version: 5.24.12
   resolution: "@rjsf/utils@npm:5.24.12"
@@ -2522,10 +2515,10 @@ __metadata:
     eslint-config-prettier: ^10.1.8
     eslint-plugin-import: 2.32.0
     eslint-plugin-jsdoc: 52.0.3
-    eslint-plugin-prettier: ^5.5.3
+    eslint-plugin-prettier: ^4.0.0
     mocha: ^11.2.2
     nyc: ^17.1.0
-    prettier: ^3.6.2
+    prettier: ^2.8.0
     proxyquire: ^2.1.3
     resolve: ^1.22.10
     sinon: ^20.0.0
@@ -2569,7 +2562,7 @@ __metadata:
     eslint-config-prettier: ^10.1.8
     eslint-plugin-import: 2.32.0
     eslint-plugin-jsdoc: 52.0.3
-    eslint-plugin-prettier: ^5.5.3
+    eslint-plugin-prettier: ^4.0.0
     glob: ^11.0.2
     graphql: ^16.11.0
     graphql-request: ^6.1.0
@@ -2578,7 +2571,7 @@ __metadata:
     mocha: ^11.2.2
     nock: 14.0.0-beta.7
     nyc: ^17.1.0
-    prettier: ^3.6.2
+    prettier: ^2.8.0
     proxyquire: ^2.1.3
     sinon: ^20.0.0
     sinon-chai: ^4.0.0
@@ -2623,7 +2616,7 @@ __metadata:
     eslint-config-prettier: ^10.1.8
     eslint-plugin-import: 2.32.0
     eslint-plugin-jsdoc: 52.0.3
-    eslint-plugin-prettier: ^5.5.3
+    eslint-plugin-prettier: ^4.0.0
     eslint-plugin-react: 7.37.5
     eslint-plugin-react-hooks: 5.2.0
     glob: ^11.0.2
@@ -2632,7 +2625,7 @@ __metadata:
     next: ^15.3.2
     nock: 14.0.0-beta.7
     nyc: ^17.1.0
-    prettier: ^3.6.2
+    prettier: ^2.8.0
     proxyquire: ^2.1.3
     react: ^19.1.0
     react-dom: ^19.1.0
@@ -2683,14 +2676,14 @@ __metadata:
     eslint-config-prettier: ^10.1.8
     eslint-plugin-import: 2.32.0
     eslint-plugin-jsdoc: 52.0.3
-    eslint-plugin-prettier: ^5.5.3
+    eslint-plugin-prettier: ^4.0.0
     eslint-plugin-react: 7.37.5
     eslint-plugin-react-hooks: 5.2.0
     fast-deep-equal: ^3.1.3
     jsdom: ^26.1.0
     mocha: ^11.2.2
     nyc: ^17.1.0
-    prettier: ^3.6.2
+    prettier: ^2.8.0
     react: ^19.1.0
     react-dom: ^19.1.0
     sinon: ^20.0.0
@@ -4739,14 +4732,14 @@ __metadata:
     eslint-config-prettier: ^10.1.8
     eslint-plugin-import: 2.32.0
     eslint-plugin-jsdoc: 52.0.3
-    eslint-plugin-prettier: ^5.5.3
+    eslint-plugin-prettier: ^4.0.0
     fs-extra: ^11.3.0
     glob: ^11.0.2
     inquirer: ^8.2.4
     minimist: ^1.2.8
     mocha: ^11.2.2
     nyc: ^17.1.0
-    prettier: ^3.6.2
+    prettier: ^2.8.0
     proxyquire: ^2.1.3
     sinon: ^20.0.0
     sinon-chai: ^3.7.0
@@ -5713,23 +5706,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^5.5.3":
-  version: 5.5.4
-  resolution: "eslint-plugin-prettier@npm:5.5.4"
+"eslint-plugin-prettier@npm:^4.0.0":
+  version: 4.2.5
+  resolution: "eslint-plugin-prettier@npm:4.2.5"
   dependencies:
     prettier-linter-helpers: ^1.0.0
-    synckit: ^0.11.7
   peerDependencies:
-    "@types/eslint": ">=8.0.0"
-    eslint: ">=8.0.0"
-    eslint-config-prettier: ">= 7.0.0 <10.0.0 || >=10.1.0"
-    prettier: ">=3.0.0"
+    eslint: ">=7.28.0"
+    prettier: ">=2.0.0"
   peerDependenciesMeta:
-    "@types/eslint":
-      optional: true
     eslint-config-prettier:
       optional: true
-  checksum: 0dd05ed85018ab0e98da80325b7bd4c4ab6dd684398f1270a7c8cf4261df714dd4502ba4c7f85f651aade9989da0a7d2adda03af8873b73b52014141abf385de
+  checksum: 22c29ba685f18516e3b1595e062849ccc108996a759da6067ff5d876519a5f81c8ba92c0c5623a1c62b593d417619ba44ab3b6ec1450ca753c078fd92970b883
   languageName: node
   linkType: hard
 
@@ -9816,12 +9804,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.6.2":
-  version: 3.6.2
-  resolution: "prettier@npm:3.6.2"
+"prettier@npm:^2.8.0":
+  version: 2.8.8
+  resolution: "prettier@npm:2.8.8"
   bin:
-    prettier: bin/prettier.cjs
-  checksum: 0206f5f437892e8858f298af8850bf9d0ef1c22e21107a213ba56bfb9c2387a2020bfda244a20161d8e3dad40c6b04101609a55d370dece53d0a31893b64f861
+    prettier: bin-prettier.js
+  checksum: b49e409431bf129dd89238d64299ba80717b57ff5a6d1c1a8b1a28b590d998a34e083fa13573bc732bb8d2305becb4c9a4407f8486c81fa7d55100eb08263cf8
   languageName: node
   linkType: hard
 
@@ -10393,11 +10381,11 @@ __metadata:
     eslint-config-prettier: ^10.1.8
     eslint-plugin-import: 2.32.0
     eslint-plugin-jsdoc: 52.0.3
-    eslint-plugin-prettier: ^5.5.3
+    eslint-plugin-prettier: ^4.0.0
     eslint-plugin-react: 7.37.5
     eslint-plugin-react-hooks: ^5.2.0
     lerna: ^5.6.2
-    prettier: ^3.6.2
+    prettier: ^2.8.0
     typedoc: ^0.28.4
     typedoc-plugin-markdown: ^4.6.3
     typescript: ~5.8.3
@@ -11268,15 +11256,6 @@ __metadata:
     rimraf: ^3.0.0
     username-sync: ^1.0.2
   checksum: 02f02d2842c69da088c28f5c6e39df7f22b68b06fd309a91eee9266a561d1a50759a8ba058df51017b89f3e70608dc884ec086b572fc9ae51165de0585029abb
-  languageName: node
-  linkType: hard
-
-"synckit@npm:^0.11.7":
-  version: 0.11.11
-  resolution: "synckit@npm:0.11.11"
-  dependencies:
-    "@pkgr/core": ^0.2.9
-  checksum: bc896d4320525501495654766e6b0aa394e522476ea0547af603bdd9fd7e9b65dcd6e3a237bc7eb3ab7e196376712f228bf1bf6ed1e1809f4b32dc9baf7ad413
   languageName: node
   linkType: hard
 
