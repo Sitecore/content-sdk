@@ -24,7 +24,6 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
-* `[core]` `[nextjs]` Restore proper local connection fallback ([#178](https://github.com/Sitecore/content-sdk/pull/178))
 * `[core]` Duplicate dictionary requests in editing, preview, and design library modes ([#161](https://github.com/Sitecore/content-sdk/pull/161))
   - `SitecoreClient.getPreview` and `SitecoreClient.getDesignLibraryData` no longer request dictionary data. `Page` type is not affected.
   - Updated `EditingService.fetchEditingData`:
