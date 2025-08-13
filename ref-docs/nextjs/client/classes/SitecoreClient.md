@@ -6,7 +6,7 @@
 
 # Class: SitecoreClient
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:24](https://github.com/Sitecore/content-sdk/blob/a54d8150bcdfc3c332757dee3bfe2ea30bd11634/packages/nextjs/src/client/sitecore-nextjs-client.ts#L24)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:24](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/nextjs/src/client/sitecore-nextjs-client.ts#L24)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:24](https://github.com/
 
 > **new SitecoreClient**(`initOptions`): `SitecoreNextjsClient`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:26](https://github.com/Sitecore/content-sdk/blob/a54d8150bcdfc3c332757dee3bfe2ea30bd11634/packages/nextjs/src/client/sitecore-nextjs-client.ts#L26)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:26](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/nextjs/src/client/sitecore-nextjs-client.ts#L26)
 
 #### Parameters
 
@@ -52,7 +52,7 @@ Defined in: core/types/client/sitecore-client.d.ts:192
 
 > `protected` **componentPropsService**: [`ComponentPropsService`](../../index/classes/ComponentPropsService.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:25](https://github.com/Sitecore/content-sdk/blob/a54d8150bcdfc3c332757dee3bfe2ea30bd11634/packages/nextjs/src/client/sitecore-nextjs-client.ts#L25)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:25](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/nextjs/src/client/sitecore-nextjs-client.ts#L25)
 
 ***
 
@@ -108,7 +108,7 @@ Defined in: core/types/client/sitecore-client.d.ts:193
 
 > `protected` **initOptions**: [`SitecoreClientInit`](../type-aliases/SitecoreClientInit.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:26](https://github.com/Sitecore/content-sdk/blob/a54d8150bcdfc3c332757dee3bfe2ea30bd11634/packages/nextjs/src/client/sitecore-nextjs-client.ts#L26)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:26](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/nextjs/src/client/sitecore-nextjs-client.ts#L26)
 
 #### Inherited from
 
@@ -160,7 +160,7 @@ Defined in: core/types/client/sitecore-client.d.ts:293
 
 > **getComponentData**(`layoutData`, `context`, `components`): `Promise`\<[`ComponentPropsCollection`](../../index/type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:93](https://github.com/Sitecore/content-sdk/blob/a54d8150bcdfc3c332757dee3bfe2ea30bd11634/packages/nextjs/src/client/sitecore-nextjs-client.ts#L93)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:93](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/nextjs/src/client/sitecore-nextjs-client.ts#L93)
 
 Parses components from nextjs component map and layoutData, executes getServerProps/getStaticProps methods
 and returns resulting props from components
@@ -185,7 +185,7 @@ component props
 
 > `protected` **getComponentPropsService**(): [`ComponentPropsService`](../../index/classes/ComponentPropsService.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:124](https://github.com/Sitecore/content-sdk/blob/a54d8150bcdfc3c332757dee3bfe2ea30bd11634/packages/nextjs/src/client/sitecore-nextjs-client.ts#L124)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:124](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/nextjs/src/client/sitecore-nextjs-client.ts#L124)
 
 #### Returns
 
@@ -360,7 +360,7 @@ An array of `<link>` elements for stylesheets.
 
 > **getPage**(`path`, `pageOptions`, `options?`): `Promise`\<`null` \| [`Page`](../../index/type-aliases/Page.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:53](https://github.com/Sitecore/content-sdk/blob/a54d8150bcdfc3c332757dee3bfe2ea30bd11634/packages/nextjs/src/client/sitecore-nextjs-client.ts#L53)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:53](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/nextjs/src/client/sitecore-nextjs-client.ts#L53)
 
 Get page details for a route, with layout and other details
 
@@ -416,7 +416,7 @@ A promise that resolves to an array of static paths.
 
 > **getPreview**(`previewData`, `fetchOptions?`): `Promise`\<`null` \| [`Page`](../../index/type-aliases/Page.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:81](https://github.com/Sitecore/content-sdk/blob/a54d8150bcdfc3c332757dee3bfe2ea30bd11634/packages/nextjs/src/client/sitecore-nextjs-client.ts#L81)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:81](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/nextjs/src/client/sitecore-nextjs-client.ts#L81)
 
 Retrieves preview page and layout details
 
@@ -522,7 +522,7 @@ Throws 'REDIRECT_404' if requested sitemap is not found
 
 > **getSiteNameFromPath**(`path`): `string`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:36](https://github.com/Sitecore/content-sdk/blob/a54d8150bcdfc3c332757dee3bfe2ea30bd11634/packages/nextjs/src/client/sitecore-nextjs-client.ts#L36)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:36](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/nextjs/src/client/sitecore-nextjs-client.ts#L36)
 
 Gets site name based on the provided path
 
@@ -544,7 +544,7 @@ site name, or default site info if not found
 
 > **parsePath**(`path`): `string`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:48](https://github.com/Sitecore/content-sdk/blob/a54d8150bcdfc3c332757dee3bfe2ea30bd11634/packages/nextjs/src/client/sitecore-nextjs-client.ts#L48)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:48](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/nextjs/src/client/sitecore-nextjs-client.ts#L48)
 
 Normalizes a nextjs path that could have been rewritten
 
