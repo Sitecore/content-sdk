@@ -64,16 +64,16 @@ export default defineConfig([
       jsdoc,
     },
     rules: {
-      ...pluginNext.configs.recommended.rules,
-      ...pluginNext.configs['core-web-vitals'].rules,
+      ...(pluginNext.configs?.recommended?.rules ?? {}),
+      ...(pluginNext.configs?.['core-web-vitals']?.rules ?? {}),
       '@next/next/no-html-link-for-pages': 'off',
       '@next/next/no-img-element': 'off',
       '@next/next/no-sync-scripts': 'off',
       '@next/next/no-assign-module-variable': 'off',
       // Include ESLint recommended rules
-      ...js.configs.recommended.rules,
+      ...(js.configs?.recommended?.rules ?? {}),
       // Include JSDoc recommended rules
-      ...jsdoc.configs.recommended.rules,
+      ...(jsdoc.configs?.recommended?.rules ?? {}),
       // JSDoc relaxations
       'jsdoc/newline-after-description': 'off',
       'jsdoc/require-property-description': 'off',
