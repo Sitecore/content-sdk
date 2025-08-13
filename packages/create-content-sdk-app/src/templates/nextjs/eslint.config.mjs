@@ -73,6 +73,9 @@ export default defineConfig([
       // Preferences
       'prefer-const': 'error',
       'no-var': 'error',
+
+      // Temporary: ignore escapes in strings/regex to align with new-starter components
+      'no-useless-escape': 'off',
     },
   },
 ])
