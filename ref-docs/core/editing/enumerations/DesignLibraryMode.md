@@ -6,7 +6,7 @@
 
 # Enumeration: DesignLibraryMode
 
-Defined in: [packages/core/src/editing/models.ts:72](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/core/src/editing/models.ts#L72)
+Defined in: [packages/core/src/editing/models.ts:72](https://github.com/Sitecore/content-sdk/blob/beeecbc7e1885b9cc78f1e0821299c2967dd9530/packages/core/src/editing/models.ts#L72)
 
 Represents the mode of the Design Library
 
@@ -16,7 +16,7 @@ Represents the mode of the Design Library
 
 > **Metadata**: `"library-metadata"`
 
-Defined in: [packages/core/src/editing/models.ts:76](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/core/src/editing/models.ts#L76)
+Defined in: [packages/core/src/editing/models.ts:76](https://github.com/Sitecore/content-sdk/blob/beeecbc7e1885b9cc78f1e0821299c2967dd9530/packages/core/src/editing/models.ts#L76)
 
 Metadata mode
 
@@ -26,7 +26,7 @@ Metadata mode
 
 > **Normal**: `"library"`
 
-Defined in: [packages/core/src/editing/models.ts:74](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/core/src/editing/models.ts#L74)
+Defined in: [packages/core/src/editing/models.ts:74](https://github.com/Sitecore/content-sdk/blob/beeecbc7e1885b9cc78f1e0821299c2967dd9530/packages/core/src/editing/models.ts#L74)
 
 Normal mode
 
@@ -36,6 +36,6 @@ Normal mode
 
 > **VariantGeneration**: `"library-variant-generation"`
 
-Defined in: [packages/core/src/editing/models.ts:78](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/core/src/editing/models.ts#L78)
+Defined in: [packages/core/src/editing/models.ts:78](https://github.com/Sitecore/content-sdk/blob/beeecbc7e1885b9cc78f1e0821299c2967dd9530/packages/core/src/editing/models.ts#L78)
 
 Variant generation mode

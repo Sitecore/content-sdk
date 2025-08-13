@@ -8,7 +8,7 @@
 
 > **getPersonalizedRewrite**(`pathname`, `variantIds`): `string`
 
-Defined in: [packages/core/src/personalize/utils.ts:15](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/core/src/personalize/utils.ts#L15)
+Defined in: [packages/core/src/personalize/utils.ts:15](https://github.com/Sitecore/content-sdk/blob/beeecbc7e1885b9cc78f1e0821299c2967dd9530/packages/core/src/personalize/utils.ts#L15)
 
 Get a personalized rewrite path for given pathname
 

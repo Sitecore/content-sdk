@@ -8,7 +8,7 @@
 
 > **escapeNonSpecialQuestionMarks**(`input`): `string`
 
-Defined in: [packages/core/src/utils/utils.ts:202](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/core/src/utils/utils.ts#L202)
+Defined in: [packages/core/src/utils/utils.ts:202](https://github.com/Sitecore/content-sdk/blob/beeecbc7e1885b9cc78f1e0821299c2967dd9530/packages/core/src/utils/utils.ts#L202)
 
 Escapes non-special "?" characters in a string or regex.
 - For regex patterns that start with `^` or end with `$`, it returns the pattern unchanged.

@@ -8,7 +8,7 @@
 
 > **getDesignLibraryStatusEvent**(`status`, `uid`): [`DesignLibraryStatusEvent`](../interfaces/DesignLibraryStatusEvent.md)
 
-Defined in: [packages/core/src/editing/design-library.ts:137](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/core/src/editing/design-library.ts#L137)
+Defined in: [packages/core/src/editing/design-library.ts:137](https://github.com/Sitecore/content-sdk/blob/beeecbc7e1885b9cc78f1e0821299c2967dd9530/packages/core/src/editing/design-library.ts#L137)
 
 Generates a DesignLibraryStatusEvent with the given status and uid.
 

@@ -8,4 +8,4 @@
 
 > `const` **SITE\_PREFIX**: `"_site_"` = `'_site_'`
 
-Defined in: [packages/core/src/site/utils.ts:1](https://github.com/Sitecore/content-sdk/blob/13392c9ff65dec52a5060108fda635434c8322be/packages/core/src/site/utils.ts#L1)
+Defined in: [packages/core/src/site/utils.ts:1](https://github.com/Sitecore/content-sdk/blob/beeecbc7e1885b9cc78f1e0821299c2967dd9530/packages/core/src/site/utils.ts#L1)
