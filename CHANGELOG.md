@@ -33,6 +33,12 @@ Our versioning strategy is as follows:
 * `[cli]` Code extraction extends XM Cloud Rendering Host build by several minutes ([#173](https://github.com/Sitecore/content-sdk/pull/173))
 * `[core]` Fix redirect regex processing to prevent over-escaping of question marks in regex patterns ([#174](https://github.com/Sitecore/content-sdk/pull/174))
 
+## 1.0.1
+
+### 🐛 Bug Fixes
+
+* `[core]` `[nextjs]` Restore proper local connection fallback ([#178](https://github.com/Sitecore/content-sdk/pull/178))([#180](https://github.com/Sitecore/content-sdk/pull/180))
+
 ## 1.0.0
 
 ### 🎉 New Features & Improvements
