@@ -1,35 +1,33 @@
-// eslint.config.mjs (updated)
+// packages/create-content-sdk-app/src/templates/nextjs/eslint.config.mjs
 import { defineConfig } from 'eslint/config'
 import js from '@eslint/js'
-import * as nextNS from '@next/eslint-plugin-next'
+import * as nextEslintPlugin from '@next/eslint-plugin-next'
 import tsParser from '@typescript-eslint/parser'
-import * as tsNS from '@typescript-eslint/eslint-plugin'
-import * as importNS from 'eslint-plugin-import'
-import * as hooksNS from 'eslint-plugin-react-hooks'
+import * as tsEslintPlugin from '@typescript-eslint/eslint-plugin'
+import * as importEslintPlugin from 'eslint-plugin-import'
+import * as reactHooksEslintPlugin from 'eslint-plugin-react-hooks'
 import globals from 'globals'
 
-// normalize CJS/ESM shapes
-const pluginNext = nextNS.default ?? nextNS
-const tsPlugin = tsNS.default ?? tsNS
-const importPlugin = importNS.default ?? importNS
-const reactHooks = hooksNS.default ?? hooksNS
+// Normalize ESM/CJS shapes to plugin objects
+const nextPlugin = nextEslintPlugin.default ?? nextEslintPlugin
+const tsPlugin = tsEslintPlugin.default ?? tsEslintPlugin
+const importPlugin = importEslintPlugin.default ?? importEslintPlugin
+const reactHooksPlugin = reactHooksEslintPlugin.default ?? reactHooksEslintPlugin
 
 export default defineConfig([
-  // common ignores
-  {
-    ignores: ['node_modules/**', '.next/**', 'dist/**', 'build/**', 'coverage/**'],
-  },
+  // ignores
+  { ignores: ['node_modules/**', '.next/**', 'dist/**', 'build/**', 'coverage/**'] },
 
-  // core ESLint recommended rules
+  // core ESLint recommended
   js.configs.recommended,
 
   // register plugins (applies to all files)
   {
     plugins: {
-      '@next/next': pluginNext,
+      '@next/next': nextPlugin,
       '@typescript-eslint': tsPlugin,
       import: importPlugin,
-      'react-hooks': reactHooks,
+      'react-hooks': reactHooksPlugin,
     },
   },
 
@@ -51,13 +49,12 @@ export default defineConfig([
       },
     },
     settings: {
-      // helps eslint-plugin-import resolve TS paths
       'import/resolver': { typescript: {} },
     },
     rules: {
       // Next.js
-      ...(pluginNext.configs?.recommended?.rules ?? {}),
-      ...(pluginNext.configs?.['core-web-vitals']?.rules ?? {}),
+      ...(nextPlugin.configs?.recommended?.rules ?? {}),
+      ...(nextPlugin.configs?.['core-web-vitals']?.rules ?? {}),
       '@next/next/no-html-link-for-pages': 'off',
       '@next/next/no-img-element': 'off',
       '@next/next/no-sync-scripts': 'off',
