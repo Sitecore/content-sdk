@@ -924,7 +924,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getDesignLibraryData', () => {
-    it('should fetch component library data', async () => {
+    it('should fetch component library data in Normal mode', async () => {
       const componentLibData = {
         itemId: 'item-id',
         componentUid: 'comp-uid',
@@ -984,7 +984,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should fetch component library data', async () => {
+    it('should fetch component library data in VariantGeneration mode', async () => {
       const componentLibData = {
         itemId: 'item-id',
         componentUid: 'comp-uid',
@@ -1023,7 +1023,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: true,
           isNormal: false,
           isPreview: false,
-          isEditing: false,
+          isEditing: true,
           designLibrary: {
             isVariantGeneration: true,
           },
@@ -1191,7 +1191,7 @@ describe('SitecoreClient', () => {
         },
         isNormal: false,
         isPreview: false,
-        isEditing: false,
+        isEditing: true,
         isDesignLibrary: true,
       });
 
@@ -1202,7 +1202,7 @@ describe('SitecoreClient', () => {
         },
         isNormal: false,
         isPreview: false,
-        isEditing: false,
+        isEditing: true,
         isDesignLibrary: true,
       });
 
