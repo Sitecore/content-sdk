@@ -24,7 +24,6 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
-* `[core]` `[nextjs]` Restore proper local connection fallback ([#178](https://github.com/Sitecore/content-sdk/pull/178))
 * `[core]` Duplicate dictionary requests in editing, preview, and design library modes ([#161](https://github.com/Sitecore/content-sdk/pull/161))
   - `SitecoreClient.getPreview` and `SitecoreClient.getDesignLibraryData` no longer request dictionary data. `Page` type is not affected.
   - Updated `EditingService.fetchEditingData`:
@@ -32,6 +31,12 @@ Our versioning strategy is as follows:
     - No longer requests and returns dictionary data.
 * `[cli]` Code extraction extends XM Cloud Rendering Host build by several minutes ([#173](https://github.com/Sitecore/content-sdk/pull/173))
 * `[core]` Fix redirect regex processing to prevent over-escaping of question marks in regex patterns ([#174](https://github.com/Sitecore/content-sdk/pull/174))
+
+## 1.0.1
+
+### 🐛 Bug Fixes
+
+* `[core]` `[nextjs]` Restore proper local connection fallback ([#178](https://github.com/Sitecore/content-sdk/pull/178))([#180](https://github.com/Sitecore/content-sdk/pull/180))
 
 ## 1.0.0
 
