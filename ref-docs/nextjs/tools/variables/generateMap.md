@@ -8,7 +8,7 @@
 
 > `const` **generateMap**: `GenerateMapFunction`
 
-Defined in: [nextjs/src/tools/generate-map.ts:15](https://github.com/Sitecore/content-sdk/blob/e4805e77c88af2a512e70d508c3004ebc275812a/packages/nextjs/src/tools/generate-map.ts#L15)
+Defined in: [nextjs/src/tools/generate-map.ts:15](https://github.com/Sitecore/content-sdk/blob/58c317bf66fa2e948a2a500869b58b4eeaa19046/packages/nextjs/src/tools/generate-map.ts#L15)
 
 Generate and write componentMap.ts file based on provided params.
 
