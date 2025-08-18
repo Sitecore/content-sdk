@@ -6,7 +6,7 @@
 
 # Interface: SitePathServiceConfig
 
-Defined in: [packages/core/src/site/sitepath-service.ts:133](https://github.com/Sitecore/content-sdk/blob/88d9ab4a9a4baaf737bb981e71df0c17f7da0c9c/packages/core/src/site/sitepath-service.ts#L133)
+Defined in: [packages/core/src/site/sitepath-service.ts:133](https://github.com/Sitecore/content-sdk/blob/9abdc12f7b057f117954b27dfd9211691c4a89cb/packages/core/src/site/sitepath-service.ts#L133)
 
 Configuration options for
 
@@ -24,7 +24,7 @@ SitePathService instances
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/site/sitepath-service.ts:149](https://github.com/Sitecore/content-sdk/blob/88d9ab4a9a4baaf737bb981e71df0c17f7da0c9c/packages/core/src/site/sitepath-service.ts#L149)
+Defined in: [packages/core/src/site/sitepath-service.ts:149](https://github.com/Sitecore/content-sdk/blob/9abdc12f7b057f117954b27dfd9211691c4a89cb/packages/core/src/site/sitepath-service.ts#L149)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -35,7 +35,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > `optional` **enableDisplayNameRouting**: `boolean`
 
-Defined in: [packages/core/src/site/sitepath-service.ts:144](https://github.com/Sitecore/content-sdk/blob/88d9ab4a9a4baaf737bb981e71df0c17f7da0c9c/packages/core/src/site/sitepath-service.ts#L144)
+Defined in: [packages/core/src/site/sitepath-service.ts:144](https://github.com/Sitecore/content-sdk/blob/9abdc12f7b057f117954b27dfd9211691c4a89cb/packages/core/src/site/sitepath-service.ts#L144)
 
 Gets a flag indicating whether display name routing is enabled.
 
@@ -45,7 +45,7 @@ Gets a flag indicating whether display name routing is enabled.
 
 > `optional` **excludedPaths**: `string`[]
 
-Defined in: [packages/core/src/site/sitepath-service.ts:88](https://github.com/Sitecore/content-sdk/blob/88d9ab4a9a4baaf737bb981e71df0c17f7da0c9c/packages/core/src/site/sitepath-service.ts#L88)
+Defined in: [packages/core/src/site/sitepath-service.ts:88](https://github.com/Sitecore/content-sdk/blob/9abdc12f7b057f117954b27dfd9211691c4a89cb/packages/core/src/site/sitepath-service.ts#L88)
 
 Optional. Paths starting with these provided prefixes will be excluded from returned results.
 
@@ -59,7 +59,7 @@ Optional. Paths starting with these provided prefixes will be excluded from retu
 
 > `optional` **includedPaths**: `string`[]
 
-Defined in: [packages/core/src/site/sitepath-service.ts:84](https://github.com/Sitecore/content-sdk/blob/88d9ab4a9a4baaf737bb981e71df0c17f7da0c9c/packages/core/src/site/sitepath-service.ts#L84)
+Defined in: [packages/core/src/site/sitepath-service.ts:84](https://github.com/Sitecore/content-sdk/blob/9abdc12f7b057f117954b27dfd9211691c4a89cb/packages/core/src/site/sitepath-service.ts#L84)
 
 Optional. Only paths starting with these provided prefixes will be returned.
 
@@ -73,7 +73,7 @@ Optional. Only paths starting with these provided prefixes will be returned.
 
 > `optional` **includePersonalizedRoutes**: `boolean`
 
-Defined in: [packages/core/src/site/sitepath-service.ts:140](https://github.com/Sitecore/content-sdk/blob/88d9ab4a9a4baaf737bb981e71df0c17f7da0c9c/packages/core/src/site/sitepath-service.ts#L140)
+Defined in: [packages/core/src/site/sitepath-service.ts:140](https://github.com/Sitecore/content-sdk/blob/9abdc12f7b057f117954b27dfd9211691c4a89cb/packages/core/src/site/sitepath-service.ts#L140)
 
 A flag for whether to include personalized routes in service output.
 Only works on XM Cloud for pages using Embedded Personalization (not Component A/B testing).
@@ -85,7 +85,7 @@ Turned off by default.
 
 > `optional` **pageSize**: `number`
 
-Defined in: [packages/core/src/site/sitepath-service.ts:96](https://github.com/Sitecore/content-sdk/blob/88d9ab4a9a4baaf737bb981e71df0c17f7da0c9c/packages/core/src/site/sitepath-service.ts#L96)
+Defined in: [packages/core/src/site/sitepath-service.ts:96](https://github.com/Sitecore/content-sdk/blob/9abdc12f7b057f117954b27dfd9211691c4a89cb/packages/core/src/site/sitepath-service.ts#L96)
 
 common variable for all GraphQL queries
 it will be used for every type of query to regulate result batch size
