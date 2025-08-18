@@ -37,7 +37,8 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
-* `[core]` `[nextjs]` Restore proper local connection fallback ([#178](https://github.com/Sitecore/content-sdk/pull/178))([#180](https://github.com/Sitecore/content-sdk/pull/180))
+* `[core]` `[nextjs]` Restore proper local connection fallback 
+  * Added fallback to `middleware.ts` file to enable local API connections in the absence of `contextId`. ([#178](https://github.com/Sitecore/content-sdk/pull/178))([#180](https://github.com/Sitecore/content-sdk/pull/180))
 
 ## 1.0.0
 
