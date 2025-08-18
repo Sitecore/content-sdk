@@ -47,7 +47,10 @@ describe('Import Map Generation', () => {
       });
 
     beforeEach(() => {
-      const appFolder = path.resolve(process.cwd(), './src/tools/codegen/test-data/import-map');
+      const appFolder = path.resolve(
+        process.cwd(),
+        './src/tools/codegen/test-data/import-map/single-file-imports'
+      );
       cwdStub = sandbox.stub(process, 'cwd').returns(appFolder);
       testExportsModulePath = path.resolve(process.cwd(), 'test-exports').replace(/\\/g, '/');
     });
@@ -75,10 +78,10 @@ describe('Import Map Generation', () => {
       expect(convertToTestable(result)).to.deep.equal(expected);
     });
 
-    it('should return map with named imports when tsconfig paths is used (pathed.ts)', () => {
-      const result = getImportMap(['pathed.ts']);
+    it('should return map with named imports when tsconfig paths is used (ts-path-alias.ts)', () => {
+      const result = getImportMap(['ts-path-alias.ts']);
       testExportsModulePath = path
-        .resolve(process.cwd(), 'pathed/test-path-exports')
+        .resolve(process.cwd(), 'ts-path-alias/test-path-exports')
         .replace(/\\/g, '/');
       const expected = [
         {
@@ -222,6 +225,66 @@ describe('Import Map Generation', () => {
           module: testExportsModulePath,
           namedImports: [{ name: 'funco', value: 'funco' }],
           defaultImports: [],
+        },
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
+    });
+
+    it('should return map from multi-file imports with duplicate default exports', () => {
+      cwdStub.restore();
+      const testDuplicateImportModule = path
+        .resolve(process.cwd(), './src/tools/codegen/test-data/import-map')
+        .replace(/\\/g, '/');
+      const multiFileFolder = path.resolve(
+        process.cwd(),
+        './src/tools/codegen/test-data/import-map/multi-file-imports'
+      );
+      cwdStub = sandbox.stub(process, 'cwd').returns(multiFileFolder);
+      const result = getImportMap(['./duplicate-default/**']);
+      const expected = [
+        {
+          module: testExportsModulePath,
+          namedImports: [{ name: 'funco', value: 'funco' }],
+          defaultImport: 'defaultExport',
+          namespaceImport: 'everything',
+        },
+        {
+          module: 'react',
+          defaultImport: 'React',
+          namespaceImport: `React_${crypto.hash('sha1', 'React')}`,
+        },
+        {
+          module: testExportsModulePath,
+          namespaceImport: `React_${crypto.hash('sha1', testDuplicateImportModule)}`,
+        },
+      ];
+      expect(convertToTestable(result)).to.deep.equal(expected);
+    });
+
+    it('should return map from multi-file imports with duplicate named exports', () => {
+      cwdStub.restore();
+      const testExportsModulePath2 = path
+        .resolve(process.cwd(), './src/tools/codegen/test-data/import-map/test-exports2')
+        .replace(/\\/g, '/');
+      const multiFileFolder = path.resolve(
+        process.cwd(),
+        './src/tools/codegen/test-data/import-map/multi-file-imports'
+      );
+      cwdStub = sandbox.stub(process, 'cwd').returns(multiFileFolder);
+      const result = getImportMap(['./duplicate-named/**']);
+      const expected = [
+        {
+          module: testExportsModulePath,
+          namedImports: [{ name: 'testClassInstance', value: 'testClassInstance' }],
+        },
+        {
+          module: testExportsModulePath2,
+          namedImports: [{ name: 'testClassInstance', value: `testClassInstance_${crypto.hash('sha1', testExportsModulePath2)}` }],
+        },
+        {
+          module: 'react',
+          namedImports: [],
+          defaultImport: 'React',
         },
       ];
       expect(convertToTestable(result)).to.deep.equal(expected);
