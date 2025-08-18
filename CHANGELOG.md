@@ -20,12 +20,9 @@ Our versioning strategy is as follows:
     - New `writeImportMap()`, `combineImportEntries()` methods and `defaultImportEntries` export available from `@sitecore-content-sdk/nextjs/codegen`
   - Dynamic component rendering ([#163](https://github.com/Sitecore/content-sdk/pull/163))
   - Updated API endpoint to new Edge Platform format ([#162](https://github.com/Sitecore/content-sdk/pull/162))
-<<<<<<< Updated upstream
   - Ensure editing state is enabled in Design Library mode ([#181](https://github.com/Sitecore/content-sdk/pull/181))
-* `[sitecore-jss-nextjs]` Introduced support for using `displayName` values in route generation for statically built pages in JSS Next.js apps. This enables localized and user-friendly URLs when SXA link provider is configured to use display names.  Ensured `displayName` paths are UTF-8 encoded. This feature can be enabled by setting the `enableDisplayNameRouting` flag to true. By default, it is set to false. ([#179](https://github.com/Sitecore/content-sdk/pull/179))
-=======
 * `[core]` Ensure displayName paths are properly UTF-8 encoded. ([#179](https://github.com/Sitecore/content-sdk/pull/179))
->>>>>>> Stashed changes
+
 
 ### 🐛 Bug Fixes
 
