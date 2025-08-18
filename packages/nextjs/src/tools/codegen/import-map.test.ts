@@ -27,12 +27,6 @@ describe('Import Map Generation', () => {
 
     const convertToTestable = (importMap: Map<string, ModuleExports>) =>
       Array.from(importMap).map(([modulePath, imports]) => {
-        const defaultImports = Array.from(imports.defaultExports).map(([key, value]) => {
-          return {
-            name: key,
-            value,
-          };
-        });
         const namedImports = Array.from(imports.namedExports).map(([key, value]) => {
           return {
             name: key,
@@ -41,7 +35,8 @@ describe('Import Map Generation', () => {
         });
         return {
           module: modulePath,
-          defaultImports,
+          defaultImport: imports.defaultExport,
+          namespaceImport: imports.namespaceExport,
           namedImports,
         };
       });
