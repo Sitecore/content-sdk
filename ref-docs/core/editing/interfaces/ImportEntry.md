@@ -6,7 +6,7 @@
 
 # Interface: ImportEntry
 
-Defined in: [packages/core/src/editing/design-library.ts:32](https://github.com/Sitecore/content-sdk/blob/58c317bf66fa2e948a2a500869b58b4eeaa19046/packages/core/src/editing/design-library.ts#L32)
+Defined in: [packages/core/src/editing/design-library.ts:32](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/design-library.ts#L32)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/core/src/editing/design-library.ts:32](https://github.com/
 
 > **exports**: `object`[]
 
-Defined in: [packages/core/src/editing/design-library.ts:34](https://github.com/Sitecore/content-sdk/blob/58c317bf66fa2e948a2a500869b58b4eeaa19046/packages/core/src/editing/design-library.ts#L34)
+Defined in: [packages/core/src/editing/design-library.ts:34](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/design-library.ts#L34)
 
 #### name
 
@@ -30,4 +30,4 @@ Defined in: [packages/core/src/editing/design-library.ts:34](https://github.com/
 
 > **module**: `string`
 
-Defined in: [packages/core/src/editing/design-library.ts:33](https://github.com/Sitecore/content-sdk/blob/58c317bf66fa2e948a2a500869b58b4eeaa19046/packages/core/src/editing/design-library.ts#L33)
+Defined in: [packages/core/src/editing/design-library.ts:33](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/design-library.ts#L33)
