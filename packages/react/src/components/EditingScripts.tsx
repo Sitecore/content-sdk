@@ -23,9 +23,14 @@ export const EditingScripts = (): JSX.Element => {
 
   // In case of Design Library - render only the script for Design Library
   if (mode.isDesignLibrary) {
-    // Add cache buster to the script URL
-    const scriptUrl = `${getDesignLibraryScriptLink(api?.edge?.edgeUrl)}?cb=${Date.now()}`;
-
+    // Add cache buster to the script URL (format hh-dd-mm-yyyy, UTC)
+    const now = new Date();
+    const hour = String(now.getUTCHours()).padStart(2, '0');
+    const day = String(now.getUTCDate()).padStart(2, '0');
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const year = String(now.getUTCFullYear());
+    const cacheBuster = `${hour}-${day}-${month}-${year}`;
+    const scriptUrl = `${getDesignLibraryScriptLink(api?.edge?.edgeUrl)}?cb=${cacheBuster}`;
     return (
       <>
         <script src={scriptUrl} suppressHydrationWarning></script>
