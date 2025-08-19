@@ -22,14 +22,6 @@ export enum ExtractedFileType {
   PackageJson = 'package.json',
 }
 
-/**
- * Describes individual entries in import map file
- */
-export type ImportMapEntry = {
-  module: string;
-  namedExports: string[];
-};
-
 export const xmCloudDeploy = () => !!process.env.SITECORE && !!process.env.SITECORE_BUILD;
 // workaround, Vercel does not have variables that are only accessible at build time
 const vercelDeploy = () => !!process.env.VERCEL && !process.env.VERCEL_REGION;
