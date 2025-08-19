@@ -17,11 +17,6 @@ export const unitMocks = ({
   getComponentListStub && (_getComponentList = getComponentListStub);
 };
 
-type ExportDefinition = {
-  name: string;
-  value: string;
-};
-
 /**
  * Type describing import map entry in final file
  * Represents structure i.e.
@@ -29,10 +24,14 @@ type ExportDefinition = {
  * exports: [{ name: 'myName1', value: myName1 },..]}
  * Note that string name and implementation (value) name would be the same
  */
-export type ImportMapEntry = {
+type ImportMapEntry = {
   module: string;
-  namedExports: ExportDefinition[];
-  defaultExports: ExportDefinition[];
+  namedExports: {
+    name: string;
+    value: string;
+  }[];
+  defaultExport: { name: 'default'; value: string | null };
+  namespaceExport: { name: '*'; value: string | null };
 };
 
 /**
@@ -63,8 +62,10 @@ export type ImportNames = {
 export type ModuleExports = {
   // import { import1, import2 as imp3 }
   namedExports: Map<string, string>;
-  // import coolName or import * as coolName or import coolName as coolerName
-  defaultExports: Map<string, string>;
+  // import coolName as coolerName
+  defaultExport: string | null;
+  // import * as coolName
+  namespaceExport: string | null;
 };
 
 /**
@@ -102,27 +103,17 @@ export const getImportedValues = (importNode: ts.ImportDeclaration): ImportNames
   return result;
 };
 
-/**
- * Returns unique alias name for import value, if value was already encountered while generating import map
- * @param {string} importName - import value name, i.e. 'myComponent'
- * @param {string} moduleName - import module name, i.e. 'my-module'
- * @param {Map<string, string>} importValuesIndex - Map of import values indexed by their names and modules
- * @returns {string} unique name
- */
-const getComponentMapImportValueName = (
-  importName: string,
-  moduleName: string,
-  importValuesIndex: Map<string, string>
-) => {
-  return importValuesIndex.has(importName) && importValuesIndex.get(importName) !== moduleName
-    ? getImportValueAlias(importName, moduleName)
-    : importName;
-};
-
 // return alias-like name for an import value/variable name
 // this helps alleviate duplicate import names in import-map.ts
-const getImportValueAlias = (importValue: string, moduleName: string) => {
-  const suffix = crypto.hash('sha1', moduleName);
+export const getImportValueAlias = (
+  importValue: string,
+  moduleName: string,
+  importType: 'named' | 'default' | 'namespace'
+) => {
+  // Add extra uniqueness since the same alias can be used for different import types
+  const importTypeId = importType === 'named' ? 'n' : importType === 'default' ? 'd' : 'ns';
+
+  const suffix = crypto.hash('sha1', `${moduleName}_${importTypeId}`);
   return `${importValue}_${suffix}`;
 };
 
@@ -158,8 +149,7 @@ export const getImportMap = (paths: string[]) => {
 
   // index to keep track of unique import values imported from different modules
   // helps avoid duplicate import names in the final import-map.ts file
-  // key = imported value name, value = imported module name
-  const importValuesIndex = new Map<string, string>();
+  const importsList: string[] = [];
 
   paths.forEach((codeFilePath) => {
     const codeFileFullPath = path.isAbsolute(codeFilePath)
@@ -211,36 +201,58 @@ export const getImportMap = (paths: string[]) => {
           if (!importMap.has(importModuleName)) {
             importMap.set(importModuleName, {
               namedExports: new Map(),
-              defaultExports: new Map(),
+              defaultExport: null,
+              namespaceExport: null,
             });
           }
 
+          const moduleEntry = importMap.get(importModuleName);
+
           imports.named.forEach((importEntry) => {
-            const importValue = getComponentMapImportValueName(
-              importEntry,
-              importModuleName,
-              importValuesIndex
-            );
-            importMap.get(importModuleName)!.namedExports.set(importEntry, importValue);
-            importValuesIndex.set(importEntry, importModuleName);
+            const sameModuleNamedAlready = moduleEntry!.namedExports.has(importEntry);
+
+            if (sameModuleNamedAlready) {
+              return;
+            }
+
+            const nameTaken = importsList.includes(importEntry);
+
+            const importValue = nameTaken
+              ? getImportValueAlias(importEntry, importModuleName, 'named')
+              : importEntry;
+
+            moduleEntry!.namedExports.set(importEntry, importValue);
+            importsList.push(importEntry);
           });
           if (imports.namespace) {
-            const importValue = getComponentMapImportValueName(
-              imports.namespace,
-              importModuleName,
-              importValuesIndex
-            );
-            importMap.get(importModuleName)!.defaultExports.set('*', importValue);
-            importValuesIndex.set(importValue, importModuleName);
+            const sameModuleNamedAlready = moduleEntry!.namespaceExport;
+
+            if (sameModuleNamedAlready) {
+              return;
+            }
+
+            const nameTaken = importsList.includes(imports.namespace);
+            const importValue = nameTaken
+              ? getImportValueAlias(imports.namespace, importModuleName, 'namespace')
+              : imports.namespace;
+
+            moduleEntry!.namespaceExport = importValue;
+            importsList.push(importValue);
           }
           if (imports.default) {
-            const importValue = getComponentMapImportValueName(
-              imports.default,
-              importModuleName,
-              importValuesIndex
-            );
-            importMap.get(importModuleName)!.defaultExports.set('default', importValue);
-            importValuesIndex.set(importValue, importModuleName);
+            const sameModuleNamedAlready = moduleEntry!.defaultExport;
+
+            if (sameModuleNamedAlready) {
+              return;
+            }
+
+            const nameTaken = importsList.includes(imports.default);
+            const importValue = nameTaken
+              ? getImportValueAlias(imports.default, importModuleName, 'default')
+              : imports.default;
+
+            moduleEntry!.defaultExport = importValue;
+            importsList.push(importValue);
           }
         } else {
           console.warn('[Codegen] Could not resolve a file for import %s', moduleName);
@@ -295,26 +307,13 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
  * @returns {string} file code for component-map.ts
  */
 export const nextJsMapTemplate = (indexedImportMap: Map<string, ModuleExports>) => {
-  const getSingleImport = (originalName: string, aliasName: string) => {
-    return originalName !== aliasName ? `${originalName} as ${aliasName}` : originalName;
-  };
-
-  const convertNamedImports = (namedImports: ExportDefinition[]) => {
-    return namedImports
-      .map((entry) => {
-        return getSingleImport(entry.name, entry.value);
-      })
-      .join(', ');
-  };
-
-  const outputExportEntries = (exports: ExportDefinition[]) => {
-    return exports.length
-      ? exports
-          .map(
-            (namedExport) => `      { name: '${namedExport.name}', value: ${namedExport.value} }`
-          )
-          .join(',\n') + ','
-      : '';
+  const outputExportEntries = (entry: ImportMapEntry) => {
+    return (
+      [...entry.namedExports, entry.defaultExport, entry.namespaceExport]
+        .filter((entry) => entry.value !== null)
+        .map((namedExport) => `      { name: '${namedExport.name}', value: ${namedExport.value} }`)
+        .join(',\n') + ','
+    );
   };
 
   const importStatements: string[] = [];
@@ -322,39 +321,45 @@ export const nextJsMapTemplate = (indexedImportMap: Map<string, ModuleExports>) 
 
   // get import map entries after
   const finalImportMap: ImportMapEntry[] = importMapArray.map(([modulePath, imports]) => {
-    const defaultExports = Array.from(imports.defaultExports).map(([name, value]) => {
-      return {
-        name,
-        value,
-      };
-    });
+    const defaultExport = {
+      name: 'default' as const,
+      value: imports.defaultExport,
+    };
     const namedExports = Array.from(imports.namedExports).map(([name, value]) => {
       return {
         name,
         value,
       };
     });
+    const namespaceExport = {
+      name: '*' as const,
+      value: imports.namespaceExport,
+    };
     return {
       module: modulePath,
-      defaultExports,
+      defaultExport,
       namedExports,
+      namespaceExport,
     };
   });
 
   finalImportMap.forEach((entry) => {
     if (entry.namedExports.length > 0) {
-      importStatements.push(
-        `import { ${convertNamedImports(entry.namedExports)} } from '${entry.module}';`
-      );
+      const namedExports = entry.namedExports
+        .map((entry) => {
+          return entry.name !== entry.value ? `${entry.name} as ${entry.value}` : entry.name;
+        })
+        .join(', ');
+
+      importStatements.push(`import { ${namedExports} } from '${entry.module}';`);
     }
-    if (entry.defaultExports.length > 0) {
-      Array.from(entry.defaultExports).forEach((defaultExportEntry) => {
-        if (defaultExportEntry.name === 'default') {
-          importStatements.push(`import ${defaultExportEntry.value} from '${entry.module}';`);
-        } else {
-          importStatements.push(`import * as ${defaultExportEntry.value} from '${entry.module}';`);
-        }
-      });
+
+    if (entry.defaultExport.value) {
+      importStatements.push(`import ${entry.defaultExport.value} from '${entry.module}';`);
+    }
+
+    if (entry.namespaceExport.value) {
+      importStatements.push(`import * as ${entry.namespaceExport.value} from '${entry.module}';`);
     }
   });
 
@@ -372,8 +377,7 @@ ${finalImportMap
       '  {',
       `    module: '${entry.module}',`,
       '    exports: [',
-      outputExportEntries(entry.namedExports),
-      outputExportEntries(entry.defaultExports),
+      outputExportEntries(entry),
       '    ]',
       '  }',
     ]
