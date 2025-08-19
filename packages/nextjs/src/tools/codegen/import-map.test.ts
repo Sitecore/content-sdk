@@ -200,8 +200,11 @@ describe('Import Map Generation', () => {
 
     it('should return map from multi-file imports with duplicate mixed exports', () => {
       cwdStub.restore();
-      const testDuplicateImportModule = path
+      const testFakeReactImportModule = path
         .resolve(process.cwd(), './src/tools/codegen/test-data/import-map/fake-react')
+        .replace(/\\/g, '/');
+      const testDuplicateImportModulePath = path
+        .resolve(process.cwd(), './src/tools/codegen/test-data/import-map/test-exports-2')
         .replace(/\\/g, '/');
       const multiFileFolder = path.resolve(
         process.cwd(),
@@ -223,21 +226,32 @@ describe('Import Map Generation', () => {
           namespaceImport: getImportValueAlias('React', 'react', 'namespace'),
         },
         {
-          module: testExportsModulePath,
+          module: testDuplicateImportModulePath,
           namedImports: [{ name: 'testClassInstance', value: 'testClassInstance' }],
-          defaultImport: 'testExportsDefault',
+          defaultImport: null,
           namespaceImport: null,
         },
         {
-          module: testDuplicateImportModule,
-          defaultImport: getImportValueAlias('React', testDuplicateImportModule, 'default'),
-          namespaceImport: getImportValueAlias('React', testDuplicateImportModule, 'namespace'),
+          module: testFakeReactImportModule,
+          defaultImport: getImportValueAlias('React', testFakeReactImportModule, 'default'),
+          namespaceImport: getImportValueAlias('React', testFakeReactImportModule, 'namespace'),
           namedImports: [
             {
               name: 'useEffect',
-              value: getImportValueAlias('useEffect', testDuplicateImportModule, 'named'),
+              value: getImportValueAlias('useEffect', testFakeReactImportModule, 'named'),
             },
           ],
+        },
+        {
+          module: testExportsModulePath,
+          namedImports: [
+            {
+              name: 'testClassInstance',
+              value: getImportValueAlias('testClassInstance', testExportsModulePath, 'named'),
+            },
+          ],
+          defaultImport: 'testExportsDefault',
+          namespaceImport: null,
         },
       ];
       expect(convertToTestable(result)).to.deep.equal(expected);

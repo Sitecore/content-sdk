@@ -1,5 +1,5 @@
 import React from 'react';
-import { testClassInstance } from '../test-exports';
+import { testClassInstance } from '../test-exports-2';
 
 export const C = () => {
   console.log(testClassInstance, React);
