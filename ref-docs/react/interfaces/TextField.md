@@ -6,7 +6,7 @@
 
 # Interface: TextField
 
-Defined in: [packages/react/src/components/Text.tsx:8](https://github.com/Sitecore/content-sdk/blob/d0da630b45169fcab63ebce765d98d87c383c4a0/packages/react/src/components/Text.tsx#L8)
+Defined in: [packages/react/src/components/Text.tsx:8](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/react/src/components/Text.tsx#L8)
 
 ## Extends
 
@@ -34,4 +34,4 @@ Defined in: packages/core/types/layout/models.d.ts:107
 
 > `optional` **value**: `string` \| `number`
 
-Defined in: [packages/react/src/components/Text.tsx:9](https://github.com/Sitecore/content-sdk/blob/d0da630b45169fcab63ebce765d98d87c383c4a0/packages/react/src/components/Text.tsx#L9)
+Defined in: [packages/react/src/components/Text.tsx:9](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/react/src/components/Text.tsx#L9)
