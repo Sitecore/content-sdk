@@ -57,7 +57,7 @@ Execute graphql request
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `query` | `string` \| `DocumentNode` | graphql query |
-| `variables?` | \{\[`key`: `string`\]: `unknown`; \} | - |
+| `variables?` | \{[`key`: `string`]: `unknown`; \} | - |
 | `options?` | `FetchOptions` | Options for configuring a GraphQL request. |
 
 #### Returns
