@@ -1,4 +1,4 @@
-import { funco } from './test-exports';
+import { funco } from '../test-exports';
 
 /**
  *
