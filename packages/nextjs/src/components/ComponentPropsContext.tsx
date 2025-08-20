@@ -18,6 +18,7 @@ export function useComponentProps<ComponentData>(
   if (!componentUid) {
     return undefined;
   }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const data = useContext(ComponentPropsReactContext);
 
   return data[componentUid] as ComponentData;

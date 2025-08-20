@@ -46,10 +46,7 @@ export class SiteResolver {
     // First collect unique hostnames.
     // For sites with same hostname defined, priority is given to the first encountered.
     this.sites.forEach((site) => {
-      const hostnames = site.hostName
-        .replace(/\s/g, '')
-        .toLocaleLowerCase()
-        .split(DELIMITERS);
+      const hostnames = site.hostName.replace(/\s/g, '').toLocaleLowerCase().split(DELIMITERS);
       hostnames.forEach((hostname) => {
         if (!map.has(hostname)) {
           map.set(hostname, site);

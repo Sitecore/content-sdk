@@ -6,9 +6,15 @@
 
 # Function: DesignLibrary()
 
-> **DesignLibrary**(): `Element`
+> **DesignLibrary**(`__namedParameters`): `Element`
 
-Defined in: [packages/react/src/components/DesignLibrary.tsx:157](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/react/src/components/DesignLibrary.tsx#L157)
+Defined in: [packages/react/src/components/DesignLibrary.tsx:276](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/react/src/components/DesignLibrary.tsx#L276)
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `__namedParameters` | `DesignLibraryProps` |
 
 ## Returns
 

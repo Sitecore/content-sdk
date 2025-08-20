@@ -6,7 +6,7 @@
 
 # Class: ComponentLayoutService
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:71](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/component-layout-service.ts#L71)
+Defined in: [packages/core/src/editing/component-layout-service.ts:72](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/core/src/editing/component-layout-service.ts#L72)
 
 REST service that enables Design Library functionality.
 Returns layout data for a single rendered component.
@@ -17,7 +17,7 @@ Returns layout data for a single rendered component.
 
 > **new ComponentLayoutService**(`config`): `ComponentLayoutService`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:72](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/component-layout-service.ts#L72)
+Defined in: [packages/core/src/editing/component-layout-service.ts:73](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/core/src/editing/component-layout-service.ts#L73)
 
 #### Parameters
 
@@ -33,15 +33,16 @@ Defined in: [packages/core/src/editing/component-layout-service.ts:72](https://g
 
 ### fetchComponentData()
 
-> **fetchComponentData**(`params`): `Promise`\<[`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)\>
+> **fetchComponentData**(`params`, `fetchOptions?`): `Promise`\<[`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)\>
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:74](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/component-layout-service.ts#L74)
+Defined in: [packages/core/src/editing/component-layout-service.ts:75](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/core/src/editing/component-layout-service.ts#L75)
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
 | `params` | [`ComponentLayoutRequestParams`](../interfaces/ComponentLayoutRequestParams.md) |
+| `fetchOptions?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) |
 
 #### Returns
 
@@ -53,7 +54,7 @@ Defined in: [packages/core/src/editing/component-layout-service.ts:74](https://g
 
 > `protected` **getComponentFetchParams**(`params`): `any`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:99](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/component-layout-service.ts#L99)
+Defined in: [packages/core/src/editing/component-layout-service.ts:107](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/core/src/editing/component-layout-service.ts#L107)
 
 #### Parameters
 

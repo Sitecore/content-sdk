@@ -22,23 +22,18 @@ export enum ExtractedFileType {
   PackageJson = 'package.json',
 }
 
+export const xmCloudDeploy = () => !!process.env.SITECORE && !!process.env.SITECORE_BUILD;
+// workaround, Vercel does not have variables that are only accessible at build time
+const vercelDeploy = () => !!process.env.VERCEL && !process.env.VERCEL_REGION;
+const netlifyDeploy = () => !!process.env.NETLIFY && !!process.env.BUILD_ID;
+
 /**
  * Validates if the current operation is done in Vercel, Netlify or XMCloud
  * deploy context
  * @returns {boolean} - true if in deploy context, false otherwise
  */
 export const validateDeployContext = () => {
-  if (process.env.NETLIFY && process.env.BUILD_ID) {
-    return true;
-  }
-  // workaround, Vercel does not have variables that are only accessible at build time
-  if (process.env.VERCEL && !process.env.VERCEL_REGION) {
-    return true;
-  }
-  if (process.env.SITECORE && process.env.SITECORE_BUILD) {
-    return true;
-  }
-  return false;
+  return xmCloudDeploy() || vercelDeploy() || netlifyDeploy();
 };
 
 /**
@@ -203,7 +198,8 @@ export const sendCode = async ({
   token: string;
   targetUrl: string;
 }) => {
-  const apiEndpoint = `${targetUrl}/api/v1/contentsdk/code/extracted`;
+  // Use the new Edge Platform mesh endpoint format
+  const apiEndpoint = `${targetUrl}/mesh/push/api/v1/contentsdk/code/extracted`;
   if (!fs.existsSync(file.path)) {
     console.error(chalk.red(`File not found: ${file.path}`));
     return null;

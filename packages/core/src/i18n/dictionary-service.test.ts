@@ -140,11 +140,9 @@ describe('DictionaryService', () => {
   });
 
   it('should throw when getting http errors', async () => {
-    nock(endpoint)
-      .post('/')
-      .reply(401, {
-        error: 'whoops',
-      });
+    nock(endpoint).post('/').reply(401, {
+      error: 'whoops',
+    });
 
     const service = new DictionaryService({
       clientFactory,

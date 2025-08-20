@@ -1,4 +1,5 @@
-﻿/* eslint-disable dot-notation */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable dot-notation */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect, use } from 'chai';
@@ -319,6 +320,45 @@ describe('EditingRenderMiddleware', () => {
     expect(res.redirect).to.have.been.calledWith('/custom/path/styleguide');
   });
 
+  it('should handle request with special characters in route', async () => {
+    const query = {
+      mode: 'edit',
+      route: '/Åbout',
+      sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+      sc_lang: 'en',
+      sc_site: 'website',
+      sc_variant: 'dev',
+      sc_version: 'latest',
+      secret: secret,
+      sc_layoutKind: 'shared',
+    } as EditingRenderQueryParams;
+
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    await handler(req, res);
+
+    expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
+      site: 'website',
+      itemId: '{11111111-1111-1111-1111-111111111111}',
+      language: 'en',
+      variantIds: ['dev'],
+      version: 'latest',
+      mode: 'edit',
+      layoutKind: 'shared',
+    });
+
+    expect(res.redirect).to.have.been.calledOnce;
+    expect(res.redirect).to.have.been.calledWith('/%C3%85bout');
+    expect(res.setHeader).to.have.been.calledWith(
+      'Content-Security-Policy',
+      `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
+    );
+  });
+
   it('should response with 400 for missing query params', async () => {
     const req = mockRequest({ query: { sc_site: 'website', secret } });
     const res = mockResponse();
@@ -332,8 +372,7 @@ describe('EditingRenderMiddleware', () => {
     expect(res.status).to.have.been.calledWith(400);
     expect(res.json).to.have.been.calledOnce;
     expect(res.json).to.have.been.calledWith({
-      html:
-        '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
+      html: '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
     });
   });
 
@@ -453,8 +492,7 @@ describe('EditingRenderMiddleware', () => {
       expect(res.status).to.have.been.calledWith(400);
       expect(res.json).to.have.been.calledOnce;
       expect(res.json).to.have.been.calledWith({
-        html:
-          '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
+        html: '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
       });
     });
   });

@@ -8,12 +8,11 @@
 
 > **escapeNonSpecialQuestionMarks**(`input`): `string`
 
-Defined in: [packages/core/src/utils/utils.ts:204](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/utils/utils.ts#L204)
+Defined in: [packages/core/src/utils/utils.ts:202](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/core/src/utils/utils.ts#L202)
 
 Escapes non-special "?" characters in a string or regex.
-- For regular strings, it escapes all unescaped "?" characters by adding a backslash (`\`).
-- For regex patterns (strings enclosed in `/.../`), it analyzes each "?" to determine if it has special meaning
-  (e.g., `?` in `(abc)?`, `.*?`, `(?!...)`) or is just a literal character. Only literal "?" characters are escaped.
+- For regex patterns that start with `^` or end with `$`, it returns the pattern unchanged.
+- For other strings, it escapes literal "?" characters but preserves regex quantifiers and special patterns.
 
 ## Parameters
 

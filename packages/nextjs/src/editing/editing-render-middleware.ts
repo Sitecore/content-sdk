@@ -209,7 +209,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           __next_preview_data: /^__next_preview_data=/,
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         for (const [_, regex] of Object.entries(cookieIdentifiers)) {
           if (cookie.match(regex)) {
             return cookie.replace(/SameSite=Lax/, 'SameSite=None; Secure');
@@ -229,7 +229,8 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       res.setHeader('Set-Cookie', modifiedCookies);
     }
 
-    const route = this.config?.resolvePageUrl?.(query.route) || query.route;
+    const encodedRoute = encodeURI(query.route);
+    const route = this.config?.resolvePageUrl?.(encodedRoute) || encodedRoute;
 
     debug.editing(
       'editing render middleware end in %dms: redirect %o',

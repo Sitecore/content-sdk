@@ -6,7 +6,7 @@
 
 # Class: EditingService
 
-Defined in: [packages/core/src/editing/editing-service.ts:111](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/editing-service.ts#L111)
+Defined in: [packages/core/src/editing/editing-service.ts:45](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/core/src/editing/editing-service.ts#L45)
 
 Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
 Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
@@ -17,7 +17,7 @@ Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
 
 > **new EditingService**(`serviceConfig`): `EditingService`
 
-Defined in: [packages/core/src/editing/editing-service.ts:118](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/editing-service.ts#L118)
+Defined in: [packages/core/src/editing/editing-service.ts:52](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/core/src/editing/editing-service.ts#L52)
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -37,41 +37,17 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > **serviceConfig**: `EditingServiceConfig`
 
-Defined in: [packages/core/src/editing/editing-service.ts:118](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/editing-service.ts#L118)
+Defined in: [packages/core/src/editing/editing-service.ts:52](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/core/src/editing/editing-service.ts#L52)
 
 configuration
 
 ## Methods
 
-### fetchDictionaryData()
-
-> **fetchDictionaryData**(`__namedParameters`, `fetchOptions?`): `Promise`\<[`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md)\>
-
-Defined in: [packages/core/src/editing/editing-service.ts:208](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/editing-service.ts#L208)
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `__namedParameters` | \{ `after?`: `string`; `hasNext?`: `boolean`; `initDictionary?`: `object`[]; `language`: `string`; `siteName`: `string`; \} |
-| `__namedParameters.after?` | `string` |
-| `__namedParameters.hasNext?` | `boolean` |
-| `__namedParameters.initDictionary?` | `object`[] |
-| `__namedParameters.language?` | `string` |
-| `__namedParameters.siteName?` | `string` |
-| `fetchOptions?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) |
-
-#### Returns
-
-`Promise`\<[`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md)\>
-
-***
-
 ### fetchEditingData()
 
-> **fetchEditingData**(`variables`, `fetchOptions?`): `Promise`\<\{ `dictionary`: [`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md); `layoutData`: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md); \}\>
+> **fetchEditingData**(`variables`, `fetchOptions?`): `Promise`\<\{ `layoutData`: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md); \}\>
 
-Defined in: [packages/core/src/editing/editing-service.ts:134](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/editing-service.ts#L134)
+Defined in: [packages/core/src/editing/editing-service.ts:67](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/core/src/editing/editing-service.ts#L67)
 
 Fetches editing data. Provides the layout data and dictionary phrases
 
@@ -84,7 +60,7 @@ Fetches editing data. Provides the layout data and dictionary phrases
 
 #### Returns
 
-`Promise`\<\{ `dictionary`: [`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md); `layoutData`: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md); \}\>
+`Promise`\<\{ `layoutData`: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md); \}\>
 
 The layout data and dictionary phrases.
 
@@ -94,7 +70,7 @@ The layout data and dictionary phrases.
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/editing/editing-service.ts:257](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/core/src/editing/editing-service.ts#L257)
+Defined in: [packages/core/src/editing/editing-service.ts:109](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/core/src/editing/editing-service.ts#L109)
 
 Gets a GraphQL client that can make requests to the API.
 

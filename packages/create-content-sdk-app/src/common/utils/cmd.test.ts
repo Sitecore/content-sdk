@@ -1,4 +1,5 @@
-/* eslint-disable no-unused-expressions */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect, use } from 'chai';
 import sinon, { SinonStub } from 'sinon';
 import spawn from 'cross-spawn';
@@ -19,7 +20,10 @@ describe('cmd', () => {
     spawnFuncStub = sinon.stub(cmd, 'spawnFunc');
     logStub = sinon.stub(console, 'log');
 
-    cmd.run('jss', ['start', 'production'], { cwd: 'samples/next', encoding: 'utf-8' });
+    cmd.run('jss', ['start', 'production'], {
+      cwd: 'samples/next',
+      encoding: 'utf-8',
+    });
 
     expect(
       spawnFuncStub.calledOnceWith('jss', ['start', 'production'], {
@@ -60,9 +64,14 @@ describe('cmd', () => {
     });
 
     it('should exit when result has status > 0', () => {
-      spawnStub = sinon
-        .stub(spawn, 'sync')
-        .returns({ output: [], pid: 1, stderr: '', stdout: '', status: 5, signal: 'SIGINFO' });
+      spawnStub = sinon.stub(spawn, 'sync').returns({
+        output: [],
+        pid: 1,
+        stderr: '',
+        stdout: '',
+        status: 5,
+        signal: 'SIGINFO',
+      });
       const parent = mockProcess(true);
 
       cmd.spawnFunc(
@@ -77,9 +86,14 @@ describe('cmd', () => {
     });
 
     it('should not exit when result has status = 0', () => {
-      spawnStub = sinon
-        .stub(spawn, 'sync')
-        .returns({ output: [], pid: 1, stderr: '', stdout: '', status: 0, signal: 'SIGINFO' });
+      spawnStub = sinon.stub(spawn, 'sync').returns({
+        output: [],
+        pid: 1,
+        stderr: '',
+        stdout: '',
+        status: 0,
+        signal: 'SIGINFO',
+      });
       const parent = mockProcess(true);
 
       cmd.spawnFunc(
@@ -93,9 +107,14 @@ describe('cmd', () => {
     });
 
     it('should log message when process is killed', () => {
-      spawnStub = sinon
-        .stub(spawn, 'sync')
-        .returns({ output: [], pid: 1, stderr: '', stdout: '', status: 5, signal: 'SIGKILL' });
+      spawnStub = sinon.stub(spawn, 'sync').returns({
+        output: [],
+        pid: 1,
+        stderr: '',
+        stdout: '',
+        status: 5,
+        signal: 'SIGKILL',
+      });
       const parent = mockProcess(true);
 
       cmd.spawnFunc(
@@ -115,9 +134,14 @@ describe('cmd', () => {
     });
 
     it('should log message when process is down', () => {
-      spawnStub = sinon
-        .stub(spawn, 'sync')
-        .returns({ output: [], pid: 1, stderr: '', stdout: '', status: 5, signal: 'SIGTERM' });
+      spawnStub = sinon.stub(spawn, 'sync').returns({
+        output: [],
+        pid: 1,
+        stderr: '',
+        stdout: '',
+        status: 5,
+        signal: 'SIGTERM',
+      });
       const parent = mockProcess(true);
 
       cmd.spawnFunc(
@@ -137,9 +161,14 @@ describe('cmd', () => {
     });
 
     it('should use inherit for stdio if tty', () => {
-      spawnStub = sinon
-        .stub(spawn, 'sync')
-        .returns({ output: [], pid: 1, stderr: '', stdout: '', status: 1, signal: 'SIGINFO' });
+      spawnStub = sinon.stub(spawn, 'sync').returns({
+        output: [],
+        pid: 1,
+        stderr: '',
+        stdout: '',
+        status: 1,
+        signal: 'SIGINFO',
+      });
       const parent = mockProcess(true);
 
       cmd.spawnFunc('npm', ['install'], { cwd: 'samples/next', encoding: 'utf-8' }, parent);
@@ -154,9 +183,14 @@ describe('cmd', () => {
     });
 
     it('should use pipe for stdio if not tty', () => {
-      spawnStub = sinon
-        .stub(spawn, 'sync')
-        .returns({ output: [], pid: 1, stderr: '', stdout: '', status: 1, signal: 'SIGINFO' });
+      spawnStub = sinon.stub(spawn, 'sync').returns({
+        output: [],
+        pid: 1,
+        stderr: '',
+        stdout: '',
+        status: 1,
+        signal: 'SIGINFO',
+      });
       const parent = mockProcess(false);
 
       cmd.spawnFunc('npm', ['install'], { cwd: 'samples/next', encoding: 'utf-8' }, parent);

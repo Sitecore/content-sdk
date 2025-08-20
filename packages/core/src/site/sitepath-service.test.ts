@@ -56,6 +56,7 @@ describe('SitePathService', () => {
             }
       );
   };
+
   describe('Fetch sitemap in SSG mode', () => {
     it('should work when 1 language is requested', async () => {
       mockPathsRequest();
@@ -141,6 +142,67 @@ describe('SitePathService', () => {
           locale: 'en',
         },
       ]);
+    });
+
+    it('should return encoded paths when special characters are used', async () => {
+      const lang = 'en';
+
+      nock(endpoint)
+        .post('/', /DefaultSitemapQuery/gi)
+        .reply(200, {
+          data: {
+            site: {
+              siteInfo: {
+                routes: {
+                  total: 3,
+                  pageInfo: {
+                    hasNext: false,
+                  },
+                  results: [
+                    {
+                      path: '/Åbout',
+                    },
+                    {
+                      path: '/Tëâm',
+                    },
+                    {
+                      path: '/',
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        });
+
+      const service = new SitePathService({
+        clientFactory,
+      });
+
+      const sitemap = await service.fetchSiteRoutes(sites, [lang]);
+
+      expect(sitemap).to.deep.equal([
+        {
+          params: {
+            path: ['_site_site-name', 'Åbout'],
+          },
+          locale: 'en',
+        },
+        {
+          params: {
+            path: ['_site_site-name', 'Tëâm'],
+          },
+          locale: 'en',
+        },
+        {
+          params: {
+            path: ['_site_site-name'],
+          },
+          locale: 'en',
+        },
+      ]);
+
+      return expect(nock.isDone()).to.be.true;
     });
 
     it('should return aggregated paths for multiple sites with no personalization', async () => {

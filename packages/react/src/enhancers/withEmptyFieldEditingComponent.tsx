@@ -54,7 +54,6 @@ export function withEmptyFieldEditingComponent<
   };
 
   if (options.isForwardRef) {
-    // eslint-disable-next-line react/display-name
     return forwardRef<RefElementType, FieldComponentProps>((props, ref) => {
       const EmptyFieldEditingComponent = getEmptyFieldEditingComponent(
         props as FieldComponentProps
@@ -69,7 +68,6 @@ export function withEmptyFieldEditingComponent<
     });
   }
 
-  // eslint-disable-next-line react/display-name
   return (props: FieldComponentProps) => {
     const EmptyFieldEditingComponent = getEmptyFieldEditingComponent(props);
     return (

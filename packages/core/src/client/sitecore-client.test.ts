@@ -1,4 +1,5 @@
 ﻿/* eslint-disable dot-notation */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
@@ -155,7 +156,6 @@ describe('SitecoreClient', () => {
               context: { site: { name: 'custom-site' } },
             },
           },
-          dictionary: { key: 'custom-dictionary' },
         }),
       };
 
@@ -724,7 +724,6 @@ describe('SitecoreClient', () => {
             context: { site: { name: 'default-site' } },
           },
         },
-        dictionary: { key1: 'value1', key2: 'value2' },
       };
 
       editingServiceStub.fetchEditingData.resolves(editingData);
@@ -734,7 +733,6 @@ describe('SitecoreClient', () => {
       expect(result).to.deep.include({
         locale: previewData.language,
         layout: editingData.layoutData,
-        dictionary: editingData.dictionary,
         mode: {
           name: LayoutServicePageState.Edit,
           isEditing: true,
@@ -750,7 +748,6 @@ describe('SitecoreClient', () => {
       expect(editingServiceStub.fetchEditingData.calledOnce).to.be.true;
       expect(
         editingServiceStub.fetchEditingData.calledWith({
-          siteName: previewData.site,
           itemId: previewData.itemId,
           language: previewData.language,
           version: previewData.version,
@@ -778,7 +775,6 @@ describe('SitecoreClient', () => {
             context: { site: { name: 'default-site' } },
           },
         },
-        dictionary: { key1: 'value1', key2: 'value2' },
       };
 
       editingServiceStub.fetchEditingData.resolves(editingData);
@@ -788,7 +784,6 @@ describe('SitecoreClient', () => {
       expect(result).to.deep.include({
         locale: previewData.language,
         layout: editingData.layoutData,
-        dictionary: editingData.dictionary,
         mode: {
           name: LayoutServicePageState.Preview,
           isNormal: false,
@@ -804,7 +799,6 @@ describe('SitecoreClient', () => {
       expect(editingServiceStub.fetchEditingData.calledOnce).to.be.true;
       expect(
         editingServiceStub.fetchEditingData.calledWith({
-          siteName: previewData.site,
           itemId: previewData.itemId,
           language: previewData.language,
           version: previewData.version,
@@ -830,7 +824,6 @@ describe('SitecoreClient', () => {
 
       const editingData = {
         layoutData: testLayoutData,
-        dictionary: { key1: 'value1', key2: 'value2' },
       };
 
       editingServiceStub.fetchEditingData.resolves(editingData);
@@ -901,12 +894,10 @@ describe('SitecoreClient', () => {
             },
           },
         },
-        dictionary: { key1: 'value1', key2: 'value2' },
       };
 
       editingServiceStub.fetchEditingData
         .withArgs({
-          siteName: previewData.site,
           itemId: previewData.itemId,
           language: previewData.language,
           version: previewData.version,
@@ -920,7 +911,6 @@ describe('SitecoreClient', () => {
       expect(
         editingServiceStub.fetchEditingData.calledWith(
           {
-            siteName: previewData.site,
             itemId: previewData.itemId,
             language: previewData.language,
             version: previewData.version,
@@ -934,7 +924,7 @@ describe('SitecoreClient', () => {
   });
 
   describe('getDesignLibraryData', () => {
-    it('should fetch component library data', async () => {
+    it('should fetch component library data in Normal mode', async () => {
       const componentLibData = {
         itemId: 'item-id',
         componentUid: 'comp-uid',
@@ -959,20 +949,14 @@ describe('SitecoreClient', () => {
           },
         },
       };
-      const dictionaryData = { key: 'value' };
 
       restComponentServiceStub.fetchComponentData.resolves(componentData);
-
-      editingServiceStub.fetchDictionaryData
-        .withArgs({ siteName: componentLibData.site, language: componentLibData.language })
-        .resolves(dictionaryData);
 
       const result = await sitecoreClient.getDesignLibraryData(componentLibData);
 
       expect(result).to.deep.include({
         locale: componentLibData.language,
         layout: componentData,
-        dictionary: dictionaryData,
         siteName: componentData.sitecore.context.site?.name,
         mode: {
           name: DesignLibraryMode.Normal,
@@ -985,13 +969,6 @@ describe('SitecoreClient', () => {
           },
         },
       });
-
-      expect(
-        editingServiceStub.fetchDictionaryData.calledWithMatch({
-          siteName: componentLibData.site,
-          language: componentLibData.language,
-        })
-      ).to.be.true;
 
       expect(
         restComponentServiceStub.fetchComponentData.calledWith({
@@ -1007,7 +984,7 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should fetch component library data', async () => {
+    it('should fetch component library data in VariantGeneration mode', async () => {
       const componentLibData = {
         itemId: 'item-id',
         componentUid: 'comp-uid',
@@ -1032,39 +1009,26 @@ describe('SitecoreClient', () => {
           },
         },
       };
-      const dictionaryData = { key: 'value' };
 
       restComponentServiceStub.fetchComponentData.resolves(componentData);
-
-      editingServiceStub.fetchDictionaryData
-        .withArgs({ siteName: componentLibData.site, language: componentLibData.language })
-        .resolves(dictionaryData);
 
       const result = await sitecoreClient.getDesignLibraryData(componentLibData);
 
       expect(result).to.deep.include({
         locale: componentLibData.language,
         layout: componentData,
-        dictionary: dictionaryData,
         siteName: componentData.sitecore.context.site?.name,
         mode: {
           name: DesignLibraryMode.VariantGeneration,
           isDesignLibrary: true,
           isNormal: false,
           isPreview: false,
-          isEditing: false,
+          isEditing: true,
           designLibrary: {
             isVariantGeneration: true,
           },
         },
       });
-
-      expect(
-        editingServiceStub.fetchDictionaryData.calledWithMatch({
-          siteName: componentLibData.site,
-          language: componentLibData.language,
-        })
-      ).to.be.true;
 
       expect(
         restComponentServiceStub.fetchComponentData.calledWith({
@@ -1114,7 +1078,7 @@ describe('SitecoreClient', () => {
       }
     });
 
-    it('should pass fetchOptions to both editingService and componentService when calling getDesignLibraryData', async () => {
+    it('should pass fetchOptions to componentService when calling getDesignLibraryData', async () => {
       const componentLibData = {
         itemId: 'item-id',
         componentUid: 'comp-uid',
@@ -1123,6 +1087,7 @@ describe('SitecoreClient', () => {
         renderingId: 'rendering-id',
         dataSourceId: 'datasource-id',
         version: '1',
+        mode: DesignLibraryMode.Normal,
       };
 
       const fetchOptions = {
@@ -1150,18 +1115,22 @@ describe('SitecoreClient', () => {
           },
         },
       };
-      const dictionaryData = { key: 'value' };
 
       restComponentServiceStub.fetchComponentData.resolves(componentData);
-      editingServiceStub.fetchDictionaryData.resolves(dictionaryData);
 
       await sitecoreClient.getDesignLibraryData(componentLibData, fetchOptions);
 
       expect(
-        editingServiceStub.fetchDictionaryData.calledWith(
+        restComponentServiceStub.fetchComponentData.calledWith(
           {
             siteName: componentLibData.site,
+            itemId: componentLibData.itemId,
             language: componentLibData.language,
+            componentUid: componentLibData.componentUid,
+            renderingId: componentLibData.renderingId,
+            dataSourceId: componentLibData.dataSourceId,
+            version: componentLibData.version,
+            mode: componentLibData.mode,
           },
           fetchOptions
         )
@@ -1222,7 +1191,7 @@ describe('SitecoreClient', () => {
         },
         isNormal: false,
         isPreview: false,
-        isEditing: false,
+        isEditing: true,
         isDesignLibrary: true,
       });
 
@@ -1233,7 +1202,7 @@ describe('SitecoreClient', () => {
         },
         isNormal: false,
         isPreview: false,
-        isEditing: false,
+        isEditing: true,
         isDesignLibrary: true,
       });
 
@@ -1303,13 +1272,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
         {
-          href:
-            'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);
@@ -1322,8 +1289,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);
@@ -1336,8 +1302,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href:
-            'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
           rel: 'stylesheet',
         },
       ]);

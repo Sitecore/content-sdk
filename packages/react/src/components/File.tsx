@@ -28,9 +28,9 @@ export const File: React.FC<FileProps> = ({ field, children, ...otherProps }) =>
   }
 
   // handle link directly on field for forgetful devs
-  const file = ((dynamicField as FileFieldValue).src
-    ? field
-    : dynamicField.value) as FileFieldValue;
+  const file = (
+    (dynamicField as FileFieldValue).src ? field : dynamicField.value
+  ) as FileFieldValue;
   if (!file) {
     return null;
   }

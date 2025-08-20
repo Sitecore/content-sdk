@@ -3,5 +3,14 @@
   "trailingComma": "es5",
   "tabWidth": 2,
   "arrowParens": "always",
-  "printWidth": 100
+  "printWidth": 100,
+  "endOfLine": "crlf",
+  "overrides": [
+    {
+      "files": ["*.graphql"],
+      "options": {
+        "parser": "graphql"
+      }
+    }
+  ]
 }

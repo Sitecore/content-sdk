@@ -12,6 +12,30 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+## 1.1.0
+
+### 🎉 New Features & Improvements
+
+* Migration from ESlint 8 -> ESLint 9 and introduction of the new Flat Config file ([#176](https://github.com/Sitecore/content-sdk/pull/176))
+* Code generation for Design Library enablers:
+  - `[core]` `[nextjs]` Add import-map generation ([#157](https://github.com/Sitecore/content-sdk/pull/157))([#167](https://github.com/Sitecore/content-sdk/pull/167))([#170](https://github.com/Sitecore/content-sdk/pull/170))([#171](https://github.com/Sitecore/content-sdk/pull/171))([#175](https://github.com/Sitecore/content-sdk/pull/175))([#177](https://github.com/Sitecore/content-sdk/pull/177))([#187](https://github.com/Sitecore/content-sdk/pull/187))
+    - New `writeImportMap()`, `combineImportEntries()` methods and `defaultImportEntries` export available from `@sitecore-content-sdk/nextjs/codegen`
+  - Dynamic component rendering ([#163](https://github.com/Sitecore/content-sdk/pull/163))
+  - Updated API endpoint to new Edge Platform format ([#162](https://github.com/Sitecore/content-sdk/pull/162))
+  - Ensure editing state is enabled in Design Library mode ([#181](https://github.com/Sitecore/content-sdk/pull/181))
+* `[core]` Ensure displayName paths are properly UTF-8 encoded. ([#179](https://github.com/Sitecore/content-sdk/pull/179))
+* `[react]` Enhanced the Design Library cache buster format to hh-dd-mm-yyyy ([#188](https://github.com/Sitecore/content-sdk/pull/188))
+
+### 🐛 Bug Fixes
+
+* `[core]` Duplicate dictionary requests in editing, preview, and design library modes ([#161](https://github.com/Sitecore/content-sdk/pull/161))
+  - `SitecoreClient.getPreview` and `SitecoreClient.getDesignLibraryData` no longer request dictionary data. `Page` type is not affected.
+  - Updated `EditingService.fetchEditingData`:
+    - Removed `siteName` parameter.
+    - No longer requests and returns dictionary data.
+* `[cli]` Code extraction extends XM Cloud Rendering Host build by several minutes ([#173](https://github.com/Sitecore/content-sdk/pull/173))
+* `[core]` Fix redirect regex processing to prevent over-escaping of question marks in regex patterns ([#174](https://github.com/Sitecore/content-sdk/pull/174))
+
 ## 1.0.1
 
 ### 🐛 Bug Fixes

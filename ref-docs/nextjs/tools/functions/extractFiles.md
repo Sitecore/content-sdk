@@ -8,7 +8,7 @@
 
 > **extractFiles**(`args`): () => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/tools/codegen/extract-files.ts:23](https://github.com/Sitecore/content-sdk/blob/f3d9dc1c3ba47b83da1bdfcc1e79c93c32080015/packages/nextjs/src/tools/codegen/extract-files.ts#L23)
+Defined in: [nextjs/src/tools/codegen/extract-files.ts:23](https://github.com/Sitecore/content-sdk/blob/ae3db5a6514fe5b8ef9bb8778ae04f0baab8613d/packages/nextjs/src/tools/codegen/extract-files.ts#L23)
 
 Extracts components from the app folder and sends them to XMCloud.
 

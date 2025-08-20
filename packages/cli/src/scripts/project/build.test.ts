@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import * as loadConfigModule from '../../utils/load-config';
@@ -14,6 +15,7 @@ describe('build command', () => {
       },
     };
     loadCliConfigStub = sinon.stub(loadConfigModule, 'default').returns(mockConfig);
+    sinon.stub(process, 'exit');
   });
 
   afterEach(() => {

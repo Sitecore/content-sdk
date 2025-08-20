@@ -1,4 +1,6 @@
-﻿/* eslint-disable dot-notation */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable dot-notation */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
@@ -341,6 +343,7 @@ describe('MiddlewareBase', () => {
 
     it('should get default site info when site cookie is provided', () => {
       class MockSiteResolver extends SiteResolver {
+        // eslint-disable-next-line no-unused-vars
         getByName = sinon.stub().callsFake((_siteName: string) => undefined);
       }
 
@@ -482,9 +485,9 @@ describe('defineMiddleware', () => {
     };
 
     const req = {} as NextRequest;
-    const res = ({
+    const res = {
       params: [],
-    } as unknown) as NextResponse;
+    } as unknown as NextResponse;
     const ev = {} as NextFetchEvent;
 
     const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev, res);

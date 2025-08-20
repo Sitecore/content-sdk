@@ -402,19 +402,11 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
     // If we're in Pages preview (editing) mode, prefetch the editing data
-    const {
-      site,
-      itemId,
-      language,
-      version,
-      variantIds,
-      layoutKind,
-      mode,
-    } = previewData as EditingPreviewData;
+    const { site, itemId, language, version, variantIds, layoutKind, mode } =
+      previewData as EditingPreviewData;
 
     const data = await this.editingService.fetchEditingData(
       {
-        siteName: site,
         itemId,
         language,
         version,
@@ -427,13 +419,12 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!data) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}`);
     }
-    const page = {
+    const page: Page = {
       locale: language,
       layout: data.layoutData,
-      dictionary: data.dictionary,
       siteName: data.layoutData.sitecore.context.site?.name || site,
       mode: this.getPageMode(mode),
-    } as Page;
+    };
     const personalizeData = getGroomedVariantIds(variantIds);
     personalizeLayout(page.layout, personalizeData.variantId, personalizeData.componentVariantIds);
 
@@ -454,32 +445,19 @@ export class SitecoreClient implements BaseSitecoreClient {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
 
-    const {
-      itemId,
-      componentUid,
-      site,
-      language,
-      renderingId,
-      dataSourceId,
-      version,
-      mode,
-    } = designLibData;
+    const { itemId, componentUid, site, language, renderingId, dataSourceId, version, mode } =
+      designLibData;
 
-    const componentData = await this.componentService.fetchComponentData({
-      siteName: site,
-      itemId,
-      language,
-      componentUid,
-      renderingId,
-      dataSourceId,
-      version,
-      mode,
-    });
-
-    const dictionaryData = await this.editingService.fetchDictionaryData(
+    const componentData = await this.componentService.fetchComponentData(
       {
         siteName: site,
+        itemId,
         language,
+        componentUid,
+        renderingId,
+        dataSourceId,
+        version,
+        mode,
       },
       fetchOptions
     );
@@ -487,13 +465,12 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!componentData) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(designLibData)}`);
     }
-    const page = {
+    const page: Page = {
       locale: designLibData.language,
       layout: componentData,
-      dictionary: dictionaryData,
       siteName: componentData.sitecore.context.site?.name || site,
       mode: this.getPageMode(mode),
-    } as Page;
+    };
     return page;
   }
 
@@ -588,6 +565,7 @@ export class SitecoreClient implements BaseSitecoreClient {
           throw new Error('REDIRECT_404');
         }
         return xmlResponse.data;
+      // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error('REDIRECT_404');
       }
@@ -681,11 +659,15 @@ export class SitecoreClient implements BaseSitecoreClient {
         pageMode.isEditing = true;
         break;
       case DesignLibraryMode.Normal:
+        pageMode.isDesignLibrary = true;
+        break;
       case DesignLibraryMode.Metadata:
         pageMode.isDesignLibrary = true;
+        pageMode.isEditing = true;
         break;
       case DesignLibraryMode.VariantGeneration:
         pageMode.isDesignLibrary = true;
+        pageMode.isEditing = true;
         pageMode.designLibrary.isVariantGeneration = true;
         break;
       default:

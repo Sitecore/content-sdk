@@ -7,16 +7,18 @@ import {
   DesignLibraryStatus,
   getDesignLibraryScriptLink,
   isDesignLibraryMode,
-  getDesignLibraryComponentPropsEvent,
-  getDesignLibraryImportMapEvent,
-  addComponentPreviewHandler,
 } from './design-library';
 import testComponent from '../test-data/component-editing-data';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { DesignLibraryMode } from './models';
 
 describe('component library utils', () => {
-  const debugSpy = sinon.spy(console, 'debug');
+  let debugSpy: sinon.SinonSpy;
+
+  beforeEach(() => {
+    debugSpy = sinon.spy(console, 'debug');
+  });
+
   describe('updateComponentHandler', () => {
     it('should abort when origin is empty', () => {
       const message = new MessageEvent('message');
@@ -158,148 +160,6 @@ describe('component library utils', () => {
     });
   });
 
-  describe('addComponentPreviewHandler', () => {
-    let windowSpy: sinon.SinonSpy;
-    let addEventListenerSpy: sinon.SinonSpy;
-    let removeEventListenerSpy: sinon.SinonSpy;
-    let callbackStub: sinon.SinonStub;
-
-    beforeEach(() => {
-      addEventListenerSpy = sinon.spy();
-      removeEventListenerSpy = sinon.spy();
-      global.window = {} as any;
-      windowSpy = sinon.stub(global, 'window' as any).value({
-        addEventListener: addEventListenerSpy,
-        removeEventListener: removeEventListenerSpy,
-      });
-      callbackStub = sinon.stub();
-    });
-
-    afterEach(() => {
-      windowSpy.restore();
-    });
-
-    it('should add event listener for message events', () => {
-      const unsubscribe = addComponentPreviewHandler(callbackStub);
-      expect(addEventListenerSpy.calledOnce).to.be.true;
-      expect(addEventListenerSpy.calledWith('message')).to.be.true;
-      expect(typeof unsubscribe).to.equal('function');
-    });
-
-    it('should ignore events without origin', () => {
-      addComponentPreviewHandler(callbackStub);
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        data: { name: 'component:generation:component-preview' },
-      });
-      handler(message);
-      expect(callbackStub.called).to.be.false;
-    });
-
-    it('should ignore events with wrong event name', () => {
-      addComponentPreviewHandler(callbackStub);
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
-        data: { name: 'component:test' },
-      });
-      handler(message);
-      expect(callbackStub.called).to.be.false;
-    });
-
-    it('should ignore events without data', () => {
-      addComponentPreviewHandler(callbackStub);
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
-        data: null,
-      });
-      handler(message);
-      expect(callbackStub.called).to.be.false;
-    });
-
-    it('should handle valid component preview events', () => {
-      addComponentPreviewHandler(callbackStub);
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const eventData = {
-        name: 'component:generation:component-preview',
-        message: {
-          uid: 'test-uid',
-          code: {},
-          styles: {},
-          imports: {},
-        },
-      };
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
-        data: eventData,
-      });
-
-      handler(message);
-
-      expect(debugSpy.calledWith('Component Library: message received', eventData)).to.be.true;
-      expect(callbackStub.calledOnce).to.be.true;
-      expect(callbackStub.calledWith(null)).to.be.true;
-    });
-
-    it('should unsubscribe from component preview event', () => {
-      const unsubscribe = addComponentPreviewHandler(callbackStub);
-
-      if (unsubscribe) {
-        unsubscribe();
-      }
-
-      expect(removeEventListenerSpy.calledOnce).to.be.true;
-      expect(removeEventListenerSpy.calledWith('message')).to.be.true;
-    });
-  });
-
-  describe('getDesignLibraryImportMapEvent', () => {
-    it('should return a valid import map event', () => {
-      const importMapEvent = getDesignLibraryImportMapEvent('uid-1', [
-        {
-          module: 'react',
-          exports: [{ name: 'default', value: 'React' }],
-        },
-      ]);
-
-      expect(importMapEvent).to.deep.equal({
-        name: 'component:generation:import-map',
-        message: {
-          uid: 'uid-1',
-          importsMap: [{ module: 'react', exports: [{ name: 'default', value: 'React' }] }],
-        },
-      });
-    });
-  });
-
-  describe('getDesignLibraryComponentPropsEvent', () => {
-    it('should return a valid component props event', () => {
-      const componentPropsEvent = getDesignLibraryComponentPropsEvent(
-        'uid-1',
-        {
-          content: { value: 'test' },
-        },
-        {
-          param1: 'value1',
-        }
-      );
-
-      expect(componentPropsEvent).to.deep.equal({
-        name: 'component:generation:component-props',
-        message: {
-          uid: 'uid-1',
-          fields: {
-            content: { value: 'test' },
-          },
-          parameters: {
-            param1: 'value1',
-          },
-        },
-      });
-    });
-  });
-
   describe('getDesignLibraryStatusEvent', () => {
     it('should return a valid status event', () => {
       const statusEvent = getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'uid-1');
@@ -351,6 +211,6 @@ describe('component library utils', () => {
   });
 
   afterEach(() => {
-    debugSpy.resetHistory();
+    debugSpy.restore();
   });
 });

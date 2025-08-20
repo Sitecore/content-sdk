@@ -109,7 +109,7 @@ describe('ComponentPropsService', () => {
     ]);
 
     const result = await service.fetchComponentProps({
-      components: (ssrComponentMap as unknown) as ComponentMap<NextjsContentSdkComponent>,
+      components: ssrComponentMap as unknown as ComponentMap<NextjsContentSdkComponent>,
       context: ssrContext,
       layoutData,
     });
@@ -131,7 +131,7 @@ describe('ComponentPropsService', () => {
   });
 
   it('should fetch component props with SSR context using lazy loading module', async () => {
-    const ssrComponentMap = (new Map<string, unknown>([
+    const ssrComponentMap = new Map<string, unknown>([
       [
         'namex11',
         {
@@ -158,7 +158,7 @@ describe('ComponentPropsService', () => {
           getComponentServerProps: fetchFn('x24SSRData'),
         },
       ],
-    ]) as unknown) as ComponentMap<NextjsContentSdkComponent>;
+    ]) as unknown as ComponentMap<NextjsContentSdkComponent>;
 
     const result = await service.fetchComponentProps({
       components: ssrComponentMap,
@@ -183,7 +183,7 @@ describe('ComponentPropsService', () => {
   });
 
   it('should fetch component props with SSG context', async () => {
-    const ssgComponentMap = (new Map<string, unknown>([
+    const ssgComponentMap = new Map<string, unknown>([
       [
         'namex11',
         {
@@ -208,7 +208,7 @@ describe('ComponentPropsService', () => {
           getComponentServerProps: fetchFn('x24StaticData'),
         },
       ],
-    ]) as unknown) as ComponentMap<NextjsContentSdkComponent>;
+    ]) as unknown as ComponentMap<NextjsContentSdkComponent>;
 
     const result = await service.fetchComponentProps({
       components: ssgComponentMap,
@@ -233,7 +233,7 @@ describe('ComponentPropsService', () => {
   });
 
   it('should fetch component props with SSG context using lazy loading module', async () => {
-    const ssgComponentMap = (new Map<string, unknown>([
+    const ssgComponentMap = new Map<string, unknown>([
       [
         'namex11',
         {
@@ -260,7 +260,7 @@ describe('ComponentPropsService', () => {
           getComponentServerProps: fetchFn('x24StaticData'),
         },
       ],
-    ]) as unknown) as ComponentMap<NextjsContentSdkComponent>;
+    ]) as unknown as ComponentMap<NextjsContentSdkComponent>;
 
     const result = await service.fetchComponentProps({
       components: ssgComponentMap,

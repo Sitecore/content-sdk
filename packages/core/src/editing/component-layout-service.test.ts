@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-expressions */
 import { expect, use } from 'chai';
 import spies from 'chai-spies';
@@ -123,6 +124,33 @@ describe('ComponentLayoutService', () => {
       .fetchComponentData(testInput)
       .then((layoutServiceData: LayoutServiceData & NativeDataFetcherConfig) => {
         expect(layoutServiceData).to.deep.equal(testExpectedData);
+      });
+  });
+
+  it('should fetch component data with custom fetch options', () => {
+    nock(SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        my_header: 'my_value',
+        sc_editMode: 'false',
+      },
+    })
+      .get(
+        '/layout/component?sitecoreContextId=test-context-id&item=123&uid=456&sc_site=supersite&sc_lang=en'
+      )
+      .reply(200, () => defaultTestData);
+
+    const service = new ComponentLayoutService({
+      contextId,
+    });
+
+    return service
+      .fetchComponentData(defaultTestInput, {
+        headers: {
+          my_header: 'my_value',
+        },
+      })
+      .then((layoutServiceData: LayoutServiceData & NativeDataFetcherConfig) => {
+        expect(layoutServiceData).to.deep.equal(defaultTestData);
       });
   });
 

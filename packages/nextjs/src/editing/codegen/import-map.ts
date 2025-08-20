@@ -23,7 +23,7 @@ import React, {
   memo,
   Suspense,
 } from 'react';
-import { ImportEntry } from '@sitecore-content-sdk/core/editing';
+import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
 import {
   Link,
   Text,
@@ -37,7 +37,7 @@ import {
   withDatasourceCheck,
   CdpHelper,
   withSitecore,
-} from '..';
+} from '../..';
 
 export const defaultImportEntries: ImportEntry[] = [
   /* -------------------- React -------------------- */
@@ -45,7 +45,6 @@ export const defaultImportEntries: ImportEntry[] = [
     module: 'react',
     exports: [
       { name: 'default', value: React },
-      { name: '*', value: React },
       { name: 'Children', value: Children },
       { name: 'Fragment', value: Fragment },
       { name: 'createElement', value: createElement },
@@ -92,3 +91,37 @@ export const defaultImportEntries: ImportEntry[] = [
     ],
   },
 ];
+
+export const combineImportEntries = (
+  defaultImportEntries: ImportEntry[],
+  generatedImportEntries: ImportEntry[]
+): ImportEntry[] => {
+  const combinedEntries: ImportEntry[] = [];
+  const importMap = new Map<string, ImportEntry>();
+
+  // add generated entries to the map, overwriting existing ones
+  generatedImportEntries.forEach((entry) => {
+    importMap.set(entry.module, entry);
+  });
+
+  // add default entries to the map, if not present
+  defaultImportEntries.forEach((defaultEntry) => {
+    const mapEntry = importMap.get(defaultEntry.module);
+    if (mapEntry) {
+      defaultEntry.exports.forEach((defaultExportsEntry) => {
+        if (!mapEntry.exports.some((e) => e.name === defaultExportsEntry.name)) {
+          mapEntry.exports.push(defaultExportsEntry);
+        }
+      });
+    } else {
+      importMap.set(defaultEntry.module, defaultEntry);
+    }
+  });
+
+  // convert map back to array
+  importMap.forEach((value) => {
+    combinedEntries.push(value);
+  });
+
+  return combinedEntries;
+};

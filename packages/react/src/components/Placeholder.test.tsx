@@ -1,7 +1,8 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import {
   ComponentRendering,
   LayoutServicePageState,
@@ -102,10 +103,9 @@ describe('<Placeholder />', () => {
       it('should render a placeholder with given key', () => {
         const page = getPage();
         page.layout = dataSet.data;
-        const component = (dataSet.data.sitecore.route.placeholders.main as (
-          | ComponentRendering
-          | RouteData
-        )[]).find((c) => (c as ComponentRendering).componentName);
+        const component = (
+          dataSet.data.sitecore.route.placeholders.main as (ComponentRendering | RouteData)[]
+        ).find((c) => (c as ComponentRendering).componentName);
         const phKey = 'page-content';
 
         const renderedComponent = render(
@@ -573,7 +573,7 @@ it('should not render Suspense when disableSuspense is true', async () => {
 
 it('should render null for unknown placeholder', () => {
   const page = getPage();
-  const route = ({
+  const route = {
     placeholders: {
       main: [
         {
@@ -581,7 +581,7 @@ it('should render null for unknown placeholder', () => {
         },
       ],
     },
-  } as unknown) as RouteData;
+  } as unknown as RouteData;
   page.layout = {
     sitecore: {
       context: {},
@@ -612,7 +612,7 @@ it('should render error message on error', () => {
     throw Error('an error occured');
   });
 
-  const route = ({
+  const route = {
     placeholders: {
       main: [
         {
@@ -620,7 +620,7 @@ it('should render error message on error', () => {
         },
       ],
     },
-  } as unknown) as RouteData;
+  } as unknown as RouteData;
   const page = getPage();
   page.layout = {
     sitecore: {
@@ -655,7 +655,7 @@ it('should render error message on error, only for the errored component', () =>
   });
   components.set('Foo', () => <div className="foo-class">foo</div>);
 
-  const route = ({
+  const route = {
     placeholders: {
       main: [
         {
@@ -666,7 +666,7 @@ it('should render error message on error, only for the errored component', () =>
         },
       ],
     },
-  } as unknown) as RouteData;
+  } as unknown as RouteData;
   const page = getPage();
   page.layout = {
     sitecore: {
@@ -706,7 +706,7 @@ it('should render custom errorComponent on error, if provided', () => {
 
   const CustomError: React.FC = () => <div className="custom-error">Custom Error</div>;
 
-  const route = ({
+  const route = {
     placeholders: {
       main: [
         {
@@ -714,7 +714,7 @@ it('should render custom errorComponent on error, if provided', () => {
         },
       ],
     },
-  } as unknown) as RouteData;
+  } as unknown as RouteData;
   page.layout = {
     sitecore: {
       context: {},

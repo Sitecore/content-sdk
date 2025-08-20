@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import debug from 'debug';
 import isServer from './utils/is-server';
 

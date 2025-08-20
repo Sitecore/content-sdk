@@ -43,8 +43,8 @@ export const extractFiles = (args: ExtractFilesConfig) => {
     const basePath = process.cwd();
 
     try {
-      // MESH_URL is temporary option to use until mesh is onboarded into Edge Proxy
-      const targetUrl = process.env.SITECORE_MESH_URL || args.scConfig.api.edge.edgeUrl;
+      // Use Edge Platform mesh endpoint - staging is ready, prod QA in progress
+      const targetUrl = args.scConfig.api.edge.edgeUrl;
       const { accessToken } = await auth.clientCredentialsFlow(authParams);
       if (!accessToken) {
         console.error(chalk.red('Failed to get access token, aborting code extraction'));

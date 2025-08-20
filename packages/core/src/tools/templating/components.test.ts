@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { getComponentList } from './components';
 import { ComponentFile } from '../../../tools';
+import path from 'path';
 
 describe('components', () => {
   const sandbox = sinon.createSandbox();
@@ -17,7 +18,12 @@ describe('components', () => {
 
     it('should return results when one of "paths" is a glob pattern', () => {
       const items = [
-        { path: 'src/test-data/components/Bar', componentName: 'Bar', moduleName: 'Bar' },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: path.normalize('src/test-data/components/Bar.tsx'),
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
       ];
 
       const result = getComponentList(['src/test-data/components/*.tsx']);
@@ -26,12 +32,33 @@ describe('components', () => {
 
     it('should return results with all folded paths when path is a non-glob path', () => {
       const items = [
-        { path: 'src/test-data/components/Qux', componentName: 'Qux', moduleName: 'Qux' },
-        { path: 'src/test-data/components/Foo', componentName: 'Foo', moduleName: 'Foo' },
-        { path: 'src/test-data/components/Baz', componentName: 'Baz', moduleName: 'Baz' },
-        { path: 'src/test-data/components/Bar', componentName: 'Bar', moduleName: 'Bar' },
         {
-          path: 'src/test-data/components/folded/Folded',
+          importPath: 'src/test-data/components/Qux',
+          filePath: path.normalize('src/test-data/components/Qux.js'),
+          componentName: 'Qux',
+          moduleName: 'Qux',
+        },
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: path.normalize('src/test-data/components/Foo.jsx'),
+          componentName: 'Foo',
+          moduleName: 'Foo',
+        },
+        {
+          importPath: 'src/test-data/components/Baz',
+          filePath: path.normalize('src/test-data/components/Baz.ts'),
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: path.normalize('src/test-data/components/Bar.tsx'),
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/folded/Folded',
+          filePath: path.normalize('src/test-data/components/folded/Folded.tsx'),
           componentName: 'Folded',
           moduleName: 'Folded',
         },
@@ -43,12 +70,33 @@ describe('components', () => {
 
     it('should filter out results that are not components', () => {
       const items = [
-        { path: 'src/test-data/components/Qux', componentName: 'Qux', moduleName: 'Qux' },
-        { path: 'src/test-data/components/Foo', componentName: 'Foo', moduleName: 'Foo' },
-        { path: 'src/test-data/components/Baz', componentName: 'Baz', moduleName: 'Baz' },
-        { path: 'src/test-data/components/Bar', componentName: 'Bar', moduleName: 'Bar' },
         {
-          path: 'src/test-data/components/folded/Folded',
+          importPath: 'src/test-data/components/Qux',
+          filePath: path.normalize('src/test-data/components/Qux.js'),
+          componentName: 'Qux',
+          moduleName: 'Qux',
+        },
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: path.normalize('src/test-data/components/Foo.jsx'),
+          componentName: 'Foo',
+          moduleName: 'Foo',
+        },
+        {
+          importPath: 'src/test-data/components/Baz',
+          filePath: path.normalize('src/test-data/components/Baz.ts'),
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: path.normalize('src/test-data/components/Bar.tsx'),
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/folded/Folded',
+          filePath: path.normalize('src/test-data/components/folded/Folded.tsx'),
           componentName: 'Folded',
           moduleName: 'Folded',
         },
@@ -60,10 +108,30 @@ describe('components', () => {
 
     it('should return result when "paths" contain exact paths to jsx, tsx, ts and js components', () => {
       const items = [
-        { path: 'src/test-data/components/Foo', componentName: 'Foo', moduleName: 'Foo' },
-        { path: 'src/test-data/components/Bar', componentName: 'Bar', moduleName: 'Bar' },
-        { path: 'src/test-data/components/Baz', componentName: 'Baz', moduleName: 'Baz' },
-        { path: 'src/test-data/components/Qux', componentName: 'Qux', moduleName: 'Qux' },
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: path.normalize('src/test-data/components/Foo.jsx'),
+          componentName: 'Foo',
+          moduleName: 'Foo',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: path.normalize('src/test-data/components/Bar.tsx'),
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/Baz',
+          filePath: path.normalize('src/test-data/components/Baz.ts'),
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Qux',
+          filePath: path.normalize('src/test-data/components/Qux.js'),
+          componentName: 'Qux',
+          moduleName: 'Qux',
+        },
       ];
 
       const result = getComponentList([
@@ -93,10 +161,30 @@ describe('components', () => {
         'src/test-data/components/Qux.js',
       ];
       const expected = [
-        { path: 'src/test-data/components/Foo', componentName: 'Foo', moduleName: 'Foo' },
-        { path: 'src/test-data/components/Bar', componentName: 'Bar', moduleName: 'Bar' },
-        { path: 'src/test-data/components/Baz', componentName: 'Baz', moduleName: 'Baz' },
-        { path: 'src/test-data/components/Qux', componentName: 'Qux', moduleName: 'Qux' },
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: 'src/test-data/components/Foo.jsx',
+          componentName: 'Foo',
+          moduleName: 'Foo',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: 'src/test-data/components/Bar.tsx',
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/Baz',
+          filePath: 'src/test-data/components/Baz.ts',
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Qux',
+          filePath: 'src/test-data/components/Qux.js',
+          componentName: 'Qux',
+          moduleName: 'Qux',
+        },
       ];
 
       const globSyncStub = sandbox.stub(require('glob'), 'sync').returns(stubbedPaths);
@@ -115,10 +203,30 @@ describe('components', () => {
         'src\\test-data\\components\\Qux.js',
       ];
       const expected = [
-        { path: 'src/test-data/components/Foo', componentName: 'Foo', moduleName: 'Foo' },
-        { path: 'src/test-data/components/Bar', componentName: 'Bar', moduleName: 'Bar' },
-        { path: 'src/test-data/components/Baz', componentName: 'Baz', moduleName: 'Baz' },
-        { path: 'src/test-data/components/Qux', componentName: 'Qux', moduleName: 'Qux' },
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: 'src\\test-data\\components\\Foo.jsx',
+          componentName: 'Foo',
+          moduleName: 'Foo',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: 'src\\test-data\\components\\Bar.tsx',
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/Baz',
+          filePath: 'src\\test-data\\components\\Baz.ts',
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Qux',
+          filePath: 'src\\test-data\\components\\Qux.js',
+          componentName: 'Qux',
+          moduleName: 'Qux',
+        },
       ];
 
       const globSyncStub = sandbox.stub(require('glob'), 'sync').returns(stubbedPaths);

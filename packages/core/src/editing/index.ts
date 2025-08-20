@@ -26,12 +26,6 @@ export {
   DesignLibraryStatus,
   DesignLibraryStatusEvent,
   getDesignLibraryStatusEvent,
-  addComponentPreviewHandler,
-  DesignLibraryImportMapEvent,
-  DesignLibraryComponentPropsEvent,
-  getDesignLibraryComponentPropsEvent,
-  getDesignLibraryImportMapEvent,
-  ImportEntry,
   getDesignLibraryScriptLink,
   isDesignLibraryMode,
 } from './design-library';

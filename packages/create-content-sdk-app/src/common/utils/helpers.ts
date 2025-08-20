@@ -39,7 +39,9 @@ export const openJsonFile = (jsonFilePath: string) => {
  */
 export const writeJsonFile = (data: { [key: string]: unknown }, jsonFilePath: string) => {
   try {
-    fs.writeFileSync(jsonFilePath, JSON.stringify(data, null, 2), { encoding: 'utf8' });
+    fs.writeFileSync(jsonFilePath, JSON.stringify(data, null, 2), {
+      encoding: 'utf8',
+    });
   } catch (error) {
     console.log(chalk.red(`The following error occurred while trying to write ${jsonFilePath}:`));
     console.log(chalk.red(error));
