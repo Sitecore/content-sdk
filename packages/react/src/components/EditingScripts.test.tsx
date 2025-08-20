@@ -15,6 +15,7 @@ import {
   DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { PageMode } from '@sitecore-content-sdk/core/client';
+import sinon from 'sinon';
 
 describe('<EditingScripts />', () => {
   const mockComponentMap = new Map();
@@ -241,6 +242,48 @@ describe('<EditingScripts />', () => {
       expect(script1.getAttribute('src')).to.contain(
         `${getDesignLibraryScriptLink(stagingEdgeUrl)}?cb=`
       );
+    });
+
+    it('should append UTC cache-buster in HH-DD-MM-YYYY format (zero-padded) across edge cases', () => {
+      // Use sinon fake timers instead of overriding Date directly
+
+      const cases = [
+        { date: '2024-01-02T03:04:05.000Z', expected: '03-02-01-2024' }, // single-digit month/day/hour
+        { date: '2024-11-12T13:00:00.000Z', expected: '13-12-11-2024' }, // double-digit month/day/hour
+        { date: '2024-12-31T23:59:59.000Z', expected: '23-31-12-2024' }, // end of year
+        { date: '2025-01-01T00:00:00.000Z', expected: '00-01-01-2025' }, // start of year, hour 00
+        { date: '2024-03-09T09:00:00.000Z', expected: '09-09-03-2024' }, // leading zero hour/day/month
+      ];
+
+      cases.forEach(({ date, expected }) => {
+        const clock = sinon.useFakeTimers(new Date(date).getTime());
+        try {
+          const layoutData = getLayoutData({
+            pageEditing: false,
+            pageState: LayoutServicePageState.Normal,
+            renderingType: RenderingType.Component,
+            clientData: {},
+            clientScripts: [],
+          });
+
+          const page = { locale: 'en', layout: layoutData, mode };
+
+          const host = document.createElement('div');
+          const { container } = render(
+            <SitecoreProvider componentMap={mockComponentMap} page={page}>
+              <EditingScripts />
+            </SitecoreProvider>,
+            { container: host }
+          );
+
+          const script1 = container.querySelectorAll('script')[0];
+          const src = script1?.getAttribute('src') || '';
+          const cbValue = new URL(src).searchParams.get('cb');
+          expect(cbValue).to.equal(expected);
+        } finally {
+          clock.restore();
+        }
+      });
     });
   });
 });
