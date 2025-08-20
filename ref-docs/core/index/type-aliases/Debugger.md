@@ -8,4 +8,4 @@
 
 > **Debugger** = `debug.Debugger`
 
-Defined in: [packages/core/src/debug.ts:7](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/core/src/debug.ts#L7)
+Defined in: [packages/core/src/debug.ts:7](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/core/src/debug.ts#L7)

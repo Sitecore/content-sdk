@@ -6,7 +6,7 @@
 
 # Class: PersonalizeService
 
-Defined in: [packages/core/src/personalize/personalize-service.ts:45](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/core/src/personalize/personalize-service.ts#L45)
+Defined in: [packages/core/src/personalize/personalize-service.ts:45](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/core/src/personalize/personalize-service.ts#L45)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [packages/core/src/personalize/personalize-service.ts:45](https://gi
 
 > **new PersonalizeService**(`config`): `PersonalizeService`
 
-Defined in: [packages/core/src/personalize/personalize-service.ts:53](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/core/src/personalize/personalize-service.ts#L53)
+Defined in: [packages/core/src/personalize/personalize-service.ts:53](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/core/src/personalize/personalize-service.ts#L53)
 
 Fetch personalize data using the Sitecore GraphQL endpoint.
 
@@ -34,7 +34,7 @@ Fetch personalize data using the Sitecore GraphQL endpoint.
 
 > `protected` **config**: [`PersonalizeServiceConfig`](../type-aliases/PersonalizeServiceConfig.md)
 
-Defined in: [packages/core/src/personalize/personalize-service.ts:53](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/core/src/personalize/personalize-service.ts#L53)
+Defined in: [packages/core/src/personalize/personalize-service.ts:53](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/core/src/personalize/personalize-service.ts#L53)
 
 ## Accessors
 
@@ -44,7 +44,7 @@ Defined in: [packages/core/src/personalize/personalize-service.ts:53](https://gi
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [packages/core/src/personalize/personalize-service.ts:59](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/core/src/personalize/personalize-service.ts#L59)
+Defined in: [packages/core/src/personalize/personalize-service.ts:59](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/core/src/personalize/personalize-service.ts#L59)
 
 ##### Returns
 
@@ -56,7 +56,7 @@ Defined in: [packages/core/src/personalize/personalize-service.ts:59](https://gi
 
 > `protected` **getCacheClient**(): [`CacheClient`](../../index/interfaces/CacheClient.md)\<`PersonalizeQueryResult`\>
 
-Defined in: [packages/core/src/personalize/personalize-service.ts:123](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/core/src/personalize/personalize-service.ts#L123)
+Defined in: [packages/core/src/personalize/personalize-service.ts:123](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/core/src/personalize/personalize-service.ts#L123)
 
 Gets cache client implementation
 Override this method if custom cache needs to be used
@@ -73,7 +73,7 @@ CacheClient instance
 
 > `protected` **getCacheKey**(`itemPath`, `language`, `siteName`): `string`
 
-Defined in: [packages/core/src/personalize/personalize-service.ts:130](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/core/src/personalize/personalize-service.ts#L130)
+Defined in: [packages/core/src/personalize/personalize-service.ts:130](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/core/src/personalize/personalize-service.ts#L130)
 
 #### Parameters
 
@@ -93,7 +93,7 @@ Defined in: [packages/core/src/personalize/personalize-service.ts:130](https://g
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/personalize/personalize-service.ts:140](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/core/src/personalize/personalize-service.ts#L140)
+Defined in: [packages/core/src/personalize/personalize-service.ts:140](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/core/src/personalize/personalize-service.ts#L140)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -111,7 +111,7 @@ implementation
 
 > **getPersonalizeInfo**(`itemPath`, `language`, `siteName`): `Promise`\<`undefined` \| [`PersonalizeInfo`](../type-aliases/PersonalizeInfo.md)\>
 
-Defined in: [packages/core/src/personalize/personalize-service.ts:82](https://github.com/Sitecore/content-sdk/blob/99328d9fd48eda757de37ab7c1ded9e68027c5e9/packages/core/src/personalize/personalize-service.ts#L82)
+Defined in: [packages/core/src/personalize/personalize-service.ts:82](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/core/src/personalize/personalize-service.ts#L82)
 
 Get personalize information for a route
 
