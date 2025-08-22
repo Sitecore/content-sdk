@@ -1,6 +1,6 @@
 ﻿/* eslint-disable jsdoc/require-param */
 /* eslint-disable prefer-const */
-import React, { useEffect, useMemo, useState, JSX } from 'react';
+import React, { useEffect, useMemo, useState, JSX, useRef } from 'react';
 import { Placeholder } from './Placeholder';
 import {
   ComponentFields,
@@ -168,6 +168,8 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
   const [initError, setInitError] = useState<boolean>(false);
   const [importMapError, setImportMapError] = useState<boolean>(false);
   const [Component, setComponent] = useState<DynamicComponent>(null);
+  const postedReady = useRef(false);
+  const postedRenderedForKey = useRef<number | null>(null);
 
   if (!rendering) {
     return <div>No component found in layout data. Please check your layout data.</div>;
@@ -237,6 +239,29 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
       }
     };
   }, []);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    postedReady.current = true;
+    window.top?.postMessage(
+      getDesignLibraryStatusEvent(DesignLibraryStatus.READY, rendering.uid),
+      '*'
+    );
+  }, [rendering?.uid]);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (initError || importMapError) return undefined;
+
+    // prevent duplicates
+    if (postedRenderedForKey.current === renderKey) return undefined;
+    postedRenderedForKey.current = renderKey;
+
+    window.top?.postMessage(
+      getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, rendering.uid),
+      '*'
+    );
+  }, [renderKey, Component, initError, importMapError, rendering?.uid]);
 
   if (importMapError) {
     return (

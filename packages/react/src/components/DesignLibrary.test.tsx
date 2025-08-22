@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor, act } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../test-data/component-editing-data';
 import { SitecoreProvider } from './SitecoreProvider';
@@ -22,7 +22,7 @@ import {
 } from '@sitecore-content-sdk/core/editing';
 import { __mockDependencies } from './DesignLibrary';
 
-describe('<DesignLibrary />', () => {
+describe.only('<DesignLibrary />', () => {
   const sandbox = sinon.createSandbox();
   const postMessageSpy = sandbox.spy(global.window, 'postMessage');
   const consoleErrorSpy = sandbox.spy(console, 'error');
@@ -335,6 +335,53 @@ describe('<DesignLibrary />', () => {
 
     let callbackEvent: any = null;
 
+    type PreviewPayload = {
+      name: 'component:generation:component-preview';
+      message: {
+        uid: string;
+        code: { type: 'function'; content: string };
+        styles?: unknown;
+        imports?: unknown[];
+      };
+    };
+
+    async function sendUpdateEvent(
+      input: ComponentUpdateEventArgs['details'] | string | PreviewPayload
+    ): Promise<void> {
+      let payload: unknown;
+
+      if (typeof input === 'string') {
+        payload = JSON.parse(input);
+      } else if ((input as any)?.name === 'component:generation:component-preview') {
+        payload = input;
+      } else {
+        payload = {
+          name: 'component:update',
+          details: input as ComponentUpdateEventArgs['details'],
+        };
+      }
+
+      try {
+        (window as any).postMessage(payload, '*');
+      } catch {
+        try {
+          const evt = new (window as any).MessageEvent('message', {
+            data: payload,
+            origin: window.location.origin,
+          });
+          window.dispatchEvent(evt as Event);
+        } catch {
+          const evt = document.createEvent('Event');
+          evt.initEvent('message', false, true);
+          (evt as any).data = payload;
+          (evt as any).origin = window.location.origin;
+          window.dispatchEvent(evt as any);
+        }
+      }
+
+      await Promise.resolve();
+    }
+
     beforeEach(() => {
       page = getPage(getTestLayoutData().layoutData, variantGenerationMode);
 
@@ -380,6 +427,74 @@ describe('<DesignLibrary />', () => {
 
       // Check that we are in variant generation mode and rendering loading state
       expect(rendered.baseElement.innerHTML).to.contain('Loading preview...');
+    });
+
+    it('should fire component:ready event', () => {
+      const expectedReadyMessage = getDesignLibraryStatusEvent(
+        DesignLibraryStatus.READY,
+        'test-content'
+      );
+
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary loadImportMap={defaultImportMap} />
+        </SitecoreProvider>,
+        { container: document.body }
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        ['<main><div>Loading preview...</div></main>'].join('')
+      );
+
+      expect(
+        postMessageSpy
+          .getCalls()
+          .some((call) => JSON.stringify(call.args[0]) === JSON.stringify(expectedReadyMessage))
+      ).to.be.true;
+    });
+
+    it('should post "rendered" after a valid component preview is received', async () => {
+      const uid = 'test-content';
+
+      const sandbox = sinon.createSandbox();
+      const target: any = window.top ?? window;
+      if ((target.postMessage as any)?.restore) (target.postMessage as any).restore();
+      const postMessageSpy = sandbox.spy(target, 'postMessage');
+
+      render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary loadImportMap={defaultImportMap} />
+        </SitecoreProvider>
+      );
+
+      const previewJson = `{
+        "name": "component:generation:component-preview",
+        "message": {
+          "uid": "${uid}",
+          "code": {
+            "type": "function",
+            "content": "const Component=(props)=>React.createElement('div',{id:'test-id'},'QA Testing');\\nexports.Component=Component;"
+          },
+          "styles": { "type": "style-element", "content": "" },
+          "imports": [ { "module": "react", "export": "default", "alias": "React" } ]
+        }
+      }`;
+
+      await sendUpdateEvent(previewJson);
+
+      expect(
+        postMessageSpy
+          .getCalls()
+          .some((call) =>
+            JSON.stringify(call.args[0]).includes(
+              JSON.stringify(
+                getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
+              )
+            )
+          )
+      ).to.be.true;
+
+      sandbox.restore();
     });
 
     it('should render error message when component fails to initialize', async () => {
