@@ -1,4 +1,13 @@
 ﻿import { NextApiRequest, NextApiResponse } from 'next';
+import {
+  EDITING_FORWARD_ENABLED,
+  EDITING_PASS_THROUGH_HEADERS,
+} from './constants';
+import {
+  forwardInternally,
+  setCspFrameAncestors,
+  scrubOutgoingSetCookie,
+} from './internal-forward-helpers';
 import { debug } from '@sitecore-content-sdk/core';
 import {
   QUERY_PARAM_EDITING_SECRET,
@@ -194,6 +203,58 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         }
       );
     }
+
+    // ===== Option 4: Internal forward (feature-flagged) =====
+if (EDITING_FORWARD_ENABLED) {
+  try {
+    // 1) Resolve the target page route using your existing logic
+    const encodedRoute = encodeURI(query.route);
+    const route = this.config?.resolvePageUrl?.(encodedRoute) || encodedRoute;
+
+    // 2) Capture the preview cookies that were just set by setPreviewData
+    const previewSetCookies = res.getHeader('Set-Cookie');
+
+    // 3) NEVER leak preview cookies to the browser in Option 4
+    scrubOutgoingSetCookie(res);
+
+    // 4) Keep your CSP frame-ancestors on the final response
+    setCspFrameAncestors(res, EDITING_ALLOWED_ORIGINS);
+
+    // 5) Pass through any whitelisted query params (e.g., Vercel bypass tokens)
+    const extraQuery =
+      typeof this.getQueryParamsForPropagation === 'function'
+        ? this.getQueryParamsForPropagation(req.query)
+        : {};
+
+    // 6) Do the internal server-side fetch to render the page
+    const internalResp = await forwardInternally({
+      req,
+      res,
+      routePath: route,
+      previewSetCookies,
+      passThroughHeaders: EDITING_PASS_THROUGH_HEADERS ?? ['authorization'],
+      extraQuery,
+    });
+
+    // 7) Mirror relevant headers (never Set-Cookie) + mark the response
+    const contentType = internalResp.headers.get('content-type') || 'text/html; charset=utf-8';
+    const cacheControl = internalResp.headers.get('cache-control') || 'no-store';
+    const vary = internalResp.headers.get('vary');
+
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', cacheControl);
+    if (vary) res.setHeader('Vary', vary);
+    res.setHeader('x-editing-forward', '1'); // acceptance marker
+
+    // 8) Send the HTML and stop here
+    const html = await internalResp.text();
+    return res.status(internalResp.status).send(html);
+  } catch (err) {
+    // Safety net: fall back to legacy redirect if anything goes wrong
+    console.warn('[editing-forward] fallback to redirect:', (err as Error)?.message);
+  }
+}
+// ===== End Option 4 block =====
 
     // Cookies with the SameSite=Lax policy set by Next.js setPreviewData function causes CORS issue
     // when Next.js preview mode is activated, resulting the page to render in normal mode instead.
