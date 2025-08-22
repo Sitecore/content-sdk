@@ -22,7 +22,7 @@ import {
 } from '@sitecore-content-sdk/core/editing';
 import { __mockDependencies } from './DesignLibrary';
 
-describe.only('<DesignLibrary />', () => {
+describe('<DesignLibrary />', () => {
   const sandbox = sinon.createSandbox();
   const postMessageSpy = sandbox.spy(global.window, 'postMessage');
   const consoleErrorSpy = sandbox.spy(console, 'error');
