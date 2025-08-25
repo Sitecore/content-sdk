@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import { fireEvent, render, waitFor, act } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../test-data/component-editing-data';
 import { SitecoreProvider } from './SitecoreProvider';
