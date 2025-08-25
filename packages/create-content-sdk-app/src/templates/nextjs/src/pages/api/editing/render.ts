@@ -1,4 +1,5 @@
 ﻿import { EditingRenderMiddleware } from '@sitecore-content-sdk/nextjs/editing';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 /**
  * This Next.js API route is used to handle GET requests from Sitecore Editor.
@@ -23,6 +24,12 @@ export const config = {
 };
 
 // Wire up the EditingRenderMiddleware handler
-const handler = new EditingRenderMiddleware().getHandler();
+const baseHandler = new EditingRenderMiddleware().getHandler();
 
-export default handler;
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (process.env.NEXT_PUBLIC_EDITING_HOST !== 'true') {
+    res.status(404).end();
+    return;
+  }
+  return baseHandler(req, res);
+}

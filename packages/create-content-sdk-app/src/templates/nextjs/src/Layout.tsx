@@ -1,12 +1,12 @@
-﻿/**
+﻿// @ts-nocheck
+/**
  * This Layout is needed for Starter Kit.
  */
 import React, { JSX } from 'react';
 import Head from 'next/head';
-import { Placeholder, Field, DesignLibrary, Page } from '@sitecore-content-sdk/nextjs';
+import { Placeholder, Field, Page, DesignLibrary } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/content-sdk/SitecoreStyles';
-
 interface LayoutProps {
   page: Page;
 }
@@ -21,7 +21,19 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   const { route } = layout.sitecore;
   const fields = route?.fields as RouteFields;
   const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
-  const importMapDynamic = () => import('.sitecore/import-map');
+
+  const isEditingHost = process.env.NEXT_PUBLIC_EDITING_HOST === 'true';
+  let importMap: any = undefined;
+  if (isEditingHost) {
+    try {
+      importMap = require('.sitecore/import-map').default;
+    } catch (error) {
+      console.warn(
+        'DesignLibrary: failed to load .sitecore/import-map; variant generation may be limited.',
+        error
+      );
+    }
+  }
 
   return (
     <>
@@ -34,8 +46,8 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
 
       {/* root placeholder for the app, which we add components to using route data */}
       <div className={mainClassPageEditing}>
-        {mode.isDesignLibrary ? (
-          <DesignLibrary loadImportMap={importMapDynamic} />
+        {mode.isDesignLibrary && isEditingHost ? (
+          <DesignLibrary importMap={importMap} />
         ) : (
           <>
             <header>

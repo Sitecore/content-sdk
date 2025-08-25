@@ -17,10 +17,14 @@ export default defineCliConfig({
       extractFiles({
         scConfig,
       }),
-      writeImportMap({
-        paths: ['src/components'],
-        scConfig,
-      }),
+      ...(scConfig.disableCodeGeneration
+        ? []
+        : [
+            writeImportMap({
+              paths: ['src/components'],
+              scConfig,
+            }),
+          ]),
     ],
   },
   componentMap: {

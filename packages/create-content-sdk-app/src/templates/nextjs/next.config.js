@@ -22,6 +22,10 @@ const nextConfig = {
 
   // Disable the X-Powered-By header. Follows security best practices.
   poweredByHeader: false,
+  // Expose the editing host flag for build-time dead-code elimination
+  env: {
+    NEXT_PUBLIC_EDITING_HOST: process.env.NEXT_PUBLIC_EDITING_HOST || 'false',
+  },
 
   // use this configuration to ensure that only images from the whitelisted domains
   // can be served from the Next.js Image Optimization API
@@ -42,7 +46,7 @@ const nextConfig = {
   },
 
   async rewrites() {
-    return [
+    const routes = [
       // healthz check
       {
         source: '/healthz',
@@ -58,12 +62,17 @@ const nextConfig = {
         source: '/sitemap:id([\\w-]{0,}).xml',
         destination: '/api/sitemap'
       },
-      // feaas api route
-      {
+    ];
+
+    // Only add FEAAS editing route for Editing Host builds
+    if (process.env.NEXT_PUBLIC_EDITING_HOST === 'true') {
+      routes.push({
         source: '/feaas-render',
         destination: '/api/editing/feaas/render',
-      },
-    ];
+      });
+    }
+
+    return routes;
   },
 
   webpack: (config, options) => {

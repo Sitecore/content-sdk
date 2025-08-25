@@ -1,4 +1,5 @@
 ﻿import { FEAASRenderMiddleware } from '@sitecore-content-sdk/nextjs/editing';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 /**
  * This Next.js API route is used to handle GET requests from Sitecore Component Builder.
@@ -11,6 +12,12 @@
  */
 
 // Wire up the FEAASRenderMiddleware handler
-const handler = new FEAASRenderMiddleware().getHandler();
+const baseHandler = new FEAASRenderMiddleware().getHandler();
 
-export default handler;
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (process.env.NEXT_PUBLIC_EDITING_HOST !== 'true') {
+    res.status(404).end();
+    return;
+  }
+  return baseHandler(req, res);
+}
