@@ -14,7 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* `[react]` Add `component:status`events for VariantGeneration so the host can reliably track component lifecycle ([#190](https://github.com/Sitecore/content-sdk/pull/190))
+* `[react]` Add `component:status` events for VariantGeneration ([#190](https://github.com/Sitecore/content-sdk/pull/190))
 
 ## 1.1.0
 
