@@ -1,5 +1,6 @@
 ﻿import { NextApiRequest, NextApiResponse } from 'next';
-import { debug } from '@sitecore-content-sdk/core';
+import { STATIC_PROPS_ID, SERVER_PROPS_ID } from 'next/constants';
+import { debug, NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   QUERY_PARAM_EDITING_SECRET,
   EDITING_ALLOWED_ORIGINS,
@@ -59,11 +60,13 @@ export const isDesignLibraryPreviewData = (
  * which is required for Sitecore editing support.
  */
 export class EditingRenderMiddleware extends RenderMiddlewareBase {
+  private dataFetcher: NativeDataFetcher;
   /**
    * @param {EditingRenderMiddlewareConfig} [config] Editing render middleware config
    */
   constructor(public config?: EditingRenderMiddlewareConfig) {
     super();
+    this.dataFetcher = new NativeDataFetcher({ debugger: debug.editing });
   }
 
   /**
@@ -84,6 +87,29 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       ...EDITING_ALLOWED_ORIGINS,
     ].join(' ')}`;
   }
+
+  /**
+   * Server URL resolution. Use EDITING_INTERNAL_HOST_URL if provided, otherwise use host header
+   * Note we use https protocol on Vercel due to serverless function architecture.
+   * In all other scenarios, including localhost (with or without a proxy e.g. ngrok)
+   * and within a nodejs container, http protocol should be used.
+   *
+   * For information about the VERCEL environment variable, see
+   * https://vercel.com/docs/environment-variables#system-environment-variables
+   * @param {NextApiRequest} req
+   */
+  private resolveServerUrl = (req: NextApiRequest) => {
+    const internalHostUrl = process.env.EDITING_INTERNAL_HOST_URL;
+    if (internalHostUrl) {
+      return internalHostUrl;
+    }
+
+    // to preserve auth headers, use https if we're in our 3 main hosting options
+    const useHttps =
+      (process.env.VERCEL || process.env.SITECORE || process.env.NETLIFY) !== undefined;
+    // use https for requests with auth but also support unsecured http rendering hosts
+    return `${useHttps ? 'https' : 'http'}://${req.headers.host}`;
+  };
 
   private handler = async (req: EditingNextApiRequest, res: NextApiResponse): Promise<void> => {
     const { query, body, method, headers } = req;
@@ -229,21 +255,104 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       res.setHeader('Set-Cookie', modifiedCookies);
     }
 
-    const encodedRoute = encodeURI(query.route);
-    const route = this.config?.resolvePageUrl?.(encodedRoute) || encodedRoute;
-
-    debug.editing(
-      'editing render middleware end in %dms: redirect %o',
-      Date.now() - startTimestamp,
-      {
-        status: 307,
-        route,
-      }
-    );
-
     // Restrict the page to be rendered only within the allowed origins
     res.setHeader('Content-Security-Policy', this.getSCPHeader());
 
-    res.redirect(route);
+    const encodedRoute = encodeURI(query.route);
+    const route = this.config?.resolvePageUrl?.(encodedRoute) || encodedRoute;
+
+    // Resolve server URL
+    const base = this.resolveServerUrl(req);
+    const requestUrl = new URL(route, base);
+
+    // Get query string parameters to propagate on subsequent requests (e.g. for deployment protection bypass)
+    const params = this.getQueryParamsForPropagation(query);
+
+    // Get headers to propagate on subsequent requests
+    const propagatedHeaders = this.getHeadersForPropagation(headers);
+
+    // Grab the Next.js preview cookies to send on to the render request
+    const cookies = res.getHeader('Set-Cookie') as string[];
+    propagatedHeaders.cookie = `${
+      propagatedHeaders.cookie ? propagatedHeaders.cookie + ';' : ''
+    }${cookies.join(';')}`;
+
+    // Make actual render request for page route, passing on preview cookies as well as any approved query string parameters.
+    // Note timestamp effectively disables caching the request (no amount of cache headers seemed to do it)
+    for (const key in params) {
+      if ({}.hasOwnProperty.call(params, key)) {
+        requestUrl.searchParams.append(key, params[key]);
+      }
+    }
+    requestUrl.searchParams.append('timestamp', Date.now().toString());
+
+    try {
+      debug.editing('fetching page route for %s', query.route);
+
+      const pageRes = await this.dataFetcher
+        .get<string>(requestUrl.toString(), {
+          credentials: 'include',
+          headers: propagatedHeaders,
+        })
+        .catch((err) => {
+          // We need to handle not found error provided by Vercel
+          // for `fallback: false` pages
+          if (err.response.status === 404) {
+            return err.response;
+          }
+
+          throw err;
+        });
+
+      let html = pageRes.data;
+      if (!html || html.length === 0) {
+        throw new Error(`Failed to render html for ${query.route}`);
+      }
+
+      // replace phkey attribute with key attribute so that newly added renderings
+      // show correct placeholders, so save and refresh won't be needed after adding each rendering
+      html = html.replace(new RegExp('phkey', 'g'), 'key');
+
+      // When SSG, Next will attempt to perform a router.replace on the client-side to inject the query string parms
+      // to the router state. See https://github.com/vercel/next.js/blob/v10.0.3/packages/next/client/index.tsx#L169.
+      // However, this doesn't really work since at this point we're in the editor and the location.search has nothing
+      // to do with the Next route/page we've rendered. Beyond the extraneous request, this can result in a 404 with
+      // certain route configurations (e.g. multiple catch-all routes).
+      // The following line will trick it into thinking we're SSR, thus avoiding any router.replace.
+      html = html.replace(STATIC_PROPS_ID, SERVER_PROPS_ID);
+
+      // remove preview cookies to not leak them to the browser
+      const setCookieHeader = res.getHeader('Set-Cookie');
+      if (setCookieHeader && Array.isArray(setCookieHeader)) {
+        // Filter out Next.js preview cookies
+        const filteredCookies = setCookieHeader.filter(
+          (cookie: string) =>
+            !/^__next_preview_data=/.test(cookie) && !/^__prerender_bypass=/.test(cookie)
+        );
+
+        res.setHeader('Set-Cookie', filteredCookies);
+      }
+
+      debug.editing('editing render middleware end in %dms: %o', Date.now() - startTimestamp, {
+        status: 200,
+        route,
+      });
+
+      res.status(200).send(html);
+    } catch (err) {
+      debug.editing('error fetching page route %s: %o', requestUrl, err);
+      debug.editing('falling back to redirect method... ');
+
+      debug.editing(
+        'editing render middleware end in %dms: redirect %o',
+        Date.now() - startTimestamp,
+        {
+          status: 307,
+          route,
+        }
+      );
+
+      res.redirect(route);
+    }
   };
 }
