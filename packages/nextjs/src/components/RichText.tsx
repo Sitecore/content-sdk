@@ -27,6 +27,21 @@ export type RichTextProps = ReactRichTextProps & {
 
 export const prefetched: { [cacheKey: string]: boolean } = {};
 
+const useAppRouterWrapper = () => {
+  try {
+    return useAppRouter();
+  } catch {
+    return null;
+  }
+};
+
+const useCompatibleRouter = () => {
+  let pageRouter = usePageRouter();
+  let appRouter = useAppRouterWrapper();
+
+  return { pageRouter, appRouter };
+};
+
 export const RichText = (props: RichTextProps): JSX.Element => {
   const {
     internalLinksSelector = 'a[href^="/"]',
@@ -37,8 +52,7 @@ export const RichText = (props: RichTextProps): JSX.Element => {
   const hasText = props.field && props.field.value;
   const isEditing = editable && props.field && props.field.metadata;
 
-  const pageRouter = usePageRouter();
-  const appRouter = useAppRouter();
+  const { pageRouter, appRouter } = useCompatibleRouter();
   const richTextRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -58,7 +72,7 @@ export const RichText = (props: RichTextProps): JSX.Element => {
 
     if (pageRouter) {
       pageRouter.push(pathname, pathname, { locale: false });
-    } else {
+    } else if (appRouter) {
       appRouter.push(pathname);
     }
   };
@@ -77,7 +91,7 @@ export const RichText = (props: RichTextProps): JSX.Element => {
       const prefetch = () => {
         if (pageRouter) {
           pageRouter.prefetch(link.pathname, undefined, { locale: false });
-        } else {
+        } else if (appRouter) {
           appRouter.prefetch(link.pathname);
         }
 
