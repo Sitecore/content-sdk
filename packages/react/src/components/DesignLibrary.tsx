@@ -1,4 +1,5 @@
-﻿/* eslint-disable jsdoc/require-param */
+﻿'use client';
+/* eslint-disable jsdoc/require-param */
 /* eslint-disable prefer-const */
 import React, { useEffect, useMemo, useState, JSX } from 'react';
 import { Placeholder } from './Placeholder';
