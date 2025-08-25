@@ -21,6 +21,10 @@ import {
   DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { __mockDependencies } from './DesignLibrary';
+import {
+  DesignLibraryPreviewError,
+  getDesignLibraryComponentPreviewErrorEvent,
+} from '@sitecore-content-sdk/core/codegen';
 
 describe('<DesignLibrary />', () => {
   const sandbox = sinon.createSandbox();
@@ -382,17 +386,51 @@ describe('<DesignLibrary />', () => {
       expect(rendered.baseElement.innerHTML).to.contain('Loading preview...');
     });
 
-    it('should render error message when component fails to initialize', async () => {
-      const rendered = render(
+    it('should fire component:ready event', async () => {
+      const expectedReadyMessage = getDesignLibraryStatusEvent(
+        DesignLibraryStatus.READY,
+        'test-content'
+      );
+
+      const rendered = await render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary loadImportMap={defaultImportMap} />
         </SitecoreProvider>,
         { container: document.body }
       );
 
+      expect(rendered.baseElement.innerHTML).to.contain(
+        ['<main><div>Loading preview...</div></main>'].join('')
+      );
+
+      expect(
+        postMessageSpy
+          .getCalls()
+          .some((call) => JSON.stringify(call.args[0]) === JSON.stringify(expectedReadyMessage))
+      ).to.be.true;
+    });
+
+    it('should post "rendered" after a valid component preview is received', async () => {
+      await render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary loadImportMap={defaultImportMap} />
+        </SitecoreProvider>
+      );
+
       await waitFor(() => {
-        callbackEvent('Error', null);
-        expect(rendered.baseElement.innerHTML).to.contain('Error during component initialization');
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+        callbackEvent(null, TestComponent);
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((call) =>
+              JSON.stringify(call.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
+                )
+              )
+            )
+        ).to.be.true;
       });
     });
 
@@ -402,7 +440,7 @@ describe('<DesignLibrary />', () => {
         new Promise((_, reject) => {
           reject(initError);
         });
-      const rendered = render(
+      await render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary loadImportMap={errorImportMap} />
         </SitecoreProvider>,
@@ -410,10 +448,21 @@ describe('<DesignLibrary />', () => {
       );
 
       await waitFor(() => {
-        expect(rendered.baseElement.innerHTML).to.contain(
-          'No dynamic import map loaded. Please check a dynamic import map function is passed into Design Library'
-        );
-        expect(consoleErrorSpy.calledWith('Error loading import map:', initError)).to.be.true;
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((call) =>
+              JSON.stringify(call.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryComponentPreviewErrorEvent(
+                    'test-content',
+                    'Error loading import map: Error: Failed to load import map',
+                    DesignLibraryPreviewError.RenderInit
+                  )
+                )
+              )
+            )
+        ).to.be.true;
       });
     });
 
@@ -433,24 +482,8 @@ describe('<DesignLibrary />', () => {
       });
     });
 
-    it('should render error message when no rendering is found', () => {
-      // Set to empty array to simulate no rendering found
-      page.layout.sitecore.route!.placeholders['editing-componentmode-placeholder'] = [];
-
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        'No component found in layout data. Please check your layout data.'
-      );
-    });
-
     it('should render error message when no import map is provided', async () => {
-      const rendered = render(
+      await render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
@@ -458,9 +491,21 @@ describe('<DesignLibrary />', () => {
       );
 
       await waitFor(() => {
-        expect(rendered.baseElement.innerHTML).to.contain(
-          'No dynamic import map loaded. Please check a dynamic import map function is passed into Design Library'
-        );
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((call) =>
+              JSON.stringify(call.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryComponentPreviewErrorEvent(
+                    'test-content',
+                    'No loadImportMap prop provided. Please provide a dynamic import map function for DesignLibrary.',
+                    DesignLibraryPreviewError.RenderInit
+                  )
+                )
+              )
+            )
+        ).to.be.true;
       });
     });
 
