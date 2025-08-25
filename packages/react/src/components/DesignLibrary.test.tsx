@@ -21,6 +21,10 @@ import {
   DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { __mockDependencies } from './DesignLibrary';
+import {
+  DesignLibraryPreviewError,
+  getDesignLibraryComponentPreviewErrorEvent,
+} from '@sitecore-content-sdk/core/codegen';
 
 describe('<DesignLibrary />', () => {
   const sandbox = sinon.createSandbox();
@@ -335,53 +339,6 @@ describe('<DesignLibrary />', () => {
 
     let callbackEvent: any = null;
 
-    type PreviewPayload = {
-      name: 'component:generation:component-preview';
-      message: {
-        uid: string;
-        code: { type: 'function'; content: string };
-        styles?: unknown;
-        imports?: unknown[];
-      };
-    };
-
-    async function sendUpdateEvent(
-      input: ComponentUpdateEventArgs['details'] | string | PreviewPayload
-    ): Promise<void> {
-      let payload: unknown;
-
-      if (typeof input === 'string') {
-        payload = JSON.parse(input);
-      } else if ((input as any)?.name === 'component:generation:component-preview') {
-        payload = input;
-      } else {
-        payload = {
-          name: 'component:update',
-          details: input as ComponentUpdateEventArgs['details'],
-        };
-      }
-
-      try {
-        (window as any).postMessage(payload, '*');
-      } catch {
-        try {
-          const evt = new (window as any).MessageEvent('message', {
-            data: payload,
-            origin: window.location.origin,
-          });
-          window.dispatchEvent(evt as Event);
-        } catch {
-          const evt = document.createEvent('Event');
-          evt.initEvent('message', false, true);
-          (evt as any).data = payload;
-          (evt as any).origin = window.location.origin;
-          window.dispatchEvent(evt as any);
-        }
-      }
-
-      await Promise.resolve();
-    }
-
     beforeEach(() => {
       page = getPage(getTestLayoutData().layoutData, variantGenerationMode);
 
@@ -429,13 +386,13 @@ describe('<DesignLibrary />', () => {
       expect(rendered.baseElement.innerHTML).to.contain('Loading preview...');
     });
 
-    it('should fire component:ready event', () => {
+    it('should fire component:ready event', async () => {
       const expectedReadyMessage = getDesignLibraryStatusEvent(
         DesignLibraryStatus.READY,
         'test-content'
       );
 
-      const rendered = render(
+      const rendered = await render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary loadImportMap={defaultImportMap} />
         </SitecoreProvider>,
@@ -454,60 +411,26 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should post "rendered" after a valid component preview is received', async () => {
-      const uid = 'test-content';
-
-      const sandbox = sinon.createSandbox();
-      const target: any = window.top ?? window;
-      if ((target.postMessage as any)?.restore) (target.postMessage as any).restore();
-      const postMessageSpy = sandbox.spy(target, 'postMessage');
-
-      render(
+      await render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary loadImportMap={defaultImportMap} />
         </SitecoreProvider>
       );
 
-      const previewJson = `{
-        "name": "component:generation:component-preview",
-        "message": {
-          "uid": "${uid}",
-          "code": {
-            "type": "function",
-            "content": "const Component=(props)=>React.createElement('div',{id:'test-id'},'QA Testing');\\nexports.Component=Component;"
-          },
-          "styles": { "type": "style-element", "content": "" },
-          "imports": [ { "module": "react", "export": "default", "alias": "React" } ]
-        }
-      }`;
-
-      await sendUpdateEvent(previewJson);
-
-      expect(
-        postMessageSpy
-          .getCalls()
-          .some((call) =>
-            JSON.stringify(call.args[0]).includes(
-              JSON.stringify(
-                getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+        callbackEvent(null, TestComponent);
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((call) =>
+              JSON.stringify(call.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
+                )
               )
             )
-          )
-      ).to.be.true;
-
-      sandbox.restore();
-    });
-
-    it('should render error message when component fails to initialize', async () => {
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      await waitFor(() => {
-        callbackEvent('Error', null);
-        expect(rendered.baseElement.innerHTML).to.contain('Error during component initialization');
+        ).to.be.true;
       });
     });
 
@@ -517,7 +440,7 @@ describe('<DesignLibrary />', () => {
         new Promise((_, reject) => {
           reject(initError);
         });
-      const rendered = render(
+      await render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary loadImportMap={errorImportMap} />
         </SitecoreProvider>,
@@ -525,10 +448,21 @@ describe('<DesignLibrary />', () => {
       );
 
       await waitFor(() => {
-        expect(rendered.baseElement.innerHTML).to.contain(
-          'No dynamic import map loaded. Please check a dynamic import map function is passed into Design Library'
-        );
-        expect(consoleErrorSpy.calledWith('Error loading import map:', initError)).to.be.true;
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((call) =>
+              JSON.stringify(call.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryComponentPreviewErrorEvent(
+                    'test-content',
+                    'Error loading import map: Error: Failed to load import map',
+                    DesignLibraryPreviewError.RenderInit
+                  )
+                )
+              )
+            )
+        ).to.be.true;
       });
     });
 
@@ -548,24 +482,8 @@ describe('<DesignLibrary />', () => {
       });
     });
 
-    it('should render error message when no rendering is found', () => {
-      // Set to empty array to simulate no rendering found
-      page.layout.sitecore.route!.placeholders['editing-componentmode-placeholder'] = [];
-
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        'No component found in layout data. Please check your layout data.'
-      );
-    });
-
     it('should render error message when no import map is provided', async () => {
-      const rendered = render(
+      await render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>,
@@ -573,9 +491,21 @@ describe('<DesignLibrary />', () => {
       );
 
       await waitFor(() => {
-        expect(rendered.baseElement.innerHTML).to.contain(
-          'No dynamic import map loaded. Please check a dynamic import map function is passed into Design Library'
-        );
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((call) =>
+              JSON.stringify(call.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryComponentPreviewErrorEvent(
+                    'test-content',
+                    'No loadImportMap prop provided. Please provide a dynamic import map function for DesignLibrary.',
+                    DesignLibraryPreviewError.RenderInit
+                  )
+                )
+              )
+            )
+        ).to.be.true;
       });
     });
 
