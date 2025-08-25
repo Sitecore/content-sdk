@@ -12,6 +12,10 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🎉 New Features & Improvements
+
+* Next.js App Router support ([#191](https://github.com/Sitecore/content-sdk/pull/191))
+
 ## 1.1.0
 
 ### 🎉 New Features & Improvements
