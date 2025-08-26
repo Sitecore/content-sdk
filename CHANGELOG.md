@@ -31,9 +31,9 @@ Our versioning strategy is as follows:
 * `[core]` Ensure displayName paths are properly UTF-8 encoded. ([#179](https://github.com/Sitecore/content-sdk/pull/179))
 * `[react]` Enhanced the Design Library cache buster format to hh-dd-mm-yyyy ([#188](https://github.com/Sitecore/content-sdk/pull/188))
 * `[nextjs]` Optimization for editing render middleware: issue an internal server request for fetching page data during editing instead of doing temporary redirect ([#195](https://github.com/Sitecore/content-sdk/pull/195))
-  - added new environment variable `EDITING_INTERNAL_HOST_URL` - the internal host URL for the Next.js application, used for server-side requests for page rendering during editing
-  - added new _sitecore.config_ setting _editingInternalHostUrl_ where the internal host URL can be set to override the env variable
-  - if none of the above is set the _host_ header of the incoming request will be used for the internal request
+  - added new environment variable `SITECORE_INTERNAL_EDITING_HOST_URL` - the internal host URL for the Next.js application, used for server-side requests for page rendering during editing
+  - added a new setting in _sitecore.config_: _sitecoreInternalEditingHostUrl_. This setting allows you to define the internal host URL explicitly, overriding the corresponding environment variable.
+  - if none of the above is set the host header of the incoming request will be used to make the internal request
 
 ### 🐛 Bug Fixes
 

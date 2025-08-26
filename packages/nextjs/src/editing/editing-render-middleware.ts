@@ -32,7 +32,7 @@ export type EditingRenderMiddlewareConfig = {
   /**
    * The internal host URL for the Next.js application, used for server-side requests for page rendering during editing.
    */
-  editingInternalHostUrl?: string;
+  sitecoreInternalEditingHostUrl?: string;
 };
 
 /**
@@ -93,7 +93,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
   }
 
   /**
-   * Server URL resolution. Use config.editingInternalHostUrl if provided, else EDITING_INTERNAL_HOST_URL if provided, otherwise use host header
+   * Server URL resolution. Use config.sitecoreInternalEditingHostUrl if provided, else SITECORE_INTERNAL_EDITING_HOST_URL if provided, otherwise use host header
    * Note we use https protocol on Vercel due to serverless function architecture.
    * In all other scenarios, including localhost (with or without a proxy e.g. ngrok)
    * and within a nodejs container, http protocol should be used.
@@ -104,7 +104,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
    */
   private resolveServerUrl = (req: NextApiRequest) => {
     const internalHostUrl =
-      this.config?.editingInternalHostUrl || process.env.EDITING_INTERNAL_HOST_URL;
+      this.config?.sitecoreInternalEditingHostUrl || process.env.SITECORE_INTERNAL_EDITING_HOST_URL;
     if (internalHostUrl) {
       return internalHostUrl;
     }
