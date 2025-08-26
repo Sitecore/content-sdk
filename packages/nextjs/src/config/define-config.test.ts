@@ -474,4 +474,40 @@ describe('defineConfig', () => {
       });
     });
   });
+
+  describe('editingInternalHostUrl', () => {
+    describe('environment variable is not set', () => {
+      it('should default to undefined', () => {
+        defineConfigModule.defineConfig(defaultConfig());
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.editingInternalHostUrl).to.be.undefined;
+      });
+
+      it('should use the value from the config', () => {
+        defineConfigModule.defineConfig({
+          editingInternalHostUrl: 'http://localhost:3000',
+          ...defaultConfig(),
+        });
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.editingInternalHostUrl).to.equal('http://localhost:3000');
+      });
+    });
+
+    describe('environment variable is set', () => {
+      afterEach(() => {
+        delete process.env.EDITING_INTERNAL_HOST_URL;
+      });
+
+      it('should return set value', () => {
+        process.env.EDITING_INTERNAL_HOST_URL = 'http://localhost:3000';
+
+        defineConfigModule.defineConfig({
+          generateStaticPaths: true,
+          ...defaultConfig(),
+        });
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.editingInternalHostUrl).to.equal('http://localhost:3000');
+      });
+    });
+  });
 });
