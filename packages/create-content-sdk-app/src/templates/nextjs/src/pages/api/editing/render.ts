@@ -31,5 +31,5 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     res.status(404).end();
     return;
   }
-  return baseHandler(req, res);
+  return baseHandler(req as any, res as any);
 }
