@@ -6,7 +6,7 @@
 
 # Class: SitemapMiddleware
 
-Defined in: [nextjs/src/middleware/sitemap-middleware.ts:9](https://github.com/Sitecore/content-sdk/blob/84a8656cae04ac3655132cd2077fbe5b8f878d16/packages/nextjs/src/middleware/sitemap-middleware.ts#L9)
+Defined in: [nextjs/src/middleware/sitemap-middleware.ts:9](https://github.com/Sitecore/content-sdk/blob/32ae43796a592ab61a7001a72f0fcb5de61f2564/packages/nextjs/src/middleware/sitemap-middleware.ts#L9)
 
 Middleware for handling sitemap requests in a Next.js application.
 Encapsulates all HTTP-related logic for sitemap generation and delivery.
@@ -17,7 +17,7 @@ Encapsulates all HTTP-related logic for sitemap generation and delivery.
 
 > **new SitemapMiddleware**(`client`, `sites`): `SitemapMiddleware`
 
-Defined in: [nextjs/src/middleware/sitemap-middleware.ts:13](https://github.com/Sitecore/content-sdk/blob/84a8656cae04ac3655132cd2077fbe5b8f878d16/packages/nextjs/src/middleware/sitemap-middleware.ts#L13)
+Defined in: [nextjs/src/middleware/sitemap-middleware.ts:13](https://github.com/Sitecore/content-sdk/blob/32ae43796a592ab61a7001a72f0fcb5de61f2564/packages/nextjs/src/middleware/sitemap-middleware.ts#L13)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [nextjs/src/middleware/sitemap-middleware.ts:13](https://github.com/
 
 > **getHandler**(): (`req`, `res`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/middleware/sitemap-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/84a8656cae04ac3655132cd2077fbe5b8f878d16/packages/nextjs/src/middleware/sitemap-middleware.ts#L18)
+Defined in: [nextjs/src/middleware/sitemap-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/32ae43796a592ab61a7001a72f0fcb5de61f2564/packages/nextjs/src/middleware/sitemap-middleware.ts#L18)
 
 #### Returns
 

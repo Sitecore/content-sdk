@@ -342,8 +342,10 @@ export class SitecoreClient implements BaseSitecoreClient {
     options: { enableStyles?: boolean; enableThemes?: boolean } = {}
   ): HTMLLink[] {
     const { enableStyles = true, enableThemes = true } = options;
-    const { contextId, edgeUrl } = this.initOptions.api.edge;
+    const { contextId: serverContextId, clientContextId, edgeUrl } = this.initOptions.api.edge;
     const headLinks: HTMLLink[] = [];
+
+    const contextId = serverContextId || clientContextId;
 
     if (enableStyles) {
       const contentStyles = getContentStylesheetLink(layoutData, contextId, edgeUrl);

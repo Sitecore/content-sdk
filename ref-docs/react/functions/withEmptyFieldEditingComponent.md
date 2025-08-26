@@ -8,7 +8,7 @@
 
 > **withEmptyFieldEditingComponent**\<`FieldComponentProps`, `RefElementType`\>(`FieldComponent`, `options`): `ForwardRefExoticComponent`\<`PropsWithoutRef`\<`FieldComponentProps`\> & `RefAttributes`\<`RefElementType`\>\> \| (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withEmptyFieldEditingComponent.tsx:38](https://github.com/Sitecore/content-sdk/blob/84a8656cae04ac3655132cd2077fbe5b8f878d16/packages/react/src/enhancers/withEmptyFieldEditingComponent.tsx#L38)
+Defined in: [packages/react/src/enhancers/withEmptyFieldEditingComponent.tsx:38](https://github.com/Sitecore/content-sdk/blob/32ae43796a592ab61a7001a72f0fcb5de61f2564/packages/react/src/enhancers/withEmptyFieldEditingComponent.tsx#L38)
 
 Returns the passed field component or default component in case field value is empty and edit mode is 'metadata'
 

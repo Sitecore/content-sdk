@@ -6,7 +6,7 @@
 
 # Enumeration: EditMode
 
-Defined in: [packages/core/src/layout/models.ts:22](https://github.com/Sitecore/content-sdk/blob/84a8656cae04ac3655132cd2077fbe5b8f878d16/packages/core/src/layout/models.ts#L22)
+Defined in: [packages/core/src/layout/models.ts:22](https://github.com/Sitecore/content-sdk/blob/32ae43796a592ab61a7001a72f0fcb5de61f2564/packages/core/src/layout/models.ts#L22)
 
 Represents the edit mode for rendering content in Sitecore Editors
 
@@ -16,4 +16,4 @@ Represents the edit mode for rendering content in Sitecore Editors
 
 > **Metadata**: `"metadata"`
 
-Defined in: [packages/core/src/layout/models.ts:23](https://github.com/Sitecore/content-sdk/blob/84a8656cae04ac3655132cd2077fbe5b8f878d16/packages/core/src/layout/models.ts#L23)
+Defined in: [packages/core/src/layout/models.ts:23](https://github.com/Sitecore/content-sdk/blob/32ae43796a592ab61a7001a72f0fcb5de61f2564/packages/core/src/layout/models.ts#L23)
