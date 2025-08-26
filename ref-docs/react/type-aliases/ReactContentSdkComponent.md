@@ -8,6 +8,6 @@
 
 > **ReactContentSdkComponent** = `ComponentType` \| [`ReactModule`](ReactModule.md)
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:11](https://github.com/Sitecore/content-sdk/blob/32ae43796a592ab61a7001a72f0fcb5de61f2564/packages/react/src/components/sharedTypes/components.ts#L11)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:11](https://github.com/Sitecore/content-sdk/blob/f35185ba0283fcb3c4155ddca298b70c13ff7024/packages/react/src/components/sharedTypes/components.ts#L11)
 
 React component import with account for custom exports
