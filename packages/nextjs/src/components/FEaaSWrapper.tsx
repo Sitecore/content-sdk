@@ -1,4 +1,5 @@
-﻿import {
+﻿'use client';
+import {
   FEaaSWrapper,
   FEaaSComponentParams,
   fetchFEaaSComponentServerProps,

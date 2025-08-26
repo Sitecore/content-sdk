@@ -1,5 +1,7 @@
-﻿import React, { useEffect, useRef, JSX } from 'react';
-import { useRouter } from 'next/router';
+﻿'use client';
+import React, { useEffect, useRef, JSX } from 'react';
+import { useRouter as usePageRouter } from 'next/compat/router';
+import { useRouter as useAppRouter } from 'next/navigation';
 import {
   RichText as ReactRichText,
   RichTextProps as ReactRichTextProps,
@@ -25,6 +27,21 @@ export type RichTextProps = ReactRichTextProps & {
 
 export const prefetched: { [cacheKey: string]: boolean } = {};
 
+const useAppRouterWrapper = () => {
+  try {
+    return useAppRouter();
+  } catch {
+    return null;
+  }
+};
+
+const useCompatibleRouter = () => {
+  let pageRouter = usePageRouter();
+  let appRouter = useAppRouterWrapper();
+
+  return { pageRouter, appRouter };
+};
+
 export const RichText = (props: RichTextProps): JSX.Element => {
   const {
     internalLinksSelector = 'a[href^="/"]',
@@ -35,7 +52,7 @@ export const RichText = (props: RichTextProps): JSX.Element => {
   const hasText = props.field && props.field.value;
   const isEditing = editable && props.field && props.field.metadata;
 
-  const router = useRouter();
+  const { pageRouter, appRouter } = useCompatibleRouter();
   const richTextRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -53,7 +70,11 @@ export const RichText = (props: RichTextProps): JSX.Element => {
 
     const pathname = (ev.currentTarget as HTMLAnchorElement).href;
 
-    router.push(pathname, pathname, { locale: false });
+    if (pageRouter) {
+      pageRouter.push(pathname, pathname, { locale: false });
+    } else if (appRouter) {
+      appRouter.push(pathname);
+    }
   };
 
   const initializeLinks = () => {
@@ -68,7 +89,11 @@ export const RichText = (props: RichTextProps): JSX.Element => {
       if (link.target === '_blank') return;
 
       const prefetch = () => {
-        router.prefetch(link.pathname, undefined, { locale: false });
+        if (pageRouter) {
+          pageRouter.prefetch(link.pathname, undefined, { locale: false });
+        } else if (appRouter) {
+          appRouter.prefetch(link.pathname);
+        }
 
         prefetched[link.pathname] = true;
       };
