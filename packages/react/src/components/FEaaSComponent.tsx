@@ -1,4 +1,5 @@
-﻿import React, { JSX } from 'react';
+﻿'use client';
+import React, { JSX } from 'react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { ComponentFields, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { getDataFromFields } from '../utils';
