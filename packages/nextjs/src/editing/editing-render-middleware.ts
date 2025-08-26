@@ -266,7 +266,6 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     const encodedRoute = encodeURI(query.route);
     const route = this.config?.resolvePageUrl?.(encodedRoute) || encodedRoute;
 
-    // Resolve server URL
     const base = this.resolveServerUrl(req);
     const requestUrl = new URL(route, base);
 
