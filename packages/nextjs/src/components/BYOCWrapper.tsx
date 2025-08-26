@@ -1,4 +1,5 @@
-﻿import {
+﻿'use client';
+import {
   BYOCWrapper,
   BYOCComponentParams,
   fetchBYOCComponentServerProps,
