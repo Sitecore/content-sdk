@@ -1230,7 +1230,7 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getHeadLinks', function() {
+  describe('getHeadLinks', function () {
     const truthyValue = {
       value: '<div class="test bar"><p class="foo ck-content">bar</p></div>',
     };
@@ -1277,6 +1277,32 @@ describe('SitecoreClient', () => {
         },
         {
           href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          rel: 'stylesheet',
+        },
+      ]);
+    });
+
+    it('should return stylesheets using clientContextId when server contextId is not set', () => {
+      const sitecoreClient = new SitecoreClient({
+        ...defaultInitOptions,
+        api: {
+          ...defaultInitOptions.api,
+          edge: {
+            ...defaultInitOptions.api.edge,
+            contextId: undefined as any,
+          },
+        },
+      });
+
+      const result = sitecoreClient.getHeadLinks(layoutData);
+
+      expect(result).to.deep.equal([
+        {
+          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id',
+          rel: 'stylesheet',
+        },
+        {
+          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id',
           rel: 'stylesheet',
         },
       ]);
