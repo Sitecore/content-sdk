@@ -109,9 +109,13 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       return internalHostUrl;
     }
 
+    // in xmc deployment we always use localhost:3000
+    if (process.env.SITECORE !== undefined) {
+      return 'http://localhost:3000';
+    }
+
     // to preserve auth headers, use https if we're in our 3 main hosting options
-    const useHttps =
-      (process.env.VERCEL || process.env.SITECORE || process.env.NETLIFY) !== undefined;
+    const useHttps = (process.env.VERCEL || process.env.NETLIFY) !== undefined;
     // use https for requests with auth but also support unsecured http rendering hosts
     return `${useHttps ? 'https' : 'http'}://${req.headers.host}`;
   };
