@@ -6,6 +6,7 @@ import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
  * Provides default initial values for SitecoreConfig
  * @returns default config
  */
+
 export const getFallbackConfig = (): SitecoreConfig => ({
   api: {
     edge: {
@@ -20,6 +21,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
     },
   },
   editingSecret: process.env.SITECORE_EDITING_SECRET || 'editing-secret-missing',
+  isEditingHost: !!process.env.SITECORE_EDITING_SECRET,
   retries: {
     count: 3,
     retryStrategy: new DefaultRetryStrategy({

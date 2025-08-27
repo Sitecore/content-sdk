@@ -4,6 +4,12 @@ import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
  * See the documentation for `defineConfig`:
  * https://doc.sitecore.com/xmc/en/developers/content-sdk/the-sitecore-configuration-file.html
  */
+// Single source of truth derived from env
+const isEditingHost = !!process.env.SITECORE_EDITING_SECRET;
+
 export default defineConfig({
-  disableCodeGeneration: process.env.NEXT_PUBLIC_EDITING_HOST !== 'true',
+  // Persist the flag on config so other parts of the app can read it
+  isEditingHost,
+  // Use the flag instead of re-deriving from env
+  disableCodeGeneration: !isEditingHost,
 });

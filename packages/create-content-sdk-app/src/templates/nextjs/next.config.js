@@ -1,10 +1,30 @@
 const path = require('path');
+const webpack = require('webpack');
 const SassAlias = require('sass-alias');
+const fs = require('fs');
 
 /**
  * @type {import('next').NextConfig}
  */
+// Determine host role strictly from env for build-time safety
+const isEditingHost = !!process.env.SITECORE_EDITING_SECRET;
+
+// For Rendering Host builds, ensure the editing API folder is removed before Next scans pages
+if (!isEditingHost) {
+  try {
+    const editingApiDir = path.join(process.cwd(), 'src', 'pages', 'api', 'editing');
+    if (fs.existsSync(editingApiDir)) {
+      fs.rmSync(editingApiDir, { recursive: true, force: true });
+      console.log('next.config: removed editing API routes for Rendering Host');
+    }
+  } catch (error) {
+    console.warn('Failed to remove editing API routes:', error);
+  }
+}
+
 const nextConfig = {
+  // Default Next.js page extensions
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   // Allow specifying a distinct distDir when concurrently running app in a container
   distDir: process.env.NEXTJS_DIST_DIR || '.next',
 
@@ -22,10 +42,6 @@ const nextConfig = {
 
   // Disable the X-Powered-By header. Follows security best practices.
   poweredByHeader: false,
-  // Expose the editing host flag for build-time dead-code elimination
-  env: {
-    NEXT_PUBLIC_EDITING_HOST: process.env.NEXT_PUBLIC_EDITING_HOST || 'false',
-  },
 
   // use this configuration to ensure that only images from the whitelisted domains
   // can be served from the Next.js Image Optimization API
@@ -65,7 +81,7 @@ const nextConfig = {
     ];
 
     // Only add FEAAS editing route for Editing Host builds
-    if (process.env.NEXT_PUBLIC_EDITING_HOST === 'true') {
+    if (isEditingHost) {
       routes.push({
         source: '/feaas-render',
         destination: '/api/editing/feaas/render',
@@ -80,8 +96,37 @@ const nextConfig = {
       // Add a loader to strip out getComponentServerProps from components in the client bundle
       config.module.rules.unshift({
         test: /src\\components\\.*\.tsx$/,
+        // reference this for the editing host exclusion task
         use: ['@sitecore-content-sdk\\nextjs\\component-props-loader'],
       });
+
+      // Exclude editing-only imports (DesignLibrary, .sitecore/import-map) from client bundle when not Editing Host
+      if (!isEditingHost) {
+        // Reuse the enhanced component-props loader to strip editing-only code across the app
+        config.module.rules.unshift({
+          test: /src\\.*\.(ts|tsx)$/,
+          use: ['@sitecore-content-sdk\\nextjs\\component-props-loader'],
+        });
+
+        // Client-only aliases and ignore rules for editing-only code
+        config.resolve = config.resolve || {};
+        config.resolve.alias = {
+          ...config.resolve.alias,
+          '@sitecore-content-sdk/nextjs/editing': false,
+          '@sitecore-content-sdk/nextjs/editing/codegen/import-map': false,
+          // Do NOT alias core editing on server; we strip only client usage
+          '@sitecore-content-sdk/react/dist/esm/components/DesignLibrary': false,
+          '.sitecore/import-map': false,
+        };
+
+        config.plugins = config.plugins || [];
+        config.plugins.push(
+          new webpack.IgnorePlugin({
+            resourceRegExp:
+              /^(?:\.sitecore\/import-map(?:\.ts|\.js)?|@sitecore-content-sdk\/(?:core|nextjs)\/editing(?:\/.*)?|@sitecore-content-sdk\/react\/dist\/esm\/components\/DesignLibrary(?:\.js)?)$/,
+          })
+        );
+      }
     } else {
       // Force use of CommonJS on the server for FEAAS SDK since Content SDK also uses CommonJS entrypoint to FEAAS SDK.
       // This prevents issues arising due to FEAAS SDK's dual CommonJS/ES module support on the server (via conditional exports).
@@ -95,6 +140,9 @@ const nextConfig = {
         ...config.externals,
       ];
     }
+
+    // Note: server bundle remains untouched; client-only handling above
+
     <%_ if (helper.isDev) { -%>
     // monorepo configuration start
     if (options.isServer) {

@@ -42,6 +42,8 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
       process.env.GENERATE_STATIC_PATHS !== undefined
         ? process.env.GENERATE_STATIC_PATHS.toLowerCase() === 'true'
         : config?.generateStaticPaths ?? true,
+    // propagate editing host flag to Next.js layer based on core config/env
+    isEditingHost: (config as any)?.isEditingHost ?? !!process.env.SITECORE_EDITING_SECRET,
   };
 };
 

@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { Placeholder, Field, Page, DesignLibrary } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/content-sdk/SitecoreStyles';
+import scConfig from 'sitecore.config';
 interface LayoutProps {
   page: Page;
 }
@@ -22,7 +23,8 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   const fields = route?.fields as RouteFields;
   const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
 
-  const isEditingHost = process.env.NEXT_PUBLIC_EDITING_HOST === 'true';
+  // Use the public flag exposed by next.config.js (derived from SITECORE_EDITING_SECRET)
+  const isEditingHost = !!scConfig.isEditingHost;
   let importMap: any = undefined;
   if (isEditingHost) {
     try {
@@ -46,7 +48,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
 
       {/* root placeholder for the app, which we add components to using route data */}
       <div className={mainClassPageEditing}>
-        {mode.isDesignLibrary && isEditingHost ? (
+        {mode.isDesignLibrary ? (
           <DesignLibrary importMap={importMap} />
         ) : (
           <>

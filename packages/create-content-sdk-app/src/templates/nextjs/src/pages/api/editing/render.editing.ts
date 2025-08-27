@@ -1,4 +1,4 @@
-﻿import { EditingRenderMiddleware } from '@sitecore-content-sdk/nextjs/editing';
+import { EditingRenderMiddleware } from '@sitecore-content-sdk/nextjs/editing';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 /**
@@ -23,13 +23,8 @@ export const config = {
   },
 };
 
-// Wire up the EditingRenderMiddleware handler
 const baseHandler = new EditingRenderMiddleware().getHandler();
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (process.env.NEXT_PUBLIC_EDITING_HOST !== 'true') {
-    res.status(404).end();
-    return;
-  }
   return baseHandler(req as any, res as any);
 }

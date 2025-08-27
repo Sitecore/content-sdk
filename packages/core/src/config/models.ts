@@ -80,6 +80,12 @@ export type SitecoreConfigInput = {
    */
   editingSecret?: string;
   /**
+   * Indicates whether the app is running as an Editing Host.
+   * Recommended to be derived from the presence of `editingSecret`.
+   * Defaults to `!!process.env.SITECORE_EDITING_SECRET`.
+   */
+  isEditingHost?: boolean;
+  /**
    * Retry configuration applied to Layout, Dictionary and ErrorPages services
    */
   retries?: {

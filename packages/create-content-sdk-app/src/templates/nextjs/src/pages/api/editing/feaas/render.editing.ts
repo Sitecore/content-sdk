@@ -1,4 +1,4 @@
-﻿import { FEAASRenderMiddleware } from '@sitecore-content-sdk/nextjs/editing';
+import { FEAASRenderMiddleware } from '@sitecore-content-sdk/nextjs/editing';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 /**
@@ -15,9 +15,5 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 const baseHandler = new FEAASRenderMiddleware().getHandler();
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (process.env.NEXT_PUBLIC_EDITING_HOST !== 'true') {
-    res.status(404).end();
-    return;
-  }
   return baseHandler(req, res);
 }
