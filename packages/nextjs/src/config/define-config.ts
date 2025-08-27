@@ -44,6 +44,8 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
         : config?.generateStaticPaths ?? true,
     // propagate editing host flag to Next.js layer based on core config/env
     isEditingHost: (config as any)?.isEditingHost ?? !!process.env.SITECORE_EDITING_SECRET,
+    sitecoreInternalEditingHostUrl:
+      config?.sitecoreInternalEditingHostUrl || process.env.SITECORE_INTERNAL_EDITING_HOST_URL,
   };
 };
 
@@ -62,6 +64,12 @@ export type SitecoreConfigInput = SitecoreConfigInputCore & {
    * This is set to `false` when the application is deployed and used as editing host in Sitecore.
    */
   generateStaticPaths?: boolean;
+
+  /**
+   * The internal host URL for the Next.js application, used for server-side requests for page rendering during editing.
+   * This should be the base URL where the Next.js app is accessible from the server side (e.g., "http://localhost:3000").
+   */
+  sitecoreInternalEditingHostUrl?: string;
 };
 
 /**

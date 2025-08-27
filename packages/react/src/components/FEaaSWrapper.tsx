@@ -1,3 +1,4 @@
+'use client';
 import { FEaaSComponent, FEaaSComponentProps } from './FEaaSComponent';
 import React, { JSX } from 'react';
 

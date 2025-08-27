@@ -8,7 +8,7 @@
 
 > **Form**(`__namedParameters`): `Element`
 
-Defined in: [packages/react/src/components/Form.tsx:40](https://github.com/Sitecore/content-sdk/blob/ebffae15e7cd42c29d5b8f20de34565a3aa344dd/packages/react/src/components/Form.tsx#L40)
+Defined in: [packages/react/src/components/Form.tsx:41](https://github.com/Sitecore/content-sdk/blob/f35185ba0283fcb3c4155ddca298b70c13ff7024/packages/react/src/components/Form.tsx#L41)
 
 ## Parameters
 
