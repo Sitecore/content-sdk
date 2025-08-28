@@ -1,5 +1,5 @@
 import { ClientError } from 'graphql-request';
-import { IncomingMessage, OutgoingMessage } from 'http';
+import { IncomingHttpHeaders, IncomingMessage, OutgoingMessage } from 'http';
 import { ParsedUrlQueryInput } from 'querystring';
 import isServer from './is-server';
 
@@ -105,6 +105,7 @@ export const getAllowedOriginsFromEnv = () =>
  * @param {OutgoingMessage} res response to set CORS headers for
  * @param {string[]} [allowedOrigins] additional list of origins to test against
  * @returns true if incoming origin matches the allowed lists, false when it does not
+ * @deprecated use getEnforcedCorsHeaders instead
  */
 export const enforceCors = (
   req: IncomingMessage,
@@ -145,6 +146,53 @@ export const enforceCors = (
     return true;
   }
   return false;
+};
+
+export const getEnforcedCorsHeaders = ({
+  requestMethod,
+  headers,
+  presetCorsHeader,
+  allowedOrigins = [],
+}: {
+  requestMethod: string;
+  headers: IncomingHttpHeaders | Headers;
+  presetCorsHeader?: string | string[];
+  allowedOrigins?: string[];
+}) => {
+  const origin = (headers as IncomingHttpHeaders).origin || (headers as Headers).get('origin');
+  if (!origin) {
+    return {};
+  }
+  // 3 sources of allowed origins are considered:
+  // the env value
+  const defaultAllowedOrigins = getAllowedOriginsFromEnv();
+  // the allowedOrigins prop
+  allowedOrigins = defaultAllowedOrigins.concat(allowedOrigins || []);
+  // and the existing CORS header, if provided (i.e. from nextjs config)
+  if (presetCorsHeader) {
+    allowedOrigins.push(presetCorsHeader as string);
+  }
+
+  if (
+    origin &&
+    allowedOrigins.some(
+      (allowedOrigin) =>
+        origin === allowedOrigin ||
+        new RegExp(convertToWildcardRegex(allowedOrigin)).test(origin)
+    )
+  ) {
+    const corsHeaders: { [key: string]: string } = {
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+    };
+    // set the allowed headers for preflight requests
+    if (requestMethod === 'OPTIONS') {
+      corsHeaders['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
+    }
+
+    return corsHeaders;
+  }
+  return null;
 };
 
 /**

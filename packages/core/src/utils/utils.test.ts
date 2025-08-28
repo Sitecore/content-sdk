@@ -4,6 +4,7 @@ import { IncomingMessage, OutgoingMessage } from 'http';
 import { isServer, resolveUrl } from '.';
 import {
   enforceCors,
+  getEnforcedCorsHeaders,
   getAllowedOriginsFromEnv,
   isAbsoluteUrl,
   isTimeoutError,
@@ -106,6 +107,126 @@ describe('utils', () => {
     it('should return true when error is timeout error', () => {
       expect(isTimeoutError({ response: { status: 408 } })).to.be.true;
       expect(isTimeoutError({ name: 'AbortError' })).to.be.true;
+    });
+  });
+
+  describe('getEnforcedCorsHeaders', () => {
+    const mockOrigin = 'https://maybeallowed.com';
+    const mockHeaders = {
+      origin: mockOrigin,
+    };
+
+    it('should return headers if origin is found in allowedOrigins from JSS_ALLOWED_ORIGINS env variable', () => {
+      process.env.JSS_ALLOWED_ORIGINS = mockOrigin;
+      const result = getEnforcedCorsHeaders({
+        requestMethod: 'GET',
+        headers: mockHeaders,
+      });
+      expect(result).to.deep.equal({
+        'Access-Control-Allow-Origin': mockOrigin,
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+      });
+      delete process.env.JSS_ALLOWED_ORIGINS;
+    });
+
+    it('should return null when theres no origin header', () => {
+      const result = getEnforcedCorsHeaders({
+        requestMethod: 'GET',
+        headers: {},
+      });
+      expect(result).to.be.null;
+    });
+
+    it('should return headers if origin is found in allowedOrigins passed as argument', () => {
+      const result = getEnforcedCorsHeaders({
+        requestMethod: 'GET',
+        headers: { origin: 'http://allowed.com' },
+        allowedOrigins: ['http://allowed.com'],
+      });
+      expect(result).to.deep.equal({
+        'Access-Control-Allow-Origin': 'http://allowed.com',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+      });
+    });
+
+    it('should return null if origin matches neither allowedOrigins from JSS_ALLOWED_ORIGINS env variable nor argument', () => {
+      process.env.JSS_ALLOWED_ORIGINS = 'https://strictallowed.com, https://alsoallowed.com';
+      const result = getEnforcedCorsHeaders({
+        requestMethod: 'GET',
+        headers: { origin: 'https://notallowed.com' },
+        allowedOrigins: ['https://paramallowed.com'],
+      });
+      expect(result).to.be.null;
+      delete process.env.JSS_ALLOWED_ORIGINS;
+    });
+
+    it('should return headers when origin matches a wildcard value from allowedOrigins', () => {
+      const result = getEnforcedCorsHeaders({
+        requestMethod: 'GET',
+        headers: { origin: 'https://allowed.dev.com' },
+        allowedOrigins: ['https://allowed.*.com'],
+      });
+      expect(result).to.deep.equal({
+        'Access-Control-Allow-Origin': 'https://allowed.dev.com',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+      });
+    });
+
+    it('should include additional headers for preflight OPTIONS request', () => {
+      const result = getEnforcedCorsHeaders({
+        requestMethod: 'OPTIONS',
+        headers: { origin: mockOrigin },
+        allowedOrigins: [mockOrigin],
+      });
+      expect(result).to.deep.equal({
+        'Access-Control-Allow-Origin': mockOrigin,
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      });
+    });
+
+    it('should consider preset CORS header when provided', () => {
+      const result = getEnforcedCorsHeaders({
+        requestMethod: 'GET',
+        headers: { origin: 'https://preallowed.com' },
+        presetCorsHeader: 'https://preallowed.com',
+      });
+      expect(result).to.deep.equal({
+        'Access-Control-Allow-Origin': 'https://preallowed.com',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+      });
+    });
+    it('should handle two different types of headers', () => {
+      // Test with IncomingHttpHeaders
+      const incomingHeaders = {
+        origin: 'http://allowed.com',
+      };
+
+      const result1 = getEnforcedCorsHeaders({
+        requestMethod: 'GET',
+        headers: incomingHeaders,
+        allowedOrigins: ['http://allowed.com'],
+      });
+
+      expect(result1).to.deep.equal({
+        'Access-Control-Allow-Origin': 'http://allowed.com',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+      });
+
+      // Test with Headers
+      const headers = new Headers();
+      headers.set('origin', 'http://allowed.com');
+
+      const result2 = getEnforcedCorsHeaders({
+        requestMethod: 'GET',
+        headers: headers,
+        allowedOrigins: ['http://allowed.com'],
+      });
+
+      expect(result2).to.deep.equal({
+        'Access-Control-Allow-Origin': 'http://allowed.com',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+      });
     });
   });
 
