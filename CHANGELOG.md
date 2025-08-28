@@ -34,7 +34,7 @@ Our versioning strategy is as follows:
   - added new environment variable `SITECORE_INTERNAL_EDITING_HOST_URL` - the internal host URL for the Next.js application, used for server-side requests for page rendering during editing
   - added a new setting in _sitecore.config_: _sitecoreInternalEditingHostUrl_. This setting allows you to define the internal host URL explicitly, overriding the corresponding environment variable.
   - if none of the above is set:
-     - in XMC environment server request will be issued to `http://localhost:3000`
+     - in XM Cloud environment server request will be issued to `http://localhost:3000`
      - in Vercel or Netlify scenarios, the host header of the incoming request will be used to make the internal request
 
 ### 🐛 Bug Fixes

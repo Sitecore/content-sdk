@@ -93,7 +93,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
   }
 
   /**
-   * Server URL resolution. Use config.sitecoreInternalEditingHostUrl if provided, else SITECORE_INTERNAL_EDITING_HOST_URL if provided, otherwise use host header
+   * Server URL resolution. Use config.sitecoreInternalEditingHostUrl if provided, else SITECORE_INTERNAL_EDITING_HOST_URL if provided, otherwise use 'http://localhost:3000' for XMC deployments, or host header in all other cases.
    * Note we use https protocol on Vercel due to serverless function architecture.
    * In all other scenarios, including localhost (with or without a proxy e.g. ngrok)
    * and within a nodejs container, http protocol should be used.
@@ -110,7 +110,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     }
 
     // in xmc deployment we always use localhost:3000
-    if (process.env.SITECORE !== undefined) {
+    if (process.env.SITECORE) {
       return 'http://localhost:3000';
     }
 
