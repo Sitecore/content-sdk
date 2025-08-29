@@ -18,12 +18,21 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // use this configuration to serve the sitemap.xml and robots.txt files from the API route handlers
+  rewrites: async () => {
+    return [
+      {
+        source: '/sitemap:id([\\w-]{0,}).xml',
+        destination: '/api/sitemap',
+        locale: false,
+      },
+      {
+        source: '/robots.txt',
+        destination: '/api/robots',
+        locale: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
-
-
-
-
-
-
