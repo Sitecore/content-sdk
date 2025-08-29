@@ -8,6 +8,6 @@
 
 > **GenericFieldValue** = `string` \| `boolean` \| `number` \| `Date` \| \{[`key`: `string`]: `unknown`; \} \| `object`[]
 
-Defined in: [packages/core/src/layout/models.ts:105](https://github.com/Sitecore/content-sdk/blob/19e8a0fa6d5d227e8741b065754ca786a249cd77/packages/core/src/layout/models.ts#L105)
+Defined in: [packages/core/src/layout/models.ts:105](https://github.com/Sitecore/content-sdk/blob/bc1a965ed03fa54073c3c9bbc495689dd3053748/packages/core/src/layout/models.ts#L105)
 
 Field value data on a component
