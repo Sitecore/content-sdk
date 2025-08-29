@@ -9,24 +9,25 @@ import Layout, { RouteFields } from 'src/Layout';
 import components from '.sitecore/component-map';
 import Providers from 'src/Providers';
 import Bootstrap from 'src/Bootstrap';
+import { draftMode } from 'next/headers'
 
 type PageProps = {
-  params: Promise<{ path?: string[] }>;
+  params: Promise<{ path?: string[]; [key: string]: string | string[] | undefined }>;
 };
 
 export default async function Page({ params }: PageProps) {
   const { path } = await params;
 
   // Set preview to false until preview mode is integrated
-  const preview = { enabled: false, data: {} };
+  // const preview = { enabled: false, data: {} };
 
   // Fetch the page data from Sitecore
   let page;
-  if (preview.enabled) {
-    if (isDesignLibraryPreviewData(preview.data)) {
-      page = await client.getDesignLibraryData(preview.data);
+  if ((await draftMode()).isEnabled) {
+    if (isDesignLibraryPreviewData(params)) {
+      page = await client.getDesignLibraryData(params);
     } else {
-      page = await client.getPreview(preview.data);
+      page = await client.getPreview(params);
     }
   } else {
     page = await client.getPage(path ?? [], { locale: 'en' });
