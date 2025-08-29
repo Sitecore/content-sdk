@@ -620,7 +620,7 @@ describe('EditingRenderMiddleware', () => {
 
       const fetchRequestUrl = fetcherGetStub.getCall(0).args[0];
       expect(fetchRequestUrl.includes(expectedHost)).to.be.true;
-      delete process.env.SITECORE_INTERNAL_EDITING_HOST_URL;
+      delete process.env.SITECORE;
     });
 
     it('should use internal editing url from env variable if provided', async () => {
