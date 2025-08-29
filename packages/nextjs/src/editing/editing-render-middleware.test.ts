@@ -74,7 +74,6 @@ const mockResponse = () => {
   res.setPreviewData = spy(() => {
     return res;
   });
-  res.redirect = spy();
   return res;
 };
 
