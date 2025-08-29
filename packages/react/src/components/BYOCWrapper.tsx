@@ -1,3 +1,4 @@
+'use client';
 import { BYOCComponentProps, BYOCComponent } from './BYOCComponent';
 import React, { JSX } from 'react';
 

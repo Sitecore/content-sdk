@@ -8,7 +8,7 @@
 
 > **BYOCComponentParams** = `object`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:26](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/react/src/components/BYOCComponent.tsx#L26)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:27](https://github.com/Sitecore/content-sdk/blob/234dc8363ba417aaccafe59c3c15290368f78da8/packages/react/src/components/BYOCComponent.tsx#L27)
 
 Data from rendering params on Sitecore's BYOC rendering
 
@@ -18,7 +18,7 @@ Data from rendering params on Sitecore's BYOC rendering
 
 > `optional` **ComponentDataOverride**: `string`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:38](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/react/src/components/BYOCComponent.tsx#L38)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:39](https://github.com/Sitecore/content-sdk/blob/234dc8363ba417aaccafe59c3c15290368f78da8/packages/react/src/components/BYOCComponent.tsx#L39)
 
 A JSON object with data sources to be fetched and passed to the component
 
@@ -28,7 +28,7 @@ A JSON object with data sources to be fetched and passed to the component
 
 > `optional` **ComponentName**: `string`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:30](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/react/src/components/BYOCComponent.tsx#L30)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:31](https://github.com/Sitecore/content-sdk/blob/234dc8363ba417aaccafe59c3c15290368f78da8/packages/react/src/components/BYOCComponent.tsx#L31)
 
 Name of the component to render
 
@@ -38,7 +38,7 @@ Name of the component to render
 
 > `optional` **ComponentProps**: `string`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:34](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/react/src/components/BYOCComponent.tsx#L34)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:35](https://github.com/Sitecore/content-sdk/blob/234dc8363ba417aaccafe59c3c15290368f78da8/packages/react/src/components/BYOCComponent.tsx#L35)
 
 JSON props to pass into rendered component
 
@@ -48,7 +48,7 @@ JSON props to pass into rendered component
 
 > `optional` **RenderingIdentifier**: `string`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:43](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/react/src/components/BYOCComponent.tsx#L43)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:44](https://github.com/Sitecore/content-sdk/blob/234dc8363ba417aaccafe59c3c15290368f78da8/packages/react/src/components/BYOCComponent.tsx#L44)
 
 ***
 
@@ -56,6 +56,6 @@ Defined in: [packages/react/src/components/BYOCComponent.tsx:43](https://github.
 
 > `optional` **styles**: `string`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:42](https://github.com/Sitecore/content-sdk/blob/d44ca4cb30a7b5875ef1f803a65999c8dbb631bd/packages/react/src/components/BYOCComponent.tsx#L42)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:43](https://github.com/Sitecore/content-sdk/blob/234dc8363ba417aaccafe59c3c15290368f78da8/packages/react/src/components/BYOCComponent.tsx#L43)
 
 A string with classes that can be used to apply themes, via SXA functionality

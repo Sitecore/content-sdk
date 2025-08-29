@@ -22,7 +22,7 @@ export const initialize = async (template: string, args: BaseAppArgs) => {
 
   if (!args.silent) {
     const pkg = openJsonFile(path.resolve(`${args.destination}${sep}package.json`));
-    nextSteps(pkg.config.appName, response.nextSteps);
+    nextSteps(pkg.name, response.nextSteps);
   }
 };
 

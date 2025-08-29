@@ -12,6 +12,11 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🎉 New Features & Improvements
+
+* Next.js App Router support ([#191](https://github.com/Sitecore/content-sdk/pull/191))
+* `[react]` Add `component:status` events for VariantGeneration ([#190](https://github.com/Sitecore/content-sdk/pull/190))
+
 ## 1.1.0
 
 ### 🎉 New Features & Improvements
@@ -25,9 +30,16 @@ Our versioning strategy is as follows:
   - Ensure editing state is enabled in Design Library mode ([#181](https://github.com/Sitecore/content-sdk/pull/181))
 * `[core]` Ensure displayName paths are properly UTF-8 encoded. ([#179](https://github.com/Sitecore/content-sdk/pull/179))
 * `[react]` Enhanced the Design Library cache buster format to hh-dd-mm-yyyy ([#188](https://github.com/Sitecore/content-sdk/pull/188))
+* `[nextjs]` Optimization for editing render middleware: issue an internal server request for fetching page data during editing instead of doing temporary redirect ([#195](https://github.com/Sitecore/content-sdk/pull/195)) ([#196](https://github.com/Sitecore/content-sdk/pull/196))
+  - added new environment variable `SITECORE_INTERNAL_EDITING_HOST_URL` - the internal host URL for the Next.js application, used for server-side requests for page rendering during editing
+  - added a new setting in _sitecore.config_: _sitecoreInternalEditingHostUrl_. This setting allows you to define the internal host URL explicitly, overriding the corresponding environment variable.
+  - if none of the above is set:
+     - in XM Cloud environment server request will be issued to `http://localhost:3000`
+     - in Vercel or Netlify scenarios, the host header of the incoming request will be used to make the internal request
 
 ### 🐛 Bug Fixes
 
+* `[core]` Content styles fail to load due to incorrect contextId resolution ([#192](https://github.com/Sitecore/content-sdk/pull/192))
 * `[core]` Duplicate dictionary requests in editing, preview, and design library modes ([#161](https://github.com/Sitecore/content-sdk/pull/161))
   - `SitecoreClient.getPreview` and `SitecoreClient.getDesignLibraryData` no longer request dictionary data. `Page` type is not affected.
   - Updated `EditingService.fetchEditingData`:

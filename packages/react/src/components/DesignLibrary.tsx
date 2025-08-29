@@ -1,4 +1,5 @@
-﻿/* eslint-disable jsdoc/require-param */
+﻿'use client';
+/* eslint-disable jsdoc/require-param */
 /* eslint-disable prefer-const */
 import React, { useEffect, useMemo, useState, JSX } from 'react';
 import { Placeholder } from './Placeholder';
@@ -109,6 +110,14 @@ type ErrorBoundaryProps = {
   renderKey: number;
 };
 
+const sendErrorEvent = (uid: string, error: unknown, type: codegen.DesignLibraryPreviewError) => {
+  const errorEvent = codegen.getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
+
+  console.error('Component Library: sending error event', errorEvent);
+
+  window.top.postMessage(errorEvent, '*');
+};
+
 class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   state = {
     hasError: false,
@@ -125,15 +134,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
 
   componentDidCatch(error: Error) {
-    const errorEvent = codegen.getDesignLibraryComponentPreviewErrorEvent(
-      this.props.uid,
-      error,
-      codegen.DesignLibraryPreviewError.Render
-    );
-
-    console.debug('Component Library: sending error event', errorEvent);
-
-    window.top.postMessage(errorEvent, '*');
+    sendErrorEvent(this.props.uid, error, codegen.DesignLibraryPreviewError.Render);
   }
 
   render() {
@@ -165,13 +166,7 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
   } = page;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER][0];
   const [renderKey, setRenderKey] = useState(0);
-  const [initError, setInitError] = useState<boolean>(false);
-  const [importMapError, setImportMapError] = useState<boolean>(false);
-  const [Component, setComponent] = useState<DynamicComponent>(null);
-
-  if (!rendering) {
-    return <div>No component found in layout data. Please check your layout data.</div>;
-  }
+  const [Component, setComponent] = useState<DynamicComponent | null>(null);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
@@ -183,31 +178,29 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
     const init = async () => {
       let importMap: codegen.ImportEntry[] = undefined;
       if (!props.loadImportMap) {
-        console.error(
-          'No loadImportMap prop provided. Please provide a dynamic import map function for DesignLibrary.'
-        );
-        setImportMapError(true);
+        const errorMessage =
+          'No loadImportMap prop provided. Please provide a dynamic import map function for DesignLibrary.';
+        sendErrorEvent(rendering.uid, errorMessage, codegen.DesignLibraryPreviewError.RenderInit);
         return;
       }
       try {
         const importMapImport = await props.loadImportMap();
         importMap = importMapImport.default;
       } catch (error) {
-        console.error('Error loading import map:', error);
-        setImportMapError(true);
+        const errorMessage = `Error loading import map: ${error}`;
+        sendErrorEvent(rendering.uid, errorMessage, codegen.DesignLibraryPreviewError.RenderInit);
         return;
       }
       // account for component being unmounted while resolving async import map
       if (cancelled) return;
 
       unsubscribe = addComponentPreviewHandler(importMap, (error, Component) => {
-        setRenderKey((key) => key + 1);
+        // Error event is already sent in the addComponentPreviewHandler
         if (error) {
-          setInitError(true);
-
           return;
         }
-        setInitError(false);
+
+        setRenderKey((key) => key + 1);
         setComponent(() => Component as DynamicComponent);
       });
 
@@ -226,6 +219,12 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
       console.debug('Component Library: sending event', componentPropsEvent);
 
       window.top.postMessage(componentPropsEvent, '*');
+
+      const readyEvent = getDesignLibraryStatusEvent(DesignLibraryStatus.READY, rendering.uid);
+
+      console.debug('Component Library: sending event', readyEvent);
+
+      window.top?.postMessage(readyEvent, '*');
     };
 
     init();
@@ -238,18 +237,17 @@ export const VariantGeneration = (props: VariantGenerationProps) => {
     };
   }, []);
 
-  if (importMapError) {
-    return (
-      <div>
-        No dynamic import map loaded. Please check a dynamic import map function is passed into
-        Design Library
-      </div>
-    );
-  }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    // Send a rendered event only as effect of a component update command
+    if (renderKey === 0) return undefined;
 
-  if (initError) {
-    return <div key={renderKey}>Error during component initialization</div>;
-  }
+    const renderedEvent = getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, rendering.uid);
+
+    console.debug('Component Library: sending event', renderedEvent);
+
+    window.top?.postMessage(renderedEvent, '*');
+  }, [renderKey, rendering?.uid]);
 
   return (
     <main>
