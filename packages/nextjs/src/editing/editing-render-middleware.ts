@@ -93,7 +93,12 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
   }
 
   /**
-   * Server URL resolution. Use config.sitecoreInternalEditingHostUrl if provided, else SITECORE_INTERNAL_EDITING_HOST_URL if provided, otherwise use host header
+   * Server URL Resolution order (highest to lowest priority):
+   * 1. `config.sitecoreInternalEditingHostUrl` (explicitly set in config)
+   * 2. Environment variable `SITECORE_INTERNAL_EDITING_HOST_URL`
+   * 3. Fallbacks:
+   *    - For XM Cloud deployments → `'http://localhost:3000'`
+   *    - For all other cases → use the request `Host` header
    * Note we use https protocol on Vercel due to serverless function architecture.
    * In all other scenarios, including localhost (with or without a proxy e.g. ngrok)
    * and within a nodejs container, http protocol should be used.
@@ -109,9 +114,13 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       return internalHostUrl;
     }
 
+    // in xmc deployment we always use localhost:3000
+    if (process.env.SITECORE) {
+      return 'http://localhost:3000';
+    }
+
     // to preserve auth headers, use https if we're in our 3 main hosting options
-    const useHttps =
-      (process.env.VERCEL || process.env.SITECORE || process.env.NETLIFY) !== undefined;
+    const useHttps = (process.env.VERCEL || process.env.NETLIFY) !== undefined;
     // use https for requests with auth but also support unsecured http rendering hosts
     return `${useHttps ? 'https' : 'http'}://${req.headers.host}`;
   };
@@ -226,38 +235,12 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       );
     }
 
-    // Cookies with the SameSite=Lax policy set by Next.js setPreviewData function causes CORS issue
-    // when Next.js preview mode is activated, resulting the page to render in normal mode instead.
-    // By replacing it with "SameSite=None; Secure", we ensure cookies are correctly sent with
-    // cross-origin requests, allowing the page to be editable. This change should be reverted
-    // once vercel addresses this open issue: https://github.com/vercel/next.js/issues/49927
-    const setCookieHeader = res.getHeader('Set-Cookie');
+    // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
+    if (mode === LayoutServicePageState.Preview) {
+      const previewSite = `${SITE_KEY}=${query.sc_site}; Path=/; HttpOnly; SameSite=None; Secure`;
+      const previewCookie = `${PREVIEW_KEY}=true; Path=/; HttpOnly; SameSite=None; Secure`;
 
-    if (setCookieHeader && Array.isArray(setCookieHeader)) {
-      const modifiedCookies = setCookieHeader.map((cookie) => {
-        const cookieIdentifiers: { [key: string]: RegExp } = {
-          __prerender_bypass: /^__prerender_bypass=/,
-          __next_preview_data: /^__next_preview_data=/,
-        };
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-        for (const [_, regex] of Object.entries(cookieIdentifiers)) {
-          if (cookie.match(regex)) {
-            return cookie.replace(/SameSite=Lax/, 'SameSite=None; Secure');
-          }
-        }
-        return cookie;
-      });
-
-      // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
-      if (mode === LayoutServicePageState.Preview) {
-        const previewSite = `${SITE_KEY}=${query.sc_site}; Path=/; HttpOnly; SameSite=None; Secure`;
-        const previewCookie = `${PREVIEW_KEY}=true; Path=/; HttpOnly; SameSite=None; Secure`;
-
-        modifiedCookies.push(previewSite, previewCookie);
-      }
-
-      res.setHeader('Set-Cookie', modifiedCookies);
+      res.setHeader('Set-Cookie', [previewSite, previewCookie]);
     }
 
     // Restrict the page to be rendered only within the allowed origins
@@ -344,19 +327,18 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
       res.status(200).send(html);
     } catch (err) {
-      debug.editing('error fetching page route %s: %o', requestUrl, err);
-      debug.editing('falling back to redirect method... ');
+      const error = err as Record<string, unknown>;
 
-      debug.editing(
-        'editing render middleware end in %dms: redirect %o',
-        Date.now() - startTimestamp,
-        {
-          status: 307,
-          route,
-        }
-      );
+      console.error(error);
 
-      res.redirect(route);
+      if (error.response) {
+        console.info(
+          // eslint-disable-next-line quotes
+          "Hint: for non-standard server or Next.js route configurations, you may need to override 'resolvePageUrl' or set the 'sitecoreInternalEditingHostUrl' (or SITECORE_INTERNAL_EDITING_HOST_URL env variable) available on the 'EditingRenderMiddleware' config."
+        );
+      }
+
+      res.status(500).send(`<html><body>${error}</body></html>`);
     }
   };
 }
