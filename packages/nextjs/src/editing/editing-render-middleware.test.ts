@@ -578,7 +578,7 @@ describe('EditingRenderMiddleware', () => {
     });
   });
 
-  describe('intrnal server request host resolution', () => {
+  describe('internal server request host resolution', () => {
     it('should use host header for making the internal request if config setting or env is not provided and we are not in XMC env', async () => {
       const req = mockRequest({ query });
       const reqHost = 'some-other-host';
