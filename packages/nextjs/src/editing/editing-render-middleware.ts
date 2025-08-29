@@ -273,57 +273,72 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     }
     requestUrl.searchParams.append('timestamp', Date.now().toString());
 
-    debug.editing('fetching page route for %s', query.route);
+    try {
+      debug.editing('fetching page route for %s', query.route);
 
-    const pageRes = await this.dataFetcher
-      .get<string>(requestUrl.toString(), {
-        credentials: 'include',
-        headers: propagatedHeaders,
-      })
-      .catch((err) => {
-        // We need to handle not found error provided by Vercel
-        // for `fallback: false` pages
-        if (err.response.status === 404) {
-          return err.response;
-        }
+      const pageRes = await this.dataFetcher
+        .get<string>(requestUrl.toString(), {
+          credentials: 'include',
+          headers: propagatedHeaders,
+        })
+        .catch((err) => {
+          // We need to handle not found error provided by Vercel
+          // for `fallback: false` pages
+          if (err.response.status === 404) {
+            return err.response;
+          }
 
-        throw err;
+          throw err;
+        });
+
+      let html = pageRes.data;
+      if (!html || html.length === 0) {
+        throw new Error(`Failed to render html for ${query.route}`);
+      }
+
+      // replace phkey attribute with key attribute so that newly added renderings
+      // show correct placeholders, so save and refresh won't be needed after adding each rendering
+      html = html.replace(new RegExp('phkey', 'g'), 'key');
+
+      // When SSG, Next will attempt to perform a router.replace on the client-side to inject the query string parms
+      // to the router state. See https://github.com/vercel/next.js/blob/v10.0.3/packages/next/client/index.tsx#L169.
+      // However, this doesn't really work since at this point we're in the editor and the location.search has nothing
+      // to do with the Next route/page we've rendered. Beyond the extraneous request, this can result in a 404 with
+      // certain route configurations (e.g. multiple catch-all routes).
+      // The following line will trick it into thinking we're SSR, thus avoiding any router.replace.
+      html = html.replace(STATIC_PROPS_ID, SERVER_PROPS_ID);
+
+      // remove preview cookies to not leak them to the browser
+      const setCookieHeader = res.getHeader('Set-Cookie');
+      if (setCookieHeader && Array.isArray(setCookieHeader)) {
+        // Filter out Next.js preview cookies
+        const filteredCookies = setCookieHeader.filter(
+          (cookie: string) =>
+            !/^__next_preview_data=/.test(cookie) && !/^__prerender_bypass=/.test(cookie)
+        );
+
+        res.setHeader('Set-Cookie', filteredCookies);
+      }
+
+      debug.editing('editing render middleware end in %dms: %o', Date.now() - startTimestamp, {
+        status: 200,
+        route,
       });
 
-    let html = pageRes.data;
-    if (!html || html.length === 0) {
-      throw new Error(`Failed to render html for ${query.route}`);
+      res.status(200).send(html);
+    } catch (err) {
+      const error = err as Record<string, unknown>;
+
+      console.error(error);
+
+      if (error.response) {
+        console.info(
+          // eslint-disable-next-line quotes
+          "Hint: for non-standard server or Next.js route configurations, you may need to override 'resolvePageUrl' or set the 'sitecoreInternalEditingHostUrl' (or SITECORE_INTERNAL_EDITING_HOST_URL env variable) available on the 'EditingRenderMiddleware' config."
+        );
+      }
+
+      res.status(500).send(`<html><body>${error}</body></html>`);
     }
-
-    // replace phkey attribute with key attribute so that newly added renderings
-    // show correct placeholders, so save and refresh won't be needed after adding each rendering
-    html = html.replace(new RegExp('phkey', 'g'), 'key');
-
-    // When SSG, Next will attempt to perform a router.replace on the client-side to inject the query string parms
-    // to the router state. See https://github.com/vercel/next.js/blob/v10.0.3/packages/next/client/index.tsx#L169.
-    // However, this doesn't really work since at this point we're in the editor and the location.search has nothing
-    // to do with the Next route/page we've rendered. Beyond the extraneous request, this can result in a 404 with
-    // certain route configurations (e.g. multiple catch-all routes).
-    // The following line will trick it into thinking we're SSR, thus avoiding any router.replace.
-    html = html.replace(STATIC_PROPS_ID, SERVER_PROPS_ID);
-
-    // remove preview cookies to not leak them to the browser
-    const setCookieHeader = res.getHeader('Set-Cookie');
-    if (setCookieHeader && Array.isArray(setCookieHeader)) {
-      // Filter out Next.js preview cookies
-      const filteredCookies = setCookieHeader.filter(
-        (cookie: string) =>
-          !/^__next_preview_data=/.test(cookie) && !/^__prerender_bypass=/.test(cookie)
-      );
-
-      res.setHeader('Set-Cookie', filteredCookies);
-    }
-
-    debug.editing('editing render middleware end in %dms: %o', Date.now() - startTimestamp, {
-      status: 200,
-      route,
-    });
-
-    res.status(200).send(html);
   };
 }

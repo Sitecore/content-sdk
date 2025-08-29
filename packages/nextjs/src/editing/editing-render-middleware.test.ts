@@ -534,6 +534,40 @@ describe('EditingRenderMiddleware', () => {
     expect(res.send).to.be.calledOnceWith(`<div>some html ${SERVER_PROPS_ID}</div>`);
   });
 
+  it('should respondWith 500 if rendered html empty', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '' });
+
+    await handler(req, res);
+
+    expect(res.status).to.have.been.calledOnce;
+    expect(res.status).to.have.been.calledWith(500);
+    expect(res.send).to.have.been.calledOnce;
+  });
+
+  it('should respondWith 500 if internal request fails', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon.stub(middleware['dataFetcher'], 'get').throws(new Error('Request failed'));
+
+    await handler(req, res);
+
+    expect(res.status).to.have.been.calledOnce;
+    expect(res.status).to.have.been.calledWith(500);
+    expect(res.send).to.have.been.calledOnce;
+  });
+
   describe('Design Library handling', () => {
     const query = {
       mode: DesignLibraryMode.Normal,
