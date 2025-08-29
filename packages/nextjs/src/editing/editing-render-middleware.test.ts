@@ -425,6 +425,115 @@ describe('EditingRenderMiddleware', () => {
     );
   });
 
+  it('should issue internal request propagating allowed query parameters', async () => {
+    const protectedQuery = {} as Query;
+    protectedQuery[QUERY_PARAM_VERCEL_PROTECTION_BYPASS] = 'bypass123';
+    protectedQuery[QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE] = 'true';
+    protectedQuery['someOtherParam'] = 'shouldNotBeIncluded';
+    const req = mockRequest({ query: { ...query, ...protectedQuery } });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const fetchRequestUrl = fetcherGetStub.getCall(0).args[0];
+    expect(fetchRequestUrl.includes(`${QUERY_PARAM_VERCEL_PROTECTION_BYPASS}=bypass123`)).to.be
+      .true;
+    expect(fetchRequestUrl.includes(`${QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE}=true`)).to.be.true;
+    expect(fetchRequestUrl.includes('someOtherParam=shouldNotBeIncluded')).to.be.false;
+  });
+
+  it('should issue intrnal request propagating allowed headers', async () => {
+    const req = mockRequest({
+      query,
+      headers: {
+        authorization: 'yes',
+        cookie: 'sc_another_cookie=12345',
+        otherHeader: 'shouldNotBeIncluded',
+      },
+    });
+
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const fetchRequestHeaders = fetcherGetStub.getCall(0).args[1]?.headers;
+
+    expect(fetchRequestHeaders).to.not.be.undefined;
+    expect(fetchRequestHeaders).to.have.property(
+      'cookie',
+      'sc_another_cookie=12345;__prerender_bypass=1122334455; Path=/; SameSite=Lax;__next_preview_data=6677889900; Path=/; SameSite=Lax'
+    );
+    expect(fetchRequestHeaders).to.have.property('authorization', 'yes');
+    expect(fetchRequestHeaders).to.not.have.property('otherHeader');
+  });
+
+  it('should return 200 if internal request successful', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    expect(res.status).to.be.calledOnceWith(200);
+  });
+
+  it('should remove nextjs preview cookies before responding to browser', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    expect(res.setHeader).to.have.been.calledWith('Set-Cookie', []);
+    expect(res.status).to.be.calledOnceWith(200);
+  });
+
+  it('should replace static props id in html before responding to browser', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon.stub(middleware['dataFetcher'], 'get').resolves({
+      status: 200,
+      statusText: 'success',
+      data: `<div>some html ${STATIC_PROPS_ID}</div>`,
+    });
+
+    await handler(req, res);
+
+    expect(res.status).to.be.calledOnceWith(200);
+    expect(res.send).to.be.calledOnceWith(`<div>some html ${SERVER_PROPS_ID}</div>`);
+  });
+
   describe('Design Library handling', () => {
     const query = {
       mode: DesignLibraryMode.Normal,
@@ -667,117 +776,6 @@ describe('EditingRenderMiddleware', () => {
       const fetchRequestUrl = fetcherGetStub.getCall(0).args[0];
       expect(fetchRequestUrl.includes(reqHostConfig)).to.be.true;
       delete process.env.SITECORE_INTERNAL_EDITING_HOST_URL;
-    });
-  });
-
-  describe('internal server request', () => {
-    it('should issue internal request propagating allowed query parameters', async () => {
-      const protectedQuery = {} as Query;
-      protectedQuery[QUERY_PARAM_VERCEL_PROTECTION_BYPASS] = 'bypass123';
-      protectedQuery[QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE] = 'true';
-      protectedQuery['someOtherParam'] = 'shouldNotBeIncluded';
-      const req = mockRequest({ query: { ...query, ...protectedQuery } });
-      const res = mockResponse();
-
-      const middleware = new EditingRenderMiddleware();
-
-      const handler = middleware.getHandler();
-
-      const fetcherGetStub = sinon
-        .stub(middleware['dataFetcher'], 'get')
-        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
-
-      await handler(req, res);
-
-      const fetchRequestUrl = fetcherGetStub.getCall(0).args[0];
-      expect(fetchRequestUrl.includes(`${QUERY_PARAM_VERCEL_PROTECTION_BYPASS}=bypass123`)).to.be
-        .true;
-      expect(fetchRequestUrl.includes(`${QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE}=true`)).to.be.true;
-      expect(fetchRequestUrl.includes('someOtherParam=shouldNotBeIncluded')).to.be.false;
-    });
-
-    it('should issue intrnal request propagating allowed headers', async () => {
-      const req = mockRequest({
-        query,
-        headers: {
-          authorization: 'yes',
-          cookie: 'sc_another_cookie=12345',
-          otherHeader: 'shouldNotBeIncluded',
-        },
-      });
-
-      const res = mockResponse();
-
-      const middleware = new EditingRenderMiddleware();
-      const handler = middleware.getHandler();
-
-      const fetcherGetStub = sinon
-        .stub(middleware['dataFetcher'], 'get')
-        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
-
-      await handler(req, res);
-
-      const fetchRequestHeaders = fetcherGetStub.getCall(0).args[1]?.headers;
-
-      expect(fetchRequestHeaders).to.not.be.undefined;
-      expect(fetchRequestHeaders).to.have.property(
-        'cookie',
-        'sc_another_cookie=12345;__prerender_bypass=1122334455; Path=/; SameSite=Lax;__next_preview_data=6677889900; Path=/; SameSite=Lax'
-      );
-      expect(fetchRequestHeaders).to.have.property('authorization', 'yes');
-      expect(fetchRequestHeaders).to.not.have.property('otherHeader');
-    });
-
-    it('should return 200 if internal request successful', async () => {
-      const req = mockRequest({ query });
-      const res = mockResponse();
-
-      const middleware = new EditingRenderMiddleware();
-      const handler = middleware.getHandler();
-
-      sinon
-        .stub(middleware['dataFetcher'], 'get')
-        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
-
-      await handler(req, res);
-
-      expect(res.status).to.be.calledOnceWith(200);
-    });
-
-    it('should remove nextjs preview cookies before responding to browser', async () => {
-      const req = mockRequest({ query });
-      const res = mockResponse();
-
-      const middleware = new EditingRenderMiddleware();
-      const handler = middleware.getHandler();
-
-      sinon
-        .stub(middleware['dataFetcher'], 'get')
-        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
-
-      await handler(req, res);
-
-      expect(res.setHeader).to.have.been.calledWith('Set-Cookie', []);
-      expect(res.status).to.be.calledOnceWith(200);
-    });
-
-    it('should replace static props id in html before responding to browser', async () => {
-      const req = mockRequest({ query });
-      const res = mockResponse();
-
-      const middleware = new EditingRenderMiddleware();
-      const handler = middleware.getHandler();
-
-      sinon.stub(middleware['dataFetcher'], 'get').resolves({
-        status: 200,
-        statusText: 'success',
-        data: `<div>some html ${STATIC_PROPS_ID}</div>`,
-      });
-
-      await handler(req, res);
-
-      expect(res.status).to.be.calledOnceWith(200);
-      expect(res.send).to.be.calledOnceWith(`<div>some html ${SERVER_PROPS_ID}</div>`);
     });
   });
 });
