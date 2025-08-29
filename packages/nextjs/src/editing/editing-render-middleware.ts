@@ -6,7 +6,6 @@ import {
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
   DesignLibraryRenderPreviewData,
-  EditingPreviewData,
   PREVIEW_KEY,
   isDesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
@@ -126,7 +125,8 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
   };
 
   private handler = async (req: EditingNextApiRequest, res: NextApiResponse): Promise<void> => {
-    const { query, body, method, headers } = req;
+    const { body, method, headers } = req;
+    let query = req.query;
 
     debug.editing('editing render middleware start: %o', {
       method,
@@ -201,8 +201,8 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     }
 
     if (isDesignLibraryMode(mode)) {
-      res.setPreviewData(
-        {
+      query = {
+        ...query,
           itemId: query.sc_itemid,
           componentUid: query.sc_uid,
           renderingId: query.sc_renderingId,
@@ -211,15 +211,11 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           mode,
           dataSourceId: query.dataSourceId,
           version: query.sc_version,
-        } as DesignLibraryRenderPreviewData,
-        {
-          maxAge: 3,
-        }
-      );
+      };
     } else {
-      res.setPreviewData(
-        {
-          site: query.sc_site,
+      query = {
+        ...query,
+        site: query.sc_site,
           itemId: query.sc_itemid,
           language: query.sc_lang,
           // for sc_variantId we may employ multiple variants (page-layout + component level)
@@ -227,12 +223,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           version: query.sc_version,
           mode: query.mode,
           layoutKind: query.sc_layoutKind,
-        } as EditingPreviewData,
-        // Cache the preview data for 3 seconds to ensure the page is rendered with the correct preview data not the cached one
-        {
-          maxAge: 3,
-        }
-      );
+      };
     }
 
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode

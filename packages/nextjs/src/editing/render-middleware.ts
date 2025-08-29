@@ -37,11 +37,11 @@ export abstract class RenderMiddlewareBase {
    * @returns Object of approved headers
    */
   protected getHeadersForPropagation = (
-    headers: IncomingHttpHeaders
+    headers: IncomingHttpHeaders | Headers
   ): { [key: string]: string } => {
     // Filter and normalize headers
     const filteredHeaders = EDITING_PASS_THROUGH_HEADERS.reduce((acc, header) => {
-      const value = headers[header];
+      const value = (headers as IncomingHttpHeaders)[header] || (headers as Headers).get(header);
       if (value) {
         acc[header] = Array.isArray(value) ? value.join(', ') : value;
       }

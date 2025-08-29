@@ -10,6 +10,10 @@ export {
   EditingConfigMiddlewareConfig,
 } from './editing-config-middleware';
 export {
+  AppRouterEditingRenderMiddleware,
+  AppRouterEditingRenderMiddlewareConfig,
+} from './route-handler/editing-render-middleware';
+export {
   RenderingType,
   EDITING_COMPONENT_PLACEHOLDER,
   EDITING_COMPONENT_ID,
