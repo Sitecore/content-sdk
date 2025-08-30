@@ -46,7 +46,6 @@ export type AppRouterEditingRenderMiddlewareConfig = {
 export type EditingNextApiRequest = NextApiRequest & {
   query: EditingRenderQueryParams;
 };
-
 /**
  * Middleware / handler for use in the editing render Next.js API route (e.g. '/api/editing/render')
  * which is required for Sitecore editing support.
@@ -331,8 +330,10 @@ export class AppRouterEditingRenderMiddleware extends RenderMiddlewareBase {
       // certain route configurations (e.g. multiple catch-all routes).
       // The following line will trick it into thinking we're SSR, thus avoiding any router.replace.
       html = html.replace(STATIC_PROPS_ID, SERVER_PROPS_ID);
-
-      // remove preview cookies to not leak them to the browser
+      // disable draft mode after page is rendered
+      
+      // remove preview and draft cookies to not leak them to the browser
+      await draft.disable();
       const setCookieHeader = headers.get('Set-Cookie');
       if (setCookieHeader && Array.isArray(setCookieHeader)) {
         // Filter out Next.js preview cookies
@@ -348,9 +349,9 @@ export class AppRouterEditingRenderMiddleware extends RenderMiddlewareBase {
         status: 200,
         route,
       });
-
+      
       responseHeaders['Content-Type'] = 'text/html; charset=utf-8';
-
+      
       return new Response(html, { status: 200, headers: responseHeaders });
     } catch (err) {
       debug.editing('error fetching page route %s: %o', requestUrl, err);
@@ -369,3 +370,4 @@ export class AppRouterEditingRenderMiddleware extends RenderMiddlewareBase {
     }
   };
 }
+
