@@ -15,7 +15,7 @@ type RouteHandlerOptions = {
   sites: SiteInfo[];
   /**
    * The number of seconds after which the cache should be revalidated.
-   * Omit or pass false to cache indefinitely.
+   * Pass false to cache indefinitely.
    * Default is 60 seconds.
    */
   revalidate?: number | false;
