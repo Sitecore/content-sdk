@@ -6,15 +6,18 @@ import {
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
   DesignLibraryRenderPreviewData,
-  PREVIEW_KEY,
   isDesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
-import { enforceCors, getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';
-import { SITE_KEY } from '@sitecore-content-sdk/core/site';
+import { getAllowedOriginsFromEnv, getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
+import {
+  getPreviewCookies,
+  getRequiredQueryParams,
+  getEditingParams,
+  getFilteredCookies,
+} from './utils';
 
 /**
  * Configuration for the Editing Render Middleware.
@@ -80,11 +83,69 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     return this.handler;
   }
 
+  protected getEditingRequestHtml = async (
+    requestUrl: URL,
+    query: Partial<{ [key: string]: string | string[] }>,
+    headers: { [key: string]: string | string[] | undefined },
+    cookies: string[]
+  ): Promise<string> => {
+    // Get query string parameters to propagate on subsequent requests (e.g. for deployment protection bypass)
+    const propagatedQsParams = this.getQueryParamsForPropagation(query);
+
+    // Get headers to propagate on subsequent requests
+    const propagatedHeaders = this.getHeadersForPropagation(headers);
+
+    // Grab the Next.js preview cookies to send on to the render request
+    propagatedHeaders.cookie = `${
+      propagatedHeaders.cookie ? propagatedHeaders.cookie + ';' : ''
+    }${cookies.join(';')}`;
+    for (const key in propagatedQsParams) {
+      if ({}.hasOwnProperty.call(propagatedQsParams, key)) {
+        requestUrl.searchParams.append(key, propagatedQsParams[key]);
+      }
+    }
+    requestUrl.searchParams.append('timestamp', Date.now().toString());
+
+    const pageRes = await this.dataFetcher
+      .get<string>(requestUrl.toString(), {
+        credentials: 'include',
+        headers: propagatedHeaders,
+      })
+      .catch((err) => {
+        // We need to handle not found error provided by Vercel
+        // for `fallback: false` pages
+        if (err.response.status === 404) {
+          return err.response;
+        }
+
+        throw err;
+      });
+
+    let html = pageRes.data;
+    if (!html || html.length === 0) {
+      throw new Error(`Failed to render html for ${requestUrl.toString()}`);
+    }
+
+    // replace phkey attribute with key attribute so that newly added renderings
+    // show correct placeholders, so save and refresh won't be needed after adding each rendering
+    html = html.replace(new RegExp('phkey', 'g'), 'key');
+
+    // When SSG, Next will attempt to perform a router.replace on the client-side to inject the query string parms
+    // to the router state. See https://github.com/vercel/next.js/blob/v10.0.3/packages/next/client/index.tsx#L169.
+    // However, this doesn't really work since at this point we're in the editor and the location.search has nothing
+    // to do with the Next route/page we've rendered. Beyond the extraneous request, this can result in a 404 with
+    // certain route configurations (e.g. multiple catch-all routes).
+    // The following line will trick it into thinking we're SSR, thus avoiding any router.replace.
+    html = html.replace(STATIC_PROPS_ID, SERVER_PROPS_ID);
+
+    return html;
+  };
+
   /**
    * Gets the Content-Security-Policy header value
    * @returns Content-Security-Policy header value
    */
-  private getSCPHeader() {
+  protected getSCPHeader() {
     return `frame-ancestors 'self' ${[
       ...getAllowedOriginsFromEnv(),
       ...EDITING_ALLOWED_ORIGINS,
@@ -106,7 +167,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
    * https://vercel.com/docs/environment-variables#system-environment-variables
    * @param {NextApiRequest} req
    */
-  private resolveServerUrl = (req: NextApiRequest) => {
+  protected resolveServerUrl = (req: NextApiRequest) => {
     const internalHostUrl =
       this.config?.sitecoreInternalEditingHostUrl || process.env.SITECORE_INTERNAL_EDITING_HOST_URL;
     if (internalHostUrl) {
@@ -125,8 +186,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
   };
 
   private handler = async (req: EditingNextApiRequest, res: NextApiResponse): Promise<void> => {
-    const { body, method, headers } = req;
-    let query = req.query;
+    const { body, method, headers, query } = req;
 
     debug.editing('editing render middleware start: %o', {
       method,
@@ -135,7 +195,14 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       body,
     });
 
-    if (!enforceCors(req, res, EDITING_ALLOWED_ORIGINS)) {
+    const corsHeaders = getEnforcedCorsHeaders({
+      requestMethod: req.method,
+      headers: req.headers,
+      presetCorsHeader: res.getHeader('Access-Control-Allow-Origin') as string,
+      allowedOrigins: EDITING_ALLOWED_ORIGINS,
+    });
+
+    if (!corsHeaders) {
       debug.editing(
         'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
       );
@@ -143,9 +210,12 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         html: `<html><body>Requests from origin ${req.headers?.origin} not allowed</body></html>`,
       });
     }
+    Object.keys(corsHeaders).forEach((key) => {
+      res.setHeader(key, corsHeaders[key]);
+    });
 
     // Validate secret
-    const secret = query[QUERY_PARAM_EDITING_SECRET] ?? body?.jssEditingSecret;
+    const secret = query[QUERY_PARAM_EDITING_SECRET];
     if (secret !== getEditingSecret()) {
       debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
       return res.status(401).json({
@@ -173,19 +243,8 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     const startTimestamp = Date.now();
 
     const mode = query.mode;
-    const defaultRequiredParams = ['sc_site', 'sc_itemid', 'sc_lang', 'route', 'mode'];
 
-    const componentRequiredParams = [
-      'sc_site',
-      'sc_itemid',
-      'sc_renderingId',
-      'sc_uid',
-      'sc_lang',
-      'mode',
-    ];
-    const requiredQueryParams = isDesignLibraryMode(mode)
-      ? componentRequiredParams
-      : defaultRequiredParams;
+    const requiredQueryParams = getRequiredQueryParams(mode);
 
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
 
@@ -200,38 +259,15 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       });
     }
 
-    if (isDesignLibraryMode(mode)) {
-      query = {
-        ...query,
-          itemId: query.sc_itemid,
-          componentUid: query.sc_uid,
-          renderingId: query.sc_renderingId,
-          language: query.sc_lang,
-          site: query.sc_site,
-          mode,
-          dataSourceId: query.dataSourceId,
-          version: query.sc_version,
-      };
-    } else {
-      query = {
-        ...query,
-        site: query.sc_site,
-          itemId: query.sc_itemid,
-          language: query.sc_lang,
-          // for sc_variantId we may employ multiple variants (page-layout + component level)
-          variantIds: query.sc_variant?.split(',') || [DEFAULT_VARIANT],
-          version: query.sc_version,
-          mode: query.mode,
-          layoutKind: query.sc_layoutKind,
-      };
-    }
+    res.setPreviewData(getEditingParams(query as { [key: string]: string }), {
+      maxAge: 3,
+    });
 
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
     if (mode === LayoutServicePageState.Preview) {
-      const previewSite = `${SITE_KEY}=${query.sc_site}; Path=/; HttpOnly; SameSite=None; Secure`;
-      const previewCookie = `${PREVIEW_KEY}=true; Path=/; HttpOnly; SameSite=None; Secure`;
+      const previewCookies = getPreviewCookies(query.sc_site);
 
-      res.setHeader('Set-Cookie', [previewSite, previewCookie]);
+      res.setHeader('Set-Cookie', previewCookies);
     }
 
     // Restrict the page to be rendered only within the allowed origins
@@ -242,73 +278,19 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     const base = this.resolveServerUrl(req);
     const requestUrl = new URL(route, base);
-
-    // Get query string parameters to propagate on subsequent requests (e.g. for deployment protection bypass)
-    const params = this.getQueryParamsForPropagation(query);
-
-    // Get headers to propagate on subsequent requests
-    const propagatedHeaders = this.getHeadersForPropagation(headers);
-
-    // Grab the Next.js preview cookies to send on to the render request
     const cookies = res.getHeader('Set-Cookie') as string[];
-    propagatedHeaders.cookie = `${
-      propagatedHeaders.cookie ? propagatedHeaders.cookie + ';' : ''
-    }${cookies.join(';')}`;
 
     // Make actual render request for page route, passing on preview cookies as well as any approved query string parameters.
     // Note timestamp effectively disables caching the request (no amount of cache headers seemed to do it)
-    for (const key in params) {
-      if ({}.hasOwnProperty.call(params, key)) {
-        requestUrl.searchParams.append(key, params[key]);
-      }
-    }
-    requestUrl.searchParams.append('timestamp', Date.now().toString());
-
     try {
       debug.editing('fetching page route for %s', query.route);
 
-      const pageRes = await this.dataFetcher
-        .get<string>(requestUrl.toString(), {
-          credentials: 'include',
-          headers: propagatedHeaders,
-        })
-        .catch((err) => {
-          // We need to handle not found error provided by Vercel
-          // for `fallback: false` pages
-          if (err.response.status === 404) {
-            return err.response;
-          }
-
-          throw err;
-        });
-
-      let html = pageRes.data;
-      if (!html || html.length === 0) {
-        throw new Error(`Failed to render html for ${query.route}`);
-      }
-
-      // replace phkey attribute with key attribute so that newly added renderings
-      // show correct placeholders, so save and refresh won't be needed after adding each rendering
-      html = html.replace(new RegExp('phkey', 'g'), 'key');
-
-      // When SSG, Next will attempt to perform a router.replace on the client-side to inject the query string parms
-      // to the router state. See https://github.com/vercel/next.js/blob/v10.0.3/packages/next/client/index.tsx#L169.
-      // However, this doesn't really work since at this point we're in the editor and the location.search has nothing
-      // to do with the Next route/page we've rendered. Beyond the extraneous request, this can result in a 404 with
-      // certain route configurations (e.g. multiple catch-all routes).
-      // The following line will trick it into thinking we're SSR, thus avoiding any router.replace.
-      html = html.replace(STATIC_PROPS_ID, SERVER_PROPS_ID);
-
+      const html = await this.getEditingRequestHtml(requestUrl, query, headers, cookies);
+      
       // remove preview cookies to not leak them to the browser
-      const setCookieHeader = res.getHeader('Set-Cookie');
-      if (setCookieHeader && Array.isArray(setCookieHeader)) {
-        // Filter out Next.js preview cookies
-        const filteredCookies = setCookieHeader.filter(
-          (cookie: string) =>
-            !/^__next_preview_data=/.test(cookie) && !/^__prerender_bypass=/.test(cookie)
-        );
-
-        res.setHeader('Set-Cookie', filteredCookies);
+      if (cookies && Array.isArray(cookies)) {
+        const filteredCookies = getFilteredCookies(cookies);
+        filteredCookies && res.setHeader('Set-Cookie', filteredCookies);
       }
 
       debug.editing('editing render middleware end in %dms: %o', Date.now() - startTimestamp, {

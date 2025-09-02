@@ -154,12 +154,15 @@ export const getEnforcedCorsHeaders = ({
   presetCorsHeader,
   allowedOrigins = [],
 }: {
-  requestMethod: string;
+  requestMethod: string | undefined;
   headers: IncomingHttpHeaders | Headers;
   presetCorsHeader?: string | string[];
   allowedOrigins?: string[];
 }) => {
-  const origin = (headers as IncomingHttpHeaders).origin || (headers as Headers).get('origin');
+  // ugly but gotta satisfy both node.js and web fetch Headers interface somehow
+  const origin = (headers as Headers).get
+    ? (headers as Headers).get('origin')
+    : (headers as IncomingHttpHeaders).origin;
   if (!origin) {
     return {};
   }
@@ -177,8 +180,7 @@ export const getEnforcedCorsHeaders = ({
     origin &&
     allowedOrigins.some(
       (allowedOrigin) =>
-        origin === allowedOrigin ||
-        new RegExp(convertToWildcardRegex(allowedOrigin)).test(origin)
+        origin === allowedOrigin || new RegExp(convertToWildcardRegex(allowedOrigin)).test(origin)
     )
   ) {
     const corsHeaders: { [key: string]: string } = {
