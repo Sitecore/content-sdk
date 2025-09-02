@@ -41,7 +41,9 @@ export abstract class RenderMiddlewareBase {
   ): { [key: string]: string } => {
     // Filter and normalize headers
     const filteredHeaders = EDITING_PASS_THROUGH_HEADERS.reduce((acc, header) => {
-      const value = (headers as IncomingHttpHeaders)[header] || (headers as Headers).get(header);
+      const value = (headers as Headers).get
+        ? (headers as Headers).get(header)
+        : (headers as IncomingHttpHeaders)[header];
       if (value) {
         acc[header] = Array.isArray(value) ? value.join(', ') : value;
       }
