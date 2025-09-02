@@ -8,7 +8,7 @@
 
 > **getDynamicPlaceholderPattern**(`placeholder`): `RegExp`
 
-Defined in: [packages/core/src/layout/utils.ts:81](https://github.com/Sitecore/content-sdk/blob/97c74d906817b2a79604992740a86febd31cad35/packages/core/src/layout/utils.ts#L81)
+Defined in: [packages/core/src/layout/utils.ts:81](https://github.com/Sitecore/content-sdk/blob/084c73091f76950d3d052732a34e9c3c118b9748/packages/core/src/layout/utils.ts#L81)
 
 Returns a regular expression pattern for a dynamic placeholder name.
 

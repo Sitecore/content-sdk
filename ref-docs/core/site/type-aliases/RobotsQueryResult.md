@@ -8,7 +8,7 @@
 
 > **RobotsQueryResult** = `object`
 
-Defined in: [packages/core/src/site/robots-service.ts:32](https://github.com/Sitecore/content-sdk/blob/97c74d906817b2a79604992740a86febd31cad35/packages/core/src/site/robots-service.ts#L32)
+Defined in: [packages/core/src/site/robots-service.ts:32](https://github.com/Sitecore/content-sdk/blob/084c73091f76950d3d052732a34e9c3c118b9748/packages/core/src/site/robots-service.ts#L32)
 
 The schema of data returned in response to robots.txt request
 
@@ -18,7 +18,7 @@ The schema of data returned in response to robots.txt request
 
 > **site**: `object`
 
-Defined in: [packages/core/src/site/robots-service.ts:32](https://github.com/Sitecore/content-sdk/blob/97c74d906817b2a79604992740a86febd31cad35/packages/core/src/site/robots-service.ts#L32)
+Defined in: [packages/core/src/site/robots-service.ts:32](https://github.com/Sitecore/content-sdk/blob/084c73091f76950d3d052732a34e9c3c118b9748/packages/core/src/site/robots-service.ts#L32)
 
 #### siteInfo
 
