@@ -30,7 +30,6 @@ import {
 import {
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
-  EDITING_PASS_THROUGH_HEADERS,
 } from './constants';
 
 chai.use(sinonChai);
@@ -679,8 +678,7 @@ describe('editing/utils', () => {
 
       const calledUrl = mockDataFetcher.get.firstCall.args[0];
       const url = new URL(calledUrl);
-      const timestamp = parseInt(url.searchParams.get('timestamp') || '0');
-
+      const timestamp = parseInt(url.searchParams.get('timestamp') || '0', 10);
       expect(timestamp).to.be.at.least(beforeTime);
       expect(timestamp).to.be.at.most(afterTime);
     });
