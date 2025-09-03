@@ -5,6 +5,7 @@ import {
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/core/editing';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { NextRequest } from 'next/server';
 import { getEditingSecret } from '../utils/utils';
 import { draftMode } from 'next/headers';
@@ -18,7 +19,7 @@ import {
   getSCPHeader,
   resolveServerUrl,
 } from '../editing/utils';
-import { LayoutServicePageState } from '@sitecore-content-sdk/react';
+import { unstable_cache } from 'next/cache';
 
 type EditingHandlerOptions = {
   /**
@@ -66,18 +67,17 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
   };
 
   const GET = async (req: NextRequest) => {
-    const { body, method, headers } = req;
+    const { method, headers } = req;
     // init query string values
     const query: EditingRenderQueryParams = {} as EditingRenderQueryParams;
     req.nextUrl.searchParams.forEach((value, key) => {
       query[key] = value;
     });
 
-    debug.editing('editing render middleware start: %o', {
+    debug.editing('editing render handler start: %o', {
       method,
       query,
       headers,
-      body,
     });
 
     const expectedCorsHeaders = getEnforcedCorsHeaders({
@@ -178,7 +178,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       const filteredCookies = getFilteredCookies(convertedCookies);
       responseHeaders['Set-Cookie'] = filteredCookies?.join('; ') || '';
 
-      debug.editing('editing render middleware end in %dms: %o', Date.now() - startTimestamp, {
+      debug.editing('editing render handler end in %dms: %o', Date.now() - startTimestamp, {
         status: 200,
         route,
       });
@@ -191,7 +191,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       debug.editing('falling back to redirect method... ');
 
       debug.editing(
-        'editing render middleware end in %dms: redirect %o',
+        'editing render handler end in %dms: redirect %o',
         Date.now() - startTimestamp,
         {
           status: 307,
