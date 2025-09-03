@@ -129,12 +129,12 @@ describe('utils', () => {
       delete process.env.JSS_ALLOWED_ORIGINS;
     });
 
-    it('should return null when theres no origin header', () => {
+    it('should return truthly empty object when theres no origin header', () => {
       const result = getEnforcedCorsHeaders({
         requestMethod: 'GET',
         headers: {},
       });
-      expect(result).to.be.null;
+      expect(result).to.be.equal({});
     });
 
     it('should return headers if origin is found in allowedOrigins passed as argument', () => {
@@ -149,7 +149,7 @@ describe('utils', () => {
       });
     });
 
-    it('should return null if origin matches neither allowedOrigins from JSS_ALLOWED_ORIGINS env variable nor argument', () => {
+    it('should return empy if origin matches neither allowedOrigins from JSS_ALLOWED_ORIGINS env variable nor argument', () => {
       process.env.JSS_ALLOWED_ORIGINS = 'https://strictallowed.com, https://alsoallowed.com';
       const result = getEnforcedCorsHeaders({
         requestMethod: 'GET',

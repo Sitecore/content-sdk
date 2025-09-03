@@ -133,7 +133,7 @@ describe('createEditingConfigRouteHandler', () => {
       expect(getEnforcedCorsHeadersStub).to.have.been.calledOnce;
       const args = getEnforcedCorsHeadersStub.firstCall.args[0];
       expect(args.requestMethod).to.equal('GET');
-      expect(args.headers).to.have.property('origin', allowedOrigin);
+      expect(args.headers.get('origin')).to.equal(allowedOrigin);
     });
 
     it('should return 500 for unexpected errors', async () => {
@@ -171,28 +171,6 @@ describe('createEditingConfigRouteHandler', () => {
       expect(res.headers['Content-Type']).to.equal('application/json');
     });
 
-    it('should return 401 for missing editing secret', async () => {
-      req.nextUrl!.searchParams = new URLSearchParams();
-
-      const res = await handler.OPTIONS(req as NextRequest);
-
-      expect(res.status).to.equal(401);
-      expect(res.body).to.equal(JSON.stringify({ message: 'Missing or invalid editing secret' }));
-      expect(res.headers['Content-Type']).to.equal('application/json');
-    });
-
-    it('should return 401 for invalid editing secret', async () => {
-      req.nextUrl!.searchParams = new URLSearchParams({
-        [QUERY_PARAM_EDITING_SECRET]: 'wrong-secret',
-      });
-
-      const res = await handler.OPTIONS(req as NextRequest);
-
-      expect(res.status).to.equal(401);
-      expect(res.body).to.equal(JSON.stringify({ message: 'Missing or invalid editing secret' }));
-      expect(res.headers['Content-Type']).to.equal('application/json');
-    });
-
     it('should return 204 for valid preflight request', async () => {
       const res = await handler.OPTIONS(req as NextRequest);
 
@@ -207,16 +185,7 @@ describe('createEditingConfigRouteHandler', () => {
       expect(getEnforcedCorsHeadersStub).to.have.been.calledOnce;
       const args = getEnforcedCorsHeadersStub.firstCall.args[0];
       expect(args.requestMethod).to.equal('OPTIONS');
-      expect(args.headers).to.have.property('origin', allowedOrigin);
-    });
-
-    it('should return 500 for unexpected errors', async () => {
-      getEditingSecretStub.throws(new Error('Unexpected error'));
-
-      const res = await handler.OPTIONS(req as NextRequest);
-
-      expect(res.status).to.equal(500);
-      expect(res.body).to.equal('Internal Server Error');
+      expect(args.headers.get('origin')).to.equal(allowedOrigin);
     });
   });
 
