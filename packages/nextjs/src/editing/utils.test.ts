@@ -178,7 +178,7 @@ describe('editing/utils', () => {
         site: 'test-site',
         itemId: 'item-123',
         language: 'en',
-        variantIds: ['variant1', 'variant2'],
+        variantIds: 'variant1,variant2',
         version: '1',
         mode: 'edit',
         layoutKind: 'mvc',
@@ -195,7 +195,7 @@ describe('editing/utils', () => {
 
       const params = getEditingParams(query);
 
-      expect(params.variantIds).to.deep.equal([DEFAULT_VARIANT]);
+      expect(params.variantIds).to.equal(DEFAULT_VARIANT);
     });
 
     it('should handle empty variant string', () => {
@@ -209,7 +209,7 @@ describe('editing/utils', () => {
 
       const params = getEditingParams(query);
 
-      expect(params.variantIds).to.deep.equal(['']);
+      expect(params.variantIds).to.equal(DEFAULT_VARIANT);
     });
 
     it('should handle undefined values gracefully', () => {

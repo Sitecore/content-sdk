@@ -10,6 +10,7 @@ import { NextRequest } from 'next/server';
 import { getEditingSecret } from '../utils/utils';
 import { draftMode } from 'next/headers';
 import {
+  getEditingParams,
   getEditingRequestHtml,
   getFilteredCookies,
   getHeadersForPropagation,
@@ -19,7 +20,6 @@ import {
   getSCPHeader,
   resolveServerUrl,
 } from '../editing/utils';
-import { unstable_cache } from 'next/cache';
 
 type EditingHandlerOptions = {
   /**
@@ -160,8 +160,11 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     try {
       debug.editing('fetching page route for %s', query.route);
       // Get query string parameters to propagate on subsequent requests (e.g. for deployment protection bypass)
-      const propagatedQsParams = getQueryParamsForPropagation(query as { [key: string]: string });
-
+      // Additionally ,in app router preview data is passed through query string instead of preview data cookie
+      const propagatedQsParams = {
+        ...getQueryParamsForPropagation(query as { [key: string]: string }),
+        ...getEditingParams(query as { [key: string]: string }),
+      };
       // Get headers to propagate on subsequent requests
       const propagatedHeaders = getHeadersForPropagation(headers);
       const html = await getEditingRequestHtml(

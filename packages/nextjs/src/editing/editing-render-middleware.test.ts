@@ -595,7 +595,7 @@ describe('EditingRenderMiddleware', () => {
 
       await handler(req, res);
 
-      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
+      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWithMatch({
         itemId: query.sc_itemid,
         componentUid: query.sc_uid,
         renderingId: query.sc_renderingId,
@@ -627,7 +627,7 @@ describe('EditingRenderMiddleware', () => {
 
       await handler(req, res);
 
-      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
+      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWithMatch({
         itemId: query.sc_itemid,
         componentUid: query.sc_uid,
         renderingId: query.sc_renderingId,

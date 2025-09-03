@@ -173,7 +173,7 @@ describe('SitecoreClient', () => {
         language: 'en',
         version: '1',
         layoutKind: LayoutKind.Final,
-        variantIds: ['variant1', 'comp_variant2'],
+        variantIds: 'variant1,comp_variant2',
       };
 
       const result = await customClient.getPreview(previewData);
@@ -713,7 +713,7 @@ describe('SitecoreClient', () => {
         mode: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
-        variantIds: ['variant1', 'comp_variant2'],
+        variantIds: 'variant1,comp_variant2',
         layoutKind: LayoutKind.Final,
       };
 
@@ -764,7 +764,7 @@ describe('SitecoreClient', () => {
         mode: LayoutServicePageState.Preview,
         language: 'en',
         version: '1',
-        variantIds: ['variant1', 'comp_variant2'],
+        variantIds: 'variant1,comp_variant2',
         layoutKind: LayoutKind.Final,
       };
 
@@ -818,7 +818,7 @@ describe('SitecoreClient', () => {
         pageState: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
-        variantIds: [variant, ...componentVariantIds],
+        variantIds: [variant, ...componentVariantIds].join(','),
         layoutKind: LayoutKind.Final,
       };
 
@@ -852,7 +852,7 @@ describe('SitecoreClient', () => {
         mode: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
-        variantIds: [],
+        variantIds: '',
         layoutKind: LayoutKind.Final,
       };
 
@@ -873,7 +873,7 @@ describe('SitecoreClient', () => {
         mode: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
-        variantIds: [],
+        variantIds: '',
         layoutKind: LayoutKind.Final,
       };
 

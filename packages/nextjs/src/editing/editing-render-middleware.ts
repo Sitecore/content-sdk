@@ -142,9 +142,19 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       });
     }
 
-    res.setPreviewData(getEditingParams(query as { [key: string]: string }), {
-      maxAge: 3,
-    });
+    const previewDataParams = getEditingParams(query as { [key: string]: string });
+
+    // With the editing optimization work done, we can cut the dependency on nextjs preview mode
+    // @TODO in next major release: pass preview data via query string, variantIds will be a single string too
+    res.setPreviewData(
+      {
+        ...previewDataParams,
+        variantIds: previewDataParams.variantIds?.split(','),
+      },
+      {
+        maxAge: 3,
+      }
+    );
 
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
     if (mode === LayoutServicePageState.Preview) {

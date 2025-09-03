@@ -48,7 +48,9 @@ export const getEditingSecretFromRequest = (req: NextApiRequest | NextRequest) =
  * @param {{ [key: string]: string | undefined }} query query string values
  * @returns {EditingRenderQueryParams} editing parameters
  */
-export const getEditingParams = (query: { [key: string]: string | undefined }) => {
+export const getEditingParams = (query: {
+  [key: string]: string | undefined;
+}): { [key: string]: string | undefined } => {
   const params = isDesignLibraryMode(query.mode)
     ? {
         itemId: query.sc_itemid,
@@ -65,7 +67,8 @@ export const getEditingParams = (query: { [key: string]: string | undefined }) =
         itemId: query.sc_itemid,
         language: query.sc_lang,
         // for sc_variantId we may employ multiple variants (page-layout + component level)
-        variantIds: query.sc_variant?.split(',') || [DEFAULT_VARIANT],
+        // they will be separated by commas (,)
+        variantIds: query.sc_variant || DEFAULT_VARIANT,
         version: query.sc_version,
         mode: query.mode,
         layoutKind: query.sc_layoutKind,
@@ -167,6 +170,10 @@ export const getHeadersForPropagation = (
   return filteredHeaders;
 };
 
+export const isCSDKPreview = (headers: Headers) => {
+  return !!headers.get('__content_sdk_preview');
+};
+
 /**
  * Performs an internal request to get the HTML for the editing mode
  * @param {string} requestUrl URL to send request to
@@ -178,7 +185,7 @@ export const getHeadersForPropagation = (
  */
 export const getEditingRequestHtml = async (
   requestUrl: URL,
-  propagatedQsParams: { [key: string]: string },
+  propagatedQsParams: { [key: string]: string | undefined },
   propagatedHeaders: { [key: string]: string },
   cookies: string[],
   dataFetcher: NativeDataFetcher
@@ -187,9 +194,16 @@ export const getEditingRequestHtml = async (
   propagatedHeaders.cookie = `${
     propagatedHeaders.cookie ? propagatedHeaders.cookie + ';' : ''
   }${cookies.join(';')}`;
+  // enable content sdk preview
+  propagatedHeaders.__content_sdk_preview = '1';
+
+  Object.keys(propagatedQsParams).forEach((key) => {
+    console.log('propagagated key', key);
+  });
+
   for (const key in propagatedQsParams) {
     if ({}.hasOwnProperty.call(propagatedQsParams, key)) {
-      requestUrl.searchParams.append(key, propagatedQsParams[key]);
+      propagatedQsParams[key] && requestUrl.searchParams.append(key, propagatedQsParams[key]);
     }
   }
   requestUrl.searchParams.append('timestamp', Date.now().toString());

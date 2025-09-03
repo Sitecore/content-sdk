@@ -253,7 +253,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.body).to.include('some html content');
     });
 
-    it('should launch internal request with correct editing parameters', async () => {
+    it('should launch internal request and pass preview data as search params', async () => {
       const mockQuery = {
         [QUERY_PARAM_EDITING_SECRET]: secret,
         mode: 'edit',
@@ -292,6 +292,13 @@ describe('createEditingRenderRouteHandlers', () => {
       // Verify propagated query parameters
       expect(propagatedQsParams).to.deep.equal({
         [QUERY_PARAM_VERCEL_PROTECTION_BYPASS]: 'bypass123',
+        itemId: mockQuery.sc_itemid,
+        language: mockQuery.sc_lang,
+        site: mockQuery.sc_site,
+        mode: mockQuery.mode,
+        variantIds: mockQuery.sc_variant,
+        version: mockQuery.sc_version,
+        layoutKind: mockQuery.sc_layoutKind,
       });
 
       // Verify propagated headers
@@ -332,10 +339,15 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
 
       const [, propagatedQsParams] = getEditingRequestHtmlStub.firstCall.args;
-      expect(propagatedQsParams).to.deep.equal(protectionParams);
+      expect(propagatedQsParams[QUERY_PARAM_VERCEL_PROTECTION_BYPASS]).to.equal(
+        protectionParams[QUERY_PARAM_VERCEL_PROTECTION_BYPASS]
+      );
+      expect(propagatedQsParams[QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE]).to.equal(
+        protectionParams[QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE]
+      );
     });
 
-    it('should propagate correct headers to internal request', async () => {
+    it('should propagate headers to internal request', async () => {
       const testHeaders = new Headers({
         origin: allowedOrigin,
         host: 'localhost:3000',
@@ -362,7 +374,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(propagatedHeaders).to.deep.equal(expectedPropagatedHeaders);
     });
 
-    it('should handle cookies correctly for internal request', async () => {
+    it('should pass cookies correctly for internal request', async () => {
       const mockCookies = [
         { name: 'sessionId', value: 'sess_123456' },
         { name: 'userId', value: 'user_789' },
@@ -384,7 +396,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(convertedCookies).to.include('theme=dark');
     });
 
-    it('should construct correct request URL for internal request', async () => {
+    it('should construct request URL with route for internal request', async () => {
       const testRoute = '/products/category/item';
 
       req.nextUrl!.searchParams = mockSearchParams({
