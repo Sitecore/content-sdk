@@ -2,17 +2,17 @@
 export {
   EditingRenderMiddleware,
   EditingRenderMiddlewareConfig,
-  isDesignLibraryPreviewData,
 } from './editing-render-middleware';
+export {
+  isDesignLibraryPreviewData,
+  getQueryParamsForPropagation,
+  getHeadersForPropagation,
+} from './utils';
 export { FEAASRenderMiddleware, FEAASRenderMiddlewareConfig } from './feaas-render-middleware';
 export {
   EditingConfigMiddleware,
   EditingConfigMiddlewareConfig,
 } from './editing-config-middleware';
-export {
-  AppRouterEditingRenderMiddleware,
-  AppRouterEditingRenderMiddlewareConfig,
-} from './route-handler/editing-render-middleware';
 export {
   RenderingType,
   EDITING_COMPONENT_PLACEHOLDER,
