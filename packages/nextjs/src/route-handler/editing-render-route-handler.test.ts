@@ -4,11 +4,10 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextRequest } from 'next/server';
 import proxyquire from 'proxyquire';
-import { STATIC_PROPS_ID, SERVER_PROPS_ID } from 'next/constants';
+import { SERVER_PROPS_ID } from 'next/constants';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
-  EditingRenderQueryParams,
   DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import {
