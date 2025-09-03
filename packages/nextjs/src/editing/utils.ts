@@ -197,10 +197,6 @@ export const getEditingRequestHtml = async (
   // enable content sdk preview
   propagatedHeaders.__content_sdk_preview = '1';
 
-  Object.keys(propagatedQsParams).forEach((key) => {
-    console.log('propagagated key', key);
-  });
-
   for (const key in propagatedQsParams) {
     if ({}.hasOwnProperty.call(propagatedQsParams, key)) {
       propagatedQsParams[key] && requestUrl.searchParams.append(key, propagatedQsParams[key]);
