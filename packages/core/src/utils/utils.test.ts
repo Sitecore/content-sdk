@@ -134,7 +134,7 @@ describe('utils', () => {
         requestMethod: 'GET',
         headers: {},
       });
-      expect(result).to.be.equal({});
+      expect(result).to.deep.equal({});
     });
 
     it('should return headers if origin is found in allowedOrigins passed as argument', () => {
