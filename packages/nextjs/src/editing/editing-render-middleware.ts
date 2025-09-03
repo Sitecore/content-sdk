@@ -10,8 +10,8 @@ import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
 import {
-  getPreviewCookies,
-  getRequiredQueryParams,
+  getNextPreviewCookies,
+  getRequiredEditingParamsList,
   getEditingParams,
   getFilteredCookies,
   getQueryParamsForPropagation,
@@ -127,7 +127,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     const mode = query.mode;
 
-    const requiredQueryParams = getRequiredQueryParams(mode);
+    const requiredQueryParams = getRequiredEditingParamsList(mode);
 
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
 
@@ -148,7 +148,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
     if (mode === LayoutServicePageState.Preview) {
-      const previewCookies = getPreviewCookies(query.sc_site);
+      const previewCookies = getNextPreviewCookies(query.sc_site);
 
       res.setHeader('Set-Cookie', previewCookies);
     }

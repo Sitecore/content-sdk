@@ -20,7 +20,12 @@ import { SERVER_PROPS_ID, STATIC_PROPS_ID } from 'next/constants';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
 
-export const getEditingSecret = (req: NextApiRequest | NextRequest) => {
+/**
+ * Gets editing secret value from request
+ * @param {NextApiRequest | NextRequest} req incoming request
+ * @returns {string | undefined} editing secret value if present
+ */
+export const getEditingSecretFromRequest = (req: NextApiRequest | NextRequest) => {
   const reqQuery = (req as NextApiRequest).query;
   const reqUrl = (req as NextRequest).url;
 
@@ -38,6 +43,11 @@ export const getEditingSecret = (req: NextApiRequest | NextRequest) => {
   return secret;
 };
 
+/**
+ * Parses query string and its parameters to required editing parameters
+ * @param {{ [key: string]: string | undefined }} query query string values
+ * @returns {EditingRenderQueryParams} editing parameters
+ */
 export const getEditingParams = (query: { [key: string]: string | undefined }) => {
   const params = isDesignLibraryMode(query.mode)
     ? {
@@ -63,6 +73,11 @@ export const getEditingParams = (query: { [key: string]: string | undefined }) =
   return params;
 };
 
+/**
+ * Filters out Next.js preview cookies from a cookie string or array
+ * @param {string | string[] | null} cookies cookie header value
+ * @returns {string[] | null} filtered cookies
+ */
 export const getFilteredCookies = (cookies: string | string[] | null) => {
   if (!cookies) {
     return null;
@@ -78,13 +93,23 @@ export const getFilteredCookies = (cookies: string | string[] | null) => {
   return filteredCookies;
 };
 
-export const getPreviewCookies = (site: string) => {
+/**
+ * Gets the Next.js preview cookies to enable preview mode
+ * @param {string} site current site name
+ * @returns {string[]} list of cookies to set
+ */
+export const getNextPreviewCookies = (site: string) => {
   const previewSite = `${SITE_KEY}=${site}; Path=/; HttpOnly; SameSite=None; Secure`;
   const previewCookie = `${PREVIEW_KEY}=true; Path=/; HttpOnly; SameSite=None; Secure`;
   return [previewSite, previewCookie];
 };
 
-export const getRequiredQueryParams = (mode: EditingRenderQueryParams['mode']) => {
+/**
+ * Returns the list of required query parameters based on the page editing mode
+ * @param {DesignLibraryMode | LayoutServicePageState.Preview | LayoutServicePageState.Edit} mode current page mode
+ * @returns {string[]} list of required parameters for validation
+ */
+export const getRequiredEditingParamsList = (mode: EditingRenderQueryParams['mode']) => {
   const editingRequiredParams = ['sc_site', 'sc_itemid', 'sc_lang', 'route', 'mode'];
 
   const componentRequiredParams = [
@@ -142,6 +167,15 @@ export const getHeadersForPropagation = (
   return filteredHeaders;
 };
 
+/**
+ * Performs an internal request to get the HTML for the editing mode
+ * @param {string} requestUrl URL to send request to
+ * @param {object} propagatedQsParams query string params to use with request
+ * @param {object} propagatedHeaders headers to use with request
+ * @param {string[]} cookies cookies to use with request
+ * @param {NativeDataFetcher} dataFetcher NativeFetcher instance to send request with
+ * @returns {string} HTML with editing markup
+ */
 export const getEditingRequestHtml = async (
   requestUrl: URL,
   propagatedQsParams: { [key: string]: string },

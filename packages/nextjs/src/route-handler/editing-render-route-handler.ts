@@ -12,9 +12,9 @@ import {
   getEditingRequestHtml,
   getFilteredCookies,
   getHeadersForPropagation,
-  getPreviewCookies,
+  getNextPreviewCookies,
   getQueryParamsForPropagation,
-  getRequiredQueryParams,
+  getRequiredEditingParamsList,
   getSCPHeader,
   resolveServerUrl,
 } from '../editing/utils';
@@ -118,7 +118,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     const startTimestamp = Date.now();
 
     const mode = query.mode;
-    const requiredQueryParams = getRequiredQueryParams(mode);
+    const requiredQueryParams = getRequiredEditingParamsList(mode);
 
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
 
@@ -140,7 +140,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
 
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
     if (mode === LayoutServicePageState.Preview) {
-      const previewCookies = getPreviewCookies(query.sc_site);
+      const previewCookies = getNextPreviewCookies(query.sc_site);
       rawCookies = rawCookies.concat(previewCookies.join('; '));
     }
     responseHeaders['Set-Cookie'] = rawCookies;
