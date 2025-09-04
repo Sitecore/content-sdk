@@ -1,11 +1,12 @@
-﻿import Head from 'next/head';
-import { SitecoreProvider, SitecorePageProps, Page, ErrorPage } from '@sitecore-content-sdk/nextjs';
-import Layout from 'src/Layout';
+﻿import { JSX } from 'react';
 import { GetStaticProps } from 'next';
+import Head from 'next/head';
+import { SitecorePageProps, ErrorPage } from '@sitecore-content-sdk/nextjs';
+import Layout from 'src/Layout';
 import scConfig from 'sitecore.config';
 import client from 'lib/sitecore-client';
 import components from '.sitecore/component-map';
-import { JSX } from 'react';
+import Providers from 'src/Providers';
 
 /**
  * Rendered in case if we have 500 error
@@ -29,18 +30,20 @@ const Custom500 = (props: SitecorePageProps): JSX.Element => {
   }
 
   return (
-    <SitecoreProvider api={scConfig.api} componentMap={components} page={props.page}>
+    <Providers componentProps={props.componentProps} page={props.page}>
       <Layout page={props.page} />
-    </SitecoreProvider>
+    </Providers>
   );
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  let page: Page | null = null;
+  const props: SitecorePageProps = {
+    page: null,
+  };
 
   if (scConfig.generateStaticPaths) {
     try {
-      page = await client.getErrorPage(ErrorPage.InternalServerError, {
+      props.page = await client.getErrorPage(ErrorPage.InternalServerError, {
         site: scConfig.defaultSite,
         locale: context.locale || context.defaultLocale || scConfig.defaultLanguage,
       });
@@ -50,10 +53,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
   }
 
+  if (props.page) {
+    props.componentProps = await client.getComponentData(props.page.layout, context, components);
+  }
+
   return {
-    props: {
-      page,
-    },
+    props,
   };
 };
 
