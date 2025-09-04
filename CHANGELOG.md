@@ -13,6 +13,7 @@ Our versioning strategy is as follows:
 ## Unreleased
 
 ### 🎉 New Features & Improvements
+
 * Next.js App Router support:
   * Robots.txt and Sitemap.xml support ([#197](https://github.com/Sitecore/content-sdk/pull/197))
   * Base template ([#191](https://github.com/Sitecore/content-sdk/pull/191))
