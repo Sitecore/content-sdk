@@ -19,6 +19,10 @@ Our versioning strategy is as follows:
   * Base template ([#191](https://github.com/Sitecore/content-sdk/pull/191))
 * `[react]` Add `component:status` events for VariantGeneration ([#190](https://github.com/Sitecore/content-sdk/pull/190))
 
+### 🐛 Bug Fixes
+
+* `[nextjs]` Preserve default locale in external absolute urls ([#201](https://github.com/Sitecore/content-sdk/pull/201))
+
 ## 1.1.0
 
 ### 🎉 New Features & Improvements
