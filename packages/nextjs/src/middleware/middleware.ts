@@ -7,6 +7,7 @@ import {
 } from '@sitecore-content-sdk/core/client';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
+export const LOCALE_HEADER_NAME = 'x-sc-locale';
 
 export type MiddlewareBaseConfig = {
   /**
@@ -118,10 +119,27 @@ export abstract class MiddlewareBase extends Middleware {
   /**
    * Provides used language
    * @param {NextRequest} req request
+   * @param {NextResponse} res response
    * @returns {string} language
    */
-  protected getLanguage(req: NextRequest) {
-    return req.nextUrl.locale || req.nextUrl.defaultLocale || this.config.defaultLanguage || 'en';
+  protected getLanguage(req: NextRequest, res?: NextResponse): string {
+    return (
+      this.getLanguageFromHeader(res) ||
+      req.nextUrl.locale ||
+      req.nextUrl.defaultLocale ||
+      this.config.defaultLanguage ||
+      'en'
+    );
+  }
+
+  /**
+   * Extract language from locale header of the response
+   * set by LocaleMiddleware for app router application
+   * @param {NextResponse} res response
+   * @returns {string | undefined} language or undefined if not found
+   */
+  protected getLanguageFromHeader(res?: NextResponse): string | undefined {
+    return res?.headers.get(LOCALE_HEADER_NAME) ?? undefined;
   }
 
   /**

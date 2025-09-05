@@ -3,7 +3,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/core/site';
 import { debug } from '@sitecore-content-sdk/core';
-import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
+import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
 import { SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/core/editing';
 
@@ -41,7 +41,8 @@ export class MultisiteMiddleware extends MiddlewareBase {
       return res;
     }
     try {
-      const pathname = req.nextUrl.pathname;
+      // Path can be rewritten by previously executed middleware
+      const pathname = res?.headers.get(REWRITE_HEADER_NAME) || req.nextUrl.pathname;
       const language = this.getLanguage(req);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
@@ -82,9 +83,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
       }
 
       // Rewrite to site specific path
-      const rewritePath = getSiteRewrite(pathname, {
-        siteName,
-      });
+      const rewritePath = this.getSiteRewrite(pathname, siteName);
 
       const response = this.rewrite(rewritePath, req, res);
 
@@ -116,5 +115,17 @@ export class MultisiteMiddleware extends MiddlewareBase {
   protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
     // ignore files
     return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
+  }
+
+  /**
+   * Generates a site-specific rewrite path based on the provided pathname and site name.
+   * @param {string} pathname - The pathname to be rewritten.
+   * @param {string} siteName - The name of the site.
+   * @returns The rewritten path as a string.
+   */
+  protected getSiteRewrite(pathname: string, siteName: string): string {
+    return getSiteRewrite(pathname, {
+      siteName,
+    });
   }
 }
