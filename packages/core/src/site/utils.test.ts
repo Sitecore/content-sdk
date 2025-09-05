@@ -1,5 +1,11 @@
 import { expect } from 'chai';
-import { getSiteRewrite, getSiteRewriteData, normalizeSiteRewrite, SITE_PREFIX } from './utils';
+import {
+  getSiteRewrite,
+  getAppRouterSiteRewrite,
+  getSiteRewriteData,
+  normalizeSiteRewrite,
+  SITE_PREFIX,
+} from './utils';
 
 describe('utils', () => {
   describe('getSiteRewrite', () => {
@@ -102,6 +108,28 @@ describe('utils', () => {
       const resultPostfix = normalizeSiteRewrite(pathnameWithPostfix);
       expect(resultPrefix).to.equal('/_variantId_0451/');
       expect(resultPrefix).to.equal(resultPostfix);
+    });
+  });
+
+  describe('getAppRouterSiteRewrite', () => {
+    const siteName = 'my-site';
+
+    it('should prepend the site name to the path when pathname starts with "/"', () => {
+      const pathname = '/some/path';
+      const result = getAppRouterSiteRewrite(pathname, { siteName });
+      expect(result).to.equal(`/${siteName}/some/path`);
+    });
+
+    it('should prepend the site name to the path when pathname does not start with "/"', () => {
+      const pathname = 'some/path';
+      const result = getAppRouterSiteRewrite(pathname, { siteName });
+      expect(result).to.equal(`/${siteName}/some/path`);
+    });
+
+    it('should return the root path with the site name', () => {
+      const pathname = '/';
+      const result = getAppRouterSiteRewrite(pathname, { siteName });
+      expect(result).to.equal(`/${siteName}/`);
     });
   });
 });

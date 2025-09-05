@@ -2,7 +2,7 @@
 
 import { NextResponse, NextRequest } from 'next/server';
 import { debug } from '@sitecore-content-sdk/core';
-import { getLocaleRewrite } from '@sitecore-content-sdk/core/site';
+import { getLocaleRewrite } from '@sitecore-content-sdk/core/i18n';
 import { MiddlewareBase, MiddlewareBaseConfig, LOCALE_HEADER_NAME } from './middleware';
 
 export type LocaleMiddlewareConfig = MiddlewareBaseConfig & {

@@ -34,18 +34,6 @@ export function getAppRouterSiteRewrite(pathname: string, data: SiteRewriteData)
 }
 
 /**
- * Get a locale rewrite path for given pathname
- * @param {string} pathname the pathname
- * @param {string} locale the site data to include in the rewrite
- * @returns {string} the rewrite path
- */
-export function getLocaleRewrite(pathname: string, locale: string): string {
-  const path = pathname.startsWith('/') ? pathname : '/' + pathname;
-
-  return `/${locale}${path}`;
-}
-
-/**
  * Get site data from the rewrite path
  * @param {string} pathname the pathname
  * @param {string} defaultSiteName the default site name

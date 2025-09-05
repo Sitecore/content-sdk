@@ -25,7 +25,6 @@ export { SiteInfo } from './models';
 export {
   getSiteRewrite,
   getAppRouterSiteRewrite,
-  getLocaleRewrite,
   getSiteRewriteData,
   normalizeSiteRewrite,
   SiteRewriteData,
