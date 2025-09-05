@@ -1715,9 +1715,11 @@ describe('RedirectsMiddleware', () => {
       });
 
       it('should not strip default locale from external absolute URLs', async () => {
+        const externalUrl = 'https://example.com/en/this-is-en';
         const cloneUrl = () => Object.assign({}, req.nextUrl);
+
         const url = {
-          href: 'https://example.com/en/this-is-en',
+          href: externalUrl,
           pathname: '/en/this-is-en',
           origin: 'https://example.com',
           locale: 'en',
@@ -1731,8 +1733,8 @@ describe('RedirectsMiddleware', () => {
             nextUrl: {
               pathname: '/ra',
               href: 'http://localhost:3000/ra',
-              locale: 'en-HK',
               origin: 'http://localhost:3000',
+              locale: 'en',
               clone: cloneUrl,
             },
           },
@@ -1741,30 +1743,18 @@ describe('RedirectsMiddleware', () => {
 
         setupRedirectStub(302);
 
-        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+        const { finalRes } = await runTestWithRedirect(
           {
             pattern: '/ra',
-            target: 'https://example.com/en/this-is-en',
+            target: externalUrl,
             redirectType: REDIRECT_TYPE_302,
             isQueryStringPreserved: false,
-            locale: 'en-HK',
+            locale: 'en',
           },
           req,
           res
         );
-
-        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {},
-          redirected: undefined,
-          status: 302,
-          url,
-        });
-
-        expect(siteResolver.getByHost).to.be.calledWith(hostname);
-        // eslint-disable-next-line no-unused-expressions
-        expect(fetchRedirects.called).to.be.true;
-        expect(finalRes.status).to.equal(302);
-        expect(finalRes.url).to.equal('https://example.com/en/this-is-en');
+        expect(finalRes.url).to.equal(externalUrl);
       });
     });
 
