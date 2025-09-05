@@ -1,4 +1,4 @@
-import chai, { use } from 'chai';
+import chai from 'chai';
 import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
@@ -8,7 +8,7 @@ import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { LocaleMiddleware } from './locale-middleware';
 import { REWRITE_HEADER_NAME, LOCALE_HEADER_NAME } from './middleware';
 
-use(sinonChai);
+chai.use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
 const defaultConfig = {
@@ -135,7 +135,7 @@ describe('LocaleMiddleware', () => {
     };
 
     it('default', async () => {
-      const { middleware } = createMiddleware();
+      const { middleware } = createMiddleware({ config: { locales: ['en'] } });
 
       await test('/src/image.png', middleware);
       await test('/api/layout/render', middleware);
@@ -147,7 +147,7 @@ describe('LocaleMiddleware', () => {
       const skip = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
 
       const { middleware } = createMiddleware({
-        config: { ...defaultConfig, skip },
+        config: { ...defaultConfig, skip, locales: ['en'] },
       });
 
       await test('/src/image.png', middleware);
