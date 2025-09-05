@@ -16,7 +16,7 @@ export class LocaleMiddleware extends MiddlewareBase {
    */
   constructor(protected config: LocaleMiddlewareConfig) {
     super(config);
-    this.locales = config.locales || ['en'];
+    this.locales = config.locales;
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
@@ -37,7 +37,7 @@ export class LocaleMiddleware extends MiddlewareBase {
       }
 
       if (!localeFromPath) {
-        // locale is not present in path, we need a rewrite
+        // locale is not present in path, we need to rewrite to include the locale segment
         const rewritePath = getLocaleRewrite(pathname, locale);
         const response = this.rewrite(rewritePath, req, res);
         this.setLocaleHeader(response, locale);
