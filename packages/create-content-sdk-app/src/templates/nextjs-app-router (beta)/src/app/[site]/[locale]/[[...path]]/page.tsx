@@ -9,13 +9,18 @@ import Layout, { RouteFields } from 'src/Layout';
 import components from '.sitecore/component-map';
 import Providers from 'src/Providers';
 import Bootstrap from 'src/Bootstrap';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
+import { routing } from 'src/i18n/routing';
 
 type PageProps = {
-  params: Promise<{ path?: string[] }>;
+  params: Promise<{ site?: string; locale?: string; path?: string[] }>;
 };
 
 export default async function Page({ params }: PageProps) {
-  const { path } = await params;
+  const { site, locale, path } = await params;
+
+  setRequestLocale(`${site}_${locale}`);
 
   // Set preview to false until preview mode is integrated
   const preview = { enabled: false, data: {} };
@@ -29,7 +34,7 @@ export default async function Page({ params }: PageProps) {
       page = await client.getPreview(preview.data);
     }
   } else {
-    page = await client.getPage(path ?? [], { locale: 'en' });
+    page = await client.getPage(path ?? [], { site, locale });
   }
 
   // If the page is not found, return a 404
@@ -43,9 +48,11 @@ export default async function Page({ params }: PageProps) {
   return (
     <>
       <Bootstrap page={page} />
-      <Providers page={page} componentProps={componentProps}>
-        <Layout page={page} />
-      </Providers>
+      <NextIntlClientProvider>
+        <Providers page={page} componentProps={componentProps}>
+          <Layout page={page} />
+        </Providers>
+      </NextIntlClientProvider>
     </>
   );
 }
@@ -54,14 +61,10 @@ export default async function Page({ params }: PageProps) {
 // This function gets called at build and export time to determine
 // pages for SSG ("paths", as tokenized array).
 export const generateStaticParams = async () => {
-  const paths = await client.getPagePaths(
+  return await client.getAppRouterStaticParams(
     sites.map((site: SiteInfo) => site.name),
-    ['en']
+    routing.locales.map((locale) => locale)
   );
-  return paths.map((path) => ({
-    path: path.params.path,
-    lang: path.locale,
-  }));
 };
 <% } -%>
 // Metadata fields for the page.
