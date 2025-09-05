@@ -9,7 +9,7 @@ import Layout, { RouteFields } from 'src/Layout';
 import components from '.sitecore/component-map';
 import Providers from 'src/Providers';
 import Bootstrap from 'src/Bootstrap';
-import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { routing } from 'src/i18n/routing';
 
@@ -20,6 +20,7 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const { site, locale, path } = await params;
 
+  // Set site and locale to be available in in src/i18n/request.ts for featching dictionary
   setRequestLocale(`${site}_${locale}`);
 
   // Set preview to false until preview mode is integrated
