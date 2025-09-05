@@ -1713,6 +1713,59 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes).to.deep.equal(res);
         expect(finalRes.status).to.equal(res.status);
       });
+
+      it('should not strip default locale from external absolute URLs', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'https://example.com/en/this-is-en',
+          pathname: '/en/this-is-en',
+          origin: 'https://example.com',
+          locale: 'en',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/ra',
+              href: 'http://localhost:3000/ra',
+              locale: 'en-HK',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 302,
+        });
+
+        setupRedirectStub(302);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            pattern: '/ra',
+            target: 'https://example.com/en/this-is-en',
+            redirectType: REDIRECT_TYPE_302,
+            isQueryStringPreserved: false,
+            locale: 'en-HK',
+          },
+          req,
+          res
+        );
+
+        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+          headers: {},
+          redirected: undefined,
+          status: 302,
+          url,
+        });
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        // eslint-disable-next-line no-unused-expressions
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(302);
+        expect(finalRes.url).to.equal('https://example.com/en/this-is-en');
+      });
     });
 
     describe('should redirect to normalized path when nextjs specific "path" query string parameter is provided', () => {
