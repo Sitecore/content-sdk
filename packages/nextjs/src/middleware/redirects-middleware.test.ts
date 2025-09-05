@@ -1754,7 +1754,9 @@ describe('RedirectsMiddleware', () => {
           req,
           res
         );
-        expect(finalRes.url).to.equal(externalUrl);
+
+        const urlObj = finalRes.url as unknown as { href: string };
+        expect(urlObj.href).to.equal(externalUrl);
       });
     });
 
