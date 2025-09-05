@@ -20,6 +20,7 @@ import {
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/core/personalize';
 import { ComponentMap } from '@sitecore-content-sdk/react';
+import { StaticParams } from '../models';
 
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
@@ -80,6 +81,40 @@ export class SitecoreNextjsClient extends SitecoreClient {
    */
   async getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null> {
     return super.getPreview(previewData as EditingPreviewData, fetchOptions);
+  }
+
+  /**
+   * Retrieves the static params for pages based on the given languages and sites.
+   * @param {string[]} sites - An array of site names to fetch routes for.
+   * @param {string[]} [languages] - An optional array of language codes to generate paths for.
+   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
+   * @returns {Promise<StaticParams[]>} A promise that resolves to an array of static params for app router.
+   */
+  async getAppRouterStaticParams(
+    sites: string[],
+    languages?: string[],
+    fetchOptions?: FetchOptions
+  ): Promise<StaticParams[]> {
+    const staticPaths = await this.sitePathService.fetchSiteRoutes(
+      sites,
+      languages || [],
+      fetchOptions
+    );
+
+    const params = new Array<StaticParams>();
+
+    staticPaths.map((path) => {
+      // remove _site_ segments
+      const normalizedPath = normalizeSiteRewrite(path.params.path.join('/')).split('/');
+
+      params.push({
+        locale: path.locale ?? this.initOptions.defaultLanguage,
+        site: this.getSiteNameFromPath(path.params.path),
+        path: normalizedPath,
+      });
+    });
+
+    return params;
   }
 
   /**
