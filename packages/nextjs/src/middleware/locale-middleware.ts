@@ -20,12 +20,6 @@ export class LocaleMiddleware extends MiddlewareBase {
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
-    if (this.disabled(req, res)) {
-      debug.locale('skipped (locale middleware is disabled)');
-      console.log('locale-middleware req.nextUrl.pathname: ', req.nextUrl.pathname);
-      return res;
-    }
-
     try {
       const { pathname } = req.nextUrl;
 
@@ -36,6 +30,11 @@ export class LocaleMiddleware extends MiddlewareBase {
         pathname,
         locale,
       });
+
+      if (this.disabled(req, res)) {
+        debug.locale('skipped (locale middleware is disabled)');
+        return res;
+      }
 
       if (!localeFromPath) {
         // locale is not present in path, we need a rewrite
