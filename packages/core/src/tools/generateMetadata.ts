@@ -20,7 +20,7 @@ export type GenerateMetadataConfig = {
    */
   destinationPath?: string;
   /**
-   * Optional flag to allow npm workspaces in the metadata generation.
+   * Optional flag to allow npm workspaces in the metadata generation. Should be kept as false for non-npm monorepos.
    * If not provided, the default is false.
    */
   allowWorkspaces?: boolean;
