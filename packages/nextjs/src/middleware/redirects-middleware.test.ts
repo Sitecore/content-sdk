@@ -1714,7 +1714,7 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
-      it('should not strip default locale from external absolute URLs', async () => {
+      it('should not strip locale from external absolute URLs', async () => {
         const externalUrl = 'https://example.com/en/this-is-en';
         const cloneUrl = () => Object.assign({}, req.nextUrl);
 
