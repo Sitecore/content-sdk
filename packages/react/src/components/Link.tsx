@@ -23,7 +23,7 @@ export interface LinkField {
   value: LinkFieldValue;
 }
 
-export type LinkProps = EditableFieldProps &
+export type LinkProps = EditableFieldProps<LinkProps> &
   React.AnchorHTMLAttributes<HTMLAnchorElement> &
   RefAttributes<HTMLAnchorElement> & {
     /** The link field data. */
