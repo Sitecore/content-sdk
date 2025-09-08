@@ -8,7 +8,7 @@
 
 > **DesignLibrary**(`__namedParameters`): `Element`
 
-Defined in: [packages/react/src/components/DesignLibrary.tsx:274](https://github.com/Sitecore/content-sdk/blob/4718c57eef4fce4cbd4fccde85fd3dbc1d92f525/packages/react/src/components/DesignLibrary.tsx#L274)
+Defined in: [packages/react/src/components/DesignLibrary.tsx:274](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/react/src/components/DesignLibrary.tsx#L274)
 
 ## Parameters
 
