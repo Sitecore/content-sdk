@@ -55,6 +55,7 @@ describe('withEmptyFieldEditingComponent', () => {
 
     it('Should render provided default empty value component component if field value is not provided', () => {
       const props = {
+        tag: 'h1',
         field: {
           value: '',
           metadata: testMetadata,
@@ -66,9 +67,10 @@ describe('withEmptyFieldEditingComponent', () => {
       });
 
       const rendered = render(<WrappedComponent {...props} />);
-      const expected = render(<DefaultEmptyFieldEditingComponentText />);
+      const expected = render(<DefaultEmptyFieldEditingComponentText tag='h1' />);
 
       expect(rendered.container.innerHTML).to.equal(expected.container.innerHTML);
+      expect(rendered.container.innerHTML).to.equal('<h1 tag="h1">[No text in field]</h1>');
     });
 
     it('Should render custom empty value component if provided via props if field value is not provided', () => {
