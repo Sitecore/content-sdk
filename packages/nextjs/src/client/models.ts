@@ -1,5 +1,5 @@
 /**
- * Object model for the app router static params.
+ * Static params shape for the Next.js App Router `generateStaticParams`.
  */
 export type StaticParams = {
   site: string;

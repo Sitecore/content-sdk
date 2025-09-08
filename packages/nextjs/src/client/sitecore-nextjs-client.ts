@@ -20,7 +20,7 @@ import {
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/core/personalize';
 import { ComponentMap } from '@sitecore-content-sdk/react';
-import { StaticParams } from '../models';
+import { StaticParams } from './models';
 
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
@@ -84,22 +84,25 @@ export class SitecoreNextjsClient extends SitecoreClient {
   }
 
   /**
-   * Retrieves the static params for pages based on the given languages and sites.
+   * Generates static params for the Next.js App Router from Sitecore routes.
+   *
+   * Fetches routes for the specified `sites` and `languages`, then converts them into
+   * objects consumable by `generateStaticParams`. Internal multisite segments are removed.
+   * The `site` name is resolved from the path. If a route lacks a locale, the
+   * client's `defaultLanguage` is used.
+   *
+   * **NOTE**: App Router only. For the Pages Router, use `getPagePaths`.
    * @param {string[]} sites - An array of site names to fetch routes for.
-   * @param {string[]} [languages] - An optional array of language codes to generate paths for.
+   * @param {string[]} [languages] - Language codes to generate params for.
    * @param {FetchOptions} [fetchOptions] - Additional fetch options.
-   * @returns {Promise<StaticParams[]>} A promise that resolves to an array of static params for app router.
+   * @returns {Promise<StaticParams[]>} Array of `{ site, locale, path }` entries for `generateStaticParams`.
    */
   async getAppRouterStaticParams(
     sites: string[],
     languages?: string[],
     fetchOptions?: FetchOptions
   ): Promise<StaticParams[]> {
-    const staticPaths = await this.sitePathService.fetchSiteRoutes(
-      sites,
-      languages || [],
-      fetchOptions
-    );
+    const staticPaths = await this.getPagePaths(sites, languages, fetchOptions);
 
     const params = new Array<StaticParams>();
 

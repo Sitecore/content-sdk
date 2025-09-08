@@ -5,18 +5,27 @@ import { debug } from '@sitecore-content-sdk/core';
 import { getLocaleRewrite } from '@sitecore-content-sdk/core/i18n';
 import { MiddlewareBase, MiddlewareBaseConfig, LOCALE_HEADER_NAME } from './middleware';
 
+/**
+ * Locale middleware config
+ */
 export type LocaleMiddlewareConfig = MiddlewareBaseConfig & {
+  /**
+   * List of locales supported by the application
+   */
   locales: string[];
 };
 
+/**
+ * Middleware/handler for handling locale-based routing in the Next.js App Router.
+ * This middleware is responsible for extracting the locale from the request path and rewriting it if necessary.
+ * It also sets the locale header in the response.
+ */
 export class LocaleMiddleware extends MiddlewareBase {
-  private locales: string[];
   /**
-   * @param {LocaleMiddlewareConfig} [config] Locale middleware config
+   * @param {LocaleMiddlewareConfig} config Locale middleware config
    */
   constructor(protected config: LocaleMiddlewareConfig) {
     super(config);
-    this.locales = config.locales;
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
@@ -77,7 +86,7 @@ export class LocaleMiddleware extends MiddlewareBase {
    * @returns {string | undefined} the locale if found
    */
   protected getLocaleFromPath(path: string): string | undefined {
-    return this.locales.find(
+    return this.config.locales.find(
       (locale) => path.includes(`/${locale}/`) || path.endsWith(`/${locale}`)
     );
   }

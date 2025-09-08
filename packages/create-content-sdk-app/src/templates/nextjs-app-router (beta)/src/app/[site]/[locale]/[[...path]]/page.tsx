@@ -20,7 +20,7 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const { site, locale, path } = await params;
 
-  // Set site and locale to be available in in src/i18n/request.ts for featching dictionary
+  // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
   setRequestLocale(`${site}_${locale}`);
 
   // Set preview to false until preview mode is integrated
@@ -64,7 +64,7 @@ export default async function Page({ params }: PageProps) {
 export const generateStaticParams = async () => {
   return await client.getAppRouterStaticParams(
     sites.map((site: SiteInfo) => site.name),
-    routing.locales.map((locale) => locale)
+    routing.locales.slice()
   );
 };
 <% } -%>

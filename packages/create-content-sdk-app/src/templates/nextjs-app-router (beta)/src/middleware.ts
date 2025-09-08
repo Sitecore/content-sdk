@@ -18,7 +18,7 @@ const locale = new LocaleMiddleware({
   /**
    * List of all supported locales configured in routing.ts
    */
-  locales: routing.locales.map((locale) => locale),
+  locales: routing.locales.slice(),
   // This function determines if the middleware should be turned off on per-request basis.
   // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to disable more.
   // This is an important performance consideration since Next.js Edge middleware runs on every request.
@@ -51,7 +51,6 @@ const redirects = new RedirectsMiddleware({
   // By default it is disabled while in development mode.
   // This is an important performance consideration since Next.js Edge middleware runs on every request.
   skip: () => false,
-  enabled: true,
 });
 
 const personalize = new PersonalizeMiddleware({

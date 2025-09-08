@@ -1,6 +1,9 @@
 import { getAppRouterSiteRewrite } from '@sitecore-content-sdk/core/site';
 import { MultisiteMiddleware } from './multisite-middleware';
 
+/**
+ * Middleware/handler for enabling multisite support in the Next.js App Router.
+ */
 export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
   /**
    * Generates a site-specific rewrite path for app router based on the provided pathname and site name.
