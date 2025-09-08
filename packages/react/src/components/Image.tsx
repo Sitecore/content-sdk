@@ -1,4 +1,5 @@
-﻿import { mediaApi } from '@sitecore-content-sdk/core/media';
+﻿/* eslint-disable no-unused-vars */
+import { mediaApi } from '@sitecore-content-sdk/core/media';
 import React from 'react';
 import { addClassName } from '../utils';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
@@ -36,7 +37,7 @@ export interface ImageSizeParameters {
   sc?: number;
 }
 
-export interface ImageProps extends EditableFieldProps {
+export interface ImageProps extends EditableFieldProps<ImageProps> {
   [attributeName: string]: unknown;
   /** Image field data (consistent with other field types) */
   field?: (ImageField | ImageFieldValue) & FieldMetadata;
@@ -84,7 +85,7 @@ const getImageAttrs = (
     ...otherAttrs,
   };
 
-  // update image URL for jss handler and image rendering params
+  // update image URL for content sdk handler and image rendering params
   const resolvedSrc = mediaApi.updateImageUrl(src, imageParams, mediaUrlPrefix);
   if (srcSet) {
     // replace with HTML-formatted srcset, including updated image URLs

@@ -34,7 +34,7 @@ export function getFieldValue<T>(
   }
 
   const fields = renderingOrFields as ComponentFields;
-  const field = (fields[fieldName] as unknown) as Field<T>;
+  const field = fields[fieldName] as unknown as Field<T>;
   if (field && typeof field.value !== 'undefined') {
     return field.value;
   }
@@ -48,7 +48,7 @@ export function getFieldValue<T>(
     return defaultValue;
   }
 
-  return ((rendering.fields[fieldName] as unknown) as Field<T>).value;
+  return (rendering.fields[fieldName] as unknown as Field<T>).value;
 }
 
 /**

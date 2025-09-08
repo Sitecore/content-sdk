@@ -1,54 +1,240 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import proxyquire from 'proxyquire';
+import { getComponentList } from './components';
+import { ComponentFile } from '../../../tools';
+import path from 'path';
 
 describe('components', () => {
-  afterEach(() => {
-    sinon.restore();
+  const sandbox = sinon.createSandbox();
+  beforeEach(() => {
+    sandbox.restore();
   });
 
   describe('getComponentList', () => {
     afterEach(() => {
-      sinon.restore();
+      sandbox.restore();
     });
 
-    it('should return list of components', () => {
+    it('should return results when one of "paths" is a glob pattern', () => {
       const items = [
         {
-          path: 'src/components/Foo',
+          importPath: 'src/test-data/components/Bar',
+          filePath: path.normalize('src/test-data/components/Bar.tsx'),
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+      ];
+
+      const result = getComponentList(['src/test-data/components/*.tsx']);
+      expect(result).to.deep.equal(items);
+    });
+
+    it('should return results with all folded paths when path is a non-glob path', () => {
+      const items = [
+        {
+          importPath: 'src/test-data/components/Qux',
+          filePath: path.normalize('src/test-data/components/Qux.js'),
+          componentName: 'Qux',
+          moduleName: 'Qux',
+        },
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: path.normalize('src/test-data/components/Foo.jsx'),
           componentName: 'Foo',
           moduleName: 'Foo',
         },
         {
-          path: 'src/components/Bar',
-          componentName: 'Bar-Component',
-          moduleName: 'BarComponent',
+          importPath: 'src/test-data/components/Baz',
+          filePath: path.normalize('src/test-data/components/Baz.ts'),
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: path.normalize('src/test-data/components/Bar.tsx'),
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/folded/Folded',
+          filePath: path.normalize('src/test-data/components/folded/Folded.tsx'),
+          componentName: 'Folded',
+          moduleName: 'Folded',
+        },
+      ] as ComponentFile[];
+
+      const result = getComponentList(['src/test-data/components']);
+      expect(result).to.deep.equal(items);
+    });
+
+    it('should filter out results that are not components', () => {
+      const items = [
+        {
+          importPath: 'src/test-data/components/Qux',
+          filePath: path.normalize('src/test-data/components/Qux.js'),
+          componentName: 'Qux',
+          moduleName: 'Qux',
+        },
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: path.normalize('src/test-data/components/Foo.jsx'),
+          componentName: 'Foo',
+          moduleName: 'Foo',
+        },
+        {
+          importPath: 'src/test-data/components/Baz',
+          filePath: path.normalize('src/test-data/components/Baz.ts'),
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: path.normalize('src/test-data/components/Bar.tsx'),
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/folded/Folded',
+          filePath: path.normalize('src/test-data/components/folded/Folded.tsx'),
+          componentName: 'Folded',
+          moduleName: 'Folded',
+        },
+      ] as ComponentFile[];
+
+      const result = getComponentList(['src/test-data/components/**/*']);
+      expect(result).to.deep.equal(items);
+    });
+
+    it('should return result when "paths" contain exact paths to jsx, tsx, ts and js components', () => {
+      const items = [
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: path.normalize('src/test-data/components/Foo.jsx'),
+          componentName: 'Foo',
+          moduleName: 'Foo',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: path.normalize('src/test-data/components/Bar.tsx'),
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/Baz',
+          filePath: path.normalize('src/test-data/components/Baz.ts'),
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Qux',
+          filePath: path.normalize('src/test-data/components/Qux.js'),
+          componentName: 'Qux',
+          moduleName: 'Qux',
         },
       ];
 
-      const logStub = sinon.stub(console, 'debug');
-      const getItemsStub = sinon.stub();
-      const componentsModule = proxyquire('./components', {
-        './utils': { getItems: getItemsStub },
-      });
-      const getComponentList = componentsModule.getComponentList;
-      getItemsStub.returns(items);
+      const result = getComponentList([
+        'src/test-data/components/Foo.jsx',
+        'src/test-data/components/Bar.tsx',
+        'src/test-data/components/Baz.ts',
+        'src/test-data/components/Qux.js',
+      ]);
+      expect(result).to.deep.equal(items);
+    });
 
-      expect(getComponentList('src/components')).to.deep.equal(items);
-      expect(getItemsStub.called).to.be.true;
+    it('should return filtered results when "exclude" contains a glob pattern', () => {
+      const exclude = ['**/components/**'];
+      expect(getComponentList(['src/test-data/components/*.tsx'], exclude)).to.be.empty;
+    });
 
-      const getItemsStubArgs = getItemsStub.getCall(0).args[0];
+    it('should return filtered results when "exclude" contains an exact path', () => {
+      const exclude = ['src/test-data/components/Foo.jsx'];
+      getComponentList(['src/test-data/components/*.tsx'], exclude);
+    });
 
-      expect(getItemsStubArgs.resolveItem('src/components', 'Foo-Bar')).to.deep.equal({
-        path: 'src/components/Foo-Bar',
-        componentName: 'Foo-Bar',
-        moduleName: 'FooBar',
-      });
+    it('should return correct result in unix file systems', () => {
+      const stubbedPaths = [
+        'src/test-data/components/Foo.jsx',
+        'src/test-data/components/Bar.tsx',
+        'src/test-data/components/Baz.ts',
+        'src/test-data/components/Qux.js',
+      ];
+      const expected = [
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: 'src/test-data/components/Foo.jsx',
+          componentName: 'Foo',
+          moduleName: 'Foo',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: 'src/test-data/components/Bar.tsx',
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/Baz',
+          filePath: 'src/test-data/components/Baz.ts',
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Qux',
+          filePath: 'src/test-data/components/Qux.js',
+          componentName: 'Qux',
+          moduleName: 'Qux',
+        },
+      ];
 
-      getItemsStubArgs.cb!('FooBar');
+      const globSyncStub = sandbox.stub(require('glob'), 'sync').returns(stubbedPaths);
 
-      expect(logStub.calledOnceWith('Registering Content SDK component FooBar')).to.be.true;
+      const result = getComponentList(['src/test-data/components/*.tsx']);
+      expect(result).to.deep.equal(expected);
+
+      globSyncStub.restore();
+    });
+
+    it('should return correct result in windows file systems', () => {
+      const stubbedPaths = [
+        'src\\test-data\\components\\Foo.jsx',
+        'src\\test-data\\components\\Bar.tsx',
+        'src\\test-data\\components\\Baz.ts',
+        'src\\test-data\\components\\Qux.js',
+      ];
+      const expected = [
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: 'src\\test-data\\components\\Foo.jsx',
+          componentName: 'Foo',
+          moduleName: 'Foo',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: 'src\\test-data\\components\\Bar.tsx',
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/Baz',
+          filePath: 'src\\test-data\\components\\Baz.ts',
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Qux',
+          filePath: 'src\\test-data\\components\\Qux.js',
+          componentName: 'Qux',
+          moduleName: 'Qux',
+        },
+      ];
+
+      const globSyncStub = sandbox.stub(require('glob'), 'sync').returns(stubbedPaths);
+
+      const result = getComponentList(['src/test-data/components/*.tsx']);
+      expect(result).to.deep.equal(expected);
+
+      globSyncStub.restore();
     });
   });
 });

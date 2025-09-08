@@ -10,12 +10,20 @@ import {
 import { EditingScripts } from './EditingScripts';
 import { SitecoreProvider } from './SitecoreProvider';
 import {
-  getJssPagesClientData,
+  getContentSdkPagesClientData,
   getDesignLibraryScriptLink,
+  DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
+import { PageMode } from '@sitecore-content-sdk/core/client';
+import sinon from 'sinon';
 
 describe('<EditingScripts />', () => {
   const mockComponentMap = new Map();
+
+  const mode: PageMode = {
+    name: LayoutServicePageState.Edit,
+    isEditing: true,
+  };
 
   const getLayoutData = ({
     pageState,
@@ -36,7 +44,7 @@ describe('<EditingScripts />', () => {
         pageEditing,
         renderingType,
         site: {
-          name: 'JssTestWeb',
+          name: 'ContentSdkTestWeb',
         },
         language: 'en',
         clientData: clientData || {
@@ -61,30 +69,30 @@ describe('<EditingScripts />', () => {
   });
 
   it('should render nothing when not in editing', () => {
-    const layoutData = getLayoutData({
-      pageState: LayoutServicePageState.Normal,
-      pageEditing: false,
-    });
+    const mode: PageMode = {
+      name: LayoutServicePageState.Normal,
+      isNormal: true,
+      isPreview: false,
+      isEditing: false,
+      isDesignLibrary: false,
+      designLibrary: {
+        isVariantGeneration: false,
+      },
+    };
+
+    const page = {
+      locale: 'en',
+      layout: {
+        sitecore: {
+          context: {},
+          route: null,
+        },
+      },
+      mode,
+    };
 
     const component = render(
-      <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
-        <EditingScripts />
-      </SitecoreProvider>,
-      { container: document.body }
-    );
-
-    expect(component.baseElement.innerHTML).to.be.empty;
-    expect(component.container.querySelectorAll('script')).to.have.length(0);
-  });
-
-  it('should render nothing when pageState is undefined', () => {
-    const layoutData = getLayoutData({
-      pageState: undefined,
-      pageEditing: false,
-    });
-
-    const component = render(
-      <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
+      <SitecoreProvider componentMap={mockComponentMap} page={page}>
         <EditingScripts />
       </SitecoreProvider>,
       { container: document.body }
@@ -101,16 +109,22 @@ describe('<EditingScripts />', () => {
         pageEditing: true,
       });
 
+      const page = {
+        locale: 'en',
+        layout: layoutData,
+        mode,
+      };
+
       const component = render(
-        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} page={page}>
           <EditingScripts />
         </SitecoreProvider>
       );
 
       const scripts = component.baseElement;
-      const jssScriptsLength = Object.keys(getJssPagesClientData()).length;
+      const contentSdkScriptsLength = Object.keys(getContentSdkPagesClientData()).length;
 
-      expect(scripts?.querySelectorAll('script')).to.have.length(4 + jssScriptsLength);
+      expect(scripts?.querySelectorAll('script')).to.have.length(4 + contentSdkScriptsLength);
 
       const script1 = scripts?.querySelectorAll('script')[0];
       expect(script1?.getAttribute('src')).to.equal('http://test.foo/script1.js');
@@ -133,7 +147,7 @@ describe('<EditingScripts />', () => {
       );
     });
 
-    it('should render jss pages script elements when data is not provided', () => {
+    it('should render content sdk pages script elements when data is not provided', () => {
       const layoutData = getLayoutData({
         pageState: LayoutServicePageState.Edit,
         pageEditing: true,
@@ -141,14 +155,20 @@ describe('<EditingScripts />', () => {
         clientScripts: [],
       });
 
+      const page = {
+        locale: 'en',
+        layout: layoutData,
+        mode,
+      };
+
       const component = render(
-        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} page={page}>
           <EditingScripts />
         </SitecoreProvider>
       );
 
       const scripts = component.baseElement;
-      const ids = Object.keys(getJssPagesClientData());
+      const ids = Object.keys(getContentSdkPagesClientData());
       ids.forEach((id) => {
         expect(component.container.querySelector(`#${id}`)).to.not.be.null;
       });
@@ -157,6 +177,11 @@ describe('<EditingScripts />', () => {
   });
 
   describe('Design Library scripts', () => {
+    const mode: PageMode = {
+      name: DesignLibraryMode.Normal,
+      isDesignLibrary: true,
+    };
+
     it('should render Design Library script when rendering type is component', () => {
       const layoutData = getLayoutData({
         pageEditing: false,
@@ -166,8 +191,14 @@ describe('<EditingScripts />', () => {
         clientScripts: [],
       });
 
+      const page = {
+        locale: 'en',
+        layout: layoutData,
+        mode,
+      };
+
       const component = render(
-        <SitecoreProvider componentMap={mockComponentMap} layoutData={layoutData}>
+        <SitecoreProvider componentMap={mockComponentMap} page={page}>
           <EditingScripts />
         </SitecoreProvider>
       );
@@ -187,12 +218,18 @@ describe('<EditingScripts />', () => {
         clientScripts: [],
       });
 
+      const page = {
+        locale: 'en',
+        layout: layoutData,
+        mode,
+      };
+
       const stagingEdgeUrl = 'http://edge-staging';
 
       const component = render(
         <SitecoreProvider
           componentMap={mockComponentMap}
-          layoutData={layoutData}
+          page={page}
           api={{ edge: { edgeUrl: stagingEdgeUrl, contextId: 'id' } }}
         >
           <EditingScripts />
@@ -205,6 +242,48 @@ describe('<EditingScripts />', () => {
       expect(script1.getAttribute('src')).to.contain(
         `${getDesignLibraryScriptLink(stagingEdgeUrl)}?cb=`
       );
+    });
+
+    it('should append UTC cache-buster in HH-DD-MM-YYYY format (zero-padded) across edge cases', () => {
+      // Use sinon fake timers instead of overriding Date directly
+
+      const cases = [
+        { date: '2024-01-02T03:04:05.000Z', expected: '03-02-01-2024' }, // single-digit month/day/hour
+        { date: '2024-11-12T13:00:00.000Z', expected: '13-12-11-2024' }, // double-digit month/day/hour
+        { date: '2024-12-31T23:59:59.000Z', expected: '23-31-12-2024' }, // end of year
+        { date: '2025-01-01T00:00:00.000Z', expected: '00-01-01-2025' }, // start of year, hour 00
+        { date: '2024-03-09T09:00:00.000Z', expected: '09-09-03-2024' }, // leading zero hour/day/month
+      ];
+
+      cases.forEach(({ date, expected }) => {
+        const clock = sinon.useFakeTimers(new Date(date).getTime());
+        try {
+          const layoutData = getLayoutData({
+            pageEditing: false,
+            pageState: LayoutServicePageState.Normal,
+            renderingType: RenderingType.Component,
+            clientData: {},
+            clientScripts: [],
+          });
+
+          const page = { locale: 'en', layout: layoutData, mode };
+
+          const host = document.createElement('div');
+          const { container } = render(
+            <SitecoreProvider componentMap={mockComponentMap} page={page}>
+              <EditingScripts />
+            </SitecoreProvider>,
+            { container: host }
+          );
+
+          const script1 = container.querySelectorAll('script')[0];
+          const src = script1?.getAttribute('src') || '';
+          const cbValue = new URL(src).searchParams.get('cb');
+          expect(cbValue).to.equal(expected);
+        } finally {
+          clock.restore();
+        }
+      });
     });
   });
 });

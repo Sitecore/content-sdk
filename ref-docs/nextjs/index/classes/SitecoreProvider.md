@@ -6,7 +6,7 @@
 
 # Class: SitecoreProvider
 
-Defined in: react/types/components/SitecoreProvider.d.ts:45
+Defined in: react/types/components/SitecoreProvider.d.ts:38
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: react/types/components/SitecoreProvider.d.ts:45
 
 > **new SitecoreProvider**(`props`): `SitecoreProvider`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:47
+Defined in: react/types/components/SitecoreProvider.d.ts:40
 
 #### Parameters
 
@@ -40,9 +40,9 @@ Defined in: react/types/components/SitecoreProvider.d.ts:47
 
 > **context**: `unknown`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:945
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:946
 
-If using the new style context, re-declare this in your class to be the
+If using React Context, re-declare this in your class to be the
 `React.ContextType` of your `static contextType`.
 Should be used with type annotation or static contextType.
 
@@ -68,9 +68,9 @@ declare context: React.ContextType<typeof MyContext>
 
 ### props
 
-> `readonly` **props**: `Readonly`\<`SitecoreProviderProps`\>
+> `readonly` **props**: `Readonly`\<`P`\>
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:961
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:970
 
 #### Inherited from
 
@@ -78,19 +78,19 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:961
 
 ***
 
-### setContext()
+### setPage()
 
-> **setContext**: (`value`) => `void`
+> **setPage**: (`value`) => `void`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:55
+Defined in: react/types/components/SitecoreProvider.d.ts:46
 
-Update context state. Value can be
+Update page state.
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `value` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) \| [`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md) | New context value |
+| `value` | [`Page`](../type-aliases/Page.md) | New page value |
 
 #### Returns
 
@@ -100,9 +100,9 @@ Update context state. Value can be
 
 ### state
 
-> **state**: `Readonly`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)\>
+> **state**: `Readonly`\<`S`\>
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:962
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:971
 
 #### Inherited from
 
@@ -114,7 +114,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:962
 
 > `static` `optional` **contextType**: `Context`\<`any`\>
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:921
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:922
 
 If set, `this.context` will be set at runtime to the current value of the given Context.
 
@@ -147,7 +147,7 @@ class Foo extends React.Component {
 
 > `static` **displayName**: `string`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:46
+Defined in: react/types/components/SitecoreProvider.d.ts:39
 
 ***
 
@@ -155,7 +155,7 @@ Defined in: react/types/components/SitecoreProvider.d.ts:46
 
 > `static` `optional` **propTypes**: `any`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:927
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:928
 
 Ignored by React.
 
@@ -173,7 +173,7 @@ Only kept in types for backwards compatibility. Will be removed in a future majo
 
 > `optional` **componentDidCatch**(`error`, `errorInfo`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1194
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1210
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
@@ -199,7 +199,7 @@ the entire component tree to unmount.
 
 > `optional` **componentDidMount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1173
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1189
 
 Called immediately after a component is mounted. Setting state here will trigger re-rendering.
 
@@ -217,7 +217,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:49
+Defined in: react/types/components/SitecoreProvider.d.ts:41
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -243,7 +243,7 @@ The snapshot is only present if [getSnapshotBeforeUpdate](#getsnapshotbeforeupda
 
 > `optional` **componentWillMount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1252
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1268
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -275,7 +275,7 @@ this from being invoked.
 
 > `optional` **componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1283
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1299
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -291,7 +291,7 @@ this from being invoked.
 
 | Parameter | Type |
 | ------ | ------ |
-| `nextProps` | `Readonly`\<`SitecoreProviderProps`\> |
+| `nextProps` | `Readonly`\<`P`\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -317,7 +317,7 @@ this from being invoked.
 
 > `optional` **componentWillUnmount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1189
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1205
 
 Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
 cancelled network requests, or cleaning up any DOM elements created in `componentDidMount`.
@@ -336,7 +336,7 @@ cancelled network requests, or cleaning up any DOM elements created in `componen
 
 > `optional` **componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1315
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1331
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -350,8 +350,8 @@ this from being invoked.
 
 | Parameter | Type |
 | ------ | ------ |
-| `nextProps` | `Readonly`\<`SitecoreProviderProps`\> |
-| `nextState` | `Readonly`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)\> |
+| `nextProps` | `Readonly`\<`P`\> |
+| `nextState` | `Readonly`\<`S`\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -373,29 +373,11 @@ this from being invoked.
 
 ***
 
-### constructContext()
-
-> **constructContext**(`layoutData?`): [`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md)
-
-Defined in: react/types/components/SitecoreProvider.d.ts:48
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `layoutData?` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) |
-
-#### Returns
-
-[`SitecoreProviderPageContext`](../type-aliases/SitecoreProviderPageContext.md)
-
-***
-
 ### forceUpdate()
 
 > **forceUpdate**(`callback?`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:958
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:967
 
 #### Parameters
 
@@ -417,7 +399,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:958
 
 > `optional` **getSnapshotBeforeUpdate**(`prevProps`, `prevState`): `any`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1230
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1246
 
 Runs before React applies the result of Component.render render to the document, and
 returns an object to be given to [componentDidUpdate](#componentdidupdate). Useful for saving
@@ -430,8 +412,8 @@ lifecycle events from running.
 
 | Parameter | Type |
 | ------ | ------ |
-| `prevProps` | `Readonly`\<`SitecoreProviderProps`\> |
-| `prevState` | `Readonly`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)\> |
+| `prevProps` | `Readonly`\<`P`\> |
+| `prevState` | `Readonly`\<`S`\> |
 
 #### Returns
 
@@ -447,7 +429,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:56
+Defined in: react/types/components/SitecoreProvider.d.ts:47
 
 #### Returns
 
@@ -463,7 +445,7 @@ Defined in: react/types/components/SitecoreProvider.d.ts:56
 
 > **setState**\<`K`\>(`state`, `callback?`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:953
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:962
 
 #### Type Parameters
 
@@ -492,7 +474,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:953
 
 > `optional` **shouldComponentUpdate**(`nextProps`, `nextState`, `nextContext`): `boolean`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1184
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1200
 
 Called to determine whether the change in props and state should trigger a re-render.
 
@@ -507,8 +489,8 @@ and `componentDidUpdate` will not be called.
 
 | Parameter | Type |
 | ------ | ------ |
-| `nextProps` | `Readonly`\<`SitecoreProviderProps`\> |
-| `nextState` | `Readonly`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)\> |
+| `nextProps` | `Readonly`\<`P`\> |
+| `nextState` | `Readonly`\<`S`\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -525,7 +507,7 @@ and `componentDidUpdate` will not be called.
 
 > `optional` **UNSAFE\_componentWillMount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1267
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1283
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -559,7 +541,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1301
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1317
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -577,7 +559,7 @@ this from being invoked.
 
 | Parameter | Type |
 | ------ | ------ |
-| `nextProps` | `Readonly`\<`SitecoreProviderProps`\> |
+| `nextProps` | `Readonly`\<`P`\> |
 | `nextContext` | `any` |
 
 #### Returns
@@ -603,7 +585,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1331
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1347
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -619,8 +601,8 @@ this from being invoked.
 
 | Parameter | Type |
 | ------ | ------ |
-| `nextProps` | `Readonly`\<`SitecoreProviderProps`\> |
-| `nextState` | `Readonly`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)\> |
+| `nextProps` | `Readonly`\<`P`\> |
+| `nextState` | `Readonly`\<`S`\> |
 | `nextContext` | `any` |
 
 #### Returns

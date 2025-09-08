@@ -1,10 +1,12 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import path from 'path';
 import fs from 'fs';
 import chalk from 'chalk';
 import { GenerateSitesConfig } from './generateSites';
-import { SiteInfo, GraphQLSiteInfoService } from '../site';
+import { SiteInfo, SiteInfoService } from '../site';
 import { SitecoreConfigInput, defineConfig } from '../config';
 import proxyquire from 'proxyquire';
 
@@ -67,7 +69,6 @@ describe('generateSites', () => {
         encoding: 'utf8',
       })
     ).to.be.true;
-    expect(consoleLogStub.calledWith(`Writing site info to ${expectedPath}`)).to.be.true;
   });
 
   it('should write site info to the provided destinationPath', async () => {
@@ -88,7 +89,6 @@ describe('generateSites', () => {
         encoding: 'utf8',
       })
     ).to.be.true;
-    expect(consoleLogStub.calledWith(`Writing site info to ${expectedPath}`)).to.be.true;
   });
 
   it('should fetch site information when multisiteEnabled is true', async () => {
@@ -97,7 +97,7 @@ describe('generateSites', () => {
       { name: 'site2', hostName: 'site2.com', language: 'da/DK' },
     ];
 
-    sinon.stub(GraphQLSiteInfoService.prototype, 'fetchSiteInfo').resolves(fetchedSites);
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves(fetchedSites);
 
     const scConfig = defineConfig(mockConfig);
     const config: GenerateSitesConfig = {
@@ -115,12 +115,10 @@ describe('generateSites', () => {
         encoding: 'utf8',
       })
     ).to.be.true;
-    expect(consoleLogStub.calledWith('Fetching site information')).to.be.true;
-    expect(consoleLogStub.calledWith(`Writing site info to ${expectedPath}`)).to.be.true;
   });
 
   it('should log an error when fetching site information fails', async () => {
-    sinon.stub(GraphQLSiteInfoService.prototype, 'fetchSiteInfo').rejects(new Error('Fetch error'));
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').rejects(new Error('Fetch error'));
     const scConfig = defineConfig(mockConfig);
 
     const config: GenerateSitesConfig = {
@@ -137,7 +135,6 @@ describe('generateSites', () => {
         encoding: 'utf8',
       })
     ).to.be.true;
-    expect(consoleLogStub.calledWith('Fetching site information')).to.be.true;
     expect(consoleErrorStub.calledWith(chalk.red('Error fetching site information'))).to.be.true;
     expect(consoleErrorStub.calledWith(sinon.match.instanceOf(Error))).to.be.true;
   });

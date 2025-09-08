@@ -385,7 +385,7 @@ describe('<Link />', () => {
   });
 
   it('should render nothing with missing field', () => {
-    const field = (null as unknown) as LinkField;
+    const field = null as unknown as LinkField;
 
     const rendered = render(<Link field={field} />);
 
@@ -459,7 +459,7 @@ describe('<Link />', () => {
           `<code type="text/sitecore" chrometype="field" class="scpm" kind="open">${JSON.stringify(
             testMetadata
           )}</code>`,
-          '<span>[No text in field]</span>',
+          '<span data-react-link="true">[No text in field]</span>',
           '<code type="text/sitecore" chrometype="field" class="scpm" kind="close"></code>',
         ].join('')
       );
@@ -482,7 +482,7 @@ describe('<Link />', () => {
           `<code type="text/sitecore" chrometype="field" class="scpm" kind="open">${JSON.stringify(
             testMetadata
           )}</code>`,
-          '<span>[No text in field]</span>',
+          '<span data-react-link="true">[No text in field]</span>',
           '<code type="text/sitecore" chrometype="field" class="scpm" kind="close"></code>',
         ].join('')
       );

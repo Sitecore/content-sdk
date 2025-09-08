@@ -18,7 +18,7 @@ export {
   LayoutServicePageState,
   LayoutServiceContext,
   LayoutServiceContextData,
-  GraphQLLayoutService,
+  LayoutService,
   RouteData,
   Field,
   Item,
@@ -29,21 +29,20 @@ export {
   ComponentParams,
   EditMode,
 } from '@sitecore-content-sdk/core/layout';
-export {
-  DictionaryPhrases,
-  DictionaryService,
-  GraphQLDictionaryService,
-} from '@sitecore-content-sdk/core/i18n';
+export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/core/i18n';
 export {
   GraphQLClientError,
   RetryStrategy,
   DefaultRetryStrategy,
   GraphQLRequestClientFactoryConfig,
   GraphQLRequestClient,
+  PageMode,
+  ErrorPage,
+  Page,
 } from '@sitecore-content-sdk/core/client';
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export { Form } from './components/Form';
-export { ReactJssComponent, ComponentMap, ReactModule } from './components/sharedTypes';
+export { ReactContentSdkComponent, ComponentMap, ReactModule } from './components/sharedTypes';
 export { Placeholder, PlaceholderComponentProps } from './components/Placeholder';
 export {
   Image,
@@ -75,7 +74,6 @@ export { File, FileField } from './components/File';
 export {
   SitecoreProvider,
   SitecoreProviderState,
-  SitecoreProviderPageContext,
   SitecoreProviderReactContext,
 } from './components/SitecoreProvider';
 export {
@@ -95,7 +93,4 @@ export {
   DefaultEmptyFieldEditingComponentText,
   DefaultEmptyFieldEditingComponentImage,
 } from './components/DefaultEmptyFieldEditingComponents';
-export {
-  GraphQLSitePathService,
-  GraphQLSitePathServiceConfig,
-} from '@sitecore-content-sdk/core/site';
+export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/core/site';

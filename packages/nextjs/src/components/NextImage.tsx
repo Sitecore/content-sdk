@@ -1,4 +1,6 @@
-﻿import { mediaApi } from '@sitecore-content-sdk/core/media';
+﻿'use client';
+/* eslint-disable no-unused-vars */
+import { mediaApi } from '@sitecore-content-sdk/core/media';
 import React from 'react';
 import {
   ImageProps,
@@ -10,11 +12,7 @@ import {
   withEmptyFieldEditingComponent,
 } from '@sitecore-content-sdk/react';
 import Image, { ImageProps as NextImageProperties } from 'next/image';
-import {
-  isFieldValueEmpty,
-  LayoutServicePageState,
-  RenderingType,
-} from '@sitecore-content-sdk/core/layout';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 
 type NextImageProps = ImageProps & Partial<NextImageProperties>;
 export const NextImage: React.FC<NextImageProps> = withFieldMetadata<NextImageProps>(
@@ -42,10 +40,7 @@ export const NextImage: React.FC<NextImageProps> = withFieldMetadata<NextImagePr
       }
 
       // disable image optimization for Edit / Preview / Component rendering, but preserve original value if true
-      const unoptimized =
-        otherProps.unoptimized ||
-        context.pageContext?.renderingType === RenderingType.Component ||
-        context.pageContext?.pageState !== LayoutServicePageState.Normal;
+      const unoptimized = otherProps.unoptimized || !context.page.mode.isNormal;
 
       const attrs = {
         ...img,

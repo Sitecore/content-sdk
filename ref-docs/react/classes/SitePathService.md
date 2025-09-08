@@ -1,0 +1,172 @@
+[**@sitecore-content-sdk/react**](../README.md)
+
+***
+
+[@sitecore-content-sdk/react](../README.md) / SitePathService
+
+# Class: SitePathService
+
+Defined in: packages/core/types/site/sitepath-service.d.ts:90
+
+Service that fetches the list of site pages using Sitecore's GraphQL API.
+Used to handle a single site
+This list is used for SSG and Export functionality.
+
+## Mixes
+
+SearchQueryService<PageListQueryResult>
+
+## Constructors
+
+### Constructor
+
+> **new SitePathService**(`options`): `SitePathService`
+
+Defined in: packages/core/types/site/sitepath-service.d.ts:97
+
+Creates an instance of graphQL sitemap service with the provided options
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `options` | [`SitePathServiceConfig`](../interfaces/SitePathServiceConfig.md) | instance |
+
+#### Returns
+
+`SitePathService`
+
+## Properties
+
+### options
+
+> **options**: [`SitePathServiceConfig`](../interfaces/SitePathServiceConfig.md)
+
+Defined in: packages/core/types/site/sitepath-service.d.ts:91
+
+## Accessors
+
+### graphQLClient
+
+#### Get Signature
+
+> **get** `protected` **graphQLClient**(): `GraphQLClient`
+
+Defined in: packages/core/types/site/sitepath-service.d.ts:101
+
+GraphQL client accessible by descendant classes when needed
+
+##### Returns
+
+`GraphQLClient`
+
+***
+
+### query
+
+#### Get Signature
+
+> **get** `protected` **query**(): `string`
+
+Defined in: packages/core/types/site/sitepath-service.d.ts:105
+
+Gets the default query used for fetching the list of site pages
+
+##### Returns
+
+`string`
+
+## Methods
+
+### fetchLanguageSitePaths()
+
+> `protected` **fetchLanguageSitePaths**(`language`, `siteName`, `fetchOptions?`): `Promise`\<`RouteListQueryResult`[]\>
+
+Defined in: packages/core/types/site/sitepath-service.d.ts:132
+
+Fetch and return site paths for multisite implementation, with prefixes included
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `language` | `string` | path language |
+| `siteName` | `string` | site name |
+| `fetchOptions?` | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
+
+#### Returns
+
+`Promise`\<`RouteListQueryResult`[]\>
+
+modified paths
+
+***
+
+### fetchSiteRoutes()
+
+> **fetchSiteRoutes**(`sites`, `languages`, `fetchOptions?`): `Promise`\<`StaticPath`[]\>
+
+Defined in: packages/core/types/site/sitepath-service.d.ts:116
+
+Fetch a flat list of all pages that belong to all the requested sites and have a
+version in the specified language(s).
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `sites` | `string`[] | Fetch pages for these sites. |
+| `languages` | `string`[] | Fetch pages that have versions in this language(s). |
+| `fetchOptions?` | `FetchOptions` | Options to override graphQL client details like retries and fetch implementation |
+
+#### Returns
+
+`Promise`\<`StaticPath`[]\>
+
+list of pages
+
+#### Throws
+
+if the list of languages is empty.
+
+#### Throws
+
+if the any of the languages is an empty string.
+
+***
+
+### getGraphQLClient()
+
+> `protected` **getGraphQLClient**(): `GraphQLClient`
+
+Defined in: packages/core/types/site/sitepath-service.d.ts:124
+
+Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
+library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
+want to use something else.
+
+#### Returns
+
+`GraphQLClient`
+
+implementation
+
+***
+
+### transformLanguageSitePaths()
+
+> `protected` **transformLanguageSitePaths**(`sitePaths`, `formatStaticPath`, `language`): `Promise`\<`StaticPath`[]\>
+
+Defined in: packages/core/types/site/sitepath-service.d.ts:117
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `sitePaths` | `RouteListQueryResult`[] |
+| `formatStaticPath` | (`path`, `language`) => `StaticPath` |
+| `language` | `string` |
+
+#### Returns
+
+`Promise`\<`StaticPath`[]\>

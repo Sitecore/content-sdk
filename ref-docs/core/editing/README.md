@@ -8,15 +8,16 @@
 
 ## Enumerations
 
+- [DesignLibraryMode](enumerations/DesignLibraryMode.md)
 - [DesignLibraryStatus](enumerations/DesignLibraryStatus.md)
 - [LayoutKind](enumerations/LayoutKind.md)
 - [MetadataKind](enumerations/MetadataKind.md)
 
 ## Classes
 
-- [GraphQLEditingService](classes/GraphQLEditingService.md)
+- [ComponentLayoutService](classes/ComponentLayoutService.md)
+- [EditingService](classes/EditingService.md)
 - [PagesEditor](classes/PagesEditor.md)
-- [RestComponentLayoutService](classes/RestComponentLayoutService.md)
 
 ## Interfaces
 
@@ -43,8 +44,9 @@
 ## Functions
 
 - [addComponentUpdateHandler](functions/addComponentUpdateHandler.md)
+- [getContentSdkPagesClientData](functions/getContentSdkPagesClientData.md)
 - [getDesignLibraryScriptLink](functions/getDesignLibraryScriptLink.md)
 - [getDesignLibraryStatusEvent](functions/getDesignLibraryStatusEvent.md)
-- [getJssPagesClientData](functions/getJssPagesClientData.md)
+- [isDesignLibraryMode](functions/isDesignLibraryMode.md)
 - [isEditorActive](functions/isEditorActive.md)
 - [resetEditorChromes](functions/resetEditorChromes.md)

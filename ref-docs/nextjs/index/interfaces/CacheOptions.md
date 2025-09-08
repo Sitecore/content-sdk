@@ -16,7 +16,7 @@ CacheClient
 
 ## Extended by
 
-- [`GraphQLDictionaryServiceConfig`](GraphQLDictionaryServiceConfig.md)
+- [`DictionaryServiceConfig`](DictionaryServiceConfig.md)
 
 ## Properties
 

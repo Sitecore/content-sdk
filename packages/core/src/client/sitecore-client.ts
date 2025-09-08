@@ -1,33 +1,76 @@
 import {
   DesignLibraryRenderPreviewData,
   EditingPreviewData,
-  GraphQLEditingService,
-  RestComponentLayoutService,
+  EditingService,
+  ComponentLayoutService,
+  DesignLibraryMode,
 } from '../editing';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
-import { DictionaryPhrases, GraphQLDictionaryService } from '../i18n';
+import { DictionaryPhrases, DictionaryService } from '../i18n';
 import {
   getDesignLibraryStylesheetLinks,
   getContentStylesheetLink,
-  GraphQLLayoutService,
+  LayoutService,
   LayoutServiceData,
   RouteOptions,
+  LayoutServicePageState,
 } from '../layout';
 import { HTMLLink, FetchOptions, StaticPath, RetryStrategy } from '../models';
 import { getGroomedVariantIds, PersonalizedRewriteData } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
-import {
-  ErrorPages,
-  SiteInfo,
-  SiteResolver,
-  GraphQLErrorPagesService,
-  GraphQLSitePathService,
-  GraphQLSitemapXmlService,
-} from '../site';
+import { ErrorPages, ErrorPagesService, SitePathService, SitemapXmlService } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { NativeDataFetcher } from '../native-fetcher';
-import { GraphQLRobotsService } from '../site/graphql-robots-service';
+import { RobotsService } from '../site/robots-service';
+
+/**
+ * Error page codes
+ */
+export enum ErrorPage {
+  NotFound = '404',
+  InternalServerError = '500',
+}
+
+/**
+ * Page mode name
+ */
+type PageModeName = LayoutServicePageState | DesignLibraryMode;
+
+/**
+ * Represents the mode of the page
+ */
+export type PageMode = {
+  /**
+   * Page mode name.
+   */
+  name: PageModeName;
+  /**
+   * Design Library related properties. Only available in Design Library mode.
+   */
+  designLibrary: {
+    /**
+     * Whether the page is in variant generation mode
+     */
+    isVariantGeneration: boolean;
+  };
+  /**
+   * Whether the page is in normal mode
+   */
+  isNormal: boolean;
+  /**
+   * Whether the page is in preview mode
+   */
+  isPreview: boolean;
+  /**
+   * Whether the page is in editing mode
+   */
+  isEditing: boolean;
+  /**
+   * Whether the page is in Design Library mode
+   */
+  isDesignLibrary: boolean;
+};
 
 /**
  * Represent a Page model returned from Edge endpoint
@@ -38,13 +81,17 @@ export type Page = {
    */
   layout: LayoutServiceData;
   /**
-   * Site info for current page / route
+   * Site name for current page / route
    */
-  site?: SiteInfo;
+  siteName?: string;
   /**
    * Route locale
    */
   locale: string;
+  /**
+   * Page mode
+   */
+  mode: PageMode;
 };
 
 export type PageOptions = Partial<RouteOptions> & {
@@ -80,12 +127,6 @@ export type RobotsOptions = {
  */
 export interface BaseSitecoreClient {
   /**
-   * Resolves site by request hostaname
-   * @param {string} hostname incoming request host name
-   * @returns {SiteInfo} site details including name, language and hostname
-   */
-  resolveSite(hostname: string): SiteInfo;
-  /**
    * Retrieves page layoutData and returns page details like language, layoutData and site info for current request
    * @param {string} path current request path
    * @param {PageOptions} pageOptions additional overrides like language, site name and personalization variants
@@ -97,7 +138,6 @@ export interface BaseSitecoreClient {
     pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
-
   /**
    * Retrieves the robots.txt content for a given site name.
    * @param {string} siteName - The name of the site for which to fetch robots.txt content.
@@ -134,11 +174,28 @@ export interface BaseSitecoreClient {
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
   /**
+   * Get error page details for a given error code
+   * @param {ErrorPage} code - The error code to get the error page for
+   * @param {Partial<RouteOptions>} [pageOptions] - The page options to get the error page for
+   * @param {FetchOptions} [fetchOptions] - Additional fetch fetch options to override GraphQL requests
+   * @returns {Promise<Page | null>} A promise that resolves to the error page details or null if not found
+   */
+  getErrorPage(
+    code: ErrorPage,
+    pageOptions?: Partial<RouteOptions>,
+    fetchOptions?: FetchOptions
+  ): Promise<Page | null>;
+  /**
    * Get route paths for all pages in the site. Can be used for static site generation.
+   * @param {string[]} sites - sites to fetch routes for
    * @param {string[]} [languages] languages to fetch routes in
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
    */
-  getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
+  getPagePaths(
+    sites: string[],
+    languages?: string[],
+    fetchOptions?: FetchOptions
+  ): Promise<StaticPath[]>;
   /**
    * Retrieves the links to be loaded in app's <head> element for each page.
    * @param {LayoutServiceData} layoutData - The layout data containing styles and themes.
@@ -181,14 +238,13 @@ export interface BaseServiceOptions {
  * Use it to retrieve pages, preview data, dictionary and other data
  */
 export class SitecoreClient implements BaseSitecoreClient {
-  protected layoutService: GraphQLLayoutService;
-  protected dictionaryService: GraphQLDictionaryService;
-  protected siteResolver: SiteResolver;
-  protected editingService: GraphQLEditingService;
+  protected layoutService: LayoutService;
+  protected dictionaryService: DictionaryService;
+  protected editingService: EditingService;
   protected clientFactory: GraphQLRequestClientFactory;
-  protected errorPagesService: GraphQLErrorPagesService;
-  protected componentService: RestComponentLayoutService;
-  protected sitePathService: GraphQLSitePathService;
+  protected errorPagesService: ErrorPagesService;
+  protected componentService: ComponentLayoutService;
+  protected sitePathService: SitePathService;
 
   /**
    * Init SitecoreClient
@@ -196,7 +252,6 @@ export class SitecoreClient implements BaseSitecoreClient {
    */
   constructor(protected initOptions: SitecoreClientInit) {
     this.clientFactory = this.getClientFactory();
-    this.siteResolver = initOptions.custom?.siteResolver ?? this.getSiteResolver();
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
@@ -208,16 +263,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     this.errorPagesService = initOptions.custom?.errorPagesService ?? this.getErrorPagesService();
     this.sitePathService = initOptions.custom?.sitePathService ?? this.getSitePathService();
     this.componentService = this.getComponentService();
-  }
-
-  /**
-   * Resolve site by hostname
-   * @param {string} hostname site hostname
-   * @returns {SiteInfo} site details matching the hostname
-   */
-  resolveSite(hostname: string): SiteInfo {
-    const site = this.siteResolver.getByHost(hostname);
-    return site;
   }
 
   /**
@@ -264,9 +309,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!layout.sitecore.route) {
       return null;
     } else {
-      const siteInfo =
-        this.siteResolver.getByName(site) || (layout.sitecore.context.site as SiteInfo);
-
       // Initialize links to be inserted on the page
       if (pageOptions?.personalize?.variantId) {
         // Modify layoutData to use specific variant(s) instead of default
@@ -280,8 +322,9 @@ export class SitecoreClient implements BaseSitecoreClient {
 
       return {
         layout,
-        site: siteInfo,
+        siteName: layout.sitecore.context.site?.name || site,
         locale,
+        mode: this.getPageMode(LayoutServicePageState.Normal),
       };
     }
   }
@@ -299,8 +342,10 @@ export class SitecoreClient implements BaseSitecoreClient {
     options: { enableStyles?: boolean; enableThemes?: boolean } = {}
   ): HTMLLink[] {
     const { enableStyles = true, enableThemes = true } = options;
-    const { contextId, edgeUrl } = this.initOptions.api.edge;
+    const { contextId: serverContextId, clientContextId, edgeUrl } = this.initOptions.api.edge;
     const headLinks: HTMLLink[] = [];
+
+    const contextId = serverContextId || clientContextId;
 
     if (enableStyles) {
       const contentStyles = getContentStylesheetLink(layoutData, contextId, edgeUrl);
@@ -359,19 +404,11 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
     // If we're in Pages preview (editing) mode, prefetch the editing data
-    const {
-      site,
-      itemId,
-      language,
-      version,
-      variantIds,
-      layoutKind,
-      mode,
-    } = previewData as EditingPreviewData;
+    const { site, itemId, language, version, variantIds, layoutKind, mode } =
+      previewData as EditingPreviewData;
 
     const data = await this.editingService.fetchEditingData(
       {
-        siteName: site,
         itemId,
         language,
         version,
@@ -384,12 +421,12 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!data) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}`);
     }
-    const page = {
+    const page: Page = {
       locale: language,
       layout: data.layoutData,
-      dictionary: data.dictionary,
-      site: data.layoutData.sitecore.context.site as SiteInfo,
-    } as Page;
+      siteName: data.layoutData.sitecore.context.site?.name || site,
+      mode: this.getPageMode(mode),
+    };
     const personalizeData = getGroomedVariantIds(variantIds);
     personalizeLayout(page.layout, personalizeData.variantId, personalizeData.componentVariantIds);
 
@@ -410,30 +447,19 @@ export class SitecoreClient implements BaseSitecoreClient {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
 
-    const {
-      itemId,
-      componentUid,
-      site,
-      language,
-      renderingId,
-      dataSourceId,
-      version,
-    } = designLibData;
+    const { itemId, componentUid, site, language, renderingId, dataSourceId, version, mode } =
+      designLibData;
 
-    const componentData = await this.componentService.fetchComponentData({
-      siteName: site,
-      itemId,
-      language,
-      componentUid,
-      renderingId,
-      dataSourceId,
-      version,
-    });
-
-    const dictionaryData = await this.editingService.fetchDictionaryData(
+    const componentData = await this.componentService.fetchComponentData(
       {
         siteName: site,
+        itemId,
         language,
+        componentUid,
+        renderingId,
+        dataSourceId,
+        version,
+        mode,
       },
       fetchOptions
     );
@@ -441,22 +467,76 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!componentData) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(designLibData)}`);
     }
-    const page = {
+    const page: Page = {
       locale: designLibData.language,
       layout: componentData,
-      dictionary: dictionaryData,
-    } as Page;
+      siteName: componentData.sitecore.context.site?.name || site,
+      mode: this.getPageMode(mode),
+    };
     return page;
   }
 
   /**
+   * Get error page details for a given error code
+   * @param {ErrorPage} code - The error code to get the error page for
+   * @param {Partial<RouteOptions>} pageOptions - The page options to get the error page for
+   * @param {FetchOptions} [fetchOptions] - Additional fetch fetch options to override GraphQL requests
+   * @returns {Promise<Page | null>} A promise that resolves to the error page details or null if not found
+   */
+  async getErrorPage(
+    code: ErrorPage,
+    pageOptions?: Partial<RouteOptions>,
+    fetchOptions?: FetchOptions
+  ): Promise<Page | null> {
+    const locale = pageOptions?.locale || this.initOptions.defaultLanguage;
+    const site = pageOptions?.site || this.initOptions.defaultSite;
+
+    const result = await this.getErrorPages(
+      {
+        site,
+        locale,
+      },
+      fetchOptions
+    );
+
+    let layout = null;
+
+    switch (code) {
+      case ErrorPage.NotFound:
+        layout = result?.notFoundPage?.rendered || null;
+        break;
+      case ErrorPage.InternalServerError:
+        layout = result?.serverErrorPage?.rendered || null;
+        break;
+      default:
+        return null;
+    }
+
+    if (!layout) {
+      return null;
+    }
+
+    return {
+      layout,
+      locale,
+      mode: this.getPageMode(LayoutServicePageState.Normal),
+      siteName: site,
+    };
+  }
+
+  /**
    * Retrieves the static paths for pages based on the given languages.
+   * @param {string[]} sites - An array of site names to fetch routes for.
    * @param {string[]} [languages] - An optional array of language codes to generate paths for.
    * @param {FetchOptions} [fetchOptions] - Additional fetch options.
    * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
    */
-  async getPagePaths(languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]> {
-    return this.sitePathService.fetchSiteRoutes(languages || [], fetchOptions);
+  async getPagePaths(
+    sites: string[],
+    languages?: string[],
+    fetchOptions?: FetchOptions
+  ): Promise<StaticPath[]> {
+    return this.sitePathService.fetchSiteRoutes(sites, languages || [], fetchOptions);
   }
 
   /**
@@ -487,6 +567,7 @@ export class SitecoreClient implements BaseSitecoreClient {
           throw new Error('REDIRECT_404');
         }
         return xmlResponse.data;
+      // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error('REDIRECT_404');
       }
@@ -530,15 +611,15 @@ export class SitecoreClient implements BaseSitecoreClient {
    * Subclasses can override these to provide custom implementations.
    */
 
-  protected getGraphqlSitemapXMLService(siteName: string): GraphQLSitemapXmlService {
-    return new GraphQLSitemapXmlService({
+  protected getGraphqlSitemapXMLService(siteName: string): SitemapXmlService {
+    return new SitemapXmlService({
       clientFactory: this.clientFactory,
       siteName,
     });
   }
 
-  protected getRobotsService(siteName: string): GraphQLRobotsService {
-    return new GraphQLRobotsService({
+  protected getRobotsService(siteName: string): RobotsService {
+    return new RobotsService({
       clientFactory: this.clientFactory,
       siteName,
     });
@@ -552,6 +633,52 @@ export class SitecoreClient implements BaseSitecoreClient {
     };
   }
 
+  /**
+   * Get page mode based on mode name
+   * @param {PageModeName} mode - The mode name to get the page mode for
+   * @returns {PageMode} The page mode
+   */
+  private getPageMode(mode: PageModeName): PageMode {
+    const pageMode: PageMode = {
+      name: mode,
+      isNormal: false,
+      isPreview: false,
+      isEditing: false,
+      isDesignLibrary: false,
+      designLibrary: {
+        isVariantGeneration: false,
+      },
+    };
+
+    switch (mode) {
+      case LayoutServicePageState.Normal:
+        pageMode.isNormal = true;
+        break;
+      case LayoutServicePageState.Preview:
+        pageMode.isPreview = true;
+        break;
+      case LayoutServicePageState.Edit:
+        pageMode.isEditing = true;
+        break;
+      case DesignLibraryMode.Normal:
+        pageMode.isDesignLibrary = true;
+        break;
+      case DesignLibraryMode.Metadata:
+        pageMode.isDesignLibrary = true;
+        pageMode.isEditing = true;
+        break;
+      case DesignLibraryMode.VariantGeneration:
+        pageMode.isDesignLibrary = true;
+        pageMode.isEditing = true;
+        pageMode.designLibrary.isVariantGeneration = true;
+        break;
+      default:
+        break;
+    }
+
+    return pageMode;
+  }
+
   private getClientFactory(): GraphQLRequestClientFactory {
     const graphQLOptions: GraphQLClientOptions = {
       api: this.initOptions.api,
@@ -561,45 +688,40 @@ export class SitecoreClient implements BaseSitecoreClient {
     return createGraphQLClientFactory(graphQLOptions);
   }
 
-  private getSiteResolver(): SiteResolver {
-    return new SiteResolver(this.initOptions.sites);
-  }
-
-  private getLayoutService(baseOptions: BaseServiceOptions): GraphQLLayoutService {
-    return new GraphQLLayoutService({
+  private getLayoutService(baseOptions: BaseServiceOptions): LayoutService {
+    return new LayoutService({
       ...baseOptions,
       formatLayoutQuery: this.initOptions.layout.formatLayoutQuery,
     });
   }
 
-  private getDictionaryService(baseOptions: BaseServiceOptions): GraphQLDictionaryService {
-    return new GraphQLDictionaryService({
+  private getDictionaryService(baseOptions: BaseServiceOptions): DictionaryService {
+    return new DictionaryService({
       ...baseOptions,
       cacheEnabled: this.initOptions.dictionary.caching.enabled,
       cacheTimeout: this.initOptions.dictionary.caching.timeout,
     });
   }
 
-  private getEditingService(): GraphQLEditingService {
-    return new GraphQLEditingService({ clientFactory: this.clientFactory });
+  private getEditingService(): EditingService {
+    return new EditingService({ clientFactory: this.clientFactory });
   }
 
-  private getErrorPagesService(): GraphQLErrorPagesService {
-    return new GraphQLErrorPagesService({
+  private getErrorPagesService(): ErrorPagesService {
+    return new ErrorPagesService({
       ...this.initOptions,
       language: this.initOptions.defaultLanguage,
       clientFactory: this.clientFactory,
     });
   }
 
-  private getComponentService(): RestComponentLayoutService {
-    return new RestComponentLayoutService(this.initOptions.api.edge);
+  private getComponentService(): ComponentLayoutService {
+    return new ComponentLayoutService(this.initOptions.api.edge);
   }
 
-  private getSitePathService(): GraphQLSitePathService {
-    return new GraphQLSitePathService({
+  private getSitePathService(): SitePathService {
+    return new SitePathService({
       clientFactory: this.clientFactory,
-      sites: this.siteResolver.sites,
     });
   }
 }

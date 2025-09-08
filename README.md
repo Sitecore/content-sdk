@@ -1,8 +1,6 @@
 # Sitecore Content SDK
 
-⚠️ **Disclaimer:** This project is currently in beta and under development, with ongoing updates and improvements. Until a stable and official release is available, please use it with caution in production.
-
-[![Build Status](https://dev.azure.com/sitecore-devex/headless-javascript/_apis/build/status/Sitecore.jss?branchName=dev)](https://dev.azure.com/sitecore-devex/headless-javascript/_build/latest?definitionId=8&branchName=dev) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Publish](https://github.com/Sitecore/content-sdk/actions/workflows/publish.yml/badge.svg)](https://github.com/Sitecore/content-sdk/actions/workflows/publish.yml) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 This repository contains source code for all Sitecore Content SDK packages and templates to help you get started using Sitecore Content SDK.
 
@@ -24,7 +22,7 @@ To develop a Sitecore Content SDK application, you need:
 To create a Sitecore Content SDK project in a terminal, run one of the following command and follow the prompts:
 
 ```
-npx @sitecore-content-sdk/create-sitecore-jss
+npx create-content-sdk-app
 ```
 
 For more information check out our [Getting Started Guide](https://doc.sitecore.com/xmc/en/developers/content-sdk/creating-a-jss-app-for-xm-cloud.html)
@@ -34,7 +32,7 @@ For more information check out our [Getting Started Guide](https://doc.sitecore.
 - Official documentation:
 - [XM Cloud](https://doc.sitecore.com/xmc/en/developers/jss/latest/jss-xmc/index-en.html)
 - [StackExchange](https://sitecore.stackexchange.com/)
-- [Community Slack](https://sitecorechat.slack.com/messages/jss)
+- [Community Slack](https://sitecorechat.slack.com/messages/content-sdk)
 - [Sitecore Community Forum](https://community.sitecore.net/developers/f/40)
 
 ## Contributions
@@ -51,6 +49,6 @@ Read our [contributing guide](CONTRIBUTING.md) to learn about our development pr
 
 ### License
 
-Sitecore JavaScript Services is using the [Apache 2.0 license](LICENSE.MD).
+Sitecore JavaScript Content SDK is using the [Apache 2.0 license](LICENSE.MD).
 
 ## [Support](SUPPORT.md)

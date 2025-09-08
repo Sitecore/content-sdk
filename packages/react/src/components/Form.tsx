@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { form } from '@sitecore-content-sdk/core';
@@ -27,7 +28,7 @@ export type FormProps = {
      */
     FormId: string;
     /**
-     * The CSS class to apply to the form.
+     * CSS class to apply to the form
      */
     styles?: string;
     /**
@@ -44,16 +45,27 @@ export const Form = ({ params, rendering }: FormProps) => {
   const context = useSitecore();
   const formRef = useRef<HTMLDivElement>(null);
 
-  const isEditing = context.pageContext.pageEditing;
+  const isEditing = context.page.mode.isEditing;
 
   useEffect(() => {
     if (!content) {
-      loadForm(context.api?.edge?.contextId, params.FormId, context.api?.edge?.edgeUrl)
+      // Forms must use clientContextId since they are rendered client-side
+      const edgeId = context.api?.edge?.clientContextId;
+
+      if (!edgeId) {
+        /* eslint-disable no-console */
+        console.warn(
+          'Warning: clientContextId is missing – form cannot be loaded properly on the client'
+        );
+        return;
+      }
+
+      loadForm(edgeId, params.FormId, context.api?.edge?.edgeUrl)
         .then(setContent)
         .catch(() => {
           if (isEditing) {
             console.error(
-              `Failed to load form with id ${params.FormId}. Check debug logs for sitecore-jss:form for more details.`
+              `Failed to load form with id ${params.FormId}. Check debug logs for content-sdk:form for more details.`
             );
           }
           setError(true);
@@ -68,12 +80,12 @@ export const Form = ({ params, rendering }: FormProps) => {
     }
   }, [content]);
 
-  if (isEditing) {
-    if (error) {
-      return (
-        <div className="sc-jss-placeholder-error">There was a problem loading this section</div>
-      );
-    }
+  if (isEditing && error) {
+    return (
+      <div className="sc-content-sdk-placeholder-error">
+        There was a problem loading this section
+      </div>
+    );
   }
 
   return (

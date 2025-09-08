@@ -1,4 +1,5 @@
-﻿/* eslint-disable no-unused-expressions */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable dot-notation */
 import { debug, GraphQLRequestClient } from '@sitecore-content-sdk/core';
@@ -181,23 +182,23 @@ describe('RedirectsMiddleware', () => {
     nextRedirectStub = sandbox.stub(NextResponse, 'redirect').callsFake((url, init) => {
       const statusCode = typeof init === 'number' ? init : init?.status || status;
       const headers = typeof init === 'object' ? init?.headers : {};
-      return ({
+      return {
         url,
         status: statusCode,
         cookies: { set: setCookies, get: getCookies },
         headers: new Headers(headers),
-      } as unknown) as NextResponse;
+      } as unknown as NextResponse;
     });
   };
 
   const setupRewriteStub = (status = 200, res) => {
     nextRewriteStub = sandbox.stub(NextResponse, 'rewrite').callsFake((url) => {
-      return ({
+      return {
         url,
         status,
         cookies: { set: setCookies, get: getCookies },
         headers: res.headers,
-      } as unknown) as NextResponse;
+      } as unknown as NextResponse;
     });
   };
 
@@ -423,7 +424,7 @@ describe('RedirectsMiddleware', () => {
       });
       const nextStub = sinon
         .stub(NextResponse, 'next')
-        .callsFake(() => (res as unknown) as NextResponse);
+        .callsFake(() => res as unknown as NextResponse);
 
       const props = {
         skip: (req) => req?.nextUrl.pathname === '/styleguide' && req.nextUrl.locale === 'en',
@@ -451,7 +452,7 @@ describe('RedirectsMiddleware', () => {
       });
       const nextStub = sinon
         .stub(NextResponse, 'next')
-        .callsFake(() => (res as unknown) as NextResponse);
+        .callsFake(() => res as unknown as NextResponse);
 
       const props = {
         enabled: false,
@@ -470,7 +471,7 @@ describe('RedirectsMiddleware', () => {
       const res = createResponse({
         url: 'http://localhost:3000/found',
       });
-      const nextStub = sandbox.stub(NextResponse, 'next').returns((res as unknown) as NextResponse);
+      const nextStub = sandbox.stub(NextResponse, 'next').returns(res as unknown as NextResponse);
       const req = createRequest();
       const { middleware, fetchRedirects, siteResolver } = createMiddleware();
       const finalRes = await middleware.handle(req, res);
@@ -1914,6 +1915,61 @@ describe('RedirectsMiddleware', () => {
           {
             pattern: '/About',
             target: '/Found',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+          headers: {},
+          redirected: undefined,
+          status: 301,
+          url,
+        });
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(siteResolver.getByHost).to.have.been.called;
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(301);
+      });
+
+      it('should redirect to lowercase target even if incoming path is mixed-case', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/about',
+          pathname: '/about',
+          origin: 'http://localhost:3000',
+          locale: 'en',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/AnotherPage',
+              href: 'http://localhost:3000/AnotherPage',
+              locale: 'en',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 301,
+        });
+
+        setupRedirectStub(301);
+        res.headers.set('x-middleware-next', '1');
+        res.headers.set('x-middleware-rewrite', '1');
+        res.headers.set(REWRITE_HEADER_NAME, 1);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            pattern: '/anotherpage',
+            target: '/about',
             redirectType: REDIRECT_TYPE_301,
             isQueryStringPreserved: false,
             locale: 'en',

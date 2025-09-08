@@ -1,4 +1,5 @@
-﻿import React, { JSX } from 'react';
+﻿'use client';
+import React, { JSX } from 'react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { ComponentFields, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { getDataFromFields } from '../utils';
@@ -79,9 +80,9 @@ export const FEaaSComponent = (props: FEaaSComponentProps): JSX.Element => {
   const data = { ...props.fetchedData, _: getDataFromFields(props.fields ?? {}) };
 
   // FEaaS control would still be hydrated by client
-  // we pass all the props as a workaround to avoid hydration error, until we convert all JSS components to server side
+  // we pass all the props as a workaround to avoid hydration error, until we convert all Content SDK components to server side
   // this also allows component to fall back to full client-side rendering when template or src is empty
-  // FEAAS should not fetch anything, since JSS does the fetching - so we pass empty array into fetch param
+  // FEAAS should not fetch anything, since Content SDK does the fetching - so we pass empty array into fetch param
   return (
     <FEAAS.Component
       data={data}
@@ -148,8 +149,9 @@ async function fetchComponentTemplate(
     return template;
   } catch (error) {
     console.error(
-      `Fetch FEAAS component from ${src} failed. Ensure the component revision "${params.ComponentRevision ||
-        revisionFallback}" is present`
+      `Fetch FEAAS component from ${src} failed. Ensure the component revision "${
+        params.ComponentRevision || revisionFallback
+      }" is present`
     );
     throw error;
   }

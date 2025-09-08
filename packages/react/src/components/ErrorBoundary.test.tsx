@@ -3,20 +3,48 @@ import { expect } from 'chai';
 import { render, waitFor } from '@testing-library/react';
 import { spy } from 'sinon';
 import ErrorBoundary from './ErrorBoundary';
-import { SitecoreProviderReactContext } from '../components/SitecoreProvider';
+import {
+  SitecoreProvider,
+  SitecoreProviderReactContext,
+  SitecoreProviderState,
+} from '../components/SitecoreProvider';
 import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { Page } from '@sitecore-content-sdk/core/client';
 
 describe('ErrorBoundary', () => {
+  const setPage = spy();
+  const testComponentProps: SitecoreProviderState = {
+    page: {
+      locale: 'en',
+      layout: {
+        sitecore: {
+          context: {},
+          route: null,
+        },
+      },
+      mode: {
+        name: LayoutServicePageState.Normal,
+        isPreview: false,
+        isNormal: false,
+        isEditing: false,
+        isDesignLibrary: false,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+      },
+    },
+    setPage,
+  };
+
+  afterEach(() => {
+    setPage.resetHistory();
+  });
+
   describe('when in page editing or preview mode', () => {
     it('Should render custom error component when custom error component is provided and error is thrown', () => {
-      const setContext = spy();
+      const previewContext = { ...testComponentProps };
 
-      const testComponentProps = {
-        context: {
-          pageState: LayoutServicePageState.Preview,
-        },
-        setContext,
-      };
+      previewContext.page.mode.isPreview = true;
 
       const testComponentName = 'Test component Name';
       const rendering: ComponentRendering = { componentName: testComponentName };
@@ -31,7 +59,7 @@ describe('ErrorBoundary', () => {
       };
 
       const rendered = render(
-        <SitecoreProviderReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={previewContext}>
           <ErrorBoundary rendering={rendering} errorComponent={CustomErrorComponent}>
             <TestErrorComponent />
           </ErrorBoundary>
@@ -45,14 +73,11 @@ describe('ErrorBoundary', () => {
     });
 
     it('Should render errors message and errored component name when error is thrown in edit mode', () => {
-      const setContext = spy();
-
-      const testComponentProps = {
-        pageContext: {
-          pageState: LayoutServicePageState.Edit,
-        },
-        setContext,
+      const editingContext = {
+        ...testComponentProps,
       };
+
+      editingContext.page.mode.isEditing = true;
 
       const testComponentName = 'Test component Name';
       const rendering: ComponentRendering = { componentName: testComponentName };
@@ -63,14 +88,14 @@ describe('ErrorBoundary', () => {
       };
 
       const rendered = render(
-        <SitecoreProviderReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={editingContext}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
         </SitecoreProviderReactContext.Provider>
       );
       const ems = rendered.container.querySelectorAll('em');
-      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-content-sdk-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
       expect(ems[0].textContent).to.equal(testComponentName);
@@ -78,14 +103,9 @@ describe('ErrorBoundary', () => {
     });
 
     it('Should render errors message and errored component name when error is thrown in preview mode', () => {
-      const setContext = spy();
+      const previewContext = { ...testComponentProps };
 
-      const testComponentProps = {
-        pageContext: {
-          pageState: LayoutServicePageState.Preview,
-        },
-        setContext,
-      };
+      previewContext.page.mode.isPreview = true;
 
       const testComponentName = 'Test component Name';
       const rendering: ComponentRendering = { componentName: testComponentName };
@@ -104,7 +124,7 @@ describe('ErrorBoundary', () => {
       );
       const ems = rendered.container.querySelectorAll('em');
 
-      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-content-sdk-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
       expect(ems[0].textContent).to.equal(testComponentName);
@@ -142,14 +162,10 @@ describe('ErrorBoundary', () => {
     });
 
     it('Should render errors message and errored component name when error is thrown and is in page editing mode', () => {
-      const setContext = spy();
-
-      const testComponentProps = {
-        pageContext: {
-          pageEditing: true,
-        },
-        setContext,
+      const editingContext = {
+        ...testComponentProps,
       };
+      editingContext.page.mode.isEditing = true;
 
       const testComponentName = 'Test component Name';
       const rendering: ComponentRendering = { componentName: testComponentName };
@@ -160,14 +176,14 @@ describe('ErrorBoundary', () => {
       };
 
       const rendered = render(
-        <SitecoreProviderReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={editingContext}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
         </SitecoreProviderReactContext.Provider>
       );
       const ems = rendered.container.querySelectorAll('em');
-      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-content-sdk-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
       expect(ems[0].textContent).to.equal(testComponentName);
@@ -175,14 +191,9 @@ describe('ErrorBoundary', () => {
     });
 
     it('Should render errors message and errored component name when error is thrown and is not in page editing mode', () => {
-      const setContext = spy();
+      const normalContext = { ...testComponentProps };
 
-      const testComponentProps = {
-        pageContext: {
-          pageEditing: false,
-        },
-        setContext,
-      };
+      normalContext.page.mode.isNormal = true;
 
       const testComponentName = 'Test component Name';
       const rendering: ComponentRendering = { componentName: testComponentName };
@@ -193,7 +204,7 @@ describe('ErrorBoundary', () => {
       };
 
       const rendered = render(
-        <SitecoreProviderReactContext.Provider value={testComponentProps}>
+        <SitecoreProviderReactContext.Provider value={normalContext}>
           <ErrorBoundary rendering={rendering}>
             <TestErrorComponent />
           </ErrorBoundary>
@@ -201,7 +212,7 @@ describe('ErrorBoundary', () => {
       );
       const ems = rendered.container.querySelectorAll('em');
 
-      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-content-sdk-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain('A rendering error occurred in component');
       expect(ems.length).to.equal(2);
       expect(ems[0].textContent).to.equal(testComponentName);
@@ -261,10 +272,32 @@ describe('ErrorBoundary', () => {
         return <div>This is a custom error component!</div>;
       };
 
+      const page: Page = {
+        locale: 'en',
+        layout: {
+          sitecore: {
+            context: {},
+            route: null,
+          },
+        },
+        mode: {
+          name: LayoutServicePageState.Normal,
+          isNormal: false,
+          isPreview: false,
+          isEditing: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
+        },
+      };
+
       const rendered = render(
-        <ErrorBoundary errorComponent={CustomErrorComponent}>
-          <TestErrorComponent />
-        </ErrorBoundary>
+        <SitecoreProvider page={page}>
+          <ErrorBoundary errorComponent={CustomErrorComponent}>
+            <TestErrorComponent />
+          </ErrorBoundary>
+        </SitecoreProvider>
       );
       expect(rendered.container.querySelectorAll('div').length).to.equal(1);
       expect(rendered.container.querySelector('div')?.textContent).to.equal(
@@ -278,13 +311,35 @@ describe('ErrorBoundary', () => {
         throw Error(errorMessage);
       };
 
+      const page: Page = {
+        locale: 'en',
+        layout: {
+          sitecore: {
+            context: {},
+            route: null,
+          },
+        },
+        mode: {
+          name: LayoutServicePageState.Normal,
+          isNormal: false,
+          isPreview: false,
+          isEditing: false,
+          isDesignLibrary: false,
+          designLibrary: {
+            isVariantGeneration: false,
+          },
+        },
+      };
+
       const rendered = render(
-        <ErrorBoundary>
-          <TestErrorComponent />
-        </ErrorBoundary>
+        <SitecoreProvider page={page}>
+          <ErrorBoundary>
+            <TestErrorComponent />
+          </ErrorBoundary>
+        </SitecoreProvider>
       );
 
-      expect(rendered.baseElement.innerHTML).to.contain('class="sc-jss-placeholder-error"');
+      expect(rendered.baseElement.innerHTML).to.contain('class="sc-content-sdk-placeholder-error"');
       expect(rendered.baseElement.innerHTML).to.contain(
         'There was a problem loading this section.' // eslint-disable-line
       );

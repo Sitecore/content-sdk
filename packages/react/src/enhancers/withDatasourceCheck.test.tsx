@@ -5,13 +5,34 @@ import { render } from '@testing-library/react';
 import { spy } from 'sinon';
 
 import { withDatasourceCheck, WithDatasourceCheckProps } from '../enhancers/withDatasourceCheck';
-import { SitecoreProviderReactContext } from '../components/SitecoreProvider';
-import { RenderingType } from '@sitecore-content-sdk/core/layout';
+import {
+  SitecoreProviderReactContext,
+  SitecoreProviderState,
+} from '../components/SitecoreProvider';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 
-const mockContext = (editing: boolean, renderingType?: RenderingType) => {
+const mockContext = (editing: boolean): SitecoreProviderState => {
   return {
-    pageContext: { pageEditing: editing, renderingType },
-    setContext: spy(),
+    page: {
+      locale: 'en',
+      layout: {
+        sitecore: {
+          context: {},
+          route: null,
+        },
+      },
+      mode: {
+        name: LayoutServicePageState.Normal,
+        isNormal: false,
+        isPreview: false,
+        isEditing: editing,
+        isDesignLibrary: false,
+        designLibrary: {
+          isVariantGeneration: false,
+        },
+      },
+    },
+    setPage: spy(),
   };
 };
 
@@ -104,8 +125,12 @@ describe('withDatasourceCheck', () => {
       },
     };
 
+    const context = mockContext(false);
+
+    context.page.mode.isDesignLibrary = true;
+
     const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={mockContext(false, RenderingType.Component)}>
+      <SitecoreProviderReactContext.Provider value={context}>
         <TestComponentWithDatasourceCheck {...props} />
       </SitecoreProviderReactContext.Provider>
     );
@@ -161,7 +186,11 @@ describe('withDatasourceCheck', () => {
       },
     };
 
-    const wrapper = render(<TestComponentWithDatasourceCheck {...props} />);
+    const wrapper = render(
+      <SitecoreProviderReactContext.Provider value={mockContext(false)}>
+        <TestComponentWithDatasourceCheck {...props} />
+      </SitecoreProviderReactContext.Provider>
+    );
 
     expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
     expect(wrapper.container.innerHTML).to.contain(props.rendering.dataSource);

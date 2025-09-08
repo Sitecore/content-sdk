@@ -8,7 +8,7 @@ import {
 import {
   ComponentPropsCollection,
   ComponentPropsError,
-  NextjsJssComponent,
+  NextjsContentSdkComponent,
 } from '../sharedTypes/component-props';
 import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
@@ -21,11 +21,6 @@ import {
 } from '@sitecore-content-sdk/core/personalize';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 
-export type NextjsPage = Page & {
-  componentProps?: ComponentPropsCollection;
-  notFound?: boolean;
-};
-
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
   constructor(protected initOptions: SitecoreClientInit) {
@@ -34,23 +29,16 @@ export class SitecoreNextjsClient extends SitecoreClient {
   }
 
   /**
-   * Resolves site based on the provided path
-   * @param {string | string[]} path path to resolve site from
-   * @returns resolved site, or default site info if not found
+   * Gets site name based on the provided path
+   * @param {string | string[]} path path to get site name from
+   * @returns site name, or default site info if not found
    */
-  resolveSiteFromPath(path: string | string[]) {
+  getSiteNameFromPath(path: string | string[]) {
     const resolvedPath = super.parsePath(path);
     // Get site name (from path rewritten in middleware)
     const siteData = getSiteRewriteData(resolvedPath, this.initOptions.defaultSite);
 
-    // Resolve site by name
-    return (
-      this.siteResolver.getByName(siteData.siteName) || {
-        name: siteData.siteName,
-        hostName: '',
-        language: '',
-      }
-    );
+    return siteData.siteName;
   }
   /**
    * Normalizes a nextjs path that could have been rewritten
@@ -66,12 +54,12 @@ export class SitecoreNextjsClient extends SitecoreClient {
     path: string | string[],
     pageOptions: PageOptions,
     options?: FetchOptions
-  ): Promise<NextjsPage | null> {
+  ): Promise<Page | null> {
     const resolvedPath = this.parsePath(path);
     // Get variant(s) for personalization (from path), must ensure path is of type string
     const personalizeData =
       pageOptions.personalize || getPersonalizedRewriteData(super.parsePath(path));
-    const site = pageOptions.site || this.resolveSiteFromPath(path)?.name;
+    const site = pageOptions.site || this.getSiteNameFromPath(path);
     const page = await super.getPage(
       resolvedPath,
       {
@@ -90,10 +78,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
    * @param {PreviewData} previewData - The editing preview data for metadata mode.
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
    */
-  async getPreview(
-    previewData: PreviewData,
-    fetchOptions?: FetchOptions
-  ): Promise<NextjsPage | null> {
+  async getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null> {
     return super.getPreview(previewData as EditingPreviewData, fetchOptions);
   }
 
@@ -102,13 +87,13 @@ export class SitecoreNextjsClient extends SitecoreClient {
    * and returns resulting props from components
    * @param {LayoutServiceData} layoutData layout data to parse compnents from
    * @param {PreviewData} context Nextjs preview data
-   * @param {ComponentMap<NextjsJssComponent>} components component map to get props for
+   * @param {ComponentMap<NextjsContentSdkComponent>} components component map to get props for
    * @returns {ComponentPropsCollection} component props
    */
   async getComponentData(
     layoutData: LayoutServiceData,
     context: GetServerSidePropsContext | GetStaticPropsContext,
-    components: ComponentMap<NextjsJssComponent>
+    components: ComponentMap<NextjsContentSdkComponent>
   ): Promise<ComponentPropsCollection> {
     let componentProps: ComponentPropsCollection = {};
     if (!layoutData.sitecore.route) return componentProps;

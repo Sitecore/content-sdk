@@ -1,4 +1,5 @@
-﻿/* eslint-disable quotes */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable quotes */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect, use } from 'chai';
@@ -61,12 +62,12 @@ describe('FEAASRenderMiddleware', () => {
   const secret = 'secret1234';
 
   beforeEach(() => {
-    process.env.JSS_EDITING_SECRET = secret;
+    process.env.SITECORE_EDITING_SECRET = secret;
     process.env.JSS_ALLOWED_ORIGINS = allowedOrigin;
   });
 
   after(() => {
-    delete process.env.JSS_EDITING_SECRET;
+    delete process.env.SITECORE_EDITING_SECRET;
     delete process.env.JSS_ALLOWED_ORIGINS;
   });
 

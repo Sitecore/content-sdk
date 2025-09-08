@@ -83,14 +83,7 @@ export const isTimeoutError = (error: unknown) => {
  * @returns {string} modified string that can be used as regexp input
  */
 const convertToWildcardRegex = (pattern: string) => {
-  return (
-    '^' +
-    pattern
-      .replace(/\//g, '\\/')
-      .replace(/\./g, '\\.')
-      .replace(/\*/g, '.*') +
-    '$'
-  );
+  return '^' + pattern.replace(/\//g, '\\/').replace(/\./g, '\\.').replace(/\*/g, '.*') + '$';
 };
 
 /**
@@ -164,7 +157,10 @@ export const isRegexOrUrl = (input: string): 'regex' | 'url' => {
   input = input.slice(0, -1);
 
   // Check if the string resembles a URL.
-  const isUrlLike = /^\/[a-zA-Z0-9\-\/]+(\?([a-zA-Z0-9\-_]+=[a-zA-Z0-9\-_]+)(&[a-zA-Z0-9\-_]+=[a-zA-Z0-9\-_]+)*)?$/.test(input);
+  const isUrlLike =
+    /^\/[a-zA-Z0-9\-\/]+(\?([a-zA-Z0-9\-_]+=[a-zA-Z0-9\-_]+)(&[a-zA-Z0-9\-_]+=[a-zA-Z0-9\-_]+)*)?$/.test(
+      input
+    );
 
   if (isUrlLike) {
     return 'url';
@@ -180,7 +176,10 @@ export const isRegexOrUrl = (input: string): 'regex' | 'url' => {
  * @param {URLSearchParams} params2 - The second set of URL search parameters.
  * @returns {boolean} - Returns true if the parameters are equal, otherwise false.
  */
-export const areURLSearchParamsEqual = (params1: URLSearchParams, params2: URLSearchParams): boolean => {
+export const areURLSearchParamsEqual = (
+  params1: URLSearchParams,
+  params2: URLSearchParams
+): boolean => {
   // Generates a sorted string representation of URL search parameters.
   const getSortedParamsString = (params: URLSearchParams): string => {
     return [...params.entries()]
@@ -195,49 +194,19 @@ export const areURLSearchParamsEqual = (params1: URLSearchParams, params2: URLSe
 
 /**
  * Escapes non-special "?" characters in a string or regex.
- * - For regular strings, it escapes all unescaped "?" characters by adding a backslash (`\`).
- * - For regex patterns (strings enclosed in `/.../`), it analyzes each "?" to determine if it has special meaning
- *   (e.g., `?` in `(abc)?`, `.*?`, `(?!...)`) or is just a literal character. Only literal "?" characters are escaped.
+ * - For regex patterns that start with `^` or end with `$`, it returns the pattern unchanged.
+ * - For other strings, it escapes literal "?" characters but preserves regex quantifiers and special patterns.
  * @param {string} input - The input string or regex pattern.
  * @returns {string} - The modified string or regex with non-special "?" characters escaped.
  */
 export const escapeNonSpecialQuestionMarks = (input: string): string => {
-  const regexPattern = /(\\)?\?/g; // Match "?" that may or may not be preceded by a backslash
-  const negativeLookaheadPattern = /\(\?!$/; // Detect the start of a Negative Lookahead pattern
-  const specialRegexSymbols = /[.*+)\[\]|\(]$/; // Check for special regex symbols before "?"
-
-  let result = '';
-  let lastIndex = 0;
-
-  let match: RegExpExecArray | null;
-  while ((match = regexPattern.exec(input)) !== null) {
-    const index = match.index; // Position of the "?" in the string
-    const before = input.slice(lastIndex, index); // Context before the "?"
-
-    // Check if "?" is preceded by a backslash (escaped)
-    const isEscaped = match[1] !== undefined; // match[1] is the backslash group
-
-    // Check if "?" is part of a Negative Lookahead
-    const isNegativeLookahead = negativeLookaheadPattern.test(before.slice(-3));
-
-    // Check if "?" follows a special regex symbol
-    const isSpecialRegexSymbol = specialRegexSymbols.test(before.slice(-1));
-
-    if (isEscaped || isNegativeLookahead || isSpecialRegexSymbol) {
-      // If it's escaped, part of a Negative Lookahead, or follows a special regex symbol, keep the "?" as is
-      result += input.slice(lastIndex, index + 1);
-    } else {
-      // Otherwise, escape the "?"
-      result += input.slice(lastIndex, index) + '\\?';
-    }
-
-    lastIndex = index + 1; // Move to the next part of the string
+  // If the input is already a regex pattern (starts with ^ or ends with $), return it unchanged
+  if (input.startsWith('^') || input.endsWith('$')) {
+    return input;
   }
 
-  // Append the remaining part of the string
-  result += input.slice(lastIndex);
-
-  return result;
+  // For non-regex strings, escape literal "?" characters
+  return input.replace(/\?/g, '\\?');
 };
 
 /**
@@ -246,7 +215,10 @@ export const escapeNonSpecialQuestionMarks = (input: string): string => {
  * @param {URLSearchParams} params2 - The second set of URL search parameters.
  * @returns {string} - A string representation of the merged URL search parameters.
  */
-export const mergeURLSearchParams = (params1: URLSearchParams, params2: URLSearchParams): string => {
+export const mergeURLSearchParams = (
+  params1: URLSearchParams,
+  params2: URLSearchParams
+): string => {
   const merged = new URLSearchParams();
 
   // Add all keys and values from the first object.
@@ -261,4 +233,3 @@ export const mergeURLSearchParams = (params1: URLSearchParams, params2: URLSearc
 
   return merged.toString();
 };
-

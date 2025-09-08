@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import proxyquire from 'proxyquire';
@@ -69,7 +70,7 @@ describe('defineConfig', () => {
         expect(resultConfig.api?.edge?.contextId).to.equal('custom-context-id');
       });
 
-      it('should use the env var if present', () => {
+      it('should NOT use the env var for server-side contextId', () => {
         defineConfigModule.defineConfig({
           api: {
             local: { apiHost: 'apihost', apiKey: 'apikey' },
@@ -77,7 +78,7 @@ describe('defineConfig', () => {
           defaultLanguage: 'en',
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.edge?.contextId).to.equal('next-public-sitecore-edge-context-id');
+        expect(resultConfig.api?.edge?.contextId).to.equal('');
       });
     });
   });
@@ -119,7 +120,7 @@ describe('defineConfig', () => {
         expect(resultConfig.api?.edge?.clientContextId).to.equal('custom-client-context-id');
       });
 
-      it('should use the env var if present', () => {
+      it('should use the env var for client-side contextId only', () => {
         defineConfigModule.defineConfig({
           api: {
             local: { apiHost: 'apihost', apiKey: 'apikey' },
@@ -127,7 +128,12 @@ describe('defineConfig', () => {
           defaultLanguage: 'en',
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.edge?.contextId).to.equal('next-public-sitecore-edge-context-id');
+        // Server-side contextId should be empty
+        expect(resultConfig.api?.edge?.contextId).to.equal('');
+        // Client-side contextId should use env var
+        expect(resultConfig.api?.edge?.clientContextId).to.equal(
+          'next-public-sitecore-edge-context-id'
+        );
       });
     });
   });
@@ -252,11 +258,11 @@ describe('defineConfig', () => {
 
     describe('environment variable is set', () => {
       before(() => {
-        process.env.NEXT_PUBLIC_SITECORE_SITE_NAME = 'next-public-sitecore-site-name';
+        process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME = 'next-public-sitecore-site-name';
       });
 
       after(() => {
-        delete process.env.NEXT_PUBLIC_SITECORE_SITE_NAME;
+        delete process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME;
       });
 
       it('should use the value from the config if present', () => {
@@ -411,60 +417,96 @@ describe('defineConfig', () => {
     });
   });
 
-  describe('config.disableStaticPaths', () => {
+  describe('config.generateStaticPaths', () => {
     describe('environment variable is not set', () => {
-      it('should default to false', () => {
+      it('should default to true', () => {
         defineConfigModule.defineConfig(defaultConfig());
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(false);
+        expect(resultConfig.generateStaticPaths).to.equal(true);
       });
 
       it('should use the value from the config', () => {
         defineConfigModule.defineConfig({
-          disableStaticPaths: true,
+          generateStaticPaths: false,
           ...defaultConfig(),
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(true);
+        expect(resultConfig.generateStaticPaths).to.equal(false);
       });
     });
 
     describe('environment variable is set', () => {
       afterEach(() => {
-        delete process.env.DISABLE_SSG_FETCH;
+        delete process.env.GENERATE_STATIC_PATHS;
       });
 
-      it('should return true when DISABLE_SSG_FETCH is set to true', () => {
-        process.env.DISABLE_SSG_FETCH = 'true';
+      it('should return false when GENERATE_STATIC_PATHS is set to false', () => {
+        process.env.GENERATE_STATIC_PATHS = 'false';
 
         defineConfigModule.defineConfig({
-          disableStaticPaths: false,
+          generateStaticPaths: true,
           ...defaultConfig(),
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(true);
+        expect(resultConfig.generateStaticPaths).to.equal(false);
       });
 
-      it('should return false when DISABLE_SSG_FETCH is set to false', () => {
-        process.env.DISABLE_SSG_FETCH = 'false';
+      it('should return true when GENERATE_STATIC_PATHS is set to true', () => {
+        process.env.GENERATE_STATIC_PATHS = 'true';
 
         defineConfigModule.defineConfig({
-          disableStaticPaths: true,
+          generateStaticPaths: false,
           ...defaultConfig(),
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(false);
+        expect(resultConfig.generateStaticPaths).to.equal(true);
       });
 
-      it('should return false when DISABLE_SSG_FETCH is set to any other value', () => {
-        process.env.DISABLE_SSG_FETCH = 'some-other-value';
+      it('should return false when GENERATE_STATIC_PATHS is set to any other value', () => {
+        process.env.GENERATE_STATIC_PATHS = 'some-other-value';
 
         defineConfigModule.defineConfig({
-          disableStaticPaths: true,
+          generateStaticPaths: true,
           ...defaultConfig(),
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.disableStaticPaths).to.equal(false);
+        expect(resultConfig.generateStaticPaths).to.equal(false);
+      });
+    });
+  });
+
+  describe('sitecoreInternalEditingHostUrl', () => {
+    describe('environment variable is not set', () => {
+      it('should default to undefined', () => {
+        defineConfigModule.defineConfig(defaultConfig());
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.sitecoreInternalEditingHostUrl).to.be.undefined;
+      });
+
+      it('should use the value from the config', () => {
+        defineConfigModule.defineConfig({
+          sitecoreInternalEditingHostUrl: 'http://localhost:3000',
+          ...defaultConfig(),
+        });
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.sitecoreInternalEditingHostUrl).to.equal('http://localhost:3000');
+      });
+    });
+
+    describe('environment variable is set', () => {
+      afterEach(() => {
+        delete process.env.SITECORE_INTERNAL_EDITING_HOST_URL;
+      });
+
+      it('should return set value', () => {
+        process.env.SITECORE_INTERNAL_EDITING_HOST_URL = 'http://localhost:3000';
+
+        defineConfigModule.defineConfig({
+          generateStaticPaths: true,
+          ...defaultConfig(),
+        });
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.sitecoreInternalEditingHostUrl).to.equal('http://localhost:3000');
       });
     });
   });

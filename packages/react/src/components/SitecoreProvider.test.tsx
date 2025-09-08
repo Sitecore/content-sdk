@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React, { FC } from 'react';
 import { expect } from 'chai';
+import { Page } from '@sitecore-content-sdk/core/client';
 import { SitecoreProvider } from './SitecoreProvider';
 import { WithSitecoreProps, withSitecore, useSitecore } from '../enhancers/withSitecore';
-import { LayoutServiceData } from '../index';
+import { LayoutServiceData, LayoutServicePageState } from '../index';
 import { render } from '@testing-library/react';
 
 describe('SitecoreProvider', () => {
@@ -12,80 +14,82 @@ describe('SitecoreProvider', () => {
     anotherProperty?: string;
   }
 
-  const NestedComponent: FC<NestedComponentProps> = (props: NestedComponentProps) => {
-    const { pageContext } = useSitecore();
-
-    nestedContext = pageContext;
-
-    <div>{props.pageContext && 'test'}</div>;
+  const NestedComponent: FC<NestedComponentProps> = () => {
+    const { page } = useSitecore();
+    nestedContext = page;
+    return <span>Page mode is {page.mode.name}</span>;
   };
 
   const NestedComponentWithContext = withSitecore()(NestedComponent);
-
   const components = new Map();
+
+  // minimal API stub – details don’t matter for these tests
+  const apiStub = {} as any;
 
   const mockLayoutData: LayoutServiceData = {
     sitecore: {
       context: {
         pageEditing: false,
-        site: {
-          name: 'JssTestWeb',
-        },
+        site: { name: 'ContentSdkTestWeb' },
         language: 'en',
       },
       route: {
         name: 'styleguide',
-        placeholders: {
-          'JssTestWeb-jss-main': [],
-        },
+        placeholders: { 'ContentSdkTestWeb-main': [] },
         itemId: 'testitemid',
       },
     },
   };
 
-  it('should set default context', () => {
-    render(
-      <SitecoreProvider componentMap={components}>
+  const mockPage: Page = {
+    layout: mockLayoutData,
+    locale: 'en',
+    mode: {
+      name: LayoutServicePageState.Normal,
+      isNormal: true,
+      isPreview: false,
+      isEditing: false,
+      isDesignLibrary: false,
+      designLibrary: {
+        isVariantGeneration: false,
+      },
+    },
+  };
+
+  it('renders the component with the context', () => {
+    const rendered = render(
+      <SitecoreProvider api={apiStub} componentMap={components} page={mockPage}>
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
 
-    expect(nestedContext).deep.equal({
-      pageEditing: false,
-    });
+    expect(nestedContext).to.deep.equal(mockPage);
+    expect(rendered.getByText('Page mode is normal')).to.exist;
   });
 
-  it('should update state when new context as prop received', () => {
-    const component = render(
-      <SitecoreProvider componentMap={components}>
+  it('updates state when new page is received via props', () => {
+    const rendered = render(
+      <SitecoreProvider api={apiStub} componentMap={components} page={mockPage}>
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
 
-    expect(nestedContext).deep.equal({
-      pageEditing: false,
-    });
+    expect(nestedContext).to.deep.equal(mockPage);
 
-    component.rerender(
-      <SitecoreProvider componentMap={components} layoutData={mockLayoutData}>
+    const newMockPage: Page = {
+      ...mockPage,
+      locale: 'gr',
+    };
+
+    rendered.rerender(
+      <SitecoreProvider api={apiStub} componentMap={components} page={newMockPage}>
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
 
     expect(nestedContext).to.deep.equal({
-      pageEditing: false,
-      itemId: 'testitemid',
-      language: 'en',
-      route: {
-        itemId: 'testitemid',
-        name: 'styleguide',
-        placeholders: {
-          'JssTestWeb-jss-main': [],
-        },
-      },
-      site: {
-        name: 'JssTestWeb',
-      },
+      ...mockPage,
+      locale: 'gr',
     });
   });
 });

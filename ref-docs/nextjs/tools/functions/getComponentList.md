@@ -6,9 +6,9 @@
 
 # Function: getComponentList()
 
-> **getComponentList**(`path`): [`ComponentFile`](../interfaces/ComponentFile.md)[]
+> **getComponentList**(`paths`, `exclude?`): [`ComponentFile`](../interfaces/ComponentFile.md)[]
 
-Defined in: core/types/tools/templating/components.d.ts:29
+Defined in: core/types/tools/templating/components.d.ts:42
 
 Get list of components from
 
@@ -16,7 +16,8 @@ Get list of components from
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `path` | `string` | path to search |
+| `paths` | `string`[] | paths to search |
+| `exclude?` | `string`[] | paths and glob patterns to exclude from final result |
 
 ## Returns
 

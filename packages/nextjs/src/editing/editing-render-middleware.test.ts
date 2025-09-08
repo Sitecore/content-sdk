@@ -1,16 +1,24 @@
-﻿/* eslint-disable dot-notation */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable dot-notation */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect, use } from 'chai';
 import { NextApiResponse } from 'next';
+import { STATIC_PROPS_ID, SERVER_PROPS_ID } from 'next/constants';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   EditingRenderQueryParams,
+  DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 import { EditingRenderMiddleware, EditingNextApiRequest } from './editing-render-middleware';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
+import sinon from 'sinon';
+import {
+  QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
+  QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
+} from './constants';
 
 use(sinonChai);
 
@@ -66,7 +74,6 @@ const mockResponse = () => {
   res.setPreviewData = spy(() => {
     return res;
   });
-  res.redirect = spy();
   return res;
 };
 
@@ -74,13 +81,13 @@ describe('EditingRenderMiddleware', () => {
   const secret = 'secret1234';
 
   beforeEach(() => {
-    process.env.JSS_EDITING_SECRET = secret;
+    process.env.SITECORE_EDITING_SECRET = secret;
     process.env.JSS_ALLOWED_ORIGINS = allowedOrigin;
     delete process.env.VERCEL;
   });
 
   after(() => {
-    delete process.env.JSS_EDITING_SECRET;
+    delete process.env.SITECORE_EDITING_SECRET;
     delete process.env.VERCEL;
     delete process.env.JSS_ALLOWED_ORIGINS;
   });
@@ -205,6 +212,10 @@ describe('EditingRenderMiddleware', () => {
     const middleware = new EditingRenderMiddleware();
     const handler = middleware.getHandler();
 
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
     await handler(req, res);
 
     expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
@@ -217,8 +228,8 @@ describe('EditingRenderMiddleware', () => {
       layoutKind: 'shared',
     });
 
-    expect(res.redirect).to.have.been.calledOnce;
-    expect(res.redirect).to.have.been.calledWith('/styleguide');
+    expect(res.send).to.have.been.calledOnce;
+    expect(res.send).to.have.been.calledWith('<div>some html</div>');
     expect(res.setHeader).to.have.been.calledWith(
       'Content-Security-Policy',
       `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
@@ -241,6 +252,10 @@ describe('EditingRenderMiddleware', () => {
 
     const middleware = new EditingRenderMiddleware();
     const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
 
@@ -270,6 +285,10 @@ describe('EditingRenderMiddleware', () => {
     const middleware = new EditingRenderMiddleware();
     const handler = middleware.getHandler();
 
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
     await handler(req, res);
 
     expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
@@ -282,8 +301,9 @@ describe('EditingRenderMiddleware', () => {
       layoutKind: undefined,
     });
 
-    expect(res.redirect).to.have.been.calledOnce;
-    expect(res.redirect).to.have.been.calledWith('/styleguide');
+    expect(res.status).to.be.calledOnceWith(200);
+    expect(res.send).to.have.been.calledOnce;
+    expect(res.send).to.have.been.calledWith('<div>some html</div>');
     expect(res.setHeader).to.have.been.calledWith(
       'Content-Security-Policy',
       `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
@@ -302,6 +322,10 @@ describe('EditingRenderMiddleware', () => {
 
     const handler = middleware.getHandler();
 
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
     await handler(req, res);
 
     expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
@@ -314,8 +338,52 @@ describe('EditingRenderMiddleware', () => {
       layoutKind: 'shared',
     });
 
-    expect(res.redirect).to.have.been.calledOnce;
-    expect(res.redirect).to.have.been.calledWith('/custom/path/styleguide');
+    expect(res.status).to.be.calledOnceWith(200);
+    expect(res.send).to.have.been.calledOnce;
+    expect(res.send).to.have.been.calledWith('<div>some html</div>');
+  });
+
+  it('should handle request with special characters in route', async () => {
+    const query = {
+      mode: 'edit',
+      route: '/Åbout',
+      sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+      sc_lang: 'en',
+      sc_site: 'website',
+      sc_variant: 'dev',
+      sc_version: 'latest',
+      secret: secret,
+      sc_layoutKind: 'shared',
+    } as EditingRenderQueryParams;
+
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
+      site: 'website',
+      itemId: '{11111111-1111-1111-1111-111111111111}',
+      language: 'en',
+      variantIds: ['dev'],
+      version: 'latest',
+      mode: 'edit',
+      layoutKind: 'shared',
+    });
+
+    expect(res.status).to.be.calledOnceWith(200);
+    expect(res.send).to.have.been.calledOnceWith('<div>some html</div>');
+    expect(res.setHeader).to.have.been.calledWith(
+      'Content-Security-Policy',
+      `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
+    );
   });
 
   it('should response with 400 for missing query params', async () => {
@@ -331,24 +399,8 @@ describe('EditingRenderMiddleware', () => {
     expect(res.status).to.have.been.calledWith(400);
     expect(res.json).to.have.been.calledOnce;
     expect(res.json).to.have.been.calledWith({
-      html:
-        '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
+      html: '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
     });
-  });
-
-  it('should modify the Set-Cookie header', async () => {
-    const req = mockRequest({ query });
-    const res = mockResponse();
-
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
-
-    await handler(req, res);
-
-    expect(res.setHeader).to.have.been.calledWith('Set-Cookie', [
-      '__prerender_bypass=1122334455; Path=/; SameSite=None; Secure',
-      '__next_preview_data=6677889900; Path=/; SameSite=None; Secure',
-    ]);
   });
 
   it('should set allowed origins when multiple allowed origins are provided in env variable', async () => {
@@ -358,6 +410,10 @@ describe('EditingRenderMiddleware', () => {
 
     const middleware = new EditingRenderMiddleware();
     const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
 
@@ -369,9 +425,152 @@ describe('EditingRenderMiddleware', () => {
     );
   });
 
+  it('should issue internal request propagating allowed query parameters', async () => {
+    const protectedQuery = {} as Query;
+    protectedQuery[QUERY_PARAM_VERCEL_PROTECTION_BYPASS] = 'bypass123';
+    protectedQuery[QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE] = 'true';
+    protectedQuery['someOtherParam'] = 'shouldNotBeIncluded';
+    const req = mockRequest({ query: { ...query, ...protectedQuery } });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const fetchRequestUrl = fetcherGetStub.getCall(0).args[0];
+    expect(fetchRequestUrl.includes(`${QUERY_PARAM_VERCEL_PROTECTION_BYPASS}=bypass123`)).to.be
+      .true;
+    expect(fetchRequestUrl.includes(`${QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE}=true`)).to.be.true;
+    expect(fetchRequestUrl.includes('someOtherParam=shouldNotBeIncluded')).to.be.false;
+  });
+
+  it('should issue intrnal request propagating allowed headers', async () => {
+    const req = mockRequest({
+      query,
+      headers: {
+        authorization: 'yes',
+        cookie: 'sc_another_cookie=12345',
+        otherHeader: 'shouldNotBeIncluded',
+      },
+    });
+
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const fetchRequestHeaders = fetcherGetStub.getCall(0).args[1]?.headers;
+
+    expect(fetchRequestHeaders).to.not.be.undefined;
+    expect(fetchRequestHeaders).to.have.property(
+      'cookie',
+      'sc_another_cookie=12345;__prerender_bypass=1122334455; Path=/; SameSite=Lax;__next_preview_data=6677889900; Path=/; SameSite=Lax'
+    );
+    expect(fetchRequestHeaders).to.have.property('authorization', 'yes');
+    expect(fetchRequestHeaders).to.not.have.property('otherHeader');
+  });
+
+  it('should return 200 if internal request successful', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    expect(res.status).to.be.calledOnceWith(200);
+  });
+
+  it('should remove nextjs preview cookies before responding to browser', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    expect(res.setHeader).to.have.been.calledWith('Set-Cookie', []);
+    expect(res.status).to.be.calledOnceWith(200);
+  });
+
+  it('should replace static props id in html before responding to browser', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon.stub(middleware['dataFetcher'], 'get').resolves({
+      status: 200,
+      statusText: 'success',
+      data: `<div>some html ${STATIC_PROPS_ID}</div>`,
+    });
+
+    await handler(req, res);
+
+    expect(res.status).to.be.calledOnceWith(200);
+    expect(res.send).to.be.calledOnceWith(`<div>some html ${SERVER_PROPS_ID}</div>`);
+  });
+
+  it('should respondWith 500 if rendered html empty', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '' });
+
+    await handler(req, res);
+
+    expect(res.status).to.have.been.calledOnce;
+    expect(res.status).to.have.been.calledWith(500);
+    expect(res.send).to.have.been.calledOnce;
+  });
+
+  it('should respondWith 500 if internal request fails', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon.stub(middleware['dataFetcher'], 'get').throws(new Error('Request failed'));
+
+    await handler(req, res);
+
+    expect(res.status).to.have.been.calledOnce;
+    expect(res.status).to.have.been.calledWith(500);
+    expect(res.send).to.have.been.calledOnce;
+  });
+
   describe('Design Library handling', () => {
     const query = {
-      mode: 'library',
+      mode: DesignLibraryMode.Normal,
       sc_itemid: '{11111111-1111-1111-1111-111111111111}',
       sc_lang: 'en',
       sc_site: 'website',
@@ -390,6 +589,10 @@ describe('EditingRenderMiddleware', () => {
       const middleware = new EditingRenderMiddleware();
       const handler = middleware.getHandler();
 
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
       await handler(req, res);
 
       expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
@@ -398,12 +601,45 @@ describe('EditingRenderMiddleware', () => {
         renderingId: query.sc_renderingId,
         language: query.sc_lang,
         site: query.sc_site,
-        mode: 'library',
+        mode: DesignLibraryMode.Normal,
         dataSourceId: query.dataSourceId,
         version: query.sc_version,
       });
 
-      expect(res.redirect).to.have.been.calledOnce;
+      expect(res.status).to.be.calledOnceWith(200);
+      expect(res.send).to.have.been.calledOnceWith('<div>some html</div>');
+      expect(res.setHeader).to.have.been.calledWith(
+        'Content-Security-Policy',
+        `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
+      );
+    });
+
+    it('should handle request with mode=library-metadata', async () => {
+      const req = mockRequest({ query: { ...query, mode: DesignLibraryMode.Metadata } });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
+        itemId: query.sc_itemid,
+        componentUid: query.sc_uid,
+        renderingId: query.sc_renderingId,
+        language: query.sc_lang,
+        site: query.sc_site,
+        mode: DesignLibraryMode.Metadata,
+        dataSourceId: query.dataSourceId,
+        version: query.sc_version,
+      });
+
+      expect(res.status).to.be.calledOnceWith(200);
+      expect(res.send).to.have.been.calledOnceWith('<div>some html</div>');
       expect(res.setHeader).to.have.been.calledWith(
         'Content-Security-Policy',
         `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
@@ -425,8 +661,7 @@ describe('EditingRenderMiddleware', () => {
       expect(res.status).to.have.been.calledWith(400);
       expect(res.json).to.have.been.calledOnce;
       expect(res.json).to.have.been.calledWith({
-        html:
-          '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
+        html: '<html><body>Missing required query parameters: sc_itemid, sc_lang, route, mode</body></html>',
       });
     });
   });
@@ -451,6 +686,10 @@ describe('EditingRenderMiddleware', () => {
       const middleware = new EditingRenderMiddleware();
       const handler = middleware.getHandler();
 
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
       await handler(req, res);
 
       expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
@@ -469,18 +708,108 @@ describe('EditingRenderMiddleware', () => {
         'GET, POST, OPTIONS, DELETE, PUT, PATCH'
       );
       expect(res.setHeader).to.have.been.calledWith('Set-Cookie', [
-        '__prerender_bypass=1122334455; Path=/; SameSite=None; Secure',
-        '__next_preview_data=6677889900; Path=/; SameSite=None; Secure',
         'sc_site=website; Path=/; HttpOnly; SameSite=None; Secure',
         'sc_preview=true; Path=/; HttpOnly; SameSite=None; Secure',
       ]);
 
-      expect(res.redirect).to.have.been.calledOnce;
-      expect(res.redirect).to.have.been.calledWith('/styleguide');
+      expect(res.status).to.be.calledOnceWith(200);
+      expect(res.send).to.have.been.calledOnceWith('<div>some html</div>');
       expect(res.setHeader).to.have.been.calledWith(
         'Content-Security-Policy',
         `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
       );
+    });
+  });
+
+  describe('internal server request host resolution', () => {
+    it('should use host header for making the internal request if config setting or env is not provided and we are not in XMC env', async () => {
+      const req = mockRequest({ query });
+      const reqHost = 'some-other-host';
+      req.headers['host'] = reqHost;
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+
+      const handler = middleware.getHandler();
+
+      const fetcherGetStub = sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const fetchRequestUrl = fetcherGetStub.getCall(0).args[0];
+      expect(fetchRequestUrl.includes(reqHost)).to.be.true;
+    });
+
+    it('should use http://localhost:3000 for making the internal request if config setting or env is not provided and we are in XMC', async () => {
+      process.env.SITECORE = 'yes';
+      const req = mockRequest({ query });
+      const expectedHost = 'http://localhost:3000';
+      const reqHost = 'some-other-host';
+      req.headers['host'] = reqHost;
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+
+      const handler = middleware.getHandler();
+
+      const fetcherGetStub = sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const fetchRequestUrl = fetcherGetStub.getCall(0).args[0];
+      expect(fetchRequestUrl.includes(expectedHost)).to.be.true;
+      delete process.env.SITECORE;
+    });
+
+    it('should use internal editing url from env variable if provided', async () => {
+      const reqHostEnv = 'http://custom-internal-host-env';
+      process.env.SITECORE_INTERNAL_EDITING_HOST_URL = reqHostEnv;
+
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+
+      const handler = middleware.getHandler();
+
+      const fetcherGetStub = sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const fetchRequestUrl = fetcherGetStub.getCall(0).args[0];
+      expect(fetchRequestUrl.includes(reqHostEnv)).to.be.true;
+      delete process.env.SITECORE_INTERNAL_EDITING_HOST_URL;
+    });
+
+    it('should use internal editing url from config if provided', async () => {
+      const reqHostConfig = 'http://custom-internal-host-config';
+      const reqHostEnv = 'http://custom-internal-host-env';
+      process.env.SITECORE_INTERNAL_EDITING_HOST_URL = reqHostEnv;
+
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({
+        sitecoreInternalEditingHostUrl: reqHostConfig,
+      });
+
+      const handler = middleware.getHandler();
+
+      const fetcherGetStub = sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const fetchRequestUrl = fetcherGetStub.getCall(0).args[0];
+      expect(fetchRequestUrl.includes(reqHostConfig)).to.be.true;
+      delete process.env.SITECORE_INTERNAL_EDITING_HOST_URL;
     });
   });
 });

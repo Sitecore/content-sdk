@@ -6,12 +6,19 @@ import {
   getDesignLibraryStatusEvent,
   DesignLibraryStatus,
   getDesignLibraryScriptLink,
+  isDesignLibraryMode,
 } from './design-library';
 import testComponent from '../test-data/component-editing-data';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
+import { DesignLibraryMode } from './models';
 
 describe('component library utils', () => {
-  const debugSpy = sinon.spy(console, 'debug');
+  let debugSpy: sinon.SinonSpy;
+
+  beforeEach(() => {
+    debugSpy = sinon.spy(console, 'debug');
+  });
+
   describe('updateComponentHandler', () => {
     it('should abort when origin is empty', () => {
       const message = new MessageEvent('message');
@@ -189,7 +196,21 @@ describe('component library utils', () => {
     });
   });
 
+  describe('isDesignLibraryMode', () => {
+    it('should return true for DesignLibraryMode.Normal', () => {
+      expect(isDesignLibraryMode(DesignLibraryMode.Normal)).to.be.true;
+    });
+
+    it('should return true for DesignLibraryMode.Metadata', () => {
+      expect(isDesignLibraryMode(DesignLibraryMode.Metadata)).to.be.true;
+    });
+
+    it('should return false for other values', () => {
+      expect(isDesignLibraryMode('invalid')).to.be.false;
+    });
+  });
+
   afterEach(() => {
-    debugSpy.resetHistory();
+    debugSpy.restore();
   });
 });

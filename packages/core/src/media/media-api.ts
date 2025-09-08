@@ -37,7 +37,7 @@ export const replaceMediaUrlPrefix = (
 };
 
 /**
- * Prepares a Sitecore media URL with `params` for use by the JSS media handler.
+ * Prepares a Sitecore media URL with `params` for use by the Content SDK media handler.
  * This is done by replacing `/~/media` or `/-/media` with `/~/jssmedia` or `/-/jssmedia`, respectively.
  * Provided `params` are used as the querystring parameters for the media URL.
  * Can use `mediaUrlPrefix` in order to use a custom prefix.
@@ -53,7 +53,7 @@ export const updateImageUrl = (
   mediaUrlPrefix: RegExp = mediaUrlPrefixRegex
 ) => {
   if (!params || Object.keys(params).length === 0) {
-    // if params aren't supplied, no need to run it through JSS media handler
+    // if params aren't supplied, no need to run it through Content SDK media handler
     return url;
   }
   // polyfill node `global` in browser to workaround https://github.com/unshiftio/url-parse/issues/150

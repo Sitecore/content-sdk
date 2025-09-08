@@ -8,13 +8,9 @@
 
 > **useSitecore**(`options?`): [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:84](https://github.com/Sitecore/content-sdk/blob/ccaca47e1d3be54d4807fac59220b223d5ccd97e/packages/react/src/enhancers/withSitecore.tsx#L84)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:81](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/react/src/enhancers/withSitecore.tsx#L81)
 
-This hook grants acсess to the current Sitecore page context and api.
-by default JSS includes the following properties in this context:
-- pageEditing - Provided by Layout Service, a boolean indicating whether the route is being accessed via the Sitecore Editor.
-- pageState - Like pageEditing, but a string: normal, preview or edit.
-- site - Provided by Layout Service, an object containing the name of the current Sitecore site context.
+This hook grants acсess to the current Sitecore page and api.
 
 ## Parameters
 
@@ -26,21 +22,21 @@ by default JSS includes the following properties in this context:
 
 [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)
 
-{ api, pageContext, updateContext }
+{ api, page, updatePage }
 
 ## Examples
 
 ```ts
 const EditMode = () => {
-   const { pageContext } = useSitecore();
-   return <span>Edit Mode is {pageContext.pageEditing ? 'active' : 'inactive'}</span>
+   const { page } = useSitecore();
+   return <span>Edit Mode is {page.mode.isEditing ? 'active' : 'inactive'}</span>
 }
 ```
 
 ```ts
 const EditMode = () => {
-   const { pageContext, updateContext } = useSitecore({ updatable: true });
-   const onClick = () => updateContext({ pageEditing: true });
-   return <span onClick={onClick}>Edit Mode is {pageContext.pageEditing ? 'active' : 'inactive'}</span>
+   const { page, updatePage } = useSitecore({ updatable: true });
+   const onClick = () => updatePage({ itemId: '123' });
+   return <span onClick={onClick}>Item id is {page.itemId}</span>
 }
 ```

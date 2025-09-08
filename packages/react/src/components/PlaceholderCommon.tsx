@@ -10,12 +10,12 @@ import {
   getDynamicPlaceholderPattern,
 } from '@sitecore-content-sdk/core/layout';
 import { constants } from '@sitecore-content-sdk/core';
+import { Page } from '@sitecore-content-sdk/core/client';
 import { HiddenRendering } from './HiddenRendering';
 import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from './FEaaSComponent';
 import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from './FEaaSWrapper';
 import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from './BYOCComponent';
 import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from './BYOCWrapper';
-import { SitecoreProviderPageContext } from './SitecoreProvider';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import ErrorBoundary from './ErrorBoundary';
 
@@ -78,14 +78,19 @@ export interface PlaceholderProps {
    */
   errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
   /**
-   * Page context data.
+   * Page data.
    * This data is passed by the SitecoreProvider.
    */
-  pageContext: SitecoreProviderPageContext;
+  page: Page;
   /**
    * The message that gets displayed while component is loading
    */
   componentLoadingMessage?: string;
+  /**
+   * If true, disables Suspense in ErrorBoundary for the placeholder.
+   * @default false
+   */
+  disableSuspense?: boolean;
 }
 
 export class PlaceholderCommon<T extends PlaceholderProps> extends React.Component<T> {
@@ -239,15 +244,25 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
         if (!isEmpty) {
           // assign type based on passed element - type='text/sitecore' should be ignored when renderEach Placeholder prop function is being used
           const type = rendered.props.type === 'text/sitecore' ? rendered.props.type : '';
+
+          const disableSuspense = this.props.disableSuspense || false;
+
           // wrapping with error boundary could cause problems in case where parent component uses withPlaceholder HOC and tries to access its children props
           // that's why we need to expose element's props here
+          const isByocWrapper = componentRendering.componentName === BYOC_WRAPPER_RENDERING_NAME;
+
+          // all dynamic elements will have a separate render prop
+          const isDynamicComponent = !!(component as LazyComponentType).render?.preload;
+
           rendered = (
             <ErrorBoundary
+              data-testid="error-boundary"
               key={rendered.type + '-' + index}
               errorComponent={this.props.errorComponent}
               componentLoadingMessage={this.props.componentLoadingMessage}
               type={type}
-              isDynamic={(component as LazyComponentType).render?.preload ? true : false}
+              isDynamic={isDynamicComponent || isByocWrapper}
+              disableSuspense={disableSuspense}
               {...rendered.props}
             >
               {rendered}
@@ -256,7 +271,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
         }
 
         // if in edit mode then emit shallow chromes for hydration in Pages
-        if (this.props.pageContext?.pageEditing) {
+        if (this.props.page.mode.isEditing) {
           return (
             <PlaceholderMetadata key={key} rendering={rendering as ComponentRendering}>
               {rendered}
@@ -268,7 +283,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
       })
       .filter((element) => element); // remove nulls
 
-    if (this.props.pageContext?.pageEditing) {
+    if (this.props.page.mode.isEditing) {
       return [
         <PlaceholderMetadata
           key={(this.props.rendering as ComponentRendering).uid}

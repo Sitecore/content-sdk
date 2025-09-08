@@ -8,9 +8,9 @@
 
 > **SitecoreCliConfigInput** = `object`
 
-Defined in: [packages/core/src/config/models.ts:198](https://github.com/Sitecore/content-sdk/blob/ccaca47e1d3be54d4807fac59220b223d5ccd97e/packages/core/src/config/models.ts#L198)
+Defined in: [packages/core/src/config/models.ts:209](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/config/models.ts#L209)
 
-Type to be used as cli config input in sitecore.cli.config
+Type used as CLI config input in sitecore.cli.config
 
 ## Properties
 
@@ -18,15 +18,15 @@ Type to be used as cli config input in sitecore.cli.config
 
 > `optional` **build**: `object`
 
-Defined in: [packages/core/src/config/models.ts:202](https://github.com/Sitecore/content-sdk/blob/ccaca47e1d3be54d4807fac59220b223d5ccd97e/packages/core/src/config/models.ts#L202)
+Defined in: [packages/core/src/config/models.ts:213](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/config/models.ts#L213)
 
-Configuration for the `sitecore-tools build` cli command
+Configuration for the `sitecore-tools build` CLI command
 
 #### commands?
 
 > `optional` **commands**: () => `Promise`\<`void`\>[]
 
-List of commands to run during the build process
+Commands to run during the build process
 
 ##### Returns
 
@@ -34,16 +34,34 @@ List of commands to run during the build process
 
 ***
 
+### componentMap?
+
+> `optional` **componentMap**: [`GenerateMapArgs`](../../tools/type-aliases/GenerateMapArgs.md) & `object`
+
+Defined in: [packages/core/src/config/models.ts:231](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/config/models.ts#L231)
+
+Configuration for the `sitecore-tools component generate-map` CLI command
+
+#### Type declaration
+
+##### generator?
+
+> `optional` **generator**: [`GenerateMapFunction`](../../tools/type-aliases/GenerateMapFunction.md)
+
+Function implementation for generating a component map
+
+***
+
 ### scaffold?
 
 > `optional` **scaffold**: `object`
 
-Defined in: [packages/core/src/config/models.ts:211](https://github.com/Sitecore/content-sdk/blob/ccaca47e1d3be54d4807fac59220b223d5ccd97e/packages/core/src/config/models.ts#L211)
+Defined in: [packages/core/src/config/models.ts:222](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/config/models.ts#L222)
 
-Configuration for the `sitecore-tools scaffold` cli command
+Configuration for the `sitecore-tools scaffold` CLI command
 
 #### templates?
 
 > `optional` **templates**: [`ScaffoldTemplate`](ScaffoldTemplate.md)[]
 
-List of scaffold templates that can be used for generating components
+Scaffold templates available for generating components

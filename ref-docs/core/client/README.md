@@ -6,6 +6,10 @@
 
 # client
 
+## Enumerations
+
+- [ErrorPage](enumerations/ErrorPage.md)
+
 ## Classes
 
 - [SitecoreClient](classes/SitecoreClient.md)
@@ -20,6 +24,7 @@
 - [GraphQLClientError](type-aliases/GraphQLClientError.md)
 - [GraphQLClientOptions](type-aliases/GraphQLClientOptions.md)
 - [Page](type-aliases/Page.md)
+- [PageMode](type-aliases/PageMode.md)
 - [PageOptions](type-aliases/PageOptions.md)
 - [SitecoreClientInit](type-aliases/SitecoreClientInit.md)
 - [SitemapXmlOptions](type-aliases/SitemapXmlOptions.md)

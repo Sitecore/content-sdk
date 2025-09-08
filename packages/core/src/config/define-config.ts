@@ -14,12 +14,12 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       edgeUrl: process.env.SITECORE_EDGE_URL || SITECORE_EDGE_URL_DEFAULT,
     },
     local: {
-      apiKey: '',
-      apiHost: '',
+      apiKey: process.env.SITECORE_API_KEY || process.env.NEXT_PUBLIC_SITECORE_API_KEY || '',
+      apiHost: process.env.SITECORE_API_HOST || process.env.NEXT_PUBLIC_SITECORE_API_HOST || '',
       path: '/sitecore/api/graph/edge',
     },
   },
-  editingSecret: process.env.JSS_EDITING_SECRET || 'editing-secret-missing',
+  editingSecret: process.env.SITECORE_EDITING_SECRET || 'editing-secret-missing',
   retries: {
     count: 3,
     retryStrategy: new DefaultRetryStrategy({
@@ -53,6 +53,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       timeout: 60,
     },
   },
+  disableCodeGeneration: false,
 });
 
 /**
@@ -107,23 +108,41 @@ const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): Sit
   if (Number.isNaN(result.personalize.edgeTimeout) || !result.personalize.edgeTimeout) {
     result.personalize.edgeTimeout = base.personalize.edgeTimeout;
   }
-  // fallback in case only one context provided
-  if (result.api.edge?.clientContextId && !result.api.edge.contextId) {
-    result.api.edge.contextId = result.api.edge.clientContextId;
-  }
 
   return result;
 };
 
-const validateConfig = (config: SitecoreConfigInput) => {
-  if (
-    !config.api?.edge?.contextId &&
-    (!config?.api?.local?.apiHost || !config?.api?.local?.apiKey)
-  ) {
-    // consider client-side usecase
-    if (!config.api?.edge?.clientContextId) {
+const validateConfig = (config: SitecoreConfigInput): void => {
+  const isBrowser = typeof window !== 'undefined';
+  const hasEdgeContextId = !!config.api?.edge?.contextId;
+  const hasClientContextId = !!config.api?.edge?.clientContextId;
+  const hasLocalCreds = !!config.api?.local?.apiHost && !!config.api?.local?.apiKey;
+
+  // Server-side: allow Edge OR Local; clientContextId alone is NOT sufficient
+  if (!isBrowser) {
+    if (!hasEdgeContextId && !hasLocalCreds) {
       throw new Error(
-        'Configuration error: either context ID or API key and host must be specified in sitecore.config'
+        'Configuration error: provide either Edge contextId (api.edge.contextId) or local credentials (api.local.apiHost + api.local.apiKey).'
+      );
+    }
+    if (hasEdgeContextId && !hasClientContextId) {
+      // eslint-disable-next-line no-console
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(
+          'Warning: only a server-side edge contextId is provided. Client-side requests will require api.edge.clientContextId or a proxy.'
+        );
+      }
+    }
+    return; // validation complete on the server
+  }
+
+  // Browser-side warning (runs only if contextId exists but clientContextId is missing)
+  if (isBrowser && !hasClientContextId) {
+    // eslint-disable-next-line no-console
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        `Warning: clientContextId is missing. The browser will use contextId instead.
+  Client Side functionalities (like Tracking and Personalization) may be limited.`
       );
     }
   }

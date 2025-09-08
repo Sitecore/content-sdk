@@ -15,9 +15,11 @@
     "types",
     "typings",
     "dist",
+    "codegen.d.ts",
     "context.d.ts",
     "config.d.ts",
     "middleware.d.ts",
+    "route-handler.d.ts",
     "editing.d.ts",
     "monitoring.d.ts",
     "component-props-loader.d.ts",
@@ -25,9 +27,11 @@
     "client.d.ts",
     "utils.d.ts",
     "tools.d.ts",
+    "config-cli.d.ts",
     "src/tests/*",
     "src/test-data/*",
     "**/*.test.ts",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "src/tools/codegen/test-data/*",
   ]
 }

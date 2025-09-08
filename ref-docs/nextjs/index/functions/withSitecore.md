@@ -8,7 +8,7 @@
 
 > **withSitecore**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element`
 
-Defined in: react/types/enhancers/withSitecore.d.ts:30
+Defined in: react/types/enhancers/withSitecore.d.ts:31
 
 ## Parameters
 
@@ -40,7 +40,7 @@ Defined in: react/types/enhancers/withSitecore.d.ts:30
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | `EnhancedOmit`\<`ComponentProps`\> |
+| `props` | [`WithSitecoreHocProps`](../type-aliases/WithSitecoreHocProps.md)\<`ComponentProps`\> |
 
 #### Returns
 

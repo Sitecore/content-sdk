@@ -18,8 +18,8 @@ export {
   LayoutServicePageState,
   LayoutServiceContext,
   LayoutServiceContextData,
-  GraphQLLayoutService,
-  GraphQLLayoutServiceConfig,
+  LayoutService,
+  LayoutServiceConfig,
   PlaceholderData,
   PlaceholdersData,
   RouteData,
@@ -34,13 +34,13 @@ export {
   EditMode,
   RenderingType,
 } from '@sitecore-content-sdk/core/layout';
-export { RestComponentLayoutService } from '@sitecore-content-sdk/core/editing';
+export { PageMode, ErrorPage, Page } from '@sitecore-content-sdk/core/client';
+export { ComponentLayoutService } from '@sitecore-content-sdk/core/editing';
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export {
   DictionaryPhrases,
   DictionaryService,
-  GraphQLDictionaryService,
-  GraphQLDictionaryServiceConfig,
+  DictionaryServiceConfig,
 } from '@sitecore-content-sdk/core/i18n';
 
 export {
@@ -50,14 +50,14 @@ export {
   getGroomedVariantIds,
   normalizePersonalizedRewrite,
   CdpHelper,
-  GraphQLPersonalizeService,
+  PersonalizeService,
 } from '@sitecore-content-sdk/core/personalize';
 
 export {
-  GraphQLSitePathService,
-  GraphQLSitePathServiceConfig,
-  GraphQLRedirectsService,
-  GraphQLRedirectsServiceConfig,
+  SitePathService,
+  SitePathServiceConfig,
+  RedirectsService,
+  RedirectsServiceConfig,
   REDIRECT_TYPE_301,
   REDIRECT_TYPE_302,
   REDIRECT_TYPE_SERVER_TRANSFER,
@@ -67,18 +67,18 @@ export {
 export { StaticPath } from '@sitecore-content-sdk/core';
 
 export {
-  GraphQLSitemapXmlService,
-  GraphQLSitemapXmlServiceConfig,
-  GraphQLErrorPagesService,
-  GraphQLErrorPagesServiceConfig,
+  SitemapXmlService,
+  SitemapXmlServiceConfig,
+  ErrorPagesService,
+  ErrorPagesServiceConfig,
   RobotsQueryResult,
-  GraphQLRobotsService,
-  GraphQLRobotsServiceConfig,
+  RobotsService,
+  RobotsServiceConfig,
   ErrorPages,
   SiteInfo,
   SiteResolver,
-  GraphQLSiteInfoService,
-  GraphQLSiteInfoServiceConfig,
+  SiteInfoService,
+  SiteInfoServiceConfig,
   getSiteRewrite,
   getSiteRewriteData,
   normalizeSiteRewrite,
@@ -87,7 +87,7 @@ export {
 export {
   ComponentPropsCollection,
   ComponentPropsError,
-  NextjsJssComponent,
+  NextjsContentSdkComponent,
   GetComponentServerProps,
 } from './sharedTypes/component-props';
 
@@ -139,7 +139,6 @@ export {
   PlaceholderComponentProps,
   SitecoreProvider,
   SitecoreProviderState,
-  SitecoreProviderPageContext,
   SitecoreProviderReactContext,
   withSitecore,
   useSitecore,

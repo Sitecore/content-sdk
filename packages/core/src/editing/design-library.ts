@@ -1,11 +1,12 @@
 import { ComponentRendering, Field, GenericFieldValue } from '../layout/models';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { normalizeUrl } from '../utils/normalize-url';
+import { DesignLibraryMode } from './models';
 
 /**
  * Event to be sent when report status to design library
  */
-export const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
+const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
 
 /**
  * Represents an event indicating the status of a component in the library.
@@ -58,7 +59,7 @@ export const addComponentUpdateHandler = (
   return unsubscribe;
 };
 
-const validateOrigin = (event: MessageEvent) => {
+export const validateOrigin = (event: MessageEvent) => {
   // TODO: use `EDITING_ALLOWED_ORIGINS.concat(getAllowedOriginsFromEnv())` later
   // nextjs's JSS_ALLOWED_ORIGINS is not available on the client, need to use NEXT_PUBLIC_ variable, but it's a breaking change for Deploy
   const allowedOrigins = ['*'];
@@ -153,4 +154,17 @@ export function getDesignLibraryStatusEvent(
  */
 export function getDesignLibraryScriptLink(sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT): string {
   return `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/designlibrary/lib/rh-lib-script.js`;
+}
+
+/**
+ * Checks if the given mode is a Design Library mode.
+ * @param {unknown} mode - The mode to check.
+ * @returns {boolean} True if the mode is a Design Library mode, false otherwise.
+ */
+export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode {
+  return (
+    mode === DesignLibraryMode.Normal ||
+    mode === DesignLibraryMode.Metadata ||
+    mode === DesignLibraryMode.VariantGeneration
+  );
 }

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { expect, use } from 'chai';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { spy } from 'sinon';

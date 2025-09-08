@@ -9,7 +9,7 @@ export interface TextField extends FieldMetadata {
   value?: string | number;
 }
 
-export interface TextProps extends EditableFieldProps {
+export interface TextProps extends EditableFieldProps<TextProps> {
   [htmlAttributes: string]: unknown;
   /** The text field data. */
   field?: TextField;
@@ -32,7 +32,7 @@ export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
 
       // can't use editable value if we want to output unencoded
       if (!encode) {
-        // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line no-param-reassign, no-unused-vars
         editable = false;
       }
 

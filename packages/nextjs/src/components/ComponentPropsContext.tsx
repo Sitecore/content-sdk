@@ -1,8 +1,9 @@
+'use client';
 import React, { createContext, useContext, ReactNode, JSX } from 'react';
 import { ComponentPropsCollection } from '../sharedTypes/component-props';
 
 /**
- * Component props context which we are using in order to store data fetched on components level (getStaticProps/getServerSideProps)
+ * Component props context which we are using in order to store data fetched on components level (getComponentServerProps)
  */
 export const ComponentPropsReactContext = createContext<ComponentPropsCollection>({});
 
@@ -18,6 +19,7 @@ export function useComponentProps<ComponentData>(
   if (!componentUid) {
     return undefined;
   }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const data = useContext(ComponentPropsReactContext);
 
   return data[componentUid] as ComponentData;

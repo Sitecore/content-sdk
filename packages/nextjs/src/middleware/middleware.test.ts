@@ -1,4 +1,6 @@
-﻿/* eslint-disable dot-notation */
+﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable dot-notation */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
@@ -136,11 +138,46 @@ describe('MiddlewareBase', () => {
       expect(middleware['isPrefetch'](req)).to.equal(true);
     });
 
+    it('should return true when x-middleware-prefetch header is 1', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          'x-middleware-prefetch': '1',
+        },
+      });
+
+      expect(middleware['isPrefetch'](req)).to.equal(true);
+    });
+
     it('should return false when required header is not provided', () => {
       const middleware = new SampleMiddleware({ sites: [] });
       const req = createReq();
 
       expect(middleware['isPrefetch'](req)).to.equal(false);
+    });
+
+    it('returns false for known device with x-middleware-prefetch header', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          'x-middleware-prefetch': '1',
+          'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X)',
+        },
+      });
+
+      expect(middleware['isPrefetch'](req)).to.equal(false);
+    });
+
+    it('should return true when it is a desktop device and purpose is prefetch', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          purpose: 'prefetch',
+          'sec-ch-ua-mobile': '?0',
+        },
+      });
+
+      expect(middleware['isPrefetch'](req)).to.equal(true);
     });
   });
 
@@ -306,6 +343,7 @@ describe('MiddlewareBase', () => {
 
     it('should get default site info when site cookie is provided', () => {
       class MockSiteResolver extends SiteResolver {
+        // eslint-disable-next-line no-unused-vars
         getByName = sinon.stub().callsFake((_siteName: string) => undefined);
       }
 
@@ -447,9 +485,9 @@ describe('defineMiddleware', () => {
     };
 
     const req = {} as NextRequest;
-    const res = ({
+    const res = {
       params: [],
-    } as unknown) as NextResponse;
+    } as unknown as NextResponse;
     const ev = {} as NextFetchEvent;
 
     const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev, res);

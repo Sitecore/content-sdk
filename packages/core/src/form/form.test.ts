@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect, use } from 'chai';
 import nock from 'nock';
 import spies from 'chai-spies';
@@ -12,7 +14,7 @@ use(spies);
 describe('form', () => {
   let dom: JSDOM;
 
-  process.env.DEBUG = 'sitecore-jss:form';
+  process.env.DEBUG = 'content-sdk:form';
 
   beforeEach(() => {
     dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "paths": {
+      "@pathed/*": ["./ts-path-alias/*"],
+    }
+  }
+}

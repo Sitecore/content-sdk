@@ -24,7 +24,10 @@
     "tools.d.ts",
     "personalize.d.ts",
     "feaas.d.ts",
+    "config-cli.d.ts",
+    "codegen.d.ts",
     "src/**/*.test.ts",
-    "src/test-data/*"
+    "src/test-data/*",
+    "src/tools/templating/test-data/*",
   ]
 }
