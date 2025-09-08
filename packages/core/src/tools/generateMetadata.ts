@@ -20,7 +20,7 @@ export type GenerateMetadataConfig = {
    */
   destinationPath?: string;
   /**
-   * Optional flag to allow workspaces in the metadata generation.
+   * Optional flag to allow npm workspaces in the metadata generation.
    * If not provided, the default is false.
    */
   allowWorkspaces?: boolean;
@@ -34,7 +34,7 @@ export type GenerateMetadataConfig = {
  */
 export const generateMetadata = (config?: GenerateMetadataConfig): (() => Promise<void>) => {
   return async () => {
-    const metadata: Metadata = getMetadata(config?.allowWorkspaces ?? false);
+    const metadata: Metadata = getMetadata(!!config?.allowWorkspaces);
     writeMetadata(metadata, config?.destinationPath ?? '.sitecore/metadata.json');
   };
 };
