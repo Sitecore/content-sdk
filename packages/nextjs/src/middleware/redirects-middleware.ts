@@ -137,14 +137,32 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
         const url = this.normalizeUrl(req.nextUrl.clone());
 
+        // Redirect logic for external (absolute) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
         if (REGEXP_ABSOLUTE_URL.test(existsRedirect.target)) {
-          url.href = existsRedirect.target;
+          switch (existsRedirect.redirectType) {
+            case REDIRECT_TYPE_301:
+              return this.createRedirectResponse(
+                existsRedirect.target,
+                res,
+                301,
+                'Moved Permanently'
+              );
+            case REDIRECT_TYPE_302:
+              return this.createRedirectResponse(existsRedirect.target, res, 302, 'Found');
+            case REDIRECT_TYPE_SERVER_TRANSFER:
+              return this.rewrite(existsRedirect.target, req, res, true);
+            default:
+              return res;
+          }
         } else {
           const isUrl = isRegexOrUrl(existsRedirect.pattern) === 'url';
           const targetParts = existsRedirect.target.split('/');
           const urlFirstPart = targetParts[1];
 
-          if ( !REGEXP_ABSOLUTE_URL.test(existsRedirect.target) && this.locales.includes(urlFirstPart) ) {
+          if (
+            !REGEXP_ABSOLUTE_URL.test(existsRedirect.target) &&
+            this.locales.includes(urlFirstPart)
+          ) {
             req.nextUrl.locale = urlFirstPart;
             existsRedirect.target = existsRedirect.target.replace(`/${urlFirstPart}`, '');
           }
@@ -351,7 +369,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
    * @returns {NextResponse<unknown>} The redirect response.
    */
   protected createRedirectResponse(
-    url: NextURL,
+    url: NextURL | string,
     res: Response | undefined,
     status: number,
     statusText: string
