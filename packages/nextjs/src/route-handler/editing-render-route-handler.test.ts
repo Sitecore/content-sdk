@@ -522,6 +522,16 @@ describe('createEditingRenderRouteHandlers', () => {
       // Mock that preview cookies are initially set but then filtered out
       cleanupNextPreviewCookiesStub.returns([]);
 
+      const mockCookies = [
+        { name: 'test', value: 'value' },
+        { name: '__prerender_bypass', value: 'bypass-value' },
+      ];
+      // Update cookiesStub to return preview cookies when getAll() is called
+      cookiesStub.getAll.callsFake(() => mockCookies);
+      cookiesStub.set.callsFake((name: string, value: string) => {
+        mockCookies.push({ name, value });
+      });
+
       const res = await handlers.GET(req as NextRequest);
 
       // Verify response is successful
@@ -535,6 +545,13 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(cleanupNextPreviewCookiesStub).to.have.been.calledOnce;
       // Preview cookies are filtered out before response, so Set-Cookie should be empty
       expect(res.headers['Set-Cookie']).to.equal('');
+
+      // New assertions: Check that preview cookies are passed as part of convertedCookies
+      expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
+      const [, , , convertedCookies] = getEditingRequestHtmlStub.firstCall.args;
+      expect(convertedCookies).to.be.an('array');
+      expect(convertedCookies).to.include(`${PREVIEW_KEY}=true`);
+      expect(convertedCookies).to.include(`${SITE_KEY}=website`);
     });
 
     it('should propagate allowed query parameters', async () => {
