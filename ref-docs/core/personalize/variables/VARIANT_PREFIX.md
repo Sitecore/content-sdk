@@ -8,4 +8,4 @@
 
 > `const` **VARIANT\_PREFIX**: `"_variantId_"` = `'_variantId_'`
 
-Defined in: [packages/core/src/personalize/utils.ts:2](https://github.com/Sitecore/content-sdk/blob/be2ccbec975e47b7f28cbba67fbed3ea13b7204e/packages/core/src/personalize/utils.ts#L2)
+Defined in: [packages/core/src/personalize/utils.ts:2](https://github.com/Sitecore/content-sdk/blob/78253760f27d4717625cd0e7bf680218381cdcc8/packages/core/src/personalize/utils.ts#L2)
