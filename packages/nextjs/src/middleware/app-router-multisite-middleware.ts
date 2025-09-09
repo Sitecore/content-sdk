@@ -1,4 +1,3 @@
-import { getAppRouterSiteRewrite } from '@sitecore-content-sdk/core/site';
 import { MultisiteMiddleware } from './multisite-middleware';
 
 /**
@@ -12,8 +11,11 @@ export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
    * @returns The rewritten path as a string.
    */
   protected getSiteRewrite(pathname: string, siteName: string): string {
-    return getAppRouterSiteRewrite(pathname, {
-      siteName,
-    });
+    return this.getAppRouterSiteRewrite(pathname, siteName);
+  }
+
+  private getAppRouterSiteRewrite(pathname: string, siteName: string): string {
+    const path = pathname.startsWith('/') ? pathname : '/' + pathname;
+    return `/${siteName}${path}`;
   }
 }

@@ -22,18 +22,6 @@ export function getSiteRewrite(pathname: string, data: SiteRewriteData): string 
 }
 
 /**
- * Get a site rewrite path for given pathname for App Router
- * @param {string} pathname the pathname
- * @param {SiteRewriteData} data the site data to include in the rewrite
- * @returns A string representing the rewritten URL path, prefixed with the site name.
- */
-export function getAppRouterSiteRewrite(pathname: string, data: SiteRewriteData): string {
-  const path = pathname.startsWith('/') ? pathname : '/' + pathname;
-
-  return `/${data.siteName}${path}`;
-}
-
-/**
  * Get site data from the rewrite path
  * @param {string} pathname the pathname
  * @param {string} defaultSiteName the default site name

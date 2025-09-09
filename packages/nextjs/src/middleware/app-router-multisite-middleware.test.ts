@@ -193,4 +193,25 @@ describe('AppRouterMultisiteMiddleware', () => {
       });
     });
   });
+
+  describe('getAppRouterSiteRewrite', () => {
+    const middleware = new AppRouterMultisiteMiddleware({
+      ...defaultConfig,
+    });
+
+    it('should return the correct rewrite path with leading slash in pathname', () => {
+      const result = middleware['getAppRouterSiteRewrite']('/some/path', 'mysite');
+      expect(result).to.equal('/mysite/some/path');
+    });
+
+    it('should return the correct rewrite path without leading slash in pathname', () => {
+      const result = middleware['getAppRouterSiteRewrite']('some/path', 'mysite');
+      expect(result).to.equal('/mysite/some/path');
+    });
+
+    it('should handle root path correctly', () => {
+      const result = middleware['getAppRouterSiteRewrite']('/', 'mysite');
+      expect(result).to.equal('/mysite/');
+    });
+  });
 });
