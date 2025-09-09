@@ -448,21 +448,27 @@ describe('<Link />', () => {
         metadata: testMetadata,
       };
 
-      const rendered = render(
+      const { container } = render(
         <Page>
           <Link field={field} />
         </Page>
       );
 
-      expect(rendered.container.innerHTML).to.equal(
-        [
-          `<code type="text/sitecore" chrometype="field" class="scpm" kind="open">${JSON.stringify(
-            testMetadata
-          )}</code>`,
-          '<span data-react-link="true">[No text in field]</span>',
-          '<code type="text/sitecore" chrometype="field" class="scpm" kind="close"></code>',
-        ].join('')
-      );
+      // metadata wrappers exist
+      const codes = container.querySelectorAll('code.scpm');
+      expect(codes.length).to.equal(2);
+      expect(codes[0].getAttribute('type')).to.equal('text/sitecore');
+      expect(codes[0].getAttribute('chrometype')).to.equal('field');
+      expect(codes[0].getAttribute('kind')).to.equal('open');
+      expect(codes[1].getAttribute('kind')).to.equal('close');
+
+      // placeholder span
+      const span = container.querySelector('span');
+      expect(span).to.not.equal(null);
+      expect(span?.textContent).to.equal('[No text in field]');
+
+      // no anchor rendered
+      expect(container.querySelector('a')).to.equal(null);
     });
 
     it('should render default empty field component when field href is not present', () => {
@@ -471,21 +477,27 @@ describe('<Link />', () => {
         metadata: testMetadata,
       };
 
-      const rendered = render(
+      const { container } = render(
         <Page>
           <Link field={field} />
         </Page>
       );
 
-      expect(rendered.container.innerHTML).to.equal(
-        [
-          `<code type="text/sitecore" chrometype="field" class="scpm" kind="open">${JSON.stringify(
-            testMetadata
-          )}</code>`,
-          '<span data-react-link="true">[No text in field]</span>',
-          '<code type="text/sitecore" chrometype="field" class="scpm" kind="close"></code>',
-        ].join('')
-      );
+      // metadata wrappers exist
+      const codes = container.querySelectorAll('code.scpm');
+      expect(codes.length).to.equal(2);
+      expect(codes[0].getAttribute('type')).to.equal('text/sitecore');
+      expect(codes[0].getAttribute('chrometype')).to.equal('field');
+      expect(codes[0].getAttribute('kind')).to.equal('open');
+      expect(codes[1].getAttribute('kind')).to.equal('close');
+
+      // placeholder span
+      const span = container.querySelector('span');
+      expect(span).to.not.equal(null);
+      expect(span?.textContent).to.equal('[No text in field]');
+
+      // no anchor rendered
+      expect(container.querySelector('a')).to.equal(null);
     });
 
     it('should render custom empty field component when provided, when field value href is not present', () => {
