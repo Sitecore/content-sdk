@@ -7,7 +7,6 @@ export {
   isDesignLibraryPreviewData,
   getQueryParamsForPropagation,
   getHeadersForPropagation,
-  isCSDKPreview,
 } from './utils';
 export { FEAASRenderMiddleware, FEAASRenderMiddlewareConfig } from './feaas-render-middleware';
 export {

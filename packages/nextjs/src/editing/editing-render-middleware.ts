@@ -10,14 +10,14 @@ import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
 import {
-  getNextPreviewCookies,
+  getPreviewCookies,
   getRequiredEditingParamsList,
-  getEditingParams,
-  getFilteredCookies,
+  mapEditingParams,
+  cleanupNextPreviewCookies,
   getQueryParamsForPropagation,
   getHeadersForPropagation,
   getEditingRequestHtml,
-  getSCPHeader,
+  getCSPHeader,
   resolveServerUrl,
 } from './utils';
 
@@ -142,10 +142,8 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       });
     }
 
-    const previewDataParams = getEditingParams(query as { [key: string]: string });
+    const previewDataParams = mapEditingParams(query as { [key: string]: string });
 
-    // With the editing optimization work done, we can cut the dependency on nextjs preview mode
-    // @TODO in next major release: pass preview data via query string, variantIds will be a single string too
     res.setPreviewData(
       {
         ...previewDataParams,
@@ -158,13 +156,13 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
     if (mode === LayoutServicePageState.Preview) {
-      const previewCookies = getNextPreviewCookies(query.sc_site);
+      const previewCookies = getPreviewCookies(query.sc_site);
 
       res.setHeader('Set-Cookie', previewCookies);
     }
 
     // Restrict the page to be rendered only within the allowed origins
-    res.setHeader('Content-Security-Policy', getSCPHeader());
+    res.setHeader('Content-Security-Policy', getCSPHeader());
 
     const encodedRoute = encodeURI(query.route);
     const route = this.config?.resolvePageUrl?.(encodedRoute) || encodedRoute;
@@ -193,7 +191,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
       // remove preview cookies to not leak them to the browser
       if (cookies && Array.isArray(cookies)) {
-        const filteredCookies = getFilteredCookies(cookies);
+        const filteredCookies = cleanupNextPreviewCookies(cookies);
         filteredCookies && res.setHeader('Set-Cookie', filteredCookies);
       }
 

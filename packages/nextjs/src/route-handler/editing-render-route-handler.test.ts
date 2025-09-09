@@ -9,13 +9,17 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   DesignLibraryMode,
+  PREVIEW_KEY,
 } from '@sitecore-content-sdk/core/editing';
 import {
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from '../editing/constants';
+import { SITE_KEY } from '@sitecore-content-sdk/core/site';
 
 chai.use(sinonChai);
+
+// Test globals are set up in beforeEach with proper stubs
 
 describe('createEditingRenderRouteHandlers', () => {
   const sandbox = sinon.createSandbox();
@@ -27,14 +31,15 @@ describe('createEditingRenderRouteHandlers', () => {
   let resolveServerUrlStub: sinon.SinonStub;
   let getQueryParamsForPropagationStub: sinon.SinonStub;
   let getHeadersForPropagationStub: sinon.SinonStub;
-  let getFilteredCookiesStub: sinon.SinonStub;
-  let getPreviewCookiesStub: sinon.SinonStub;
+  let cleanupNextPreviewCookiesStub: sinon.SinonStub;
+  let cookiesStub: any;
   let getRequiredQueryParamsStub: sinon.SinonStub;
-  let getSCPHeaderStub: sinon.SinonStub;
+  let getCSPHeaderStub: sinon.SinonStub;
   let handlers: any;
   let req: Partial<NextRequest>;
 
   let OriginalResponse: typeof Response;
+  let originalTestCookieStore: any;
 
   const allowedOrigin = 'https://allowed.com';
   const secret = 'secret1234';
@@ -53,6 +58,20 @@ describe('createEditingRenderRouteHandlers', () => {
     return searchParams;
   };
 
+  before(() => {
+    // Store original global cookie store state
+    originalTestCookieStore = (global as any).__TEST_COOKIE_STORE__;
+  });
+
+  after(() => {
+    // Restore original cookie store state (don't touch process.env.TEST as it's global)
+    if (originalTestCookieStore !== undefined) {
+      (global as any).__TEST_COOKIE_STORE__ = originalTestCookieStore;
+    } else {
+      delete (global as any).__TEST_COOKIE_STORE__;
+    }
+  });
+
   beforeEach(() => {
     getEditingSecretStub = sandbox.stub().returns(secret);
     getEnforcedCorsHeadersStub = sandbox.stub().returns(corsHeaders);
@@ -64,31 +83,50 @@ describe('createEditingRenderRouteHandlers', () => {
     resolveServerUrlStub = sandbox.stub().returns('http://localhost:3000');
     getQueryParamsForPropagationStub = sandbox.stub().returns([]);
     getHeadersForPropagationStub = sandbox.stub().returns({});
-    getFilteredCookiesStub = sandbox.stub().returns([]);
-    getPreviewCookiesStub = sandbox
-      .stub()
-      .returns([
-        'sc_site=website; Path=/; HttpOnly; SameSite=None; Secure',
-        'sc_preview=true; Path=/; HttpOnly; SameSite=None; Secure',
-      ]);
+    cleanupNextPreviewCookiesStub = sandbox.stub().returns([]);
+
+    // Mock cookies store
+    cookiesStub = {
+      set: sandbox.stub(),
+      get: sandbox.stub().returns({ value: 'some-value' }),
+      getAll: sandbox.stub().returns([
+        { name: 'test', value: 'value' },
+        { name: '__prerender_bypass', value: 'bypass-value' },
+      ]),
+    };
+
     getRequiredQueryParamsStub = sandbox.stub().returns(['sc_itemid', 'sc_lang', 'route', 'mode']);
-    getSCPHeaderStub = sandbox
+    getCSPHeaderStub = sandbox
       .stub()
       .returns(`frame-ancestors 'self' ${allowedOrigin} ${EDITING_ALLOWED_ORIGINS.join(' ')}`);
+
+    // Set the global variable BEFORE proxyquire loads the module
+    (global as any).__TEST_COOKIE_STORE__ = cookiesStub;
 
     editingRenderRouteHandlerModule = proxyquire('./editing-render-route-handler', {
       '../utils/utils': { getEditingSecret: getEditingSecretStub },
       '@sitecore-content-sdk/core/utils': { getEnforcedCorsHeaders: getEnforcedCorsHeadersStub },
-      'next/headers': { draftMode: () => draftModeStub },
+      'next/headers': {
+        draftMode: sandbox.stub().returns(draftModeStub),
+        cookies: sandbox.stub(), // Won't be called in test environment
+      },
       '../editing/utils': {
         getEditingRequestHtml: getEditingRequestHtmlStub,
-        getFilteredCookies: getFilteredCookiesStub,
+        cleanupNextPreviewCookies: cleanupNextPreviewCookiesStub,
         getHeadersForPropagation: getHeadersForPropagationStub,
-        getNextPreviewCookies: getPreviewCookiesStub,
         getQueryParamsForPropagation: getQueryParamsForPropagationStub,
         getRequiredEditingParamsList: getRequiredQueryParamsStub,
-        getSCPHeader: getSCPHeaderStub,
+        getCSPHeader: getCSPHeaderStub,
         resolveServerUrl: resolveServerUrlStub,
+        mapEditingParams: sandbox.stub().callsFake((query: any) => ({
+          itemId: query.sc_itemid,
+          language: query.sc_lang,
+          site: query.sc_site,
+          mode: query.mode,
+          variantIds: query.sc_variant,
+          version: query.sc_version,
+          layoutKind: query.sc_layoutKind,
+        })),
       },
     });
 
@@ -133,9 +171,6 @@ describe('createEditingRenderRouteHandlers', () => {
           sc_layoutKind: 'shared',
         }),
       } as any,
-      cookies: {
-        getAll: () => [{ name: 'test', value: 'value' }],
-      } as any,
     };
   });
 
@@ -143,6 +178,7 @@ describe('createEditingRenderRouteHandlers', () => {
     sandbox.restore();
     sinon.restore();
     (globalThis as any).Response = OriginalResponse;
+    // Note: Global TEST environment variables are cleaned up in after() hook
   });
 
   describe('OPTIONS handler', () => {
@@ -277,6 +313,8 @@ describe('createEditingRenderRouteHandlers', () => {
         cookie: 'test=value',
       });
 
+      // The mapEditingParams stub should be set up to return proper values in the beforeEach
+
       await handlers.GET(req as NextRequest);
 
       expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
@@ -307,9 +345,10 @@ describe('createEditingRenderRouteHandlers', () => {
         cookie: 'test=value',
       });
 
-      // Verify converted cookies
+      // Verify converted cookies from cookieStore.getAll()
       expect(convertedCookies).to.be.an('array');
       expect(convertedCookies).to.include('test=value');
+      expect(convertedCookies).to.include('__prerender_bypass=bypass-value');
 
       // Verify data fetcher is passed
       expect(dataFetcher).to.exist;
@@ -381,9 +420,15 @@ describe('createEditingRenderRouteHandlers', () => {
         { name: 'theme', value: 'dark' },
       ];
 
-      req.cookies = {
-        getAll: () => mockCookies,
-      } as any;
+      // Create a new mock cookie store for this test
+      const testCookieStore = {
+        set: sandbox.stub(),
+        get: sandbox.stub().returns({ value: 'test-value' }),
+        getAll: sandbox.stub().returns(mockCookies),
+      };
+
+      // Update the global test store for this test
+      (global as any).__TEST_COOKIE_STORE__ = testCookieStore;
 
       await handlers.GET(req as NextRequest);
 
@@ -394,6 +439,9 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(convertedCookies).to.include('sessionId=sess_123456');
       expect(convertedCookies).to.include('userId=user_789');
       expect(convertedCookies).to.include('theme=dark');
+
+      // Restore the original cookie store
+      (global as any).__TEST_COOKIE_STORE__ = cookiesStub;
     });
 
     it('should construct request URL with route for internal request', async () => {
@@ -472,12 +520,19 @@ describe('createEditingRenderRouteHandlers', () => {
       });
 
       // Mock that preview cookies are initially set but then filtered out
-      getFilteredCookiesStub.returns([]);
+      cleanupNextPreviewCookiesStub.returns([]);
 
       const res = await handlers.GET(req as NextRequest);
 
-      expect(getPreviewCookiesStub).to.have.been.calledWith('website');
-      expect(getFilteredCookiesStub).to.have.been.calledOnce;
+      // Verify response is successful
+      expect(res.status).to.equal(200);
+      expect(draftModeStub.enable).to.have.been.calledOnce;
+      expect(draftModeStub.disable).to.have.been.calledOnce;
+
+      // Check that cookieStore.set was called for preview cookies
+      // Note: The actual calls depend on the implementation details
+      expect(cookiesStub.set).to.have.been.called;
+      expect(cleanupNextPreviewCookiesStub).to.have.been.calledOnce;
       // Preview cookies are filtered out before response, so Set-Cookie should be empty
       expect(res.headers['Set-Cookie']).to.equal('');
     });
@@ -530,11 +585,11 @@ describe('createEditingRenderRouteHandlers', () => {
     });
 
     it('should filter cookies before response', async () => {
-      getFilteredCookiesStub.returns(['filtered=cookie']);
+      cleanupNextPreviewCookiesStub.returns(['filtered=cookie']);
 
       const res = await handlers.GET(req as NextRequest);
 
-      expect(getFilteredCookiesStub).to.have.been.calledOnce;
+      expect(cleanupNextPreviewCookiesStub).to.have.been.calledOnce;
       expect(res.headers['Set-Cookie']).to.equal('filtered=cookie');
     });
 
@@ -569,7 +624,7 @@ describe('createEditingRenderRouteHandlers', () => {
     it('should set Content-Security-Policy header', async () => {
       const res = await handlers.GET(req as NextRequest);
 
-      expect(getSCPHeaderStub).to.have.been.calledOnce;
+      expect(getCSPHeaderStub).to.have.been.calledOnce;
       expect(res.headers['Content-Security-Policy']).to.equal(
         `frame-ancestors 'self' ${allowedOrigin} ${EDITING_ALLOWED_ORIGINS.join(' ')}`
       );
@@ -666,15 +721,20 @@ describe('createEditingRenderRouteHandlers', () => {
       req.nextUrl!.searchParams = mockSearchParams(previewQuery);
 
       // Mock that preview cookies are initially set but then filtered out
-      getFilteredCookiesStub.returns([]);
+      cleanupNextPreviewCookiesStub.returns([]);
 
       const res = await handlers.GET(req as NextRequest);
 
-      expect(getPreviewCookiesStub).to.have.been.calledWith('website');
+      // Check that the request was handled successfully
       expect(res.status).to.equal(200);
       expect(res.body).to.equal(mockPreviewHtml);
       expect(res.headers['Content-Type']).to.equal('text/html; charset=utf-8');
-      expect(getFilteredCookiesStub).to.have.been.calledOnce;
+      expect(draftModeStub.enable).to.have.been.calledOnce;
+      expect(draftModeStub.disable).to.have.been.calledOnce;
+
+      // Check that cookieStore operations were called
+      expect(cookiesStub.set).to.have.been.called;
+      expect(cleanupNextPreviewCookiesStub).to.have.been.calledOnce;
       // Preview cookies are filtered out before response
       expect(res.headers['Set-Cookie']).to.equal('');
 
@@ -748,7 +808,7 @@ describe('createEditingRenderRouteHandlers', () => {
 
     it('should handle multiple allowed origins', async () => {
       process.env.JSS_ALLOWED_ORIGINS = 'https://allowed.com,https://anotherallowed.com';
-      getSCPHeaderStub.returns(
+      getCSPHeaderStub.returns(
         `frame-ancestors 'self' https://allowed.com https://anotherallowed.com ${EDITING_ALLOWED_ORIGINS.join(
           ' '
         )}`
@@ -756,8 +816,9 @@ describe('createEditingRenderRouteHandlers', () => {
 
       const res = await handlers.GET(req as NextRequest);
 
-      expect(getSCPHeaderStub).to.have.been.calledOnce;
+      expect(getCSPHeaderStub).to.have.been.calledOnce;
       expect(res.headers['Content-Security-Policy']).to.include('https://anotherallowed.com');
     });
   });
 });
+

@@ -48,7 +48,7 @@ export const getEditingSecretFromRequest = (req: NextApiRequest | NextRequest) =
  * @param {{ [key: string]: string | undefined }} query query string values
  * @returns {EditingRenderQueryParams} editing parameters
  */
-export const getEditingParams = (query: {
+export const mapEditingParams = (query: {
   [key: string]: string | undefined;
 }): { [key: string]: string | undefined } => {
   const params = isDesignLibraryMode(query.mode)
@@ -81,7 +81,7 @@ export const getEditingParams = (query: {
  * @param {string | string[] | null} cookies cookie header value
  * @returns {string[] | null} filtered cookies
  */
-export const getFilteredCookies = (cookies: string | string[] | null) => {
+export const cleanupNextPreviewCookies = (cookies: string | string[] | null) => {
   if (!cookies) {
     return null;
   }
@@ -101,7 +101,7 @@ export const getFilteredCookies = (cookies: string | string[] | null) => {
  * @param {string} site current site name
  * @returns {string[]} list of cookies to set
  */
-export const getNextPreviewCookies = (site: string) => {
+export const getPreviewCookies = (site: string) => {
   const previewSite = `${SITE_KEY}=${site}; Path=/; HttpOnly; SameSite=None; Secure`;
   const previewCookie = `${PREVIEW_KEY}=true; Path=/; HttpOnly; SameSite=None; Secure`;
   return [previewSite, previewCookie];
@@ -168,10 +168,6 @@ export const getHeadersForPropagation = (
   }, {} as Record<string, string>);
 
   return filteredHeaders;
-};
-
-export const isCSDKPreview = (headers: Headers) => {
-  return !!headers.get('__content_sdk_preview');
 };
 
 /**
@@ -295,7 +291,7 @@ export const resolveServerUrl = (req: NextApiRequest | NextRequest) => {
  * Gets the Content-Security-Policy header value
  * @returns Content-Security-Policy header value
  */
-export const getSCPHeader = () => {
+export const getCSPHeader = () => {
   return `frame-ancestors 'self' ${[...getAllowedOriginsFromEnv(), ...EDITING_ALLOWED_ORIGINS].join(
     ' '
   )}`;

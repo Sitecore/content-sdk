@@ -2,24 +2,34 @@ import { debug, NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
+  PREVIEW_KEY,
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/core/editing';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { NextRequest } from 'next/server';
 import { getEditingSecret } from '../utils/utils';
-import { draftMode } from 'next/headers';
+import { draftMode, cookies as nextCokies } from 'next/headers';
 import {
-  getEditingParams,
+  mapEditingParams,
   getEditingRequestHtml,
-  getFilteredCookies,
+  cleanupNextPreviewCookies,
   getHeadersForPropagation,
-  getNextPreviewCookies,
   getQueryParamsForPropagation,
   getRequiredEditingParamsList,
-  getSCPHeader,
+  getCSPHeader,
   resolveServerUrl,
 } from '../editing/utils';
+import { SITE_KEY } from '@sitecore-content-sdk/core/site';
+
+// Helper function to handle cookie operations - can be mocked for testing
+export async function getNextCookies() {
+  // In test environment, use mock cookie store only if specifically provided
+  if (process.env.TEST === 'true' && (global as any).__TEST_COOKIE_STORE__) {
+    return (global as any).__TEST_COOKIE_STORE__;
+  }
+  return await nextCokies();
+}
 
 type EditingHandlerOptions = {
   /**
@@ -136,26 +146,40 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       );
     }
 
-    let rawCookies = headers.get('cookie') || '';
-
-    // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
-    if (mode === LayoutServicePageState.Preview) {
-      const previewCookies = getNextPreviewCookies(query.sc_site);
-      rawCookies = rawCookies.concat(previewCookies.join('; '));
-    }
-    responseHeaders['Set-Cookie'] = rawCookies;
-    const cookies = req.cookies.getAll();
-
-    const convertedCookies = cookies.map((c) => `${c.name}=${c.value}`);
-
-    // Restrict the page to be rendered only within the allowed origins
-    responseHeaders['Content-Security-Policy'] = getSCPHeader();
-
     const encodedRoute = encodeURI(query.route);
     const route = options?.resolvePageUrl?.(encodedRoute) || encodedRoute;
 
     const base = resolveServerUrl(req);
     const requestUrl = new URL(route, base);
+
+    // Restrict the page to be rendered only within the allowed origins
+    responseHeaders['Content-Security-Policy'] = getCSPHeader();
+
+    const cookieStore = await getNextCookies();
+    cookieStore.set('__prerender_bypass', cookieStore.get('__prerender_bypass')?.value || '', {
+      httpOnly: true,
+      path: '/',
+      sameSite: 'none',
+      secure: true,
+    });
+
+    // Set Preview mode identifier cookies, if the page is rendered in Sitecore Preview mode
+    if (mode === LayoutServicePageState.Preview) {
+      cookieStore.set(PREVIEW_KEY, 'true', {
+        httpOnly: true,
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      });
+      cookieStore.set(SITE_KEY, query.sc_site, {
+        httpOnly: true,
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      });
+    }
+
+    const convertedCookies = cookieStore.getAll().map((c: NextCookie) => `${c.name}=${c.value}`);
 
     try {
       debug.editing('fetching page route for %s', query.route);
@@ -163,7 +187,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       // Additionally ,in app router preview data is passed through query string instead of preview data cookie
       const propagatedQsParams = {
         ...getQueryParamsForPropagation(query as { [key: string]: string }),
-        ...getEditingParams(query as { [key: string]: string }),
+        ...mapEditingParams(query as { [key: string]: string }),
       };
       // Get headers to propagate on subsequent requests
       const propagatedHeaders = getHeadersForPropagation(headers);
@@ -175,10 +199,8 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
         dataFetcher
       );
 
-      // disable draft mode after page is rendered
-      await draft.disable();
       // remove nextjs preview cookies to not leak them to the browser
-      const filteredCookies = getFilteredCookies(convertedCookies);
+      const filteredCookies = cleanupNextPreviewCookies(convertedCookies);
       responseHeaders['Set-Cookie'] = filteredCookies?.join('; ') || '';
 
       debug.editing('editing render handler end in %dms: %o', Date.now() - startTimestamp, {
@@ -203,8 +225,15 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       );
 
       return Response.redirect(route);
+    } finally {
+      await draft.disable();
     }
   };
 
   return { GET, OPTIONS };
+};
+
+type NextCookie = {
+  name: string;
+  value: string;
 };

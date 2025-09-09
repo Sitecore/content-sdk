@@ -16,16 +16,16 @@ import { SITE_KEY } from '@sitecore-content-sdk/core/site';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   getEditingSecretFromRequest,
-  getEditingParams,
-  getFilteredCookies,
-  getNextPreviewCookies,
+  mapEditingParams,
+  cleanupNextPreviewCookies,
+  getPreviewCookies,
   getRequiredEditingParamsList,
   getQueryParamsForPropagation,
   getHeadersForPropagation,
   getEditingRequestHtml,
   isDesignLibraryPreviewData,
   resolveServerUrl,
-  getSCPHeader,
+  getCSPHeader,
 } from './utils';
 import {
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
@@ -108,7 +108,7 @@ describe('editing/utils', () => {
     });
   });
 
-  describe('getEditingParams', () => {
+  describe('mapEditingParams', () => {
     it('should return design library params when mode is design library', () => {
       const query = {
         mode: DesignLibraryMode.Normal,
@@ -121,7 +121,7 @@ describe('editing/utils', () => {
         sc_version: '1',
       };
 
-      const params = getEditingParams(query);
+      const params = mapEditingParams(query);
 
       expect(params).to.deep.equal({
         itemId: 'item-123',
@@ -147,7 +147,7 @@ describe('editing/utils', () => {
         sc_version: '1',
       };
 
-      const params = getEditingParams(query);
+      const params = mapEditingParams(query);
 
       expect(params).to.deep.equal({
         itemId: 'item-123',
@@ -172,7 +172,7 @@ describe('editing/utils', () => {
         sc_layoutKind: 'mvc',
       };
 
-      const params = getEditingParams(query);
+      const params = mapEditingParams(query);
 
       expect(params).to.deep.equal({
         site: 'test-site',
@@ -193,7 +193,7 @@ describe('editing/utils', () => {
         sc_lang: 'en',
       };
 
-      const params = getEditingParams(query);
+      const params = mapEditingParams(query);
 
       expect(params.variantIds).to.equal(DEFAULT_VARIANT);
     });
@@ -207,7 +207,7 @@ describe('editing/utils', () => {
         sc_variant: '',
       };
 
-      const params = getEditingParams(query);
+      const params = mapEditingParams(query);
 
       expect(params.variantIds).to.equal(DEFAULT_VARIANT);
     });
@@ -220,7 +220,7 @@ describe('editing/utils', () => {
         sc_lang: undefined,
       };
 
-      const params = getEditingParams(query);
+      const params = mapEditingParams(query);
 
       expect(params).to.have.property('site', undefined);
       expect(params).to.have.property('itemId', undefined);
@@ -228,14 +228,14 @@ describe('editing/utils', () => {
     });
   });
 
-  describe('getFilteredCookies', () => {
+  describe('cleanupNextPreviewCookies', () => {
     it('should return null when cookies is null', () => {
-      const result = getFilteredCookies(null);
+      const result = cleanupNextPreviewCookies(null);
       expect(result).to.be.null;
     });
 
     it('should return null when cookies is undefined', () => {
-      const result = getFilteredCookies(undefined as any);
+      const result = cleanupNextPreviewCookies(undefined as any);
       expect(result).to.be.null;
     });
 
@@ -243,7 +243,7 @@ describe('editing/utils', () => {
       const cookies =
         'normalCookie=value,__next_preview_data=preview123,__prerender_bypass=bypass456,anotherCookie=value2';
 
-      const result = getFilteredCookies(cookies);
+      const result = cleanupNextPreviewCookies(cookies);
 
       expect(result).to.deep.equal(['normalCookie=value', 'anotherCookie=value2']);
     });
@@ -256,7 +256,7 @@ describe('editing/utils', () => {
         'anotherCookie=value2',
       ];
 
-      const result = getFilteredCookies(cookies);
+      const result = cleanupNextPreviewCookies(cookies);
 
       expect(result).to.deep.equal(['normalCookie=value', 'anotherCookie=value2']);
     });
@@ -264,19 +264,19 @@ describe('editing/utils', () => {
     it('should return all cookies when no preview cookies are present', () => {
       const cookies = ['normalCookie=value', 'anotherCookie=value2'];
 
-      const result = getFilteredCookies(cookies);
+      const result = cleanupNextPreviewCookies(cookies);
 
       expect(result).to.deep.equal(cookies);
     });
 
     it('should handle empty string', () => {
-      const result = getFilteredCookies('');
+      const result = cleanupNextPreviewCookies('');
 
       expect(result).to.be.null;
     });
 
     it('should handle empty array', () => {
-      const result = getFilteredCookies([]);
+      const result = cleanupNextPreviewCookies([]);
 
       expect(result).to.deep.equal([]);
     });
@@ -284,17 +284,17 @@ describe('editing/utils', () => {
     it('should handle string with only preview cookies', () => {
       const cookies = '__next_preview_data=preview123,__prerender_bypass=bypass456';
 
-      const result = getFilteredCookies(cookies);
+      const result = cleanupNextPreviewCookies(cookies);
 
       expect(result).to.deep.equal([]);
     });
   });
 
-  describe('getNextPreviewCookies', () => {
+  describe('getPreviewCookies', () => {
     it('should generate correct preview cookies for a site', () => {
       const siteName = 'test-site';
 
-      const cookies = getNextPreviewCookies(siteName);
+      const cookies = getPreviewCookies(siteName);
 
       expect(cookies).to.have.length(2);
       expect(cookies[0]).to.equal(`${SITE_KEY}=test-site; Path=/; HttpOnly; SameSite=None; Secure`);
@@ -302,7 +302,7 @@ describe('editing/utils', () => {
     });
 
     it('should handle empty site name', () => {
-      const cookies = getNextPreviewCookies('');
+      const cookies = getPreviewCookies('');
 
       expect(cookies).to.have.length(2);
       expect(cookies[0]).to.equal(`${SITE_KEY}=; Path=/; HttpOnly; SameSite=None; Secure`);
@@ -312,7 +312,7 @@ describe('editing/utils', () => {
     it('should handle site name with special characters', () => {
       const siteName = 'test-site-with_special.chars';
 
-      const cookies = getNextPreviewCookies(siteName);
+      const cookies = getPreviewCookies(siteName);
 
       expect(cookies[0]).to.equal(
         `${SITE_KEY}=test-site-with_special.chars; Path=/; HttpOnly; SameSite=None; Secure`
@@ -860,14 +860,14 @@ describe('editing/utils', () => {
     });
   });
 
-  describe('getSCPHeader', () => {
+  describe('getCSPHeader', () => {
     beforeEach(() => {
       // Clean up any existing JSS_ALLOWED_ORIGINS
       delete process.env.JSS_ALLOWED_ORIGINS;
     });
 
     it('should return CSP header with default allowed origins', () => {
-      const result = getSCPHeader();
+      const result = getCSPHeader();
 
       expect(result).to.include("frame-ancestors 'self'");
       expect(result).to.include('https://pages.sitecorecloud.io');
@@ -876,7 +876,7 @@ describe('editing/utils', () => {
     it('should include custom allowed origins from environment', () => {
       process.env.JSS_ALLOWED_ORIGINS = 'https://custom1.com,https://custom2.com';
 
-      const result = getSCPHeader();
+      const result = getCSPHeader();
 
       expect(result).to.include("frame-ancestors 'self'");
       expect(result).to.include('https://custom1.com');
@@ -888,7 +888,7 @@ describe('editing/utils', () => {
     it('should handle empty JSS_ALLOWED_ORIGINS', () => {
       process.env.JSS_ALLOWED_ORIGINS = '';
 
-      const result = getSCPHeader();
+      const result = getCSPHeader();
 
       expect(result).to.include("frame-ancestors 'self'");
       expect(result).to.include('https://pages.sitecorecloud.io');
@@ -897,7 +897,7 @@ describe('editing/utils', () => {
     it('should handle JSS_ALLOWED_ORIGINS with spaces', () => {
       process.env.JSS_ALLOWED_ORIGINS = ' https://custom1.com , https://custom2.com ';
 
-      const result = getSCPHeader();
+      const result = getCSPHeader();
 
       expect(result).to.include('https://custom1.com');
       expect(result).to.include('https://custom2.com');
@@ -906,7 +906,7 @@ describe('editing/utils', () => {
     it('should include origins from both env and defaults even if duplicated', () => {
       process.env.JSS_ALLOWED_ORIGINS = 'https://pages.sitecorecloud.io,https://custom.com';
 
-      const result = getSCPHeader();
+      const result = getCSPHeader();
 
       // May have duplicate pages.sitecorecloud.io from both env and defaults
       const matches = (result.match(/https:\/\/pages\.sitecorecloud\.io/g) || []).length;
