@@ -43,7 +43,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
     try {
       // Path can be rewritten by previously executed middleware
       const pathname = res?.headers.get(REWRITE_HEADER_NAME) || req.nextUrl.pathname;
-      const language = this.getLanguage(req);
+      const language = this.getLanguage(req, res);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
 

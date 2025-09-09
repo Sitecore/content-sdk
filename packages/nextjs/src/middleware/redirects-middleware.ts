@@ -75,7 +75,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
     }
     try {
       const pathname = req.nextUrl.pathname;
-      const language = this.getLanguage(req);
+      const language = this.getLanguage(req, res);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       let site: SiteInfo | undefined;
       const startTimestamp = Date.now();

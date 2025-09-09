@@ -393,7 +393,7 @@ describe('MultisiteMiddleware', () => {
       });
     });
 
-    it('rewritten pathname frome header is used when present in response', async () => {
+    it('rewritten pathname from header is used when present in response', async () => {
       const req = createRequest({
         nextUrl: { pathname: '/styleguide/foo' },
       });

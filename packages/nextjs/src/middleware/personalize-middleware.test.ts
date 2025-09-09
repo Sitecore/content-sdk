@@ -140,6 +140,9 @@ describe('PersonalizeMiddleware', () => {
         },
         enumerable: false,
       },
+      get: {
+        value: (key) => res.headers[key],
+      },
       forEach: {
         value: (cb) => {
           Object.keys(res.headers).forEach((key) => cb(res.headers[key], key, res.headers));
@@ -1041,6 +1044,71 @@ describe('PersonalizeMiddleware', () => {
       });
       expect(finalRes).to.deep.equal(res);
       nextRewriteStub.restore();
+    });
+
+    describe('getLanguage', () => {
+      it('should get Language from locale response header if present', async () => {
+        const languageInHeader = 'fr-FR';
+        const language = 'da-DK';
+        const req = createRequest({
+          nextUrl: {
+            locale: language,
+          },
+        });
+        const res = createResponse({ headers: { 'x-sc-locale': languageInHeader } });
+        const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+        const { middleware, getPersonalizeInfo } = createMiddleware({
+          language,
+          variantId: 'variant-2',
+          personalizeInfo: {
+            variantIds,
+            pageId,
+          },
+        });
+        await middleware.handle(req, res);
+
+        validateDebugLog('personalize middleware start: %o', {
+          headers: {
+            ...req.headers,
+          },
+          hostname: 'foo.net',
+          pathname: '/styleguide',
+          language: languageInHeader,
+        });
+        expect(getPersonalizeInfo.calledWith('/styleguide', languageInHeader)).to.be.true;
+        nextRewriteStub.restore();
+      });
+
+      it('should get Language from nexturl if locale header is not present', async () => {
+        const language = 'da-DK';
+        const req = createRequest({
+          nextUrl: {
+            locale: language,
+          },
+        });
+        const res = createResponse({ headers: {} });
+        const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+        const { middleware, getPersonalizeInfo } = createMiddleware({
+          language,
+          variantId: 'variant-2',
+          personalizeInfo: {
+            variantIds,
+            pageId,
+          },
+        });
+        await middleware.handle(req, res);
+
+        validateDebugLog('personalize middleware start: %o', {
+          headers: {
+            ...req.headers,
+          },
+          hostname: 'foo.net',
+          pathname: '/styleguide',
+          language,
+        });
+        expect(getPersonalizeInfo.calledWith('/styleguide', language)).to.be.true;
+        nextRewriteStub.restore();
+      });
     });
   });
 

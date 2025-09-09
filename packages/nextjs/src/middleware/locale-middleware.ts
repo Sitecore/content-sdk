@@ -33,7 +33,7 @@ export class LocaleMiddleware extends MiddlewareBase {
       const { pathname } = req.nextUrl;
 
       const localeFromPath = this.getLocaleFromPath(pathname);
-      const locale = localeFromPath || this.config.defaultLanguage || 'en';
+      const locale = localeFromPath || this.getLanguage(req, res);
 
       debug.locale('locale middleware start: %o', {
         pathname,
