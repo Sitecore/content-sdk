@@ -15,13 +15,17 @@ const trackedScopes = [
 
 /**
  * Get application metadata
+ * @param {boolean} allowWorkspaces - Whether to allow workspaces in the metadata generation.
+ * @returns {Metadata} The generated metadata.
  */
-export function getMetadata(): Metadata {
+export function getMetadata(allowWorkspaces: boolean = false): Metadata {
   const metadata: Metadata = { packages: {} };
 
   let queryResult: Package[] = [];
   try {
-    queryResult = JSON.parse(execSync('npm query [name*=@sitecore] --workspaces false').toString());
+    queryResult = JSON.parse(
+      execSync(`npm query [name*=@sitecore] --workspaces ${allowWorkspaces}`).toString()
+    );
   } catch (error) {
     console.error('Failed to retrieve sitecore packages using npm query', error);
     return metadata;
