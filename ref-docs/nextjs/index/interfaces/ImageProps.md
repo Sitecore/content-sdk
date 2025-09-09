@@ -10,7 +10,7 @@ Defined in: react/types/components/Image.d.ts:28
 
 ## Extends
 
-- `EditableFieldProps`
+- `EditableFieldProps`\<`ImageProps`\>
 
 ## Indexable
 
@@ -40,7 +40,7 @@ true
 
 ### emptyFieldEditingComponent?
 
-> `optional` **emptyFieldEditingComponent**: `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\>
+> `optional` **emptyFieldEditingComponent**: `ComponentClass`\<`ImageProps`, `any`\> \| `FC`\<`ImageProps`\>
 
 Defined in: react/types/components/sharedTypes/props.d.ts:13
 

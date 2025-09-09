@@ -8,7 +8,7 @@
 
 > `const` **getComponentServerProps**: [`GetComponentServerProps`](../../../type-aliases/GetComponentServerProps.md)
 
-Defined in: [nextjs/src/components/BYOCWrapper.tsx:19](https://github.com/Sitecore/content-sdk/blob/baea9a2a6cbe5fc3daf90495c2c1933a2dccdc3b/packages/nextjs/src/components/BYOCWrapper.tsx#L19)
+Defined in: [nextjs/src/components/BYOCWrapper.tsx:19](https://github.com/Sitecore/content-sdk/blob/6be89bafb8657b4eebecb2b67bf96c2e4d98029b/packages/nextjs/src/components/BYOCWrapper.tsx#L19)
 
 Will be called during SSG or SSR
 
