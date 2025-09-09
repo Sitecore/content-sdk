@@ -14,12 +14,12 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-- Next.js App Router support:
+* Next.js App Router support:
   - Robots.txt and Sitemap.xml support ([#197](https://github.com/Sitecore/content-sdk/pull/197))
   - Base template ([#191](https://github.com/Sitecore/content-sdk/pull/191))
   - Editing and preview support ([#198](https://github.com/Sitecore/content-sdk/pull/198))
-  - `[nextjs]` Support component-level data fetching in 404/500 pages ([#199](https://github.com/Sitecore/content-sdk/pull/199))
-- `[react]` Add `component:status` events for VariantGeneration ([#190](https://github.com/Sitecore/content-sdk/pull/190))
+* `[react]` Add `component:status` events for VariantGeneration ([#190](https://github.com/Sitecore/content-sdk/pull/190))
+* `[nextjs]` Support component-level data fetching in 404/500 pages ([#199](https://github.com/Sitecore/content-sdk/pull/199))
 
 ## 1.1.0
 
@@ -43,8 +43,9 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
-- `[core]` Content styles fail to load due to incorrect contextId resolution ([#192](https://github.com/Sitecore/content-sdk/pull/192))
-- `[core]` Duplicate dictionary requests in editing, preview, and design library modes ([#161](https://github.com/Sitecore/content-sdk/pull/161))
+* `[react]` Custom properties are not applied to empty field in editing mode ([#200](https://github.com/Sitecore/content-sdk/pull/200))
+* `[core]` Content styles fail to load due to incorrect contextId resolution ([#192](https://github.com/Sitecore/content-sdk/pull/192))
+* `[core]` Duplicate dictionary requests in editing, preview, and design library modes ([#161](https://github.com/Sitecore/content-sdk/pull/161))
   - `SitecoreClient.getPreview` and `SitecoreClient.getDesignLibraryData` no longer request dictionary data. `Page` type is not affected.
   - Updated `EditingService.fetchEditingData`:
     - Removed `siteName` parameter.
