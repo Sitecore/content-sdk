@@ -2,8 +2,12 @@
 export {
   EditingRenderMiddleware,
   EditingRenderMiddlewareConfig,
-  isDesignLibraryPreviewData,
 } from './editing-render-middleware';
+export {
+  isDesignLibraryPreviewData,
+  getQueryParamsForPropagation,
+  getHeadersForPropagation,
+} from './utils';
 export { FEAASRenderMiddleware, FEAASRenderMiddlewareConfig } from './feaas-render-middleware';
 export {
   EditingConfigMiddleware,

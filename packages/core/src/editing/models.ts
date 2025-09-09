@@ -63,7 +63,7 @@ export type EditingPreviewData = {
   itemId: string;
   language: string;
   mode: Exclude<LayoutServicePageState, 'Normal'>;
-  variantIds: string[];
+  variantIds: string[] | string;
   version?: string;
   layoutKind?: LayoutKind;
 };
