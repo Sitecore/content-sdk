@@ -393,14 +393,7 @@ describe('RedirectsMiddleware', () => {
           headers: {},
           redirected: undefined,
           status: 301,
-          url: {
-            href: 'http://localhost:3000/custom-target',
-            pathname: '/custom-target',
-            origin: 'http://localhost:3000',
-            locale: 'en',
-            search: '',
-            clone: cloneUrl,
-          },
+          url,
         });
 
         expect(customRedirectsService.fetchRedirects).to.be.calledOnce;
@@ -1323,6 +1316,8 @@ describe('RedirectsMiddleware', () => {
         expect(siteResolver.getByName).to.be.calledWith(site);
         expect(fetchRedirects.called).to.be.true;
         expect(finalRes.cookies.get('sc_site')?.value).to.equal(site);
+        // pass-through: ensure the same response instance is returned
+        expect(finalRes).to.deep.equal(res);
       });
 
       it('should preserve site name from response data when provided, if handler is disabled / skipped', async () => {
@@ -1363,6 +1358,8 @@ describe('RedirectsMiddleware', () => {
         expect(siteResolver.getByName).to.not.be.called;
         expect(fetchRedirects.called).to.be.false;
         expect(finalRes.cookies.get('sc_site')?.value).to.equal(site);
+        // pass-through: ensure the same response instance is returned
+        expect(finalRes).to.deep.equal(res);
       });
 
       it('default fallback hostname is used', async () => {
@@ -1767,12 +1764,7 @@ describe('RedirectsMiddleware', () => {
           res
         );
 
-        const urlVal =
-          typeof (finalRes as any).url === 'string'
-            ? (finalRes as any).url
-            : (finalRes as any).url?.href;
-
-        expect(urlVal).to.equal(externalUrl);
+        expect(finalRes.url).to.equal(externalUrl);
       });
     });
 

@@ -343,7 +343,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
    * @param {string} type One of `REDIRECT_TYPE_301`, `REDIRECT_TYPE_302`, or `REDIRECT_TYPE_SERVER_TRANSFER`.
    * @param {NextRequest} req The incoming request.
    * @param {NextResponse} res The current response (used for header cleanup / carry-over).
-   * @param {boolean} [isExternal=false] Whether `target` is an external absolute URL.
+   * @param {boolean} isExternal Set to `true` when `target` is an external absolute URL (e.g. `https://…`).
    *   Passed through to `rewrite` so it can skip locale/basePath stripping for externals.
    * @returns {NextResponse} The redirect/rewrite response, or `res` if the type is not recognized.
    */
@@ -374,7 +374,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
   /**
    * Helper function to create a redirect response and remove the x-middleware-next header.
-   * @param {NextURL} url The URL to redirect to.
+   * @param {NextURL | string} url The URL to redirect to.
    * @param {Response} res The response object.
    * @param {number} status The HTTP status code of the redirect.
    * @param {string} statusText The status text of the redirect.
