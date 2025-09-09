@@ -14,7 +14,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { routing } from 'src/i18n/routing';
 
 type PageProps = {
-  params: Promise<{ site?: string; locale?: string; path?: string[] }>;
+  params: Promise<{ site: string; locale: string; path?: string[] }>;
 };
 
 export default async function Page({ params }: PageProps) {
