@@ -8,7 +8,7 @@
 
 > **subscribeToFormSubmitEvent**(`formElement`, `componentId?`): `void`
 
-Defined in: [packages/core/src/form/form.ts:76](https://github.com/Sitecore/content-sdk/blob/310212e7fd147258f548cd545db093d1138753de/packages/core/src/form/form.ts#L76)
+Defined in: [packages/core/src/form/form.ts:76](https://github.com/Sitecore/content-sdk/blob/baea9a2a6cbe5fc3daf90495c2c1933a2dccdc3b/packages/core/src/form/form.ts#L76)
 
 Subscribes to the Form event and then sends data to CloudSDK.
 This listener captures interactions such as form views or submissions

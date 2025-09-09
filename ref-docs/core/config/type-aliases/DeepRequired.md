@@ -8,7 +8,7 @@
 
 > **DeepRequired**\<`T`\> = `Required`\<`{ [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]> }`\>
 
-Defined in: [packages/core/src/config/models.ts:7](https://github.com/Sitecore/content-sdk/blob/310212e7fd147258f548cd545db093d1138753de/packages/core/src/config/models.ts#L7)
+Defined in: [packages/core/src/config/models.ts:7](https://github.com/Sitecore/content-sdk/blob/baea9a2a6cbe5fc3daf90495c2c1933a2dccdc3b/packages/core/src/config/models.ts#L7)
 
 Utility type to make every property in a type required
 

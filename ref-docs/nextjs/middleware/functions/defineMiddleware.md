@@ -8,7 +8,7 @@
 
 > **defineMiddleware**(...`middlewares`): `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:198](https://github.com/Sitecore/content-sdk/blob/310212e7fd147258f548cd545db093d1138753de/packages/nextjs/src/middleware/middleware.ts#L198)
+Defined in: [nextjs/src/middleware/middleware.ts:198](https://github.com/Sitecore/content-sdk/blob/baea9a2a6cbe5fc3daf90495c2c1933a2dccdc3b/packages/nextjs/src/middleware/middleware.ts#L198)
 
 Define a middleware with a list of middlewares
 

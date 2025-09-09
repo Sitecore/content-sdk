@@ -8,7 +8,7 @@
 
 > **getContentStylesheetLink**(`layoutData`, `sitecoreEdgeContextId`, `sitecoreEdgeUrl?`): `null` \| [`HTMLLink`](../../index/type-aliases/HTMLLink.md)
 
-Defined in: [packages/core/src/layout/content-styles.ts:20](https://github.com/Sitecore/content-sdk/blob/310212e7fd147258f548cd545db093d1138753de/packages/core/src/layout/content-styles.ts#L20)
+Defined in: [packages/core/src/layout/content-styles.ts:20](https://github.com/Sitecore/content-sdk/blob/baea9a2a6cbe5fc3daf90495c2c1933a2dccdc3b/packages/core/src/layout/content-styles.ts#L20)
 
 Get the content styles link to be loaded from the Sitecore Edge Platform
 

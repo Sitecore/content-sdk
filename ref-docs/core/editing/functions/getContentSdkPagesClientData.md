@@ -8,7 +8,7 @@
 
 > **getContentSdkPagesClientData**(): `Record`\<`string`, `Record`\<`string`, `unknown`\>\>
 
-Defined in: [packages/core/src/editing/utils.ts:117](https://github.com/Sitecore/content-sdk/blob/310212e7fd147258f548cd545db093d1138753de/packages/core/src/editing/utils.ts#L117)
+Defined in: [packages/core/src/editing/utils.ts:117](https://github.com/Sitecore/content-sdk/blob/baea9a2a6cbe5fc3daf90495c2c1933a2dccdc3b/packages/core/src/editing/utils.ts#L117)
 
 Gets extra Content SDK clientData scripts to render in XMC Pages in addition to clientData from Pages itself
 

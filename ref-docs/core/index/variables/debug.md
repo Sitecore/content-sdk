@@ -8,7 +8,7 @@
 
 > **debug**: `object`
 
-Defined in: [packages/core/src/debug.ts:31](https://github.com/Sitecore/content-sdk/blob/310212e7fd147258f548cd545db093d1138753de/packages/core/src/debug.ts#L31)
+Defined in: [packages/core/src/debug.ts:31](https://github.com/Sitecore/content-sdk/blob/baea9a2a6cbe5fc3daf90495c2c1933a2dccdc3b/packages/core/src/debug.ts#L31)
 
 Default Sitecore Content SDK 'debug' module debuggers. Uses namespace prefix 'content-sdk:'.
 See [https://www.npmjs.com/package/debug](https://www.npmjs.com/package/debug) for details.
