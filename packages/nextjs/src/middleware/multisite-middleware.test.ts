@@ -15,7 +15,7 @@ use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
 describe('MultisiteMiddleware', () => {
-  const debugSpy = spy(debug, 'multisite');
+  let debugSpy;
   const validateDebugLog = (message, ...params) =>
     expect(debugSpy.args.find((log) => log[0] === message)).to.deep.equal([message, ...params]);
   const validateEndMessageDebugLog = (message, params) => {
@@ -132,7 +132,11 @@ describe('MultisiteMiddleware', () => {
   // Stub for NextResponse generation, see https://github.com/vercel/next.js/issues/42374
   (Headers.prototype as any).getAll = () => [];
 
-  beforeEach(() => {
+  before(() => {
+    debugSpy = spy(debug, 'multisite');
+  });
+
+  afterEach(() => {
     debugSpy.resetHistory();
   });
 
