@@ -137,8 +137,15 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
         const url = this.normalizeUrl(req.nextUrl.clone());
 
+        // Redirect logic for external (absolute) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
         if (REGEXP_ABSOLUTE_URL.test(existsRedirect.target)) {
-          url.href = existsRedirect.target;
+          return this.dispatchRedirect(
+            existsRedirect.target,
+            existsRedirect.redirectType,
+            req,
+            res,
+            true
+          );
         } else {
           const isUrl = isRegexOrUrl(existsRedirect.pattern) === 'url';
           const targetParts = existsRedirect.target.split('/');
@@ -179,19 +186,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
         }
 
         /** return Response redirect with http code of redirect type */
-        switch (existsRedirect.redirectType) {
-          case REDIRECT_TYPE_301: {
-            return this.createRedirectResponse(url, res, 301, 'Moved Permanently');
-          }
-          case REDIRECT_TYPE_302: {
-            return this.createRedirectResponse(url, res, 302, 'Found');
-          }
-          case REDIRECT_TYPE_SERVER_TRANSFER: {
-            return this.rewrite(url.href, req, res, true);
-          }
-          default:
-            return res;
-        }
+        return this.dispatchRedirect(url, existsRedirect.redirectType, req, res, false);
       };
 
       const response = await createResponse();
@@ -343,15 +338,50 @@ export class RedirectsMiddleware extends MiddlewareBase {
   }
 
   /**
+   * Helper function to dispatch a redirect or rewrite based on the redirect type.
+   * @param {NextURL | string} target The final target to redirect/rewrite to.
+   * @param {string} type One of `REDIRECT_TYPE_301`, `REDIRECT_TYPE_302`, or `REDIRECT_TYPE_SERVER_TRANSFER`.
+   * @param {NextRequest} req The incoming request.
+   * @param {NextResponse} res The current response (used for header cleanup / carry-over).
+   * @param {boolean} isExternal Set to `true` when `target` is an external absolute URL (e.g. `https://…`).
+   *   Passed through to `rewrite` so it can skip locale/basePath stripping for externals.
+   * @returns {NextResponse} The redirect/rewrite response, or `res` if the type is not recognized.
+   */
+  protected dispatchRedirect(
+    target: NextURL | string,
+    type: string,
+    req: NextRequest,
+    res: NextResponse,
+    isExternal = false
+  ): NextResponse {
+    switch (type) {
+      case REDIRECT_TYPE_301:
+        return this.createRedirectResponse(target, res, 301, 'Moved Permanently');
+      case REDIRECT_TYPE_302:
+        return this.createRedirectResponse(target, res, 302, 'Found');
+      case REDIRECT_TYPE_SERVER_TRANSFER:
+        // rewrite expects a string; unwrap NextURL if needed
+        return this.rewrite(
+          typeof target === 'string' ? target : target.href,
+          req,
+          res,
+          isExternal
+        );
+      default:
+        return res;
+    }
+  }
+
+  /**
    * Helper function to create a redirect response and remove the x-middleware-next header.
-   * @param {NextURL} url The URL to redirect to.
+   * @param {NextURL | string} url The URL to redirect to.
    * @param {Response} res The response object.
    * @param {number} status The HTTP status code of the redirect.
    * @param {string} statusText The status text of the redirect.
    * @returns {NextResponse<unknown>} The redirect response.
    */
   protected createRedirectResponse(
-    url: NextURL,
+    url: NextURL | string,
     res: Response | undefined,
     status: number,
     statusText: string

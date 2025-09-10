@@ -8,7 +8,7 @@
 
 > **GraphQLRequestClientConfig** = `object`
 
-Defined in: [packages/core/src/graphql-request-client.ts:34](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/graphql-request-client.ts#L34)
+Defined in: [packages/core/src/graphql-request-client.ts:34](https://github.com/Sitecore/content-sdk/blob/7c1616588aced013969dae63e4cf109034a39708/packages/core/src/graphql-request-client.ts#L34)
 
 Minimum configuration options for classes that implement
 
@@ -22,7 +22,7 @@ GraphQLClient
 
 > `optional` **apiKey**: `string`
 
-Defined in: [packages/core/src/graphql-request-client.ts:38](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/graphql-request-client.ts#L38)
+Defined in: [packages/core/src/graphql-request-client.ts:38](https://github.com/Sitecore/content-sdk/blob/7c1616588aced013969dae63e4cf109034a39708/packages/core/src/graphql-request-client.ts#L38)
 
 The API key to use for authentication. This will be added as an 'sc_apikey' header.
 
@@ -32,7 +32,7 @@ The API key to use for authentication. This will be added as an 'sc_apikey' head
 
 > `optional` **debugger**: [`Debugger`](Debugger.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:42](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/graphql-request-client.ts#L42)
+Defined in: [packages/core/src/graphql-request-client.ts:42](https://github.com/Sitecore/content-sdk/blob/7c1616588aced013969dae63e4cf109034a39708/packages/core/src/graphql-request-client.ts#L42)
 
 Override debugger for logging. Uses 'content-sdk:http' by default.
 
@@ -42,7 +42,7 @@ Override debugger for logging. Uses 'content-sdk:http' by default.
 
 > `optional` **fetch**: *typeof* `fetch`
 
-Defined in: [packages/core/src/graphql-request-client.ts:46](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/graphql-request-client.ts#L46)
+Defined in: [packages/core/src/graphql-request-client.ts:46](https://github.com/Sitecore/content-sdk/blob/7c1616588aced013969dae63e4cf109034a39708/packages/core/src/graphql-request-client.ts#L46)
 
 Override fetch method. Uses 'graphql-request' library default otherwise ('cross-fetch').
 
@@ -52,7 +52,7 @@ Override fetch method. Uses 'graphql-request' library default otherwise ('cross-
 
 > `optional` **headers**: `Record`\<`string`, `string`\>
 
-Defined in: [packages/core/src/graphql-request-client.ts:63](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/graphql-request-client.ts#L63)
+Defined in: [packages/core/src/graphql-request-client.ts:63](https://github.com/Sitecore/content-sdk/blob/7c1616588aced013969dae63e4cf109034a39708/packages/core/src/graphql-request-client.ts#L63)
 
 Custom headers to be sent with each request.
 
@@ -62,7 +62,7 @@ Custom headers to be sent with each request.
 
 > `optional` **retries**: `number`
 
-Defined in: [packages/core/src/graphql-request-client.ts:54](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/graphql-request-client.ts#L54)
+Defined in: [packages/core/src/graphql-request-client.ts:54](https://github.com/Sitecore/content-sdk/blob/7c1616588aced013969dae63e4cf109034a39708/packages/core/src/graphql-request-client.ts#L54)
 
 Number of retries for client. Will use the specified `retryStrategy`.
 
@@ -72,7 +72,7 @@ Number of retries for client. Will use the specified `retryStrategy`.
 
 > `optional` **retryStrategy**: [`RetryStrategy`](../interfaces/RetryStrategy.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:59](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/graphql-request-client.ts#L59)
+Defined in: [packages/core/src/graphql-request-client.ts:59](https://github.com/Sitecore/content-sdk/blob/7c1616588aced013969dae63e4cf109034a39708/packages/core/src/graphql-request-client.ts#L59)
 
 Retry strategy for the client. Uses `DefaultRetryStrategy` by default with exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
@@ -83,6 +83,6 @@ back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
 
 > `optional` **timeout**: `number`
 
-Defined in: [packages/core/src/graphql-request-client.ts:50](https://github.com/Sitecore/content-sdk/blob/03264144042ad781def9f7c0b968ddb525b3de97/packages/core/src/graphql-request-client.ts#L50)
+Defined in: [packages/core/src/graphql-request-client.ts:50](https://github.com/Sitecore/content-sdk/blob/7c1616588aced013969dae63e4cf109034a39708/packages/core/src/graphql-request-client.ts#L50)
 
 GraphQLClient request timeout (in milliseconds).

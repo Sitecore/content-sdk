@@ -404,8 +404,11 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
     // If we're in Pages preview (editing) mode, prefetch the editing data
-    const { site, itemId, language, version, variantIds, layoutKind, mode } =
-      previewData as EditingPreviewData;
+    const { site, itemId, language, version, layoutKind, mode } = previewData as EditingPreviewData;
+
+    const variantIds = Array.isArray(previewData.variantIds)
+      ? previewData.variantIds
+      : previewData.variantIds.split(',');
 
     const data = await this.editingService.fetchEditingData(
       {

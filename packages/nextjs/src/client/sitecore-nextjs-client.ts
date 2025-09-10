@@ -13,7 +13,10 @@ import {
 import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
-import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
+import {
+  DesignLibraryRenderPreviewData,
+  EditingPreviewData,
+} from '@sitecore-content-sdk/core/editing';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
 import {
   getPersonalizedRewriteData,
@@ -72,6 +75,22 @@ export class SitecoreNextjsClient extends SitecoreClient {
     );
 
     return page;
+  }
+
+  /**
+   * Get design library page details for Design Library mode of your app
+   * @param {PreviewData} designLibData preview data set in 'library' mode of the app
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
+   * @returns {Page} preview page for Design Library
+   */
+  async getDesignLibraryData(
+    designLibData: PreviewData,
+    fetchOptions?: FetchOptions
+  ): Promise<Page> {
+    return super.getDesignLibraryData(
+      designLibData as DesignLibraryRenderPreviewData,
+      fetchOptions
+    );
   }
 
   /**

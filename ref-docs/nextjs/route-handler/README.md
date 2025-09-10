@@ -8,5 +8,7 @@
 
 ## Functions
 
+- [createEditingConfigRouteHandler](functions/createEditingConfigRouteHandler.md)
+- [createEditingRenderRouteHandlers](functions/createEditingRenderRouteHandlers.md)
 - [createRobotsRouteHandler](functions/createRobotsRouteHandler.md)
 - [createSitemapRouteHandler](functions/createSitemapRouteHandler.md)
