@@ -118,6 +118,9 @@ describe('RedirectsMiddleware', () => {
         },
         enumerable: false,
       },
+      get: {
+        value: (key) => res.headers[key],
+      },
       forEach: {
         value: (cb) => {
           Object.keys(res.headers).forEach((key) => cb(res.headers[key], key, res.headers));
@@ -252,13 +255,6 @@ describe('RedirectsMiddleware', () => {
             ...response,
           })
         : NextResponse.next();
-
-    Object.defineProperties(res.headers, {
-      get: {
-        value: (key) => res.headers[key],
-      },
-    });
-
     const req = createRequest(request);
     return { res, req };
   };
