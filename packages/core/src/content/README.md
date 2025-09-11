@@ -11,7 +11,7 @@ It enables developers to query and fetch structured content from XM Cloud Conten
 - [Getting started](#getting-started)
   - [Option A: Use environment variables via factory](#option-a-use-environment-variables-via-factory)
   - [Option B: Construct with explicit options](#option-b-construct-with-explicit-options)
-- [Quick examples](#quick-examples)
+- [Examples](#examples)
   - [Execute an arbitrary GraphQL query](#execute-an-arbitrary-graphql-query)
   - [Locales](#locales)
   - [Taxonomies](#taxonomies)
@@ -284,4 +284,5 @@ enableDebug('core:content');
 
 - [API reference (core/content)](../../../../ref-docs/core/content/)
 - [Full Core package reference](../../../../ref-docs/core/)
+
 
