@@ -20,7 +20,7 @@ It enables developers to query and fetch structured content from XM Cloud Conten
 
 ## What’s included
 
-- Content GraphQL Client (`ContentClient`) tailored for XM Cloud Content endpoint
+- XM Cloud Content Client (`ContentClient`) tailored for Content endpoint
 - Built‑in typed queries for common entities:
   - Locales: fetch one locale or list all locales
   - Taxonomies: fetch all taxonomies (with pagination) or a single taxonomy (with paginated terms)
@@ -284,6 +284,7 @@ enableDebug('core:content');
 
 - [API reference (core/content)](../../../../ref-docs/core/content/)
 - [Full Core package reference](../../../../ref-docs/core/)
+
 
 
 
