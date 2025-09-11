@@ -66,7 +66,7 @@ export const isServerSidePropsContext = (
 };
 
 /**
- * Extracts the site and locale information from the rewrite header which is in format /[site]/[locale]/[...path].
+ * For App Router application, extracts the site and locale information from the rewrite header which is in format /[site]/[locale]/[...path].
  * @param {Headers} headers - The `Headers` object containing the rewrite header.
  * @returns An object containing the `site` and `locale` extracted from the rewrite header.
  */
