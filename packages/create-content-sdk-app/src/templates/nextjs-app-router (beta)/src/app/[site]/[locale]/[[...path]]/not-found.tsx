@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { ErrorPage } from '@sitecore-content-sdk/nextjs';
-import { getSiteAndLocaleFromRewriteHeader } from '@sitecore-content-sdk/nextjs/utils';
+import { parseRewriteHeader } from '@sitecore-content-sdk/nextjs/utils';
 import client from 'lib/sitecore-client';
 import scConfig from 'sitecore.config';
 import Layout from 'src/Layout';
@@ -9,7 +9,7 @@ import Providers from 'src/Providers';
 
 export default async function NotFound() {
   const headersList = await headers();
-  const { site, locale } = getSiteAndLocaleFromRewriteHeader(headersList);
+  const { site, locale } = parseRewriteHeader(headersList);
 
   const page = await client.getErrorPage(ErrorPage.NotFound, {
     site: site || scConfig.defaultSite,

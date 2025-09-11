@@ -70,7 +70,7 @@ export const isServerSidePropsContext = (
  * @param {Headers} headers - The `Headers` object containing the rewrite header.
  * @returns An object containing the `site` and `locale` extracted from the rewrite header.
  */
-export const getSiteAndLocaleFromRewriteHeader = (headers: Headers) => {
+export const parseRewriteHeader = (headers: Headers) => {
   const rewriteHeader = headers.get(REWRITE_HEADER_NAME);
   const rewriteSegments = rewriteHeader?.split('/').filter((segment) => segment) || [];
   const site = rewriteSegments[0];
