@@ -69,7 +69,6 @@ export const isServerSidePropsContext = (
  * Extracts the site and locale information from the rewrite header which is in format /[site]/[locale]/[...path].
  * @param {Headers} headers - The `Headers` object containing the rewrite header.
  * @returns An object containing the `site` and `locale` extracted from the rewrite header.
- * // Assuming the rewrite header value is "siteName/localeCode/otherSegments"
  */
 export const getSiteAndLocaleFromRewriteHeader = (headers: Headers) => {
   const rewriteHeader = headers.get(REWRITE_HEADER_NAME);
