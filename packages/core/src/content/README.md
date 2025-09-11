@@ -40,8 +40,8 @@ You can instantiate a `ContentClient` directly with explicit options, or use the
 |--------------|----------|--------------------|--------------------------------------------------------------------------------|---------------------------------------------------|
 | tenant       | ✅ Yes    | SITECORE_CS_TENANT | —                                                                              | The name of the Sitecore tenant.                  |
 | token        | ✅ Yes    | SITECORE_CS_TOKEN  | —                                                                              | The API access token used for authentication.     |
-| environment  | No       | SITECORE_CS_ENVIRONMENT | 'main'                                                                     | The target environment for the content.           |
-| preview      | No       | SITECORE_CS_PREVIEW | false                                                                        | Enables preview mode if set to `true`.              |
+| environment  | No       | SITECORE_CS_ENVIRONMENT | `main`                                                                     | The target environment for the content.           |
+| preview      | No       | SITECORE_CS_PREVIEW | `false`                                                                        | Enables preview mode if set to `true`.              |
 | url          | No       | SITECORE_CS_URL    | <https://cs-graphqlapi-staging.sitecore-staging.cloud> | The base GraphQL endpoint of the XM Cloud Content API.     |
 
 > **NOTE**: Do not commit the token to the repository. Use environment variables instead.
