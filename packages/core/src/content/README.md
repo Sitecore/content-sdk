@@ -121,41 +121,41 @@ To retrieve available locale(s) from the Content API, the `ContentClient` provid
 
 - `getLocale(id: string)`: Fetches a single locale by its unique ID.
 
-```ts
-import { ContentClient } from '@sitecore-content-sdk/core/content';
+  ```ts
+  import { ContentClient } from '@sitecore-content-sdk/core/content';
 
-const client = ContentClient.createClient();
+  const client = ContentClient.createClient();
 
-client.getLocale('en')
-  .then((locale) => console.log('Locale:', locale));
-```
+  client.getLocale('en')
+    .then((locale) => console.log('Locale:', locale));
+  ```
 
 - `getLocales()`: Retrieves a list of all available locales.
 
-```ts
-client.getLocales()
-  .then((res) => {
-    res.forEach((locale) => {
-      console.log(`Locale ID: ${locale.id}, Label: ${locale.label}`);
-  });
-})
-```
+  ```ts
+  client.getLocales()
+    .then((res) => {
+      res.forEach((locale) => {
+        console.log(`Locale ID: ${locale.id}, Label: ${locale.label}`);
+    });
+  })
+  ```
 
 - Using custom client instance:
 
-```ts
-import { GET_LOCALES_QUERY, LocalesQueryResponse } from '@sitecore-content-sdk/core/content';
+  ```ts
+  import { GET_LOCALES_QUERY, LocalesQueryResponse } from '@sitecore-content-sdk/core/content';
 
-// Your custom GraphQL client instance
-const client = createClient();
+  // Your custom GraphQL client instance
+  const client = createClient();
 
-client.get<LocalesQueryResponse>(GET_LOCALES_QUERY)
-  .then((res) => {
-    res.manyLocale.forEach((locale) => {
-      console.log(`Locale ID: ${locale.system.id}, Label: ${locale.system.label}`);
-    });
-});
-```
+  client.get<LocalesQueryResponse>(GET_LOCALES_QUERY)
+    .then((res) => {
+      res.manyLocale.forEach((locale) => {
+        console.log(`Locale ID: ${locale.system.id}, Label: ${locale.system.label}`);
+      });
+  });
+  ```
 
 ### Taxonomies
 
@@ -165,32 +165,15 @@ To retrieve taxonomy data from the Content API, the `ContentClient` provides uti
   - `id (string, required)`: The unique taxonomy ID.
   - `terms ({ pageSize?: number; after?: string })`: Pagination for terms (number per page and pagination cursor).
 
-```ts
-import { ContentClient } from '@sitecore-content-sdk/core/content';
+  ```ts
+  import { ContentClient } from '@sitecore-content-sdk/core/content';
 
-const client = ContentClient.createClient();
+  const client = ContentClient.createClient();
 
-(async () => {
-  let taxonomy = await client.getTaxonomy({
-    id: 'YOUR_TAXONOMY_ID',
-    terms: { pageSize: 5 },
-  });
-
-  if (!taxonomy) {
-    console.error('Taxonomy not found');
-    return;
-  }
-
-  console.log('Taxonomy:', taxonomy);
-
-  taxonomy.terms.results.forEach((term) => {
-    console.log(`Term ID: ${term.id}, Name: ${term.name}`);
-  });
-
-  while (taxonomy.terms.hasMore && taxonomy.terms.cursor) {
-    taxonomy = await client.getTaxonomy({
+  (async () => {
+    let taxonomy = await client.getTaxonomy({
       id: 'YOUR_TAXONOMY_ID',
-      terms: { pageSize: 5, after: taxonomy.terms.cursor },
+      terms: { pageSize: 5 },
     });
 
     if (!taxonomy) {
@@ -198,42 +181,43 @@ const client = ContentClient.createClient();
       return;
     }
 
-    console.log('\nNext page of terms:');
+    console.log('Taxonomy:', taxonomy);
 
     taxonomy.terms.results.forEach((term) => {
       console.log(`Term ID: ${term.id}, Name: ${term.name}`);
     });
-  }
-})();
-```
+
+    while (taxonomy.terms.hasMore && taxonomy.terms.cursor) {
+      taxonomy = await client.getTaxonomy({
+        id: 'YOUR_TAXONOMY_ID',
+        terms: { pageSize: 5, after: taxonomy.terms.cursor },
+      });
+
+      if (!taxonomy) {
+        console.error('Taxonomy not found');
+        return;
+      }
+
+      console.log('\nNext page of terms:');
+
+      taxonomy.terms.results.forEach((term) => {
+        console.log(`Term ID: ${term.id}, Name: ${term.name}`);
+      });
+    }
+  })();
+  ```
 
 - `getTaxonomies({ pageSize?, after? })`: Retrieves a paginated list of all available taxonomies.
   - `pageSize (number)`: The number of taxonomies per page.
   - `after (string)`: Pagination cursor (use the cursor value returned from a previous call).
 
-```ts
-import { ContentClient } from '@sitecore-content-sdk/core/content';
+  ```ts
+  import { ContentClient } from '@sitecore-content-sdk/core/content';
 
-const client = ContentClient.createClient();
+  const client = ContentClient.createClient();
 
-(async () => {
-  let taxonomyList = await client.getTaxonomies({ pageSize: 3 });
-
-  taxonomyList.results.forEach((taxonomy, idx) => {
-    console.log(`Taxonomy[${idx}] Name: ${taxonomy.system.name}, ID: ${taxonomy.system.id}`);
-
-    taxonomy.terms.forEach((term) => {
-      console.log(`Term: ${term.name} (ID: ${term.id})`);
-    });
-  });
-
-  while (taxonomyList.hasMore && taxonomyList.cursor) {
-    taxonomyList = await client.getTaxonomies({
-      pageSize: 3,
-      after: taxonomyList.cursor,
-    });
-
-    console.log('\nNext page of taxonomies:');
+  (async () => {
+    let taxonomyList = await client.getTaxonomies({ pageSize: 3 });
 
     taxonomyList.results.forEach((taxonomy, idx) => {
       console.log(`Taxonomy[${idx}] Name: ${taxonomy.system.name}, ID: ${taxonomy.system.id}`);
@@ -242,32 +226,48 @@ const client = ContentClient.createClient();
         console.log(`Term: ${term.name} (ID: ${term.id})`);
       });
     });
-  }
-})();
-```
+
+    while (taxonomyList.hasMore && taxonomyList.cursor) {
+      taxonomyList = await client.getTaxonomies({
+        pageSize: 3,
+        after: taxonomyList.cursor,
+      });
+
+      console.log('\nNext page of taxonomies:');
+
+      taxonomyList.results.forEach((taxonomy, idx) => {
+        console.log(`Taxonomy[${idx}] Name: ${taxonomy.system.name}, ID: ${taxonomy.system.id}`);
+
+        taxonomy.terms.forEach((term) => {
+          console.log(`Term: ${term.name} (ID: ${term.id})`);
+        });
+      });
+    }
+  })();
+  ```
 
 - Using custom client
 
-```ts
-import { GET_TAXONOMIES_QUERY, TaxonomiesQueryResponse } from '@sitecore-content-sdk/core/content';
+  ```ts
+  import { GET_TAXONOMIES_QUERY, TaxonomiesQueryResponse } from '@sitecore-content-sdk/core/content';
 
-const client = createClient();
+  const client = createClient();
 
-(async () => {
-  const res: TaxonomiesQueryResponse = await client.get(GET_TAXONOMIES_QUERY, { pageSize: 3 });
+  (async () => {
+    const res: TaxonomiesQueryResponse = await client.get(GET_TAXONOMIES_QUERY, { pageSize: 3 });
 
-  res.manyTaxonomy.results.forEach((taxonomy) => {
-    console.log(`Taxonomy ID: ${taxonomy.system.id}, Name: ${taxonomy.system.name}`);
-    taxonomy.terms.results.forEach((term) => {
-      console.log(`Term ID: ${term.id}, Name: ${term.name}`);
+    res.manyTaxonomy.results.forEach((taxonomy) => {
+      console.log(`Taxonomy ID: ${taxonomy.system.id}, Name: ${taxonomy.system.name}`);
+      taxonomy.terms.results.forEach((term) => {
+        console.log(`Term ID: ${term.id}, Name: ${term.name}`);
+      });
     });
-  });
 
-  if (res.manyTaxonomy.hasMore) {
-    console.log('More taxonomies available. Use cursor:', res.manyTaxonomy.cursor);
-  }
-})();
-```
+    if (res.manyTaxonomy.hasMore) {
+      console.log('More taxonomies available. Use cursor:', res.manyTaxonomy.cursor);
+    }
+  })();
+  ```
 
 ## Debugging requests
 
