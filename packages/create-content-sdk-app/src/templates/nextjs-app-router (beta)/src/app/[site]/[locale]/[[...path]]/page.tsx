@@ -25,8 +25,6 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
   setRequestLocale(`${site}_${locale}`);
-  // Set preview to false until preview mode is integrated
-  const preview = { enabled: false, data: {} };
 
   // Fetch the page data from Sitecore
   let page;
