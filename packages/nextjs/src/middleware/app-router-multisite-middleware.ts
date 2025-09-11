@@ -11,10 +11,6 @@ export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
    * @returns The rewritten path as a string.
    */
   protected getSiteRewrite(pathname: string, siteName: string): string {
-    return this.getAppRouterSiteRewrite(pathname, siteName);
-  }
-
-  private getAppRouterSiteRewrite(pathname: string, siteName: string): string {
     const path = pathname.startsWith('/') ? pathname : '/' + pathname;
     return `/${siteName}${path}`;
   }
