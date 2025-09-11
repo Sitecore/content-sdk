@@ -74,7 +74,7 @@ const client = new ContentClient({
 });
 ```
 
-## Quick examples
+## Examples
 
 ### Execute an arbitrary GraphQL query
 
