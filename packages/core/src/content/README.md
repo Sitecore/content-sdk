@@ -269,7 +269,7 @@ To retrieve taxonomy data from the Content API, the `ContentClient` provides uti
   })();
   ```
 
-## Debugging requests
+## Debugging
 
 Enable debug logs programmatically using the `debug` package namespaces. Use `core:content` namespace.
 You can also set `DEBUG` environment variable to enable debug logs.
@@ -284,3 +284,4 @@ enableDebug('core:content');
 
 - [API reference (core/content)](../../../../ref-docs/core/content/)
 - [Full Core package reference](../../../../ref-docs/core/)
+
