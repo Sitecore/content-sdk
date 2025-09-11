@@ -15,7 +15,7 @@ It enables developers to query and fetch structured content from XM Cloud Conten
   - [Execute an arbitrary GraphQL query](#execute-an-arbitrary-graphql-query)
   - [Locales](#locales)
   - [Taxonomies](#taxonomies)
-- [Debugging requests](#debugging-requests)
+- [Debugging](#debugging)
 - [Further reading](#further-reading)
 
 ## What’s included
@@ -284,5 +284,6 @@ enableDebug('core:content');
 
 - [API reference (core/content)](../../../../ref-docs/core/content/)
 - [Full Core package reference](../../../../ref-docs/core/)
+
 
 
