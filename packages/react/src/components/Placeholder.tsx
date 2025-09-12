@@ -1,5 +1,6 @@
 ﻿import React from 'react';
-import { PlaceholderCommon, PlaceholderProps } from './PlaceholderCommon';
+import { PlaceholderCommon } from './PlaceholderCommon';
+import { PlaceholderProps } from './models';
 import { withComponentMap } from '../enhancers/withComponentMap';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PagesEditor } from '@sitecore-content-sdk/core/editing';

@@ -1,16 +1,13 @@
 ﻿import React, { ComponentType } from 'react';
 import { MissingComponent } from './MissingComponent';
-import { DEFAULT_EXPORT_NAME, ComponentMap, LazyComponentType, ReactModule } from './sharedTypes';
+import { DEFAULT_EXPORT_NAME, LazyComponentType, ReactModule } from './sharedTypes';
 import {
   ComponentRendering,
   RouteData,
-  Field,
-  Item,
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
 } from '@sitecore-content-sdk/core/layout';
 import { constants } from '@sitecore-content-sdk/core';
-import { Page } from '@sitecore-content-sdk/core/client';
 import { HiddenRendering } from './HiddenRendering';
 import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from './FEaaSComponent';
 import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from './FEaaSWrapper';
@@ -18,80 +15,7 @@ import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from './BYOCComponent';
 import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from './BYOCWrapper';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import ErrorBoundary from './ErrorBoundary';
-
-type ErrorComponentProps = {
-  [prop: string]: unknown;
-};
-
-/** Provided for the component which represents rendering data */
-export type ComponentProps = {
-  [key: string]: unknown;
-  rendering: ComponentRendering;
-};
-
-export interface PlaceholderProps {
-  [key: string]: unknown;
-  /** Name of the placeholder to render. */
-  name: string;
-  /** Rendering data to be used when rendering the placeholder. */
-  rendering: ComponentRendering | RouteData;
-  /**
-   * Component Map will be used to map Sitecore component names to app implementation
-   * When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
-   */
-  componentMap?: ComponentMap;
-  /**
-   * An object of field names/values that are aggregated and propagated through the component tree created by a placeholder.
-   * Any component or placeholder rendered by a placeholder will have access to this data via `props.fields`.
-   */
-  fields?: {
-    [name: string]: Field | Item | Item[];
-  };
-  /**
-   * An object of rendering parameter names/values that are aggregated and propagated through the component tree created by a placeholder.
-   * Any component or placeholder rendered by a placeholder will have access to this data via `props.params`.
-   */
-  params?: {
-    [name: string]: string;
-  };
-  /**
-   * Modify final props of component (before render) provided by rendering data.
-   * Can be used in case when you need to insert additional data into the component.
-   * @param {ComponentProps} componentProps component props to be modified
-   * @returns {ComponentProps} modified or initial props
-   */
-  modifyComponentProps?: (componentProps: ComponentProps) => ComponentProps;
-  /**
-   * A component that is rendered in place of any components that are in this placeholder,
-   * but do not have a definition in the componentMap (i.e. don't have a React implementation)
-   */
-  missingComponentComponent?: React.ComponentClass<unknown> | React.FC<unknown>;
-
-  /**
-   * A component that is rendered in place of any components that are hidden
-   */
-  hiddenRenderingComponent?: React.ComponentClass<unknown> | React.FC<unknown>;
-
-  /**
-   * A component that is rendered in place of the placeholder when an error occurs rendering
-   * the placeholder
-   */
-  errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
-  /**
-   * Page data.
-   * This data is passed by the SitecoreProvider.
-   */
-  page: Page;
-  /**
-   * The message that gets displayed while component is loading
-   */
-  componentLoadingMessage?: string;
-  /**
-   * If true, disables Suspense in ErrorBoundary for the placeholder.
-   * @default false
-   */
-  disableSuspense?: boolean;
-}
+import { PlaceholderProps } from './models';
 
 export class PlaceholderCommon<T extends PlaceholderProps> extends React.Component<T> {
   state: Readonly<{ error?: Error }>;
@@ -176,50 +100,11 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     } = this.props;
 
     const transformedComponents = placeholderData
-      .map((rendering: ComponentRendering, index: number) => {
-        const key = (rendering as ComponentRendering).uid
-          ? (rendering as ComponentRendering).uid
-          : `component-${index}`;
+      .map((componentRendering: ComponentRendering, index: number) => {
+        const key = componentRendering.uid ? componentRendering.uid : `component-${index}`;
         const commonProps = { key };
-        let isEmpty = false;
 
-        const componentRendering = rendering as ComponentRendering;
-
-        let component;
-
-        if (componentRendering.componentName === constants.HIDDEN_RENDERING_NAME) {
-          component = hiddenRenderingComponent ?? HiddenRendering;
-          isEmpty = true;
-        } else if (!componentRendering.componentName) {
-          component = () => <></>;
-          isEmpty = true;
-        } else {
-          component = this.getComponentForRendering(componentRendering);
-        }
-
-        // Fallback/defaults for Sitecore Component renderings (in case not defined in component map)
-        if (!component) {
-          if (componentRendering.componentName === FEAAS_COMPONENT_RENDERING_NAME) {
-            component = FEaaSComponent;
-          } else if (componentRendering.componentName === FEAAS_WRAPPER_RENDERING_NAME) {
-            component = FEaaSWrapper;
-          } else if (componentRendering.componentName === BYOC_COMPONENT_RENDERING_NAME) {
-            component = BYOCComponent;
-          } else if (componentRendering.componentName === BYOC_WRAPPER_RENDERING_NAME) {
-            component = BYOCWrapper;
-          }
-        }
-
-        if (!component) {
-          console.error(
-            `Placeholder ${name} contains unknown component ${componentRendering.componentName}. Ensure that a React component exists for it, and that it is registered in your component-map file.`
-          );
-
-          component = missingComponentComponent ?? MissingComponent;
-          isEmpty = true;
-        }
-
-        const finalProps = {
+        const renderedProps = {
           ...commonProps,
           ...placeholderProps,
           ...((placeholderFields || componentRendering.fields) && {
@@ -236,23 +121,25 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
           rendering: componentRendering,
         };
 
-        let rendered = React.createElement<{ [attr: string]: unknown }>(
-          component as React.ComponentType,
-          this.props.modifyComponentProps ? this.props.modifyComponentProps(finalProps) : finalProps
+        const component = this.getComponentForRendering(
+          componentRendering,
+          name,
+          hiddenRenderingComponent,
+          missingComponentComponent
         );
 
-        if (!isEmpty) {
+        let rendered = React.createElement<{ [attr: string]: unknown }>(
+          component.component as React.ComponentType,
+          this.props.modifyComponentProps
+            ? this.props.modifyComponentProps(renderedProps)
+            : renderedProps
+        );
+
+        if (!component.empty) {
           // assign type based on passed element - type='text/sitecore' should be ignored when renderEach Placeholder prop function is being used
           const type = rendered.props.type === 'text/sitecore' ? rendered.props.type : '';
 
           const disableSuspense = this.props.disableSuspense || false;
-
-          // wrapping with error boundary could cause problems in case where parent component uses withPlaceholder HOC and tries to access its children props
-          // that's why we need to expose element's props here
-          const isByocWrapper = componentRendering.componentName === BYOC_WRAPPER_RENDERING_NAME;
-
-          // all dynamic elements will have a separate render prop
-          const isDynamicComponent = !!(component as LazyComponentType).render?.preload;
 
           rendered = (
             <ErrorBoundary
@@ -261,7 +148,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
               errorComponent={this.props.errorComponent}
               componentLoadingMessage={this.props.componentLoadingMessage}
               type={type}
-              isDynamic={isDynamicComponent || isByocWrapper}
+              isDynamic={!!component.dynamic}
               disableSuspense={disableSuspense}
               {...rendered.props}
             >
@@ -273,7 +160,7 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
         // if in edit mode then emit shallow chromes for hydration in Pages
         if (this.props.page.mode.isEditing) {
           return (
-            <PlaceholderMetadata key={key} rendering={rendering as ComponentRendering}>
+            <PlaceholderMetadata key={key} rendering={componentRendering}>
               {rendered}
             </PlaceholderMetadata>
           );
@@ -298,7 +185,27 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     return transformedComponents;
   }
 
-  getComponentForRendering(renderingDefinition: ComponentRendering): ComponentType | null {
+  getComponentForRendering(
+    renderingDefinition: ComponentRendering,
+    placeholderName: string,
+    hiddenRenderingComponent?: React.ComponentClass | React.FC,
+    missingComponentComponent?: React.ComponentClass | React.FC
+  ) {
+    if (renderingDefinition.componentName === constants.HIDDEN_RENDERING_NAME) {
+      return {
+        component: hiddenRenderingComponent ?? HiddenRendering,
+        empty: true,
+      };
+    } else if (!renderingDefinition.componentName) {
+      console.error(
+        `Placeholder ${placeholderName} contains unknown component ${renderingDefinition.componentName}. Ensure that a React component exists for it, and that it is registered in your component-map file.`
+      );
+      return {
+        component: () => <></>,
+        empty: true,
+      };
+    }
+
     const componentMap = this.props.componentMap;
 
     if (!componentMap || componentMap.size === 0) {
@@ -311,18 +218,47 @@ export class PlaceholderCommon<T extends PlaceholderProps> extends React.Compone
     // Render SXA Rendering Variant if available
     const exportName = renderingDefinition.params?.FieldNames;
 
-    const component = componentMap.get(renderingDefinition.componentName);
+    let component = componentMap.get(renderingDefinition.componentName);
 
-    if (!component) return null;
-
-    if (exportName && exportName !== DEFAULT_EXPORT_NAME) {
-      return (component as ReactModule)[exportName] as ComponentType;
+    if (!component) {
+      // Fallback/defaults for Sitecore Component renderings (in case not defined in component map)
+      if (renderingDefinition.componentName === FEAAS_COMPONENT_RENDERING_NAME) {
+        return {
+          component: FEaaSComponent,
+        };
+      } else if (renderingDefinition.componentName === FEAAS_WRAPPER_RENDERING_NAME) {
+        return {
+          component: FEaaSWrapper,
+        };
+      } else if (renderingDefinition.componentName === BYOC_COMPONENT_RENDERING_NAME) {
+        return {
+          component: BYOCComponent,
+        };
+      } else if (renderingDefinition.componentName === BYOC_WRAPPER_RENDERING_NAME) {
+        // wrapping with error boundary could cause problems in case where parent component uses withPlaceholder HOC and tries to access its children props
+        // that's why we need to mark BYOC wrapper dynamic
+        return {
+          component: BYOCWrapper,
+          dynamic: true,
+        };
+      }
+      return {
+        component: missingComponentComponent ?? MissingComponent,
+        empty: true,
+      };
     }
 
-    return (
-      (component as ReactModule).default ||
-      (component as ReactModule).Default ||
-      (component as ComponentType)
-    );
+    const renderedComponent =
+      exportName && exportName !== DEFAULT_EXPORT_NAME
+        ? ((component as ReactModule)[exportName] as ComponentType)
+        : (component as ReactModule).default ||
+          (component as ReactModule).Default ||
+          (component as ComponentType);
+
+    // all dynamic elements will have a separate render prop
+    return {
+      component: renderedComponent,
+      dynamic: !!(renderedComponent as LazyComponentType).render?.preload,
+    };
   }
 }
