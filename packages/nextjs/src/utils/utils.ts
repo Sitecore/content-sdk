@@ -1,5 +1,6 @@
 ﻿import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
+import { REWRITE_HEADER_NAME } from '../middleware/middleware';
 
 /**
  * Since Sitecore editors do not support Fast Refresh:
@@ -62,4 +63,17 @@ export const isServerSidePropsContext = (
   context: GetServerSidePropsContext | GetStaticPropsContext
 ): context is GetServerSidePropsContext => {
   return (<GetServerSidePropsContext>context).req !== undefined;
+};
+
+/**
+ * For App Router application, extracts the site and locale information from the rewrite header which is in format /[site]/[locale]/[...path].
+ * @param {Headers} headers - The `Headers` object containing the rewrite header.
+ * @returns An object containing the `site` and `locale` extracted from the rewrite header.
+ */
+export const parseRewriteHeader = (headers: Headers) => {
+  const rewriteHeader = headers.get(REWRITE_HEADER_NAME);
+  const rewriteSegments = rewriteHeader?.split('/').filter((segment) => segment) || [];
+  const site = rewriteSegments[0];
+  const locale = rewriteSegments[1];
+  return { site, locale };
 };

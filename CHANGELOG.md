@@ -15,9 +15,10 @@ Our versioning strategy is as follows:
 ### 🎉 New Features & Improvements
 
 * Next.js App Router support:
-  - Robots.txt and Sitemap.xml support ([#197](https://github.com/Sitecore/content-sdk/pull/197))
   - Base template ([#191](https://github.com/Sitecore/content-sdk/pull/191))
+  - Robots.txt and Sitemap.xml support ([#197](https://github.com/Sitecore/content-sdk/pull/197))
   - Editing and preview support ([#198](https://github.com/Sitecore/content-sdk/pull/198))
+  - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202))
 * `[react]` Add `component:status` events for VariantGeneration ([#190](https://github.com/Sitecore/content-sdk/pull/190))
 * `[nextjs]` Support component-level data fetching in 404/500 pages ([#199](https://github.com/Sitecore/content-sdk/pull/199))
 

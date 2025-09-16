@@ -374,7 +374,7 @@ describe('SitePathService', () => {
         },
         {
           params: {
-            path: ['_variantId_green', '_site_site1'],
+            path: ['_site_site1', '_variantId_green'],
           },
           locale: lang,
         },
@@ -386,19 +386,19 @@ describe('SitePathService', () => {
         },
         {
           params: {
-            path: ['_variantId_green', '_site_site1', 'y1', 'y2', 'y3', 'y4'],
+            path: ['_site_site1', 'y1', 'y2', 'y3', 'y4', '_variantId_green'],
           },
           locale: lang,
         },
         {
           params: {
-            path: ['_variantId_red', '_site_site1', 'y1', 'y2', 'y3', 'y4'],
+            path: ['_site_site1', 'y1', 'y2', 'y3', 'y4', '_variantId_red'],
           },
           locale: lang,
         },
         {
           params: {
-            path: ['_variantId_purple', '_site_site1', 'y1', 'y2', 'y3', 'y4'],
+            path: ['_site_site1', 'y1', 'y2', 'y3', 'y4', '_variantId_purple'],
           },
           locale: lang,
         },

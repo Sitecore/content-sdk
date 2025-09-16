@@ -15,7 +15,7 @@ use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
 describe('MultisiteMiddleware', () => {
-  const debugSpy = spy(debug, 'multisite');
+  let debugSpy;
   const validateDebugLog = (message, ...params) =>
     expect(debugSpy.args.find((log) => log[0] === message)).to.deep.equal([message, ...params]);
   const validateEndMessageDebugLog = (message, params) => {
@@ -90,6 +90,9 @@ describe('MultisiteMiddleware', () => {
         },
         enumerable: false,
       },
+      get: {
+        value: (key) => res.headers[key],
+      },
       forEach: {
         value: (cb) => {
           Object.keys(res.headers).forEach((key) => cb(res.headers[key], key, res.headers));
@@ -129,7 +132,11 @@ describe('MultisiteMiddleware', () => {
   // Stub for NextResponse generation, see https://github.com/vercel/next.js/issues/42374
   (Headers.prototype as any).getAll = () => [];
 
-  beforeEach(() => {
+  before(() => {
+    debugSpy = spy(debug, 'multisite');
+  });
+
+  afterEach(() => {
     debugSpy.resetHistory();
   });
 
@@ -342,6 +349,98 @@ describe('MultisiteMiddleware', () => {
       expect(nextRewriteStub).calledWith({
         ...req.nextUrl,
         pathname: '/_site_foo/styleguide',
+      });
+    });
+
+    it('nexturl request pathname is used', async () => {
+      const req = createRequest({
+        nextUrl: { pathname: '/styleguide/foo' },
+      });
+      const res = createResponse();
+
+      nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const { middleware, siteResolver } = createMiddleware({
+        config: { ...defaultConfig },
+      });
+
+      const finalRes = await middleware.handle(req, res);
+
+      validateDebugLog('multisite middleware start: %o', {
+        pathname: '/styleguide/foo',
+        language: 'en',
+        hostname: 'foo.net',
+      });
+
+      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+        rewritePath: '/_site_foo/styleguide/foo',
+        siteName: 'foo',
+        headers: {
+          'x-sc-rewrite': '/_site_foo/styleguide/foo',
+        },
+        cookies: {
+          ...res.cookies,
+          sc_site: {
+            ...defaultSiteCookieAttributes,
+            value: 'foo',
+          },
+        },
+      });
+
+      expect(siteResolver.getByHost).to.be.calledWith('foo.net');
+
+      expect(finalRes).to.deep.equal(res);
+
+      expect(nextRewriteStub).calledWith({
+        ...req.nextUrl,
+        pathname: '/_site_foo/styleguide/foo',
+      });
+    });
+
+    it('rewritten pathname from header is used when present in response', async () => {
+      const req = createRequest({
+        nextUrl: { pathname: '/styleguide/foo' },
+      });
+      const res = createResponse({
+        headers: { 'x-sc-rewrite': '/en/some/otherpath' },
+      });
+
+      nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const { middleware, siteResolver } = createMiddleware({
+        config: { ...defaultConfig },
+      });
+
+      const finalRes = await middleware.handle(req, res);
+
+      validateDebugLog('multisite middleware start: %o', {
+        pathname: '/en/some/otherpath',
+        language: 'en',
+        hostname: 'foo.net',
+      });
+
+      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+        rewritePath: '/_site_foo/en/some/otherpath',
+        siteName: 'foo',
+        headers: {
+          'x-sc-rewrite': '/_site_foo/en/some/otherpath',
+        },
+        cookies: {
+          ...res.cookies,
+          sc_site: {
+            ...defaultSiteCookieAttributes,
+            value: 'foo',
+          },
+        },
+      });
+
+      expect(siteResolver.getByHost).to.be.calledWith('foo.net');
+
+      expect(finalRes).to.deep.equal(res);
+
+      expect(nextRewriteStub).calledWith({
+        ...req.nextUrl,
+        pathname: '/_site_foo/en/some/otherpath',
       });
     });
 
