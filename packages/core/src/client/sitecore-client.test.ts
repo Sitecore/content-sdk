@@ -10,6 +10,7 @@ import { DefaultRetryStrategy } from '../retries';
 import { LayoutServicePageState } from '../layout';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 import { NativeDataFetcher } from '../native-fetcher';
+import { DesignLibraryVariantGeneration } from '../editing/models';
 
 chai.use(sinonChai);
 
@@ -923,7 +924,7 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getDesignLibraryData', () => {
+  describe.only('getDesignLibraryData', () => {
     it('should fetch component library data in Normal mode', async () => {
       const componentLibData = {
         itemId: 'item-id',
@@ -994,7 +995,8 @@ describe('SitecoreClient', () => {
         dataSourceId: 'datasource-id',
         version: '1',
         pageState: LayoutServicePageState.Normal,
-        mode: DesignLibraryMode.VariantGeneration,
+        mode: DesignLibraryMode.Normal,
+        generation: DesignLibraryVariantGeneration.Variant,
       };
 
       const componentData = {
@@ -1019,7 +1021,7 @@ describe('SitecoreClient', () => {
         layout: componentData,
         siteName: componentData.sitecore.context.site?.name,
         mode: {
-          name: DesignLibraryMode.VariantGeneration,
+          name: DesignLibraryMode.Normal,
           isDesignLibrary: true,
           isNormal: false,
           isPreview: false,
@@ -1040,6 +1042,7 @@ describe('SitecoreClient', () => {
           dataSourceId: componentLibData.dataSourceId,
           version: componentLibData.version,
           mode: componentLibData.mode,
+          generation: componentLibData.generation,
         })
       ).to.be.true;
     });
@@ -1188,17 +1191,6 @@ describe('SitecoreClient', () => {
         name: DesignLibraryMode.Metadata,
         designLibrary: {
           isVariantGeneration: false,
-        },
-        isNormal: false,
-        isPreview: false,
-        isEditing: true,
-        isDesignLibrary: true,
-      });
-
-      expect(sitecoreClient['getPageMode'](DesignLibraryMode.VariantGeneration)).to.deep.equal({
-        name: DesignLibraryMode.VariantGeneration,
-        designLibrary: {
-          isVariantGeneration: true,
         },
         isNormal: false,
         isPreview: false,

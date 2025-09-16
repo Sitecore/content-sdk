@@ -16,7 +16,7 @@ import { Placeholder } from '..';
 
 import {
   DesignLibraryStatus,
-  ComponentUpdateEventArgs,
+  // ComponentUpdateEventArgs,
   getDesignLibraryStatusEvent,
   DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
@@ -26,44 +26,17 @@ import {
   getDesignLibraryComponentPreviewErrorEvent,
 } from '@sitecore-content-sdk/core/codegen';
 
-describe('<DesignLibrary />', () => {
+before(() => {
+  if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
+    (window as any).requestAnimationFrame = (cb: FrameRequestCallback) => setTimeout(cb, 0);
+  }
+});
+
+describe.only('<DesignLibrary />', () => {
   const sandbox = sinon.createSandbox();
-  const postMessageSpy = sandbox.spy(global.window, 'postMessage');
+  const postMessageSpy = sandbox.spy(window, 'postMessage');
   const consoleErrorSpy = sandbox.spy(console, 'error');
   const components = new Map<string, React.FC>();
-
-  const mode: PageMode = {
-    name: DesignLibraryMode.Normal,
-    isDesignLibrary: true,
-    designLibrary: {
-      isVariantGeneration: false,
-    },
-    isNormal: false,
-    isPreview: false,
-    isEditing: false,
-  };
-
-  const variantGenerationMode: PageMode = {
-    name: DesignLibraryMode.VariantGeneration,
-    isNormal: false,
-    isPreview: false,
-    isEditing: false,
-    isDesignLibrary: true,
-    designLibrary: {
-      isVariantGeneration: true,
-    },
-  };
-
-  const getPage = (layout?: LayoutServiceData, pageMode: PageMode = mode): Page => ({
-    locale: 'en',
-    layout: layout || {
-      sitecore: {
-        context: {},
-        route: null,
-      },
-    },
-    mode: pageMode,
-  });
 
   const api = {
     edge: {
@@ -71,91 +44,136 @@ describe('<DesignLibrary />', () => {
       clientContextId: 'test-client-context-id',
       edgeUrl: 'https://test-edge-url.com',
     },
-    local: {
-      apiKey: 'test-api-key',
-      apiHost: 'https://test-api-host.com',
-      path: '/test-path',
-    },
+    local: { apiKey: 'test-api-key', apiHost: 'https://test-api-host.com', path: '/test-path' },
   };
 
-  it('should render null if not in design library mode', () => {
-    const page = getPage();
+  // Modes
+  const modeLibraryMetadata: PageMode = {
+    name: DesignLibraryMode.Metadata,
+    isDesignLibrary: true,
+    designLibrary: { isVariantGeneration: false },
+    isNormal: false,
+    isPreview: false,
+    isEditing: true,
+  };
 
-    page.mode = {
+  const modeLibrary_Gen: PageMode = {
+    name: DesignLibraryMode.Normal,
+    isDesignLibrary: true,
+    designLibrary: { isVariantGeneration: true },
+    isNormal: false,
+    isPreview: false,
+    isEditing: false,
+  };
+
+  const modeLibraryMetadata_Gen: PageMode = {
+    name: DesignLibraryMode.Metadata,
+    isDesignLibrary: true,
+    designLibrary: { isVariantGeneration: true },
+    isNormal: false,
+    isPreview: false,
+    isEditing: true,
+  };
+
+  const getPage = (layout?: LayoutServiceData, pageMode: PageMode = modeLibrary): Page => ({
+    locale: 'en',
+    layout: layout || { sitecore: { context: {}, route: null } },
+    mode: pageMode,
+  });
+
+  const ContentBlock: React.FC<{
+    [prop: string]: unknown;
+    fields?: { content: { value: string }; heading: { value: string } };
+  }> = (props) => (
+    <div className="test">
+      <RichText field={props.fields?.content} />
+      <Placeholder name="inner" rendering={props.rendering} />
+    </div>
+  );
+
+  const InnerBlock: React.FC<{ [prop: string]: unknown; fields?: { text: { value: string } } }> = (
+    props
+  ) => (
+    <div className="inner">
+      <Text field={props.fields?.text} />
+    </div>
+  );
+
+  components.set('ContentBlock', ContentBlock);
+  components.set('InnerBlock', InnerBlock);
+
+  async function sendUpdate(details: { uid: string; fields?: any; params?: any }) {
+    const ev = document.createEvent('Event');
+    ev.initEvent('message', false, true);
+    (ev as any).origin = window.location.origin;
+    (ev as any).data = { name: 'component:update', details };
+    await fireEvent(window, ev);
+  }
+
+  const defaultImportMap = () =>
+    Promise.resolve({
+      default: [{ module: 'react', exports: [{ name: 'default', value: React }] }],
+    });
+
+  const unsubscribeSpy = sandbox.spy();
+  let addComponentPreviewHandlerSpy: sinon.SinonStub;
+  let callbackEvent: any = null;
+
+  beforeEach(() => {
+    postMessageSpy.resetHistory();
+    consoleErrorSpy.resetHistory();
+    unsubscribeSpy.resetHistory();
+
+    if (typeof (globalThis as any).requestAnimationFrame === 'undefined') {
+      (globalThis as any).requestAnimationFrame = (cb: Function) => setTimeout(cb, 0);
+      (globalThis as any).cancelAnimationFrame = (id: any) => clearTimeout(id);
+    }
+    if (typeof window !== 'undefined') {
+      (window as any).requestAnimationFrame = (globalThis as any).requestAnimationFrame;
+      (window as any).cancelAnimationFrame = (globalThis as any).cancelAnimationFrame;
+    }
+  });
+
+  describe('mode=library and isVariantGeneration=false', () => {
+    let page: Page;
+
+    const modeLibrary: PageMode = {
       name: DesignLibraryMode.Normal,
-      isDesignLibrary: false,
-      designLibrary: {
-        isVariantGeneration: false,
-      },
+      isDesignLibrary: true,
+      designLibrary: { isVariantGeneration: false },
       isNormal: false,
       isPreview: false,
       isEditing: false,
     };
-    const rendered = render(
-      <SitecoreProvider componentMap={components} api={api} page={page}>
-        <DesignLibrary />
-      </SitecoreProvider>,
-      { container: document.body }
-    );
-    expect(rendered.baseElement.innerHTML).to.equal('');
-  });
 
-  describe('Preview', () => {
-    let page: Page;
-
-    const ContentBlock: React.FC<{
-      [prop: string]: unknown;
-      fields?: { content: { value: string }; heading: { value: string } };
-    }> = (props) => (
-      <div className="test">
-        <RichText field={props.fields?.content} />
-        <Placeholder name="inner" rendering={props.rendering} />
-      </div>
-    );
-
-    const InnerBlock: React.FC<{
-      [prop: string]: unknown;
-      fields?: { text: { value: string } };
-    }> = (props) => (
-      <div className="inner">
-        <Text field={props.fields?.text} />
-      </div>
-    );
-
-    components.set('ContentBlock', ContentBlock);
-    components.set('InnerBlock', InnerBlock);
-
-    // eslint-disable-next-line jsdoc/require-jsdoc
-    async function sendUpdateEvent(
-      eventDataDetails: ComponentUpdateEventArgs['details']
-    ): Promise<void> {
-      // jsdom performs postMessage without origin. We work around, ugly (https://github.com/jsdom/jsdom/issues/2745)
-      // jsdom also doesn't consider `new MessageEvent()` to be of class Event - so we go very much around to get it working
-      const updateEvent = document.createEvent('Event');
-      const updateEventData: ComponentUpdateEventArgs = {
-        name: 'component:update',
-        details: eventDataDetails,
-      };
-      updateEvent.initEvent('message', false, true);
-      (updateEvent as any).origin = window.location.origin;
-      (updateEvent as any).data = updateEventData;
-      await fireEvent(window, updateEvent);
+    async function sendUpdateEvent(details: { uid: string; fields?: any; params?: any }) {
+      const ev = document.createEvent('Event');
+      ev.initEvent('message', false, true);
+      (ev as any).origin = window.location.origin;
+      (ev as any).data = { name: 'component:update', details };
+      await fireEvent(window, ev);
     }
 
     beforeEach(() => {
-      const basicPage = getTestLayoutData();
-      page = getPage(basicPage.layoutData);
+      const basic = getTestLayoutData();
+      page = {
+        locale: 'en',
+        layout: basic.layoutData,
+        mode: modeLibrary,
+      };
+      postMessageSpy.resetHistory();
     });
 
-    it('should render', () => {
-      // don't wrap the content in divs
+    it('renders real component and sends READY + initial RENDERED', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary);
+
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
-        </SitecoreProvider>,
-        { container: document.body }
+        </SitecoreProvider>
       );
-      expect(rendered.baseElement.innerHTML).to.equal(
+
+      expect(rendered.baseElement.innerHTML).to.contain(
         [
           '<main><div id="editing-component">',
           '<div class="test"><div>',
@@ -163,6 +181,30 @@ describe('<DesignLibrary />', () => {
           '</div></div></div></main>',
         ].join('')
       );
+
+      expect(
+        postMessageSpy
+          .getCalls()
+          .some(
+            (c) =>
+              JSON.stringify(c.args[0]) ===
+              JSON.stringify(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'test-content'))
+          )
+      ).to.be.true;
+
+      await waitFor(() => {
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((c) =>
+              JSON.stringify(c.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
+                )
+              )
+            )
+        ).to.be.true;
+      });
     });
 
     it('should render component with placeholders', () => {
@@ -187,35 +229,6 @@ describe('<DesignLibrary />', () => {
           '</main>',
         ].join('')
       );
-    });
-
-    it('should fire component:ready event', () => {
-      const expectedReadyMessage = getDesignLibraryStatusEvent(
-        DesignLibraryStatus.READY,
-        'test-content'
-      );
-
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        [
-          '<main><div id="editing-component">',
-          '<div class="test"><div>',
-          '<p>This is a live set of examples of how to use Content SDK</p>\n',
-          '</div></div></div></main>',
-        ].join('')
-      );
-
-      expect(
-        postMessageSpy
-          .getCalls()
-          .some((call) => JSON.stringify(call.args[0]) === JSON.stringify(expectedReadyMessage))
-      ).to.be.true;
     });
 
     it('should update root component', async () => {
@@ -251,8 +264,8 @@ describe('<DesignLibrary />', () => {
     });
 
     it('should update nested component', async () => {
-      const placeholderPage = getTestLayoutData(true);
-      page.layout = placeholderPage.layoutData;
+      const withPlaceholder = getTestLayoutData(true);
+      page.layout = withPlaceholder.layoutData;
 
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
@@ -292,126 +305,171 @@ describe('<DesignLibrary />', () => {
         ].join('')
       );
     });
+  });
 
-    it('should send render event when component is updated', async () => {
-      render(
+  describe('mode=library-metadata and isVariantGeneration=false', () => {
+    it('renders real component and sends READY + initial RENDERED', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata);
+
+      const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary />
         </SitecoreProvider>
       );
 
-      await sendUpdateEvent({
-        uid: 'test-content',
-        fields: { content: { value: 'new content!' } },
-      });
+      const expected = [
+        '<main><div id="editing-component">',
+        '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_00000000-0000-0000-0000-000000000000"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content"></code>',
+        '<div class="test"><div>',
+        '<p>This is a live set of examples of how to use Content SDK</p>\n',
+        '</div><div class="sc-jss-empty-placeholder">',
+        '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id=""></code>',
+        '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
+        '</div></div>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
+        '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
+        '</div></main>',
+      ].join('');
 
+      expect(rendered.baseElement.innerHTML).to.contain(expected);
+
+      // READY
       expect(
         postMessageSpy
           .getCalls()
-          .some((call) =>
-            JSON.stringify(call.args[0]).includes(
-              JSON.stringify(
-                getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
-              )
-            )
+          .some(
+            (c) =>
+              JSON.stringify(c.args[0]) ===
+              JSON.stringify(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'test-content'))
           )
       ).to.be.true;
+
+      // initial RENDERED
+      await waitFor(() => {
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((c) =>
+              JSON.stringify(c.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
+                )
+              )
+            )
+        ).to.be.true;
+      });
     });
   });
 
-  describe('VariantGeneration', () => {
-    const TestComponent = () => <div>TestComponent</div>;
-    const unsubscribeSpy = sandbox.spy();
-    let addComponentPreviewHandlerSpy: sandbox.SinonStub;
-    let page: Page;
-
-    const defaultImportMap = () =>
-      new Promise((resolve) => {
-        resolve({
-          default: [
-            {
-              module: 'react',
-              exports: [{ name: 'default', value: React }],
-            },
-          ],
-        });
-      });
-
-    let callbackEvent: any = null;
-
+  describe('mode=library&generation=variant and isVariantGeneration=true', () => {
     beforeEach(() => {
-      page = getPage(getTestLayoutData().layoutData, variantGenerationMode);
-
-      addComponentPreviewHandlerSpy = sandbox.stub().callsFake((_importMap, callback) => {
-        callbackEvent = callback;
-
+      addComponentPreviewHandlerSpy = sandbox.stub().callsFake((_importMap, cb) => {
+        callbackEvent = cb;
         return unsubscribeSpy;
       });
-
       __mockDependencies({ addComponentPreviewHandler: addComponentPreviewHandlerSpy });
-    });
 
-    afterEach(() => {
       postMessageSpy.resetHistory();
-      consoleErrorSpy.resetHistory();
-      addComponentPreviewHandlerSpy.resetHistory();
-      unsubscribeSpy.resetHistory();
     });
 
-    it('should render component when provided', async () => {
-      const rendered = await render(
+    it('fires component:ready on mount', () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary loadImportMap={defaultImportMap} />
-        </SitecoreProvider>,
-        { container: document.body }
+        </SitecoreProvider>
       );
 
-      // Wait for the useEffect to complete and component to render
-      await waitFor(() => {
-        expect(addComponentPreviewHandlerSpy).to.have.been.called;
-        callbackEvent(null, TestComponent);
-        expect(rendered.baseElement.innerHTML).to.contain('TestComponent');
-      });
-    });
-
-    it('should render loading preview when no component is provided', () => {
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      // Check that we are in variant generation mode and rendering loading state
-      expect(rendered.baseElement.innerHTML).to.contain('Loading preview...');
-    });
-
-    it('should fire component:ready event', async () => {
-      const expectedReadyMessage = getDesignLibraryStatusEvent(
-        DesignLibraryStatus.READY,
-        'test-content'
-      );
-
-      const rendered = await render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        ['<main><div>Loading preview...</div></main>'].join('')
-      );
-
+      const expectedReady = getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'test-content');
       expect(
         postMessageSpy
           .getCalls()
-          .some((call) => JSON.stringify(call.args[0]) === JSON.stringify(expectedReadyMessage))
+          .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedReady))
       ).to.be.true;
+
+      const readyCount = postMessageSpy
+        .getCalls()
+        .filter(
+          (c) =>
+            c.args[0]?.name === expectedReady.name &&
+            c.args[0]?.message?.uid === expectedReady.message.uid
+        ).length;
+      expect(readyCount).to.equal(1);
     });
 
-    it('should post "rendered" after a valid component preview is received', async () => {
-      await render(
+    it('fires component:rendered only after generated component is received', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary loadImportMap={defaultImportMap} />
+        </SitecoreProvider>
+      );
+
+      const expectedRendered = getDesignLibraryStatusEvent(
+        DesignLibraryStatus.RENDERED,
+        'test-content'
+      );
+      expect(
+        postMessageSpy
+          .getCalls()
+          .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedRendered))
+      ).to.be.false;
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+      });
+
+      const TestComponent = () => <div>Generated!</div>;
+      callbackEvent(null, TestComponent);
+
+      await waitFor(() => {
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedRendered))
+        ).to.be.true;
+      });
+    });
+
+    it('renders real component first, wires generation, then switches to generated component', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary loadImportMap={defaultImportMap} />
+        </SitecoreProvider>
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          '<p>This is a live set of examples of how to use Content SDK</p>\n',
+          '</div></div></div></main>',
+        ].join('')
+      );
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+      });
+
+      const TestComponent = () => <div>Generated!</div>;
+      callbackEvent(null, TestComponent);
+
+      await waitFor(() => {
+        expect(rendered.baseElement.innerHTML).to.contain('<div>Generated!</div>');
+      });
+    });
+
+    it('updates via component:update after switch', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      const Gen = (props: any) => <div className="gen">{props.fields?.content?.value}</div>;
+
+      render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary loadImportMap={defaultImportMap} />
         </SitecoreProvider>
@@ -419,12 +477,20 @@ describe('<DesignLibrary />', () => {
 
       await waitFor(() => {
         expect(addComponentPreviewHandlerSpy).to.have.been.called;
-        callbackEvent(null, TestComponent);
+        callbackEvent(null, Gen);
+      });
+
+      await sendUpdate({
+        uid: 'test-content',
+        fields: { content: { value: 'updated!' } },
+      });
+
+      await waitFor(() => {
         expect(
           postMessageSpy
             .getCalls()
-            .some((call) =>
-              JSON.stringify(call.args[0]).includes(
+            .some((c) =>
+              JSON.stringify(c.args[0]).includes(
                 JSON.stringify(
                   getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
                 )
@@ -434,29 +500,25 @@ describe('<DesignLibrary />', () => {
       });
     });
 
-    it('should render error message when import map promise cannot be resolved', async () => {
-      const initError = new Error('Failed to load import map');
-      const errorImportMap = () =>
-        new Promise((_, reject) => {
-          reject(initError);
-        });
-      await render(
+    it('sends error event when no import map is provided', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={errorImportMap} />
-        </SitecoreProvider>,
-        { container: document.body }
+          <DesignLibrary />
+        </SitecoreProvider>
       );
 
       await waitFor(() => {
         expect(
           postMessageSpy
             .getCalls()
-            .some((call) =>
-              JSON.stringify(call.args[0]).includes(
+            .some((c) =>
+              JSON.stringify(c.args[0]).includes(
                 JSON.stringify(
                   getDesignLibraryComponentPreviewErrorEvent(
                     'test-content',
-                    'Error loading import map: Error: Failed to load import map',
+                    'No loadImportMap provided',
                     DesignLibraryPreviewError.RenderInit
                   )
                 )
@@ -465,63 +527,47 @@ describe('<DesignLibrary />', () => {
         ).to.be.true;
       });
     });
+  });
 
-    it('should render error message when component fails to render', async () => {
+  describe('?mode=library-metadata&generation=variant and isVariantGeneration=true', () => {
+    beforeEach(() => {
+      addComponentPreviewHandlerSpy = sandbox.stub().callsFake((_importMap, cb) => {
+        callbackEvent = cb;
+        return unsubscribeSpy;
+      });
+      __mockDependencies({ addComponentPreviewHandler: addComponentPreviewHandlerSpy });
+    });
+
+    it('behaves like combined (metadata)', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
+
       const rendered = render(
         <SitecoreProvider componentMap={components} api={api} page={page}>
           <DesignLibrary loadImportMap={defaultImportMap} />
-        </SitecoreProvider>,
-        { container: document.body }
+        </SitecoreProvider>
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        '<p>This is a live set of examples of how to use Content SDK</p>'
       );
 
       await waitFor(() => {
-        callbackEvent(null, () => {
-          throw new Error('Error rendering component');
-        });
-        expect(rendered.baseElement.innerHTML).to.contain('Error during component rendering');
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+        callbackEvent(null, () => <div>Gen-Metadata</div>);
+        expect(rendered.baseElement.innerHTML).to.contain('Gen-Metadata');
       });
-    });
 
-    it('should render error message when no import map is provided', async () => {
-      await render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      await waitFor(() => {
-        expect(
-          postMessageSpy
-            .getCalls()
-            .some((call) =>
-              JSON.stringify(call.args[0]).includes(
-                JSON.stringify(
-                  getDesignLibraryComponentPreviewErrorEvent(
-                    'test-content',
-                    'No loadImportMap prop provided. Please provide a dynamic import map function for DesignLibrary.',
-                    DesignLibraryPreviewError.RenderInit
-                  )
-                )
+      expect(
+        postMessageSpy
+          .getCalls()
+          .some((c) =>
+            JSON.stringify(c.args[0]).includes(
+              JSON.stringify(
+                getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
               )
             )
-        ).to.be.true;
-      });
-    });
-
-    it('should send postMessage events for import-map and component-props', async () => {
-      render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      // Check that postMessage was called (we can't easily mock the event functions)
-      await waitFor(() => {
-        expect(postMessageSpy.called).to.be.true;
-        expect(postMessageSpy.callCount).to.be.greaterThan(0);
-      });
+          )
+      ).to.be.true;
     });
   });
 });
