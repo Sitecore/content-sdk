@@ -74,4 +74,39 @@ export interface PlaceholderProps {
    * @default false
    */
   disableSuspense?: boolean;
+  /**
+   * Render props function that is called when the placeholder contains no content components.
+   */
+  renderEmpty?: (components: React.ReactNode[]) => React.ReactNode;
+  /**
+   * Render props function that enables control over the rendering of the components in the placeholder.
+   * Useful for techniques like wrapping each child in a wrapper component.
+   */
+  render?: (
+    components: React.ReactNode[],
+    data: ComponentRendering[],
+    props: PlaceholderProps
+  ) => React.ReactNode;
+
+  /**
+   * Render props function that is called for each non-system component added to the placeholder.
+   * Mutually exclusive with `render`.
+   */
+  renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
 }
+
+//
+export const nonSerializedProps = [
+  'renderEmpty',
+  'render',
+  'renderEach',
+  'errorComponent',
+  'componentLoadingMessage',
+  'modifyComponentProps',
+  'componentMap',
+  'pageContext',
+  'missingComponentComponent',
+  'hiddenRenderingComponent',
+  'rendering',
+  // eslint-disable-next-line prettier/prettier
+] as const satisfies (keyof PlaceholderProps)[];

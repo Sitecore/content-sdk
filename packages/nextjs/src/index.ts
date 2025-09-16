@@ -153,4 +153,5 @@ export {
   withEmptyFieldEditingComponent,
   EditingScripts,
   Form,
+  ServerPlaceholder,
 } from '@sitecore-content-sdk/react';

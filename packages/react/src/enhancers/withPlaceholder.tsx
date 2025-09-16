@@ -1,8 +1,13 @@
 ﻿import React from 'react';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
-import { PlaceholderProps, PlaceholderCommon } from '../components/PlaceholderCommon';
 import { withComponentMap } from './withComponentMap';
 import { withSitecore } from './withSitecore';
+import { PlaceholderComponent } from '../components/Placeholder';
+import { PlaceholderProps } from '../components/models';
+import {
+  getComponentsForRenderingData,
+  getPlaceholderDataFromRenderingData,
+} from '../components/PlaceholderCommon';
 
 export interface WithPlaceholderOptions {
   /**
@@ -48,7 +53,7 @@ export function withPlaceholder(
       | React.ComponentClass<PlaceholderProps>
       | React.FunctionComponent<PlaceholderProps>
   ) => {
-    class WithPlaceholder extends PlaceholderCommon<PlaceholderProps> {
+    class WithPlaceholder extends PlaceholderComponent {
       constructor(props: PlaceholderProps) {
         super(props);
       }
@@ -87,23 +92,28 @@ export function withPlaceholder(
           let placeholderData: ComponentRendering[];
 
           if (typeof placeholder !== 'string' && placeholder.placeholder && placeholder.prop) {
-            placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
+            placeholderData = getPlaceholderDataFromRenderingData(
               renderingData,
               placeholder.placeholder,
               childProps.page.mode.isEditing
             );
             if (placeholderData) {
-              childProps[placeholder.prop] = this.getComponentsForRenderingData(placeholderData);
+              childProps[placeholder.prop] = getComponentsForRenderingData(
+                this.props,
+                placeholderData
+              );
             }
           } else {
-            placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
+            placeholderData = getPlaceholderDataFromRenderingData(
               renderingData,
               placeholder as string,
               childProps.page.mode.isEditing
             );
             if (placeholderData) {
-              childProps[placeholder as string] =
-                this.getComponentsForRenderingData(placeholderData);
+              childProps[placeholder as string] = getComponentsForRenderingData(
+                this.props,
+                placeholderData
+              );
             }
           }
         });

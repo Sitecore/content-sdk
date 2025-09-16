@@ -1,38 +1,21 @@
 ﻿import React from 'react';
-import { PlaceholderCommon } from './PlaceholderCommon';
 import { PlaceholderProps } from './models';
 import { withComponentMap } from '../enhancers/withComponentMap';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PagesEditor } from '@sitecore-content-sdk/core/editing';
 import { withSitecore } from '../enhancers/withSitecore';
+import {
+  getComponentsForRenderingData,
+  getPlaceholderDataFromRenderingData,
+  renderEmptyPlaceholder,
+} from './PlaceholderCommon';
 
-export interface PlaceholderComponentProps extends PlaceholderProps {
-  /**
-   * Render props function that is called when the placeholder contains no content components.
-   */
-  renderEmpty?: (components: React.ReactNode[]) => React.ReactNode;
-  /**
-   * Render props function that enables control over the rendering of the components in the placeholder.
-   * Useful for techniques like wrapping each child in a wrapper component.
-   */
-  render?: (
-    components: React.ReactNode[],
-    data: ComponentRendering[],
-    props: PlaceholderProps
-  ) => React.ReactNode;
-
-  /**
-   * Render props function that is called for each non-system component added to the placeholder.
-   * Mutually exclusive with `render`.
-   */
-  renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
-}
-
-class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> {
+export class PlaceholderComponent extends React.Component<PlaceholderProps> {
   isEmpty = false;
+  state: Readonly<{ error?: Error }>;
 
-  constructor(props: PlaceholderComponentProps) {
+  constructor(props: PlaceholderProps) {
     super(props);
+    this.state = {};
   }
 
   componentDidMount() {
@@ -41,17 +24,22 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
     }
   }
 
+  componentDidCatch(error: Error) {
+    this.setState({ error });
+  }
+
   /**
    * Renders the placeholder when it is empty. The required CSS styles are applied to the placeholder in edit mode.
    * @param {React.ReactNode | React.ReactElement[]} node react node
    * @returns react node
+   * @deprecated use renderEmptyPlaceholder from react/nextjs import instead
    */
   renderEmptyPlaceholder(node: React.ReactNode | React.ReactElement[]) {
-    return <div className="sc-jss-empty-placeholder">{node}</div>;
+    return renderEmptyPlaceholder(node);
   }
 
   render() {
-    const childProps: PlaceholderComponentProps = { ...this.props };
+    const childProps: PlaceholderProps = { ...this.props };
 
     delete childProps.componentMap;
 
@@ -69,7 +57,7 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
 
     const renderingData = childProps.rendering;
 
-    const placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
+    const placeholderData = getPlaceholderDataFromRenderingData(
       renderingData,
       this.props.name,
       this.props.page.mode.isEditing
@@ -77,12 +65,12 @@ class PlaceholderComponent extends PlaceholderCommon<PlaceholderComponentProps> 
 
     this.isEmpty = !placeholderData.length;
 
-    const components = this.getComponentsForRenderingData(placeholderData);
+    const components = getComponentsForRenderingData(this.props, placeholderData);
 
     if (this.isEmpty) {
       const rendered = this.props.renderEmpty ? this.props.renderEmpty(components) : components;
 
-      return this.props.page.mode.isEditing ? this.renderEmptyPlaceholder(rendered) : rendered;
+      return this.props.page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
     } else if (this.props.render) {
       return this.props.render(components, placeholderData, childProps);
     } else if (this.props.renderEach) {
