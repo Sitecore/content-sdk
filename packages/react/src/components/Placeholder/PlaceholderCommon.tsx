@@ -13,9 +13,6 @@ import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from '../FEaaSComponen
 import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
 import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
 import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
-import { PlaceholderMetadata } from './PlaceholderMetadata';
-import ErrorBoundary from '../ErrorBoundary';
-import { PlaceholderProps } from './models';
 
 export const getSXAParams = (rendering: ComponentRendering) => {
   if (!rendering.params) return {};
@@ -84,99 +81,6 @@ export const getPlaceholderDataFromRenderingData = (
  */
 export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElement[]) => {
   return <div className="sc-jss-empty-placeholder">{node}</div>;
-};
-
-export const getComponentsForRenderingData = (
-  props: PlaceholderProps,
-  placeholderData: ComponentRendering[]
-) => {
-  const {
-    name,
-    fields: placeholderFields,
-    params: placeholderParams,
-    missingComponentComponent,
-    hiddenRenderingComponent,
-    ...placeholderProps
-  } = props;
-
-  const transformedComponents = placeholderData
-    .map((componentRendering: ComponentRendering, index: number) => {
-      const key = componentRendering.uid || `component-${index}`;
-
-      const renderedProps = {
-        key,
-        ...placeholderProps,
-        fields: { ...(placeholderFields || {}), ...(componentRendering.fields || {}) },
-        params: {
-          ...(placeholderParams || {}),
-          ...(componentRendering.params || {}),
-          // Provide SXA styles
-          ...getSXAParams(componentRendering),
-        },
-        rendering: componentRendering,
-      };
-
-      const component = getComponentForRendering(
-        componentRendering,
-        name,
-        props.componentMap,
-        hiddenRenderingComponent,
-        missingComponentComponent
-      );
-
-      let rendered = React.createElement<{ [attr: string]: unknown }>(
-        component.component as React.ComponentType,
-        props.modifyComponentProps ? props.modifyComponentProps(renderedProps) : renderedProps
-      );
-
-      if (!component.isEmpty) {
-        // assign type based on passed element - type='text/sitecore' should be ignored when renderEach Placeholder prop function is being used
-        const type = rendered.props.type === 'text/sitecore' ? rendered.props.type : '';
-
-        const disableSuspense = props.disableSuspense || false;
-
-        rendered = (
-          <ErrorBoundary
-            data-testid="error-boundary"
-            key={rendered.type + '-' + index}
-            errorComponent={props.errorComponent}
-            componentLoadingMessage={props.componentLoadingMessage}
-            type={type}
-            isDynamic={!!component.dynamic}
-            disableSuspense={disableSuspense}
-            {...rendered.props}
-          >
-            {rendered}
-          </ErrorBoundary>
-        );
-      }
-
-      // if in edit mode then emit shallow chromes for hydration in Pages
-      if (props.page.mode.isEditing) {
-        return (
-          <PlaceholderMetadata key={key} rendering={componentRendering}>
-            {rendered}
-          </PlaceholderMetadata>
-        );
-      }
-
-      return rendered;
-    })
-    .filter((element) => element); // remove nulls
-
-  if (props.page.mode.isEditing) {
-    return [
-      <PlaceholderMetadata
-        key={(props.rendering as ComponentRendering).uid}
-        placeholderName={name}
-        rendering={props.rendering as ComponentRendering}
-      >
-        {transformedComponents}
-      </PlaceholderMetadata>,
-    ];
-  }
-
-  return transformedComponents;
 };
 
 export const getComponentForRendering = (

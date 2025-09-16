@@ -33,7 +33,7 @@ import * as HiddenRendering from '../HiddenRendering';
 import * as ErrorBoundary from '../ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
 import { Placeholder } from './Placeholder';
-import { ComponentProps } from './PlaceholderCommon';
+import { ComponentProps } from './models';
 import { SitecoreProvider } from '../SitecoreProvider';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 
