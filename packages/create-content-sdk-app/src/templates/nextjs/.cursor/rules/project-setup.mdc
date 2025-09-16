@@ -1,0 +1,74 @@
+---
+description: Generated Sitecore Content SDK Next.js project guidance
+alwaysApply: true
+globs: []
+---
+
+# Sitecore Content SDK Next.js Project
+
+## Project Overview
+
+This is a Sitecore Content SDK application built with Next.js. The project structure follows Sitecore best practices for XM Cloud development.
+
+Key Technologies:
+
+- Next.js (React framework)
+- Sitecore Content SDK
+- TypeScript
+- Sitecore XM Cloud
+
+## Development Workflow
+
+Getting Started:
+
+- Run `npm install` to install dependencies
+- Configure environment variables (see .env.example)
+- Run `npm run dev` to start development server
+- Use `npm run build` to create production build
+
+Sitecore Integration:
+
+- Configure Sitecore connection in `sitecore.config.ts`
+- Register components in the component map
+- Use Sitecore field components for content rendering
+- Follow Sitecore's layout service patterns
+
+## Code Organization
+
+Directory Structure:
+
+```
+src/
+  components/          # React components
+  lib/                 # Configuration and utilities
+  pages/               # Next.js pages
+  assets/              # Static assets and styles
+```
+
+Component Development:
+
+- Create components in `src/components/`
+- Export from component files for registration
+- Use TypeScript interfaces for component props
+- Follow Sitecore field handling patterns
+
+## Best Practices
+
+Sitecore Components:
+
+- Use descriptive component names
+- Handle field validation gracefully
+- Implement proper error boundaries
+- Cache content when appropriate
+
+Performance:
+
+- Optimize images using Next.js Image component
+- Implement proper loading states
+- Use React.memo for expensive components
+- Consider server-side rendering implications
+
+Referenced:
+@src/components/
+@sitecore.config.ts
+@package.json

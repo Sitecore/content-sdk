@@ -1,0 +1,32 @@
+---
+description: Repository structure and templates policy
+alwaysApply: true
+globs: []
+---
+
+# Repository Structure
+
+/src
+  /common
+  /initializers
+  /templates
+  index.ts
+/dist
+/types
+/scripts
+
+Sources: `/src/**`
+Never edit: `/dist/**`
+
+Templates:
+- Copied to generated apps
+- Self-contained
+- Use `.env.*.example` for env values
+
+Initializers:
+- Each exposes `init(args)`
+- Reuse common processes/utilities
+
+Referenced:
+@src/common/base/Initializer.ts
+@src/initializers/nextjs/index.ts

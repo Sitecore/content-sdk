@@ -1,0 +1,33 @@
+---
+description: Project-wide context and constraints for create-content-sdk-app
+alwaysApply: true
+globs: []
+---
+
+# Project Context
+
+Purpose: Scaffolds example apps for the Sitecore Content SDK, providing templates and a CLI initializer.
+
+Language: TypeScript (Node 22+)
+
+Build: `tsc` -> `dist/`, templates bundled via `scripts/build-templates.ts`
+
+Tests: Mocha + Sinon + Chai, coverage via `nyc`
+
+Lint/format: ESLint + Prettier
+
+Scripts:
+- build
+- clean
+- lint
+- test
+- coverage
+
+Runtime:
+- Node >= 22
+- Do not import from `dist/`
+- CLI entry: `./dist/index.js`
+
+Referenced:
+@src/index.ts
+@scripts/build-templates.ts

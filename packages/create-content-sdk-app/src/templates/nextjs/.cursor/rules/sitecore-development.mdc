@@ -1,0 +1,79 @@
+---
+description: Sitecore-specific development patterns for this project
+alwaysApply: false
+globs:
+  - 'src/components/**'
+  - 'src/lib/**'
+  - 'sitecore.config.ts'
+  - '**/*sitecore*'
+---
+
+# Sitecore Development Patterns
+
+## Component Registration
+
+When creating Sitecore components:
+
+- Export component from component file
+- Use descriptive, PascalCase names
+- Include TypeScript interfaces for props
+- Handle missing fields gracefully
+
+```typescript
+// Example component
+interface HeroProps {
+  fields: {
+    title: Field;
+    subtitle: Field;
+    backgroundImage: Field;
+  };
+}
+
+export default function Hero({ fields }: HeroProps) {
+  return (
+    <div>
+      <Text field={fields?.title} tag="h1" />
+      <Text field={fields?.subtitle} tag="p" />
+      <Image field={fields?.backgroundImage} />
+    </div>
+  );
+}
+```
+
+## Content Management
+
+Field Handling:
+
+- Always check field existence: `fields?.title`
+- Use Sitecore field components: `<Text field={} />`, `<RichText field={} />`
+- Provide fallback content for missing fields
+- Validate field data when necessary
+
+Layout Service:
+
+- Use layout service for page data
+- Handle layout service errors gracefully
+- Implement proper loading states
+- Cache layout responses appropriately
+
+## Configuration
+
+Environment Setup:
+
+- Use `.env.local` for local development
+- Never commit API keys to version control
+- Use `.env.example` to document required variables
+- Configure Sitecore endpoints in `sitecore.config.ts`
+
+Security:
+
+- Validate all content from Sitecore
+- Sanitize user inputs
+- Use HTTPS for all Sitecore connections
+- Implement proper error boundaries
+
+Referenced:
+@src/components/
+@sitecore.config.ts
+@.env.example
+
