@@ -23,7 +23,7 @@ When using AI coding assistants like Cursor:
 1. Rules automatically provide context based on the files you're working with
 2. Follow the naming conventions and architectural guidance provided
 3. Refer to specific rules when uncertain about implementation approaches
-4. Templates include project-specific rules for generated applications
+4. Generated projects inherit these rules automatically when using Cursor
 
 ## Contributing
 
