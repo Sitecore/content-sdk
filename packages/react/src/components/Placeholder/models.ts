@@ -1,6 +1,6 @@
 import { Page } from '@sitecore-content-sdk/core/client';
 import { ComponentRendering, Field, Item, RouteData } from '@sitecore-content-sdk/core/layout';
-import { ComponentMap } from './sharedTypes';
+import { ComponentMap } from '../sharedTypes';
 
 type ErrorComponentProps = {
   [prop: string]: unknown;

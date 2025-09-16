@@ -22,19 +22,19 @@ import {
   sxaRenderingVariantData,
   sxaRenderingVariantDoubleDigitDynamicPlaceholder as sxaRenderingDoubleDigitContainerName,
   sxaRenderingVariantDataWithoutCommonContainerName as sxaRenderingWithoutContainerName,
-} from '../test-data/normal-mode-data';
-import * as metadataData from '../test-data/metadata-data';
-import * as SxaRichText from '../test-data/sxa-rich-text';
-import * as BYOCComponent from './BYOCComponent';
-import * as BYOCWrapper from './BYOCWrapper';
-import * as FEAASComponent from './FEaaSComponent';
-import * as FEAASWrapper from './FEaaSWrapper';
-import * as HiddenRendering from './HiddenRendering';
-import * as ErrorBoundary from './ErrorBoundary';
-import { MissingComponent, MissingComponentProps } from './MissingComponent';
+} from '../../test-data/normal-mode-data';
+import * as metadataData from '../../test-data/metadata-data';
+import * as SxaRichText from '../../test-data/sxa-rich-text';
+import * as BYOCComponent from '../BYOCComponent';
+import * as BYOCWrapper from '../BYOCWrapper';
+import * as FEAASComponent from '../FEaaSComponent';
+import * as FEAASWrapper from '../FEaaSWrapper';
+import * as HiddenRendering from '../HiddenRendering';
+import * as ErrorBoundary from '../ErrorBoundary';
+import { MissingComponent, MissingComponentProps } from '../MissingComponent';
 import { Placeholder } from './Placeholder';
 import { ComponentProps } from './PlaceholderCommon';
-import { SitecoreProvider } from './SitecoreProvider';
+import { SitecoreProvider } from '../SitecoreProvider';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 
 const componentMap = new Map<string, React.FC>();

@@ -1,8 +1,8 @@
 ﻿import React from 'react';
 import { PlaceholderProps } from './models';
-import { withComponentMap } from '../enhancers/withComponentMap';
+import { withComponentMap } from '../../enhancers/withComponentMap';
 import { PagesEditor } from '@sitecore-content-sdk/core/editing';
-import { withSitecore } from '../enhancers/withSitecore';
+import { withSitecore } from '../../enhancers/withSitecore';
 import {
   getComponentsForRenderingData,
   getPlaceholderDataFromRenderingData,

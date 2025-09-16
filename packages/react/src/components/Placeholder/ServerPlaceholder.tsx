@@ -1,6 +1,5 @@
-import { Page } from '@sitecore-content-sdk/core/client';
 import { nonSerializedProps, PlaceholderProps } from './models';
-import { ComponentMap } from './sharedTypes';
+import { ComponentMap } from '../sharedTypes';
 import {
   getComponentForRendering,
   getPlaceholderDataFromRenderingData,
@@ -8,12 +7,11 @@ import {
   renderEmptyPlaceholder,
 } from './PlaceholderCommon';
 import React from 'react';
-import ErrorBoundary from './ErrorBoundary';
+import ErrorBoundary from '../ErrorBoundary';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 
 export type ServerPlaceholderProps = PlaceholderProps & {
-  pageContext: Page;
   componentMap: ComponentMap;
 };
 

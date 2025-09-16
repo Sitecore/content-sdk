@@ -1,6 +1,6 @@
 ﻿import React, { ComponentType } from 'react';
-import { MissingComponent } from './MissingComponent';
-import { ComponentMap, DEFAULT_EXPORT_NAME, LazyComponentType, ReactModule } from './sharedTypes';
+import { MissingComponent } from '../MissingComponent';
+import { ComponentMap, DEFAULT_EXPORT_NAME, LazyComponentType, ReactModule } from '../sharedTypes';
 import {
   ComponentRendering,
   RouteData,
@@ -8,13 +8,13 @@ import {
   getDynamicPlaceholderPattern,
 } from '@sitecore-content-sdk/core/layout';
 import { constants } from '@sitecore-content-sdk/core';
-import { HiddenRendering } from './HiddenRendering';
-import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from './FEaaSComponent';
-import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from './FEaaSWrapper';
-import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from './BYOCComponent';
-import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from './BYOCWrapper';
+import { HiddenRendering } from '../HiddenRendering';
+import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from '../FEaaSComponent';
+import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
+import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
+import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
-import ErrorBoundary from './ErrorBoundary';
+import ErrorBoundary from '../ErrorBoundary';
 import { PlaceholderProps } from './models';
 
 export const getSXAParams = (rendering: ComponentRendering) => {
