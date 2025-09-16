@@ -924,7 +924,7 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe.only('getDesignLibraryData', () => {
+  describe('getDesignLibraryData', () => {
     it('should fetch component library data in Normal mode', async () => {
       const componentLibData = {
         itemId: 'item-id',

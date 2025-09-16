@@ -32,7 +32,7 @@ before(() => {
   }
 });
 
-describe.only('<DesignLibrary />', () => {
+describe('<DesignLibrary />', () => {
   const sandbox = sinon.createSandbox();
   const postMessageSpy = sandbox.spy(window, 'postMessage');
   const consoleErrorSpy = sandbox.spy(console, 'error');
