@@ -43,12 +43,13 @@ export {
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export { Form } from './components/Form';
 export { ReactContentSdkComponent, ComponentMap, ReactModule } from './components/sharedTypes';
-export { Placeholder } from './components/Placeholder';
-export { ServerPlaceholder, ServerPlaceholderProps } from './components/ServerPlaceholder';
 export {
+  Placeholder,
+  ServerPlaceholder,
+  ServerPlaceholderProps,
   PlaceholderProps,
   PlaceholderProps as PlaceholderComponentProps,
-} from './components/models';
+} from './components/Placeholder';
 export {
   Image,
   ImageProps,

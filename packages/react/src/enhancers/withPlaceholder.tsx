@@ -2,12 +2,12 @@
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
 import { withComponentMap } from './withComponentMap';
 import { withSitecore } from './withSitecore';
-import { PlaceholderComponent } from '../components/Placeholder';
-import { PlaceholderProps } from '../components/models';
 import {
+  PlaceholderComponent,
+  PlaceholderProps,
   getComponentsForRenderingData,
   getPlaceholderDataFromRenderingData,
-} from '../components/PlaceholderCommon';
+} from '../components/Placeholder';
 
 export interface WithPlaceholderOptions {
   /**

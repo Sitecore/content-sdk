@@ -12,7 +12,7 @@ import { getTestLayoutData } from '../test-data/component-editing-data';
 import { SitecoreProvider } from './SitecoreProvider';
 import { RichText } from './RichText';
 import { Text } from './Text';
-import { Placeholder } from '..';
+import { Placeholder } from './Placeholder';
 
 import {
   DesignLibraryStatus,
