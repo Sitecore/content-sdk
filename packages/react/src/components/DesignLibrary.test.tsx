@@ -134,7 +134,7 @@ describe('<DesignLibrary />', () => {
     }
   });
 
-  it.only('should render null if not in design library mode', () => {
+  it('should render null if not in design library mode', () => {
     const page = getPage(getTestLayoutData().layoutData, {
       name: DesignLibraryMode.Normal,
       isDesignLibrary: false,

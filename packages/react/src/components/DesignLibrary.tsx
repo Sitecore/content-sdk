@@ -1,7 +1,7 @@
 ﻿'use client';
 /* eslint-disable jsdoc/require-param */
 /* eslint-disable prefer-const */
-import React, { useEffect, useState, JSX } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Placeholder } from './Placeholder';
 import {
   ComponentFields,
@@ -192,10 +192,10 @@ export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps) => {
       // account for component being unmounted while resolving async import map
       if (cancelled) return;
 
-      unsubscribe = addComponentPreviewHandler(importMap, (error, Comp) => {
+      unsubscribe = addComponentPreviewHandler(importMap, (error, Component) => {
         // Error event is already sent in the addComponentPreviewHandler
         if (error) return;
-        setComponent(() => Comp as DynamicComponent);
+        setComponent(() => Component as DynamicComponent);
         setRenderKey((k) => k + 1);
       });
 
