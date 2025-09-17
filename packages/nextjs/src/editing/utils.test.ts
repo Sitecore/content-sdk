@@ -119,6 +119,7 @@ describe('editing/utils', () => {
         sc_site: 'test-site',
         dataSourceId: 'datasource-789',
         sc_version: '1',
+        generation: 'variant',
       };
 
       const params = mapEditingParams(query);
@@ -132,6 +133,7 @@ describe('editing/utils', () => {
         mode: DesignLibraryMode.Normal,
         dataSourceId: 'datasource-789',
         version: '1',
+        generation: 'variant',
       });
     });
 
@@ -145,6 +147,7 @@ describe('editing/utils', () => {
         sc_site: 'test-site',
         dataSourceId: 'datasource-789',
         sc_version: '1',
+        generation: 'variant',
       };
 
       const params = mapEditingParams(query);
@@ -158,6 +161,7 @@ describe('editing/utils', () => {
         mode: DesignLibraryMode.Metadata,
         dataSourceId: 'datasource-789',
         version: '1',
+        generation: 'variant',
       });
     });
 

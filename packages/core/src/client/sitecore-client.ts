@@ -23,6 +23,7 @@ import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { NativeDataFetcher } from '../native-fetcher';
 import { RobotsService } from '../site/robots-service';
+import { DesignLibraryVariantGeneration } from '../editing/models';
 
 /**
  * Error page codes
@@ -450,8 +451,17 @@ export class SitecoreClient implements BaseSitecoreClient {
       throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
     }
 
-    const { itemId, componentUid, site, language, renderingId, dataSourceId, version, mode } =
-      designLibData;
+    const {
+      itemId,
+      componentUid,
+      site,
+      language,
+      renderingId,
+      dataSourceId,
+      version,
+      mode,
+      generation,
+    } = designLibData;
 
     const componentData = await this.componentService.fetchComponentData(
       {
@@ -463,6 +473,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         dataSourceId,
         version,
         mode,
+        ...(generation ? { generation } : {}),
       },
       fetchOptions
     );
@@ -474,7 +485,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       locale: designLibData.language,
       layout: componentData,
       siteName: componentData.sitecore.context.site?.name || site,
-      mode: this.getPageMode(mode),
+      mode: this.getPageMode(mode, generation),
     };
     return page;
   }
@@ -570,7 +581,7 @@ export class SitecoreClient implements BaseSitecoreClient {
           throw new Error('REDIRECT_404');
         }
         return xmlResponse.data;
-      // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error('REDIRECT_404');
       }
@@ -639,44 +650,48 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Get page mode based on mode name
    * @param {PageModeName} mode - The mode name to get the page mode for
+   * @param { DesignLibraryVariantGeneration} generation - The variant generation mode, if applicable
    * @returns {PageMode} The page mode
    */
-  private getPageMode(mode: PageModeName): PageMode {
+  private getPageMode(mode: PageModeName, generation?: DesignLibraryVariantGeneration): PageMode {
     const pageMode: PageMode = {
       name: mode,
       isNormal: false,
       isPreview: false,
       isEditing: false,
       isDesignLibrary: false,
-      designLibrary: {
-        isVariantGeneration: false,
-      },
+      designLibrary: { isVariantGeneration: false },
     };
 
     switch (mode) {
       case LayoutServicePageState.Normal:
         pageMode.isNormal = true;
         break;
+
       case LayoutServicePageState.Preview:
         pageMode.isPreview = true;
         break;
+
       case LayoutServicePageState.Edit:
         pageMode.isEditing = true;
         break;
+
       case DesignLibraryMode.Normal:
         pageMode.isDesignLibrary = true;
         break;
+
       case DesignLibraryMode.Metadata:
         pageMode.isDesignLibrary = true;
         pageMode.isEditing = true;
         break;
-      case DesignLibraryMode.VariantGeneration:
-        pageMode.isDesignLibrary = true;
-        pageMode.isEditing = true;
-        pageMode.designLibrary.isVariantGeneration = true;
-        break;
+
       default:
         break;
+    }
+
+    if (pageMode.isDesignLibrary && generation === DesignLibraryVariantGeneration.Variant) {
+      pageMode.designLibrary.isVariantGeneration = true;
+      pageMode.isEditing = true;
     }
 
     return pageMode;
