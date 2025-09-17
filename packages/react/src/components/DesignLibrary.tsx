@@ -113,7 +113,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
  * @param {() => Promise<{ default: import('../codegen').ImportEntry[] }>} [props.loadImportMap] Optional async loader that resolves to the import-map used to resolve the generated component’s imports. Required when `isVariantGeneration` is true.
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  */
-export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps): JSX.Element => {
+export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps) => {
   const { page } = useSitecore();
   const route = page.layout.sitecore.route;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
@@ -129,6 +129,9 @@ export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps): JSX.Elemen
   const [Component, setComponent] = useState<DynamicComponent | null>(null);
   const isGeneratedComponentActive = !!Component;
 
+  if (!isDesignLibrary) return null;
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     postToDL(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, rendering.uid));
 
@@ -145,15 +148,17 @@ export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps): JSX.Elemen
 
     // useEffect will cleanup event handler on re-render
     return () => unsubUpdate && unsubUpdate();
-  }, [isDesignLibrary, rendering?.uid]);
+  }, [isVariantGeneration, rendering]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     // Send a rendered event only as effect of a component update command
     if (renderKey === 0) return;
 
     postToDL(getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, rendering.uid));
-  }, [renderKey, isDesignLibrary, rendering?.uid, postToDL]);
+  }, [renderKey, rendering]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (!isDesignLibrary || !isVariantGeneration) return undefined;
 
@@ -210,9 +215,7 @@ export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps): JSX.Elemen
       cancelled = true;
       unsubscribe && unsubscribe();
     };
-  }, [rendering?.uid]);
-
-  if (!isDesignLibrary) return null;
+  }, [isVariantGeneration, rendering]);
 
   return (
     <main>

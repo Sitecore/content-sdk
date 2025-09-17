@@ -76,6 +76,9 @@ export enum DesignLibraryMode {
   Metadata = 'library-metadata',
 }
 
+/**
+ * Variant generation mode for Design Library
+ */
 export enum DesignLibraryVariantGeneration {
   Variant = 'variant',
 }

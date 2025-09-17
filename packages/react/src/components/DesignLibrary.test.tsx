@@ -134,6 +134,27 @@ describe('<DesignLibrary />', () => {
     }
   });
 
+  it.only('should render null if not in design library mode', () => {
+    const page = getPage(getTestLayoutData().layoutData, {
+      name: DesignLibraryMode.Normal,
+      isDesignLibrary: false,
+      designLibrary: {
+        isVariantGeneration: false,
+      },
+      isNormal: false,
+      isPreview: false,
+      isEditing: false,
+    });
+
+    const rendered = render(
+      <SitecoreProvider componentMap={components} api={api} page={page}>
+        <DesignLibrary />
+      </SitecoreProvider>,
+      { container: document.body }
+    );
+    expect(rendered.baseElement.innerHTML).to.equal('');
+  });
+
   describe('mode=library and isVariantGeneration=false', () => {
     let page: Page;
 
