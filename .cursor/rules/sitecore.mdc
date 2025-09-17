@@ -1,0 +1,149 @@
+---
+description: Sitecore SDK-specific rules for XM Cloud development
+alwaysApply: false
+globs:
+  - '**/*sitecore*.ts'
+  - '**/*sitecore*.tsx'
+  - '**/*content*.ts'
+  - '**/*content*.tsx'
+  - '**/sitecore.config.ts'
+  - '**/sitecore.cli.config.ts'
+  - 'src/api/**'
+  - 'src/lib/**'
+---
+
+# Sitecore SDK Rules
+
+## XM Cloud Integration
+
+Configuration:
+
+- Always use environment variables for API endpoints and keys
+- Never hardcode API keys in source code
+- Use `.env.example` files to document required environment variables
+- Prefer `sitecore.config.ts` for centralized configuration
+
+```typescript
+// sitecore.config.ts
+export const sitecoreConfig = {
+  sitecoreApiHost: process.env.SITECORE_API_HOST || '',
+  sitecoreApiKey: process.env.SITECORE_API_KEY || '',
+  siteName: process.env.SITECORE_SITE_NAME || 'default',
+};
+```
+
+API Client Usage:
+
+- Use HTTPS for all XM Cloud endpoints
+- Implement proper retry logic with exponential backoff
+- Cache responses appropriately (consider content freshness)
+- Handle GraphQL errors gracefully
+
+## Component Development
+
+Sitecore Component Naming:
+
+- Use descriptive, feature-based names: `HeroWithContent`, `ProductListing`, `ContentBlockGrid`
+- Follow PascalCase convention
+- Include component type in name when helpful: `LayoutContainer`, `ContentRenderer`
+
+Component Registration:
+
+- Register components in the component map
+- Use consistent component names across registration and files
+- Include TypeScript types for all component props
+
+```typescript
+// Component props interface
+interface ContentBlockProps {
+  fields: {
+    title: Field;
+    content: Field;
+    image: Field;
+  };
+}
+```
+
+## Content Management
+
+Field Handling:
+
+- Always validate field existence before rendering
+- Use helper functions for common field operations
+- Handle empty/null fields gracefully
+- Prefer Sitecore field components over manual rendering
+
+```typescript
+// Good: Using Sitecore field components
+<Text field={fields?.title} tag="h1" />
+<RichText field={fields?.content} />
+
+// Avoid: Manual field value extraction unless necessary
+```
+
+Content SDK Client Methods:
+
+- Prefer using `scClient.getPage()` for page data and layout fetching
+- Use `scClient.getDictionary()` for localized content
+- Leverage `scClient.getErrorPages()` for error page handling
+- Use `scClient.getPreviewPage()` for preview mode content
+- Implement proper error boundaries for layout rendering
+- Handle missing placeholder content gracefully
+- Cache layout data when appropriate
+
+## Performance and Security
+
+Content Fetching:
+
+- Implement caching strategy for content (React Query recommended)
+- Use GraphQL queries efficiently (avoid over-fetching)
+- Implement proper loading states and error handling
+- Consider content preview vs. published content scenarios
+
+Security Best Practices:
+
+- Sanitize user inputs before processing
+- Validate content from Sitecore before rendering
+- Use Content Security Policy (CSP) headers
+- Never expose sensitive configuration in client-side code
+
+```typescript
+// Content validation example
+function validateContentItem(item: unknown): ContentItem {
+  if (!item || typeof item !== 'object') {
+    throw new Error('Invalid content item');
+  }
+  // Additional validation logic
+  return item as ContentItem;
+}
+```
+
+## Development Patterns
+
+Error Handling:
+
+- Create custom error classes: `SitecoreFetchError`, `ComponentRenderError`
+- Log errors appropriately for debugging
+- Provide fallback content when components fail to render
+- Use error boundaries in React applications
+
+Placeholder Management:
+
+- Use strongly-typed placeholder names
+- Handle dynamic placeholders appropriately
+- Implement fallback rendering for missing placeholders
+- Follow Sitecore's placeholder naming conventions
+
+Testing:
+
+- Mock Sitecore services in unit tests
+- Test component rendering with various field configurations
+- Include tests for error scenarios (missing fields, API failures)
+- Use Sitecore's test data helpers when available
+
+Referenced:
+@packages/create-content-sdk-app/src/templates/nextjs/sitecore.config.ts
+@packages/nextjs/src/components/
+@packages/core/src/site/
+@packages/core/src/layout/
+
