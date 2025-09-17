@@ -1,0 +1,135 @@
+---
+description: Sitecore development patterns for your project
+alwaysApply: false
+globs:
+  - 'src/components/**'
+  - 'src/lib/**'
+  - 'sitecore.config.ts'
+  - '**/*sitecore*'
+  - '**/*content*'
+---
+
+# Sitecore Development Patterns
+
+## Component Development
+
+Sitecore Component Naming:
+
+- Use descriptive, feature-based names: `HeroWithContent`, `ProductListing`, `ContentBlockGrid`
+- Follow PascalCase convention
+- Include component type in name when helpful: `LayoutContainer`, `ContentRenderer`
+
+Component Registration:
+
+- Export component from component file
+- Use descriptive, PascalCase names
+- Include TypeScript interfaces for props
+- Handle missing fields gracefully
+
+```typescript
+// Component props interface
+interface HeroProps {
+  fields: {
+    title: Field;
+    subtitle: Field;
+    backgroundImage: Field;
+  };
+}
+
+export default function Hero({ fields }: HeroProps) {
+  return (
+    <div>
+      <Text field={fields?.title} tag="h1" />
+      <Text field={fields?.subtitle} tag="p" />
+      <Image field={fields?.backgroundImage} />
+    </div>
+  );
+}
+```
+
+## Content Management
+
+Field Handling:
+
+- Always validate field existence before rendering
+- Use helper functions for common field operations
+- Handle empty/null fields gracefully
+- Prefer Sitecore field components over manual rendering
+
+```typescript
+// Good: Using Sitecore field components
+<Text field={fields?.title} tag="h1" />
+<RichText field={fields?.content} />
+
+// Avoid: Manual field value extraction unless necessary
+```
+
+Layout Service:
+
+- Use the Layout Service for page data fetching
+- Implement proper error boundaries for layout rendering
+- Handle missing placeholder content gracefully
+- Cache layout data when appropriate
+
+## Configuration
+
+Environment Setup:
+
+- Use `.env.local` for local development
+- Never commit API keys to version control
+- Use `.env.example` to document required variables
+- Configure Sitecore endpoints in `sitecore.config.ts`
+
+```typescript
+// sitecore.config.ts
+export const sitecoreConfig = {
+  sitecoreApiHost: process.env.SITECORE_API_HOST || '',
+  sitecoreApiKey: process.env.SITECORE_API_KEY || '',
+  siteName: process.env.SITECORE_SITE_NAME || 'default',
+};
+```
+
+## Security and Performance
+
+Security Best Practices:
+
+- Sanitize user inputs before processing
+- Validate content from Sitecore before rendering
+- Use HTTPS for all Sitecore connections
+- Never expose sensitive configuration in client-side code
+
+Content Fetching:
+
+- Implement caching strategy for content (React Query recommended)
+- Use GraphQL queries efficiently (avoid over-fetching)
+- Implement proper loading states and error handling
+- Consider content preview vs. published content scenarios
+
+## Development Patterns
+
+Error Handling:
+
+- Create custom error classes: `SitecoreFetchError`, `ComponentRenderError`
+- Log errors appropriately for debugging
+- Provide fallback content when components fail to render
+- Use error boundaries in React applications
+
+Placeholder Management:
+
+- Use strongly-typed placeholder names
+- Handle dynamic placeholders appropriately
+- Implement fallback rendering for missing placeholders
+- Follow Sitecore's placeholder naming conventions
+
+Testing:
+
+- Mock Sitecore services in unit tests
+- Test component rendering with various field configurations
+- Include tests for error scenarios (missing fields, API failures)
+- Use Sitecore's test data helpers when available
+
+Referenced:
+@src/components/
+@sitecore.config.ts
+@.env.example
+
