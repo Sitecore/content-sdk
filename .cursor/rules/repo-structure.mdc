@@ -6,27 +6,45 @@ globs: []
 
 # Repository Structure
 
-/src
-  /common
-  /initializers
-  /templates
-  index.ts
-/dist
-/types
-/scripts
+packages/create-content-sdk-app/ # ← Primary focus of these rules
+├── src/
+│ ├── common/
+│ ├── initializers/
+│ ├── templates/
+│ └── index.ts
+├── dist/
+├── types/
+└── scripts/
 
-Sources: `/src/**`
-Never edit: `/dist/**`
+Repository Overview:
+
+```
+content-sdk/
+├── packages/
+│   ├── create-content-sdk-app/    # Scaffolding CLI & templates
+│   ├── core/                      # Core SDK functionality
+│   ├── nextjs/                    # Next.js-specific SDK
+│   ├── react/                     # React components
+│   └── cli/                       # Additional CLI tools
+├── .cursor/rules/                 # AI coding guidance
+└── samples/                       # Example applications
+```
+
+Sources: `src/**` (within create-content-sdk-app package)
+Never edit: `dist/**` (compiled output)
 
 Templates:
+
 - Copied to generated apps
 - Self-contained
 - Use `.env.*.example` for env values
 
 Initializers:
+
 - Each exposes `init(args)`
 - Reuse common processes/utilities
 
 Referenced:
-@src/common/base/Initializer.ts
-@src/initializers/nextjs/index.ts
+@packages/create-content-sdk-app/src/common/base/Initializer.ts
+@packages/create-content-sdk-app/src/initializers/nextjs/index.ts
+
