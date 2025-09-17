@@ -6,7 +6,7 @@
 
 # Interface: ComponentLayoutRequestParams
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:12](https://github.com/Sitecore/content-sdk/blob/a460749e7be9db9d2ef78c106f21279a4d8b9570/packages/core/src/editing/component-layout-service.ts#L12)
+Defined in: [packages/core/src/editing/component-layout-service.ts:12](https://github.com/Sitecore/content-sdk/blob/c09209f470e4296742157cb93ea93261fcb5b348/packages/core/src/editing/component-layout-service.ts#L12)
 
 Params for requesting component data in Design Library mode
 
@@ -16,7 +16,7 @@ Params for requesting component data in Design Library mode
 
 > **componentUid**: `string`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:21](https://github.com/Sitecore/content-sdk/blob/a460749e7be9db9d2ef78c106f21279a4d8b9570/packages/core/src/editing/component-layout-service.ts#L21)
+Defined in: [packages/core/src/editing/component-layout-service.ts:21](https://github.com/Sitecore/content-sdk/blob/c09209f470e4296742157cb93ea93261fcb5b348/packages/core/src/editing/component-layout-service.ts#L21)
 
 Component identifier. Can be either taken from item's layout details or
 an arbitrary one (component renderingId and datasource would be used for identification then)
@@ -27,7 +27,7 @@ an arbitrary one (component renderingId and datasource would be used for identif
 
 > `optional` **dataSourceId**: `string`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:29](https://github.com/Sitecore/content-sdk/blob/a460749e7be9db9d2ef78c106f21279a4d8b9570/packages/core/src/editing/component-layout-service.ts#L29)
+Defined in: [packages/core/src/editing/component-layout-service.ts:29](https://github.com/Sitecore/content-sdk/blob/c09209f470e4296742157cb93ea93261fcb5b348/packages/core/src/editing/component-layout-service.ts#L29)
 
 optional component datasource
 
@@ -37,7 +37,7 @@ optional component datasource
 
 > **itemId**: `string`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:16](https://github.com/Sitecore/content-sdk/blob/a460749e7be9db9d2ef78c106f21279a4d8b9570/packages/core/src/editing/component-layout-service.ts#L16)
+Defined in: [packages/core/src/editing/component-layout-service.ts:16](https://github.com/Sitecore/content-sdk/blob/c09209f470e4296742157cb93ea93261fcb5b348/packages/core/src/editing/component-layout-service.ts#L16)
 
 Item id to be used as context for rendering the component
 
@@ -47,7 +47,7 @@ Item id to be used as context for rendering the component
 
 > `optional` **language**: `string`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:25](https://github.com/Sitecore/content-sdk/blob/a460749e7be9db9d2ef78c106f21279a4d8b9570/packages/core/src/editing/component-layout-service.ts#L25)
+Defined in: [packages/core/src/editing/component-layout-service.ts:25](https://github.com/Sitecore/content-sdk/blob/c09209f470e4296742157cb93ea93261fcb5b348/packages/core/src/editing/component-layout-service.ts#L25)
 
 language to render component in
 
@@ -57,7 +57,7 @@ language to render component in
 
 > `optional` **mode**: [`DesignLibraryMode`](../enumerations/DesignLibraryMode.md)
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:45](https://github.com/Sitecore/content-sdk/blob/a460749e7be9db9d2ef78c106f21279a4d8b9570/packages/core/src/editing/component-layout-service.ts#L45)
+Defined in: [packages/core/src/editing/component-layout-service.ts:45](https://github.com/Sitecore/content-sdk/blob/c09209f470e4296742157cb93ea93261fcb5b348/packages/core/src/editing/component-layout-service.ts#L45)
 
 mode to be used for rendering the component
 
@@ -67,7 +67,7 @@ mode to be used for rendering the component
 
 > `optional` **renderingId**: `string`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:33](https://github.com/Sitecore/content-sdk/blob/a460749e7be9db9d2ef78c106f21279a4d8b9570/packages/core/src/editing/component-layout-service.ts#L33)
+Defined in: [packages/core/src/editing/component-layout-service.ts:33](https://github.com/Sitecore/content-sdk/blob/c09209f470e4296742157cb93ea93261fcb5b348/packages/core/src/editing/component-layout-service.ts#L33)
 
 ID of the component definition rendering item in Sitecore
 
@@ -77,7 +77,7 @@ ID of the component definition rendering item in Sitecore
 
 > **siteName**: `string`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:41](https://github.com/Sitecore/content-sdk/blob/a460749e7be9db9d2ef78c106f21279a4d8b9570/packages/core/src/editing/component-layout-service.ts#L41)
+Defined in: [packages/core/src/editing/component-layout-service.ts:41](https://github.com/Sitecore/content-sdk/blob/c09209f470e4296742157cb93ea93261fcb5b348/packages/core/src/editing/component-layout-service.ts#L41)
 
 site name to be used as context for rendering the component
 
@@ -87,6 +87,6 @@ site name to be used as context for rendering the component
 
 > `optional` **version**: `string`
 
-Defined in: [packages/core/src/editing/component-layout-service.ts:37](https://github.com/Sitecore/content-sdk/blob/a460749e7be9db9d2ef78c106f21279a4d8b9570/packages/core/src/editing/component-layout-service.ts#L37)
+Defined in: [packages/core/src/editing/component-layout-service.ts:37](https://github.com/Sitecore/content-sdk/blob/c09209f470e4296742157cb93ea93261fcb5b348/packages/core/src/editing/component-layout-service.ts#L37)
 
 version of the context item (latest by default)
