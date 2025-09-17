@@ -1,0 +1,100 @@
+---
+description: Getting started with your Sitecore Content SDK Next.js project
+alwaysApply: true
+globs: []
+---
+
+# Sitecore Content SDK Next.js Project
+
+## Project Overview
+
+This is a Sitecore Content SDK application built with Next.js. The project structure follows Sitecore best practices for XM Cloud development.
+
+Key Technologies:
+
+- Next.js (React framework)
+- Sitecore Content SDK
+- TypeScript
+- Sitecore XM Cloud
+
+## Getting Started
+
+Development Workflow:
+
+1. Install dependencies: `npm install`
+2. Configure environment variables (copy `.env.example` to `.env.local`)
+3. Start development server: `npm run dev`
+4. Build for production: `npm run build`
+
+Environment Configuration:
+
+- Copy `.env.example` to `.env.local`
+- Add your Sitecore API endpoint and key
+- Configure site name and other settings
+
+## Sitecore Integration
+
+Configuration:
+
+- Configure Sitecore connection in `sitecore.config.ts`
+- Register components in the component map
+- Use Sitecore field components for content rendering
+- Follow Sitecore's layout service patterns
+
+Component Development:
+
+- Create components in `src/components/`
+- Export from component files for registration
+- Use TypeScript interfaces for component props
+- Follow Sitecore field handling patterns
+
+## Project Structure
+
+```
+src/
+  components/          # React components
+  lib/                 # Configuration and utilities
+  pages/               # Next.js pages
+  assets/              # Static assets and styles
+```
+
+## Best Practices
+
+Sitecore Components:
+
+- Use descriptive component names
+- Handle field validation gracefully
+- Implement proper error boundaries
+- Cache content when appropriate
+
+Performance:
+
+- Optimize images using Next.js Image component
+- Implement proper loading states
+- Use React.memo for expensive components
+- Consider server-side rendering implications
+
+## Development Commands
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run type-check   # Run TypeScript compiler
+```
+
+## Next Steps
+
+1. Configure your Sitecore connection
+2. Create your first component
+3. Add content types and templates
+4. Set up your development workflow
+5. Deploy to your hosting platform
+
+Referenced:
+@src/components/
+@sitecore.config.ts
+@package.json
+@.env.example
+
