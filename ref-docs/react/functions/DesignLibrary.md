@@ -6,16 +6,25 @@
 
 # Function: DesignLibrary()
 
-> **DesignLibrary**(`__namedParameters`): `Element`
+> **DesignLibrary**(`props`): `Element`
 
-Defined in: [packages/react/src/components/DesignLibrary.tsx:274](https://github.com/Sitecore/content-sdk/blob/c09209f470e4296742157cb93ea93261fcb5b348/packages/react/src/components/DesignLibrary.tsx#L274)
+Defined in: [packages/react/src/components/DesignLibrary.tsx:116](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/react/src/components/DesignLibrary.tsx#L116)
+
+Design Library component.
+
+Renders the **real** Sitecore component for `library` / `library-metadata` modes and,
+when generation is enabled (`page.mode.designLibrary.isVariantGeneration === true`),
+wires the **variant generation** handshake so the parent (DL Studio) can send
+generated code to preview and iterate on.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `__namedParameters` | `DesignLibraryProps` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `props` | `DesignLibraryProps` |  |
 
 ## Returns
 
 `Element`
+
+The preview surface, or `null` when not in Design Library mode.
