@@ -162,9 +162,5 @@ export function getDesignLibraryScriptLink(sitecoreEdgeUrl = SITECORE_EDGE_URL_D
  * @returns {boolean} True if the mode is a Design Library mode, false otherwise.
  */
 export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode {
-  return (
-    mode === DesignLibraryMode.Normal ||
-    mode === DesignLibraryMode.Metadata ||
-    mode === DesignLibraryMode.VariantGeneration
-  );
+  return mode === DesignLibraryMode.Normal || mode === DesignLibraryMode.Metadata;
 }

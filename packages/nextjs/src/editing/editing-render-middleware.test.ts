@@ -580,6 +580,7 @@ describe('EditingRenderMiddleware', () => {
       sc_renderingId: '123',
       dataSourceId: '456',
       sc_uid: '789',
+      generation: 'variant',
     };
 
     it('should handle request with mode=library', async () => {
@@ -604,6 +605,7 @@ describe('EditingRenderMiddleware', () => {
         mode: DesignLibraryMode.Normal,
         dataSourceId: query.dataSourceId,
         version: query.sc_version,
+        generation: query.generation,
       });
 
       expect(res.status).to.be.calledOnceWith(200);
@@ -636,6 +638,7 @@ describe('EditingRenderMiddleware', () => {
         mode: DesignLibraryMode.Metadata,
         dataSourceId: query.dataSourceId,
         version: query.sc_version,
+        generation: query.generation,
       });
 
       expect(res.status).to.be.calledOnceWith(200);

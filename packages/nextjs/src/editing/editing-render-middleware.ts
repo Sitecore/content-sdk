@@ -211,6 +211,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
           mode,
           dataSourceId: query.dataSourceId,
           version: query.sc_version,
+          generation: query.generation,
         } as DesignLibraryRenderPreviewData,
         {
           maxAge: 3,
