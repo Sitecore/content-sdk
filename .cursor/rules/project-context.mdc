@@ -8,7 +8,7 @@ globs: []
 
 Purpose: Scaffolds example apps for the Sitecore Content SDK, providing templates and a CLI initializer.
 
-Language: TypeScript (Node 22+)
+Language: TypeScript (Node LTS)
 
 Build: `tsc` -> `dist/`, templates bundled via `scripts/build-templates.ts`
 
@@ -17,6 +17,7 @@ Tests: Mocha + Sinon + Chai, coverage via `nyc`
 Lint/format: ESLint + Prettier
 
 Scripts:
+
 - build
 - clean
 - lint
@@ -24,10 +25,12 @@ Scripts:
 - coverage
 
 Runtime:
-- Node >= 22
+
+- Node LTS or higher
 - Do not import from `dist/`
 - CLI entry: `./dist/index.js`
 
 Referenced:
 @src/index.ts
 @scripts/build-templates.ts
+

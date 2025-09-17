@@ -81,9 +81,12 @@ Field Handling:
 // Avoid: Manual field value extraction unless necessary
 ```
 
-Layout Service:
+Content SDK Client Methods:
 
-- Use the Layout Service for page data fetching
+- Prefer using `scClient.getPage()` for page data and layout fetching
+- Use `scClient.getDictionary()` for localized content
+- Leverage `scClient.getErrorPages()` for error page handling
+- Use `scClient.getPreviewPage()` for preview mode content
 - Implement proper error boundaries for layout rendering
 - Handle missing placeholder content gracefully
 - Cache layout data when appropriate

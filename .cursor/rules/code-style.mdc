@@ -17,7 +17,7 @@ Core Philosophy:
 
 Code Organization:
 
-- Use Node 22+ features when stable
+- Use Node LTS+ features when stable
 - Export public types at module boundaries
 - Prefer pure functions and thin wrappers
 - No top-level side effects (except CLI entry)

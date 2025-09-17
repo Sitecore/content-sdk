@@ -105,28 +105,8 @@ TypeScript:
 - Prefer type assertions over any: `value as ContentItem`
 - Use discriminated unions for complex state management
 
-## Documentation
-
-JSDoc Comments:
-
-- All new functions, interfaces, classes must have JSDoc style comments
-- Include @param tags for all parameters with types and descriptions
-- Include @returns tag for return values with type and description
-- Use descriptive comments that explain the purpose and behavior
-
-```typescript
-/**
- * Fetches content item from Sitecore by ID with proper error handling
- * @param {string} id - The unique identifier for the content item
- * @param {boolean} [includeChildren] - Whether to include child items
- * @returns {Promise<ContentItem>} Promise that resolves to the content item
- */
-async function fetchContentItem(id: string, includeChildren?: boolean): Promise<ContentItem> {
-  // Implementation
-}
-```
-
 Referenced:
 @src/components/
 @src/lib/
 @src/types/
+
