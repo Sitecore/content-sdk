@@ -16,7 +16,7 @@ Generate application metadata
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `config?` | `GenerateMetadataConfig` | Optional configuration for generating metadata. If not provided, the default '.sitecore/metadata.json' will be used. |
+| `config?` | `GenerateMetadataConfig` | Optional configuration for generating metadata. If not provided, the default '.sitecore/metadata.json' will be used and allowWorkspaces will be set to false. |
 
 ## Returns
 
