@@ -8,7 +8,7 @@
 
 > **replaceMediaUrlPrefix**(`url`, `mediaUrlPrefix?`): `string`
 
-Defined in: [packages/core/src/media/media-api.ts:24](https://github.com/Sitecore/content-sdk/blob/2d7417f51ef9a18893c62a39c45dc387012e542f/packages/core/src/media/media-api.ts#L24)
+Defined in: [packages/core/src/media/media-api.ts:24](https://github.com/Sitecore/content-sdk/blob/393c51c74a23d0f4ce2431fb5de1ff414fa0d8f0/packages/core/src/media/media-api.ts#L24)
 
 Replace `/~/media` or `/-/media` with `/~/jssmedia` or `/-/jssmedia`, respectively.
 Can use `mediaUrlPrefix` in order to use a custom prefix.

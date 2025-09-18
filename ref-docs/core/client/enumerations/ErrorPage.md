@@ -6,7 +6,7 @@
 
 # Enumeration: ErrorPage
 
-Defined in: [packages/core/src/client/sitecore-client.ts:30](https://github.com/Sitecore/content-sdk/blob/2d7417f51ef9a18893c62a39c45dc387012e542f/packages/core/src/client/sitecore-client.ts#L30)
+Defined in: [packages/core/src/client/sitecore-client.ts:31](https://github.com/Sitecore/content-sdk/blob/393c51c74a23d0f4ce2431fb5de1ff414fa0d8f0/packages/core/src/client/sitecore-client.ts#L31)
 
 Error page codes
 
@@ -16,7 +16,7 @@ Error page codes
 
 > **InternalServerError**: `"500"`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:32](https://github.com/Sitecore/content-sdk/blob/2d7417f51ef9a18893c62a39c45dc387012e542f/packages/core/src/client/sitecore-client.ts#L32)
+Defined in: [packages/core/src/client/sitecore-client.ts:33](https://github.com/Sitecore/content-sdk/blob/393c51c74a23d0f4ce2431fb5de1ff414fa0d8f0/packages/core/src/client/sitecore-client.ts#L33)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/core/src/client/sitecore-client.ts:32](https://github.com/
 
 > **NotFound**: `"404"`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:31](https://github.com/Sitecore/content-sdk/blob/2d7417f51ef9a18893c62a39c45dc387012e542f/packages/core/src/client/sitecore-client.ts#L31)
+Defined in: [packages/core/src/client/sitecore-client.ts:32](https://github.com/Sitecore/content-sdk/blob/393c51c74a23d0f4ce2431fb5de1ff414fa0d8f0/packages/core/src/client/sitecore-client.ts#L32)

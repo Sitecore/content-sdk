@@ -8,7 +8,7 @@
 
 > **fetchFEaaSComponentServerProps**(`params`, `pageState?`, `endpointOverride?`): `Promise`\<[`FEaaSComponentProps`](../type-aliases/FEaaSComponentProps.md)\>
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:107](https://github.com/Sitecore/content-sdk/blob/2d7417f51ef9a18893c62a39c45dc387012e542f/packages/react/src/components/FEaaSComponent.tsx#L107)
+Defined in: [packages/react/src/components/FEaaSComponent.tsx:107](https://github.com/Sitecore/content-sdk/blob/393c51c74a23d0f4ce2431fb5de1ff414fa0d8f0/packages/react/src/components/FEaaSComponent.tsx#L107)
 
 Fetches server component props required for server rendering, based on rendering params.
 Component endpoint will either be retrieved from params or from endpointOverride
