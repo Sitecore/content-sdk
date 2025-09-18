@@ -3,7 +3,7 @@ import { NativeDataFetcher } from '../native-fetcher';
 import debug from '../debug';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { resolveUrl } from '../utils';
-import { DesignLibraryMode } from './models';
+import { DesignLibraryMode, DesignLibraryVariantGeneration } from './models';
 import { FetchOptions } from '../models';
 
 /**
@@ -19,6 +19,10 @@ export interface ComponentLayoutRequestParams {
    * an arbitrary one (component renderingId and datasource would be used for identification then)
    */
   componentUid: string;
+  /**
+   * site name to be used as context for rendering the component
+   */
+  siteName: string;
   /**
    * language to render component in
    */
@@ -36,13 +40,13 @@ export interface ComponentLayoutRequestParams {
    */
   version?: string;
   /**
-   * site name to be used as context for rendering the component
-   */
-  siteName: string;
-  /**
    * mode to be used for rendering the component
    */
   mode?: DesignLibraryMode;
+  /**
+   * design library variant generation mode
+   */
+  generation?: DesignLibraryVariantGeneration;
 }
 
 /**
