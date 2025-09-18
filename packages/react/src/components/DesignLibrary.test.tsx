@@ -524,4 +524,7 @@ describe('<DesignLibrary />', () => {
       });
     });
   });
+  after(() => {
+    sandbox.restore();
+  });
 });

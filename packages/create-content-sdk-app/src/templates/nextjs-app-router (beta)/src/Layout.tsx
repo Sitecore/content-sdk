@@ -1,6 +1,6 @@
 'use client';
 import React, { JSX } from 'react';
-import { Placeholder, Field, DesignLibrary, Page } from '@sitecore-content-sdk/nextjs';
+import { ServerPlaceholder, Field, DesignLibrary, Page } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'components/content-sdk/SitecoreStyles';
 
@@ -31,17 +31,38 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
           <>
             <header>
               <div id="header">
-                {route && <Placeholder name="headless-header" rendering={route} />}
+                {route && (
+                  <ServerPlaceholder
+                    page={page}
+                    componentMap={componentMap}
+                    name="headless-header"
+                    rendering={route}
+                  />
+                )}
               </div>
             </header>
             <main>
               <div id="content">
-                {route && <Placeholder name="headless-main" rendering={route} />}
+                {route && (
+                  <ServerPlaceholder
+                    page={page}
+                    componentMap={componentMap}
+                    name="headless-main"
+                    rendering={route}
+                  />
+                )}
               </div>
             </main>
             <footer>
               <div id="footer">
-                {route && <Placeholder name="headless-footer" rendering={route} />}
+                {route && (
+                  <ServerPlaceholder
+                    page={page}
+                    componentMap={componentMap}
+                    name="headless-footer"
+                    rendering={route}
+                  />
+                )}
               </div>
             </footer>
           </>

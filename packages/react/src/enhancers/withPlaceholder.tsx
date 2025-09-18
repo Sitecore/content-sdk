@@ -5,8 +5,7 @@ import { withSitecore } from './withSitecore';
 import {
   PlaceholderComponent,
   PlaceholderProps,
-  getComponentsForRenderingData,
-  getPlaceholderDataFromRenderingData,
+  getPlaceholderRenderings,
 } from '../components/Placeholder';
 
 export interface WithPlaceholderOptions {
@@ -41,6 +40,7 @@ export type WithPlaceholderSpec =
   | (string | PlaceholderToPropMapping)[];
 
 /**
+ * HOC to provide client-side placeholder functionality to a component.
  * @param {WithPlaceholderSpec} placeholders
  * @param {WithPlaceholderOptions} [options]
  */
@@ -92,25 +92,25 @@ export function withPlaceholder(
           let placeholderData: ComponentRendering[];
 
           if (typeof placeholder !== 'string' && placeholder.placeholder && placeholder.prop) {
-            placeholderData = getPlaceholderDataFromRenderingData(
+            placeholderData = getPlaceholderRenderings(
               renderingData,
               placeholder.placeholder,
               childProps.page.mode.isEditing
             );
             if (placeholderData) {
-              childProps[placeholder.prop] = getComponentsForRenderingData(
+              childProps[placeholder.prop] = PlaceholderComponent.getRenderedComponents(
                 this.props,
                 placeholderData
               );
             }
           } else {
-            placeholderData = getPlaceholderDataFromRenderingData(
+            placeholderData = getPlaceholderRenderings(
               renderingData,
               placeholder as string,
               childProps.page.mode.isEditing
             );
             if (placeholderData) {
-              childProps[placeholder as string] = getComponentsForRenderingData(
+              childProps[placeholder as string] = PlaceholderComponent.getRenderedComponents(
                 this.props,
                 placeholderData
               );

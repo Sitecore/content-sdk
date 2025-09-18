@@ -2,12 +2,12 @@ import { nonSerializedProps, PlaceholderProps } from './models';
 import { ComponentMap } from '../sharedTypes';
 import {
   getComponentForRendering,
-  getPlaceholderDataFromRenderingData,
-  getSXAParams,
+  getPlaceholderRenderings,
+  getRenderedComponentProps,
   renderEmptyPlaceholder,
+  wrapErrorBoundary,
 } from './PlaceholderCommon';
 import React from 'react';
-import ErrorBoundary from '../ErrorBoundary';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 
@@ -30,13 +30,13 @@ export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
     { ...props }
   );
 
-  const componentRenderings = getPlaceholderDataFromRenderingData(
+  const placeholderRenderings = getPlaceholderRenderings(
     props.rendering,
     props.name,
     props.page.mode.isEditing
   );
 
-  const components = componentRenderings
+  const components = placeholderRenderings
     .map((rendering, index) => {
       const { component, isEmpty, isClient, dynamic } = getComponentForRendering(
         rendering,
@@ -45,21 +45,10 @@ export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
         props.hiddenRenderingComponent,
         props.missingComponentComponent
       );
-
+      const key = rendering.uid || `component-${index}`;
       const finalPhProps = isClient ? serializableProps : props;
 
-      const renderedProps = {
-        key: finalPhProps.name,
-        ...finalPhProps,
-        fields: { ...(finalPhProps.fields || {}), ...(rendering.fields || {}) },
-        params: {
-          ...(finalPhProps.params || {}),
-          ...(rendering.params || {}),
-          // Provide SXA styles
-          ...getSXAParams(rendering),
-        },
-        rendering,
-      };
+      const renderedProps = getRenderedComponentProps(finalPhProps, rendering, key);
 
       let rendered = React.createElement<{ [attr: string]: unknown }>(
         component as React.ComponentType,
@@ -67,25 +56,9 @@ export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
       );
 
       if (!isEmpty) {
-        // assign type based on passed element - type='text/sitecore' should be ignored when renderEach Placeholder prop function is being used
-        const type = rendered.props.type === 'text/sitecore' ? rendered.props.type : '';
+        const errorBoundaryKey = rendered.type + '-' + index;
 
-        const disableSuspense = props.disableSuspense || false;
-
-        rendered = (
-          <ErrorBoundary
-            data-testid="error-boundary"
-            key={rendered.type + '-' + index}
-            errorComponent={props.errorComponent}
-            componentLoadingMessage={props.componentLoadingMessage}
-            type={type}
-            isDynamic={!dynamic}
-            disableSuspense={disableSuspense}
-            {...rendered.props}
-          >
-            {rendered}
-          </ErrorBoundary>
-        );
+        rendered = wrapErrorBoundary(rendered, props, errorBoundaryKey, dynamic);
       }
 
       // if in edit mode then emit shallow chromes for hydration in Pages
@@ -112,18 +85,16 @@ export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
       ]
     : components;
 
-  const placeholderData = getPlaceholderDataFromRenderingData(
-    props.rendering,
-    props.name,
-    props.page.mode.isEditing
-  );
+  const placeholderEmpty = !placeholderRenderings.length;
 
-  if (props.isEmpty) {
+  if (placeholderEmpty) {
     const rendered = props.renderEmpty ? props.renderEmpty(finalRendering) : finalRendering;
 
     return props.page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
-  } else if (props.render) {
-    return props.render(components, placeholderData, serializableProps);
+  }
+
+  if (props.render) {
+    return props.render(components, placeholderRenderings, serializableProps);
   } else if (props.renderEach) {
     const renderEach = props.renderEach;
 
@@ -135,6 +106,6 @@ export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
       return renderEach(component, index);
     });
   } else {
-    return components;
+    return finalRendering;
   }
 };

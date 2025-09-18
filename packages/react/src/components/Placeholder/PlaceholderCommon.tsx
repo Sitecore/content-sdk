@@ -13,20 +13,17 @@ import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from '../FEaaSComponen
 import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
 import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
 import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
+import ErrorBoundary from '../ErrorBoundary';
+import { PlaceholderProps } from './models';
 
-export const getSXAParams = (rendering: ComponentRendering) => {
-  if (!rendering.params) return {};
-
-  const { GridParameters, Styles } = rendering.params;
-
-  return (
-    (GridParameters || Styles) && {
-      styles: `${GridParameters || ''} ${Styles || ''}`,
-    }
-  );
-};
-
-export const getPlaceholderDataFromRenderingData = (
+/**
+ * Get the renderings for the specified placeholder from the rendering data.
+ * @param {ComponentRendering | RouteData } rendering rendering data
+ * @param {string} name placeholder name
+ * @param {boolean} isEditing whether components should be rendered in editing mode
+ * @returns {ComponentRendering[]} array of component renderings
+ */
+export const getPlaceholderRenderings = (
   rendering: ComponentRendering | RouteData,
   name: string,
   isEditing: boolean
@@ -75,6 +72,23 @@ export const getPlaceholderDataFromRenderingData = (
 };
 
 /**
+ * Get SXA specific params from Sitecore rendering params
+ * @param {ComponentRendering} rendering rendering object
+ * @returns {object} converted SXA params
+ */
+export const getSXAParams = (rendering: ComponentRendering) => {
+  if (!rendering.params) return {};
+
+  const { GridParameters, Styles } = rendering.params;
+
+  return (
+    (GridParameters || Styles) && {
+      styles: `${GridParameters || ''} ${Styles || ''}`,
+    }
+  );
+};
+
+/**
  * Renders the placeholder when it is empty. The required CSS styles are applied to the placeholder in edit mode.
  * @param {React.ReactNode | React.ReactElement[]} node react node
  * @returns react node
@@ -83,6 +97,91 @@ export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElemen
   return <div className="sc-jss-empty-placeholder">{node}</div>;
 };
 
+/**
+ * Wraps rendered component(s) with an error boundary.
+ * @param {React.ReactElement} rendered React elements to be wrapped
+ * @param {PlaceholderProps} placeholderProps props of placeholder under which the component is being rendered
+ * @param {string} renderingKey unique key for the error boundary
+ * @param {boolean} isDynamic whether error boundary wraps any lazy components
+ * @param {object} [extraProps] extra non-rendered component props to be passed to the error boundary
+ * @returns {React.ReactElement} wrapped component
+ */
+export const wrapErrorBoundary = (
+  rendered: React.ReactElement<{
+    [attr: string]: unknown;
+  }>,
+  placeholderProps: PlaceholderProps,
+  renderingKey: string,
+  isDynamic: boolean = false,
+  extraProps: { [attr: string]: unknown } = {}
+) => {
+  // assign type based on passed element - type='text/sitecore' should be ignored when renderEach Placeholder prop function is being used
+  const type = rendered.props.type === 'text/sitecore' ? rendered.props.type : '';
+
+  const disableSuspense = placeholderProps.disableSuspense || false;
+
+  return (
+    <ErrorBoundary
+      data-testid="error-boundary"
+      key={renderingKey}
+      errorComponent={placeholderProps.errorComponent}
+      componentLoadingMessage={placeholderProps.componentLoadingMessage}
+      type={type}
+      isDynamic={isDynamic}
+      disableSuspense={disableSuspense}
+      {...rendered.props}
+      {...extraProps}
+    >
+      {rendered}
+    </ErrorBoundary>
+  );
+};
+
+/**
+ * Get component props to be passed to the rendered component.
+ * @param {PlaceholderProps} placeholderProps current placeholder props
+ * @param {ComponentRendering} componentRendering rendering to be rendered
+ * @param {string} renderingKey unique key to pass over to rendering props
+ * @returns {object} props to be passed to the rendered component
+ */
+export const getRenderedComponentProps = (
+  placeholderProps: PlaceholderProps,
+  componentRendering: ComponentRendering,
+  renderingKey: string
+) => {
+  const {
+    fields: placeholderFields,
+    params: placeholderParams,
+    ...passThroughProps
+  } = placeholderProps;
+  delete passThroughProps.missingComponentComponent;
+  delete passThroughProps.hiddenRenderingComponent;
+  delete passThroughProps.name;
+  const fields = { ...(placeholderFields || {}), ...(componentRendering.fields || {}) };
+  const params = { ...(placeholderParams || {}), ...(componentRendering.params || {}) };
+
+  return {
+    key: renderingKey,
+    ...passThroughProps,
+    fields,
+    params: {
+      ...params,
+      // Provide SXA styles
+      ...getSXAParams(componentRendering),
+    },
+    rendering: componentRendering,
+  };
+};
+
+/**
+ * Get component implemenation from the component map based on the rendering definition.
+ * @param {ComponentRendering} renderingDefinition rendering data
+ * @param {string} placeholderName name of current placeholder
+ * @param {ComponentMap} componentMap component map for the current app
+ * @param {React.ComponentClass} [hiddenRenderingComponent] fallback implementation in to be rendered if the rendering is hidden
+ * @param {React.ComponentClass} [missingComponentComponent] fallback implementation in case no component is found in the component map
+ * @returns {ContentSDKComponet | null} component implementation or null if no component map is provided
+ */
 export const getComponentForRendering = (
   renderingDefinition: ComponentRendering,
   placeholderName: string,
@@ -105,17 +204,14 @@ export const getComponentForRendering = (
     };
   }
 
+  let component = null;
   if (!componentMap || componentMap.size === 0) {
     console.warn(
       `No components were available in component map to service request for component ${renderingDefinition}`
     );
-    return null;
+  } else {
+    component = componentMap.get(renderingDefinition.componentName);
   }
-
-  // Render SXA Rendering Variant if available
-  const exportName = renderingDefinition.params?.FieldNames;
-
-  let component = componentMap.get(renderingDefinition.componentName);
 
   if (!component) {
     // Fallback/defaults for Sitecore Component renderings (in case not defined in component map)
@@ -144,6 +240,9 @@ export const getComponentForRendering = (
       isEmpty: true,
     };
   }
+
+  // Render SXA Rendering Variant if available
+  const exportName = renderingDefinition.params?.FieldNames;
 
   const renderedComponent =
     exportName && exportName !== DEFAULT_EXPORT_NAME
