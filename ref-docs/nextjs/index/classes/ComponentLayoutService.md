@@ -6,7 +6,7 @@
 
 # Class: ComponentLayoutService
 
-Defined in: core/types/editing/component-layout-service.d.ts:65
+Defined in: core/types/editing/component-layout-service.d.ts:69
 
 REST service that enables Design Library functionality.
 Returns layout data for a single rendered component.
@@ -17,7 +17,7 @@ Returns layout data for a single rendered component.
 
 > **new ComponentLayoutService**(`config`): `ComponentLayoutService`
 
-Defined in: core/types/editing/component-layout-service.d.ts:67
+Defined in: core/types/editing/component-layout-service.d.ts:71
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: core/types/editing/component-layout-service.d.ts:67
 
 > **fetchComponentData**(`params`, `fetchOptions?`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
-Defined in: core/types/editing/component-layout-service.d.ts:68
+Defined in: core/types/editing/component-layout-service.d.ts:72
 
 #### Parameters
 
@@ -54,7 +54,7 @@ Defined in: core/types/editing/component-layout-service.d.ts:68
 
 > `protected` **getComponentFetchParams**(`params`): `any`
 
-Defined in: core/types/editing/component-layout-service.d.ts:69
+Defined in: core/types/editing/component-layout-service.d.ts:73
 
 #### Parameters
 

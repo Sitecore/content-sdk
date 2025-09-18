@@ -61,6 +61,7 @@ export const mapEditingParams = (query: {
         mode: query.mode,
         dataSourceId: query.dataSourceId,
         version: query.sc_version,
+        generation: query.generation,
       }
     : {
         site: query.sc_site,

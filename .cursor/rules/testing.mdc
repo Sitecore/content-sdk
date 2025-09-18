@@ -1,0 +1,23 @@
+---
+description: Test strategy with Mocha/Sinon/Chai and NYC coverage
+alwaysApply: false
+globs:
+  - 'src/**/*.test.ts'
+  - 'packages/**/.nycrc'
+  - 'coverage/**'
+---
+
+# Testing
+
+- Mocha with ts-node/register
+- Nearby `*.test.ts` with success + failure cases
+- Stub child-process and fs as needed
+
+Commands:
+
+- Package level: `npm run test`, `npm run coverage`
+- Monorepo level: `yarn test-packages`, `yarn coverage-packages`
+
+Referenced:
+@src/bin.test.ts
+

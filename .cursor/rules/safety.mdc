@@ -1,0 +1,15 @@
+---
+description: Safety rules to prevent editing compiled artifacts or secrets
+alwaysApply: true
+globs: []
+---
+
+# Safety
+
+- Never edit `dist/**`
+- Do not commit secrets (`.env` ignored, use `.env.example`)
+- Template edits must build/run with npm install && npm run build
+- Reuse common processes
+
+Referenced:
+@src/templates/nextjs/.env.example
