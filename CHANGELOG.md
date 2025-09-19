@@ -29,7 +29,9 @@ Our versioning strategy is as follows:
 * `[core]` Ensure displayName paths are properly UTF-8 encoded. ([#179](https://github.com/Sitecore/content-sdk/pull/179))
 * `[react]` Enhanced the Design Library cache buster format to hh-dd-mm-yyyy ([#188](https://github.com/Sitecore/content-sdk/pull/188))
 * `[react]` Add `component:status` events for VariantGeneration ([#190](https://github.com/Sitecore/content-sdk/pull/190))
-* `[nextjs]` Optimization for editing render middleware: issue an internal server request for fetching page data during editing instead of doing temporary redirect ([#195](https://github.com/Sitecore/content-sdk/pull/195)) ([#196](https://github.com/Sitecore/content-sdk/pull/196))
+- `[react]` Enhanced the Design Library cache buster format to hh-dd-mm-yyyy ([#188](https://github.com/Sitecore/content-sdk/pull/188))
+* `[react]` `[core]` Unite capabilities of library | library-metadata with library-variant-generation modes. `isVariantGeneration` is honored only when `isDesignLibrary`(library | library-metadata) is true and `generation=variant` query string is passed to the editing render endpoint. ([#208](https://github.com/Sitecore/content-sdk/pull/208)) ([#215](https://github.com/Sitecore/content-sdk/pull/215))
+- `[nextjs]` Optimization for editing render middleware: issue an internal server request for fetching page data during editing instead of doing temporary redirect ([#195](https://github.com/Sitecore/content-sdk/pull/195)) ([#196](https://github.com/Sitecore/content-sdk/pull/196))
   - added new environment variable `SITECORE_INTERNAL_EDITING_HOST_URL` - the internal host URL for the Next.js application, used for server-side requests for page rendering during editing
   - added a new setting in _sitecore.config_: _sitecoreInternalEditingHostUrl_. This setting allows you to define the internal host URL explicitly, overriding the corresponding environment variable.
   - if none of the above is set:
