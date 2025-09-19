@@ -15,6 +15,7 @@ import {
 } from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { useSitecore } from '../enhancers/withSitecore';
+import { PlaceholderMetadata } from './PlaceholderMetadata';
 
 let {
   getDesignLibraryImportMapEvent,
@@ -220,7 +221,9 @@ export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps) => {
     <main>
       {isGeneratedComponentActive ? (
         <ErrorBoundary uid={rendering.uid} renderKey={renderKey}>
-          <Component fields={propsState.fields} params={propsState.params} key={renderKey} />
+          <PlaceholderMetadata rendering={rendering}>
+            <Component fields={propsState.fields} params={propsState.params} key={renderKey} />
+          </PlaceholderMetadata>
         </ErrorBoundary>
       ) : (
         <div id={EDITING_COMPONENT_ID}>
