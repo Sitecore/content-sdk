@@ -112,25 +112,18 @@ export const wrapErrorBoundary = (
   }>,
   placeholderProps: PlaceholderProps,
   renderingKey: string,
-  isDynamic: boolean = false,
-  extraProps: { [attr: string]: unknown } = {}
+  isDynamic: boolean = false
 ) => {
-  // assign type based on passed element - type='text/sitecore' should be ignored when renderEach Placeholder prop function is being used
-  const type = rendered.props.type === 'text/sitecore' ? rendered.props.type : '';
-
   const disableSuspense = placeholderProps.disableSuspense || false;
-
   return (
     <ErrorBoundary
       data-testid="error-boundary"
       key={renderingKey}
       errorComponent={placeholderProps.errorComponent}
       componentLoadingMessage={placeholderProps.componentLoadingMessage}
-      type={type}
       isDynamic={isDynamic}
       disableSuspense={disableSuspense}
       {...rendered.props}
-      {...extraProps}
     >
       {rendered}
     </ErrorBoundary>
@@ -255,6 +248,6 @@ export const getComponentForRendering = (
   return {
     component: renderedComponent,
     dynamic: !!(renderedComponent as LazyComponentType).render?.preload,
-    isClient: !!(component as ReactModule).isClient,
+    componentType: (component as ReactModule).componentType,
   };
 };

@@ -10,9 +10,9 @@ import {
   wrapErrorBoundary,
   getRenderedComponentProps,
   getComponentForRendering,
-} from './PlaceholderCommon';
+} from './placeholder-utils';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import { PlaceholderProps } from './models';
+import { ComponentType, PlaceholderProps } from './models';
 import { ComponentMap, ReactModule } from '../sharedTypes';
 import { constants } from '@sitecore-content-sdk/core';
 import ErrorBoundary from '../ErrorBoundary';
@@ -467,7 +467,7 @@ describe('PlaceholderCommon', () => {
 
       expect(result?.component).to.equal(TestComponent);
       expect(result?.dynamic).to.be.false;
-      expect(result?.isClient).to.be.false;
+      expect(!!result?.componentType).to.be.false;
     });
 
     it('should return Default export when default not available', () => {
@@ -520,10 +520,10 @@ describe('PlaceholderCommon', () => {
       expect(result?.component).to.equal(CustomExport);
     });
 
-    it('should mark returned component isClient, when isClient export present', () => {
-      const module: ReactModule & { isClient: boolean } = {
+    it('should mark returned component as client, when componentType export present and is client', () => {
+      const module: ReactModule & { componentType: ComponentType } = {
         default: TestComponent,
-        isClient: true,
+        componentType: 'client',
       };
       componentMap.set('TestComponent', module);
 
@@ -535,7 +535,7 @@ describe('PlaceholderCommon', () => {
       const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
 
       expect(result?.component).to.equal(TestComponent);
-      expect(result?.isClient).to.be.true;
+      expect(result?.componentType).to.equal('client');
     });
 
     it('should mark returned component dynamic when it is lazy', () => {

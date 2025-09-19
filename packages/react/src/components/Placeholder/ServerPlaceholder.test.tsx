@@ -995,7 +995,7 @@ describe('Server Placeholder logic', () => {
       };
 
       // Mark as client component
-      (TestClientComponent as any).isClient = true;
+      (TestClientComponent as any).componentType = 'client';
 
       const localComponentMap = new Map();
       localComponentMap.set('TestClientComponent', TestClientComponent);
@@ -1090,7 +1090,10 @@ describe('Server Placeholder logic', () => {
 
       // Mock this as a client component
       const localComponentMap = new Map();
-      localComponentMap.set('ClientComponent', { default: ClientComponent, isClient: true });
+      localComponentMap.set('ClientComponent', {
+        default: ClientComponent,
+        componentType: 'client',
+      });
 
       const route: any = {
         placeholders: {
@@ -1359,4 +1362,3 @@ describe('Server Placeholder logic', () => {
 after(() => {
   (global as any).window.close();
 });
-

@@ -12,6 +12,8 @@ export type ComponentProps = {
   rendering: ComponentRendering;
 };
 
+export type ComponentType = 'server' | 'client' | 'universal';
+
 export interface PlaceholderProps {
   [key: string]: unknown;
   /** Name of the placeholder to render. */
@@ -95,7 +97,9 @@ export interface PlaceholderProps {
   renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
 }
 
-//
+/**
+ * Prop names from placeholder that cannot be serialized and passed to client side components
+ */
 export const nonSerializedProps = [
   'renderEmpty',
   'render',
@@ -104,7 +108,7 @@ export const nonSerializedProps = [
   'componentLoadingMessage',
   'modifyComponentProps',
   'componentMap',
-  'pageContext',
+  'page',
   'missingComponentComponent',
   'hiddenRenderingComponent',
   'rendering',

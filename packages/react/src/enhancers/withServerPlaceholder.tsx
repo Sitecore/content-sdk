@@ -8,12 +8,11 @@ import { Page } from '@sitecore-content-sdk/core/client';
 export type ComponentProps = {
   rendering: ComponentRendering;
   placeholders: Record<string, React.ReactNode>;
-  componentMap?: ComponentMap;
 };
 
 export type WrapperProps = {
   page: Page;
-  componentMap?: ComponentMap;
+  componentMap: ComponentMap;
   rendering: ComponentRendering;
 };
 
@@ -34,7 +33,6 @@ export const withServerPlaceholder = <T extends ComponentProps, W extends T & Wr
       );
     }
     const propsCopy: T = { ...props };
-    delete propsCopy.componentMap;
 
     return <Component {...propsCopy} placeholders={phProps} />;
   };

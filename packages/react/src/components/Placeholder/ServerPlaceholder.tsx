@@ -6,7 +6,7 @@ import {
   getRenderedComponentProps,
   renderEmptyPlaceholder,
   wrapErrorBoundary,
-} from './PlaceholderCommon';
+} from './placeholder-utils';
 import React from 'react';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
@@ -38,13 +38,14 @@ export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
 
   const components = placeholderRenderings
     .map((rendering, index) => {
-      const { component, isEmpty, isClient, dynamic } = getComponentForRendering(
+      const { component, isEmpty, componentType, dynamic } = getComponentForRendering(
         rendering,
         props.name,
         props.componentMap,
         props.hiddenRenderingComponent,
         props.missingComponentComponent
       );
+      const isClient = componentType === 'client';
       const key = rendering.uid || `component-${index}`;
       const finalPhProps = isClient ? serializableProps : props;
 

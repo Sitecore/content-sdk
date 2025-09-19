@@ -236,50 +236,6 @@ describe('withServerPlaceholder HOC', () => {
     expect(capturedPlaceholderProps.componentMap).to.equal(componentMap);
   });
 
-  it('should remove componentMap from props passed to wrapped component', () => {
-    const cleanComponent: ComponentRendering = {
-      componentName: 'TestComponent',
-      uid: 'clean-test-123',
-      placeholders: {
-        'page-content': [
-          {
-            componentName: 'DownloadCallout',
-            uid: 'download-123',
-            fields: { linkText: { value: 'Download' } },
-          },
-        ],
-      },
-    };
-
-    const phKey = 'page-content';
-    const page = getPage();
-
-    let capturedProps: any = null;
-    const TestComponent: React.FC<ComponentProps> = (props) => {
-      capturedProps = props;
-      return <div className="test-component">{props.placeholders[phKey]}</div>;
-    };
-
-    const props: WrapperProps = {
-      rendering: cleanComponent,
-      page,
-      componentMap,
-    };
-
-    const Element = withServerPlaceholder(TestComponent, [phKey]);
-    render(
-      <SitecoreProvider api={api} componentMap={componentMap} page={page}>
-        <Element {...props} />
-      </SitecoreProvider>
-    );
-
-    expect(capturedProps).to.not.be.null;
-    expect(capturedProps.componentMap).to.be.undefined;
-    expect(capturedProps.rendering).to.equal(cleanComponent);
-    expect(capturedProps.placeholders).to.be.an('object');
-    expect(capturedProps.placeholders[phKey]).to.not.be.undefined;
-  });
-
   describe('Metadata Mode', () => {
     const defaultPage = getPage();
     const editModePage: Page = {

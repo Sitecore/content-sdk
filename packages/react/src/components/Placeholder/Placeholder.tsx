@@ -9,7 +9,7 @@ import {
   getRenderedComponentProps,
   renderEmptyPlaceholder,
   wrapErrorBoundary,
-} from './PlaceholderCommon';
+} from './placeholder-utils';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 

@@ -7,10 +7,11 @@ type ErrorComponentProps = {
   [prop: string]: unknown;
 };
 
+// @TODO: remove type in next major release
 export type ErrorBoundaryProps = {
   children: ReactNode;
   page: Page;
-  type: string;
+  type?: string;
   isDynamic?: boolean;
   errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
   rendering?: ComponentRendering;
