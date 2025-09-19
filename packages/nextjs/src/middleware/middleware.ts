@@ -70,6 +70,15 @@ export abstract class MiddlewareBase extends Middleware {
   }
 
   /**
+   * Determines if the application is using the app router based on the locale header
+   * @param {NextResponse} res response
+   * @returns {boolean} true if app router is used
+   */
+  protected isAppRouter(res: NextResponse): boolean {
+    return !!this.getLanguageFromHeader(res);
+  }
+
+  /**
    * Determines if the request is a Next.js (next/link) prefetch request
    * @param {NextRequest} req request
    * @returns {boolean} is prefetch
