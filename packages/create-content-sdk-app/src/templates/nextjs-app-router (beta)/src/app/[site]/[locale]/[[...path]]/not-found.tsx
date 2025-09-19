@@ -6,6 +6,7 @@ import client from 'lib/sitecore-client';
 import scConfig from 'sitecore.config';
 import Layout from 'src/Layout';
 import Providers from 'src/Providers';
+import { NextIntlClientProvider } from 'next-intl';
 
 export default async function NotFound() {
   const headersList = await headers();
