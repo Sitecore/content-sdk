@@ -1362,3 +1362,4 @@ describe('Server Placeholder logic', () => {
 after(() => {
   (global as any).window.close();
 });
+

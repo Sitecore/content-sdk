@@ -17,12 +17,12 @@ export type WrapperProps = {
 };
 
 export const withServerPlaceholder = <T extends ComponentProps, W extends T & WrapperProps>(
-  Component: ComponentType<T>,
-  placeholders: string[]
+  Component: ComponentType<T>
 ) => {
   return (props: W) => {
+    const placeholders = props.rendering.placeholders;
     const phProps: Record<string, unknown> = {};
-    for (const placeholder of placeholders) {
+    for (const placeholder of Object.keys(placeholders)) {
       phProps[placeholder] = (
         <ServerPlaceholder
           name={placeholder}

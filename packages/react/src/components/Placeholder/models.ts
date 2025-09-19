@@ -97,6 +97,13 @@ export interface PlaceholderProps {
   renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
 }
 
+export type RenderedProps = Omit<PlaceholderProps, 'fields | params'> & {
+  key: string;
+  fields: { [field: string]: unknown };
+  params: { [param: string]: unknown };
+  rendering: ComponentRendering;
+};
+
 /**
  * Prop names from placeholder that cannot be serialized and passed to client side components
  */

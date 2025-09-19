@@ -12,12 +12,18 @@ import { PlaceholderMetadata } from './PlaceholderMetadata';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 
 export type ServerPlaceholderProps = PlaceholderProps & {
-  componentMap: ComponentMap;
+  componentMap?: ComponentMap;
 };
 
+/**
+ * React Server Component implementation for Placeholder.
+ * Renders components from the layout data for the given placeholder name, with consideration for page edit mode.
+ * Pulls components from the provided component map.
+ * @param {ServerPlaceholderProps} props Placeholder props
+ * @returns {React.ReactNode | React.ReactElement[]} rendered component(s)
+ */
 export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
   if (!props.componentMap) {
-    // better error handling needed
     throw new Error('Component map is required for ServerPlaceholder');
   }
 
@@ -33,7 +39,7 @@ export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
   const placeholderRenderings = getPlaceholderRenderings(
     props.rendering,
     props.name,
-    props.page.mode.isEditing
+    props.page?.mode.isEditing
   );
 
   const components = placeholderRenderings
@@ -64,8 +70,9 @@ export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
 
       // if in edit mode then emit shallow chromes for hydration in Pages
       if (props.page.mode.isEditing) {
+        const key = (finalPhProps.uid as string) || `component-${index}`;
         return (
-          <PlaceholderMetadata key={finalPhProps.name} rendering={rendering}>
+          <PlaceholderMetadata key={key} rendering={rendering}>
             {rendered}
           </PlaceholderMetadata>
         );
@@ -110,3 +117,5 @@ export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
     return finalRendering;
   }
 };
+
+export default ServerPlaceholder;

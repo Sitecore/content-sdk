@@ -274,6 +274,63 @@ describe('PlaceholderCommon', () => {
 
       expect(result.props.disableSuspense).to.be.false;
     });
+
+    it('should only pass serializable props to ErrorBoundary', () => {
+      const TestComponent = () => <div className="test-component">Test</div>;
+      const errorComponent = () => <div className="error-component">Error</div>;
+      const mockComponentMap = new Map();
+
+      const placeholderProps: PlaceholderProps = {
+        name: 'test-placeholder',
+        rendering: { componentName: 'Test', uid: 'test-uid' },
+        page: {
+          layout: {},
+          locale: 'en',
+          mode: {
+            name: 'normal',
+            isNormal: true,
+            isPreview: false,
+            isEditing: false,
+            isDesignLibrary: false,
+            designLibrary: { isVariantGeneration: false },
+          },
+        },
+        errorComponent,
+        componentLoadingMessage: 'Loading...',
+      };
+
+      // Create a rendered component with both serializable and non-serializable props
+      const renderedProps = {
+        serializableProp: 'serializable-value',
+        anotherSerializableProp: 123,
+        renderEmpty: () => <div>Empty</div>,
+        render: () => <div>Render</div>,
+        renderEach: () => <div>RenderEach</div>,
+        componentMap: mockComponentMap,
+        page: placeholderProps.page,
+        rendering: { componentName: 'Test', uid: 'test-uid' },
+      };
+      const rendered = <TestComponent {...renderedProps} />;
+
+      const renderingKey = 'test-key';
+      const result = wrapErrorBoundary(rendered, placeholderProps, renderingKey);
+
+      // Verify that serializable props are passed to ErrorBoundary
+      expect(result.props.serializableProp).to.equal('serializable-value');
+      expect(result.props.anotherSerializableProp).to.equal(123);
+
+      // Verify that non-serializable props are NOT passed to ErrorBoundary
+      expect(result.props.renderEmpty).to.be.undefined;
+      expect(result.props.render).to.be.undefined;
+      expect(result.props.renderEach).to.be.undefined;
+      expect(result.props.componentMap).to.be.undefined;
+      expect(result.props.page).to.be.undefined;
+      expect(result.props.rendering).to.be.undefined;
+
+      // Verify that ErrorBoundary still gets its expected props from placeholderProps
+      expect(result.props.errorComponent).to.equal(errorComponent);
+      expect(result.props.componentLoadingMessage).to.equal('Loading...');
+    });
   });
 
   describe('getRenderedComponentProps', () => {

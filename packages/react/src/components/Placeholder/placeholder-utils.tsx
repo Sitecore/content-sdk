@@ -14,7 +14,7 @@ import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
 import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
 import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
 import ErrorBoundary from '../ErrorBoundary';
-import { PlaceholderProps } from './models';
+import { nonSerializedProps, PlaceholderProps, RenderedProps } from './models';
 
 /**
  * Get the renderings for the specified placeholder from the rendering data.
@@ -107,14 +107,19 @@ export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElemen
  * @returns {React.ReactElement} wrapped component
  */
 export const wrapErrorBoundary = (
-  rendered: React.ReactElement<{
-    [attr: string]: unknown;
-  }>,
+  rendered: React.ReactElement<RenderedProps>,
   placeholderProps: PlaceholderProps,
   renderingKey: string,
   isDynamic: boolean = false
 ) => {
   const disableSuspense = placeholderProps.disableSuspense || false;
+  const serializableProps = nonSerializedProps.reduce(
+    (finalProps, prop) => {
+      delete finalProps[prop];
+      return finalProps;
+    },
+    { ...rendered.props }
+  );
   return (
     <ErrorBoundary
       data-testid="error-boundary"
@@ -123,7 +128,7 @@ export const wrapErrorBoundary = (
       componentLoadingMessage={placeholderProps.componentLoadingMessage}
       isDynamic={isDynamic}
       disableSuspense={disableSuspense}
-      {...rendered.props}
+      {...serializableProps}
     >
       {rendered}
     </ErrorBoundary>
@@ -135,13 +140,13 @@ export const wrapErrorBoundary = (
  * @param {PlaceholderProps} placeholderProps current placeholder props
  * @param {ComponentRendering} componentRendering rendering to be rendered
  * @param {string} renderingKey unique key to pass over to rendering props
- * @returns {object} props to be passed to the rendered component
+ * @returns {RenderedProps} props to be passed to the rendered component
  */
 export const getRenderedComponentProps = (
   placeholderProps: PlaceholderProps,
   componentRendering: ComponentRendering,
   renderingKey: string
-) => {
+): RenderedProps => {
   const {
     fields: placeholderFields,
     params: placeholderParams,
