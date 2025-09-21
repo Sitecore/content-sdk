@@ -45,11 +45,13 @@ export { Form } from './components/Form';
 export { ReactContentSdkComponent, ComponentMap, ReactModule } from './components/sharedTypes';
 export {
   Placeholder,
-  ServerPlaceholder,
-  ServerPlaceholderProps,
   PlaceholderProps,
   PlaceholderProps as PlaceholderComponentProps,
+  // name it AppPlaceholder to avoid a breaking change for default Placeholder export
+  // @TODO: rename to Placeholder in the next major release
+  AppPlaceholder,
 } from './components/Placeholder';
+export { ServerPlaceholder } from './components/Placeholder/ServerPlaceholder';
 export {
   Image,
   ImageProps,

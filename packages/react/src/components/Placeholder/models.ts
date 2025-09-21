@@ -23,6 +23,7 @@ export interface PlaceholderProps {
   /**
    * Component Map will be used to map Sitecore component names to app implementation
    * When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
+   * When rendered as a server placeholder, this prop must be provided.
    */
   componentMap?: ComponentMap;
   /**

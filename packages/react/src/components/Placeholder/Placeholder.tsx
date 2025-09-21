@@ -164,4 +164,3 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
 const PlaceholderWithComponentMap = withComponentMap(PlaceholderComponent);
 
 export const Placeholder = withSitecore()(PlaceholderWithComponentMap);
-export default Placeholder;

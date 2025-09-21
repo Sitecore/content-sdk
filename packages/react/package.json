@@ -73,7 +73,8 @@
   },
   "dependencies": {
     "@sitecore-content-sdk/core": "1.2.0-canary.17",
-    "fast-deep-equal": "^3.1.3"
+    "fast-deep-equal": "^3.1.3",
+    "rsc-env": "0.0.2"
   },
   "description": "",
   "types": "types/index.d.ts",

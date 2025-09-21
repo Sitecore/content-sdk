@@ -107,7 +107,7 @@ export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElemen
  * @returns {React.ReactElement} wrapped component
  */
 export const wrapErrorBoundary = (
-  rendered: React.ReactElement<RenderedProps>,
+  rendered: React.ReactElement<{ [attr: string]: unknown }>,
   placeholderProps: PlaceholderProps,
   renderingKey: string,
   isDynamic: boolean = false

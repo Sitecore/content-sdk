@@ -1,5 +1,4 @@
 import { nonSerializedProps, PlaceholderProps } from './models';
-import { ComponentMap } from '../sharedTypes';
 import {
   getComponentForRendering,
   getPlaceholderRenderings,
@@ -11,18 +10,14 @@ import React from 'react';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 
-export type ServerPlaceholderProps = PlaceholderProps & {
-  componentMap?: ComponentMap;
-};
-
 /**
  * React Server Component implementation for Placeholder.
  * Renders components from the layout data for the given placeholder name, with consideration for page edit mode.
  * Pulls components from the provided component map.
- * @param {ServerPlaceholderProps} props Placeholder props
+ * @param {PlaceholderProps} props Placeholder props
  * @returns {React.ReactNode | React.ReactElement[]} rendered component(s)
  */
-export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
+export const ServerPlaceholder = (props: PlaceholderProps) => {
   if (!props.componentMap) {
     throw new Error('Component map is required for ServerPlaceholder');
   }
@@ -117,5 +112,3 @@ export const ServerPlaceholder = (props: ServerPlaceholderProps) => {
     return finalRendering;
   }
 };
-
-export default ServerPlaceholder;

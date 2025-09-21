@@ -1,6 +1,6 @@
 import React from 'react';
 import { ComponentType } from 'react';
-import { ServerPlaceholder } from '../components/Placeholder';
+import { ServerPlaceholder } from '../components/Placeholder/ServerPlaceholder';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { ComponentMap } from '../components/sharedTypes';
 import { Page } from '@sitecore-content-sdk/core/client';
@@ -32,7 +32,8 @@ export const withServerPlaceholder = <T extends ComponentProps, W extends T & Wr
         />
       );
     }
-    const propsCopy: T = { ...props };
+    const displayName = Component.displayName || Component.name || 'Component';
+    const propsCopy: T = { ...props, displayName };
 
     return <Component {...propsCopy} placeholders={phProps} />;
   };
