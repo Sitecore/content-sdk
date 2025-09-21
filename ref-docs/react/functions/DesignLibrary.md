@@ -8,7 +8,7 @@
 
 > **DesignLibrary**(`props`): `Element`
 
-Defined in: [packages/react/src/components/DesignLibrary.tsx:116](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/react/src/components/DesignLibrary.tsx#L116)
+Defined in: [packages/react/src/components/DesignLibrary.tsx:117](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/react/src/components/DesignLibrary.tsx#L117)
 
 Design Library component.
 

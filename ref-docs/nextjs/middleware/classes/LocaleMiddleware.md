@@ -6,7 +6,7 @@
 
 # Class: LocaleMiddleware
 
-Defined in: [nextjs/src/middleware/locale-middleware.ts:23](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/locale-middleware.ts#L23)
+Defined in: [nextjs/src/middleware/locale-middleware.ts:23](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/locale-middleware.ts#L23)
 
 Middleware/handler for handling locale-based routing in the Next.js App Router.
 This middleware is responsible for extracting the locale from the request path and rewriting it if necessary.
@@ -22,7 +22,7 @@ It also sets the locale header in the response.
 
 > **new LocaleMiddleware**(`config`): `LocaleMiddleware`
 
-Defined in: [nextjs/src/middleware/locale-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/locale-middleware.ts#L27)
+Defined in: [nextjs/src/middleware/locale-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/locale-middleware.ts#L27)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [nextjs/src/middleware/locale-middleware.ts:27](https://github.com/S
 
 > `protected` **config**: [`LocaleMiddlewareConfig`](../type-aliases/LocaleMiddlewareConfig.md)
 
-Defined in: [nextjs/src/middleware/locale-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/locale-middleware.ts#L27)
+Defined in: [nextjs/src/middleware/locale-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/locale-middleware.ts#L27)
 
 Locale middleware config
 
@@ -58,7 +58,7 @@ Locale middleware config
 
 > `protected` **defaultHostname**: `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:52](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L52)
+Defined in: [nextjs/src/middleware/middleware.ts:52](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L52)
 
 #### Inherited from
 
@@ -70,7 +70,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:52](https://github.com/Sitecore
 
 > `protected` **siteResolver**: [`SiteResolver`](../../index/classes/SiteResolver.md)
 
-Defined in: [nextjs/src/middleware/middleware.ts:53](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L53)
+Defined in: [nextjs/src/middleware/middleware.ts:53](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L53)
 
 #### Inherited from
 
@@ -82,7 +82,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:53](https://github.com/Sitecore
 
 > `protected` **disabled**(`req`, `res`): `undefined` \| `boolean`
 
-Defined in: [nextjs/src/middleware/locale-middleware.ts:78](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/locale-middleware.ts#L78)
+Defined in: [nextjs/src/middleware/locale-middleware.ts:78](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/locale-middleware.ts#L78)
 
 #### Parameters
 
@@ -105,7 +105,7 @@ Defined in: [nextjs/src/middleware/locale-middleware.ts:78](https://github.com/S
 
 > `protected` **extractDebugHeaders**(`incomingHeaders`): `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:113](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L113)
+Defined in: [nextjs/src/middleware/middleware.ts:113](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L113)
 
 Safely extract all headers for debug logging
 Necessary to avoid middleware issue https://github.com/vercel/next.js/issues/39765
@@ -132,7 +132,7 @@ Object with headers as key/value pairs
 
 > `protected` **getClientFactory**(`graphQLOptions`): [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [nextjs/src/middleware/middleware.ts:181](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L181)
+Defined in: [nextjs/src/middleware/middleware.ts:181](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L181)
 
 #### Parameters
 
@@ -154,7 +154,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:181](https://github.com/Sitecor
 
 > `protected` **getHostHeader**(`req`): `undefined` \| `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:149](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L149)
+Defined in: [nextjs/src/middleware/middleware.ts:149](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L149)
 
 Extract 'host' header
 
@@ -178,7 +178,7 @@ Extract 'host' header
 
 > `protected` **getLanguage**(`req`, `res?`): `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:125](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L125)
+Defined in: [nextjs/src/middleware/middleware.ts:125](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L125)
 
 Provides used language
 
@@ -205,7 +205,7 @@ language
 
 > `protected` **getLanguageFromHeader**(`res?`): `undefined` \| `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:141](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L141)
+Defined in: [nextjs/src/middleware/middleware.ts:141](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L141)
 
 Extract language from locale header of the response
 set by LocaleMiddleware for app router application
@@ -232,7 +232,7 @@ language or undefined if not found
 
 > `protected` **getLocaleFromPath**(`path`): `undefined` \| `string`
 
-Defined in: [nextjs/src/middleware/locale-middleware.ts:88](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/locale-middleware.ts#L88)
+Defined in: [nextjs/src/middleware/locale-middleware.ts:88](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/locale-middleware.ts#L88)
 
 Extract locale from path
 
@@ -254,7 +254,7 @@ the locale if found
 
 > `protected` **getSite**(`req`, `res?`): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
-Defined in: [nextjs/src/middleware/middleware.ts:161](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L161)
+Defined in: [nextjs/src/middleware/middleware.ts:161](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L161)
 
 Get site information. If site name is stored in cookie, use it, otherwise resolve by hostname
 - If site can't be resolved by site name cookie use default site info based on provided parameters
@@ -283,7 +283,7 @@ site information
 
 > **handle**(`req`, `res`): `Promise`\<`NextResponse`\<`unknown`\>\>
 
-Defined in: [nextjs/src/middleware/locale-middleware.ts:31](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/locale-middleware.ts#L31)
+Defined in: [nextjs/src/middleware/locale-middleware.ts:31](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/locale-middleware.ts#L31)
 
 Handler method to execute middleware logic
 
@@ -308,7 +308,7 @@ Handler method to execute middleware logic
 
 > `protected` **isPrefetch**(`req`): `boolean`
 
-Defined in: [nextjs/src/middleware/middleware.ts:77](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L77)
+Defined in: [nextjs/src/middleware/middleware.ts:77](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L77)
 
 Determines if the request is a Next.js (next/link) prefetch request
 
@@ -334,7 +334,7 @@ is prefetch
 
 > `protected` **isPreview**(`req`): `boolean`
 
-Defined in: [nextjs/src/middleware/middleware.ts:66](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L66)
+Defined in: [nextjs/src/middleware/middleware.ts:66](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L66)
 
 Determines if mode is preview
 
@@ -360,7 +360,7 @@ is preview
 
 > `protected` **rewrite**(`rewritePath`, `req`, `res`, `skipHeader?`): `NextResponse`
 
-Defined in: [nextjs/src/middleware/middleware.ts:192](https://github.com/Sitecore/content-sdk/blob/7d8d24cfeb4d439bce7e15ba05691bbd035b5c26/packages/nextjs/src/middleware/middleware.ts#L192)
+Defined in: [nextjs/src/middleware/middleware.ts:192](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/middleware/middleware.ts#L192)
 
 Create a rewrite response
 
