@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../test-data/component-editing-data';
 import { SitecoreProvider } from './SitecoreProvider';
@@ -16,7 +16,6 @@ import { Placeholder } from '..';
 
 import {
   DesignLibraryStatus,
-  // ComponentUpdateEventArgs,
   getDesignLibraryStatusEvent,
   DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
@@ -118,6 +117,47 @@ describe('<DesignLibrary />', () => {
   const unsubscribeSpy = sandbox.spy();
   let addComponentPreviewHandlerSpy: sinon.SinonStub;
   let callbackEvent: any = null;
+
+  const RENDER_ID = 'test-content';
+  const PLACEHOLDER_GUID = '00000000-0000-0000-0000-000000000000';
+
+  const joinHtml = (parts: string[]) => parts.join('');
+  const expectContains = (html: string, parts: string[]) =>
+    expect(html).to.contain(joinHtml(parts));
+
+  const expectedInitialMarkup = (guid = PLACEHOLDER_GUID, id = RENDER_ID) =>
+    joinHtml([
+      '<main><div id="editing-component">',
+      `<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_${guid}"></code>`,
+      `<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="${id}"></code>`,
+      '<div class="test"><div>',
+      '<p>This is a live set of examples of how to use Content SDK</p>\n',
+      '</div><div class="sc-jss-empty-placeholder">',
+      '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id=""></code>',
+      '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
+      '</div></div>',
+      '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
+      '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
+      '</div></main>',
+    ]);
+
+  const postedEventsJson = (spy: sinon.SinonSpy) =>
+    spy.getCalls().map((c) => JSON.stringify(c.args[0]));
+
+  const expectStatus = (
+    spy: sinon.SinonSpy,
+    status: DesignLibraryStatus,
+    id: string,
+    opts: { strict?: boolean } = {}
+  ) => {
+    const target = JSON.stringify(getDesignLibraryStatusEvent(status, id));
+    const events = postedEventsJson(spy);
+    if (opts.strict) {
+      expect(events).to.include(target);
+    } else {
+      expect(events.some((e) => e.includes(target))).to.be.true;
+    }
+  };
 
   beforeEach(() => {
     postMessageSpy.resetHistory();
@@ -338,48 +378,11 @@ describe('<DesignLibrary />', () => {
         </SitecoreProvider>
       );
 
-      const expected = [
-        '<main><div id="editing-component">',
-        '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_00000000-0000-0000-0000-000000000000"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content"></code>',
-        '<div class="test"><div>',
-        '<p>This is a live set of examples of how to use Content SDK</p>\n',
-        '</div><div class="sc-jss-empty-placeholder">',
-        '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id=""></code>',
-        '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
-        '</div></div>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
-        '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
-        '</div></main>',
-      ].join('');
+      expect(rendered.baseElement.innerHTML).to.contain(expectedInitialMarkup());
 
-      expect(rendered.baseElement.innerHTML).to.contain(expected);
+      expectStatus(postMessageSpy, DesignLibraryStatus.READY, RENDER_ID, { strict: true });
 
-      // READY
-      expect(
-        postMessageSpy
-          .getCalls()
-          .some(
-            (c) =>
-              JSON.stringify(c.args[0]) ===
-              JSON.stringify(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'test-content'))
-          )
-      ).to.be.true;
-
-      // initial RENDERED
-      await waitFor(() => {
-        expect(
-          postMessageSpy
-            .getCalls()
-            .some((c) =>
-              JSON.stringify(c.args[0]).includes(
-                JSON.stringify(
-                  getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
-                )
-              )
-            )
-        ).to.be.true;
-      });
+      await waitFor(() => expectStatus(postMessageSpy, DesignLibraryStatus.RENDERED, RENDER_ID));
     });
   });
 
@@ -559,7 +562,23 @@ describe('<DesignLibrary />', () => {
       __mockDependencies({ addComponentPreviewHandler: addComponentPreviewHandlerSpy });
     });
 
-    it('behaves like combined (metadata)', async () => {
+    const expectedGeneratedParts = [
+      '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close">',
+      '<div>Gen-Metadata</div>',
+      '</code>',
+    ];
+
+    const triggerGeneration = async () => {
+      await act(async () => {
+        callbackEvent(null, () => (
+          <code type="text/sitecore" chrometype="rendering" class="scpm" kind="close">
+            <div>Gen-Metadata</div>
+          </code>
+        ));
+      });
+    };
+
+    it('renders real component first, wires generation, then switches to generated component', async () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
 
       const rendered = render(
@@ -568,27 +587,17 @@ describe('<DesignLibrary />', () => {
         </SitecoreProvider>
       );
 
-      expect(rendered.baseElement.innerHTML).to.contain(
-        '<p>This is a live set of examples of how to use Content SDK</p>'
-      );
+      expect(rendered.baseElement.innerHTML).to.contain(expectedInitialMarkup());
 
-      await waitFor(() => {
-        expect(addComponentPreviewHandlerSpy).to.have.been.called;
-        callbackEvent(null, () => <div>Gen-Metadata</div>);
-        expect(rendered.baseElement.innerHTML).to.contain('Gen-Metadata');
-      });
+      await waitFor(() => expect(addComponentPreviewHandlerSpy).to.have.been.called);
 
-      expect(
-        postMessageSpy
-          .getCalls()
-          .some((c) =>
-            JSON.stringify(c.args[0]).includes(
-              JSON.stringify(
-                getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
-              )
-            )
-          )
-      ).to.be.true;
+      expectStatus(postMessageSpy, DesignLibraryStatus.READY, RENDER_ID, { strict: true });
+
+      await triggerGeneration();
+
+      await waitFor(() => expectContains(rendered.baseElement.innerHTML, expectedGeneratedParts));
+
+      await waitFor(() => expectStatus(postMessageSpy, DesignLibraryStatus.RENDERED, RENDER_ID));
     });
   });
 });

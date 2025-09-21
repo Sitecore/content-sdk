@@ -6,7 +6,7 @@
 
 # Interface: RetryStrategy
 
-Defined in: [packages/core/src/models.ts:27](https://github.com/Sitecore/content-sdk/blob/e614f9898cdcddf62ed7ac3f0b877414346454a3/packages/core/src/models.ts#L27)
+Defined in: [packages/core/src/models.ts:27](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/core/src/models.ts#L27)
 
 Defines the strategy for retrying GraphQL requests based on errors and attempts.
 
@@ -16,7 +16,7 @@ Defines the strategy for retrying GraphQL requests based on errors and attempts.
 
 > **getDelay**(`error`, `attempt`): `number`
 
-Defined in: [packages/core/src/models.ts:42](https://github.com/Sitecore/content-sdk/blob/e614f9898cdcddf62ed7ac3f0b877414346454a3/packages/core/src/models.ts#L42)
+Defined in: [packages/core/src/models.ts:42](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/core/src/models.ts#L42)
 
 Calculates the delay (in milliseconds) before the next retry based on the given error and attempt count.
 
@@ -39,7 +39,7 @@ The delay in milliseconds before the next retry.
 
 > **shouldRetry**(`error`, `attempt`, `retries`): `boolean`
 
-Defined in: [packages/core/src/models.ts:35](https://github.com/Sitecore/content-sdk/blob/e614f9898cdcddf62ed7ac3f0b877414346454a3/packages/core/src/models.ts#L35)
+Defined in: [packages/core/src/models.ts:35](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/core/src/models.ts#L35)
 
 Determines whether a request should be retried based on the given error and attempt count.
 

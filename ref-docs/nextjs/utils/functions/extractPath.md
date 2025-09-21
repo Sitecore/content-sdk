@@ -8,7 +8,7 @@
 
 > **extractPath**(`context`): `string`
 
-Defined in: [nextjs/src/utils/utils.ts:50](https://github.com/Sitecore/content-sdk/blob/e614f9898cdcddf62ed7ac3f0b877414346454a3/packages/nextjs/src/utils/utils.ts#L50)
+Defined in: [nextjs/src/utils/utils.ts:50](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/nextjs/src/utils/utils.ts#L50)
 
 ## Parameters
 
