@@ -18,7 +18,7 @@ Our versioning strategy is as follows:
   - Base template ([#191](https://github.com/Sitecore/content-sdk/pull/191))
   - Robots.txt and Sitemap.xml support ([#197](https://github.com/Sitecore/content-sdk/pull/197))
   - Editing and preview support ([#198](https://github.com/Sitecore/content-sdk/pull/198))
-  - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202))
+  - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202)) ([#214](https://github.com/Sitecore/content-sdk/pull/214))
 
 ## 1.1.0
 

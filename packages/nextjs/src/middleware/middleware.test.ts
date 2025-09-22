@@ -130,6 +130,26 @@ describe('MiddlewareBase', () => {
     });
   });
 
+  describe('isAppRouter', () => {
+    it('should return true when locale header is provided', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+      const res = createRes({
+        headers: {
+          'x-sc-locale': 'en-US',
+        },
+      });
+
+      expect(middleware['isAppRouter'](res)).to.equal(true);
+    });
+
+    it('should return false when locale header is missing', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+      const res = createRes({});
+
+      expect(middleware['isAppRouter'](res)).to.equal(false);
+    });
+  });
+
   describe('isPrefetch', () => {
     it('should return true when purpose header is prefetch', () => {
       const middleware = new SampleMiddleware({ sites: [] });
