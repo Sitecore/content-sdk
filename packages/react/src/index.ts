@@ -47,11 +47,8 @@ export {
   Placeholder,
   PlaceholderProps,
   PlaceholderProps as PlaceholderComponentProps,
-  // name it AppPlaceholder to avoid a breaking change for default Placeholder export
-  // @TODO: rename to Placeholder in the next major release
-  AppPlaceholder,
+  ServerPlaceholder,
 } from './components/Placeholder';
-export { ServerPlaceholder } from './components/Placeholder/ServerPlaceholder';
 export {
   Image,
   ImageProps,

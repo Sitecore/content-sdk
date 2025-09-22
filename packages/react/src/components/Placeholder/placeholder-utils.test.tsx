@@ -207,7 +207,12 @@ describe('PlaceholderCommon', () => {
       const rendered = <TestComponent />;
       const renderingKey = 'test-key';
 
-      const result = wrapErrorBoundary(rendered, placeholderProps, renderingKey, true);
+      const result = wrapErrorBoundary({
+        rendered,
+        placeholderProps,
+        renderingKey,
+        isDynamic: true,
+      });
 
       expect(result.type).to.equal(ErrorBoundary);
       expect(result.key).to.equal(renderingKey);
@@ -242,7 +247,11 @@ describe('PlaceholderCommon', () => {
       const rendered = <TestComponent type="text/sitecore" />;
       const renderingKey = 'test-key';
 
-      const result = wrapErrorBoundary(rendered, placeholderProps, renderingKey);
+      const result = wrapErrorBoundary({
+        rendered,
+        placeholderProps,
+        renderingKey,
+      });
 
       expect(result.props.type).to.equal('text/sitecore');
     });
@@ -270,16 +279,26 @@ describe('PlaceholderCommon', () => {
       const rendered = <TestComponent />;
       const renderingKey = 'test-key';
 
-      const result = wrapErrorBoundary(rendered, placeholderProps, renderingKey);
+      const result = wrapErrorBoundary({
+        rendered,
+        placeholderProps,
+        renderingKey,
+      });
 
       expect(result.props.disableSuspense).to.be.false;
     });
 
-    it('should only pass serializable props to ErrorBoundary', () => {
+    it('should only pass serializable props to ErrorBoundary when in server', () => {
       const TestComponent = () => <div className="test-component">Test</div>;
       const errorComponent = () => <div className="error-component">Error</div>;
       const mockComponentMap = new Map();
-
+      class NonJsonClass {
+        value: string;
+        constructor() {
+          this.value = 'test';
+        }
+      }
+      const customObj = new NonJsonClass();
       const placeholderProps: PlaceholderProps = {
         name: 'test-placeholder',
         rendering: { componentName: 'Test', uid: 'test-uid' },
@@ -301,6 +320,7 @@ describe('PlaceholderCommon', () => {
 
       // Create a rendered component with both serializable and non-serializable props
       const renderedProps = {
+        customObj,
         serializableProp: 'serializable-value',
         anotherSerializableProp: 123,
         renderEmpty: () => <div>Empty</div>,
@@ -313,7 +333,12 @@ describe('PlaceholderCommon', () => {
       const rendered = <TestComponent {...renderedProps} />;
 
       const renderingKey = 'test-key';
-      const result = wrapErrorBoundary(rendered, placeholderProps, renderingKey);
+      const result = wrapErrorBoundary({
+        rendered,
+        placeholderProps,
+        renderingKey,
+        isServer: true,
+      });
 
       // Verify that serializable props are passed to ErrorBoundary
       expect(result.props.serializableProp).to.equal('serializable-value');
@@ -323,9 +348,7 @@ describe('PlaceholderCommon', () => {
       expect(result.props.renderEmpty).to.be.undefined;
       expect(result.props.render).to.be.undefined;
       expect(result.props.renderEach).to.be.undefined;
-      expect(result.props.componentMap).to.be.undefined;
-      expect(result.props.page).to.be.undefined;
-      expect(result.props.rendering).to.be.undefined;
+      expect(result.props.customObj).to.be.undefined;
 
       // Verify that ErrorBoundary still gets its expected props from placeholderProps
       expect(result.props.errorComponent).to.equal(errorComponent);

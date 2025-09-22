@@ -56,7 +56,12 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
         if (!component.isEmpty) {
           const errorBoundaryKey = rendered.type + '-' + index;
 
-          rendered = wrapErrorBoundary(rendered, props, errorBoundaryKey, component.dynamic);
+          rendered = wrapErrorBoundary({
+            rendered,
+            placeholderProps: props,
+            renderingKey: errorBoundaryKey,
+            isDynamic: component.dynamic,
+          });
         }
 
         // if in edit mode then emit shallow chromes for hydration in Pages

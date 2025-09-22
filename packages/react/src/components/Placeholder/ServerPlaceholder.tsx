@@ -60,7 +60,13 @@ export const ServerPlaceholder = (props: PlaceholderProps) => {
       if (!isEmpty) {
         const errorBoundaryKey = rendered.type + '-' + index;
 
-        rendered = wrapErrorBoundary(rendered, props, errorBoundaryKey, dynamic);
+        rendered = wrapErrorBoundary({
+          rendered,
+          placeholderProps: props,
+          renderingKey: errorBoundaryKey,
+          isDynamic: dynamic,
+          isServer: true,
+        });
       }
 
       // if in edit mode then emit shallow chromes for hydration in Pages

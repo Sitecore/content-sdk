@@ -97,29 +97,48 @@ export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElemen
   return <div className="sc-jss-empty-placeholder">{node}</div>;
 };
 
+export const pickSerializableProps = (props: { [key: string]: unknown }) => {
+  const jsonConstrutor = {}.constructor;
+  const serializableProps = Object.keys(props).reduce((finalProps, propKey) => {
+    if (
+      (!props[propKey] && props[propKey] !== null) ||
+      (typeof props[propKey] === 'object' && props[propKey].constructor !== jsonConstrutor) ||
+      typeof props[propKey] === 'function'
+    ) {
+      return finalProps;
+    }
+    // if prop is null or not in the non-serializable category (https://react.dev/reference/rsc/use-client#serializable-types)
+    // we pass it on
+    finalProps[propKey] = props[propKey];
+    return finalProps;
+  }, {} as { [key: string]: unknown });
+  return serializableProps;
+};
+
 /**
  * Wraps rendered component(s) with an error boundary.
  * @param {React.ReactElement} rendered React elements to be wrapped
  * @param {PlaceholderProps} placeholderProps props of placeholder under which the component is being rendered
  * @param {string} renderingKey unique key for the error boundary
  * @param {boolean} isDynamic whether error boundary wraps any lazy components
- * @param {object} [extraProps] extra non-rendered component props to be passed to the error boundary
+ * @param {boolean} [isServer] whether the rendering should happen on the server side
  * @returns {React.ReactElement} wrapped component
  */
-export const wrapErrorBoundary = (
-  rendered: React.ReactElement<{ [attr: string]: unknown }>,
-  placeholderProps: PlaceholderProps,
-  renderingKey: string,
-  isDynamic: boolean = false
-) => {
+export const wrapErrorBoundary = ({
+  rendered,
+  placeholderProps,
+  renderingKey,
+  isDynamic = false,
+  isServer = false,
+}: {
+  rendered: React.ReactElement<{ [attr: string]: unknown }>;
+  placeholderProps: PlaceholderProps;
+  renderingKey: string;
+  isDynamic?: boolean;
+  isServer?: boolean;
+}) => {
   const disableSuspense = placeholderProps.disableSuspense || false;
-  const serializableProps = nonSerializedProps.reduce(
-    (finalProps, prop) => {
-      delete finalProps[prop];
-      return finalProps;
-    },
-    { ...rendered.props }
-  );
+  const passThroughProps = isServer ? pickSerializableProps(rendered.props) : rendered.props;
   return (
     <ErrorBoundary
       data-testid="error-boundary"
@@ -128,7 +147,7 @@ export const wrapErrorBoundary = (
       componentLoadingMessage={placeholderProps.componentLoadingMessage}
       isDynamic={isDynamic}
       disableSuspense={disableSuspense}
-      {...serializableProps}
+      {...passThroughProps}
     >
       {rendered}
     </ErrorBoundary>

@@ -8,6 +8,20 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
+  "exports": {
+    ".": {
+      "import": {
+        "default" : "./dist/esm/index.js",
+        "react-server": "./dist/esm/server.js"
+      },
+      "require": {
+        "default" : "./dist/esm/index.js",
+        "react-server": "./dist/esm/server.js"
+      },
+      "types": "./types/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
@@ -73,8 +87,7 @@
   },
   "dependencies": {
     "@sitecore-content-sdk/core": "1.2.0-canary.19",
-    "fast-deep-equal": "^3.1.3",
-    "rsc-env": "0.0.2"
+    "fast-deep-equal": "^3.1.3"
   },
   "description": "",
   "types": "types/index.d.ts",
