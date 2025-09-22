@@ -154,4 +154,5 @@ export {
   EditingScripts,
   Form,
   AppPlaceholder,
+  ServerPlaceholder,
 } from '@sitecore-content-sdk/react';

@@ -11,7 +11,6 @@ type ErrorComponentProps = {
 export type ErrorBoundaryProps = {
   children: ReactNode;
   page: Page;
-  type?: string;
   isDynamic?: boolean;
   errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
   rendering?: ComponentRendering;
