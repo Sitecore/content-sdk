@@ -38,6 +38,14 @@ jobs:
       - name: Build packages
         run: npm run build
 
+      - name: Generate API docs
+        shell: bash
+        run: |
+          set -euo pipefail
+          yarn generate-docs
+          echo "Intentionally failing 'Generate API docs' for testing" 1>&2
+          exit 1
+
       - name: Lint packages
         run: |
           yarn lint-packages
