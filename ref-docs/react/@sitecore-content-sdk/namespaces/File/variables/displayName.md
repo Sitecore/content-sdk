@@ -8,4 +8,4 @@
 
 > **displayName**: `string`
 
-Defined in: [packages/react/src/components/File.tsx:45](https://github.com/Sitecore/content-sdk/blob/b906e58a3d48beb6325e7fca193b7efa4653e6e5/packages/react/src/components/File.tsx#L45)
+Defined in: [packages/react/src/components/File.tsx:45](https://github.com/Sitecore/content-sdk/blob/3a3301c5fd596749a0c51a4826e9163b9f1b97ea/packages/react/src/components/File.tsx#L45)

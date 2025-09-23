@@ -59,7 +59,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
         return res;
       }
 
-      if (this.isPreview(req)) {
+      if (this.isPreview(req) && !this.isAppRouter(res)) {
         debug.multisite('skipped (preview)');
 
         return res;

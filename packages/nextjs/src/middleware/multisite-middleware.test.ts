@@ -397,6 +397,58 @@ describe('MultisiteMiddleware', () => {
       });
     });
 
+    it('app router application and next preview cookies are present', async () => {
+      const req = createRequest({
+        nextUrl: { pathname: '/styleguide/foo' },
+        cookieValues: {
+          __prerender_bypass: true,
+          __next_preview_data: true,
+        },
+      });
+      const res = createResponse({
+        headers: { 'x-sc-rewrite': '/en/some/otherpath', 'x-sc-locale': 'en' },
+      });
+
+      nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const { middleware, siteResolver } = createMiddleware({
+        config: { ...defaultConfig },
+      });
+
+      const finalRes = await middleware.handle(req, res);
+
+      validateDebugLog('multisite middleware start: %o', {
+        pathname: '/en/some/otherpath',
+        language: 'en',
+        hostname: 'foo.net',
+      });
+
+      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+        rewritePath: '/_site_foo/en/some/otherpath',
+        siteName: 'foo',
+        headers: {
+          'x-sc-rewrite': '/_site_foo/en/some/otherpath',
+          'x-sc-locale': 'en',
+        },
+        cookies: {
+          ...res.cookies,
+          sc_site: {
+            ...defaultSiteCookieAttributes,
+            value: 'foo',
+          },
+        },
+      });
+
+      expect(siteResolver.getByHost).to.be.calledWith('foo.net');
+
+      expect(finalRes).to.deep.equal(res);
+
+      expect(nextRewriteStub).calledWith({
+        ...req.nextUrl,
+        pathname: '/_site_foo/en/some/otherpath',
+      });
+    });
+
     it('rewritten pathname from header is used when present in response', async () => {
       const req = createRequest({
         nextUrl: { pathname: '/styleguide/foo' },
