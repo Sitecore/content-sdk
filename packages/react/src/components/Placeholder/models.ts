@@ -106,9 +106,9 @@ export type RenderedProps = Omit<PlaceholderProps, 'fields | params'> & {
 };
 
 /**
- * Prop names from placeholder that cannot be serialized and passed to client side components
+ * Prop names from placeholder that cannot be serialized and passed from server to client side components
  */
-export const nonSerializedProps = [
+export const nonSerializedPlaceholderProps = [
   'renderEmpty',
   'render',
   'renderEach',
@@ -120,5 +120,4 @@ export const nonSerializedProps = [
   'missingComponentComponent',
   'hiddenRenderingComponent',
   'rendering',
-  // eslint-disable-next-line prettier/prettier
 ] as const satisfies (keyof PlaceholderProps)[];

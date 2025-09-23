@@ -96,6 +96,12 @@ export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElemen
   return <div className="sc-jss-empty-placeholder">{node}</div>;
 };
 
+/**
+ * Picks the props with types that can be serialized between server/client.
+ * Reference: https://react.dev/reference/rsc/use-server#serializable-parameters-and-return-values
+ * @param {object} props input props
+ * @returns {object} filtered props
+ */
 export const pickSerializableProps = (props: { [key: string]: unknown }) => {
   const jsonConstrutor = {}.constructor;
   const serializableProps = Object.keys(props).reduce((finalProps, propKey) => {

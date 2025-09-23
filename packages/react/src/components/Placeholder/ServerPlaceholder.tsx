@@ -1,4 +1,4 @@
-import { nonSerializedProps, PlaceholderProps } from './models';
+import { nonSerializedPlaceholderProps, PlaceholderProps } from './models';
 import {
   getComponentForRendering,
   getPlaceholderRenderings,
@@ -24,7 +24,7 @@ export const ServerPlaceholder = (props: PlaceholderProps) => {
   }
 
   // get serializable props for client rendering
-  const serializableProps = nonSerializedProps.reduce(
+  const serializableProps = nonSerializedPlaceholderProps.reduce(
     (finalProps, prop) => {
       delete finalProps[prop];
       return finalProps;
