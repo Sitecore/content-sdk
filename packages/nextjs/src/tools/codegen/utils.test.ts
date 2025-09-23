@@ -6,6 +6,7 @@ import * as path from 'path';
 import nock from 'nock';
 import fs from 'fs';
 import * as codegenUtils from './utils';
+import { toPosixPath, stripExtension, getRelativeImportPath, isNodeModuleImport } from './utils';
 
 describe('codegen-utils', () => {
   const sandbox = sinon.createSandbox();
@@ -331,6 +332,70 @@ describe('codegen-utils', () => {
 
     it('should return false when not in a recognized build context', () => {
       expect(codegenUtils.validateDeployContext()).to.be.false;
+    });
+  });
+
+  describe('Path & Import Utils', () => {
+    describe('toPosixPath', () => {
+      it('converts backslashes to forward slashes', () => {
+        expect(toPosixPath('C:\\repo\\app\\src\\index.ts')).to.equal('C:/repo/app/src/index.ts');
+        expect(toPosixPath('some\\nested\\dir')).to.equal('some/nested/dir');
+      });
+      it('leaves forward slashes unchanged', () => {
+        expect(toPosixPath('C:/repo/app/src/index.ts')).to.equal('C:/repo/app/src/index.ts');
+        expect(toPosixPath('some/nested/dir')).to.equal('some/nested/dir');
+      });
+    });
+
+    describe('stripExtension', () => {
+      it('removes supported script extensions', () => {
+        expect(stripExtension('file.ts')).to.equal('file');
+        expect(stripExtension('file.tsx')).to.equal('file');
+        expect(stripExtension('file.js')).to.equal('file');
+        expect(stripExtension('file.jsx')).to.equal('file');
+        expect(stripExtension('file.mjs')).to.equal('file');
+        expect(stripExtension('file.cjs')).to.equal('file');
+      });
+
+      it('leaves other extensions unchanged', () => {
+        expect(stripExtension('file.json')).to.equal('file.json');
+        expect(stripExtension('styles.css')).to.equal('styles.css');
+        expect(stripExtension('archive.tar.gz')).to.equal('archive.tar.gz');
+      });
+
+      it('only strips the final extension', () => {
+        expect(stripExtension('lib/utils/index.tsx')).to.equal('lib/utils/index');
+      });
+    });
+
+    describe('getRelativeImportPath', () => {
+      it('returns POSIX, extensionless path relative to app root', () => {
+        const appRoot = path.resolve('/repo/app');
+        const absFile = path.resolve(appRoot, 'src', 'components', 'Button.tsx');
+        const rel = getRelativeImportPath(absFile, appRoot);
+        expect(rel).to.equal('src/components/Button');
+      });
+
+      it('normalizes separators regardless of OS', () => {
+        const appRoot = path.resolve('/repo/app');
+        const absFile = path.resolve(appRoot, 'lib', 'utils', 'index.mjs');
+        const rel = getRelativeImportPath(absFile, appRoot);
+        expect(rel).to.equal('lib/utils/index');
+      });
+    });
+
+    describe('isNodeModuleImport', () => {
+      it('returns true for package names and alias-like specifiers', () => {
+        ['react', '@scope/pkg', 'components/Button', '#internal', 'somePkg'].forEach((s) =>
+          expect(isNodeModuleImport(s), s).to.equal(true)
+        );
+      });
+
+      it('returns false for relative and absolute specifiers', () => {
+        ['./x', '../x', '/abs/path'].forEach((s) =>
+          expect(isNodeModuleImport(s), s).to.equal(false)
+        );
+      });
     });
   });
 });
