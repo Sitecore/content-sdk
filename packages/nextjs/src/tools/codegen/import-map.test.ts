@@ -39,7 +39,7 @@ describe('Import Map Generation', () => {
     beforeEach(() => {
       const appFolder = path.resolve(process.cwd(), './src/tools/codegen/test-data/import-map');
       cwdStub = sandbox.stub(process, 'cwd').returns(appFolder);
-      testExportsModulePath = path.resolve(process.cwd(), 'test-exports').replace(/\\/g, '/');
+      testExportsModulePath = 'test-exports';
     });
 
     afterEach(() => {
@@ -68,12 +68,10 @@ describe('Import Map Generation', () => {
 
     it('should return map with named imports when tsconfig paths is used (ts-path-alias.ts)', () => {
       const result = getImportMap(['single-file-imports/ts-path-alias.ts']);
-      testExportsModulePath = path
-        .resolve(process.cwd(), 'ts-path-alias/test-path-exports')
-        .replace(/\\/g, '/');
+
       const expected = [
         {
-          module: testExportsModulePath,
+          module: '@pathed/test-path-exports',
           namedImports: [{ name: 'pathedVariable', value: 'pathedVariable' }],
           defaultImport: null,
           namespaceImport: null,
@@ -199,18 +197,18 @@ describe('Import Map Generation', () => {
     });
 
     it('should return map from multi-file imports with duplicate mixed exports', () => {
+      const reactSpecifier = 'react';
+      const fakeReactSpecifier = 'fake-react';
+      const testExports2Specifier = 'test-exports-2';
+      const testExportsSpecifier = 'test-exports';
+
       cwdStub.restore();
-      const testFakeReactImportModule = path
-        .resolve(process.cwd(), './src/tools/codegen/test-data/import-map/fake-react')
-        .replace(/\\/g, '/');
-      const testDuplicateImportModulePath = path
-        .resolve(process.cwd(), './src/tools/codegen/test-data/import-map/test-exports-2')
-        .replace(/\\/g, '/');
       const multiFileFolder = path.resolve(
         process.cwd(),
         './src/tools/codegen/test-data/import-map'
       );
       cwdStub = sandbox.stub(process, 'cwd').returns(multiFileFolder);
+
       const result = getImportMap([
         'multi-file-imports/A.tsx',
         'multi-file-imports/B.tsx',
@@ -218,42 +216,44 @@ describe('Import Map Generation', () => {
         'multi-file-imports/D.tsx',
         'multi-file-imports/E.tsx',
       ]);
+
       const expected = [
         {
-          module: 'react',
+          module: reactSpecifier,
           defaultImport: 'React',
           namedImports: [{ name: 'useEffect', value: 'useEffect' }],
-          namespaceImport: getImportValueAlias('React', 'react', 'namespace'),
+          namespaceImport: getImportValueAlias('React', reactSpecifier, 'namespace'),
         },
         {
-          module: testDuplicateImportModulePath,
+          module: testExports2Specifier,
           namedImports: [{ name: 'testClassInstance', value: 'testClassInstance' }],
           defaultImport: null,
           namespaceImport: null,
         },
         {
-          module: testFakeReactImportModule,
-          defaultImport: getImportValueAlias('React', testFakeReactImportModule, 'default'),
-          namespaceImport: getImportValueAlias('React', testFakeReactImportModule, 'namespace'),
+          module: fakeReactSpecifier,
+          defaultImport: getImportValueAlias('React', fakeReactSpecifier, 'default'),
+          namespaceImport: getImportValueAlias('React', fakeReactSpecifier, 'namespace'),
           namedImports: [
             {
               name: 'useEffect',
-              value: getImportValueAlias('useEffect', testFakeReactImportModule, 'named'),
+              value: getImportValueAlias('useEffect', fakeReactSpecifier, 'named'),
             },
           ],
         },
         {
-          module: testExportsModulePath,
+          module: testExportsSpecifier,
           namedImports: [
             {
               name: 'testClassInstance',
-              value: getImportValueAlias('testClassInstance', testExportsModulePath, 'named'),
+              value: getImportValueAlias('testClassInstance', testExportsSpecifier, 'named'),
             },
           ],
           defaultImport: 'testExportsDefault',
           namespaceImport: null,
         },
       ];
+
       expect(convertToTestable(result)).to.deep.equal(expected);
     });
   });
