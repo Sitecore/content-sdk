@@ -8,10 +8,10 @@ import {
   getPlaceholderRenderings,
   getRenderedComponentProps,
   renderEmptyPlaceholder,
-  wrapErrorBoundary,
 } from './placeholder-utils';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
+import ErrorBoundary from '../ErrorBoundary';
 
 export class PlaceholderComponent extends React.Component<PlaceholderProps> {
   isEmpty = false;
@@ -56,12 +56,20 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
         if (!component.isEmpty) {
           const errorBoundaryKey = rendered.type + '-' + index;
 
-          rendered = wrapErrorBoundary({
-            rendered,
-            placeholderProps: props,
-            renderingKey: errorBoundaryKey,
-            isDynamic: component.dynamic,
-          });
+          const disableSuspense = props.disableSuspense || false;
+          return (
+            <ErrorBoundary
+              data-testid="error-boundary"
+              key={errorBoundaryKey}
+              errorComponent={props.errorComponent}
+              componentLoadingMessage={props.componentLoadingMessage}
+              isDynamic={component.dynamic}
+              disableSuspense={disableSuspense}
+              {...rendered.props}
+            >
+              {rendered}
+            </ErrorBoundary>
+          );
         }
 
         // if in edit mode then emit shallow chromes for hydration in Pages

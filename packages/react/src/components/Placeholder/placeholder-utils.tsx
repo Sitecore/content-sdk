@@ -13,7 +13,6 @@ import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from '../FEaaSComponen
 import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
 import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
 import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
-import ErrorBoundary from '../ErrorBoundary';
 import { PlaceholderProps, RenderedProps } from './models';
 
 /**
@@ -113,45 +112,6 @@ export const pickSerializableProps = (props: { [key: string]: unknown }) => {
     return finalProps;
   }, {} as { [key: string]: unknown });
   return serializableProps;
-};
-
-/**
- * Wraps rendered component(s) with an error boundary.
- * @param {React.ReactElement} rendered React elements to be wrapped
- * @param {PlaceholderProps} placeholderProps props of placeholder under which the component is being rendered
- * @param {string} renderingKey unique key for the error boundary
- * @param {boolean} isDynamic whether error boundary wraps any lazy components
- * @param {boolean} [isServer] whether the rendering should happen on the server side
- * @returns {React.ReactElement} wrapped component
- */
-export const wrapErrorBoundary = ({
-  rendered,
-  placeholderProps,
-  renderingKey,
-  isDynamic = false,
-  isServer = false,
-}: {
-  rendered: React.ReactElement<{ [attr: string]: unknown }>;
-  placeholderProps: PlaceholderProps;
-  renderingKey: string;
-  isDynamic?: boolean;
-  isServer?: boolean;
-}) => {
-  const disableSuspense = placeholderProps.disableSuspense || false;
-  const passThroughProps = isServer ? pickSerializableProps(rendered.props) : rendered.props;
-  return (
-    <ErrorBoundary
-      data-testid="error-boundary"
-      key={renderingKey}
-      errorComponent={placeholderProps.errorComponent}
-      componentLoadingMessage={placeholderProps.componentLoadingMessage}
-      isDynamic={isDynamic}
-      disableSuspense={disableSuspense}
-      {...passThroughProps}
-    >
-      {rendered}
-    </ErrorBoundary>
-  );
 };
 
 /**

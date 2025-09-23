@@ -3,12 +3,13 @@ import {
   getComponentForRendering,
   getPlaceholderRenderings,
   getRenderedComponentProps,
+  pickSerializableProps,
   renderEmptyPlaceholder,
-  wrapErrorBoundary,
 } from './placeholder-utils';
 import React from 'react';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import ErrorBoundary from '../ErrorBoundary';
 
 /**
  * React Server Component implementation for Placeholder.
@@ -59,14 +60,22 @@ export const ServerPlaceholder = (props: PlaceholderProps) => {
 
       if (!isEmpty) {
         const errorBoundaryKey = rendered.type + '-' + index;
-
-        rendered = wrapErrorBoundary({
-          rendered,
-          placeholderProps: props,
-          renderingKey: errorBoundaryKey,
-          isDynamic: dynamic,
-          isServer: true,
-        });
+        const ErrorComponentWrapped = props.errorComponent ? <props.errorComponent /> : undefined;
+        const disableSuspense = props.disableSuspense || false;
+        const passThroughProps = pickSerializableProps(rendered.props);
+        return (
+          <ErrorBoundary
+            data-testid="error-boundary"
+            key={errorBoundaryKey}
+            errorComponent={ErrorComponentWrapped}
+            componentLoadingMessage={props.componentLoadingMessage}
+            isDynamic={dynamic}
+            disableSuspense={disableSuspense}
+            {...passThroughProps}
+          >
+            {rendered}
+          </ErrorBoundary>
+        );
       }
 
       // if in edit mode then emit shallow chromes for hydration in Pages
