@@ -57,7 +57,7 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
           const errorBoundaryKey = rendered.type + '-' + index;
 
           const disableSuspense = props.disableSuspense || false;
-          return (
+          rendered = (
             <ErrorBoundary
               data-testid="error-boundary"
               key={errorBoundaryKey}

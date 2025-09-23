@@ -7,7 +7,6 @@ import { createSandbox } from 'sinon';
 import {
   getPlaceholderRenderings,
   getSXAParams,
-  wrapErrorBoundary,
   getRenderedComponentProps,
   getComponentForRendering,
 } from './placeholder-utils';
@@ -15,7 +14,6 @@ import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { ComponentType, PlaceholderProps } from './models';
 import { ComponentMap, ReactModule } from '../sharedTypes';
 import { constants } from '@sitecore-content-sdk/core';
-import ErrorBoundary from '../ErrorBoundary';
 import { MissingComponent } from '../MissingComponent';
 import { HiddenRendering } from '../HiddenRendering';
 import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from '../FEaaSComponent';
@@ -23,7 +21,7 @@ import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
 import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
 import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
 
-describe('PlaceholderCommon', () => {
+describe('placeholder-utils', () => {
   const sandbox = createSandbox();
   let consoleWarnStub: any;
   let consoleErrorStub: any;
@@ -176,183 +174,6 @@ describe('PlaceholderCommon', () => {
       const result = getSXAParams(rendering);
 
       expect(result).to.deep.equal({});
-    });
-  });
-
-  describe('wrapErrorBoundary', () => {
-    it('should wrap components in ErrorBoundary and correctly apply props to it', () => {
-      const TestComponent = () => <div className="test-component">Test</div>;
-      const errorComponent = () => <div className="error-component">Error</div>;
-
-      const placeholderProps: PlaceholderProps = {
-        name: 'test-placeholder',
-        rendering: { componentName: 'Test', uid: 'test-uid' },
-        page: {
-          layout: {},
-          locale: 'en',
-          mode: {
-            name: 'normal',
-            isNormal: true,
-            isPreview: false,
-            isEditing: false,
-            isDesignLibrary: false,
-            designLibrary: { isVariantGeneration: false },
-          },
-        },
-        errorComponent,
-        componentLoadingMessage: 'Loading...',
-        disableSuspense: true,
-      };
-
-      const rendered = <TestComponent />;
-      const renderingKey = 'test-key';
-
-      const result = wrapErrorBoundary({
-        rendered,
-        placeholderProps,
-        renderingKey,
-        isDynamic: true,
-      });
-
-      expect(result.type).to.equal(ErrorBoundary);
-      expect(result.key).to.equal(renderingKey);
-      expect(result.props['data-testid']).to.equal('error-boundary');
-      expect(result.props.errorComponent).to.equal(errorComponent);
-      expect(result.props.componentLoadingMessage).to.equal('Loading...');
-      expect(result.props.isDynamic).to.be.true;
-      expect(result.props.disableSuspense).to.be.true;
-      expect(result.props.children).to.equal(rendered);
-    });
-
-    it('should handle sitecore type correctly', () => {
-      const TestComponent = () => <div className="test-component">Test</div>;
-
-      const placeholderProps: PlaceholderProps = {
-        name: 'test-placeholder',
-        rendering: { componentName: 'Test', uid: 'test-uid' },
-        page: {
-          layout: {},
-          locale: 'en',
-          mode: {
-            name: 'normal',
-            isNormal: true,
-            isPreview: false,
-            isEditing: false,
-            isDesignLibrary: false,
-            designLibrary: { isVariantGeneration: false },
-          },
-        },
-      };
-
-      const rendered = <TestComponent type="text/sitecore" />;
-      const renderingKey = 'test-key';
-
-      const result = wrapErrorBoundary({
-        rendered,
-        placeholderProps,
-        renderingKey,
-      });
-
-      expect(result.props.type).to.equal('text/sitecore');
-    });
-
-    it('should default disableSuspense to false when not provided', () => {
-      const TestComponent = () => <div className="test-component">Test</div>;
-
-      const placeholderProps: PlaceholderProps = {
-        name: 'test-placeholder',
-        rendering: { componentName: 'Test', uid: 'test-uid' },
-        page: {
-          layout: {},
-          locale: 'en',
-          mode: {
-            name: 'normal',
-            isNormal: true,
-            isPreview: false,
-            isEditing: false,
-            isDesignLibrary: false,
-            designLibrary: { isVariantGeneration: false },
-          },
-        },
-      };
-
-      const rendered = <TestComponent />;
-      const renderingKey = 'test-key';
-
-      const result = wrapErrorBoundary({
-        rendered,
-        placeholderProps,
-        renderingKey,
-      });
-
-      expect(result.props.disableSuspense).to.be.false;
-    });
-
-    it('should only pass serializable props to ErrorBoundary when in server', () => {
-      const TestComponent = () => <div className="test-component">Test</div>;
-      const errorComponent = () => <div className="error-component">Error</div>;
-      const mockComponentMap = new Map();
-      class NonJsonClass {
-        value: string;
-        constructor() {
-          this.value = 'test';
-        }
-      }
-      const customObj = new NonJsonClass();
-      const placeholderProps: PlaceholderProps = {
-        name: 'test-placeholder',
-        rendering: { componentName: 'Test', uid: 'test-uid' },
-        page: {
-          layout: {},
-          locale: 'en',
-          mode: {
-            name: 'normal',
-            isNormal: true,
-            isPreview: false,
-            isEditing: false,
-            isDesignLibrary: false,
-            designLibrary: { isVariantGeneration: false },
-          },
-        },
-        errorComponent,
-        componentLoadingMessage: 'Loading...',
-      };
-
-      // Create a rendered component with both serializable and non-serializable props
-      const renderedProps = {
-        customObj,
-        serializableProp: 'serializable-value',
-        anotherSerializableProp: 123,
-        renderEmpty: () => <div>Empty</div>,
-        render: () => <div>Render</div>,
-        renderEach: () => <div>RenderEach</div>,
-        componentMap: mockComponentMap,
-        page: placeholderProps.page,
-        rendering: { componentName: 'Test', uid: 'test-uid' },
-      };
-      const rendered = <TestComponent {...renderedProps} />;
-
-      const renderingKey = 'test-key';
-      const result = wrapErrorBoundary({
-        rendered,
-        placeholderProps,
-        renderingKey,
-        isServer: true,
-      });
-
-      // Verify that serializable props are passed to ErrorBoundary
-      expect(result.props.serializableProp).to.equal('serializable-value');
-      expect(result.props.anotherSerializableProp).to.equal(123);
-
-      // Verify that non-serializable props are NOT passed to ErrorBoundary
-      expect(result.props.renderEmpty).to.be.undefined;
-      expect(result.props.render).to.be.undefined;
-      expect(result.props.renderEach).to.be.undefined;
-      expect(result.props.customObj).to.be.undefined;
-
-      // Verify that ErrorBoundary still gets its expected props from placeholderProps
-      expect(result.props.errorComponent).to.equal(errorComponent);
-      expect(result.props.componentLoadingMessage).to.equal('Loading...');
     });
   });
 

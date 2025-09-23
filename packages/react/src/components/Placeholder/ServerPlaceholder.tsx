@@ -60,14 +60,13 @@ export const ServerPlaceholder = (props: PlaceholderProps) => {
 
       if (!isEmpty) {
         const errorBoundaryKey = rendered.type + '-' + index;
-        const ErrorComponentWrapped = props.errorComponent ? <props.errorComponent /> : undefined;
         const disableSuspense = props.disableSuspense || false;
         const passThroughProps = pickSerializableProps(rendered.props);
-        return (
+        rendered = (
           <ErrorBoundary
             data-testid="error-boundary"
             key={errorBoundaryKey}
-            errorComponent={ErrorComponentWrapped}
+            errorComponent={props.errorComponent}
             componentLoadingMessage={props.componentLoadingMessage}
             isDynamic={dynamic}
             disableSuspense={disableSuspense}
