@@ -246,16 +246,15 @@ export const sendCode = async ({
 };
 
 // Normalize path separators to POSIX-style "/" for cross-platform consistency.
-export const toPosix = (p: string) => p.replace(/\\/g, '/');
+export const toPosixPath = (p: string) => p.replace(/\\/g, '/');
 export const stripExtension = (p: string) => p.replace(/\.(tsx?|jsx?|mjs|cjs)$/, '');
 
-// Convert an absolute file path into an app-relative module specifier (POSIX), optionally stripping a leading "src/".
-export const toAppSpecifier = (absFile: string, appPath: string) => {
-  let rel = toPosix(path.relative(appPath, absFile));
-  if (rel.startsWith('src/')) rel = rel.slice(4);
+// Convert an absolute file path into an relative module specifier (POSIX)
+export const getRelativeImportPath = (absFile: string, appPath: string) => {
+  let rel = toPosixPath(path.relative(appPath, absFile));
   return stripExtension(rel);
 };
 
 // Determine if a specifier is bare/aliased (i.e., not relative "./" or "../" and not absolute "/").
-export const isBare = (name: string) =>
+export const isNodeModuleImport = (name: string) =>
   !name.startsWith('./') && !name.startsWith('../') && !name.startsWith('/');

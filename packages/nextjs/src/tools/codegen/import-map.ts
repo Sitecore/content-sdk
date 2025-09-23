@@ -5,7 +5,7 @@ import { debug } from '@sitecore-content-sdk/core';
 import { getComponentList } from '@sitecore-content-sdk/core/tools';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import crypto from 'crypto';
-import { isBare, stripExtension, toAppSpecifier, toPosix } from './utils';
+import { isNodeModuleImport, stripExtension, getRelativeImportPath, toPosixPath } from './utils';
 
 let _getComponentList = getComponentList;
 const aliasImport = /^([a-zA-Z0-9]+) as .+$/;
@@ -204,22 +204,22 @@ export const getImportMap = (paths: string[]) => {
 
         let importModuleName: string;
 
-        // if import path points to a file in local app - process import path to the file (i.e. ./myComponent)
-        // if it points to node_modules or a file in monorepo - parse import path as dependency module name (i.e. React)
         if (
           resolvedImportPath.includes('node_modules') ||
           resolvedImportPath.endsWith('.d.ts') ||
-          !toPosix(resolvedImportPath).startsWith(toPosix(appPath) + '/')
+          !toPosixPath(resolvedImportPath).startsWith(toPosixPath(appPath) + '/')
         ) {
+          // if import path points to a file in local app - process import path to the file (i.e. ./myComponent)
+          // if it points to node_modules or a file in monorepo - parse import path as dependency module name (i.e. React)
           // external dependency → keep as-is
-          importModuleName = isBare(moduleName)
+          importModuleName = isNodeModuleImport(moduleName)
             ? stripExtension(moduleName)
-            : toAppSpecifier(resolvedImportPath, appPath);
+            : getRelativeImportPath(resolvedImportPath, appPath);
         } else {
           // local file
-          importModuleName = isBare(moduleName)
+          importModuleName = isNodeModuleImport(moduleName)
             ? stripExtension(moduleName)
-            : toAppSpecifier(resolvedImportPath, appPath);
+            : getRelativeImportPath(resolvedImportPath, appPath);
         }
 
         // Set module import info in the map. If module import exists - add entries to existing entry
