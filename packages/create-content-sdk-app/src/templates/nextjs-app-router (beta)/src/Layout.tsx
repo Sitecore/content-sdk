@@ -1,8 +1,10 @@
-'use client';
 import React, { JSX } from 'react';
-import { ServerPlaceholder, Field, DesignLibrary, Page } from '@sitecore-content-sdk/nextjs';
+import { Field, Page } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'components/content-sdk/SitecoreStyles';
+import { DesignLibraryLayout } from './DesignLibraryLayout';
+import AppPlaceholder from 'components/content-sdk/Placeholder';
+import componentMap from '.sitecore/component-map';
 
 interface LayoutProps {
   page: Page;
@@ -17,8 +19,6 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   const { layout, mode } = page;
   const { route } = layout.sitecore;
   const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
-  const importMapDynamic = () => import('.sitecore/import-map');
-
   return (
     <>
       <Scripts />
@@ -26,13 +26,13 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
       {/* root placeholder for the app, which we add components to using route data */}
       <div className={mainClassPageEditing}>
         {mode.isDesignLibrary ? (
-          <DesignLibrary loadImportMap={importMapDynamic} />
+          <DesignLibraryLayout />
         ) : (
           <>
             <header>
               <div id="header">
                 {route && (
-                  <ServerPlaceholder
+                  <AppPlaceholder
                     page={page}
                     componentMap={componentMap}
                     name="headless-header"
@@ -44,7 +44,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
             <main>
               <div id="content">
                 {route && (
-                  <ServerPlaceholder
+                  <AppPlaceholder
                     page={page}
                     componentMap={componentMap}
                     name="headless-main"
@@ -56,7 +56,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
             <footer>
               <div id="footer">
                 {route && (
-                  <ServerPlaceholder
+                  <AppPlaceholder
                     page={page}
                     componentMap={componentMap}
                     name="headless-footer"

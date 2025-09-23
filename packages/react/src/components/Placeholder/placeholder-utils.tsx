@@ -14,7 +14,7 @@ import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
 import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
 import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
 import ErrorBoundary from '../ErrorBoundary';
-import { nonSerializedProps, PlaceholderProps, RenderedProps } from './models';
+import { PlaceholderProps, RenderedProps } from './models';
 
 /**
  * Get the renderings for the specified placeholder from the rendering data.

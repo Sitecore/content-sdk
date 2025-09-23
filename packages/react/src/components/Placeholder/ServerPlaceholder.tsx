@@ -71,7 +71,7 @@ export const ServerPlaceholder = (props: PlaceholderProps) => {
 
       // if in edit mode then emit shallow chromes for hydration in Pages
       if (props.page.mode.isEditing) {
-        const key = (finalPhProps.uid as string) || `component-${index}`;
+        const key = (rendering.uid as string) || `component-${index}`;
         return (
           <PlaceholderMetadata key={key} rendering={rendering}>
             {rendered}
