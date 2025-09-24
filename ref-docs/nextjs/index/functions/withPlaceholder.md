@@ -8,7 +8,9 @@
 
 > **withPlaceholder**(`placeholders`, `options?`): (`WrappedComponent`) => (`props`) => `Element`
 
-Defined in: react/types/enhancers/withPlaceholder.d.ts:34
+Defined in: react/types/enhancers/withPlaceholder.d.ts:35
+
+HOC to provide client-side placeholder functionality to a component.
 
 ## Parameters
 
@@ -25,7 +27,7 @@ Defined in: react/types/enhancers/withPlaceholder.d.ts:34
 
 | Parameter | Type |
 | ------ | ------ |
-| `WrappedComponent` | `ComponentClass`\<`PlaceholderProps`, `any`\> \| `FunctionComponent`\<`PlaceholderProps`\> |
+| `WrappedComponent` | `ComponentClass`\<[`PlaceholderComponentProps`](../interfaces/PlaceholderComponentProps.md), `any`\> \| `FunctionComponent`\<[`PlaceholderComponentProps`](../interfaces/PlaceholderComponentProps.md)\> |
 
 ### Returns
 
@@ -35,7 +37,7 @@ Defined in: react/types/enhancers/withPlaceholder.d.ts:34
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | `EnhancedOmit`\<`PlaceholderProps`, keyof [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)\> |
+| `props` | `EnhancedOmit`\<[`PlaceholderComponentProps`](../interfaces/PlaceholderComponentProps.md), keyof [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)\> |
 
 #### Returns
 

@@ -51,7 +51,7 @@
 - [LinkField](interfaces/LinkField.md)
 - [LinkFieldValue](interfaces/LinkFieldValue.md)
 - [NativeDataFetcherResponse](interfaces/NativeDataFetcherResponse.md)
-- [PlaceholderComponentProps](interfaces/PlaceholderComponentProps.md)
+- [PlaceholderProps](interfaces/PlaceholderProps.md)
 - [RetryStrategy](interfaces/RetryStrategy.md)
 - [RichTextField](interfaces/RichTextField.md)
 - [RichTextProps](interfaces/RichTextProps.md)
@@ -100,6 +100,7 @@
 ## Functions
 
 - [BYOCWrapper](functions/BYOCWrapper.md)
+- [ClientEditingChromesUpdate](functions/ClientEditingChromesUpdate.md)
 - [DesignLibrary](functions/DesignLibrary.md)
 - [EditingScripts](functions/EditingScripts.md)
 - [FEaaSComponent](functions/FEaaSComponent.md)
@@ -110,6 +111,7 @@
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getFieldValue](functions/getFieldValue.md)
+- [ServerPlaceholder](functions/ServerPlaceholder.md)
 - [useSitecore](functions/useSitecore.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEditorChromes](functions/withEditorChromes.md)
@@ -117,3 +119,9 @@
 - [withFieldMetadata](functions/withFieldMetadata.md)
 - [withPlaceholder](functions/withPlaceholder.md)
 - [withSitecore](functions/withSitecore.md)
+
+## References
+
+### PlaceholderComponentProps
+
+Renames and re-exports [PlaceholderProps](interfaces/PlaceholderProps.md)

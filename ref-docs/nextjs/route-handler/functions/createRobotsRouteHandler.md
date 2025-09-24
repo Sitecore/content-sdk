@@ -8,7 +8,7 @@
 
 > **createRobotsRouteHandler**(`options`): `object`
 
-Defined in: [nextjs/src/route-handler/robots-route-handler.ts:29](https://github.com/Sitecore/content-sdk/blob/ed2155fff7709a257ed893c7696069848d82f91c/packages/nextjs/src/route-handler/robots-route-handler.ts#L29)
+Defined in: [nextjs/src/route-handler/robots-route-handler.ts:29](https://github.com/Sitecore/content-sdk/blob/dc78717cbc6eab86c122d7a2aebdbc19b460c53c/packages/nextjs/src/route-handler/robots-route-handler.ts#L29)
 
 Creates a route handler to serve the robots.txt file.
 
