@@ -1,11 +1,7 @@
 ﻿'use client';
-import React, { JSX, useEffect } from 'react';
+import React, { JSX } from 'react';
 import { useSitecore } from '../enhancers/withSitecore';
-import {
-  getContentSdkPagesClientData,
-  isEditorActive,
-  resetEditorChromes,
-} from '@sitecore-content-sdk/core/editing';
+import { getContentSdkPagesClientData } from '@sitecore-content-sdk/core/editing';
 import { getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
 
 /**
@@ -18,12 +14,6 @@ export const EditingScripts = (): JSX.Element => {
     page: { mode, layout },
     api,
   } = useSitecore();
-
-  useEffect(() => {
-    if (isEditorActive()) {
-      resetEditorChromes();
-    }
-  }, []);
 
   const { clientData, clientScripts } = layout.sitecore.context;
 
