@@ -3,7 +3,6 @@ import {
   getComponentForRendering,
   getPlaceholderRenderings,
   getRenderedComponentProps,
-  pickSerializableProps,
   renderEmptyPlaceholder,
 } from './placeholder-utils';
 import React from 'react';
@@ -61,7 +60,6 @@ export const ServerPlaceholder = (props: PlaceholderProps) => {
       if (!isEmpty) {
         const errorBoundaryKey = rendered.type + '-' + index;
         const disableSuspense = props.disableSuspense || false;
-        const passThroughProps = pickSerializableProps(rendered.props);
         rendered = (
           <ErrorBoundary
             data-testid="error-boundary"
@@ -70,7 +68,7 @@ export const ServerPlaceholder = (props: PlaceholderProps) => {
             componentLoadingMessage={props.componentLoadingMessage}
             isDynamic={dynamic}
             disableSuspense={disableSuspense}
-            {...passThroughProps}
+            rendering={rendered.props.rendering as ComponentRendering}
           >
             {rendered}
           </ErrorBoundary>

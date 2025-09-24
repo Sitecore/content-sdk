@@ -97,30 +97,6 @@ export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElemen
 };
 
 /**
- * Picks the props with types that can be serialized between server/client.
- * Reference: https://react.dev/reference/rsc/use-server#serializable-parameters-and-return-values
- * @param {object} props input props
- * @returns {object} filtered props
- */
-export const pickSerializableProps = (props: { [key: string]: unknown }) => {
-  const jsonConstrutor = {}.constructor;
-  const serializableProps = Object.keys(props).reduce((finalProps, propKey) => {
-    if (
-      (!props[propKey] && props[propKey] !== null) ||
-      (typeof props[propKey] === 'object' && props[propKey].constructor !== jsonConstrutor) ||
-      typeof props[propKey] === 'function'
-    ) {
-      return finalProps;
-    }
-    // if prop is null or not in the non-serializable category (https://react.dev/reference/rsc/use-client#serializable-types)
-    // we pass it on
-    finalProps[propKey] = props[propKey];
-    return finalProps;
-  }, {} as { [key: string]: unknown });
-  return serializableProps;
-};
-
-/**
  * Get component props to be passed to the rendered component.
  * @param {PlaceholderProps} placeholderProps current placeholder props
  * @param {ComponentRendering} componentRendering rendering to be rendered

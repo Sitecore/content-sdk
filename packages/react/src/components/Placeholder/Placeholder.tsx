@@ -65,7 +65,7 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
               componentLoadingMessage={props.componentLoadingMessage}
               isDynamic={component.dynamic}
               disableSuspense={disableSuspense}
-              {...rendered.props}
+              rendering={rendered.props.rendering as ComponentRendering}
             >
               {rendered}
             </ErrorBoundary>

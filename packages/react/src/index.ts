@@ -49,7 +49,6 @@ export {
   PlaceholderProps as PlaceholderComponentProps,
   ServerPlaceholder,
 } from './components/Placeholder';
-export { EditingReadyComponent } from './components/EditingReadyComponent';
 export {
   Image,
   ImageProps,

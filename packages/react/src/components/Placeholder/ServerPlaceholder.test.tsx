@@ -9,7 +9,7 @@ import {
   RouteData,
 } from '@sitecore-content-sdk/core/layout';
 import { expect } from 'chai';
-import { findByText, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import React from 'react';
 import { createSandbox, SinonSandbox } from 'sinon';
 import {
@@ -1362,4 +1362,3 @@ describe('Server Placeholder logic', () => {
 after(() => {
   (global as any).window.close();
 });
-
