@@ -1,8 +1,12 @@
 ﻿import React from 'react';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
-import { PlaceholderProps, PlaceholderCommon } from '../components/PlaceholderCommon';
 import { withComponentMap } from './withComponentMap';
 import { withSitecore } from './withSitecore';
+import {
+  PlaceholderComponent,
+  PlaceholderProps,
+  getPlaceholderRenderings,
+} from '../components/Placeholder';
 
 export interface WithPlaceholderOptions {
   /**
@@ -36,6 +40,7 @@ export type WithPlaceholderSpec =
   | (string | PlaceholderToPropMapping)[];
 
 /**
+ * HOC to provide client-side placeholder functionality to a component.
  * @param {WithPlaceholderSpec} placeholders
  * @param {WithPlaceholderOptions} [options]
  */
@@ -48,7 +53,7 @@ export function withPlaceholder(
       | React.ComponentClass<PlaceholderProps>
       | React.FunctionComponent<PlaceholderProps>
   ) => {
-    class WithPlaceholder extends PlaceholderCommon<PlaceholderProps> {
+    class WithPlaceholder extends PlaceholderComponent {
       constructor(props: PlaceholderProps) {
         super(props);
       }
@@ -87,23 +92,28 @@ export function withPlaceholder(
           let placeholderData: ComponentRendering[];
 
           if (typeof placeholder !== 'string' && placeholder.placeholder && placeholder.prop) {
-            placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
+            placeholderData = getPlaceholderRenderings(
               renderingData,
               placeholder.placeholder,
               childProps.page.mode.isEditing
             );
             if (placeholderData) {
-              childProps[placeholder.prop] = this.getComponentsForRenderingData(placeholderData);
+              childProps[placeholder.prop] = PlaceholderComponent.getRenderedComponents(
+                this.props,
+                placeholderData
+              );
             }
           } else {
-            placeholderData = PlaceholderCommon.getPlaceholderDataFromRenderingData(
+            placeholderData = getPlaceholderRenderings(
               renderingData,
               placeholder as string,
               childProps.page.mode.isEditing
             );
             if (placeholderData) {
-              childProps[placeholder as string] =
-                this.getComponentsForRenderingData(placeholderData);
+              childProps[placeholder as string] = PlaceholderComponent.getRenderedComponents(
+                this.props,
+                placeholderData
+              );
             }
           }
         });

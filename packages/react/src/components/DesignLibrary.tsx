@@ -16,7 +16,7 @@ import {
 } from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { useSitecore } from '../enhancers/withSitecore';
-import { PlaceholderMetadata } from './PlaceholderMetadata';
+import { PlaceholderMetadata } from './Placeholder';
 
 let {
   getDesignLibraryImportMapEvent,

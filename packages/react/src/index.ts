@@ -43,7 +43,12 @@ export {
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export { Form } from './components/Form';
 export { ReactContentSdkComponent, ComponentMap, ReactModule } from './components/sharedTypes';
-export { Placeholder, PlaceholderComponentProps } from './components/Placeholder';
+export {
+  Placeholder,
+  PlaceholderProps,
+  PlaceholderProps as PlaceholderComponentProps,
+  ServerPlaceholder,
+} from './components/Placeholder';
 export {
   Image,
   ImageProps,
@@ -93,4 +98,5 @@ export {
   DefaultEmptyFieldEditingComponentText,
   DefaultEmptyFieldEditingComponentImage,
 } from './components/DefaultEmptyFieldEditingComponents';
+export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
