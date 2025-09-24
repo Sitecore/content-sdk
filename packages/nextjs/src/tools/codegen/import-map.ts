@@ -5,6 +5,7 @@ import { debug } from '@sitecore-content-sdk/core';
 import { getComponentList } from '@sitecore-content-sdk/core/tools';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import crypto from 'crypto';
+import { isNodeModuleImport, stripExtension, getRelativeImportPath, toPosixPath } from './utils';
 
 let _getComponentList = getComponentList;
 const aliasImport = /^([a-zA-Z0-9]+) as .+$/;
@@ -179,6 +180,11 @@ export const getImportMap = (paths: string[]) => {
     ts.forEachChild(jsCodeSource, (childNode) => {
       if (ts.isImportDeclaration(childNode) && childNode.importClause) {
         const imports = getImportedValues(childNode);
+
+        if (!imports) {
+          return;
+        }
+
         // import path is extracted
         const moduleName = childNode.moduleSpecifier.getText().replace(/['"]/g, '');
         const resolvedModule = ts.nodeModuleNameResolver(
@@ -187,75 +193,92 @@ export const getImportMap = (paths: string[]) => {
           cliCompilerOptions,
           tsHost
         );
+
         // get import path and check if its import target exists
         const resolvedImportPath = resolvedModule?.resolvedModule?.resolvedFileName;
-        if (resolvedImportPath && imports) {
+
+        if (!resolvedImportPath) {
+          console.warn('[Codegen] Could not resolve a file for import %s', moduleName);
+          return;
+        }
+
+        let importModuleName: string;
+
+        if (
+          resolvedImportPath.includes('node_modules') ||
+          resolvedImportPath.endsWith('.d.ts') ||
+          !toPosixPath(resolvedImportPath).startsWith(toPosixPath(appPath) + '/')
+        ) {
           // if import path points to a file in local app - process import path to the file (i.e. ./myComponent)
           // if it points to node_modules or a file in monorepo - parse import path as dependency module name (i.e. React)
-          const importModuleName =
-            resolvedImportPath.indexOf('node_modules') > -1 || resolvedImportPath.endsWith('.d.ts')
-              ? moduleName
-              : resolvedImportPath.replace(/\.[a-zA-Z]{2,4}$/, ''); // remove file extension
-          // Set module import info in the map. If module import exists - add entries to existing entry
-          // Otherwise, add new entry
-          if (!importMap.has(importModuleName)) {
-            importMap.set(importModuleName, {
-              namedExports: new Map(),
-              defaultExport: null,
-              namespaceExport: null,
-            });
-          }
-
-          const moduleEntry = importMap.get(importModuleName);
-
-          imports.named.forEach((importEntry) => {
-            const sameModuleNamedAlready = moduleEntry!.namedExports.has(importEntry);
-
-            if (sameModuleNamedAlready) {
-              return;
-            }
-
-            const nameTaken = importsList.includes(importEntry);
-
-            const importValue = nameTaken
-              ? getImportValueAlias(importEntry, importModuleName, 'named')
-              : importEntry;
-
-            moduleEntry!.namedExports.set(importEntry, importValue);
-            importsList.push(importEntry);
-          });
-          if (imports.namespace) {
-            const sameModuleNamedAlready = moduleEntry!.namespaceExport;
-
-            if (sameModuleNamedAlready) {
-              return;
-            }
-
-            const nameTaken = importsList.includes(imports.namespace);
-            const importValue = nameTaken
-              ? getImportValueAlias(imports.namespace, importModuleName, 'namespace')
-              : imports.namespace;
-
-            moduleEntry!.namespaceExport = importValue;
-            importsList.push(importValue);
-          }
-          if (imports.default) {
-            const sameModuleNamedAlready = moduleEntry!.defaultExport;
-
-            if (sameModuleNamedAlready) {
-              return;
-            }
-
-            const nameTaken = importsList.includes(imports.default);
-            const importValue = nameTaken
-              ? getImportValueAlias(imports.default, importModuleName, 'default')
-              : imports.default;
-
-            moduleEntry!.defaultExport = importValue;
-            importsList.push(importValue);
-          }
+          // external dependency → keep as-is
+          importModuleName = isNodeModuleImport(moduleName)
+            ? stripExtension(moduleName)
+            : getRelativeImportPath(resolvedImportPath, appPath);
         } else {
-          console.warn('[Codegen] Could not resolve a file for import %s', moduleName);
+          // local file
+          importModuleName = isNodeModuleImport(moduleName)
+            ? stripExtension(moduleName)
+            : getRelativeImportPath(resolvedImportPath, appPath);
+        }
+
+        // Set module import info in the map. If module import exists - add entries to existing entry
+        // Otherwise, add new entry
+        if (!importMap.has(importModuleName)) {
+          importMap.set(importModuleName, {
+            namedExports: new Map(),
+            defaultExport: null,
+            namespaceExport: null,
+          });
+        }
+
+        const moduleEntry = importMap.get(importModuleName);
+
+        imports.named.forEach((importEntry) => {
+          const sameModuleNamedAlready = moduleEntry!.namedExports.has(importEntry);
+
+          if (sameModuleNamedAlready) {
+            return;
+          }
+
+          const nameTaken = importsList.includes(importEntry);
+
+          const importValue = nameTaken
+            ? getImportValueAlias(importEntry, importModuleName, 'named')
+            : importEntry;
+
+          moduleEntry!.namedExports.set(importEntry, importValue);
+          importsList.push(importEntry);
+        });
+        if (imports.namespace) {
+          const sameModuleNamedAlready = moduleEntry!.namespaceExport;
+
+          if (sameModuleNamedAlready) {
+            return;
+          }
+
+          const nameTaken = importsList.includes(imports.namespace);
+          const importValue = nameTaken
+            ? getImportValueAlias(imports.namespace, importModuleName, 'namespace')
+            : imports.namespace;
+
+          moduleEntry!.namespaceExport = importValue;
+          importsList.push(importValue);
+        }
+        if (imports.default) {
+          const sameModuleNamedAlready = moduleEntry!.defaultExport;
+
+          if (sameModuleNamedAlready) {
+            return;
+          }
+
+          const nameTaken = importsList.includes(imports.default);
+          const importValue = nameTaken
+            ? getImportValueAlias(imports.default, importModuleName, 'default')
+            : imports.default;
+
+          moduleEntry!.defaultExport = importValue;
+          importsList.push(importValue);
         }
       }
     });
@@ -367,9 +390,9 @@ export const nextJsMapTemplate = (indexedImportMap: Map<string, ModuleExports>) 
 // Below are built-in Content SDK imports neccessary for the import map
 import { combineImportEntries, defaultImportEntries } from '@sitecore-content-sdk/nextjs/codegen';
 // end of built-in imports
-  
+
 ${importStatements.join('\n')}
-    
+
 const importMap = [
 ${finalImportMap
   .map((entry) =>
