@@ -1,9 +1,12 @@
 ﻿'use client';
-import React, { JSX } from 'react';
+import React, { JSX, useEffect } from 'react';
 import { useSitecore } from '../enhancers/withSitecore';
-import { getContentSdkPagesClientData } from '@sitecore-content-sdk/core/editing';
+import {
+  getContentSdkPagesClientData,
+  isEditorActive,
+  resetEditorChromes,
+} from '@sitecore-content-sdk/core/editing';
 import { getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
-import { EditingReadyComponent } from './EditingReadyComponent';
 
 /**
  * Renders client scripts and data for editing/preview mode for Pages.
@@ -15,6 +18,12 @@ export const EditingScripts = (): JSX.Element => {
     page: { mode, layout },
     api,
   } = useSitecore();
+
+  useEffect(() => {
+    if (isEditorActive()) {
+      resetEditorChromes();
+    }
+  }, []);
 
   const { clientData, clientScripts } = layout.sitecore.context;
 
@@ -44,7 +53,6 @@ export const EditingScripts = (): JSX.Element => {
 
   return (
     <>
-      <EditingReadyComponent />
       {clientScripts?.map((src, index) => (
         <script src={src} key={index} />
       ))}
