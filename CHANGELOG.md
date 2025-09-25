@@ -19,6 +19,7 @@ Our versioning strategy is as follows:
   - Robots.txt and Sitemap.xml support ([#197](https://github.com/Sitecore/content-sdk/pull/197))
   - Editing and preview support ([#198](https://github.com/Sitecore/content-sdk/pull/198))
   - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202)) ([#214](https://github.com/Sitecore/content-sdk/pull/214))
+  - Mark client components with `use client` directive. ([#226](https://github.com/Sitecore/content-sdk/pull/226))
 
 ## 1.1.0
 
