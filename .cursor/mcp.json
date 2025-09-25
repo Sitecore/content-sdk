@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "Sitecore Content SDK MCP": {
+      "type": "stdio",
+      "command": "yarn",
+      "args": ["workspace", "@sitecore-content-sdk/mcp-server", "start"],
+      "env": {
+        "SITECORE_DEFAULT_LANGUAGE": "en",
+        "SITECORE_DEFAULT_SITE": "test"
+      }
+    }
+  }
+}
