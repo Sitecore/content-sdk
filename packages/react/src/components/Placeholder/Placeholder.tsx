@@ -1,4 +1,5 @@
-﻿import React from 'react';
+﻿'use client';
+import React from 'react';
 import { PlaceholderProps } from './models';
 import { withComponentMap } from '../../enhancers/withComponentMap';
 import { PagesEditor } from '@sitecore-content-sdk/core/editing';
