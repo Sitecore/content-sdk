@@ -32,11 +32,7 @@ async function loadMcpSdk() {
       const m = await import(pathToFileURL(resolved).href);
       ServerCtor = m.Server || m.default || ServerCtor;
       if (ServerCtor) break;
-    } catch (err) {
-      if (process.env.DEBUG_MCP_IMPORTS) {
-        console.warn('[mcp] failed to import', mod, String(err && err.message ? err.message : err));
-      }
-    }
+    } catch {}
   }
   for (const mod of stdioCandidates) {
     try {
@@ -44,11 +40,7 @@ async function loadMcpSdk() {
       const m = await import(pathToFileURL(resolved).href);
       StdioCtor = m.StdioServerTransport || m.default || StdioCtor;
       if (StdioCtor) break;
-    } catch (err) {
-      if (process.env.DEBUG_MCP_IMPORTS) {
-        console.warn('[mcp] failed to import', mod, String(err && err.message ? err.message : err));
-      }
-    }
+    } catch {}
   }
   if (!ServerCtor || !StdioCtor) {
     throw new Error('Failed to load MCP SDK Server or Stdio transport');
@@ -74,7 +66,6 @@ async function loadSitecoreClientCtor() {
     try {
       let m;
       if (mod.startsWith('file:')) {
-        // Use CJS require for workspace file path for reliable interop
         const fsPath = fileURLToPath(mod);
         m = require(fsPath);
       } else {
@@ -88,29 +79,8 @@ async function loadSitecoreClientCtor() {
         m = await import(resolved);
       }
       const ctor = (m && (m.SitecoreClient || m.default?.SitecoreClient)) || m?.default;
-      if (process.env.DEBUG_MCP_IMPORTS) {
-        console.warn(
-          '[mcp] tried core client candidate:',
-          mod,
-          'loaded:',
-          Boolean(m),
-          'ctor:',
-          Boolean(ctor)
-        );
-      }
       if (ctor) return ctor;
-    } catch (err) {
-      if (process.env.DEBUG_MCP_IMPORTS) {
-        console.warn(
-          '[mcp] failed to import core client from',
-          mod,
-          String(err && err.message ? err.message : err)
-        );
-      }
-    }
-  }
-  if (process.env.DEBUG_MCP_IMPORTS) {
-    console.warn('[mcp] SitecoreClient not found in any candidate');
+    } catch {}
   }
   return undefined;
 }
@@ -205,17 +175,8 @@ async function createClientFromEnv() {
       return undefined;
     }
 
-    if (process.env.DEBUG_MCP_IMPORTS) {
-      console.warn('[mcp] creating SitecoreClient with init:', JSON.stringify(init));
-    }
     return new SitecoreClient(init);
   } catch (e) {
-    if (process.env.DEBUG_MCP_IMPORTS) {
-      console.warn(
-        '[mcp] failed to create SitecoreClient:',
-        String(e && e.message ? e.message : e)
-      );
-    }
     return undefined;
   }
 }
@@ -376,42 +337,7 @@ async function main() {
   const client = await createClientFromEnv();
   const hasClient = Boolean(client);
 
-  // Optional self-test mode: run basic checks and exit without loading MCP SDK
-  if (process.env.MCP_SELFTEST === '1') {
-    const out = [];
-    out.push({ test: 'ping', result: { ok: true, mode: hasClient ? 'client' : 'demo' } });
-    out.push({
-      test: 'listSchemas',
-      result: {
-        edge: {
-          contextId: process.env.SITECORE_EDGE_CONTEXT_ID || null,
-          clientContextId: process.env.SITECORE_EDGE_CLIENT_CONTEXT_ID || null,
-          edgeUrl: process.env.SITECORE_EDGE_URL || null,
-        },
-        local: {
-          apiHost: process.env.SITECORE_API_HOST || null,
-          apiKey: process.env.SITECORE_API_KEY ? '***' : null,
-          path: process.env.SITECORE_GRAPHQL_PATH || '/sitecore/api/graph/edge',
-        },
-      },
-    });
-    if (hasClient) {
-      try {
-        const page = await client.getPage('/', {});
-        out.push({ test: 'getPage', ok: true, hasLayout: Boolean(page && page.layout) });
-      } catch (e) {
-        out.push({ test: 'getPage', ok: false, error: String(e?.message || e) });
-      }
-      try {
-        const dict = await client.getDictionary({});
-        out.push({ test: 'getDictionary', ok: true, size: dict ? Object.keys(dict).length : 0 });
-      } catch (e) {
-        out.push({ test: 'getDictionary', ok: false, error: String(e?.message || e) });
-      }
-    }
-    console.log(JSON.stringify({ selftest: true, results: out }, null, 2));
-    return;
-  }
+  // No self-test path; server always starts
 
   const { Server, StdioServerTransport } = await loadMcpSdk();
   const server = new Server({
