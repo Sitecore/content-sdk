@@ -8,7 +8,7 @@
 
 > **ComponentPropsContext**(`__namedParameters`): `Element`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/dc78717cbc6eab86c122d7a2aebdbc19b460c53c/packages/nextjs/src/components/ComponentPropsContext.tsx#L33)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/257d1c870bd759124711aaafa802b560060fbd91/packages/nextjs/src/components/ComponentPropsContext.tsx#L33)
 
 ## Parameters
 
