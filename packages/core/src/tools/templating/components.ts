@@ -1,8 +1,12 @@
 import * as glob from 'glob';
+import * as fs from 'fs';
 
 const componentNamePattern = /^[\/]*(.+[\/\\])*(.+)\.[jt]sx?$/;
 
 const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
+
+export type ComponentType = 'server' | 'client' | 'universal';
+export type RouterType = 'app' | 'pages';
 
 /**
  * Describes a file that represents a component definition
@@ -17,6 +21,11 @@ export interface ComponentFile {
   importPath: string;
   moduleName: string;
   componentName: string;
+  componentType?: ComponentType;
+}
+
+export interface ComponentFileWithType extends ComponentFile {
+  componentType: ComponentType;
 }
 
 /**
@@ -71,4 +80,67 @@ export function getComponentList(paths: string[], exclude?: string[]): Component
   }, []);
 
   return components;
+}
+
+export function detectRouterType(projectRoot: string = process.cwd()): RouterType {
+  const appDirExists =
+    fs.existsSync(`${projectRoot}/src/app`) || fs.existsSync(`${projectRoot}/app`);
+  const pagesDirExists =
+    fs.existsSync(`${projectRoot}/src/pages`) || fs.existsSync(`${projectRoot}/pages`);
+
+  if (appDirExists) {
+    return 'app';
+  }
+
+  if (pagesDirExists) {
+    return 'pages';
+  }
+
+  return 'pages';
+}
+
+export function detectComponentType(filePath: string): ComponentType {
+  try {
+    const content = fs.readFileSync(filePath, 'utf-8');
+
+    // Check for 'use client' directive
+    if (content.includes("'use client'") || content.includes('"use client"')) {
+      return 'client';
+    }
+
+    // Check for explicit componentType export
+    const componentTypeMatch = content.match(
+      /export\s+const\s+componentType\s*[:=]\s*['"`](\w+)['"`]/
+    );
+    if (componentTypeMatch) {
+      const type = componentTypeMatch[1] as ComponentType;
+      if (type === 'server' || type === 'client' || type === 'universal') {
+        return type;
+      }
+    }
+
+    // Default to universal if no explicit indicators
+    return 'universal';
+  } catch {
+    return 'universal';
+  }
+}
+
+export function getComponentListWithTypes(
+  paths: string[],
+  exclude?: string[]
+): ComponentFileWithType[] {
+  const components = getComponentList(paths, exclude);
+
+  return components.map((component) => ({
+    ...component,
+    componentType: detectComponentType(component.filePath),
+  }));
+}
+
+export function filterComponentsByType(
+  components: ComponentFileWithType[],
+  allowedTypes: ComponentType[]
+): ComponentFileWithType[] {
+  return components.filter((component) => allowedTypes.includes(component.componentType));
 }

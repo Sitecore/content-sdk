@@ -6,7 +6,7 @@ import {
   Page,
   SitecoreProvider,
 } from '@sitecore-content-sdk/nextjs';
-import components from '.sitecore/component-map';
+import components from '.sitecore/component-map.client';
 import scConfig from 'sitecore.config';
 
 export default function Providers({

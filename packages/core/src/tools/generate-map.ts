@@ -1,4 +1,4 @@
-import { ComponentFile, ComponentImport } from './templating';
+import { ComponentFile, ComponentImport, RouterType } from './templating';
 
 export type GenerateMapFunction = (args: GenerateMapArgs) => void;
 
@@ -17,4 +17,5 @@ export type GenerateMapArgs = {
   componentImports?: ComponentImport[];
   exclude?: string[];
   mapTemplate?: (components: ComponentFile[], componentImports?: ComponentImport[]) => string;
+  routerType?: RouterType;
 };
