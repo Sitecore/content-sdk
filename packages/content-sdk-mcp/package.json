@@ -9,7 +9,8 @@
   "scripts": {
     "start": "yarn node ./index.js",
     "dev": "yarn node --watch ./index.js",
-    "call": "node ./index.js call"
+    "call": "node ./index.js call",
+    "test:smoke": "node ./scripts/smoke-test.js"
   },
   "engines": {
     "node": ">=22"

@@ -5,6 +5,15 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 import { pathToFileURL, fileURLToPath } from 'url';
 import { registerTools } from './tools/register.js';
+import pingTool from './tools/ping.js';
+import listSchemasTool from './tools/listSchemas.js';
+import getPageTool from './tools/getPage.js';
+import getDictionaryTool from './tools/getDictionary.js';
+import getRobotsTool from './tools/getRobots.js';
+import getErrorPagesTool from './tools/getErrorPages.js';
+import listRoutesTool from './tools/listRoutes.js';
+import getSitemapXmlTool from './tools/getSitemapXml.js';
+import listComponentsTool from './tools/listComponents.js';
 // Resolve MCP SDK imports dynamically to handle version/path differences
 /**
  * Load MCP SDK Server and stdio transport constructors with path fallbacks.
@@ -200,20 +209,14 @@ function jsonText(value) {
   }
 }
 
-function collectComponentNames(obj, out) {
-  if (!obj || typeof obj !== 'object') return;
-  for (const k of Object.keys(obj)) {
-    const v = obj[k];
-    if (k === 'componentName' && typeof v === 'string') {
-      out.add(v);
-    } else if (v && typeof v === 'object') {
-      collectComponentNames(v, out);
-    }
-  }
-}
+// removed: collectComponentNames (no longer used in CLI path)
 
 /**
  * CLI call mode: run a single tool and output JSON, then exit.
+ */
+/**
+ * CLI call mode: run a single tool and output JSON, then exit.
+ * @param {string[]} argv process argv array
  */
 async function runCliCall(argv) {
   const cmd = argv[2];
@@ -233,90 +236,25 @@ async function runCliCall(argv) {
   }
 
   const client = await createClientFromEnv();
-  const hasClient = Boolean(client);
 
-  async function resolveResult() {
-    switch (tool) {
-      case 'ping':
-        return { ok: true, mode: hasClient ? 'client' : 'demo' };
-      case 'listSchemas':
-        return {
-          edge: {
-            contextId: process.env.SITECORE_EDGE_CONTEXT_ID || null,
-            clientContextId: process.env.SITECORE_EDGE_CLIENT_CONTEXT_ID || null,
-            edgeUrl: process.env.SITECORE_EDGE_URL || null,
-          },
-          local: {
-            apiHost: process.env.SITECORE_API_HOST || null,
-            apiKey: process.env.SITECORE_API_KEY ? '***' : null,
-            path: process.env.SITECORE_GRAPHQL_PATH || '/sitecore/api/graph/edge',
-          },
-        };
-      case 'getPage': {
-        if (!hasClient) throw new Error('Sitecore client not configured');
-        return client.getPage(args.path, {
-          site: args.site || undefined,
-          locale: args.locale || undefined,
-        });
-      }
-      case 'getDictionary': {
-        if (!hasClient) throw new Error('Sitecore client not configured');
-        return client.getDictionary({
-          site: args.site || undefined,
-          locale: args.locale || undefined,
-        });
-      }
-      case 'getRobots': {
-        if (!hasClient) throw new Error('Sitecore client not configured');
-        return (await client.getRobots(args.site)) || '';
-      }
-      case 'getErrorPages': {
-        if (!hasClient) throw new Error('Sitecore client not configured');
-        return client.getErrorPages({
-          site: args.site || undefined,
-          locale: args.locale || undefined,
-        });
-      }
-      case 'listRoutes': {
-        if (!hasClient) throw new Error('Sitecore client not configured');
-        const site = args.site || undefined;
-        const languages = Array.isArray(args.languages) ? args.languages : undefined;
-        const paths = await client.getPagePaths(site ? [site] : [], languages);
-        return { routes: paths };
-      }
-      case 'getSitemapXml': {
-        if (!hasClient) throw new Error('Sitecore client not configured');
-        const reqHost = args.reqHost || 'localhost';
-        const reqProtocol = args.reqProtocol || 'https';
-        const id = args.id || undefined;
-        const siteName = args.site || undefined;
-        const xml = await client.getSiteMap({ reqHost, reqProtocol, id, siteName });
-        return xml;
-      }
-      case 'listComponents': {
-        const routes = Array.isArray(args?.routes) && args.routes.length ? args.routes : ['/'];
-        const names = new Set();
-        if (!hasClient) throw new Error('Sitecore client not configured');
-        for (const r of routes) {
-          try {
-            const page = await client.getPage(r, {
-              site: args.site || undefined,
-              locale: args.locale || undefined,
-            });
-            if (page?.layout) collectComponentNames(page.layout, names);
-          } catch {
-            // ignore per-route errors
-          }
-        }
-        return { components: Array.from(names).sort() };
-      }
-      default:
-        throw new Error(`Unknown tool: ${tool}`);
-    }
-  }
+  /** Map tool name to shared tool implementation */
+  const toolMap = {
+    ping: (ctx) => pingTool(ctx),
+    listSchemas: (ctx) => listSchemasTool(ctx),
+    getPage: (ctx) => getPageTool(ctx),
+    getDictionary: (ctx) => getDictionaryTool(ctx),
+    getRobots: (ctx) => getRobotsTool(ctx),
+    getErrorPages: (ctx) => getErrorPagesTool(ctx),
+    listRoutes: (ctx) => listRoutesTool(ctx),
+    getSitemapXml: (ctx) => getSitemapXmlTool(ctx),
+    listComponents: (ctx) => listComponentsTool(ctx),
+  };
+
+  const impl = toolMap[tool];
+  if (!impl) throw new Error(`Unknown tool: ${tool}`);
 
   try {
-    const result = await resolveResult();
+    const result = await impl({ client, args });
     console.log(jsonText({ tool, args, result }));
     process.exit(0);
   } catch (e) {
