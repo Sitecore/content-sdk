@@ -21,6 +21,10 @@ Our versioning strategy is as follows:
   - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202)) ([#214](https://github.com/Sitecore/content-sdk/pull/214))
   - Mark client components with `use client` directive. ([#226](https://github.com/Sitecore/content-sdk/pull/226))
 
+### 🐛 Bug Fixes
+* `[template/nextjs]` `[template/next-app-router]` Fix imports for SSR/SSG ([#229](https://github.com/Sitecore/content-sdk/pull/229))
+
+
 ## 1.1.0
 
 ### 🎉 New Features & Improvements
