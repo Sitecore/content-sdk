@@ -8,7 +8,7 @@
 
 > **getEnforcedCorsHeaders**(`__namedParameters`): `null` \| \{\[`key`: `string`\]: `string`; \}
 
-Defined in: [packages/core/src/utils/utils.ts:151](https://github.com/Sitecore/content-sdk/blob/dc78717cbc6eab86c122d7a2aebdbc19b460c53c/packages/core/src/utils/utils.ts#L151)
+Defined in: [packages/core/src/utils/utils.ts:151](https://github.com/Sitecore/content-sdk/blob/257d1c870bd759124711aaafa802b560060fbd91/packages/core/src/utils/utils.ts#L151)
 
 ## Parameters
 
