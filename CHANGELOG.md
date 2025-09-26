@@ -22,6 +22,10 @@ Our versioning strategy is as follows:
 * [nextjs] Slim down sample even more ([#225](https://github.com/Sitecore/content-sdk/pull/225))
 * Mark client components with `use client` directive. ([#226](https://github.com/Sitecore/content-sdk/pull/226))
 
+### 🐛 Bug Fixes
+* `[template/nextjs]` `[template/next-app-router]` Fix imports for SSR/SSG ([#229](https://github.com/Sitecore/content-sdk/pull/229))
+
+
 ## 1.1.0
 
 ### 🎉 New Features & Improvements
