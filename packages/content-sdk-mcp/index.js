@@ -4,6 +4,7 @@ import 'dotenv/config';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 import { pathToFileURL, fileURLToPath } from 'url';
+import { registerTools } from './tools/register.js';
 // Resolve MCP SDK imports dynamically to handle version/path differences
 /**
  * Load MCP SDK Server and stdio transport constructors with path fallbacks.
@@ -32,7 +33,9 @@ async function loadMcpSdk() {
       const m = await import(pathToFileURL(resolved).href);
       ServerCtor = m.Server || m.default || ServerCtor;
       if (ServerCtor) break;
-    } catch {}
+    } catch {
+      // ignore
+    }
   }
   for (const mod of stdioCandidates) {
     try {
@@ -40,7 +43,9 @@ async function loadMcpSdk() {
       const m = await import(pathToFileURL(resolved).href);
       StdioCtor = m.StdioServerTransport || m.default || StdioCtor;
       if (StdioCtor) break;
-    } catch {}
+    } catch {
+      // ignore
+    }
   }
   if (!ServerCtor || !StdioCtor) {
     throw new Error('Failed to load MCP SDK Server or Stdio transport');
@@ -80,7 +85,9 @@ async function loadSitecoreClientCtor() {
       }
       const ctor = (m && (m.SitecoreClient || m.default?.SitecoreClient)) || m?.default;
       if (ctor) return ctor;
-    } catch {}
+    } catch {
+      // ignore
+    }
   }
   return undefined;
 }
@@ -176,7 +183,7 @@ async function createClientFromEnv() {
     }
 
     return new SitecoreClient(init);
-  } catch (e) {
+  } catch {
     return undefined;
   }
 }
@@ -246,46 +253,39 @@ async function runCliCall(argv) {
           },
         };
       case 'getPage': {
-        if (!hasClient) {
-          return {
-            layout: { sitecore: { route: { name: 'Home', placeholders: {} } } },
-            siteName: 'demo',
-            locale: 'en',
-            mode: 'Normal',
-          };
-        }
+        if (!hasClient) throw new Error('Sitecore client not configured');
         return client.getPage(args.path, {
           site: args.site || undefined,
           locale: args.locale || undefined,
         });
       }
       case 'getDictionary': {
-        if (!hasClient) return { phrases: { Hello: 'Hello', Welcome: 'Welcome' } };
+        if (!hasClient) throw new Error('Sitecore client not configured');
         return client.getDictionary({
           site: args.site || undefined,
           locale: args.locale || undefined,
         });
       }
       case 'getRobots': {
-        if (!hasClient) return 'User-agent: *\nDisallow:';
+        if (!hasClient) throw new Error('Sitecore client not configured');
         return (await client.getRobots(args.site)) || '';
       }
       case 'getErrorPages': {
-        if (!hasClient) return { notFound: '/not-found', serverError: '/error' };
+        if (!hasClient) throw new Error('Sitecore client not configured');
         return client.getErrorPages({
           site: args.site || undefined,
           locale: args.locale || undefined,
         });
       }
       case 'listRoutes': {
-        if (!hasClient) return { routes: [] };
+        if (!hasClient) throw new Error('Sitecore client not configured');
         const site = args.site || undefined;
         const languages = Array.isArray(args.languages) ? args.languages : undefined;
         const paths = await client.getPagePaths(site ? [site] : [], languages);
         return { routes: paths };
       }
       case 'getSitemapXml': {
-        if (!hasClient) return '<sitemapindex></sitemapindex>';
+        if (!hasClient) throw new Error('Sitecore client not configured');
         const reqHost = args.reqHost || 'localhost';
         const reqProtocol = args.reqProtocol || 'https';
         const id = args.id || undefined;
@@ -296,7 +296,7 @@ async function runCliCall(argv) {
       case 'listComponents': {
         const routes = Array.isArray(args?.routes) && args.routes.length ? args.routes : ['/'];
         const names = new Set();
-        if (!hasClient) return { components: [] };
+        if (!hasClient) throw new Error('Sitecore client not configured');
         for (const r of routes) {
           try {
             const page = await client.getPage(r, {
@@ -335,7 +335,6 @@ async function main() {
     return;
   }
   const client = await createClientFromEnv();
-  const hasClient = Boolean(client);
 
   // No self-test path; server always starts
 
@@ -345,288 +344,9 @@ async function main() {
     version: '0.1.0',
   });
 
-  // Health check
-  server.tool(
-    {
-      name: 'ping',
-      description: 'Health check for the Sitecore MCP server',
-      inputSchema: { type: 'object', additionalProperties: false },
-    },
-    async () => ({
-      content: [
-        { type: 'text', text: 'pong' },
-        { type: 'text', text: hasClient ? 'client:configured' : 'client:demo-fallback' },
-      ],
-    })
-  );
-
-  // Get page layout data for a route
-  server.tool(
-    {
-      name: 'getPage',
-      description:
-        'Fetch Sitecore page details (layout, site, locale) for a given route path. Uses configured Sitecore connection or returns demo fallback.',
-      inputSchema: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          path: { type: 'string', description: 'Route path, e.g. / or /products' },
-          site: { type: 'string', nullable: true },
-          locale: { type: 'string', nullable: true },
-        },
-        required: ['path'],
-      },
-    },
-    async (args) => {
-      if (!hasClient) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: jsonText({
-                layout: { sitecore: { route: { name: 'Home', placeholders: {} } } },
-                siteName: 'demo',
-                locale: 'en',
-                mode: 'Normal',
-              }),
-            },
-          ],
-        };
-      }
-      try {
-        const result = await client.getPage(args.path, {
-          site: args.site || undefined,
-          locale: args.locale || undefined,
-        });
-        return { content: [{ type: 'text', text: jsonText(result) }] };
-      } catch (err) {
-        return { content: [{ type: 'text', text: `error: ${err?.message || String(err)}` }] };
-      }
-    }
-  );
-
-  // Get dictionary phrases
-  server.tool(
-    {
-      name: 'getDictionary',
-      description: 'Fetch Sitecore dictionary phrases for a site/locale.',
-      inputSchema: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          site: { type: 'string', nullable: true },
-          locale: { type: 'string', nullable: true },
-        },
-      },
-    },
-    async (args) => {
-      if (!hasClient) {
-        return {
-          content: [
-            { type: 'text', text: jsonText({ phrases: { Hello: 'Hello', Welcome: 'Welcome' } }) },
-          ],
-        };
-      }
-      try {
-        const result = await client.getDictionary({
-          site: args.site || undefined,
-          locale: args.locale || undefined,
-        });
-        return { content: [{ type: 'text', text: jsonText(result) }] };
-      } catch (err) {
-        return { content: [{ type: 'text', text: `error: ${err?.message || String(err)}` }] };
-      }
-    }
-  );
-
-  // Get robots.txt
-  server.tool(
-    {
-      name: 'getRobots',
-      description: 'Fetch robots.txt content for a given site name.',
-      inputSchema: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          site: { type: 'string' },
-        },
-        required: ['site'],
-      },
-    },
-    async (args) => {
-      if (!hasClient) {
-        return { content: [{ type: 'text', text: 'User-agent: *\nDisallow:' }] };
-      }
-      try {
-        const robots = await client.getRobots(args.site);
-        return { content: [{ type: 'text', text: robots || '' }] };
-      } catch (err) {
-        return { content: [{ type: 'text', text: `error: ${err?.message || String(err)}` }] };
-      }
-    }
-  );
-
-  // List routes using Sitecore getPagePaths
-  server.tool(
-    {
-      name: 'listRoutes',
-      description: 'List site routes via getPagePaths (optionally filter languages).',
-      inputSchema: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          site: { type: 'string', nullable: true },
-          languages: { type: 'array', items: { type: 'string' }, nullable: true },
-        },
-      },
-    },
-    async (args) => {
-      if (!client) {
-        return { content: [{ type: 'text', text: jsonText({ routes: [] }) }] };
-      }
-      try {
-        const site = args.site || undefined;
-        const languages = Array.isArray(args.languages) ? args.languages : undefined;
-        const paths = await client.getPagePaths(site ? [site] : [], languages);
-        return { content: [{ type: 'text', text: jsonText({ routes: paths }) }] };
-      } catch (err) {
-        return { content: [{ type: 'text', text: `error: ${err?.message || String(err)}` }] };
-      }
-    }
-  );
-
-  // Get sitemap XML
-  server.tool(
-    {
-      name: 'getSitemapXml',
-      description: 'Return sitemap XML (or index) via getSiteMap.',
-      inputSchema: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          reqHost: { type: 'string' },
-          reqProtocol: { type: 'string' },
-          id: { type: 'string', nullable: true },
-          site: { type: 'string', nullable: true },
-        },
-        required: ['reqHost', 'reqProtocol'],
-      },
-    },
-    async (args) => {
-      if (!client) {
-        return { content: [{ type: 'text', text: '<sitemapindex></sitemapindex>' }] };
-      }
-      try {
-        const xml = await client.getSiteMap({
-          reqHost: args.reqHost,
-          reqProtocol: args.reqProtocol,
-          id: args.id || undefined,
-          siteName: args.site || undefined,
-        });
-        return { content: [{ type: 'text', text: xml }] };
-      } catch (err) {
-        return { content: [{ type: 'text', text: `error: ${err?.message || String(err)}` }] };
-      }
-    }
-  );
-
-  // Get error pages (404/500) for a site/locale
-  server.tool(
-    {
-      name: 'getErrorPages',
-      description: 'Fetch Sitecore error pages (404/500) configured for a site/locale.',
-      inputSchema: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          site: { type: 'string', nullable: true },
-          locale: { type: 'string', nullable: true },
-        },
-      },
-    },
-    async (args) => {
-      if (!hasClient) {
-        return {
-          content: [
-            { type: 'text', text: jsonText({ notFound: '/not-found', serverError: '/error' }) },
-          ],
-        };
-      }
-      try {
-        const result = await client.getErrorPages({
-          site: args.site || undefined,
-          locale: args.locale || undefined,
-        });
-        return { content: [{ type: 'text', text: jsonText(result) }] };
-      } catch (err) {
-        return { content: [{ type: 'text', text: `error: ${err?.message || String(err)}` }] };
-      }
-    }
-  );
-
-  // Utility/demo tools
-  server.tool(
-    {
-      name: 'listSchemas',
-      description:
-        'List configured Sitecore GraphQL endpoints based on environment (edge/local). Useful for debugging and demos.',
-      inputSchema: { type: 'object', additionalProperties: false },
-    },
-    async () => {
-      const data = {
-        edge: {
-          contextId: process.env.SITECORE_EDGE_CONTEXT_ID || null,
-          clientContextId: process.env.SITECORE_EDGE_CLIENT_CONTEXT_ID || null,
-          edgeUrl: process.env.SITECORE_EDGE_URL || null,
-        },
-        local: {
-          apiHost: process.env.SITECORE_API_HOST || null,
-          apiKey: process.env.SITECORE_API_KEY ? '***' : null,
-          path: process.env.SITECORE_GRAPHQL_PATH || '/sitecore/api/graph/edge',
-        },
-      };
-      return { content: [{ type: 'text', text: jsonText(data) }] };
-    }
-  );
-
-  // Register helpful prompt templates if supported by the SDK
-  if (typeof server.prompt === 'function') {
-    server.prompt({
-      name: 'summarizeContent',
-      description: 'Summarize a Sitecore content item JSON',
-      inputSchema: {
-        type: 'object',
-        properties: { content: { type: 'string' } },
-        required: ['content'],
-      },
-      messages: [
-        {
-          role: 'user',
-          content: [{ type: 'text', text: 'Summarize this content item:\n\n{{content}}' }],
-        },
-      ],
-    });
-    server.prompt({
-      name: 'seoDescription',
-      description: 'Generate an SEO meta description for a content item',
-      inputSchema: {
-        type: 'object',
-        properties: { content: { type: 'string' } },
-        required: ['content'],
-      },
-      messages: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: 'Create an SEO-friendly 150-160 char meta description for:\n\n{{content}}',
-            },
-          ],
-        },
-      ],
-    });
-  }
+  // Register tools
+  registerTools(server, client);
+  // Prompts are disabled for now
 
   await server.connect(new StdioServerTransport());
 }

@@ -8,14 +8,15 @@
   },
   "scripts": {
     "start": "yarn node ./index.js",
-    "dev": "yarn node --watch ./index.js"
+    "dev": "yarn node --watch ./index.js",
+    "call": "node ./index.js call"
   },
   "engines": {
     "node": ">=22"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "latest",
+    "@modelcontextprotocol/sdk": "^1.18.2",
     "@sitecore-content-sdk/core": "workspace:*",
-    "dotenv": "^16.4.5"
+    "dotenv": "^17.2.2"
   }
 }

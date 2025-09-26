@@ -1,7 +1,6 @@
 {
-  "servers": {
+  "mcpServers": {
     "Sitecore Content SDK MCP": {
-      "type": "stdio",
       "command": "yarn",
       "args": ["workspace", "@sitecore-content-sdk/mcp-server", "start"],
       "env": {
