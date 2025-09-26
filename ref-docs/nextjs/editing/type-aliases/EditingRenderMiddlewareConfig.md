@@ -8,7 +8,7 @@
 
 > **EditingRenderMiddlewareConfig** = `object`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/e8b106f23eb416c3200d4f8e6db200c4a3f9f594/packages/nextjs/src/editing/editing-render-middleware.ts#L27)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/6568f3f866052357cc0d19dd77254f43ff7c7f0a/packages/nextjs/src/editing/editing-render-middleware.ts#L27)
 
 Configuration for the Editing Render Middleware.
 
@@ -18,7 +18,7 @@ Configuration for the Editing Render Middleware.
 
 > `optional` **resolvePageUrl**: (`itemPath`) => `string`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:35](https://github.com/Sitecore/content-sdk/blob/e8b106f23eb416c3200d4f8e6db200c4a3f9f594/packages/nextjs/src/editing/editing-render-middleware.ts#L35)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:35](https://github.com/Sitecore/content-sdk/blob/6568f3f866052357cc0d19dd77254f43ff7c7f0a/packages/nextjs/src/editing/editing-render-middleware.ts#L35)
 
 Function used to determine route/page URL to render.
 This may be necessary for certain custom Next.js routing configurations.
@@ -45,6 +45,6 @@ The URL to render
 
 > `optional` **sitecoreInternalEditingHostUrl**: `string`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/e8b106f23eb416c3200d4f8e6db200c4a3f9f594/packages/nextjs/src/editing/editing-render-middleware.ts#L39)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/6568f3f866052357cc0d19dd77254f43ff7c7f0a/packages/nextjs/src/editing/editing-render-middleware.ts#L39)
 
 The internal host URL for the Next.js application, used for server-side requests for page rendering during editing.

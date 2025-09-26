@@ -8,4 +8,4 @@
 
 > `const` **Link**: `ForwardRefExoticComponent`\<`Omit`\<[`LinkProps`](../type-aliases/LinkProps.md), `"ref"`\> & `RefAttributes`\<`HTMLAnchorElement`\>\>
 
-Defined in: [nextjs/src/components/Link.tsx:28](https://github.com/Sitecore/content-sdk/blob/e8b106f23eb416c3200d4f8e6db200c4a3f9f594/packages/nextjs/src/components/Link.tsx#L28)
+Defined in: [nextjs/src/components/Link.tsx:28](https://github.com/Sitecore/content-sdk/blob/6568f3f866052357cc0d19dd77254f43ff7c7f0a/packages/nextjs/src/components/Link.tsx#L28)
