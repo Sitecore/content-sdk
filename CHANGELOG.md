@@ -20,6 +20,7 @@ Our versioning strategy is as follows:
   - Editing and preview support ([#198](https://github.com/Sitecore/content-sdk/pull/198))
   - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202)) ([#214](https://github.com/Sitecore/content-sdk/pull/214))
 * [nextjs] Slim down sample even more ([#225](https://github.com/Sitecore/content-sdk/pull/225))
+* Mark client components with `use client` directive. ([#226](https://github.com/Sitecore/content-sdk/pull/226))
 
 ## 1.1.0
 
