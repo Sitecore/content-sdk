@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
+﻿'use client';
 import React, { RefAttributes, forwardRef } from 'react';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
