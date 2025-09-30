@@ -171,7 +171,7 @@ export function detectComponentType(filePath: string): ComponentType {
       // Check for explicit componentType export (improved detection)
       if (ts.isVariableStatement(node)) {
         const hasExportModifier = node.modifiers?.some(
-          (modifier: ts.Modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword
+          (modifier: ts.ModifierLike) => modifier.kind === ts.SyntaxKind.ExportKeyword
         );
 
         if (hasExportModifier) {
