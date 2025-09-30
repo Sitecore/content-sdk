@@ -9,7 +9,6 @@ import {
   detectRouterType,
 } from './components';
 import { ComponentFile, ComponentFileWithType } from './components';
-import * as componentsModule from './components';
 import path from 'path';
 import fs from 'fs';
 
