@@ -1,5 +1,6 @@
 import * as glob from 'glob';
-import * as fs from 'fs';
+import fs from 'fs';
+import * as ts from 'typescript';
 
 const componentNamePattern = /^[\/]*(.+[\/\\])*(.+)\.[jt]sx?$/;
 
@@ -65,8 +66,8 @@ export function getComponentList(paths: string[], exclude?: string[]): Component
     return result.concat(
       ...glob
         .sync(globPath, { ignore: exclude, nodir: true })
-        .filter((path) => path.match(componentNamePattern))
-        .map((filePath) => {
+        .filter((path: string) => path.match(componentNamePattern))
+        .map((filePath: string) => {
           const name = filePath.match(componentNamePattern)![2];
           console.debug(`Registering Content SDK component ${name}`);
           return {
@@ -103,25 +104,137 @@ export function detectComponentType(filePath: string): ComponentType {
   try {
     const content = fs.readFileSync(filePath, 'utf-8');
 
-    // Check for 'use client' directive
-    if (content.includes("'use client'") || content.includes('"use client"')) {
+    // Parse using TypeScript AST (following patterns from import-map.ts and utils.ts)
+    const sourceFile = ts.createSourceFile(
+      filePath,
+      content,
+      ts.ScriptTarget.Latest,
+      true
+    );
+
+    let hasUseClientDirective = false;
+    let explicitComponentType: ComponentType | null = null;
+    let hasServerOnlyImports = false;
+
+    // Track position to ensure directives come before imports/other statements
+    let foundFirstNonDirectiveStatement = false;
+
+    // Helper function to check if a node is a valid directive
+    const isValidDirective = (node: ts.Node): boolean => {
+      return (
+        ts.isExpressionStatement(node) &&
+        ts.isStringLiteral(node.expression) &&
+        !foundFirstNonDirectiveStatement
+      );
+    };
+
+    // More comprehensive AST traversal (following patterns from import-map.ts and utils.ts)
+    const traverseNode = (node: ts.Node) => {
+      // Check for 'use client'/'use server' directives (must be at top, before imports)
+      if (isValidDirective(node) && ts.isStringLiteral((node as ts.ExpressionStatement).expression)) {
+        const directiveText = ((node as ts.ExpressionStatement).expression as ts.StringLiteral).text;
+        if (directiveText === 'use client') {
+          hasUseClientDirective = true;
+          return; // Don't mark as non-directive statement
+        }
+        if (directiveText === 'use server') {
+          explicitComponentType = 'server';
+          return; // Don't mark as non-directive statement
+        }
+      }
+
+      // Mark that we've seen a non-directive statement (imports, declarations, etc.)
+      if (ts.isImportDeclaration(node) || ts.isVariableStatement(node) || ts.isFunctionDeclaration(node) || ts.isExportDeclaration(node) || ts.isExportAssignment(node)) {
+        foundFirstNonDirectiveStatement = true;
+      }
+
+      // Check for import declarations with server-only modules
+      if (ts.isImportDeclaration(node)) {
+        const moduleSpecifier = node.moduleSpecifier;
+        if (ts.isStringLiteral(moduleSpecifier)) {
+          const importPath = moduleSpecifier.text;
+          // Expand server-only module detection
+          if (
+            importPath === 'next/headers' ||
+            importPath === 'server-only' ||
+            importPath === 'next/cache' ||
+            importPath === 'next/cookies' ||
+            importPath.startsWith('node:') ||
+            importPath === 'fs' ||
+            importPath === 'path'
+          ) {
+            hasServerOnlyImports = true;
+          }
+        }
+      }
+
+      // Check for explicit componentType export (improved detection)
+      if (ts.isVariableStatement(node)) {
+        const hasExportModifier = node.modifiers?.some(
+          (modifier: ts.Modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword
+        );
+
+        if (hasExportModifier) {
+          node.declarationList.declarations.forEach((declaration: ts.VariableDeclaration) => {
+            if (
+              ts.isIdentifier(declaration.name) &&
+              declaration.name.text === 'componentType' &&
+              declaration.initializer
+            ) {
+              // Handle string literal
+              if (ts.isStringLiteral(declaration.initializer)) {
+                const typeValue = declaration.initializer.text as ComponentType;
+                if (typeValue === 'server' || typeValue === 'client' || typeValue === 'universal') {
+                  explicitComponentType = typeValue;
+                }
+              }
+              // Handle template literal (e.g., `client`)
+              else if (ts.isNoSubstitutionTemplateLiteral(declaration.initializer)) {
+                const typeValue = declaration.initializer.text as ComponentType;
+                if (typeValue === 'server' || typeValue === 'client' || typeValue === 'universal') {
+                  explicitComponentType = typeValue;
+                }
+              }
+            }
+          });
+        }
+      }
+
+      // Check for named export of componentType (export const componentType = ...)
+      if (ts.isExportDeclaration(node) && node.exportClause && ts.isNamedExports(node.exportClause)) {
+        node.exportClause.elements.forEach((exportSpecifier: ts.ExportSpecifier) => {
+          if (exportSpecifier.name.text === 'componentType') {
+            // This would need additional logic to resolve the actual value, but for now
+            // we'll rely on the variable declaration detection above
+          }
+        });
+      }
+
+      // Recursively traverse child nodes (following import-map.ts pattern)
+      ts.forEachChild(node, traverseNode);
+    };
+
+    // Start traversal from the source file (following utils.ts pattern)
+    ts.forEachChild(sourceFile, traverseNode);
+
+    // Priority: explicit componentType export > use client/server directives > server-only imports > universal default
+    if (explicitComponentType) {
+      return explicitComponentType;
+    }
+
+    if (hasUseClientDirective) {
       return 'client';
     }
 
-    // Check for explicit componentType export
-    const componentTypeMatch = content.match(
-      /export\s+const\s+componentType\s*[:=]\s*['"`](\w+)['"`]/
-    );
-    if (componentTypeMatch) {
-      const type = componentTypeMatch[1] as ComponentType;
-      if (type === 'server' || type === 'client' || type === 'universal') {
-        return type;
-      }
+    if (hasServerOnlyImports) {
+      return 'server';
     }
 
-    // Default to universal if no explicit indicators
+    // Default to universal for components that can work in both environments
     return 'universal';
-  } catch {
+
+  } catch (error) {
+    console.warn(`Failed to parse component file ${filePath}, defaulting to universal:`, error);
     return 'universal';
   }
 }
