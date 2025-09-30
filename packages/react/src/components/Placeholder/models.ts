@@ -1,6 +1,10 @@
 import { Page } from '@sitecore-content-sdk/core/client';
 import { ComponentRendering, Field, Item, RouteData } from '@sitecore-content-sdk/core/layout';
+import { ComponentType } from '@sitecore-content-sdk/core/tools';
 import { ComponentMap } from '../sharedTypes';
+
+// Re-export ComponentType to maintain API compatibility
+export type { ComponentType };
 
 type ErrorComponentProps = {
   [prop: string]: unknown;
@@ -11,8 +15,6 @@ export type ComponentProps = {
   [key: string]: unknown;
   rendering: ComponentRendering;
 };
-
-export type ComponentType = 'server' | 'client' | 'universal';
 
 export interface PlaceholderProps {
   [key: string]: unknown;
