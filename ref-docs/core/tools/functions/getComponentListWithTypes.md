@@ -6,17 +6,22 @@
 
 # Function: getComponentListWithTypes()
 
-> **getComponentListWithTypes**(`paths`, `exclude?`): [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md)[]
+> **getComponentListWithTypes**(`paths`, `exclude?`, `routerType?`): [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md)[]
 
-Defined in: [packages/core/src/tools/templating/components.ts:242](https://github.com/Sitecore/content-sdk/blob/1dc5119a99f7ea0312c71429a8519d717a976622/packages/core/src/tools/templating/components.ts#L242)
+Defined in: [packages/core/src/tools/templating/components.ts:281](https://github.com/Sitecore/content-sdk/blob/a8415117824703872b7acc5bb5ff4ca3f710846f/packages/core/src/tools/templating/components.ts#L281)
+
+Get list of components with detected types (server, client, or universal).
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `paths` | `string`[] |
-| `exclude?` | `string`[] |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `paths` | `string`[] | Paths to search for components |
+| `exclude?` | `string`[] | Paths and glob patterns to exclude from final result |
+| `routerType?` | [`RouterType`](../type-aliases/RouterType.md) | Optional router type override for type detection. Auto-detected if not provided. |
 
 ## Returns
 
 [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md)[]
+
+Array of components with their detected types

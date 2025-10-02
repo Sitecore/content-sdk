@@ -8,7 +8,7 @@
 
 > **clientCredentialsFlow**: (`args`) => `Promise`\<\{ `accessToken`: `any`; `data`: `any`; `tokenOrgId`: `any`; `tokenTenantId`: `any`; `tokenTenantName`: `any`; \}\> = `_clientCredentialsFlow`
 
-Defined in: [packages/core/src/tools/auth/flow.ts:26](https://github.com/Sitecore/content-sdk/blob/1dc5119a99f7ea0312c71429a8519d717a976622/packages/core/src/tools/auth/flow.ts#L26)
+Defined in: [packages/core/src/tools/auth/flow.ts:26](https://github.com/Sitecore/content-sdk/blob/a8415117824703872b7acc5bb5ff4ca3f710846f/packages/core/src/tools/auth/flow.ts#L26)
 
 Performs the OAuth 2.0 client credentials flow to obtain a JWT access token
 from the Sitecore Identity Provider using the provided client credentials.

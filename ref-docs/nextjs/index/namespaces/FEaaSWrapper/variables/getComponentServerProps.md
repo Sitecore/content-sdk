@@ -8,7 +8,7 @@
 
 > `const` **getComponentServerProps**: [`GetComponentServerProps`](../../../type-aliases/GetComponentServerProps.md)
 
-Defined in: [nextjs/src/components/FEaaSWrapper.tsx:21](https://github.com/Sitecore/content-sdk/blob/1dc5119a99f7ea0312c71429a8519d717a976622/packages/nextjs/src/components/FEaaSWrapper.tsx#L21)
+Defined in: [nextjs/src/components/FEaaSWrapper.tsx:21](https://github.com/Sitecore/content-sdk/blob/a8415117824703872b7acc5bb5ff4ca3f710846f/packages/nextjs/src/components/FEaaSWrapper.tsx#L21)
 
 Will be called during SSG or SSR
 

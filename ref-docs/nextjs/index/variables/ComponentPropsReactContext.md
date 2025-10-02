@@ -8,6 +8,6 @@
 
 > `const` **ComponentPropsReactContext**: `Context`\<[`ComponentPropsCollection`](../type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:8](https://github.com/Sitecore/content-sdk/blob/1dc5119a99f7ea0312c71429a8519d717a976622/packages/nextjs/src/components/ComponentPropsContext.tsx#L8)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:8](https://github.com/Sitecore/content-sdk/blob/a8415117824703872b7acc5bb5ff4ca3f710846f/packages/nextjs/src/components/ComponentPropsContext.tsx#L8)
 
 Component props context which we are using in order to store data fetched on components level (getComponentServerProps)
