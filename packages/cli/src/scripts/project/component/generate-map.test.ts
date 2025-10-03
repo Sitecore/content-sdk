@@ -73,6 +73,7 @@ describe('generate-map CLI', () => {
       destination: 'dest',
       componentImports: ['pkg'],
       exclude: ['ex'],
+      clientComponentMap: undefined,
     };
     const fakeConfig = {
       componentMap: {
