@@ -307,7 +307,9 @@ describe('generateMap', () => {
       expect(mainContent).to.include(
         "import * as UniversalCard from './src/components/UniversalCard';"
       );
-      expect(mainContent).to.include("['ClientButton', ClientButton],");
+      expect(mainContent).to.include(
+        "['ClientButton', {...ClientButton, componentType: 'client'}],"
+      );
       expect(mainContent).to.include("['ServerData', ServerData],");
       expect(mainContent).to.include("['UniversalCard', UniversalCard],");
 
