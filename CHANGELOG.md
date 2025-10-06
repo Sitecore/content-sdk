@@ -24,8 +24,11 @@ Our versioning strategy is as follows:
 * Mark client components with `use client` directive. ([#226](https://github.com/Sitecore/content-sdk/pull/226))
 
 ### 🐛 Bug Fixes
-* `[template/nextjs]` `[template/next-app-router]` Fix imports for SSR/SSG ([#229](https://github.com/Sitecore/content-sdk/pull/229))
+* `[template/nextjs]` `[template/next-app-router]` Fix imports for SSR/SSG ([#229](https://github.com/Sitecore/content-sdk/pull/229));
 
+### 🧹 Chores
+
+* `[core]` `[nextjs]` Move Design Library logic from nextjs to core ([#236](https://github.com/Sitecore/content-sdk/pull/236));
 
 ## 1.1.0
 
