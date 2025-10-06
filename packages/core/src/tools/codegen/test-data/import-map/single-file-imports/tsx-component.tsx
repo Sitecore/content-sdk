@@ -1,7 +1,6 @@
 import { funco } from '../test-exports';
-import { JSX } from 'react';
 
-export const Component = (): JSX.Element => {
+export const Component = () => {
   funco();
-  return <div>Wow a unit test</div>;
+  return `Wow a unit test`;
 };
