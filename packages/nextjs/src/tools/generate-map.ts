@@ -25,7 +25,6 @@ import * as fs from 'fs';
  * Template Customization:
  * - mapTemplate: Custom template for main component map (works for both single and dual map modes)
  * - clientMapTemplate: Custom template for client component map (only used when clientComponentMap is true)
- *
  * @param {GenerateMapArgs} param0 params for generateMap
  */
 export const generateMap: GenerateMapFunction = ({
@@ -99,14 +98,18 @@ export const generateMap: GenerateMapFunction = ({
  * Template options for component map generation
  */
 type TemplateOptions = {
-  /** Whether to include inline componentType for non-universal components */
-  includeComponentType?: boolean;
   /** Custom header comment for the generated map */
   headerComment?: string;
+  /** Whether this is a client-only map (no need for componentType annotations) */
+  isClientMap?: boolean;
 };
 
 /**
  * Unified template function for all component map generation
+ * @param {ComponentFile[] | ComponentFileWithType[]} components - Array of components to include in the map
+ * @param {ComponentImport[]} [componentImports] - Optional array of component imports to include
+ * @param {TemplateOptions} [options] - Template generation options
+ * @returns {string} Generated component map content
  */
 const nextjsUnifiedTemplate = (
   components: (ComponentFile | ComponentFileWithType)[],
@@ -114,8 +117,8 @@ const nextjsUnifiedTemplate = (
   options: TemplateOptions = {}
 ): string => {
   const {
-    includeComponentType = false,
     headerComment = "Below are built-in components that are available in the app, it's recommended to keep them as is",
+    isClientMap = false,
   } = options;
 
   const wildcardImports: string[] = [];
@@ -126,14 +129,12 @@ const nextjsUnifiedTemplate = (
     // Clean imports only
     wildcardImports.push(`import * as ${component.moduleName} from '${component.importPath}';`);
 
-    // Handle componentType if requested and available
-    if (
-      includeComponentType &&
-      'componentType' in component &&
-      component.componentType !== 'universal'
-    ) {
+    // Handle componentType for client components (components with 'use client' directive)
+    // Only add componentType: 'client' for components that actually use 'use client' directive
+    // Skip this for client-only maps since all components are already client components
+    if (!isClientMap && 'componentType' in component && component.componentType === 'client') {
       componentMapEntries.push(
-        `['${component.moduleName}', {...${component.moduleName}, componentType: '${component.componentType}'}]`
+        `['${component.moduleName}', {...${component.moduleName}, componentType: 'client'}]`
       );
     } else {
       componentMapEntries.push(`['${component.moduleName}', ${component.moduleName}]`);
@@ -192,7 +193,6 @@ const nextjsMapTemplateWithTypes = (
   componentImports?: ComponentImport[]
 ): string => {
   return nextjsUnifiedTemplate(components, componentImports, {
-    includeComponentType: true,
     headerComment:
       "Below are built-in components that are available in the app, it's recommended to keep them as is",
   });
@@ -203,7 +203,6 @@ const nextjsMapTemplate = (
   componentImports?: ComponentImport[]
 ): string => {
   return nextjsUnifiedTemplate(components, componentImports, {
-    includeComponentType: false,
     headerComment:
       "Below are built-in components that are available in the app, it's recommended to keep them as is",
   });
@@ -214,7 +213,7 @@ const nextjsClientMapTemplate = (
   componentImports?: ComponentImport[]
 ): string => {
   return nextjsUnifiedTemplate(components, componentImports, {
-    includeComponentType: false, // Client components are already filtered, no need for type info
     headerComment: 'Client-safe component map for App Router',
+    isClientMap: true,
   });
 };
