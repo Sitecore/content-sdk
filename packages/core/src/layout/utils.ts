@@ -5,6 +5,7 @@ import { ComponentRendering, ComponentFields, Field, GenericFieldValue } from '.
  * Null will be returned if the field is not defined.
  * @param {ComponentRendering | Fields} renderingOrFields the rendering or fields object to extract the field from
  * @param {string} fieldName the name of the field to extract
+ * @param defaultValue
  * @returns {T | undefined} the field value or null if the field is not defined
  */
 export function getFieldValue<T>(

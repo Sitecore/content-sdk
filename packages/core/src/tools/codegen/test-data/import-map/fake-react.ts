@@ -8,6 +8,6 @@ export default React;
  *
  * @param {...any} _args
  */
-export function useEffect(..._args: unknown[]) {
+export function useEffect() {
   // noop
 }
