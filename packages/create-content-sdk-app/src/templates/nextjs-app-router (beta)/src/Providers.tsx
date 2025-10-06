@@ -7,10 +7,7 @@ import {
   SitecoreProvider,
 } from '@sitecore-content-sdk/nextjs';
 import scConfig from 'sitecore.config';
-
-// Always use client-safe component map to maintain server/client boundary
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const components = require('.sitecore/component-map.client').default;
+import components from '.sitecore/component-map.client';
 
 export default function Providers({
   children,

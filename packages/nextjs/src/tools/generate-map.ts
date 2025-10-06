@@ -78,7 +78,7 @@ export const generateMap: GenerateMapFunction = ({
       throw error;
     }
   } else {
-    // Pages Router - generate single component map + empty client map for safety
+    // Pages Router - generate single component map
     const components = getComponentList(paths, exclude);
     const componentMapContent = mapTemplate(components, componentImports);
     const componentMapFile = path.join(process.cwd(), destination, 'component-map.ts');
@@ -88,20 +88,6 @@ export const generateMap: GenerateMapFunction = ({
     } catch (error) {
       console.error(
         `Component Map generation failed. Error writing to file ${destination}:`,
-        error
-      );
-      throw error;
-    }
-
-    // Always generate client map for safety (even in Pages Router mode)
-    const emptyClientMapContent = nextjsClientMapTemplate([], componentImports);
-    const clientMapFile = path.join(process.cwd(), destination, 'component-map.client.ts');
-
-    try {
-      fs.writeFileSync(clientMapFile, emptyClientMapContent, { encoding: 'utf8' });
-    } catch (error) {
-      console.error(
-        `Client Component Map generation failed. Error writing to file ${destination}:`,
         error
       );
       throw error;
