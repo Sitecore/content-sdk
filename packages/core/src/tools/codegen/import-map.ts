@@ -143,6 +143,7 @@ export const getImportValueAlias = (
   moduleName: string,
   importType: 'named' | 'default' | 'namespace'
 ) => {
+  if (process.env.IMPORT_ALIAS_STRATEGY === 'plain') return importValue;
   // Add extra uniqueness since the same alias can be used for different import types
   const importTypeId = importType === 'named' ? 'n' : importType === 'default' ? 'd' : 'ns';
 

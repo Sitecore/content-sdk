@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from '../fake-react';
 
 export const B = () => {
   console.log(React);

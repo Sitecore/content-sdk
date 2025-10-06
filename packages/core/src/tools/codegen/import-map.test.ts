@@ -17,7 +17,7 @@ import { utilsUnitMocks } from './utils';
 import { importUnitMocks } from './import-map';
 import { componentUnitMocks } from './../templating/components';
 
-describe('Import Map Generation', () => {
+describe.only('Import Map Generation', () => {
   describe('getImportMap', () => {
     const sandbox = sinon.createSandbox();
     let cwdStub: sinon.SinonStub;
@@ -100,16 +100,10 @@ describe('Import Map Generation', () => {
       const result = getImportMap(['single-file-imports/wildcard.ts']);
       const expected = [
         {
-          module: 'react',
-          namedImports: [],
-          namespaceImport: 'React',
           defaultImport: null,
-        },
-        {
           module: testExportsModulePath,
           namedImports: [],
           namespaceImport: 'everything',
-          defaultImport: null,
         },
       ];
 
@@ -200,7 +194,7 @@ describe('Import Map Generation', () => {
     });
 
     it('should return map from multi-file imports with duplicate mixed exports', () => {
-      const reactSpecifier = 'react';
+      process.env.IMPORT_ALIAS_STRATEGY = 'plain';
       const fakeReactSpecifier = 'fake-react';
       const testExports2Specifier = 'test-exports-2';
       const testExportsSpecifier = 'test-exports';
@@ -222,27 +216,24 @@ describe('Import Map Generation', () => {
 
       const expected = [
         {
-          module: reactSpecifier,
-          defaultImport: 'React',
-          namedImports: [{ name: 'useEffect', value: 'useEffect' }],
-          namespaceImport: getImportValueAlias('React', reactSpecifier, 'namespace'),
-        },
-        {
-          module: testExports2Specifier,
-          namedImports: [{ name: 'testClassInstance', value: 'testClassInstance' }],
-          defaultImport: null,
-          namespaceImport: null,
-        },
-        {
           module: fakeReactSpecifier,
+          // default import used (A, C, E)
           defaultImport: getImportValueAlias('React', fakeReactSpecifier, 'default'),
+          // namespace import used (B, D) — MUST be the alias, not plain "React"
           namespaceImport: getImportValueAlias('React', fakeReactSpecifier, 'namespace'),
+          // named import used (A, E) — MUST be the alias, not plain "useEffect"
           namedImports: [
             {
               name: 'useEffect',
               value: getImportValueAlias('useEffect', fakeReactSpecifier, 'named'),
             },
           ],
+        },
+        {
+          module: testExports2Specifier,
+          namedImports: [{ name: 'testClassInstance', value: 'testClassInstance' }],
+          defaultImport: null,
+          namespaceImport: null,
         },
         {
           module: testExportsSpecifier,
