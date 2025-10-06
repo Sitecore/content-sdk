@@ -14,18 +14,18 @@ import * as fs from 'fs';
 
 /**
  * Generate and write componentMap.ts file based on provided params.
- * 
+ *
  * When clientComponentMap is true, generates:
  * - component-map.ts: Full component map with all components (server, client, universal)
  * - component-map.client.ts: Client-safe map with only client + universal components
- * 
+ *
  * When clientComponentMap is false, generates:
  * - component-map.ts: Single component map (traditional behavior)
- * 
+ *
  * Template Customization:
  * - mapTemplate: Custom template for main component map (works for both single and dual map modes)
  * - clientMapTemplate: Custom template for client component map (only used when clientComponentMap is true)
- * 
+ *
  * @param {GenerateMapArgs} param0 params for generateMap
  */
 export const generateMap: GenerateMapFunction = ({
@@ -37,16 +37,16 @@ export const generateMap: GenerateMapFunction = ({
   clientMapTemplate,
   clientComponentMap,
 }: GenerateMapArgs) => {
-  // Default behavior: if clientComponentMap is not specified, auto-detect based on router type  
-  const shouldGenerateClientMap = clientComponentMap ?? (detectRouterType() === 'app');
+  // Default behavior: if clientComponentMap is not specified, auto-detect based on router type
+  const shouldGenerateClientMap = clientComponentMap ?? detectRouterType() === 'app';
 
   if (shouldGenerateClientMap) {
     const componentsWithTypes = getComponentListWithTypes(paths, exclude);
 
     // Generate regular component map (all components with type information)
-    // Use custom mapTemplate if provided (assumes it can handle ComponentFileWithType[]), 
+    // Use custom mapTemplate if provided (assumes it can handle ComponentFileWithType[]),
     // otherwise use default template designed for typed components
-    const regularMapContent = mapTemplate 
+    const regularMapContent = mapTemplate
       ? mapTemplate(componentsWithTypes, componentImports)
       : nextjsMapTemplateWithTypes(componentsWithTypes, componentImports);
     const regularMapFile = path.join(process.cwd(), destination, 'component-map.ts');
@@ -113,8 +113,11 @@ const nextjsUnifiedTemplate = (
   componentImports?: ComponentImport[],
   options: TemplateOptions = {}
 ): string => {
-  const { includeComponentType = false, headerComment = 'Below are built-in components that are available in the app, it\'s recommended to keep them as is' } = options;
-  
+  const {
+    includeComponentType = false,
+    headerComment = "Below are built-in components that are available in the app, it's recommended to keep them as is",
+  } = options;
+
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];
   const componentMapEntries: string[] = [];
@@ -122,9 +125,13 @@ const nextjsUnifiedTemplate = (
   components.forEach((component) => {
     // Clean imports only
     wildcardImports.push(`import * as ${component.moduleName} from '${component.importPath}';`);
-    
+
     // Handle componentType if requested and available
-    if (includeComponentType && 'componentType' in component && component.componentType !== 'universal') {
+    if (
+      includeComponentType &&
+      'componentType' in component &&
+      component.componentType !== 'universal'
+    ) {
       componentMapEntries.push(
         `['${component.moduleName}', {...${component.moduleName}, componentType: '${component.componentType}'}]`
       );
@@ -152,12 +159,18 @@ const nextjsUnifiedTemplate = (
     }
   });
 
+  // Build imports section, filtering out empty arrays
+  const importLines = [
+    headerComment.includes('built-in') ? '// end of built-in components' : null,
+    ...wildcardImports,
+    ...namedImports,
+  ].filter((line) => line !== null && line !== '');
+
+  const importsSection = importLines.length > 0 ? `\n${importLines.join('\n')}` : '';
+
   return `// ${headerComment}
 import { BYOCWrapper, NextjsContentSdkComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
-import { Form } from '@sitecore-content-sdk/nextjs';
-${headerComment.includes('built-in') ? '// end of built-in components\n' : ''}
-${wildcardImports.join('\n')}
-${namedImports.join('\n')}
+import { Form } from '@sitecore-content-sdk/nextjs';${importsSection}
 
 export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['BYOCWrapper', BYOCWrapper],
@@ -180,7 +193,8 @@ const nextjsMapTemplateWithTypes = (
 ): string => {
   return nextjsUnifiedTemplate(components, componentImports, {
     includeComponentType: true,
-    headerComment: 'Below are built-in components that are available in the app, it\'s recommended to keep them as is'
+    headerComment:
+      "Below are built-in components that are available in the app, it's recommended to keep them as is",
   });
 };
 
@@ -190,7 +204,8 @@ const nextjsMapTemplate = (
 ): string => {
   return nextjsUnifiedTemplate(components, componentImports, {
     includeComponentType: false,
-    headerComment: 'Below are built-in components that are available in the app, it\'s recommended to keep them as is'
+    headerComment:
+      "Below are built-in components that are available in the app, it's recommended to keep them as is",
   });
 };
 
@@ -200,6 +215,6 @@ const nextjsClientMapTemplate = (
 ): string => {
   return nextjsUnifiedTemplate(components, componentImports, {
     includeComponentType: false, // Client components are already filtered, no need for type info
-    headerComment: 'Client-safe component map for App Router'
+    headerComment: 'Client-safe component map for App Router',
   });
 };
