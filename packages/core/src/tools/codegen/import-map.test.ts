@@ -17,7 +17,7 @@ import { utilsUnitMocks } from './utils';
 import { importUnitMocks } from './import-map';
 import { componentUnitMocks } from './../templating/components';
 
-describe.only('Import Map Generation', () => {
+describe('Import Map Generation', () => {
   describe('getImportMap', () => {
     const sandbox = sinon.createSandbox();
     let cwdStub: sinon.SinonStub;
