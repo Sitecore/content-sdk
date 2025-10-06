@@ -62,17 +62,24 @@ export function handler(argv: GenerateMapCliArgs) {
     return;
   }
   const componentMapGenerator = cliConfig.componentMap.generator;
-  const { paths, destination, componentImports, exclude } = cliConfig.componentMap;
+  const { paths, destination, componentImports, exclude, clientComponentMap } =
+    cliConfig.componentMap;
   if (argv.watch) {
     console.log(
       `Watching for component changes to component builder sources in:\n ${paths.join('\n')}`
     );
     watchItems(
       paths,
-      componentMapGenerator.bind(null, { paths, destination, componentImports, exclude })
+      componentMapGenerator.bind(null, {
+        paths,
+        destination,
+        componentImports,
+        exclude,
+        clientComponentMap,
+      })
     );
   } else {
     console.log(`Generating component map for:\n ${paths.join('\n')}`);
-    componentMapGenerator({ paths, destination, componentImports, exclude });
+    componentMapGenerator({ paths, destination, componentImports, exclude, clientComponentMap });
   }
 }

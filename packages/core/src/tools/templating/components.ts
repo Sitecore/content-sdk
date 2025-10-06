@@ -95,8 +95,13 @@ function _getComponentList(paths: string[], exclude?: string[]): ComponentFile[]
 }
 
 /**
- *
+<<<<<<< HEAD
  * @param projectRoot
+=======
+ * Detects the Next.js router type (App Router or Pages Router) based on directory structure.
+ * @param {string} projectRoot - The project root directory. Defaults to current working directory.
+ * @returns {RouterType} 'app' if App Router is detected, 'pages' otherwise
+>>>>>>> 320740678885c09d24564322cf9d5dea44f6f1f1
  */
 export function detectRouterType(projectRoot: string = process.cwd()): RouterType {
   const appDirExists =
@@ -116,10 +121,16 @@ export function detectRouterType(projectRoot: string = process.cwd()): RouterTyp
 }
 
 /**
- *
- * @param filePath
+ * Detects the component type based on directives, imports, and router context.
+ * - Checks for 'use client' directive
+ * - Checks for explicit componentType export
+ * - Checks for server-only imports (next/headers, etc.)
+ * - Defaults to 'server' for App Router, 'universal' for Pages Router
+ * @param {string} filePath - Path to the component file
+ * @param {RouterType} [routerType] - Optional router type override. Auto-detected if not provided.
+ * @returns {ComponentType} 'server', 'client', or 'universal'
  */
-export function detectComponentType(filePath: string): ComponentType {
+export function detectComponentType(filePath: string, routerType?: RouterType): ComponentType {
   try {
     const content = fs.readFileSync(filePath, 'utf-8');
 
@@ -129,6 +140,9 @@ export function detectComponentType(filePath: string): ComponentType {
     let hasUseClientDirective = false;
     let explicitComponentType: ComponentType | null = null;
     let hasServerOnlyImports = false;
+
+    // Auto-detect router type if not provided
+    const detectedRouterType = routerType || detectRouterType();
 
     // Track position to ensure directives come before imports/other statements
     let foundFirstNonDirectiveStatement = false;
@@ -258,8 +272,14 @@ export function detectComponentType(filePath: string): ComponentType {
       return 'server';
     }
 
-    // Default to universal for components that can work in both environments
-    return 'universal';
+    // Router-aware defaults:
+    // - App Router: defaults to server (RSC by default)
+    // - Pages Router: defaults to universal (isomorphic by default)
+    if (detectedRouterType === 'app') {
+      return 'server';
+    } else {
+      return 'universal';
+    }
   } catch (error) {
     console.warn(`Failed to parse component file ${filePath}, defaulting to universal:`, error);
     return 'universal';
@@ -267,26 +287,31 @@ export function detectComponentType(filePath: string): ComponentType {
 }
 
 /**
- *
- * @param paths
- * @param exclude
+ * Get list of components with detected types (server, client, or universal).
+ * @param {string[]} paths - Paths to search for components
+ * @param {string[]} [exclude] - Paths and glob patterns to exclude from final result
+ * @param {RouterType} [routerType] - Optional router type override for type detection. Auto-detected if not provided.
+ * @returns {ComponentFileWithType[]} Array of components with their detected types
  */
 export function getComponentListWithTypes(
   paths: string[],
-  exclude?: string[]
+  exclude?: string[],
+  routerType?: RouterType
 ): ComponentFileWithType[] {
   const components = getComponentList(paths, exclude);
+  const detectedRouterType = routerType || detectRouterType();
 
   return components.map((component) => ({
     ...component,
-    componentType: detectComponentType(component.filePath),
+    componentType: detectComponentType(component.filePath, detectedRouterType),
   }));
 }
 
 /**
- *
- * @param components
- * @param allowedTypes
+ * Filters components by their detected type.
+ * @param {ComponentFileWithType[]} components - Array of components with types
+ * @param {ComponentType[]} allowedTypes - Array of allowed component types to filter by
+ * @returns {ComponentFileWithType[]} Filtered array containing only components matching allowed types
  */
 export function filterComponentsByType(
   components: ComponentFileWithType[],
