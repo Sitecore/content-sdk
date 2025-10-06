@@ -18,7 +18,18 @@ export const unitMocks = ({
   getComponentListStub && (_getComponentList = getComponentListStub);
 };
 
+/**
+ * Gets a Map object with import modules and their respective exports present throughout the paths specified
+ * @param {string} paths paths to files to be processed for import-map
+ * @returns {Map<string, ImportModule>} collection of keys and values, where keys refer to modules being processed and values are collections of exports for each module
+ */
 export let getImportMap = _getImportMap;
+
+/**
+ * Builds file contents for component map based on the default template
+ * @param {Map<string, ImportModule>} indexedImportMap map to be processed into final component-map.ts file
+ * @returns {string} file code for component-map.ts
+ */
 export let nextJsMapTemplate = _nextJsMapTemplate;
 
 export const importUnitMocks = {
@@ -139,11 +150,7 @@ export const getImportValueAlias = (
   return `${importValue}_${suffix}`;
 };
 
-/**
- * Gets a Map object with import modules and their respective exports present throughout the paths specified
- * @param {string} paths paths to files to be processed for import-map
- * @returns {Map<string, ImportModule>} collection of keys and values, where keys refer to modules being processed and values are collections of exports for each module
- */
+// eslint-disable-next-line jsdoc/require-jsdoc
 function _getImportMap(paths: string[]) {
   // make preparations for handling ts/js files
   const appPath = process.cwd();
@@ -345,11 +352,7 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
   };
 };
 
-/**
- * Builds file contents for component map based on the default template
- * @param {Map<string, ImportModule>} indexedImportMap map to be processed into final component-map.ts file
- * @returns {string} file code for component-map.ts
- */
+// eslint-disable-next-line jsdoc/require-jsdoc
 function _nextJsMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
   const outputExportEntries = (entry: ImportMapEntry) => {
     return (

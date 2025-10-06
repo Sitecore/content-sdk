@@ -1,4 +1,3 @@
-import { getComponentList } from './../../../../nextjs/node_modules/@sitecore-content-sdk/core/src/tools/templating/components';
 /* eslint-disable quotes */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';

@@ -61,7 +61,6 @@ function _extractFiles(args: ExtractFilesConfig) {
       // Use Edge Platform mesh endpoint - staging is ready, prod QA in progress
       const targetUrl = args.scConfig.api.edge.edgeUrl;
       const { accessToken } = await auth.clientCredentialsFlow(authParams);
-      console.log('accessToken', accessToken);
       if (!accessToken) {
         console.error(chalk.red('Failed to get access token, aborting code extraction'));
         return;
