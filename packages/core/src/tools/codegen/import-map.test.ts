@@ -1,3 +1,4 @@
+import { getComponentList } from './../../../../nextjs/node_modules/@sitecore-content-sdk/core/src/tools/templating/components';
 /* eslint-disable quotes */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
@@ -9,10 +10,13 @@ import {
   writeImportMap,
   getImportValueAlias,
 } from './import-map';
-import { debug } from '@sitecore-content-sdk/core';
+import debug from './../../debug';
 import sinon from 'sinon';
 import path from 'path';
 import fs from 'fs';
+import { utilsUnitMocks } from './utils';
+import { importUnitMocks } from './import-map';
+import { componentUnitMocks } from './../templating/components';
 
 describe('Import Map Generation', () => {
   describe('getImportMap', () => {
@@ -346,10 +350,23 @@ describe('Import Map Generation', () => {
       sandbox.restore();
     });
 
+    let getImportMapStub: sinon.SinonStub;
+    let nextJsMapTemplateStub: sinon.SinonStub;
+    let getComponentListStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      getImportMapStub = sandbox.stub();
+      nextJsMapTemplateStub = sandbox.stub();
+      getComponentListStub = sandbox.stub();
+      sandbox.replace.usingAccessor(importUnitMocks, 'getImportMap', getImportMapStub);
+      sandbox.replace.usingAccessor(importUnitMocks, 'nextJsMapTemplate', nextJsMapTemplateStub);
+      sandbox.replace.usingAccessor(componentUnitMocks, 'getComponentList', getComponentListStub);
+    });
+
     it('should skip when code generation is disabled', async () => {
       const debugStub = sandbox.stub(debug, 'common');
       const scConfig = { disableCodeGeneration: true } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
       const getComponentListStub = sandbox.stub();
       unitMocks({ getComponentListStub });
       const fsWriteStub = sandbox.stub(fs, 'writeFileSync');
@@ -367,19 +384,14 @@ describe('Import Map Generation', () => {
 
     it('should retrieve and parse paths based on inputs from "paths" and "exclude"', async () => {
       const scConfig = { disableCodeGeneration: false } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
 
       const fakeEntries = [{ filePath: 'component1.tsx' }, { filePath: 'component2.tsx' }];
       const getComponentListStub = sandbox.stub().returns(fakeEntries);
       unitMocks({ getComponentListStub });
-      const getImportMapStub = sandbox
-        .stub(require('./import-map'), 'getImportMap')
-        .returns(new Map());
+      getImportMapStub.returns(new Map());
       const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
-      const nextJsMapTemplateStub = sandbox
-        .stub(require('./import-map'), 'nextJsMapTemplate')
-        .returns('// import map content');
-
+      nextJsMapTemplateStub.returns('// import map content');
       await writeImportMap({ paths: ['foo'], exclude: ['bar'], scConfig })();
 
       expect(getComponentListStub.called).to.be.true;
@@ -391,15 +403,13 @@ describe('Import Map Generation', () => {
 
     it('should write output into import-map file', async () => {
       const scConfig = { disableCodeGeneration: false } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
 
       const fakeEntries = [{ filePath: 'component1.tsx' }];
-      sandbox
-        .stub(require('@sitecore-content-sdk/core/tools'), 'getComponentList')
-        .returns(fakeEntries);
-      sandbox.stub(require('./import-map'), 'getImportMap').returns(new Map());
+      getComponentListStub.returns(fakeEntries);
+      getImportMapStub.returns(new Map());
       const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
-      sandbox.stub(require('./import-map'), 'nextJsMapTemplate').returns('// import map content');
+      nextJsMapTemplateStub.returns('// import map content');
 
       await writeImportMap({ paths: ['foo'], exclude: [], scConfig })();
 
@@ -413,16 +423,14 @@ describe('Import Map Generation', () => {
 
     it('should throw when file write operation fails', async () => {
       const scConfig = { disableCodeGeneration: false } as any;
-      sandbox.stub(require('./utils'), 'xmCloudDeploy').returns(true);
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
 
       const fakeEntries = [{ filePath: 'component1.tsx' }];
-      sandbox
-        .stub(require('@sitecore-content-sdk/core/tools'), 'getComponentList')
-        .returns(fakeEntries);
-      sandbox.stub(require('./import-map'), 'getImportMap').returns(new Map());
+      getComponentListStub.returns(fakeEntries);
+      getImportMapStub.returns(new Map());
       const error = new Error('Unit test mocks: write failed');
       sandbox.stub(require('fs'), 'writeFileSync').throws(error);
-      sandbox.stub(require('./import-map'), 'nextJsMapTemplate').returns('// import map content');
+      nextJsMapTemplateStub.returns('// import map content');
 
       let thrownError: Error | undefined;
       try {

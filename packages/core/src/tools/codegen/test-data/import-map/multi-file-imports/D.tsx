@@ -3,5 +3,5 @@ import { testClassInstance } from '../test-exports';
 
 export const D = () => {
   console.log(testClassInstance, React);
-  return <div>D</div>;
+  return 'D';
 };

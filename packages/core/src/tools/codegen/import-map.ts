@@ -1,9 +1,9 @@
 import * as ts from 'typescript';
 import path from 'path';
 import fs from 'fs';
-import { debug } from '@sitecore-content-sdk/core';
-import { getComponentList } from '@sitecore-content-sdk/core/tools';
-import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
+import { getComponentList } from './../templating';
+import { SitecoreConfig } from './../../config';
+import debug from './../../debug';
 import crypto from 'crypto';
 import { isNodeModuleImport, stripExtension, getRelativeImportPath, toPosixPath } from './utils';
 
@@ -16,6 +16,27 @@ export const unitMocks = ({
   getComponentListStub?: typeof getComponentList;
 }) => {
   getComponentListStub && (_getComponentList = getComponentListStub);
+};
+
+export let getImportMap = _getImportMap;
+export let nextJsMapTemplate = _nextJsMapTemplate;
+
+export const importUnitMocks = {
+  set getImportMap(mockImplementation) {
+    getImportMap = mockImplementation;
+  },
+  get getImportMap() {
+    return _getImportMap;
+  },
+
+  set nextJsMapTemplate(
+    mockImplementation: (indexedImportMap: Map<string, ModuleExports>) => string
+  ) {
+    nextJsMapTemplate = mockImplementation;
+  },
+  get nextJsMapTemplate() {
+    return _nextJsMapTemplate;
+  },
 };
 
 /**
@@ -123,7 +144,7 @@ export const getImportValueAlias = (
  * @param {string} paths paths to files to be processed for import-map
  * @returns {Map<string, ImportModule>} collection of keys and values, where keys refer to modules being processed and values are collections of exports for each module
  */
-export const getImportMap = (paths: string[]) => {
+function _getImportMap(paths: string[]) {
   // make preparations for handling ts/js files
   const appPath = process.cwd();
   let cliCompilerOptions = {
@@ -285,7 +306,7 @@ export const getImportMap = (paths: string[]) => {
   });
 
   return importMap;
-};
+}
 
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
@@ -329,7 +350,7 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
  * @param {Map<string, ImportModule>} indexedImportMap map to be processed into final component-map.ts file
  * @returns {string} file code for component-map.ts
  */
-export const nextJsMapTemplate = (indexedImportMap: Map<string, ModuleExports>) => {
+function _nextJsMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
   const outputExportEntries = (entry: ImportMapEntry) => {
     return (
       [...entry.namedExports, entry.defaultExport, entry.namespaceExport]
@@ -412,4 +433,4 @@ ${finalImportMap
 
 export default combineImportEntries(defaultImportEntries, importMap);
 `;
-};
+}

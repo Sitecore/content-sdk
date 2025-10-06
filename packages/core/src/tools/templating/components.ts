@@ -2,6 +2,17 @@ import * as glob from 'glob';
 import fs from 'fs';
 import * as ts from 'typescript';
 
+export let getComponentList = _getComponentList;
+
+export const componentUnitMocks = {
+  set getComponentList(mockImplementation) {
+    getComponentList = mockImplementation;
+  },
+  get getComponentList() {
+    return _getComponentList;
+  },
+};
+
 const componentNamePattern = /^[\/]*(.+[\/\\])*(.+)\.[jt]sx?$/;
 
 const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
@@ -57,7 +68,7 @@ export interface ComponentImport {
  * @param {string[]} paths paths to search
  * @param {string[]} [exclude] paths and glob patterns to exclude from final result
  */
-export function getComponentList(paths: string[], exclude?: string[]): ComponentFile[] {
+function _getComponentList(paths: string[], exclude?: string[]): ComponentFile[] {
   const components = paths.reduce<ComponentFile[]>((result, path) => {
     const globPath =
       glob.hasMagic(path, { magicalBraces: true }) || path.match(componentNamePattern)
@@ -83,6 +94,10 @@ export function getComponentList(paths: string[], exclude?: string[]): Component
   return components;
 }
 
+/**
+ *
+ * @param projectRoot
+ */
 export function detectRouterType(projectRoot: string = process.cwd()): RouterType {
   const appDirExists =
     fs.existsSync(`${projectRoot}/src/app`) || fs.existsSync(`${projectRoot}/app`);
@@ -100,17 +115,16 @@ export function detectRouterType(projectRoot: string = process.cwd()): RouterTyp
   return 'pages';
 }
 
+/**
+ *
+ * @param filePath
+ */
 export function detectComponentType(filePath: string): ComponentType {
   try {
     const content = fs.readFileSync(filePath, 'utf-8');
 
     // Parse using TypeScript AST (following patterns from import-map.ts and utils.ts)
-    const sourceFile = ts.createSourceFile(
-      filePath,
-      content,
-      ts.ScriptTarget.Latest,
-      true
-    );
+    const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true);
 
     let hasUseClientDirective = false;
     let explicitComponentType: ComponentType | null = null;
@@ -131,8 +145,12 @@ export function detectComponentType(filePath: string): ComponentType {
     // More comprehensive AST traversal (following patterns from import-map.ts and utils.ts)
     const traverseNode = (node: ts.Node) => {
       // Check for 'use client'/'use server' directives (must be at top, before imports)
-      if (isValidDirective(node) && ts.isStringLiteral((node as ts.ExpressionStatement).expression)) {
-        const directiveText = ((node as ts.ExpressionStatement).expression as ts.StringLiteral).text;
+      if (
+        isValidDirective(node) &&
+        ts.isStringLiteral((node as ts.ExpressionStatement).expression)
+      ) {
+        const directiveText = ((node as ts.ExpressionStatement).expression as ts.StringLiteral)
+          .text;
         if (directiveText === 'use client') {
           hasUseClientDirective = true;
           return; // Don't mark as non-directive statement
@@ -144,7 +162,13 @@ export function detectComponentType(filePath: string): ComponentType {
       }
 
       // Mark that we've seen a non-directive statement (imports, declarations, etc.)
-      if (ts.isImportDeclaration(node) || ts.isVariableStatement(node) || ts.isFunctionDeclaration(node) || ts.isExportDeclaration(node) || ts.isExportAssignment(node)) {
+      if (
+        ts.isImportDeclaration(node) ||
+        ts.isVariableStatement(node) ||
+        ts.isFunctionDeclaration(node) ||
+        ts.isExportDeclaration(node) ||
+        ts.isExportAssignment(node)
+      ) {
         foundFirstNonDirectiveStatement = true;
       }
 
@@ -201,7 +225,11 @@ export function detectComponentType(filePath: string): ComponentType {
       }
 
       // Check for named export of componentType (export const componentType = ...)
-      if (ts.isExportDeclaration(node) && node.exportClause && ts.isNamedExports(node.exportClause)) {
+      if (
+        ts.isExportDeclaration(node) &&
+        node.exportClause &&
+        ts.isNamedExports(node.exportClause)
+      ) {
         node.exportClause.elements.forEach((exportSpecifier: ts.ExportSpecifier) => {
           if (exportSpecifier.name.text === 'componentType') {
             // This would need additional logic to resolve the actual value, but for now
@@ -232,13 +260,17 @@ export function detectComponentType(filePath: string): ComponentType {
 
     // Default to universal for components that can work in both environments
     return 'universal';
-
   } catch (error) {
     console.warn(`Failed to parse component file ${filePath}, defaulting to universal:`, error);
     return 'universal';
   }
 }
 
+/**
+ *
+ * @param paths
+ * @param exclude
+ */
 export function getComponentListWithTypes(
   paths: string[],
   exclude?: string[]
@@ -251,6 +283,11 @@ export function getComponentListWithTypes(
   }));
 }
 
+/**
+ *
+ * @param components
+ * @param allowedTypes
+ */
 export function filterComponentsByType(
   components: ComponentFileWithType[],
   allowedTypes: ComponentType[]
