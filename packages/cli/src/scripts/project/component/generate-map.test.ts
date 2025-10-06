@@ -87,4 +87,27 @@ describe('generate-map CLI', () => {
     expect(generatorStub.firstCall.args[0]).to.deep.equal(args);
     expect(consoleLogStub.calledWithMatch(/Generating component map/)).to.be.true;
   });
+
+  it('should pass clientComponentMap: false to generator when explicitly set to false', () => {
+    const generatorStub = sinon.stub();
+    const args = {
+      paths: ['src'],
+      destination: 'dest',
+      componentImports: ['pkg'],
+      exclude: ['ex'],
+      clientComponentMap: false,
+    };
+    const fakeConfig = {
+      componentMap: {
+        generator: generatorStub,
+        ...args,
+      },
+    };
+    loadCliConfigStub.returns(fakeConfig);
+    generateMapModule.handler({});
+    expect(generatorStub.calledOnce).to.be.true;
+    expect(generatorStub.firstCall.args[0]).to.deep.equal(args);
+    expect(generatorStub.firstCall.args[0].clientComponentMap).to.be.false;
+    expect(consoleLogStub.calledWithMatch(/Generating component map/)).to.be.true;
+  });
 });
