@@ -8,14 +8,20 @@ import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
 
+export const dynamic = 'force-dynamic';
+
 export default async function NotFound() {
   const headersList = await headers();
   const { site, locale } = parseRewriteHeader(headersList);
 
-  const page = await client.getErrorPage(ErrorPage.NotFound, {
-    site: site || scConfig.defaultSite,
-    locale: locale || scConfig.defaultLanguage,
-  });
+  const resolvedSite = site || scConfig.defaultSite;
+  const resolvedLocale = locale || scConfig.defaultLanguage;
+  const page = resolvedSite
+    ? await client.getErrorPage(ErrorPage.NotFound, {
+        site: resolvedSite,
+        locale: resolvedLocale,
+      })
+    : null;
 
   if (page) {
     return (

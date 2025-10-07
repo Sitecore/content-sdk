@@ -1,13 +1,14 @@
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import { notFound } from 'next/navigation';
-import { draftMode } from 'next/headers'
+import { draftMode } from 'next/headers';
 <% if (prerender === 'SSG') { -%>
 import { SiteInfo } from '@sitecore-content-sdk/nextjs';
 import sites from '.sitecore/sites.json';
 import { routing } from 'src/i18n/routing';
+import scConfig from 'sitecore.config';
 <% } -%>
 import client from 'src/lib/sitecore-client';
-import Layout, { RouteFields } from 'src/Layout';
+import Layout from 'src/Layout';
 import components from '.sitecore/component-map';
 import Providers from 'src/Providers';
 import Bootstrap from 'src/Bootstrap';
@@ -15,7 +16,12 @@ import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 
 type PageProps = {
-  params: Promise<{ site: string; locale: string; path?: string[]; [key: string]: string | string[] | undefined }>;
+  params: Promise<{
+    site: string;
+    locale: string;
+    path?: string[];
+    [key: string]: string | string[] | undefined;
+  }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
@@ -59,22 +65,25 @@ export default async function Page({ params, searchParams }: PageProps) {
   );
 }
 
-<% if (prerender === 'SSG') { -%>
-// This function gets called at build and export time to determine
-// pages for SSG ("paths", as tokenized array).
-export const generateStaticParams = async () => {
-  return await client.getAppRouterStaticParams(
-    sites.map((site: SiteInfo) => site.name),
-    routing.locales.slice()
-  );
-};
+<% if (prerender === 'SSR') { -%>
+export const dynamic = 'force-dynamic';
 <% } -%>
 // Metadata fields for the page.
-export const generateMetadata = async ({ params }: PageProps) => {
-  const { path } = await params;
-  // The same call as for rendering the page. Should be cached by default react behavior
-  const page = await client.getPage(path ?? [], { locale: 'en' });
-  return {
-    title: (page?.layout.sitecore.route?.fields as RouteFields)?.Title?.value?.toString() || 'Page',
-  };
+export const generateMetadata = async () => ({
+  title: 'Page',
+});
+
+<% if (prerender === 'SSG') { -%>
+// Generate static params only when explicitly enabled and sites/locales exist
+export const generateStaticParams = async () => {
+  if (!scConfig?.generateStaticPaths) {
+    return [];
+  }
+  const siteNames = Array.isArray(sites) ? sites.map((s: SiteInfo) => s.name).filter(Boolean) : [];
+  const locales = Array.isArray(routing.locales) ? routing.locales.slice() : [];
+  if (!siteNames.length || !locales.length) {
+    return [];
+  }
+  return await client.getAppRouterStaticParams(siteNames, locales);
 };
+<% } -%>
