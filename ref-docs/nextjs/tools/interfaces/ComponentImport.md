@@ -6,7 +6,7 @@
 
 # Interface: ComponentImport
 
-Defined in: core/types/tools/templating/components.d.ts:30
+Defined in: core/types/tools/templating/components.d.ts:34
 
 Definition for custom components to be included in component map.
 Use this to define components imported from modules/dependencies/packages
@@ -17,7 +17,7 @@ Use this to define components imported from modules/dependencies/packages
 
 > **importInfo**: `object`
 
-Defined in: core/types/tools/templating/components.d.ts:32
+Defined in: core/types/tools/templating/components.d.ts:36
 
 Information about how to import the package.
 
@@ -35,6 +35,6 @@ Information about how to import the package.
 
 > **importName**: `string`
 
-Defined in: core/types/tools/templating/components.d.ts:31
+Defined in: core/types/tools/templating/components.d.ts:35
 
 Name of the import.
