@@ -360,6 +360,36 @@ export const componentType: 'server' = 'server';`);
       expect(result).to.equal('universal');
     });
 
+    it('should default to server for plain components in App Router', () => {
+      readFileSyncStub.returns(`export default function PlainComponent() {
+  return <div>Plain component</div>;
+}`);
+
+      const result = detectComponentType('test.tsx', 'app');
+      expect(result).to.equal('server');
+    });
+
+    it('should default to universal for plain components in Pages Router', () => {
+      readFileSyncStub.returns(`export default function PlainComponent() {
+  return <div>Plain component</div>;
+}`);
+
+      const result = detectComponentType('test.tsx', 'pages');
+      expect(result).to.equal('universal');
+    });
+
+    it('should respect explicit routerType parameter', () => {
+      readFileSyncStub.returns(`export default function PlainComponent() {
+  return <div>Plain component</div>;
+}`);
+
+      const appResult = detectComponentType('test.tsx', 'app');
+      const pagesResult = detectComponentType('test.tsx', 'pages');
+
+      expect(appResult).to.equal('server');
+      expect(pagesResult).to.equal('universal');
+    });
+
     it('should handle file read errors gracefully', () => {
       readFileSyncStub.throws(new Error('File not found'));
 

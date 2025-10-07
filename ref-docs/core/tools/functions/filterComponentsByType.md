@@ -8,15 +8,19 @@
 
 > **filterComponentsByType**(`components`, `allowedTypes`): [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md)[]
 
-Defined in: [packages/core/src/tools/templating/components.ts:254](https://github.com/Sitecore/content-sdk/blob/1dc5119a99f7ea0312c71429a8519d717a976622/packages/core/src/tools/templating/components.ts#L254)
+Defined in: [packages/core/src/tools/templating/components.ts:301](https://github.com/Sitecore/content-sdk/blob/093286832218b748faec930972f4c68c302518b2/packages/core/src/tools/templating/components.ts#L301)
+
+Filters components by their detected type.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `components` | [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md)[] |
-| `allowedTypes` | [`ComponentType`](../type-aliases/ComponentType.md)[] |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `components` | [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md)[] | Array of components with types |
+| `allowedTypes` | [`ComponentType`](../type-aliases/ComponentType.md)[] | Array of allowed component types to filter by |
 
 ## Returns
 
 [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md)[]
+
+Filtered array containing only components matching allowed types
