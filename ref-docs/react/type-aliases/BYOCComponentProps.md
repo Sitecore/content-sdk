@@ -8,4 +8,4 @@
 
 > **BYOCComponentProps** = `BYOCComponentClientProps` & `BYOCServerProps`
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:76](https://github.com/Sitecore/content-sdk/blob/fe2f13c51c10d34e04dfeff337807ad53b762ca9/packages/react/src/components/BYOCComponent.tsx#L76)
+Defined in: [packages/react/src/components/BYOCComponent.tsx:76](https://github.com/Sitecore/content-sdk/blob/093286832218b748faec930972f4c68c302518b2/packages/react/src/components/BYOCComponent.tsx#L76)
