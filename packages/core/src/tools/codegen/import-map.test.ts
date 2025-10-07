@@ -217,11 +217,8 @@ describe('Import Map Generation', () => {
       const expected = [
         {
           module: fakeReactSpecifier,
-          // default import used (A, C, E)
           defaultImport: getImportValueAlias('React', fakeReactSpecifier, 'default'),
-          // namespace import used (B, D) — MUST be the alias, not plain "React"
           namespaceImport: getImportValueAlias('React', fakeReactSpecifier, 'namespace'),
-          // named import used (A, E) — MUST be the alias, not plain "useEffect"
           namedImports: [
             {
               name: 'useEffect',
