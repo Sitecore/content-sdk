@@ -1,9 +1,9 @@
 import * as ts from 'typescript';
 import path from 'path';
 import fs from 'fs';
-import { debug } from '@sitecore-content-sdk/core';
-import { getComponentList } from '@sitecore-content-sdk/core/tools';
-import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
+import { getComponentList } from './../templating';
+import { SitecoreConfig } from './../../config';
+import debug from './../../debug';
 import crypto from 'crypto';
 import { isNodeModuleImport, stripExtension, getRelativeImportPath, toPosixPath } from './utils';
 
@@ -16,6 +16,38 @@ export const unitMocks = ({
   getComponentListStub?: typeof getComponentList;
 }) => {
   getComponentListStub && (_getComponentList = getComponentListStub);
+};
+
+/**
+ * Gets a Map object with import modules and their respective exports present throughout the paths specified
+ * @param {string} paths paths to files to be processed for import-map
+ * @returns {Map<string, ImportModule>} collection of keys and values, where keys refer to modules being processed and values are collections of exports for each module
+ */
+export let getImportMap = _getImportMap;
+
+/**
+ * Builds file contents for component map based on the default template
+ * @param {Map<string, ImportModule>} indexedImportMap map to be processed into final component-map.ts file
+ * @returns {string} file code for component-map.ts
+ */
+export let nextJsMapTemplate = _nextJsMapTemplate;
+
+export const importUnitMocks = {
+  set getImportMap(mockImplementation) {
+    getImportMap = mockImplementation;
+  },
+  get getImportMap() {
+    return _getImportMap;
+  },
+
+  set nextJsMapTemplate(
+    mockImplementation: (indexedImportMap: Map<string, ModuleExports>) => string
+  ) {
+    nextJsMapTemplate = mockImplementation;
+  },
+  get nextJsMapTemplate() {
+    return _nextJsMapTemplate;
+  },
 };
 
 /**
@@ -111,6 +143,7 @@ export const getImportValueAlias = (
   moduleName: string,
   importType: 'named' | 'default' | 'namespace'
 ) => {
+  if (process.env.IMPORT_ALIAS_STRATEGY === 'plain') return importValue;
   // Add extra uniqueness since the same alias can be used for different import types
   const importTypeId = importType === 'named' ? 'n' : importType === 'default' ? 'd' : 'ns';
 
@@ -118,12 +151,8 @@ export const getImportValueAlias = (
   return `${importValue}_${suffix}`;
 };
 
-/**
- * Gets a Map object with import modules and their respective exports present throughout the paths specified
- * @param {string} paths paths to files to be processed for import-map
- * @returns {Map<string, ImportModule>} collection of keys and values, where keys refer to modules being processed and values are collections of exports for each module
- */
-export const getImportMap = (paths: string[]) => {
+// eslint-disable-next-line jsdoc/require-jsdoc
+function _getImportMap(paths: string[]) {
   // make preparations for handling ts/js files
   const appPath = process.cwd();
   let cliCompilerOptions = {
@@ -324,12 +353,8 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
   };
 };
 
-/**
- * Builds file contents for component map based on the default template
- * @param {Map<string, ImportModule>} indexedImportMap map to be processed into final component-map.ts file
- * @returns {string} file code for component-map.ts
- */
-export const nextJsMapTemplate = (indexedImportMap: Map<string, ModuleExports>) => {
+// eslint-disable-next-line jsdoc/require-jsdoc
+function _nextJsMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
   const outputExportEntries = (entry: ImportMapEntry) => {
     return (
       [...entry.namedExports, entry.defaultExport, entry.namespaceExport]
