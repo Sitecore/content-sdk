@@ -8,7 +8,7 @@
 
 > **LinkProps** = `ReactLinkProps` & `object`
 
-Defined in: [nextjs/src/components/Link.tsx:11](https://github.com/Sitecore/content-sdk/blob/61376f2dce117075960ede703699a389d7b00500/packages/nextjs/src/components/Link.tsx#L11)
+Defined in: [nextjs/src/components/Link.tsx:11](https://github.com/Sitecore/content-sdk/blob/093286832218b748faec930972f4c68c302518b2/packages/nextjs/src/components/Link.tsx#L11)
 
 ## Type declaration
 
