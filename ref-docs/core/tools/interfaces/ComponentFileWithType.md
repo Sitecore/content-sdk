@@ -6,7 +6,7 @@
 
 # Interface: ComponentFileWithType
 
-Defined in: [packages/core/src/tools/templating/components.ts:28](https://github.com/Sitecore/content-sdk/blob/c6d79fb7cf099c2bccf76e3f383b969340251618/packages/core/src/tools/templating/components.ts#L28)
+Defined in: [packages/core/src/tools/templating/components.ts:28](https://github.com/Sitecore/content-sdk/blob/61376f2dce117075960ede703699a389d7b00500/packages/core/src/tools/templating/components.ts#L28)
 
 Describes a file that represents a component definition
 
@@ -20,7 +20,7 @@ Describes a file that represents a component definition
 
 > **componentName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:24](https://github.com/Sitecore/content-sdk/blob/c6d79fb7cf099c2bccf76e3f383b969340251618/packages/core/src/tools/templating/components.ts#L24)
+Defined in: [packages/core/src/tools/templating/components.ts:24](https://github.com/Sitecore/content-sdk/blob/61376f2dce117075960ede703699a389d7b00500/packages/core/src/tools/templating/components.ts#L24)
 
 Name of the code file
 
@@ -34,7 +34,7 @@ Name of the code file
 
 > **componentType**: [`ComponentType`](../type-aliases/ComponentType.md)
 
-Defined in: [packages/core/src/tools/templating/components.ts:29](https://github.com/Sitecore/content-sdk/blob/c6d79fb7cf099c2bccf76e3f383b969340251618/packages/core/src/tools/templating/components.ts#L29)
+Defined in: [packages/core/src/tools/templating/components.ts:29](https://github.com/Sitecore/content-sdk/blob/61376f2dce117075960ede703699a389d7b00500/packages/core/src/tools/templating/components.ts#L29)
 
 #### Overrides
 
@@ -46,7 +46,7 @@ Defined in: [packages/core/src/tools/templating/components.ts:29](https://github
 
 > **filePath**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:21](https://github.com/Sitecore/content-sdk/blob/c6d79fb7cf099c2bccf76e3f383b969340251618/packages/core/src/tools/templating/components.ts#L21)
+Defined in: [packages/core/src/tools/templating/components.ts:21](https://github.com/Sitecore/content-sdk/blob/61376f2dce117075960ede703699a389d7b00500/packages/core/src/tools/templating/components.ts#L21)
 
 Path to the component or code file
 
@@ -60,7 +60,7 @@ Path to the component or code file
 
 > **importPath**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:22](https://github.com/Sitecore/content-sdk/blob/c6d79fb7cf099c2bccf76e3f383b969340251618/packages/core/src/tools/templating/components.ts#L22)
+Defined in: [packages/core/src/tools/templating/components.ts:22](https://github.com/Sitecore/content-sdk/blob/61376f2dce117075960ede703699a389d7b00500/packages/core/src/tools/templating/components.ts#L22)
 
 Normalized path that can be used for import statements
 
@@ -74,7 +74,7 @@ Normalized path that can be used for import statements
 
 > **moduleName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:23](https://github.com/Sitecore/content-sdk/blob/c6d79fb7cf099c2bccf76e3f383b969340251618/packages/core/src/tools/templating/components.ts#L23)
+Defined in: [packages/core/src/tools/templating/components.ts:23](https://github.com/Sitecore/content-sdk/blob/61376f2dce117075960ede703699a389d7b00500/packages/core/src/tools/templating/components.ts#L23)
 
 Normalized name that can be used as import
 
