@@ -37,7 +37,8 @@ export const generateMap: GenerateMapFunction = ({
   clientComponentMap,
 }: GenerateMapArgs) => {
   // Default behavior: if clientComponentMap is not specified, auto-detect based on router type
-  const shouldGenerateClientMap = clientComponentMap ?? detectRouterType() === 'app';
+  const isAppRouter = detectRouterType() === 'app';
+  const shouldGenerateClientMap = clientComponentMap ?? isAppRouter;
 
   if (shouldGenerateClientMap) {
     const componentsWithTypes = getComponentListWithTypes(paths, exclude);
@@ -90,6 +91,24 @@ export const generateMap: GenerateMapFunction = ({
         error
       );
       throw error;
+    }
+
+    // For App Router compatibility, always generate client map file even when clientComponentMap is false
+    // When clientComponentMap is false, only include built-in components (no custom client components)
+    if (shouldGenerateClientMap || isAppRouter) {
+      const clientMapTemplateToUse = clientMapTemplate || nextjsClientMapTemplate;
+      const clientMapContent = clientMapTemplateToUse([], componentImports); // Empty array = only built-ins
+      const clientMapFile = path.join(process.cwd(), destination, 'component-map.client.ts');
+
+      try {
+        fs.writeFileSync(clientMapFile, clientMapContent, { encoding: 'utf8' });
+      } catch (error) {
+        console.error(
+          `Client Component Map generation failed. Error writing to file ${destination}:`,
+          error
+        );
+        throw error;
+      }
     }
   }
 };
