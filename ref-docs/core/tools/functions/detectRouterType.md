@@ -8,7 +8,7 @@
 
 > **detectRouterType**(`projectRoot`): [`RouterType`](../type-aliases/RouterType.md)
 
-Defined in: [packages/core/src/tools/templating/components.ts:106](https://github.com/Sitecore/content-sdk/blob/53c6af4754a04669699810f3778c40b2f56631f4/packages/core/src/tools/templating/components.ts#L106)
+Defined in: [packages/core/src/tools/templating/components.ts:106](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/core/src/tools/templating/components.ts#L106)
 
 <<<<<<< HEAD
  *

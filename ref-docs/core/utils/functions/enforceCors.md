@@ -8,7 +8,7 @@
 
 > **enforceCors**(`req`, `res`, `allowedOrigins?`): `boolean`
 
-Defined in: [packages/core/src/utils/utils.ts:110](https://github.com/Sitecore/content-sdk/blob/53c6af4754a04669699810f3778c40b2f56631f4/packages/core/src/utils/utils.ts#L110)
+Defined in: [packages/core/src/utils/utils.ts:110](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/core/src/utils/utils.ts#L110)
 
 Tests origin from incoming request against allowed origins list that can be
 set in JSS's JSS_ALLOWED_ORIGINS env variable, passed via allowedOrigins param and/or
