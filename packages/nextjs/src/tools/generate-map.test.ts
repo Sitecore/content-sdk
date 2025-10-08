@@ -42,10 +42,39 @@ describe('generateMap', () => {
     ];
 
     let getComponentListStub = sandbox.stub().returns(fakeComponentList);
+    let getComponentListWithTypesStub: sinon.SinonStub;
+    let detectRouterTypeStub: sinon.SinonStub;
+    let filterComponentsByTypeStub: sinon.SinonStub;
+
+    const fakeComponentsWithTypes = [
+      {
+        componentName: 'Button',
+        moduleName: 'Button',
+        importPath: './src/components/Button',
+        componentType: 'client' as const,
+      },
+      {
+        componentName: 'Link',
+        moduleName: 'Link',
+        importPath: './src/components/Link',
+        componentType: 'universal' as const,
+      },
+    ];
 
     beforeEach(() => {
       getComponentListStub = sandbox.stub().returns(fakeComponentList);
+      getComponentListWithTypesStub = sandbox.stub().returns(fakeComponentsWithTypes);
+      detectRouterTypeStub = sandbox.stub().returns('app'); // Default to App Router for tests
+      filterComponentsByTypeStub = sandbox.stub().returns(fakeComponentsWithTypes);
+
       sandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+      sandbox.replaceGetter(
+        coreTools,
+        'getComponentListWithTypes',
+        () => getComponentListWithTypesStub
+      );
+      sandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
+      sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
       sandbox.stub(fs, 'writeFileSync');
     });
 
@@ -57,7 +86,7 @@ describe('generateMap', () => {
       const paths = ['src/components'];
       generateMap({ paths });
 
-      expect(fs.writeFileSync).to.have.been.calledOnce;
+      expect(fs.writeFileSync).to.have.been.calledTwice;
       const [dest, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(dest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
 
@@ -73,7 +102,7 @@ describe('generateMap', () => {
           "  ['BYOCWrapper', BYOCWrapper],",
           "  ['FEaaSWrapper', FEaaSWrapper],",
           "  ['Form', Form],",
-          "  ['Button', Button],",
+          "  ['Button', {...Button, componentType: 'client'}],",
           "  ['Link', Link],",
           ']);',
         ].join('\n')
@@ -95,19 +124,19 @@ describe('generateMap', () => {
       generateMap({ paths, componentImports: fakePackages, mapTemplate: customTemplate });
 
       expect(customTemplate).to.have.been.calledOnce;
-      expect(customTemplate.getCall(0).args[0]).to.deep.equal(fakeComponentList);
+      expect(customTemplate.getCall(0).args[0]).to.deep.equal(fakeComponentsWithTypes);
       expect(customTemplate.getCall(0).args[1]).to.deep.equal(fakePackages);
-      expect(fs.writeFileSync).to.have.been.calledOnce;
+      expect(fs.writeFileSync).to.have.been.calledTwice;
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.equal('// custom template output');
     });
 
     it('should generate an empty component map if no components are found', async () => {
-      getComponentListStub.returns([]);
+      getComponentListWithTypesStub.returns([]);
       const paths = ['src/components'];
       generateMap({ paths });
 
-      expect(fs.writeFileSync).to.have.been.calledOnce;
+      expect(fs.writeFileSync).to.have.been.calledTwice;
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include(
         'export const componentMap = new Map<string, NextjsContentSdkComponent>('
@@ -120,39 +149,41 @@ describe('generateMap', () => {
     it('should handle multiple paths and merge their components', async () => {
       const paths = ['src/components', 'src/other-components'];
       // Simulate different components for each path
-      getComponentListStub.returns([
+      getComponentListWithTypesStub.returns([
         {
           componentName: 'Button',
           moduleName: 'Button',
           importPath: './src/components/Button',
+          componentType: 'client' as const,
         },
         {
           componentName: 'Card',
           moduleName: 'Card',
           importPath: './src/other-components/Card',
+          componentType: 'universal' as const,
         },
       ]);
       generateMap({ paths });
 
-      expect(getComponentListStub).to.have.been.calledOnce;
+      expect(getComponentListWithTypesStub).to.have.been.calledOnce;
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import * as Button from './src/components/Button';");
       expect(content).to.include("import * as Card from './src/other-components/Card';");
-      expect(content).to.include("['Button', Button],");
+      expect(content).to.include("['Button', {...Button, componentType: 'client'}],");
       expect(content).to.include("['Card', Card],");
     });
 
     it('should not fail if packages is undefined', async () => {
       const paths = ['src/components'];
       expect(() => generateMap({ paths, componentImports: undefined })).to.not.throw();
-      expect(fs.writeFileSync).to.have.been.calledOnce;
+      expect(fs.writeFileSync).to.have.been.calledTwice;
     });
 
     it('should write componentMap.ts file with components from "paths" and "packages" parameters, when provided', async () => {
       const paths = ['src/components'];
       generateMap({ paths, componentImports: fakePackages });
 
-      expect(fs.writeFileSync).to.have.been.calledOnce;
+      expect(fs.writeFileSync).to.have.been.calledTwice;
       const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(content).to.include("import * as MyLib from '@my/lib';");
       expect(content).to.include("import { CompA, CompB } from '@other/lib';");
@@ -170,7 +201,7 @@ describe('generateMap', () => {
       const customDest = path.join(process.cwd(), 'custom/path', 'component-map.ts');
       generateMap({ paths, destination: 'custom/path' });
 
-      expect(fs.writeFileSync).to.have.been.calledOnce;
+      expect(fs.writeFileSync).to.have.been.calledTwice;
       expect(fs.writeFileSync).to.have.been.calledWith(
         customDest,
         sinon.match.string,
@@ -178,13 +209,13 @@ describe('generateMap', () => {
       );
     });
 
-    it('should pass exclude param into getComponentList call', async () => {
+    it('should pass exclude param into getComponentListWithTypes call', async () => {
       const paths = ['src/components'];
       const exclude = ['**/*.stories.tsx', '**/*.test.tsx'];
       generateMap({ paths, exclude });
 
-      expect(getComponentListStub).to.have.been.calledOnce;
-      expect(getComponentListStub.getCall(0).args[1]).to.deep.equals(exclude);
+      expect(getComponentListWithTypesStub).to.have.been.calledOnce;
+      expect(getComponentListWithTypesStub.getCall(0).args[1]).to.deep.equals(exclude);
     });
 
     it('should throw error when destination cannot be written to', async () => {
@@ -328,7 +359,7 @@ describe('generateMap', () => {
       expect(clientContent).to.include("['UniversalCard', UniversalCard],");
     });
 
-    it('should generate only main component map when clientComponentMap is false', async () => {
+    it('should generate both component maps when clientComponentMap is false (App Router compatibility)', async () => {
       const paths = ['src/components'];
       // Reset stubs for this test - use getComponentList instead of getComponentListWithTypes
       sandbox.restore();
@@ -353,21 +384,81 @@ describe('generateMap', () => {
       ];
 
       const getComponentListStub = newSandbox.stub().returns(fakeComponentList);
+      const detectRouterTypeStub = newSandbox.stub().returns('app'); // Force App Router
       newSandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+      newSandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
       newSandbox.stub(fs, 'writeFileSync');
 
       generateMap({ paths, clientComponentMap: false });
 
-      expect(fs.writeFileSync).to.have.been.calledOnce;
+      // Should generate both files for App Router compatibility
+      expect(fs.writeFileSync).to.have.been.calledTwice;
       expect(getComponentListStub).to.have.been.calledOnce;
 
-      const [dest, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
-      expect(dest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
-      expect(content).to.include("import * as ClientButton from './src/components/ClientButton';");
-      expect(content).to.include("import * as ServerData from './src/components/ServerData';");
-      expect(content).to.include(
+      // Check main component map
+      const [mainDest, mainContent] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+      expect(mainDest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
+      expect(mainContent).to.include(
+        "import * as ClientButton from './src/components/ClientButton';"
+      );
+      expect(mainContent).to.include("import * as ServerData from './src/components/ServerData';");
+      expect(mainContent).to.include(
         "import * as UniversalCard from './src/components/UniversalCard';"
       );
+
+      // Check client component map (should only contain built-in components)
+      const [clientDest, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
+      expect(clientDest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.client.ts'));
+      expect(clientContent).to.include('Client-safe component map for App Router');
+      // Should not include custom components when clientComponentMap is false
+      expect(clientContent).to.not.include('ClientButton');
+      expect(clientContent).to.not.include('ServerData');
+      expect(clientContent).to.not.include('UniversalCard');
+      // Should only include built-in components
+      expect(clientContent).to.include("['BYOCWrapper', BYOCWrapper],");
+      expect(clientContent).to.include("['FEaaSWrapper', FEaaSWrapper],");
+      expect(clientContent).to.include("['Form', Form],");
+
+      newSandbox.restore();
+    });
+
+    it('should always generate client component map for App Router compatibility even when clientComponentMap is false', async () => {
+      const paths = ['src/components'];
+      // Reset stubs for this test - use getComponentList instead of getComponentListWithTypes
+      sandbox.restore();
+      const newSandbox = sinon.createSandbox();
+
+      const fakeComponentList = [
+        {
+          componentName: 'CustomComponent',
+          moduleName: 'CustomComponent',
+          importPath: './src/components/CustomComponent',
+        },
+      ];
+
+      const getComponentListStub = newSandbox.stub().returns(fakeComponentList);
+      const detectRouterTypeStub = newSandbox.stub().returns('app'); // Force App Router
+      newSandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+      newSandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
+      newSandbox.stub(fs, 'writeFileSync');
+
+      generateMap({ paths, clientComponentMap: false });
+
+      // Should generate both files for App Router compatibility
+      expect(fs.writeFileSync).to.have.been.calledTwice;
+
+      // Check that client component map is generated with only built-in components
+      const [clientDest, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
+      expect(clientDest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.client.ts'));
+      expect(clientContent).to.include('Client-safe component map for App Router');
+
+      // Should not include custom components when clientComponentMap is false
+      expect(clientContent).to.not.include('CustomComponent');
+
+      // Should only include built-in components for App Router compatibility
+      expect(clientContent).to.include("['BYOCWrapper', BYOCWrapper],");
+      expect(clientContent).to.include("['FEaaSWrapper', FEaaSWrapper],");
+      expect(clientContent).to.include("['Form', Form],");
 
       newSandbox.restore();
     });
@@ -381,12 +472,31 @@ describe('generateMap', () => {
     });
 
     it('should auto-detect Pages Router and generate single map when clientComponentMap is undefined', async () => {
-      detectRouterTypeStub.returns('pages');
+      // Reset stubs for this test - use getComponentList instead of getComponentListWithTypes
+      sandbox.restore();
+      const newSandbox = sinon.createSandbox();
+
+      const fakeComponentList = [
+        {
+          componentName: 'TestComponent',
+          moduleName: 'TestComponent',
+          importPath: './src/components/TestComponent',
+        },
+      ];
+
+      const getComponentListStub = newSandbox.stub().returns(fakeComponentList);
+      const detectRouterTypeStub = newSandbox.stub().returns('pages');
+      newSandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+      newSandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
+      newSandbox.stub(fs, 'writeFileSync');
+
       const paths = ['src/components'];
       generateMap({ paths }); // clientComponentMap is undefined
 
       expect(detectRouterTypeStub).to.have.been.calledOnce;
       expect(fs.writeFileSync).to.have.been.calledOnce;
+
+      newSandbox.restore();
     });
 
     it('should use custom clientMapTemplate when provided', async () => {
