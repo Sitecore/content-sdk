@@ -91,6 +91,22 @@ export const generateMap: GenerateMapFunction = ({
       );
       throw error;
     }
+
+    // Always generate client map file for App Router compatibility, even when clientComponentMap is false
+    // When clientComponentMap is false, only include built-in components (no custom client components)
+    const clientMapTemplateToUse = clientMapTemplate || nextjsClientMapTemplate;
+    const clientMapContent = clientMapTemplateToUse([], componentImports); // Empty array = only built-ins
+    const clientMapFile = path.join(process.cwd(), destination, 'component-map.client.ts');
+
+    try {
+      fs.writeFileSync(clientMapFile, clientMapContent, { encoding: 'utf8' });
+    } catch (error) {
+      console.error(
+        `Client Component Map generation failed. Error writing to file ${destination}:`,
+        error
+      );
+      throw error;
+    }
   }
 };
 
