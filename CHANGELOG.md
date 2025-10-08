@@ -25,8 +25,12 @@ Our versioning strategy is as follows:
 * Add LLMs and Copilot instruction files for improved AI guidance ([#239](https://github.com/Sitecore/content-sdk/pull/239))
 
 ### 🐛 Bug Fixes
+
 * `[template/nextjs]` `[template/next-app-router]` Fix imports for SSR/SSG ([#229](https://github.com/Sitecore/content-sdk/pull/229))
 
+### 🧹 Chores
+
+* `[core]` `[nextjs]` Move Design Library logic from nextjs to core ([#236](https://github.com/Sitecore/content-sdk/pull/236))
 
 ## 1.1.0
 

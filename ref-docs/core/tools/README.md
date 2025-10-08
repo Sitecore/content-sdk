@@ -6,10 +6,6 @@
 
 # tools
 
-## Namespaces
-
-- [auth](namespaces/auth/README.md)
-
 ## Enumerations
 
 - [ModuleType](enumerations/ModuleType.md)
@@ -30,6 +26,12 @@
 - [GenerateSitesConfig](type-aliases/GenerateSitesConfig.md)
 - [RouterType](type-aliases/RouterType.md)
 
+## Variables
+
+- [auth](variables/auth.md)
+- [extractFiles](variables/extractFiles.md)
+- [getComponentList](variables/getComponentList.md)
+
 ## Functions
 
 - [detectComponentType](functions/detectComponentType.md)
@@ -38,7 +40,7 @@
 - [generateMetadata](functions/generateMetadata.md)
 - [generatePlugins](functions/generatePlugins.md)
 - [generateSites](functions/generateSites.md)
-- [getComponentList](functions/getComponentList.md)
 - [getComponentListWithTypes](functions/getComponentListWithTypes.md)
 - [matchPath](functions/matchPath.md)
 - [scaffoldComponent](functions/scaffoldComponent.md)
+- [writeImportMap](functions/writeImportMap.md)

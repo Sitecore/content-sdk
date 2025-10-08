@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
-import { debug } from '@sitecore-content-sdk/core';
+import debug from './../../debug';
 
 /**
  * Description properties for the files sent to the mesh endpoint
@@ -22,7 +22,23 @@ export enum ExtractedFileType {
   PackageJson = 'package.json',
 }
 
-export const xmCloudDeploy = () => !!process.env.SITECORE && !!process.env.SITECORE_BUILD;
+export const _xmCloudDeploy = () => !!process.env.SITECORE && !!process.env.SITECORE_BUILD;
+
+export const utils: {
+  xmCloudDeploy: () => boolean;
+} = {
+  xmCloudDeploy: (...args) => _xmCloudDeploy(...args),
+};
+
+export const utilsUnitMocks = {
+  set xmCloudDeploy(mockImpl: () => boolean) {
+    utils.xmCloudDeploy = mockImpl;
+  },
+  get xmCloudDeploy() {
+    return _xmCloudDeploy;
+  },
+};
+
 // workaround, Vercel does not have variables that are only accessible at build time
 const vercelDeploy = () => !!process.env.VERCEL && !process.env.VERCEL_REGION;
 const netlifyDeploy = () => !!process.env.NETLIFY && !!process.env.BUILD_ID;
@@ -33,7 +49,7 @@ const netlifyDeploy = () => !!process.env.NETLIFY && !!process.env.BUILD_ID;
  * @returns {boolean} - true if in deploy context, false otherwise
  */
 export const validateDeployContext = () => {
-  return xmCloudDeploy() || vercelDeploy() || netlifyDeploy();
+  return _xmCloudDeploy() || vercelDeploy() || netlifyDeploy();
 };
 
 /**

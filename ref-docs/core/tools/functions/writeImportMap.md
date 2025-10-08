@@ -1,14 +1,14 @@
-[**@sitecore-content-sdk/nextjs**](../../README.md)
+[**@sitecore-content-sdk/core**](../../README.md)
 
 ***
 
-[@sitecore-content-sdk/nextjs](../../README.md) / [tools](../README.md) / writeImportMap
+[@sitecore-content-sdk/core](../../README.md) / [tools](../README.md) / writeImportMap
 
 # Function: writeImportMap()
 
 > **writeImportMap**(`args`): () => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/tools/codegen/import-map.ts:294](https://github.com/Sitecore/content-sdk/blob/093286832218b748faec930972f4c68c302518b2/packages/nextjs/src/tools/codegen/import-map.ts#L294)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:323](https://github.com/Sitecore/content-sdk/blob/53c6af4754a04669699810f3778c40b2f56631f4/packages/core/src/tools/codegen/import-map.ts#L323)
 
 Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
 

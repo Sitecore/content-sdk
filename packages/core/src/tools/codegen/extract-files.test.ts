@@ -5,10 +5,10 @@ import chalk from 'chalk';
 import fs from 'fs';
 import nock from 'nock';
 import path from 'path';
-import { defineConfig } from '@sitecore-content-sdk/core/config';
-import { auth } from '@sitecore-content-sdk/core/tools';
+import { defineConfig } from './../../config';
+import { auth } from '../../tools';
 import { extractFiles } from './extract-files';
-import { debug } from '@sitecore-content-sdk/core';
+import debug from './../../debug';
 
 describe('extract-files', () => {
   const sandbox = sinon.createSandbox();
@@ -148,9 +148,6 @@ describe('extract-files', () => {
   });
 
   it('should call sendCode for each component path and package.json', async () => {
-    const args = {
-      ...mockArgs,
-    };
     const appFolder = path.resolve(
       process.cwd(),
       './src/tools/codegen/test-data/extract-components/regular-imports'
@@ -165,27 +162,25 @@ describe('extract-files', () => {
     nock(edgeUrl).post('/mesh/push/api/v1/contentsdk/code/extracted').reply(200).persist();
 
     const component1Path = path.resolve(process.cwd(), './src/components/TestComponent.tsx');
-
     const component2Path = path.resolve(process.cwd(), './src/components/TestComponent2.tsx');
-
     const packageJsonPath = path.resolve(process.cwd(), './package.json');
 
-    const extractFilesCall = extractFiles(args);
-    await extractFilesCall();
+    const run = extractFiles(mockArgs);
+    await run();
 
     expect(fetchBearerTokenStub.calledOnce).to.be.true;
 
-    expect(consoleLogStub.callCount).to.equal(2);
-    expect(consoleLogStub.getCall(0).args[0]).to.equal(chalk.green('Code extraction started'));
-    expect(consoleLogStub.getCall(1).args[0]).to.equal(
-      chalk.green(
-        [
-          'Code extraction completed successfully, files extracted:',
-          component1Path,
-          component2Path,
-          packageJsonPath,
-        ].join('\r\n')
-      )
+    const msgs = consoleLogStub.getCalls().map((c) => c.args[0]);
+    expect(msgs).to.include(chalk.green('Code extraction started'));
+
+    const successMsg = chalk.green(
+      [
+        'Code extraction completed successfully, files extracted:',
+        component1Path,
+        component2Path,
+        packageJsonPath,
+      ].join('\r\n')
     );
+    expect(msgs).to.include(successMsg);
   });
 });

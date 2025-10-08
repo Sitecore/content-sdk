@@ -2,6 +2,17 @@ import * as glob from 'glob';
 import fs from 'fs';
 import * as ts from 'typescript';
 
+export let getComponentList = _getComponentList;
+
+export const componentUnitMocks = {
+  set getComponentList(mockImplementation) {
+    getComponentList = mockImplementation;
+  },
+  get getComponentList() {
+    return _getComponentList;
+  },
+};
+
 const componentNamePattern = /^[\/]*(.+[\/\\])*(.+)\.[jt]sx?$/;
 
 const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
@@ -57,7 +68,7 @@ export interface ComponentImport {
  * @param {string[]} paths paths to search
  * @param {string[]} [exclude] paths and glob patterns to exclude from final result
  */
-export function getComponentList(paths: string[], exclude?: string[]): ComponentFile[] {
+function _getComponentList(paths: string[], exclude?: string[]): ComponentFile[] {
   const components = paths.reduce<ComponentFile[]>((result, path) => {
     const globPath =
       glob.hasMagic(path, { magicalBraces: true }) || path.match(componentNamePattern)
@@ -84,9 +95,13 @@ export function getComponentList(paths: string[], exclude?: string[]): Component
 }
 
 /**
+<<<<<<< HEAD
+ * @param projectRoot
+=======
  * Detects the Next.js router type (App Router or Pages Router) based on directory structure.
  * @param {string} projectRoot - The project root directory. Defaults to current working directory.
  * @returns {RouterType} 'app' if App Router is detected, 'pages' otherwise
+>>>>>>> 320740678885c09d24564322cf9d5dea44f6f1f1
  */
 export function detectRouterType(projectRoot: string = process.cwd()): RouterType {
   const appDirExists =

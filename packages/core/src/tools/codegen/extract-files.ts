@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 import chalk from 'chalk';
 import {
   ExtractedFileType,
@@ -5,9 +6,9 @@ import {
   sendCode,
   validateDeployContext,
 } from './utils';
-import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
-import { auth } from '@sitecore-content-sdk/core/tools';
-import { debug } from '@sitecore-content-sdk/core';
+import { SitecoreConfig } from './../../config';
+import { auth } from '../../tools';
+import debug from './../../debug';
 import path from 'path';
 
 export type ExtractFilesConfig = {
@@ -20,7 +21,21 @@ export type ExtractFilesConfig = {
  * Extracts components from the app folder and sends them to XMCloud.
  * @param {ExtractFilesConfig} args - Config for components extraction
  */
-export const extractFiles = (args: ExtractFilesConfig) => {
+export let extractFiles = _extractFiles;
+
+// mock setup for unit tests to make sinon happy and mock-able with esbuild/tsx
+// https://sinonjs.org/how-to/typescript-swc/
+// This, plus the `_` names make the exports writable for sinon
+export const unitMocks = {
+  set extractFiles(mockImplementation) {
+    extractFiles = mockImplementation;
+  },
+  get extractFiles() {
+    return _extractFiles;
+  },
+};
+
+function _extractFiles(args: ExtractFilesConfig) {
   const authParams = {
     clientId: process.env.SITECORE_AUTH_CLIENT_ID || '',
     clientSecret: process.env.SITECORE_AUTH_CLIENT_SECRET || '',
@@ -89,4 +104,4 @@ export const extractFiles = (args: ExtractFilesConfig) => {
       console.error(chalk.red('Error during code extraction:', error));
     }
   };
-};
+}
