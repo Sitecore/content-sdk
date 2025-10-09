@@ -6,7 +6,7 @@ This is the **Sitecore Content SDK** - a comprehensive TypeScript/JavaScript SDK
 
 ### Tech Stack
 - **Language**: TypeScript (Node LTS)
-- **Runtime**: Node LTS or higher
+- **Runtime**: Node LTS
 - **Build**: `tsc` -> `dist/`, templates bundled via `scripts/build-templates.ts`
 - **Testing**: Mocha + Sinon + Chai, coverage via `nyc`
 - **Lint/format**: ESLint + Prettier
@@ -27,14 +27,14 @@ content-sdk/
 │   ├── create-content-sdk-app/    # Scaffolding CLI & templates
 │   ├── core/                      # Core SDK functionality
 │   ├── nextjs/                    # Next.js-specific SDK
-│   ├── react/                     # React components
+│   ├── react/                     # React-specific SDK
 │   └── cli/                       # Additional CLI tools
 ├── .cursor/rules/                 # AI coding guidance
 └── samples/                       # Example applications
 ```
 
 ### Key Directories
-- **Sources**: `src/**` (within create-content-sdk-app package)
+- **Sources**: `src/**`
 - **Never edit**: `dist/**` (compiled output)
 - **Templates**: Copied to generated apps, self-contained, use `.env.*.example` for env values
 - **Initializers**: Each exposes `init(args)`, reuse common processes/utilities
@@ -50,7 +50,7 @@ Core Philosophy:
 - TypeScript-first development approach
 
 Code Organization:
-- Use Node LTS+ features when stable
+- Use Node LTS
 - Export public types at module boundaries
 - Prefer pure functions and thin wrappers
 - No top-level side effects (except CLI entry)
@@ -202,11 +202,24 @@ Configuration:
 
 ```typescript
 // sitecore.config.ts
-export const sitecoreConfig = {
-  sitecoreApiHost: process.env.SITECORE_API_HOST || '',
-  sitecoreApiKey: process.env.SITECORE_API_KEY || '',
-  siteName: process.env.SITECORE_SITE_NAME || 'default',
-};
+import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
+
+export default defineConfig({
+  api: {
+    edge: {
+      contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
+      clientContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
+      edgeUrl: process.env.SITECORE_EDGE_URL || 'https://edge-platform.sitecorecloud.io',
+    },
+    local: {
+      apiKey: process.env.SITECORE_API_KEY || '',
+      apiHost: process.env.SITECORE_API_HOST || '',
+    },
+  },
+  defaultSite: process.env.SITECORE_SITE_NAME || 'default',
+  defaultLanguage: process.env.SITECORE_DEFAULT_LANGUAGE || 'en',
+  editingSecret: process.env.SITECORE_EDITING_SECRET,
+});
 ```
 
 API Client Usage:
@@ -257,8 +270,8 @@ Field Handling:
 Content SDK Client Methods:
 - Prefer using `scClient.getPage()` for page data and layout fetching
 - Use `scClient.getDictionary()` for localized content
-- Leverage `scClient.getErrorPages()` for error page handling
-- Use `scClient.getPreviewPage()` for preview mode content
+- Leverage `scClient.getErrorPage()` for error page handling
+- Use `scClient.getPreview()` for preview mode content
 - Implement proper error boundaries for layout rendering
 - Handle missing placeholder content gracefully
 - Cache layout data when appropriate

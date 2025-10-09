@@ -40,19 +40,18 @@ src/
 
 ## Library Usage
 
-### @sitecore/content-sdk
+### @sitecore-content-sdk
 - Use `SitecoreClient` for content fetching
 - Implement proper error handling with try/catch blocks
 - Cache API responses using React Query or SWR
 - Handle content preview vs. published content scenarios
 
 ```typescript
-import { SitecoreClient } from '@sitecore/content-sdk';
+import { SitecoreClient } from '@sitecore-content-sdk/nextjs/client';
+import scConfig from 'sitecore.config';
 
 const client = new SitecoreClient({
-  sitecoreApiHost: process.env.SITECORE_API_HOST,
-  sitecoreApiKey: process.env.SITECORE_API_KEY,
-  siteName: process.env.SITECORE_SITE_NAME
+  ...scConfig,
 });
 ```
 
@@ -83,11 +82,16 @@ const client = new SitecoreClient({
 ### Server Component Development
 ```typescript
 // Server Component example (default in App Router)
-import { getPage } from '@/lib/sitecore';
+import { SitecoreClient } from '@sitecore-content-sdk/nextjs/client';
+import scConfig from 'sitecore.config';
+
+const client = new SitecoreClient({
+  ...scConfig,
+});
 
 export default async function SitecorePage({ params }: { params: { path: string[] } }) {
   try {
-    const pageData = await getPage(params.path.join('/'));
+    const pageData = await client.getPage(params.path.join('/'));
     return <SitecoreLayout layoutData={pageData?.layout} />;
   } catch (error) {
     return <div>Content not found</div>;
@@ -158,16 +162,16 @@ API Calls:
 - Handle edge cases with guard clauses
 
 ```typescript
-async function fetchContent(id: string): Promise<ContentItem> {
-  if (!id) {
-    throw new Error('Content ID is required');
+async function fetchPageData(path: string): Promise<Page | null> {
+  if (!path) {
+    throw new Error('Page path is required');
   }
 
   try {
-    const response = await sitecoreClient.getItem(id);
-    return response.data;
+    const pageData = await client.getPage(path);
+    return pageData;
   } catch (error) {
-    throw new SitecoreFetchError(`Failed to fetch content ${id}`, error);
+    throw new SitecoreFetchError(`Failed to fetch page data for ${path}`, error);
   }
 }
 ```
@@ -175,11 +179,24 @@ async function fetchContent(id: string): Promise<ContentItem> {
 ### Configuration
 ```typescript
 // sitecore.config.ts
-export const sitecoreConfig = {
-  sitecoreApiHost: process.env.SITECORE_API_HOST || '',
-  sitecoreApiKey: process.env.SITECORE_API_KEY || '',
-  siteName: process.env.SITECORE_SITE_NAME || 'default',
-};
+import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
+
+export default defineConfig({
+  api: {
+    edge: {
+      contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
+      clientContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
+      edgeUrl: process.env.SITECORE_EDGE_URL || 'https://edge-platform.sitecorecloud.io',
+    },
+    local: {
+      apiKey: process.env.SITECORE_API_KEY || '',
+      apiHost: process.env.SITECORE_API_HOST || '',
+    },
+  },
+  defaultSite: process.env.SITECORE_SITE_NAME || 'default',
+  defaultLanguage: process.env.SITECORE_DEFAULT_LANGUAGE || 'en',
+  editingSecret: process.env.SITECORE_EDITING_SECRET,
+});
 ```
 
 ### Internationalization

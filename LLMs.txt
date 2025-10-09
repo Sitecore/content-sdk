@@ -251,8 +251,8 @@ Field Handling:
 Content SDK Client Methods:
 - Prefer using `scClient.getPage()` for page data and layout fetching
 - Use `scClient.getDictionary()` for localized content
-- Leverage `scClient.getErrorPages()` for error page handling
-- Use `scClient.getPreviewPage()` for preview mode content
+- Leverage `scClient.getErrorPage()` for error page handling
+- Use `scClient.getPreview()` for preview mode content
 - Implement proper error boundaries for layout rendering
 - Handle missing placeholder content gracefully
 - Cache layout data when appropriate

@@ -7,7 +7,7 @@ This is a Sitecore Content SDK application built with Next.js App Router, TypeSc
 - **Framework**: Next.js with App Router (Server Components by default)
 - **Language**: TypeScript with strict mode enabled
 - **CMS**: Sitecore XM Cloud (headless)
-- **SDK**: @sitecore/content-sdk for API integration
+- **SDK**: @sitecore-content-sdk for API integration
 - **Styling**: CSS Modules or Tailwind CSS
 - **State Management**: React Query/SWR for server state
 - **Internationalization**: next-intl for multi-language support
@@ -71,7 +71,7 @@ interface ComponentProps {
 ```typescript
 // Server Component (default)
 export default async function SitecorePage({ params }: { params: { path: string[] } }) {
-  const pageData = await getPage(params.path.join('/'));
+  const pageData = await client.getPage(params.path.join('/'));
   return <SitecoreLayout layoutData={pageData.layout} />;
 }
 
@@ -189,12 +189,11 @@ export default function Hero({ fields }: HeroProps) {
 
 ### API Integration
 ```typescript
-import { SitecoreClient } from '@sitecore/content-sdk';
+import { SitecoreClient } from '@sitecore-content-sdk/nextjs/client';
+import scConfig from 'sitecore.config';
 
 const client = new SitecoreClient({
-  sitecoreApiHost: process.env.SITECORE_API_HOST,
-  sitecoreApiKey: process.env.SITECORE_API_KEY,
-  siteName: process.env.SITECORE_SITE_NAME
+  ...scConfig,
 });
 
 async function fetchPageData(path: string) {
