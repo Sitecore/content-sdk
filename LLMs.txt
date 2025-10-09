@@ -12,14 +12,14 @@ content-sdk/
 │   ├── create-content-sdk-app/    # Scaffolding CLI & templates
 │   ├── core/                      # Core SDK functionality
 │   ├── nextjs/                    # Next.js-specific SDK
-│   ├── react/                     # React components
+│   ├── react/                     # React-specific SDK
 │   └── cli/                       # Additional CLI tools
 ├── .cursor/rules/                 # AI coding guidance
 └── samples/                       # Example applications
 ```
 
 ### Key Directories
-- **Sources**: `src/**` (within create-content-sdk-app package)
+- **Sources**: `src/**`
 - **Never edit**: `dist/**` (compiled output)
 - **Templates**: Copied to generated apps, self-contained, use `.env.*.example` for env values
 - **Initializers**: Each exposes `init(args)`, reuse common processes/utilities
@@ -27,7 +27,7 @@ content-sdk/
 ## Technology Stack
 
 - **Language**: TypeScript (Node LTS)
-- **Runtime**: Node LTS or higher
+- **Runtime**: Node LTS
 - **Build**: `tsc` -> `dist/`, templates bundled via `scripts/build-templates.ts`
 - **Testing**: Mocha + Sinon + Chai, coverage via `nyc`
 - **Lint/format**: ESLint + Prettier
@@ -44,7 +44,7 @@ Core Philosophy:
 - TypeScript-first development approach
 
 Code Organization:
-- Use Node LTS+ features when stable
+- Use Node LTS
 - Export public types at module boundaries
 - Prefer pure functions and thin wrappers
 - No top-level side effects (except CLI entry)
