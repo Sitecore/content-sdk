@@ -96,8 +96,8 @@ export default defineConfig({
       apiHost: process.env.SITECORE_API_HOST || '',
     },
   },
-  defaultSite: process.env.SITECORE_SITE_NAME || 'default',
-  defaultLanguage: process.env.SITECORE_DEFAULT_LANGUAGE || 'en',
+  defaultSite: process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME || 'default',
+  defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
   editingSecret: process.env.SITECORE_EDITING_SECRET,
 });
 ```
