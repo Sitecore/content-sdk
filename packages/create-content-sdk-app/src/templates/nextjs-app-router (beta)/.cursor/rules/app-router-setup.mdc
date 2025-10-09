@@ -39,7 +39,7 @@ App Router Specifics:
 ```
 src/
   app/                 # App Router pages and layouts
-  components/          # React components
+  components/          # React-specific SDK
   lib/                 # Configuration and utilities
   i18n/                # Internationalization setup
 ```
