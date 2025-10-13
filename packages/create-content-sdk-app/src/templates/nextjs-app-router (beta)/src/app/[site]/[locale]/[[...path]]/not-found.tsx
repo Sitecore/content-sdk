@@ -12,6 +12,16 @@ export default async function NotFound() {
   const headersList = await headers();
   const { site, locale } = parseRewriteHeader(headersList);
 
+  if (!(site && site.trim()) && (!scConfig.defaultSite || scConfig.defaultSite.trim() === '')) {
+    return (
+      <div style={{ padding: 10 }}>
+        <h1>Page not found</h1>
+        <p>This page does not exist.</p>
+        <Link href="/">Go to the Home page</Link>
+      </div>
+    );
+  }
+
   const page = await client.getErrorPage(ErrorPage.NotFound, {
     site: site || scConfig.defaultSite,
     locale: locale || scConfig.defaultLanguage,
