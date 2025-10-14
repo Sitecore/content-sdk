@@ -28,6 +28,7 @@ Our versioning strategy is as follows:
 
 * `[template/nextjs]` `[template/next-app-router]` Fix imports for SSR/SSG ([#229](https://github.com/Sitecore/content-sdk/pull/229))
 * `[template/next-app-router]` Guard static params generation and harden not-found routes for XM Cloud ([#242](https://github.com/Sitecore/content-sdk/pull/242))
+* `[template/next-app-router]` Prevent CloudSDK re-initialization on client-side navigation ([#243](https://github.com/Sitecore/content-sdk/pull/243))
 
 ### 🧹 Chores
 
