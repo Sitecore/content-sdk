@@ -25,7 +25,7 @@ Our versioning strategy is as follows:
 * Mark client components with `use client` directive. ([#226](https://github.com/Sitecore/content-sdk/pull/226))
 * Add LLMs and Copilot instruction files for improved AI guidance ([#239](https://github.com/Sitecore/content-sdk/pull/239))
 
-### 🐛 Bug Fixes
+### 🐛 Bug Fixes	
 
 * `[template/nextjs]` `[template/next-app-router]` Fix imports for SSR/SSG ([#229](https://github.com/Sitecore/content-sdk/pull/229))
 * `[template/next-app-router]` Guard static params generation and harden not-found routes for XM Cloud ([#242](https://github.com/Sitecore/content-sdk/pull/242))
