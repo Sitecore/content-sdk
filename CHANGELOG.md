@@ -20,7 +20,6 @@ Our versioning strategy is as follows:
   - Editing and preview support ([#198](https://github.com/Sitecore/content-sdk/pull/198))
   - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202)) ([#214](https://github.com/Sitecore/content-sdk/pull/214))
   - Client-server component map separation ([#230](https://github.com/Sitecore/content-sdk/pull/230))([#232](https://github.com/Sitecore/content-sdk/pull/232))([#234](https://github.com/Sitecore/content-sdk/pull/234))([#235](https://github.com/Sitecore/content-sdk/pull/235))([#241](https://github.com/Sitecore/content-sdk/pull/241))
- 
 * [nextjs] Slim down sample even more ([#225](https://github.com/Sitecore/content-sdk/pull/225))
 * Mark client components with `use client` directive. ([#226](https://github.com/Sitecore/content-sdk/pull/226))
 * Add LLMs and Copilot instruction files for improved AI guidance ([#239](https://github.com/Sitecore/content-sdk/pull/239))

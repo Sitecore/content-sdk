@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, JSX } from 'react';
+import { useEffect, JSX } from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
@@ -11,8 +11,6 @@ const Bootstrap = ({
   siteName: string;
   isPreviewMode: boolean;
 }): JSX.Element | null => {
-  const sdkInitialized = useRef(false);
-
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       console.debug('Browser Events SDK is not initialized in development environment');
@@ -24,11 +22,8 @@ const Bootstrap = ({
       return;
     }
 
-    if (sdkInitialized.current) {
-      return;
-    }
-
     if (config.api.edge?.clientContextId) {
+      console.log('✨ Initializing CloudSDK for site:', siteName);
       CloudSDK({
         sitecoreEdgeUrl: config.api.edge.edgeUrl,
         sitecoreEdgeContextId: config.api.edge.clientContextId,
@@ -38,8 +33,6 @@ const Bootstrap = ({
       })
         .addEvents()
         .initialize();
-
-      sdkInitialized.current = true;
     } else {
       console.error('Client Edge API settings missing from configuration');
     }
