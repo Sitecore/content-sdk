@@ -6,7 +6,7 @@ import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 
 export default async function NotFound() {
-  if (scConfig.defaultSite && scConfig.defaultSite.trim() !== '') {
+  if (scConfig.defaultSite) {
     const page = await client.getErrorPage(ErrorPage.NotFound, {
       site: scConfig.defaultSite,
       locale: scConfig.defaultLanguage,
