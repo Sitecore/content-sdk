@@ -8,4 +8,4 @@
 
 > `const` **NextImage**: `React.FC`\<`NextImageProps`\>
 
-Defined in: [nextjs/src/components/NextImage.tsx:18](https://github.com/Sitecore/content-sdk/blob/744d61f7bd5485ed73238761e95560ed2414b112/packages/nextjs/src/components/NextImage.tsx#L18)
+Defined in: [nextjs/src/components/NextImage.tsx:18](https://github.com/Sitecore/content-sdk/blob/37b030678b27071e2e67e8eb187235e51935f3ce/packages/nextjs/src/components/NextImage.tsx#L18)
