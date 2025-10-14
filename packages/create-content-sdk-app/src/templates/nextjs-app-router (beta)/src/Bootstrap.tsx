@@ -1,18 +1,19 @@
 'use client';
 import { useEffect, useRef, JSX } from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
-import { useSearchParams } from 'next/navigation';
 import '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
 
-const Bootstrap = ({ siteName }: { siteName: string }): JSX.Element | null => {
-  const searchParams = useSearchParams();
+const Bootstrap = ({
+  siteName,
+  isPreviewMode,
+}: {
+  siteName: string;
+  isPreviewMode: boolean;
+}): JSX.Element | null => {
   const sdkInitialized = useRef(false);
-  const currentSiteName = useRef<string | null>(null);
 
   useEffect(() => {
-    const isPreviewMode = searchParams.has('sc_itemid') || searchParams.has('sc_mode');
-
     if (process.env.NODE_ENV === 'development') {
       console.debug('Browser Events SDK is not initialized in development environment');
       return;
@@ -23,25 +24,26 @@ const Bootstrap = ({ siteName }: { siteName: string }): JSX.Element | null => {
       return;
     }
 
-    if (!sdkInitialized.current || currentSiteName.current !== siteName) {
-      if (config.api.edge?.clientContextId) {
-        CloudSDK({
-          sitecoreEdgeUrl: config.api.edge.edgeUrl,
-          sitecoreEdgeContextId: config.api.edge.clientContextId,
-          siteName: siteName || config.defaultSite,
-          enableBrowserCookie: true,
-          cookieDomain: window.location.hostname.replace(/^www\./, ''),
-        })
-          .addEvents()
-          .initialize();
-
-        sdkInitialized.current = true;
-        currentSiteName.current = siteName;
-      } else {
-        console.error('Client Edge API settings missing from configuration');
-      }
+    if (sdkInitialized.current) {
+      return;
     }
-  }, [siteName, searchParams]);
+
+    if (config.api.edge?.clientContextId) {
+      CloudSDK({
+        sitecoreEdgeUrl: config.api.edge.edgeUrl,
+        sitecoreEdgeContextId: config.api.edge.clientContextId,
+        siteName: siteName || config.defaultSite,
+        enableBrowserCookie: true,
+        cookieDomain: window.location.hostname.replace(/^www\./, ''),
+      })
+        .addEvents()
+        .initialize();
+
+      sdkInitialized.current = true;
+    } else {
+      console.error('Client Edge API settings missing from configuration');
+    }
+  }, [siteName, isPreviewMode]);
 
   return null;
 };
