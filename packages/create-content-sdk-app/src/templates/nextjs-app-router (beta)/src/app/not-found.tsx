@@ -6,27 +6,19 @@ import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 
 export default async function NotFound() {
-  if (!scConfig.defaultSite || scConfig.defaultSite.trim() === '') {
-    return (
-      <div style={{ padding: 10 }}>
-        <h1>Page not found</h1>
-        <p>This page does not exist.</p>
-        <Link href="/">Go to the Home page</Link>
-      </div>
-    );
-  }
+  if (scConfig.defaultSite && scConfig.defaultSite.trim() !== '') {
+    const page = await client.getErrorPage(ErrorPage.NotFound, {
+      site: scConfig.defaultSite,
+      locale: scConfig.defaultLanguage,
+    });
 
-  const page = await client.getErrorPage(ErrorPage.NotFound, {
-    site: scConfig.defaultSite,
-    locale: scConfig.defaultLanguage,
-  });
-
-  if (page) {
-    return (
-      <Providers page={page}>
-        <Layout page={page} />
-      </Providers>
-    );
+    if (page) {
+      return (
+        <Providers page={page}>
+          <Layout page={page} />
+        </Providers>
+      );
+    }
   }
 
   return (
