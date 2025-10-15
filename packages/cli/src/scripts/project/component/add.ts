@@ -151,7 +151,7 @@ export async function handler(argv: AddArgs) {
             type: 'input',
             name: 'targetPath',
             required: true,
-            message: `Enter the target path for the component variant.\nThe filename must follow the format: {componentName}.{variantName}.ts\n(example: src/components/MyComponent/MyComponent.variantA.ts):`,
+            message: `Enter the target path for the component variant.\nThe filename must follow the format: {componentName}.{variantName}.{extension}\n(example: src/components/MyComponent/MyComponent.variantA.ts):`,
           })
           .then((answer) => answer.targetPath);
       }
