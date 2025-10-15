@@ -156,7 +156,7 @@ export const generateMap: GenerateMapFunction = ({
   mapTemplate,
   clientMapTemplate,
   clientComponentMap,
-  enableVariantsInMap = true,
+  enableVariantsInMap,
 }: GenerateMapArgs) => {
   console.log('enableVariantsInMap:', enableVariantsInMap);
   console.log('clientComponentMap:', clientComponentMap);
