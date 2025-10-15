@@ -145,8 +145,7 @@ const nextjsUnifiedTemplate = (
   const componentMapEntries: string[] = [];
 
   components.forEach((component) => {
-    // Clean imports only
-    wildcardImports.push(`import * as ${component.moduleName} from '${component.importPath}';`);
+    namedImports.push(`import { ${component.moduleName} } from '${component.importPath}';`);
 
     // Handle componentType for client components (components with 'use client' directive)
     // Only add componentType: 'client' for components that actually use 'use client' directive

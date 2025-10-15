@@ -5,5 +5,21 @@
       "prerender": "SSG",
       "silent": false
     }
+  },
+  {
+    "template": "nextjs-app-router (beta)",
+    "args": {
+      "prerender": "SSG",
+      "starterType": "basic",
+      "silent": false
+    }
+  },
+  {
+    "template": "nextjs-app-router (beta)",
+    "args": {
+      "prerender": "SSG",
+      "starterType": "skatepark",
+      "silent": false
+    }
   }
 ]

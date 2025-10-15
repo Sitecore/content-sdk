@@ -4,5 +4,6 @@
  * @returns unique app name
  */
 module.exports.getAppFolder = (args) =>
-  `sample-${args.template}${args.prerender ? `-${args.prerender}` : ''
+  `sample-${args.template}${args.starterType ? `-${args.starterType}` : ''}${
+    args.prerender ? `-${args.prerender}` : ''
   }`;

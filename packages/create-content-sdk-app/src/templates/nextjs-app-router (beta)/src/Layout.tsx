@@ -29,6 +29,8 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
           <DesignLibraryLayout />
         ) : (
           <>
+<% if (starterType === 'basic') { -%>
+            {/* Basic (Empty) starter - minimal structure */}
             <header>
               <div id="header">
                 {route && (
@@ -65,6 +67,57 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
                 )}
               </div>
             </footer>
+<% } else if (starterType === 'skatepark') { -%>
+            {/* Skatepark starter - structured with hero and additional sections */}
+            <header>
+              <div id="header">
+                {route && (
+                  <AppPlaceholder
+                    page={page}
+                    componentMap={componentMap}
+                    name="headless-header"
+                    rendering={route}
+                  />
+                )}
+              </div>
+            </header>
+            <div className="hero-section">
+              <div id="hero">
+                {route && (
+                  <AppPlaceholder
+                    page={page}
+                    componentMap={componentMap}
+                    name="headless-hero"
+                    rendering={route}
+                  />
+                )}
+              </div>
+            </div>
+            <main>
+              <div id="content">
+                {route && (
+                  <AppPlaceholder
+                    page={page}
+                    componentMap={componentMap}
+                    name="headless-main"
+                    rendering={route}
+                  />
+                )}
+              </div>
+            </main>
+            <footer>
+              <div id="footer">
+                {route && (
+                  <AppPlaceholder
+                    page={page}
+                    componentMap={componentMap}
+                    name="headless-footer"
+                    rendering={route}
+                  />
+                )}
+              </div>
+            </footer>
+<% } -%>
           </>
         )}
       </div>
