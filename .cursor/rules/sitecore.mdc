@@ -25,11 +25,24 @@ Configuration:
 
 ```typescript
 // sitecore.config.ts
-export const sitecoreConfig = {
-  sitecoreApiHost: process.env.SITECORE_API_HOST || '',
-  sitecoreApiKey: process.env.SITECORE_API_KEY || '',
-  siteName: process.env.SITECORE_SITE_NAME || 'default',
-};
+import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
+
+export default defineConfig({
+  api: {
+    edge: {
+      contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
+      clientContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
+      edgeUrl: process.env.SITECORE_EDGE_URL || 'https://edge-platform.sitecorecloud.io',
+    },
+    local: {
+      apiKey: process.env.SITECORE_API_KEY || '',
+      apiHost: process.env.SITECORE_API_HOST || '',
+    },
+  },
+  defaultSite: process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME || 'default',
+  defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
+  editingSecret: process.env.SITECORE_EDITING_SECRET,
+});
 ```
 
 API Client Usage:
@@ -85,8 +98,8 @@ Content SDK Client Methods:
 
 - Prefer using `scClient.getPage()` for page data and layout fetching
 - Use `scClient.getDictionary()` for localized content
-- Leverage `scClient.getErrorPages()` for error page handling
-- Use `scClient.getPreviewPage()` for preview mode content
+- Leverage `scClient.getErrorPage()` for error page handling
+- Use `scClient.getPreview()` for preview mode content
 - Implement proper error boundaries for layout rendering
 - Handle missing placeholder content gracefully
 - Cache layout data when appropriate
@@ -146,4 +159,3 @@ Referenced:
 @packages/nextjs/src/components/
 @packages/core/src/site/
 @packages/core/src/layout/
-

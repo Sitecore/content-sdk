@@ -17,7 +17,7 @@ Core Philosophy:
 
 Code Organization:
 
-- Use Node LTS+ features when stable
+- Use Node LTS
 - Export public types at module boundaries
 - Prefer pure functions and thin wrappers
 - No top-level side effects (except CLI entry)
@@ -87,4 +87,3 @@ Lint and Format:
 
 Referenced:
 @src/common/index.ts
-

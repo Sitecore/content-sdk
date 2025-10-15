@@ -8,7 +8,7 @@
 
 > **createEditingRenderRouteHandlers**(`options`): `object`
 
-Defined in: [nextjs/src/route-handler/editing-render-route-handler.ts:49](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/nextjs/src/route-handler/editing-render-route-handler.ts#L49)
+Defined in: [nextjs/src/route-handler/editing-render-route-handler.ts:49](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/nextjs/src/route-handler/editing-render-route-handler.ts#L49)
 
 ## Parameters
 

@@ -6,7 +6,7 @@
 
 # Interface: TenantArgs
 
-Defined in: [packages/core/src/tools/auth/models.ts:4](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/core/src/tools/auth/models.ts#L4)
+Defined in: [packages/core/src/tools/auth/models.ts:4](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/tools/auth/models.ts#L4)
 
 CLI arguments used for authentication and tenant identification.
 
@@ -16,7 +16,7 @@ CLI arguments used for authentication and tenant identification.
 
 > `optional` **audience**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:24](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/core/src/tools/auth/models.ts#L24)
+Defined in: [packages/core/src/tools/auth/models.ts:24](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/tools/auth/models.ts#L24)
 
 OAuth2 audience (e.g., API base URL the token is intended for)
 
@@ -26,7 +26,7 @@ OAuth2 audience (e.g., API base URL the token is intended for)
 
 > `optional` **authority**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:28](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/core/src/tools/auth/models.ts#L28)
+Defined in: [packages/core/src/tools/auth/models.ts:28](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/tools/auth/models.ts#L28)
 
 Auth authority/issuer URL (e.g., Sitecore identity endpoint)
 
@@ -36,7 +36,7 @@ Auth authority/issuer URL (e.g., Sitecore identity endpoint)
 
 > `optional` **baseUrl**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:32](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/core/src/tools/auth/models.ts#L32)
+Defined in: [packages/core/src/tools/auth/models.ts:32](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/tools/auth/models.ts#L32)
 
 Base URL for the target Sitecore Content Management API
 
@@ -46,7 +46,7 @@ Base URL for the target Sitecore Content Management API
 
 > **clientId**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:8](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/core/src/tools/auth/models.ts#L8)
+Defined in: [packages/core/src/tools/auth/models.ts:8](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/tools/auth/models.ts#L8)
 
 OAuth2 client ID used to identify the application
 
@@ -56,7 +56,7 @@ OAuth2 client ID used to identify the application
 
 > `optional` **clientSecret**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:12](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/core/src/tools/auth/models.ts#L12)
+Defined in: [packages/core/src/tools/auth/models.ts:12](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/tools/auth/models.ts#L12)
 
 Client secret used for client credentials flow
 
@@ -66,7 +66,7 @@ Client secret used for client credentials flow
 
 > `optional` **organizationId**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:16](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/core/src/tools/auth/models.ts#L16)
+Defined in: [packages/core/src/tools/auth/models.ts:16](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/tools/auth/models.ts#L16)
 
 Organization ID associated with the tenant
 
@@ -76,6 +76,6 @@ Organization ID associated with the tenant
 
 > `optional` **tenantId**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:20](https://github.com/Sitecore/content-sdk/blob/1c8f633c7651baec96c06fbaa0804ea244809879/packages/core/src/tools/auth/models.ts#L20)
+Defined in: [packages/core/src/tools/auth/models.ts:20](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/tools/auth/models.ts#L20)
 
 Tenant ID used for scoping the login

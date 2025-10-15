@@ -5,12 +5,12 @@ import { draftMode } from 'next/headers'
 import { SiteInfo } from '@sitecore-content-sdk/nextjs';
 import sites from '.sitecore/sites.json';
 import { routing } from 'src/i18n/routing';
+import scConfig from 'sitecore.config';
 <% } -%>
 import client from 'src/lib/sitecore-client';
 import Layout, { RouteFields } from 'src/Layout';
 import components from '.sitecore/component-map';
 import Providers from 'src/Providers';
-import Bootstrap from 'src/Bootstrap';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -48,14 +48,11 @@ export default async function Page({ params, searchParams }: PageProps) {
   const componentProps = await client.getComponentData(page.layout, {}, components);
 
   return (
-    <>
-      <Bootstrap page={page} />
-      <NextIntlClientProvider>
-        <Providers page={page} componentProps={componentProps}>
-          <Layout page={page} />
-        </Providers>
-      </NextIntlClientProvider>
-    </>
+    <NextIntlClientProvider>
+      <Providers page={page} componentProps={componentProps}>
+        <Layout page={page} />
+      </Providers>
+    </NextIntlClientProvider>
   );
 }
 
@@ -63,10 +60,13 @@ export default async function Page({ params, searchParams }: PageProps) {
 // This function gets called at build and export time to determine
 // pages for SSG ("paths", as tokenized array).
 export const generateStaticParams = async () => {
-  return await client.getAppRouterStaticParams(
-    sites.map((site: SiteInfo) => site.name),
-    routing.locales.slice()
-  );
+  if (process.env.NODE_ENV !== 'development' && scConfig.generateStaticPaths) {
+    return await client.getAppRouterStaticParams(
+      sites.map((site: SiteInfo) => site.name),
+      routing.locales.slice()
+    );
+  }
+  return [];
 };
 <% } -%>
 // Metadata fields for the page.
