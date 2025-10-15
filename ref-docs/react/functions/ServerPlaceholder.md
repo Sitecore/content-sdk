@@ -8,7 +8,7 @@
 
 > **ServerPlaceholder**(`props`): `string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`ReactNode`, `any`, `any`\> \| `Promise`\<`AwaitedReactNode`\> \| `Element` \| (`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`ReactNode`, `any`, `any`\> \| `Promise`\<`AwaitedReactNode`\> \| `Element`)[]
 
-Defined in: [packages/react/src/components/Placeholder/ServerPlaceholder.tsx:20](https://github.com/Sitecore/content-sdk/blob/37b030678b27071e2e67e8eb187235e51935f3ce/packages/react/src/components/Placeholder/ServerPlaceholder.tsx#L20)
+Defined in: [packages/react/src/components/Placeholder/ServerPlaceholder.tsx:20](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/react/src/components/Placeholder/ServerPlaceholder.tsx#L20)
 
 React Server Component implementation for Placeholder.
 Renders components from the layout data for the given placeholder name, with consideration for page edit mode.

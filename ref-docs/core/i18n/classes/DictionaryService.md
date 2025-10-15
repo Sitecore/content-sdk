@@ -6,7 +6,7 @@
 
 # Class: DictionaryService
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:116](https://github.com/Sitecore/content-sdk/blob/37b030678b27071e2e67e8eb187235e51935f3ce/packages/core/src/i18n/dictionary-service.ts#L116)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:116](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/i18n/dictionary-service.ts#L116)
 
 Service that fetch dictionary data using Sitecore's GraphQL API.
 
@@ -24,7 +24,7 @@ SearchQueryService<DictionaryQueryResult>
 
 > **new DictionaryService**(`options`): `DictionaryService`
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:123](https://github.com/Sitecore/content-sdk/blob/37b030678b27071e2e67e8eb187235e51935f3ce/packages/core/src/i18n/dictionary-service.ts#L123)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:123](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/i18n/dictionary-service.ts#L123)
 
 Creates an instance of graphQL dictionary service with the provided options
 
@@ -44,7 +44,7 @@ Creates an instance of graphQL dictionary service with the provided options
 
 > **options**: [`DictionaryServiceConfig`](../interfaces/DictionaryServiceConfig.md)
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:123](https://github.com/Sitecore/content-sdk/blob/37b030678b27071e2e67e8eb187235e51935f3ce/packages/core/src/i18n/dictionary-service.ts#L123)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:123](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/i18n/dictionary-service.ts#L123)
 
 instance
 
@@ -54,7 +54,7 @@ instance
 
 > **fetchDictionaryData**(`language`, `site`, `fetchOptions?`): `Promise`\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:136](https://github.com/Sitecore/content-sdk/blob/37b030678b27071e2e67e8eb187235e51935f3ce/packages/core/src/i18n/dictionary-service.ts#L136)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:136](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/i18n/dictionary-service.ts#L136)
 
 Fetches dictionary data for internalization. Uses search query by default
 
@@ -82,7 +82,7 @@ if the app root was not found for the specified site and language.
 
 > `protected` **getCacheClient**(): [`CacheClient`](../../index/interfaces/CacheClient.md)\<[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)\>
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:215](https://github.com/Sitecore/content-sdk/blob/37b030678b27071e2e67e8eb187235e51935f3ce/packages/core/src/i18n/dictionary-service.ts#L215)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:215](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/i18n/dictionary-service.ts#L215)
 
 Gets a cache client that can cache data. Uses memory-cache as the default
 library for caching (@see MemoryCacheClient). Override this method if you
@@ -100,7 +100,7 @@ implementation
 
 > **getCacheValue**(`key`): `null` \| [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:205](https://github.com/Sitecore/content-sdk/blob/37b030678b27071e2e67e8eb187235e51935f3ce/packages/core/src/i18n/dictionary-service.ts#L205)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:205](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/i18n/dictionary-service.ts#L205)
 
 Retrieves a
 
@@ -131,7 +131,7 @@ The
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:225](https://github.com/Sitecore/content-sdk/blob/37b030678b27071e2e67e8eb187235e51935f3ce/packages/core/src/i18n/dictionary-service.ts#L225)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:225](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/i18n/dictionary-service.ts#L225)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -149,7 +149,7 @@ implementation
 
 > **setCacheValue**(`key`, `value`): [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: [packages/core/src/i18n/dictionary-service.ts:196](https://github.com/Sitecore/content-sdk/blob/37b030678b27071e2e67e8eb187235e51935f3ce/packages/core/src/i18n/dictionary-service.ts#L196)
+Defined in: [packages/core/src/i18n/dictionary-service.ts:196](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/i18n/dictionary-service.ts#L196)
 
 Caches a
 
