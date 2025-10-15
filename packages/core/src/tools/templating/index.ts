@@ -1,6 +1,6 @@
-export { 
-  ComponentFile, 
-  ComponentImport, 
+export {
+  ComponentFile,
+  ComponentImport,
   ComponentFileWithType,
   ComponentType,
   RouterType,
@@ -8,7 +8,9 @@ export {
   detectRouterType,
   detectComponentType,
   getComponentListWithTypes,
-  filterComponentsByType
+  filterComponentsByType,
+  ComponentMapEntry,
+  ComponentSource,
 } from './components';
 export { PluginDefinition, generatePlugins, ModuleType } from './plugins';
-export { matchPath } from './utils';
+export { matchPath, groupComponentsWithoutVariants, groupComponentsWithVariants } from './utils';

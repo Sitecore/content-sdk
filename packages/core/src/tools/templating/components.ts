@@ -21,38 +21,74 @@ export type ComponentType = 'server' | 'client' | 'universal';
 export type RouterType = 'app' | 'pages';
 
 /**
- * Describes a file that represents a component definition
- * @typedef ComponentFile
- * @property {string} filePath - Path to the component or code file
- * @property {string} importPath - Normalized path that can be used for import statements
- * @property {string} moduleName - Normalized name that can be used as import
- * @property {string} componentName - Name of the code file
+ * A component source can be either a file or a file with type information.
+ */
+export type ComponentSource = ComponentFile | ComponentFileWithType;
+
+/**
+ * Definition for a component file
  */
 export interface ComponentFile {
+  /** The original file path of the component */
   filePath: string;
+  /** Normalized path that can be used for import statements */
   importPath: string;
+  /** Normalized name that can be used as import */
   moduleName: string;
+  /** Name of the code file */
   componentName: string;
+  /** Detected component type (server, client, or universal) */
   componentType?: ComponentType;
 }
 
+/*
+ * Definition for a component file with guaranteed componentType
+ */
 export interface ComponentFileWithType extends ComponentFile {
+  /** Detected component type (server, client, or universal) */
   componentType: ComponentType;
 }
 
 /**
+ * A group of components that share the same directory and base name (prefix).
+ */
+export type ComponentGroup<T extends ComponentSource = ComponentSource> = {
+  /** directory containing the components */
+  dir: string;
+  /** base component name (before any ".Variant") */
+  prefix: string;
+  /** the base (non-variant) component, if present */
+  base?: T;
+  /** variant components (e.g., Teaser.Variant1) */
+  neighbors: T[];
+};
+
+/*
+ * An entry in the component map, including import lines and value expression.
+ */
+export type ComponentMapEntry = {
+  /** map entry key */
+  key: string;
+  /** namespace import lines needed for this entry */
+  imports: string[];
+  /** whether base is client (and we're in main map) */
+  annotateClient: boolean;
+  /** expression used as the map value */
+  valueExpr: string;
+};
+
+/**
  * Definition for custom components to be included in component map.
  * Use this to define components imported from modules/dependencies/packages
- * @typedef ComponentImport
- * @property {string} importName - Name of the import.
- * @property {object} importInfo - Information about how to import the package.
- * @property {string} importInfo.importFrom - The path from which to import the component(s).
- * @property {string[]} [importInfo.namedImports] - The specific named components to import from the package. Leave empty to have whole package be imported as wildcard and allow SXA variants support for component.
  */
 export interface ComponentImport {
+  /** The name of the import (e.g., 'MyComponent')*/
   importName: string;
+  /** Information about how to import the package */
   importInfo: {
+    /** The path from which to import the component(s) */
     importFrom: string;
+    /** The specific named components to import from the package. Leave empty to have whole package be imported as wildcard and allow SXA variants support for component. */
     namedImports?: string[];
   };
 }
@@ -95,13 +131,9 @@ function _getComponentList(paths: string[], exclude?: string[]): ComponentFile[]
 }
 
 /**
-<<<<<<< HEAD
- * @param projectRoot
-=======
  * Detects the Next.js router type (App Router or Pages Router) based on directory structure.
  * @param {string} projectRoot - The project root directory. Defaults to current working directory.
  * @returns {RouterType} 'app' if App Router is detected, 'pages' otherwise
->>>>>>> 320740678885c09d24564322cf9d5dea44f6f1f1
  */
 export function detectRouterType(projectRoot: string = process.cwd()): RouterType {
   const appDirExists =

@@ -77,3 +77,12 @@ export const parseRewriteHeader = (headers: Headers) => {
   const locale = rewriteSegments[1];
   return { site, locale };
 };
+
+/**
+ * Filters out variant components (names containing a '.').
+ * e.g., "Teaser.Variant1" → removed, "Teaser" → kept
+ * @param {Array} components Array of components to filter
+ * @returns {Array} Components without variant suffixes
+ */
+export const stripVariants = <T extends { componentName: string }>(components: T[]): T[] =>
+  components.filter((component) => !component.componentName.includes('.'));
