@@ -73,7 +73,10 @@ type ImportMapEntry = {
  */
 export type WriteImportMapArgs = {
   paths: string[];
-  scConfig: SitecoreConfig;
+  /**
+   * @deprecated Pass `config` to the `defineCliConfig` function instead. This argument will be removed in the next major version.
+   */
+  scConfig?: SitecoreConfig;
   exclude?: string[];
 };
 
@@ -321,8 +324,13 @@ function _getImportMap(paths: string[]) {
  * @param {WriteImportMapArgs} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration
  */
 export const writeImportMap = (args: WriteImportMapArgs) => {
-  return async () => {
-    const scConfig = args.scConfig;
+  return async (config?: SitecoreConfig) => {
+    const scConfig = args.scConfig ?? config;
+
+    if (!scConfig) {
+      throw new Error('Sitecore configuration is required to be provided');
+    }
+
     if (scConfig.disableCodeGeneration) {
       debug.common('Skipping import map generation. Code generation functionality is disabled.');
       return;

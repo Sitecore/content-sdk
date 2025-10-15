@@ -33,7 +33,7 @@ export async function handler(argv: BuildArgs) {
 
   if (cliConfig.build && Array.isArray(cliConfig.build.commands)) {
     for (const command of cliConfig.build.commands) {
-      await command();
+      await command(cliConfig.config);
     }
   }
 
