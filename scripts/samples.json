@@ -5,5 +5,37 @@
       "prerender": "SSG",
       "silent": false
     }
+  },
+  {
+    "template": "nextjs-app-router",
+    "args": {
+      "prerender": "SSG",
+      "silent": false,
+      "variant": "basic"
+    }
+  },
+  {
+    "template": "nextjs-app-router",
+    "args": {
+      "prerender": "SSG",
+      "silent": false,
+      "variant": "skatepark"
+    }
+  },
+  {
+    "template": "nextjs-app-router",
+    "args": {
+      "prerender": "SSR",
+      "silent": false,
+      "variant": "basic"
+    }
+  },
+  {
+    "template": "nextjs-app-router",
+    "args": {
+      "prerender": "SSR",
+      "silent": false,
+      "variant": "skatepark"
+    }
   }
 ]

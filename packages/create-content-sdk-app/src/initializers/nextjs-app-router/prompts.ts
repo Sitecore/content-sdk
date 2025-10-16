@@ -6,14 +6,43 @@ export enum Prerender {
   SSR = 'SSR',
 }
 
+export enum AppRouterVariant {
+  BASIC = 'basic',
+  SKATEPARK = 'skatepark',
+}
+
 export type NextjsAppRouterAnswer = BaseAppAnswer & {
   prerender: Prerender;
+  variant: AppRouterVariant;
 };
 
 const DEFAULT_PRERENDER = Prerender.SSG;
+const DEFAULT_VARIANT = AppRouterVariant.BASIC;
 
 export const prompts: QuestionCollection<NextjsAppRouterAnswer> = [
   ...baseAppPrompts,
+  {
+    type: 'list',
+    name: 'variant',
+    message: 'Which App Router template would you like to use?',
+    choices: [
+      {
+        name: 'Basic - Minimal starter template',
+        value: AppRouterVariant.BASIC,
+      },
+      {
+        name: 'Skatepark - Complete sample with all components',
+        value: AppRouterVariant.SKATEPARK,
+      },
+    ],
+    default: DEFAULT_VARIANT,
+    when: (answers: NextjsAppRouterAnswer): boolean => {
+      if (answers.yes && !answers.variant) {
+        answers.variant = DEFAULT_VARIANT;
+      }
+      return !answers.variant;
+    },
+  },
   {
     type: 'list',
     name: 'prerender',
