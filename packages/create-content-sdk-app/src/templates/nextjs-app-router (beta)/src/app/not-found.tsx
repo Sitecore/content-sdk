@@ -6,17 +6,19 @@ import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 
 export default async function NotFound() {
-  const page = await client.getErrorPage(ErrorPage.NotFound, {
-    site: scConfig.defaultSite,
-    locale: scConfig.defaultLanguage,
-  });
+  if (scConfig.defaultSite) {
+    const page = await client.getErrorPage(ErrorPage.NotFound, {
+      site: scConfig.defaultSite,
+      locale: scConfig.defaultLanguage,
+    });
 
-  if (page) {
-    return (
-      <Providers page={page}>
-        <Layout page={page} />
-      </Providers>
-    );
+    if (page) {
+      return (
+        <Providers page={page}>
+          <Layout page={page} />
+        </Providers>
+      );
+    }
   }
 
   return (

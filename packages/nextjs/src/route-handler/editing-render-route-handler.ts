@@ -24,7 +24,7 @@ import { SITE_KEY } from '@sitecore-content-sdk/core/site';
 
 /**
  * Helper function to handle cookie operations - can be mocked for testing
- * @returns {Promise<ReturnType<typeof cookies>>} The Next.js cookies object
+ * @returns {Promise<NextCookies>} Next cookies
  */
 export async function getNextCookies() {
   // In test environment, use mock cookie store only if specifically provided
