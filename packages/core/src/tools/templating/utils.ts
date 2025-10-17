@@ -129,7 +129,10 @@ export function groupComponentsByDirAndPrefix<T extends ComponentSource>(
   };
 
   for (const file of files) {
+    if (!file || !file.filePath || !file.componentName) continue;
+
     const posixPath = toPosix(file.filePath);
+    if (!posixPath) continue;
     const directory = path.posix.dirname(posixPath);
     const prefix = getBaseComponentName(file.componentName);
     const compositeKey = `${directory}::${prefix}`;

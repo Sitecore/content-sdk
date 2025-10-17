@@ -663,7 +663,7 @@ describe('generateMap', () => {
 
     it('should generate both component maps when clientComponentMap is true', async () => {
       const paths = ['src/components'];
-      generateMap({ paths, clientComponentMap: true });
+      generateMap({ paths, clientComponentMap: true, enableVariantsInMap: false });
 
       expect(fs.writeFileSync).to.have.been.calledTwice;
 
@@ -729,7 +729,7 @@ describe('generateMap', () => {
       newSandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
       newSandbox.stub(fs, 'writeFileSync');
 
-      generateMap({ paths, clientComponentMap: false });
+      generateMap({ paths, clientComponentMap: false, enableVariantsInMap: false });
 
       expect(fs.writeFileSync).to.have.been.calledTwice;
       expect(getComponentListStub).to.have.been.calledOnce;
