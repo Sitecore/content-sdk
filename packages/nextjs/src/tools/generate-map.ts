@@ -156,10 +156,8 @@ export const generateMap: GenerateMapFunction = ({
   mapTemplate,
   clientMapTemplate,
   clientComponentMap,
-  enableVariantsInMap,
+  enableVariantsInMap = true,
 }: GenerateMapArgs) => {
-  console.log('enableVariantsInMap:', enableVariantsInMap);
-  console.log('clientComponentMap:', clientComponentMap);
   const isAppRouter = detectRouterType() === 'app';
   const shouldGenerateClientMap = clientComponentMap ?? isAppRouter;
 
@@ -231,7 +229,7 @@ export const generateMap: GenerateMapFunction = ({
     // When clientComponentMap is false, only include built-in components (no custom client components)
     if (shouldGenerateClientMap || isAppRouter) {
       const clientMapTemplateToUse = clientMapTemplate || nextjsClientMapTemplate;
-      const clientMapContent = clientMapTemplateToUse([], componentImports); // Empty array = only built-ins
+      const clientMapContent = clientMapTemplateToUse([], componentImports);
       const clientMapFile = path.join(process.cwd(), destination, 'component-map.client.ts');
 
       try {

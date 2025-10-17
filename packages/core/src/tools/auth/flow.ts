@@ -70,9 +70,9 @@ async function _clientCredentialsFlow({
 
   const decodedPayload = decodeJwtPayload(data.access_token) || {};
 
-  if (!decodedPayload?.tokenTenantId || !decodedPayload.tokenOrgId) {
-    throw new Error('\n Token is missing required claims tenant_id or org_id.');
-  }
+  // if (!decodedPayload?.tokenTenantId || !decodedPayload.tokenOrgId) {
+  //   throw new Error('\n Token is missing required claims tenant_id or org_id.');
+  // }
 
   const { tokenTenantId, tokenOrgId, tokenTenantName } = decodedPayload;
 

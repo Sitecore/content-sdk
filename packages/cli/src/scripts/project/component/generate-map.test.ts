@@ -74,6 +74,7 @@ describe('generate-map CLI', () => {
       componentImports: ['pkg'],
       exclude: ['ex'],
       clientComponentMap: undefined,
+      enableVariantsInMap: undefined,
     };
     const fakeConfig = {
       componentMap: {

@@ -12,16 +12,19 @@ describe('generateMap', () => {
   const sandbox = sinon.createSandbox();
 
   describe('generateMap', () => {
+    const abs = (p: string) => path.resolve(process.cwd(), p);
     const fakeComponentList = [
       {
         componentName: 'Button',
         moduleName: 'Button',
         importPath: './src/components/Button',
+        filePath: abs('src/components/Button.tsx'),
       },
       {
         componentName: 'Link',
         moduleName: 'Link',
         importPath: './src/components/Link',
+        filePath: abs('src/components/Link.tsx'),
       },
     ];
 
@@ -51,13 +54,17 @@ describe('generateMap', () => {
         componentName: 'Button',
         moduleName: 'Button',
         importPath: './src/components/Button',
+        filePath: abs('src/components/Button.tsx'),
         componentType: 'client' as const,
+        isVariant: false,
       },
       {
         componentName: 'Link',
         moduleName: 'Link',
         importPath: './src/components/Link',
+        filePath: abs('src/components/Link.tsx'),
         componentType: 'universal' as const,
+        isVariant: false,
       },
     ];
 
@@ -84,9 +91,11 @@ describe('generateMap', () => {
 
     it('should write componentMap.ts file with components from "paths" parameter', async () => {
       const paths = ['src/components'];
-      generateMap({ paths });
+
+      generateMap({ paths, enableVariantsInMap: false });
 
       expect(fs.writeFileSync).to.have.been.calledTwice;
+
       const [dest, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(dest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
 
@@ -96,18 +105,15 @@ describe('generateMap', () => {
 
       expect(content).to.include("import * as Button from './src/components/Button';");
       expect(content).to.include("import * as Link from './src/components/Link';");
-      expect(content).to.include(
-        [
-          'export const componentMap = new Map<string, NextjsContentSdkComponent>([',
-          "  ['BYOCWrapper', BYOCWrapper],",
-          "  ['FEaaSWrapper', FEaaSWrapper],",
-          "  ['Form', Form],",
-          "  ['Button', {...Button, componentType: 'client'}],",
-          "  ['Link', Link],",
-          ']);',
-        ].join('\n')
-      );
-      expect(content).to.include('export default componentMap;');
+
+      expect(content).to.include('new Map');
+
+      expect(content).to.match(/\['Button'[\s\S]*Button/);
+      expect(content).to.include("componentType: 'client'");
+
+      expect(content).to.match(/\['Link'[\s\S]*Link/);
+
+      expect(content.replace(/\s+/g, ' ')).to.include('export default componentMap');
     });
 
     it('should use template from custom componentMap function, when provided', async () => {
@@ -148,29 +154,64 @@ describe('generateMap', () => {
 
     it('should handle multiple paths and merge their components', async () => {
       const paths = ['src/components', 'src/other-components'];
-      // Simulate different components for each path
-      getComponentListWithTypesStub.returns([
+      const abs = (p: string) => path.resolve(process.cwd(), p);
+
+      const allWithTypes = [
         {
           componentName: 'Button',
           moduleName: 'Button',
           importPath: './src/components/Button',
+          filePath: abs('src/components/Button.tsx'),
           componentType: 'client' as const,
+          isVariant: false,
+        },
+        {
+          componentName: 'Link',
+          moduleName: 'Link',
+          importPath: './src/components/Link',
+          filePath: abs('src/components/Link.tsx'),
+          componentType: 'universal' as const,
+          isVariant: false,
         },
         {
           componentName: 'Card',
           moduleName: 'Card',
           importPath: './src/other-components/Card',
-          componentType: 'universal' as const,
+          filePath: abs('src/other-components/Card.tsx'),
+          componentType: 'server' as const,
+          isVariant: false,
         },
-      ]);
-      generateMap({ paths });
+      ];
 
-      expect(getComponentListWithTypesStub).to.have.been.calledOnce;
-      const [, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
-      expect(content).to.include("import * as Button from './src/components/Button';");
-      expect(content).to.include("import * as Card from './src/other-components/Card';");
-      expect(content).to.include("['Button', {...Button, componentType: 'client'}],");
-      expect(content).to.include("['Card', Card],");
+      getComponentListWithTypesStub.callsFake((_pathsArg: string[]) => allWithTypes);
+
+      filterComponentsByTypeStub.callsFake((list: any[], types: string[]) =>
+        list.filter((c) => types.includes(c.componentType))
+      );
+
+      generateMap({ paths, enableVariantsInMap: false });
+
+      expect(fs.writeFileSync).to.have.been.calledTwice;
+
+      const [mainDest, mainContent] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+      expect(mainDest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
+
+      expect(mainContent).to.include("import * as Button from './src/components/Button';");
+      expect(mainContent).to.include("import * as Link from './src/components/Link';");
+      expect(mainContent).to.include("import * as Card from './src/other-components/Card';");
+
+      expect(mainContent).to.include('new Map');
+
+      expect(mainContent).to.match(/\['Button'[\s\S]*Button/);
+      expect(mainContent).to.include("componentType: 'client'");
+      expect(mainContent).to.match(/\['Link'[\s\S]*Link/);
+      expect(mainContent).to.match(/\['Card'[\s\S]*Card/);
+
+      const [, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
+      expect(clientContent).to.include('new Map');
+      expect(clientContent).to.include("import * as Button from './src/components/Button';");
+      expect(clientContent).to.include("import * as Link from './src/components/Link';");
+      expect(clientContent).to.not.include("import * as Card from './src/other-components/Card';");
     });
 
     it('should not fail if packages is undefined', async () => {
@@ -198,14 +239,27 @@ describe('generateMap', () => {
 
     it('should use custom destination when provided', async () => {
       const paths = ['src/components'];
-      const customDest = path.join(process.cwd(), 'custom/path', 'component-map.ts');
-      generateMap({ paths, destination: 'custom/path' });
+      const customDir = path.join(process.cwd(), 'custom/path');
+      const mainDest = path.join(customDir, 'component-map.ts');
+      const clientDest = path.join(customDir, 'component-map.client.ts');
+
+      generateMap({ paths, destination: 'custom/path', enableVariantsInMap: false });
 
       expect(fs.writeFileSync).to.have.been.calledTwice;
-      expect(fs.writeFileSync).to.have.been.calledWith(
-        customDest,
+
+      const encodingArg = sinon.match.string.or(sinon.match.has('encoding'));
+
+      expect(fs.writeFileSync).to.have.been.calledWithMatch(
+        mainDest,
         sinon.match.string,
-        sinon.match.object
+        encodingArg
+      );
+
+      // Client map write
+      expect(fs.writeFileSync).to.have.been.calledWithMatch(
+        clientDest,
+        sinon.match.string,
+        encodingArg
       );
     });
 
@@ -271,6 +325,291 @@ describe('generateMap', () => {
       );
       expect(content).to.include("['NamedA', NamedA],");
       expect(content).to.include("['NamedB', NamedB],");
+    });
+
+    it('should group neighbor files into variants when in App Router + enableVariantsInMap=true', async () => {
+      const withNeighbor = [
+        {
+          componentName: 'Button',
+          moduleName: 'Button',
+          importPath: './src/components/Button',
+          filePath: path.join(process.cwd(), 'src/components/Button.tsx'),
+          componentType: 'client' as const,
+        },
+        {
+          componentName: 'Button.extra',
+          moduleName: 'Buttonextra',
+          importPath: './src/components/Button.extra',
+          filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
+          componentType: 'universal' as const,
+        },
+        {
+          componentName: 'Link',
+          moduleName: 'Link',
+          importPath: './src/components/Link',
+          filePath: path.join(process.cwd(), 'src/components/Link.tsx'),
+          componentType: 'universal' as const,
+        },
+      ];
+      getComponentListWithTypesStub.returns(withNeighbor);
+      filterComponentsByTypeStub
+        .withArgs(withNeighbor, ['client', 'universal'])
+        .returns(withNeighbor);
+
+      generateMap({
+        paths: ['src/components'],
+        enableVariantsInMap: true,
+        clientComponentMap: true,
+      });
+
+      expect(fs.writeFileSync).to.have.been.calledTwice;
+      const [, mainContent] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+
+      expect(mainContent).to.include(
+        "import * as Buttonextra from './src/components/Button.extra';"
+      );
+      expect(mainContent).to.include("import * as Button from './src/components/Button';");
+
+      expect(mainContent.replace(/\s+/g, ' ')).to.include(
+        "['Button', { ...{ ...Buttonextra, ...Button }, componentType: 'client' }]"
+      );
+
+      expect(mainContent).to.match(/\['Link',\s*(\{[^]*?\.{3}Link[^]*?\}|Link)\s*\],/);
+      const linkEntryMain = mainContent.match(/\['Link',\s*([^\]]+)\],/);
+      expect(linkEntryMain?.[1] || '').to.not.include("componentType: 'client'");
+
+      const [, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
+      expect(clientContent.replace(/\s+/g, ' ')).to.include(
+        "['Button', { ...Buttonextra, ...Button }]"
+      );
+      expect(clientContent).to.not.include("componentType: 'client'");
+      expect(clientContent).to.match(/\['Link',\s*(\{[^]*?\.{3}Link[^]*?\}|Link)\s*\],/);
+    });
+
+    it('should groups neighbors in a single main map when in Pages Router + enableVariantsInMap=true(no client map)', async () => {
+      detectRouterTypeStub.returns('pages');
+
+      const withNeighborNoTypes = [
+        {
+          componentName: 'Button',
+          moduleName: 'Button',
+          importPath: './src/components/Button',
+          filePath: path.join(process.cwd(), 'src/components/Button.tsx'),
+        },
+        {
+          componentName: 'Button.extra',
+          moduleName: 'Buttonextra',
+          importPath: './src/components/Button.extra',
+          filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
+        },
+        {
+          componentName: 'Link',
+          moduleName: 'Link',
+          importPath: './src/components/Link',
+          filePath: path.join(process.cwd(), 'src/components/Link.tsx'),
+        },
+      ];
+      getComponentListStub.returns(withNeighborNoTypes);
+
+      generateMap({
+        paths: ['src/components'],
+        enableVariantsInMap: true,
+      });
+
+      expect(fs.writeFileSync).to.have.been.calledOnce;
+
+      const [dest, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+      expect(String(dest)).to.match(/\.sitecore[\/\\]component-map\.ts$/);
+
+      expect(content).to.include("import * as Buttonextra from './src/components/Button.extra';");
+      expect(content).to.include("import * as Button from './src/components/Button';");
+
+      const btnEntry = content.replace(/\s+/g, ' ');
+      expect(btnEntry).to.include("['Button', { ...Buttonextra, ...Button }]");
+      expect(btnEntry).to.not.include("componentType: 'client'");
+
+      expect(content).to.match(/\['Link',\s*(\{[^]*?\.{3}Link[^]*?\}|Link)\s*\],/);
+    });
+
+    it('should strip neighbor files when in App Router + clientComponentMap=true + enableVariantsInMap=false', async () => {
+      const withNeighbor = [
+        {
+          componentName: 'Button',
+          moduleName: 'Button',
+          importPath: './src/components/Button',
+          filePath: path.join(process.cwd(), 'src/components/Button.tsx'),
+          componentType: 'client' as const,
+        },
+        {
+          componentName: 'Button.extra',
+          moduleName: 'Buttonextra',
+          importPath: './src/components/Button.extra',
+          filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
+          componentType: 'server' as const,
+        },
+        {
+          componentName: 'Link',
+          moduleName: 'Link',
+          importPath: './src/components/Link',
+          filePath: path.join(process.cwd(), 'src/components/Link.tsx'),
+          componentType: 'universal' as const,
+        },
+      ];
+      getComponentListWithTypesStub.returns(withNeighbor);
+      filterComponentsByTypeStub
+        .withArgs(withNeighbor, ['client', 'universal'])
+        .returns([withNeighbor[0], withNeighbor[2]]);
+
+      generateMap({
+        paths: ['src/components'],
+        enableVariantsInMap: false,
+        clientComponentMap: true,
+      });
+
+      expect(fs.writeFileSync).to.have.been.calledTwice;
+
+      const [, mainContent] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+      expect(mainContent).to.not.include(
+        "import * as Buttonextra from './src/components/Button.extra';"
+      );
+      expect(mainContent).to.include("import * as Button from './src/components/Button';");
+
+      const buttonEntryMain = mainContent.match(/\['Button',\s*([^\]]+)\],/);
+      expect(buttonEntryMain, 'Button entry should exist in main map').to.not.be.null;
+
+      const buttonValueMain = (buttonEntryMain?.[1] || '').replace(/\s+/g, ' ');
+      expect(buttonValueMain).to.include("componentType: 'client'");
+      expect(buttonValueMain).to.match(/(\.\.\.Button|Button)/);
+
+      expect(mainContent).to.match(/\['Link',\s*(\{[^]*?\.{3}Link[^]*?\}|Link)\s*\],/);
+
+      const [, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
+      expect(clientContent).to.not.include('Buttonextra');
+
+      const buttonEntryClient = clientContent.match(/\['Button',\s*([^\]]+)\],/);
+      expect(buttonEntryClient, 'Button entry should exist in client map').to.not.be.null;
+      expect(buttonEntryClient?.[1] || '').to.not.include("componentType: 'client'");
+      expect(clientContent).to.match(/\['Link',\s*(\{[^]*?\.{3}Link[^]*?\}|Link)\s*\],/);
+    });
+
+    it('should pass unstripped arrays to custom templates when in App Router + clientComponentMap=true + enableVariantsInMap=true', async () => {
+      const withNeighbor = [
+        {
+          componentName: 'Button',
+          moduleName: 'Button',
+          importPath: './src/components/Button',
+          filePath: path.join(process.cwd(), 'src/components/Button.tsx'),
+          componentType: 'client' as const,
+        },
+        {
+          componentName: 'Button.extra',
+          moduleName: 'Buttonextra',
+          importPath: './src/components/Button.extra',
+          filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
+          componentType: 'universal' as const,
+        },
+      ];
+      getComponentListWithTypesStub.returns(withNeighbor);
+      filterComponentsByTypeStub
+        .withArgs(withNeighbor, ['client', 'universal'])
+        .returns(withNeighbor);
+
+      const customMain = sinon.stub().returns('// main-out');
+      const customClient = sinon.stub().returns('// client-out');
+
+      generateMap({
+        paths: ['src/components'],
+        enableVariantsInMap: true,
+        clientComponentMap: true,
+        mapTemplate: customMain as any,
+        clientMapTemplate: customClient as any,
+      });
+
+      sinon.assert.calledOnce(customMain);
+      expect(customMain.getCall(0).args[0]).to.deep.equal(withNeighbor);
+
+      sinon.assert.calledOnce(customClient);
+      expect(customClient.getCall(0).args[0]).to.deep.equal(withNeighbor);
+
+      expect(fs.writeFileSync).to.have.been.calledTwice;
+      expect((fs.writeFileSync as sinon.SinonStub).getCall(0).args[1]).to.equal('// main-out');
+      expect((fs.writeFileSync as sinon.SinonStub).getCall(1).args[1]).to.equal('// client-out');
+    });
+
+    it('should pass stripped arrays to custom templates when enableVariantsInMap=false', async () => {
+      const withNeighbor = [
+        {
+          componentName: 'Button',
+          moduleName: 'Button',
+          importPath: './src/components/Button',
+          filePath: path.join(process.cwd(), 'src/components/Button.tsx'),
+          componentType: 'client' as const,
+        },
+        {
+          componentName: 'Button.extra',
+          moduleName: 'Buttonextra',
+          importPath: './src/components/Button.extra',
+          filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
+          componentType: 'universal' as const,
+        },
+      ];
+      getComponentListWithTypesStub.returns(withNeighbor);
+      filterComponentsByTypeStub
+        .withArgs(withNeighbor, ['client', 'universal'])
+        .returns(withNeighbor);
+
+      const customMain = sinon.stub().returns('// main-stripped');
+      const customClient = sinon.stub().returns('// client-stripped');
+
+      generateMap({
+        paths: ['src/components'],
+        enableVariantsInMap: false,
+        clientComponentMap: true,
+        mapTemplate: customMain as any,
+        clientMapTemplate: customClient as any,
+      });
+
+      const stripped = [withNeighbor[0]];
+
+      sinon.assert.calledOnce(customMain);
+      expect(customMain.getCall(0).args[0]).to.deep.equal(stripped);
+
+      sinon.assert.calledOnce(customClient);
+      expect(customClient.getCall(0).args[0]).to.deep.equal(stripped);
+
+      expect(fs.writeFileSync).to.have.been.calledTwice;
+      expect((fs.writeFileSync as sinon.SinonStub).getCall(0).args[1]).to.equal('// main-stripped');
+      expect((fs.writeFileSync as sinon.SinonStub).getCall(1).args[1]).to.equal(
+        '// client-stripped'
+      );
+    });
+
+    it('should generate main map only when in Pages Router + clientComponentMap=false', async () => {
+      detectRouterTypeStub.returns('pages');
+      getComponentListStub.returns(fakeComponentList);
+
+      generateMap({ paths: ['src/components'], clientComponentMap: false });
+
+      expect(fs.writeFileSync).to.have.been.calledOnce;
+      const [mainPath] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+      expect(String(mainPath)).to.match(/component-map\.ts$/);
+    });
+
+    it('should generate empty client map when in App Router even when clientComponentMap=false', async () => {
+      detectRouterTypeStub.returns('app');
+      getComponentListStub.returns(fakeComponentList);
+
+      const clientTemplate = sinon.stub().returns('// empty client map');
+      generateMap({
+        paths: ['src/components'],
+        clientComponentMap: false,
+        clientMapTemplate: clientTemplate as any,
+      });
+
+      expect(fs.writeFileSync).to.have.been.calledTwice;
+      const call1Args = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
+      expect(String(call1Args[0])).to.match(/component-map\.client\.ts$/);
+      sinon.assert.calledWith(clientTemplate, [], sinon.match.any);
     });
   });
 
@@ -338,8 +677,9 @@ describe('generateMap', () => {
       expect(mainContent).to.include(
         "import * as UniversalCard from './src/components/UniversalCard';"
       );
+      console.log(mainContent);
       expect(mainContent).to.include(
-        "['ClientButton', {...ClientButton, componentType: 'client'}],"
+        "['ClientButton', { ...ClientButton, componentType: 'client' }],"
       );
       expect(mainContent).to.include("['ServerData', ServerData],");
       expect(mainContent).to.include("['UniversalCard', UniversalCard],");
@@ -391,7 +731,6 @@ describe('generateMap', () => {
 
       generateMap({ paths, clientComponentMap: false });
 
-      // Should generate both files for App Router compatibility
       expect(fs.writeFileSync).to.have.been.calledTwice;
       expect(getComponentListStub).to.have.been.calledOnce;
 

@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import chalk from 'chalk';
 import fs from 'fs';
-import nock from 'nock';
 import path from 'path';
 import { defineConfig } from './../../config';
 import { auth } from '../../tools';
@@ -22,8 +21,6 @@ describe('extract-files', () => {
     defaultLanguage: '',
   });
 
-  const edgeUrl = defaultConfig.api.edge.edgeUrl;
-
   const mockArgs = {
     scConfig: {
       ...defaultConfig,
@@ -37,12 +34,30 @@ describe('extract-files', () => {
     },
   };
 
+  let fetchFake: sinon.SinonSpy;
+  let existsSyncStub: sinon.SinonStub;
+  let fetchBehavior: (url: any, init: any) => Promise<any>;
+
   beforeEach(() => {
     process.env.SITECORE = 'true';
     process.env.SITECORE_BUILD = '0451';
     process.env.SITECORE_AUTH_CLIENT_ID = 'test-client-id';
     process.env.SITECORE_AUTH_CLIENT_SECRET = 'test-client-secret';
-    sandbox.stub(fs, 'existsSync').returns(true);
+
+    fetchBehavior = async () =>
+      ({
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        url: 'https://example/mesh/push/api/v1/contentsdk/code/extracted',
+        headers: {},
+        text: async () => '',
+      } as any);
+
+    fetchFake = sinon.fake((url: any, init: any) => fetchBehavior(url, init));
+    sandbox.replace(globalThis as any, 'fetch', fetchFake);
+
+    existsSyncStub = sandbox.stub(fs, 'existsSync').returns(true);
   });
 
   afterEach(() => {
@@ -123,9 +138,8 @@ describe('extract-files', () => {
   });
 
   it('should catch exceptions from resolveImportFiles call', async () => {
-    const args = {
-      ...mockArgs,
-    };
+    const args = { ...mockArgs };
+
     const appFolder = path.resolve(
       process.cwd(),
       './src/tools/codegen/test-data/extract-components/no-componentBuilder'
@@ -136,51 +150,72 @@ describe('extract-files', () => {
     sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
     const consoleErrorStub = sandbox.stub(console, 'error');
+
     const extractFilesCall = extractFiles(args);
     await extractFilesCall();
 
     expect(fetchBearerTokenStub.calledOnce).to.be.true;
     expect(consoleErrorStub.calledOnce).to.be.true;
-    const expectedPath = path.resolve(process.cwd(), './.sitecore/component-map.ts');
-    expect(consoleErrorStub.firstCall.args[0]).to.equal(
-      chalk.red('Error during code extraction: ReferenceError: Failed to find file', expectedPath)
-    );
+
+    const logged = String(consoleErrorStub.firstCall.args[0]); // contains ANSI colors from chalk
+    const expectedPath = path.resolve(appFolder, './.sitecore/component-map.ts');
+
+    expect(logged).to.include('Error during code extraction:');
+    expect(logged).to.include('ENOENT');
+    const norm = (s: string) => s.replace(/\\/g, '/');
+    expect(norm(logged)).to.include(norm(expectedPath));
   });
 
   it('should call sendCode for each component path and package.json', async () => {
+    const prevCwd = process.cwd();
     const appFolder = path.resolve(
-      process.cwd(),
+      prevCwd,
       './src/tools/codegen/test-data/extract-components/regular-imports'
     );
-    sandbox.stub(process, 'cwd').returns(appFolder);
+    process.chdir(appFolder);
 
-    const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: 'test-token' });
-    sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
+    try {
+      const tokenStub = sandbox.stub().resolves({ accessToken: 'test-token' });
+      sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => tokenStub);
 
-    const consoleLogStub = sandbox.stub(console, 'log');
+      const consoleLogStub = sandbox.stub(console, 'log');
 
-    nock(edgeUrl).post('/mesh/push/api/v1/contentsdk/code/extracted').reply(200).persist();
+      const run = extractFiles(mockArgs as any);
+      await run();
 
-    const component1Path = path.resolve(process.cwd(), './src/components/TestComponent.tsx');
-    const component2Path = path.resolve(process.cwd(), './src/components/TestComponent2.tsx');
-    const packageJsonPath = path.resolve(process.cwd(), './package.json');
+      expect(tokenStub.calledOnce).to.equal(true);
 
-    const run = extractFiles(mockArgs);
-    await run();
+      const logs = consoleLogStub.getCalls().map((c) => String(c.args[0]));
+      expect(logs.some((m) => m.includes(chalk.green('Code extraction started')))).to.equal(true);
 
-    expect(fetchBearerTokenStub.calledOnce).to.be.true;
+      const success = logs.find((m) => m.includes('Code extraction completed successfully'));
+      expect(success, 'expected a success log').to.exist;
 
-    const msgs = consoleLogStub.getCalls().map((c) => c.args[0]);
-    expect(msgs).to.include(chalk.green('Code extraction started'));
+      expect(fetchFake.callCount).to.equal(3);
 
-    const successMsg = chalk.green(
-      [
-        'Code extraction completed successfully, files extracted:',
-        component1Path,
-        component2Path,
-        packageJsonPath,
-      ].join('\r\n')
-    );
-    expect(msgs).to.include(successMsg);
+      const bodies = fetchFake.getCalls().map((call) => JSON.parse(call.args[1].body));
+
+      const component1Path = path.resolve('./src/components/TestComponent.tsx');
+      const component2Path = path.resolve('./src/components/TestComponent2.tsx');
+      const packageJsonPath = path.resolve('./package.json');
+
+      const names = bodies.map((b) => b.name).sort();
+      expect(names).to.deep.equal(['TestComponent', 'Component1', 'package.json'].sort());
+
+      bodies.forEach((b) => {
+        expect(b.EnvironmentId).to.equal('ContentSDK');
+        expect(b.labels).to.be.an('object');
+      });
+
+      const existsArgs = existsSyncStub
+        .getCalls()
+        .map((c) => String(c.args[0]).replace(/\\/g, '/'));
+      const norm = (s: string) => s.replace(/\\/g, '/');
+      expect(existsArgs.join('\n')).to.include(norm(component1Path));
+      expect(existsArgs.join('\n')).to.include(norm(component2Path));
+      expect(existsArgs.join('\n')).to.include(norm(packageJsonPath));
+    } finally {
+      process.chdir(prevCwd);
+    }
   });
 });

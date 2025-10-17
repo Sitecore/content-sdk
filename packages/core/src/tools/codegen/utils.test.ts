@@ -53,6 +53,48 @@ describe('codegen-utils', () => {
       expect(result).to.equal(componentPath);
     });
 
+    it('should read file from componentPath and send code with variant data to meshEndpoint', async () => {
+      const componentPath = '/path/to/component.ts';
+      const token = 'test-token';
+      const fileContent = 'export const test = () => {};';
+
+      const file = {
+        name: componentName,
+        path: componentPath,
+        type: codegenUtils.ExtractedFileType.Component,
+      };
+
+      const labels = {
+        type: file.type,
+        variantNames: ['default', 'variant1'],
+      };
+
+      sandbox.stub(fs, 'existsSync').withArgs(componentPath).returns(true);
+      sandbox.stub(fs, 'readFileSync').withArgs(componentPath).returns(fileContent);
+
+      nock(meshEndpoint)
+        .post(
+          '/mesh/push/api/v1/contentsdk/code/extracted',
+          JSON.stringify({
+            EnvironmentId: 'ContentSDK',
+            name: file.name,
+            content: fileContent,
+            labels,
+          })
+        )
+        .matchHeader('Authorization', `Bearer ${token}`)
+        .reply(200);
+
+      const result = await codegenUtils.sendCode({
+        file,
+        token,
+        targetUrl: meshEndpoint,
+        extraLabels: { variantNames: ['default', 'variant1'] },
+      });
+
+      expect(result).to.equal(componentPath);
+    });
+
     it('should log when componentPath file is not found', async () => {
       const componentPath = '/path/to/nonexistent-component.ts';
       const token = 'test-token';
@@ -115,174 +157,239 @@ describe('codegen-utils', () => {
   });
 
   describe('resolveComponentImportFiles', () => {
-    it('should throw when tsconfig.json is not found under baseApp path', () => {
-      const appPath = './path/to/app/that/not/exist';
+    const norm = (s: string) => s.replace(/\\/g, '/');
+    it('should not throw if tsconfig.json is missing (falls back to defaults) as long as map exists', () => {
+      const appPath = './src/tools/codegen/test-data/extract-components/regular-imports';
+      expect(() => codegenUtils.resolveComponentImportFiles(appPath)).to.not.throw();
+    });
+
+    it('throws ENOENT when component map file is not found', () => {
+      const appPath = './src/tools/codegen/test-data/extract-components/no-componentBuilder';
 
       expect(() => codegenUtils.resolveComponentImportFiles(appPath)).to.throw(
         Error,
-        // eslint-disable-next-line
-        `Error reading tsconfig.json from JSS app root: Cannot read file '${path.resolve(
-          process.cwd(),
-          './path/to/app/that/not/exist/tsconfig.json'
-        )}'`
+        `no such file or directory`
       );
     });
 
-    it('should throw when .sitecore/component-map.ts is not found', () => {
-      const appPath = './src/tools/codegen/test-data/extract-components/no-componentBuilder';
-      const appRoot = process.cwd();
-      const expectedPath = path.resolve(
-        appRoot,
-        './src/tools/codegen/test-data/extract-components/no-componentBuilder/.sitecore/component-map.ts'
-      );
-      expect(() => codegenUtils.resolveComponentImportFiles(appPath)).to.throw(
-        ReferenceError,
-        `Failed to find file ${expectedPath}`
-      );
-    });
-
-    it('should return JS imports with absolute paths from component-map.ts', () => {
+    it('returns identifier imports with absolute paths from default .sitecore/component-map.ts', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/regular-imports';
-      const imports = codegenUtils.resolveComponentImportFiles(appPath);
-      expect(Array.from(imports)).to.deep.equal([
+      const res = codegenUtils.resolveComponentImportFiles(appPath);
+
+      const actual = res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }));
+      const expected = [
+        {
+          componentKey: 'TestComponent',
+          moduleName: 'TestComponent',
+          importPath: '../src/components/TestComponent',
+          filePath: norm(
+            path.resolve(
+              process.cwd(),
+              './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
+            )
+          ),
+        },
+        {
+          componentKey: 'Component1',
+          moduleName: 'TestComponent2',
+          importPath: '../src/components/TestComponent2',
+          filePath: norm(
+            path.resolve(
+              process.cwd(),
+              './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
+            )
+          ),
+        },
+      ];
+
+      expect(actual).to.deep.equal(expected);
+      expect(res.uniqueFiles.map(norm).sort()).to.deep.equal(
         [
-          'TestComponent',
           path.resolve(
             process.cwd(),
             './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
           ),
-        ],
-        [
-          'TestComponent2',
           path.resolve(
             process.cwd(),
             './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
           ),
-        ],
-      ]);
+        ]
+          .map(norm)
+          .sort()
+      );
+
+      expect(Object.keys(res.byComponent).sort()).to.deep.equal(['Component1', 'TestComponent']);
+      expect(res.byComponent.TestComponent).to.have.length(1);
+      expect(res.byComponent.Component1).to.have.length(1);
     });
 
-    it('should handle custom componentMap path and parse js', () => {
+    it('handles custom componentMap path (JS) and parses identifier entries', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/regular-imports';
       const mapPath = './src/non-standard-path/componentMap.js';
-      const imports = codegenUtils.resolveComponentImportFiles(appPath, mapPath);
-      expect(Array.from(imports)).to.deep.equal([
-        [
-          'OtherComponent1',
-          path.resolve(
-            process.cwd(),
-            './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
+      const res = codegenUtils.resolveComponentImportFiles(appPath, mapPath);
+
+      const actual = res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }));
+      const expected = [
+        {
+          componentKey: 'OtherComponent1',
+          moduleName: 'OtherComponent1',
+          importPath: '../components/TestComponent',
+          filePath: norm(
+            path.resolve(
+              process.cwd(),
+              './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent.tsx'
+            )
           ),
-        ],
-        [
-          'OtherComponent2',
-          path.resolve(
-            process.cwd(),
-            './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
+        },
+        {
+          componentKey: 'OtherComponent2',
+          moduleName: 'OtherComponent2',
+          importPath: '../components/TestComponent2',
+          filePath: norm(
+            path.resolve(
+              process.cwd(),
+              './src/tools/codegen/test-data/extract-components/regular-imports/src/components/TestComponent2.tsx'
+            )
           ),
-        ],
-      ]);
+        },
+      ];
+
+      expect(actual).to.deep.equal(expected);
     });
 
-    it('should return imports with absolute paths from component-map.ts', () => {
+    it('should handle variant spread entries from default .sitecore/component-map.ts', () => {
+      const appPath = './src/tools/codegen/test-data/extract-components/variants-imports';
+      const res = codegenUtils.resolveComponentImportFiles(appPath);
+
+      const actual = res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }));
+      const expected = [
+        {
+          componentKey: 'Promo',
+          moduleName: 'PromoBase',
+          importPath: '../src/components/Promo',
+          filePath: norm(path.resolve(process.cwd(), appPath, 'src/components/Promo.tsx')),
+        },
+        {
+          componentKey: 'Promo',
+          moduleName: 'PromoVariants',
+          importPath: '../src/components/Promo.variants',
+          filePath: norm(path.resolve(process.cwd(), appPath, 'src/components/Promo.variants.tsx')),
+        },
+      ];
+
+      expect(actual).to.deep.equal(expected);
+
+      expect(Object.keys(res.byComponent)).to.deep.equal(['Promo']);
+      expect(res.byComponent.Promo).to.have.length(2);
+      expect(res.uniqueFiles.map(norm).sort()).to.deep.equal(
+        [
+          path.resolve(process.cwd(), appPath, 'src/components/Promo.tsx'),
+          path.resolve(process.cwd(), appPath, 'src/components/Promo.variants.tsx'),
+        ]
+          .map(norm)
+          .sort()
+      );
+    });
+
+    it('supports spread entries and returns both files for a single componentKey', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/js-imports';
+      const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      const imports = codegenUtils.resolveComponentImportFiles(appPath);
-      expect(Array.from(imports)).to.deep.equal([
-        [
-          'TestComponent',
-          path.resolve(
-            process.cwd(),
-            './src/tools/codegen/test-data/extract-components/js-imports/src/components/TestComponent.jsx'
+      const actual = res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }));
+      const expected = [
+        {
+          componentKey: 'TestComponent',
+          moduleName: 'TestComponent',
+          importPath: '../src/components/TestComponent',
+          filePath: norm(
+            path.resolve(
+              process.cwd(),
+              './src/tools/codegen/test-data/extract-components/js-imports/src/components/TestComponent.jsx'
+            )
           ),
-        ],
-        [
-          'TestComponent2',
-          path.resolve(
-            process.cwd(),
-            './src/tools/codegen/test-data/extract-components/js-imports/src/components/TestComponent2.jsx'
+        },
+        {
+          componentKey: 'Component1',
+          moduleName: 'TestComponent2',
+          importPath: '../src/components/TestComponent2',
+          filePath: norm(
+            path.resolve(
+              process.cwd(),
+              './src/tools/codegen/test-data/extract-components/js-imports/src/components/TestComponent2.jsx'
+            )
           ),
-        ],
-      ]);
+        },
+      ];
+
+      expect(actual).to.deep.equal(expected);
     });
 
-    it('should return imports with absolute paths when component map is initialized with values and set with values', () => {
+    it('returns entries when component map is initialized and later set (custom map pattern)', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/custom-component-map';
-      const imports = codegenUtils.resolveComponentImportFiles(appPath);
-      expect(Array.from(imports)).to.deep.equal([
-        [
-          'TestComponent',
-          path.resolve(
-            process.cwd(),
-            './src/tools/codegen/test-data/extract-components/custom-component-map/src/components/TestComponent.tsx'
+      const res = codegenUtils.resolveComponentImportFiles(appPath);
+
+      const actual = res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }));
+      const expected = [
+        {
+          componentKey: 'TestComponent',
+          moduleName: 'TestComponent',
+          importPath: '../src/components/TestComponent',
+          filePath: norm(
+            path.resolve(
+              process.cwd(),
+              './src/tools/codegen/test-data/extract-components/custom-component-map/src/components/TestComponent.tsx'
+            )
           ),
-        ],
-        [
-          'TestComponent2',
-          path.resolve(
-            process.cwd(),
-            './src/tools/codegen/test-data/extract-components/custom-component-map/src/components/TestComponent2.tsx'
-          ),
-        ],
-      ]);
+        },
+      ];
+
+      expect(actual).to.deep.equal(expected);
     });
 
-    it('should return imports with absolute paths from component-map.ts with named imports', () => {
+    it('ignores default/named imports and only uses namespace imports (named-imports fixture)', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/named-imports';
+      const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      const imports = codegenUtils.resolveComponentImportFiles(appPath);
-      expect(Array.from(imports)).to.deep.equal([
-        [
-          'TestComponent',
-          path.resolve(
-            process.cwd(),
-            './src/tools/codegen/test-data/extract-components/named-imports/src/components/TestComponent.tsx'
+      expect(res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }))).to.deep.equal([
+        {
+          componentKey: 'TestComponent',
+          moduleName: 'TestComponent',
+          importPath: '../src/components/TestComponent',
+          filePath: norm(
+            path.resolve(
+              process.cwd(),
+              './src/tools/codegen/test-data/extract-components/named-imports/src/components/TestComponent.tsx'
+            )
           ),
-        ],
-        [
-          'Component1',
-          path.resolve(
-            process.cwd(),
-            './src/tools/codegen/test-data/extract-components/named-imports/src/components/TestComponent2.tsx'
-          ),
-        ],
-        [
-          'Component2',
-          path.resolve(
-            process.cwd(),
-            './src/tools/codegen/test-data/extract-components/named-imports/src/components/TestComponent2.tsx'
-          ),
-        ],
+        },
       ]);
     });
 
-    it('should return imports with absolute paths from component-map.ts when paths aliases are used', () => {
+    it('resolves with path aliases defined in tsconfig (with-path-aliases fixture)', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/with-path-aliases';
-      const imports = codegenUtils.resolveComponentImportFiles(appPath);
+      const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      expect(Array.from(imports)).to.deep.equal([
-        [
-          'TestComponent',
+      expect(res.uniqueFiles.map(norm)).to.deep.equal([
+        norm(
           path.resolve(
             process.cwd(),
             './src/tools/codegen/test-data/extract-components/with-path-aliases/src/components/TestComponent.tsx'
-          ),
-        ],
+          )
+        ),
       ]);
     });
 
-    it('should ignore imports starting with "node:", ending with ".d.ts" and containing "node_modules"', () => {
+    it('ignores non-relevant imports (node:, *.d.ts, node_modules) in the map entries', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/node-modules-imports';
-      const imports = codegenUtils.resolveComponentImportFiles(appPath);
+      const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      expect(Array.from(imports)).to.deep.equal([
-        [
-          'TestComponent',
+      expect(res.uniqueFiles.map(norm)).to.deep.equal([
+        norm(
           path.resolve(
             process.cwd(),
             './src/tools/codegen/test-data/extract-components/node-modules-imports/src/components/TestComponent.tsx'
-          ),
-        ],
+          )
+        ),
       ]);
     });
   });
