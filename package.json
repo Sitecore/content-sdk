@@ -41,8 +41,7 @@
     "typescript": "~5.8.3"
   },
   "workspaces": [
-    "packages/*",
-    "samples/*"
+    "packages/*"
   ],
   "resolutions": {
     "eslint-plugin-react-hooks": "^5.2.0",

@@ -11,7 +11,10 @@ import { isDevEnvironment, openJsonFile } from '../utils/helpers';
 export const installPackages = (projectFolder: string, silent?: boolean) => {
   silent || console.log(chalk.cyan('Installing packages...'));
 
-  if (isDevEnvironment(projectFolder)) {
+  // Check if this is a sample directory (contains 'sample-' in the path)
+  const isSampleDirectory = projectFolder.includes('sample-');
+
+  if (isDevEnvironment(projectFolder) && !isSampleDirectory) {
     silent || console.log(chalk.yellow('Detected development environment.'));
 
     run(
@@ -25,6 +28,11 @@ export const installPackages = (projectFolder: string, silent?: boolean) => {
       silent
     );
   } else {
+    // Use npm for samples and production environments
+    if (isSampleDirectory) {
+      silent || console.log(chalk.yellow('Using npm for sample directory.'));
+    }
+
     run(
       'npm',
       ['install', '--loglevel=error'],

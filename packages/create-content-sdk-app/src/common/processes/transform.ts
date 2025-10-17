@@ -21,9 +21,15 @@ export const populateEjsData = (args: BaseAppArgs, destination?: string) => {
   // Use exact version for Content SDK dependencies in beta and canary versions
   const contentSdkVersion: string = version.match(/(\-[a-zA-Z]+\.\d+)$/) ? version : `~${version}`;
 
+  // Generate unique package name based on destination folder name
+  const packageName = destination
+    ? path.basename(destination).replace(/^sample-/, 'content-sdk-')
+    : 'content-sdk-app';
+
   const ejsData: Data = {
     ...args,
     version: contentSdkVersion,
+    packageName: packageName,
     helper: {
       isDev: isDevEnvironment(destination || args.destination),
     },
@@ -68,7 +74,7 @@ export const transform = async (
 
   const destinationPath = path.resolve(args.destination);
 
-  const ejsData: Data = populateEjsData(args);
+  const ejsData: Data = populateEjsData(args, destinationPath);
   // the templates to be run through ejs render or copied directly
   const files = glob.sync('**/*', {
     cwd: templatePath,
