@@ -78,8 +78,6 @@ function _extractFiles(args: ExtractFilesConfig) {
       // Resolve files from component-map
       const resolvedImports = await resolveComponentImportFiles(basePath, args.componentMapPath);
 
-      console.log(resolvedImports);
-
       let items: Array<{ componentKey: string; filePath: string }> = [];
 
       if (resolvedImports && typeof (resolvedImports as ResolveResult).imports !== 'undefined') {

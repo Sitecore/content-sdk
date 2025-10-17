@@ -103,6 +103,15 @@ export function getItems<Item>(settings: GetItemsSettings<Item>): Item[] {
 }
 
 // ---- Low-level grouping (returns raw groups, NOT entries)
+
+/**
+ * Converts a given path to POSIX format by replacing backslashes with forward slashes.
+ * @param p
+ */
+function toPosix(p: string) {
+  return p.replace(/\\/g, '/');
+}
+
 /**
  * Groups components by directory and base component name (prefix).
  * For example, "Teaser" and "Teaser.Variant1" in the same folder are grouped together.
@@ -120,7 +129,8 @@ export function groupComponentsByDirAndPrefix<T extends ComponentSource>(
   };
 
   for (const file of files) {
-    const directory = path.dirname(file.filePath).replace(/\\/g, '/');
+    const posixPath = toPosix(file.filePath);
+    const directory = path.posix.dirname(posixPath);
     const prefix = getBaseComponentName(file.componentName);
     const compositeKey = `${directory}::${prefix}`;
 
@@ -141,7 +151,6 @@ export function groupComponentsByDirAndPrefix<T extends ComponentSource>(
 
   return componentGroups;
 }
-
 
 /**
  * Produces entries where each base component key aggregates its variants via object spread.
