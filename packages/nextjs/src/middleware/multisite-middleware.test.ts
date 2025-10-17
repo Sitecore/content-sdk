@@ -624,6 +624,49 @@ describe('MultisiteMiddleware', () => {
       });
     });
 
+    it('site querystring parameter is provided', async () => {
+      const req = createRequest({
+        searchParams: { site: 'qsFoo' },
+      });
+
+      const res = createResponse();
+
+      nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const { middleware, siteResolver } = createMiddleware({
+        useCookieResolution: () => true,
+      });
+
+      const finalRes = await middleware.handle(req, res);
+
+      validateDebugLog('multisite middleware start: %o', {
+        pathname: '/styleguide',
+        language: 'en',
+        hostname: 'foo.net',
+      });
+
+      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+        rewritePath: '/_site_qsFoo/styleguide',
+        siteName: 'qsFoo',
+        headers: {
+          'x-sc-rewrite': '/_site_qsFoo/styleguide',
+        },
+        cookies: {
+          ...res.cookies,
+        },
+      });
+
+      expect(siteResolver.getByHost).not.called.equal(true);
+      expect(siteResolver.getByName).not.called.equal(true);
+
+      expect(finalRes).to.deep.equal(res);
+
+      expect(nextRewriteStub).calledWith({
+        ...req.nextUrl,
+        pathname: '/_site_qsFoo/styleguide',
+      });
+    });
+
     it('sc_site querystring parameter is provided', async () => {
       const req = createRequest({
         searchParams: { sc_site: 'qsFoo' },
