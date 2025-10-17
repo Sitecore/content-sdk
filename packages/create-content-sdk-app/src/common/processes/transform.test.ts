@@ -59,6 +59,7 @@ describe('transform', () => {
       expect(ejsRenderFileStub).to.have.been.calledOnceWith(path.join(templatePath, file), {
         ...args,
         version: pkgVersion,
+        packageName: 'next',
         helper: {
           isDev: false,
         },
