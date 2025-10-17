@@ -183,7 +183,7 @@ describe('generateMap', () => {
         },
       ];
 
-      getComponentListWithTypesStub.callsFake((_pathsArg: string[]) => allWithTypes);
+      getComponentListWithTypesStub.callsFake(() => allWithTypes);
 
       filterComponentsByTypeStub.callsFake((list: any[], types: string[]) =>
         list.filter((c) => types.includes(c.componentType))
