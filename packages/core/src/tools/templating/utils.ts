@@ -142,7 +142,7 @@ export function groupComponentsByDirAndPrefix<T extends ComponentSource>(
   return componentGroups;
 }
 
-// ---- Adapter that returns the ComponentMapEntry[] the builder wants
+
 /**
  * Produces entries where each base component key aggregates its variants via object spread.
  * @param {ComponentSource[]} components list of components

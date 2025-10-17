@@ -45,8 +45,8 @@ function _extractFiles(args: ExtractFilesConfig) {
   const authParams = {
     clientId: process.env.SITECORE_AUTH_CLIENT_ID || '',
     clientSecret: process.env.SITECORE_AUTH_CLIENT_SECRET || '',
-    authority: 'https://auth-staging-1.sitecore-staging.cloud',
-    audience: 'https://api-staging.sitecore-staging.cloud',
+    authority: process.env.SITECORE_AUTH_AUTHORITY,
+    audience: process.env.SITECORE_AUTH_AUDIENCE,
   };
 
   const enableVariantsInMap = args.enableVariantsInMap ?? true;
