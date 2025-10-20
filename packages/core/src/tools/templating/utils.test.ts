@@ -6,12 +6,6 @@ import sinon from 'sinon';
 import fs from 'fs';
 import path from 'path';
 import { getItems, matchPath } from './utils';
-import {
-  groupComponentsWithVariants,
-  groupComponentsWithoutVariants,
-  groupComponentsByDirAndPrefix,
-} from './utils';
-import { ComponentSource, ComponentGroup, ComponentType } from './components';
 
 describe('utils', () => {
   afterEach(() => {
@@ -55,25 +49,25 @@ describe('utils', () => {
     });
 
     const baseDirent = {
-      isFile: function (): boolean {
+      isFile: function(): boolean {
         return false;
       },
-      isDirectory: function (): boolean {
+      isDirectory: function(): boolean {
         return false;
       },
-      isBlockDevice: function (): boolean {
+      isBlockDevice: function(): boolean {
         return false;
       },
-      isCharacterDevice: function (): boolean {
+      isCharacterDevice: function(): boolean {
         return false;
       },
-      isSymbolicLink: function (): boolean {
+      isSymbolicLink: function(): boolean {
         return false;
       },
-      isFIFO: function (): boolean {
+      isFIFO: function(): boolean {
         return false;
       },
-      isSocket: function (): boolean {
+      isSocket: function(): boolean {
         return false;
       },
       name: '',
