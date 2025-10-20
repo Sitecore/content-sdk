@@ -21,11 +21,6 @@ export type ComponentType = 'server' | 'client' | 'universal';
 export type RouterType = 'app' | 'pages';
 
 /**
- * A component source can be either a file or a file with type information.
- */
-export type ComponentSource = ComponentFile | ComponentFileWithType;
-
-/**
  * Definition for a component file
  */
 export interface ComponentFile {
@@ -48,34 +43,6 @@ export interface ComponentFileWithType extends ComponentFile {
   /** Detected component type (server, client, or universal) */
   componentType: ComponentType;
 }
-
-/**
- * A group of components that share the same directory and base name (prefix).
- */
-export type ComponentGroup<T extends ComponentSource = ComponentSource> = {
-  /** directory containing the components */
-  dir: string;
-  /** base component name (before any ".Variant") */
-  prefix: string;
-  /** the base (non-variant) component, if present */
-  base?: T;
-  /** variant components (e.g., Teaser.Variant1) */
-  neighbors: T[];
-};
-
-/*
- * An entry in the component map, including import lines and value expression.
- */
-export type ComponentMapEntry = {
-  /** map entry key */
-  key: string;
-  /** namespace import lines needed for this entry */
-  imports: string[];
-  /** whether base is client (and we're in main map) */
-  annotateClient: boolean;
-  /** expression used as the map value */
-  valueExpr: string;
-};
 
 /**
  * Definition for custom components to be included in component map.

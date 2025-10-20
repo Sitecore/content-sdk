@@ -14,7 +14,7 @@ export type GenerateMapFunction = (args: GenerateMapArgs) => void;
  * @property {boolean} [clientComponentMap] - Optional flag to generate separate client and server component maps. When true,
  *                                            generates both component-map.ts (all components) and component-map.client.ts (client + universal only).
  *                                            When false or undefined, generates single component-map.ts (traditional behavior).
- * @property {boolean} [enableVariantsInMap] - Optional flag to include component's variants path in the component map.
+ * @property {boolean} [ includeVariants] - Optional flag to include component's variants path in the component map.
  */
 export type GenerateMapArgs = {
   paths: string[];
@@ -23,12 +23,14 @@ export type GenerateMapArgs = {
   exclude?: string[];
   mapTemplate?: (
     components: ComponentFile[] | ComponentFileWithType[],
+    includeVariants: boolean,
     componentImports?: ComponentImport[]
   ) => string;
   clientMapTemplate?: (
     components: ComponentFileWithType[],
+    includeVariants?: boolean,
     componentImports?: ComponentImport[]
   ) => string;
   clientComponentMap?: boolean;
-  enableVariantsInMap?: boolean;
+  includeVariants?: boolean;
 };

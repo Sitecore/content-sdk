@@ -62,7 +62,7 @@ export function handler(argv: GenerateMapCliArgs) {
     return;
   }
   const componentMapGenerator = cliConfig.componentMap.generator;
-  const { paths, destination, componentImports, exclude, clientComponentMap, enableVariantsInMap } =
+  const { paths, destination, componentImports, exclude, clientComponentMap, includeVariants } =
     cliConfig.componentMap;
   if (argv.watch) {
     console.log(
@@ -76,7 +76,7 @@ export function handler(argv: GenerateMapCliArgs) {
         componentImports,
         exclude,
         clientComponentMap,
-        enableVariantsInMap,
+        includeVariants,
       })
     );
   } else {
@@ -87,7 +87,7 @@ export function handler(argv: GenerateMapCliArgs) {
       componentImports,
       exclude,
       clientComponentMap,
-      enableVariantsInMap,
+      includeVariants,
     });
   }
 }

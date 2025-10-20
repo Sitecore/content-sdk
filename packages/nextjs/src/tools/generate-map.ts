@@ -8,64 +8,139 @@ import {
   getComponentListWithTypes,
   filterComponentsByType,
   ComponentFileWithType,
-  groupComponentsWithoutVariants,
-  groupComponentsWithVariants,
-  ComponentMapEntry,
-  ComponentSource,
 } from '@sitecore-content-sdk/core/tools';
 import * as path from 'path';
 import * as fs from 'fs';
-import { stripVariants } from '../utils/utils';
 
 /**
- * Template options for component map generation
+ * A component source can be either a file or a file with type information.
  */
-type TemplateOptions = {
-  /** Custom header comment for the generated map */
-  headerComment?: string;
-  /** Whether this is a client-only map (no need for componentType annotations) */
-  isClientMap?: boolean;
+type ComponentSource = ComponentFile | ComponentFileWithType;
+
+/*
+ * An entry in the component map, including import lines and value expression.
+ */
+export type ComponentMapEntry = {
+  /** map entry key */
+  key: string;
+  /** namespace import lines needed for this entry */
+  imports: string[];
+  /** whether base is client (and we're in main map) */
+  annotateClient: boolean;
+  /** expression used as the map value */
+  valueExpr: string;
 };
 
 // Common builder for Next.js component map content
-const buildNextjsMapContent = (
+const prepareComponentsForMap = (
   components: ComponentSource[],
+  opts: { includeVariants: boolean }
+): ComponentMapEntry[] => {
+  const groups = new Map<
+    string,
+    { dir: string; prefix: string; base?: ComponentSource; neighbors: ComponentSource[] }
+  >();
+
+  const getPrefix = (name: string) => {
+    const index = name.indexOf('.');
+    return index === -1 ? name : name.slice(0, index);
+  };
+
+  for (const file of components) {
+    const dir = path.dirname(file.filePath).replace(/\\/g, '/');
+    const prefix = getPrefix(file.componentName);
+    const key = `${dir}::${prefix}`;
+
+    let group = groups.get(key);
+    if (!group) {
+      group = { dir, prefix, neighbors: [] };
+      groups.set(key, group);
+    }
+
+    if (file.componentName === prefix) g.base = file;
+    else group.neighbors.push(file);
+  }
+
+  const entries: ComponentMapEntry[] = [];
+
+  for (const group of groups.values()) {
+    const imports: string[] = [];
+
+    if (opts.includeVariants) {
+      const spreads: string[] = [];
+      for (const n of group.neighbors) {
+        imports.push(`import * as ${n.moduleName} from '${n.importPath}';`);
+        spreads.push(`...${n.moduleName}`);
+      }
+      if (group.base) {
+        imports.push(`import * as ${group.base.moduleName} from '${group.base.importPath}';`);
+        spreads.push(`...${group.base.moduleName}`);
+      }
+      const annotateClient =
+        !!group.base && 'componentType' in group.base && group.base.componentType === 'client';
+
+      entries.push({
+        key: group.prefix,
+        imports,
+        valueExpr: spreads.length
+          ? `{ ${spreads.join(', ')} }`
+          : group.base
+          ? group.base.moduleName
+          : group.neighbors[0].moduleName,
+        annotateClient,
+      });
+    } else {
+      // Variants disabled: single entry per group
+      if (group.base) {
+        imports.push(`import * as ${group.base.moduleName} from '${group.base.importPath}';`);
+        const annotateClient =
+          'componentType' in group.base && group.base.componentType === 'client';
+        entries.push({
+          key: group.prefix,
+          imports,
+          valueExpr: group.base.moduleName,
+          annotateClient,
+        });
+      } else if (group.neighbors.length) {
+        const first = group.neighbors[0];
+        imports.push(`import * as ${first.moduleName} from '${first.importPath}';`);
+        entries.push({
+          key: group.prefix,
+          imports,
+          valueExpr: first.moduleName,
+          annotateClient: false,
+        });
+      }
+    }
+  }
+
+  return entries;
+};
+
+const buildNextjsMapContent = (
+  entries: ComponentMapEntry[],
   componentImports: ComponentImport[] | undefined,
-  opts: TemplateOptions,
-  grouping: (components: ComponentSource[]) => ComponentMapEntry[]
+  options: { headerComment?: string; isClientMap?: boolean } = {}
 ): string => {
   const {
     headerComment = "Below are built-in components that are available in the app, it's recommended to keep them as is",
     isClientMap = false,
-  } = opts;
+  } = options;
 
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];
-  const entries: string[] = [];
 
-  // Build per-entry imports/values via grouping
-  const groups = grouping(components);
-  for (const group of groups) {
-    wildcardImports.push(...group.imports);
-    const value =
-      !isClientMap && group.annotateClient
-        ? `{ ...${group.valueExpr}, componentType: 'client' }`
-        : group.valueExpr;
-    entries.push(`['${group.key}', ${value}]`);
-  }
+  // Add per-entry imports
+  entries.forEach((e) => wildcardImports.push(...e.imports));
 
-  // Package-based componentImports
+  // Handle package imports
   componentImports?.forEach((pkg) => {
     if (pkg.importInfo.namedImports) {
       namedImports.push(
         `import { ${pkg.importInfo.namedImports.join(', ')} } from '${pkg.importInfo.importFrom}';`
       );
-      pkg.importInfo.namedImports.forEach((name: string) => {
-        entries.push(`['${name}', ${name}]`);
-      });
     } else {
       wildcardImports.push(`import * as ${pkg.importName} from '${pkg.importInfo.importFrom}';`);
-      entries.push(`['${pkg.importName}', ${pkg.importName}]`);
     }
   });
 
@@ -77,6 +152,27 @@ const buildNextjsMapContent = (
 
   const importsSection = importLines.length ? `\n${importLines.join('\n')}` : '';
 
+  // Build entry lines (package named imports are appended below)
+  const entryLines: string[] = [];
+  for (const e of entries) {
+    const value =
+      !isClientMap && e.annotateClient
+        ? `{ ...${e.valueExpr}, componentType: 'client' }`
+        : e.valueExpr;
+    entryLines.push(`  ['${e.key}', ${value}],`);
+  }
+
+  // Add package-based entries
+  componentImports?.forEach((pkg) => {
+    if (pkg.importInfo.namedImports) {
+      pkg.importInfo.namedImports.forEach((name: string) => {
+        entryLines.push(`  ['${name}', ${name}],`);
+      });
+    } else {
+      entryLines.push(`  ['${pkg.importName}', ${pkg.importName}],`);
+    }
+  });
+
   return `// ${headerComment}
 import { BYOCWrapper, NextjsContentSdkComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
 import { Form } from '@sitecore-content-sdk/nextjs';${importsSection}
@@ -85,48 +181,26 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['BYOCWrapper', BYOCWrapper],
   ['FEaaSWrapper', FEaaSWrapper],
   ['Form', Form],
-${entries.map((e) => `  ${e},\n`).join('')}]);
+${entryLines.join('\n')}
+]);
 
 export default componentMap;
 `;
 };
 
-// Template that produces single map (no client/server split)
-const nextjsUnifiedTemplate = (
-  components: ComponentSource[],
-  componentImports?: ComponentImport[],
-  options: TemplateOptions = {}
-): string => {
-  return buildNextjsMapContent(
-    components,
-    componentImports,
-    options,
-    groupComponentsWithoutVariants
-  );
-};
-
-// Template that produces single map with variants folded in
-const nextjsUnifiedTemplateWithVariants = (
-  components: (ComponentFile | ComponentFileWithType)[],
-  componentImports?: ComponentImport[],
-  options: TemplateOptions = {}
-): string => {
-  return buildNextjsMapContent(components, componentImports, options, groupComponentsWithVariants);
-};
-
-// Template that produces client-only map (client + universal components)
-const nextjsClientMapTemplate = (
+const defaultClientMapTemplate = (
   components: ComponentFileWithType[],
+  includeVariants: boolean,
   componentImports?: ComponentImport[]
 ): string => {
-  return nextjsUnifiedTemplate(components, componentImports, {
+  // We don’t pre-process here because this is the legacy “custom template” hook.
+  // This function exists purely as our default client template implementation.
+  const entries = prepareComponentsForMap(components, { includeVariants });
+  return buildNextjsMapContent(entries, componentImports, {
     headerComment: 'Client-safe component map for App Router',
     isClientMap: true,
   });
 };
-
-const pickTemplate = (enable: boolean = false) =>
-  enable ? nextjsUnifiedTemplateWithVariants : nextjsUnifiedTemplate;
 
 /**
  * Generate and write componentMap.ts files based on provided params.
@@ -138,7 +212,7 @@ const pickTemplate = (enable: boolean = false) =>
  * When clientComponentMap is false, generates:
  * - component-map.ts          : Single component map (traditional behavior)
  *
- * When enableVariantsInMap is true (in either mode):
+ * When includeVariants is true (in either mode):
  * - Includes component **variants** in the generated map(s) alongside base components
  * - Preserves the same client/server filtering rules (variants obey clientComponentMap filtering)
  * - Variant entries are emitted using the same naming/keys convention as their base components
@@ -156,80 +230,58 @@ export const generateMap: GenerateMapFunction = ({
   mapTemplate,
   clientMapTemplate,
   clientComponentMap,
-  enableVariantsInMap = true,
+  includeVariants = true,
 }: GenerateMapArgs) => {
   const isAppRouter = detectRouterType() === 'app';
   const shouldGenerateClientMap = clientComponentMap ?? isAppRouter;
 
   if (shouldGenerateClientMap) {
-    // In app router
-    const allComponentsWithTypes = getComponentListWithTypes(paths, exclude);
-
-    // MAIN map (all components)
-    const resolvedComponents = enableVariantsInMap
-      ? allComponentsWithTypes
-      : stripVariants(allComponentsWithTypes);
-
-    const regularMapContent = mapTemplate
-      ? mapTemplate(resolvedComponents, componentImports)
-      : pickTemplate(enableVariantsInMap)(resolvedComponents, componentImports, {
-          headerComment:
-            "Below are built-in components that are available in the app, it's recommended to keep them as is",
-          isClientMap: false,
-        });
-
+    // App Router case, main map
+    const componentsWithTypes = getComponentListWithTypes(paths, exclude);
+    let mainContent: string;
+    if (mapTemplate) {
+      mainContent = mapTemplate(componentsWithTypes, includeVariants, componentImports);
+    } else {
+      const components = prepareComponentsForMap(componentsWithTypes, {
+        includeVariants,
+      });
+      mainContent = buildNextjsMapContent(components, componentImports, {
+        headerComment:
+          "Below are built-in components that are available in the app, it's recommended to keep them as is",
+        isClientMap: false,
+      });
+    }
     fs.writeFileSync(
       path.join(process.cwd(), destination, 'component-map.ts'),
-      regularMapContent,
+      mainContent,
       'utf8'
     );
 
-    // CLIENT map (client + universal only)
-    const allClientComponents = filterComponentsByType(allComponentsWithTypes, [
-      'client',
-      'universal',
-    ]);
-    const clientComponents = enableVariantsInMap
-      ? allClientComponents
-      : stripVariants(allClientComponents);
-
-    const clientMapContent = clientMapTemplate
-      ? clientMapTemplate(clientComponents, componentImports)
-      : pickTemplate(enableVariantsInMap)(clientComponents, componentImports, {
-          headerComment: 'Client-safe component map for App Router',
-          isClientMap: true,
-        });
-
+    // App Router, client map
+    const clientComponents = filterComponentsByType(componentsWithTypes, ['client', 'universal']);
+    const clientTemplate = clientMapTemplate || defaultClientMapTemplate;
+    const clientContent = clientTemplate(clientComponents, includeVariants, componentImports);
     fs.writeFileSync(
       path.join(process.cwd(), destination, 'component-map.client.ts'),
-      clientMapContent,
+      clientContent,
       'utf8'
     );
   } else {
     // Either in pages/app router or clientComponentMap = false
-    const allComponents = getComponentList(paths, exclude);
-
-    // MAIN map (all components)
-    const resolvedComponents = enableVariantsInMap ? allComponents : stripVariants(allComponents);
-    const componentMapContent = mapTemplate
-      ? mapTemplate(resolvedComponents, componentImports)
-      : pickTemplate(enableVariantsInMap)(resolvedComponents, componentImports, {
-          headerComment:
-            "Below are built-in components that are available in the app, it's recommended to keep them as is",
-          isClientMap: false,
-        });
-
-    fs.writeFileSync(
-      path.join(process.cwd(), destination, 'component-map.ts'),
-      componentMapContent,
-      'utf8'
-    );
+    const all = getComponentList(paths, exclude);
+    const components = prepareComponentsForMap(all, { includeVariants });
+    const content = buildNextjsMapContent(components, componentImports, {
+      headerComment:
+        "Below are built-in components that are available in the app, it's recommended to keep them as is",
+      isClientMap: false,
+    });
+    fs.writeFileSync(path.join(process.cwd(), destination, 'component-map.ts'), content, 'utf8');
 
     // For App Router compatibility, always generate client map file even when clientComponentMap is false
     // When clientComponentMap is false, only include built-in components (no custom client components)
     if (shouldGenerateClientMap || isAppRouter) {
-      const clientMapTemplateToUse = clientMapTemplate || nextjsClientMapTemplate;
-      const clientMapContent = clientMapTemplateToUse([], componentImports);
+      const clientMapTemplateToUse = clientMapTemplate || defaultClientMapTemplate;
+      const clientMapContent = clientMapTemplateToUse([], includeVariants, componentImports);
       const clientMapFile = path.join(process.cwd(), destination, 'component-map.client.ts');
 
       try {

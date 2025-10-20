@@ -9,8 +9,6 @@ export {
   detectComponentType,
   getComponentListWithTypes,
   filterComponentsByType,
-  ComponentMapEntry,
-  ComponentSource,
 } from './components';
 export { PluginDefinition, generatePlugins, ModuleType } from './plugins';
-export { matchPath, groupComponentsWithoutVariants, groupComponentsWithVariants } from './utils';
+export { matchPath } from './utils';
