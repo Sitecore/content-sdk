@@ -1,6 +1,7 @@
 'use client';
-import { FEaaSComponent, FEaaSComponentProps } from './FEaaSComponent';
+import { FEaaSComponent } from './FEaaSComponent';
 import React, { JSX } from 'react';
+import { FEaaSComponentProps } from './models';
 
 export const FEAAS_WRAPPER_RENDERING_NAME = 'FEaaSWrapper';
 

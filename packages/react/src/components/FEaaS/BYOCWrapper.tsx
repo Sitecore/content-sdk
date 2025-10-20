@@ -1,6 +1,7 @@
 'use client';
-import { BYOCComponentProps, BYOCComponent } from './BYOCComponent';
+import { BYOCComponent } from './BYOCComponent';
 import React, { JSX } from 'react';
+import { BYOCComponentProps } from './models';
 
 export const BYOC_WRAPPER_RENDERING_NAME = 'BYOCWrapper';
 
