@@ -5,7 +5,7 @@ import * as generateMapModule from './generate-map';
 import * as loadConfigModule from '../../../utils/load-config';
 import * as watchItemsModule from '../../../utils/watch-items';
 
-describe.only('generate-map CLI', () => {
+describe('generate-map CLI', () => {
   let sandbox: sinon.SinonSandbox;
   let consoleErrorStub: sinon.SinonStub;
   let consoleLogStub: sinon.SinonStub;

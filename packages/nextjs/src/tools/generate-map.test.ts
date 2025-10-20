@@ -8,7 +8,7 @@ import fs from 'fs';
 import { ComponentImport } from '@sitecore-content-sdk/core/tools';
 import * as coreTools from '@sitecore-content-sdk/core/tools';
 
-describe.only('generateMap', () => {
+describe('generateMap', () => {
   const sandbox = sinon.createSandbox();
 
   describe('generateMap', () => {
