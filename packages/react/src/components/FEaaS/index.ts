@@ -1,12 +1,14 @@
-export { BYOCComponent } from './BYOCComponent';
-export { FEaaSComponent } from './FEaaSComponent';
-export { FEaaSWrapper } from './FEaaSWrapper';
-export { BYOCWrapper } from './BYOCWrapper';
+export { FEaaSWrapper, FEaaSComponent } from './FEaaSWrapper';
+export { BYOCWrapper, BYOCComponent } from './BYOCWrapper';
 export {
   FEaaSComponentProps,
   FEaaSComponentParams,
   BYOCComponentParams,
   BYOCComponentProps,
+  FEAAS_COMPONENT_RENDERING_NAME,
+  BYOC_COMPONENT_RENDERING_NAME,
+  FEAAS_WRAPPER_RENDERING_NAME,
+  BYOC_WRAPPER_RENDERING_NAME,
 } from './models';
 export { FEaaSServerWrapper } from './FEaaSSeverWrapper';
 export { BYOCServerWrapper } from './BYOCServerWrapper';

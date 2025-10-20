@@ -3,6 +3,10 @@ import { ComponentFields, ComponentRendering } from '@sitecore-content-sdk/core/
 import { Page } from '@sitecore-content-sdk/core/client';
 import { MissingComponentProps } from '../MissingComponent';
 
+export const FEAAS_WRAPPER_RENDERING_NAME = 'FEaaSWrapper';
+export const FEAAS_COMPONENT_RENDERING_NAME = 'FEaaSComponent';
+export const BYOC_WRAPPER_RENDERING_NAME = 'BYOCWrapper';
+export const BYOC_COMPONENT_RENDERING_NAME = 'BYOCComponent';
 /**
  * FEaaS props for server rendering.
  */

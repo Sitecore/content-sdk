@@ -46,9 +46,10 @@ export const generateMap: GenerateMapFunction = ({
     // Generate regular component map (all components with type information)
     // Use custom mapTemplate if provided (assumes it can handle ComponentFileWithType[]),
     // otherwise use default template designed for typed components
-    const regularMapContent = mapTemplate
-      ? mapTemplate(componentsWithTypes, componentImports)
-      : nextjsMapTemplateWithTypes(componentsWithTypes, componentImports);
+    const regularMapContent =
+      !mapTemplate || mapTemplate === nextjsMapTemplate
+        ? nextjsMapTemplateWithTypes(componentsWithTypes, componentImports)
+        : mapTemplate(componentsWithTypes, componentImports);
     const regularMapFile = path.join(process.cwd(), destination, 'component-map.ts');
 
     try {
@@ -121,6 +122,10 @@ type TemplateOptions = {
   headerComment?: string;
   /** Whether this is a client-only map (no need for componentType annotations) */
   isClientMap?: boolean;
+  /** Built-in imports string to include in the map */
+  builtInImports?: string;
+  /** Built-in map entries to include in the map */
+  builtInMapEntries?: string[];
 };
 
 /**
@@ -143,7 +148,19 @@ const nextjsUnifiedTemplate = (
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];
   const componentMapEntries: string[] = [];
+  const builtInImports =
+    options.builtInImports ||
+    `
+import { BYOCWrapper, NextjsContentSdkComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
+import { Form } from '@sitecore-content-sdk/nextjs';
+`;
 
+  const builtInMapEntries = options.builtInMapEntries || [
+    `['BYOCWrapper', BYOCWrapper]`,
+    `['FEaaSWrapper', FEaaSWrapper]`,
+    `['Form', Form]`,
+  ];
+  componentMapEntries.push(...builtInMapEntries);
   components.forEach((component) => {
     // Clean imports only
     wildcardImports.push(`import * as ${component.moduleName} from '${component.importPath}';`);
@@ -189,13 +206,9 @@ const nextjsUnifiedTemplate = (
   const importsSection = importLines.length > 0 ? `\n${importLines.join('\n')}` : '';
 
   return `// ${headerComment}
-import { BYOCWrapper, NextjsContentSdkComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
-import { Form } from '@sitecore-content-sdk/nextjs';${importsSection}
+${builtInImports}${importsSection}
 
 export const componentMap = new Map<string, NextjsContentSdkComponent>([
-  ['BYOCWrapper', BYOCWrapper],
-  ['FEaaSWrapper', FEaaSWrapper],
-  ['Form', Form],
 ${componentMapEntries
   .map((component) => {
     return `  ${component},\n`;
@@ -206,17 +219,28 @@ export default componentMap;
 `;
 };
 
-// Wrapper functions for backward compatibility
+// tempalte for app router component map
 const nextjsMapTemplateWithTypes = (
   components: ComponentFileWithType[],
   componentImports?: ComponentImport[]
 ): string => {
+  const builtInImports = `
+import { BYOCServerWrapper, NextjsContentSdkComponent, FEaaSServerWrapper } from '@sitecore-content-sdk/nextjs';
+import { Form } from '@sitecore-content-sdk/nextjs';
+`;
   return nextjsUnifiedTemplate(components, componentImports, {
     headerComment:
       "Below are built-in components that are available in the app, it's recommended to keep them as is",
+    builtInImports,
+    builtInMapEntries: [
+      `['BYOCWrapper', BYOCServerWrapper]`,
+      `['FEaaSWrapper', FEaaSServerWrapper]`,
+      `['Form', Form]`,
+    ],
   });
 };
 
+// default nextjs map template
 const nextjsMapTemplate = (
   components: ComponentFile[],
   componentImports?: ComponentImport[]
@@ -227,12 +251,23 @@ const nextjsMapTemplate = (
   });
 };
 
+// app router client template
 const nextjsClientMapTemplate = (
   components: ComponentFileWithType[],
   componentImports?: ComponentImport[]
 ): string => {
+  const builtInImports = `
+import { BYOCClientWrapper, NextjsContentSdkComponent, FEaaSClientWrapper } from '@sitecore-content-sdk/nextjs';
+import { Form } from '@sitecore-content-sdk/nextjs';
+`;
   return nextjsUnifiedTemplate(components, componentImports, {
     headerComment: 'Client-safe component map for App Router',
     isClientMap: true,
+    builtInImports,
+    builtInMapEntries: [
+      `['BYOCWrapper', BYOCClientWrapper]`,
+      `['FEaaSWrapper', FEaaSClientWrapper]`,
+      `['Form', Form]`,
+    ],
   });
 };

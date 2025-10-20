@@ -82,11 +82,27 @@ describe('generateMap', () => {
       sandbox.restore();
     });
 
-    it('should write componentMap.ts file with components from "paths" parameter', async () => {
+    it('should write componentMap.ts file with components from "paths" parameter in pages router', async () => {
       const paths = ['src/components'];
+      sandbox.restore();
+      getComponentListStub = sandbox.stub().returns(fakeComponentList);
+      getComponentListWithTypesStub = sandbox.stub().returns(fakeComponentsWithTypes);
+      detectRouterTypeStub = sandbox.stub().returns('pages'); // Use pages for this test
+      filterComponentsByTypeStub = sandbox.stub().returns(fakeComponentsWithTypes);
+
+      sandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+      sandbox.replaceGetter(
+        coreTools,
+        'getComponentListWithTypes',
+        () => getComponentListWithTypesStub
+      );
+      sandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
+      sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
+      sandbox.stub(fs, 'writeFileSync');
+
       generateMap({ paths });
 
-      expect(fs.writeFileSync).to.have.been.calledTwice;
+      expect(fs.writeFileSync).to.have.been.calledOnce;
       const [dest, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(dest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
 
@@ -102,7 +118,7 @@ describe('generateMap', () => {
           "  ['BYOCWrapper', BYOCWrapper],",
           "  ['FEaaSWrapper', FEaaSWrapper],",
           "  ['Form', Form],",
-          "  ['Button', {...Button, componentType: 'client'}],",
+          "  ['Button', Button],",
           "  ['Link', Link],",
           ']);',
         ].join('\n')
@@ -141,8 +157,8 @@ describe('generateMap', () => {
       expect(content).to.include(
         'export const componentMap = new Map<string, NextjsContentSdkComponent>('
       );
-      expect(content).to.include("['BYOCWrapper', BYOCWrapper],");
-      expect(content).to.include("['FEaaSWrapper', FEaaSWrapper],");
+      expect(content).to.include("['BYOCWrapper', BYOCServerWrapper],");
+      expect(content).to.include("['FEaaSWrapper', FEaaSServerWrapper],");
       expect(content).to.include("['Form', Form],");
     });
 
@@ -415,11 +431,27 @@ describe('generateMap', () => {
       expect(clientContent).to.not.include('ServerData');
       expect(clientContent).to.not.include('UniversalCard');
       // Should only include built-in components
-      expect(clientContent).to.include("['BYOCWrapper', BYOCWrapper],");
-      expect(clientContent).to.include("['FEaaSWrapper', FEaaSWrapper],");
+      expect(clientContent).to.include("['BYOCWrapper', BYOCClientWrapper],");
+      expect(clientContent).to.include("['FEaaSWrapper', FEaaSClientWrapper],");
       expect(clientContent).to.include("['Form', Form],");
 
       newSandbox.restore();
+    });
+
+    it('should use server built-in imports in main map and client built-in imports in client map', async () => {
+      const paths = ['src/components'];
+      generateMap({ paths, clientComponentMap: true });
+
+      const [_, mainContent] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+      const [__, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
+      expect(mainContent).to.include(
+        "import { BYOCServerWrapper, NextjsContentSdkComponent, FEaaSServerWrapper } from '@sitecore-content-sdk/nextjs';"
+      );
+      expect(mainContent).to.include("import { Form } from '@sitecore-content-sdk/nextjs';");
+      expect(clientContent).to.include(
+        "import { BYOCClientWrapper, NextjsContentSdkComponent, FEaaSClientWrapper } from '@sitecore-content-sdk/nextjs';"
+      );
+      expect(clientContent).to.include("import { Form } from '@sitecore-content-sdk/nextjs';");
     });
 
     it('should always generate client component map for App Router compatibility even when clientComponentMap is false', async () => {
@@ -456,8 +488,8 @@ describe('generateMap', () => {
       expect(clientContent).to.not.include('CustomComponent');
 
       // Should only include built-in components for App Router compatibility
-      expect(clientContent).to.include("['BYOCWrapper', BYOCWrapper],");
-      expect(clientContent).to.include("['FEaaSWrapper', FEaaSWrapper],");
+      expect(clientContent).to.include("['BYOCWrapper', BYOCClientWrapper],");
+      expect(clientContent).to.include("['FEaaSWrapper', FEaaSClientWrapper],");
       expect(clientContent).to.include("['Form', Form],");
 
       newSandbox.restore();

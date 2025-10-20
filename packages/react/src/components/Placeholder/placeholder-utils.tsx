@@ -9,10 +9,16 @@ import {
 } from '@sitecore-content-sdk/core/layout';
 import { constants } from '@sitecore-content-sdk/core';
 import { HiddenRendering } from '../HiddenRendering';
-import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from '../FEaaS/FEaaSComponent';
-import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaS/FEaaSWrapper';
-import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../FEaaS/BYOCComponent';
-import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../FEaaS/BYOCWrapper';
+import {
+  FEaaSComponent,
+  FEaaSWrapper,
+  BYOCComponent,
+  BYOCWrapper,
+  BYOC_COMPONENT_RENDERING_NAME,
+  BYOC_WRAPPER_RENDERING_NAME,
+  FEAAS_COMPONENT_RENDERING_NAME,
+  FEAAS_WRAPPER_RENDERING_NAME,
+} from '../FEaaS';
 import { PlaceholderProps, RenderedProps } from './models';
 
 /**
