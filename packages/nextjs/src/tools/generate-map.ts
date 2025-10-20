@@ -8,6 +8,9 @@ import {
   getComponentListWithTypes,
   filterComponentsByType,
   ComponentFileWithType,
+  EnhancedComponentMapTemplate,
+  ComponentMapTemplate,
+  ComponentMapEntry,
 } from '@sitecore-content-sdk/core/tools';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -16,20 +19,6 @@ import * as fs from 'fs';
  * A component source can be either a file or a file with type information.
  */
 type ComponentSource = ComponentFile | ComponentFileWithType;
-
-/*
- * An entry in the component map, including import lines and value expression.
- */
-export type ComponentMapEntry = {
-  /** map entry key */
-  key: string;
-  /** namespace import lines needed for this entry */
-  imports: string[];
-  /** whether base is client (and we're in main map) */
-  annotateClient: boolean;
-  /** expression used as the map value */
-  valueExpr: string;
-};
 
 // Common builder for Next.js component map content
 const prepareComponentsForMap = (
@@ -57,7 +46,7 @@ const prepareComponentsForMap = (
       groups.set(key, group);
     }
 
-    if (file.componentName === prefix) g.base = file;
+    if (file.componentName === prefix) group.base = file;
     else group.neighbors.push(file);
   }
 
@@ -188,14 +177,19 @@ export default componentMap;
 `;
 };
 
-const defaultClientMapTemplate = (
-  components: ComponentFileWithType[],
-  includeVariants: boolean,
-  componentImports?: ComponentImport[]
-): string => {
-  // We don’t pre-process here because this is the legacy “custom template” hook.
-  // This function exists purely as our default client template implementation.
-  const entries = prepareComponentsForMap(components, { includeVariants });
+// default client template
+export const defaultClientMapTemplate: EnhancedComponentMapTemplate = (
+  components,
+  componentImports,
+  ctx
+) => {
+  // Prefer preprocessed entries from ctx; otherwise fall back to local prep
+  const entries =
+    ctx?.entries ??
+    prepareComponentsForMap(components as ComponentFileWithType[], {
+      includeVariants: ctx?.includeVariants ?? true,
+    });
+
   return buildNextjsMapContent(entries, componentImports, {
     headerComment: 'Client-safe component map for App Router',
     isClientMap: true,
@@ -238,13 +232,21 @@ export const generateMap: GenerateMapFunction = ({
   if (shouldGenerateClientMap) {
     // App Router case, main map
     const componentsWithTypes = getComponentListWithTypes(paths, exclude);
+    const components = prepareComponentsForMap(componentsWithTypes, {
+      includeVariants,
+    });
     let mainContent: string;
     if (mapTemplate) {
-      mainContent = mapTemplate(componentsWithTypes, includeVariants, componentImports);
+      mainContent = (mapTemplate as EnhancedComponentMapTemplate)(
+        componentsWithTypes,
+        componentImports,
+        {
+          entries: components,
+          includeVariants,
+          isClientMap: false,
+        }
+      );
     } else {
-      const components = prepareComponentsForMap(componentsWithTypes, {
-        includeVariants,
-      });
       mainContent = buildNextjsMapContent(components, componentImports, {
         headerComment:
           "Below are built-in components that are available in the app, it's recommended to keep them as is",
@@ -259,8 +261,22 @@ export const generateMap: GenerateMapFunction = ({
 
     // App Router, client map
     const clientComponents = filterComponentsByType(componentsWithTypes, ['client', 'universal']);
+    const clientEntries = prepareComponentsForMap(clientComponents, { includeVariants });
     const clientTemplate = clientMapTemplate || defaultClientMapTemplate;
-    const clientContent = clientTemplate(clientComponents, includeVariants, componentImports);
+    let clientContent: string;
+    if (clientTemplate.length >= 2) {
+      clientContent = (clientTemplate as ComponentMapTemplate)(clientComponents, componentImports);
+    } else {
+      clientContent = (clientTemplate as EnhancedComponentMapTemplate)(
+        clientComponents,
+        componentImports,
+        {
+          entries: clientEntries,
+          includeVariants,
+          isClientMap: true,
+        }
+      );
+    }
     fs.writeFileSync(
       path.join(process.cwd(), destination, 'component-map.client.ts'),
       clientContent,
@@ -268,8 +284,8 @@ export const generateMap: GenerateMapFunction = ({
     );
   } else {
     // Either in pages/app router or clientComponentMap = false
-    const all = getComponentList(paths, exclude);
-    const components = prepareComponentsForMap(all, { includeVariants });
+    const allComponents = getComponentList(paths, exclude);
+    const components = prepareComponentsForMap(allComponents, { includeVariants });
     const content = buildNextjsMapContent(components, componentImports, {
       headerComment:
         "Below are built-in components that are available in the app, it's recommended to keep them as is",
@@ -281,9 +297,22 @@ export const generateMap: GenerateMapFunction = ({
     // When clientComponentMap is false, only include built-in components (no custom client components)
     if (shouldGenerateClientMap || isAppRouter) {
       const clientMapTemplateToUse = clientMapTemplate || defaultClientMapTemplate;
-      const clientMapContent = clientMapTemplateToUse([], includeVariants, componentImports);
-      const clientMapFile = path.join(process.cwd(), destination, 'component-map.client.ts');
+      let clientMapContent: string;
+      if (clientMapTemplateToUse.length >= 2) {
+        clientMapContent = (clientMapTemplateToUse as ComponentMapTemplate)([], componentImports);
+      } else {
+        clientMapContent = (clientMapTemplateToUse as EnhancedComponentMapTemplate)(
+          [],
+          componentImports,
+          {
+            entries: prepareComponentsForMap([], { includeVariants }),
+            includeVariants,
+            isClientMap: true,
+          }
+        );
+      }
 
+      const clientMapFile = path.join(process.cwd(), destination, 'component-map.client.ts');
       try {
         fs.writeFileSync(clientMapFile, clientMapContent, { encoding: 'utf8' });
       } catch (error) {

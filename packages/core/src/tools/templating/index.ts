@@ -9,6 +9,9 @@ export {
   detectComponentType,
   getComponentListWithTypes,
   filterComponentsByType,
+  ComponentMapEntry,
+  ComponentMapTemplate,
+  EnhancedComponentMapTemplate,
 } from './components';
 export { PluginDefinition, generatePlugins, ModuleType } from './plugins';
 export { matchPath } from './utils';

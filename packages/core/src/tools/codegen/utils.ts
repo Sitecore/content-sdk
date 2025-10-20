@@ -79,15 +79,11 @@ export enum ExtractedFileType {
 
 export type ResolvedImport = {
   componentKey: string; // map key, e.g. 'PromoBlock'
-  moduleName: string; // namespace identifier, e.g. 'PromoBlockbutcooler'
-  importPath: string; // module specifier from map, e.g. '@/components/PromoBlock.but-cooler'
   filePath: string; // absolute file path to source (with extension)
 };
 
 export type ResolveResult = {
   imports: ResolvedImport[];
-  uniqueFiles: string[];
-  byComponent: Record<string, ResolvedImport[]>;
 };
 
 export const utils: {
@@ -197,27 +193,30 @@ function _resolveComponentImportFiles(
   });
 
   // 2) Find the map literal: new Map([...]) and collect entries
+  //    Also capture subsequent mutations: <mapIdent>.set('Key', Value)
   const results: ResolvedImport[] = [];
+  const mapIdentifiers = new Set<string>(); // all identifiers bound to the Map we care about
 
-  const addEntry = (componentKey: string, ident: ts.Expression) => {
+  // Given a component key and an expression (identifier or object literal with spreads),
+  // resolve the module(s) to absolute file paths and append normalized entries to `results`.
+  const resolveAndRecordEntry = (componentKey: string, expr: ts.Expression) => {
     // Case A: ['Key', Identifier]
-    if (ts.isIdentifier(ident)) {
-      const modName = ident.text;
+    if (ts.isIdentifier(expr)) {
+      const modName = expr.text;
       const spec = nameSpaceImports.get(modName);
       if (!spec) return;
       const fileAbs = resolveWithTs(spec, mapPath, compilerOptions);
       if (!fileAbs) return;
       results.push({
         componentKey,
-        moduleName: modName,
-        importPath: spec,
         filePath: toPosixPath(fileAbs),
       });
       return;
     }
+
     // Case B: ['Key', { ...A, ...B, ...C }]
-    if (ts.isObjectLiteralExpression(ident)) {
-      ident.properties.forEach((prop) => {
+    if (ts.isObjectLiteralExpression(expr)) {
+      expr.properties.forEach((prop) => {
         if (ts.isSpreadAssignment(prop) && ts.isIdentifier(prop.expression)) {
           const modName = prop.expression.text;
           const spec = nameSpaceImports.get(modName);
@@ -226,8 +225,6 @@ function _resolveComponentImportFiles(
           if (!fileAbs) return;
           results.push({
             componentKey,
-            moduleName: modName,
-            importPath: spec,
             filePath: toPosixPath(fileAbs),
           });
         }
@@ -235,39 +232,85 @@ function _resolveComponentImportFiles(
     }
   };
 
-  const visit = (node: ts.Node) => {
-    // Look for: export const componentMap = new Map([...])
+  // Walk the `new Map([...])` array literal and feed each ['Key', Value] into
+  // `resolveAndRecordEntry` (only when the key is a string literal).
+  const collectArrayEntries = (arrayArg: ts.ArrayLiteralExpression) => {
+    arrayArg.elements.forEach((el) => {
+      if (ts.isArrayLiteralExpression(el)) {
+        const [keyNode, valNode] = el.elements;
+        if (keyNode && valNode && ts.isStringLiteral(keyNode)) {
+          resolveAndRecordEntry(keyNode.text, valNode as ts.Expression);
+        }
+      }
+    });
+  };
+
+  // If this `new Map([...])` is bound to a variable (via decl or assignment),
+  // record the identifier name so we can catch later `<id>.set(...)` mutations.
+  const captureMapIdentifier = (node: ts.NewExpression) => {
+    // const m = new Map([...])
+    const parent = node.parent;
+
+    // Variable declaration with initializer new Map(...)
+    if (parent && ts.isVariableDeclaration(parent) && ts.isIdentifier(parent.name)) {
+      mapIdentifiers.add(parent.name.text);
+      return;
+    }
+
+    // Assignment: m = new Map([...])
+    if (
+      parent &&
+      ts.isBinaryExpression(parent) &&
+      parent.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+      ts.isIdentifier(parent.left)
+    ) {
+      mapIdentifiers.add(parent.left.text);
+      return;
+    }
+
+    // Exported variable declaration: export const componentMap = new Map([...])
+    if (parent && ts.isVariableDeclaration(parent) && ts.isIdentifier(parent.name)) {
+      mapIdentifiers.add(parent.name.text);
+      return;
+    }
+  };
+
+  const traverseAst = (node: ts.Node) => {
+    // A) Initial literal: new Map([...])
     if (
       ts.isNewExpression(node) &&
       node.expression.getText(source) === 'Map' &&
       node.arguments &&
       node.arguments.length > 0
     ) {
-      const arg = node.arguments[0];
-      if (ts.isArrayLiteralExpression(arg)) {
-        arg.elements.forEach((el) => {
-          if (ts.isArrayLiteralExpression(el)) {
-            const [keyNode, valNode] = el.elements;
-            if (keyNode && valNode && ts.isStringLiteral(keyNode)) {
-              addEntry(keyNode.text, valNode as ts.Expression);
-            }
-          }
-        });
+      const firstArg = node.arguments[0];
+      if (ts.isArrayLiteralExpression(firstArg)) {
+        collectArrayEntries(firstArg);
+      }
+      captureMapIdentifier(node);
+    }
+
+    // B) Mutations: <mapIdent>.set('Key', Value)
+    if (
+      ts.isCallExpression(node) &&
+      ts.isPropertyAccessExpression(node.expression) &&
+      node.expression.name.text === 'set'
+    ) {
+      const target = node.expression.expression;
+      if (ts.isIdentifier(target) && mapIdentifiers.has(target.text)) {
+        const [keyArg, valArg] = node.arguments ?? [];
+        if (keyArg && ts.isStringLiteral(keyArg) && valArg) {
+          resolveAndRecordEntry(keyArg.text, valArg as ts.Expression);
+        }
       }
     }
-    ts.forEachChild(node, visit);
+
+    ts.forEachChild(node, traverseAst);
   };
 
-  ts.forEachChild(source, visit);
+  ts.forEachChild(source, traverseAst);
 
-  // 3) Produce unique files and grouped view
-  const uniqueFiles = Array.from(new Set(results.map((r) => r.filePath)));
-  const byComponent: Record<string, ResolvedImport[]> = {};
-  for (const r of results) {
-    (byComponent[r.componentKey] ||= []).push(r);
-  }
-
-  return { imports: results, uniqueFiles, byComponent };
+  return { imports: results };
 }
 
 function _readNamedExports(filePath: string): string[] {
@@ -376,8 +419,10 @@ async function _sendCode({
 
 // Normalize path separators to POSIX-style "/" for cross-platform consistency.
 export function toPosixPath(p: string) {
+  if (/^\\\\\?\\/.test(p)) return p;
   return p.replace(/\\/g, '/');
 }
+
 export const stripExtension = (p: string) => p.replace(/\.(tsx?|jsx?|mjs|cjs)$/, '');
 
 // Convert an absolute file path into an relative module specifier (POSIX)

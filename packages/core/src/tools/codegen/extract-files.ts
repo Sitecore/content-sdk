@@ -6,12 +6,10 @@ import {
   sendCode,
   validateDeployContext,
   readNamedExports,
-  ResolvedImport,
 } from './utils';
 import { SitecoreConfig } from './../../config';
 import { auth } from '../../tools';
 import debug from './../../debug';
-import fs from 'fs';
 import path from 'path';
 
 export type ExtractFilesConfig = {
@@ -20,8 +18,6 @@ export type ExtractFilesConfig = {
   customValidateDeployContext?: () => boolean;
   enableVariantsInMap?: boolean;
 };
-
-type ResolveResult = { imports: ResolvedImport[] };
 
 /**
  * Extracts components from the app folder and sends them to XMCloud.
@@ -45,8 +41,8 @@ function _extractFiles(args: ExtractFilesConfig) {
   const authParams = {
     clientId: process.env.SITECORE_AUTH_CLIENT_ID || '',
     clientSecret: process.env.SITECORE_AUTH_CLIENT_SECRET || '',
-    authority: process.env.SITECORE_AUTH_AUTHORITY,
-    audience: process.env.SITECORE_AUTH_AUDIENCE,
+    authority: process.env.SITECORE_AUTH_AUTHORITY || '',
+    audience: process.env.SITECORE_AUTH_AUDIENCE || '',
   };
 
   const enableVariantsInMap = args.enableVariantsInMap ?? true;
@@ -65,6 +61,7 @@ function _extractFiles(args: ExtractFilesConfig) {
     }
 
     console.log(chalk.green('Code extraction started'));
+
     const basePath = process.cwd();
 
     try {
@@ -78,35 +75,9 @@ function _extractFiles(args: ExtractFilesConfig) {
       // Resolve files from component-map
       const resolvedImports = await resolveComponentImportFiles(basePath, args.componentMapPath);
 
-      let items: Array<{ componentKey: string; filePath: string }> = [];
-
-      if (resolvedImports && typeof (resolvedImports as ResolveResult).imports !== 'undefined') {
-        // With variants
-        items = (resolvedImports as ResolveResult).imports.map(({ componentKey, filePath }) => ({
-          componentKey,
-          filePath,
-        }));
-      } else if (
-        resolvedImports &&
-        typeof (resolvedImports as unknown as Map<string, string>).forEach === 'function'
-      ) {
-        // Without Variants
-        (resolvedImports as unknown as Map<string, string>).forEach((absPath, key) => {
-          items.push({ componentKey: key, filePath: absPath });
-        });
-      } else {
-        console.error(chalk.red('resolveComponentImportFiles: unexpected return shape'));
-        return;
-      }
-
       const fileDispatches: Promise<string | null>[] = [];
 
-      for (const { componentKey, filePath } of items) {
-        if (!fs.existsSync(filePath)) {
-          console.warn(chalk.yellow(`Skipping missing file: ${filePath}`));
-          continue;
-        }
-
+      for (const { componentKey, filePath } of resolvedImports.imports) {
         let extraLabels: Record<string, unknown> | undefined;
 
         if (enableVariantsInMap) {
