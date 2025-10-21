@@ -85,10 +85,6 @@ export type ResolvedImport = {
   fileType: ExtractedFileType;
 };
 
-export type ResolveResult = {
-  imports: ResolvedImport[];
-};
-
 export const utils: {
   xmCloudDeploy: () => boolean;
 } = {
@@ -167,7 +163,7 @@ function resolveWithTs(spec: string, fromFile: string, options: ts.CompilerOptio
 function _resolveComponentImportFiles(
   appRoot: string,
   componentMapPath: string = './.sitecore/component-map.ts'
-): ResolveResult {
+): ResolvedImport[] {
   const appPath = path.isAbsolute(appRoot) ? appRoot : path.resolve(process.cwd(), appRoot);
   const mapPath = path.isAbsolute(componentMapPath)
     ? componentMapPath
@@ -321,7 +317,7 @@ function _resolveComponentImportFiles(
 
   ts.forEachChild(source, traverseAst);
 
-  return { imports: results };
+  return results;
 }
 
 function _readNamedExports(filePath: string): string[] {

@@ -76,7 +76,7 @@ function _extractFiles(args: ExtractFilesConfig) {
 
       const fileDispatches: Promise<string | null>[] = [];
 
-      for (const { componentKey, filePath, fileType } of resolvedImports.imports) {
+      for (const { componentKey, filePath, fileType } of resolvedImports) {
         let extraLabels: Record<string, unknown> | undefined;
 
         // return an array of export names (e.g., ['Default','Cooler'])
