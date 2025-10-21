@@ -19,7 +19,7 @@ describe('component-variant', () => {
       });
 
       expect(url).to.equal(
-        `${SITECORE_EDGE_URL_DEFAULT}/api/v1/components/generated/123?token=456&targetPath=.%2Fcomponents%2Fpromo-block%2FPromoBlock.variantA.ts`
+        `${SITECORE_EDGE_URL_DEFAULT}/authoring/api/v1/components/generated/123?token=456&targetPath=.%2Fcomponents%2Fpromo-block%2FPromoBlock.variantA.ts`
       );
     });
 
@@ -32,7 +32,7 @@ describe('component-variant', () => {
       });
 
       expect(url).to.equal(
-        `http://my.server/api/v1/components/generated/123?token=456&targetPath=.%2Fcomponents%2Fpromo-block%2FPromoBlock.variantA.ts`
+        `http://my.server/authoring/api/v1/components/generated/123?token=456&targetPath=.%2Fcomponents%2Fpromo-block%2FPromoBlock.variantA.ts`
       );
     });
   });
@@ -49,7 +49,7 @@ describe('component-variant', () => {
       targetPath?: string;
       token: string;
     }) => {
-      let path = `/api/v1/components/generated/${variantId}?token=${token}`;
+      let path = `/authoring/api/v1/components/generated/${variantId}?token=${token}`;
 
       if (targetPath) {
         path += `&targetPath=${encodeURIComponent(targetPath)}`;

@@ -48,7 +48,7 @@ export const getComponentVariantSpecUrl = ({
   targetPath,
   token,
 }: GetComponentVariantSpecParams) => {
-  let url = `${edgeUrl}/api/v1/components/generated/${variantId}?token=${token}`;
+  let url = `${edgeUrl}/authoring/api/v1/components/generated/${variantId}?token=${token}`;
 
   if (targetPath) {
     url += `&targetPath=${encodeURIComponent(targetPath)}`;

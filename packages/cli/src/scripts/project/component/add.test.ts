@@ -78,7 +78,7 @@ describe('add command', () => {
   }) => {
     expect(
       execSyncStub.calledOnceWith(
-        `npx shadcn@^3.4.2 add ${edgeUrl}/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}${
+        `npx shadcn@^3.4.2 add ${edgeUrl}/authoring/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}${
           overwrite ? ' --overwrite' : ''
         }`,
         {
@@ -98,7 +98,7 @@ describe('add command', () => {
     getComponentVariantSpecUrlStub = sandbox
       .stub(toolsModule, 'getComponentVariantSpecUrl')
       .callsFake(({ variantId, targetPath, token }) => {
-        return `https://my.server/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}`;
+        return `https://my.server/authoring/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}`;
       });
     execSyncStub = sandbox.stub(childProcess, 'execSync');
     generateMapStub = sandbox.stub(generateMapModule, 'handler');
@@ -302,7 +302,7 @@ describe('add command', () => {
     getComponentVariantSpecStub.resolves(createComponentVariantSpec());
 
     getComponentVariantSpecUrlStub.callsFake(({ variantId, targetPath, token }) => {
-      return `${edgeUrl}/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}`;
+      return `${edgeUrl}/authoring/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}`;
     });
 
     await addModule.handler({
