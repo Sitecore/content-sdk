@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { expect, use } from 'chai';
+import { expect } from 'chai';
 import { createSandbox, SinonSandbox } from 'sinon';
 import { render } from '@testing-library/react';
 import { FEaaSServerWrapper } from './FEaaSSeverWrapper';
