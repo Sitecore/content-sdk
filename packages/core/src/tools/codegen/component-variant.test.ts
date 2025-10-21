@@ -144,5 +144,23 @@ describe('component-variant', () => {
         expect(error.message).to.equal('Failed to fetch component variant 123');
       }
     });
+
+    it('should throw an error when response is unauthorized', async () => {
+      const variantId = '123';
+
+      mockComponentVariantSpecApi({
+        variantId,
+        token,
+      }).reply(401);
+
+      try {
+        await getComponentVariantSpec({ variantId, token });
+        expect.fail('Expected function to throw');
+      } catch (error) {
+        expect(error.message).to.equal(
+          'Unauthorized. Please verify the token is correct and not expired.'
+        );
+      }
+    });
   });
 });

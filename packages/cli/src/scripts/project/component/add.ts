@@ -175,7 +175,7 @@ export async function handler(argv: AddArgs) {
       token,
     });
 
-    execSync(`npx shadcn@^3.4.2 add ${variantSpecUrl}${overwrite ? ' --overwrite' : ''}`, {
+    execSync(`npx shadcn@^3.4.2 add "${variantSpecUrl}"${overwrite ? ' --overwrite' : ''}`, {
       stdio: 'inherit',
       cwd: process.cwd(),
     });

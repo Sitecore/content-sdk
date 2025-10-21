@@ -78,7 +78,7 @@ describe('add command', () => {
   }) => {
     expect(
       execSyncStub.calledOnceWith(
-        `npx shadcn@^3.4.2 add ${edgeUrl}/authoring/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}${
+        `npx shadcn@^3.4.2 add "${edgeUrl}/authoring/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}"${
           overwrite ? ' --overwrite' : ''
         }`,
         {

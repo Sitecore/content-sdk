@@ -81,6 +81,10 @@ export const getComponentVariantSpec = async ({
       );
     }
 
+    if (response.status === 401) {
+      throw new Error('Unauthorized. Please verify the token is correct and not expired.');
+    }
+
     if (!response.ok) {
       throw new Error(`Failed to fetch component variant ${variantId}`);
     }
