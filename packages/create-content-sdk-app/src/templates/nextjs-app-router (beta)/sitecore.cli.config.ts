@@ -8,18 +8,14 @@ import {
 import scConfig from './sitecore.config';
 
 export default defineCliConfig({
+  config: scConfig,
   build: {
     commands: [
       generateMetadata(),
-      generateSites({
-        scConfig,
-      }),
-      extractFiles({
-        scConfig,
-      }),
+      generateSites(),
+      extractFiles(),
       writeImportMap({
         paths: ['src/components'],
-        scConfig,
       }),
     ],
   },
