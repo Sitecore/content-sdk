@@ -65,6 +65,7 @@ export function args(yargs: Argv<AddArgs>) {
       requiresArg: true,
       type: 'string',
       describe: 'The authentication token.',
+      demandOption: true,
     })
     .option('target-path', {
       requiresArg: false,
