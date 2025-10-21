@@ -2,7 +2,6 @@ import {
   ComponentFile,
   GenerateMapArgs,
   GenerateMapFunction,
-  // getComponentList,
   ComponentImport,
   detectRouterType,
   getComponentListWithTypes,
