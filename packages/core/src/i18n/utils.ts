@@ -5,6 +5,8 @@
  * @returns {string} the rewrite path
  */
 export function getLocaleRewrite(pathname: string, locale: string): string {
+  if (pathname === '/') return `/${locale}`;
+  
   const path = pathname.startsWith('/') ? pathname : '/' + pathname;
 
   return `/${locale}${path}`;

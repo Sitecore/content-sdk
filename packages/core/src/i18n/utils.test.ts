@@ -20,7 +20,7 @@ describe('utils', () => {
     it('should return the root path with the locale', () => {
       const pathname = '/';
       const result = getLocaleRewrite(pathname, defaultLocale);
-      expect(result).to.equal(`/en/`);
+      expect(result).to.equal(`/en`);
     });
   });
 });
