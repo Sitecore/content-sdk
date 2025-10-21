@@ -1,5 +1,7 @@
 /* eslint-disable quotes */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-unused-vars */
+
 import path from 'path';
 import { expect } from 'chai';
 import sinon from 'sinon';
