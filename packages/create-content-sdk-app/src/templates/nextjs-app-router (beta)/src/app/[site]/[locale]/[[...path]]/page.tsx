@@ -71,9 +71,10 @@ export const generateStaticParams = async () => {
 <% } -%>
 // Metadata fields for the page.
 export const generateMetadata = async ({ params }: PageProps) => {
-  const { path } = await params;
+  const { path, site, locale } = await params;
+
   // The same call as for rendering the page. Should be cached by default react behavior
-  const page = await client.getPage(path ?? [], { locale: 'en' });
+  const page = await client.getPage(path ?? [], { site, locale });
   return {
     title: (page?.layout.sitecore.route?.fields as RouteFields)?.Title?.value?.toString() || 'Page',
   };
