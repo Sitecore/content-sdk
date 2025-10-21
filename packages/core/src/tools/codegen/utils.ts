@@ -66,6 +66,7 @@ export type ExtractedFile = {
   name: string;
   path: string;
   type: ExtractedFileType;
+  labels?: Record<string, unknown>;
 };
 
 /**
@@ -73,6 +74,7 @@ export type ExtractedFile = {
  */
 export enum ExtractedFileType {
   Component = 'component',
+  Variant = 'variant',
   Json = 'json',
   PackageJson = 'package.json',
 }
@@ -80,6 +82,7 @@ export enum ExtractedFileType {
 export type ResolvedImport = {
   componentKey: string; // map key, e.g. 'PromoBlock'
   filePath: string; // absolute file path to source (with extension)
+  fileType: ExtractedFileType;
 };
 
 export type ResolveResult = {
@@ -177,6 +180,12 @@ function _resolveComponentImportFiles(
   const mapText = fs.readFileSync(mapPath, 'utf8');
   const source = ts.createSourceFile(mapPath, mapText, ts.ScriptTarget.Latest, true);
 
+  const getFileType = (absPath: string): ExtractedFileType => {
+    const base = path.basename(absPath); // e.g., "PromoBlock.extra.tsx"
+    const name = base.replace(/\.[^.]+$/, ''); // -> "PromoBlock.extra"
+    return name.includes('.') ? ExtractedFileType.Variant : ExtractedFileType.Component;
+  };
+
   // 1) Collect namespace imports: Identifier -> module specifier string
   const nameSpaceImports = new Map<string, string>();
   source.forEachChild((node) => {
@@ -210,6 +219,7 @@ function _resolveComponentImportFiles(
       results.push({
         componentKey,
         filePath: toPosixPath(fileAbs),
+        fileType: getFileType(fileAbs),
       });
       return;
     }
@@ -226,6 +236,7 @@ function _resolveComponentImportFiles(
           results.push({
             componentKey,
             filePath: toPosixPath(fileAbs),
+            fileType: getFileType(fileAbs),
           });
         }
       });
@@ -356,12 +367,10 @@ async function _sendCode({
   file,
   token,
   targetUrl,
-  extraLabels,
 }: {
   file: ExtractedFile;
   token: string;
   targetUrl: string;
-  extraLabels?: Record<string, unknown>;
 }) {
   const apiEndpoint = `${targetUrl}/mesh/push/api/v1/contentsdk/code/extracted`;
 
@@ -375,7 +384,7 @@ async function _sendCode({
   // Merge base labels with any extra labels (variants, componentName, etc.)
   const labels: Record<string, unknown> = {
     type: file.type,
-    ...(extraLabels || {}),
+    ...(file.labels || {}),
   };
 
   try {

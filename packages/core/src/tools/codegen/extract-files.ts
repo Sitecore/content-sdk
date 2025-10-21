@@ -16,7 +16,6 @@ export type ExtractFilesConfig = {
   scConfig: SitecoreConfig;
   componentMapPath?: string;
   customValidateDeployContext?: () => boolean;
-  enableVariantsInMap?: boolean;
 };
 
 /**
@@ -45,7 +44,7 @@ function _extractFiles(args: ExtractFilesConfig) {
     audience: process.env.SITECORE_AUTH_AUDIENCE || '',
   };
 
-  const enableVariantsInMap = args.enableVariantsInMap ?? true;
+  // const enableVariantsInMap = args.enableVariantsInMap ?? true;
 
   return async () => {
     if (
@@ -77,28 +76,26 @@ function _extractFiles(args: ExtractFilesConfig) {
 
       const fileDispatches: Promise<string | null>[] = [];
 
-      for (const { componentKey, filePath } of resolvedImports.imports) {
+      for (const { componentKey, filePath, fileType } of resolvedImports.imports) {
         let extraLabels: Record<string, unknown> | undefined;
 
-        if (enableVariantsInMap) {
-          // return an array of export names (e.g., ['Default','Cooler'])
-          const variantNames = readNamedExports(filePath);
+        // return an array of export names (e.g., ['Default','Cooler'])
+        const variantNames = readNamedExports(filePath);
 
-          extraLabels = {
-            ...(variantNames.length ? { variantNames } : {}),
-          };
-        }
+        extraLabels = {
+          ...(variantNames.length ? { variantNames } : {}),
+        };
 
         fileDispatches.push(
           sendCode({
             file: {
               name: componentKey,
               path: filePath,
-              type: ExtractedFileType.Component,
+              type: fileType,
+              labels: extraLabels,
             },
             token: accessToken,
             targetUrl,
-            extraLabels,
           })
         );
       }
