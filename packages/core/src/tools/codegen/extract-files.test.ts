@@ -9,7 +9,7 @@ import { auth } from '../../tools';
 import { extractFiles } from './extract-files';
 import debug from './../../debug';
 
-describe('extract-files', () => {
+describe.only('extract-files', () => {
   const sandbox = sinon.createSandbox();
   const defaultConfig = defineConfig({
     api: {

@@ -10,6 +10,7 @@ import {
   EnhancedComponentMapTemplate,
   ComponentMapTemplate,
   ComponentMapEntry,
+  getComponentList,
 } from '@sitecore-content-sdk/core/tools';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -211,10 +212,6 @@ const collectComponents = (opts: {
   const filtered =
     opts.filter === 'client'
       ? filterComponentsByType(withTypes, ['client', 'universal'])
-      : opts.filter === 'server'
-      ? filterComponentsByType(withTypes, ['server'])
-      : opts.filter === 'universal'
-      ? filterComponentsByType(withTypes, ['universal'])
       : withTypes;
 
   return {
@@ -284,16 +281,25 @@ export const generateMap: GenerateMapFunction = ({
     );
 
     // App Router, client map
+    const clientComponents = collectComponents({
+      paths,
+      exclude,
+      includeVariants,
+      filter: 'client',
+    });
     const clientTemplate = clientMapTemplate || defaultClientMapTemplate;
     let clientContent: string;
     if (clientTemplate.length >= 2) {
-      clientContent = (clientTemplate as ComponentMapTemplate)(getComponents.raw, componentImports);
+      clientContent = (clientTemplate as ComponentMapTemplate)(
+        clientComponents.raw,
+        componentImports
+      );
     } else {
       clientContent = (clientTemplate as EnhancedComponentMapTemplate)(
-        getComponents.raw,
+        clientComponents.raw,
         componentImports,
         {
-          entries: getComponents.entries,
+          entries: clientComponents.entries,
           includeVariants,
           isClientMap: true,
         }
@@ -306,8 +312,9 @@ export const generateMap: GenerateMapFunction = ({
     );
   } else {
     // Either in pages/app router or clientComponentMap = false
-    const getComponent = collectComponents({ paths, exclude, includeVariants, filter: 'all' });
-    const content = buildNextjsMapContent(getComponent.entries, componentImports, {
+    const allComponents = getComponentList(paths, exclude);
+    const components = prepareComponentsForMap(allComponents, { includeVariants });
+    const content = buildNextjsMapContent(components, componentImports, {
       headerComment:
         "Below are built-in components that are available in the app, it's recommended to keep them as is",
       isClientMap: false,
@@ -318,7 +325,7 @@ export const generateMap: GenerateMapFunction = ({
     // When clientComponentMap is false, only include built-in components (no custom client components)
     if (shouldGenerateClientMap || isAppRouter) {
       const clientMapTemplateToUse = clientMapTemplate || defaultClientMapTemplate;
-      const getComponents = collectComponents({ paths: [], includeVariants, filter: 'all' });
+      const components = collectComponents({ paths: [], includeVariants, filter: 'all' });
       let clientMapContent: string;
       if (clientMapTemplateToUse.length >= 2) {
         clientMapContent = (clientMapTemplateToUse as ComponentMapTemplate)([], componentImports);
@@ -327,7 +334,7 @@ export const generateMap: GenerateMapFunction = ({
           [],
           componentImports,
           {
-            entries: getComponents.entries,
+            entries: components.entries,
             includeVariants,
             isClientMap: true,
           }
@@ -347,3 +354,4 @@ export const generateMap: GenerateMapFunction = ({
     }
   }
 };
+

@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
 import debug from './../../debug';
+import { isBuiltin } from 'module';
 
 /**
  * Parse the generated component-map file and return all referenced modules
@@ -177,8 +178,8 @@ function _resolveComponentImportFiles(
   const source = ts.createSourceFile(mapPath, mapText, ts.ScriptTarget.Latest, true);
 
   const getFileType = (absPath: string): ExtractedFileType => {
-    const base = path.basename(absPath); // e.g., "PromoBlock.extra.tsx"
-    const name = base.replace(/\.[^.]+$/, ''); // -> "PromoBlock.extra"
+    const base = path.basename(absPath); // "PromoBlock.extra.tsx"
+    const name = base.replace(/\.[^.]+$/, ''); // "PromoBlock.extra"
     return name.includes('.') ? ExtractedFileType.Variant : ExtractedFileType.Component;
   };
 
@@ -205,18 +206,30 @@ function _resolveComponentImportFiles(
   // Given a component key and an expression (identifier or object literal with spreads),
   // resolve the module(s) to absolute file paths and append normalized entries to `results`.
   const resolveAndRecordEntry = (componentKey: string, expr: ts.Expression) => {
-    // Case A: ['Key', Identifier]
-    if (ts.isIdentifier(expr)) {
-      const modName = expr.text;
-      const spec = nameSpaceImports.get(modName);
-      if (!spec) return;
+    // small guard to record a resolved path if valid
+    const recordIfValid = (spec: string) => {
+      // ignore Node built-ins and node: protocol up front
+      if (isBuiltin(spec) || isNodeProtocol(spec)) return;
+
       const fileAbs = resolveWithTs(spec, mapPath, compilerOptions);
       if (!fileAbs) return;
+
+      // ignore node_modules and *.d.ts after resolution
+      if (inNodeModules(fileAbs) || isDeclarationFile(fileAbs)) return;
+
       results.push({
         componentKey,
         filePath: toPosixPath(fileAbs),
         fileType: getFileType(fileAbs),
       });
+    };
+
+    // Case A: ['Key', Identifier]
+    if (ts.isIdentifier(expr)) {
+      const modName = expr.text;
+      const spec = nameSpaceImports.get(modName);
+      if (!spec) return;
+      recordIfValid(spec);
       return;
     }
 
@@ -227,13 +240,7 @@ function _resolveComponentImportFiles(
           const modName = prop.expression.text;
           const spec = nameSpaceImports.get(modName);
           if (!spec) return;
-          const fileAbs = resolveWithTs(spec, mapPath, compilerOptions);
-          if (!fileAbs) return;
-          results.push({
-            componentKey,
-            filePath: toPosixPath(fileAbs),
-            fileType: getFileType(fileAbs),
-          });
+          recordIfValid(spec);
         }
       });
     }
@@ -317,7 +324,7 @@ function _resolveComponentImportFiles(
 
   ts.forEachChild(source, traverseAst);
 
-  return results;
+  return results.filter((r) => !isDeclarationFile(r.filePath));
 }
 
 function _readNamedExports(filePath: string): string[] {
@@ -420,6 +427,20 @@ async function _sendCode({
   }
 
   return file.path;
+}
+
+const NODE_PROTOCOL = 'node:';
+
+function isNodeProtocol(specifier: string): boolean {
+  return specifier.startsWith(NODE_PROTOCOL);
+}
+
+function isDeclarationFile(p: string): boolean {
+  return p.endsWith('.d.ts');
+}
+
+function inNodeModules(p: string): boolean {
+  return p.replace(/\\/g, '/').includes('/node_modules/');
 }
 
 // Normalize path separators to POSIX-style "/" for cross-platform consistency.

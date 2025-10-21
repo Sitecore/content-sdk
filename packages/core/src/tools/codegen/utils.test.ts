@@ -8,6 +8,12 @@ import fs from 'fs';
 import * as codegenUtils from './utils';
 import { toPosixPath, stripExtension, getRelativeImportPath, isNodeModuleImport } from './utils';
 
+const uniqueFilesFrom = (res: Array<{ filePath: string }>) => {
+  const set = new Set<string>();
+  for (const it of res) set.add(it.filePath);
+  return Array.from(set);
+};
+
 describe('codegen-utils', () => {
   const sandbox = sinon.createSandbox();
   afterEach(() => {
@@ -33,24 +39,36 @@ describe('codegen-utils', () => {
       sandbox.stub(fs, 'existsSync').withArgs(componentPath).returns(true);
       sandbox.stub(fs, 'readFileSync').withArgs(componentPath).returns(fileContent);
 
-      nock(meshEndpoint)
-        .post(
-          '/mesh/push/api/v1/contentsdk/code/extracted',
-          JSON.stringify({
+      const fetchStub = sandbox
+        .stub(globalThis as any, 'fetch')
+        .callsFake(async (url: string, init: any) => {
+          // Assert URL & payload so this test still has value without nock
+          expect(url).to.equal(`${meshEndpoint}/mesh/push/api/v1/contentsdk/code/extracted`);
+          expect(init.method).to.equal('POST');
+          expect(init.headers.Authorization).to.equal(`Bearer ${token}`);
+
+          const body = JSON.parse(init.body);
+          expect(body).to.deep.equal({
             EnvironmentId: 'ContentSDK',
             name: file.name,
             content: fileContent,
-            labels: {
-              type: file.type,
-            },
-          })
-        )
-        .matchHeader('Authorization', `Bearer ${token}`)
-        .reply(200);
+            labels: { type: file.type },
+          });
+
+          return {
+            ok: true,
+            status: 200,
+            statusText: 'OK',
+            url,
+            headers: new Map(),
+            text: async () => '',
+          } as any;
+        });
 
       const result = await codegenUtils.sendCode({ file, token, targetUrl: meshEndpoint });
-
       expect(result).to.equal(componentPath);
+
+      expect(fetchStub.calledOnce).to.be.true;
     });
 
     it('should read file from componentPath and send code with variant data to meshEndpoint', async () => {
@@ -61,38 +79,48 @@ describe('codegen-utils', () => {
       const file = {
         name: componentName,
         path: componentPath,
-        type: codegenUtils.ExtractedFileType.Component,
-      };
-
-      const labels = {
-        type: file.type,
-        variantNames: ['default', 'variant1'],
+        type: codegenUtils.ExtractedFileType.Variant,
+        labels: {
+          componentName: 'Promo',
+          variantName: 'dark',
+        },
       };
 
       sandbox.stub(fs, 'existsSync').withArgs(componentPath).returns(true);
       sandbox.stub(fs, 'readFileSync').withArgs(componentPath).returns(fileContent);
 
-      nock(meshEndpoint)
-        .post(
-          '/mesh/push/api/v1/contentsdk/code/extracted',
-          JSON.stringify({
+      const fetchStub = sandbox
+        .stub(globalThis as any, 'fetch')
+        .callsFake(async (url: string, init: any) => {
+          expect(url).to.equal(`${meshEndpoint}/mesh/push/api/v1/contentsdk/code/extracted`);
+          expect(init.method).to.equal('POST');
+          expect(init.headers.Authorization).to.equal(`Bearer ${token}`);
+
+          const body = JSON.parse(init.body);
+          expect(body).to.deep.equal({
             EnvironmentId: 'ContentSDK',
             name: file.name,
             content: fileContent,
-            labels,
-          })
-        )
-        .matchHeader('Authorization', `Bearer ${token}`)
-        .reply(200);
+            labels: {
+              type: file.type,
+              componentName: 'Promo',
+              variantName: 'dark',
+            },
+          });
 
-      const result = await codegenUtils.sendCode({
-        file,
-        token,
-        targetUrl: meshEndpoint,
-        extraLabels: { variantNames: ['default', 'variant1'] },
-      });
+          return {
+            ok: true,
+            status: 200,
+            statusText: 'OK',
+            url,
+            headers: new Map(),
+            text: async () => '',
+          } as any;
+        });
 
+      const result = await codegenUtils.sendCode({ file, token, targetUrl: meshEndpoint });
       expect(result).to.equal(componentPath);
+      expect(fetchStub.calledOnce).to.be.true;
     });
 
     it('should log when componentPath file is not found', async () => {
@@ -176,12 +204,11 @@ describe('codegen-utils', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/regular-imports';
       const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      const actual = res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }));
+      const actual = res.map((i) => ({ ...i, filePath: norm(i.filePath) }));
       const expected = [
         {
           componentKey: 'TestComponent',
-          moduleName: 'TestComponent',
-          importPath: '../src/components/TestComponent',
+          fileType: codegenUtils.ExtractedFileType.Component,
           filePath: norm(
             path.resolve(
               process.cwd(),
@@ -191,8 +218,7 @@ describe('codegen-utils', () => {
         },
         {
           componentKey: 'Component1',
-          moduleName: 'TestComponent2',
-          importPath: '../src/components/TestComponent2',
+          fileType: codegenUtils.ExtractedFileType.Component,
           filePath: norm(
             path.resolve(
               process.cwd(),
@@ -203,7 +229,7 @@ describe('codegen-utils', () => {
       ];
 
       expect(actual).to.deep.equal(expected);
-      expect(res.uniqueFiles.map(norm).sort()).to.deep.equal(
+      expect(uniqueFilesFrom(res).map(norm).sort()).to.deep.equal(
         [
           path.resolve(
             process.cwd(),
@@ -217,10 +243,6 @@ describe('codegen-utils', () => {
           .map(norm)
           .sort()
       );
-
-      expect(Object.keys(res.byComponent).sort()).to.deep.equal(['Component1', 'TestComponent']);
-      expect(res.byComponent.TestComponent).to.have.length(1);
-      expect(res.byComponent.Component1).to.have.length(1);
     });
 
     it('handles custom componentMap path (JS) and parses identifier entries', () => {
@@ -228,12 +250,11 @@ describe('codegen-utils', () => {
       const mapPath = './src/non-standard-path/componentMap.js';
       const res = codegenUtils.resolveComponentImportFiles(appPath, mapPath);
 
-      const actual = res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }));
+      const actual = res.map((i) => ({ ...i, filePath: norm(i.filePath) }));
       const expected = [
         {
           componentKey: 'OtherComponent1',
-          moduleName: 'OtherComponent1',
-          importPath: '../components/TestComponent',
+          fileType: codegenUtils.ExtractedFileType.Component,
           filePath: norm(
             path.resolve(
               process.cwd(),
@@ -243,8 +264,7 @@ describe('codegen-utils', () => {
         },
         {
           componentKey: 'OtherComponent2',
-          moduleName: 'OtherComponent2',
-          importPath: '../components/TestComponent2',
+          fileType: codegenUtils.ExtractedFileType.Component,
           filePath: norm(
             path.resolve(
               process.cwd(),
@@ -261,46 +281,32 @@ describe('codegen-utils', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/variants-imports';
       const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      const actual = res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }));
+      const actual = res.map((i) => ({ ...i, filePath: norm(i.filePath) }));
       const expected = [
         {
           componentKey: 'Promo',
-          moduleName: 'PromoBase',
-          importPath: '../src/components/Promo',
+          fileType: codegenUtils.ExtractedFileType.Component,
           filePath: norm(path.resolve(process.cwd(), appPath, 'src/components/Promo.tsx')),
         },
         {
           componentKey: 'Promo',
-          moduleName: 'PromoVariants',
-          importPath: '../src/components/Promo.variants',
+          fileType: codegenUtils.ExtractedFileType.Variant,
           filePath: norm(path.resolve(process.cwd(), appPath, 'src/components/Promo.variants.tsx')),
         },
       ];
 
       expect(actual).to.deep.equal(expected);
-
-      expect(Object.keys(res.byComponent)).to.deep.equal(['Promo']);
-      expect(res.byComponent.Promo).to.have.length(2);
-      expect(res.uniqueFiles.map(norm).sort()).to.deep.equal(
-        [
-          path.resolve(process.cwd(), appPath, 'src/components/Promo.tsx'),
-          path.resolve(process.cwd(), appPath, 'src/components/Promo.variants.tsx'),
-        ]
-          .map(norm)
-          .sort()
-      );
     });
 
     it('supports spread entries and returns both files for a single componentKey', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/js-imports';
       const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      const actual = res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }));
+      const actual = res.map((i) => ({ ...i, filePath: norm(i.filePath) }));
       const expected = [
         {
           componentKey: 'TestComponent',
-          moduleName: 'TestComponent',
-          importPath: '../src/components/TestComponent',
+          fileType: codegenUtils.ExtractedFileType.Component,
           filePath: norm(
             path.resolve(
               process.cwd(),
@@ -310,8 +316,7 @@ describe('codegen-utils', () => {
         },
         {
           componentKey: 'Component1',
-          moduleName: 'TestComponent2',
-          importPath: '../src/components/TestComponent2',
+          fileType: codegenUtils.ExtractedFileType.Component,
           filePath: norm(
             path.resolve(
               process.cwd(),
@@ -328,12 +333,14 @@ describe('codegen-utils', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/custom-component-map';
       const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      const actual = res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }));
+      const actual = res
+        .map((i) => ({ ...i, filePath: norm(i.filePath) }))
+        .sort((a, b) => a.filePath.localeCompare(b.filePath));
+
       const expected = [
         {
           componentKey: 'TestComponent',
-          moduleName: 'TestComponent',
-          importPath: '../src/components/TestComponent',
+          fileType: codegenUtils.ExtractedFileType.Component,
           filePath: norm(
             path.resolve(
               process.cwd(),
@@ -341,7 +348,17 @@ describe('codegen-utils', () => {
             )
           ),
         },
-      ];
+        {
+          componentKey: 'TestComponent2',
+          fileType: codegenUtils.ExtractedFileType.Component,
+          filePath: norm(
+            path.resolve(
+              process.cwd(),
+              './src/tools/codegen/test-data/extract-components/custom-component-map/src/components/TestComponent2.tsx'
+            )
+          ),
+        },
+      ].sort((a, b) => a.filePath.localeCompare(b.filePath));
 
       expect(actual).to.deep.equal(expected);
     });
@@ -350,11 +367,15 @@ describe('codegen-utils', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/named-imports';
       const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      expect(res.imports.map((i) => ({ ...i, filePath: norm(i.filePath) }))).to.deep.equal([
+      expect(
+        res.map((i) => ({
+          ...i,
+          filePath: norm(i.filePath),
+        }))
+      ).to.deep.equal([
         {
           componentKey: 'TestComponent',
-          moduleName: 'TestComponent',
-          importPath: '../src/components/TestComponent',
+          fileType: codegenUtils.ExtractedFileType.Component,
           filePath: norm(
             path.resolve(
               process.cwd(),
@@ -369,7 +390,7 @@ describe('codegen-utils', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/with-path-aliases';
       const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      expect(res.uniqueFiles.map(norm)).to.deep.equal([
+      expect(uniqueFilesFrom(res).map(norm)).to.deep.equal([
         norm(
           path.resolve(
             process.cwd(),
@@ -383,7 +404,7 @@ describe('codegen-utils', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/node-modules-imports';
       const res = codegenUtils.resolveComponentImportFiles(appPath);
 
-      expect(res.uniqueFiles.map(norm)).to.deep.equal([
+      expect(uniqueFilesFrom(res).map(norm)).to.deep.equal([
         norm(
           path.resolve(
             process.cwd(),
