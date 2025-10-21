@@ -2,7 +2,7 @@ import {
   ComponentFile,
   GenerateMapArgs,
   GenerateMapFunction,
-  getComponentList,
+  // getComponentList,
   ComponentImport,
   detectRouterType,
   getComponentListWithTypes,
@@ -183,7 +183,6 @@ export const defaultClientMapTemplate: EnhancedComponentMapTemplate = (
   componentImports,
   ctx
 ) => {
-  // Prefer preprocessed entries from ctx; otherwise fall back to local prep
   const entries =
     ctx?.entries ??
     prepareComponentsForMap(components as ComponentFileWithType[], {
@@ -194,6 +193,35 @@ export const defaultClientMapTemplate: EnhancedComponentMapTemplate = (
     headerComment: 'Client-safe component map for App Router',
     isClientMap: true,
   });
+};
+
+export type CollectFilter = 'all' | 'client' | 'server' | 'universal';
+
+// Collect components from specified paths, apply exclude and type filter, and prepare map entries.
+const collectComponents = (opts: {
+  paths: string[];
+  exclude?: string[];
+  includeVariants: boolean;
+  filter?: CollectFilter;
+}): {
+  raw: ComponentFileWithType[];
+  entries: ComponentMapEntry[];
+} => {
+  const withTypes = getComponentListWithTypes(opts.paths, opts.exclude);
+
+  const filtered =
+    opts.filter === 'client'
+      ? filterComponentsByType(withTypes, ['client', 'universal'])
+      : opts.filter === 'server'
+      ? filterComponentsByType(withTypes, ['server'])
+      : opts.filter === 'universal'
+      ? filterComponentsByType(withTypes, ['universal'])
+      : withTypes;
+
+  return {
+    raw: filtered,
+    entries: prepareComponentsForMap(filtered, { includeVariants: opts.includeVariants }),
+  };
 };
 
 /**
@@ -231,23 +259,20 @@ export const generateMap: GenerateMapFunction = ({
 
   if (shouldGenerateClientMap) {
     // App Router case, main map
-    const componentsWithTypes = getComponentListWithTypes(paths, exclude);
-    const components = prepareComponentsForMap(componentsWithTypes, {
-      includeVariants,
-    });
+    const getComponents = collectComponents({ paths, exclude, includeVariants, filter: 'all' });
     let mainContent: string;
     if (mapTemplate) {
       mainContent = (mapTemplate as EnhancedComponentMapTemplate)(
-        componentsWithTypes,
+        getComponents.raw,
         componentImports,
         {
-          entries: components,
+          entries: getComponents.entries,
           includeVariants,
           isClientMap: false,
         }
       );
     } else {
-      mainContent = buildNextjsMapContent(components, componentImports, {
+      mainContent = buildNextjsMapContent(getComponents.entries, componentImports, {
         headerComment:
           "Below are built-in components that are available in the app, it's recommended to keep them as is",
         isClientMap: false,
@@ -260,18 +285,16 @@ export const generateMap: GenerateMapFunction = ({
     );
 
     // App Router, client map
-    const clientComponents = filterComponentsByType(componentsWithTypes, ['client', 'universal']);
-    const clientEntries = prepareComponentsForMap(clientComponents, { includeVariants });
     const clientTemplate = clientMapTemplate || defaultClientMapTemplate;
     let clientContent: string;
     if (clientTemplate.length >= 2) {
-      clientContent = (clientTemplate as ComponentMapTemplate)(clientComponents, componentImports);
+      clientContent = (clientTemplate as ComponentMapTemplate)(getComponents.raw, componentImports);
     } else {
       clientContent = (clientTemplate as EnhancedComponentMapTemplate)(
-        clientComponents,
+        getComponents.raw,
         componentImports,
         {
-          entries: clientEntries,
+          entries: getComponents.entries,
           includeVariants,
           isClientMap: true,
         }
@@ -284,9 +307,8 @@ export const generateMap: GenerateMapFunction = ({
     );
   } else {
     // Either in pages/app router or clientComponentMap = false
-    const allComponents = getComponentList(paths, exclude);
-    const components = prepareComponentsForMap(allComponents, { includeVariants });
-    const content = buildNextjsMapContent(components, componentImports, {
+    const getComponent = collectComponents({ paths, exclude, includeVariants, filter: 'all' });
+    const content = buildNextjsMapContent(getComponent.entries, componentImports, {
       headerComment:
         "Below are built-in components that are available in the app, it's recommended to keep them as is",
       isClientMap: false,
@@ -297,6 +319,7 @@ export const generateMap: GenerateMapFunction = ({
     // When clientComponentMap is false, only include built-in components (no custom client components)
     if (shouldGenerateClientMap || isAppRouter) {
       const clientMapTemplateToUse = clientMapTemplate || defaultClientMapTemplate;
+      const getComponents = collectComponents({ paths: [], includeVariants, filter: 'all' });
       let clientMapContent: string;
       if (clientMapTemplateToUse.length >= 2) {
         clientMapContent = (clientMapTemplateToUse as ComponentMapTemplate)([], componentImports);
@@ -305,7 +328,7 @@ export const generateMap: GenerateMapFunction = ({
           [],
           componentImports,
           {
-            entries: prepareComponentsForMap([], { includeVariants }),
+            entries: getComponents.entries,
             includeVariants,
             isClientMap: true,
           }
