@@ -6,9 +6,9 @@
 
 # Variable: writeImportMap()
 
-> `const` **writeImportMap**: (`args`) => () => `Promise`\<`void`\>
+> `const` **writeImportMap**: (`args`) => (`{ scConfig }?`) => `Promise`\<`void`\>
 
-Defined in: core/types/tools/codegen/import-map.d.ts:63
+Defined in: core/types/tools/codegen/import-map.d.ts:66
 
 Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
 
@@ -20,7 +20,14 @@ Entry point function for generating import-map. Parses provided paths and output
 
 ## Returns
 
-> (): `Promise`\<`void`\>
+> (`{ scConfig }?`): `Promise`\<`void`\>
+
+### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `{ scConfig }?` | \{ `scConfig?`: `SitecoreConfig`; \} |
+| `{ scConfig }.scConfig?` | `SitecoreConfig` |
 
 ### Returns
 
