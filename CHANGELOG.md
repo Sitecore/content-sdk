@@ -24,7 +24,7 @@ Our versioning strategy is as follows:
   * Introduced a new `sitecore-tools project component add <variant-id>` CLI command to add a generated variant to the application.
 * `[core]` Introduce `scConfig` property in `sitecore.cli.config` ([#244](https://github.com/Sitecore/content-sdk/pull/244)):
   * The `scConfig` property is used to pass the Sitecore configuration to the CLI commands.
-  * Build commands now receive arguments (e.g. `scConfig`) to allow access to the CLI specific configuration settings.
+  * Build commands now receive arguments (e.g. `scConfig`) to allow access to the CLI specific configuration settings. Now it's optional to pass `scConfig` manually to the command constructor.
 * `[nextjs]` Slim down sample even more ([#225](https://github.com/Sitecore/content-sdk/pull/225))
 * Mark client components with `use client` directive. ([#226](https://github.com/Sitecore/content-sdk/pull/226))
 * Add LLMs and Copilot instruction files for improved AI guidance ([#239](https://github.com/Sitecore/content-sdk/pull/239))
