@@ -65,7 +65,7 @@ describe('extract-files', () => {
       title: 'Using new config passed as argument',
       run: ({ scConfig, ...rest }: ExtractFilesConfig) => {
         const generate = extractFiles(rest);
-        return generate(scConfig);
+        return generate({ scConfig });
       },
     },
   ];

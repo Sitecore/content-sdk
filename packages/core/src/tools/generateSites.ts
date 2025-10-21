@@ -36,7 +36,7 @@ export const generateSites = ({
   scConfig: deprecatedScConfig,
   destinationPath,
 }: GenerateSitesConfig = {}): (() => Promise<void>) => {
-  return async (scConfig?: GenerateSitesConfig['scConfig']) => {
+  return async ({ scConfig }: { scConfig?: GenerateSitesConfig['scConfig'] } = {}) => {
     const config = deprecatedScConfig ?? scConfig;
 
     if (!config) {

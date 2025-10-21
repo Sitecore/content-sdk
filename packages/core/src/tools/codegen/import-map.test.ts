@@ -363,7 +363,7 @@ describe('Import Map Generation', () => {
         title: 'Using new config passed as argument',
         run: ({ scConfig, ...rest }: WriteImportMapArgs) => {
           const generate = writeImportMap(rest);
-          return generate(scConfig);
+          return generate({ scConfig });
         },
       },
     ];

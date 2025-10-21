@@ -6,17 +6,17 @@ import inquirer from 'inquirer';
 import loadCliConfig from '../../../utils/load-config';
 import { handler as generateMapHandler } from './generate-map';
 
-let { getComponentVariantSpec, getComponentList, getComponentRegistryUrl } = tools;
+let { getComponentVariantSpec, getComponentList, getComponentVariantSpecUrl } = tools;
 
 export const unitMocks = (
   toolsModule: Pick<
     typeof tools,
-    'getComponentVariantSpec' | 'getComponentList' | 'getComponentRegistryUrl'
+    'getComponentVariantSpec' | 'getComponentList' | 'getComponentVariantSpecUrl'
   >
 ) => {
   getComponentVariantSpec = toolsModule.getComponentVariantSpec;
   getComponentList = toolsModule.getComponentList;
-  getComponentRegistryUrl = toolsModule.getComponentRegistryUrl;
+  getComponentVariantSpecUrl = toolsModule.getComponentVariantSpecUrl;
 };
 
 type AddArgs = {
@@ -24,6 +24,10 @@ type AddArgs = {
    * The unique identifier of the newly created variant.
    */
   variantId: string;
+  /**
+   * The authentication token.
+   */
+  token: string;
   /**
    * The target path for the component variant.
    */
@@ -56,6 +60,11 @@ export function args(yargs: Argv<AddArgs>) {
       positional: true,
       type: 'string',
       describe: `The unique identifier of the newly created variant.`,
+    })
+    .option('token', {
+      requiresArg: true,
+      type: 'string',
+      describe: 'The authentication token.',
     })
     .option('target-path', {
       requiresArg: false,
@@ -95,7 +104,7 @@ export function builder(yargs: Argv<AddArgs>) {
  * @param {AddArgs} argv - The arguments passed to the command.
  */
 export async function handler(argv: AddArgs) {
-  const { variantId, targetPath: targetPathArg, skipComponentMap, config, overwrite } = argv;
+  const { variantId, token, targetPath: targetPathArg, skipComponentMap, config, overwrite } = argv;
 
   console.log(chalk.green('Adding component variant'));
 
@@ -110,13 +119,14 @@ export async function handler(argv: AddArgs) {
     return;
   }
 
-  const { contextId, edgeUrl } = cliConfig.config.api.edge;
+  const { edgeUrl } = cliConfig.config.api.edge;
 
   try {
     const spec = await getComponentVariantSpec({
       edgeUrl,
       variantId,
       targetPath,
+      token,
     });
 
     const componentType = spec.meta['contentsdk-component-type'];
@@ -157,13 +167,14 @@ export async function handler(argv: AddArgs) {
       }
     }
 
-    const registryUrl = getComponentRegistryUrl({
+    const variantSpecUrl = getComponentVariantSpecUrl({
       variantId,
-      contextId,
       targetPath: targetPath as string,
+      edgeUrl,
+      token,
     });
 
-    execSync(`npx shadcn@latest add ${registryUrl}${overwrite ? ' --overwrite' : ''}`, {
+    execSync(`npx shadcn@^3.4.2 add ${variantSpecUrl}${overwrite ? ' --overwrite' : ''}`, {
       stdio: 'inherit',
       cwd: process.cwd(),
     });

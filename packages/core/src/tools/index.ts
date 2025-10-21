@@ -4,7 +4,7 @@ export { scaffoldComponent } from './scaffold';
 export { GenerateMapFunction, GenerateMapArgs } from './generate-map';
 export { extractFiles } from './codegen/extract-files';
 export { writeImportMap } from './codegen/import-map';
-export { getComponentVariantSpec, getComponentRegistryUrl } from './codegen/component-variant';
+export { getComponentVariantSpec, getComponentVariantSpecUrl } from './codegen/component-variant';
 export * from './templating';
 export * from './auth/models';
 import * as authModule from './auth';

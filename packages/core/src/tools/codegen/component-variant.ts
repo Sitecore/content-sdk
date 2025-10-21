@@ -19,6 +19,10 @@ type GetComponentVariantSpecParams = {
    * The component variant id.
    */
   variantId: string;
+  /**
+   * The authentication token.
+   */
+  token: string;
 };
 
 /**
@@ -34,6 +38,26 @@ export interface ComponentVariantSpec {
 }
 
 /**
+ * Gets the component variant spec url.
+ * @param {GetComponentVariantSpecParams} params - The parameters for getting the component variant spec url.
+ * @returns {string} The component variant spec url.
+ */
+export const getComponentVariantSpecUrl = ({
+  variantId,
+  edgeUrl = SITECORE_EDGE_URL_DEFAULT,
+  targetPath,
+  token,
+}: GetComponentVariantSpecParams) => {
+  let url = `${edgeUrl}/api/v1/components/generated/${variantId}?token=${token}`;
+
+  if (targetPath) {
+    url += `&targetPath=${encodeURIComponent(targetPath)}`;
+  }
+
+  return url;
+};
+
+/**
  * Fetches the component variant spec.
  * @param {GetComponentVariantSpecParams} params - The parameters for fetching the component variant spec.
  * @returns {Promise<ComponentVariantSpec>} The component variant spec.
@@ -42,12 +66,9 @@ export const getComponentVariantSpec = async ({
   variantId,
   edgeUrl = SITECORE_EDGE_URL_DEFAULT,
   targetPath,
+  token,
 }: GetComponentVariantSpecParams) => {
-  let url = `${edgeUrl}/components/generated/${variantId}`;
-
-  if (targetPath) {
-    url += `?targetPath=${targetPath}`;
-  }
+  const url = getComponentVariantSpecUrl({ variantId, edgeUrl, targetPath, token });
 
   debug.common('Fetching component variant spec for %s: %s', variantId, url);
 
@@ -73,30 +94,3 @@ export const getComponentVariantSpec = async ({
     throw error;
   }
 };
-
-type GetComponentRegistryUrlParams = {
-  /**
-   * The component variant id.
-   */
-  variantId: string;
-  /**
-   * The context id.
-   */
-  contextId: string;
-  /**
-   * The component variant target path.
-   */
-  targetPath: string;
-};
-
-/**
- * Gets the component registry url.
- * @param {GetComponentRegistryUrlParams} params - The parameters for getting the component registry url.
- * @returns {string} The component registry url.
- */
-export const getComponentRegistryUrl = ({
-  variantId,
-  contextId,
-  targetPath,
-}: GetComponentRegistryUrlParams) =>
-  `https://genui.com/evilCorp/${variantId}?contextID=${contextId}&targetPath=${targetPath}`;

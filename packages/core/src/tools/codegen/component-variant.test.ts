@@ -2,22 +2,37 @@ import { expect } from 'chai';
 import nock from 'nock';
 import {
   ComponentVariantSpec,
-  getComponentRegistryUrl,
+  getComponentVariantSpecUrl,
   getComponentVariantSpec,
 } from './component-variant';
 import { SITECORE_EDGE_URL_DEFAULT } from '../../constants';
 
 describe('component-variant', () => {
-  describe('getComponentRegistryUrl', () => {
+  const token = '456';
+
+  describe('getComponentVariantSpecUrl', () => {
     it('should return the correct url', () => {
-      const url = getComponentRegistryUrl({
+      const url = getComponentVariantSpecUrl({
         variantId: '123',
-        contextId: '456',
         targetPath: './components/promo-block/PromoBlock.variantA.ts',
+        token,
       });
 
       expect(url).to.equal(
-        'https://genui.com/evilCorp/123?contextID=456&targetPath=./components/promo-block/PromoBlock.variantA.ts'
+        `${SITECORE_EDGE_URL_DEFAULT}/api/v1/components/generated/123?token=456&targetPath=.%2Fcomponents%2Fpromo-block%2FPromoBlock.variantA.ts`
+      );
+    });
+
+    it('should return the correct url when custom edge url is provided', () => {
+      const url = getComponentVariantSpecUrl({
+        variantId: '123',
+        targetPath: './components/promo-block/PromoBlock.variantA.ts',
+        edgeUrl: 'http://my.server',
+        token,
+      });
+
+      expect(url).to.equal(
+        `http://my.server/api/v1/components/generated/123?token=456&targetPath=.%2Fcomponents%2Fpromo-block%2FPromoBlock.variantA.ts`
       );
     });
   });
@@ -27,15 +42,17 @@ describe('component-variant', () => {
       edgeUrl = SITECORE_EDGE_URL_DEFAULT,
       variantId,
       targetPath,
+      token,
     }: {
       edgeUrl?: string;
       variantId: string;
       targetPath?: string;
+      token: string;
     }) => {
-      let path = `/components/generated/${variantId}`;
+      let path = `/api/v1/components/generated/${variantId}?token=${token}`;
 
       if (targetPath) {
-        path += `?targetPath=${targetPath}`;
+        path += `&targetPath=${encodeURIComponent(targetPath)}`;
       }
 
       return nock(edgeUrl).get(path);
@@ -57,11 +74,13 @@ describe('component-variant', () => {
       mockComponentVariantSpecApi({
         variantId,
         targetPath,
+        token,
       }).reply(200, spec);
 
       const response = await getComponentVariantSpec({
         variantId,
         targetPath,
+        token,
       });
 
       expect(response).to.deep.equal(spec);
@@ -81,10 +100,12 @@ describe('component-variant', () => {
 
       mockComponentVariantSpecApi({
         variantId,
+        token,
       }).reply(200, spec);
 
       const response = await getComponentVariantSpec({
         variantId,
+        token,
       });
 
       expect(response).to.deep.equal(spec);
@@ -95,10 +116,11 @@ describe('component-variant', () => {
 
       mockComponentVariantSpecApi({
         variantId,
+        token,
       }).reply(404);
 
       try {
-        await getComponentVariantSpec({ variantId });
+        await getComponentVariantSpec({ variantId, token });
         expect.fail('Expected function to throw');
       } catch (error) {
         expect(error.message).to.equal(
@@ -112,10 +134,11 @@ describe('component-variant', () => {
 
       mockComponentVariantSpecApi({
         variantId,
+        token,
       }).reply(500);
 
       try {
-        await getComponentVariantSpec({ variantId });
+        await getComponentVariantSpec({ variantId, token });
         expect.fail('Expected function to throw');
       } catch (error) {
         expect(error.message).to.equal('Failed to fetch component variant 123');

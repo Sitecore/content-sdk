@@ -324,14 +324,14 @@ function _getImportMap(paths: string[]) {
  * @param {WriteImportMapArgs} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration
  */
 export const writeImportMap = (args: WriteImportMapArgs) => {
-  return async (config?: SitecoreConfig) => {
-    const scConfig = args.scConfig ?? config;
+  return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
+    const config = args.scConfig ?? scConfig;
 
-    if (!scConfig) {
+    if (!config) {
       throw new Error('Sitecore configuration is required to be provided');
     }
 
-    if (scConfig.disableCodeGeneration) {
+    if (config.disableCodeGeneration) {
       debug.common('Skipping import map generation. Code generation functionality is disabled.');
       return;
     }

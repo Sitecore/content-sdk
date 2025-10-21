@@ -45,10 +45,10 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
     authority: process.env.SITECORE_AUTH_AUTHORITY,
     audience: process.env.SITECORE_AUTH_AUDIENCE,
   };
-  return async (config?: SitecoreConfig) => {
-    const scConfig = args.scConfig ?? config;
+  return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
+    const config = args.scConfig ?? scConfig;
 
-    if (!scConfig) {
+    if (!config) {
       throw new Error('Sitecore configuration is required to be provided');
     }
 
@@ -59,7 +59,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
       debug.common('Skipping code extraction, not in deploy context');
       return;
     }
-    if (scConfig.disableCodeGeneration) {
+    if (config.disableCodeGeneration) {
       debug.common('Skipping code extraction, code generation has been disabled');
       return;
     }
@@ -68,7 +68,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
 
     try {
       // Use Edge Platform mesh endpoint - staging is ready, prod QA in progress
-      const targetUrl = scConfig.api.edge.edgeUrl;
+      const targetUrl = config.api.edge.edgeUrl;
       const { accessToken } = await auth.clientCredentialsFlow(authParams);
       if (!accessToken) {
         console.error(chalk.red('Failed to get access token, aborting code extraction'));

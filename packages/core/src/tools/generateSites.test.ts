@@ -66,7 +66,7 @@ describe('generateSites', () => {
       title: 'Using new config passed as argument',
       run: ({ scConfig, ...rest }: GenerateSitesConfig) => {
         const generate = generateSites(rest);
-        return generate(scConfig);
+        return generate({ scConfig });
       },
     },
   ];

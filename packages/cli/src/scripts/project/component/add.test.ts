@@ -15,25 +15,24 @@ describe('add command', () => {
   let loadCliConfigStub: sinon.SinonStub;
   let getComponentListStub: sinon.SinonStub;
   let getComponentVariantSpecStub: sinon.SinonStub;
-  let getComponentRegistryUrlStub: sinon.SinonStub;
+  let getComponentVariantSpecUrlStub: sinon.SinonStub;
   let execSyncStub: sinon.SinonStub;
   let generateMapStub: sinon.SinonStub;
   let inquirerStub: sinon.SinonStub;
 
   const variantId = 'unique-id';
-  const contextId = 'context-id';
+  const token = '456';
 
-  const createScConfig = (contextId: string, edgeUrl: string | undefined) => ({
+  const createScConfig = (edgeUrl: string | undefined) => ({
     api: {
       edge: {
-        contextId,
         edgeUrl,
       },
     },
   });
 
-  const createCliConfig = (contextId = 'context-id', edgeUrl = undefined) => ({
-    config: createScConfig(contextId, edgeUrl),
+  const createCliConfig = ({ edgeUrl }: { edgeUrl?: string } = {}) => ({
+    config: createScConfig(edgeUrl),
     componentMap: {
       paths: ['src/components'],
       exclude: [],
@@ -66,16 +65,40 @@ describe('add command', () => {
     importPath: `src/components/promo-block/${componentName}`,
   });
 
+  const validateShadcnCommand = ({
+    variantId,
+    targetPath,
+    overwrite = false,
+    edgeUrl = 'https://my.server',
+  }: {
+    variantId: string;
+    targetPath: string;
+    overwrite?: boolean;
+    edgeUrl?: string;
+  }) => {
+    expect(
+      execSyncStub.calledOnceWith(
+        `npx shadcn@^3.4.2 add ${edgeUrl}/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}${
+          overwrite ? ' --overwrite' : ''
+        }`,
+        {
+          stdio: 'inherit',
+          cwd: process.cwd(),
+        }
+      )
+    ).to.be.true;
+  };
+
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     loadCliConfigStub = sandbox.stub(loadConfigModule, 'default');
     consoleErrorStub = sandbox.stub(console, 'error').callThrough();
     getComponentListStub = sandbox.stub(toolsModule, 'getComponentList');
     getComponentVariantSpecStub = sandbox.stub(toolsModule, 'getComponentVariantSpec');
-    getComponentRegistryUrlStub = sandbox
-      .stub(toolsModule, 'getComponentRegistryUrl')
-      .callsFake(({ variantId, contextId, targetPath }) => {
-        return `https://genui.com/evilCorp/${variantId}?contextID=${contextId}&targetPath=${targetPath}`;
+    getComponentVariantSpecUrlStub = sandbox
+      .stub(toolsModule, 'getComponentVariantSpecUrl')
+      .callsFake(({ variantId, targetPath, token }) => {
+        return `https://my.server/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}`;
       });
     execSyncStub = sandbox.stub(childProcess, 'execSync');
     generateMapStub = sandbox.stub(generateMapModule, 'handler');
@@ -84,7 +107,7 @@ describe('add command', () => {
     addModule.unitMocks({
       getComponentVariantSpec: getComponentVariantSpecStub,
       getComponentList: getComponentListStub,
-      getComponentRegistryUrl: getComponentRegistryUrlStub,
+      getComponentVariantSpecUrl: getComponentVariantSpecUrlStub,
     });
   });
 
@@ -102,6 +125,7 @@ describe('add command', () => {
     await addModule.handler({
       variantId,
       targetPath,
+      token,
     });
 
     expect(
@@ -109,26 +133,23 @@ describe('add command', () => {
         variantId,
         targetPath,
         edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
     expect(
-      getComponentRegistryUrlStub.calledOnceWith({
+      getComponentVariantSpecUrlStub.calledOnceWith({
         variantId,
-        contextId,
         targetPath,
+        edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
-    expect(
-      execSyncStub.calledOnceWith(
-        `npx shadcn@latest add https://genui.com/evilCorp/${variantId}?contextID=${contextId}&targetPath=${targetPath}`,
-        {
-          stdio: 'inherit',
-          cwd: process.cwd(),
-        }
-      )
-    ).to.be.true;
+    validateShadcnCommand({
+      variantId,
+      targetPath,
+    });
 
     expect(
       generateMapStub.calledOnceWith({
@@ -148,6 +169,7 @@ describe('add command', () => {
       variantId,
       targetPath,
       skipComponentMap: true,
+      token,
     });
 
     expect(
@@ -155,26 +177,23 @@ describe('add command', () => {
         variantId,
         targetPath,
         edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
     expect(
-      getComponentRegistryUrlStub.calledOnceWith({
+      getComponentVariantSpecUrlStub.calledOnceWith({
         variantId,
-        contextId,
         targetPath,
+        edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
-    expect(
-      execSyncStub.calledOnceWith(
-        `npx shadcn@latest add https://genui.com/evilCorp/${variantId}?contextID=${contextId}&targetPath=${targetPath}`,
-        {
-          stdio: 'inherit',
-          cwd: process.cwd(),
-        }
-      )
-    ).to.be.true;
+    validateShadcnCommand({
+      variantId,
+      targetPath,
+    });
 
     expect(generateMapStub.notCalled).to.be.true;
   });
@@ -190,6 +209,7 @@ describe('add command', () => {
 
     await addModule.handler({
       variantId,
+      token,
     });
 
     expect(
@@ -197,28 +217,25 @@ describe('add command', () => {
         variantId,
         edgeUrl: undefined,
         targetPath: undefined,
+        token,
       })
     ).to.be.true;
 
     expect(getComponentListStub.calledOnceWith(['src/components'], [])).to.be.true;
 
     expect(
-      getComponentRegistryUrlStub.calledOnceWith({
+      getComponentVariantSpecUrlStub.calledOnceWith({
         variantId,
-        contextId,
         targetPath,
+        edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
-    expect(
-      execSyncStub.calledOnceWith(
-        `npx shadcn@latest add https://genui.com/evilCorp/${variantId}?contextID=${contextId}&targetPath=${targetPath}`,
-        {
-          stdio: 'inherit',
-          cwd: process.cwd(),
-        }
-      )
-    ).to.be.true;
+    validateShadcnCommand({
+      variantId,
+      targetPath,
+    });
 
     expect(
       generateMapStub.calledOnceWith({
@@ -238,6 +255,7 @@ describe('add command', () => {
       variantId,
       targetPath,
       overwrite: true,
+      token,
     });
 
     expect(
@@ -245,26 +263,77 @@ describe('add command', () => {
         variantId,
         targetPath,
         edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
     expect(
-      getComponentRegistryUrlStub.calledOnceWith({
+      getComponentVariantSpecUrlStub.calledOnceWith({
         variantId,
-        contextId,
         targetPath,
+        edgeUrl: undefined,
+        token,
+      })
+    ).to.be.true;
+
+    validateShadcnCommand({
+      variantId,
+      targetPath,
+      overwrite: true,
+    });
+
+    expect(
+      generateMapStub.calledOnceWith({
+        config: undefined,
+      })
+    ).to.be.true;
+  });
+
+  it('should add a component variant when custom edge url is provided', async () => {
+    const targetPath = 'src/components/promo-block/PromoBlock.variantA.ts';
+    const edgeUrl = 'https://custom.server';
+
+    loadCliConfigStub.returns(
+      createCliConfig({
+        edgeUrl,
+      })
+    );
+
+    getComponentVariantSpecStub.resolves(createComponentVariantSpec());
+
+    getComponentVariantSpecUrlStub.callsFake(({ variantId, targetPath, token }) => {
+      return `${edgeUrl}/api/v1/components/generated/${variantId}?token=${token}&targetPath=${targetPath}`;
+    });
+
+    await addModule.handler({
+      variantId,
+      targetPath,
+      token,
+    });
+
+    expect(
+      getComponentVariantSpecStub.calledOnceWith({
+        variantId,
+        targetPath,
+        edgeUrl,
+        token,
       })
     ).to.be.true;
 
     expect(
-      execSyncStub.calledOnceWith(
-        `npx shadcn@latest add https://genui.com/evilCorp/${variantId}?contextID=${contextId}&targetPath=${targetPath} --overwrite`,
-        {
-          stdio: 'inherit',
-          cwd: process.cwd(),
-        }
-      )
+      getComponentVariantSpecUrlStub.calledOnceWith({
+        variantId,
+        targetPath,
+        edgeUrl,
+        token,
+      })
     ).to.be.true;
+
+    validateShadcnCommand({
+      variantId,
+      targetPath,
+      edgeUrl,
+    });
 
     expect(
       generateMapStub.calledOnceWith({
@@ -288,6 +357,7 @@ describe('add command', () => {
 
     await addModule.handler({
       variantId,
+      token,
     });
 
     expect(
@@ -295,6 +365,7 @@ describe('add command', () => {
         variantId,
         edgeUrl: undefined,
         targetPath: undefined,
+        token,
       })
     ).to.be.true;
 
@@ -310,22 +381,18 @@ describe('add command', () => {
     ).to.be.true;
 
     expect(
-      getComponentRegistryUrlStub.calledOnceWith({
+      getComponentVariantSpecUrlStub.calledOnceWith({
         variantId,
-        contextId,
         targetPath,
+        edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
-    expect(
-      execSyncStub.calledOnceWith(
-        `npx shadcn@latest add https://genui.com/evilCorp/${variantId}?contextID=${contextId}&targetPath=${targetPath}`,
-        {
-          stdio: 'inherit',
-          cwd: process.cwd(),
-        }
-      )
-    ).to.be.true;
+    validateShadcnCommand({
+      variantId,
+      targetPath,
+    });
 
     expect(
       generateMapStub.calledOnceWith({
@@ -347,6 +414,7 @@ describe('add command', () => {
       variantId,
       targetPath,
       config: customCliConfigPath,
+      token,
     });
 
     expect(loadCliConfigStub.calledOnceWith(customCliConfigPath)).to.be.true;
@@ -356,26 +424,23 @@ describe('add command', () => {
         variantId,
         targetPath,
         edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
     expect(
-      getComponentRegistryUrlStub.calledOnceWith({
+      getComponentVariantSpecUrlStub.calledOnceWith({
         variantId,
-        contextId,
         targetPath,
+        edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
-    expect(
-      execSyncStub.calledOnceWith(
-        `npx shadcn@latest add https://genui.com/evilCorp/${variantId}?contextID=${contextId}&targetPath=${targetPath}`,
-        {
-          stdio: 'inherit',
-          cwd: process.cwd(),
-        }
-      )
-    ).to.be.true;
+    validateShadcnCommand({
+      variantId,
+      targetPath,
+    });
 
     expect(
       generateMapStub.calledOnceWith({
@@ -401,6 +466,7 @@ describe('add command', () => {
     await addModule.handler({
       variantId,
       targetPath,
+      token,
     });
 
     expect(
@@ -408,6 +474,7 @@ describe('add command', () => {
         variantId,
         targetPath,
         edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
@@ -419,7 +486,7 @@ describe('add command', () => {
       )
     ).to.be.true;
 
-    expect(getComponentRegistryUrlStub.notCalled).to.be.true;
+    expect(getComponentVariantSpecUrlStub.notCalled).to.be.true;
 
     expect(execSyncStub.notCalled).to.be.true;
 
@@ -431,6 +498,7 @@ describe('add command', () => {
 
     addModule.handler({
       variantId,
+      token,
     });
 
     expect(consoleErrorStub.calledOnce).to.be.true;
@@ -449,6 +517,7 @@ describe('add command', () => {
     await addModule.handler({
       variantId,
       targetPath,
+      token,
     });
 
     expect(
@@ -456,6 +525,7 @@ describe('add command', () => {
         variantId,
         targetPath,
         edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
@@ -465,7 +535,7 @@ describe('add command', () => {
       )
     ).to.be.true;
 
-    expect(getComponentRegistryUrlStub.notCalled).to.be.true;
+    expect(getComponentVariantSpecUrlStub.notCalled).to.be.true;
 
     expect(execSyncStub.notCalled).to.be.true;
 
@@ -484,6 +554,7 @@ describe('add command', () => {
     await addModule.handler({
       variantId,
       targetPath,
+      token,
     });
 
     expect(
@@ -491,6 +562,7 @@ describe('add command', () => {
         variantId,
         targetPath,
         edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
@@ -501,22 +573,18 @@ describe('add command', () => {
     ).to.be.true;
 
     expect(
-      getComponentRegistryUrlStub.calledOnceWith({
+      getComponentVariantSpecUrlStub.calledOnceWith({
         variantId,
-        contextId,
         targetPath,
+        edgeUrl: undefined,
+        token,
       })
     ).to.be.true;
 
-    expect(
-      execSyncStub.calledOnceWith(
-        `npx shadcn@latest add https://genui.com/evilCorp/${variantId}?contextID=${contextId}&targetPath=${targetPath}`,
-        {
-          stdio: 'inherit',
-          cwd: process.cwd(),
-        }
-      )
-    ).to.be.true;
+    validateShadcnCommand({
+      variantId,
+      targetPath,
+    });
 
     expect(generateMapStub.notCalled).to.be.true;
   });
