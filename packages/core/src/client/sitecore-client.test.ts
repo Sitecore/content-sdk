@@ -3,6 +3,7 @@
 import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
+import { DocumentNode } from 'graphql';
 import { ErrorPage, SitecoreClient } from './sitecore-client';
 import { LayoutKind, DesignLibraryMode } from '../../editing';
 import { LayoutServiceData } from '../../layout';
@@ -104,6 +105,92 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).componentService = restComponentServiceStub;
     (sitecoreClient as any).sitePathService = sitePathServiceStub;
     (sitecoreClient as any).sitemapXmlService = sitemapXmlServiceStub;
+  });
+
+  describe('getData', () => {
+    let requestStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      // Attach a fake GraphQL client to the instance
+      const fakeGraphQLClient = { request: sandbox.stub() };
+      (sitecoreClient as any).graphQLClient = fakeGraphQLClient as any;
+      requestStub = fakeGraphQLClient.request as sinon.SinonStub;
+    });
+
+    it('should forwards query, variables, and fetchOptions to graphQLClient.request and returns the result', async () => {
+      const query = 'query ($id: String!) { item(id: $id) { id name } }';
+      const variables = { id: '123' };
+      const fetchOptions = {
+        headers: { 'x-test': 'ok' },
+        retries: 0,
+      };
+
+      const expected = { item: { id: '123', name: 'Home' } };
+      requestStub.resolves(expected);
+
+      const result = await sitecoreClient.getData<typeof expected>(query, variables, fetchOptions);
+
+      expect(result).to.equal(expected);
+      sinon.assert.calledOnceWithExactly(requestStub, query, variables, fetchOptions);
+    });
+
+    it('should accept a DocumentNode as the query', async () => {
+      const doc = { kind: 'Document' } as unknown as DocumentNode;
+
+      const expected = { ok: true };
+      requestStub.resolves(expected);
+
+      const result = await sitecoreClient.getData<typeof expected>(doc);
+
+      expect(result).to.equal(expected);
+      sinon.assert.calledOnceWithExactly(requestStub, doc, undefined, undefined);
+    });
+
+    it('should work when variables and fetchOptions are omitted', async () => {
+      const query = 'query { ping }';
+      const expected = { ping: 'pong' };
+      requestStub.resolves(expected);
+
+      const result = await sitecoreClient.getData<typeof expected>(query);
+
+      expect(result).to.equal(expected);
+      sinon.assert.calledOnceWithExactly(requestStub, query, undefined, undefined);
+    });
+
+    it('should allow per-call fetchOptions overrides (e.g., headers, retries, fetch impl)', async () => {
+      const query = 'query { me { id } }';
+      const customFetch = sinon.stub() as unknown as typeof fetch;
+      const fetchOptions = {
+        headers: { Authorization: 'Bearer test' },
+        retries: 2,
+        fetch: customFetch,
+      };
+      const expected = { me: { id: 'u1' } };
+      requestStub.resolves(expected);
+
+      await sitecoreClient.getData(query, undefined, fetchOptions);
+
+      sinon.assert.calledOnce(requestStub);
+      const [, , passedOptions] = requestStub.firstCall.args;
+      expect(passedOptions).to.include({
+        retries: 2,
+        fetch: customFetch,
+      });
+      expect(passedOptions?.headers).to.deep.equal({ Authorization: 'Bearer test' });
+    });
+
+    it('should propagate errors from graphQLClient.request', async () => {
+      const query = 'query { broken }';
+      const boom = new Error('Boom');
+      requestStub.rejects(boom);
+
+      try {
+        await sitecoreClient.getData(query);
+        expect.fail('Expected getData to throw');
+      } catch (err: any) {
+        expect(err).to.equal(boom);
+      }
+    });
   });
 
   describe('Extensibility', () => {
