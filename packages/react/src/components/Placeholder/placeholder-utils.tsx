@@ -121,6 +121,7 @@ export const getRenderedComponentProps = (
   } = placeholderProps;
   delete passThroughProps.missingComponentComponent;
   delete passThroughProps.hiddenRenderingComponent;
+  delete passThroughProps.componentMap;
   delete passThroughProps.name;
   const fields = { ...(placeholderFields || {}), ...(componentRendering.fields || {}) };
   const params = { ...(placeholderParams || {}), ...(componentRendering.params || {}) };
@@ -216,10 +217,14 @@ export const getComponentForRendering = (
         (component as ReactModule).Default ||
         (component as ComponentType);
 
+  const dynamic =
+    !!(renderedComponent as LazyComponentType).render?.preload ||
+    renderingDefinition.componentName === BYOC_WRAPPER_RENDERING_NAME;
+
   // all dynamic elements will have a separate render prop
   return {
     component: renderedComponent,
-    dynamic: !!(renderedComponent as LazyComponentType).render?.preload,
+    dynamic,
     componentType: (component as ReactModule).componentType,
   };
 };
