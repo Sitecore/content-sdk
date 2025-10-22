@@ -5,7 +5,8 @@ import {
   ComponentLayoutService,
   DesignLibraryMode,
 } from '../editing';
-import { GraphQLRequestClientFactory } from '../graphql-request-client';
+import { DocumentNode } from 'graphql';
+import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases, DictionaryService } from '../i18n';
 import {
   getDesignLibraryStylesheetLinks,
@@ -128,6 +129,18 @@ export type RobotsOptions = {
  */
 export interface BaseSitecoreClient {
   /**
+   * Execute a raw GraphQL request against the configured Sitecore endpoint(s).
+   * Mirrors GraphQLClient.request for familiarity.
+   * @param query GraphQL string or DocumentNode
+   * @param variables Optional variables bag
+   * @param fetchOptions Optional fetch/retry overrides (headers, retries, fetch impl, debugger)
+   */
+  getData<T = unknown>(
+    query: string | DocumentNode,
+    variables?: Record<string, unknown>,
+    fetchOptions?: FetchOptions
+  ): Promise<T>;
+  /**
    * Retrieves page layoutData and returns page details like language, layoutData and site info for current request
    * @param {string} path current request path
    * @param {PageOptions} pageOptions additional overrides like language, site name and personalization variants
@@ -246,6 +259,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   protected errorPagesService: ErrorPagesService;
   protected componentService: ComponentLayoutService;
   protected sitePathService: SitePathService;
+  protected graphQLClient: GraphQLClient;
 
   /**
    * Init SitecoreClient
@@ -253,6 +267,7 @@ export class SitecoreClient implements BaseSitecoreClient {
    */
   constructor(protected initOptions: SitecoreClientInit) {
     this.clientFactory = this.getClientFactory();
+    this.graphQLClient = this.getGraphQLClient();
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
@@ -281,6 +296,21 @@ export class SitecoreClient implements BaseSitecoreClient {
           .filter((part) => part !== '/')
           .map((part) => part.replace(/^\/+/, '').replace(/\/+$/, ''))
           .join('/')}`;
+  }
+
+  /**
+   * GraphQL pass-through: make any GraphQL call via the client's configured endpoint(s).
+   * Honors retries, custom fetch, headers, and debugger from FetchOptions.
+   * @param {string | DocumentNode} query GraphQL string or DocumentNode
+   * @param {Record<string, unknown>} [variables] Optional variables bag
+   * @param {FetchOptions} [fetchOptions] Optional fetch/retry overrides (headers, retries, fetch impl, debugger)
+   */
+  getData<T = unknown>(
+    query: string | DocumentNode,
+    variables?: Record<string, unknown>,
+    fetchOptions?: FetchOptions
+  ): Promise<T> {
+    return this.graphQLClient.request<T>(query, variables, fetchOptions);
   }
 
   /**
@@ -695,6 +725,13 @@ export class SitecoreClient implements BaseSitecoreClient {
     }
 
     return pageMode;
+  }
+
+  private getGraphQLClient(): GraphQLClient {
+    return this.clientFactory({
+      retries: this.initOptions.retries.count,
+      retryStrategy: this.initOptions.retries.retryStrategy,
+    });
   }
 
   private getClientFactory(): GraphQLRequestClientFactory {
