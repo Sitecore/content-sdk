@@ -20,7 +20,10 @@
 
 ## Type Aliases
 
+- [ComponentMapEntry](type-aliases/ComponentMapEntry.md)
+- [ComponentMapTemplate](type-aliases/ComponentMapTemplate.md)
 - [ComponentType](type-aliases/ComponentType.md)
+- [EnhancedComponentMapTemplate](type-aliases/EnhancedComponentMapTemplate.md)
 - [GenerateMapArgs](type-aliases/GenerateMapArgs.md)
 - [GenerateMapFunction](type-aliases/GenerateMapFunction.md)
 - [GenerateSitesConfig](type-aliases/GenerateSitesConfig.md)

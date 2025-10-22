@@ -8,16 +8,21 @@
 
 > `const` **generateMap**: `GenerateMapFunction`
 
-Defined in: [nextjs/src/tools/generate-map.ts:30](https://github.com/Sitecore/content-sdk/blob/6dc8e98dbbb7b7e5be9ff8107e95237d8311c7dc/packages/nextjs/src/tools/generate-map.ts#L30)
+Defined in: [nextjs/src/tools/generate-map.ts:243](https://github.com/Sitecore/content-sdk/blob/2c5dd060074b62e615d6f108b77b3eb85b4fea21/packages/nextjs/src/tools/generate-map.ts#L243)
 
-Generate and write componentMap.ts file based on provided params.
+Generate and write componentMap.ts files based on provided params.
 
 When clientComponentMap is true, generates:
-- component-map.ts: Full component map with all components (server, client, universal)
-- component-map.client.ts: Client-safe map with only client + universal components
+- component-map.ts          : Full component map with all components (server, client, universal)
+- component-map.client.ts   : Client-safe map with only client + universal components
 
 When clientComponentMap is false, generates:
-- component-map.ts: Single component map (traditional behavior)
+- component-map.ts          : Single component map (traditional behavior)
+
+When includeVariants is true (in either mode):
+- Includes component **variants** in the generated map(s) alongside base components
+- Preserves the same client/server filtering rules (variants obey clientComponentMap filtering)
+- Variant entries are emitted using the same naming/keys convention as their base components
 
 Template Customization:
 - mapTemplate: Custom template for main component map (works for both single and dual map modes)

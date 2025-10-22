@@ -8,7 +8,7 @@
 
 > **detectComponentType**(`filePath`, `routerType?`): [`ComponentType`](../type-aliases/ComponentType.md)
 
-Defined in: [packages/core/src/tools/templating/components.ts:130](https://github.com/Sitecore/content-sdk/blob/6dc8e98dbbb7b7e5be9ff8107e95237d8311c7dc/packages/core/src/tools/templating/components.ts#L130)
+Defined in: [packages/core/src/tools/templating/components.ts:162](https://github.com/Sitecore/content-sdk/blob/2c5dd060074b62e615d6f108b77b3eb85b4fea21/packages/core/src/tools/templating/components.ts#L162)
 
 Detects the component type based on directives, imports, and router context.
 - Checks for 'use client' directive

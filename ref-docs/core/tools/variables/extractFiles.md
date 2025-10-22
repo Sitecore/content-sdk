@@ -8,7 +8,7 @@
 
 > **extractFiles**: (`args`) => (`__namedParameters`) => `Promise`\<`void`\> = `_extractFiles`
 
-Defined in: [packages/core/src/tools/codegen/extract-files.ts:27](https://github.com/Sitecore/content-sdk/blob/6dc8e98dbbb7b7e5be9ff8107e95237d8311c7dc/packages/core/src/tools/codegen/extract-files.ts#L27)
+Defined in: [packages/core/src/tools/codegen/extract-files.ts:28](https://github.com/Sitecore/content-sdk/blob/2c5dd060074b62e615d6f108b77b3eb85b4fea21/packages/core/src/tools/codegen/extract-files.ts#L28)
 
 Extracts components from the app folder and sends them to XMCloud.
 

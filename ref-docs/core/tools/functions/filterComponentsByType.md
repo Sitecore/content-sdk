@@ -8,7 +8,7 @@
 
 > **filterComponentsByType**(`components`, `allowedTypes`): [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md)[]
 
-Defined in: [packages/core/src/tools/templating/components.ts:313](https://github.com/Sitecore/content-sdk/blob/6dc8e98dbbb7b7e5be9ff8107e95237d8311c7dc/packages/core/src/tools/templating/components.ts#L313)
+Defined in: [packages/core/src/tools/templating/components.ts:345](https://github.com/Sitecore/content-sdk/blob/2c5dd060074b62e615d6f108b77b3eb85b4fea21/packages/core/src/tools/templating/components.ts#L345)
 
 Filters components by their detected type.
 

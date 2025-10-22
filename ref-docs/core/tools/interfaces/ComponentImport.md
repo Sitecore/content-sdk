@@ -6,7 +6,7 @@
 
 # Interface: ComponentImport
 
-Defined in: [packages/core/src/tools/templating/components.ts:52](https://github.com/Sitecore/content-sdk/blob/6dc8e98dbbb7b7e5be9ff8107e95237d8311c7dc/packages/core/src/tools/templating/components.ts#L52)
+Defined in: [packages/core/src/tools/templating/components.ts:80](https://github.com/Sitecore/content-sdk/blob/2c5dd060074b62e615d6f108b77b3eb85b4fea21/packages/core/src/tools/templating/components.ts#L80)
 
 Definition for custom components to be included in component map.
 Use this to define components imported from modules/dependencies/packages
@@ -17,17 +17,21 @@ Use this to define components imported from modules/dependencies/packages
 
 > **importInfo**: `object`
 
-Defined in: [packages/core/src/tools/templating/components.ts:54](https://github.com/Sitecore/content-sdk/blob/6dc8e98dbbb7b7e5be9ff8107e95237d8311c7dc/packages/core/src/tools/templating/components.ts#L54)
+Defined in: [packages/core/src/tools/templating/components.ts:84](https://github.com/Sitecore/content-sdk/blob/2c5dd060074b62e615d6f108b77b3eb85b4fea21/packages/core/src/tools/templating/components.ts#L84)
 
-Information about how to import the package.
+Information about how to import the package
 
 #### importFrom
 
 > **importFrom**: `string`
 
+The path from which to import the component(s)
+
 #### namedImports?
 
 > `optional` **namedImports**: `string`[]
+
+The specific named components to import from the package. Leave empty to have whole package be imported as wildcard and allow SXA variants support for component.
 
 ***
 
@@ -35,6 +39,6 @@ Information about how to import the package.
 
 > **importName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:53](https://github.com/Sitecore/content-sdk/blob/6dc8e98dbbb7b7e5be9ff8107e95237d8311c7dc/packages/core/src/tools/templating/components.ts#L53)
+Defined in: [packages/core/src/tools/templating/components.ts:82](https://github.com/Sitecore/content-sdk/blob/2c5dd060074b62e615d6f108b77b3eb85b4fea21/packages/core/src/tools/templating/components.ts#L82)
 
-Name of the import.
+The name of the import (e.g., 'MyComponent')
