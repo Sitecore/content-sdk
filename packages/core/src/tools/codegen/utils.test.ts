@@ -191,12 +191,13 @@ describe('codegen-utils', () => {
       expect(() => codegenUtils.resolveComponentImportFiles(appPath)).to.not.throw();
     });
 
-    it('throws ENOENT when component map file is not found', () => {
+    it('throws error when component map file is not found', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/no-componentBuilder';
+      const expectedPath = path.resolve(appPath, './.sitecore/component-map.ts');
 
       expect(() => codegenUtils.resolveComponentImportFiles(appPath)).to.throw(
-        Error,
-        `no such file or directory`
+        ReferenceError,
+        `Failed to find file ${expectedPath}`
       );
     });
 
