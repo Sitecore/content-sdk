@@ -303,7 +303,7 @@ export class SitecoreClient implements BaseSitecoreClient {
    * This is a thin pass-through to the underlying {@link GraphQLClient.request},
    * @param {string | DocumentNode} query GraphQL string or DocumentNode
    * @param {Record<string, unknown>} [variables] Optional variables bag
-   * @param {FetchOptions} [fetchOptions] Optional fetch/retry overrides (headers, retries, fetch impl, debugger)
+   * @param {FetchOptions} [fetchOptions] Optional fetch overrides (e.g. fetch, headers)
    */
   getData<T = unknown>(
     query: string | DocumentNode,
