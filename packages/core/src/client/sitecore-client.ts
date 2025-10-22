@@ -299,8 +299,8 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
-   * GraphQL pass-through: make any GraphQL call via the client's configured endpoint(s).
-   * Honors retries, custom fetch, headers, and debugger from FetchOptions.
+   * Execute a raw GraphQL request using the client's configured GraphQL endpoint(s).
+   * This is a thin pass-through to the underlying {@link GraphQLClient.request},
    * @param {string | DocumentNode} query GraphQL string or DocumentNode
    * @param {Record<string, unknown>} [variables] Optional variables bag
    * @param {FetchOptions} [fetchOptions] Optional fetch/retry overrides (headers, retries, fetch impl, debugger)
