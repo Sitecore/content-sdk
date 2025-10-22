@@ -86,7 +86,7 @@ describe('extract-files', () => {
   ];
 
   initialization.forEach(({ title, run }) => {
-    describe.only(title, () => {
+    describe(title, () => {
       it('should skip when not in deploy context', async () => {
         const debugStub = sandbox.stub(debug, 'common');
         const fetchBearerTokenStub = sandbox.stub().resolves({ data: {}, accessToken: '' });
@@ -179,7 +179,6 @@ describe('extract-files', () => {
         expect(consoleErrorStub.calledOnce).to.be.true;
         const expectedPath = path.resolve(process.cwd(), './.sitecore/component-map.ts');
 
-        // Check that the error message contains the expected information
         const errorMessage = consoleErrorStub.firstCall.args[0];
         expect(errorMessage).to.include('Error during code extraction:');
         expect(errorMessage).to.include('ENOENT: no such file or directory');

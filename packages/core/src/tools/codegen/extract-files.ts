@@ -43,8 +43,8 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
   const authParams = {
     clientId: process.env.SITECORE_AUTH_CLIENT_ID || '',
     clientSecret: process.env.SITECORE_AUTH_CLIENT_SECRET || '',
-    authority: process.env.SITECORE_AUTH_AUTHORITY || '',
-    audience: process.env.SITECORE_AUTH_AUDIENCE || '',
+    authority: process.env.SITECORE_AUTH_AUTHORITY,
+    audience: process.env.SITECORE_AUTH_AUDIENCE,
   };
   return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
     const config = args.scConfig ?? scConfig;
