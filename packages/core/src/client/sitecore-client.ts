@@ -301,7 +301,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Execute a raw GraphQL request using the client's configured GraphQL endpoint(s).
    * This is a thin pass-through to the underlying {@link GraphQLClient.request},
-   * @param {string | DocumentNode} query GraphQL string or DocumentNode
+   * @param {string | DocumentNode} query GraphQL query
    * @param {Record<string, unknown>} [variables] Optional variables bag
    * @param {FetchOptions} [fetchOptions] Optional fetch overrides (e.g. fetch, headers)
    */
