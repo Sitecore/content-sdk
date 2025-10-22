@@ -5,6 +5,7 @@ import {
   resolveComponentImportFiles,
   sendCode,
   validateDeployContext,
+  readNamedExports,
 } from './utils';
 import { SitecoreConfig } from './../../config';
 import { auth } from '../../tools';
@@ -63,7 +64,9 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
       debug.common('Skipping code extraction, code generation has been disabled');
       return;
     }
+
     console.log(chalk.green('Code extraction started'));
+
     const basePath = process.cwd();
 
     try {
@@ -75,19 +78,34 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
         return;
       }
 
-      const componentPaths = await resolveComponentImportFiles(basePath, args.componentMapPath);
+      // Resolve files from component-map
+      const resolvedImports = await resolveComponentImportFiles(basePath, args.componentMapPath);
 
-      const fileDispatches = Array.from(componentPaths, (mapEntry) =>
-        sendCode({
-          file: {
-            name: mapEntry[0],
-            path: mapEntry[1],
-            type: ExtractedFileType.Component,
-          },
-          token: accessToken,
-          targetUrl,
-        })
-      );
+      const fileDispatches: Promise<string | null>[] = [];
+
+      for (const { componentKey, filePath, fileType } of resolvedImports) {
+        let extraLabels: Record<string, unknown> | undefined;
+
+        // return an array of export names (e.g., ['Default','Cooler'])
+        const variantNames = readNamedExports(filePath);
+
+        extraLabels = {
+          ...(variantNames.length ? { variantNames } : {}),
+        };
+
+        fileDispatches.push(
+          sendCode({
+            file: {
+              name: componentKey,
+              path: filePath,
+              type: fileType,
+              labels: extraLabels,
+            },
+            token: accessToken,
+            targetUrl,
+          })
+        );
+      }
 
       fileDispatches.push(
         sendCode({
