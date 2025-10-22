@@ -129,8 +129,8 @@ export type RobotsOptions = {
  */
 export interface BaseSitecoreClient {
   /**
-   * Execute a raw GraphQL request against the configured Sitecore endpoint(s).
-   * Mirrors GraphQLClient.request for familiarity.
+   * Execute a raw GraphQL request using the client's configured GraphQL endpoint(s).
+   * This is a thin pass-through to the underlying {@link GraphQLClient.request},
    * @param query GraphQL string or DocumentNode
    * @param variables Optional variables bag
    * @param fetchOptions Optional fetch/retry overrides (headers, retries, fetch impl, debugger)
