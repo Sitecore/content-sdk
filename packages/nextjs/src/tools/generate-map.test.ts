@@ -776,6 +776,7 @@ describe('generateMap', () => {
             componentType: 'universal' as const,
           },
         ];
+        // eslint-disable-next-line no-unused-vars
         const untyped = typed.map(({ componentType, ...rest }) => rest);
 
         // Stubs for both branches used by generateMap
