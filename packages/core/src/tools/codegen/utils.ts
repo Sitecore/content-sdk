@@ -170,6 +170,10 @@ function _resolveComponentImportFiles(
     ? componentMapPath
     : path.resolve(appPath, componentMapPath);
 
+  if (!fs.existsSync(mapPath)) {
+    throw new ReferenceError(`Failed to find file ${mapPath}`);
+  }
+
   // 1) Load tsconfig (simple + safe). Use appPath as baseUrl fallback.
   const compilerOptions = loadCompilerOptions(appPath);
 

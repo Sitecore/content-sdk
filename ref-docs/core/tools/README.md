@@ -41,6 +41,8 @@
 - [generatePlugins](functions/generatePlugins.md)
 - [generateSites](functions/generateSites.md)
 - [getComponentListWithTypes](functions/getComponentListWithTypes.md)
+- [getComponentVariantSpec](functions/getComponentVariantSpec.md)
+- [getComponentVariantSpecUrl](functions/getComponentVariantSpecUrl.md)
 - [matchPath](functions/matchPath.md)
 - [scaffoldComponent](functions/scaffoldComponent.md)
 - [writeImportMap](functions/writeImportMap.md)

@@ -8,20 +8,18 @@
 
 > **detectRouterType**(`projectRoot`): [`RouterType`](../type-aliases/RouterType.md)
 
-Defined in: [packages/core/src/tools/templating/components.ts:106](https://github.com/Sitecore/content-sdk/blob/6104efc507b9dca7ce977b97a32095c83116e73e/packages/core/src/tools/templating/components.ts#L106)
+Defined in: [packages/core/src/tools/templating/components.ts:103](https://github.com/Sitecore/content-sdk/blob/6dc8e98dbbb7b7e5be9ff8107e95237d8311c7dc/packages/core/src/tools/templating/components.ts#L103)
 
-<<<<<<< HEAD
- *
+Detects the Next.js router type (App Router or Pages Router) based on directory structure.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `projectRoot` | `string` | ======= * Detects the Next.js router type (App Router or Pages Router) based on directory structure. * |
+| `projectRoot` | `string` | The project root directory. Defaults to current working directory. |
 
 ## Returns
 
 [`RouterType`](../type-aliases/RouterType.md)
 
 'app' if App Router is detected, 'pages' otherwise
->>>>>>> 320740678885c09d24564322cf9d5dea44f6f1f1

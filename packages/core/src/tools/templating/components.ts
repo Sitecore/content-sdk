@@ -99,8 +99,9 @@ export interface ComponentImport {
  * }
  * @param {string[]} paths paths to search
  * @param {string[]} [exclude] paths and glob patterns to exclude from final result
+ * @param {boolean} [silent] whether to suppress console output
  */
-function _getComponentList(paths: string[], exclude?: string[]): ComponentFile[] {
+function _getComponentList(paths: string[], exclude?: string[], silent?: boolean): ComponentFile[] {
   const components = paths.reduce<ComponentFile[]>((result, path) => {
     const globPath =
       glob.hasMagic(path, { magicalBraces: true }) || path.match(componentNamePattern)
@@ -112,7 +113,7 @@ function _getComponentList(paths: string[], exclude?: string[]): ComponentFile[]
         .filter((path: string) => path.match(componentNamePattern))
         .map((filePath: string) => {
           const name = filePath.match(componentNamePattern)![2];
-          console.debug(`Registering Content SDK component ${name}`);
+          !silent && console.debug(`Registering Content SDK component ${name}`);
           return {
             filePath,
             importPath: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency

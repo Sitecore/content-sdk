@@ -13,7 +13,10 @@ import debug from './../../debug';
 import path from 'path';
 
 export type ExtractFilesConfig = {
-  scConfig: SitecoreConfig;
+  /**
+   * @deprecated Pass `config` to the `defineCliConfig` function instead. This argument will be removed in the next major version.
+   */
+  scConfig?: SitecoreConfig;
   componentMapPath?: string;
   customValidateDeployContext?: () => boolean;
 };
@@ -36,17 +39,20 @@ export const unitMocks = {
   },
 };
 
-function _extractFiles(args: ExtractFilesConfig) {
+function _extractFiles(args: ExtractFilesConfig = {}) {
   const authParams = {
     clientId: process.env.SITECORE_AUTH_CLIENT_ID || '',
     clientSecret: process.env.SITECORE_AUTH_CLIENT_SECRET || '',
     authority: process.env.SITECORE_AUTH_AUTHORITY || '',
     audience: process.env.SITECORE_AUTH_AUDIENCE || '',
   };
+  return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
+    const config = args.scConfig ?? scConfig;
 
-  // const enableVariantsInMap = args.enableVariantsInMap ?? true;
+    if (!config) {
+      throw new Error('Sitecore configuration is required to be provided');
+    }
 
-  return async () => {
     if (
       (args.customValidateDeployContext && !args.customValidateDeployContext()) ||
       !validateDeployContext()
@@ -54,7 +60,7 @@ function _extractFiles(args: ExtractFilesConfig) {
       debug.common('Skipping code extraction, not in deploy context');
       return;
     }
-    if (args.scConfig.disableCodeGeneration) {
+    if (config.disableCodeGeneration) {
       debug.common('Skipping code extraction, code generation has been disabled');
       return;
     }
@@ -64,7 +70,8 @@ function _extractFiles(args: ExtractFilesConfig) {
     const basePath = process.cwd();
 
     try {
-      const targetUrl = args.scConfig.api.edge.edgeUrl;
+      // Use Edge Platform mesh endpoint - staging is ready, prod QA in progress
+      const targetUrl = config.api.edge.edgeUrl;
       const { accessToken } = await auth.clientCredentialsFlow(authParams);
       if (!accessToken) {
         console.error(chalk.red('Failed to get access token, aborting code extraction'));
