@@ -25,6 +25,7 @@ import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { NativeDataFetcher } from '../native-fetcher';
 import { RobotsService } from '../site/robots-service';
 import { DesignLibraryVariantGeneration } from '../editing/models';
+import debug from '../debug';
 
 /**
  * Error page codes
@@ -267,7 +268,9 @@ export class SitecoreClient implements BaseSitecoreClient {
    */
   constructor(protected initOptions: SitecoreClientInit) {
     this.clientFactory = this.getClientFactory();
-    this.graphQLClient = this.getGraphQLClient();
+    this.graphQLClient = this.clientFactory({
+      debugger: debug.http,
+    });
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
@@ -725,13 +728,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     }
 
     return pageMode;
-  }
-
-  private getGraphQLClient(): GraphQLClient {
-    return this.clientFactory({
-      retries: this.initOptions.retries.count,
-      retryStrategy: this.initOptions.retries.retryStrategy,
-    });
   }
 
   private getClientFactory(): GraphQLRequestClientFactory {
