@@ -25,10 +25,10 @@ import {
 } from '../../test-data/normal-mode-data';
 import * as metadataData from '../../test-data/metadata-data';
 import * as SxaRichText from '../../test-data/sxa-rich-text';
-import * as BYOCComponent from '../BYOCComponent';
-import * as BYOCWrapper from '../BYOCWrapper';
-import * as FEAASComponent from '../FEaaSComponent';
-import * as FEAASWrapper from '../FEaaSWrapper';
+import * as BYOCComponent from '../FEaaS/BYOCWrapper';
+import * as BYOCWrapper from '../FEaaS/BYOCWrapper';
+import * as FEAASComponent from '../FEaaS/FEaaSWrapper';
+import * as FEAASWrapper from '../FEaaS/FEaaSWrapper';
 import * as HiddenRendering from '../HiddenRendering';
 import * as ErrorBoundary from '../ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
@@ -1041,10 +1041,13 @@ describe('Server Placeholder logic', () => {
     it('should render react server component', () => {
       const page = getPage();
 
+      let componentMapPassed = false;
+      let pagePropPassed = false;
+
       const ServerComponent: React.FC<any> = (props) => {
         // Server components should receive all props including non-serializable ones
-        expect(props.page).to.not.be.undefined;
-        expect(props.componentMap).to.not.be.undefined;
+        pagePropPassed = props.page !== undefined;
+        componentMapPassed = props.componentMap !== undefined;
 
         return <div className="server-component">Server Component</div>;
       };
@@ -1078,6 +1081,8 @@ describe('Server Placeholder logic', () => {
         />
       );
 
+      expect(componentMapPassed).to.be.true;
+      expect(pagePropPassed).to.be.true;
       expect(renderedComponent.container.querySelectorAll('.server-component').length).to.equal(1);
     });
 

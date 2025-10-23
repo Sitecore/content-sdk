@@ -8,5 +8,10 @@
 
 ## Variables
 
-- [default](variables/default.md)
 - [getComponentServerProps](variables/getComponentServerProps.md)
+
+## References
+
+### default
+
+Renames and re-exports [BYOCClientWrapper](../../variables/BYOCClientWrapper.md)

@@ -121,5 +121,4 @@ export const nonSerializedPlaceholderProps = [
   'page',
   'missingComponentComponent',
   'hiddenRenderingComponent',
-  'rendering',
 ] as const satisfies (keyof PlaceholderProps)[];

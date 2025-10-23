@@ -8,7 +8,7 @@
 
 > **FEaaSComponentParams** = `object`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:12](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L12)
+Defined in: [packages/react/src/components/FEaaS/models.ts:86](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L86)
 
 Params from a Sitecore FEaaS rendering
 
@@ -18,7 +18,7 @@ Params from a Sitecore FEaaS rendering
 
 > `optional` **ComponentDataOverride**: `string`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:19](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L19)
+Defined in: [packages/react/src/components/FEaaS/models.ts:93](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L93)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/react/src/components/FEaaSComponent.tsx:19](https://github
 
 > `optional` **ComponentHostName**: `string`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:17](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L17)
+Defined in: [packages/react/src/components/FEaaS/models.ts:91](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L91)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/react/src/components/FEaaSComponent.tsx:17](https://github
 
 > `optional` **ComponentHTMLOverride**: `string`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:20](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L20)
+Defined in: [packages/react/src/components/FEaaS/models.ts:94](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L94)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/react/src/components/FEaaSComponent.tsx:20](https://github
 
 > `optional` **ComponentId**: `string`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:14](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L14)
+Defined in: [packages/react/src/components/FEaaS/models.ts:88](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L88)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [packages/react/src/components/FEaaSComponent.tsx:14](https://github
 
 > `optional` **ComponentInstanceId**: `string`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:18](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L18)
+Defined in: [packages/react/src/components/FEaaS/models.ts:92](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L92)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [packages/react/src/components/FEaaSComponent.tsx:18](https://github
 
 > `optional` **ComponentRevision**: `RevisionType`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:16](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L16)
+Defined in: [packages/react/src/components/FEaaS/models.ts:90](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L90)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [packages/react/src/components/FEaaSComponent.tsx:16](https://github
 
 > `optional` **ComponentVersion**: `string`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:15](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L15)
+Defined in: [packages/react/src/components/FEaaS/models.ts:89](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L89)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [packages/react/src/components/FEaaSComponent.tsx:15](https://github
 
 > `optional` **LibraryId**: `string`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:13](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L13)
+Defined in: [packages/react/src/components/FEaaS/models.ts:87](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L87)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [packages/react/src/components/FEaaSComponent.tsx:13](https://github
 
 > `optional` **RenderingIdentifier**: `string`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:22](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L22)
+Defined in: [packages/react/src/components/FEaaS/models.ts:96](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L96)
 
 ***
 
@@ -90,4 +90,4 @@ Defined in: [packages/react/src/components/FEaaSComponent.tsx:22](https://github
 
 > `optional` **styles**: `string`
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:21](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/FEaaSComponent.tsx#L21)
+Defined in: [packages/react/src/components/FEaaS/models.ts:95](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/react/src/components/FEaaS/models.ts#L95)
