@@ -99,13 +99,11 @@ export interface ComponentImport {
  * }
  * @param {string[]} paths paths to search
  * @param {string[]} [exclude] paths and glob patterns to exclude from final result
- * @param {boolean} [silent] whether to suppress console output
  * @param {boolean} [includeVariants] whether to include variant components
  */
 function _getComponentList(
   paths: string[],
   exclude?: string[],
-  silent?: boolean,
   includeVariants?: boolean
 ): ComponentFile[] {
   const components = paths.reduce<ComponentFile[]>((result, path) => {
@@ -119,10 +117,6 @@ function _getComponentList(
         .filter((path: string) => path.match(componentNamePattern))
         .map((filePath: string) => {
           const name = filePath.match(componentNamePattern)![2];
-          const isVariant = name.includes('.');
-          if (!silent && (!isVariant || includeVariants)) {
-            console.debug(`Registering Content SDK component ${name}`);
-          }
           return {
             filePath,
             importPath: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
@@ -340,7 +334,7 @@ export function getComponentListWithTypes(
   includeVariants?: boolean,
   routerType?: RouterType
 ): ComponentFileWithType[] {
-  const components = getComponentList(paths, exclude, false, includeVariants);
+  const components = getComponentList(paths, exclude, includeVariants);
   const detectedRouterType = routerType || detectRouterType();
 
   return components.map((component) => ({

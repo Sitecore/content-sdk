@@ -632,6 +632,39 @@ describe('generateMap', () => {
       expect(String(call1Args[0])).to.match(/component-map\.client\.ts$/);
       sinon.assert.calledWith(clientTemplate, [], sinon.match.any);
     });
+
+    it('should log for component registration', () => {
+      const debugStub = sandbox.stub(console, 'debug');
+
+      const withNeighbor = [
+        {
+          componentName: 'Button',
+          moduleName: 'Button',
+          importPath: './src/components/Button',
+          filePath: path.join(process.cwd(), 'src/components/Button.tsx'),
+          componentType: 'universal' as const,
+        },
+        {
+          componentName: 'Button.extra',
+          moduleName: 'Buttonextra',
+          importPath: './src/components/Button.extra',
+          filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
+          componentType: 'universal' as const,
+        },
+      ];
+
+      getComponentListWithTypesStub.resetBehavior();
+
+      getComponentListWithTypesStub.returns(withNeighbor);
+
+      generateMap({ paths: ['src/components'] });
+
+      expect(debugStub).to.have.been.calledWithExactly('Registering Content SDK component Button');
+      expect(debugStub).to.have.been.calledWithExactly(
+        'Registering Content SDK component Button.extra'
+      );
+      expect(debugStub).to.have.been.callCount(4);
+    });
   });
 
   describe('clientComponentMap functionality', () => {

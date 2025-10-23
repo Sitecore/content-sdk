@@ -335,7 +335,7 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
       debug.common('Skipping import map generation. Code generation functionality is disabled.');
       return;
     }
-    const paths = _getComponentList(args.paths, args.exclude, true).map((entry) => entry.filePath);
+    const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
     const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
     console.log(
       `[Codegen] Generating import map: ${JSON.stringify({
