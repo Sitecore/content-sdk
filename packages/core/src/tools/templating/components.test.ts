@@ -33,12 +33,7 @@ describe('components', () => {
         },
       ];
 
-      const result = getComponentList(
-        ['src/test-data/components/*.tsx'],
-        ['**/*.test.*'],
-        false,
-        false
-      );
+      const result = getComponentList(['src/test-data/components/*.tsx'], ['**/*.test.*'], false);
       expect(result).to.deep.equal(items);
     });
 
@@ -76,7 +71,7 @@ describe('components', () => {
         },
       ] as ComponentFile[];
 
-      const result = getComponentList(['src/test-data/components'], ['**/*.test.*'], false, false);
+      const result = getComponentList(['src/test-data/components'], ['**/*.test.*'], false);
       expect(result).to.deep.equal(items);
     });
 
@@ -203,7 +198,7 @@ describe('components', () => {
         },
       ] as ComponentFile[];
 
-      const result = getComponentList(['src/test-data/components'], ['**/*.test.*'], false, true);
+      const result = getComponentList(['src/test-data/components'], ['**/*.test.*'], true);
       expect(result).to.deep.equal(items);
     });
 
