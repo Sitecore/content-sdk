@@ -35,7 +35,7 @@ describe('extract-files', () => {
   };
 
   let fetchFake: sinon.SinonSpy;
-  let existsSyncStub: sinon.SinonStub;
+  let existsSyncSpy: sinon.SinonSpy;
   let fetchBehavior: (url: any, init: any) => Promise<any>;
 
   beforeEach(() => {
@@ -57,7 +57,7 @@ describe('extract-files', () => {
     fetchFake = sinon.fake((url: any, init: any) => fetchBehavior(url, init));
     sandbox.replace(globalThis as any, 'fetch', fetchFake);
 
-    existsSyncStub = sandbox.stub(fs, 'existsSync').returns(true);
+    existsSyncSpy = sandbox.spy(fs, 'existsSync');
   });
 
   afterEach(() => {
@@ -181,7 +181,7 @@ describe('extract-files', () => {
 
         const errorMessage = consoleErrorStub.firstCall.args[0];
         expect(errorMessage).to.include('Error during code extraction:');
-        expect(errorMessage).to.include('ENOENT: no such file or directory');
+        expect(errorMessage).to.include('Failed to find file');
         expect(errorMessage).to.include(expectedPath);
       });
 
@@ -228,7 +228,7 @@ describe('extract-files', () => {
             expect(b.labels).to.be.an('object');
           });
 
-          const existsArgs = existsSyncStub
+          const existsArgs = existsSyncSpy
             .getCalls()
             .map((c) => String(c.args[0]).replace(/\\/g, '/'));
           const norm = (s: string) => s.replace(/\\/g, '/');
@@ -271,6 +271,44 @@ describe('extract-files', () => {
               'Code extraction completed successfully, files extracted:',
               component1Path,
               component2Path,
+              packageJsonPath,
+            ].join('\r\n')
+          );
+          expect(msgs).to.include(successMsg);
+        });
+
+        xit('should call sendCode for each component path and package.json when client component map present', async () => {
+          const appFolder = path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/extract-components/with-client-map'
+          );
+          sandbox.stub(process, 'cwd').returns(appFolder);
+
+          const fetchBearerTokenStub = sandbox
+            .stub()
+            .resolves({ data: {}, accessToken: 'test-token' });
+          sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
+
+          const consoleLogStub = sandbox.stub(console, 'log');
+
+          nock(edgeUrl).post('/mesh/push/api/v1/contentsdk/code/extracted').reply(200).persist();
+
+          const component2Path = path.resolve(process.cwd(), './src/components/TestComponent2.tsx');
+          const component3Path = path.resolve(process.cwd(), './src/components/TestComponent3.tsx');
+          const packageJsonPath = path.resolve(process.cwd(), './package.json');
+
+          await run(mockArgs);
+
+          expect(fetchBearerTokenStub.calledOnce).to.be.true;
+
+          const msgs = consoleLogStub.getCalls().map((c) => c.args[0]);
+          expect(msgs).to.include(chalk.green('Code extraction started'));
+
+          const successMsg = chalk.green(
+            [
+              'Code extraction completed successfully, files extracted:',
+              component2Path,
+              component3Path,
               packageJsonPath,
             ].join('\r\n')
           );
