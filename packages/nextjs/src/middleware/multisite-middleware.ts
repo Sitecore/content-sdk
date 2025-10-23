@@ -74,8 +74,10 @@ export class MultisiteMiddleware extends MiddlewareBase {
         siteName = req.cookies.get(SITE_KEY)?.value!;
       } else {
         // Site name can be forced by query string parameter or cookie
+        // 'site' is provided when running "preview" in AppRouter
         siteName =
           req.nextUrl.searchParams.get(SITE_KEY) ||
+          req.nextUrl.searchParams.get('site') ||
           (this.config.useCookieResolution &&
             this.config.useCookieResolution(req) &&
             req.cookies.get(SITE_KEY)?.value) ||

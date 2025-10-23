@@ -5,7 +5,8 @@ import {
   ComponentLayoutService,
   DesignLibraryMode,
 } from '../editing';
-import { GraphQLRequestClientFactory } from '../graphql-request-client';
+import { DocumentNode } from 'graphql';
+import { GraphQLClient, GraphQLRequestClientFactory } from '../graphql-request-client';
 import { DictionaryPhrases, DictionaryService } from '../i18n';
 import {
   getDesignLibraryStylesheetLinks,
@@ -24,6 +25,7 @@ import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { NativeDataFetcher } from '../native-fetcher';
 import { RobotsService } from '../site/robots-service';
 import { DesignLibraryVariantGeneration } from '../editing/models';
+import debug from '../debug';
 
 /**
  * Error page codes
@@ -127,6 +129,18 @@ export type RobotsOptions = {
  * Contract for the Sitecore Client implementations
  */
 export interface BaseSitecoreClient {
+  /**
+   * Execute a raw GraphQL request using the client's configured GraphQL endpoint(s).
+   * This is a thin pass-through to the underlying {@link GraphQLClient.request},
+   * @param query GraphQL string or DocumentNode
+   * @param variables Optional variables bag
+   * @param fetchOptions Optional fetch/retry overrides (headers, retries, fetch impl, debugger)
+   */
+  getData<T = unknown>(
+    query: string | DocumentNode,
+    variables?: Record<string, unknown>,
+    fetchOptions?: FetchOptions
+  ): Promise<T>;
   /**
    * Retrieves page layoutData and returns page details like language, layoutData and site info for current request
    * @param {string} path current request path
@@ -246,6 +260,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   protected errorPagesService: ErrorPagesService;
   protected componentService: ComponentLayoutService;
   protected sitePathService: SitePathService;
+  protected graphQLClient: GraphQLClient;
 
   /**
    * Init SitecoreClient
@@ -253,6 +268,9 @@ export class SitecoreClient implements BaseSitecoreClient {
    */
   constructor(protected initOptions: SitecoreClientInit) {
     this.clientFactory = this.getClientFactory();
+    this.graphQLClient = this.clientFactory({
+      debugger: debug.http,
+    });
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
@@ -281,6 +299,21 @@ export class SitecoreClient implements BaseSitecoreClient {
           .filter((part) => part !== '/')
           .map((part) => part.replace(/^\/+/, '').replace(/\/+$/, ''))
           .join('/')}`;
+  }
+
+  /**
+   * Execute a raw GraphQL request using the client's configured GraphQL Edge endpoint.
+   * This is a thin pass-through to the underlying {@link GraphQLClient.request},
+   * @param {string | DocumentNode} query GraphQL query
+   * @param {Record<string, unknown>} [variables] Optional variables bag
+   * @param {FetchOptions} [fetchOptions] Optional fetch overrides (e.g. fetch, headers)
+   */
+  getData<T = unknown>(
+    query: string | DocumentNode,
+    variables?: Record<string, unknown>,
+    fetchOptions?: FetchOptions
+  ): Promise<T> {
+    return this.graphQLClient.request<T>(query, variables, fetchOptions);
   }
 
   /**

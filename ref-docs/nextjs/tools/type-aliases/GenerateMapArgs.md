@@ -8,7 +8,7 @@
 
 > **GenerateMapArgs** = `object`
 
-Defined in: core/types/tools/generate-map.d.ts:14
+Defined in: core/types/tools/generate-map.d.ts:17
 
 Arguments for the generateMap function.
 
@@ -18,30 +18,21 @@ Arguments for the generateMap function.
 
 > `optional` **clientComponentMap**: `boolean`
 
-Defined in: core/types/tools/generate-map.d.ts:21
+Defined in: core/types/tools/generate-map.d.ts:24
 
-Optional flag to generate separate client and server component maps. When true, generates both component-map.ts (all components) and component-map.client.ts (client + universal only). When false or undefined, generates single component-map.ts (traditional behavior).
+Optional flag to generate separate client and server component maps. When true,
+                                           generates both component-map.ts (all components) and component-map.client.ts (client + universal only).
+                                           When false or undefined, generates single component-map.ts (traditional behavior).
 
 ***
 
-### clientMapTemplate()?
+### clientMapTemplate?
 
-> `optional` **clientMapTemplate**: (`components`, `componentImports?`) => `string`
+> `optional` **clientMapTemplate**: `ComponentMapTemplate` \| `EnhancedComponentMapTemplate`
 
-Defined in: core/types/tools/generate-map.d.ts:20
+Defined in: core/types/tools/generate-map.d.ts:23
 
 Optional custom template function to generate the client component map content (only used when clientComponentMap is true).
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `components` | `ComponentFileWithType`[] |
-| `componentImports?` | [`ComponentImport`](../interfaces/ComponentImport.md)[] |
-
-#### Returns
-
-`string`
 
 ***
 
@@ -49,7 +40,7 @@ Optional custom template function to generate the client component map content (
 
 > `optional` **componentImports**: [`ComponentImport`](../interfaces/ComponentImport.md)[]
 
-Defined in: core/types/tools/generate-map.d.ts:17
+Defined in: core/types/tools/generate-map.d.ts:20
 
 Optional array of package definitions for component imports to include in the map.
 
@@ -59,7 +50,7 @@ Optional array of package definitions for component imports to include in the ma
 
 > `optional` **destination**: `string`
 
-Defined in: core/types/tools/generate-map.d.ts:16
+Defined in: core/types/tools/generate-map.d.ts:19
 
 Destination folder path for the generated map.
 
@@ -69,30 +60,29 @@ Destination folder path for the generated map.
 
 > `optional` **exclude**: `string`[]
 
-Defined in: core/types/tools/generate-map.d.ts:18
+Defined in: core/types/tools/generate-map.d.ts:21
 
 Optional array of glob paths to exclude from the map.
 
 ***
 
-### mapTemplate()?
+### includeVariants?
 
-> `optional` **mapTemplate**: (`components`, `componentImports?`) => `string`
+> `optional` **includeVariants**: `boolean`
 
-Defined in: core/types/tools/generate-map.d.ts:19
+Defined in: core/types/tools/generate-map.d.ts:25
+
+Optional flag to include component's variants path in the component map.
+
+***
+
+### mapTemplate?
+
+> `optional` **mapTemplate**: `ComponentMapTemplate` \| `EnhancedComponentMapTemplate`
+
+Defined in: core/types/tools/generate-map.d.ts:22
 
 Optional custom template function to generate the main component map content.
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `components` | [`ComponentFile`](../interfaces/ComponentFile.md)[] \| `ComponentFileWithType`[] |
-| `componentImports?` | [`ComponentImport`](../interfaces/ComponentImport.md)[] |
-
-#### Returns
-
-`string`
 
 ***
 
@@ -100,6 +90,6 @@ Optional custom template function to generate the main component map content.
 
 > **paths**: `string`[]
 
-Defined in: core/types/tools/generate-map.d.ts:15
+Defined in: core/types/tools/generate-map.d.ts:18
 
 Array of component paths to include in component map.

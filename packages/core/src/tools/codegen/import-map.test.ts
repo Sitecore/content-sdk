@@ -8,6 +8,7 @@ import {
   unitMocks,
   writeImportMap,
   getImportValueAlias,
+  WriteImportMapArgs,
 } from './import-map';
 import debug from './../../debug';
 import sinon from 'sinon';
@@ -350,82 +351,103 @@ describe('Import Map Generation', () => {
       sandbox.replace.usingAccessor(componentUnitMocks, 'getComponentList', getComponentListStub);
     });
 
-    it('should skip when code generation is disabled', async () => {
-      const debugStub = sandbox.stub(debug, 'common');
-      const scConfig = { disableCodeGeneration: true } as any;
-      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
-      const getComponentListStub = sandbox.stub();
-      unitMocks({ getComponentListStub });
-      const fsWriteStub = sandbox.stub(fs, 'writeFileSync');
+    const initialization = [
+      {
+        title: 'Using deprecated scConfig',
+        run: (config: WriteImportMapArgs) => {
+          const generate = writeImportMap(config);
+          return generate();
+        },
+      },
+      {
+        title: 'Using new config passed as argument',
+        run: ({ scConfig, ...rest }: WriteImportMapArgs) => {
+          const generate = writeImportMap(rest);
+          return generate({ scConfig });
+        },
+      },
+    ];
 
-      await writeImportMap({ paths: ['foo'], exclude: [], scConfig })();
+    initialization.forEach(({ title, run }) => {
+      describe(title, () => {
+        it('should skip when code generation is disabled', async () => {
+          const debugStub = sandbox.stub(debug, 'common');
+          const scConfig = { disableCodeGeneration: true } as any;
+          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+          const getComponentListStub = sandbox.stub();
+          unitMocks({ getComponentListStub });
+          const fsWriteStub = sandbox.stub(fs, 'writeFileSync');
 
-      expect(
-        debugStub.calledWithMatch(
-          'Skipping import map generation. Code generation functionality is disabled.'
-        )
-      ).to.be.true;
-      expect(getComponentListStub.notCalled).to.be.true;
-      expect(fsWriteStub.called).to.be.false;
-    });
+          await run({ paths: ['foo'], exclude: [], scConfig });
 
-    it('should retrieve and parse paths based on inputs from "paths" and "exclude"', async () => {
-      const scConfig = { disableCodeGeneration: false } as any;
-      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+          expect(
+            debugStub.calledWithMatch(
+              'Skipping import map generation. Code generation functionality is disabled.'
+            )
+          ).to.be.true;
+          expect(getComponentListStub.notCalled).to.be.true;
+          expect(fsWriteStub.called).to.be.false;
+        });
 
-      const fakeEntries = [{ filePath: 'component1.tsx' }, { filePath: 'component2.tsx' }];
-      const getComponentListStub = sandbox.stub().returns(fakeEntries);
-      unitMocks({ getComponentListStub });
-      getImportMapStub.returns(new Map());
-      const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
-      nextJsMapTemplateStub.returns('// import map content');
-      await writeImportMap({ paths: ['foo'], exclude: ['bar'], scConfig })();
+        it('should retrieve and parse paths based on inputs from "paths" and "exclude"', async () => {
+          const scConfig = { disableCodeGeneration: false } as any;
+          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
 
-      expect(getComponentListStub.called).to.be.true;
-      expect(getComponentListStub.calledWith(['foo'], ['bar'])).to.be.true;
-      expect(getImportMapStub.calledWith(['component1.tsx', 'component2.tsx'])).to.be.true;
-      expect(fsWriteStub.calledOnce).to.be.true;
-      expect(nextJsMapTemplateStub.calledOnce).to.be.true;
-    });
+          const fakeEntries = [{ filePath: 'component1.tsx' }, { filePath: 'component2.tsx' }];
+          const getComponentListStub = sandbox.stub().returns(fakeEntries);
+          unitMocks({ getComponentListStub });
+          getImportMapStub.returns(new Map());
+          const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+          nextJsMapTemplateStub.returns('// import map content');
+          await run({ paths: ['foo'], exclude: ['bar'], scConfig });
 
-    it('should write output into import-map file', async () => {
-      const scConfig = { disableCodeGeneration: false } as any;
-      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+          expect(getComponentListStub.called).to.be.true;
+          expect(getComponentListStub.calledWith(['foo'], ['bar'])).to.be.true;
+          expect(getImportMapStub.calledWith(['component1.tsx', 'component2.tsx'])).to.be.true;
+          expect(fsWriteStub.calledOnce).to.be.true;
+          expect(nextJsMapTemplateStub.calledOnce).to.be.true;
+        });
 
-      const fakeEntries = [{ filePath: 'component1.tsx' }];
-      getComponentListStub.returns(fakeEntries);
-      getImportMapStub.returns(new Map());
-      const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
-      nextJsMapTemplateStub.returns('// import map content');
+        it('should write output into import-map file', async () => {
+          const scConfig = { disableCodeGeneration: false } as any;
+          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
 
-      await writeImportMap({ paths: ['foo'], exclude: [], scConfig })();
+          const fakeEntries = [{ filePath: 'component1.tsx' }];
+          getComponentListStub.returns(fakeEntries);
+          getImportMapStub.returns(new Map());
+          const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+          nextJsMapTemplateStub.returns('// import map content');
 
-      expect(fsWriteStub.calledOnce).to.be.true;
-      const filePath = fsWriteStub.getCall(0).args[0];
-      expect(filePath).to.include('.sitecore');
-      expect(filePath).to.include('import-map.ts');
-      expect(fsWriteStub.getCall(0).args[1]).to.equal('// import map content');
-      expect(fsWriteStub.getCall(0).args[2]).to.deep.include({ encoding: 'utf8' });
-    });
+          await run({ paths: ['foo'], exclude: [], scConfig });
 
-    it('should throw when file write operation fails', async () => {
-      const scConfig = { disableCodeGeneration: false } as any;
-      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+          expect(fsWriteStub.calledOnce).to.be.true;
+          const filePath = fsWriteStub.getCall(0).args[0];
+          expect(filePath).to.include('.sitecore');
+          expect(filePath).to.include('import-map.ts');
+          expect(fsWriteStub.getCall(0).args[1]).to.equal('// import map content');
+          expect(fsWriteStub.getCall(0).args[2]).to.deep.include({ encoding: 'utf8' });
+        });
 
-      const fakeEntries = [{ filePath: 'component1.tsx' }];
-      getComponentListStub.returns(fakeEntries);
-      getImportMapStub.returns(new Map());
-      const error = new Error('Unit test mocks: write failed');
-      sandbox.stub(require('fs'), 'writeFileSync').throws(error);
-      nextJsMapTemplateStub.returns('// import map content');
+        it('should throw when file write operation fails', async () => {
+          const scConfig = { disableCodeGeneration: false } as any;
+          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
 
-      let thrownError: Error | undefined;
-      try {
-        await writeImportMap({ paths: ['foo'], exclude: [], scConfig })();
-      } catch (e) {
-        thrownError = e as Error;
-      }
-      expect(thrownError).to.equal(error);
+          const fakeEntries = [{ filePath: 'component1.tsx' }];
+          getComponentListStub.returns(fakeEntries);
+          getImportMapStub.returns(new Map());
+          const error = new Error('Unit test mocks: write failed');
+          sandbox.stub(require('fs'), 'writeFileSync').throws(error);
+          nextJsMapTemplateStub.returns('// import map content');
+
+          let thrownError: Error | undefined;
+          try {
+            await run({ paths: ['foo'], exclude: [], scConfig });
+          } catch (e) {
+            thrownError = e as Error;
+          }
+          expect(thrownError).to.equal(error);
+        });
+      });
     });
   });
 });

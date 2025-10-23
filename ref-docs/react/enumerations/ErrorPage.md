@@ -6,7 +6,7 @@
 
 # Enumeration: ErrorPage
 
-Defined in: packages/core/types/client/sitecore-client.d.ts:13
+Defined in: packages/core/types/client/sitecore-client.d.ts:14
 
 Error page codes
 
@@ -16,7 +16,7 @@ Error page codes
 
 > **InternalServerError**: `"500"`
 
-Defined in: packages/core/types/client/sitecore-client.d.ts:15
+Defined in: packages/core/types/client/sitecore-client.d.ts:16
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/core/types/client/sitecore-client.d.ts:15
 
 > **NotFound**: `"404"`
 
-Defined in: packages/core/types/client/sitecore-client.d.ts:14
+Defined in: packages/core/types/client/sitecore-client.d.ts:15

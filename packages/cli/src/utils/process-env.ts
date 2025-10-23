@@ -1,6 +1,7 @@
 import path from 'path';
 import * as dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
+import { SITECORE_CLI_MODE_ENV_VAR } from '@sitecore-content-sdk/core/config-cli';
 
 /**
  * Loads and processes environment variables from `.env` files in the specified directory.
@@ -22,6 +23,9 @@ export default function processEnv(dir: string) {
     mode && `.env.${mode}`,
     '.env',
   ].filter(Boolean) as string[];
+
+  // Set the environment variable to indicate that the application is running in CLI mode
+  process.env[SITECORE_CLI_MODE_ENV_VAR] = 'true';
 
   // inspired by https://github.com/entropitor/dotenv-cli/blob/v4.0.0/cli.js#L53-L55
   dotenvFiles.forEach(function(env) {
