@@ -1,7 +1,7 @@
 import React from 'react';
 import { fetchFEaaSComponentServerProps } from './feaas-utils';
 import { FEaaSWrapper } from './FEaaSWrapper';
-import { FEaaSServerWrapperProps } from './models';
+import { FEaaSComponentProps, FEaaSServerWrapperProps } from './models';
 import { nonSerializedPlaceholderProps } from '../Placeholder/models';
 
 /**
@@ -13,13 +13,9 @@ export const FEaaSServerWrapper = async (props: FEaaSServerWrapperProps) => {
   const params = props.rendering?.params || {};
   const isPageStateNormal = props.page?.mode.isNormal;
   // only pass serializable props to the client FEaaS component
-  const serializableProps = nonSerializedPlaceholderProps.reduce(
-    (finalProps, prop) => {
-      delete finalProps[prop];
-      return finalProps;
-    },
-    { ...(props as any) }
-  );
+  const serializableProps = Object.fromEntries(
+    Object.entries(props).filter(([key]) => !nonSerializedPlaceholderProps.includes(key as any))
+  ) as FEaaSComponentProps;
   const finalProps = {
     ...(await fetchFEaaSComponentServerProps(params, isPageStateNormal)),
     ...serializableProps,

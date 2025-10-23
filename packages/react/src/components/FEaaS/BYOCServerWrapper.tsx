@@ -1,5 +1,5 @@
 import React from 'react';
-import { BYOCServerWrapperProps } from './models';
+import { BYOCComponentProps, BYOCServerWrapperProps } from './models';
 import { fetchBYOCComponentServerProps } from './feaas-utils';
 import { BYOCWrapper } from './BYOCWrapper';
 import { nonSerializedPlaceholderProps } from '../Placeholder/models';
@@ -7,13 +7,9 @@ import { nonSerializedPlaceholderProps } from '../Placeholder/models';
 export const BYOCServerWrapper = async (props: BYOCServerWrapperProps) => {
   const params = props.rendering?.params || {};
   // only pass serializable props to the client BYOC component
-  const serializableProps = nonSerializedPlaceholderProps.reduce(
-    (finalProps, prop) => {
-      delete finalProps[prop];
-      return finalProps;
-    },
-    { ...(props as any) }
-  );
+  const serializableProps = Object.fromEntries(
+    Object.entries(props).filter(([key]) => !nonSerializedPlaceholderProps.includes(key as any))
+  ) as BYOCComponentProps;
   const finalProps = {
     ...(await fetchBYOCComponentServerProps(params)),
     ...serializableProps,
