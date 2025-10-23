@@ -10,6 +10,7 @@ import {
   EnhancedComponentMapTemplate,
   ComponentMapTemplate,
   ComponentMapEntry,
+  getComponentList,
 } from '@sitecore-content-sdk/core/tools';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -311,8 +312,13 @@ export const generateMap: GenerateMapFunction = ({
     );
   } else {
     // Either in pages/app router or clientComponentMap = false
-    const components = collectComponents({ paths, exclude, includeVariants, filter: 'all' });
-    const content = buildNextjsMapContent(components.entries, componentImports, {
+    const components = collectComponents({
+      paths,
+      exclude,
+      includeVariants,
+      filter: 'all',
+    }).entries;
+    const content = buildNextjsMapContent(components, componentImports, {
       headerComment:
         "Below are built-in components that are available in the app, it's recommended to keep them as is",
       isClientMap: false,

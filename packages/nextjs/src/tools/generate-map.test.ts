@@ -411,7 +411,7 @@ describe('generateMap', () => {
           filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
         },
       ];
-      getComponentListStub.returns(withNeighborNoTypes);
+      getComponentListWithTypesStub.returns(withNeighborNoTypes);
 
       generateMap({ paths: ['src/components'], includeVariants: true, clientComponentMap: false });
 
