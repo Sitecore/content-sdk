@@ -8,6 +8,6 @@
 
 > `const` **EDITING\_COMPONENT\_PLACEHOLDER**: `"editing-componentmode-placeholder"` = `'editing-componentmode-placeholder'`
 
-Defined in: [packages/core/src/layout/models.ts:164](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/core/src/layout/models.ts#L164)
+Defined in: [packages/core/src/layout/models.ts:164](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/core/src/layout/models.ts#L164)
 
 Static placeholder name used for component rendering

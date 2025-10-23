@@ -99,11 +99,13 @@
 
 ## Functions
 
+- [BYOCServerWrapper](functions/BYOCServerWrapper.md)
 - [BYOCWrapper](functions/BYOCWrapper.md)
 - [ClientEditingChromesUpdate](functions/ClientEditingChromesUpdate.md)
 - [DesignLibrary](functions/DesignLibrary.md)
 - [EditingScripts](functions/EditingScripts.md)
 - [FEaaSComponent](functions/FEaaSComponent.md)
+- [FEaaSServerWrapper](functions/FEaaSServerWrapper.md)
 - [FEaaSWrapper](functions/FEaaSWrapper.md)
 - [fetchBYOCComponentServerProps](functions/fetchBYOCComponentServerProps.md)
 - [fetchFEaaSComponentServerProps](functions/fetchFEaaSComponentServerProps.md)
@@ -121,6 +123,18 @@
 - [withSitecore](functions/withSitecore.md)
 
 ## References
+
+### BYOCClientWrapper
+
+Renames and re-exports [BYOCWrapper](functions/BYOCWrapper.md)
+
+***
+
+### FEaaSClientWrapper
+
+Renames and re-exports [FEaaSWrapper](functions/FEaaSWrapper.md)
+
+***
 
 ### PlaceholderComponentProps
 
