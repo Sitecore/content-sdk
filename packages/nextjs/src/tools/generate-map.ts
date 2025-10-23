@@ -10,7 +10,7 @@ import {
   EnhancedComponentMapTemplate,
   ComponentMapTemplate,
   ComponentMapEntry,
-  getComponentList,
+  // getComponentList,
 } from '@sitecore-content-sdk/core/tools';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -207,7 +207,7 @@ const collectComponents = (opts: {
   raw: ComponentFileWithType[];
   entries: ComponentMapEntry[];
 } => {
-  const withTypes = getComponentListWithTypes(opts.paths, opts.exclude);
+  const withTypes = getComponentListWithTypes(opts.paths, opts.exclude, opts.includeVariants);
 
   const filtered =
     opts.filter === 'client'
@@ -312,9 +312,8 @@ export const generateMap: GenerateMapFunction = ({
     );
   } else {
     // Either in pages/app router or clientComponentMap = false
-    const allComponents = getComponentList(paths, exclude);
-    const components = prepareComponentsForMap(allComponents, { includeVariants });
-    const content = buildNextjsMapContent(components, componentImports, {
+    const components = collectComponents({ paths, exclude, includeVariants, filter: 'all' });
+    const content = buildNextjsMapContent(components.entries, componentImports, {
       headerComment:
         "Below are built-in components that are available in the app, it's recommended to keep them as is",
       isClientMap: false,
@@ -354,4 +353,3 @@ export const generateMap: GenerateMapFunction = ({
     }
   }
 };
-

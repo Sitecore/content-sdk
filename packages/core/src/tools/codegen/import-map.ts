@@ -317,7 +317,7 @@ function _getImportMap(paths: string[]) {
   });
 
   return importMap;
-};
+}
 
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
@@ -335,7 +335,7 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
       debug.common('Skipping import map generation. Code generation functionality is disabled.');
       return;
     }
-    const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
+    const paths = _getComponentList(args.paths, args.exclude, true).map((entry) => entry.filePath);
     const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
     console.log(
       `[Codegen] Generating import map: ${JSON.stringify({
@@ -445,4 +445,4 @@ ${finalImportMap
 
 export default combineImportEntries(defaultImportEntries, importMap);
 `;
-};
+}

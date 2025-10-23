@@ -100,8 +100,14 @@ export interface ComponentImport {
  * @param {string[]} paths paths to search
  * @param {string[]} [exclude] paths and glob patterns to exclude from final result
  * @param {boolean} [silent] whether to suppress console output
+ * @param {boolean} [includeVariants] whether to include variant components
  */
-function _getComponentList(paths: string[], exclude?: string[], silent?: boolean): ComponentFile[] {
+function _getComponentList(
+  paths: string[],
+  exclude?: string[],
+  silent?: boolean,
+  includeVariants?: boolean
+): ComponentFile[] {
   const components = paths.reduce<ComponentFile[]>((result, path) => {
     const globPath =
       glob.hasMagic(path, { magicalBraces: true }) || path.match(componentNamePattern)
@@ -113,7 +119,10 @@ function _getComponentList(paths: string[], exclude?: string[], silent?: boolean
         .filter((path: string) => path.match(componentNamePattern))
         .map((filePath: string) => {
           const name = filePath.match(componentNamePattern)![2];
-          !silent && console.debug(`Registering Content SDK component ${name}`);
+          const isVariant = name.includes('.');
+          if (!silent && (!isVariant || includeVariants)) {
+            console.debug(`Registering Content SDK component ${name}`);
+          }
           return {
             filePath,
             importPath: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
@@ -124,7 +133,9 @@ function _getComponentList(paths: string[], exclude?: string[], silent?: boolean
     );
   }, []);
 
-  return components;
+  return includeVariants
+    ? components
+    : components.filter((component) => !component.componentName.includes('.'));
 }
 
 /**
@@ -319,15 +330,17 @@ export function detectComponentType(filePath: string, routerType?: RouterType): 
  * Get list of components with detected types (server, client, or universal).
  * @param {string[]} paths - Paths to search for components
  * @param {string[]} [exclude] - Paths and glob patterns to exclude from final result
+ * @param {boolean} includeVariants - Whether to include variant components
  * @param {RouterType} [routerType] - Optional router type override for type detection. Auto-detected if not provided.
  * @returns {ComponentFileWithType[]} Array of components with their detected types
  */
 export function getComponentListWithTypes(
   paths: string[],
   exclude?: string[],
+  includeVariants?: boolean,
   routerType?: RouterType
 ): ComponentFileWithType[] {
-  const components = getComponentList(paths, exclude);
+  const components = getComponentList(paths, exclude, false, includeVariants);
   const detectedRouterType = routerType || detectRouterType();
 
   return components.map((component) => ({
