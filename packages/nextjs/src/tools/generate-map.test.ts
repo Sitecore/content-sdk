@@ -428,7 +428,7 @@ describe('generateMap', () => {
           filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
         },
       ];
-      getComponentListStub.returns(withNeighborNoTypes);
+      getComponentListWithTypesStub.returns(withNeighborNoTypes);
 
       generateMap({ paths: ['src/components'], includeVariants: true, clientComponentMap: false });
 
@@ -631,6 +631,39 @@ describe('generateMap', () => {
       const call1Args = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
       expect(String(call1Args[0])).to.match(/component-map\.client\.ts$/);
       sinon.assert.calledWith(clientTemplate, [], sinon.match.any);
+    });
+
+    it('should log for component registration', () => {
+      const debugStub = sandbox.stub(console, 'debug');
+
+      const withNeighbor = [
+        {
+          componentName: 'Button',
+          moduleName: 'Button',
+          importPath: './src/components/Button',
+          filePath: path.join(process.cwd(), 'src/components/Button.tsx'),
+          componentType: 'universal' as const,
+        },
+        {
+          componentName: 'Button.extra',
+          moduleName: 'Buttonextra',
+          importPath: './src/components/Button.extra',
+          filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
+          componentType: 'universal' as const,
+        },
+      ];
+
+      getComponentListWithTypesStub.resetBehavior();
+
+      getComponentListWithTypesStub.returns(withNeighbor);
+
+      generateMap({ paths: ['src/components'] });
+
+      expect(debugStub).to.have.been.calledWithExactly('Registering Content SDK component Button');
+      expect(debugStub).to.have.been.calledWithExactly(
+        'Registering Content SDK component Button.extra'
+      );
+      expect(debugStub).to.have.been.callCount(4);
     });
   });
 
@@ -948,10 +981,14 @@ describe('generateMap', () => {
           },
         ];
 
-        const getComponentListStub = newSandbox.stub().returns(fakeComponentList);
+        const getComponentListWithTypesStub = newSandbox.stub().returns(fakeComponentList);
         const detectRouterTypeStub = newSandbox.stub().returns('pages'); // auto-detect Pages Router
 
-        newSandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+        newSandbox.replaceGetter(
+          coreTools,
+          'getComponentListWithTypes',
+          () => getComponentListWithTypesStub
+        );
         newSandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
 
         // Defensively un-stub fs.writeFileSync if some other test wrapped it
