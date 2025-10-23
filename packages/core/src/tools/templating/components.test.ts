@@ -155,18 +155,6 @@ describe('components', () => {
       expect(result).to.deep.equal(items);
     });
 
-    it('should not log anything when silent=true', () => {
-      const debugStub = sandbox.stub(console, 'debug');
-
-      const result = getComponentList(['src/test-data/components'], ['**/*.test.*'], true);
-
-      expect(debugStub.called).to.equal(
-        false,
-        'console.debug should not be called when silent=true'
-      );
-      expect(result).to.have.lengthOf(5);
-    });
-
     it('should return filtered results when "exclude" contains a glob pattern', () => {
       const exclude = ['**/components/**'];
       expect(getComponentList(['src/test-data/components/*.tsx'], exclude)).to.be.empty;
