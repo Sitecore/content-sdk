@@ -172,7 +172,7 @@ describe('components', () => {
       expect(getComponentList(['src/test-data/components/*.tsx'], exclude)).to.be.empty;
     });
 
-    it('should return filtered results when "exclude" contains a glob pattern', () => {
+    it('should return variants in results when includeVariants is true', () => {
       sandbox.stub(console, 'debug');
 
       const items = [
@@ -182,6 +182,7 @@ describe('components', () => {
           componentName: 'Qux',
           moduleName: 'Qux',
         },
+        // variant component
         {
           importPath: 'src/test-data/components/Hero.variant',
           filePath: path.normalize('src/test-data/components/Hero.variant.tsx'),
