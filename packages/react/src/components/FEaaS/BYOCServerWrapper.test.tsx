@@ -126,6 +126,42 @@ describe('BYOCServerWrapper', () => {
     expect(finalProps.fetchedData).to.not.deep.equal(mockServerProps.fetchedData);
   });
 
+  it('should strip non-serialized props from placeholder', async () => {
+    // Arrange
+    const mockServerProps = {
+      fetchedData: { serverKey: 'serverValue' },
+    };
+
+    const mockParams: BYOCComponentParams = {
+      ComponentName: 'TestComponent',
+    };
+
+    const mockRendering: ComponentRendering = {
+      uid: 'test-uid-2',
+      componentName: 'BYOCWrapper',
+      params: mockParams,
+    };
+
+    const inputProps = {
+      rendering: mockRendering,
+      componentMap: {},
+    };
+
+    fetchBYOCComponentServerPropsStub.resolves(mockServerProps);
+
+    // Act
+    const result = await BYOCServerWrapper(inputProps);
+    render(result);
+
+    // Assert
+    expect(BYOCWrapperStub).to.have.been.calledOnce;
+
+    // Verify that input props override server props
+    const finalProps = BYOCWrapperStub.firstCall.args[0];
+    expect(finalProps.rendering).to.deep.equal(mockRendering);
+    expect(finalProps).to.not.have.property('componentMap');
+  });
+
   it('should handle empty params gracefully', async () => {
     // Arrange
     const mockServerProps = {

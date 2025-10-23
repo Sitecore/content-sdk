@@ -69,10 +69,11 @@ export type BYOCComponentClientProps = {
     | React.FC<MissingComponentProps>;
 };
 
-export type BYOCComponentProps = BYOCComponentClientProps &
-  BYOCServerProps & {
-    rendering: ComponentRendering;
-  };
+export type BYOCServerWrapperProps = BYOCComponentProps & {
+  rendering: ComponentRendering;
+};
+
+export type BYOCComponentProps = BYOCComponentClientProps & BYOCServerProps;
 
 export type ErrorComponentProps = {
   [prop: string]: unknown;
@@ -97,11 +98,12 @@ export type FEaaSComponentParams = {
 
 export type RevisionType = number | 'staged' | 'published' | 'saved';
 
-export type FEaaSComponentProps = FEaaSComponentServerProps &
-  FEaaSComponentClientProps & {
-    rendering?: ComponentRendering;
-    page?: Page;
-  };
+export type FEaaSServerWrapperProps = FEaaSComponentProps & {
+  rendering?: ComponentRendering;
+  page?: Page;
+};
+
+export type FEaaSComponentProps = FEaaSComponentServerProps & FEaaSComponentClientProps;
 
 /**
  * FEaaS props for server rendering.

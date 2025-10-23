@@ -121,7 +121,6 @@ export const getRenderedComponentProps = (
   } = placeholderProps;
   delete passThroughProps.missingComponentComponent;
   delete passThroughProps.hiddenRenderingComponent;
-  delete passThroughProps.componentMap;
   delete passThroughProps.name;
   const fields = { ...(placeholderFields || {}), ...(componentRendering.fields || {}) };
   const params = { ...(placeholderParams || {}), ...(componentRendering.params || {}) };

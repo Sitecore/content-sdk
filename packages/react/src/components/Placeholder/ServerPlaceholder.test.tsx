@@ -1041,10 +1041,13 @@ describe('Server Placeholder logic', () => {
     it('should render react server component', () => {
       const page = getPage();
 
+      let componentMapPassed = false;
+      let pagePropPassed = false;
+
       const ServerComponent: React.FC<any> = (props) => {
         // Server components should receive all props including non-serializable ones
-        expect(props.page).to.not.be.undefined;
-        expect(props.componentMap).to.not.be.undefined;
+        pagePropPassed = props.page !== undefined;
+        componentMapPassed = props.componentMap !== undefined;
 
         return <div className="server-component">Server Component</div>;
       };
@@ -1078,6 +1081,8 @@ describe('Server Placeholder logic', () => {
         />
       );
 
+      expect(componentMapPassed).to.be.true;
+      expect(pagePropPassed).to.be.true;
       expect(renderedComponent.container.querySelectorAll('.server-component').length).to.equal(1);
     });
 

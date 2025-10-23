@@ -100,11 +100,9 @@ describe('FEaaSServerWrapper', () => {
     // Verify that server props are merged with input props
     const finalProps = FEaaSWrapperStub.firstCall.args[0];
     expect(finalProps).to.include(mockServerProps);
-    expect(finalProps).to.include(inputProps);
     expect(finalProps.template).to.equal(mockServerProps.template);
     expect(finalProps.fetchedData).to.deep.equal(mockServerProps.fetchedData);
     expect(finalProps.rendering).to.deep.equal(mockRendering);
-    expect(finalProps.page).to.deep.equal(mockPage);
 
     // Verify component renders correctly
     expect(container.querySelector('[data-testid="feaas-wrapper"]')).to.not.be.null;
@@ -160,7 +158,6 @@ describe('FEaaSServerWrapper', () => {
     expect(finalProps.template).to.equal(overrideProps.template);
     expect(finalProps.fetchedData).to.deep.equal(overrideProps.fetchedData);
     expect(finalProps.rendering).to.deep.equal(mockRendering);
-    expect(finalProps.page).to.deep.equal(mockPage);
 
     // Verify server props are still present but overridden where conflicts exist
     expect(finalProps).to.have.property('revisionFallback', mockServerProps.revisionFallback);
@@ -245,7 +242,7 @@ describe('FEaaSServerWrapper', () => {
 
     const finalProps = FEaaSWrapperStub.firstCall.args[0];
     expect(finalProps).to.include(mockServerProps);
-    expect(finalProps).to.include(inputProps);
+    expect(finalProps.rendering).to.deep.equal(inputProps.rendering);
   });
 
   it('should handle missing rendering object', async () => {
@@ -275,7 +272,6 @@ describe('FEaaSServerWrapper', () => {
 
     const finalProps = FEaaSWrapperStub.firstCall.args[0];
     expect(finalProps).to.include(mockServerProps);
-    expect(finalProps).to.include(inputProps);
   });
 
   it('should handle missing page object', async () => {
