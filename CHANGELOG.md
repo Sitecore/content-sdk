@@ -29,7 +29,7 @@ Our versioning strategy is as follows:
 * `[nextjs]` Slim down sample even more ([#225](https://github.com/Sitecore/content-sdk/pull/225))
 * Mark client components with `use client` directive. ([#226](https://github.com/Sitecore/content-sdk/pull/226))
 * Add LLMs and Copilot instruction files for improved AI guidance ([#239](https://github.com/Sitecore/content-sdk/pull/239))
-* `[core]` `[nextjs]` Enable component variants in component-map & also send variants files in code extraction ([#245](https://github.com/Sitecore/content-sdk/pull/245))
+* `[core]` `[nextjs]` Enable component variants in component-map & also send variants files in code extraction ([#245](https://github.com/Sitecore/content-sdk/pull/245))([#251](https://github.com/Sitecore/content-sdk/pull/251))
 * `[core]` Expose `getData` on `SitecoreClient` to run raw GraphQL queries. ([#249](https://github.com/Sitecore/content-sdk/pull/249))
 
 ### 🐛 Bug Fixes

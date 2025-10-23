@@ -10,7 +10,6 @@ import {
   EnhancedComponentMapTemplate,
   ComponentMapTemplate,
   ComponentMapEntry,
-  getComponentList,
 } from '@sitecore-content-sdk/core/tools';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -71,9 +70,9 @@ const prepareComponentsForMap = (
 
     if (opts.includeVariants) {
       const spreads: string[] = [];
-      for (const n of group.neighbors) {
-        imports.push(`import * as ${n.moduleName} from '${n.importPath}';`);
-        spreads.push(`...${n.moduleName}`);
+      for (const neighbor of group.neighbors) {
+        imports.push(`import * as ${neighbor.moduleName} from '${neighbor.importPath}';`);
+        spreads.push(`...${neighbor.moduleName}`);
       }
       if (group.base) {
         imports.push(`import * as ${group.base.moduleName} from '${group.base.importPath}';`);
@@ -246,12 +245,16 @@ const collectComponents = (opts: {
   raw: ComponentFileWithType[];
   entries: ComponentMapEntry[];
 } => {
-  const withTypes = getComponentListWithTypes(opts.paths, opts.exclude);
+  const withTypes = getComponentListWithTypes(opts.paths, opts.exclude, opts.includeVariants);
 
   const filtered =
     opts.filter === 'client'
       ? filterComponentsByType(withTypes, ['client', 'universal'])
       : withTypes;
+
+  for (const file of filtered) {
+    console.debug(`Registering Content SDK component ${file.componentName}`);
+  }
 
   return {
     raw: filtered,
@@ -364,8 +367,12 @@ import { Form } from '@sitecore-content-sdk/nextjs';
     );
   } else {
     // Either in pages/app router or clientComponentMap = false
-    const allComponents = getComponentList(paths, exclude);
-    const components = prepareComponentsForMap(allComponents, { includeVariants });
+    const components = collectComponents({
+      paths,
+      exclude,
+      includeVariants,
+      filter: 'all',
+    }).entries;
     const content = buildNextjsMapContent(components, componentImports, {
       headerComment:
         "Below are built-in components that are available in the app, it's recommended to keep them as is",

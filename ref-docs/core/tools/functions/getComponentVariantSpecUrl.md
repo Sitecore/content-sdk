@@ -8,7 +8,7 @@
 
 > **getComponentVariantSpecUrl**(`params`): `string`
 
-Defined in: [packages/core/src/tools/codegen/component-variant.ts:45](https://github.com/Sitecore/content-sdk/blob/685d5642934579f7870610a5d3e64f5d001ae881/packages/core/src/tools/codegen/component-variant.ts#L45)
+Defined in: [packages/core/src/tools/codegen/component-variant.ts:45](https://github.com/Sitecore/content-sdk/blob/272d88b6498b3e929c9ee618271795d978073c6f/packages/core/src/tools/codegen/component-variant.ts#L45)
 
 Gets the component variant spec url.
 
