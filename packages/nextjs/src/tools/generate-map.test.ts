@@ -931,10 +931,14 @@ describe('generateMap', () => {
           },
         ];
 
-        const getComponentListStub = newSandbox.stub().returns(fakeComponentList);
+        const getComponentListWithTypesStub = newSandbox.stub().returns(fakeComponentList);
         const detectRouterTypeStub = newSandbox.stub().returns('pages'); // auto-detect Pages Router
 
-        newSandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+        newSandbox.replaceGetter(
+          coreTools,
+          'getComponentListWithTypes',
+          () => getComponentListWithTypesStub
+        );
         newSandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
 
         // Defensively un-stub fs.writeFileSync if some other test wrapped it
