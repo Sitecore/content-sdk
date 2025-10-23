@@ -3,8 +3,8 @@ import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
-import { BYOCComponent } from './BYOCComponent';
-import { MissingComponentProps } from './MissingComponent';
+import { BYOCComponent } from './BYOCWrapper';
+import { MissingComponentProps } from '../MissingComponent';
 
 describe('BYOCComponent', () => {
   it('should render with props when ComponentProps is provided', () => {
