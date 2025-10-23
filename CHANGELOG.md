@@ -20,8 +20,6 @@ Our versioning strategy is as follows:
   - Editing and preview support ([#198](https://github.com/Sitecore/content-sdk/pull/198))
   - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202)) ([#214](https://github.com/Sitecore/content-sdk/pull/214))
   - Client-server component map separation ([#230](https://github.com/Sitecore/content-sdk/pull/230))([#232](https://github.com/Sitecore/content-sdk/pull/232))([#234](https://github.com/Sitecore/content-sdk/pull/234))([#235](https://github.com/Sitecore/content-sdk/pull/235))([#241](https://github.com/Sitecore/content-sdk/pull/241))
-* [AI Component Generation] A new CLI command to add a new component variant ([#244](https://github.com/Sitecore/content-sdk/pull/244)):
-  * Introduced a new `sitecore-tools project component add <variant-id>` CLI command to add a generated variant to the application.
 * `[core]` Introduce `scConfig` property in `sitecore.cli.config` ([#244](https://github.com/Sitecore/content-sdk/pull/244)):
   * The `scConfig` property is used to pass the Sitecore configuration to the CLI commands.
   * Build commands now receive arguments (e.g. `scConfig`) to allow access to the CLI specific configuration settings. Now it's optional to pass `scConfig` manually to the command constructor.
