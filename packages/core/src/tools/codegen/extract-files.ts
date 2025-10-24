@@ -11,6 +11,7 @@ import { SitecoreConfig } from './../../config';
 import { auth } from '../../tools';
 import debug from './../../debug';
 import path from 'path';
+import fs from 'fs';
 
 export type ExtractFilesConfig = {
   /**
@@ -18,6 +19,7 @@ export type ExtractFilesConfig = {
    */
   scConfig?: SitecoreConfig;
   componentMapPath?: string;
+  clientComponentMapPath?: string;
   customValidateDeployContext?: () => boolean;
 };
 
@@ -81,6 +83,16 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
       // Resolve files from component-map
       const resolvedImports = await resolveComponentImportFiles(basePath, args.componentMapPath);
 
+      const clientComponentMapPath =
+        args.clientComponentMapPath || '.sitecore/component-map.client.ts';
+      const absClientMapPath = path.isAbsolute(clientComponentMapPath)
+        ? clientComponentMapPath
+        : path.resolve(basePath, clientComponentMapPath);
+      const exists = fs.existsSync(absClientMapPath);
+      if (exists) {
+        resolvedImports.push(...(await resolveComponentImportFiles(basePath, absClientMapPath)));
+      }
+
       const fileDispatches: Promise<string | null>[] = [];
 
       for (const { componentKey, filePath, fileType } of resolvedImports) {
@@ -128,7 +140,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
         )
       );
     } catch (error) {
-      console.error(chalk.red('Error during code extraction:', error));
+      console.error(chalk.red('Error during code extraction:', error, error.stack));
     }
   };
 }
