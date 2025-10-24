@@ -153,7 +153,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         maxAge: 3,
       }
     );
-    
+
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
     if (mode === LayoutServicePageState.Preview) {
       const cookies = res.getHeader('Set-Cookie') as string[];
