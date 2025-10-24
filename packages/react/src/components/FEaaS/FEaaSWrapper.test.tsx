@@ -1,12 +1,9 @@
 ﻿import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import {
-  composeComponentEndpoint,
-  FEaaSComponent,
-  FEaaSComponentParams,
-  FEaaSComponentProps,
-} from './FEaaSComponent';
+import { composeComponentEndpoint } from './feaas-utils';
+import { FEaaSComponentParams, FEaaSComponentProps } from './models';
+import { FEaaSComponent } from './FEaaSWrapper';
 import { ComponentFields } from '@sitecore-content-sdk/core/layout';
 
 describe('<FEaaSComponent />', () => {

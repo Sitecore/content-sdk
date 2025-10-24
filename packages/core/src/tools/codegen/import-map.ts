@@ -317,7 +317,7 @@ function _getImportMap(paths: string[]) {
   });
 
   return importMap;
-};
+}
 
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
@@ -445,4 +445,4 @@ ${finalImportMap
 
 export default combineImportEntries(defaultImportEntries, importMap);
 `;
-};
+}

@@ -8,7 +8,7 @@
 
 > **fetchBYOCComponentServerProps**(`params`): `Promise`\<`BYOCServerProps`\>
 
-Defined in: [packages/react/src/components/BYOCComponent.tsx:183](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/react/src/components/BYOCComponent.tsx#L183)
+Defined in: [packages/react/src/components/FEaaS/feaas-utils.ts:14](https://github.com/Sitecore/content-sdk/blob/272d88b6498b3e929c9ee618271795d978073c6f/packages/react/src/components/FEaaS/feaas-utils.ts#L14)
 
 Fetches server component props required for server rendering, based on rendering params.
 

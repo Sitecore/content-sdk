@@ -9,10 +9,16 @@ import {
 } from '@sitecore-content-sdk/core/layout';
 import { constants } from '@sitecore-content-sdk/core';
 import { HiddenRendering } from '../HiddenRendering';
-import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from '../FEaaSComponent';
-import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
-import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
-import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
+import {
+  FEaaSComponent,
+  FEaaSWrapper,
+  BYOCComponent,
+  BYOCWrapper,
+  BYOC_COMPONENT_RENDERING_NAME,
+  BYOC_WRAPPER_RENDERING_NAME,
+  FEAAS_COMPONENT_RENDERING_NAME,
+  FEAAS_WRAPPER_RENDERING_NAME,
+} from '../FEaaS';
 import { PlaceholderProps, RenderedProps } from './models';
 
 /**
@@ -210,10 +216,14 @@ export const getComponentForRendering = (
         (component as ReactModule).Default ||
         (component as ComponentType);
 
+  const dynamic =
+    !!(renderedComponent as LazyComponentType).render?.preload ||
+    renderingDefinition.componentName === BYOC_WRAPPER_RENDERING_NAME;
+
   // all dynamic elements will have a separate render prop
   return {
     component: renderedComponent,
-    dynamic: !!(renderedComponent as LazyComponentType).render?.preload,
+    dynamic,
     componentType: (component as ReactModule).componentType,
   };
 };

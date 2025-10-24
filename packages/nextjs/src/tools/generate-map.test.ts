@@ -1,5 +1,7 @@
 /* eslint-disable quotes */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-unused-vars */
+
 import path from 'path';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -89,13 +91,27 @@ describe('generateMap', () => {
       sandbox.restore();
     });
 
-    it('should write componentMap.ts file with components from "paths" parameter', async () => {
+    it('should write componentMap.ts file with components from "paths" parameter in pages router', async () => {
       const paths = ['src/components'];
+      sandbox.restore();
+      getComponentListStub = sandbox.stub().returns(fakeComponentList);
+      getComponentListWithTypesStub = sandbox.stub().returns(fakeComponentsWithTypes);
+      detectRouterTypeStub = sandbox.stub().returns('pages');
+      filterComponentsByTypeStub = sandbox.stub().returns(fakeComponentsWithTypes);
+
+      sandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+      sandbox.replaceGetter(
+        coreTools,
+        'getComponentListWithTypes',
+        () => getComponentListWithTypesStub
+      );
+      sandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
+      sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
+      sandbox.stub(fs, 'writeFileSync');
 
       generateMap({ paths, includeVariants: false });
 
-      expect(fs.writeFileSync).to.have.been.calledTwice;
-
+      expect(fs.writeFileSync).to.have.been.calledOnce;
       const [dest, content] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
       expect(dest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
 
@@ -107,9 +123,10 @@ describe('generateMap', () => {
       expect(content).to.include("import * as Link from './src/components/Link';");
 
       expect(content).to.include('new Map');
-
+      expect(content).to.match(/\['BYOCWrapper'[\s\S]*BYOCWrapper/);
+      expect(content).to.match(/\['FEaaSWrapper'[\s\S]*FEaaSWrapper/);
+      expect(content).to.match(/\['Form'[\s\S]*Form/);
       expect(content).to.match(/\['Button'[\s\S]*Button/);
-      expect(content).to.include("componentType: 'client'");
 
       expect(content).to.match(/\['Link'[\s\S]*Link/);
 
@@ -147,8 +164,8 @@ describe('generateMap', () => {
       expect(content).to.include(
         'export const componentMap = new Map<string, NextjsContentSdkComponent>('
       );
-      expect(content).to.include("['BYOCWrapper', BYOCWrapper],");
-      expect(content).to.include("['FEaaSWrapper', FEaaSWrapper],");
+      expect(content).to.include("['BYOCWrapper', BYOCServerWrapper],");
+      expect(content).to.include("['FEaaSWrapper', FEaaSServerWrapper],");
       expect(content).to.include("['Form', Form],");
     });
 
@@ -411,7 +428,7 @@ describe('generateMap', () => {
           filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
         },
       ];
-      getComponentListStub.returns(withNeighborNoTypes);
+      getComponentListWithTypesStub.returns(withNeighborNoTypes);
 
       generateMap({ paths: ['src/components'], includeVariants: true, clientComponentMap: false });
 
@@ -614,6 +631,39 @@ describe('generateMap', () => {
       const call1Args = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
       expect(String(call1Args[0])).to.match(/component-map\.client\.ts$/);
       sinon.assert.calledWith(clientTemplate, [], sinon.match.any);
+    });
+
+    it('should log for component registration', () => {
+      const debugStub = sandbox.stub(console, 'debug');
+
+      const withNeighbor = [
+        {
+          componentName: 'Button',
+          moduleName: 'Button',
+          importPath: './src/components/Button',
+          filePath: path.join(process.cwd(), 'src/components/Button.tsx'),
+          componentType: 'universal' as const,
+        },
+        {
+          componentName: 'Button.extra',
+          moduleName: 'Buttonextra',
+          importPath: './src/components/Button.extra',
+          filePath: path.join(process.cwd(), 'src/components/Button.extra.tsx'),
+          componentType: 'universal' as const,
+        },
+      ];
+
+      getComponentListWithTypesStub.resetBehavior();
+
+      getComponentListWithTypesStub.returns(withNeighbor);
+
+      generateMap({ paths: ['src/components'] });
+
+      expect(debugStub).to.have.been.calledWithExactly('Registering Content SDK component Button');
+      expect(debugStub).to.have.been.calledWithExactly(
+        'Registering Content SDK component Button.extra'
+      );
+      expect(debugStub).to.have.been.callCount(4);
     });
   });
 
@@ -830,8 +880,8 @@ describe('generateMap', () => {
         expect(clientContent).to.not.include('ClientButton');
         expect(clientContent).to.not.include('ServerData');
         expect(clientContent).to.not.include('UniversalCard');
-        expect(clientContent).to.include("['BYOCWrapper', BYOCWrapper],");
-        expect(clientContent).to.include("['FEaaSWrapper', FEaaSWrapper],");
+        expect(clientContent).to.include("['BYOCWrapper', BYOCClientWrapper],");
+        expect(clientContent).to.include("['FEaaSWrapper', FEaaSClientWrapper],");
         expect(clientContent).to.include("['Form', Form],");
       } finally {
         sb.restore();
@@ -931,10 +981,14 @@ describe('generateMap', () => {
           },
         ];
 
-        const getComponentListStub = newSandbox.stub().returns(fakeComponentList);
+        const getComponentListWithTypesStub = newSandbox.stub().returns(fakeComponentList);
         const detectRouterTypeStub = newSandbox.stub().returns('pages'); // auto-detect Pages Router
 
-        newSandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+        newSandbox.replaceGetter(
+          coreTools,
+          'getComponentListWithTypes',
+          () => getComponentListWithTypesStub
+        );
         newSandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
 
         // Defensively un-stub fs.writeFileSync if some other test wrapped it
