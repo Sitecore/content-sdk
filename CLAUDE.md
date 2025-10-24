@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions for Sitecore Content SDK
+# Claude Code Agent Guide for Sitecore Content SDK
 
 ## Project Overview
 
