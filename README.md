@@ -35,6 +35,14 @@ For more information check out our [Getting Started Guide](https://doc.sitecore.
 - [Community Slack](https://sitecorechat.slack.com/messages/content-sdk)
 - [Sitecore Community Forum](https://community.sitecore.net/developers/f/40)
 
+### AI Development Support
+
+- [Claude Code Agent Guide](claude-guide.md) - Comprehensive guide for Claude Code Agent to generate consistent and idiomatic Sitecore Content SDK code
+- [GitHub Copilot Instructions](copilot-instructions.md) - Instructions for GitHub Copilot to provide accurate Sitecore Content SDK suggestions
+- [LLM Guidance](LLMs.txt) - General guidance for Large Language Models working with the Sitecore Content SDK
+- [Cursor AI Rules](.cursor/rules/) - Cursor-specific coding rules and patterns for Sitecore Content SDK development
+- [Windsurf AI Rules](.windsurfrules) - Windsurf IDE configuration for Sitecore Content SDK development
+
 ## Contributions
 
 We are very grateful to the community for contributing bug fixes and improvements. We welcome all efforts to evolve and improve the Sitecore Content SDK; read below to learn how to participate in those efforts.
