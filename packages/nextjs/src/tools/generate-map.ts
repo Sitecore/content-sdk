@@ -10,7 +10,6 @@ import {
   EnhancedComponentMapTemplate,
   ComponentMapTemplate,
   ComponentMapEntry,
-  getComponentList,
 } from '@sitecore-content-sdk/core/tools';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -19,6 +18,20 @@ import * as fs from 'fs';
  * A component source can be either a file or a file with type information.
  */
 type ComponentSource = ComponentFile | ComponentFileWithType;
+
+/**
+ * Template options for component map generation
+ */
+type TemplateOptions = {
+  /** Custom header comment for the generated map */
+  headerComment?: string;
+  /** Whether this is a client-only map (no need for componentType annotations) */
+  isClientMap?: boolean;
+  /** Built-in imports string to include in the map */
+  builtInImports?: string;
+  /** Built-in map entries to include in the map */
+  builtInMapEntries?: string[];
+};
 
 // Common builder for Next.js component map content
 const prepareComponentsForMap = (
@@ -57,9 +70,9 @@ const prepareComponentsForMap = (
 
     if (opts.includeVariants) {
       const spreads: string[] = [];
-      for (const n of group.neighbors) {
-        imports.push(`import * as ${n.moduleName} from '${n.importPath}';`);
-        spreads.push(`...${n.moduleName}`);
+      for (const neighbor of group.neighbors) {
+        imports.push(`import * as ${neighbor.moduleName} from '${neighbor.importPath}';`);
+        spreads.push(`...${neighbor.moduleName}`);
       }
       if (group.base) {
         imports.push(`import * as ${group.base.moduleName} from '${group.base.importPath}';`);
@@ -109,7 +122,7 @@ const prepareComponentsForMap = (
 const buildNextjsMapContent = (
   entries: ComponentMapEntry[],
   componentImports: ComponentImport[] | undefined,
-  options: { headerComment?: string; isClientMap?: boolean } = {}
+  options: TemplateOptions = {}
 ): string => {
   const {
     headerComment = "Below are built-in components that are available in the app, it's recommended to keep them as is",
@@ -118,6 +131,18 @@ const buildNextjsMapContent = (
 
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];
+  const builtInImports =
+    options.builtInImports ||
+    `
+import { BYOCWrapper, NextjsContentSdkComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
+import { Form } from '@sitecore-content-sdk/nextjs';
+`;
+
+  const builtInMapEntries = options.builtInMapEntries || [
+    `['BYOCWrapper', BYOCWrapper]`,
+    `['FEaaSWrapper', FEaaSWrapper]`,
+    `['Form', Form]`,
+  ];
 
   // Add per-entry imports
   entries.forEach((e) => wildcardImports.push(...e.imports));
@@ -142,35 +167,35 @@ const buildNextjsMapContent = (
   const importsSection = importLines.length ? `\n${importLines.join('\n')}` : '';
 
   // Build entry lines (package named imports are appended below)
-  const entryLines: string[] = [];
+  const componentMapEntries: string[] = builtInMapEntries;
   for (const e of entries) {
     const value =
       !isClientMap && e.annotateClient
         ? `{ ...${e.valueExpr}, componentType: 'client' }`
         : e.valueExpr;
-    entryLines.push(`  ['${e.key}', ${value}],`);
+    componentMapEntries.push(`['${e.key}', ${value}],`);
   }
 
   // Add package-based entries
   componentImports?.forEach((pkg) => {
     if (pkg.importInfo.namedImports) {
       pkg.importInfo.namedImports.forEach((name: string) => {
-        entryLines.push(`  ['${name}', ${name}],`);
+        componentMapEntries.push(`['${name}', ${name}],`);
       });
     } else {
-      entryLines.push(`  ['${pkg.importName}', ${pkg.importName}],`);
+      componentMapEntries.push(`['${pkg.importName}', ${pkg.importName}],`);
     }
   });
 
   return `// ${headerComment}
-import { BYOCWrapper, NextjsContentSdkComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
-import { Form } from '@sitecore-content-sdk/nextjs';${importsSection}
+${builtInImports}${importsSection}
 
 export const componentMap = new Map<string, NextjsContentSdkComponent>([
-  ['BYOCWrapper', BYOCWrapper],
-  ['FEaaSWrapper', FEaaSWrapper],
-  ['Form', Form],
-${entryLines.join('\n')}
+${componentMapEntries
+  .map((component) => {
+    return `  ${component},\n`;
+  })
+  .join('')}]);
 ]);
 
 export default componentMap;
@@ -183,6 +208,17 @@ export const defaultClientMapTemplate: EnhancedComponentMapTemplate = (
   componentImports,
   ctx
 ) => {
+  const builtInImports = `
+import { BYOCClientWrapper, NextjsContentSdkComponent, FEaaSClientWrapper } from '@sitecore-content-sdk/nextjs';
+import { Form } from '@sitecore-content-sdk/nextjs';
+`;
+
+  const builtInMapEntries = [
+    `['BYOCWrapper', BYOCClientWrapper]`,
+    `['FEaaSWrapper', FEaaSClientWrapper]`,
+    `['Form', Form]`,
+  ];
+
   const entries =
     ctx?.entries ??
     prepareComponentsForMap(components as ComponentFileWithType[], {
@@ -192,6 +228,8 @@ export const defaultClientMapTemplate: EnhancedComponentMapTemplate = (
   return buildNextjsMapContent(entries, componentImports, {
     headerComment: 'Client-safe component map for App Router',
     isClientMap: true,
+    builtInImports,
+    builtInMapEntries,
   });
 };
 
@@ -207,12 +245,16 @@ const collectComponents = (opts: {
   raw: ComponentFileWithType[];
   entries: ComponentMapEntry[];
 } => {
-  const withTypes = getComponentListWithTypes(opts.paths, opts.exclude);
+  const withTypes = getComponentListWithTypes(opts.paths, opts.exclude, opts.includeVariants);
 
   const filtered =
     opts.filter === 'client'
       ? filterComponentsByType(withTypes, ['client', 'universal'])
       : withTypes;
+
+  for (const file of filtered) {
+    console.debug(`Registering Content SDK component ${file.componentName}`);
+  }
 
   return {
     raw: filtered,
@@ -268,10 +310,23 @@ export const generateMap: GenerateMapFunction = ({
         }
       );
     } else {
+      // default app router server map
+      const builtInImports = `
+import { BYOCServerWrapper, NextjsContentSdkComponent, FEaaSServerWrapper } from '@sitecore-content-sdk/nextjs';
+import { Form } from '@sitecore-content-sdk/nextjs';
+`;
+
+      const builtInMapEntries = [
+        `['BYOCWrapper', BYOCServerWrapper]`,
+        `['FEaaSWrapper', FEaaSServerWrapper]`,
+        `['Form', Form]`,
+      ];
       mainContent = buildNextjsMapContent(getComponents.entries, componentImports, {
         headerComment:
           "Below are built-in components that are available in the app, it's recommended to keep them as is",
         isClientMap: false,
+        builtInImports,
+        builtInMapEntries,
       });
     }
     fs.writeFileSync(
@@ -312,8 +367,12 @@ export const generateMap: GenerateMapFunction = ({
     );
   } else {
     // Either in pages/app router or clientComponentMap = false
-    const allComponents = getComponentList(paths, exclude);
-    const components = prepareComponentsForMap(allComponents, { includeVariants });
+    const components = collectComponents({
+      paths,
+      exclude,
+      includeVariants,
+      filter: 'all',
+    }).entries;
     const content = buildNextjsMapContent(components, componentImports, {
       headerComment:
         "Below are built-in components that are available in the app, it's recommended to keep them as is",
@@ -354,4 +413,3 @@ export const generateMap: GenerateMapFunction = ({
     }
   }
 };
-

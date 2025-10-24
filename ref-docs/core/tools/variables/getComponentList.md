@@ -6,9 +6,9 @@
 
 # Variable: getComponentList()
 
-> **getComponentList**: (`paths`, `exclude?`, `silent?`) => [`ComponentFile`](../interfaces/ComponentFile.md)[] = `_getComponentList`
+> **getComponentList**: (`paths`, `exclude?`, `includeVariants?`) => [`ComponentFile`](../interfaces/ComponentFile.md)[] = `_getComponentList`
 
-Defined in: [packages/core/src/tools/templating/components.ts:5](https://github.com/Sitecore/content-sdk/blob/62f7ac36d5480ae38ab5b264795c674f9e05e2d3/packages/core/src/tools/templating/components.ts#L5)
+Defined in: [packages/core/src/tools/templating/components.ts:5](https://github.com/Sitecore/content-sdk/blob/272d88b6498b3e929c9ee618271795d978073c6f/packages/core/src/tools/templating/components.ts#L5)
 
 Get list of components from
 
@@ -18,7 +18,7 @@ Get list of components from
 | ------ | ------ | ------ |
 | `paths` | `string`[] | paths to search |
 | `exclude?` | `string`[] | paths and glob patterns to exclude from final result |
-| `silent?` | `boolean` | whether to suppress console output |
+| `includeVariants?` | `boolean` | whether to include variant components |
 
 ## Returns
 

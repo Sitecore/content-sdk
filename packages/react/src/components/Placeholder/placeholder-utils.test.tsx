@@ -16,10 +16,16 @@ import { ComponentMap, ReactModule } from '../sharedTypes';
 import { constants } from '@sitecore-content-sdk/core';
 import { MissingComponent } from '../MissingComponent';
 import { HiddenRendering } from '../HiddenRendering';
-import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from '../FEaaSComponent';
-import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
-import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
-import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
+import {
+  FEaaSComponent,
+  FEAAS_COMPONENT_RENDERING_NAME,
+  FEaaSWrapper,
+  FEAAS_WRAPPER_RENDERING_NAME,
+  BYOCComponent,
+  BYOC_COMPONENT_RENDERING_NAME,
+  BYOCWrapper,
+  BYOC_WRAPPER_RENDERING_NAME,
+} from '../FEaaS';
 
 describe('placeholder-utils', () => {
   const sandbox = createSandbox();

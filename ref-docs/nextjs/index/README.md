@@ -108,6 +108,8 @@
 
 ## Variables
 
+- [BYOCClientWrapper](variables/BYOCClientWrapper.md)
+- [BYOCServerWrapper](variables/BYOCServerWrapper.md)
 - [ClientEditingChromesUpdate](variables/ClientEditingChromesUpdate.md)
 - [ComponentPropsReactContext](variables/ComponentPropsReactContext.md)
 - [DateField](variables/DateField.md)
@@ -117,7 +119,9 @@
 - [DesignLibrary](variables/DesignLibrary.md)
 - [EditingScripts](variables/EditingScripts.md)
 - [enableDebug](variables/enableDebug.md)
+- [FEaaSClientWrapper](variables/FEaaSClientWrapper.md)
 - [FEaaSComponent](variables/FEaaSComponent.md)
+- [FEaaSServerWrapper](variables/FEaaSServerWrapper.md)
 - [File](variables/File.md)
 - [Form](variables/Form.md)
 - [getContentStylesheetLink](variables/getContentStylesheetLink.md)

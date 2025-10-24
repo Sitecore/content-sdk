@@ -25,10 +25,10 @@ import {
 } from '../../test-data/normal-mode-data';
 import * as metadataData from '../../test-data/metadata-data';
 import * as SxaRichText from '../../test-data/sxa-rich-text';
-import * as BYOCComponent from '../BYOCComponent';
-import * as BYOCWrapper from '../BYOCWrapper';
-import * as FEAASComponent from '../FEaaSComponent';
-import * as FEAASWrapper from '../FEaaSWrapper';
+import * as BYOCComponent from '../FEaaS/BYOCWrapper';
+import * as BYOCWrapper from '../FEaaS/BYOCWrapper';
+import * as FEAASComponent from '../FEaaS/FEaaSWrapper';
+import * as FEAASWrapper from '../FEaaS/FEaaSWrapper';
 import * as HiddenRendering from '../HiddenRendering';
 import * as ErrorBoundary from '../ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
@@ -1047,4 +1047,3 @@ describe('PlaceholderMetadata', () => {
 after(() => {
   (global as any).window.close();
 });
-
