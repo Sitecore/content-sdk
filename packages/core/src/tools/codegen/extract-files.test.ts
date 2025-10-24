@@ -277,7 +277,7 @@ describe('extract-files', () => {
           expect(msgs).to.include(successMsg);
         });
 
-        xit('should call sendCode for each component path and package.json when client component map present', async () => {
+        it('should call sendCode for each component path and package.json when client component map present', async () => {
           const appFolder = path.resolve(
             process.cwd(),
             './src/tools/codegen/test-data/extract-components/with-client-map'
