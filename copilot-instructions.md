@@ -29,7 +29,6 @@ content-sdk/
 │   ├── nextjs/                    # Next.js-specific SDK
 │   ├── react/                     # React-specific SDK
 │   └── cli/                       # Additional CLI tools
-├── .cursor/rules/                 # AI coding guidance
 └── samples/                       # Example applications
 ```
 

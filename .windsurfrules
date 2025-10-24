@@ -19,7 +19,7 @@ This is the Sitecore Content SDK - a comprehensive TypeScript/JavaScript SDK for
 - @sitecore-content-sdk/react - React-specific SDK
 - @sitecore-content-sdk/nextjs - Next.js integration and middleware
 - @sitecore-content-sdk/cli - CLI tools and scaffolding
-- @sitecore-content-sdk/create-content-sdk-app - Scaffolding CLI & templates
+- create-content-sdk-app - Scaffolding CLI & templates
 
 ## Repository Structure
 
@@ -31,7 +31,6 @@ content-sdk/
 │   ├── nextjs/                    # Next.js-specific SDK
 │   ├── react/                     # React-specific SDK
 │   └── cli/                       # Additional CLI tools
-├── .cursor/rules/                 # AI coding guidance
 └── samples/                       # Example applications
 ```
 
