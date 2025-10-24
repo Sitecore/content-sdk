@@ -8,16 +8,18 @@
 
 > **BYOCWrapper**(`props`): `Element`
 
-Defined in: [packages/react/src/components/BYOCWrapper.tsx:11](https://github.com/Sitecore/content-sdk/blob/54e2d32b8cfa6a9aec978ed0874e1d70711b6607/packages/react/src/components/BYOCWrapper.tsx#L11)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:111](https://github.com/Sitecore/content-sdk/blob/272d88b6498b3e929c9ee618271795d978073c6f/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L111)
 
-TODO: remove when framework agnostic forms implemented
+SXA wrapper for BYOC components
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `props` | [`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md) |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `props` | [`BYOCComponentProps`](../type-aliases/BYOCComponentProps.md) | component props |
 
 ## Returns
 
 `Element`
+
+wrapped BYOC component

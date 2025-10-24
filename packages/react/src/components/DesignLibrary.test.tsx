@@ -24,6 +24,7 @@ import {
   DesignLibraryPreviewError,
   getDesignLibraryComponentPreviewErrorEvent,
 } from '@sitecore-content-sdk/core/codegen';
+import { after } from 'node:test';
 
 before(() => {
   if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
@@ -32,9 +33,11 @@ before(() => {
 });
 
 describe('<DesignLibrary />', () => {
+  after(() => {
+    sandbox.restore();
+  });
   const sandbox = sinon.createSandbox();
   const postMessageSpy = sandbox.spy(window, 'postMessage');
-  const consoleErrorSpy = sandbox.spy(console, 'error');
   const components = new Map<string, React.FC>();
 
   const api = {
@@ -161,7 +164,6 @@ describe('<DesignLibrary />', () => {
 
   beforeEach(() => {
     postMessageSpy.resetHistory();
-    consoleErrorSpy.resetHistory();
     unsubscribeSpy.resetHistory();
 
     if (typeof (globalThis as any).requestAnimationFrame === 'undefined') {

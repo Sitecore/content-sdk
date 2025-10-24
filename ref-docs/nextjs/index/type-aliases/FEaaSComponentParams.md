@@ -8,7 +8,7 @@
 
 > **FEaaSComponentParams** = `object`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:8
+Defined in: react/types/components/FEaaS/models.d.ts:77
 
 Params from a Sitecore FEaaS rendering
 
@@ -18,7 +18,7 @@ Params from a Sitecore FEaaS rendering
 
 > `optional` **ComponentDataOverride**: `string`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:15
+Defined in: react/types/components/FEaaS/models.d.ts:84
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: react/types/components/FEaaSComponent.d.ts:15
 
 > `optional` **ComponentHostName**: `string`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:13
+Defined in: react/types/components/FEaaS/models.d.ts:82
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: react/types/components/FEaaSComponent.d.ts:13
 
 > `optional` **ComponentHTMLOverride**: `string`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:16
+Defined in: react/types/components/FEaaS/models.d.ts:85
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: react/types/components/FEaaSComponent.d.ts:16
 
 > `optional` **ComponentId**: `string`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:10
+Defined in: react/types/components/FEaaS/models.d.ts:79
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: react/types/components/FEaaSComponent.d.ts:10
 
 > `optional` **ComponentInstanceId**: `string`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:14
+Defined in: react/types/components/FEaaS/models.d.ts:83
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: react/types/components/FEaaSComponent.d.ts:14
 
 > `optional` **ComponentRevision**: `RevisionType`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:12
+Defined in: react/types/components/FEaaS/models.d.ts:81
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: react/types/components/FEaaSComponent.d.ts:12
 
 > `optional` **ComponentVersion**: `string`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:11
+Defined in: react/types/components/FEaaS/models.d.ts:80
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: react/types/components/FEaaSComponent.d.ts:11
 
 > `optional` **LibraryId**: `string`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:9
+Defined in: react/types/components/FEaaS/models.d.ts:78
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: react/types/components/FEaaSComponent.d.ts:9
 
 > `optional` **RenderingIdentifier**: `string`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:18
+Defined in: react/types/components/FEaaS/models.d.ts:87
 
 ***
 
@@ -90,4 +90,4 @@ Defined in: react/types/components/FEaaSComponent.d.ts:18
 
 > `optional` **styles**: `string`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:17
+Defined in: react/types/components/FEaaS/models.d.ts:86
