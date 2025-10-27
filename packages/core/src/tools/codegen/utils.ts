@@ -187,18 +187,13 @@ function _resolveComponentImportFiles(
     return name.includes('.') ? ExtractedFileType.Variant : ExtractedFileType.Component;
   };
 
-  // 1) Collect namespace imports: Identifier -> module specifier string
-  const nameSpaceImports = new Map<string, string>();
+  // 1) Collect import (import %importString% from %importModule%) strings
+  const componentMapImports = new Map<string, string>();
   source.forEachChild((node) => {
-    if (
-      ts.isImportDeclaration(node) &&
-      node.importClause &&
-      node.importClause.namedBindings &&
-      ts.isNamespaceImport(node.importClause.namedBindings)
-    ) {
-      const ident = node.importClause.namedBindings.name.text;
-      const spec = (node.moduleSpecifier as ts.StringLiteral).text;
-      nameSpaceImports.set(ident, spec);
+    if (ts.isImportDeclaration(node) && node.importClause) {
+      const importString = node.importClause.getText();
+      const importModule = (node.moduleSpecifier as ts.StringLiteral).text;
+      componentMapImports.set(importString, importModule);
     }
   });
 
@@ -207,9 +202,9 @@ function _resolveComponentImportFiles(
   const results: ResolvedImport[] = [];
   const mapIdentifiers = new Set<string>(); // all identifiers bound to the Map we care about
 
-  // Given a component key and an expression (identifier or object literal with spreads),
+  // Given an import and an expression (identifier or object literal with spreads),
   // resolve the module(s) to absolute file paths and append normalized entries to `results`.
-  const resolveAndRecordEntry = (componentKey: string, expr: ts.Expression) => {
+  const resolveAndRecordEntry = (importStringsEntry: string, mapEntry: ts.Expression) => {
     // small guard to record a resolved path if valid
     const recordIfValid = (spec: string) => {
       // ignore Node built-ins and node: protocol up front
@@ -222,29 +217,44 @@ function _resolveComponentImportFiles(
       if (inNodeModules(fileAbs) || isDeclarationFile(fileAbs)) return;
 
       results.push({
-        componentKey,
+        componentKey: importStringsEntry,
         filePath: toPosixPath(fileAbs),
         fileType: getFileType(fileAbs),
       });
     };
 
+    // Helper to find the matching import statement for a given component/module name
+    const getImportPathForModule = (componentModuleName: string) => {
+      let result = componentMapImports.get(componentModuleName);
+      if (!result) {
+        for (const key of componentMapImports.keys()) {
+          const matcher = new RegExp(`\\b(${componentModuleName})\\b`);
+          if (key.match(matcher) !== null) {
+            return componentMapImports.get(key);
+          }
+        }
+        return null;
+      }
+      return result;
+    };
+
     // Case A: ['Key', Identifier]
-    if (ts.isIdentifier(expr)) {
-      const modName = expr.text;
-      const spec = nameSpaceImports.get(modName);
-      if (!spec) return;
-      recordIfValid(spec);
+    if (ts.isIdentifier(mapEntry)) {
+      const componentEntryName = mapEntry.text;
+      const importPathString = getImportPathForModule(componentEntryName);
+      if (!importPathString) return;
+      recordIfValid(importPathString);
       return;
     }
 
     // Case B: ['Key', { ...A, ...B, ...C }]
-    if (ts.isObjectLiteralExpression(expr)) {
-      expr.properties.forEach((prop) => {
+    if (ts.isObjectLiteralExpression(mapEntry)) {
+      mapEntry.properties.forEach((prop) => {
         if (ts.isSpreadAssignment(prop) && ts.isIdentifier(prop.expression)) {
-          const modName = prop.expression.text;
-          const spec = nameSpaceImports.get(modName);
-          if (!spec) return;
-          recordIfValid(spec);
+          const componentEntryName = prop.expression.text;
+          const importPathString = getImportPathForModule(componentEntryName);
+          if (!importPathString) return;
+          recordIfValid(importPathString);
         }
       });
     }
