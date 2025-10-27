@@ -21,6 +21,7 @@ Our versioning strategy is as follows:
   - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202)) ([#214](https://github.com/Sitecore/content-sdk/pull/214))
   - Client-server component map separation ([#230](https://github.com/Sitecore/content-sdk/pull/230))([#232](https://github.com/Sitecore/content-sdk/pull/232))([#234](https://github.com/Sitecore/content-sdk/pull/234))([#235](https://github.com/Sitecore/content-sdk/pull/235))([#241](https://github.com/Sitecore/content-sdk/pull/241))
   - Server components for FEAAS and BYOC ([#248](https://github.com/Sitecore/content-sdk/pull/248))
+  - Generic App router compatible placeholder ([#258](https://github.com/Sitecore/content-sdk/pull/258))
 * [AI Component Generation] A new CLI command to add a new component variant ([#244](https://github.com/Sitecore/content-sdk/pull/244)):
   * Introduced a new `sitecore-tools project component add <variant-id>` CLI command to add a generated variant to the application.
 * `[core]` Introduce `scConfig` property in `sitecore.cli.config` ([#244](https://github.com/Sitecore/content-sdk/pull/244)):
