@@ -8,7 +8,7 @@
 
 > **SitecorePageProps** = `object`
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:5](https://github.com/Sitecore/content-sdk/blob/875026478718f4c8b8e0a7ccb65eac312b3fb4f6/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L5)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:5](https://github.com/Sitecore/content-sdk/blob/dc04f1c487753e06395b0c207587f39f42c029db/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L5)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:5](https://github.com
 
 > `optional` **componentProps**: [`ComponentPropsCollection`](ComponentPropsCollection.md)
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:8](https://github.com/Sitecore/content-sdk/blob/875026478718f4c8b8e0a7ccb65eac312b3fb4f6/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L8)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:8](https://github.com/Sitecore/content-sdk/blob/dc04f1c487753e06395b0c207587f39f42c029db/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L8)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:8](https://github.com
 
 > `optional` **dictionary**: [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:7](https://github.com/Sitecore/content-sdk/blob/875026478718f4c8b8e0a7ccb65eac312b3fb4f6/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L7)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:7](https://github.com/Sitecore/content-sdk/blob/dc04f1c487753e06395b0c207587f39f42c029db/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L7)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:7](https://github.com
 
 > `optional` **notFound**: `boolean`
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:9](https://github.com/Sitecore/content-sdk/blob/875026478718f4c8b8e0a7ccb65eac312b3fb4f6/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L9)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:9](https://github.com/Sitecore/content-sdk/blob/dc04f1c487753e06395b0c207587f39f42c029db/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L9)
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:9](https://github.com
 
 > **page**: [`Page`](Page.md) \| `null`
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:6](https://github.com/Sitecore/content-sdk/blob/875026478718f4c8b8e0a7ccb65eac312b3fb4f6/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L6)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:6](https://github.com/Sitecore/content-sdk/blob/dc04f1c487753e06395b0c207587f39f42c029db/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L6)
