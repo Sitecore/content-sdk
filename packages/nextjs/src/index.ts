@@ -161,7 +161,6 @@ export {
   withEmptyFieldEditingComponent,
   EditingScripts,
   Form,
-  ServerPlaceholder,
   ClientEditingChromesUpdate,
   AppPlaceholder,
   AppPlaceholderProps,

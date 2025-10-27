@@ -2791,25 +2791,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sitecore-content-sdk/cli@npm:1.2.0-canary.37":
-  version: 1.2.0-canary.37
-  resolution: "@sitecore-content-sdk/cli@npm:1.2.0-canary.37"
-  dependencies:
-    "@sitecore-content-sdk/core": 1.2.0-canary.37
-    chokidar: ^4.0.3
-    dotenv: ^16.5.0
-    dotenv-expand: ^12.0.2
-    resolve: ^1.22.10
-    tmp: ^0.2.3
-    tsx: ^4.19.4
-    yargs: ^17.7.2
-  bin:
-    sitecore-tools: dist/cjs/bin/sitecore-tools.js
-  checksum: ca9389ce7972fc54e571e0acbfa3231a1c50c7862f3b74c29b3ebcb913d1ad1e8d4962b32216aba231bce9f2f0ea9b58b850ad63d22d828763561b6efd00a359
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/cli@workspace:packages/cli":
+"@sitecore-content-sdk/cli@workspace:*, @sitecore-content-sdk/cli@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
@@ -2902,50 +2884,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/core@npm:1.2.0-canary.37":
-  version: 1.2.0-canary.37
-  resolution: "@sitecore-content-sdk/core@npm:1.2.0-canary.37"
-  dependencies:
-    chalk: ^4.1.2
-    debug: ^4.4.0
-    glob: ^11.0.2
-    graphql: ^16.11.0
-    graphql-request: ^6.1.0
-    memory-cache: ^0.2.0
-    sinon-chai: ^4.0.0
-    url-parse: ^1.5.10
-  peerDependencies:
-    "@sitecore-cloudsdk/events": ^0.5.1
-  checksum: 40176a6be7c58313e868ef94c039fd9f016d1cbc37f0fe5911bbca3577a7a8cde7eabaca47cf6e9c09b7d39a104a59532c6616a9511c75c3371a6269ceb54fd6
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/nextjs@npm:1.2.0-canary.37":
-  version: 1.2.0-canary.37
-  resolution: "@sitecore-content-sdk/nextjs@npm:1.2.0-canary.37"
-  dependencies:
-    "@babel/parser": ^7.27.2
-    "@sitecore-content-sdk/core": 1.2.0-canary.37
-    "@sitecore-content-sdk/react": 1.2.0-canary.37
-    recast: ^0.23.11
-    regex-parser: ^2.3.1
-    sync-disk-cache: ^2.1.0
-  peerDependencies:
-    "@sitecore-cloudsdk/core": ^0.5.1
-    "@sitecore-cloudsdk/events": ^0.5.1
-    "@sitecore-cloudsdk/personalize": ^0.5.1
-    next: ^15.3.2
-    react: ^19.1.0
-    react-dom: ^19.1.0
-    typescript: ^5.4.0
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 2b5d6800f439a2c5b0bb9a345a31643cc341b198425c39ad3ceef0d6acc5af8e8ea6ee524177c4fdf90af121402ee7918e2be599e1e944e007616cce71bbfcc5
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/nextjs@workspace:packages/nextjs":
+"@sitecore-content-sdk/nextjs@workspace:*, @sitecore-content-sdk/nextjs@workspace:packages/nextjs":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/nextjs@workspace:packages/nextjs"
   dependencies:
@@ -3060,22 +2999,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/react@npm:1.2.0-canary.37":
-  version: 1.2.0-canary.37
-  resolution: "@sitecore-content-sdk/react@npm:1.2.0-canary.37"
-  dependencies:
-    "@sitecore-content-sdk/core": 1.2.0-canary.37
-    fast-deep-equal: ^3.1.3
-  peerDependencies:
-    "@sitecore-cloudsdk/events": ^0.5.1
-    "@sitecore-feaas/clientside": ^0.6.0
-    react: ^19.1.0
-    react-dom: ^19.1.0
-  checksum: 5d4b380bcbee12bbe73969614d86fbdfdc96cdef787dd406a588a8a50eda1789e077f785db76fa3f7bf42c463376fe19147f9d46522d83861ae2877b1dc05e7c
-  languageName: node
-  linkType: hard
-
-"@sitecore-feaas/clientside@npm:^0.6.0":
+"@sitecore-feaas/clientside@npm:^0.6.0, @sitecore-feaas/clientside@npm:^0.6.2":
   version: 0.6.2
   resolution: "@sitecore-feaas/clientside@npm:0.6.2"
   dependencies:
@@ -5149,8 +5073,9 @@ __metadata:
     "@eslint/eslintrc": ^3
     "@sitecore-cloudsdk/core": ^0.5.4
     "@sitecore-cloudsdk/events": ^0.5.4
-    "@sitecore-content-sdk/cli": 1.2.0-canary.37
-    "@sitecore-content-sdk/nextjs": 1.2.0-canary.37
+    "@sitecore-content-sdk/cli": "workspace:*"
+    "@sitecore-content-sdk/nextjs": "workspace:*"
+    "@sitecore-feaas/clientside": ^0.6.2
     "@tailwindcss/postcss": ^4
     "@types/node": ^22.15.14
     "@types/react": ^19.1.10
