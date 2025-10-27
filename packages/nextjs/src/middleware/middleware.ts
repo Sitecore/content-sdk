@@ -5,6 +5,7 @@ import {
   createGraphQLClientFactory,
   GraphQLClientOptions,
 } from '@sitecore-content-sdk/core/client';
+import { PreviewCookies } from '../editing/utils';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
 export const LOCALE_HEADER_NAME = 'x-sc-locale';
@@ -65,7 +66,8 @@ export abstract class MiddlewareBase extends Middleware {
    */
   protected isPreview(req: NextRequest) {
     return !!(
-      req.cookies.get('__prerender_bypass')?.value || req.cookies.get('__next_preview_data')?.value
+      req.cookies.get(PreviewCookies.PRERENDER_BYPASS)?.value ||
+      req.cookies.get(PreviewCookies.PREVIEW_DATA)?.value
     );
   }
 

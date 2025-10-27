@@ -21,6 +21,7 @@ Our versioning strategy is as follows:
   - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202)) ([#214](https://github.com/Sitecore/content-sdk/pull/214))
   - Client-server component map separation ([#230](https://github.com/Sitecore/content-sdk/pull/230))([#232](https://github.com/Sitecore/content-sdk/pull/232))([#234](https://github.com/Sitecore/content-sdk/pull/234))([#235](https://github.com/Sitecore/content-sdk/pull/235))([#241](https://github.com/Sitecore/content-sdk/pull/241))
   - Server components for FEAAS and BYOC ([#248](https://github.com/Sitecore/content-sdk/pull/248))
+  - Generic App router compatible placeholder ([#258](https://github.com/Sitecore/content-sdk/pull/258))
 * [AI Component Generation] A new CLI command to add a new component variant ([#244](https://github.com/Sitecore/content-sdk/pull/244)):
   * Introduced a new `sitecore-tools project component add <variant-id>` CLI command to add a generated variant to the application.
 * `[core]` Introduce `scConfig` property in `sitecore.cli.config` ([#244](https://github.com/Sitecore/content-sdk/pull/244)):
@@ -36,6 +37,7 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
+* `[nextjs]` Error when rendering Preview when Multisite middleware is disabled ([#256](https://github.com/Sitecore/content-sdk/pull/256))
 * `[template/nextjs]` `[template/next-app-router]` Fix imports for SSR/SSG ([#229](https://github.com/Sitecore/content-sdk/pull/229))
 * `[template/next-app-router]` Unable to render 'preview' without default sitename ([#247](https://github.com/Sitecore/content-sdk/pull/247))
 * `[template/next-app-router]` Guard static params generation and harden not-found routes for XM Cloud ([#242](https://github.com/Sitecore/content-sdk/pull/242))

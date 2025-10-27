@@ -8,10 +8,10 @@ import { Page } from '@sitecore-content-sdk/core/client';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { convertedDevData as normalModeDevData } from '../test-data/normal-mode-data';
 import * as metadataData from '../test-data/metadata-data';
-import { withServerPlaceholder, ComponentProps, WrapperProps } from './withServerPlaceholder';
+import { withAppPlaceholder, ComponentProps, WrapperProps } from './withAppPlaceholder';
 import { SitecoreProvider } from '../components/SitecoreProvider';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
-import { ServerPlaceholder } from '../components/Placeholder';
+import { AppPlaceholder } from '../components/Placeholder';
 
 type CalloutProps = ComponentProps & {
   [prop: string]: unknown;
@@ -35,7 +35,7 @@ const Home: React.FC<HomeProps> = ({ placeholders, subProp, ...otherProps }: Hom
   if (subProp && !otherProps.reset) {
     return <div className="home-mock-with-prop">{subProp}</div>;
   } else {
-    // For withServerPlaceholder, placeholders are provided as props, so we access them differently
+    // For withAppPlaceholder, placeholders are provided as props, so we access them differently
     const placeholderContent =
       Object.keys(placeholders).length > 0
         ? placeholders['page-content'] || placeholders.main || placeholders['page-header']
@@ -66,7 +66,7 @@ componentMap.set(
   )
 );
 
-describe('withServerPlaceholder HOC', () => {
+describe('withAppPlaceholder HOC', () => {
   const api = {
     edge: {
       contextId: 'id',
@@ -112,13 +112,12 @@ describe('withServerPlaceholder HOC', () => {
       },
     };
 
-    const phKeys = ['page-content'];
     const props: WrapperProps = {
       rendering: cleanComponent,
       page: getPage(),
       componentMap,
     };
-    const Element = withServerPlaceholder(Home, phKeys);
+    const Element = withAppPlaceholder(Home);
     const renderedComponent = render(
       <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
         <Element {...props} />
@@ -171,7 +170,7 @@ describe('withServerPlaceholder HOC', () => {
       page: getPage(),
       componentMap,
     };
-    const Element = withServerPlaceholder(MultiKeyTestComponent, phKeys);
+    const Element = withAppPlaceholder(MultiKeyTestComponent, phKeys);
     const renderedComponent = render(
       <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
         <Element {...props} />
@@ -188,7 +187,7 @@ describe('withServerPlaceholder HOC', () => {
     );
   });
 
-  it('should pass correct props to ServerPlaceholder components', () => {
+  it('should pass correct props to AppPlaceholder components', () => {
     const cleanComponent: ComponentRendering = {
       componentName: 'TestComponent',
       uid: 'clean-test-123',
@@ -221,14 +220,14 @@ describe('withServerPlaceholder HOC', () => {
       componentMap,
     };
 
-    const Element = withServerPlaceholder(TestComponent, [phKey]);
+    const Element = withAppPlaceholder(TestComponent, [phKey]);
     render(
       <SitecoreProvider api={api} componentMap={componentMap} page={page}>
         <Element {...props} />
       </SitecoreProvider>
     );
 
-    // Verify ServerPlaceholder received correct props
+    // Verify AppPlaceholder received correct props
     expect(capturedPlaceholderProps).to.not.be.null;
     expect(capturedPlaceholderProps.name).to.equal(phKey);
     expect(capturedPlaceholderProps.rendering).to.equal(cleanComponent);
@@ -258,7 +257,7 @@ describe('withServerPlaceholder HOC', () => {
 
     metadataComponentMap.set('Header', () => (
       <div className="header-wrapper">
-        <ServerPlaceholder
+        <AppPlaceholder
           name="logo"
           rendering={metadataData.layoutData.sitecore.route.placeholders.main[0]}
           page={editModePage}
@@ -276,14 +275,14 @@ describe('withServerPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withServerPlaceholder(Home, [phKey]);
+      const Element = withAppPlaceholder(Home, [phKey]);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
         </SitecoreProvider>
       );
 
-      // Check that it renders the basic structure - ServerPlaceholder handles metadata differently
+      // Check that it renders the basic structure - AppPlaceholder handles metadata differently
       expect(renderedComponent.container.querySelectorAll('.home-mock').length).to.equal(1);
       expect(renderedComponent.container.querySelectorAll('.header-wrapper').length).to.equal(1);
       expect(renderedComponent.container.querySelectorAll('.Logo-mock').length).to.equal(1);
@@ -309,7 +308,7 @@ describe('withServerPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withServerPlaceholder(MultiPlaceholderMetadataComponent, phKeys);
+      const Element = withAppPlaceholder(MultiPlaceholderMetadataComponent, phKeys);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
@@ -331,7 +330,7 @@ describe('withServerPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withServerPlaceholder(Home, [phKey]);
+      const Element = withAppPlaceholder(Home, [phKey]);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
@@ -339,7 +338,7 @@ describe('withServerPlaceholder HOC', () => {
       );
 
       expect(renderedComponent.container.querySelectorAll('.home-mock').length).to.equal(1);
-      // ServerPlaceholder should handle empty placeholders in edit mode
+      // AppPlaceholder should handle empty placeholders in edit mode
     });
 
     it('should render missing component with code blocks if component is not registered', () => {
@@ -350,7 +349,7 @@ describe('withServerPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withServerPlaceholder(Home, [phKey]);
+      const Element = withAppPlaceholder(Home, [phKey]);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
@@ -371,7 +370,7 @@ describe('withServerPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withServerPlaceholder(Home, [phKey]);
+      const Element = withAppPlaceholder(Home, [phKey]);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
@@ -379,7 +378,7 @@ describe('withServerPlaceholder HOC', () => {
       );
 
       expect(renderedComponent.container.querySelectorAll('.home-mock').length).to.equal(1);
-      // ServerPlaceholder should handle dynamic placeholders
+      // AppPlaceholder should handle dynamic placeholders
     });
 
     it('should render double digit dynamic placeholder', () => {
@@ -391,7 +390,7 @@ describe('withServerPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withServerPlaceholder(Home, [phKey]);
+      const Element = withAppPlaceholder(Home, [phKey]);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
@@ -399,7 +398,7 @@ describe('withServerPlaceholder HOC', () => {
       );
 
       expect(renderedComponent.container.querySelectorAll('.home-mock').length).to.equal(1);
-      // ServerPlaceholder should handle double digit dynamic placeholders
+      // AppPlaceholder should handle double digit dynamic placeholders
     });
   });
 });

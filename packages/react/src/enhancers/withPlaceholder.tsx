@@ -98,10 +98,8 @@ export function withPlaceholder(
               childProps.page.mode.isEditing
             );
             if (placeholderData) {
-              childProps[placeholder.prop] = PlaceholderComponent.getRenderedComponents(
-                this.props,
-                placeholderData
-              );
+              (childProps as PlaceholderProps & Record<string, unknown>)[placeholder.prop] =
+                PlaceholderComponent.getRenderedComponents(this.props, placeholderData);
             }
           } else {
             placeholderData = getPlaceholderRenderings(
@@ -110,10 +108,8 @@ export function withPlaceholder(
               childProps.page.mode.isEditing
             );
             if (placeholderData) {
-              childProps[placeholder as string] = PlaceholderComponent.getRenderedComponents(
-                this.props,
-                placeholderData
-              );
+              (childProps as PlaceholderProps & Record<string, unknown>)[placeholder as string] =
+                PlaceholderComponent.getRenderedComponents(this.props, placeholderData);
             }
           }
         });

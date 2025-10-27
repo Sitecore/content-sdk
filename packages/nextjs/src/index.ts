@@ -161,6 +161,7 @@ export {
   withEmptyFieldEditingComponent,
   EditingScripts,
   Form,
-  ServerPlaceholder,
   ClientEditingChromesUpdate,
+  AppPlaceholder,
+  AppPlaceholderProps,
 } from '@sitecore-content-sdk/react';

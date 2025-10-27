@@ -6,7 +6,7 @@
 
 # Class: RobotsMiddleware
 
-Defined in: [nextjs/src/middleware/robots-middleware.ts:8](https://github.com/Sitecore/content-sdk/blob/e9db4b450860d4e5f9f71fd28fd89a6300395c4d/packages/nextjs/src/middleware/robots-middleware.ts#L8)
+Defined in: [nextjs/src/middleware/robots-middleware.ts:8](https://github.com/Sitecore/content-sdk/blob/3c36d10259ff5fde8a86011b79e6e99deb6497df/packages/nextjs/src/middleware/robots-middleware.ts#L8)
 
 Middleware for handling robots.txt requests in a Next.js application.
 
@@ -16,7 +16,7 @@ Middleware for handling robots.txt requests in a Next.js application.
 
 > **new RobotsMiddleware**(`client`, `sites`): `RobotsMiddleware`
 
-Defined in: [nextjs/src/middleware/robots-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/e9db4b450860d4e5f9f71fd28fd89a6300395c4d/packages/nextjs/src/middleware/robots-middleware.ts#L12)
+Defined in: [nextjs/src/middleware/robots-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/3c36d10259ff5fde8a86011b79e6e99deb6497df/packages/nextjs/src/middleware/robots-middleware.ts#L12)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [nextjs/src/middleware/robots-middleware.ts:12](https://github.com/S
 
 > **getHandler**(): (`req`, `res`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/middleware/robots-middleware.ts:17](https://github.com/Sitecore/content-sdk/blob/e9db4b450860d4e5f9f71fd28fd89a6300395c4d/packages/nextjs/src/middleware/robots-middleware.ts#L17)
+Defined in: [nextjs/src/middleware/robots-middleware.ts:17](https://github.com/Sitecore/content-sdk/blob/3c36d10259ff5fde8a86011b79e6e99deb6497df/packages/nextjs/src/middleware/robots-middleware.ts#L17)
 
 #### Returns
 
