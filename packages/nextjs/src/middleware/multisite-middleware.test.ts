@@ -291,6 +291,59 @@ describe('MultisiteMiddleware', () => {
           pathname: '/_site_foobar/styleguide',
         });
       });
+
+      it('should not be skipped if multisite middleware is disabled globally', async () => {
+        const defaultSiteCookieAttributes = {
+          secure: true,
+          httpOnly: true,
+          sameSite: 'none',
+        };
+
+        const req = createRequest({
+          cookieValues: { sc_site: 'foobar', sc_preview: 'true' },
+        });
+
+        const res = createResponse();
+
+        nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+        const { middleware, siteResolver } = createMiddleware({
+          config: { ...defaultConfig, enabled: false, useCookieResolution: () => true },
+        });
+
+        const finalRes = await middleware.handle(req, res);
+
+        validateDebugLog('multisite middleware start: %o', {
+          pathname: '/styleguide',
+          language: 'en',
+          hostname: 'foo.net',
+        });
+
+        validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+          rewritePath: '/_site_foobar/styleguide',
+          siteName: 'foobar',
+          headers: {
+            'x-sc-rewrite': '/_site_foobar/styleguide',
+          },
+          cookies: {
+            ...res.cookies,
+            sc_site: {
+              ...defaultSiteCookieAttributes,
+              value: 'foobar',
+            },
+          },
+        });
+
+        expect(siteResolver.getByHost).not.called.equal(true);
+        expect(siteResolver.getByName).not.called.equal(true);
+
+        expect(finalRes).to.deep.equal(res);
+
+        expect(nextRewriteStub).calledWith({
+          ...req.nextUrl,
+          pathname: '/_site_foobar/styleguide',
+        });
+      });
     });
   });
 
