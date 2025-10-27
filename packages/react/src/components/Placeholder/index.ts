@@ -1,5 +1,5 @@
-export { ServerPlaceholder } from './ServerPlaceholder';
 export { Placeholder, PlaceholderComponent } from './Placeholder';
 export { PlaceholderMetadata } from './PlaceholderMetadata';
-export { PlaceholderProps } from './models';
+export { PlaceholderProps, AppPlaceholderProps } from './models';
+export { AppPlaceholder } from './AppPlaceholder';
 export * from './placeholder-utils';

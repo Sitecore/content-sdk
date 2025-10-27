@@ -1,60 +1,74 @@
-import { nonSerializedPlaceholderProps, PlaceholderProps } from './models';
+import { AppPlaceholderProps } from './models';
 import {
+  getAppComponentProps,
   getComponentForRendering,
   getPlaceholderRenderings,
-  getRenderedComponentProps,
   renderEmptyPlaceholder,
+  getRSC,
 } from './placeholder-utils';
 import React from 'react';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import ErrorBoundary from '../ErrorBoundary';
+import { ClientComponentWrapper } from './ClientComponentWrapper';
 
 /**
- * React Server Component implementation for Placeholder.
+ * The implemention of placeholder compatible with React Server Components.
  * Renders components from the layout data for the given placeholder name, with consideration for page edit mode.
  * Pulls components from the provided component map.
- * @param {PlaceholderProps} props Placeholder props
+ * @param {AppPlaceholderProps} props Placeholder props
  * @returns {React.ReactNode | React.ReactElement[]} rendered component(s)
  */
-export const ServerPlaceholder = (props: PlaceholderProps) => {
-  if (!props.componentMap) {
-    throw new Error('Component map is required for ServerPlaceholder');
-  }
-
-  // get serializable props for client rendering
-  const serializableProps = nonSerializedPlaceholderProps.reduce(
-    (finalProps, prop) => {
-      delete finalProps[prop];
-      return finalProps;
-    },
-    { ...props }
-  );
-
+export const AppPlaceholder = (props: AppPlaceholderProps) => {
+  const { rendering: parentRendering, componentMap, page } = props;
   const placeholderRenderings = getPlaceholderRenderings(
-    props.rendering,
+    parentRendering,
     props.name,
-    props.page?.mode.isEditing
+    page.mode.isEditing
   );
 
   const components = placeholderRenderings
     .map((rendering, index) => {
-      const { component, isEmpty, componentType, dynamic } = getComponentForRendering(
+      const {
+        component: Component,
+        isEmpty,
+        componentType,
+        dynamic,
+      } = getComponentForRendering(
         rendering,
         props.name,
-        props.componentMap,
+        componentMap,
         props.hiddenRenderingComponent,
         props.missingComponentComponent
       );
       const isClient = componentType === 'client';
       const key = rendering.uid || `component-${index}`;
-      const finalPhProps = isClient ? serializableProps : props;
 
-      const renderedProps = getRenderedComponentProps(finalPhProps, rendering, key);
+      const renderedProps = getAppComponentProps(props, rendering);
 
-      let rendered = React.createElement<{ [attr: string]: unknown }>(
-        component as React.ComponentType,
-        props.modifyComponentProps ? props.modifyComponentProps(renderedProps) : renderedProps
+      const finalRenderedProps = props.modifyComponentProps
+        ? props.modifyComponentProps(renderedProps)
+        : renderedProps;
+
+      // Client wrapper is required only when component crosses boundary from server to client.
+      // It happens when component is marker as client and rendered in RSC context.
+      // Also, it is not required when component is hidden or empty, as it will be rendered whthout boundary crossing.
+      const useClientWrapper = isClient && getRSC() && !isEmpty;
+      let rendered = useClientWrapper ? (
+        <ClientComponentWrapper
+          rendering={rendering}
+          componentProps={finalRenderedProps}
+          placeholderName={props.name}
+          key={key}
+        />
+      ) : (
+        <Component
+          key={key}
+          {...finalRenderedProps}
+          rendering={rendering}
+          page={page}
+          componentMap={componentMap}
+        />
       );
 
       if (!isEmpty) {
@@ -76,7 +90,7 @@ export const ServerPlaceholder = (props: PlaceholderProps) => {
       }
 
       // if in edit mode then emit shallow chromes for hydration in Pages
-      if (props.page.mode.isEditing) {
+      if (page.mode.isEditing) {
         const key = (rendering.uid as string) || `component-${index}`;
         return (
           <PlaceholderMetadata key={key} rendering={rendering}>
@@ -88,12 +102,12 @@ export const ServerPlaceholder = (props: PlaceholderProps) => {
     })
     .filter((element) => element);
 
-  const finalRendering = props.page.mode.isEditing
+  const finalRendering = page.mode.isEditing
     ? [
         <PlaceholderMetadata
-          key={(props.rendering as ComponentRendering).uid}
+          key={(parentRendering as ComponentRendering).uid}
           placeholderName={props.name}
-          rendering={props.rendering as ComponentRendering}
+          rendering={parentRendering as ComponentRendering}
         >
           {components}
         </PlaceholderMetadata>,
@@ -105,11 +119,11 @@ export const ServerPlaceholder = (props: PlaceholderProps) => {
   if (placeholderEmpty) {
     const rendered = props.renderEmpty ? props.renderEmpty(finalRendering) : finalRendering;
 
-    return props.page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
+    return page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
   }
 
   if (props.render) {
-    return props.render(components, placeholderRenderings, serializableProps);
+    return props.render(components, placeholderRenderings, props);
   } else if (props.renderEach) {
     const renderEach = props.renderEach;
 

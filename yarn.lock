@@ -2935,6 +2935,7 @@ __metadata:
     prettier: ^2.8.0
     react: ^19.1.0
     react-dom: ^19.1.0
+    rsc-env: ^0.0.2
     sinon: ^20.0.0
     sinon-chai: ^3.7.0
     ts-node: ^10.9.2
@@ -10688,6 +10689,13 @@ __metadata:
   version: 0.8.0
   resolution: "rrweb-cssom@npm:0.8.0"
   checksum: b84912cd1fbab9c972bf3fd5ca27b492efb442cacb23b6fd5a5ef6508572a91e411d325692609bf758865bc38a01b876e343c552d0e2ae87d0ff9907d96ef622
+  languageName: node
+  linkType: hard
+
+"rsc-env@npm:^0.0.2":
+  version: 0.0.2
+  resolution: "rsc-env@npm:0.0.2"
+  checksum: 450462b17405088bab5b8874fb15d31e3cf57039153fd971d820f00812d07994ec76c744c8125296b2b1f581e6b8e20d9e30282adda13bfb6c8f8386edbefec1
   languageName: node
   linkType: hard
 

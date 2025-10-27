@@ -47,7 +47,8 @@ export {
   Placeholder,
   PlaceholderProps,
   PlaceholderProps as PlaceholderComponentProps,
-  ServerPlaceholder,
+  AppPlaceholder,
+  AppPlaceholderProps,
 } from './components/Placeholder';
 export {
   Image,
