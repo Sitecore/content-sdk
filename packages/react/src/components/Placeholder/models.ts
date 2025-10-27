@@ -155,3 +155,19 @@ export interface ComponentForRendering {
   dynamic?: boolean;
   componentType?: ComponentType;
 }
+
+/**
+ * Prop names from placeholder that cannot be serialized and passed from server to client side components
+ */
+export const nonSerializedPlaceholderProps = [
+  'renderEmpty',
+  'render',
+  'renderEach',
+  'errorComponent',
+  'componentLoadingMessage',
+  'modifyComponentProps',
+  'componentMap',
+  'page',
+  'missingComponentComponent',
+  'hiddenRenderingComponent',
+] as const satisfies (keyof PlaceholderProps)[];
