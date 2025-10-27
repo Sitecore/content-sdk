@@ -42,6 +42,7 @@
 
 ## Interfaces
 
+- [AppPlaceholderProps](interfaces/AppPlaceholderProps.md)
 - [CacheClient](interfaces/CacheClient.md)
 - [CacheOptions](interfaces/CacheOptions.md)
 - [ComponentFields](interfaces/ComponentFields.md)
@@ -108,6 +109,7 @@
 
 ## Variables
 
+- [AppPlaceholder](variables/AppPlaceholder.md)
 - [BYOCClientWrapper](variables/BYOCClientWrapper.md)
 - [BYOCServerWrapper](variables/BYOCServerWrapper.md)
 - [ClientEditingChromesUpdate](variables/ClientEditingChromesUpdate.md)
@@ -131,7 +133,6 @@
 - [REDIRECT\_TYPE\_301](variables/REDIRECT_TYPE_301.md)
 - [REDIRECT\_TYPE\_302](variables/REDIRECT_TYPE_302.md)
 - [REDIRECT\_TYPE\_SERVER\_TRANSFER](variables/REDIRECT_TYPE_SERVER_TRANSFER.md)
-- [ServerPlaceholder](variables/ServerPlaceholder.md)
 - [SitecoreProviderReactContext](variables/SitecoreProviderReactContext.md)
 - [Text](variables/Text.md)
 - [withEditorChromes](variables/withEditorChromes.md)

@@ -8,7 +8,7 @@
 
 > **getHeadersForPropagation**(`headers`): `object`
 
-Defined in: [nextjs/src/editing/utils.ts:166](https://github.com/Sitecore/content-sdk/blob/353772215e69c57f5abae74ad3f0b600ba4dfbf1/packages/nextjs/src/editing/utils.ts#L166)
+Defined in: [nextjs/src/editing/utils.ts:166](https://github.com/Sitecore/content-sdk/blob/3c36d10259ff5fde8a86011b79e6e99deb6497df/packages/nextjs/src/editing/utils.ts#L166)
 
 Get headers that should be passed along to subsequent requests
 
