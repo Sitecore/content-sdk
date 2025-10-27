@@ -396,7 +396,7 @@ describe('generateMap', () => {
       expect(mainContent).to.include("import * as Button from './src/components/Button';");
 
       expect(mainContent.replace(/\s+/g, ' ')).to.include(
-        "['Button', { ...{ ...Buttonextra, ...Button }, componentType: 'client' }]"
+        "['Button', { ...Buttonextra, ...Button, componentType: 'client' }],"
       );
 
       expect(mainContent).to.match(/\['Link',\s*(\{[^]*?\.{3}Link[^]*?\}|Link)\s*\],/);
@@ -775,8 +775,9 @@ describe('generateMap', () => {
       expect(mainContent).to.include(
         "import * as UniversalCard from './src/components/UniversalCard';"
       );
+
       expect(mainContent).to.include(
-        "['ClientButton', { ...ClientButton, componentType: 'client' }],"
+        "['ClientButton', { ClientButton, componentType: 'client' }],"
       );
       expect(mainContent).to.include("['ServerData', ServerData],");
       expect(mainContent).to.include("['UniversalCard', UniversalCard],");
