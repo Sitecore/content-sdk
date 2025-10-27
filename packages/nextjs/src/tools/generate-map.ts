@@ -81,14 +81,19 @@ const prepareComponentsForMap = (
       const annotateClient =
         !!group.base && 'componentType' in group.base && group.base.componentType === 'client';
 
+       let valueExpr: string;
+      if (spreads.length) {
+        valueExpr = spreads.join(', ');
+      } else {
+        valueExpr = group.base
+          ? group.base.moduleName
+          : group.neighbors[0].moduleName;
+      }
+
       entries.push({
         key: group.prefix,
         imports,
-        valueExpr: spreads.length
-          ? `{ ${spreads.join(', ')} }`
-          : group.base
-          ? group.base.moduleName
-          : group.neighbors[0].moduleName,
+        valueExpr,
         annotateClient,
       });
     } else {
@@ -169,12 +174,14 @@ import { Form } from '@sitecore-content-sdk/nextjs';
   // Build entry lines (package named imports are appended below)
   const componentMapEntries: string[] = builtInMapEntries;
   for (const e of entries) {
-    const value =
-      !isClientMap && e.annotateClient
-        ? `{ ...${e.valueExpr}, componentType: 'client' }`
-        : e.valueExpr;
-    componentMapEntries.push(`['${e.key}', ${value}]`);
-  }
+  const value =
+    !isClientMap && e.annotateClient
+      ? `{ ${e.valueExpr}, componentType: 'client' }`
+      : e.valueExpr.includes('...')
+      ? `{ ${e.valueExpr} }`
+      : e.valueExpr;
+  componentMapEntries.push(`['${e.key}', ${value}]`);
+}
 
   // Add package-based entries
   componentImports?.forEach((pkg) => {
