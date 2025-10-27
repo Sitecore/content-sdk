@@ -1,9 +1,9 @@
 import React from 'react';
 import { ComponentType } from 'react';
-import { ServerPlaceholder } from '../components/Placeholder/ServerPlaceholder';
+import { AppPlaceholder } from '../components/Placeholder/AppPlaceholder';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import { ComponentMap } from '../components/sharedTypes';
 import { Page } from '@sitecore-content-sdk/core/client';
+import { ComponentMap } from '../components/sharedTypes';
 
 export type ComponentProps = {
   rendering: ComponentRendering;
@@ -11,12 +11,12 @@ export type ComponentProps = {
 };
 
 export type WrapperProps = {
+  rendering: ComponentRendering;
   page: Page;
   componentMap: ComponentMap;
-  rendering: ComponentRendering;
 };
 
-export const withServerPlaceholder = <T extends ComponentProps, W extends T & WrapperProps>(
+export const withAppPlaceholder = <T extends ComponentProps, W extends T & WrapperProps>(
   Component: ComponentType<T>
 ) => {
   return (props: W) => {
@@ -24,11 +24,11 @@ export const withServerPlaceholder = <T extends ComponentProps, W extends T & Wr
     const phProps: Record<string, unknown> = {};
     for (const placeholder of Object.keys(placeholders)) {
       phProps[placeholder] = (
-        <ServerPlaceholder
+        <AppPlaceholder
           name={placeholder}
           rendering={props.rendering}
-          page={props.page}
           componentMap={props.componentMap}
+          page={props.page}
         />
       );
     }

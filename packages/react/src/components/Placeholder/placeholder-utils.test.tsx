@@ -478,7 +478,7 @@ describe('placeholder-utils', () => {
       const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
 
       expect(result?.component).to.equal(FEaaSComponent);
-      expect(result?.isEmpty).to.be.undefined;
+      expect(result?.isEmpty).to.be.false;
     });
 
     it('should return fallback implementation for FEaaSWrapper', () => {
@@ -493,7 +493,7 @@ describe('placeholder-utils', () => {
       const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
 
       expect(result?.component).to.equal(FEaaSWrapper);
-      expect(result?.isEmpty).to.be.undefined;
+      expect(result?.isEmpty).to.be.false;
     });
 
     it('should return fallback implementation for BYOCComponent', () => {
@@ -508,7 +508,7 @@ describe('placeholder-utils', () => {
       const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
 
       expect(result?.component).to.equal(BYOCComponent);
-      expect(result?.isEmpty).to.be.undefined;
+      expect(result?.isEmpty).to.be.false;
     });
 
     it('should return fallback implementation for BYOCWrapper', () => {
@@ -524,7 +524,7 @@ describe('placeholder-utils', () => {
 
       expect(result?.component).to.equal(BYOCWrapper);
       expect(result?.dynamic).to.be.true;
-      expect(result?.isEmpty).to.be.undefined;
+      expect(result?.isEmpty).to.be.false;
     });
 
     it('should return default missing component when component not found in component map', () => {

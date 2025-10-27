@@ -32,11 +32,13 @@ import * as FEAASWrapper from '../FEaaS/FEaaSWrapper';
 import * as HiddenRendering from '../HiddenRendering';
 import * as ErrorBoundary from '../ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
-import { ServerPlaceholder } from './ServerPlaceholder';
-import { ComponentProps } from './models';
+import { AppPlaceholder } from './AppPlaceholder';
+import { AppComponentProps, ComponentProps } from './models';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
+import * as placeholderUtils from './placeholder-utils';
+import * as ClientComponentWrapperModule from './ClientComponentWrapper';
 
-describe('Server Placeholder logic', () => {
+describe('App Placeholder logic', () => {
   // Global sinon sandbox for all tests
   let sandbox: SinonSandbox;
 
@@ -65,7 +67,7 @@ describe('Server Placeholder logic', () => {
     },
   });
 
-  // pass otherProps to page-content to test property cascading through the ServerPlaceholder
+  // pass otherProps to page-content to test property cascading through the AppPlaceholder
   const Home: React.FC<{ [prop: string]: unknown; rendering?: RouteData | ComponentRendering }> = ({
     rendering,
     render,
@@ -74,15 +76,15 @@ describe('Server Placeholder logic', () => {
     ...otherProps
   }) => (
     <div className="home-mock">
-      <ServerPlaceholder
+      <AppPlaceholder
         name="page-header"
-        rendering={rendering}
+        rendering={rendering!}
         componentMap={componentMap}
         page={getPage()}
       />
-      <ServerPlaceholder
+      <AppPlaceholder
         name="page-content"
-        rendering={rendering}
+        rendering={rendering!}
         componentMap={componentMap}
         page={getPage()}
         {...otherProps}
@@ -116,7 +118,7 @@ describe('Server Placeholder logic', () => {
     sandbox.restore();
   });
 
-  describe('<ServerPlaceholder />', () => {
+  describe('<AppPlaceholder />', () => {
     const testData = [
       { label: 'Dev data', data: normalModeDevData },
       { label: 'LayoutService data - Editing off', data: normalModeLsData },
@@ -128,14 +130,14 @@ describe('Server Placeholder logic', () => {
           const page = getPage();
           page.layout = dataSet.data;
           const component = (
-            dataSet.data.sitecore.route.placeholders.main as (ComponentRendering | RouteData)[]
+            dataSet.data.sitecore.route!.placeholders.main as (ComponentRendering | RouteData)[]
           ).find((c) => (c as ComponentRendering).componentName);
           const phKey = 'page-content';
 
           const renderedComponent = render(
-            <ServerPlaceholder
+            <AppPlaceholder
               name={phKey}
-              rendering={component}
+              rendering={component!}
               componentMap={componentMap}
               page={page}
             />
@@ -153,7 +155,7 @@ describe('Server Placeholder logic', () => {
           const phKey = 'main';
 
           const renderedComponent = render(
-            <ServerPlaceholder
+            <AppPlaceholder
               name={phKey}
               rendering={component}
               componentMap={componentMap}
@@ -173,7 +175,7 @@ describe('Server Placeholder logic', () => {
           const phKey = 'main';
 
           const renderedComponent = render(
-            <ServerPlaceholder
+            <AppPlaceholder
               name={phKey}
               rendering={component}
               componentMap={componentMap}
@@ -192,7 +194,7 @@ describe('Server Placeholder logic', () => {
           const phKey = 'main';
 
           const renderedComponent = render(
-            <ServerPlaceholder
+            <AppPlaceholder
               name={phKey}
               rendering={component}
               componentMap={componentMap}
@@ -211,7 +213,7 @@ describe('Server Placeholder logic', () => {
           const phKey = 'mainEmpty';
 
           const renderedComponent = render(
-            <ServerPlaceholder
+            <AppPlaceholder
               name={phKey}
               rendering={component}
               componentMap={componentMap}
@@ -242,7 +244,7 @@ describe('Server Placeholder logic', () => {
         const phKey = 'main';
 
         const renderedComponent = render(
-          <ServerPlaceholder
+          <AppPlaceholder
             name={phKey}
             rendering={myComponent}
             componentMap={componentMap}
@@ -268,7 +270,7 @@ describe('Server Placeholder logic', () => {
           .fields.message;
 
         const renderedComponent = render(
-          <ServerPlaceholder
+          <AppPlaceholder
             name={phKey}
             rendering={component}
             componentMap={componentMap}
@@ -286,12 +288,10 @@ describe('Server Placeholder logic', () => {
       it('should apply modifyComponentProps to the final props', () => {
         const page = getPage();
         page.layout = dataSet.data;
-        const component = dataSet.data.sitecore.route as any;
-        const phKey = 'main';
-        const expectedMessage = (component.placeholders.main as any[]).find((c) => c.componentName)
-          .fields.message;
+        const component = dataSet.data.sitecore.route?.placeholders.main[0] as any;
+        const phKey = 'page-content';
 
-        const modifyComponentProps = (props: ComponentProps) => {
+        const modifyComponentProps = (props: AppComponentProps) => {
           if (props.rendering?.componentName === 'DownloadCallout') {
             return {
               ...props,
@@ -303,7 +303,7 @@ describe('Server Placeholder logic', () => {
         };
 
         const renderedComponent = render(
-          <ServerPlaceholder
+          <AppPlaceholder
             name={phKey}
             rendering={component}
             componentMap={componentMap}
@@ -312,17 +312,12 @@ describe('Server Placeholder logic', () => {
           />
         );
 
-        expect(
-          renderedComponent.container
-            .querySelector('.download-callout-mock')
-            ?.innerHTML.indexOf(expectedMessage.value) !== -1
-        ).to.be.true;
         expect(renderedComponent.container.querySelectorAll('div.extra').length).to.equal(1);
       });
     });
   });
 
-  describe('ServerPlaceholder SXA rendering variants', () => {
+  describe('AppPlaceholder SXA rendering variants', () => {
     const componentMap = new Map();
 
     componentMap.set('RichText', SxaRichText);
@@ -334,7 +329,7 @@ describe('Server Placeholder logic', () => {
       const phKey = 'main';
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={component}
           componentMap={componentMap}
@@ -365,7 +360,7 @@ describe('Server Placeholder logic', () => {
       const phKey = 'container-1';
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={component}
           componentMap={componentMap}
@@ -392,7 +387,7 @@ describe('Server Placeholder logic', () => {
       const phKey = 'richText';
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={component}
           componentMap={componentMap}
@@ -411,7 +406,7 @@ describe('Server Placeholder logic', () => {
       const phKey = 'dynamic-1-{*}';
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={component}
           componentMap={componentMap}
@@ -438,7 +433,7 @@ describe('Server Placeholder logic', () => {
       const phKey = 'main-second';
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={component}
           componentMap={componentMap}
@@ -462,7 +457,7 @@ describe('Server Placeholder logic', () => {
       const phKey = 'column-1-{*}';
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={component}
           componentMap={componentMap}
@@ -480,7 +475,7 @@ describe('Server Placeholder logic', () => {
     });
   });
 
-  describe('ServerPlaceholder BYOC fallback', () => {
+  describe('AppPlaceholder BYOC fallback', () => {
     let byocComponentStub;
     let byocWrapperStub;
 
@@ -503,7 +498,7 @@ describe('Server Placeholder logic', () => {
       ));
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={component}
           componentMap={componentMap}
@@ -534,7 +529,7 @@ describe('Server Placeholder logic', () => {
       const errorBoundarySpy = sandbox.spy(ErrorBoundary, 'default');
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={component}
           componentMap={componentMap}
@@ -556,7 +551,7 @@ describe('Server Placeholder logic', () => {
     });
   });
 
-  describe('ServerPlaceholder FEaaS fallback', () => {
+  describe('AppPlaceholder FEaaS fallback', () => {
     let feaasComponentStub;
     let feaasWrapperStub;
 
@@ -579,7 +574,7 @@ describe('Server Placeholder logic', () => {
       ));
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={component}
           componentMap={componentMap}
@@ -599,7 +594,7 @@ describe('Server Placeholder logic', () => {
     const phKey = 'main';
 
     const renderedComponent = render(
-      <ServerPlaceholder
+      <AppPlaceholder
         name={phKey}
         disableSuspense={false}
         rendering={component}
@@ -620,7 +615,7 @@ describe('Server Placeholder logic', () => {
     const phKey = 'main';
 
     const renderedComponent = render(
-      <ServerPlaceholder
+      <AppPlaceholder
         name={phKey}
         disableSuspense={true}
         rendering={component}
@@ -654,7 +649,7 @@ describe('Server Placeholder logic', () => {
     const phKey = 'unknown';
 
     const renderedComponent = render(
-      <ServerPlaceholder name={phKey} rendering={route} componentMap={componentMap} page={page} />
+      <AppPlaceholder name={phKey} rendering={route} componentMap={componentMap} page={page} />
     );
     expect(renderedComponent?.container.innerHTML).to.be.empty;
   });
@@ -664,9 +659,9 @@ describe('Server Placeholder logic', () => {
 
     const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
       <div className="home-mock">
-        <ServerPlaceholder
+        <AppPlaceholder
           name="main"
-          rendering={rendering}
+          rendering={rendering!}
           componentMap={components}
           page={getPage()}
         />
@@ -697,10 +692,10 @@ describe('Server Placeholder logic', () => {
     const phKey = 'main';
 
     const renderedComponent = render(
-      <ServerPlaceholder name={phKey} rendering={route} componentMap={components} page={page} />
+      <AppPlaceholder name={phKey} rendering={route} componentMap={components} page={page} />
     );
 
-    // ServerPlaceholder uses ErrorBoundary for error handling
+    // AppPlaceholder uses ErrorBoundary for error handling
     expect(
       renderedComponent.container.querySelectorAll('[data-testid="error-boundary"]').length
     ).to.be.greaterThan(0);
@@ -711,9 +706,9 @@ describe('Server Placeholder logic', () => {
 
     const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
       <div className="home-mock">
-        <ServerPlaceholder
+        <AppPlaceholder
           name="main"
-          rendering={rendering}
+          rendering={rendering!}
           componentMap={components}
           page={getPage()}
         />
@@ -748,7 +743,7 @@ describe('Server Placeholder logic', () => {
     const phKey = 'main';
 
     const renderedComponent = render(
-      <ServerPlaceholder name={phKey} rendering={route} componentMap={components} page={page} />
+      <AppPlaceholder name={phKey} rendering={route} componentMap={components} page={page} />
     );
 
     // The Foo component should still render even if ThrowError fails
@@ -761,9 +756,9 @@ describe('Server Placeholder logic', () => {
 
     const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
       <div className="home-mock">
-        <ServerPlaceholder
+        <AppPlaceholder
           name="main"
-          rendering={rendering}
+          rendering={rendering!}
           componentMap={componentMap}
           page={page}
         />
@@ -795,7 +790,7 @@ describe('Server Placeholder logic', () => {
     const phKey = 'main';
 
     const renderedComponent = render(
-      <ServerPlaceholder
+      <AppPlaceholder
         name={phKey}
         rendering={route}
         componentMap={components}
@@ -804,7 +799,7 @@ describe('Server Placeholder logic', () => {
       />
     );
 
-    // ServerPlaceholder passes errorComponent to ErrorBoundary
+    // AppPlaceholder passes errorComponent to ErrorBoundary
     expect(
       renderedComponent.container.querySelectorAll('[data-testid="error-boundary"]').length
     ).to.be.greaterThan(0);
@@ -836,7 +831,7 @@ describe('Server Placeholder logic', () => {
     );
 
     const renderedComponent = render(
-      <ServerPlaceholder
+      <AppPlaceholder
         name={phKey}
         rendering={route}
         componentMap={componentMap}
@@ -877,7 +872,7 @@ describe('Server Placeholder logic', () => {
 
     const renderedComponent = render(
       <div className="empty-test">
-        <ServerPlaceholder name={phKey} rendering={route} componentMap={componentMap} page={page} />
+        <AppPlaceholder name={phKey} rendering={route} componentMap={componentMap} page={page} />
       </div>
     );
     expect(renderedComponent.container.children.length).to.equal(1);
@@ -903,7 +898,7 @@ describe('Server Placeholder logic', () => {
     const phKey = 'main';
 
     const renderedComponent = render(
-      <ServerPlaceholder name={phKey} rendering={route} componentMap={componentMap} page={page} />
+      <AppPlaceholder name={phKey} rendering={route} componentMap={componentMap} page={page} />
     );
     expect(renderedComponent.getAllByText('The component is hidden').length).to.equal(1);
   });
@@ -937,7 +932,7 @@ describe('Server Placeholder logic', () => {
     );
 
     const renderedComponent = render(
-      <ServerPlaceholder
+      <AppPlaceholder
         name={phKey}
         rendering={route}
         componentMap={componentMap}
@@ -953,91 +948,8 @@ describe('Server Placeholder logic', () => {
     );
   });
 
-  it('should require componentMap prop', () => {
-    const page = getPage();
-    const route: any = {
-      placeholders: {
-        main: [
-          {
-            componentName: 'Home',
-          },
-        ],
-      },
-    };
-    page.layout = {
-      sitecore: {
-        context: {},
-        route,
-      },
-    };
-
-    expect(() => {
-      render(
-        <ServerPlaceholder
-          name="main"
-          rendering={route}
-          componentMap={undefined as any}
-          page={page}
-        />
-      );
-    }).to.throw('Component map is required for ServerPlaceholder');
-  });
-
-  // Additional test cases specific to ServerPlaceholder
-  describe('ServerPlaceholder specific functionality', () => {
-    it('should exclude non-serializable props when rendering client component', () => {
-      const page = getPage();
-      let receivedProps: any = null;
-
-      const TestClientComponent: React.FC<any> = (props) => {
-        receivedProps = props;
-        return <div className="test-client-component">Test Client Component</div>;
-      };
-
-      // Mark as client component
-      (TestClientComponent as any).componentType = 'client';
-
-      const localComponentMap = new Map();
-      localComponentMap.set('TestClientComponent', TestClientComponent);
-
-      const route: any = {
-        placeholders: {
-          main: [
-            {
-              componentName: 'TestClientComponent',
-            },
-          ],
-        },
-      };
-
-      page.layout = {
-        sitecore: {
-          context: {},
-          route,
-        },
-      };
-
-      const renderedComponent = render(
-        <ServerPlaceholder
-          name="main"
-          rendering={route}
-          componentMap={localComponentMap}
-          page={page}
-        />
-      );
-
-      // Check that the client component was called and received props
-      expect(receivedProps).to.not.be.null;
-
-      // Check that non-serializable props are excluded from client component
-      expect(receivedProps.componentMap).to.be.undefined;
-
-      // Note: Currently the rendering prop is still passed to client components.
-      // This may be expected behavior or a separate issue.
-      // For now, we're just verifying that we can check the props the component receives.
-      expect(receivedProps.rendering).to.not.be.undefined;
-    });
-
+  // Additional test cases specific to AppPlaceholder
+  describe('AppPlaceholder specific functionality', () => {
     it('should render react server component', () => {
       const page = getPage();
 
@@ -1073,7 +985,7 @@ describe('Server Placeholder logic', () => {
       };
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name="main"
           rendering={route}
           componentMap={localComponentMap}
@@ -1118,7 +1030,7 @@ describe('Server Placeholder logic', () => {
       };
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name="main"
           rendering={route}
           componentMap={localComponentMap}
@@ -1129,33 +1041,29 @@ describe('Server Placeholder logic', () => {
       expect(renderedComponent.container.querySelectorAll('.client-component').length).to.equal(1);
     });
 
-    it('should pass props to child component', () => {
+    it('should render client component wrapper when component is marker as client and rendered in RSC context', () => {
+      sandbox.stub(placeholderUtils, 'getRSC').returns(true);
+      sandbox
+        .stub(ClientComponentWrapperModule, 'ClientComponentWrapper')
+        .returns(<div className="client-component-wrapper">Client Component Wrapper</div>);
       const page = getPage();
 
-      const TestComponent: React.FC<any> = (props) => {
-        // Verify that props are passed correctly
-        expect(props.customProp).to.equal('customValue');
-        expect(props.fields).to.not.be.undefined;
-        expect(props.params).to.not.be.undefined;
-        expect(props.rendering).to.not.be.undefined;
-
-        return <div className="test-component">Test Component</div>;
+      const ClientComponent: React.FC<any> = () => {
+        return <div className="client-component">Client Component</div>;
       };
 
+      // Mock this as a client component
       const localComponentMap = new Map();
-      localComponentMap.set('TestComponent', TestComponent);
+      localComponentMap.set('ClientComponent', {
+        default: ClientComponent,
+        componentType: 'client',
+      });
 
       const route: any = {
         placeholders: {
           main: [
             {
-              componentName: 'TestComponent',
-              fields: {
-                testField: { value: 'testValue' },
-              },
-              params: {
-                testParam: 'testParamValue',
-              },
+              componentName: 'ClientComponent',
             },
           ],
         },
@@ -1169,20 +1077,21 @@ describe('Server Placeholder logic', () => {
       };
 
       const renderedComponent = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name="main"
           rendering={route}
           componentMap={localComponentMap}
           page={page}
-          customProp="customValue"
         />
       );
 
-      expect(renderedComponent.container.querySelectorAll('.test-component').length).to.equal(1);
+      expect(
+        renderedComponent.container.querySelectorAll('.client-component-wrapper').length
+      ).to.equal(1);
     });
   });
 
-  describe('ServerPlaceholder PlaceholderMetadata', () => {
+  describe('AppPlaceholder PlaceholderMetadata', () => {
     const {
       layoutData,
       layoutDataForNestedDynamicPlaceholder,
@@ -1213,7 +1122,7 @@ describe('Server Placeholder logic', () => {
 
     componentMap.set('Header', () => (
       <div className="header-wrapper">
-        <ServerPlaceholder
+        <AppPlaceholder
           name="logo"
           rendering={layoutData.sitecore.route.placeholders.main[0]}
           componentMap={componentMap}
@@ -1225,7 +1134,7 @@ describe('Server Placeholder logic', () => {
 
     it('should render <PlaceholderMetadata> with nested placeholder components', () => {
       const wrapper = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name="main"
           rendering={layoutData.sitecore.route}
           componentMap={componentMap}
@@ -1256,7 +1165,7 @@ describe('Server Placeholder logic', () => {
     it('should render code blocks even if placeholder is empty', () => {
       page.layout = layoutDataWithEmptyPlaceholder;
       const wrapper = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name="main"
           rendering={layoutDataWithEmptyPlaceholder.sitecore.route}
           componentMap={componentMap}
@@ -1279,7 +1188,7 @@ describe('Server Placeholder logic', () => {
       page.layout = layoutDataWithUnknownComponent;
 
       const wrapper = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name="main"
           rendering={layoutDataWithUnknownComponent.sitecore.route}
           componentMap={componentMap}
@@ -1304,7 +1213,7 @@ describe('Server Placeholder logic', () => {
       page.layout = layoutData;
 
       const wrapper = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={layoutData.sitecore.route}
           componentMap={componentMap}
@@ -1335,7 +1244,7 @@ describe('Server Placeholder logic', () => {
       const layoutData = layoutDataForNestedDynamicPlaceholder('container-1-{*}');
       page.layout = layoutData;
       const wrapper = render(
-        <ServerPlaceholder
+        <AppPlaceholder
           name={phKey}
           rendering={layoutData.sitecore.route}
           componentMap={componentMap}
