@@ -8,7 +8,7 @@
 
 > **getQueryParamsForPropagation**(`query`): `object`
 
-Defined in: [nextjs/src/editing/utils.ts:144](https://github.com/Sitecore/content-sdk/blob/3c36d10259ff5fde8a86011b79e6e99deb6497df/packages/nextjs/src/editing/utils.ts#L144)
+Defined in: [nextjs/src/editing/utils.ts:144](https://github.com/Sitecore/content-sdk/blob/875026478718f4c8b8e0a7ccb65eac312b3fb4f6/packages/nextjs/src/editing/utils.ts#L144)
 
 Gets query parameters that should be passed along to subsequent requests (e.g. for deployment protection bypass)
 
