@@ -173,17 +173,17 @@ import { Form } from '@sitecore-content-sdk/nextjs';
       !isClientMap && e.annotateClient
         ? `{ ...${e.valueExpr}, componentType: 'client' }`
         : e.valueExpr;
-    componentMapEntries.push(`['${e.key}', ${value}],`);
+    componentMapEntries.push(`['${e.key}', ${value}]`);
   }
 
   // Add package-based entries
   componentImports?.forEach((pkg) => {
     if (pkg.importInfo.namedImports) {
       pkg.importInfo.namedImports.forEach((name: string) => {
-        componentMapEntries.push(`['${name}', ${name}],`);
+        componentMapEntries.push(`['${name}', ${name}]`);
       });
     } else {
-      componentMapEntries.push(`['${pkg.importName}', ${pkg.importName}],`);
+      componentMapEntries.push(`['${pkg.importName}', ${pkg.importName}]`);
     }
   });
 
@@ -196,7 +196,6 @@ ${componentMapEntries
     return `  ${component},\n`;
   })
   .join('')}]);
-]);
 
 export default componentMap;
 `;
