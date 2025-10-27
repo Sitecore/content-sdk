@@ -8,7 +8,7 @@
 
 > **getComponentVariantSpec**(`params`): `Promise`\<`ComponentVariantSpec`\>
 
-Defined in: [packages/core/src/tools/codegen/component-variant.ts:65](https://github.com/Sitecore/content-sdk/blob/e9db4b450860d4e5f9f71fd28fd89a6300395c4d/packages/core/src/tools/codegen/component-variant.ts#L65)
+Defined in: [packages/core/src/tools/codegen/component-variant.ts:65](https://github.com/Sitecore/content-sdk/blob/353772215e69c57f5abae74ad3f0b600ba4dfbf1/packages/core/src/tools/codegen/component-variant.ts#L65)
 
 Fetches the component variant spec.
 

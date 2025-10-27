@@ -708,6 +708,8 @@ describe('EditingRenderMiddleware', () => {
         'GET, POST, OPTIONS, DELETE, PUT, PATCH'
       );
       expect(res.setHeader).to.have.been.calledWith('Set-Cookie', [
+        '__prerender_bypass=1122334455; Path=/; SameSite=Lax',
+        '__next_preview_data=6677889900; Path=/; SameSite=Lax',
         'sc_site=website; Path=/; HttpOnly; SameSite=None; Secure',
         'sc_preview=true; Path=/; HttpOnly; SameSite=None; Secure',
       ]);
