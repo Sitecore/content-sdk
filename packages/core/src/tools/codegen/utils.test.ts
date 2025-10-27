@@ -364,29 +364,6 @@ describe('codegen-utils', () => {
       expect(actual).to.deep.equal(expected);
     });
 
-    it('ignores default/named imports and only uses namespace imports (named-imports fixture)', () => {
-      const appPath = './src/tools/codegen/test-data/extract-components/named-imports';
-      const res = codegenUtils.resolveComponentImportFiles(appPath);
-
-      expect(
-        res.map((i) => ({
-          ...i,
-          filePath: norm(i.filePath),
-        }))
-      ).to.deep.equal([
-        {
-          componentKey: 'TestComponent',
-          fileType: codegenUtils.ExtractedFileType.Component,
-          filePath: norm(
-            path.resolve(
-              process.cwd(),
-              './src/tools/codegen/test-data/extract-components/named-imports/src/components/TestComponent.tsx'
-            )
-          ),
-        },
-      ]);
-    });
-
     it('resolves with path aliases defined in tsconfig (with-path-aliases fixture)', () => {
       const appPath = './src/tools/codegen/test-data/extract-components/with-path-aliases';
       const res = codegenUtils.resolveComponentImportFiles(appPath);

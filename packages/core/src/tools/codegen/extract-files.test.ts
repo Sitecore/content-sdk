@@ -314,6 +314,44 @@ describe('extract-files', () => {
           );
           expect(msgs).to.include(successMsg);
         });
+
+        it('should call sendCode for each component path and package.json when using named imports', async () => {
+          const appFolder = path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/extract-components/named-imports'
+          );
+          sandbox.stub(process, 'cwd').returns(appFolder);
+
+          const fetchBearerTokenStub = sandbox
+            .stub()
+            .resolves({ data: {}, accessToken: 'test-token' });
+          sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
+
+          const consoleLogStub = sandbox.stub(console, 'log');
+
+          nock(edgeUrl).post('/mesh/push/api/v1/contentsdk/code/extracted').reply(200).persist();
+
+          const component1Path = path.resolve(process.cwd(), './src/components/TestComponent.tsx');
+          const component2Path = path.resolve(process.cwd(), './src/components/TestComponent2.tsx');
+          const packageJsonPath = path.resolve(process.cwd(), './package.json');
+
+          await run(mockArgs);
+
+          expect(fetchBearerTokenStub.calledOnce).to.be.true;
+
+          const msgs = consoleLogStub.getCalls().map((c) => c.args[0]);
+          expect(msgs).to.include(chalk.green('Code extraction started'));
+
+          const successMsg = chalk.green(
+            [
+              'Code extraction completed successfully, files extracted:',
+              component1Path,
+              component2Path,
+              packageJsonPath,
+            ].join('\r\n')
+          );
+          expect(msgs).to.include(successMsg);
+        });
       });
     });
   });
