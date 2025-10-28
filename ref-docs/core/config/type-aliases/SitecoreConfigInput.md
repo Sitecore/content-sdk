@@ -8,7 +8,7 @@
 
 > **SitecoreConfigInput** = `object`
 
-Defined in: [packages/core/src/config/models.ts:21](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L21)
+Defined in: [packages/core/src/config/models.ts:21](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L21)
 
 Type to be used as config input in sitecore.config
 
@@ -18,7 +18,7 @@ Type to be used as config input in sitecore.config
 
 > `optional` **api**: `object`
 
-Defined in: [packages/core/src/config/models.ts:27](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L27)
+Defined in: [packages/core/src/config/models.ts:27](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L27)
 
 API settings required to connect to Sitecore.
 Both edge and local sets can be specified; the Content SDK app will choose
@@ -92,7 +92,7 @@ GraphQL endpoint path (appended to `apiHost` to form the full URL).
 
 > `optional` **defaultLanguage**: `string`
 
-Defined in: [packages/core/src/config/models.ts:72](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L72)
+Defined in: [packages/core/src/config/models.ts:72](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L72)
 
 The default and fallback locale for your site.
 Ensure it aligns with the framework-specific settings used in your application.
@@ -103,7 +103,7 @@ Ensure it aligns with the framework-specific settings used in your application.
 
 > `optional` **defaultSite**: `string`
 
-Defined in: [packages/core/src/config/models.ts:76](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L76)
+Defined in: [packages/core/src/config/models.ts:76](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L76)
 
 Your default site name. When using the multisite feature this variable defines the fallback site.
 
@@ -113,7 +113,7 @@ Your default site name. When using the multisite feature this variable defines t
 
 > `optional` **dictionary**: `object`
 
-Defined in: [packages/core/src/config/models.ts:118](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L118)
+Defined in: [packages/core/src/config/models.ts:118](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L118)
 
 Settings for Dictionary Service
 
@@ -137,7 +137,7 @@ Configure local memory caching for Dictionary Service requests
 
 > `optional` **disableCodeGeneration**: `boolean`
 
-Defined in: [packages/core/src/config/models.ts:197](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L197)
+Defined in: [packages/core/src/config/models.ts:197](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L197)
 
 Opt-out setting for code generation feature
 Disables code extraction procedure
@@ -148,7 +148,7 @@ Disables code extraction procedure
 
 > `optional` **editingSecret**: `string`
 
-Defined in: [packages/core/src/config/models.ts:81](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L81)
+Defined in: [packages/core/src/config/models.ts:81](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L81)
 
 Editing secret required for Sitecore editing and preview functionality.
 Default comes from the SITECORE_EDITING_SECRET environment variable.
@@ -159,7 +159,7 @@ Default comes from the SITECORE_EDITING_SECRET environment variable.
 
 > `optional` **layout**: `object`
 
-Defined in: [packages/core/src/config/models.ts:103](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L103)
+Defined in: [packages/core/src/config/models.ts:103](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L103)
 
 Settings for Layout Service
 
@@ -197,7 +197,7 @@ custom layout query
 
 > `optional` **multisite**: `object`
 
-Defined in: [packages/core/src/config/models.ts:131](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L131)
+Defined in: [packages/core/src/config/models.ts:131](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L131)
 
 Settings for multisite functionality
 
@@ -236,7 +236,7 @@ Function used to determine if site should be resolved from sc_site cookie when p
 
 > `optional` **personalize**: `object`
 
-Defined in: [packages/core/src/config/models.ts:146](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L146)
+Defined in: [packages/core/src/config/models.ts:146](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L146)
 
 Settings for Personalize functionality
 
@@ -298,7 +298,7 @@ Optional Sitecore Personalize scope ID (to isolate data between environments)
 
 > `optional` **redirects**: `object`
 
-Defined in: [packages/core/src/config/models.ts:181](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L181)
+Defined in: [packages/core/src/config/models.ts:181](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L181)
 
 Settings for redirects functionality
 
@@ -327,7 +327,7 @@ These should match those in framework-specific configuration of your app.
 
 > `optional` **retries**: `object`
 
-Defined in: [packages/core/src/config/models.ts:85](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/config/models.ts#L85)
+Defined in: [packages/core/src/config/models.ts:85](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/config/models.ts#L85)
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services
 
