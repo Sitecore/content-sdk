@@ -1,5 +1,4 @@
 const path = require('path');
-const SassAlias = require('sass-alias');
 
 /**
  * @type {import('next').NextConfig}
@@ -56,7 +55,7 @@ const nextConfig = {
       // sitemap route
       {
         source: '/sitemap:id([\\w-]{0,}).xml',
-        destination: '/api/sitemap'
+        destination: '/api/sitemap',
       },
       // feaas api route
       {
@@ -104,17 +103,6 @@ const nextConfig = {
     <% } -%>
 
     return config;
-  },
-
-  // Add sass settings for SXA themes and styles
-  sassOptions: {
-    importer: new SassAlias({
-      '@globals': path.join(process.cwd(), './src/assets', 'globals'),
-      '@fontawesome': path.join(process.cwd(), './node_modules', 'font-awesome'),
-    }).getImporter(),
-    // temporary measure until new versions of bootstrap and font-awesome released
-    quietDeps: true,    
-    silenceDeprecations: ["import", "legacy-js-api"],
   },
 };
 

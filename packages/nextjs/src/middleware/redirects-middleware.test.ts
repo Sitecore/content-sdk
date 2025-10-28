@@ -118,6 +118,9 @@ describe('RedirectsMiddleware', () => {
         },
         enumerable: false,
       },
+      get: {
+        value: (key) => res.headers[key],
+      },
       forEach: {
         value: (cb) => {
           Object.keys(res.headers).forEach((key) => cb(res.headers[key], key, res.headers));
@@ -2097,6 +2100,90 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
 
         nextRedirectStub.restore();
+      });
+    });
+  });
+
+  describe('getLanguage', () => {
+    it('should get Language from locale header if present', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/found',
+        pathname: '/found',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        search: '',
+        clone: cloneUrl,
+      };
+      const { res, req } = createTestRequestResponse({
+        response: {
+          url,
+          headers: {
+            'x-sc-locale': 'de-DE',
+          },
+        },
+        request: {
+          nextUrl: {
+            pathname: '/not-found',
+            origin: 'http://localhost:3000',
+            href: 'http://localhost:3000/not-found',
+            clone: cloneUrl,
+            locale: 'en',
+          },
+        },
+      });
+      setupRedirectStub(301);
+
+      const { middleware } = createMiddleware({
+        defaultHostname: 'localhost:3000',
+      });
+
+      await middleware.handle(req, res);
+
+      validateDebugLog('redirects middleware start: %o', {
+        hostname: hostname,
+        language: 'de-DE',
+        pathname: '/not-found',
+      });
+    });
+
+    it('should get Language from nexturl if locale header is not present', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/found',
+        pathname: '/found',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        search: '',
+        clone: cloneUrl,
+      };
+      const { res, req } = createTestRequestResponse({
+        response: {
+          url,
+          headers: {},
+        },
+        request: {
+          nextUrl: {
+            pathname: '/not-found',
+            origin: 'http://localhost:3000',
+            href: 'http://localhost:3000/not-found',
+            clone: cloneUrl,
+            locale: 'pl-PL',
+          },
+        },
+      });
+      setupRedirectStub(301);
+
+      const { middleware } = createMiddleware({
+        defaultHostname: 'localhost:3000',
+      });
+
+      await middleware.handle(req, res);
+
+      validateDebugLog('redirects middleware start: %o', {
+        hostname: hostname,
+        language: 'pl-PL',
+        pathname: '/not-found',
       });
     });
   });

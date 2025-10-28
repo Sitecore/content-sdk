@@ -6,6 +6,6 @@
 
 # Variable: DefaultEmptyFieldEditingComponentText
 
-> `const` **DefaultEmptyFieldEditingComponentText**: `React.FC`\<\{[`key`: `string`]: `unknown`; `tag?`: `string`; \}\>
+> `const` **DefaultEmptyFieldEditingComponentText**: `React.FC`\<\{\[`key`: `string`\]: `unknown`; `tag?`: `string`; \}\>
 
 Defined in: react/types/components/DefaultEmptyFieldEditingComponents.d.ts:2

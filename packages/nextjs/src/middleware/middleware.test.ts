@@ -56,7 +56,7 @@ describe('MiddlewareBase', () => {
   };
 
   const createRes = (props: any = {}) => {
-    return {
+    const res = {
       ...props,
       cookies: {
         get(cookieName: string) {
@@ -64,7 +64,22 @@ describe('MiddlewareBase', () => {
           return { value: cookies[cookieName] };
         },
       },
+      headers: { ...props?.headers },
     } as NextResponse;
+
+    Object.defineProperties(res.headers, {
+      set: {
+        value: (key, value) => {
+          res.headers[key] = value;
+        },
+        enumerable: false,
+      },
+      get: {
+        value: (key) => res.headers[key],
+      },
+    });
+
+    return res;
   };
 
   describe('defaultHostname', () => {
@@ -112,6 +127,26 @@ describe('MiddlewareBase', () => {
       const req = createReq();
 
       expect(middleware['isPreview'](req)).to.equal(false);
+    });
+  });
+
+  describe('isAppRouter', () => {
+    it('should return true when locale header is provided', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+      const res = createRes({
+        headers: {
+          'x-sc-locale': 'en-US',
+        },
+      });
+
+      expect(middleware['isAppRouter'](res)).to.equal(true);
+    });
+
+    it('should return false when locale header is missing', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+      const res = createRes({});
+
+      expect(middleware['isAppRouter'](res)).to.equal(false);
     });
   });
 
@@ -324,6 +359,48 @@ describe('MiddlewareBase', () => {
 
       expect(middleware['getLanguage'](req)).to.equal('en');
     });
+
+    it('should return language from resp header if present', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+      const req = createReq({
+        nextUrl: {
+          defaultLocale: 'fr',
+        },
+      });
+      const res = createRes({
+        headers: {
+          'x-sc-locale': 'de-DE',
+        },
+      });
+
+      expect(middleware['getLanguage'](req, res)).to.equal('de-DE');
+    });
+  });
+
+  describe('getLanguageFromHeader', () => {
+    it('should return language from resp header if present', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+      const res = createRes({
+        headers: {
+          'x-sc-locale': 'de-DE',
+        },
+      });
+
+      expect(middleware['getLanguageFromHeader'](res)).to.equal('de-DE');
+    });
+
+    it('should return undefined from resp header if not present', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+      const res = createRes();
+
+      expect(middleware['getLanguageFromHeader'](res)).to.equal(undefined);
+    });
+
+    it('should return undefined from resp header if res not passed', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+
+      expect(middleware['getLanguageFromHeader']()).to.equal(undefined);
+    });
   });
 
   describe('getSite', () => {
@@ -426,7 +503,7 @@ describe('MiddlewareBase', () => {
       const req = createReq({
         nextUrl: url,
       });
-      const res = createRes();
+      const res = createRes({});
 
       const response = middleware['rewrite']('/new', req, res);
 
