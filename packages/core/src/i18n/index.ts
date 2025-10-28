@@ -3,4 +3,3 @@ export {
   DictionaryServiceConfig,
   DictionaryService,
 } from './dictionary-service';
-export { getLocaleRewrite } from './utils';

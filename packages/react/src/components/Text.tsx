@@ -1,5 +1,4 @@
-﻿'use client';
-import React, { ReactElement } from 'react';
+﻿import React, { ReactElement } from 'react';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';

@@ -2,7 +2,6 @@
   FEaaSWrapper,
   FEaaSComponentParams,
   fetchFEaaSComponentServerProps,
-  LayoutServicePageState,
 } from '@sitecore-content-sdk/react';
 import { GetComponentServerProps } from '../sharedTypes/component-props';
 
@@ -20,10 +19,11 @@ import { GetComponentServerProps } from '../sharedTypes/component-props';
  */
 export const getComponentServerProps: GetComponentServerProps = async (rendering, layoutData) => {
   const params: FEaaSComponentParams = rendering.params || {};
-  const isPageStateNormal =
-    !layoutData.sitecore.context.pageState ||
-    layoutData.sitecore.context.pageState === LayoutServicePageState.Normal;
-  return await fetchFEaaSComponentServerProps(params, isPageStateNormal);
+  const result = await fetchFEaaSComponentServerProps(
+    params,
+    layoutData.sitecore.context.pageState
+  );
+  return result;
 };
 
 export default FEaaSWrapper;

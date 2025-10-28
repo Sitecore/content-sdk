@@ -208,17 +208,13 @@ export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
  */
 export type SitecoreCliConfigInput = {
   /**
-   * Sitecore configuration (`sitecore.config` file)
-   */
-  config?: SitecoreConfig;
-  /**
    * Configuration for the `sitecore-tools build` CLI command
    */
   build?: {
     /**
      * Commands to run during the build process
      */
-    commands?: Array<(args?: { scConfig?: SitecoreConfig }) => Promise<void>>;
+    commands?: Array<() => Promise<void>>;
   };
   /**
    * Configuration for the `sitecore-tools scaffold` CLI command

@@ -26,10 +26,11 @@ Scripts:
 
 Runtime:
 
-- Node LTS
+- Node LTS or higher
 - Do not import from `dist/`
 - CLI entry: `./dist/index.js`
 
 Referenced:
 @src/index.ts
 @scripts/build-templates.ts
+

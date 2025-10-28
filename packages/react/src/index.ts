@@ -43,13 +43,7 @@ export {
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export { Form } from './components/Form';
 export { ReactContentSdkComponent, ComponentMap, ReactModule } from './components/sharedTypes';
-export {
-  Placeholder,
-  PlaceholderProps,
-  PlaceholderProps as PlaceholderComponentProps,
-  AppPlaceholder,
-  AppPlaceholderProps,
-} from './components/Placeholder';
+export { Placeholder, PlaceholderComponentProps } from './components/Placeholder';
 export {
   Image,
   ImageProps,
@@ -65,20 +59,16 @@ export {
   FEaaSComponentProps,
   FEaaSComponentParams,
   fetchFEaaSComponentServerProps,
+} from './components/FEaaSComponent';
+export { FEaaSWrapper } from './components/FEaaSWrapper';
+export { DesignLibrary } from './components/DesignLibrary';
+export {
   BYOCComponent,
   BYOCComponentParams,
   BYOCComponentProps,
   fetchBYOCComponentServerProps,
-  // leaving original names for backward compatibility
-  BYOCWrapper,
-  BYOCWrapper as BYOCClientWrapper,
-  FEaaSWrapper,
-  FEaaSWrapper as FEaaSClientWrapper,
-  FEaaSServerWrapper,
-  BYOCServerWrapper,
-} from './components/FEaaS';
-export { DesignLibrary } from './components/DesignLibrary';
-export {} from './components/FEaaS/BYOCComponent';
+} from './components/BYOCComponent';
+export { BYOCWrapper } from './components/BYOCWrapper';
 export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';
 export { File, FileField } from './components/File';
 export {
@@ -103,5 +93,4 @@ export {
   DefaultEmptyFieldEditingComponentText,
   DefaultEmptyFieldEditingComponentImage,
 } from './components/DefaultEmptyFieldEditingComponents';
-export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/core/site';

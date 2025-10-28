@@ -16,9 +16,8 @@ const DEFAULT_SITES_DIST_PATH = '.sitecore/sites.json';
 export type GenerateSitesConfig = {
   /**
    * The Sitecore configuration used at build and run time.
-   * @deprecated Pass `config` to the `defineCliConfig` function instead. This argument will be removed in the next major version.
    */
-  scConfig?: SitecoreConfig;
+  scConfig: SitecoreConfig;
 
   /**
    * Optional path where the generated sites will be saved.
@@ -30,50 +29,46 @@ export type GenerateSitesConfig = {
 /**
  * Generates site information and writes it to a specified destination path.
  * @param {GenerateSitesConfig} config - The configuration for generating site info.
+ * @param {SiteInfoService} config.scConfig - The Sitecore configuration used at build and run time.
+ * @param {string} config.destinationPath - The optional path where the generated sites file will be written. Defaults to '.sitecore/sites.json'.
  * @returns {Promise<Function>} - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
  */
 export const generateSites = ({
-  scConfig: deprecatedScConfig,
+  scConfig,
   destinationPath,
-}: GenerateSitesConfig = {}): (() => Promise<void>) => {
-  return async ({ scConfig }: { scConfig?: GenerateSitesConfig['scConfig'] } = {}) => {
-    const config = deprecatedScConfig ?? scConfig;
-
-    if (!config) {
-      throw new Error('Sitecore configuration is required to be provided');
-    }
-
+}: GenerateSitesConfig): (() => Promise<void>) => {
+  return async () => {
     let sites: SiteInfo[] = [];
     const sitesFilePath = path.resolve(destinationPath ?? DEFAULT_SITES_DIST_PATH);
 
     debug.multisite(
-      config.multisite.enabled
+      scConfig.multisite.enabled
         ? 'Multisite Enabled: Generating site information'
         : 'Multisite Disabled'
     );
 
-    if (config.multisite.enabled) {
+    if (scConfig.multisite.enabled) {
       try {
         const siteInfoService = new SiteInfoService({
           clientFactory: createGraphQLClientFactory({
-            api: config.api,
-            retries: config.retries.count,
-            retryStrategy: config.retries.retryStrategy,
+            api: scConfig.api,
+            retries: scConfig.retries.count,
+            retryStrategy: scConfig.retries.retryStrategy,
           }),
         });
 
         sites = await siteInfoService.fetchSiteInfo();
       } catch (error) {
         console.error(chalk.red('Error fetching site information'));
-        throw error;
+        console.error(error);
       }
     }
 
     // Add default site to the list
     const defaultSite: SiteInfo = {
-      name: config.defaultSite,
+      name: scConfig.defaultSite,
       hostName: '*',
-      language: config.defaultLanguage,
+      language: scConfig.defaultLanguage,
     };
     sites.unshift(defaultSite);
 

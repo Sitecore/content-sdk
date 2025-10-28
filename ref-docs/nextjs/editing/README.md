@@ -29,8 +29,6 @@
 
 ## Functions
 
-- [getHeadersForPropagation](functions/getHeadersForPropagation.md)
-- [getQueryParamsForPropagation](functions/getQueryParamsForPropagation.md)
 - [isDesignLibraryPreviewData](functions/isDesignLibraryPreviewData.md)
 
 ## References

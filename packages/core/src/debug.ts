@@ -40,7 +40,6 @@ export default {
   robots: debug(`${rootNamespace}:robots`),
   redirects: debug(`${rootNamespace}:redirects`),
   personalize: debug(`${rootNamespace}:personalize`),
-  locale: debug(`${rootNamespace}:locale`),
   errorpages: debug(`${rootNamespace}:errorpages`),
   proxy: debug(`${rootNamespace}:proxy`),
 };

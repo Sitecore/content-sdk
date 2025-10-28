@@ -1,5 +1,4 @@
-﻿'use client';
-import React, { ForwardedRef, forwardRef } from 'react';
+﻿import React, { ForwardedRef, forwardRef } from 'react';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';

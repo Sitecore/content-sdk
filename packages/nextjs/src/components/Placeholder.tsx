@@ -1,5 +1,4 @@
-﻿'use client';
-import React, { useContext } from 'react';
+﻿import React, { useContext } from 'react';
 import {
   Placeholder as ReactPlaceholder,
   PlaceholderComponentProps,

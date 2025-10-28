@@ -8,4 +8,4 @@
 
 > **FEaaSComponentProps** = `FEaaSComponentServerProps` & `FEaaSComponentClientProps`
 
-Defined in: react/types/components/FEaaS/models.d.ts:94
+Defined in: react/types/components/FEaaSComponent.d.ts:52

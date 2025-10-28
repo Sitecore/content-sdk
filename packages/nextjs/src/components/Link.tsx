@@ -1,5 +1,4 @@
-﻿'use client';
-import React, { forwardRef, JSX } from 'react';
+﻿import React, { forwardRef, JSX } from 'react';
 import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import {
   Link as ReactLink,

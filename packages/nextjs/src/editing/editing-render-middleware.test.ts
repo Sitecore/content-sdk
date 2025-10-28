@@ -596,7 +596,7 @@ describe('EditingRenderMiddleware', () => {
 
       await handler(req, res);
 
-      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWithMatch({
+      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
         itemId: query.sc_itemid,
         componentUid: query.sc_uid,
         renderingId: query.sc_renderingId,
@@ -629,7 +629,7 @@ describe('EditingRenderMiddleware', () => {
 
       await handler(req, res);
 
-      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWithMatch({
+      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
         itemId: query.sc_itemid,
         componentUid: query.sc_uid,
         renderingId: query.sc_renderingId,
@@ -711,8 +711,6 @@ describe('EditingRenderMiddleware', () => {
         'GET, POST, OPTIONS, DELETE, PUT, PATCH'
       );
       expect(res.setHeader).to.have.been.calledWith('Set-Cookie', [
-        '__prerender_bypass=1122334455; Path=/; SameSite=Lax',
-        '__next_preview_data=6677889900; Path=/; SameSite=Lax',
         'sc_site=website; Path=/; HttpOnly; SameSite=None; Secure',
         'sc_preview=true; Path=/; HttpOnly; SameSite=None; Secure',
       ]);

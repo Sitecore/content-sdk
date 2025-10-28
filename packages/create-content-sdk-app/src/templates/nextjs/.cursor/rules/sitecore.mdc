@@ -82,24 +82,11 @@ Environment Setup:
 
 ```typescript
 // sitecore.config.ts
-import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
-
-export default defineConfig({
-  api: {
-    edge: {
-      contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
-      clientContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
-      edgeUrl: process.env.SITECORE_EDGE_URL || 'https://edge-platform.sitecorecloud.io',
-    },
-    local: {
-      apiKey: process.env.SITECORE_API_KEY || '',
-      apiHost: process.env.SITECORE_API_HOST || '',
-    },
-  },
-  defaultSite: process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME || 'default',
-  defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
-  editingSecret: process.env.SITECORE_EDITING_SECRET,
-});
+export const sitecoreConfig = {
+  sitecoreApiHost: process.env.SITECORE_API_HOST || '',
+  sitecoreApiKey: process.env.SITECORE_API_KEY || '',
+  siteName: process.env.SITECORE_SITE_NAME || 'default',
+};
 ```
 
 ## Security and Performance
@@ -145,3 +132,4 @@ Referenced:
 @src/components/
 @sitecore.config.ts
 @.env.example
+

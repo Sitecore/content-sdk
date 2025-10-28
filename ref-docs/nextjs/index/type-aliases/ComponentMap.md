@@ -8,7 +8,7 @@
 
 > **ComponentMap**\<`TComponent`\> = `Map`\<`string`, `TComponent`\>
 
-Defined in: react/types/components/sharedTypes/components.d.ts:38
+Defined in: react/types/components/sharedTypes/components.d.ts:32
 
 ## Type Parameters
 

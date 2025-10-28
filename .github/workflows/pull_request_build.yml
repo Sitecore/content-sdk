@@ -46,7 +46,6 @@ jobs:
         run: yarn coverage-packages
         env:
           testEnv: ci
-          IMPORT_ALIAS_STRATEGY: plain
 
       - name: Generate code coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@v5

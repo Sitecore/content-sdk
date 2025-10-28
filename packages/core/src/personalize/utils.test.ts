@@ -16,25 +16,25 @@ describe('utils', () => {
     it('should return a string', () => {
       expect(getPersonalizedRewrite('/pathname', variantIds)).to.be.a('string');
     });
-    it('should return the path with the variant ids when pathname ends with "/"', () => {
-      const pathname = '/some/path/';
-      const result = getPersonalizedRewrite(pathname, variantIds);
-      expect(result).to.equal(
-        `/some/path/${VARIANT_PREFIX}${variantIds[0]}/${VARIANT_PREFIX}${variantIds[1]}`
-      );
-    });
-    it('should return the path with the variant ids when pathname not ends with "/"', () => {
+    it('should return the path with the variant ids when pathname starts with "/"', () => {
       const pathname = '/some/path';
       const result = getPersonalizedRewrite(pathname, variantIds);
       expect(result).to.equal(
-        `/some/path/${VARIANT_PREFIX}${variantIds[0]}/${VARIANT_PREFIX}${variantIds[1]}`
+        `/${VARIANT_PREFIX}${variantIds[0]}/${VARIANT_PREFIX}${variantIds[1]}/some/path`
+      );
+    });
+    it('should return the path with the variant ids when pathname not starts with "/"', () => {
+      const pathname = 'some/path';
+      const result = getPersonalizedRewrite(pathname, variantIds);
+      expect(result).to.equal(
+        `/${VARIANT_PREFIX}${variantIds[0]}/${VARIANT_PREFIX}${variantIds[1]}/some/path`
       );
     });
     it('should return the root path with the variant ids', () => {
       const pathname = '/';
       const result = getPersonalizedRewrite(pathname, variantIds);
       expect(result).to.equal(
-        `/${VARIANT_PREFIX}${variantIds[0]}/${VARIANT_PREFIX}${variantIds[1]}`
+        `/${VARIANT_PREFIX}${variantIds[0]}/${VARIANT_PREFIX}${variantIds[1]}/`
       );
     });
     it('should return the path when variant ids are empty', () => {

@@ -52,7 +52,7 @@ Component Development:
 
 ```
 src/
-  components/          # React-specific SDK
+  components/          # React components
   lib/                 # Configuration and utilities
   pages/               # Next.js pages
   assets/              # Static assets and styles
