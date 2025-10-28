@@ -8,4 +8,4 @@
 
 > **RouterType** = `"app"` \| `"pages"`
 
-Defined in: [packages/core/src/tools/templating/components.ts:21](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/core/src/tools/templating/components.ts#L21)
+Defined in: [packages/core/src/tools/templating/components.ts:21](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/core/src/tools/templating/components.ts#L21)

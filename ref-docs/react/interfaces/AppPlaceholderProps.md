@@ -6,7 +6,7 @@
 
 # Interface: AppPlaceholderProps
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:119](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L119)
+Defined in: [packages/react/src/components/Placeholder/models.ts:119](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L119)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/react/src/components/Placeholder/models.ts:119](https://gi
 
 > `optional` **componentLoadingMessage**: `string`
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:73](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L73)
+Defined in: [packages/react/src/components/Placeholder/models.ts:73](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L73)
 
 The message that gets displayed while component is loading
 
@@ -32,7 +32,7 @@ The message that gets displayed while component is loading
 
 > **componentMap**: [`ComponentMap`](../type-aliases/ComponentMap.md)
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:125](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L125)
+Defined in: [packages/react/src/components/Placeholder/models.ts:125](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L125)
 
 Component Map will be used to map Sitecore component names to app implementation
 When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
@@ -44,7 +44,7 @@ When rendered as a server placeholder, this prop must be provided. This prop is 
 
 > `optional` **disableSuspense**: `boolean`
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:78](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L78)
+Defined in: [packages/react/src/components/Placeholder/models.ts:78](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L78)
 
 If true, disables Suspense in ErrorBoundary for the placeholder.
 
@@ -64,7 +64,7 @@ false
 
 > `optional` **errorComponent**: `ComponentClass`\<`ErrorComponentProps`, `any`\> \| `FC`\<`ErrorComponentProps`\>
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:64](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L64)
+Defined in: [packages/react/src/components/Placeholder/models.ts:64](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L64)
 
 A component that is rendered in place of the placeholder when an error occurs rendering
 the placeholder
@@ -79,7 +79,7 @@ the placeholder
 
 > `optional` **fields**: `object`
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:38](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L38)
+Defined in: [packages/react/src/components/Placeholder/models.ts:38](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L38)
 
 An object of field names/values that are aggregated and propagated through the component tree created by a placeholder.
 Any component or placeholder rendered by a placeholder will have access to this data via `props.fields`.
@@ -98,7 +98,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 > `optional` **hiddenRenderingComponent**: `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\>
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:58](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L58)
+Defined in: [packages/react/src/components/Placeholder/models.ts:58](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L58)
 
 A component that is rendered in place of any components that are hidden
 
@@ -112,7 +112,7 @@ A component that is rendered in place of any components that are hidden
 
 > `optional` **missingComponentComponent**: `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\>
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:53](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L53)
+Defined in: [packages/react/src/components/Placeholder/models.ts:53](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L53)
 
 A component that is rendered in place of any components that are in this placeholder,
 but do not have a definition in the componentMap (i.e. don't have a React implementation)
@@ -127,7 +127,7 @@ but do not have a definition in the componentMap (i.e. don't have a React implem
 
 > `optional` **modifyComponentProps**: (`componentProps`) => `AppComponentProps`
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:132](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L132)
+Defined in: [packages/react/src/components/Placeholder/models.ts:132](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L132)
 
 Modify final props of component (before render) provided by rendering data.
 Can be used in case when you need to insert additional data into the component.
@@ -150,7 +150,7 @@ modified or initial props
 
 > **name**: `string`
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:31](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L31)
+Defined in: [packages/react/src/components/Placeholder/models.ts:31](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L31)
 
 Name of the placeholder to render.
 
@@ -164,7 +164,7 @@ Name of the placeholder to render.
 
 > **page**: [`Page`](../type-aliases/Page.md)
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:69](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L69)
+Defined in: [packages/react/src/components/Placeholder/models.ts:69](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L69)
 
 Page data.
 This data is passed by the SitecoreProvider.
@@ -179,7 +179,7 @@ This data is passed by the SitecoreProvider.
 
 > `optional` **params**: `object`
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:45](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L45)
+Defined in: [packages/react/src/components/Placeholder/models.ts:45](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L45)
 
 An object of rendering parameter names/values that are aggregated and propagated through the component tree created by a placeholder.
 Any component or placeholder rendered by a placeholder will have access to this data via `props.params`.
@@ -198,7 +198,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 > `optional` **render**: (`components`, `data`, `props`) => `ReactNode`
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:138](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L138)
+Defined in: [packages/react/src/components/Placeholder/models.ts:138](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L138)
 
 Render props function that enables control over the rendering of the components in the placeholder.
 Useful for techniques like wrapping each child in a wrapper component.
@@ -221,7 +221,7 @@ Useful for techniques like wrapping each child in a wrapper component.
 
 > `optional` **renderEach**: (`component`, `index`) => `ReactNode`
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:88](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L88)
+Defined in: [packages/react/src/components/Placeholder/models.ts:88](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L88)
 
 Render props function that is called for each non-system component added to the placeholder.
 Mutually exclusive with `render`.
@@ -247,7 +247,7 @@ Mutually exclusive with `render`.
 
 > `optional` **renderEmpty**: (`components`) => `ReactNode`
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:82](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L82)
+Defined in: [packages/react/src/components/Placeholder/models.ts:82](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L82)
 
 Render props function that is called when the placeholder contains no content components.
 
@@ -271,7 +271,7 @@ Render props function that is called when the placeholder contains no content co
 
 > **rendering**: [`ComponentRendering`](ComponentRendering.md)\<[`ComponentFields`](ComponentFields.md)\> \| [`RouteData`](RouteData.md)\<`Record`\<`string`, [`Field`](Field.md)\<`GenericFieldValue`\> \| [`Item`](Item.md) \| [`Item`](Item.md)[]\>\>
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:33](https://github.com/Sitecore/content-sdk/blob/34c7cd724603943e1a1fa289cebab8b5d2a77b03/packages/react/src/components/Placeholder/models.ts#L33)
+Defined in: [packages/react/src/components/Placeholder/models.ts:33](https://github.com/Sitecore/content-sdk/blob/c6539d55185180828821fcf33050229fcd7ba921/packages/react/src/components/Placeholder/models.ts#L33)
 
 Rendering data to be used when rendering the placeholder.
 
