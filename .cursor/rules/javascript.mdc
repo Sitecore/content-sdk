@@ -77,16 +77,16 @@ Input Validation:
 - Escape content when rendering to prevent XSS
 
 ```typescript
-async function fetchPageData(path: string): Promise<Page | null> {
-  if (!path) {
-    throw new Error('Page path is required');
+async function fetchContent(id: string): Promise<ContentItem> {
+  if (!id) {
+    throw new Error('Content ID is required');
   }
 
   try {
-    const pageData = await client.getPage(path);
-    return pageData;
+    const response = await sitecoreClient.getItem(id);
+    return response.data;
   } catch (error) {
-    throw new SitecoreFetchError(`Failed to fetch page data for ${path}`, error);
+    throw new SitecoreFetchError(`Failed to fetch content ${id}`, error);
   }
 }
 ```
@@ -131,3 +131,4 @@ Referenced:
 @packages/create-content-sdk-app/src/templates/nextjs/src/components/
 @packages/nextjs/src/components/
 @packages/core/src/models.ts
+

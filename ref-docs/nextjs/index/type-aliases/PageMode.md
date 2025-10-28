@@ -8,7 +8,7 @@
 
 > **PageMode** = `object`
 
-Defined in: core/types/client/sitecore-client.d.ts:25
+Defined in: core/types/client/sitecore-client.d.ts:24
 
 Represents the mode of the page
 
@@ -18,7 +18,7 @@ Represents the mode of the page
 
 > **designLibrary**: `object`
 
-Defined in: core/types/client/sitecore-client.d.ts:33
+Defined in: core/types/client/sitecore-client.d.ts:32
 
 Design Library related properties. Only available in Design Library mode.
 
@@ -34,7 +34,7 @@ Whether the page is in variant generation mode
 
 > **isDesignLibrary**: `boolean`
 
-Defined in: core/types/client/sitecore-client.d.ts:54
+Defined in: core/types/client/sitecore-client.d.ts:53
 
 Whether the page is in Design Library mode
 
@@ -44,7 +44,7 @@ Whether the page is in Design Library mode
 
 > **isEditing**: `boolean`
 
-Defined in: core/types/client/sitecore-client.d.ts:50
+Defined in: core/types/client/sitecore-client.d.ts:49
 
 Whether the page is in editing mode
 
@@ -54,7 +54,7 @@ Whether the page is in editing mode
 
 > **isNormal**: `boolean`
 
-Defined in: core/types/client/sitecore-client.d.ts:42
+Defined in: core/types/client/sitecore-client.d.ts:41
 
 Whether the page is in normal mode
 
@@ -64,7 +64,7 @@ Whether the page is in normal mode
 
 > **isPreview**: `boolean`
 
-Defined in: core/types/client/sitecore-client.d.ts:46
+Defined in: core/types/client/sitecore-client.d.ts:45
 
 Whether the page is in preview mode
 
@@ -74,6 +74,6 @@ Whether the page is in preview mode
 
 > **name**: `PageModeName`
 
-Defined in: core/types/client/sitecore-client.d.ts:29
+Defined in: core/types/client/sitecore-client.d.ts:28
 
 Page mode name.

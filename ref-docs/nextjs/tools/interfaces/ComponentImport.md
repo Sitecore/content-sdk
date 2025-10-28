@@ -6,7 +6,7 @@
 
 # Interface: ComponentImport
 
-Defined in: core/types/tools/templating/components.d.ts:46
+Defined in: core/types/tools/templating/components.d.ts:24
 
 Definition for custom components to be included in component map.
 Use this to define components imported from modules/dependencies/packages
@@ -17,21 +17,17 @@ Use this to define components imported from modules/dependencies/packages
 
 > **importInfo**: `object`
 
-Defined in: core/types/tools/templating/components.d.ts:50
+Defined in: core/types/tools/templating/components.d.ts:26
 
-Information about how to import the package
+Information about how to import the package.
 
 #### importFrom
 
 > **importFrom**: `string`
 
-The path from which to import the component(s)
-
 #### namedImports?
 
 > `optional` **namedImports**: `string`[]
-
-The specific named components to import from the package. Leave empty to have whole package be imported as wildcard and allow SXA variants support for component.
 
 ***
 
@@ -39,6 +35,6 @@ The specific named components to import from the package. Leave empty to have wh
 
 > **importName**: `string`
 
-Defined in: core/types/tools/templating/components.d.ts:48
+Defined in: core/types/tools/templating/components.d.ts:25
 
-The name of the import (e.g., 'MyComponent')
+Name of the import.

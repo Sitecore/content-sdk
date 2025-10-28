@@ -4,7 +4,6 @@ import { deepMerge, defineConfig, getFallbackConfig } from './define-config';
 import { SitecoreConfigInput } from './models';
 import { DefaultRetryStrategy } from '..';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
 
 describe('define-config', () => {
   const mockConfig: SitecoreConfigInput = {
@@ -68,6 +67,22 @@ describe('define-config', () => {
     // dictionary caching
     expect(config.dictionary.caching.enabled).to.equal(fallback.dictionary.caching.enabled);
     expect(config.dictionary.caching.timeout).to.equal(fallback.dictionary.caching.timeout);
+  });
+
+  it('throws when server-side has neither Edge contextId nor Local credentials', () => {
+    const badConfig: SitecoreConfigInput = {
+      api: {
+        edge: {
+          contextId: '',
+          clientContextId: 'client-id', // client-only is NOT sufficient on the server
+        },
+        // no local creds provided
+      },
+    };
+
+    expect(() => defineConfig(badConfig)).to.throw(
+      'Configuration error: provide either Edge contextId'
+    );
   });
 
   it('applies fallback personalize timeouts when values are falsy', () => {
@@ -192,6 +207,13 @@ describe('define-config', () => {
     expect(() => defineConfig(cfg)).to.not.throw();
   });
 
+  it('fails when only clientContextId is provided (no local creds)', () => {
+    const cfg: SitecoreConfigInput = {
+      api: { edge: { contextId: '', clientContextId: 'client-id' } },
+    };
+    expect(() => defineConfig(cfg)).to.throw('Configuration error: provide either Edge contextId');
+  });
+
   it('allows local-only when contextId is missing', () => {
     const cfg: SitecoreConfigInput = {
       api: {
@@ -202,84 +224,9 @@ describe('define-config', () => {
     expect(() => defineConfig(cfg)).to.not.throw();
   });
 
-  describe('runtime validation (on config access)', () => {
-    it('fails when only clientContextId is provided (no local creds)', () => {
-      const cfg: SitecoreConfigInput = {
-        api: { edge: { contextId: '', clientContextId: 'client-id' } },
-      };
-      expect(() => defineConfig(cfg)).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
-    });
-
-    it('throws when server-side has neither Edge contextId nor Local credentials', () => {
-      const badConfig: SitecoreConfigInput = {
-        api: {
-          edge: {
-            contextId: '',
-            clientContextId: 'client-id', // client-only is NOT sufficient on the server
-          },
-          // no local creds provided
-        },
-      };
-
-      expect(() => defineConfig(badConfig)).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
-    });
-
-    it('fails when API configuration is empty', () => {
-      const cfg = { api: {} } as SitecoreConfigInput;
-      expect(() => defineConfig(cfg)).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
-    });
-  });
-
-  describe('build time validation (on property access)', () => {
-    before(() => {
-      process.env[SITECORE_CLI_MODE_ENV_VAR] = 'true';
-    });
-
-    after(() => {
-      delete process.env[SITECORE_CLI_MODE_ENV_VAR];
-    });
-
-    it('fails when only clientContextId is provided (no local creds)', () => {
-      const cfg: SitecoreConfigInput = {
-        api: { edge: { contextId: '', clientContextId: 'client-id' } },
-      };
-
-      const config = defineConfig(cfg);
-
-      expect(() => config.api.edge.contextId).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
-    });
-
-    it('throws when server-side has neither Edge contextId nor Local credentials', () => {
-      const badConfig: SitecoreConfigInput = {
-        api: {
-          edge: {
-            contextId: '',
-            clientContextId: 'client-id', // client-only is NOT sufficient on the server
-          },
-          // no local creds provided
-        },
-      };
-
-      const config = defineConfig(badConfig);
-
-      expect(() => config.api).to.throw('Configuration error: provide either Edge contextId');
-    });
-
-    it('fails when API configuration is empty', () => {
-      const cfg = { api: {} } as SitecoreConfigInput;
-
-      const config = defineConfig(cfg);
-
-      expect(() => config.api).to.throw('Configuration error: provide either Edge contextId');
-    });
+  it('fails when API configuration is empty', () => {
+    const cfg = { api: {} } as SitecoreConfigInput;
+    expect(() => defineConfig(cfg)).to.throw('Configuration error: provide either Edge contextId');
   });
 
   describe('validateConfig server-side behaviour', () => {
@@ -289,52 +236,26 @@ describe('define-config', () => {
       originalWindow = (global as any).window;
       delete (global as any).window; // simulate server
     });
-
     afterEach(() => {
       if (originalWindow !== undefined) (global as any).window = originalWindow;
+    });
+
+    it('logs warning but does not throw when clientContextId is missing (Edge server-only)', () => {
+      const cfg = { api: { edge: { contextId: 'server-id' } } };
+      expect(() => defineConfig(cfg)).to.not.throw();
+      expect(defineConfig(cfg).api.edge.clientContextId).to.equal('');
+    });
+
+    it('requires Edge or Local; clientContextId alone is insufficient', () => {
+      const cfg = { api: { edge: { contextId: '', clientContextId: 'client-id' } } };
+      expect(() => defineConfig(cfg)).to.throw(
+        'Configuration error: provide either Edge contextId'
+      );
     });
 
     it('accepts local-only on the server', () => {
       const cfg = { api: { edge: { contextId: '' }, local: { apiKey: 'k', apiHost: 'h' } } };
       expect(() => defineConfig(cfg as any)).to.not.throw();
-    });
-
-    describe('runtime validation (on config access)', () => {
-      it('logs warning but does not throw when clientContextId is missing (Edge server-only)', () => {
-        const cfg = { api: { edge: { contextId: 'server-id' } } };
-        expect(() => defineConfig(cfg)).to.not.throw();
-        expect(defineConfig(cfg).api.edge.clientContextId).to.equal('');
-      });
-
-      it('requires Edge or Local; clientContextId alone is insufficient', () => {
-        const cfg = { api: { edge: { contextId: '', clientContextId: 'client-id' } } };
-        expect(() => defineConfig(cfg)).to.throw(
-          'Configuration error: provide either Edge contextId'
-        );
-      });
-    });
-
-    describe('build time validation (on property access)', () => {
-      before(() => {
-        process.env[SITECORE_CLI_MODE_ENV_VAR] = 'true';
-      });
-
-      after(() => {
-        delete process.env[SITECORE_CLI_MODE_ENV_VAR];
-      });
-
-      it('logs warning but does not throw when clientContextId is missing (Edge server-only)', () => {
-        const cfg = { api: { edge: { contextId: 'server-id' } } };
-        const config = defineConfig(cfg);
-        expect(() => config.api.edge.clientContextId).to.not.throw();
-        expect(config.api.edge.clientContextId).to.equal('');
-      });
-
-      it('requires Edge or Local; clientContextId alone is insufficient', () => {
-        const cfg = { api: { edge: { contextId: '', clientContextId: 'client-id' } } };
-        const config = defineConfig(cfg);
-        expect(() => config.api).to.throw('Configuration error: provide either Edge contextId');
-      });
     });
   });
 });

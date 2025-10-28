@@ -1,7 +1,6 @@
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { DefaultRetryStrategy } from '../retries';
 import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
-import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
 
 /**
  * Provides default initial values for SitecoreConfig
@@ -113,7 +112,7 @@ const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): Sit
   return result;
 };
 
-const validateApiConfiguration = (config: SitecoreConfigInput): void => {
+const validateConfig = (config: SitecoreConfigInput): void => {
   const isBrowser = typeof window !== 'undefined';
   const hasEdgeContextId = !!config.api?.edge?.contextId;
   const hasClientContextId = !!config.api?.edge?.clientContextId;
@@ -150,68 +149,6 @@ const validateApiConfiguration = (config: SitecoreConfigInput): void => {
 };
 
 /**
- * The paths to validate the config object during build time.
- */
-type ProxyValidationPaths = {
-  api: keyof SitecoreConfigInput['api'];
-};
-
-/**
- * The validator for the config object during build time.
- */
-type ProxyValidator = (config: SitecoreConfigInput) => void;
-
-/**
- * The validators for the config object during build time.
- * Validators are called when the literal path of the config object is accessed.
- */
-const PROPERTY_VALIDATORS: Record<keyof ProxyValidationPaths, ProxyValidator> = {
-  api: validateApiConfiguration,
-};
-
-/**
- * Creates a proxy for the config object to validate the config object during build time.
- * @param {SitecoreConfig} config - The config object to create a proxy for.
- * @returns {SitecoreConfig} The proxy for the config object.
- */
-const createConfigProxy = (config: SitecoreConfig) => {
-  const validated = new Set<keyof ProxyValidationPaths>();
-
-  const createProxy = (target: SitecoreConfig, propPath = '') => {
-    return new Proxy<SitecoreConfig>(target, {
-      get(obj, prop, receiver) {
-        // Skip symbol properties, do not attempt to stringify them
-        // Type safety check
-        if (typeof prop === 'symbol') {
-          return Reflect.get(obj, prop, receiver);
-        }
-
-        const fullPath = propPath ? `${propPath}.${prop}` : prop;
-
-        const value = Reflect.get(obj, prop, receiver);
-
-        if (
-          fullPath in PROPERTY_VALIDATORS &&
-          !validated.has(fullPath as keyof ProxyValidationPaths)
-        ) {
-          const validator = PROPERTY_VALIDATORS[fullPath as keyof ProxyValidationPaths];
-          validator(config);
-          validated.add(fullPath as keyof ProxyValidationPaths);
-        }
-
-        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-          return createProxy(value, fullPath);
-        }
-
-        return value;
-      },
-    });
-  };
-
-  return createProxy(config);
-};
-
-/**
  * Accepts a SitecoreConfigInput object and returns full sitecore configuration
  * @param {SitecoreConfigInput} config override values to be written over default config settings
  * @returns {SitecoreConfig} full sitecore configuration to use in application
@@ -219,16 +156,7 @@ const createConfigProxy = (config: SitecoreConfig) => {
 export const defineConfig = (config: SitecoreConfigInput): SitecoreConfig => {
   const resolvedConfig = resolveConfig(getFallbackConfig(), config);
 
-  const isCLI = process.env[SITECORE_CLI_MODE_ENV_VAR] === 'true';
-
-  // At `build time`, we create a proxy for the config object to validate the config by
-  // accessing the literal paths instead of validating the whole object at once.
-  // At `runtime` all the config should be validated to fail fast in case of invalid configuration.
-  if (isCLI) {
-    return createConfigProxy(resolvedConfig);
-  }
-
-  validateApiConfiguration(resolvedConfig);
+  validateConfig(resolvedConfig);
 
   return resolvedConfig;
 };

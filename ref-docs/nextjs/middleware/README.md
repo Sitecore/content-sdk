@@ -8,8 +8,6 @@
 
 ## Classes
 
-- [AppRouterMultisiteMiddleware](classes/AppRouterMultisiteMiddleware.md)
-- [LocaleMiddleware](classes/LocaleMiddleware.md)
 - [Middleware](classes/Middleware.md)
 - [MiddlewareBase](classes/MiddlewareBase.md)
 - [MultisiteMiddleware](classes/MultisiteMiddleware.md)
@@ -20,7 +18,6 @@
 
 ## Type Aliases
 
-- [LocaleMiddlewareConfig](type-aliases/LocaleMiddlewareConfig.md)
 - [MiddlewareBaseConfig](type-aliases/MiddlewareBaseConfig.md)
 - [MultisiteMiddlewareConfig](type-aliases/MultisiteMiddlewareConfig.md)
 - [PersonalizeMiddlewareConfig](type-aliases/PersonalizeMiddlewareConfig.md)

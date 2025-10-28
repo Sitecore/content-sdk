@@ -37,7 +37,7 @@ describe('initialize', () => {
     getInitializerStub = sinon.stub(initialize, 'getInitializer');
     openJsonFileStub = sinon
       .stub(helpers, 'openJsonFile')
-      .returns({ name: defaultAppName });
+      .returns({ config: { appName: defaultAppName } });
   });
 
   afterEach(() => {

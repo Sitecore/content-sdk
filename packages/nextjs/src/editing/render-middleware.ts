@@ -7,7 +7,6 @@ import { IncomingHttpHeaders } from 'http';
 
 /**
  * Base class for middleware that handles pages and components rendering in Sitecore Editors.
- * @deprecated getQueryParamsForPropagation and getHeadersForPropagation methods have been moved to separate exports
  */
 export abstract class RenderMiddlewareBase {
   /**
@@ -38,13 +37,11 @@ export abstract class RenderMiddlewareBase {
    * @returns Object of approved headers
    */
   protected getHeadersForPropagation = (
-    headers: IncomingHttpHeaders | Headers
+    headers: IncomingHttpHeaders
   ): { [key: string]: string } => {
     // Filter and normalize headers
     const filteredHeaders = EDITING_PASS_THROUGH_HEADERS.reduce((acc, header) => {
-      const value = (headers as Headers).get
-        ? (headers as Headers).get(header)
-        : (headers as IncomingHttpHeaders)[header];
+      const value = headers[header];
       if (value) {
         acc[header] = Array.isArray(value) ? value.join(', ') : value;
       }

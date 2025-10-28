@@ -18,21 +18,17 @@ Configuration object for generating sites.
 
 > `optional` **destinationPath**: `string`
 
-Defined in: core/types/tools/generateSites.d.ts:15
+Defined in: core/types/tools/generateSites.d.ts:14
 
 Optional path where the generated sites will be saved.
 If not provided, the default '.sitecore/sites.json' will be used.
 
 ***
 
-### ~~scConfig?~~
+### scConfig
 
-> `optional` **scConfig**: `SitecoreConfig`
+> **scConfig**: `SitecoreConfig`
 
-Defined in: core/types/tools/generateSites.d.ts:10
+Defined in: core/types/tools/generateSites.d.ts:9
 
 The Sitecore configuration used at build and run time.
-
-#### Deprecated
-
-Pass `config` to the `defineCliConfig` function instead. This argument will be removed in the next major version.

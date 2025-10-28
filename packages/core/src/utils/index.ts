@@ -4,7 +4,6 @@ export {
   isAbsoluteUrl,
   isTimeoutError,
   enforceCors,
-  getEnforcedCorsHeaders,
   EnhancedOmit,
   getAllowedOriginsFromEnv,
   isRegexOrUrl,

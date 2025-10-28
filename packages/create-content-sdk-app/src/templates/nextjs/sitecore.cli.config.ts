@@ -8,14 +8,18 @@ import {
 } from '@sitecore-content-sdk/nextjs/tools';
 
 export default defineCliConfig({
-  config: scConfig,
   build: {
     commands: [
       generateMetadata(),
-      generateSites(),
-      extractFiles(),
+      generateSites({
+        scConfig,
+      }),
+      extractFiles({
+        scConfig,
+      }),
       writeImportMap({
         paths: ['src/components'],
+        scConfig,
       }),
     ],
   },

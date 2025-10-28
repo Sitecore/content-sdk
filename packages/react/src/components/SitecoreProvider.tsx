@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
 import { Page } from '@sitecore-content-sdk/core/client';

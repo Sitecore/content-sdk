@@ -1,5 +1,4 @@
-﻿'use client';
-import React, { JSX } from 'react';
+﻿import React, { JSX } from 'react';
 import { useSitecore } from '../enhancers/withSitecore';
 import { getContentSdkPagesClientData } from '@sitecore-content-sdk/core/editing';
 import { getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
