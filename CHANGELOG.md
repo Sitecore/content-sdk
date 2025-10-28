@@ -12,6 +12,8 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+## 1.2.0
+
 ### 🎉 New Features & Improvements
 
 * Next.js App Router support:
