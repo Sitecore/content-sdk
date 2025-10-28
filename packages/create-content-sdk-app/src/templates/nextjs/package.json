@@ -27,15 +27,10 @@
     "@sitecore-content-sdk/nextjs": "<%- version %>",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",
-    "bootstrap": "^5.3.6",
-    "font-awesome": "^4.7.0",
     "next": "^15.3.2",
     "next-localization": "^0.12.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "sass": "^1.87.0",
-    "sass-alias": "^1.0.5",
-    "sharp": "0.34.1"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@sitecore-content-sdk/cli": "<%- version %>",
@@ -67,7 +62,7 @@
     "sitecore-tools:generate-map": "sitecore-tools project component generate-map",
     "sitecore-tools:generate-map:watch": "sitecore-tools project component generate-map --watch",
     "sitecore-tools:build": "sitecore-tools project build",
-    "dev": "cross-env NODE_ENV=development npm-run-all --serial sitecore-tools:build --parallel next:dev sitecore-tools:generate-map:watch",
+    "dev": "cross-env NODE_ENV=development npm-run-all --serial sitecore-tools:generate-map sitecore-tools:build --parallel next:dev sitecore-tools:generate-map:watch",
     "start": "cross-env-shell NODE_ENV=production npm-run-all --serial build next:start"
   }
 }

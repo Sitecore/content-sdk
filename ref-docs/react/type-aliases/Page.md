@@ -8,7 +8,7 @@
 
 > **Page** = `object`
 
-Defined in: packages/core/types/client/sitecore-client.d.ts:58
+Defined in: packages/core/types/client/sitecore-client.d.ts:59
 
 Represent a Page model returned from Edge endpoint
 
@@ -18,7 +18,7 @@ Represent a Page model returned from Edge endpoint
 
 > **layout**: [`LayoutServiceData`](../interfaces/LayoutServiceData.md)
 
-Defined in: packages/core/types/client/sitecore-client.d.ts:62
+Defined in: packages/core/types/client/sitecore-client.d.ts:63
 
 Layout details and props for the page
 
@@ -28,7 +28,7 @@ Layout details and props for the page
 
 > **locale**: `string`
 
-Defined in: packages/core/types/client/sitecore-client.d.ts:70
+Defined in: packages/core/types/client/sitecore-client.d.ts:71
 
 Route locale
 
@@ -38,7 +38,7 @@ Route locale
 
 > **mode**: [`PageMode`](PageMode.md)
 
-Defined in: packages/core/types/client/sitecore-client.d.ts:74
+Defined in: packages/core/types/client/sitecore-client.d.ts:75
 
 Page mode
 
@@ -48,6 +48,6 @@ Page mode
 
 > `optional` **siteName**: `string`
 
-Defined in: packages/core/types/client/sitecore-client.d.ts:66
+Defined in: packages/core/types/client/sitecore-client.d.ts:67
 
 Site name for current page / route

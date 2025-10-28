@@ -1,4 +1,5 @@
-﻿/* eslint-disable jsdoc/require-param */
+﻿'use client';
+/* eslint-disable jsdoc/require-param */
 /* eslint-disable prefer-const */
 import React, { useEffect, useState } from 'react';
 import { Placeholder } from './Placeholder';
@@ -15,7 +16,7 @@ import {
 } from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { useSitecore } from '../enhancers/withSitecore';
-import { PlaceholderMetadata } from './PlaceholderMetadata';
+import { PlaceholderMetadata } from './Placeholder';
 
 let {
   getDesignLibraryImportMapEvent,

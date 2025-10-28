@@ -1,4 +1,5 @@
-﻿import React, { ReactNode, Suspense } from 'react';
+﻿'use client';
+import React, { ReactNode, Suspense } from 'react';
 import { Page } from '@sitecore-content-sdk/core/client';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { withSitecore } from '../enhancers/withSitecore';
@@ -10,7 +11,6 @@ type ErrorComponentProps = {
 export type ErrorBoundaryProps = {
   children: ReactNode;
   page: Page;
-  type: string;
   isDynamic?: boolean;
   errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
   rendering?: ComponentRendering;

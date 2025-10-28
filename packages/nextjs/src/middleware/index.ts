@@ -3,8 +3,10 @@ export { MiddlewareBase, MiddlewareBaseConfig, Middleware, defineMiddleware } fr
 export { RedirectsMiddleware, RedirectsMiddlewareConfig } from './redirects-middleware';
 export { PersonalizeMiddleware, PersonalizeMiddlewareConfig } from './personalize-middleware';
 export { MultisiteMiddleware, MultisiteMiddlewareConfig } from './multisite-middleware';
+export { AppRouterMultisiteMiddleware } from './app-router-multisite-middleware';
 export { SitemapMiddleware } from './sitemap-middleware';
 export { RobotsMiddleware } from './robots-middleware';
+export { LocaleMiddleware, LocaleMiddlewareConfig } from './locale-middleware';
 export {
   PersonalizeService,
   PersonalizeServiceConfig,
