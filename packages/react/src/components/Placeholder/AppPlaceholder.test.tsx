@@ -35,7 +35,7 @@ import { MissingComponent, MissingComponentProps } from '../MissingComponent';
 import { AppPlaceholder } from './AppPlaceholder';
 import { AppComponentProps, ComponentProps } from './models';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
-import * as placeholderUtils from './placeholder-utils';
+import * as rscUtils from '#rsc-env';
 import * as ClientComponentWrapperModule from './ClientComponentWrapper';
 
 describe('App Placeholder logic', () => {
@@ -1042,7 +1042,7 @@ describe('App Placeholder logic', () => {
     });
 
     it('should render client component wrapper when component is marker as client and rendered in RSC context', () => {
-      sandbox.stub(placeholderUtils, 'getRSC').returns(true);
+      sandbox.replace(rscUtils, 'rsc', true as any);
       sandbox
         .stub(ClientComponentWrapperModule, 'ClientComponentWrapper')
         .returns(<div className="client-component-wrapper">Client Component Wrapper</div>);
