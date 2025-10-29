@@ -1,5 +1,6 @@
 import React, { JSX } from 'react';
-import { AppPlaceholder, Field, Page } from '@sitecore-content-sdk/nextjs';
+import { Field, Page } from '@sitecore-content-sdk/nextjs';
+import { AppPlaceholder } from '@sitecore-content-sdk/nextjs/rsc';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'components/content-sdk/SitecoreStyles';
 import { DesignLibraryLayout } from './DesignLibraryLayout';

@@ -35,7 +35,7 @@ import { MissingComponent, MissingComponentProps } from '../MissingComponent';
 import { AppPlaceholder } from './AppPlaceholder';
 import { AppComponentProps, ComponentProps } from './models';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
-import * as placeholderUtils from './placeholder-utils';
+import * as placeholderUtils from './AppPlaceholder';
 import * as ClientComponentWrapperModule from './ClientComponentWrapper';
 
 describe('App Placeholder logic', () => {

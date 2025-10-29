@@ -22,6 +22,7 @@
     "route-handler.d.ts",
     "editing.d.ts",
     "monitoring.d.ts",
+    "rsc.d.ts",
     "component-props-loader.d.ts",
     "site.d.ts",
     "client.d.ts",
@@ -32,6 +33,6 @@
     "src/test-data/*",
     "**/*.test.ts",
     "**/*.test.tsx",
-    "src/tools/codegen/test-data/*",
+    "src/tools/codegen/test-data/*"
   ]
 }

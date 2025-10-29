@@ -162,6 +162,4 @@ export {
   EditingScripts,
   Form,
   ClientEditingChromesUpdate,
-  AppPlaceholder,
-  AppPlaceholderProps,
 } from '@sitecore-content-sdk/react';

@@ -16,6 +16,7 @@
     "types",
     "typings",
     "dist",
+    "rsc.d.ts",
     "src/tests/*",
     "src/test-data/*",
     "**/*.test.ts",

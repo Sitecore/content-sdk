@@ -4,13 +4,21 @@ import {
   getComponentForRendering,
   getPlaceholderRenderings,
   renderEmptyPlaceholder,
-  getRSC,
 } from './placeholder-utils';
 import React from 'react';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import ErrorBoundary from '../ErrorBoundary';
 import { ClientComponentWrapper } from './ClientComponentWrapper';
+import { rsc } from 'rsc-env';
+
+/**
+ * Get the RSC environment variable.
+ * @returns {boolean} true if RSC is enabled, false otherwise.
+ */
+export function getRSC(): boolean {
+  return rsc;
+}
 
 /**
  * The implemention of placeholder compatible with React Server Components.
