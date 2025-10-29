@@ -11,7 +11,7 @@ import * as metadataData from '../test-data/metadata-data';
 import { withAppPlaceholder, ComponentProps, WrapperProps } from './withAppPlaceholder';
 import { SitecoreProvider } from '../components/SitecoreProvider';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
-import { AppPlaceholder } from '../components/Placeholder';
+import { AppPlaceholder } from '../components/Placeholder/index-rsc';
 
 type CalloutProps = ComponentProps & {
   [prop: string]: unknown;

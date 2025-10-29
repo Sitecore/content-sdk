@@ -32,13 +32,15 @@ import * as FEAASWrapper from '../FEaaS/FEaaSWrapper';
 import * as HiddenRendering from '../HiddenRendering';
 import * as ErrorBoundary from '../ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
-import { AppPlaceholder } from './AppPlaceholder';
-import { AppComponentProps, ComponentProps } from './models';
+import * as AppPlaceholderImport from './AppPlaceholder';
+import { AppComponentProps } from './models';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
-import * as placeholderUtils from './AppPlaceholder';
 import * as ClientComponentWrapperModule from './ClientComponentWrapper';
+import { unitMocks } from './AppPlaceholder';
 
 describe('App Placeholder logic', () => {
+  const AppPlaceholder = AppPlaceholderImport.AppPlaceholder;
+
   // Global sinon sandbox for all tests
   let sandbox: SinonSandbox;
 
@@ -1042,7 +1044,7 @@ describe('App Placeholder logic', () => {
     });
 
     it('should render client component wrapper when component is marker as client and rendered in RSC context', () => {
-      sandbox.stub(placeholderUtils, 'getRSC').returns(true);
+      unitMocks.getRSC = sandbox.stub().returns(true);
       sandbox
         .stub(ClientComponentWrapperModule, 'ClientComponentWrapper')
         .returns(<div className="client-component-wrapper">Client Component Wrapper</div>);

@@ -12,13 +12,27 @@ import ErrorBoundary from '../ErrorBoundary';
 import { ClientComponentWrapper } from './ClientComponentWrapper';
 import { rsc } from 'rsc-env';
 
+// mock setup for unit tests to make sinon happy and mock-able
+// https://sinonjs.org/how-to/typescript-swc/
+// This, plus the `_` names make the exports writable for sinon
+export const unitMocks = {
+  set getRSC(mockImplementation) {
+    getRSC = mockImplementation;
+  },
+  get getRSC() {
+    return _getRSC;
+  },
+};
+
 /**
  * Get the RSC environment variable.
  * @returns {boolean} true if RSC is enabled, false otherwise.
  */
-export function getRSC(): boolean {
+const _getRSC = (): boolean => {
   return rsc;
-}
+};
+
+export let getRSC = _getRSC;
 
 /**
  * The implemention of placeholder compatible with React Server Components.
