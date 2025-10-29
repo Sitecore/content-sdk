@@ -4,13 +4,13 @@ import {
   getComponentForRendering,
   getPlaceholderRenderings,
   renderEmptyPlaceholder,
-  getRSC,
 } from './placeholder-utils';
 import React from 'react';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import ErrorBoundary from '../ErrorBoundary';
 import { ClientComponentWrapper } from './ClientComponentWrapper';
+import { rsc } from '#rsc-env';
 
 /**
  * The implemention of placeholder compatible with React Server Components.
@@ -53,7 +53,7 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => {
       // Client wrapper is required only when component crosses boundary from server to client.
       // It happens when component is marker as client and rendered in RSC context.
       // Also, it is not required when component is hidden or empty, as it will be rendered whthout boundary crossing.
-      const useClientWrapper = isClient && getRSC() && !isEmpty;
+      const useClientWrapper = isClient && rsc && !isEmpty;
       let rendered = useClientWrapper ? (
         <ClientComponentWrapper
           rendering={rendering}
