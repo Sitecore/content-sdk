@@ -24,13 +24,12 @@ content-sdk/
 │   ├── create-content-sdk-app/    # Scaffolding CLI & templates
 │   ├── core/                      # Core SDK functionality
 │   ├── nextjs/                    # Next.js-specific SDK
-│   ├── react/                     # React components
+│   ├── react/                     # React-specific SDK
 │   └── cli/                       # Additional CLI tools
-├── .cursor/rules/                 # AI coding guidance
 └── samples/                       # Example applications
 ```
 
-Sources: `src/**` (within create-content-sdk-app package)
+Sources: `src/**`
 Never edit: `dist/**` (compiled output)
 
 Templates:
@@ -47,4 +46,3 @@ Initializers:
 Referenced:
 @packages/create-content-sdk-app/src/common/base/Initializer.ts
 @packages/create-content-sdk-app/src/initializers/nextjs/index.ts
-

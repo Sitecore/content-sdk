@@ -23,13 +23,13 @@
 
 ## Variables
 
+- [extractFiles](variables/extractFiles.md)
 - [generateMap](variables/generateMap.md)
 - [generateMetadata](variables/generateMetadata.md)
 - [generateSites](variables/generateSites.md)
+- [getComponentList](variables/getComponentList.md)
+- [writeImportMap](variables/writeImportMap.md)
 
 ## Functions
 
-- [extractFiles](functions/extractFiles.md)
 - [generatePlugins](functions/generatePlugins.md)
-- [getComponentList](functions/getComponentList.md)
-- [writeImportMap](functions/writeImportMap.md)

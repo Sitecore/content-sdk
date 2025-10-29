@@ -1,6 +1,11 @@
 import { ComponentType } from 'react';
 
 /**
+ * React component import with account for custom exports
+ */
+export type ReactJssComponent = (ComponentType | ReactModule) & { isClient?: boolean };
+
+/**
  * SXA uses custom default export name
  */
 export const DEFAULT_EXPORT_NAME = 'Default';

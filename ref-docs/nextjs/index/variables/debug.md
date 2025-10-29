@@ -43,6 +43,10 @@ See [https://www.npmjs.com/package/debug](https://www.npmjs.com/package/debug) f
 
 > **layout**: `debug.Debugger`
 
+### locale
+
+> **locale**: `debug.Debugger`
+
 ### multisite
 
 > **multisite**: `debug.Debugger`

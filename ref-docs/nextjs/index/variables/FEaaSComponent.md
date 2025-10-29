@@ -8,7 +8,7 @@
 
 > `const` **FEaaSComponent**: (`props`) => `JSX.Element`
 
-Defined in: react/types/components/FEaaSComponent.d.ts:56
+Defined in: react/types/components/FEaaS/FEaaSWrapper.d.ts:6
 
 ## Parameters
 

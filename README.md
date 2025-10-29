@@ -30,10 +30,18 @@ For more information check out our [Getting Started Guide](https://doc.sitecore.
 ## Documentation and community resources
 
 - Official documentation:
-- [XM Cloud](https://doc.sitecore.com/xmc/en/developers/jss/latest/jss-xmc/index-en.html)
+- [XM Cloud](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html)
 - [StackExchange](https://sitecore.stackexchange.com/)
 - [Community Slack](https://sitecorechat.slack.com/messages/content-sdk)
 - [Sitecore Community Forum](https://community.sitecore.net/developers/f/40)
+
+### AI Development Support
+
+- [Claude Code Agent Guide](CLAUDE.md) - Comprehensive guide for Claude Code Agent to generate consistent and idiomatic Sitecore Content SDK code
+- [GitHub Copilot Instructions](copilot-instructions.md) - Instructions for GitHub Copilot to provide accurate Sitecore Content SDK suggestions
+- [Cursor AI Rules](.cursor/rules/) - Cursor-specific coding rules and patterns for Sitecore Content SDK development
+- [Windsurf AI Rules](.windsurfrules) - Windsurf IDE configuration for Sitecore Content SDK development
+- [LLM Guidance](LLMs.txt) - General guidance for Large Language Models working with the Sitecore Content SDK
 
 ## Contributions
 

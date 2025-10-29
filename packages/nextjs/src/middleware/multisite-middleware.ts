@@ -3,7 +3,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/core/site';
 import { debug } from '@sitecore-content-sdk/core';
-import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
+import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
 import { SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/core/editing';
 
@@ -36,13 +36,10 @@ export class MultisiteMiddleware extends MiddlewareBase {
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
-    if (!this.config.enabled) {
-      debug.multisite('skipped (multisite middleware is disabled globally)');
-      return res;
-    }
     try {
-      const pathname = req.nextUrl.pathname;
-      const language = this.getLanguage(req);
+      // Path can be rewritten by previously executed middleware
+      const pathname = res?.headers.get(REWRITE_HEADER_NAME) || req.nextUrl.pathname;
+      const language = this.getLanguage(req, res);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
 
@@ -52,29 +49,43 @@ export class MultisiteMiddleware extends MiddlewareBase {
         hostname,
       });
 
-      if (this.disabled(req, res)) {
-        debug.multisite('skipped (multisite middleware is disabled)');
+      // We can't skip site name preservation for App Router in Preview since currently we rely on the site segment
+      // to be present in the path.
 
-        return res;
-      }
-
-      if (this.isPreview(req)) {
+      if (this.isPreview(req) && !this.isAppRouter(res)) {
         debug.multisite('skipped (preview)');
 
         return res;
       }
 
-      let siteName: string;
-
+      // Site name preservation is required for Sitecore Preview mode to support navigation between pages
       const isSitecorePreview = req.cookies.get(PREVIEW_KEY)?.value;
 
+      if (!isSitecorePreview) {
+        if (!this.config.enabled) {
+          debug.multisite('skipped (multisite middleware is disabled globally)');
+          return res;
+        }
+
+        if (this.disabled(req, res)) {
+          debug.multisite('skipped (multisite middleware is disabled)');
+
+          return res;
+        }
+      }
+
+      let siteName: string;
+
       if (isSitecorePreview) {
-        // This cookie is required to be set in the Sitecore Preview mode
+        // This cookie is required to be set in the Sitecore Preview mode to support navigation
+        // and preserve the site name
         siteName = req.cookies.get(SITE_KEY)?.value!;
       } else {
         // Site name can be forced by query string parameter or cookie
+        // 'site' is provided when running "preview" in AppRouter
         siteName =
           req.nextUrl.searchParams.get(SITE_KEY) ||
+          req.nextUrl.searchParams.get('site') ||
           (this.config.useCookieResolution &&
             this.config.useCookieResolution(req) &&
             req.cookies.get(SITE_KEY)?.value) ||
@@ -82,9 +93,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
       }
 
       // Rewrite to site specific path
-      const rewritePath = getSiteRewrite(pathname, {
-        siteName,
-      });
+      const rewritePath = this.getSiteRewrite(pathname, siteName);
 
       const response = this.rewrite(rewritePath, req, res);
 
@@ -116,5 +125,17 @@ export class MultisiteMiddleware extends MiddlewareBase {
   protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
     // ignore files
     return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
+  }
+
+  /**
+   * Generates a site-specific rewrite path based on the provided pathname and site name.
+   * @param {string} pathname - The pathname to be rewritten.
+   * @param {string} siteName - The name of the site.
+   * @returns The rewritten path as a string.
+   */
+  protected getSiteRewrite(pathname: string, siteName: string): string {
+    return getSiteRewrite(pathname, {
+      siteName,
+    });
   }
 }
