@@ -26,7 +26,6 @@ import {
   PlaceholderProps,
   RenderedProps,
 } from './models';
-import { rsc } from 'rsc-env';
 
 /**
  * Get the renderings for the specified placeholder from the rendering data.
@@ -261,11 +260,3 @@ export const getComponentForRendering = (
     isEmpty: false,
   };
 };
-
-/**
- * Get the RSC environment variable.
- * @returns {boolean} true if RSC is enabled, false otherwise.
- */
-export function getRSC(): boolean {
-  return rsc;
-}
