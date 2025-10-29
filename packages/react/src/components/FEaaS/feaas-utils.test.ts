@@ -1,19 +1,35 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect } from 'chai';
-import { createSandbox, SinonSandbox } from 'sinon';
-import {
-  fetchBYOCComponentServerProps,
-  fetchFEaaSComponentServerProps,
-  composeComponentEndpoint,
-} from './feaas-utils';
+import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
 import { BYOCComponentParams, FEaaSComponentParams, RevisionType } from './models';
+import proxyquire from 'proxyquire';
 
 describe('feaas-utils', () => {
   let sandbox: SinonSandbox;
 
+  let utilsModule: any;
+
+  let dataSettingsFetchStub: SinonStub;
+  let fetchDataStub: SinonStub;
+  let fetchComponentStub: SinonStub;
+
   beforeEach(() => {
     sandbox = createSandbox();
+
+    dataSettingsFetchStub = sandbox.stub().resolves({ test: 'data' });
+    fetchDataStub = sandbox.stub().resolves({ test: 'data' });
+    fetchComponentStub = sandbox.stub().resolves({ template: '<div>Test Component</div>' });
+
+    utilsModule = proxyquire('./feaas-utils', {
+      '@sitecore-feaas/clientside/react': {
+        DataSettings: {
+          fetch: dataSettingsFetchStub,
+        },
+        fetchData: fetchDataStub,
+        fetchComponent: fetchComponentStub,
+      },
+    });
   });
 
   afterEach(() => {
@@ -31,15 +47,10 @@ describe('feaas-utils', () => {
         ComponentName: 'TestComponent',
       };
 
-      try {
-        const result = await fetchBYOCComponentServerProps(params);
-        // The function should return the expected structure
-        expect(result).to.have.property('fetchedData');
-      } catch (error) {
-        // Expected since we don't have real FEAAS endpoints
-        // But we verify the function attempts to call FEAAS.DataSettings.fetch
-        expect(error).to.be.an('error');
-      }
+      const result = await utilsModule.fetchBYOCComponentServerProps(params);
+      // The function should return the expected structure
+      expect(result).to.deep.equal({ fetchedData: { test: 'data' } });
+      expect(dataSettingsFetchStub).to.have.been.calledOnce;
     });
 
     it('should pass ComponentDataOverride param when present', async () => {
@@ -49,12 +60,9 @@ describe('feaas-utils', () => {
         ComponentDataOverride: JSON.stringify(componentDataOverride),
       };
 
-      try {
-        await fetchBYOCComponentServerProps(params);
-      } catch (error) {
-        // We expect this to fail in test environment, but verify the structure
-        expect(error).to.be.an('error');
-      }
+      await utilsModule.fetchBYOCComponentServerProps(params);
+
+      expect(dataSettingsFetchStub).to.have.been.calledOnce;
 
       // Test the JSON parsing logic works
       expect(() => JSON.parse(params.ComponentDataOverride!)).to.not.throw();
@@ -73,16 +81,13 @@ describe('feaas-utils', () => {
         ComponentHostName: 'https://example.com',
       };
 
-      try {
-        const result = await fetchFEaaSComponentServerProps(params, true);
-        // Verify return structure
-        expect(result).to.have.property('fetchedData');
-        expect(result).to.have.property('revisionFallback');
-        expect(result).to.have.property('template');
-      } catch (error) {
-        // Expected in test environment - verify error handling
-        expect(error).to.be.an('error');
-      }
+      const result = await utilsModule.fetchFEaaSComponentServerProps(params, true);
+
+      expect(result).to.deep.equal({
+        fetchedData: { test: 'data' },
+        revisionFallback: 'published',
+        template: '<div>Test Component</div>',
+      });
     });
 
     it('should apply correct revision based on page state', async () => {
@@ -94,8 +99,8 @@ describe('feaas-utils', () => {
       };
 
       // Test the revision logic - this doesn't require mocking
-      const stagedResult = await fetchFEaaSComponentServerProps(params, false);
-      const publishedResult = await fetchFEaaSComponentServerProps(params, true);
+      const stagedResult = await utilsModule.fetchFEaaSComponentServerProps(params, false);
+      const publishedResult = await utilsModule.fetchFEaaSComponentServerProps(params, true);
 
       // Verify the revision fallback logic works correctly
       expect(stagedResult.revisionFallback).to.equal('staged');
@@ -111,12 +116,16 @@ describe('feaas-utils', () => {
       };
       const customEndpoint = 'https://custom.endpoint.com/component';
 
-      const result = await fetchFEaaSComponentServerProps(params, true, customEndpoint);
+      const result = await utilsModule.fetchFEaaSComponentServerProps(params, true, customEndpoint);
+
+      expect(fetchComponentStub).to.have.been.calledOnceWith(customEndpoint);
 
       // Verify the function completes and returns the expected structure
-      expect(result).to.have.property('fetchedData');
-      expect(result).to.have.property('revisionFallback', 'published');
-      expect(result).to.have.property('template');
+      expect(result).to.deep.equal({
+        fetchedData: { test: 'data' },
+        revisionFallback: 'published',
+        template: '<div>Test Component</div>',
+      });
     });
 
     it('should handle errors gracefully and return empty template', async () => {
@@ -129,7 +138,10 @@ describe('feaas-utils', () => {
         ComponentHostName: 'invalid.endpoint.com',
       };
 
-      const result = await fetchFEaaSComponentServerProps(params, true);
+      fetchComponentStub.rejects(new Error('Fetch FEAAS component template failed'));
+      dataSettingsFetchStub.rejects(new Error('Fetch FEAAS component data settings failed'));
+
+      const result = await utilsModule.fetchFEaaSComponentServerProps(params, true);
 
       // Verify error handling - should return empty template and empty fetchedData
       expect(consoleErrorStub).to.have.been.called;
@@ -155,7 +167,7 @@ describe('feaas-utils', () => {
       const parsed = JSON.parse(params.ComponentDataOverride!);
       expect(parsed).to.deep.equal(componentDataOverride);
 
-      const result = await fetchFEaaSComponentServerProps(params, true);
+      const result = await utilsModule.fetchFEaaSComponentServerProps(params, true);
 
       // Verify structure is returned
       expect(result).to.have.property('fetchedData');
@@ -165,7 +177,6 @@ describe('feaas-utils', () => {
 
   describe('composeComponentEndpoint', () => {
     it('should return endpoint based on provided params', () => {
-      // Arrange
       const params: FEaaSComponentParams = {
         LibraryId: 'myLibrary',
         ComponentId: 'myComponent',
@@ -175,10 +186,8 @@ describe('feaas-utils', () => {
       };
       const revisionFallback: RevisionType = 'staged';
 
-      // Act
-      const endpoint = composeComponentEndpoint(params, revisionFallback);
+      const endpoint = utilsModule.composeComponentEndpoint(params, revisionFallback);
 
-      // Assert
       expect(endpoint).to.equal(
         'https://feaas.example.com/components/myLibrary/myComponent/2.1.0/published'
       );
@@ -196,7 +205,7 @@ describe('feaas-utils', () => {
       const revisionFallback: RevisionType = 'staged';
 
       // Act
-      const endpoint = composeComponentEndpoint(params, revisionFallback);
+      const endpoint = utilsModule.composeComponentEndpoint(params, revisionFallback);
 
       // Assert
       expect(endpoint).to.equal('https://feaas.test.com/components/testLib/testComp/1.0.0/staged');
@@ -214,7 +223,7 @@ describe('feaas-utils', () => {
       const revisionFallback: RevisionType = 'staged';
 
       // Act
-      const endpoint = composeComponentEndpoint(params, revisionFallback);
+      const endpoint = utilsModule.composeComponentEndpoint(params, revisionFallback);
 
       // Assert
       expect(endpoint).to.equal('https://example.com/components/lib/comp/1.0.0/published');
@@ -232,7 +241,7 @@ describe('feaas-utils', () => {
       const revisionFallback: RevisionType = 'published';
 
       // Act
-      const endpoint = composeComponentEndpoint(params, revisionFallback);
+      const endpoint = utilsModule.composeComponentEndpoint(params, revisionFallback);
 
       // Assert
       expect(endpoint).to.equal('https://numeric.example.com/components/numLib/numComp/3.0.0/42');
@@ -250,7 +259,7 @@ describe('feaas-utils', () => {
       const revisionFallback: RevisionType = 'published';
 
       // Act
-      const endpoint = composeComponentEndpoint(params, revisionFallback);
+      const endpoint = utilsModule.composeComponentEndpoint(params, revisionFallback);
 
       // Assert
       expect(endpoint).to.equal(

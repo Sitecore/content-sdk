@@ -171,18 +171,18 @@ describe('extract-files', () => {
           .resolves({ data: {}, accessToken: 'test-token' });
         sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => fetchBearerTokenStub);
 
-        const consoleErrorStub = sandbox.stub(console, 'error');
+        const consoleWarnStub = sandbox.stub(console, 'warn');
 
         await run(args);
 
         expect(fetchBearerTokenStub.calledOnce).to.be.true;
-        expect(consoleErrorStub.calledOnce).to.be.true;
+        expect(consoleWarnStub.calledOnce).to.be.true;
         const expectedPath = path.resolve(process.cwd(), './.sitecore/component-map.ts');
 
-        const errorMessage = consoleErrorStub.firstCall.args[0];
-        expect(errorMessage).to.include('Error during code extraction:');
-        expect(errorMessage).to.include('Failed to find file');
-        expect(errorMessage).to.include(expectedPath);
+        const warnMessage = consoleWarnStub.firstCall.args[0];
+        expect(warnMessage).to.include('Error during code extraction:');
+        expect(warnMessage).to.include('Failed to find file');
+        expect(warnMessage).to.include(expectedPath);
       });
 
       it('should call sendCode for each component path and package.json', async () => {
