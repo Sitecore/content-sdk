@@ -140,7 +140,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
         )
       );
     } catch (error) {
-      console.error(chalk.red('Error during code extraction:', error, error.stack));
+      console.warn(chalk.yellow('Error during code extraction:', error, error.stack));
     }
   };
 }
