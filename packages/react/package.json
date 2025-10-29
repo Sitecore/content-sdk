@@ -88,10 +88,10 @@
     "#rsc-env": {
       "react-server": {
         "import": "./dist/esm/rsc-utils/rsc.js",
-        "require": "./dist/cjs/rsc-utils/rsc.js"
+        "default": "./dist/cjs/rsc-utils/rsc.js"
       },
       "import": "./dist/esm/rsc-utils/no-rsc.js",
-      "require": "./dist/cjs/rsc-utils/no-rsc.js"
+      "default": "./dist/cjs/rsc-utils/no-rsc.js"
     }
   }
 }
