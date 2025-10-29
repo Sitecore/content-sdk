@@ -9,7 +9,8 @@
     "types": ["node", "mocha"],
     "typeRoots": ["node_modules/@types"],
     "declarationDir": "./types",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": { "#rsc-env": ["./src/rsc-utils/rsc.d.ts"] }
   },
   "exclude": [
     "node_modules",
