@@ -8,7 +8,7 @@
 
 > **getSiteRewrite**(`pathname`, `data`): `string`
 
-Defined in: [packages/core/src/site/utils.ts:18](https://github.com/Sitecore/content-sdk/blob/0c888a2fdb81890effd584a22eba80368bdbff2c/packages/core/src/site/utils.ts#L18)
+Defined in: [packages/core/src/site/utils.ts:18](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/core/src/site/utils.ts#L18)
 
 Get a site rewrite path for given pathname
 

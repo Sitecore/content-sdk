@@ -10,7 +10,7 @@
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`): `T`
 
-Defined in: packages/core/types/layout/utils.d.ts:9
+Defined in: packages/core/types/layout/utils.d.ts:10
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.
@@ -38,7 +38,7 @@ the field value or null if the field is not defined
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`, `defaultValue`): `T`
 
-Defined in: packages/core/types/layout/utils.d.ts:10
+Defined in: packages/core/types/layout/utils.d.ts:11
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.
@@ -55,7 +55,7 @@ Null will be returned if the field is not defined.
 | ------ | ------ | ------ |
 | `renderingOrFields` | [`ComponentFields`](../interfaces/ComponentFields.md) \| [`ComponentRendering`](../interfaces/ComponentRendering.md)\<[`ComponentFields`](../interfaces/ComponentFields.md)\> | the rendering or fields object to extract the field from |
 | `fieldName` | `string` | the name of the field to extract |
-| `defaultValue` | `T` | - |
+| `defaultValue` | `T` |  |
 
 ### Returns
 

@@ -1,4 +1,4 @@
-﻿/* eslint-disable jsdoc/require-jsdoc */
+/* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
@@ -12,7 +12,7 @@ import { getTestLayoutData } from '../test-data/component-editing-data';
 import { SitecoreProvider } from './SitecoreProvider';
 import { RichText } from './RichText';
 import { Text } from './Text';
-import { Placeholder } from '..';
+import { Placeholder } from './Placeholder';
 
 import {
   DesignLibraryStatus,
@@ -24,6 +24,7 @@ import {
   DesignLibraryPreviewError,
   getDesignLibraryComponentPreviewErrorEvent,
 } from '@sitecore-content-sdk/core/codegen';
+import { after } from 'node:test';
 
 before(() => {
   if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
@@ -32,9 +33,11 @@ before(() => {
 });
 
 describe('<DesignLibrary />', () => {
+  after(() => {
+    sandbox.restore();
+  });
   const sandbox = sinon.createSandbox();
   const postMessageSpy = sandbox.spy(window, 'postMessage');
-  const consoleErrorSpy = sandbox.spy(console, 'error');
   const components = new Map<string, React.FC>();
 
   const api = {
@@ -161,7 +164,6 @@ describe('<DesignLibrary />', () => {
 
   beforeEach(() => {
     postMessageSpy.resetHistory();
-    consoleErrorSpy.resetHistory();
     unsubscribeSpy.resetHistory();
 
     if (typeof (globalThis as any).requestAnimationFrame === 'undefined') {
@@ -599,5 +601,8 @@ describe('<DesignLibrary />', () => {
 
       await waitFor(() => expectStatus(postMessageSpy, DesignLibraryStatus.RENDERED, RENDER_ID));
     });
+  });
+  after(() => {
+    sandbox.restore();
   });
 });

@@ -80,7 +80,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
     }
     try {
       const pathname = req.nextUrl.pathname;
-      const language = this.getLanguage(req);
+      const language = this.getLanguage(req, res);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
       const cdpTimeout = this.config.cdpTimeout;

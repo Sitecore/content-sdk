@@ -8,7 +8,7 @@
 
 > **LinkProps** = `EditableFieldProps`\<`LinkProps`\> & `React.AnchorHTMLAttributes`\<`HTMLAnchorElement`\> & `RefAttributes`\<`HTMLAnchorElement`\> & `object`
 
-Defined in: [packages/react/src/components/Link.tsx:26](https://github.com/Sitecore/content-sdk/blob/0c888a2fdb81890effd584a22eba80368bdbff2c/packages/react/src/components/Link.tsx#L26)
+Defined in: [packages/react/src/components/Link.tsx:26](https://github.com/Sitecore/content-sdk/blob/6f1f574e232c16ea3b3b0aca917e03c8b56b437b/packages/react/src/components/Link.tsx#L26)
 
 ## Type declaration
 

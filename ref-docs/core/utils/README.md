@@ -13,9 +13,10 @@
 ## Functions
 
 - [areURLSearchParamsEqual](functions/areURLSearchParamsEqual.md)
-- [enforceCors](functions/enforceCors.md)
+- [~~enforceCors~~](functions/enforceCors.md)
 - [escapeNonSpecialQuestionMarks](functions/escapeNonSpecialQuestionMarks.md)
 - [getAllowedOriginsFromEnv](functions/getAllowedOriginsFromEnv.md)
+- [getEnforcedCorsHeaders](functions/getEnforcedCorsHeaders.md)
 - [isAbsoluteUrl](functions/isAbsoluteUrl.md)
 - [isRegexOrUrl](functions/isRegexOrUrl.md)
 - [isServer](functions/isServer.md)

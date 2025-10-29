@@ -13,13 +13,17 @@ import {
 import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ComponentPropsService } from '../services/component-props-service';
-import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
+import {
+  DesignLibraryRenderPreviewData,
+  EditingPreviewData,
+} from '@sitecore-content-sdk/core/editing';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
 import {
   getPersonalizedRewriteData,
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/core/personalize';
 import { ComponentMap } from '@sitecore-content-sdk/react';
+import { StaticParams } from './models';
 
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
@@ -74,12 +78,65 @@ export class SitecoreNextjsClient extends SitecoreClient {
   }
 
   /**
+   * Get design library page details for Design Library mode of your app
+   * @param {PreviewData} designLibData preview data set in 'library' mode of the app
+   * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
+   * @returns {Page} preview page for Design Library
+   */
+  async getDesignLibraryData(
+    designLibData: PreviewData,
+    fetchOptions?: FetchOptions
+  ): Promise<Page> {
+    return super.getDesignLibraryData(
+      designLibData as DesignLibraryRenderPreviewData,
+      fetchOptions
+    );
+  }
+
+  /**
    * Retrieves preview page and layout details
    * @param {PreviewData} previewData - The editing preview data for metadata mode.
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
    */
   async getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null> {
     return super.getPreview(previewData as EditingPreviewData, fetchOptions);
+  }
+
+  /**
+   * Generates static params for the Next.js App Router from Sitecore routes.
+   *
+   * Fetches routes for the specified `sites` and `languages`, then converts them into
+   * objects consumable by `generateStaticParams`. Internal multisite segments are removed.
+   * The `site` name is resolved from the path. If a route lacks a locale, the
+   * client's `defaultLanguage` is used.
+   *
+   * **NOTE**: App Router only. For the Pages Router, use `getPagePaths`.
+   * @param {string[]} sites - An array of site names to fetch routes for.
+   * @param {string[]} [languages] - Language codes to generate params for.
+   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
+   * @returns {Promise<StaticParams[]>} Array of `{ site, locale, path }` entries for `generateStaticParams`.
+   */
+  async getAppRouterStaticParams(
+    sites: string[],
+    languages?: string[],
+    fetchOptions?: FetchOptions
+  ): Promise<StaticParams[]> {
+    const staticPaths = await this.getPagePaths(sites, languages, fetchOptions);
+
+    const params = new Array<StaticParams>();
+
+    staticPaths.map((path) => {
+      // remove _site_ segments
+      const normalizedPath = normalizeSiteRewrite(path.params.path.join('/')).split('/');
+
+      params.push({
+        locale: path.locale ?? this.initOptions.defaultLanguage,
+        site: this.getSiteNameFromPath(path.params.path),
+        path: normalizedPath,
+      });
+    });
+
+    return params;
   }
 
   /**

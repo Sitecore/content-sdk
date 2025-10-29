@@ -54,6 +54,9 @@ describe('SitecoreClient', () => {
   let restComponentServiceStub = {
     fetchComponentData: sandbox.stub(),
   };
+  let sitePathServiceStub = {
+    fetchSiteRoutes: sandbox.stub(),
+  };
 
   beforeEach(() => {
     layoutServiceStub = {
@@ -72,6 +75,9 @@ describe('SitecoreClient', () => {
     restComponentServiceStub = {
       fetchComponentData: sandbox.stub(),
     };
+    sitePathServiceStub = {
+      fetchSiteRoutes: sandbox.stub(),
+    };
 
     sitecoreClient = new SitecoreNextjsClient(defaultInitOptions);
 
@@ -80,6 +86,7 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).errorPagesService = errorPagesServiceStub;
     (sitecoreClient as any).editingService = editingServiceStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
+    (sitecoreClient as any).sitePathService = sitePathServiceStub;
   });
 
   describe('getPage', () => {
@@ -251,6 +258,68 @@ describe('SitecoreClient', () => {
         'test-uid': { props: { data: 'test-data' } },
       });
       expect(mockComponent.getComponentServerProps.calledOnce).to.be.true;
+    });
+  });
+
+  describe('getAppRouterStaticParams', () => {
+    it('should handle multiple sites and languages and normalize site path rewrites, removing _site_ prefix', async () => {
+      const paths = [
+        { params: { path: ['_site_site-one', 'home'] }, locale: 'en' },
+        { params: { path: ['_site_site-one', 'about'] }, locale: 'en' },
+        { params: { path: ['_site_site-one', 'home'] }, locale: 'de-DE' },
+        { params: { path: ['_site_site-one', 'about'] }, locale: 'de-DE' },
+        { params: { path: ['_site_site-two', 'home'] }, locale: 'en' },
+        { params: { path: ['_site_site-two', 'about'] }, locale: 'en' },
+      ];
+
+      const expectedStaticParams = [
+        { locale: 'en', site: 'site-one', path: ['home'] },
+        { locale: 'en', site: 'site-one', path: ['about'] },
+        { locale: 'de-DE', site: 'site-one', path: ['home'] },
+        { locale: 'de-DE', site: 'site-one', path: ['about'] },
+        { locale: 'en', site: 'site-two', path: ['home'] },
+        { locale: 'en', site: 'site-two', path: ['about'] },
+      ];
+
+      sitePathServiceStub.fetchSiteRoutes.resolves(paths);
+
+      const result = await sitecoreClient.getAppRouterStaticParams(
+        ['site-one', 'site-two'],
+        ['en', 'de-DE'],
+        defaultInitOptions
+      );
+
+      expect(result).to.deep.equal(expectedStaticParams);
+    });
+
+    it('should use defaultLanguage if locale is missing in static path', async () => {
+      const paths = [{ params: { path: ['_site_site-one', 'home'] } }];
+      sitePathServiceStub.fetchSiteRoutes.resolves(paths);
+
+      const result = await sitecoreClient.getAppRouterStaticParams(
+        ['site-one'],
+        ['en', 'de-DE'],
+        defaultInitOptions
+      );
+
+      expect(result).to.deep.equal([
+        { locale: defaultInitOptions.defaultLanguage, site: 'site-one', path: ['home'] },
+      ]);
+    });
+
+    it('should use defaultSite if site is missing in static path', async () => {
+      const paths = [{ params: { path: ['home'] }, locale: 'en' }];
+      sitePathServiceStub.fetchSiteRoutes.resolves(paths);
+
+      const result = await sitecoreClient.getAppRouterStaticParams(
+        ['site-one'],
+        ['en'],
+        defaultInitOptions
+      );
+
+      expect(result).to.deep.equal([
+        { locale: 'en', site: defaultInitOptions.defaultSite, path: ['home'] },
+      ]);
     });
   });
 });

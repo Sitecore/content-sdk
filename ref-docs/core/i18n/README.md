@@ -14,3 +14,7 @@
 
 - [DictionaryPhrases](interfaces/DictionaryPhrases.md)
 - [DictionaryServiceConfig](interfaces/DictionaryServiceConfig.md)
+
+## Functions
+
+- [getLocaleRewrite](functions/getLocaleRewrite.md)

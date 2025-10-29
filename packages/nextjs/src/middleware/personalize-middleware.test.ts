@@ -140,6 +140,9 @@ describe('PersonalizeMiddleware', () => {
         },
         enumerable: false,
       },
+      get: {
+        value: (key) => res.headers[key],
+      },
       forEach: {
         value: (cb) => {
           Object.keys(res.headers).forEach((key) => cb(res.headers[key], key, res.headers));
@@ -292,11 +295,11 @@ describe('PersonalizeMiddleware', () => {
       ).to.be.true;
 
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
-        rewritePath: '/_variantId_variant-2/styleguide',
+        rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
-          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+          'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
 
@@ -343,11 +346,11 @@ describe('PersonalizeMiddleware', () => {
       });
 
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
-        rewritePath: '/_variantId_variant-2/styleguide',
+        rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
-          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+          'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
 
@@ -640,11 +643,11 @@ describe('PersonalizeMiddleware', () => {
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
-        rewritePath: '/_variantId_variant-2/styleguide',
+        rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
-          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+          'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
       expect(siteResolver.getByHost).to.be.calledWith(hostname);
@@ -679,11 +682,11 @@ describe('PersonalizeMiddleware', () => {
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
-        rewritePath: '/_variantId_variant-2/styleguide',
+        rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
-          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+          'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
       expect(siteResolver.getByHost).to.be.calledWith(hostname);
@@ -713,11 +716,11 @@ describe('PersonalizeMiddleware', () => {
         language: 'en',
       });
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
-        rewritePath: '/_variantId_variant-2/styleguide',
+        rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
-          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+          'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
       expect(siteResolver.getByHost).to.be.calledWith(hostname);
@@ -748,11 +751,11 @@ describe('PersonalizeMiddleware', () => {
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
-        rewritePath: '/_variantId_variant-2/styleguide',
+        rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
-          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+          'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
       expect(siteResolver.getByHost).to.be.calledWith(hostname);
@@ -786,11 +789,11 @@ describe('PersonalizeMiddleware', () => {
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
-        rewritePath: '/_variantId_variant-2/styleguide',
+        rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
-          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+          'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
       expect(siteResolver.getByHost).not.called.to.equal(true);
@@ -803,7 +806,7 @@ describe('PersonalizeMiddleware', () => {
       const req = createRequest();
       const res = createResponse({
         headerValues: {
-          'x-sc-rewrite': '/_site_nextjs-app/styleguide',
+          'x-sc-rewrite': '/_site_nextjs-app/styleguide/',
         },
       });
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
@@ -825,11 +828,11 @@ describe('PersonalizeMiddleware', () => {
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
-        rewritePath: '/_variantId_variant-2/_site_nextjs-app/styleguide',
+        rewritePath: '/_site_nextjs-app/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
-          'x-sc-rewrite': '/_variantId_variant-2/_site_nextjs-app/styleguide',
+          'x-sc-rewrite': '/_site_nextjs-app/styleguide/_variantId_variant-2',
         },
       });
       expect(siteResolver.getByHost).to.be.calledWith(hostname);
@@ -863,11 +866,11 @@ describe('PersonalizeMiddleware', () => {
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
-        rewritePath: '/_variantId_variant-2/styleguide',
+        rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
-          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+          'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
       expect(siteResolver.getByHost).to.be.calledWith('localhost');
@@ -899,11 +902,11 @@ describe('PersonalizeMiddleware', () => {
       });
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en', siteName)).to.be.true;
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
-        rewritePath: '/_variantId_variant-2/styleguide',
+        rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
-          'x-sc-rewrite': '/_variantId_variant-2/styleguide',
+          'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
       expect(siteResolver.getByHost).to.be.calledWith('foobar');
@@ -1031,16 +1034,81 @@ describe('PersonalizeMiddleware', () => {
       });
       validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
         rewritePath:
-          '/_variantId_component1_default/_variantId_component2_variant1/_variantId_component3_variant3/styleguide',
+          '/styleguide/_variantId_component1_default/_variantId_component2_variant1/_variantId_component3_variant3',
         headers: {
           ...res.headers,
           'x-middleware-cache': 'no-cache',
           'x-sc-rewrite':
-            '/_variantId_component1_default/_variantId_component2_variant1/_variantId_component3_variant3/styleguide',
+            '/styleguide/_variantId_component1_default/_variantId_component2_variant1/_variantId_component3_variant3',
         },
       });
       expect(finalRes).to.deep.equal(res);
       nextRewriteStub.restore();
+    });
+
+    describe('getLanguage', () => {
+      it('should get Language from locale response header if present', async () => {
+        const languageInHeader = 'fr-FR';
+        const language = 'da-DK';
+        const req = createRequest({
+          nextUrl: {
+            locale: language,
+          },
+        });
+        const res = createResponse({ headers: { 'x-sc-locale': languageInHeader } });
+        const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+        const { middleware, getPersonalizeInfo } = createMiddleware({
+          language,
+          variantId: 'variant-2',
+          personalizeInfo: {
+            variantIds,
+            pageId,
+          },
+        });
+        await middleware.handle(req, res);
+
+        validateDebugLog('personalize middleware start: %o', {
+          headers: {
+            ...req.headers,
+          },
+          hostname: 'foo.net',
+          pathname: '/styleguide',
+          language: languageInHeader,
+        });
+        expect(getPersonalizeInfo.calledWith('/styleguide', languageInHeader)).to.be.true;
+        nextRewriteStub.restore();
+      });
+
+      it('should get Language from nexturl if locale header is not present', async () => {
+        const language = 'da-DK';
+        const req = createRequest({
+          nextUrl: {
+            locale: language,
+          },
+        });
+        const res = createResponse({ headers: {} });
+        const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+        const { middleware, getPersonalizeInfo } = createMiddleware({
+          language,
+          variantId: 'variant-2',
+          personalizeInfo: {
+            variantIds,
+            pageId,
+          },
+        });
+        await middleware.handle(req, res);
+
+        validateDebugLog('personalize middleware start: %o', {
+          headers: {
+            ...req.headers,
+          },
+          hostname: 'foo.net',
+          pathname: '/styleguide',
+          language,
+        });
+        expect(getPersonalizeInfo.calledWith('/styleguide', language)).to.be.true;
+        nextRewriteStub.restore();
+      });
     });
   });
 

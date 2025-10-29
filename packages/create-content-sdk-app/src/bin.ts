@@ -32,7 +32,8 @@ export const getDestination = async (args: ParsedArgs, template: string) => {
   }
 
   // validate/gather destination
-  const defaultBaseDestination = `${process.cwd()}${sep}${template}`;
+  // remove the (beta) from the template name
+  const defaultBaseDestination = `${process.cwd()}${sep}${template.replace(' (beta)', '')}`;
 
   let destination = args.destination;
   if (!destination) {

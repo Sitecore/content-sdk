@@ -5,8 +5,10 @@ import {
   createGraphQLClientFactory,
   GraphQLClientOptions,
 } from '@sitecore-content-sdk/core/client';
+import { PreviewCookies } from '../editing/utils';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
+export const LOCALE_HEADER_NAME = 'x-sc-locale';
 
 export type MiddlewareBaseConfig = {
   /**
@@ -64,8 +66,18 @@ export abstract class MiddlewareBase extends Middleware {
    */
   protected isPreview(req: NextRequest) {
     return !!(
-      req.cookies.get('__prerender_bypass')?.value || req.cookies.get('__next_preview_data')?.value
+      req.cookies.get(PreviewCookies.PRERENDER_BYPASS)?.value ||
+      req.cookies.get(PreviewCookies.PREVIEW_DATA)?.value
     );
+  }
+
+  /**
+   * Determines if the application is using the app router based on the locale header
+   * @param {NextResponse} res response
+   * @returns {boolean} true if app router is used
+   */
+  protected isAppRouter(res: NextResponse): boolean {
+    return !!this.getLanguageFromHeader(res);
   }
 
   /**
@@ -118,10 +130,27 @@ export abstract class MiddlewareBase extends Middleware {
   /**
    * Provides used language
    * @param {NextRequest} req request
+   * @param {NextResponse} res response
    * @returns {string} language
    */
-  protected getLanguage(req: NextRequest) {
-    return req.nextUrl.locale || req.nextUrl.defaultLocale || this.config.defaultLanguage || 'en';
+  protected getLanguage(req: NextRequest, res?: NextResponse): string {
+    return (
+      this.getLanguageFromHeader(res) ||
+      req.nextUrl.locale ||
+      req.nextUrl.defaultLocale ||
+      this.config.defaultLanguage ||
+      'en'
+    );
+  }
+
+  /**
+   * Extract language from locale header of the response
+   * set by LocaleMiddleware for app router application
+   * @param {NextResponse} res response
+   * @returns {string | undefined} language or undefined if not found
+   */
+  protected getLanguageFromHeader(res?: NextResponse): string | undefined {
+    return res?.headers.get(LOCALE_HEADER_NAME) ?? undefined;
   }
 
   /**
