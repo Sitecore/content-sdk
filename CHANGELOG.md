@@ -10,7 +10,7 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
-## Unreleased
+## 1.2.0
 
 ### 🎉 New Features & Improvements
 
