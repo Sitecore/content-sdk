@@ -211,10 +211,6 @@ export async function handler(argv: AddArgs) {
           })
           .then((answer) => answer.targetPath);
       }
-
-      if (!validateTargetPath(targetPath)) {
-        return;
-      }
     }
 
     const resolvedFilePath = path.resolve(process.cwd(), targetPath as string);
