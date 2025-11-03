@@ -24,19 +24,6 @@ jobs:
           yarn cache clean --all
           yarn install --immutable
 
-      - name: Dump environment + workspace
-        run: |
-          pwd
-          ls -la
-          git status --porcelain --branch
-          git rev-parse --abbrev-ref HEAD || true
-          git rev-parse --verify origin/dev || true
-          node -v
-          yarn -v
-          npx lerna -v || true
-          yarn workspaces info || true
-          yarn check --verify-tree || true
-
       - name: Generate Report
         run: node ./scripts/generate-package-metrics-report.js
 
