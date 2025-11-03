@@ -70,7 +70,7 @@ export function args(yargs: Argv<AddArgs>) {
       requiresArg: false,
       type: 'string',
       describe:
-        'The relative target path for the component.\nFilename format: {componentName}.{variantName}.{extension}\n(Example: components/Promo.WithText.ts)',
+        'The relative target path for the component.\n(Example: components/Promo.WithText.ts)',
     })
     .option('skip-component-map', {
       requiresArg: false,
@@ -111,22 +111,13 @@ const validateTargetPath = (targetPath?: string) => {
   }
 
   // Check for unsafe absolute path starting with "/"
-  if (targetPath.startsWith('/')) {
+  if (path.isAbsolute(targetPath)) {
     return 'Target path cannot be an absolute path starting with "/"';
   }
 
   // Check for path traversal attempts
   if (targetPath.includes('..')) {
     return 'Target path cannot contain ".." (path traversal)';
-  }
-
-  const filename = path.basename(targetPath);
-
-  // Validate filename matches {componentName}.{variantName}.{extension} pattern
-  const filenamePattern = /^[^.]+\.[^.]+\.[a-zA-Z0-9]+$/;
-
-  if (!filenamePattern.test(filename)) {
-    return `Filename must follow the format: {componentName}.{variantName}.{extension}`;
   }
 
   return true;
@@ -160,6 +151,8 @@ export async function handler(argv: AddArgs) {
   }
 
   const { edgeUrl } = cliConfig.config.api.edge;
+  let backupPath: string | undefined;
+  let resolvedFilePath: string | undefined;
 
   try {
     if (validateTargetPath(targetPath) !== true) {
@@ -206,17 +199,18 @@ export async function handler(argv: AddArgs) {
             type: 'input',
             name: 'targetPath',
             required: true,
-            message: `Enter the target path for the component.\nThe filename must follow the format: {componentName}.{variantName}.{extension}\n(Example: components/MyComponent/MyComponent.variantA.ts):`,
+            message: `Enter the target path for the component.\n(Example: components/Promo.WithText.ts):`,
             validate: validateTargetPath,
           })
           .then((answer) => answer.targetPath);
       }
     }
 
-    const resolvedFilePath = path.resolve(process.cwd(), targetPath as string);
-    const isFileExists = fs.existsSync(resolvedFilePath);
+    resolvedFilePath = path.resolve(process.cwd(), targetPath as string);
+    const isFileAlreadyExists = fs.existsSync(resolvedFilePath);
+    backupPath = `${resolvedFilePath}.backup`;
 
-    if (isFileExists) {
+    if (isFileAlreadyExists) {
       if (!overwrite) {
         const shouldOverwrite = await inquirer.prompt({
           type: 'confirm',
@@ -230,7 +224,7 @@ export async function handler(argv: AddArgs) {
         }
       }
 
-      fs.unlinkSync(resolvedFilePath);
+      fs.renameSync(resolvedFilePath, backupPath);
 
       console.log(chalk.yellow(`Overwriting existing file: ${targetPath}`));
     }
@@ -247,12 +241,20 @@ export async function handler(argv: AddArgs) {
       cwd: process.cwd(),
     });
 
+    if (isFileAlreadyExists) {
+      fs.unlinkSync(backupPath);
+    }
+
     if (!skipComponentMap) {
       generateMapHandler({ config });
     }
 
     console.log(chalk.green(`Component ${componentName} added successfully`));
   } catch (error) {
+    if (backupPath && resolvedFilePath && fs.existsSync(backupPath)) {
+      fs.renameSync(backupPath, resolvedFilePath);
+    }
+
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(chalk.red(`Failed to add component: ${errorMessage}`));
     return;

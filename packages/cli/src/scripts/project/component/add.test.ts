@@ -3,11 +3,12 @@ import { expect } from 'chai';
 import chalk from 'chalk';
 import sinon from 'sinon';
 import fs from 'fs';
+import path from 'path';
 import childProcess from 'child_process';
 import inquirer from 'inquirer';
+import * as toolsModule from '@sitecore-content-sdk/core/tools';
 import * as addModule from './add';
 import * as loadConfigModule from '../../../utils/load-config';
-import * as toolsModule from '@sitecore-content-sdk/core/tools';
 import * as generateMapModule from './generate-map';
 
 describe('add command', () => {
@@ -21,6 +22,7 @@ describe('add command', () => {
   let generateMapStub: sinon.SinonStub;
   let inquirerStub: sinon.SinonStub;
   let unlinkSyncStub: sinon.SinonStub;
+  let renameSyncStub: sinon.SinonStub;
   let existsSyncStub: sinon.SinonStub;
 
   const componentId = 'unique-id';
@@ -101,6 +103,7 @@ describe('add command', () => {
     inquirerStub = sandbox.stub(inquirer, 'prompt');
     unlinkSyncStub = sandbox.stub(fs, 'unlinkSync');
     existsSyncStub = sandbox.stub(fs, 'existsSync');
+    renameSyncStub = sandbox.stub(fs, 'renameSync');
     addModule.unitMocks({
       getComponentSpec: getComponentSpecStub,
       getComponentList: getComponentListStub,
@@ -266,7 +269,9 @@ describe('add command', () => {
       })
     ).to.be.true;
 
-    expect(unlinkSyncStub.calledOnce).to.be.true;
+    expect(renameSyncStub.calledOnce).to.be.true;
+    expect(unlinkSyncStub.calledOnceWith(path.resolve(process.cwd(), `${targetPath}.backup`))).to.be
+      .true;
 
     expect(
       getComponentSpecStub.calledOnceWith({
@@ -363,7 +368,9 @@ describe('add command', () => {
     });
 
     expect(inquirerStub.notCalled).to.be.true;
-    expect(unlinkSyncStub.calledOnce).to.be.true;
+    expect(renameSyncStub.calledOnce).to.be.true;
+    expect(unlinkSyncStub.calledOnceWith(path.resolve(process.cwd(), `${targetPath}.backup`))).to.be
+      .true;
 
     expect(
       getComponentSpecStub.calledOnceWith({
@@ -688,6 +695,66 @@ describe('add command', () => {
     expect(generateMapStub.notCalled).to.be.true;
   });
 
+  it('should restore the original file when shadcn add command fails', async () => {
+    const targetPath = 'src/components/promo-block/PromoBlock.variantA.ts';
+
+    loadCliConfigStub.returns(createCliConfig());
+    existsSyncStub.withArgs(path.resolve(process.cwd(), `${targetPath}.backup`)).returns(true);
+    existsSyncStub.withArgs(path.resolve(process.cwd(), targetPath)).returns(true);
+    getComponentSpecStub.resolves(createComponentSpec());
+
+    execSyncStub.throws(new Error('Failed to execute shadcn add command'));
+
+    await addModule.handler({
+      componentId,
+      targetPath,
+      token,
+      overwrite: true,
+    });
+
+    expect(
+      getComponentSpecStub.calledOnceWith({
+        componentId,
+        targetPath,
+        edgeUrl: undefined,
+        token,
+      })
+    ).to.be.true;
+
+    expect(
+      consoleErrorStub.calledOnceWith(
+        chalk.red('Failed to add component: Failed to execute shadcn add command')
+      )
+    ).to.be.true;
+
+    expect(
+      getComponentSpecUrlStub.calledOnceWith({
+        componentId,
+        targetPath,
+        edgeUrl: undefined,
+        token,
+      })
+    ).to.be.true;
+
+    expect(renameSyncStub.calledTwice).to.be.true;
+
+    const resolvedTargetPath = path.resolve(process.cwd(), targetPath);
+    const resolvedBackupPath = path.resolve(process.cwd(), `${targetPath}.backup`);
+
+    expect(renameSyncStub.getCall(0).args[0]).to.equal(resolvedTargetPath);
+    expect(renameSyncStub.getCall(0).args[1]).to.equal(resolvedBackupPath);
+
+    expect(renameSyncStub.getCall(1).args[0]).to.equal(resolvedBackupPath);
+    expect(renameSyncStub.getCall(1).args[1]).to.equal(resolvedTargetPath);
+
+    validateShadcnCommand({
+      componentId,
+      targetPath,
+    });
+
+    expect(generateMapStub.notCalled).to.be.true;
+  });
+
   describe('should log an error when target path is invalid', () => {
     [
       {
@@ -699,11 +766,6 @@ describe('add command', () => {
         targetPath: 'src/components/promo-block/../../PromoBlock.variantA.ts',
         scenario: 'path traversal',
         expectedError: 'Target path cannot contain ".." (path traversal)',
-      },
-      {
-        targetPath: 'src/components/promo-block/PromoBlock.ts',
-        scenario: 'invalid filename',
-        expectedError: 'Filename must follow the format: {componentName}.{variantName}.{extension}',
       },
     ].forEach(({ targetPath, scenario, expectedError }) => {
       it(`${scenario}`, async () => {
