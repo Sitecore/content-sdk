@@ -17,12 +17,25 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
 
       - name: Install dependencies
         run: |
           yarn cache clean --all
           yarn install --immutable
+
+      - name: Dump environment + workspace
+        run: |
+          pwd
+          ls -la
+          git status --porcelain --branch
+          git rev-parse --abbrev-ref HEAD || true
+          git rev-parse --verify origin/dev || true
+          node -v
+          yarn -v
+          npx lerna -v || true
+          yarn workspaces info || true
+          yarn check --verify-tree || true
 
       - name: Generate Report
         run: node ./scripts/generate-package-metrics-report.js
@@ -32,4 +45,3 @@ jobs:
         with:
           header: Metrics Report
           path: metrics-report.md
-
