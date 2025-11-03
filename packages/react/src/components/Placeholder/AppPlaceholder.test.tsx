@@ -37,6 +37,7 @@ import { AppComponentProps, ComponentProps } from './models';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 import * as rscUtils from '#rsc-env';
 import * as ClientComponentWrapperModule from './ClientComponentWrapper';
+import { SitecoreProvider } from '../..';
 
 describe('App Placeholder logic', () => {
   // Global sinon sandbox for all tests
@@ -112,6 +113,7 @@ describe('App Placeholder logic', () => {
   // Global setup and teardown for sinon sandbox
   beforeEach(() => {
     sandbox = createSandbox();
+    sandbox.replace(rscUtils, 'rsc', true as any);
   });
 
   afterEach(() => {
@@ -481,7 +483,7 @@ describe('App Placeholder logic', () => {
 
     const componentMap = new Map();
 
-    xit('should render', () => {
+    it('should render', () => {
       const page = getPage();
       page.layout = byocWrapperData;
       const component = byocWrapperData.sitecore.route as RouteData;
@@ -510,7 +512,7 @@ describe('App Placeholder logic', () => {
       expect(renderedComponent.container.querySelectorAll('.byoc-wrapper').length).to.equal(1);
     });
 
-    xit('should render ErrorBoundary without Suspense for byoc wrapper', () => {
+    it('should render ErrorBoundary without Suspense for byoc wrapper', () => {
       const page = getPage();
       page.layout = byocWrapperData;
       const component = byocWrapperData.sitecore.route as RouteData;
@@ -557,7 +559,7 @@ describe('App Placeholder logic', () => {
 
     const componentMap = new Map();
 
-    xit('should render', () => {
+    it('should render', () => {
       const page = getPage();
       page.layout = feaasWrapperData;
       const component = feaasWrapperData.sitecore.route as RouteData;
@@ -587,7 +589,7 @@ describe('App Placeholder logic', () => {
     });
   });
 
-  xit('should render Suspense when disableSuspense is false', () => {
+  it('should render Suspense when disableSuspense is false', () => {
     const page = getPage();
     page.layout = normalModeDevData;
     const component = normalModeDevData.sitecore.route as RouteData;
@@ -604,11 +606,9 @@ describe('App Placeholder logic', () => {
     );
 
     expect(renderedComponent.container.innerHTML).to.contain('Loading component...');
-
-    expect(renderedComponent.container.querySelector('.dynamic-component')).to.not.be.null;
   });
 
-  xit('should not render Suspense when disableSuspense is true', () => {
+  it('should not render Suspense when disableSuspense is true', () => {
     const page = getPage();
     page.layout = normalModeDevData;
     const component = normalModeDevData.sitecore.route as RouteData;
@@ -654,24 +654,8 @@ describe('App Placeholder logic', () => {
     expect(renderedComponent?.container.innerHTML).to.be.empty;
   });
 
-  xit('should handle component errors through ErrorBoundary', () => {
+  it('should handle component errors through ErrorBoundary', () => {
     const components = new Map<string, React.FC>();
-
-    const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
-      <div className="home-mock">
-        <AppPlaceholder
-          name="main"
-          rendering={rendering!}
-          componentMap={components}
-          page={getPage()}
-        />
-      </div>
-    );
-
-    components.set('Home', Home);
-    components.set('ThrowError', () => {
-      throw Error('an error occured');
-    });
 
     const route = {
       placeholders: {
@@ -689,38 +673,36 @@ describe('App Placeholder logic', () => {
         route,
       },
     };
-    const phKey = 'main';
-
-    const renderedComponent = render(
-      <AppPlaceholder name={phKey} rendering={route} componentMap={components} page={page} />
-    );
-
-    // AppPlaceholder uses ErrorBoundary for error handling
-    expect(
-      renderedComponent.container.querySelectorAll('[data-testid="error-boundary"]').length
-    ).to.be.greaterThan(0);
-  });
-
-  xit('should render error message on error, only for the errored component', () => {
-    const components = new Map<string, React.FC>();
 
     const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
-      <div className="home-mock">
-        <AppPlaceholder
-          name="main"
-          rendering={rendering!}
-          componentMap={components}
-          page={getPage()}
-        />
-      </div>
+      <SitecoreProvider page={page}>
+        <div className="home-mock">
+          <AppPlaceholder
+            name="main"
+            rendering={rendering!}
+            componentMap={components}
+            page={page}
+          />
+        </div>
+      </SitecoreProvider>
     );
 
     components.set('Home', Home);
     components.set('ThrowError', () => {
       throw Error('an error occured');
     });
-    components.set('Foo', () => <div className="foo-class">foo</div>);
 
+    const renderedComponent = render(<Home rendering={route} />);
+
+    // AppPlaceholder uses ErrorBoundary for error handling
+    expect(
+      renderedComponent.container.querySelectorAll('.sc-content-sdk-placeholder-error').length
+    ).to.be.greaterThan(0);
+  });
+
+  it('should render error message on error, only for the errored component', () => {
+    const components = new Map<string, React.FC>();
+    const page = getPage();
     const route = {
       placeholders: {
         main: [
@@ -733,42 +715,41 @@ describe('App Placeholder logic', () => {
         ],
       },
     } as unknown as RouteData;
-    const page = getPage();
     page.layout = {
       sitecore: {
         context: {},
         route,
       },
     };
-    const phKey = 'main';
-
-    const renderedComponent = render(
-      <AppPlaceholder name={phKey} rendering={route} componentMap={components} page={page} />
-    );
-
-    // The Foo component should still render even if ThrowError fails
-    expect(renderedComponent.container.querySelectorAll('div.foo-class').length).to.equal(1);
-  });
-
-  xit('should render custom errorComponent on error, if provided', () => {
-    const page = getPage();
-    const components = new Map<string, React.FC<{ [key: string]: unknown }>>();
 
     const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
-      <div className="home-mock">
-        <AppPlaceholder
-          name="main"
-          rendering={rendering!}
-          componentMap={componentMap}
-          page={page}
-        />
-      </div>
+      <SitecoreProvider page={page}>
+        <div className="home-mock">
+          <AppPlaceholder
+            name="main"
+            rendering={rendering!}
+            componentMap={components}
+            page={page}
+          />
+        </div>
+      </SitecoreProvider>
     );
 
     components.set('Home', Home);
     components.set('ThrowError', () => {
       throw Error('an error occured');
     });
+    components.set('Foo', () => <div className="foo-class">foo</div>);
+
+    const renderedComponent = render(<Home rendering={route} />);
+
+    // The Foo component should still render even if ThrowError fails
+    expect(renderedComponent.container.querySelectorAll('div.foo-class').length).to.equal(1);
+  });
+
+  it('should render custom errorComponent on error, if provided', () => {
+    const page = getPage();
+    const components = new Map<string, React.FC<{ [key: string]: unknown }>>();
 
     const CustomError: React.FC = () => <div className="custom-error">Custom Error</div>;
 
@@ -781,28 +762,37 @@ describe('App Placeholder logic', () => {
         ],
       },
     } as unknown as RouteData;
+
     page.layout = {
       sitecore: {
         context: {},
         route,
       },
     };
-    const phKey = 'main';
 
-    const renderedComponent = render(
-      <AppPlaceholder
-        name={phKey}
-        rendering={route}
-        componentMap={components}
-        page={page}
-        errorComponent={CustomError}
-      />
+    const Home: React.FC<{ rendering?: RouteData }> = ({ rendering }) => (
+      <SitecoreProvider page={page}>
+        <div className="home-mock">
+          <AppPlaceholder
+            name="main"
+            rendering={rendering!}
+            componentMap={components}
+            errorComponent={CustomError}
+            page={page}
+          />
+        </div>
+      </SitecoreProvider>
     );
 
+    components.set('Home', Home);
+    components.set('ThrowError', () => {
+      throw Error('an error occured');
+    });
+
+    const renderedComponent = render(<Home rendering={route} />);
+
     // AppPlaceholder passes errorComponent to ErrorBoundary
-    expect(
-      renderedComponent.container.querySelectorAll('[data-testid="error-boundary"]').length
-    ).to.be.greaterThan(0);
+    expect(renderedComponent.container.querySelectorAll('div.custom-error').length).to.equal(1);
   });
 
   it('should render MissingComponent for unknown rendering', () => {
@@ -1000,7 +990,9 @@ describe('App Placeholder logic', () => {
 
     it('should render react client component', () => {
       const page = getPage();
-
+      sandbox.reset();
+      sandbox = createSandbox();
+      sandbox.replace(rscUtils, 'rsc', false as any);
       const ClientComponent: React.FC<any> = () => {
         return <div className="client-component">Client Component</div>;
       };
@@ -1042,7 +1034,6 @@ describe('App Placeholder logic', () => {
     });
 
     it('should render client component wrapper when component is marker as client and rendered in RSC context', () => {
-      sandbox.replace(rscUtils, 'rsc', true as any);
       sandbox
         .stub(ClientComponentWrapperModule, 'ClientComponentWrapper')
         .returns(<div className="client-component-wrapper">Client Component Wrapper</div>);

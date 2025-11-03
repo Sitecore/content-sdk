@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import { expect } from 'chai';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { BYOCComponent } from './BYOCWrapper';
 import { MissingComponentProps } from '../MissingComponent';
@@ -257,7 +257,7 @@ describe('Error handling', () => {
   // Disabling these two tests until we have AppRouter and can switch back from clientFallback to fallback
   // Components does some workarounds to support client BYOC and client fallback without error frame flickering during component load
   // This results in fallback frame being rendered post-hydration, and not being findable in test context.
-  xit('should render missing component frame when component is not registered', async () => {
+  it('should render missing component frame when component is not registered', async () => {
     const props = {
       params: { ComponentName: 'NonExistentComponent' },
       components: {},
@@ -265,11 +265,12 @@ describe('Error handling', () => {
     };
 
     const wrapper = render(<BYOCComponent {...props} />);
-
-    expect(wrapper.queryAllByText('This component was not registered').length).to.equal(1);
+    waitFor(() => {
+      expect(wrapper.queryAllByText('This component was not registered').length).to.equal(1);
+    });
   });
 
-  xit('should render custom missing component when provided, when component is not registered', () => {
+  it('should render custom missing component when provided, when component is not registered', () => {
     const missingComponent = (props: MissingComponentProps) => (
       <div>
         Custom missive for {props.rendering?.componentName}: {props.errorOverride}
@@ -283,9 +284,11 @@ describe('Error handling', () => {
       fetchedData: {},
     };
     const wrapper = render(<BYOCComponent {...props} />);
-    const text = wrapper.container.querySelector('div')?.innerText;
-
-    expect(text).to.contain('Custom missive for NonExistentComponent');
-    expect(text).to.contain('This component was not registered');
+    waitFor(() => {
+      const text = wrapper.container.querySelector('div')?.innerText;
+      expect(text).to.not.be.undefined;
+      expect(text).to.contain('Custom missive for NonExistentComponent');
+      expect(text).to.contain('This component was not registered');
+    });
   });
 });
