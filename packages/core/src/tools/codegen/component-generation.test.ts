@@ -1,19 +1,19 @@
 import { expect } from 'chai';
 import nock from 'nock';
 import {
-  ComponentVariantSpec,
-  getComponentVariantSpecUrl,
-  getComponentVariantSpec,
-} from './component-variant';
+  ComponentSpec,
+  getComponentSpecUrl,
+  getComponentSpec,
+} from './component-generation';
 import { SITECORE_EDGE_URL_DEFAULT } from '../../constants';
 
-describe('component-variant', () => {
+describe('component-generation', () => {
   const token = '456';
 
-  describe('getComponentVariantSpecUrl', () => {
+  describe('getComponentSpecUrl', () => {
     it('should return the correct url', () => {
-      const url = getComponentVariantSpecUrl({
-        variantId: '123',
+      const url = getComponentSpecUrl({
+        componentId: '123',
         targetPath: './components/promo-block/PromoBlock.variantA.ts',
         token,
       });
@@ -24,8 +24,8 @@ describe('component-variant', () => {
     });
 
     it('should return the correct url when custom edge url is provided', () => {
-      const url = getComponentVariantSpecUrl({
-        variantId: '123',
+      const url = getComponentSpecUrl({
+        componentId: '123',
         targetPath: './components/promo-block/PromoBlock.variantA.ts',
         edgeUrl: 'http://my.server',
         token,
@@ -37,19 +37,19 @@ describe('component-variant', () => {
     });
   });
 
-  describe('getComponentVariantSpec', () => {
-    const mockComponentVariantSpecApi = ({
+  describe('getComponentSpec', () => {
+    const mockComponentSpecApi = ({
       edgeUrl = SITECORE_EDGE_URL_DEFAULT,
-      variantId,
+      componentId,
       targetPath,
       token,
     }: {
       edgeUrl?: string;
-      variantId: string;
+      componentId: string;
       targetPath?: string;
       token: string;
     }) => {
-      let path = `/authoring/api/v1/components/generated/${variantId}?token=${token}`;
+      let path = `/authoring/api/v1/components/generated/${componentId}?token=${token}`;
 
       if (targetPath) {
         path += `&targetPath=${encodeURIComponent(targetPath)}`;
@@ -59,10 +59,10 @@ describe('component-variant', () => {
     };
 
     it('should return the correct spec', async () => {
-      const variantId = '123';
+      const componentId = '123';
       const targetPath = './components/promo-block/PromoBlock.variantA.ts';
 
-      const spec: ComponentVariantSpec = {
+      const spec: ComponentSpec = {
         title: 'Promo Block',
         meta: {
           'contentsdk-component-type': 'variant',
@@ -71,14 +71,14 @@ describe('component-variant', () => {
         },
       };
 
-      mockComponentVariantSpecApi({
-        variantId,
+      mockComponentSpecApi({
+        componentId,
         targetPath,
         token,
       }).reply(200, spec);
 
-      const response = await getComponentVariantSpec({
-        variantId,
+      const response = await getComponentSpec({
+        componentId,
         targetPath,
         token,
       });
@@ -87,9 +87,9 @@ describe('component-variant', () => {
     });
 
     it('should return correct spec when target path is not provided', async () => {
-      const variantId = '123';
+      const componentId = '123';
 
-      const spec: ComponentVariantSpec = {
+      const spec: ComponentSpec = {
         title: 'Promo Block',
         meta: {
           'contentsdk-component-type': 'variant',
@@ -98,67 +98,67 @@ describe('component-variant', () => {
         },
       };
 
-      mockComponentVariantSpecApi({
-        variantId,
+      mockComponentSpecApi({
+        componentId,
         token,
       }).reply(200, spec);
 
-      const response = await getComponentVariantSpec({
-        variantId,
+      const response = await getComponentSpec({
+        componentId,
         token,
       });
 
       expect(response).to.deep.equal(spec);
     });
 
-    it('should throw an error when the component variant is not found', async () => {
-      const variantId = '123';
+    it('should throw an error when the component is not found', async () => {
+      const componentId = '123';
 
-      mockComponentVariantSpecApi({
-        variantId,
+      mockComponentSpecApi({
+        componentId,
         token,
       }).reply(404);
 
       try {
-        await getComponentVariantSpec({ variantId, token });
+        await getComponentSpec({ componentId, token });
         expect.fail('Expected function to throw');
       } catch (error) {
         expect(error.message).to.equal(
-          "Component variant '123' was not found. Please verify the variant ID is correct and exists."
+          "Component '123' was not found. Please verify the component ID is correct and exists."
         );
       }
     });
 
     it('should throw an error when response is not ok', async () => {
-      const variantId = '123';
+      const componentId = '123';
 
-      mockComponentVariantSpecApi({
-        variantId,
+      mockComponentSpecApi({
+        componentId,
         token,
       }).reply(500);
 
       try {
-        await getComponentVariantSpec({ variantId, token });
+        await getComponentSpec({ componentId, token });
         expect.fail('Expected function to throw');
       } catch (error) {
-        expect(error.message).to.equal('Failed to fetch component variant 123');
+        expect(error.message).to.equal('Failed to fetch component 123');
       }
     });
 
     it('should throw an error when response is unauthorized', async () => {
-      const variantId = '123';
+      const componentId = '123';
 
-      mockComponentVariantSpecApi({
-        variantId,
+      mockComponentSpecApi({
+        componentId,
         token,
       }).reply(401);
 
       try {
-        await getComponentVariantSpec({ variantId, token });
+        await getComponentSpec({ componentId, token });
         expect.fail('Expected function to throw');
       } catch (error) {
         expect(error.message).to.equal(
-          'Unauthorized. Please verify the token is correct and not expired.'
+          'The token is incorrect or expired or the component ID is incorrect.'
         );
       }
     });

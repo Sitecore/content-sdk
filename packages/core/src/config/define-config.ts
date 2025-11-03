@@ -153,7 +153,8 @@ const validateApiConfiguration = (config: SitecoreConfigInput): void => {
  * The paths to validate the config object during build time.
  */
 type ProxyValidationPaths = {
-  api: keyof SitecoreConfigInput['api'];
+  'api.edge.contextId': string;
+  'api.local.apiKey': string;
 };
 
 /**
@@ -165,8 +166,9 @@ type ProxyValidator = (config: SitecoreConfigInput) => void;
  * The validators for the config object during build time.
  * Validators are called when the literal path of the config object is accessed.
  */
-const PROPERTY_VALIDATORS: Record<keyof ProxyValidationPaths, ProxyValidator> = {
-  api: validateApiConfiguration,
+const PROPERTY_VALIDATORS: Record<string, ProxyValidator> = {
+  'api.edge.contextId': validateApiConfiguration,
+  'api.local.apiKey': validateApiConfiguration,
 };
 
 /**
