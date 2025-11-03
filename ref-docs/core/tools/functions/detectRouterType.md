@@ -8,7 +8,7 @@
 
 > **detectRouterType**(`projectRoot`): [`RouterType`](../type-aliases/RouterType.md)
 
-Defined in: [packages/core/src/tools/templating/components.ts:140](https://github.com/Sitecore/content-sdk/blob/a906bba440e9579bfb49486d8c4ee492c095a043/packages/core/src/tools/templating/components.ts#L140)
+Defined in: [packages/core/src/tools/templating/components.ts:140](https://github.com/Sitecore/content-sdk/blob/327098a1190431d8aa6fcac9a4930ea9e1bd2859/packages/core/src/tools/templating/components.ts#L140)
 
 Detects the Next.js router type (App Router or Pages Router) based on directory structure.
 

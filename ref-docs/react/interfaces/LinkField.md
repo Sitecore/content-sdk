@@ -6,7 +6,7 @@
 
 # Interface: LinkField
 
-Defined in: [packages/react/src/components/Link.tsx:22](https://github.com/Sitecore/content-sdk/blob/a906bba440e9579bfb49486d8c4ee492c095a043/packages/react/src/components/Link.tsx#L22)
+Defined in: [packages/react/src/components/Link.tsx:22](https://github.com/Sitecore/content-sdk/blob/327098a1190431d8aa6fcac9a4930ea9e1bd2859/packages/react/src/components/Link.tsx#L22)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [packages/react/src/components/Link.tsx:22](https://github.com/Sitec
 
 > **value**: [`LinkFieldValue`](LinkFieldValue.md)
 
-Defined in: [packages/react/src/components/Link.tsx:23](https://github.com/Sitecore/content-sdk/blob/a906bba440e9579bfb49486d8c4ee492c095a043/packages/react/src/components/Link.tsx#L23)
+Defined in: [packages/react/src/components/Link.tsx:23](https://github.com/Sitecore/content-sdk/blob/327098a1190431d8aa6fcac9a4930ea9e1bd2859/packages/react/src/components/Link.tsx#L23)

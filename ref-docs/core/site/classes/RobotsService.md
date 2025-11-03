@@ -6,7 +6,7 @@
 
 # Class: RobotsService
 
-Defined in: [packages/core/src/site/robots-service.ts:37](https://github.com/Sitecore/content-sdk/blob/a906bba440e9579bfb49486d8c4ee492c095a043/packages/core/src/site/robots-service.ts#L37)
+Defined in: [packages/core/src/site/robots-service.ts:37](https://github.com/Sitecore/content-sdk/blob/327098a1190431d8aa6fcac9a4930ea9e1bd2859/packages/core/src/site/robots-service.ts#L37)
 
 Service that fetch the robots.txt data using Sitecore's GraphQL API.
 
@@ -16,7 +16,7 @@ Service that fetch the robots.txt data using Sitecore's GraphQL API.
 
 > **new RobotsService**(`options`): `RobotsService`
 
-Defined in: [packages/core/src/site/robots-service.ts:44](https://github.com/Sitecore/content-sdk/blob/a906bba440e9579bfb49486d8c4ee492c095a043/packages/core/src/site/robots-service.ts#L44)
+Defined in: [packages/core/src/site/robots-service.ts:44](https://github.com/Sitecore/content-sdk/blob/327098a1190431d8aa6fcac9a4930ea9e1bd2859/packages/core/src/site/robots-service.ts#L44)
 
 Creates an instance of graphQL robots.txt service with the provided options
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL robots.txt service with the provided options
 
 > **options**: [`RobotsServiceConfig`](../type-aliases/RobotsServiceConfig.md)
 
-Defined in: [packages/core/src/site/robots-service.ts:44](https://github.com/Sitecore/content-sdk/blob/a906bba440e9579bfb49486d8c4ee492c095a043/packages/core/src/site/robots-service.ts#L44)
+Defined in: [packages/core/src/site/robots-service.ts:44](https://github.com/Sitecore/content-sdk/blob/327098a1190431d8aa6fcac9a4930ea9e1bd2859/packages/core/src/site/robots-service.ts#L44)
 
 instance
 
@@ -48,7 +48,7 @@ instance
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [packages/core/src/site/robots-service.ts:48](https://github.com/Sitecore/content-sdk/blob/a906bba440e9579bfb49486d8c4ee492c095a043/packages/core/src/site/robots-service.ts#L48)
+Defined in: [packages/core/src/site/robots-service.ts:48](https://github.com/Sitecore/content-sdk/blob/327098a1190431d8aa6fcac9a4930ea9e1bd2859/packages/core/src/site/robots-service.ts#L48)
 
 ##### Returns
 
@@ -60,7 +60,7 @@ Defined in: [packages/core/src/site/robots-service.ts:48](https://github.com/Sit
 
 > **fetchRobots**(`fetchOptions?`): `Promise`\<`string`\>
 
-Defined in: [packages/core/src/site/robots-service.ts:58](https://github.com/Sitecore/content-sdk/blob/a906bba440e9579bfb49486d8c4ee492c095a043/packages/core/src/site/robots-service.ts#L58)
+Defined in: [packages/core/src/site/robots-service.ts:58](https://github.com/Sitecore/content-sdk/blob/327098a1190431d8aa6fcac9a4930ea9e1bd2859/packages/core/src/site/robots-service.ts#L58)
 
 Fetch a data of robots.txt from API
 
@@ -86,7 +86,7 @@ if the siteName is empty.
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/site/robots-service.ts:87](https://github.com/Sitecore/content-sdk/blob/a906bba440e9579bfb49486d8c4ee492c095a043/packages/core/src/site/robots-service.ts#L87)
+Defined in: [packages/core/src/site/robots-service.ts:87](https://github.com/Sitecore/content-sdk/blob/327098a1190431d8aa6fcac9a4930ea9e1bd2859/packages/core/src/site/robots-service.ts#L87)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

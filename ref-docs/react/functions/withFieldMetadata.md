@@ -8,7 +8,7 @@
 
 > **withFieldMetadata**\<`FieldComponentProps`, `RefElementType`\>(`FieldComponent`, `isForwardRef`): `ForwardRefExoticComponent`\<`PropsWithoutRef`\<`FieldComponentProps`\> & `RefAttributes`\<`RefElementType`\>\> \| (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withFieldMetadata.tsx:16](https://github.com/Sitecore/content-sdk/blob/a906bba440e9579bfb49486d8c4ee492c095a043/packages/react/src/enhancers/withFieldMetadata.tsx#L16)
+Defined in: [packages/react/src/enhancers/withFieldMetadata.tsx:16](https://github.com/Sitecore/content-sdk/blob/327098a1190431d8aa6fcac9a4930ea9e1bd2859/packages/react/src/enhancers/withFieldMetadata.tsx#L16)
 
 Wraps the field component with metadata markup intended to be used for chromes hydration in Pages
 
