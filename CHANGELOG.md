@@ -12,6 +12,12 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+## 1.2.1
+
+### 🐛 Bug Fixes
+
+* `[nextjs]` Application build fails due to missing component variants ([#277](https://github.com/Sitecore/content-sdk/pull/277))
+
 ## 1.2.0
 
 ### 🎉 New Features & Improvements
