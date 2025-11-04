@@ -8,7 +8,7 @@
 
 > **BYOCServerWrapper**(`props`): `Promise`\<`Element`\>
 
-Defined in: [packages/react/src/components/FEaaS/BYOCServerWrapper.tsx:7](https://github.com/Sitecore/content-sdk/blob/78d309deab0b9fedeaba9951fa69030fc09fa968/packages/react/src/components/FEaaS/BYOCServerWrapper.tsx#L7)
+Defined in: [packages/react/src/components/FEaaS/BYOCServerWrapper.tsx:7](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/FEaaS/BYOCServerWrapper.tsx#L7)
 
 ## Parameters
 
