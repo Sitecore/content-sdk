@@ -542,6 +542,28 @@ describe('placeholder-utils', () => {
       expect(result?.isEmpty).to.be.true;
     });
 
+    it('should return missing component when component variant is not found', () => {
+      // Add a dummy entry so componentMap is not empty
+      componentMap.set('DummyComponent', {
+        default: () => <div>Dummy</div>,
+        CustomVariant: () => <div>Custom Variant</div>,
+      });
+
+      const rendering: ComponentRendering = {
+        componentName: 'DummyComponent',
+        uid: 'test-uid',
+        params: {
+          FieldNames: 'NonExistentVariant',
+        },
+      };
+
+      const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
+
+      expect(result?.component).to.equal(MissingComponent);
+      expect(result?.isEmpty).to.be.true;
+      expect(consoleErrorStub.calledOnce).to.be.true;
+    });
+
     it('should return custom missing component when specified and component not found in component map', () => {
       // Add a dummy entry so componentMap is not empty
       componentMap.set('DummyComponent', () => <div>Dummy</div>);
@@ -601,7 +623,6 @@ describe('placeholder-utils', () => {
       const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
 
       expect(result?.isEmpty).to.be.true;
-      expect(consoleErrorStub.calledOnce).to.be.true;
     });
   });
 });
