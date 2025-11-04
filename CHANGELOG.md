@@ -10,6 +10,12 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
+## 1.2.1
+
+### 🐛 Bug Fixes
+
+* `[nextjs]` Application build fails due to missing component variants ([#277](https://github.com/Sitecore/content-sdk/pull/277))
+
 ## 1.2.0
 
 ### 🎉 New Features & Improvements
