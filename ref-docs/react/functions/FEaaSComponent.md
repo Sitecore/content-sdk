@@ -8,7 +8,7 @@
 
 > **FEaaSComponent**(`props`): `Element`
 
-Defined in: [packages/react/src/components/FEaaS/FEaaSWrapper.tsx:12](https://github.com/Sitecore/content-sdk/blob/b6bd0865567bd897fba0f8cf7dcc09cf930cb1d8/packages/react/src/components/FEaaS/FEaaSWrapper.tsx#L12)
+Defined in: [packages/react/src/components/FEaaS/FEaaSWrapper.tsx:12](https://github.com/Sitecore/content-sdk/blob/60c7825e2f202b24a2d2bcfda53f8541054c59da/packages/react/src/components/FEaaS/FEaaSWrapper.tsx#L12)
 
 ## Parameters
 
