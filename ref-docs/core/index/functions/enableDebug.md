@@ -8,7 +8,7 @@
 
 > **enableDebug**(`namespaces`): `void`
 
-Defined in: [packages/core/src/debug.ts:25](https://github.com/Sitecore/content-sdk/blob/f2948d819f7079524f7ecc571981b044a2f89025/packages/core/src/debug.ts#L25)
+Defined in: [packages/core/src/debug.ts:25](https://github.com/Sitecore/content-sdk/blob/dc0ca17cbadb2896d730e547fac38bbb4e3a00d3/packages/core/src/debug.ts#L25)
 
 Enable debug logging dynamically
 
