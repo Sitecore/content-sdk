@@ -6,7 +6,7 @@ import { getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
 
 /**
  * Renders client scripts and data for editing/preview mode for Pages.
- * Renders script required for the Design Library (when mode.isDesignLibrary is true).
+ * Renders script required for the Design Studio (when mode.isDesignLibrary is true).
  * @returns A JSX element containing the editing scripts or an empty fragment if not in editing/preview mode.
  */
 export const EditingScripts = (): JSX.Element => {
