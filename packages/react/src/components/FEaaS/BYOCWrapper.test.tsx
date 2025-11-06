@@ -1,10 +1,14 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
-import { expect } from 'chai';
+import { expect, use } from 'chai';
 import { render, waitFor } from '@testing-library/react';
+import { createSandbox, SinonSandbox } from 'sinon';
+import sinonChai from 'sinon-chai';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
-import { BYOCComponent } from './BYOCWrapper';
-import { MissingComponentProps } from '../MissingComponent';
+import { BYOCComponent, __mockDependencies } from './BYOCWrapper';
+import { MissingComponent, MissingComponentProps } from '../MissingComponent';
+
+use(sinonChai);
 
 describe('BYOCComponent', () => {
   it('should render with props when ComponentProps is provided', () => {
@@ -191,6 +195,33 @@ describe('BYOCComponent', () => {
 });
 
 describe('Error handling', () => {
+  let sandbox: SinonSandbox;
+  let mockExternalComponent: any;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+
+    // Create a mock ExternalComponent that records the props it receives
+    mockExternalComponent = sandbox.spy((props: any) => {
+      // Store the props for assertion
+      mockExternalComponent.lastProps = props;
+      return <div data-testid="mock-external-component">Mock ExternalComponent</div>;
+    });
+
+    // Inject the mock using the __mockDependencies function
+    __mockDependencies({
+      ExternalComponent: mockExternalComponent,
+    });
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+
+    // Reset the mock dependencies
+    __mockDependencies({
+      ExternalComponent: FEAAS.ExternalComponent,
+    });
+  });
   it('should render DefaultErrorComponent when invalid JSON', () => {
     const props = {
       params: {
@@ -204,6 +235,9 @@ describe('Error handling', () => {
     expect(wrapper.baseElement.innerHTML).to.equal(
       '<div>A rendering error occurred: Unexpected token \'i\', "invalid-json" is not valid JSON.</div>'
     );
+
+    // Verify mock external component is not rendered in error scenario
+    expect(wrapper.queryByTestId('mock-external-component')).to.be.null;
   });
 
   it('should render custom error component when provided, when underlying component throws', () => {
@@ -219,6 +253,9 @@ describe('Error handling', () => {
 
     const wrapper = render(<BYOCComponent {...props} />);
     expect(wrapper.queryAllByText('custom error:', { exact: false }).length).to.equal(1);
+
+    // Verify mock external component is not rendered in error scenario
+    expect(wrapper.queryByTestId('mock-external-component')).to.be.null;
   });
 
   it('renders MissingComponent when no ComponentName is provided', () => {
@@ -234,6 +271,9 @@ describe('Error handling', () => {
 
     expect(text).to.contain('Unnamed Component');
     expect(text).to.contain('BYOC: The ComponentName for this rendering is missing');
+
+    // Verify mock external component is not rendered when ComponentName is missing
+    expect(wrapper.queryByTestId('mock-external-component')).to.be.null;
   });
 
   it('should render custom missing component when provided, when component name is not provided', () => {
@@ -252,43 +292,71 @@ describe('Error handling', () => {
     expect(wrapper.baseElement.innerHTML).to.equal(
       '<div>Custom missive for : BYOC: The ComponentName for this rendering is missing</div>'
     );
+
+    // Verify mock external component is not rendered when ComponentName is missing
+    expect(wrapper.queryByTestId('mock-external-component')).to.be.null;
   });
 
-  // Disabling these two tests until we have AppRouter and can switch back from clientFallback to fallback
-  // Components does some workarounds to support client BYOC and client fallback without error frame flickering during component load
-  // This results in fallback frame being rendered post-hydration, and not being findable in test context.
-  it('should render missing component frame when component is not registered', async () => {
+  it('should pass default missing component implementation as fallback into BYOC logic', () => {
     const props = {
       params: { ComponentName: 'NonExistentComponent' },
       components: {},
       fetchedData: {},
     };
 
-    const wrapper = render(<BYOCComponent {...props} />);
-    waitFor(() => {
-      expect(wrapper.queryAllByText('This component was not registered').length).to.equal(1);
-    });
+    render(<BYOCComponent {...props} />);
+
+    // Assert that mock ExternalComponent was called
+    expect(mockExternalComponent).to.have.been.calledOnce;
+
+    // Get the props passed to ExternalComponent
+    const externalComponentProps = mockExternalComponent.lastProps;
+
+    // Verify that componentName is correct
+    expect(externalComponentProps.componentName).to.equal('NonExistentComponent');
+
+    // Verify that clientFallback is the default MissingComponent
+    expect(externalComponentProps.clientFallback).to.not.be.undefined;
+    expect(externalComponentProps.clientFallback.type).to.equal(MissingComponent);
+
+    // Verify the fallback component has the correct props
+    const fallbackProps = externalComponentProps.clientFallback.props;
+    expect(fallbackProps.rendering.componentName).to.equal('NonExistentComponent');
+    expect(fallbackProps.errorOverride).to.equal('BYOC: This component was not registered.');
   });
 
-  it('should render custom missing component when provided, when component is not registered', () => {
-    const missingComponent = (props: MissingComponentProps) => (
+  it('should pass custom missing component when provided as fallback into BYOC logic', () => {
+    const CustomMissingComponent = (props: MissingComponentProps) => (
       <div>
         Custom missive for {props.rendering?.componentName}: {props.errorOverride}
       </div>
     );
 
     const props = {
-      missingComponentComponent: missingComponent,
+      missingComponentComponent: CustomMissingComponent,
       params: { ComponentName: 'NonExistentComponent' },
       components: {},
       fetchedData: {},
     };
-    const wrapper = render(<BYOCComponent {...props} />);
-    waitFor(() => {
-      const text = wrapper.container.querySelector('div')?.innerText;
-      expect(text).to.not.be.undefined;
-      expect(text).to.contain('Custom missive for NonExistentComponent');
-      expect(text).to.contain('This component was not registered');
-    });
+
+    render(<BYOCComponent {...props} />);
+
+    // Assert that mock ExternalComponent was called
+    expect(mockExternalComponent).to.have.been.calledOnce;
+
+    // Get the props passed to ExternalComponent
+    const externalComponentProps = mockExternalComponent.lastProps;
+
+    // Verify that componentName is correct
+    expect(externalComponentProps.componentName).to.equal('NonExistentComponent');
+
+    // Verify that clientFallback is the custom missing component
+    expect(externalComponentProps.clientFallback).to.not.be.undefined;
+    expect(externalComponentProps.clientFallback.type).to.equal(CustomMissingComponent);
+
+    // Verify the fallback component has the correct props
+    const fallbackProps = externalComponentProps.clientFallback.props;
+    expect(fallbackProps.rendering.componentName).to.equal('NonExistentComponent');
+    expect(fallbackProps.errorOverride).to.equal('BYOC: This component was not registered.');
   });
 });
