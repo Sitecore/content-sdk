@@ -175,6 +175,16 @@ export const getComponentForRendering = (
   hiddenRenderingComponent?: React.ComponentClass | React.FC,
   missingComponentComponent?: React.ComponentClass | React.FC
 ): ComponentForRendering => {
+  const logUnknownComponentError = (variant?: string) => {
+    console.error(
+      `Placeholder ${placeholderName} contains unknown component ${
+        renderingDefinition.componentName
+      }${
+        variant ? ` (${variant})` : ''
+      }. Ensure that a React component exists for it, and that it is registered in your component-map file.`
+    );
+  };
+
   if (renderingDefinition.componentName === constants.HIDDEN_RENDERING_NAME) {
     return {
       component: hiddenRenderingComponent ?? HiddenRendering,
@@ -182,9 +192,6 @@ export const getComponentForRendering = (
       componentType: 'universal',
     };
   } else if (!renderingDefinition.componentName) {
-    console.error(
-      `Placeholder ${placeholderName} contains unknown component ${renderingDefinition.componentName}. Ensure that a React component exists for it, and that it is registered in your component-map file.`
-    );
     return {
       component: () => <></>,
       isEmpty: true,
@@ -231,6 +238,9 @@ export const getComponentForRendering = (
         isEmpty: false,
       };
     }
+
+    logUnknownComponentError();
+
     return {
       component: missingComponentComponent ?? MissingComponent,
       isEmpty: true,
@@ -247,6 +257,16 @@ export const getComponentForRendering = (
       : (component as ReactModule).default ||
         (component as ReactModule).Default ||
         (component as ComponentType);
+
+  if (!renderedComponent) {
+    logUnknownComponentError(exportName !== DEFAULT_EXPORT_NAME ? exportName : undefined);
+
+    return {
+      component: missingComponentComponent ?? MissingComponent,
+      isEmpty: true,
+      componentType: 'universal',
+    };
+  }
 
   const dynamic =
     !!(renderedComponent as LazyComponentType).render?.preload ||
