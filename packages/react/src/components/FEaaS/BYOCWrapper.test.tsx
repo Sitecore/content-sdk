@@ -1,14 +1,11 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
-import { expect, use } from 'chai';
-import { render, waitFor } from '@testing-library/react';
+import { expect } from 'chai';
+import { render } from '@testing-library/react';
 import { createSandbox, SinonSandbox } from 'sinon';
-import sinonChai from 'sinon-chai';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { BYOCComponent, __mockDependencies } from './BYOCWrapper';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
-
-use(sinonChai);
 
 describe('BYOCComponent', () => {
   it('should render with props when ComponentProps is provided', () => {
