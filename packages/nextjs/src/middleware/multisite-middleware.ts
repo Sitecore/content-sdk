@@ -36,10 +36,6 @@ export class MultisiteMiddleware extends MiddlewareBase {
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
-    if (!this.config.enabled) {
-      debug.multisite('skipped (multisite middleware is disabled globally)');
-      return res;
-    }
     try {
       // Path can be rewritten by previously executed middleware
       const pathname = res?.headers.get(REWRITE_HEADER_NAME) || req.nextUrl.pathname;
@@ -53,11 +49,8 @@ export class MultisiteMiddleware extends MiddlewareBase {
         hostname,
       });
 
-      if (this.disabled(req, res)) {
-        debug.multisite('skipped (multisite middleware is disabled)');
-
-        return res;
-      }
+      // We can't skip site name preservation for App Router in Preview since currently we rely on the site segment
+      // to be present in the path.
 
       if (this.isPreview(req) && !this.isAppRouter(res)) {
         debug.multisite('skipped (preview)');
@@ -65,17 +58,34 @@ export class MultisiteMiddleware extends MiddlewareBase {
         return res;
       }
 
-      let siteName: string;
-
+      // Site name preservation is required for Sitecore Preview mode to support navigation between pages
       const isSitecorePreview = req.cookies.get(PREVIEW_KEY)?.value;
 
+      if (!isSitecorePreview) {
+        if (!this.config.enabled) {
+          debug.multisite('skipped (multisite middleware is disabled globally)');
+          return res;
+        }
+
+        if (this.disabled(req, res)) {
+          debug.multisite('skipped (multisite middleware is disabled)');
+
+          return res;
+        }
+      }
+
+      let siteName: string;
+
       if (isSitecorePreview) {
-        // This cookie is required to be set in the Sitecore Preview mode
+        // This cookie is required to be set in the Sitecore Preview mode to support navigation
+        // and preserve the site name
         siteName = req.cookies.get(SITE_KEY)?.value!;
       } else {
         // Site name can be forced by query string parameter or cookie
+        // 'site' is provided when running "preview" in AppRouter
         siteName =
           req.nextUrl.searchParams.get(SITE_KEY) ||
+          req.nextUrl.searchParams.get('site') ||
           (this.config.useCookieResolution &&
             this.config.useCookieResolution(req) &&
             req.cookies.get(SITE_KEY)?.value) ||

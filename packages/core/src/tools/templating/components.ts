@@ -20,39 +20,71 @@ const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
 export type ComponentType = 'server' | 'client' | 'universal';
 export type RouterType = 'app' | 'pages';
 
+export type ComponentMapTemplate = (
+  components: (ComponentFile | ComponentFileWithType)[],
+  componentImports?: ComponentImport[]
+) => string;
+
+export type EnhancedComponentMapTemplate = (
+  components: (ComponentFile | ComponentFileWithType)[],
+  componentImports: ComponentImport[] | undefined,
+  ctx: {
+    entries: ComponentMapEntry[];
+    includeVariants: boolean;
+    isClientMap: boolean;
+  }
+) => string;
+
+/*
+ * An entry in the component map, including import lines and value expression.
+ */
+export type ComponentMapEntry = {
+  /** map entry key */
+  key: string;
+  /** namespace import lines needed for this entry */
+  imports: string[];
+  /** whether base is client (and we're in main map) */
+  annotateClient: boolean;
+  /** expression used as the map value */
+  valueExpr: string;
+};
+
 /**
- * Describes a file that represents a component definition
- * @typedef ComponentFile
- * @property {string} filePath - Path to the component or code file
- * @property {string} importPath - Normalized path that can be used for import statements
- * @property {string} moduleName - Normalized name that can be used as import
- * @property {string} componentName - Name of the code file
+ * Definition for a component file
  */
 export interface ComponentFile {
+  /** The original file path of the component */
   filePath: string;
+  /** Normalized path that can be used for import statements */
   importPath: string;
+  /** Normalized name that can be used as import */
   moduleName: string;
+  /** Name of the code file */
   componentName: string;
+  /** Detected component type (server, client, or universal) */
   componentType?: ComponentType;
 }
 
+/*
+ * Definition for a component file with guaranteed componentType
+ */
 export interface ComponentFileWithType extends ComponentFile {
+  /** Detected component type (server, client, or universal) */
   componentType: ComponentType;
 }
 
 /**
  * Definition for custom components to be included in component map.
  * Use this to define components imported from modules/dependencies/packages
- * @typedef ComponentImport
- * @property {string} importName - Name of the import.
- * @property {object} importInfo - Information about how to import the package.
- * @property {string} importInfo.importFrom - The path from which to import the component(s).
- * @property {string[]} [importInfo.namedImports] - The specific named components to import from the package. Leave empty to have whole package be imported as wildcard and allow SXA variants support for component.
  */
 export interface ComponentImport {
+  /** The name of the import (e.g., 'MyComponent')*/
   importName: string;
+  /** Information about how to import the package */
   importInfo: {
+    /** The path from which to import the component(s) */
     importFrom: string;
+    /** The specific named components to import from the package. Leave empty to have whole package be imported as wildcard and allow SXA variants support for component. */
     namedImports?: string[];
   };
 }
@@ -67,8 +99,13 @@ export interface ComponentImport {
  * }
  * @param {string[]} paths paths to search
  * @param {string[]} [exclude] paths and glob patterns to exclude from final result
+ * @param {boolean} [includeVariants] whether to include variant components
  */
-function _getComponentList(paths: string[], exclude?: string[]): ComponentFile[] {
+function _getComponentList(
+  paths: string[],
+  exclude?: string[],
+  includeVariants?: boolean
+): ComponentFile[] {
   const components = paths.reduce<ComponentFile[]>((result, path) => {
     const globPath =
       glob.hasMagic(path, { magicalBraces: true }) || path.match(componentNamePattern)
@@ -80,7 +117,6 @@ function _getComponentList(paths: string[], exclude?: string[]): ComponentFile[]
         .filter((path: string) => path.match(componentNamePattern))
         .map((filePath: string) => {
           const name = filePath.match(componentNamePattern)![2];
-          console.debug(`Registering Content SDK component ${name}`);
           return {
             filePath,
             importPath: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
@@ -91,17 +127,15 @@ function _getComponentList(paths: string[], exclude?: string[]): ComponentFile[]
     );
   }, []);
 
-  return components;
+  return includeVariants
+    ? components
+    : components.filter((component) => !component.componentName.includes('.'));
 }
 
 /**
-<<<<<<< HEAD
- * @param projectRoot
-=======
  * Detects the Next.js router type (App Router or Pages Router) based on directory structure.
  * @param {string} projectRoot - The project root directory. Defaults to current working directory.
  * @returns {RouterType} 'app' if App Router is detected, 'pages' otherwise
->>>>>>> 320740678885c09d24564322cf9d5dea44f6f1f1
  */
 export function detectRouterType(projectRoot: string = process.cwd()): RouterType {
   const appDirExists =
@@ -290,15 +324,17 @@ export function detectComponentType(filePath: string, routerType?: RouterType): 
  * Get list of components with detected types (server, client, or universal).
  * @param {string[]} paths - Paths to search for components
  * @param {string[]} [exclude] - Paths and glob patterns to exclude from final result
+ * @param {boolean} includeVariants - Whether to include variant components
  * @param {RouterType} [routerType] - Optional router type override for type detection. Auto-detected if not provided.
  * @returns {ComponentFileWithType[]} Array of components with their detected types
  */
 export function getComponentListWithTypes(
   paths: string[],
   exclude?: string[],
+  includeVariants?: boolean,
   routerType?: RouterType
 ): ComponentFileWithType[] {
-  const components = getComponentList(paths, exclude);
+  const components = getComponentList(paths, exclude, includeVariants);
   const detectedRouterType = routerType || detectRouterType();
 
   return components.map((component) => ({

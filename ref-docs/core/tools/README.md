@@ -20,7 +20,10 @@
 
 ## Type Aliases
 
+- [ComponentMapEntry](type-aliases/ComponentMapEntry.md)
+- [ComponentMapTemplate](type-aliases/ComponentMapTemplate.md)
 - [ComponentType](type-aliases/ComponentType.md)
+- [EnhancedComponentMapTemplate](type-aliases/EnhancedComponentMapTemplate.md)
 - [GenerateMapArgs](type-aliases/GenerateMapArgs.md)
 - [GenerateMapFunction](type-aliases/GenerateMapFunction.md)
 - [GenerateSitesConfig](type-aliases/GenerateSitesConfig.md)
@@ -41,6 +44,8 @@
 - [generatePlugins](functions/generatePlugins.md)
 - [generateSites](functions/generateSites.md)
 - [getComponentListWithTypes](functions/getComponentListWithTypes.md)
+- [getComponentSpec](functions/getComponentSpec.md)
+- [getComponentSpecUrl](functions/getComponentSpecUrl.md)
 - [matchPath](functions/matchPath.md)
 - [scaffoldComponent](functions/scaffoldComponent.md)
 - [writeImportMap](functions/writeImportMap.md)

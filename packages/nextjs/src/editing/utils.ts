@@ -78,6 +78,14 @@ export const mapEditingParams = (query: {
 };
 
 /**
+ * Next.js preview cookies enum
+ */
+export const enum PreviewCookies {
+  PREVIEW_DATA = '__next_preview_data',
+  PRERENDER_BYPASS = '__prerender_bypass',
+}
+
+/**
  * Filters out Next.js preview cookies from a cookie string or array
  * @param {string | string[] | null} cookies cookie header value
  * @returns {string[] | null} filtered cookies
@@ -92,7 +100,8 @@ export const cleanupNextPreviewCookies = (cookies: string | string[] | null) => 
   // Filter out Next.js preview cookies
   const filteredCookies = cookies.filter(
     (cookie: string) =>
-      !/^__next_preview_data=/.test(cookie) && !/^__prerender_bypass=/.test(cookie)
+      !new RegExp(`^${PreviewCookies.PREVIEW_DATA}=`).test(cookie) &&
+      !new RegExp(`^${PreviewCookies.PRERENDER_BYPASS}=`).test(cookie)
   );
   return filteredCookies;
 };

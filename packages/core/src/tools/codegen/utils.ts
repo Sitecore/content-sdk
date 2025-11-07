@@ -1,34 +1,37 @@
+/* eslint-disable jsdoc/require-jsdoc */
 import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
 import debug from './../../debug';
+import { isBuiltin } from 'module';
 
 /**
- * Description properties for the files sent to the mesh endpoint
+ * Parse the generated component-map file and return all referenced modules
+ * per map entry (handles both single identifiers and spread objects).
+ * @param {string} appRoot path to the JSS app root
+ * @param {string} componentMapPath path to the component map file
+ * @returns map of component names and their respective import strings
  */
-export type ExtractedFile = {
-  name: string;
-  path: string;
-  type: ExtractedFileType;
-};
+export let resolveComponentImportFiles = _resolveComponentImportFiles;
 
 /**
- * Type of file to be sent to the mesh endpoint
+ * Reads the named exports from a TypeScript file.
+ * @param {ExtractedFile} filePath absolute path to a .ts/.tsx file
+ * @returns {string[]} list of named exports found in the file
  */
-export enum ExtractedFileType {
-  Component = 'component',
-  Json = 'json',
-  PackageJson = 'package.json',
-}
+export let readNamedExports = _readNamedExports;
 
-export const _xmCloudDeploy = () => !!process.env.SITECORE && !!process.env.SITECORE_BUILD;
-
-export const utils: {
-  xmCloudDeploy: () => boolean;
-} = {
-  xmCloudDeploy: (...args) => _xmCloudDeploy(...args),
-};
+/**
+ * Sends the extracted code to the specified target URL.
+ * @param {object} params - The parameters object.
+ * @param {ExtractedFile} params.file - The file to be sent.
+ * @param {string} params.token - The access token for authentication.
+ * @param {string} params.targetUrl - The target URL to send the file to.
+ * @param {Record<string, unknown>} [params.extraLabels] - Additional labels to include in the payload.
+ * @returns {Promise<string | null>} - The path of the sent file or null if sending failed.
+ */
+export let sendCode = _sendCode;
 
 export const utilsUnitMocks = {
   set xmCloudDeploy(mockImpl: () => boolean) {
@@ -37,7 +40,59 @@ export const utilsUnitMocks = {
   get xmCloudDeploy() {
     return _xmCloudDeploy;
   },
+  set resolveComponentImportFiles(mockImpl) {
+    resolveComponentImportFiles = mockImpl;
+  },
+  get resolveComponentImportFiles() {
+    return _resolveComponentImportFiles;
+  },
+  set readNamedExports(mockImpl) {
+    readNamedExports = mockImpl;
+  },
+  get readNamedExports() {
+    return _readNamedExports;
+  },
+  set sendCode(mockImpl) {
+    sendCode = mockImpl;
+  },
+  get sendCode() {
+    return _sendCode;
+  },
 };
+
+/**
+ * Description properties for the files sent to the mesh endpoint
+ */
+export type ExtractedFile = {
+  name: string;
+  path: string;
+  type: ExtractedFileType;
+  labels?: Record<string, unknown>;
+};
+
+/**
+ * Type of file to be sent to the mesh endpoint
+ */
+export enum ExtractedFileType {
+  Component = 'component',
+  Variant = 'variant',
+  Json = 'json',
+  PackageJson = 'package.json',
+}
+
+export type ResolvedImport = {
+  componentKey: string; // map key, e.g. 'PromoBlock'
+  filePath: string; // absolute file path to source (with extension)
+  fileType: ExtractedFileType;
+};
+
+export const utils: {
+  xmCloudDeploy: () => boolean;
+} = {
+  xmCloudDeploy: (...args) => _xmCloudDeploy(...args),
+};
+
+export const _xmCloudDeploy = () => !!process.env.SITECORE && !!process.env.SITECORE_BUILD;
 
 // workaround, Vercel does not have variables that are only accessible at build time
 const vercelDeploy = () => !!process.env.VERCEL && !process.env.VERCEL_REGION;
@@ -48,164 +103,284 @@ const netlifyDeploy = () => !!process.env.NETLIFY && !!process.env.BUILD_ID;
  * deploy context
  * @returns {boolean} - true if in deploy context, false otherwise
  */
-export const validateDeployContext = () => {
+export function validateDeployContext() {
   return _xmCloudDeploy() || vercelDeploy() || netlifyDeploy();
-};
+}
 
-/**
- * Parses the componentBuilder.ts file and returns a map of component names
- * and their respective import strings
- * @param {string} appPath path to the JSS app root
- * @param {string} [componentMapPath] path to the app's component map file. Default: '.sitecore/component-map.ts'
- * @returns map of component names and their respective import strings
+/*
+ * Load and parse the tsconfig.json file from the specified app path.
  */
-export const resolveComponentImportFiles = (
-  appPath: string,
-  componentMapPath: string = './.sitecore/component-map.ts'
-) => {
-  appPath = path.isAbsolute(appPath) ? appPath : path.resolve(process.cwd(), appPath);
-  const tsConfig = ts.readConfigFile(path.resolve(appPath, 'tsconfig.json'), ts.sys.readFile);
-
-  if (tsConfig.error) {
-    throw new Error(`Error reading tsconfig.json from JSS app root: ${tsConfig.error.messageText}`);
+function loadCompilerOptions(appPathAbs: string): ts.CompilerOptions {
+  const configPath = ts.findConfigFile(appPathAbs, ts.sys.fileExists, 'tsconfig.json');
+  if (!configPath) {
+    // Sane defaults if no tsconfig exists
+    return {
+      jsx: ts.JsxEmit.Preserve,
+      allowJs: true,
+      module: ts.ModuleKind.ESNext,
+      moduleResolution: ts.ModuleResolutionKind.NodeNext,
+      target: ts.ScriptTarget.ES2020,
+      baseUrl: appPathAbs,
+      noEmit: true,
+    };
   }
 
-  const componentMapFullPath = path.isAbsolute(componentMapPath)
+  const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
+  if (configFile.error) {
+    throw new Error(`Error reading tsconfig at ${configPath}: ${configFile.error.messageText}`);
+  }
+
+  const parsed = ts.parseJsonConfigFileContent(configFile.config, ts.sys, path.dirname(configPath));
+
+  // Merge with a few safe fallbacks/overrides
+  return {
+    jsx: ts.JsxEmit.Preserve,
+    allowJs: true,
+    module: ts.ModuleKind.ESNext,
+    moduleResolution: ts.ModuleResolutionKind.NodeNext,
+    target: ts.ScriptTarget.ES2020,
+    baseUrl: appPathAbs,
+    noEmit: true,
+    ...parsed.options,
+  };
+}
+
+/*
+ * Resolve a module specifier using tsconfig options (fast, no Program needed).
+ */
+function resolveWithTs(spec: string, fromFile: string, options: ts.CompilerOptions): string | null {
+  const host: ts.ModuleResolutionHost = {
+    fileExists: ts.sys.fileExists,
+    readFile: ts.sys.readFile,
+    directoryExists: ts.sys.directoryExists,
+    getCurrentDirectory: ts.sys.getCurrentDirectory,
+    getDirectories: ts.sys.getDirectories,
+    realpath: ts.sys.realpath,
+  };
+  const result = ts.resolveModuleName(spec, fromFile, options, host);
+  return result.resolvedModule?.resolvedFileName ?? null;
+}
+
+function _resolveComponentImportFiles(
+  appRoot: string,
+  componentMapPath: string = './.sitecore/component-map.ts'
+): ResolvedImport[] {
+  const appPath = path.isAbsolute(appRoot) ? appRoot : path.resolve(process.cwd(), appRoot);
+  const mapPath = path.isAbsolute(componentMapPath)
     ? componentMapPath
     : path.resolve(appPath, componentMapPath);
 
-  const cliCompilerOptions = {
-    ...tsConfig.config.compilerOptions,
-    baseUrl: appPath,
+  if (!fs.existsSync(mapPath)) {
+    throw new ReferenceError(`Failed to find file ${mapPath}`);
+  }
+
+  // 1) Load tsconfig (simple + safe). Use appPath as baseUrl fallback.
+  const compilerOptions = loadCompilerOptions(appPath);
+
+  // Read & parse the map file to an AST (SourceFile)
+  const mapText = fs.readFileSync(mapPath, 'utf8');
+  const source = ts.createSourceFile(mapPath, mapText, ts.ScriptTarget.Latest, true);
+
+  const getFileType = (absPath: string): ExtractedFileType => {
+    const base = path.basename(absPath); // "PromoBlock.extra.tsx"
+    const name = base.replace(/\.[^.]+$/, ''); // "PromoBlock.extra"
+    return name.includes('.') ? ExtractedFileType.Variant : ExtractedFileType.Component;
   };
 
-  const tsHost = ts.createCompilerHost(cliCompilerOptions, true);
-  const componentMapSourceFile = tsHost.getSourceFile(
-    componentMapFullPath,
-    ts.ScriptTarget.Latest,
-    (msg) => {
-      throw new Error(`Failed to parse ${componentMapFullPath}: ${msg}`);
-    }
-  );
-
-  if (!componentMapSourceFile) throw ReferenceError(`Failed to find file ${componentMapFullPath}`);
-  // this map matches all raw import strings (i.e. * as component) to import strings
-  const importStringsMap: Record<string, string> = {};
-  // this map will match component names only to full resolved source file paths
-  const componentImportsMap: Map<string, string> = new Map();
-
-  let mapExportName: string = '';
-  // all new xyz() statements in file
-  const newAssignments: ts.Node[] = [];
-  // all map.set() assignments in file
-  const mapAssignments: ts.CallExpression[] = [];
-
-  // this function will traverse the  map = new Map([/values/]) statement
-  // and get the component names registered in map from it
-  const traverseNewStatement = (node: ts.Node) => {
-    // going through map invocation, we're looking for outer array value
-    if (ts.isArrayLiteralExpression(node)) {
-      ts.forEachChild(node, (childNode) => {
-        // and then parse each individual array pair (i.e. ['MyComp', MyComp])
-        if (!ts.isArrayLiteralExpression(childNode)) {
-          return;
-        }
-        const componentKey = childNode.elements[1].getText();
-        const componentImport = Object.keys(importStringsMap).find((importStatement) => {
-          const matcher = new RegExp(`\\b(${componentKey})\\b`);
-          return importStatement.match(matcher) !== null;
-        });
-        if (componentImport) {
-          const componentValue = importStringsMap[componentImport];
-          componentImportsMap.set(componentKey, componentValue);
-        }
-      });
-    } else if (node.getChildCount() > 0) {
-      ts.forEachChild(node, (childNode) => {
-        traverseNewStatement(childNode);
-      });
-    }
-  };
-
-  // step 1: get all import statements, map assignments (map.set) and map inits (map = new Map()) from componentMap file
-  ts.forEachChild(componentMapSourceFile, (childNode) => {
-    // first, all import statements are parsed
-    if (ts.isImportDeclaration(childNode) && childNode.importClause) {
-      // import path is extracted
-      const moduleName = childNode.moduleSpecifier.getText().replace(/['"]/g, '');
-      // unless the import is a nodeJS one, or points to dependency package, resolve full path to the imported source file
-      if (moduleName.startsWith('node:') || moduleName.indexOf('/node_modules') > -1) {
-        return;
-      }
-      const resolvedModule = ts.nodeModuleNameResolver(
-        moduleName,
-        componentMapFullPath,
-        cliCompilerOptions,
-        tsHost
-      );
-      const resolvedFile = resolvedModule?.resolvedModule?.resolvedFileName;
-      // module imports will be resolved to /node_modules location - we don't support that yet
-      if (resolvedFile) {
-        if (resolvedFile.indexOf('node_modules') === -1 && !resolvedFile.endsWith('.d.ts')) {
-          importStringsMap[childNode.importClause.getText()] = path.resolve(resolvedFile);
-        }
-      } else {
-        console.warn('Could not resolve a file for import %s', moduleName);
-      }
-    } else if (ts.isExpressionStatement(childNode)) {
-      // parse map assignments (map.set(..)) to get registered components
-      ts.forEachChild(childNode, (expressionNode) => {
-        if (
-          ts.isCallExpression(expressionNode) &&
-          expressionNode.expression.getText().indexOf('set') !== -1
-        ) {
-          // get map.set assignments
-          mapAssignments.push(expressionNode);
-        }
-      });
-    } else if (ts.isExportAssignment(childNode)) {
-      // get component map export variable
-      mapExportName = childNode.expression.getText();
-    } else if (childNode.kind === ts.SyntaxKind.FirstStatement) {
-      // get potential map = new Map() assignments to extract initial component values from
-      newAssignments.push(childNode);
+  // 1) Collect import (import %importString% from %importModule%) strings
+  const componentMapImports = new Map<string, string>();
+  source.forEachChild((node) => {
+    if (ts.isImportDeclaration(node) && node.importClause) {
+      const importString = node.importClause.getText();
+      const importModule = (node.moduleSpecifier as ts.StringLiteral).text;
+      componentMapImports.set(importString, importModule);
     }
   });
 
-  // step 2: parse map assignments (from map.set and the new Map()) and retrieve import paths
-  // only for components registered into component map
-  for (const mapAssignment of newAssignments) {
-    // parse new Map() statement first
-    // only consider variable name for map that is exported
-    if (
-      // get the (maybe) exported new Map() statement
-      // matches i.e. export const map.. / export default const map.. / let map = .. / etc
-      mapAssignment
-        .getText()
-        .match(`^((export )|(export default ))?\\b(var|let|const)\\b\\s{1}\\b(${mapExportName})\\b`)
-    ) {
-      traverseNewStatement(mapAssignment);
-      break;
-    }
-  }
-  for (const mapAssignment of mapAssignments) {
-    // only consider the map variable that is exported
-    if (mapAssignment.getText().startsWith(mapExportName)) {
-      const componentKey = mapAssignment.arguments[1].getText();
-      const componentImport = Object.keys(importStringsMap).find((importStatement) => {
-        const matcher = new RegExp(`\\b(${componentKey})\\b`);
-        return importStatement.match(matcher) !== null;
+  // 2) Find the map literal: new Map([...]) and collect entries
+  //    Also capture subsequent mutations: <mapIdent>.set('Key', Value)
+  const results: ResolvedImport[] = [];
+  const mapIdentifiers = new Set<string>(); // all identifiers bound to the Map we care about
+
+  // Given an import and an expression (identifier or object literal with spreads),
+  // resolve the module(s) to absolute file paths and append normalized entries to `results`.
+  const resolveAndRecordEntry = (importStringsEntry: string, mapEntry: ts.Expression) => {
+    // small guard to record a resolved path if valid
+    const recordIfValid = (spec: string) => {
+      // ignore Node built-ins and node: protocol up front
+      if (isBuiltin(spec) || isNodeProtocol(spec)) return;
+
+      const fileAbs = resolveWithTs(spec, mapPath, compilerOptions);
+      if (!fileAbs) return;
+
+      // ignore node_modules and *.d.ts after resolution
+      if (inNodeModules(fileAbs) || isDeclarationFile(fileAbs)) return;
+
+      results.push({
+        componentKey: importStringsEntry,
+        filePath: toPosixPath(fileAbs),
+        fileType: getFileType(fileAbs),
       });
-      if (componentImport) {
-        const componentValue = importStringsMap[componentImport];
-        componentImportsMap.set(componentKey, componentValue);
+    };
+
+    // Helper to find the matching import statement for a given component/module name
+    const getImportPathForModule = (componentModuleName: string) => {
+      let result = componentMapImports.get(componentModuleName);
+      if (!result) {
+        for (const key of componentMapImports.keys()) {
+          const matcher = new RegExp(`\\b(${componentModuleName})\\b`);
+          if (key.match(matcher) !== null) {
+            return componentMapImports.get(key);
+          }
+        }
+        return null;
+      }
+      return result;
+    };
+
+    // Case A: ['Key', Identifier]
+    if (ts.isIdentifier(mapEntry)) {
+      const componentEntryName = mapEntry.text;
+      const importPathString = getImportPathForModule(componentEntryName);
+      if (!importPathString) return;
+      recordIfValid(importPathString);
+      return;
+    }
+
+    // Case B: ['Key', { ...A, ...B, ...C }]
+    if (ts.isObjectLiteralExpression(mapEntry)) {
+      mapEntry.properties.forEach((prop) => {
+        if (ts.isSpreadAssignment(prop) && ts.isIdentifier(prop.expression)) {
+          const componentEntryName = prop.expression.text;
+          const importPathString = getImportPathForModule(componentEntryName);
+          if (!importPathString) return;
+          recordIfValid(importPathString);
+        }
+      });
+    }
+  };
+
+  // Walk the `new Map([...])` array literal and feed each ['Key', Value] into
+  // `resolveAndRecordEntry` (only when the key is a string literal).
+  const collectArrayEntries = (arrayArg: ts.ArrayLiteralExpression) => {
+    arrayArg.elements.forEach((el) => {
+      if (ts.isArrayLiteralExpression(el)) {
+        const [keyNode, valNode] = el.elements;
+        if (keyNode && valNode && ts.isStringLiteral(keyNode)) {
+          resolveAndRecordEntry(keyNode.text, valNode as ts.Expression);
+        }
+      }
+    });
+  };
+
+  // If this `new Map([...])` is bound to a variable (via decl or assignment),
+  // record the identifier name so we can catch later `<id>.set(...)` mutations.
+  const captureMapIdentifier = (node: ts.NewExpression) => {
+    // const m = new Map([...])
+    const parent = node.parent;
+
+    // Variable declaration with initializer new Map(...)
+    if (parent && ts.isVariableDeclaration(parent) && ts.isIdentifier(parent.name)) {
+      mapIdentifiers.add(parent.name.text);
+      return;
+    }
+
+    // Assignment: m = new Map([...])
+    if (
+      parent &&
+      ts.isBinaryExpression(parent) &&
+      parent.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+      ts.isIdentifier(parent.left)
+    ) {
+      mapIdentifiers.add(parent.left.text);
+      return;
+    }
+
+    // Exported variable declaration: export const componentMap = new Map([...])
+    if (parent && ts.isVariableDeclaration(parent) && ts.isIdentifier(parent.name)) {
+      mapIdentifiers.add(parent.name.text);
+      return;
+    }
+  };
+
+  const traverseAst = (node: ts.Node) => {
+    // A) Initial literal: new Map([...])
+    if (
+      ts.isNewExpression(node) &&
+      node.expression.getText(source) === 'Map' &&
+      node.arguments &&
+      node.arguments.length > 0
+    ) {
+      const firstArg = node.arguments[0];
+      if (ts.isArrayLiteralExpression(firstArg)) {
+        collectArrayEntries(firstArg);
+      }
+      captureMapIdentifier(node);
+    }
+
+    // B) Mutations: <mapIdent>.set('Key', Value)
+    if (
+      ts.isCallExpression(node) &&
+      ts.isPropertyAccessExpression(node.expression) &&
+      node.expression.name.text === 'set'
+    ) {
+      const target = node.expression.expression;
+      if (ts.isIdentifier(target) && mapIdentifiers.has(target.text)) {
+        const [keyArg, valArg] = node.arguments ?? [];
+        if (keyArg && ts.isStringLiteral(keyArg) && valArg) {
+          resolveAndRecordEntry(keyArg.text, valArg as ts.Expression);
+        }
       }
     }
-  }
-  return componentImportsMap;
-};
 
-export const sendCode = async ({
+    ts.forEachChild(node, traverseAst);
+  };
+
+  ts.forEachChild(source, traverseAst);
+
+  return results.filter((r) => !isDeclarationFile(r.filePath));
+}
+
+function _readNamedExports(filePath: string): string[] {
+  const code = fs.readFileSync(filePath, 'utf8');
+  const sf = ts.createSourceFile(filePath, code, ts.ScriptTarget.Latest, true);
+
+  const names = new Set<string>();
+
+  const visit = (node: ts.Node) => {
+    // export const X = ...
+    if (
+      ts.isVariableStatement(node) &&
+      node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)
+    ) {
+      node.declarationList.declarations.forEach((d) => {
+        if (ts.isIdentifier(d.name)) names.add(d.name.text);
+      });
+    }
+    // export function X() {}
+    if (
+      ts.isFunctionDeclaration(node) &&
+      node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword) &&
+      node.name
+    ) {
+      names.add(node.name.text);
+    }
+    // export { A, B as C }
+    if (ts.isExportDeclaration(node) && node.exportClause && ts.isNamedExports(node.exportClause)) {
+      node.exportClause.elements.forEach((e) => names.add(e.name.text));
+    }
+    // export default ...
+    if (ts.isExportAssignment(node)) {
+      names.add('Default');
+    }
+    ts.forEachChild(node, visit);
+  };
+
+  ts.forEachChild(sf, visit);
+  return Array.from(names);
+}
+
+async function _sendCode({
   file,
   token,
   targetUrl,
@@ -213,14 +388,22 @@ export const sendCode = async ({
   file: ExtractedFile;
   token: string;
   targetUrl: string;
-}) => {
-  // Use the new Edge Platform mesh endpoint format
+}) {
   const apiEndpoint = `${targetUrl}/mesh/push/api/v1/contentsdk/code/extracted`;
+
   if (!fs.existsSync(file.path)) {
     console.error(chalk.red(`File not found: ${file.path}`));
     return null;
   }
+
   const code = fs.readFileSync(file.path);
+
+  // Merge base labels with any extra labels (variants, componentName, etc.)
+  const labels: Record<string, unknown> = {
+    type: file.type,
+    ...(file.labels || {}),
+  };
+
   try {
     const response = await fetch(apiEndpoint, {
       method: 'POST',
@@ -229,15 +412,13 @@ export const sendCode = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        // EnvironmentId can have any value - but it's required
         EnvironmentId: 'ContentSDK',
         name: file.name,
         content: code.toString(),
-        labels: {
-          type: file.type,
-        },
+        labels,
       }),
     });
+
     if (!response.ok) {
       console.error(
         chalk.red(`Failed to send extracted code from ${file.path}: ${response.statusText}`)
@@ -258,11 +439,30 @@ export const sendCode = async ({
     );
     return null;
   }
+
   return file.path;
-};
+}
+
+const NODE_PROTOCOL = 'node:';
+
+function isNodeProtocol(specifier: string): boolean {
+  return specifier.startsWith(NODE_PROTOCOL);
+}
+
+function isDeclarationFile(p: string): boolean {
+  return p.endsWith('.d.ts');
+}
+
+function inNodeModules(p: string): boolean {
+  return p.replace(/\\/g, '/').includes('/node_modules/');
+}
 
 // Normalize path separators to POSIX-style "/" for cross-platform consistency.
-export const toPosixPath = (p: string) => p.replace(/\\/g, '/');
+export function toPosixPath(p: string) {
+  if (/^\\\\\?\\/.test(p)) return p;
+  return p.replace(/\\/g, '/');
+}
+
 export const stripExtension = (p: string) => p.replace(/\.(tsx?|jsx?|mjs|cjs)$/, '');
 
 // Convert an absolute file path into an relative module specifier (POSIX)

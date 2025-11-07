@@ -1,7 +1,6 @@
 import { Argv } from 'yargs';
 
 import * as scaffold from './scaffold';
-
 import * as generateMap from './generate-map';
 
 /**

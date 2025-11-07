@@ -31,6 +31,7 @@
 
 ## Interfaces
 
+- [AppPlaceholderProps](interfaces/AppPlaceholderProps.md)
 - [CacheClient](interfaces/CacheClient.md)
 - [CacheOptions](interfaces/CacheOptions.md)
 - [ComponentFields](interfaces/ComponentFields.md)
@@ -99,11 +100,14 @@
 
 ## Functions
 
+- [AppPlaceholder](functions/AppPlaceholder.md)
+- [BYOCServerWrapper](functions/BYOCServerWrapper.md)
 - [BYOCWrapper](functions/BYOCWrapper.md)
 - [ClientEditingChromesUpdate](functions/ClientEditingChromesUpdate.md)
 - [DesignLibrary](functions/DesignLibrary.md)
 - [EditingScripts](functions/EditingScripts.md)
 - [FEaaSComponent](functions/FEaaSComponent.md)
+- [FEaaSServerWrapper](functions/FEaaSServerWrapper.md)
 - [FEaaSWrapper](functions/FEaaSWrapper.md)
 - [fetchBYOCComponentServerProps](functions/fetchBYOCComponentServerProps.md)
 - [fetchFEaaSComponentServerProps](functions/fetchFEaaSComponentServerProps.md)
@@ -111,7 +115,6 @@
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getFieldValue](functions/getFieldValue.md)
-- [ServerPlaceholder](functions/ServerPlaceholder.md)
 - [useSitecore](functions/useSitecore.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEditorChromes](functions/withEditorChromes.md)
@@ -121,6 +124,18 @@
 - [withSitecore](functions/withSitecore.md)
 
 ## References
+
+### BYOCClientWrapper
+
+Renames and re-exports [BYOCWrapper](functions/BYOCWrapper.md)
+
+***
+
+### FEaaSClientWrapper
+
+Renames and re-exports [FEaaSWrapper](functions/FEaaSWrapper.md)
+
+***
 
 ### PlaceholderComponentProps
 

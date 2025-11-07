@@ -8,8 +8,10 @@ import * as fs from 'node:fs';
 import * as index from '../src/index';
 
 export const components = new Map([
-    ['TestComponent', TestComponent],
-    ['Test2', Test2],
+  ['TestComponent', TestComponent],
+  ['Test2', Test2],
+  ['fs', fs],
+  ['index', index],
 ]);
 
 export default components;

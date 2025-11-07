@@ -8,7 +8,7 @@
 
 > **extractFiles**: *typeof* `_extractFiles`
 
-Defined in: core/types/tools/codegen/extract-files.d.ts:11
+Defined in: core/types/tools/codegen/extract-files.d.ts:15
 
 Extracts components from the app folder and sends them to XMCloud.
 

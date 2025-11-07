@@ -108,6 +108,14 @@ export { Placeholder } from './components/Placeholder';
 export { NextImage } from './components/NextImage';
 import * as FEaaSWrapper from './components/FEaaSWrapper';
 import * as BYOCWrapper from './components/BYOCWrapper';
+export {
+  FEaaSClientWrapper,
+  FEaaSServerWrapper,
+  BYOCClientWrapper,
+  BYOCServerWrapper,
+} from '@sitecore-content-sdk/react';
+// Preserving original FEaaSWrapper export name for backward compatibility
+// TODO: remove in future major release
 export { FEaaSWrapper };
 export { BYOCWrapper };
 
@@ -154,6 +162,7 @@ export {
   withEmptyFieldEditingComponent,
   EditingScripts,
   Form,
-  ServerPlaceholder,
   ClientEditingChromesUpdate,
+  AppPlaceholder,
+  AppPlaceholderProps,
 } from '@sitecore-content-sdk/react';

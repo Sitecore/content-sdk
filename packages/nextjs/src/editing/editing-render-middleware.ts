@@ -156,9 +156,10 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
     if (mode === LayoutServicePageState.Preview) {
+      const cookies = res.getHeader('Set-Cookie') as string[];
       const previewCookies = getPreviewCookies(query.sc_site);
 
-      res.setHeader('Set-Cookie', previewCookies);
+      res.setHeader('Set-Cookie', [...cookies, ...previewCookies]);
     }
 
     // Restrict the page to be rendered only within the allowed origins

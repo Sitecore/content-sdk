@@ -47,7 +47,8 @@ export {
   Placeholder,
   PlaceholderProps,
   PlaceholderProps as PlaceholderComponentProps,
-  ServerPlaceholder,
+  AppPlaceholder,
+  AppPlaceholderProps,
 } from './components/Placeholder';
 export {
   Image,
@@ -64,17 +65,21 @@ export {
   FEaaSComponentProps,
   FEaaSComponentParams,
   fetchFEaaSComponentServerProps,
-} from './components/FEaaSComponent';
-export { FEaaSWrapper } from './components/FEaaSWrapper';
-export { DesignLibrary } from './components/DesignLibrary';
-export { DesignLibraryServer } from './components/DesignLibraryServer';
-export {
   BYOCComponent,
   BYOCComponentParams,
   BYOCComponentProps,
   fetchBYOCComponentServerProps,
-} from './components/BYOCComponent';
-export { BYOCWrapper } from './components/BYOCWrapper';
+  // leaving original names for backward compatibility
+  BYOCWrapper,
+  BYOCWrapper as BYOCClientWrapper,
+  FEaaSWrapper,
+  FEaaSWrapper as FEaaSClientWrapper,
+  FEaaSServerWrapper,
+  BYOCServerWrapper,
+} from './components/FEaaS';
+export { DesignLibrary } from './components/DesignLibrary';
+export { DesignLibraryServer } from './components/DesignLibraryServer';
+export {} from './components/FEaaS/BYOCComponent';
 export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';
 export { File, FileField } from './components/File';
 export {

@@ -19,10 +19,14 @@ import {
   getRequiredEditingParamsList,
   getCSPHeader,
   resolveServerUrl,
+  PreviewCookies,
 } from '../editing/utils';
 import { SITE_KEY } from '@sitecore-content-sdk/core/site';
 
-// Helper function to handle cookie operations - can be mocked for testing
+/**
+ * Helper function to handle cookie operations - can be mocked for testing
+ * @returns {Promise<NextCookies>} Next cookies
+ */
 export async function getNextCookies() {
   // In test environment, use mock cookie store only if specifically provided
   if (process.env.TEST === 'true' && (global as any).__TEST_COOKIE_STORE__) {
@@ -156,12 +160,16 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     responseHeaders['Content-Security-Policy'] = getCSPHeader();
 
     const cookieStore = await getNextCookies();
-    cookieStore.set('__prerender_bypass', cookieStore.get('__prerender_bypass')?.value || '', {
-      httpOnly: true,
-      path: '/',
-      sameSite: 'none',
-      secure: true,
-    });
+    cookieStore.set(
+      PreviewCookies.PRERENDER_BYPASS,
+      cookieStore.get(PreviewCookies.PRERENDER_BYPASS)?.value || '',
+      {
+        httpOnly: true,
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      }
+    );
 
     // Set Preview mode identifier cookies, if the page is rendered in Sitecore Preview mode
     if (mode === LayoutServicePageState.Preview) {

@@ -9,11 +9,23 @@ import {
 } from '@sitecore-content-sdk/core/layout';
 import { constants } from '@sitecore-content-sdk/core';
 import { HiddenRendering } from '../HiddenRendering';
-import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from '../FEaaSComponent';
-import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
-import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
-import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
-import { PlaceholderProps, RenderedProps } from './models';
+import {
+  FEaaSComponent,
+  FEaaSWrapper,
+  BYOCComponent,
+  BYOCWrapper,
+  BYOC_COMPONENT_RENDERING_NAME,
+  BYOC_WRAPPER_RENDERING_NAME,
+  FEAAS_COMPONENT_RENDERING_NAME,
+  FEAAS_WRAPPER_RENDERING_NAME,
+} from '../FEaaS';
+import {
+  AppComponentProps,
+  BasePlaceholderProps,
+  ComponentForRendering,
+  PlaceholderProps,
+  RenderedProps,
+} from './models';
 
 /**
  * Get the renderings for the specified placeholder from the rendering data.
@@ -108,20 +120,34 @@ export const getRenderedComponentProps = (
   componentRendering: ComponentRendering,
   renderingKey: string
 ): RenderedProps => {
-  const {
-    fields: placeholderFields,
-    params: placeholderParams,
-    ...passThroughProps
-  } = placeholderProps;
+  // eslint-disable-next-line no-unused-vars
+  const { fields, params: placeholderParams, ...passThroughProps } = placeholderProps;
   delete passThroughProps.missingComponentComponent;
   delete passThroughProps.hiddenRenderingComponent;
   delete passThroughProps.name;
-  const fields = { ...(placeholderFields || {}), ...(componentRendering.fields || {}) };
-  const params = { ...(placeholderParams || {}), ...(componentRendering.params || {}) };
+  const mergedContentProps = getAppComponentProps(placeholderProps, componentRendering);
 
   return {
     key: renderingKey,
     ...passThroughProps,
+    ...mergedContentProps,
+    rendering: componentRendering,
+  };
+};
+
+/**
+ * Merge placeholder and component field and params content props.
+ * @param {BasePlaceholderProps} placeholderProps placeholder props
+ * @param {ComponentRendering} componentRendering component rendering
+ * @returns {ComponentProps} merged props
+ */
+export function getAppComponentProps<T extends BasePlaceholderProps>(
+  placeholderProps: T,
+  componentRendering: ComponentRendering
+): AppComponentProps {
+  const fields = { ...(placeholderProps.fields || {}), ...(componentRendering.fields || {}) };
+  const params = { ...(placeholderProps.params || {}), ...(componentRendering.params || {}) };
+  return {
     fields,
     params: {
       ...params,
@@ -130,7 +156,7 @@ export const getRenderedComponentProps = (
     },
     rendering: componentRendering,
   };
-};
+}
 
 /**
  * Get component implemenation from the component map based on the rendering definition.
@@ -147,19 +173,28 @@ export const getComponentForRendering = (
   componentMap?: ComponentMap,
   hiddenRenderingComponent?: React.ComponentClass | React.FC,
   missingComponentComponent?: React.ComponentClass | React.FC
-) => {
+): ComponentForRendering => {
+  const logUnknownComponentError = (variant?: string) => {
+    console.error(
+      `Placeholder ${placeholderName} contains unknown component ${
+        renderingDefinition.componentName
+      }${
+        variant ? ` (${variant})` : ''
+      }. Ensure that a React component exists for it, and that it is registered in your component-map file.`
+    );
+  };
+
   if (renderingDefinition.componentName === constants.HIDDEN_RENDERING_NAME) {
     return {
       component: hiddenRenderingComponent ?? HiddenRendering,
       isEmpty: true,
+      componentType: 'universal',
     };
   } else if (!renderingDefinition.componentName) {
-    console.error(
-      `Placeholder ${placeholderName} contains unknown component ${renderingDefinition.componentName}. Ensure that a React component exists for it, and that it is registered in your component-map file.`
-    );
     return {
       component: () => <></>,
       isEmpty: true,
+      componentType: 'universal',
     };
   }
 
@@ -177,14 +212,20 @@ export const getComponentForRendering = (
     if (renderingDefinition.componentName === FEAAS_COMPONENT_RENDERING_NAME) {
       return {
         component: FEaaSComponent,
+        isEmpty: false,
+        componentType: 'universal',
       };
     } else if (renderingDefinition.componentName === FEAAS_WRAPPER_RENDERING_NAME) {
       return {
         component: FEaaSWrapper,
+        isEmpty: false,
+        componentType: 'universal',
       };
     } else if (renderingDefinition.componentName === BYOC_COMPONENT_RENDERING_NAME) {
       return {
         component: BYOCComponent,
+        isEmpty: false,
+        componentType: 'universal',
       };
     } else if (renderingDefinition.componentName === BYOC_WRAPPER_RENDERING_NAME) {
       // wrapping with error boundary could cause problems in case where parent component uses withPlaceholder HOC and tries to access its children props
@@ -192,11 +233,17 @@ export const getComponentForRendering = (
       return {
         component: BYOCWrapper,
         dynamic: true,
+        componentType: 'universal',
+        isEmpty: false,
       };
     }
+
+    logUnknownComponentError();
+
     return {
       component: missingComponentComponent ?? MissingComponent,
       isEmpty: true,
+      componentType: 'universal',
     };
   }
 
@@ -210,10 +257,26 @@ export const getComponentForRendering = (
         (component as ReactModule).Default ||
         (component as ComponentType);
 
+  if (!renderedComponent) {
+    logUnknownComponentError(exportName !== DEFAULT_EXPORT_NAME ? exportName : undefined);
+
+    return {
+      component: missingComponentComponent ?? MissingComponent,
+      isEmpty: true,
+      componentType: 'universal',
+    };
+  }
+
+  const dynamic =
+    !!(renderedComponent as LazyComponentType).render?.preload ||
+    renderingDefinition.componentName === BYOC_WRAPPER_RENDERING_NAME;
+
   // all dynamic elements will have a separate render prop
   return {
     component: renderedComponent,
-    dynamic: !!(renderedComponent as LazyComponentType).render?.preload,
-    componentType: (component as ReactModule).componentType,
+    dynamic,
+    componentType: (component as ReactModule)
+      .componentType as ComponentForRendering['componentType'],
+    isEmpty: false,
   };
 };

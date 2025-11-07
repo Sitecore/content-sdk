@@ -12,21 +12,40 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+## 1.2.1
+
+### 🐛 Bug Fixes
+
+* `[nextjs]` Application build fails due to missing component variants ([#277](https://github.com/Sitecore/content-sdk/pull/277))
+
+## 1.2.0
+
 ### 🎉 New Features & Improvements
 
-* Next.js App Router support:
+* Next.js App Router support (beta):
   - Base template ([#191](https://github.com/Sitecore/content-sdk/pull/191))
   - Robots.txt and Sitemap.xml support ([#197](https://github.com/Sitecore/content-sdk/pull/197))
   - Editing and preview support ([#198](https://github.com/Sitecore/content-sdk/pull/198))
   - Internationalization support ([#202](https://github.com/Sitecore/content-sdk/pull/202)) ([#214](https://github.com/Sitecore/content-sdk/pull/214))
   - Client-server component map separation ([#230](https://github.com/Sitecore/content-sdk/pull/230))([#232](https://github.com/Sitecore/content-sdk/pull/232))([#234](https://github.com/Sitecore/content-sdk/pull/234))([#235](https://github.com/Sitecore/content-sdk/pull/235))([#241](https://github.com/Sitecore/content-sdk/pull/241))
-* [nextjs] Slim down sample even more ([#225](https://github.com/Sitecore/content-sdk/pull/225))
+  - Server components for FEAAS and BYOC ([#248](https://github.com/Sitecore/content-sdk/pull/248)) ([#262](https://github.com/Sitecore/content-sdk/pull/262))
+  - Generic App router compatible placeholder ([#258](https://github.com/Sitecore/content-sdk/pull/258))
+* `[core]` Introduce `scConfig` property in `sitecore.cli.config` ([#244](https://github.com/Sitecore/content-sdk/pull/244)):
+  * The `scConfig` property is used to pass the Sitecore configuration to the CLI commands.
+  * Build commands now receive arguments (e.g. `scConfig`) to allow access to the CLI specific configuration settings. Now it's optional to pass `scConfig` manually to the command constructor.
+* `[nextjs]` Slim down sample even more ([#225](https://github.com/Sitecore/content-sdk/pull/225))
 * Mark client components with `use client` directive. ([#226](https://github.com/Sitecore/content-sdk/pull/226))
 * Add LLMs and Copilot instruction files for improved AI guidance ([#239](https://github.com/Sitecore/content-sdk/pull/239))
+* `[core]` `[nextjs]` Enable component variants in component-map & also send variants files in code extraction ([#245](https://github.com/Sitecore/content-sdk/pull/245))([#251](https://github.com/Sitecore/content-sdk/pull/251))
+* `[core]` Expose `getData` on `SitecoreClient` to run raw GraphQL queries. ([#249](https://github.com/Sitecore/content-sdk/pull/249))
+* Add Claude AI guidance files for improved AI development support ([#254](https://github.com/Sitecore/content-sdk/pull/254))
+* Add Windsurf AI rules for improved IDE development support ([#255](https://github.com/Sitecore/content-sdk/pull/255))
 
 ### 🐛 Bug Fixes
 
+* `[nextjs]` Error when rendering Preview when Multisite middleware is disabled ([#256](https://github.com/Sitecore/content-sdk/pull/256))
 * `[template/nextjs]` `[template/next-app-router]` Fix imports for SSR/SSG ([#229](https://github.com/Sitecore/content-sdk/pull/229))
+* `[template/next-app-router]` Unable to render 'preview' without default sitename ([#247](https://github.com/Sitecore/content-sdk/pull/247))
 * `[template/next-app-router]` Guard static params generation and harden not-found routes for XM Cloud ([#242](https://github.com/Sitecore/content-sdk/pull/242))
 * `[template/next-app-router]` Prevent CloudSDK re-initialization on client-side navigation ([#243](https://github.com/Sitecore/content-sdk/pull/243))
 
@@ -38,6 +57,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* `[react]` `[core]` Unite capabilities of library | library-metadata with library-variant-generation modes. `isVariantGeneration` is honored only when `isDesignLibrary`(library | library-metadata) is true and `generation=variant` query string is passed to the editing render endpoint. ([#208](https://github.com/Sitecore/content-sdk/pull/208))
 * Add Cursor AI coding agent rules for consistent development patterns across the Content SDK repository ([#207](https://github.com/Sitecore/content-sdk/pull/207))
 * `[nextjs]` Support component-level data fetching in 404/500 pages ([#199](https://github.com/Sitecore/content-sdk/pull/199))
 * Migration from ESlint 8 -> ESLint 9 and introduction of the new Flat Config file ([#176](https://github.com/Sitecore/content-sdk/pull/176))
@@ -47,7 +67,7 @@ Our versioning strategy is as follows:
   - Dynamic component rendering ([#163](https://github.com/Sitecore/content-sdk/pull/163))
   - Updated API endpoint to new Edge Platform format ([#162](https://github.com/Sitecore/content-sdk/pull/162))
   - Ensure editing state is enabled in Design Library mode ([#181](https://github.com/Sitecore/content-sdk/pull/181))
-- `[core]` Ensure displayName paths are properly UTF-8 encoded. ([#179](https://github.com/Sitecore/content-sdk/pull/179))
+* `[core]` Ensure displayName paths are properly UTF-8 encoded. ([#179](https://github.com/Sitecore/content-sdk/pull/179))
 * `[react]` Add `component:status` events for VariantGeneration ([#190](https://github.com/Sitecore/content-sdk/pull/190))
 - `[react]` Enhanced the Design Library cache buster format to hh-dd-mm-yyyy ([#188](https://github.com/Sitecore/content-sdk/pull/188))
 * `[react]` `[core]` Unite capabilities of library | library-metadata with library-variant-generation modes. `isVariantGeneration` is honored only when `isDesignLibrary`(library | library-metadata) is true and `generation=variant` query string is passed to the editing render endpoint. ([#208](https://github.com/Sitecore/content-sdk/pull/208)) ([#215](https://github.com/Sitecore/content-sdk/pull/215))

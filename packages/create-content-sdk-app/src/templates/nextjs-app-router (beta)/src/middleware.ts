@@ -74,12 +74,15 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
 export const config = {
   /*
    * Match all paths except for:
-   * 1. API route handlers: /sitemap.xml and /robots.txt routes
+   * 1. API route handlers
    * 2. /_next (Next.js internals)
    * 3. /sitecore/api (Sitecore API routes)
    * 4. /- (Sitecore media)
    * 5. /healthz (Health check)
    * 7. all root files inside /public
    */
-  matcher: ['/', '/((?!sitemap|robots|_next/|healthz|sitecore/api/|-/|favicon.ico|sc_logo.svg).*)'],
+  matcher: [
+    '/',
+    '/((?!api/|sitemap|robots|_next/|healthz|sitecore/api/|-/|favicon.ico|sc_logo.svg).*)',
+  ],
 };

@@ -16,10 +16,16 @@ import { ComponentMap, ReactModule } from '../sharedTypes';
 import { constants } from '@sitecore-content-sdk/core';
 import { MissingComponent } from '../MissingComponent';
 import { HiddenRendering } from '../HiddenRendering';
-import { FEaaSComponent, FEAAS_COMPONENT_RENDERING_NAME } from '../FEaaSComponent';
-import { FEaaSWrapper, FEAAS_WRAPPER_RENDERING_NAME } from '../FEaaSWrapper';
-import { BYOCComponent, BYOC_COMPONENT_RENDERING_NAME } from '../BYOCComponent';
-import { BYOCWrapper, BYOC_WRAPPER_RENDERING_NAME } from '../BYOCWrapper';
+import {
+  FEaaSComponent,
+  FEAAS_COMPONENT_RENDERING_NAME,
+  FEaaSWrapper,
+  FEAAS_WRAPPER_RENDERING_NAME,
+  BYOCComponent,
+  BYOC_COMPONENT_RENDERING_NAME,
+  BYOCWrapper,
+  BYOC_WRAPPER_RENDERING_NAME,
+} from '../FEaaS';
 
 describe('placeholder-utils', () => {
   const sandbox = createSandbox();
@@ -472,7 +478,7 @@ describe('placeholder-utils', () => {
       const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
 
       expect(result?.component).to.equal(FEaaSComponent);
-      expect(result?.isEmpty).to.be.undefined;
+      expect(result?.isEmpty).to.be.false;
     });
 
     it('should return fallback implementation for FEaaSWrapper', () => {
@@ -487,7 +493,7 @@ describe('placeholder-utils', () => {
       const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
 
       expect(result?.component).to.equal(FEaaSWrapper);
-      expect(result?.isEmpty).to.be.undefined;
+      expect(result?.isEmpty).to.be.false;
     });
 
     it('should return fallback implementation for BYOCComponent', () => {
@@ -502,7 +508,7 @@ describe('placeholder-utils', () => {
       const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
 
       expect(result?.component).to.equal(BYOCComponent);
-      expect(result?.isEmpty).to.be.undefined;
+      expect(result?.isEmpty).to.be.false;
     });
 
     it('should return fallback implementation for BYOCWrapper', () => {
@@ -518,7 +524,7 @@ describe('placeholder-utils', () => {
 
       expect(result?.component).to.equal(BYOCWrapper);
       expect(result?.dynamic).to.be.true;
-      expect(result?.isEmpty).to.be.undefined;
+      expect(result?.isEmpty).to.be.false;
     });
 
     it('should return default missing component when component not found in component map', () => {
@@ -534,6 +540,28 @@ describe('placeholder-utils', () => {
 
       expect(result?.component).to.equal(MissingComponent);
       expect(result?.isEmpty).to.be.true;
+    });
+
+    it('should return missing component when component variant is not found', () => {
+      // Add a dummy entry so componentMap is not empty
+      componentMap.set('DummyComponent', {
+        default: () => <div>Dummy</div>,
+        CustomVariant: () => <div>Custom Variant</div>,
+      });
+
+      const rendering: ComponentRendering = {
+        componentName: 'DummyComponent',
+        uid: 'test-uid',
+        params: {
+          FieldNames: 'NonExistentVariant',
+        },
+      };
+
+      const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
+
+      expect(result?.component).to.equal(MissingComponent);
+      expect(result?.isEmpty).to.be.true;
+      expect(consoleErrorStub.calledOnce).to.be.true;
     });
 
     it('should return custom missing component when specified and component not found in component map', () => {
@@ -595,7 +623,6 @@ describe('placeholder-utils', () => {
       const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
 
       expect(result?.isEmpty).to.be.true;
-      expect(consoleErrorStub.calledOnce).to.be.true;
     });
   });
 });

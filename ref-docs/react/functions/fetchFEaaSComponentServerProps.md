@@ -6,9 +6,9 @@
 
 # Function: fetchFEaaSComponentServerProps()
 
-> **fetchFEaaSComponentServerProps**(`params`, `pageState?`, `endpointOverride?`): `Promise`\<[`FEaaSComponentProps`](../type-aliases/FEaaSComponentProps.md)\>
+> **fetchFEaaSComponentServerProps**(`params`, `isPageStateNormal?`, `endpointOverride?`): `Promise`\<`FEaaSComponentServerProps`\>
 
-Defined in: [packages/react/src/components/FEaaSComponent.tsx:108](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/react/src/components/FEaaSComponent.tsx#L108)
+Defined in: [packages/react/src/components/FEaaS/feaas-utils.ts:35](https://github.com/Sitecore/content-sdk/blob/dc0ca17cbadb2896d730e547fac38bbb4e3a00d3/packages/react/src/components/FEaaS/feaas-utils.ts#L35)
 
 Fetches server component props required for server rendering, based on rendering params.
 Component endpoint will either be retrieved from params or from endpointOverride
@@ -18,9 +18,9 @@ Component endpoint will either be retrieved from params or from endpointOverride
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `params` | [`FEaaSComponentParams`](../type-aliases/FEaaSComponentParams.md) | component params |
-| `pageState?` | [`LayoutServicePageState`](../enumerations/LayoutServicePageState.md) | page state to determine which component variant to use |
+| `isPageStateNormal?` | `boolean` | whether page is in normal mode |
 | `endpointOverride?` | `string` | optional override for component endpoint |
 
 ## Returns
 
-`Promise`\<[`FEaaSComponentProps`](../type-aliases/FEaaSComponentProps.md)\>
+`Promise`\<`FEaaSComponentServerProps`\>

@@ -8,7 +8,7 @@
 
 > **RedirectsServiceConfig** = [`CacheOptions`](../../index/interfaces/CacheOptions.md) & `object`
 
-Defined in: [packages/core/src/site/redirects-service.ts:36](https://github.com/Sitecore/content-sdk/blob/ca48edcc6e0b5ca5f670bd66a7cf5b742968ebbe/packages/core/src/site/redirects-service.ts#L36)
+Defined in: [packages/core/src/site/redirects-service.ts:36](https://github.com/Sitecore/content-sdk/blob/dc0ca17cbadb2896d730e547fac38bbb4e3a00d3/packages/core/src/site/redirects-service.ts#L36)
 
 ## Type declaration
 
