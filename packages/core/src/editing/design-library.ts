@@ -9,6 +9,11 @@ import { DesignLibraryMode } from './models';
 const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
 
 /**
+ * Prefix for component update cache keys
+ */
+export const COMPONENT_UPDATE_CACHE_KEY_PREFIX = 'component-update-';
+
+/**
  * Represents an event indicating the status of a component in the library.
  */
 export interface DesignLibraryStatusEvent {
