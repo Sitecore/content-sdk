@@ -10,16 +10,14 @@ import {
   RichText,
   NextImage,
   Placeholder as Placeholder_8a80e63291fea86e0744df19113dc44bec187216,
-  ServerPlaceholder,
+  AppPlaceholder,
   CdpHelper,
   withDatasourceCheck,
 } from '@sitecore-content-sdk/nextjs';
 import { Suspense } from 'react';
 import React from 'react';
-import Placeholder from 'components/content-sdk/Placeholder';
 import { componentMap } from '.sitecore/component-map';
 import client from 'src/lib/sitecore-client';
-import { rsc } from 'rsc-env';
 import { pageView } from '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
 
@@ -33,7 +31,7 @@ const importMapServer = [
       { name: 'RichText', value: RichText },
       { name: 'NextImage', value: NextImage },
       { name: 'Placeholder', value: Placeholder_8a80e63291fea86e0744df19113dc44bec187216 },
-      { name: 'ServerPlaceholder', value: ServerPlaceholder },
+      { name: 'AppPlaceholder', value: AppPlaceholder },
       { name: 'CdpHelper', value: CdpHelper },
       { name: 'withDatasourceCheck', value: withDatasourceCheck },
     ],
@@ -46,20 +44,12 @@ const importMapServer = [
     ],
   },
   {
-    module: 'components/content-sdk/Placeholder',
-    exports: [{ name: 'default', value: Placeholder }],
-  },
-  {
     module: '.sitecore/component-map',
     exports: [{ name: 'componentMap', value: componentMap }],
   },
   {
     module: 'src/lib/sitecore-client',
     exports: [{ name: 'default', value: client }],
-  },
-  {
-    module: 'rsc-env',
-    exports: [{ name: 'rsc', value: rsc }],
   },
   {
     module: '@sitecore-cloudsdk/events/browser',
@@ -72,4 +62,3 @@ const importMapServer = [
 ];
 
 export default combineImportEntries(defaultImportEntries, importMapServer);
-

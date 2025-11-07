@@ -10,7 +10,7 @@ import {
   ComponentParams,
 } from '@sitecore-content-sdk/core/layout';
 import { ComponentMap } from './sharedTypes';
-import { ServerPlaceholder } from './Placeholder';
+import { AppPlaceholder } from './Placeholder';
 import { DesignLibraryClient } from './DesignLibraryClient';
 import { getCacheAndClean, hasCache } from '@sitecore-content-sdk/core/utils';
 import {
@@ -118,7 +118,7 @@ export const DesignLibraryServer = async ({
           params={(rendering as ComponentRendering<ComponentFields>).params}
         />
       ) : (
-        <ServerPlaceholder
+        <AppPlaceholder
           name={EDITING_COMPONENT_PLACEHOLDER}
           page={page}
           rendering={rendering}
