@@ -5,6 +5,15 @@ import { getDataFromFields } from '../../utils';
 import { BYOCComponentProps, ErrorComponentProps } from './models';
 import { MissingComponent } from '../MissingComponent';
 
+// Allow mocking of FEAAS.ExternalComponent for testing
+let { ExternalComponent } = FEAAS;
+
+export const __mockDependencies = (mocks: any) => {
+  if (mocks.ExternalComponent) {
+    ExternalComponent = mocks.ExternalComponent;
+  }
+};
+
 const DefaultErrorComponent = (props: ErrorComponentProps) => (
   <div>A rendering error occurred: {props.error?.message}.</div>
 );
@@ -92,7 +101,7 @@ export class BYOCComponent extends React.Component<BYOCComponentProps> {
 
     // we render fallback on client to avoid problems with client-only components
     return (
-      <FEAAS.ExternalComponent
+      <ExternalComponent
         {...props.rendering}
         componentName={componentName}
         clientFallback={fallbackComponent}
