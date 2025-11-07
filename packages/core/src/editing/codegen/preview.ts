@@ -31,6 +31,14 @@ export interface ImportEntry {
 }
 
 /**
+ * Represents the payload for the import entry to be sent to design library.
+ */
+export interface ImportEntryPayload {
+  module: string;
+  exports: string[];
+}
+
+/**
  * Represents a component import.
  */
 export type ComponentImport = {
@@ -316,6 +324,74 @@ export const addComponentPreviewHandler = (
   return unsubscribe;
 };
 
+export const addServerComponentPreviewHandler = (
+  callback: (eventArgs: ComponentPreviewEventArgs) => void
+) => {
+  const handler = (e: MessageEvent) => {
+    if (!e.origin || !e.data || e.data.name !== 'component:generation:component-preview') {
+      // avoid extra noise in logs
+      if (!validateOrigin(e)) {
+        console.debug(
+          'Component Library: event skipped - invalid origin: message %s from origin %s',
+          e.data.name,
+          e.origin
+        );
+      }
+
+      return;
+    }
+
+    callback(e.data as ComponentPreviewEventArgs);
+  };
+
+  window.addEventListener('message', handler);
+
+  const unsubscribe = () => {
+    window.removeEventListener('message', handler);
+  };
+
+  return unsubscribe;
+};
+
+export const createComponent = (
+  importMap: ImportEntry[],
+  previewEventArgs: ComponentPreviewEventArgs
+): unknown => {
+  const { message } = previewEventArgs;
+  const dependencies = buildComponentDependencies(message.imports, importMap);
+
+  if (dependencies.missing.modules.length > 0 || dependencies.missing.exports.length > 0) {
+    let errorMessage = '';
+
+    dependencies.missing.modules.forEach((mod) => {
+      errorMessage += `Missing module: '${mod.module}' with alias: '${mod.alias}'\n`;
+    });
+
+    dependencies.missing.exports.forEach((exp) => {
+      const alias = exp.export !== exp.alias ? ` with alias: '${exp.alias}'` : '';
+      errorMessage += `Missing export: '${exp.export}' from module: '${exp.module}'${alias}\n`;
+    });
+
+    throw errorMessage;
+  }
+
+  const importNames = dependencies.successful.map((entry) => entry.name);
+  const importInstances = dependencies.successful.map((entry) => entry.value);
+
+  const exports: { Component: unknown } = { Component: null };
+  const componentFn = new Function(
+    'exports',
+    message.styles.styleImport.name,
+    ...importNames,
+    message.code.content
+  );
+
+  // Function will set exports.Component
+  componentFn(exports, message.styles.styleImport.content, ...importInstances);
+
+  return exports.Component;
+};
+
 /**
  * Generates a DesignLibraryComponentPreviewErrorEvent with the given uid and error.
  * @param {string} uid - The unique identifier for the event.
@@ -366,10 +442,7 @@ export function getDesignLibraryImportMapEvent(
   uid: string,
   importMap: ImportEntry[]
 ): DesignLibraryImportMapEvent {
-  const importMapPayload = importMap.map((entry) => ({
-    module: entry.module,
-    exports: entry.exports.map((exp) => exp.name),
-  }));
+  const importMapPayload = getImportMapPayload(importMap);
 
   return {
     name: DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME,
@@ -378,4 +451,28 @@ export function getDesignLibraryImportMapEvent(
       importMap: importMapPayload,
     },
   };
+}
+
+export function getDesignLibraryImportMapPayloadEvent(
+  uid: string,
+  importMap: ImportEntryPayload[]
+): DesignLibraryImportMapEvent {
+  return {
+    name: DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME,
+    message: {
+      uid,
+      importMap: importMap,
+    },
+  };
+}
+
+/**
+ * Generates the payload for the import map to be sent to design library.
+ * @param {ImportEntry[]} importMap - The imports map to be sent.
+ */
+export function getImportMapPayload(importMap: ImportEntry[]): ImportEntryPayload[] {
+  return importMap.map((entry) => ({
+    module: entry.module,
+    exports: entry.exports.map((exp) => exp.name),
+  }));
 }
