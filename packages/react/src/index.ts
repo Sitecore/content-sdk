@@ -67,6 +67,7 @@ export {
 } from './components/FEaaSComponent';
 export { FEaaSWrapper } from './components/FEaaSWrapper';
 export { DesignLibrary } from './components/DesignLibrary';
+export { DesignLibraryServer } from './components/DesignLibraryServer';
 export {
   BYOCComponent,
   BYOCComponentParams,

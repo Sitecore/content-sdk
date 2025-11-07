@@ -45,7 +45,7 @@ type ErrorBoundaryProps = {
 };
 
 // @MAJOR-RELEASE-TODO - Make importMap required in next major version
-type DesignLibraryProps = {
+export type DesignLibraryProps = {
   /**
    * The dynamic import for import map to be used in variant generation mode.
    * Currently it's optional but it will be required in the next major version.
@@ -62,7 +62,7 @@ const sendErrorEvent = (uid: string, error: unknown, type: codegen.DesignLibrary
   }
 };
 
-const postToDL = (evt: unknown) => {
+export const postToDL = (evt: unknown) => {
   if (typeof window === 'undefined') return;
 
   const target = window.parent && window.parent !== window ? window.parent : window;
