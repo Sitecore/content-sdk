@@ -51,4 +51,11 @@ export type NextjsContentSdkComponent = ReactContentSdkComponent & {
    * Optional dynamic import for lazy components - allows component props retrieval
    */
   dynamicModule?: () => Promise<ReactContentSdkComponent>;
+  /**
+   * Indicates the type of the component in a Next.js app router context.
+   * - 'client': The component contains client only api's and will be rendered on the client side.
+   * - 'server': The component contains server only api's and will be rendered on the server side.
+   * - 'universal': The component is isomorphic and can be rendered on both server and client.
+   */
+  componentType?: 'client' | 'server' | 'universal';
 };
