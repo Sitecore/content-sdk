@@ -17,6 +17,7 @@ import {
   feaasWrapperData,
   convertedDevData as normalModeDevData,
   convertedLayoutServiceData as normalModeLsData,
+  dynamicComponentLayout,
   sxaRenderingColumnSplitterVariant,
   sxaRenderingVariantDataWithCommonContainerName as sxaRenderingCommonContainerName,
   sxaRenderingVariantData,
@@ -510,9 +511,6 @@ describe('BYOC fallback', () => {
 });
 
 describe('FEaaS fallback', () => {
-  let feaasComponentStub;
-  let feaasWrapperStub;
-
   const componentMap = new Map();
 
   it('should render', () => {
@@ -521,11 +519,11 @@ describe('FEaaS fallback', () => {
     const component = feaasWrapperData.sitecore.route as RouteData;
     const phKey = 'main';
 
-    feaasComponentStub = sandbox
+    sandbox
       .stub(FEAASComponent, 'FEaaSComponent')
       .callsFake(() => <p className="feaas-component">Foo</p>);
 
-    feaasWrapperStub = sandbox.stub(FEAASWrapper, 'FEaaSWrapper').callsFake(() => (
+    sandbox.stub(FEAASWrapper, 'FEaaSWrapper').callsFake(() => (
       <div className="feaas-wrapper">
         <FEAASComponent.FEaaSComponent />
       </div>
@@ -544,8 +542,8 @@ describe('FEaaS fallback', () => {
 
 it('should render Suspense when disableSuspense is false', async () => {
   const page = getPage();
-  page.layout = normalModeDevData;
-  const component = normalModeDevData.sitecore.route as RouteData;
+  page.layout = dynamicComponentLayout;
+  const component = dynamicComponentLayout.sitecore.route as RouteData;
   const phKey = 'main';
 
   const renderedComponent = render(
@@ -562,8 +560,8 @@ it('should render Suspense when disableSuspense is false', async () => {
 
 it('should not render Suspense when disableSuspense is true', () => {
   const page = getPage();
-  page.layout = normalModeDevData;
-  const component = normalModeDevData.sitecore.route as RouteData;
+  page.layout = dynamicComponentLayout;
+  const component = dynamicComponentLayout.sitecore.route as RouteData;
   const phKey = 'main';
 
   const renderedComponent = render(

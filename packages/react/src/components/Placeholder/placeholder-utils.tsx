@@ -155,7 +155,6 @@ export function getAppComponentProps<T extends BasePlaceholderProps>(
       ...getSXAParams(componentRendering),
     },
     rendering: componentRendering,
-    disableSuspense: placeholderProps.disableSuspense,
   };
 }
 

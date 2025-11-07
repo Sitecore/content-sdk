@@ -15,6 +15,7 @@ import { createSandbox, SinonSandbox } from 'sinon';
 import {
   byocWrapperData,
   feaasWrapperData,
+  dynamicComponentLayout,
   convertedDevData as normalModeDevData,
   convertedLayoutServiceData as normalModeLsData,
   sxaRenderingColumnSplitterVariant,
@@ -554,9 +555,6 @@ describe('App Placeholder logic', () => {
   });
 
   describe('AppPlaceholder FEaaS fallback', () => {
-    let feaasComponentStub;
-    let feaasWrapperStub;
-
     const componentMap = new Map();
 
     it('should render', () => {
@@ -565,11 +563,11 @@ describe('App Placeholder logic', () => {
       const component = feaasWrapperData.sitecore.route as RouteData;
       const phKey = 'main';
 
-      feaasComponentStub = sandbox
+      sandbox
         .stub(FEAASComponent, 'FEaaSComponent')
         .callsFake(() => <p className="feaas-component">Foo</p>);
 
-      feaasWrapperStub = sandbox.stub(FEAASWrapper, 'FEaaSWrapper').callsFake(() => (
+      sandbox.stub(FEAASWrapper, 'FEaaSWrapper').callsFake(() => (
         <div className="feaas-wrapper">
           <FEAASComponent.FEaaSComponent />
         </div>
@@ -591,8 +589,8 @@ describe('App Placeholder logic', () => {
 
   it('should render Suspense when disableSuspense is false', () => {
     const page = getPage();
-    page.layout = normalModeDevData;
-    const component = normalModeDevData.sitecore.route as RouteData;
+    page.layout = dynamicComponentLayout;
+    const component = dynamicComponentLayout.sitecore.route as RouteData;
     const phKey = 'main';
 
     const renderedComponent = render(
@@ -610,8 +608,8 @@ describe('App Placeholder logic', () => {
 
   it('should not render Suspense when disableSuspense is true', () => {
     const page = getPage();
-    page.layout = normalModeDevData;
-    const component = normalModeDevData.sitecore.route as RouteData;
+    page.layout = dynamicComponentLayout;
+    const component = dynamicComponentLayout.sitecore.route as RouteData;
     const phKey = 'main';
 
     const renderedComponent = render(

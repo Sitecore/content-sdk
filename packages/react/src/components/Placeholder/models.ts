@@ -24,7 +24,6 @@ export interface AppComponentProps {
     [name: string]: string;
   };
   rendering: ComponentRendering;
-  disableSuspense?: boolean;
 }
 
 export interface BasePlaceholderProps {
