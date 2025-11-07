@@ -230,7 +230,66 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     }
   };
 
-  return { GET, OPTIONS };
+  /**
+   * This POST handler serves as proxy for server action call when Design Library is rendering server component.
+   * When Design Library needs to dynamically update or render a generated variant of server component a server action {@link updateServerComponentAction} is called from the client side.
+   * The way server functions work is that the action call is made to the same URL with POST method, which in normal page render is handled internally by Next.js.
+   * However, in editing mode we are in an api route handler scenario so we need to proxy the POST request to be able to process the server action correctly.
+   * @param {NextRequest} req - The incoming request
+   */
+  const POST = async (req: NextRequest) => {
+    const originalUrl = new URL(req.url);
+    const queryString = originalUrl.search;
+    const targetUrl = new URL(`/${queryString}`, req.url).toString();
+
+    // enable draft mode in order to add prerender bypass cookie to request
+    const draft = await draftMode();
+    draft.enable();
+
+    // add prerender bypass cookie to forwarded request in order to enable draft mode
+    const cookieStore = await getNextCookies();
+    const reqCookie = req.headers.get('cookie') || '';
+    const prerenderBypassCookie = `__prerender_bypass=${
+      cookieStore.get('__prerender_bypass')?.value || ''
+    }`;
+    const forwardCookie = reqCookie
+      ? `${reqCookie}; ${prerenderBypassCookie}`
+      : prerenderBypassCookie;
+
+    const forwardHeaders = new Headers(req.headers);
+    forwardHeaders.set('cookie', forwardCookie);
+
+    const forwardedResponse = await fetch(targetUrl, {
+      method: req.method,
+      headers: forwardHeaders,
+      body: req.body,
+      duplex: 'half',
+    } as any);
+
+    // Filter out x-middleware headers since rewrites are not allowed in route handlers
+    // Also filter out content-encoding and content-length to avoid issues when browser reads the payload
+    const filteredHeaders = new Headers();
+    forwardedResponse.headers.forEach((value, key) => {
+      if (
+        key !== 'x-middleware-next' &&
+        key !== 'x-middleware-rewrite' &&
+        key !== 'content-encoding' &&
+        key !== 'content-length'
+      ) {
+        filteredHeaders.set(key, value);
+      }
+    });
+
+    const body = await forwardedResponse.text();
+
+    return new Response(body, {
+      status: forwardedResponse.status,
+      statusText: forwardedResponse.statusText,
+      headers: filteredHeaders,
+    });
+  };
+
+  return { GET, POST, OPTIONS };
 };
 
 type NextCookie = {
