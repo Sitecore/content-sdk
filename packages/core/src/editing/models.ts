@@ -4,6 +4,7 @@ import { LayoutServicePageState } from '../layout';
  * Query parameters appended to the page route URL
  * Appended when XMCloud Pages preview (editing) mode is used
  * `mode` is a special case as it serves editing and component library both
+ * @internal
  */
 export interface EditingRenderQueryParams {
   [key: string]: unknown;
@@ -21,6 +22,7 @@ export interface EditingRenderQueryParams {
 /**
  * Query parameters appended for Component Library functionaity.
  * Used when a single component is rendered in Pages.
+ * @internal
  */
 export interface RenderComponentQueryParams {
   [key: string]: unknown;
@@ -39,6 +41,7 @@ export interface RenderComponentQueryParams {
  * Represents the Editing Layout variant.
  * - shared - shared layout
  * - final - final layout
+ * @public
  */
 export enum LayoutKind {
   Final = 'final',
@@ -49,6 +52,7 @@ export enum LayoutKind {
  * Represents the kind of metadata element.
  * - open - starting chrome element
  * - close - closing chrome element
+ * @internal
  */
 export enum MetadataKind {
   Open = 'open',
@@ -57,6 +61,7 @@ export enum MetadataKind {
 
 /**
  * Data for Preview (Editing) Mode.
+ * @public
  */
 export type EditingPreviewData = {
   site: string;
@@ -68,7 +73,10 @@ export type EditingPreviewData = {
   layoutKind?: LayoutKind;
 };
 
-/** Represents the mode of the Design Library */
+/**
+ * Represents the mode of the Design Library
+ * @public
+ */
 export enum DesignLibraryMode {
   /** Normal mode */
   Normal = 'library',
@@ -85,6 +93,7 @@ export enum DesignLibraryVariantGeneration {
 
 /**
  * Data for Design Library rendering mode
+ * @public
  */
 export interface DesignLibraryRenderPreviewData {
   site: string;

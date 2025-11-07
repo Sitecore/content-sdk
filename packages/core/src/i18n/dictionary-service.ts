@@ -59,6 +59,7 @@ export interface DictionaryQueryVariables {
 
 /**
  * Object model for Sitecore dictionary phrases
+ * @public
  */
 export interface DictionaryPhrases {
   [k: string]: string;
@@ -66,6 +67,7 @@ export interface DictionaryPhrases {
 
 /**
  * Configuration options for @see DictionaryService instances
+ * @public
  */
 export interface DictionaryServiceConfig extends CacheOptions, GraphQLServiceConfig {
   /**
@@ -112,6 +114,7 @@ export type DictionarySiteQueryResponse = {
  * Service that fetch dictionary data using Sitecore's GraphQL API.
  * @augments DictionaryServiceBase
  * @mixes SearchQueryService<DictionaryQueryResult>
+ * @public
  */
 export class DictionaryService implements CacheClient<DictionaryPhrases> {
   private graphQLClient: GraphQLClient;

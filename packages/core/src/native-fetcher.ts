@@ -19,6 +19,7 @@ type NativeDataFetcherOptions = {
 /**
  * Response data for an HTTP request sent to an API
  * @template T the type of data model requested
+ * @public
  */
 export interface NativeDataFetcherResponse<T> {
   /** HTTP status code of the response (i.e. 200, 404) */
@@ -33,13 +34,22 @@ export interface NativeDataFetcherResponse<T> {
 
 /**
  * Native fetcher error type to include response text and status
+ * @public
  */
 export type NativeDataFetcherError = Error & {
   response: NativeDataFetcherResponse<unknown>;
 };
 
+/**
+ * Native data fetcher configuration
+ * @public
+ */
 export type NativeDataFetcherConfig = NativeDataFetcherOptions & RequestInit;
 
+/**
+ * Native data fetcher class
+ * @public
+ */
 export class NativeDataFetcher {
   private abortTimeout?: TimeoutPromise;
 

@@ -8,6 +8,7 @@ import { FetchOptions } from '../models';
 
 /**
  * Params for requesting component data in Design Library mode
+ * @public
  */
 export interface ComponentLayoutRequestParams {
   /**
@@ -72,6 +73,7 @@ export interface ComponentLayoutServiceConfig {
 /**
  * REST service that enables Design Library functionality.
  * Returns layout data for a single rendered component.
+ * @public
  */
 export class ComponentLayoutService {
   constructor(private config: ComponentLayoutServiceConfig) {}

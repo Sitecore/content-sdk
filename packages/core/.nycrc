@@ -14,7 +14,8 @@
     "./*.js",
     "./*.d.ts",
     "**/layout/models.ts",
-    "*.js"
+    "*.js",
+    "api"
   ],
   "all": true,
   "reporter": [

@@ -41,6 +41,7 @@ export type EditingOptions = {
 /**
  * Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
  * Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
+ * @public
  */
 export class EditingService {
   private graphQLClient: GraphQLClient;

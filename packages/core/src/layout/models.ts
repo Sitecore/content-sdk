@@ -1,5 +1,6 @@
 /**
  * A reply from the Sitecore Layout Service
+ * @public
  */
 export interface LayoutServiceData {
   sitecore: LayoutServiceContextData & {
@@ -9,6 +10,7 @@ export interface LayoutServiceData {
 
 /**
  * Layout Service page state enum
+ * @public
  */
 export enum LayoutServicePageState {
   Preview = 'preview',
@@ -18,6 +20,7 @@ export enum LayoutServicePageState {
 
 /**
  * Represents the edit mode for rendering content in Sitecore Editors
+ * @public
  */
 export enum EditMode {
   Metadata = 'metadata',
@@ -25,6 +28,7 @@ export enum EditMode {
 
 /**
  * Shape of context data from the Sitecore Layout Service
+ * @public
  */
 export interface LayoutServiceContext {
   [key: string]: unknown;
@@ -43,6 +47,7 @@ export interface LayoutServiceContext {
 
 /**
  * Context information from the Sitecore Layout Service
+ * @public
  */
 export interface LayoutServiceContextData {
   context: LayoutServiceContext;
@@ -50,6 +55,7 @@ export interface LayoutServiceContextData {
 
 /**
  * Shape of route data returned from Sitecore Layout Service
+ * @public
  */
 export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
   name: string;
@@ -68,6 +74,7 @@ export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
 
 /**
  * Placeholder contents data (name: placeholder name, then array of components within that placeholder name)
+ * @public
  */
 export type PlaceholdersData<TYPEDNAME extends string = string> = {
   [P in TYPEDNAME]: Array<ComponentRendering>;
@@ -75,6 +82,7 @@ export type PlaceholdersData<TYPEDNAME extends string = string> = {
 
 /**
  * Content field data passed to a component
+ * @public
  */
 export interface ComponentFields {
   [name: string]: Field | Item | Item[];
@@ -82,6 +90,7 @@ export interface ComponentFields {
 
 /**
  * Component params
+ * @public
  */
 export interface ComponentParams {
   [name: string]: string;
@@ -89,6 +98,7 @@ export interface ComponentParams {
 
 /**
  * Definition of a component instance within a placeholder on a route
+ * @public
  */
 export interface ComponentRendering<T = ComponentFields> {
   componentName: string;
@@ -101,6 +111,7 @@ export interface ComponentRendering<T = ComponentFields> {
 
 /**
  * Field value data on a component
+ * @public
  */
 export type GenericFieldValue =
   | string
@@ -110,12 +121,18 @@ export type GenericFieldValue =
   | { [key: string]: unknown }
   | Array<{ [key: string]: unknown }>;
 
+
+/**
+ * Field interface
+ * @public
+ */
 export interface Field<T = GenericFieldValue> extends FieldMetadata {
   value: T;
 }
 
 /**
  * Field metadata in editing mode
+ * @public
  */
 export interface FieldMetadata {
   metadata?: { [key: string]: unknown };
@@ -123,6 +140,7 @@ export interface FieldMetadata {
 
 /**
  * Content data returned from Layout Service
+ * @public
  */
 export interface Item {
   name: string;
@@ -136,6 +154,7 @@ export interface Item {
 
 /**
  * Contents of a single placeholder returned from placeholder service
+ * @public
  */
 export interface PlaceholderData {
   name: string;
@@ -145,6 +164,7 @@ export interface PlaceholderData {
 
 /**
  * Editing rendering type
+ * @public
  */
 export enum RenderingType {
   Component = 'component',
@@ -152,6 +172,7 @@ export enum RenderingType {
 
 /**
  * Contract for additional route options when requesting layout data
+ * @public
  */
 export type RouteOptions = {
   site: string;
@@ -160,9 +181,11 @@ export type RouteOptions = {
 
 /**
  * Static placeholder name used for component rendering
+ * @internal
  */
 export const EDITING_COMPONENT_PLACEHOLDER = 'editing-componentmode-placeholder';
 /**
  * Id of wrapper for component rendering
+ * @internal
  */
 export const EDITING_COMPONENT_ID = 'editing-component';

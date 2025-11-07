@@ -5,6 +5,7 @@ import { normalizeUrl } from '../utils/normalize-url';
  * @param {string} sitecoreEdgeContextId - The unique context id.
  * @param {string} [sitecoreEdgeUrl] - The base endpoint URL for the Edge Platform. Default is https://edge-platform.sitecorecloud.io
  * @returns {string} The complete URL for accessing content through the Edge Platform.
+ * @public
  */
 export const getEdgeProxyContentUrl = (
   sitecoreEdgeContextId: string,
@@ -20,6 +21,7 @@ export const getEdgeProxyContentUrl = (
  * @param {string} formId - The unique form id.
  * @param {string} [sitecoreEdgeUrl] - The base endpoint URL for the Edge Platform. Default is https://edge-platform.sitecorecloud.io
  * @returns {string} The complete URL for accessing forms through the Edge Platform.
+ * @internal
  */
 export const getEdgeProxyFormsUrl = (
   sitecoreEdgeContextId: string,
