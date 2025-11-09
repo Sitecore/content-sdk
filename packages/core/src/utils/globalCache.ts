@@ -22,9 +22,7 @@ export function setCache(key: string, data: unknown): void {
  */
 export function getCache<T>(key: string): T | undefined {
   const cache = (globalThis as any)[DL_CACHE_NAMESPACE];
-  const data = cache?.[key];
-  delete cache?.[key];
-  return data;
+  return cache?.[key];
 }
 
 /**
