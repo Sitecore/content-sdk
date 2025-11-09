@@ -2,9 +2,14 @@ export const SITE_PREFIX = '_site_';
 
 /**
  * Site key for cookie and query string parameter access
+ * @public
  */
 export const SITE_KEY = 'sc_site';
 
+/**
+ * Object model of site rewrite data
+ * @public
+ */
 export type SiteRewriteData = {
   siteName: string;
 };
@@ -14,6 +19,7 @@ export type SiteRewriteData = {
  * @param {string} pathname the pathname
  * @param {SiteRewriteData} data the site data to include in the rewrite
  * @returns {string} the rewrite path
+ * @public
  */
 export function getSiteRewrite(pathname: string, data: SiteRewriteData): string {
   const path = pathname.startsWith('/') ? pathname : '/' + pathname;
@@ -26,6 +32,7 @@ export function getSiteRewrite(pathname: string, data: SiteRewriteData): string 
  * @param {string} pathname the pathname
  * @param {string} defaultSiteName the default site name
  * @returns {SiteRewriteData} the site data from the rewrite
+ * @public
  */
 export function getSiteRewriteData(pathname: string, defaultSiteName: string): SiteRewriteData {
   const data: SiteRewriteData = {
@@ -46,6 +53,7 @@ export function getSiteRewriteData(pathname: string, defaultSiteName: string): S
  * Normalize a site rewrite path (remove site data)
  * @param {string} pathname the pathname
  * @returns {string} the pathname with site data removed
+ * @public
  */
 export function normalizeSiteRewrite(pathname: string): string {
   const result = pathname.match(`${SITE_PREFIX}.*?(?:\\/|$)`);

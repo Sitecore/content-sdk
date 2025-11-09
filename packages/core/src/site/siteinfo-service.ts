@@ -16,6 +16,10 @@ const siteQuery = /* GraphQL */ `
   }
 `;
 
+/**
+ * Configuration for @see SiteInfoService instances
+ * @public
+ */
 export type SiteInfoServiceConfig = CacheOptions & {
   /**
    * common variable for all GraphQL queries
@@ -37,6 +41,10 @@ type GraphQLSiteInfoResponse = {
   };
 };
 
+/**
+ * Object model of Site Info result
+ * @public
+ */
 export type GraphQLSiteInfoResult = {
   name: string;
   hostName: string;

@@ -24,6 +24,14 @@ export interface CacheOptions {
     cacheTimeout?: number;
 }
 
+// @public
+export class CdpHelper {
+    static getComponentFriendlyId(pageId: string, componentId: string, language: string, scope?: string): string;
+    static getPageFriendlyId(pageId: string, language: string, scope?: string): string;
+    static getPageVariantId(pageId: string, language: string, variantId: string, scope?: string): string;
+    static normalizeScope(scope?: string): string;
+}
+
 // @internal
 const CLAIMS = "https://auth.sitecorecloud.io/claims";
 
@@ -156,6 +164,9 @@ const DEFAULT_SITECORE_AUTH_BASE_URL = "https://edge-platform.sitecorecloud.io/c
 
 // @internal
 const DEFAULT_SITECORE_AUTH_DOMAIN = "https://auth.sitecorecloud.io";
+
+// @internal (undocumented)
+export const DEFAULT_VARIANT = "_default";
 
 // @public
 export class DefaultRetryStrategy implements RetryStrategy {
@@ -329,6 +340,35 @@ export enum ErrorPage {
     NotFound = "404"
 }
 
+// @public
+export type ErrorPages = {
+    notFoundPage: {
+        rendered: LayoutServiceData;
+    };
+    notFoundPagePath: string;
+    serverErrorPage: {
+        rendered: LayoutServiceData;
+    };
+    serverErrorPagePath: string;
+};
+
+// @public
+export class ErrorPagesService {
+    constructor(options: ErrorPagesServiceConfig);
+    fetchErrorPages(siteName: string, locale?: string, fetchOptions?: FetchOptions): Promise<ErrorPages | null>;
+    protected getGraphQLClient(): GraphQLClient;
+    // (undocumented)
+    options: ErrorPagesServiceConfig;
+    // (undocumented)
+    protected get query(): string;
+}
+
+// @public
+export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
+    clientFactory: GraphQLRequestClientFactory;
+    language: string;
+}
+
 // @internal
 const executeScriptElements: (rootElement: HTMLElement) => void;
 
@@ -416,7 +456,40 @@ export function getFieldValue<T>(renderingOrFields: ComponentRendering | Compone
 export function getFieldValue<T>(renderingOrFields: ComponentRendering | ComponentFields, fieldName: string, defaultValue: T): T;
 
 // @public
+export function getGroomedVariantIds(variantIds: string[]): PersonalizedRewriteData;
+
+// @public
 export function getLocaleRewrite(pathname: string, locale: string): string;
+
+// @public
+export function getPersonalizedRewrite(pathname: string, variantIds: string[]): string;
+
+// @public
+export function getPersonalizedRewriteData(pathname: string): PersonalizedRewriteData;
+
+// @public
+const getRequiredParams: (qs: {
+    [key: string]: string | undefined;
+}) => {
+    rev: string | undefined;
+    db: string | undefined;
+    la: string | undefined;
+    vs: string | undefined;
+    ts: string | undefined;
+};
+
+// @public
+export function getSiteRewrite(pathname: string, data: SiteRewriteData): string;
+
+// @public
+export function getSiteRewriteData(pathname: string, defaultSiteName: string): SiteRewriteData;
+
+// @public
+const getSrcSet: (url: string, srcSet: Array<{
+    [key: string]: string | number | undefined;
+}>, imageParams?: {
+    [key: string]: string | number | undefined;
+}, mediaUrlPrefix?: RegExp) => string;
 
 // @internal
 export const GRAPHQL_LAYOUT_QUERY_NAME = "ContentSdkLayoutQuery";
@@ -574,6 +647,16 @@ export enum LayoutServicePageState {
 // @internal
 const loadForm: (contextId: string, formId: string, edgeUrl?: string) => Promise<string>;
 
+declare namespace mediaApi {
+    export {
+        getRequiredParams,
+        replaceMediaUrlPrefix,
+        updateImageUrl,
+        getSrcSet
+    }
+}
+export { mediaApi }
+
 // @public
 export class MemoryCacheClient<T> implements CacheClient<T> {
     constructor(options: CacheOptions);
@@ -635,6 +718,12 @@ export interface NativeDataFetcherResponse<T> {
 }
 
 // @public
+export function normalizePersonalizedRewrite(pathname: string): string;
+
+// @public
+export function normalizeSiteRewrite(pathname: string): string;
+
+// @public
 export type Page = {
     layout: LayoutServiceData;
     siteName?: string;
@@ -675,6 +764,44 @@ export class PagesEditor {
     static resetChromes(): void;
 }
 
+// @public (undocumented)
+export type PersonalizedRewriteData = {
+    variantId: string;
+    componentVariantIds?: string[];
+};
+
+// @public
+export type PersonalizeInfo = {
+    pageId: string;
+    variantIds: string[];
+};
+
+// @public
+export function personalizeLayout(layout: LayoutServiceData, variantId: string, componentVariantIds?: string[]): PlaceholdersData<string> | undefined;
+
+// @public
+export class PersonalizeService {
+    constructor(config: PersonalizeServiceConfig);
+    // (undocumented)
+    protected config: PersonalizeServiceConfig;
+    // Warning: (ae-forgotten-export) The symbol "PersonalizeQueryResult" needs to be exported by the entry point api-surface.d.ts
+    protected getCacheClient(): CacheClient<PersonalizeQueryResult>;
+    // (undocumented)
+    protected getCacheKey(itemPath: string, language: string, siteName: string): string;
+    protected getGraphQLClient(): GraphQLClient;
+    getPersonalizeInfo(itemPath: string, language: string, siteName: string): Promise<PersonalizeInfo | undefined>;
+    // (undocumented)
+    protected get query(): string;
+}
+
+// @public
+export type PersonalizeServiceConfig = CacheOptions & {
+    timeout?: number;
+    scope?: string;
+    fetch?: typeof fetch;
+    clientFactory: GraphQLRequestClientFactory;
+};
+
 // @public
 export interface PlaceholderData {
     // (undocumented)
@@ -695,6 +822,49 @@ export const PREVIEW_KEY = "sc_preview";
 
 // @internal
 export const QUERY_PARAM_EDITING_SECRET = "secret";
+
+// @public
+export const REDIRECT_TYPE_301 = "REDIRECT_301";
+
+// @public
+export const REDIRECT_TYPE_302 = "REDIRECT_302";
+
+// @public
+export const REDIRECT_TYPE_SERVER_TRANSFER = "SERVER_TRANSFER";
+
+// @public
+export type RedirectInfo = {
+    pattern: string;
+    target: string;
+    redirectType: string;
+    isQueryStringPreserved: boolean;
+    locale: string;
+};
+
+// @public
+export type RedirectsQueryResult = {
+    site: {
+        siteInfo: {
+            redirects: RedirectInfo[];
+        } | null;
+    };
+};
+
+// @public
+export class RedirectsService {
+    constructor(options: RedirectsServiceConfig);
+    fetchRedirects(siteName: string, fetchOptions?: FetchOptions): Promise<RedirectInfo[]>;
+    protected getCacheClient(): CacheClient<RedirectsQueryResult>;
+    protected getGraphQLClient(): GraphQLClient;
+    // (undocumented)
+    protected get query(): string;
+}
+
+// @public
+export type RedirectsServiceConfig = CacheOptions & {
+    fetch?: typeof fetch;
+    clientFactory: GraphQLRequestClientFactory;
+};
 
 // @internal
 export interface RenderComponentQueryParams {
@@ -727,6 +897,9 @@ export enum RenderingType {
 }
 
 // @public
+const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
+
+// @public
 export const resetEditorChromes: () => void;
 
 // @public
@@ -734,6 +907,32 @@ export interface RetryStrategy {
     getDelay(error: GenericGraphQLClientError, attempt: number): number;
     shouldRetry(error: GenericGraphQLClientError, attempt: number, retries: number): boolean;
 }
+
+// @public
+export type RobotsQueryResult = {
+    site: {
+        siteInfo: {
+            robots: string;
+        };
+    };
+};
+
+// @public
+export class RobotsService {
+    constructor(options: RobotsServiceConfig);
+    fetchRobots(fetchOptions?: FetchOptions): Promise<string>;
+    protected getGraphQLClient(): GraphQLClient;
+    // (undocumented)
+    options: RobotsServiceConfig;
+    // (undocumented)
+    protected get query(): string;
+}
+
+// @public
+export type RobotsServiceConfig = {
+    siteName: string;
+    clientFactory: GraphQLRequestClientFactory;
+};
 
 // @public
 export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
@@ -777,6 +976,12 @@ export type ScaffoldTemplate = {
     getNextSteps?: (componentOutputPath: string) => string[];
 };
 
+// @public
+export const SITE_KEY = "sc_site";
+
+// @public (undocumented)
+export const SITE_PREFIX = "_site_";
+
 // @internal
 const SITECORE_EDGE_URL_DEFAULT = "https://edge-platform.sitecorecloud.io";
 
@@ -812,8 +1017,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     protected dictionaryService: DictionaryService;
     // (undocumented)
     protected editingService: EditingService;
-    // Warning: (ae-forgotten-export) The symbol "ErrorPagesService" needs to be exported by the entry point api-surface.d.ts
-    //
     // (undocumented)
     protected errorPagesService: ErrorPagesService;
     // Warning: (ae-forgotten-export) The symbol "BaseServiceOptions" needs to be exported by the entry point api-surface.d.ts
@@ -824,9 +1027,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     getDesignLibraryData(designLibData: DesignLibraryRenderPreviewData, fetchOptions?: FetchOptions): Promise<Page>;
     getDictionary(routeOptions?: Partial<RouteOptions>, fetchOptions?: FetchOptions): Promise<DictionaryPhrases>;
     getErrorPage(code: ErrorPage, pageOptions?: Partial<RouteOptions>, fetchOptions?: FetchOptions): Promise<Page | null>;
-    // Warning: (ae-forgotten-export) The symbol "ErrorPages" needs to be exported by the entry point api-surface.d.ts
     getErrorPages(routeOptions?: RouteOptions, fetchOptions?: FetchOptions): Promise<ErrorPages | null>;
-    // Warning: (ae-forgotten-export) The symbol "SitemapXmlService" needs to be exported by the entry point api-surface.d.ts
     protected getGraphqlSitemapXMLService(siteName: string): SitemapXmlService;
     getHeadLinks(layoutData: LayoutServiceData, options?: {
         enableStyles?: boolean;
@@ -836,8 +1037,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: EditingPreviewData | undefined, fetchOptions?: FetchOptions): Promise<Page | null>;
     getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
-    // Warning: (ae-forgotten-export) The symbol "RobotsService" needs to be exported by the entry point api-surface.d.ts
-    //
     // (undocumented)
     protected getRobotsService(siteName: string): RobotsService;
     getSiteMap(reqOptions: SitemapXmlOptions, fetchOptions?: FetchOptions): Promise<string>;
@@ -848,8 +1047,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     // (undocumented)
     protected layoutService: LayoutService;
     parsePath(path: string | string[]): string;
-    // Warning: (ae-forgotten-export) The symbol "SitePathService" needs to be exported by the entry point api-surface.d.ts
-    //
     // (undocumented)
     protected sitePathService: SitePathService;
 }
@@ -927,6 +1124,39 @@ enum SitecoreTemplateId {
 }
 
 // @public
+export type SiteInfo = {
+    [key: string]: unknown;
+    name: string;
+    hostName: string;
+    language: string;
+};
+
+// @public (undocumented)
+export class SiteInfoService {
+    constructor(config: SiteInfoServiceConfig);
+    // (undocumented)
+    fetchSiteInfo(fetchOptions?: FetchOptions): Promise<SiteInfo[]>;
+    protected getCacheClient(): CacheClient<SiteInfo[]>;
+    protected getGraphQLClient(): GraphQLClient;
+    protected get siteQuery(): string;
+}
+
+// @public
+export type SiteInfoServiceConfig = CacheOptions & {
+    pageSize?: number;
+    clientFactory: GraphQLRequestClientFactory;
+};
+
+// @public
+export type SitemapQueryResult = {
+    site: {
+        siteInfo: {
+            sitemap: string[];
+        };
+    };
+};
+
+// @public
 export type SitemapXmlOptions = {
     reqHost: string;
     reqProtocol: string | string[];
@@ -934,8 +1164,68 @@ export type SitemapXmlOptions = {
     siteName?: string;
 };
 
+// @public
+export class SitemapXmlService {
+    constructor(options: SitemapXmlServiceConfig);
+    fetchSitemaps(fetchOptions?: FetchOptions): Promise<string[]>;
+    protected getGraphQLClient(): GraphQLClient;
+    getSitemap(id: string): Promise<string | undefined>;
+    // (undocumented)
+    options: SitemapXmlServiceConfig;
+    // (undocumented)
+    protected get query(): string;
+}
+
+// @public
+export type SitemapXmlServiceConfig = {
+    siteName: string;
+    clientFactory: GraphQLRequestClientFactory;
+};
+
 // @internal
 const siteNameError = "The siteName cannot be empty";
+
+// @public
+export class SitePathService {
+    constructor(options: SitePathServiceConfig);
+    protected fetchLanguageSitePaths(language: string, siteName: string, fetchOptions?: FetchOptions): Promise<RouteListQueryResult[]>;
+    fetchSiteRoutes(sites: string[], languages: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
+    protected getGraphQLClient(): GraphQLClient;
+    protected get graphQLClient(): GraphQLClient;
+    // (undocumented)
+    options: SitePathServiceConfig;
+    protected get query(): string;
+    // Warning: (ae-forgotten-export) The symbol "RouteListQueryResult" needs to be exported by the entry point api-surface.d.ts
+    //
+    // (undocumented)
+    protected transformLanguageSitePaths(sitePaths: RouteListQueryResult[], formatStaticPath: (path: string[], language: string) => StaticPath, language: string): Promise<StaticPath[]>;
+}
+
+// Warning: (ae-forgotten-export) The symbol "SiteRouteQueryVariables" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export interface SitePathServiceConfig extends Omit<SiteRouteQueryVariables, 'language' | 'siteName'> {
+    clientFactory: GraphQLRequestClientFactory;
+    includePersonalizedRoutes?: boolean;
+}
+
+// @public
+export class SiteResolver {
+    constructor(sites: SiteInfo[]);
+    getByHost: (hostName: string) => SiteInfo;
+    getByName: (siteName: string) => SiteInfo | undefined;
+    // (undocumented)
+    protected getHostMap: () => Map<string, SiteInfo>;
+    // (undocumented)
+    protected matchesPattern(hostname: string, pattern: string): boolean;
+    // (undocumented)
+    readonly sites: SiteInfo[];
+}
+
+// @public (undocumented)
+export type SiteRewriteData = {
+    siteName: string;
+};
 
 // @public
 export type StaticPath = {
@@ -948,10 +1238,17 @@ export type StaticPath = {
 // @internal
 const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string) => void;
 
+// @public
+const updateImageUrl: (url: string, params?: {
+    [key: string]: string | number | undefined;
+} | null, mediaUrlPrefix?: RegExp) => string;
+
+// @internal (undocumented)
+export const VARIANT_PREFIX = "_variantId_";
+
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:53:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/client/sitecore-client.ts:109:3 - (ae-forgotten-export) The symbol "PersonalizedRewriteData" needs to be exported by the entry point api-surface.d.ts
 // src/config/models.ts:240:3 - (ae-forgotten-export) The symbol "GenerateMapArgs" needs to be exported by the entry point api-surface.d.ts
 // src/config/models.ts:244:5 - (ae-forgotten-export) The symbol "GenerateMapFunction" needs to be exported by the entry point api-surface.d.ts
 
