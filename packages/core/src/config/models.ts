@@ -131,6 +131,17 @@ export type SitecoreConfigInput = {
   multisite?: {
     /**
      * Enable multisite
+     *
+     * **WARNING: Do NOT disable multisite in App Router applications.**
+     *
+     * The App Router route structure requires the `[site]` segment in the path (`/[site]/[locale]/[[...path]]`).
+     * Disabling this will break routing and cause 404 errors for regular requests.
+     *
+     * Preview and Editing modes will still work (they bypass this check), but regular page requests will fail.
+     *
+     * **For single-site setups**: Keep `enabled: true` and configure only one site in your sites configuration.
+     * The middleware will always use that single site, achieving the desired single-site behavior.
+     *
      * @default true
      */
     enabled?: boolean;

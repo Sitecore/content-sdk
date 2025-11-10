@@ -51,6 +51,8 @@ export class MultisiteMiddleware extends MiddlewareBase {
 
       // We can't skip site name preservation for App Router in Preview since currently we rely on the site segment
       // to be present in the path.
+      // Additionally, App Router route structure always requires [site] segment, so disabling multisite
+      // will break regular requests even though Preview/Editing modes will still work.
 
       if (this.isPreview(req) && !this.isAppRouter(res)) {
         debug.multisite('skipped (preview)');
@@ -63,6 +65,14 @@ export class MultisiteMiddleware extends MiddlewareBase {
 
       if (!isSitecorePreview) {
         if (!this.config.enabled) {
+          // Warn if multisite is disabled in App Router - this will break regular requests
+          if (this.isAppRouter(res)) {
+            console.warn(
+              '⚠️ Warning: Multisite is disabled but App Router requires the [site] segment in routes. ' +
+                'Regular requests will fail with 404 errors. Preview/Editing modes will still work. ' +
+                'For single-site setups, keep multisite enabled and configure only one site.'
+            );
+          }
           debug.multisite('skipped (multisite middleware is disabled globally)');
           return res;
         }
@@ -79,7 +89,16 @@ export class MultisiteMiddleware extends MiddlewareBase {
       if (isSitecorePreview) {
         // This cookie is required to be set in the Sitecore Preview mode to support navigation
         // and preserve the site name
-        siteName = req.cookies.get(SITE_KEY)?.value!;
+        // Fallback to hostname resolution if cookie is missing (shouldn't happen in normal flow)
+        const siteCookie = req.cookies.get(SITE_KEY)?.value;
+        if (!siteCookie) {
+          debug.multisite(
+            'warning: sc_site cookie missing in preview mode, falling back to hostname resolution'
+          );
+          siteName = this.siteResolver.getByHost(hostname).name;
+        } else {
+          siteName = siteCookie;
+        }
       } else {
         // Site name can be forced by query string parameter or cookie
         // 'site' is provided when running "preview" in AppRouter
