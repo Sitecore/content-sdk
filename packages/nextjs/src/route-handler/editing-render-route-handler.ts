@@ -246,6 +246,35 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
    * @param {NextRequest} req - The incoming request
    */
   const POST = async (req: NextRequest) => {
+    const expectedCorsHeaders = getEnforcedCorsHeaders({
+      requestMethod: req.method,
+      headers: req.headers,
+      presetCorsHeader: req.headers.get('Access-Control-Allow-Origin') as string,
+      allowedOrigins: EDITING_ALLOWED_ORIGINS,
+    });
+
+    if (!expectedCorsHeaders) {
+      debug.editing(
+        'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
+      );
+      return new Response(
+        `<html><body>Requests from origin ${req.headers.get('origin')} not allowed</body></html>`,
+        { status: 401 }
+      );
+    }
+
+    // Validate secret
+    const secret = req.nextUrl.searchParams.get(QUERY_PARAM_EDITING_SECRET);
+    if (secret !== getEditingSecret()) {
+      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
+      return Response.json(
+        {
+          html: '<html><body>Missing or invalid secret</body></html>',
+        },
+        { status: 401, headers: expectedCorsHeaders }
+      );
+    }
+
     const originalUrl = new URL(req.url);
     const queryString = originalUrl.search;
     const targetUrl = new URL(`/${queryString}`, req.url).toString();
@@ -257,8 +286,8 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     // add prerender bypass cookie to forwarded request in order to enable draft mode
     const cookieStore = await getNextCookies();
     const reqCookie = req.headers.get('cookie') || '';
-    const prerenderBypassCookie = `__prerender_bypass=${
-      cookieStore.get('__prerender_bypass')?.value || ''
+    const prerenderBypassCookie = `${PreviewCookies.PRERENDER_BYPASS}=${
+      cookieStore.get(PreviewCookies.PRERENDER_BYPASS)?.value || ''
     }`;
     const forwardCookie = reqCookie
       ? `${reqCookie}; ${prerenderBypassCookie}`
@@ -287,6 +316,20 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
         filteredHeaders.set(key, value);
       }
     });
+
+    // Restrict the page to be rendered only within the allowed origins
+    filteredHeaders.set('Content-Security-Policy', getCSPHeader());
+
+    // add expected CORS headers to response
+    Object.entries(expectedCorsHeaders as Record<string, string>).forEach(
+      ([key, value]: [string, string]) => {
+        filteredHeaders.set(key, value);
+      }
+    );
+
+    // remove nextjs preview cookies to not leak them to the browser
+    const filteredCookies = cleanupNextPreviewCookies(filteredHeaders.get('Set-Cookie'));
+    filteredHeaders.set('Set-Cookie', filteredCookies?.join('; ') || '');
 
     const body = await forwardedResponse.text();
 
