@@ -1222,7 +1222,7 @@ export class SiteResolver {
     readonly sites: SiteInfo[];
 }
 
-// @public (undocumented)
+// @public
 export type SiteRewriteData = {
     siteName: string;
 };
