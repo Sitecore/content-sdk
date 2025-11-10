@@ -6,28 +6,11 @@
 
 ## Why It Can't Be Disabled
 
-The App Router route structure is hardcoded at build time:
-- Route: `src/app/[site]/[locale]/[[...path]]/`
-- Components expect `site` in params: `const { site, locale, path } = await params`
+The App Router route structure is hardcoded at build time: `src/app/[site]/[locale]/[[...path]]/`. Components expect `site` in params, so the `[site]` segment is required.
 
-### What Happens If You Try to Disable Multisite
-
-**⚠️ Warning**: Setting `multisite.enabled: false` in App Router will break your application.
-
-**Steps to reproduce the issue** (for testing purposes only):
-
-1. Set `multisite.enabled: false` in `sitecore.config.ts`
-2. Make a regular page request (e.g., navigate to `/en/home`)
-3. **Result**: 404 error - route doesn't match because `[site]` segment is missing
-
-**What breaks**:
-- ❌ All regular page requests return 404
-- ❌ Static generation fails
-- ❌ Client-side navigation breaks
-- ✅ Preview mode still works (middleware bypasses enabled check)
-- ✅ Editing mode still works (middleware bypasses enabled check)
-
-**Why it breaks**: The App Router route structure requires `/[site]/[locale]/[[...path]]`, but when disabled, the middleware doesn't add the site segment, so routes don't match.
+**If you set `multisite.enabled: false`**:
+- ❌ Regular requests: 404 errors (no site segment)
+- ✅ Preview/Editing: Still works (middleware bypasses enabled check)
 
 ## Steps to Configure Single-Site Setup
 
@@ -63,13 +46,9 @@ In `.sitecore/sites.json`, configure only one site:
 ]
 ```
 
-### Step 3: Verify Configuration
+### Step 3: Verify
 
-- The middleware will always resolve to your single site
-- All requests will use the same site name
-- You achieve single-site behavior without breaking the App Router
-
-**Result**: Your application behaves as a single-site setup while maintaining the required route structure.
+The middleware will always resolve to your single site, achieving single-site behavior without breaking the App Router.
 
 ## Configuration
 
@@ -88,33 +67,12 @@ multisite: {
 }
 ```
 
-## Preview/Editing Modes Behavior
+## Preview/Editing Modes
 
-### When Multisite is Enabled (`enabled: true`)
+Preview and Editing modes always run the middleware (even when `enabled: false`) to preserve site name via cookies. Site resolution: `sc_site` cookie → hostname fallback.
 
-| Mode | Middleware Behavior | Site Resolution | Result |
-|------|-------------------|-----------------|--------|
-| **Preview** | ✅ Runs | From `sc_site` cookie → hostname fallback | ✅ Works correctly |
-| **Editing** | ✅ Runs | From `sc_site` cookie → hostname fallback | ✅ Works correctly |
-| **Regular** | ✅ Runs | From hostname, query params, or cookie | ✅ Works correctly |
-
-### When Multisite is Disabled (`enabled: false`)
-
-| Mode | Middleware Behavior | Site Resolution | Result |
-|------|-------------------|-----------------|--------|
-| **Preview** | ✅ Runs (bypasses enabled check) | From `sc_site` cookie → hostname fallback | ✅ Works correctly |
-| **Editing** | ✅ Runs (bypasses enabled check) | From `sc_site` cookie → hostname fallback | ✅ Works correctly |
-| **Regular** | ❌ Skips | No site segment added | ❌ 404 errors |
-
-**Key Insight**: Preview and Editing modes always require the middleware to run (even when disabled) to preserve site name via cookies for navigation between pages.
-
-### Middleware Adjustments Made
-
-The middleware includes the following adjustments for correct site resolution:
-
-1. **Fallback for missing site cookie**: If `sc_site` cookie is missing in Preview/Editing mode, falls back to hostname resolution instead of crashing
-2. **Runtime warning**: Logs a warning when multisite is disabled in App Router to alert developers
-3. **Cookie validation**: Validates site cookie presence and provides graceful fallback
+**When enabled**: All modes work correctly  
+**When disabled**: Preview/Editing work, regular requests break (404)
 
 ## Troubleshooting
 
