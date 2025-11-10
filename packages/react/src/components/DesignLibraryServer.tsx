@@ -19,6 +19,8 @@ import {
 } from '@sitecore-content-sdk/core/editing';
 import { ComponentUpdateModel } from '../server-actions/update-server-component-action';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
+import { PlaceholderMetadata } from './Placeholder';
+import ErrorBoundary from './ErrorBoundary';
 
 export type ImportMapImport = {
   default: codegen.ImportEntry[];
@@ -85,7 +87,7 @@ export const DesignLibraryServer = async ({
     }
   }
 
-  const componentToUpdate = rendering?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
+  let componentToUpdate = rendering?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
   const componentUpdateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${componentToUpdate.uid}`;
   if (hasCache(componentUpdateKey)) {
     designLibraryStatus = DesignLibraryStatus.RENDERED;
@@ -113,10 +115,11 @@ export const DesignLibraryServer = async ({
   return (
     <>
       {isVariantGeneration && Component ? (
-        <Component
-          fields={rendering.fields}
-          params={(rendering as ComponentRendering<ComponentFields>).params}
-        />
+        <ErrorBoundary rendering={componentToUpdate}>
+          <PlaceholderMetadata rendering={componentToUpdate}>
+            <Component fields={componentToUpdate.fields} params={componentToUpdate.params} />
+          </PlaceholderMetadata>
+        </ErrorBoundary>
       ) : (
         <AppPlaceholder
           name={EDITING_COMPONENT_PLACEHOLDER}
@@ -125,7 +128,12 @@ export const DesignLibraryServer = async ({
           componentMap={componentMap}
         />
       )}
-      <DesignLibraryClient designLibraryStatus={designLibraryStatus} importMap={importMapPayload} />
+      <DesignLibraryClient
+        designLibraryStatus={designLibraryStatus}
+        importMap={importMapPayload}
+        // pass a new object since we have mutated the original which leads to old reference passed to the client
+        component={{ ...componentToUpdate }}
+      />
     </>
   );
 };

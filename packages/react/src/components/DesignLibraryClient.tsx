@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { updateServerComponentAction } from '../server-actions/update-server-component-action';
 import { useSitecore } from '../enhancers/withSitecore';
-import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
@@ -13,47 +13,42 @@ import * as codegen from '@sitecore-content-sdk/core/codegen';
 
 export type DesignLibraryClientProps = {
   designLibraryStatus: DesignLibraryStatus;
+  component: ComponentRendering;
   importMap?: codegen.ImportEntryPayload[];
 };
 
-export const DesignLibraryClient = (props: DesignLibraryClientProps) => {
-  console.log('DesignLibraryClient render');
-
+export const DesignLibraryClient = ({
+  designLibraryStatus,
+  component,
+  importMap,
+}: DesignLibraryClientProps) => {
   const { page } = useSitecore();
-  const route = page.layout.sitecore.route;
-  const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
   const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
   const isDesignLibrary = page.mode.isDesignLibrary;
 
-  console.log('DesignLibraryClient rendering: ', rendering);
-  console.log('isVariantGeneration:', isVariantGeneration);
-  console.log('importMap length:', props.importMap?.length);
-  console.log(props.importMap);
-
   useEffect(() => {
     let unsubPreview: () => void;
-    console.log('DesignLibraryClient mounted!');
     // - post to DL designlibraryStatus
-    postToDL(getDesignLibraryStatusEvent(props.designLibraryStatus, rendering.uid));
+    postToDL(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
 
-    if (isDesignLibrary && isVariantGeneration && props.importMap) {
+    if (isDesignLibrary && isVariantGeneration && importMap) {
       unsubPreview = codegen.addServerComponentPreviewHandler((eventArgs) => {
         console.log('preview event args: ', eventArgs);
-        updateServerComponentAction({ uid: rendering.uid, previewComponent: eventArgs });
+        updateServerComponentAction({ uid: component.uid, previewComponent: eventArgs });
       });
 
       // post importmap event
       const importMapEvent = codegen.getDesignLibraryImportMapPayloadEvent(
-        rendering.uid,
-        props.importMap
+        component.uid,
+        importMap
       );
       postToDL(importMapEvent);
 
       // const props evemt
       const propsEvent = codegen.getDesignLibraryComponentPropsEvent(
-        rendering.uid,
-        rendering.fields,
-        rendering.params
+        component.uid,
+        component.fields,
+        component.params
       );
       postToDL(propsEvent);
 
@@ -61,15 +56,10 @@ export const DesignLibraryClient = (props: DesignLibraryClientProps) => {
     }
 
     // add the component update handler
-    const unsubUpdate = addComponentUpdateHandler(rendering, (updated) => {
+    const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
       console.log('updated component: ', updated);
       updateServerComponentAction({ uid: updated.uid, updatedComponent: updated });
     });
-
-    // add the component preview handler
-    if (isVariantGeneration) {
-      console.log('DesignLibraryClient adding preview handler for variant generation');
-    }
 
     // useEffect will cleanup event handler on re-render
     return () => {
@@ -78,18 +68,5 @@ export const DesignLibraryClient = (props: DesignLibraryClientProps) => {
     };
   });
 
-  const handleClick = async () => {
-    updateServerComponentAction({
-      uid: 'ha-ha',
-      updatedComponent: rendering,
-    });
-  };
-
-  // return <DesignLibrary serverFunct={myServerFunct} loadImportMap={undefined} />;
-  return (
-    <>
-      <div>DesignLibraryClient</div>
-      <button onClick={handleClick}>Run server func</button>
-    </>
-  );
+  return <></>;
 };
