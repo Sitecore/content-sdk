@@ -1,14 +1,15 @@
-import React from 'react';
+'use client';
+import React, { Suspense } from 'react';
 import { DesignLibraryPreviewError } from '@sitecore-content-sdk/core/codegen';
 import { sendErrorEvent } from './design-library-utils';
 
-type ErrorBoundaryProps = {
+type DLErrorBoundaryProps = {
   uid: string;
   children: React.ReactNode;
-  renderKey: number;
+  renderKey?: number;
 };
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+export class DLErrorBoundary extends React.Component<DLErrorBoundaryProps> {
   state = {
     hasError: false,
   };
@@ -17,7 +18,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
     return { hasError: true };
   }
 
-  componentDidUpdate(prevProps: ErrorBoundaryProps) {
+  componentDidUpdate(prevProps: DLErrorBoundaryProps) {
     if (prevProps.renderKey !== this.props.renderKey) {
       this.setState({ hasError: false });
     }
@@ -32,6 +33,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
       return <div>Error during component rendering</div>;
     }
 
-    return this.props.children;
+    return <Suspense>{this.props.children}</Suspense>;
   }
 }
