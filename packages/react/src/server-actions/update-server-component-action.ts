@@ -15,7 +15,7 @@ export type ComponentUpdateModel = {
    */
   updatedComponent?: ComponentRendering;
   /**
-   * The preview component event arguments when in variant generation mode.
+   * The preview component event arguments in variant generation mode.
    */
   previewComponent?: ComponentPreviewEventArgs;
 };
