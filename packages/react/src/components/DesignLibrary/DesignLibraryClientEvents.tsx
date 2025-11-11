@@ -51,6 +51,7 @@ export const DesignLibraryClientEvents = ({
     });
 
     if (importMapError) {
+      // an import map error occurred on the server side in DesignLibraryServer, post error event to Design Studio
       sendErrorEvent(component.uid, importMapError, codegen.DesignLibraryPreviewError.RenderInit);
     } else {
       if (isDesignLibrary && isVariantGeneration) {
@@ -72,6 +73,7 @@ export const DesignLibraryClientEvents = ({
         postToDL(propsEvent);
 
         if (previewComponentStyle) {
+          // the generated component has custom styles, so add the css in style element and add it to document head
           addStyleElement(previewComponentStyle);
         }
       }
@@ -81,7 +83,7 @@ export const DesignLibraryClientEvents = ({
       unsubUpdate && unsubUpdate();
       unsubPreview && unsubPreview();
     };
-  }, []);
+  });
 
   return <></>;
 };

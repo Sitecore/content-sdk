@@ -63,10 +63,14 @@ export const DesignLibraryServer = async ({
 
   let componentToUpdate = rendering?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
   const componentUpdateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${componentToUpdate.uid}`;
+
+  // check if we have an update for this component in the global cache
   if (hasCache(componentUpdateKey)) {
+    // we have an update, get it and clean the cache
     designLibraryStatus = DesignLibraryStatus.RENDERED;
     const updateData = getCacheAndClean<ComponentUpdateModel>(componentUpdateKey);
 
+    // apply the updates to the component rendering
     if (updateData.updatedComponent) {
       componentToUpdate.fields = {
         ...componentToUpdate.fields,
@@ -79,13 +83,13 @@ export const DesignLibraryServer = async ({
     }
 
     if (isVariantGeneration && updateData.previewComponent && !importMapError) {
-      // use provided code and import map to create the component
+      // use provided code and import map to create the component instance
       Component = codegen.createComponentInstance(
         importMap,
         updateData.previewComponent
       ) as DynamicComponent;
 
-      // pass any raw styles to the client
+      // pass any raw styles to the client to be added to document head
       previewComponentStyle = updateData.previewComponent.message.styles.content;
     }
   }
