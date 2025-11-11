@@ -5,6 +5,7 @@ export {
   getDesignLibraryComponentPropsEvent,
   getDesignLibraryImportMapEvent,
   getImportMapInfo,
+  addStyleElement,
   createComponent,
   DesignLibraryPreviewError,
   ImportEntry,

@@ -14,6 +14,7 @@ let {
   getDesignLibraryComponentPropsEvent,
   addServerComponentPreviewHandler,
   getDesignLibraryImportMapEvent,
+  addStyleElement,
 } = codegen;
 
 /**
@@ -71,19 +72,7 @@ export const DesignLibraryClientEvents = ({
         postToDL(propsEvent);
 
         if (previewComponentStyle) {
-          // create new style element and attach it to DOM
-          const style = document.createElement('style');
-          const styleId = 'content-sdk-style-preview';
-          const styleElement = document.getElementById(styleId);
-
-          // remove existing style element if it exists to avoid duplicates
-          if (styleElement) {
-            styleElement.remove();
-          }
-
-          style.setAttribute('id', styleId);
-          style.innerHTML = previewComponentStyle;
-          document.head.appendChild(style);
+          addStyleElement(previewComponentStyle);
         }
       }
     }

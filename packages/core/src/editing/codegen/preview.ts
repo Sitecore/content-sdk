@@ -264,19 +264,7 @@ export const addComponentPreviewHandler = (
       const importNames = dependencies.successful.map((entry) => entry.name);
       const importInstances = dependencies.successful.map((entry) => entry.value);
 
-      const styleId = 'content-sdk-style-preview';
-      const styleElement = document.getElementById(styleId);
-
-      // remove existing style element if it exists to avoid duplicates
-      if (styleElement) {
-        styleElement.remove();
-      }
-
-      // create new style element and attach it to DOM
-      const style = document.createElement('style');
-      style.setAttribute('id', styleId);
-      style.innerHTML = message.styles.content;
-      document.head.appendChild(style);
+      addStyleElement(message.styles.content);
 
       const exports: { Component: unknown } = { Component: null };
 
@@ -339,6 +327,28 @@ export const addServerComponentPreviewHandler = (
 
   return unsubscribe;
 };
+
+/**
+ * Adds <style> element in the document head with the provided CSS.
+ * If an existing style element with the id "content-sdk-style-preview" is found, it is removed
+ * to prevent duplicates
+ * @param {string} stylesContent - The raw CSS text to inject into the style element.
+ */
+export function addStyleElement(stylesContent: string) {
+  const styleId = 'content-sdk-style-preview';
+  const styleElement = document.getElementById(styleId);
+
+  // remove existing style element if it exists to avoid duplicates
+  if (styleElement) {
+    styleElement.remove();
+  }
+
+  // create new style element and attach it to DOM
+  const style = document.createElement('style');
+  style.setAttribute('id', styleId);
+  style.innerHTML = stylesContent;
+  document.head.appendChild(style);
+}
 
 export const createComponent = (
   importMap: ImportEntry[],
