@@ -80,7 +80,7 @@ export const DesignLibraryServer = async ({
 
     if (isVariantGeneration && updateData.previewComponent && !importMapError) {
       // use provided code and import map to create the component
-      Component = codegen.createComponent(
+      Component = codegen.createComponentInstance(
         importMap,
         updateData.previewComponent
       ) as DynamicComponent;

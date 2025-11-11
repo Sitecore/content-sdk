@@ -242,43 +242,10 @@ export const addComponentPreviewHandler = (
 
       console.debug('Component Library: message received', eventArgs);
 
-      const { message } = eventArgs;
+      const Component = createComponentInstance(importMap, eventArgs);
+      addStyleElement(eventArgs.message.styles.content);
 
-      const dependencies = buildComponentDependencies(message.imports, importMap);
-
-      if (dependencies.missing.modules.length > 0 || dependencies.missing.exports.length > 0) {
-        let errorMessage = '';
-
-        dependencies.missing.modules.forEach((mod) => {
-          errorMessage += `Missing module: '${mod.module}' with alias: '${mod.alias}'\n`;
-        });
-
-        dependencies.missing.exports.forEach((exp) => {
-          const alias = exp.export !== exp.alias ? ` with alias: '${exp.alias}'` : '';
-          errorMessage += `Missing export: '${exp.export}' from module: '${exp.module}'${alias}\n`;
-        });
-
-        throw errorMessage;
-      }
-
-      const importNames = dependencies.successful.map((entry) => entry.name);
-      const importInstances = dependencies.successful.map((entry) => entry.value);
-
-      addStyleElement(message.styles.content);
-
-      const exports: { Component: unknown } = { Component: null };
-
-      const componentFn = new Function(
-        'exports',
-        message.styles.styleImport.name,
-        ...importNames,
-        message.code.content
-      );
-
-      // Function will set exports.Component
-      componentFn(exports, message.styles.styleImport.content, ...importInstances);
-
-      callback(null, exports.Component);
+      callback(null, Component);
     } catch (error) {
       const errorEvent = getDesignLibraryComponentPreviewErrorEvent(
         eventArgs.message.uid,
@@ -350,7 +317,14 @@ export function addStyleElement(stylesContent: string) {
   document.head.appendChild(style);
 }
 
-export const createComponent = (
+/**
+ * Dynamically creates a React component instance from provided importMap and from code, styles, and dependencies provided in the preview event.
+ * @param {ImportEntry[]} importMap - The import map containing module and export references that might be injected as dependencies in the provided code.
+ * @param {ComponentPreviewEventArgs} previewEventArgs - The event arguments containing the component code, styles, and import definitions.
+ * @returns The dynamically created React component instance.
+ * @throws If any required modules or exports are missing from the import map, an error is thrown describing the missing dependencies.
+ */
+export const createComponentInstance = (
   importMap: ImportEntry[],
   previewEventArgs: ComponentPreviewEventArgs
 ): unknown => {

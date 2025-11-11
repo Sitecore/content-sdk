@@ -6,7 +6,7 @@ export {
   getDesignLibraryImportMapEvent,
   getImportMapInfo,
   addStyleElement,
-  createComponent,
+  createComponentInstance,
   DesignLibraryPreviewError,
   ImportEntry,
   ImportEntryInfo,
