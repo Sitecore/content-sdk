@@ -6,13 +6,16 @@ import { MultisiteMiddleware } from './multisite-middleware';
  */
 export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
   /**
-   * Always warn when multisite is disabled in App Router, as it will break regular requests.
+   * Warns when multisite is disabled in App Router, as it will break regular requests.
    * @param {NextResponse} _res response (unused, kept for method signature compatibility)
-   * @returns {boolean} always returns true for App Router
    */
   // eslint-disable-next-line no-unused-vars
-  protected shouldWarnWhenDisabled(_res: NextResponse): boolean {
-    return true;
+  protected shouldWarnWhenDisabled(_res: NextResponse): void {
+    console.warn(
+      '⚠️ Warning: Multisite is disabled but App Router requires the [site] segment in routes. ' +
+        'Regular requests will fail with 404 errors. Preview/Editing modes will still work. ' +
+        'For single-site setups, keep multisite enabled and configure only one site.'
+    );
   }
 
   /**

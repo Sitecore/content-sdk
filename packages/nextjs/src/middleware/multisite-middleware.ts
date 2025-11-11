@@ -65,13 +65,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
 
       if (!isSitecorePreview) {
         if (!this.config.enabled) {
-          if (this.shouldWarnWhenDisabled(res)) {
-            console.warn(
-              '⚠️ Warning: Multisite is disabled but App Router requires the [site] segment in routes. ' +
-                'Regular requests will fail with 404 errors. Preview/Editing modes will still work. ' +
-                'For single-site setups, keep multisite enabled and configure only one site.'
-            );
-          }
+          this.shouldWarnWhenDisabled(res);
           debug.multisite('skipped (multisite middleware is disabled globally)');
           return res;
         }
@@ -137,13 +131,12 @@ export class MultisiteMiddleware extends MiddlewareBase {
   }
 
   /**
-   * Determines if a warning should be shown when multisite is disabled.
-   * Override this method in subclasses to provide router-specific behavior.
-   * @param {NextResponse} res response
-   * @returns {boolean} true if warning should be shown
+   * Called when multisite is disabled. Override this method in subclasses to show router-specific warnings.
+   * @param {NextResponse} _res response
    */
-  protected shouldWarnWhenDisabled(res: NextResponse): boolean {
-    return false;
+  // eslint-disable-next-line no-unused-vars
+  protected shouldWarnWhenDisabled(_res: NextResponse): void {
+    // Base implementation does nothing - subclasses can override to show warnings
   }
 
   /**
