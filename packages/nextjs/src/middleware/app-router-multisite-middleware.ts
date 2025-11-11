@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server';
 import { MultisiteMiddleware } from './multisite-middleware';
 
 /**
@@ -5,14 +6,27 @@ import { MultisiteMiddleware } from './multisite-middleware';
  */
 export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
   /**
-   * Warns when multisite is disabled in App Router, as it will break regular requests.
+   * Warns when multisite is disabled in App Router.
+   * The middleware will still run to prevent routing errors.
+   * @param {NextResponse} _res response (unused, kept for method signature compatibility)
    */
-  protected shouldWarnWhenDisabled() {
+  // eslint-disable-next-line no-unused-vars
+  protected shouldWarnWhenDisabled(_res: NextResponse): void {
     console.warn(
-      '⚠️ Warning: Multisite is disabled but App Router requires the [site] segment in routes. ' +
-        'Regular requests will fail with 404 errors. Preview/Editing modes will still work. ' +
+      '⚠️ Warning: Multisite is disabled in App Router configuration, but the middleware will continue running. ' +
+        'Disabling multisite in App Router would cause 404 errors for regular page requests because the route structure requires the [site] segment. ' +
+        'Preview/Editing modes will still work. ' +
         'For single-site setups, keep multisite enabled and configure only one site.'
     );
+  }
+
+  /**
+   * In App Router, we cannot skip the middleware even if enabled is false,
+   * because the route structure requires the [site] segment.
+   * @returns {boolean} always returns false (never skip) for App Router
+   */
+  protected shouldSkipWhenDisabled(): boolean {
+    return false; // Never skip in App Router - route structure requires [site] segment
   }
 
   /**

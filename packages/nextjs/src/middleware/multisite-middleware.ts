@@ -66,8 +66,11 @@ export class MultisiteMiddleware extends MiddlewareBase {
       if (!isSitecorePreview) {
         if (!this.config.enabled) {
           this.shouldWarnWhenDisabled(res);
-          debug.multisite('skipped (multisite middleware is disabled globally)');
-          return res;
+          if (this.shouldSkipWhenDisabled()) {
+            debug.multisite('skipped (multisite middleware is disabled globally)');
+            return res;
+          }
+          // Continue execution if shouldSkipWhenDisabled returns false (App Router case)
         }
 
         if (this.disabled(req, res)) {
@@ -137,6 +140,15 @@ export class MultisiteMiddleware extends MiddlewareBase {
   // eslint-disable-next-line no-unused-vars
   protected shouldWarnWhenDisabled(_res: NextResponse): void {
     // Base implementation does nothing - subclasses can override to show warnings
+  }
+
+  /**
+   * Determines if middleware should be skipped when multisite is disabled.
+   * Override in subclasses to provide router-specific behavior.
+   * @returns {boolean} true if middleware should be skipped when disabled
+   */
+  protected shouldSkipWhenDisabled(): boolean {
+    return true; // Base class skips when disabled
   }
 
   /**
