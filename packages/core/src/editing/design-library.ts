@@ -75,6 +75,23 @@ export const validateOrigin = (event: MessageEvent) => {
   );
 };
 
+export const validateEvent = (e: MessageEvent, eventName: string): boolean => {
+  if (!e.origin || !e.data || e.data.name !== eventName) {
+    // avoid extra noise in logs
+    if (!validateOrigin(e)) {
+      console.debug(
+        'Component Library: event skipped - invalid origin: message %s from origin %s',
+        e.data.name,
+        e.origin
+      );
+    }
+
+    return false;
+  }
+
+  return true;
+};
+
 export const updateComponentHandler = (
   e: MessageEvent,
   rootComponent: ComponentRendering,

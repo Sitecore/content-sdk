@@ -1,5 +1,5 @@
 import { ComponentFields, ComponentParams } from '../../layout/models';
-import { validateOrigin } from '../design-library';
+import { validateEvent } from '../design-library';
 
 /**
  * Event to send import map to design library
@@ -236,16 +236,7 @@ export const addComponentPreviewHandler = (
     const eventArgs: ComponentPreviewEventArgs = e.data;
 
     try {
-      if (!e.origin || !eventArgs || eventArgs.name !== 'component:generation:component-preview') {
-        // avoid extra noise in logs
-        if (!validateOrigin(e)) {
-          console.debug(
-            'Component Library: event skipped - invalid origin: message %s from origin %s',
-            eventArgs.name,
-            e.origin
-          );
-        }
-
+      if (!validateEvent(e, DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME)) {
         return;
       }
 
@@ -324,20 +315,16 @@ export const addComponentPreviewHandler = (
   return unsubscribe;
 };
 
+/**
+ * Adds the browser-side event handler for 'component:generation:component-preview' message used in Design Library for server components
+ * The event should contain the component code, styles and imports.
+ * @param {Function} callback callback to be called after component is received
+ */
 export const addServerComponentPreviewHandler = (
   callback: (eventArgs: ComponentPreviewEventArgs) => void
 ) => {
   const handler = (e: MessageEvent) => {
-    if (!e.origin || !e.data || e.data.name !== 'component:generation:component-preview') {
-      // avoid extra noise in logs
-      if (!validateOrigin(e)) {
-        console.debug(
-          'Component Library: event skipped - invalid origin: message %s from origin %s',
-          e.data.name,
-          e.origin
-        );
-      }
-
+    if (!validateEvent(e, DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME)) {
       return;
     }
 
