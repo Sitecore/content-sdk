@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { MultisiteMiddleware } from './multisite-middleware';
 
 /**
@@ -7,10 +6,8 @@ import { MultisiteMiddleware } from './multisite-middleware';
 export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
   /**
    * Warns when multisite is disabled in App Router, as it will break regular requests.
-   * @param {NextResponse} _res response (unused, kept for method signature compatibility)
    */
-  // eslint-disable-next-line no-unused-vars
-  protected shouldWarnWhenDisabled(_res: NextResponse): void {
+  protected shouldWarnWhenDisabled() {
     console.warn(
       '⚠️ Warning: Multisite is disabled but App Router requires the [site] segment in routes. ' +
         'Regular requests will fail with 404 errors. Preview/Editing modes will still work. ' +
