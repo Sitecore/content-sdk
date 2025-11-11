@@ -1,58 +1,33 @@
 'use server';
 import React from 'react';
-import { DesignLibraryProps } from './DesignLibrary';
-import { Page } from '@sitecore-content-sdk/core/client';
-import {
-  ComponentRendering,
-  RouteData,
-  EDITING_COMPONENT_PLACEHOLDER,
-  ComponentFields,
-  ComponentParams,
-} from '@sitecore-content-sdk/core/layout';
-import { ComponentMap } from './sharedTypes';
-import { AppPlaceholder } from './Placeholder';
-import { DesignLibraryClient } from './DesignLibraryClient';
+import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/core/layout';
+import { DesignLibraryClientEvents } from './DesignLibraryClientEvents';
 import { getCacheAndClean, hasCache } from '@sitecore-content-sdk/core/utils';
 import {
   DesignLibraryStatus,
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
 } from '@sitecore-content-sdk/core/editing';
-import { ComponentUpdateModel } from '../server-actions/update-server-component-action';
+import { ComponentUpdateModel } from '../../server-actions/update-server-component-action';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
-import { PlaceholderMetadata } from './Placeholder';
-import ErrorBoundary from './ErrorBoundary';
+import { AppPlaceholder, PlaceholderMetadata } from '../Placeholder';
+import ErrorBoundary from '../ErrorBoundary';
+import { DynamicComponent, DesignLibraryServerProps } from './models';
 
-export type ImportMapImport = {
-  default: codegen.ImportEntry[];
-};
-
-type DesignLibraryServerProps = DesignLibraryProps & {
-  /**
-   * Component Map will be used to map Sitecore component names to app implementation
-   * When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
-   * When rendered as a server placeholder, this prop must be provided.
-   */
-  componentMap?: ComponentMap;
-  /** Rendering data to be used when rendering the placeholder. */
-  rendering: ComponentRendering | RouteData;
-  /**
-   * Page data.
-   * This data is passed by the SitecoreProvider.
-   */
-  page: Page;
-  /**
-   * The dynamic import for import map to be used in variant generation mode.
-   * Currently it's optional but it will be required in the next major version.
-   */
-  loadImportMap?: () => Promise<ImportMapImport>;
-};
-
-type DynamicComponentServer = React.ComponentType<{
-  [key: string]: unknown;
-  fields: ComponentFields;
-  params: ComponentParams;
-}>;
-
+/**
+ * Design Library component for rendering server components in app router application.
+ *
+ * Renders the **real** Sitecore component for `library` / `library-metadata` modes and,
+ * when generation is enabled (`page.mode.designLibrary.isVariantGeneration === true`),
+ * wires the **variant generation** handshake so the parent (DL Studio) can send
+ * generated code to preview and iterate on.
+ * Also Renders the DesignLibraryClientEvents component which serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
+ * @param {DesignLibraryServerProps} [props]
+ * @param {Page} [props.page] the page data.
+ * @param {Record<string, DynamicComponent>} [props.componentMap] Component Map will be used by the placeholder to map Sitecore component names to app implementation
+ * @param {ComponentRendering} [props.rendering] Rendering data to be used when rendering the placeholder.
+ * @param {() => Promise<{ default: import('../codegen').ImportEntry[] }>} [props.loadImportMap] Optional async loader that resolves to the import-map used to resolve the generated component’s imports. Required when `isVariantGeneration` is true.
+ * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
+ */
 export const DesignLibraryServer = async ({
   page,
   componentMap,
@@ -62,12 +37,10 @@ export const DesignLibraryServer = async ({
   if (!page.mode.isDesignLibrary) {
     return null;
   }
-  console.log('DesignLibrarySR render');
-
   let designLibraryStatus = DesignLibraryStatus.READY;
   let importMap: codegen.ImportEntry[];
   let importMapPayload: codegen.ImportEntryPayload[];
-  let Component: DynamicComponentServer;
+  let Component: DynamicComponent;
   let importMapError: string;
   let previewComponentStyle: string;
   const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
@@ -110,7 +83,7 @@ export const DesignLibraryServer = async ({
       Component = codegen.createComponent(
         importMap,
         updateData.previewComponent
-      ) as DynamicComponentServer;
+      ) as DynamicComponent;
 
       // pass any raw styles to the client
       previewComponentStyle = updateData.previewComponent.message.styles.content;
@@ -133,7 +106,7 @@ export const DesignLibraryServer = async ({
           componentMap={componentMap}
         />
       )}
-      <DesignLibraryClient
+      <DesignLibraryClientEvents
         designLibraryStatus={designLibraryStatus}
         importMap={importMapPayload}
         // pass a new object since we have mutated the original which leads to old reference passed to the client

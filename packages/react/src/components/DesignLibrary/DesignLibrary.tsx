@@ -2,10 +2,7 @@
 /* eslint-disable jsdoc/require-param */
 /* eslint-disable prefer-const */
 import React, { useEffect, useState } from 'react';
-import { Placeholder } from './Placeholder';
 import {
-  ComponentFields,
-  ComponentParams,
   EDITING_COMPONENT_ID,
   EDITING_COMPONENT_PLACEHOLDER,
 } from '@sitecore-content-sdk/core/layout';
@@ -15,8 +12,11 @@ import {
   addComponentUpdateHandler,
 } from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
-import { useSitecore } from '../enhancers/withSitecore';
-import { PlaceholderMetadata } from './Placeholder';
+import { useSitecore } from '../../enhancers/withSitecore';
+import { Placeholder, PlaceholderMetadata } from '../Placeholder';
+import { postToDL, sendErrorEvent } from './design-library-utils';
+import { ErrorBoundary } from './ErrorBoundary';
+import { DesignLibraryProps, DynamicComponent } from './models';
 
 let {
   getDesignLibraryImportMapEvent,
@@ -27,85 +27,6 @@ let {
 export const __mockDependencies = (mocks: any) => {
   addComponentPreviewHandler = mocks.addComponentPreviewHandler;
 };
-
-export type ImportMapImport = {
-  default: codegen.ImportEntry[];
-};
-
-type DynamicComponent = React.ComponentType<{
-  [key: string]: unknown;
-  fields: ComponentFields;
-  params: ComponentParams;
-}>;
-
-type ErrorBoundaryProps = {
-  uid: string;
-  children: React.ReactNode;
-  renderKey: number;
-};
-
-// @MAJOR-RELEASE-TODO - Make importMap required in next major version
-export type DesignLibraryProps = {
-  /**
-   * The dynamic import for import map to be used in variant generation mode.
-   * Currently it's optional but it will be required in the next major version.
-   */
-  loadImportMap?: () => Promise<ImportMapImport>;
-};
-
-export const sendErrorEvent = (
-  uid: string,
-  error: unknown,
-  type: codegen.DesignLibraryPreviewError
-) => {
-  const errorEvent = codegen.getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
-  console.error('Component Library: sending error event', errorEvent);
-  if (typeof window !== 'undefined') {
-    const target = window.parent && window.parent !== window ? window.parent : window;
-    target.postMessage(errorEvent, '*');
-  }
-};
-
-export const postToDL = (evt: unknown) => {
-  if (typeof window === 'undefined') return;
-
-  const target = window.parent && window.parent !== window ? window.parent : window;
-
-  try {
-    console.log('Component Library: sending event', (evt as any)?.name, evt);
-    target.postMessage(evt as any, '*');
-  } catch (err) {
-    console.error('Component Library: postMessage failed', err, evt);
-  }
-};
-
-class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
-  state = {
-    hasError: false,
-  };
-
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-
-  componentDidUpdate(prevProps: ErrorBoundaryProps) {
-    if (prevProps.renderKey !== this.props.renderKey) {
-      this.setState({ hasError: false });
-    }
-  }
-
-  componentDidCatch(error: Error) {
-    sendErrorEvent(this.props.uid, error, codegen.DesignLibraryPreviewError.Render);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <div>Error during component rendering</div>;
-    }
-
-    return this.props.children;
-  }
-}
 
 /**
  * Design Library component.

@@ -8,11 +8,11 @@ import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
-import { getTestLayoutData } from '../test-data/component-editing-data';
-import { SitecoreProvider } from './SitecoreProvider';
-import { RichText } from './RichText';
-import { Text } from './Text';
-import { Placeholder } from './Placeholder';
+import { getTestLayoutData } from '../../test-data/component-editing-data';
+import { SitecoreProvider } from '../SitecoreProvider';
+import { RichText } from '../RichText';
+import { Text } from '../Text';
+import { Placeholder } from '../Placeholder';
 
 import {
   DesignLibraryStatus,

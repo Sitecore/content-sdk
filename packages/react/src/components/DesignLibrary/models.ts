@@ -1,0 +1,73 @@
+import { ImportEntry, ImportEntryPayload } from '@sitecore-content-sdk/core/codegen';
+import {
+  ComponentFields,
+  ComponentParams,
+  ComponentRendering,
+  RouteData,
+} from '@sitecore-content-sdk/core/layout';
+import { DesignLibraryStatus } from '@sitecore-content-sdk/core/editing';
+import { Page } from '@sitecore-content-sdk/core/client';
+import { ComponentMap } from '../sharedTypes';
+
+export type ImportMapImport = {
+  default: ImportEntry[];
+};
+
+export type DynamicComponent = React.ComponentType<{
+  [key: string]: unknown;
+  fields: ComponentFields;
+  params: ComponentParams;
+}>;
+
+// @MAJOR-RELEASE-TODO - Make importMap required in next major version
+export type DesignLibraryProps = {
+  /**
+   * The dynamic import for import map to be used in variant generation mode.
+   * Currently it's optional but it will be required in the next major version.
+   */
+  loadImportMap?: () => Promise<ImportMapImport>;
+};
+
+export type DesignLibraryServerProps = DesignLibraryProps & {
+  /**
+   * Component Map will be used to map Sitecore component names to app implementation
+   * When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
+   * When rendered as a server placeholder, this prop must be provided.
+   */
+  componentMap?: ComponentMap;
+  /** Rendering data to be used when rendering the placeholder. */
+  rendering: ComponentRendering | RouteData;
+  /**
+   * Page data.
+   * This data is passed by the SitecoreProvider.
+   */
+  page: Page;
+  /**
+   * The dynamic import for import map to be used in variant generation mode.
+   * Currently it's optional but it will be required in the next major version.
+   */
+  loadImportMap?: () => Promise<ImportMapImport>;
+};
+
+export type DesignLibraryClientEventsProps = {
+  /**
+   * The design library status to be posted as a message to the Design Studio.
+   */
+  designLibraryStatus: DesignLibraryStatus;
+  /**
+   * The component rendering data that is being edited in the Design Studio.
+   */
+  component: ComponentRendering;
+  /**
+   * The import map payload to be posted as a message to the Design Studio.
+   */
+  importMap?: ImportEntryPayload[];
+  /**
+   * Any error that occurred while loading the import map to be posted as a message to the Design Studio.
+   */
+  importMapError?: string;
+  /**
+   * The preview component style contents to be added to the DOM when rendering generated component.
+   */
+  previewComponentStyle?: string;
+};

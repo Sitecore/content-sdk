@@ -77,8 +77,7 @@ export {
   FEaaSServerWrapper,
   BYOCServerWrapper,
 } from './components/FEaaS';
-export { DesignLibrary } from './components/DesignLibrary';
-export { DesignLibraryServer } from './components/DesignLibraryServer';
+export { DesignLibrary, DesignLibraryServer } from './components/DesignLibrary';
 export {} from './components/FEaaS/BYOCComponent';
 export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';
 export { File, FileField } from './components/File';
