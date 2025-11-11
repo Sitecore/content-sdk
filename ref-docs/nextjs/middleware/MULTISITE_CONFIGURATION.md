@@ -69,7 +69,7 @@ multisite: {
 
 ## Preview/Editing Modes
 
-Preview and Editing modes always run the middleware (even when `enabled: false`) to preserve site name via cookies. Site resolution: `sc_site` cookie → hostname fallback.
+Preview and Editing modes always run the middleware (even when `enabled: false`) to preserve site name via cookies. Site name comes from the `sc_site` cookie set by the editing route handler.
 
 **When enabled**: All modes work correctly  
 **When disabled**: Preview/Editing work, regular requests break (404)
