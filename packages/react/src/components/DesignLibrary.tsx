@@ -53,7 +53,11 @@ export type DesignLibraryProps = {
   loadImportMap?: () => Promise<ImportMapImport>;
 };
 
-const sendErrorEvent = (uid: string, error: unknown, type: codegen.DesignLibraryPreviewError) => {
+export const sendErrorEvent = (
+  uid: string,
+  error: unknown,
+  type: codegen.DesignLibraryPreviewError
+) => {
   const errorEvent = codegen.getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
   console.error('Component Library: sending error event', errorEvent);
   if (typeof window !== 'undefined') {

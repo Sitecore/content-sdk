@@ -68,22 +68,23 @@ export const DesignLibraryServer = async ({
   let importMap: codegen.ImportEntry[];
   let importMapPayload: codegen.ImportEntryPayload[];
   let Component: DynamicComponentServer;
+  let importMapError: string;
+  let previewComponentStyle: string;
   const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
 
   // load importmap and importmap payload to pass to FE
+  // if not provided, or errors during load set error to pass to FE
   if (isVariantGeneration) {
-    try {
-      const mod = await loadImportMap();
-      importMap = mod.default;
-      importMapPayload = codegen.getImportMapPayload(importMap);
-    } catch (e) {
-      console.log('Error loading import map: ', e);
-      // TODO: send error event to frontend
-      // sendErrorEvent(
-      //   rendering.uid,
-      //   `Error loading import map: ${e}`,
-      //   codegen.DesignLibraryPreviewError.RenderInit
-      // );
+    if (!loadImportMap) {
+      importMapError = 'No loadImportMap provided';
+    } else {
+      try {
+        const mod = await loadImportMap();
+        importMap = mod.default;
+        importMapPayload = codegen.getImportMapPayload(importMap);
+      } catch (e) {
+        importMapError = `Error loading import map: ${e}`;
+      }
     }
   }
 
@@ -104,11 +105,15 @@ export const DesignLibraryServer = async ({
       };
     }
 
-    if (isVariantGeneration && updateData.previewComponent) {
+    if (isVariantGeneration && updateData.previewComponent && !importMapError) {
+      // use provided code and import map to create the component
       Component = codegen.createComponent(
         importMap,
         updateData.previewComponent
       ) as DynamicComponentServer;
+
+      // pass any raw styles to the client
+      previewComponentStyle = updateData.previewComponent.message.styles.content;
     }
   }
 
@@ -133,6 +138,8 @@ export const DesignLibraryServer = async ({
         importMap={importMapPayload}
         // pass a new object since we have mutated the original which leads to old reference passed to the client
         component={{ ...componentToUpdate }}
+        importMapError={importMapError}
+        previewComponentStyle={previewComponentStyle}
       />
     </>
   );
