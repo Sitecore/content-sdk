@@ -451,3 +451,18 @@ function isImportEntryInfoArray(data: unknown): data is ImportEntryInfo[] {
     typeof data[0].exports[0] === 'string'
   );
 }
+
+/**
+ * Sends a component preview error event to the design library
+ * @param {string} uid - The unique identifier of the component that's being edited.
+ * @param {unknown} error - The error object or message to be sent.
+ * @param {DesignLibraryPreviewError} type - The type of error, as defined in DesignLibraryPreviewError.
+ */
+export const sendErrorEvent = (uid: string, error: unknown, type: DesignLibraryPreviewError) => {
+  const errorEvent = getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
+  console.error('Component Library: sending error event', errorEvent);
+  if (typeof window !== 'undefined') {
+    const target = window.parent && window.parent !== window ? window.parent : window;
+    target.postMessage(errorEvent, '*');
+  }
+};

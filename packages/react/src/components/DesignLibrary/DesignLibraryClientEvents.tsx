@@ -3,11 +3,11 @@ import React, { useEffect } from 'react';
 import {
   getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
+  postToDL,
 } from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { useSitecore } from '../../enhancers/withSitecore';
 import { updateServerComponentAction } from '../../server-actions/update-server-component-action';
-import { postToDL, sendErrorEvent } from './design-library-utils';
 import { DesignLibraryClientEventsProps } from './models';
 
 let {
@@ -15,6 +15,7 @@ let {
   addServerComponentPreviewHandler,
   getDesignLibraryImportMapEvent,
   addStyleElement,
+  sendErrorEvent,
 } = codegen;
 
 /**

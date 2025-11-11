@@ -186,3 +186,20 @@ export function getDesignLibraryScriptLink(sitecoreEdgeUrl = SITECORE_EDGE_URL_D
 export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode {
   return mode === DesignLibraryMode.Normal || mode === DesignLibraryMode.Metadata;
 }
+
+/**
+ * Sends an event to the Design Library
+ * @param {unknown} evt - The event object to send.
+ */
+export const postToDL = (evt: unknown) => {
+  if (typeof window === 'undefined') return;
+
+  const target = window.parent && window.parent !== window ? window.parent : window;
+
+  try {
+    console.log('Component Library: sending event', (evt as any)?.name, evt);
+    target.postMessage(evt as any, '*');
+  } catch (err) {
+    console.error('Component Library: postMessage failed', err, evt);
+  }
+};

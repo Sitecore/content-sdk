@@ -10,11 +10,11 @@ import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
+  postToDL,
 } from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { useSitecore } from '../../enhancers/withSitecore';
 import { Placeholder, PlaceholderMetadata } from '../Placeholder';
-import { postToDL, sendErrorEvent } from './design-library-utils';
 import { DLErrorBoundary } from './DLErrorBoundary';
 import { DesignLibraryProps, DynamicComponent } from './models';
 
@@ -22,6 +22,7 @@ let {
   getDesignLibraryImportMapEvent,
   getDesignLibraryComponentPropsEvent,
   addComponentPreviewHandler,
+  sendErrorEvent,
 } = codegen;
 
 export const __mockDependencies = (mocks: any) => {

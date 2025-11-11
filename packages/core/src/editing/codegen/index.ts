@@ -7,6 +7,7 @@ export {
   getImportMapInfo,
   addStyleElement,
   createComponentInstance,
+  sendErrorEvent,
   DesignLibraryPreviewError,
   ImportEntry,
   ImportEntryInfo,

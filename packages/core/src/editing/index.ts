@@ -28,5 +28,6 @@ export {
   getDesignLibraryStatusEvent,
   getDesignLibraryScriptLink,
   isDesignLibraryMode,
+  postToDL,
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
 } from './design-library';
