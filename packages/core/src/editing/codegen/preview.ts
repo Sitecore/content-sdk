@@ -31,9 +31,9 @@ export interface ImportEntry {
 }
 
 /**
- * Represents the payload for the import entry to be sent to design library.
+ * Represents the info for the import entry to be sent to design library.
  */
-export interface ImportEntryPayload {
+export interface ImportEntryInfo {
   module: string;
   exports: string[];
 }
@@ -440,9 +440,11 @@ export function getDesignLibraryComponentPropsEvent(
  */
 export function getDesignLibraryImportMapEvent(
   uid: string,
-  importMap: ImportEntry[]
+  importMap: ImportEntry[] | ImportEntryInfo[]
 ): DesignLibraryImportMapEvent {
-  const importMapPayload = getImportMapPayload(importMap);
+  const importMapPayload = isImportEntryInfoArray(importMap)
+    ? importMap
+    : getImportMapInfo(importMap);
 
   return {
     name: DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME,
@@ -453,26 +455,28 @@ export function getDesignLibraryImportMapEvent(
   };
 }
 
-export function getDesignLibraryImportMapPayloadEvent(
-  uid: string,
-  importMap: ImportEntryPayload[]
-): DesignLibraryImportMapEvent {
-  return {
-    name: DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME,
-    message: {
-      uid,
-      importMap: importMap,
-    },
-  };
-}
-
 /**
  * Generates the payload for the import map to be sent to design library.
  * @param {ImportEntry[]} importMap - The imports map to be sent.
  */
-export function getImportMapPayload(importMap: ImportEntry[]): ImportEntryPayload[] {
+export function getImportMapInfo(importMap: ImportEntry[]): ImportEntryInfo[] {
   return importMap.map((entry) => ({
     module: entry.module,
     exports: entry.exports.map((exp) => exp.name),
   }));
+}
+
+/**
+ * Type guard for ImportEntryInfo[]
+ * @param {unknown} data import entry data to check
+ * @returns true if the data is ImportEntryInfo array
+ */
+function isImportEntryInfoArray(data: unknown): data is ImportEntryInfo[] {
+  return (
+    Array.isArray(data) &&
+    data.length > 0 &&
+    typeof data[0].module === 'string' &&
+    Array.isArray(data[0].exports) &&
+    typeof data[0].exports[0] === 'string'
+  );
 }

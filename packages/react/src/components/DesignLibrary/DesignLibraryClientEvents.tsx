@@ -13,7 +13,7 @@ import { DesignLibraryClientEventsProps } from './models';
 let {
   getDesignLibraryComponentPropsEvent,
   addServerComponentPreviewHandler,
-  getDesignLibraryImportMapPayloadEvent,
+  getDesignLibraryImportMapEvent,
 } = codegen;
 
 /**
@@ -23,7 +23,7 @@ let {
  * @param {DesignLibraryClientEventsProps} [props]
  * @param {DesignLibraryStatus} [props.designLibraryStatus] The design library status to be posted as a message to the Design Studio.
  * @param {ComponentRendering} [props.component] The component rendering data that is being edited in the Design Studio.
- * @param {ImportEntryPayload[]} [props.importMap] The import map payload to be posted as a message to the Design Studio.
+ * @param {ImportEntryInfo[]} [props.importMap] The import map payload to be posted as a message to the Design Studio.
  * @param {string} [props.importMapError] Any error that occurred while loading the import map to be posted as a message to the Design Studio.
  * @param {string} [props.previewComponentStyle] The preview component style contents to be added to the DOM when rendering generated component.
  * @returns {JSX.Element} emtpty JSX element.
@@ -46,7 +46,6 @@ export const DesignLibraryClientEvents = ({
 
     // add the component update handler
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
-      console.log('updated component: ', updated);
       updateServerComponentAction({ uid: updated.uid, updatedComponent: updated });
     });
 
@@ -60,7 +59,7 @@ export const DesignLibraryClientEvents = ({
         });
 
         // post importmap event
-        const importMapEvent = getDesignLibraryImportMapPayloadEvent(component.uid, importMap);
+        const importMapEvent = getDesignLibraryImportMapEvent(component.uid, importMap);
         postToDL(importMapEvent);
 
         // const props event

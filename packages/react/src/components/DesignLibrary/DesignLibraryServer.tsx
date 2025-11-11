@@ -39,7 +39,7 @@ export const DesignLibraryServer = async ({
   }
   let designLibraryStatus = DesignLibraryStatus.READY;
   let importMap: codegen.ImportEntry[];
-  let importMapPayload: codegen.ImportEntryPayload[];
+  let importMapInfo: codegen.ImportEntryInfo[];
   let Component: DynamicComponent;
   let importMapError: string;
   let previewComponentStyle: string;
@@ -54,7 +54,7 @@ export const DesignLibraryServer = async ({
       try {
         const mod = await loadImportMap();
         importMap = mod.default;
-        importMapPayload = codegen.getImportMapPayload(importMap);
+        importMapInfo = codegen.getImportMapInfo(importMap);
       } catch (e) {
         importMapError = `Error loading import map: ${e}`;
       }
@@ -108,7 +108,7 @@ export const DesignLibraryServer = async ({
       )}
       <DesignLibraryClientEvents
         designLibraryStatus={designLibraryStatus}
-        importMap={importMapPayload}
+        importMap={importMapInfo}
         // pass a new object since we have mutated the original which leads to old reference passed to the client
         component={{ ...componentToUpdate }}
         importMapError={importMapError}

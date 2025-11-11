@@ -1,4 +1,4 @@
-import { ImportEntry, ImportEntryPayload } from '@sitecore-content-sdk/core/codegen';
+import { ImportEntry, ImportEntryInfo } from '@sitecore-content-sdk/core/codegen';
 import {
   ComponentFields,
   ComponentParams,
@@ -59,9 +59,9 @@ export type DesignLibraryClientEventsProps = {
    */
   component: ComponentRendering;
   /**
-   * The import map payload to be posted as a message to the Design Studio.
+   * The import map info to be posted as a message to the Design Studio.
    */
-  importMap?: ImportEntryPayload[];
+  importMap?: ImportEntryInfo[];
   /**
    * Any error that occurred while loading the import map to be posted as a message to the Design Studio.
    */
