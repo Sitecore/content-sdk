@@ -6,13 +6,11 @@ import { combineImportEntries, defaultImportEntries } from '@sitecore-content-sd
 import {
   Link,
   Text,
-  useSitecore,
   RichText,
   NextImage,
   Placeholder as Placeholder_8a80e63291fea86e0744df19113dc44bec187216,
   AppPlaceholder,
   CdpHelper,
-  withDatasourceCheck,
 } from '@sitecore-content-sdk/nextjs';
 import { Suspense } from 'react';
 import React from 'react';
@@ -27,13 +25,11 @@ const importMapServer = [
     exports: [
       { name: 'Link', value: Link },
       { name: 'Text', value: Text },
-      { name: 'useSitecore', value: useSitecore },
       { name: 'RichText', value: RichText },
       { name: 'NextImage', value: NextImage },
       { name: 'Placeholder', value: Placeholder_8a80e63291fea86e0744df19113dc44bec187216 },
       { name: 'AppPlaceholder', value: AppPlaceholder },
       { name: 'CdpHelper', value: CdpHelper },
-      { name: 'withDatasourceCheck', value: withDatasourceCheck },
     ],
   },
   {
