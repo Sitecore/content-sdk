@@ -12,6 +12,12 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🎉 New Features & Improvements
+  * `[core]` `[react]` `[nextjs]` `[templates/nextjs app router]` Add support for server components in Design Library in nextjs app router template ([#280](https://github.com/Sitecore/content-sdk/pull/280))
+   - additional ract components to handle dynamic rendering of server components
+   - includes refactoring of existing Design Library functionality
+   - this is a breaking change for Next.js App Router (beta) application
+
 ## 1.2.1
 
 ### 🐛 Bug Fixes
