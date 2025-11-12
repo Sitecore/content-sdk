@@ -7,6 +7,8 @@ import {
   DesignLibraryStatus,
   getDesignLibraryScriptLink,
   isDesignLibraryMode,
+  postToDL,
+  validateEvent,
 } from './design-library';
 import testComponent from '../test-data/component-editing-data';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
@@ -207,6 +209,101 @@ describe('component library utils', () => {
 
     it('should return false for other values', () => {
       expect(isDesignLibraryMode('invalid')).to.be.false;
+    });
+  });
+
+  describe('postToDL', () => {
+    let originalWindow: any;
+    let logSpy: sinon.SinonSpy;
+    let errorSpy: sinon.SinonSpy;
+    const statusReadyEvent = 'component:status:ready';
+
+    beforeEach(() => {
+      logSpy = sinon.spy(console, 'log');
+      errorSpy = sinon.spy(console, 'error');
+      originalWindow = (global as any).window;
+    });
+
+    afterEach(() => {
+      logSpy.restore();
+      errorSpy.restore();
+      (global as any).window = originalWindow;
+    });
+
+    it('should return when window is undefined', () => {
+      (global as any).window = undefined;
+      postToDL({ name: statusReadyEvent });
+      expect(logSpy.called).to.be.false;
+      expect(errorSpy.called).to.be.false;
+    });
+
+    it('should post message to parent when parent is different from window', () => {
+      const parentPost = sinon.stub();
+      (global as any).window = {
+        parent: { postMessage: parentPost },
+        postMessage: sinon.stub(),
+      };
+      postToDL({ name: statusReadyEvent, message: { status: 'ready', uid: 'x' } });
+      expect(logSpy.calledOnce).to.be.true;
+      expect(parentPost.calledOnce).to.be.true;
+      const args = parentPost.getCall(0).args[0];
+      expect(args).to.deep.include({ name: statusReadyEvent });
+    });
+
+    it('should post message to window when parent equals window', () => {
+      const winPost = sinon.stub();
+      const win: any = { postMessage: winPost };
+      win.parent = win;
+      (global as any).window = win;
+      postToDL({ name: statusReadyEvent });
+      expect(winPost.calledOnce).to.be.true;
+    });
+
+    it('should log error when postMessage throws', () => {
+      const throwingParent = { postMessage: sinon.stub().throws(new Error('fail')) };
+      (global as any).window = {
+        parent: throwingParent,
+        postMessage: sinon.stub(),
+      };
+      postToDL({ name: statusReadyEvent });
+      expect(errorSpy.calledOnce).to.be.true;
+      const errArg = errorSpy.getCall(0).args[1];
+      expect((errArg as Error).message).to.equal('fail');
+    });
+  });
+
+  describe('validateEvent', () => {
+    const statusRenderedEvent = 'component:status:render';
+
+    it('should return true for valid event', () => {
+      const evt = new MessageEvent('message', {
+        origin: 'http://localhost',
+        data: { name: statusRenderedEvent },
+      });
+      expect(validateEvent(evt, statusRenderedEvent)).to.be.true;
+    });
+
+    it('should return false when name mismatches without logging (wildcard origin)', () => {
+      const evt = new MessageEvent('message', {
+        origin: 'http://localhost',
+        data: { name: 'other:event' },
+      });
+      expect(validateEvent(evt, statusRenderedEvent)).to.be.false;
+      expect(debugSpy.called).to.be.false;
+    });
+
+    it('should return false when data missing', () => {
+      const evt = new MessageEvent('message', {
+        origin: 'http://localhost',
+      });
+      expect(validateEvent(evt, statusRenderedEvent)).to.be.false;
+      expect(debugSpy.called).to.be.false;
+    });
+
+    it('should return false when origin missing', () => {
+      const evt = { origin: '', data: { name: statusRenderedEvent } } as any;
+      expect(validateEvent(evt, statusRenderedEvent)).to.be.false;
+      expect(debugSpy.called).to.be.false;
     });
   });
 

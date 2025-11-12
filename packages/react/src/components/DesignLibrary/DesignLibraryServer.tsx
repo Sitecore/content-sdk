@@ -83,14 +83,19 @@ export const DesignLibraryServer = async ({
     }
 
     if (isVariantGeneration && updateData.previewComponent && !importMapError) {
-      // use provided code and import map to create the component instance
-      Component = codegen.createComponentInstance(
-        importMap,
-        updateData.previewComponent
-      ) as DynamicComponent;
+      try {
+        // use provided code and import map to create the component instance
+        Component = codegen.createComponentInstance(
+          importMap,
+          updateData.previewComponent
+        ) as DynamicComponent;
 
-      // pass any raw styles to the client to be added to document head
-      previewComponentStyle = updateData.previewComponent.message.styles.content;
+        // pass any raw styles to the client to be added to document head
+        previewComponentStyle = updateData.previewComponent.message.styles.content;
+      } catch (error) {
+        // error during component initialization - send error to client
+        importMapError = error.toString();
+      }
     }
   }
 

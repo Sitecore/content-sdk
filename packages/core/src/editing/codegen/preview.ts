@@ -283,6 +283,8 @@ export const addServerComponentPreviewHandler = (
       return;
     }
 
+    console.debug('Component Library: message received', e.data);
+
     callback(e.data as ComponentPreviewEventArgs);
   };
 
@@ -442,7 +444,7 @@ export function getImportMapInfo(importMap: ImportEntry[]): ImportEntryInfo[] {
  * @param {unknown} data import entry data to check
  * @returns true if the data is ImportEntryInfo array
  */
-function isImportEntryInfoArray(data: unknown): data is ImportEntryInfo[] {
+export function isImportEntryInfoArray(data: unknown): data is ImportEntryInfo[] {
   return (
     Array.isArray(data) &&
     data.length > 0 &&
