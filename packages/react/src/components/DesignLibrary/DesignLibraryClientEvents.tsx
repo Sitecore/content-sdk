@@ -28,7 +28,7 @@ let {
  * @param {ImportEntryInfo[]} [props.importMap] The import map payload to be posted as a message to the Design Studio.
  * @param {string} [props.importMapError] Any error that occurred while loading the import map to be posted as a message to the Design Studio.
  * @param {string} [props.previewComponentStyle] The preview component style contents to be added to the DOM when rendering generated component.
- * @returns {JSX.Element} emtpty JSX element.
+ * @returns {JSX.Element} empty JSX element.
  */
 export const DesignLibraryClientEvents = ({
   designLibraryStatus,
