@@ -12,6 +12,10 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🐛 Bug Fixes
+
+* `[template/next-app-router]` Remove component-level data fetching to prevent security vulnerability
+
 ## 1.2.1
 
 ### 🐛 Bug Fixes
