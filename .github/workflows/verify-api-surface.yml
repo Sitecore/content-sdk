@@ -14,23 +14,23 @@ jobs:
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
-      # - uses: actions/checkout@v4
-      #   with:
-      #     ref: ${{ github.ref }}
-      #     fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
 
-      # - name: Use Node.js ${{ inputs.node_version }}
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: ${{ inputs.node_version }}
+      - name: Use Node.js ${{ inputs.node_version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
 
-      # - name: Install dependencies
-      #   run: |
-      #     yarn cache clean --all
-      #     yarn install --immutable
+      - name: Install dependencies
+        run: |
+          yarn cache clean --all
+          yarn install --immutable
 
-      # - name: Build packages
-      #   run: npm run build
+      - name: Build packages
+        run: yarn build
 
       # API Extractor verifies that public API changes are properly documented
       # and helps prevent accidental breaking changes to the public API surface
