@@ -275,9 +275,9 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       );
     }
 
-    const originalUrl = new URL(req.url);
-    const queryString = originalUrl.search;
-    const targetUrl = new URL(`/${queryString}`, req.url).toString();
+    const queryString = req.nextUrl.searchParams.toString();
+    const base = resolveServerUrl(req);
+    const targetUrl = new URL(`/?${queryString}`, base).toString();
 
     // enable draft mode in order to get prerender bypass cookie from request
     const draft = await draftMode();
