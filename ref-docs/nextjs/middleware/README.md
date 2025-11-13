@@ -31,6 +31,10 @@
 
 - [defineMiddleware](functions/defineMiddleware.md)
 
+## Documentation
+
+- [Multisite Configuration in App Router](MULTISITE_CONFIGURATION.md) - Important information about multisite limitations and single-site setups
+
 ## References
 
 ### debug
