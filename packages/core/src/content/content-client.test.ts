@@ -20,7 +20,7 @@ describe('content-client', () => {
       const client = new ContentClient(options);
 
       expect(client.endpoint).to.equal(
-        'https://example.com/api/graphql/v1/test-tenant/test-env?preview=true'
+        'https://example.com/cs/api/v2/graphql/test-tenant/test-env?preview=true'
       );
       expect(client.graphqlClient).to.be.instanceOf(GraphQLRequestClient);
       expect(client.graphqlClient['headers']).to.deep.equal({
@@ -58,7 +58,7 @@ describe('content-client', () => {
 
       expect(client).to.be.instanceOf(ContentClient);
       expect(client.endpoint).to.equal(
-        'https://cs-graphqlapi-staging.sitecore-staging.cloud/api/graphql/v1/test-tenant/main?preview=false'
+        'https://edge-platform.sitecorecloud.io/cs/api/v2/graphql/test-tenant/main?preview=false'
       );
     });
 
@@ -72,7 +72,7 @@ describe('content-client', () => {
       });
 
       expect(client.endpoint).to.equal(
-        'https://custom-url.com/api/graphql/v1/test-tenant/test-env?preview=true'
+        'https://custom-url.com/cs/api/v2/graphql/test-tenant/test-env?preview=true'
       );
     });
 
@@ -84,13 +84,13 @@ describe('content-client', () => {
       process.env.SITECORE_CS_TOKEN = 'test-token';
 
       expect(ContentClient.createClient().endpoint).to.equal(
-        'https://example.com/api/graphql/v1/test-tenant/test-env?preview=false'
+        'https://example.com/cs/api/v2/graphql/test-tenant/test-env?preview=false'
       );
 
       process.env.SITECORE_CS_PREVIEW = 'true';
 
       expect(ContentClient.createClient().endpoint).to.equal(
-        'https://example.com/api/graphql/v1/test-tenant/test-env?preview=true'
+        'https://example.com/cs/api/v2/graphql/test-tenant/test-env?preview=true'
       );
     });
   });

@@ -14,7 +14,7 @@ describe('utils', () => {
       });
 
       expect(url).to.equal(
-        `https://cs-graphqlapi-staging.sitecore-staging.cloud/api/graphql/v1/${tenant}/${environment}?preview=true`
+        'https://edge-platform.sitecorecloud.io/cs/api/v2/graphql/my-tenant/my-environment?preview=true'
       );
     });
 
@@ -27,7 +27,7 @@ describe('utils', () => {
       });
 
       expect(url).to.equal(
-        `https://my-custom-url.com/api/graphql/v1/${tenant}/${environment}?preview=false`
+        'https://my-custom-url.com/cs/api/v2/graphql/my-tenant/my-environment?preview=false'
       );
     });
 
@@ -40,7 +40,7 @@ describe('utils', () => {
       });
 
       expect(url).to.equal(
-        `https://my-custom-url.com/api/graphql/v1/${tenant}/${environment}?preview=false`
+        'https://my-custom-url.com/cs/api/v2/graphql/my-tenant/my-environment?preview=false'
       );
     });
   });

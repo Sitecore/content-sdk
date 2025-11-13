@@ -10,7 +10,7 @@ import { normalizeUrl } from '../utils/normalize-url';
  * @returns {string} Content graphql endpoint url
  */
 export function getContentUrl({
-  url = 'https://cs-graphqlapi-staging.sitecore-staging.cloud',
+  url = 'https://edge-platform.sitecorecloud.io',
   tenant,
   environment,
   preview,
@@ -20,5 +20,5 @@ export function getContentUrl({
   environment: string;
   preview: boolean;
 }) {
-  return `${normalizeUrl(url)}/api/graphql/v1/${tenant}/${environment}?preview=${preview}`;
+  return `${normalizeUrl(url)}/cs/api/v2/graphql/${tenant}/${environment}?preview=${preview}`;
 }
