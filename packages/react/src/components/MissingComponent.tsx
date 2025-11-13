@@ -14,8 +14,8 @@ export const MissingComponent: React.FC<MissingComponentProps> = (props) => {
       : 'Unnamed Component';
 
   // error override would mean component is not unimplemented
-  // !props.errorOverride &&
-  //   console.log(`Component props for unimplemented '${componentName}' component`, props);
+  !props.errorOverride &&
+    console.log(`Component props for unimplemented '${componentName}' component`, props);
   const errorMessage =
     props.errorOverride ||
     'Content SDK component is missing React implementation. See the developer console for more information.';
