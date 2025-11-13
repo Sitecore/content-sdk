@@ -22,10 +22,15 @@ export type CookieAttributes = {
   sameSite?: true | false | 'lax' | 'strict' | 'none' | undefined;
 };
 
+/**
+ * The interface for the MultisiteMiddleware configuration.
+ * @public
+ */
 export type MultisiteMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['multisite'];
 
 /**
  * Middleware / handler for multisite support
+ * @public
  */
 export class MultisiteMiddleware extends MiddlewareBase {
   /**

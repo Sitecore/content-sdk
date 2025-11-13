@@ -26,6 +26,7 @@ export type ExtractFilesConfig = {
 /**
  * Extracts components from the app folder and sends them to XMCloud.
  * @param {ExtractFilesConfig} args - Config for components extraction
+ * @public
  */
 export let extractFiles = _extractFiles;
 

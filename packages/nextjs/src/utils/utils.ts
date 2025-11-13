@@ -7,6 +7,7 @@ import { REWRITE_HEADER_NAME } from '../middleware/middleware';
  * 1. Subscribe on events provided by webpack.
  * 2. Reset editor chromes when build is finished
  * @param {boolean} [forceReload] force page reload instead of reset chromes
+ * @public
  */
 export const handleEditorFastRefresh = (forceReload = false): void => {
   if (process.env.NODE_ENV !== 'development' || !isEditorActive()) {
@@ -47,6 +48,12 @@ export const getEditingSecret = (): string => {
   return secret;
 };
 
+/**
+ * Extracts the path from the Next.js context parameters.
+ * @param {GetStaticPropsContext | GetServerSidePropsContext} context - The Next.js context parameters.
+ * @returns The extracted path.
+ * @public
+ */
 export const extractPath = (context: GetStaticPropsContext | GetServerSidePropsContext) => {
   return context.params === undefined
     ? '/'
@@ -58,6 +65,7 @@ export const extractPath = (context: GetStaticPropsContext | GetServerSidePropsC
 /**
  * Determines whether context is GetServerSidePropsContext (SSR) or GetStaticPropsContext (SSG)
  * @param {GetServerSidePropsContext | GetStaticPropsContext} context
+ * @public
  */
 export const isServerSidePropsContext = (
   context: GetServerSidePropsContext | GetStaticPropsContext
@@ -69,6 +77,7 @@ export const isServerSidePropsContext = (
  * For App Router application, extracts the site and locale information from the rewrite header which is in format /[site]/[locale]/[...path].
  * @param {Headers} headers - The `Headers` object containing the rewrite header.
  * @returns An object containing the `site` and `locale` extracted from the rewrite header.
+ * @public
  */
 export const parseRewriteHeader = (headers: Headers) => {
   const rewriteHeader = headers.get(REWRITE_HEADER_NAME);

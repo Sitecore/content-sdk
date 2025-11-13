@@ -16,6 +16,7 @@ const DefaultErrorComponent = (props: ErrorComponentProps) => (
  * missing components, and customization of error messages or alternative rendering components.
  * @param {ByocComponentProps} props component props
  * @returns dynamically rendered component or Missing Component error frame
+ * @public
  */
 export class BYOCComponent extends React.Component<BYOCComponentProps> {
   state: Readonly<{ error?: Error }>;
@@ -107,6 +108,7 @@ export class BYOCComponent extends React.Component<BYOCComponentProps> {
  * SXA wrapper for BYOC components
  * @param {BYOCComponentProps} props component props
  * @returns wrapped BYOC component
+ * @public
  */
 export const BYOCWrapper = (props: BYOCComponentProps): JSX.Element => {
   const styles = props.params?.styles?.trimEnd();

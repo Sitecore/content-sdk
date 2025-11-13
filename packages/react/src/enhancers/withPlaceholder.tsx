@@ -43,6 +43,7 @@ export type WithPlaceholderSpec =
  * HOC to provide client-side placeholder functionality to a component.
  * @param {WithPlaceholderSpec} placeholders
  * @param {WithPlaceholderOptions} [options]
+ * @public
  */
 export function withPlaceholder(
   placeholders: WithPlaceholderSpec,

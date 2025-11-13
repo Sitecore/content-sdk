@@ -7,6 +7,10 @@ import {
   RichTextProps as ReactRichTextProps,
 } from '@sitecore-content-sdk/react';
 
+/**
+ * The interface for the RichText component props.
+ * @public
+ */
 export type RichTextProps = ReactRichTextProps & {
   /**
    * Selector which should be used in order to prefetch it and attach event listeners
@@ -42,6 +46,11 @@ const useCompatibleRouter = () => {
   return { pageRouter, appRouter };
 };
 
+/**
+ * The RichText component.
+ * @param {RichTextProps} props - The props for the RichText component.
+ * @public
+ */
 export const RichText = (props: RichTextProps): JSX.Element => {
   const {
     internalLinksSelector = 'a[href^="/"]',

@@ -22,6 +22,10 @@ export type GraphQLEditingQueryResponse = {
   item: { rendered: LayoutServiceData };
 };
 
+/**
+ * Configuration for the EditingService
+ * @public
+ */
 export interface EditingServiceConfig {
   /**
    * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
@@ -30,6 +34,10 @@ export interface EditingServiceConfig {
   clientFactory: GraphQLRequestClientFactory;
 }
 
+/**
+ * Options for fetching editing data
+ * @public
+ */
 export type EditingOptions = {
   itemId: string;
   language: string;

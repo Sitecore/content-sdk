@@ -4,6 +4,7 @@ import { SiteInfo, SiteResolver } from '../site';
 
 /**
  * Middleware for handling robots.txt requests in a Next.js application.
+ * @public
  */
 export class RobotsMiddleware {
   private client: SitecoreClient;

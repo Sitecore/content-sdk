@@ -8,6 +8,7 @@ import { FEaaSComponentProps } from './models';
 
 /**
  * @param {FEaaSComponentProps} props component props
+ * @public
  */
 export const FEaaSComponent = (props: FEaaSComponentProps): JSX.Element => {
   const computedRevision = props.params?.ComponentRevision || props.revisionFallback;
@@ -45,6 +46,11 @@ export const FEaaSComponent = (props: FEaaSComponentProps): JSX.Element => {
   );
 };
 
+/**
+ * The FEaaSWrapper component.
+ * @param {FEaaSComponentProps} props component props
+ * @public
+ */
 export const FEaaSWrapper = (props: FEaaSComponentProps): JSX.Element => {
   const styles = `component feaas ${props.params?.styles}`.trimEnd();
   const id = props.params?.RenderingIdentifier;

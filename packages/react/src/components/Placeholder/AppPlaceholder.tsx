@@ -18,6 +18,7 @@ import { rsc } from '#rsc-env';
  * Pulls components from the provided component map.
  * @param {AppPlaceholderProps} props Placeholder props
  * @returns {React.ReactNode | React.ReactElement[]} rendered component(s)
+ * @public
  */
 export const AppPlaceholder = (props: AppPlaceholderProps) => {
   const { rendering: parentRendering, componentMap, page } = props;

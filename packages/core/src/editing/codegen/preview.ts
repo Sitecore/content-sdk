@@ -24,6 +24,7 @@ const DESIGN_LIBRARY_COMPONENT_PREVIEW_ERROR_EVENT_NAME =
 
 /**
  * Represents an import map entry.
+ * @public
  */
 export interface ImportEntry {
   module: string;
@@ -138,6 +139,7 @@ export interface DesignLibraryComponentPreviewErrorEvent {
 
 /**
  * Enumeration of error types for the design library preview.
+ * @internal
  */
 export enum DesignLibraryPreviewError {
   /**
@@ -217,6 +219,7 @@ export function buildComponentDependencies(
  * The event should contain the component code, styles and imports.
  * @param {ImportEntry[]} importMap - The import map to be used for the component.
  * @param {Function} callback callback to be called after component is received
+ * @internal
  */
 export const addComponentPreviewHandler = (
   importMap: ImportEntry[],
@@ -322,6 +325,7 @@ export const addComponentPreviewHandler = (
  * @param {unknown} error - The error to be sent.
  * @param {DesignLibraryPreviewError} type - The type of error.
  * @returns An object representing the DesignLibraryComponentPreviewErrorEvent.
+ * @internal
  */
 export function getDesignLibraryComponentPreviewErrorEvent(
   uid: string,
@@ -340,6 +344,7 @@ export function getDesignLibraryComponentPreviewErrorEvent(
  * @param {ComponentFields} fields - The fields of the component.
  * @param {ComponentParams} parameters - The parameters of the component.
  * @returns An object representing the DesignLibraryComponentPropsEvent.
+ * @internal
  */
 export function getDesignLibraryComponentPropsEvent(
   uid: string,
@@ -361,6 +366,7 @@ export function getDesignLibraryComponentPropsEvent(
  * @param {string} uid - The unique identifier for the event.
  * @param {ImportEntry[]} importMap - The imports map to be sent.
  * @returns An object representing the DesignLibraryImportMapEvent.
+ * @internal
  */
 export function getDesignLibraryImportMapEvent(
   uid: string,

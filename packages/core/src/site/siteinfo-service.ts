@@ -51,6 +51,10 @@ export type GraphQLSiteInfoResult = {
   language: string;
 };
 
+/**
+ * Service to fetch site information
+ * @public
+ */
 export class SiteInfoService {
   private graphQLClient: GraphQLClient;
   private cache: CacheClient<SiteInfo[]>;

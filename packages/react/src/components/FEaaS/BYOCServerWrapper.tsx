@@ -4,6 +4,12 @@ import { fetchBYOCComponentServerProps } from './feaas-utils';
 import { BYOCWrapper } from './BYOCWrapper';
 import { nonSerializedPlaceholderProps } from '../Placeholder/models';
 
+/**
+ * Server component for BYOC. Retrieves server props and renders client BYOCWrapper.
+ * @param {BYOCServerWrapperProps} props incoming props
+ * @returns rendered BYOCWrapper component
+ * @public
+ */
 export const BYOCServerWrapper = async (props: BYOCServerWrapperProps) => {
   const params = props.rendering?.params || {};
   // only pass serializable props to the client BYOC component

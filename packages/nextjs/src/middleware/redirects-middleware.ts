@@ -26,7 +26,8 @@ const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
 type RedirectResult = RedirectInfo & { matchedQueryString?: string };
 
 /**
- * extended RedirectsMiddlewareConfig config type for RedirectsMiddleware
+ * The interface for the RedirectsMiddleware configuration.
+ * @public
  */
 export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> &
   SitecoreConfig['api']['edge'] &
@@ -37,6 +38,7 @@ export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | '
 /**
  * Middleware / handler fetches all redirects from Sitecore instance by grapqhl service
  * compares with current url and redirects to target url
+ * @public
  */
 export class RedirectsMiddleware extends MiddlewareBase {
   protected redirectsService: RedirectsService;

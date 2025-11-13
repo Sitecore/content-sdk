@@ -8,9 +8,24 @@ import { ClientError } from 'graphql-request';
 import { default as debug_3 } from 'debug';
 import { Debugger as Debugger_2 } from 'debug';
 import { DocumentNode } from 'graphql';
+import { IncomingHttpHeaders } from 'http';
+import { IncomingMessage } from 'http';
+import { OutgoingMessage } from 'http';
+import { ParsedUrlQueryInput } from 'querystring';
+
+// @internal
+export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (error: unknown | null, Component: unknown) => void) => (() => void) | undefined;
 
 // @internal
 export const addComponentUpdateHandler: (rootComponent: ComponentRendering, successCallback?: (updatedRootComponent: ComponentRendering) => void) => (() => void) | undefined;
+
+// @public
+export const areURLSearchParamsEqual: (params1: URLSearchParams, params2: URLSearchParams) => boolean;
+
+// @public
+export const auth: {
+    readonly clientCredentialsFlow: typeof authModule.clientCredentialsFlow;
+};
 
 // @public
 export interface CacheClient<T> {
@@ -44,10 +59,33 @@ export interface ComponentFields {
 }
 
 // @public
+export interface ComponentFile {
+    componentName: string;
+    // Warning: (ae-incompatible-release-tags) The symbol "componentType" is marked as @public, but its signature references "ComponentType" which is marked as @internal
+    componentType?: ComponentType;
+    filePath: string;
+    importPath: string;
+    moduleName: string;
+}
+
+// @internal
+export interface ComponentFileWithType extends ComponentFile {
+    componentType: ComponentType;
+}
+
+// @public
+export interface ComponentImport {
+    importInfo: {
+        importFrom: string;
+        namedImports?: string[];
+    };
+    importName: string;
+}
+
+// @public
 export interface ComponentLayoutRequestParams {
     componentUid: string;
     dataSourceId?: string;
-    // Warning: (ae-forgotten-export) The symbol "DesignLibraryVariantGeneration" needs to be exported by the entry point api-surface.d.ts
     generation?: DesignLibraryVariantGeneration;
     itemId: string;
     language?: string;
@@ -59,13 +97,30 @@ export interface ComponentLayoutRequestParams {
 
 // @public
 export class ComponentLayoutService {
-    // Warning: (ae-forgotten-export) The symbol "ComponentLayoutServiceConfig" needs to be exported by the entry point api-surface.d.ts
     constructor(config: ComponentLayoutServiceConfig);
     // (undocumented)
     fetchComponentData(params: ComponentLayoutRequestParams, fetchOptions?: FetchOptions): Promise<LayoutServiceData>;
     // (undocumented)
     protected getComponentFetchParams(params: ComponentLayoutRequestParams): any;
 }
+
+// @public
+export interface ComponentLayoutServiceConfig {
+    clientContextId?: string;
+    contextId: string;
+    edgeUrl?: string;
+}
+
+// @internal
+export type ComponentMapEntry = {
+    key: string;
+    imports: string[];
+    annotateClient: boolean;
+    valueExpr: string;
+};
+
+// @internal (undocumented)
+export type ComponentMapTemplate = (components: (ComponentFile | ComponentFileWithType)[], componentImports?: ComponentImport[]) => string;
 
 // @public
 export interface ComponentParams {
@@ -96,6 +151,9 @@ export enum ComponentTemplateType {
     // (undocumented)
     DEFAULT = "default"
 }
+
+// @internal (undocumented)
+export type ComponentType = 'server' | 'client' | 'universal';
 
 // @internal
 export interface ComponentUpdateEventArgs {
@@ -182,12 +240,21 @@ export class DefaultRetryStrategy implements RetryStrategy {
 }
 
 // @public
+export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCliConfig;
+
+// @public
 export const defineConfig: (config: SitecoreConfigInput) => SitecoreConfig;
 
 // @public
 export enum DesignLibraryMode {
     Metadata = "library-metadata",
     Normal = "library"
+}
+
+// @internal
+export enum DesignLibraryPreviewError {
+    Render = "render",
+    RenderInit = "render-init"
 }
 
 // @public
@@ -236,6 +303,18 @@ export interface DesignLibraryStatusEvent {
 }
 
 // @public
+export enum DesignLibraryVariantGeneration {
+    // (undocumented)
+    Variant = "variant"
+}
+
+// @internal
+export function detectComponentType(filePath: string, routerType?: RouterType): ComponentType;
+
+// @internal
+export function detectRouterType(projectRoot?: string): RouterType;
+
+// @public
 export interface DictionaryPhrases {
     // (undocumented)
     [k: string]: string;
@@ -270,6 +349,15 @@ export const EDITING_COMPONENT_ID = "editing-component";
 
 // @internal
 export const EDITING_COMPONENT_PLACEHOLDER = "editing-componentmode-placeholder";
+
+// @public
+export type EditingOptions = {
+    itemId: string;
+    language: string;
+    version?: string;
+    layoutKind?: LayoutKind;
+    mode: Exclude<LayoutServicePageState, 'Normal'>;
+};
 
 // @public
 export type EditingPreviewData = {
@@ -309,15 +397,17 @@ export interface EditingRenderQueryParams {
 // @public
 export class EditingService {
     constructor(serviceConfig: EditingServiceConfig);
-    // Warning: (ae-forgotten-export) The symbol "EditingOptions" needs to be exported by the entry point api-surface.d.ts
     fetchEditingData({ itemId, language, version, layoutKind, mode }: EditingOptions, fetchOptions?: FetchOptions): Promise<{
         layoutData: LayoutServiceData;
     }>;
     protected getGraphQLClient(): GraphQLClient;
-    // Warning: (ae-forgotten-export) The symbol "EditingServiceConfig" needs to be exported by the entry point api-surface.d.ts
-    //
     // (undocumented)
     serviceConfig: EditingServiceConfig;
+}
+
+// @public
+export interface EditingServiceConfig {
+    clientFactory: GraphQLRequestClientFactory;
 }
 
 // @public
@@ -331,6 +421,21 @@ export const EMPTY_DATE_FIELD_VALUE = "0001-01-01T00:00:00Z";
 
 // @public
 export const enableDebug: (namespaces: string) => void;
+
+// @public @deprecated
+export const enforceCors: (req: IncomingMessage, res: OutgoingMessage, allowedOrigins?: string[]) => boolean;
+
+// @internal (undocumented)
+export type EnhancedComponentMapTemplate = (components: (ComponentFile | ComponentFileWithType)[], componentImports: ComponentImport[] | undefined, ctx: {
+    entries: ComponentMapEntry[];
+    includeVariants: boolean;
+    isClientMap: boolean;
+}) => string;
+
+// @public
+export type EnhancedOmit<T, K extends PropertyKey> = {
+    [P in keyof T as Exclude<P, K>]: T[P];
+};
 
 // @public
 export enum ErrorPage {
@@ -369,8 +474,16 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
     language: string;
 }
 
+// @public
+export const escapeNonSpecialQuestionMarks: (input: string) => string;
+
 // @internal
 const executeScriptElements: (rootElement: HTMLElement) => void;
+
+// Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export let extractFiles: typeof _extractFiles;
 
 // @public
 export type FetchOptions = {
@@ -395,6 +508,9 @@ export interface FieldMetadata {
     };
 }
 
+// @internal
+export function filterComponentsByType(components: ComponentFileWithType[], allowedTypes: ComponentType[]): ComponentFileWithType[];
+
 declare namespace form {
     export {
         executeScriptElements,
@@ -403,6 +519,38 @@ declare namespace form {
     }
 }
 export { form }
+
+// @public
+export type GenerateMapArgs = {
+    paths: string[];
+    destination?: string;
+    componentImports?: ComponentImport[];
+    exclude?: string[];
+    mapTemplate?: ComponentMapTemplate | EnhancedComponentMapTemplate;
+    clientMapTemplate?: ComponentMapTemplate | EnhancedComponentMapTemplate;
+    clientComponentMap?: boolean;
+    includeVariants?: boolean;
+};
+
+// @public (undocumented)
+export type GenerateMapFunction = (args: GenerateMapArgs) => void;
+
+// Warning: (ae-forgotten-export) The symbol "GenerateMetadataConfig" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export const generateMetadata: (config?: GenerateMetadataConfig) => (() => Promise<void>);
+
+// @public
+export function generatePlugins(definition: PluginDefinition): void;
+
+// @public
+export const generateSites: ({ scConfig: deprecatedScConfig, destinationPath, }?: GenerateSitesConfig) => (() => Promise<void>);
+
+// @public
+export type GenerateSitesConfig = {
+    scConfig?: SitecoreConfig;
+    destinationPath?: string;
+};
 
 // @public
 export type GenericFieldValue = string | boolean | number | Date | {
@@ -423,13 +571,48 @@ export type GenericGraphQLClientError = Partial<Error> & {
 };
 
 // @public
+export const getAllowedOriginsFromEnv: () => string[];
+
+// @public
 export function getChildPlaceholder(rendering: ComponentRendering, placeholderName: string): ComponentRendering[];
+
+// Warning: (ae-forgotten-export) The symbol "_getComponentList" needs to be exported by the entry point api-surface.d.ts
+//
+// @public (undocumented)
+export let getComponentList: typeof _getComponentList;
+
+// @internal
+export function getComponentListWithTypes(paths: string[], exclude?: string[], includeVariants?: boolean, routerType?: RouterType): ComponentFileWithType[];
+
+// Warning: (ae-forgotten-export) The symbol "GetComponentSpecParams" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "ComponentSpec" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export const getComponentSpec: ({ componentId, edgeUrl, targetPath, token, }: GetComponentSpecParams) => Promise<ComponentSpec>;
+
+// @internal
+export const getComponentSpecUrl: ({ componentId, edgeUrl, targetPath, token, }: GetComponentSpecParams) => string;
 
 // @internal
 export const getContentSdkPagesClientData: () => Record<string, Record<string, unknown>>;
 
 // @public
 export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreEdgeContextId: string, sitecoreEdgeUrl?: string) => HTMLLink | null;
+
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPreviewErrorEvent" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export function getDesignLibraryComponentPreviewErrorEvent(uid: string, error: unknown, type: DesignLibraryPreviewError): DesignLibraryComponentPreviewErrorEvent;
+
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPropsEvent" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export function getDesignLibraryComponentPropsEvent(uid: string, fields: ComponentFields, parameters: ComponentParams): DesignLibraryComponentPropsEvent;
+
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryImportMapEvent" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export function getDesignLibraryImportMapEvent(uid: string, importMap: ImportEntry[]): DesignLibraryImportMapEvent;
 
 // @internal
 export function getDesignLibraryScriptLink(sitecoreEdgeUrl?: string): string;
@@ -448,6 +631,16 @@ export const getEdgeProxyContentUrl: (sitecoreEdgeContextId: string, sitecoreEdg
 
 // @internal
 export const getEdgeProxyFormsUrl: (sitecoreEdgeContextId: string, formId: string, sitecoreEdgeUrl?: string) => string;
+
+// @public
+export const getEnforcedCorsHeaders: ({ requestMethod, headers, presetCorsHeader, allowedOrigins, }: {
+    requestMethod: string | undefined;
+    headers: IncomingHttpHeaders | Headers;
+    presetCorsHeader?: string | string[];
+    allowedOrigins?: string[];
+}) => {
+    [key: string]: string;
+} | null;
 
 // @public
 export function getFieldValue<T>(renderingOrFields: ComponentRendering | ComponentFields, fieldName: string): T | undefined;
@@ -544,6 +737,20 @@ export type HTMLLink = {
     [key: string]: unknown;
 } & Pick<HTMLLinkElement, 'rel' | 'href'>;
 
+// @public
+export interface ImportEntry {
+    // (undocumented)
+    exports: {
+        name: string | 'default' | '*';
+        value: unknown;
+    }[];
+    // (undocumented)
+    module: string;
+}
+
+// @public
+export const isAbsoluteUrl: (url: string) => boolean;
+
 // @internal
 export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode;
 
@@ -555,6 +762,15 @@ export const isEditorActive: () => boolean;
 
 // @public
 export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field>): boolean;
+
+// @public
+export const isRegexOrUrl: (input: string) => "regex" | "url";
+
+// @public
+export function isServer(): boolean;
+
+// @public
+export const isTimeoutError: (error: unknown) => boolean;
 
 // @public
 export interface Item {
@@ -647,6 +863,9 @@ export enum LayoutServicePageState {
 // @internal
 const loadForm: (contextId: string, formId: string, edgeUrl?: string) => Promise<string>;
 
+// @public
+export const matchPath: (itemPath: string, compare: string) => boolean;
+
 declare namespace mediaApi {
     export {
         getRequiredParams,
@@ -667,6 +886,9 @@ export class MemoryCacheClient<T> implements CacheClient<T> {
 }
 
 // @public
+export const mergeURLSearchParams: (params1: URLSearchParams, params2: URLSearchParams) => string;
+
+// @public
 export interface Metadata {
     // (undocumented)
     packages: {
@@ -680,6 +902,14 @@ export enum MetadataKind {
     Close = "close",
     // (undocumented)
     Open = "open"
+}
+
+// @public
+export enum ModuleType {
+    // (undocumented)
+    CJS = 0,
+    // (undocumented)
+    ESM = 1
 }
 
 // @public
@@ -817,6 +1047,15 @@ export type PlaceholdersData<TYPEDNAME extends string = string> = {
     [P in TYPEDNAME]: Array<ComponentRendering>;
 };
 
+// @public
+export interface PluginDefinition {
+    distPath: string;
+    moduleType: ModuleType;
+    relative?: boolean;
+    rootPath: string;
+    silent?: boolean;
+}
+
 // @internal
 export const PREVIEW_KEY = "sc_preview";
 
@@ -903,6 +1142,9 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 export const resetEditorChromes: () => void;
 
 // @public
+export function resolveUrl(urlBase: string, params?: ParsedUrlQueryInput): string;
+
+// @public
 export interface RetryStrategy {
     getDelay(error: GenericGraphQLClientError, attempt: number): number;
     shouldRetry(error: GenericGraphQLClientError, attempt: number, retries: number): boolean;
@@ -968,6 +1210,12 @@ export type RouteOptions = {
     locale?: string;
 };
 
+// @internal (undocumented)
+export type RouterType = 'app' | 'pages';
+
+// @internal
+export function scaffoldComponent(outputFolderPath: string, componentName: string, templateName: string, templates: ScaffoldTemplate[]): void;
+
 // @public
 export type ScaffoldTemplate = {
     name: string;
@@ -979,8 +1227,11 @@ export type ScaffoldTemplate = {
 // @public
 export const SITE_KEY = "sc_site";
 
-// @public (undocumented)
+// @public
 export const SITE_PREFIX = "_site_";
+
+// @internal
+export const SITECORE_CLI_MODE_ENV_VAR = "SITECORE_CLI_MODE";
 
 // @internal
 const SITECORE_EDGE_URL_DEFAULT = "https://edge-platform.sitecorecloud.io";
@@ -1131,7 +1382,7 @@ export type SiteInfo = {
     language: string;
 };
 
-// @public (undocumented)
+// @public
 export class SiteInfoService {
     constructor(config: SiteInfoServiceConfig);
     // (undocumented)
@@ -1239,6 +1490,20 @@ export type StaticPath = {
 const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string) => void;
 
 // @public
+export interface TenantArgs {
+    audience?: string;
+    authority?: string;
+    baseUrl?: string;
+    clientId: string;
+    clientSecret?: string;
+    organizationId?: string;
+    tenantId?: string;
+}
+
+// @public
+export const tryParseEnvValue: <T>(envValue: string | undefined, defaultValue: T) => T;
+
+// @public
 const updateImageUrl: (url: string, params?: {
     [key: string]: string | number | undefined;
 } | null, mediaUrlPrefix?: RegExp) => string;
@@ -1246,11 +1511,21 @@ const updateImageUrl: (url: string, params?: {
 // @internal (undocumented)
 export const VARIANT_PREFIX = "_variantId_";
 
+// Warning: (ae-forgotten-export) The symbol "WriteImportMapArgs" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }?: {
+    scConfig?: SitecoreConfig;
+}) => Promise<void>;
+
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:53:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/config/models.ts:240:3 - (ae-forgotten-export) The symbol "GenerateMapArgs" needs to be exported by the entry point api-surface.d.ts
-// src/config/models.ts:244:5 - (ae-forgotten-export) The symbol "GenerateMapFunction" needs to be exported by the entry point api-surface.d.ts
+// src/tools/generate-map.ts:25:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:25:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:29:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:29:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
+// src/tools/index.ts:21:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

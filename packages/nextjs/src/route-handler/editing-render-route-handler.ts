@@ -50,6 +50,12 @@ type EditingHandlerOptions = {
   sitecoreInternalEditingHostUrl?: string;
 };
 
+/**
+ * Creates a route handler for the editing render API route (e.g. '/api/editing/render')
+ * @param {EditingHandlerOptions} options - The options for the route handler.
+ * @returns The route handler object with GET and OPTIONS methods.
+ * @public
+ */
 export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions) => {
   const dataFetcher = new NativeDataFetcher({ debugger: debug.editing });
 

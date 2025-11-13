@@ -25,12 +25,7 @@
    */
   "bundledPackages": [],
 
-  /**
-   * Determines how the TypeScript compiler engine will be invoked by API Extractor.
-   */
-  "compiler": {
-    "tsconfigFilePath": "<projectFolder>/tsconfig.api.json"
-  },
+  "mainEntryPointFilePath": "<projectFolder>/api/api-surface.d.ts",
 
   /**
    * Configures how the API report file (*.api.md) will be generated.
@@ -38,7 +33,8 @@
   "apiReport": {
     "enabled": true,
     "reportFolder": "<projectFolder>/api/",
-    "reportTempFolder": "<projectFolder>/temp/"
+    "reportTempFolder": "<projectFolder>/temp/",
+    "reportFileName": "content-sdk-<unscopedPackageName>.api.md"
   },
   "docModel": {
     "enabled": false
@@ -126,6 +122,10 @@
       "tsdoc-escape-right-brace": {
         "logLevel": "none"
       },
+      
+      "tsdoc-html-tag-missing-string": {
+        "logLevel": "none"
+      },
 
       "tsdoc-param-tag-with-invalid-type": {
         "logLevel": "none"
@@ -161,4 +161,3 @@
     }
   }
 }
-

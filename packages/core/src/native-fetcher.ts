@@ -1,7 +1,7 @@
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './utils/timeout-promise';
 
-type NativeDataFetcherOptions = {
+export type NativeDataFetcherOptions = {
   /**
    * Override debugger for logging. Uses 'content-sdk:http' by default.
    */

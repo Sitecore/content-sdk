@@ -169,19 +169,21 @@ export function getAppComponentProps<T extends BasePlaceholderProps>(
  */
 export const getComponentForRendering = (
   renderingDefinition: ComponentRendering,
-  placeholderName: string,
+  // eslint-disable-next-line no-unused-vars
+  _placeholderName: string,
   componentMap?: ComponentMap,
   hiddenRenderingComponent?: React.ComponentClass | React.FC,
   missingComponentComponent?: React.ComponentClass | React.FC
 ): ComponentForRendering => {
-  const logUnknownComponentError = (variant?: string) => {
-    console.error(
-      `Placeholder ${placeholderName} contains unknown component ${
-        renderingDefinition.componentName
-      }${
-        variant ? ` (${variant})` : ''
-      }. Ensure that a React component exists for it, and that it is registered in your component-map file.`
-    );
+  // eslint-disable-next-line no-unused-vars
+  const logUnknownComponentError = (_variant?: string) => {
+    // console.error(
+    //   `Placeholder ${placeholderName} contains unknown component ${
+    //     renderingDefinition.componentName
+    //   }${
+    //     variant ? ` (${variant})` : ''
+    //   }. Ensure that a React component exists for it, and that it is registered in your component-map file.`
+    // );
   };
 
   if (renderingDefinition.componentName === constants.HIDDEN_RENDERING_NAME) {

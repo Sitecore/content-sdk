@@ -39,6 +39,10 @@ import {
   withSitecore,
 } from '../..';
 
+/**
+ * The default import entries for the import map.
+ * @public
+ */
 export const defaultImportEntries: ImportEntry[] = [
   /* -------------------- React -------------------- */
   {
@@ -92,6 +96,13 @@ export const defaultImportEntries: ImportEntry[] = [
   },
 ];
 
+/**
+ * Combines the default import entries with the generated import entries.
+ * @param {ImportEntry[]} defaultImportEntries - The default import entries.
+ * @param {ImportEntry[]} generatedImportEntries - The generated import entries.
+ * @returns {ImportEntry[]} The combined import entries.
+ * @public
+ */
 export const combineImportEntries = (
   defaultImportEntries: ImportEntry[],
   generatedImportEntries: ImportEntry[]

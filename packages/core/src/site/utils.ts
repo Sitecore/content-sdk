@@ -1,3 +1,7 @@
+/**
+ * Site prefix for rewrite path
+ * @public
+ */
 export const SITE_PREFIX = '_site_';
 
 /**

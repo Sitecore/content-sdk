@@ -23,6 +23,7 @@ import {
 
 /**
  * Configuration for the Editing Render Middleware.
+ * @public
  */
 export type EditingRenderMiddlewareConfig = {
   /**
@@ -49,6 +50,7 @@ export type EditingNextApiRequest = NextApiRequest & {
 /**
  * Middleware / handler for use in the editing render Next.js API route (e.g. '/api/editing/render')
  * which is required for Sitecore editing support.
+ * @public
  */
 export class EditingRenderMiddleware extends RenderMiddlewareBase {
   private dataFetcher: NativeDataFetcher;

@@ -6,6 +6,10 @@ import { EditableFieldProps } from './sharedTypes';
 import { FieldMetadata } from '@sitecore-content-sdk/core/layout';
 import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 
+/**
+ * The props for the DateField component.
+ * @public
+ */
 export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
   /** The date field data. */
   [htmlAttributes: string]: unknown;
@@ -20,6 +24,10 @@ export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
   render?: (date: Date | null) => React.ReactNode;
 }
 
+/**
+ * The DateField component.
+ * @public
+ */
 export const DateField: React.FC<DateFieldProps> = withFieldMetadata<DateFieldProps>(
   withEmptyFieldEditingComponent<DateFieldProps>(
     // eslint-disable-next-line no-unused-vars

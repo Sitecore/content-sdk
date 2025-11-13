@@ -177,4 +177,8 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
 
 const PlaceholderWithComponentMap = withComponentMap(PlaceholderComponent);
 
+/**
+ * The Placeholder component.
+ * @public
+ */
 export const Placeholder = withSitecore()(PlaceholderWithComponentMap);

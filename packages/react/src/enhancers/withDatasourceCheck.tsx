@@ -26,6 +26,7 @@ export interface WithDatasourceCheckOptions {
  * @returns
  *  The wrapped component, if a datasource is present.
  *  A null component (in normal mode) or an error component (in editing mode), if a datasource is not present.
+ * @public
  */
 export function withDatasourceCheck(options?: WithDatasourceCheckOptions) {
   return function withDatasourceCheckHoc<ComponentProps extends WithDatasourceCheckProps>(

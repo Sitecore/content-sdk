@@ -2,6 +2,7 @@ import { MultisiteMiddleware } from './multisite-middleware';
 
 /**
  * Middleware/handler for enabling multisite support in the Next.js App Router.
+ * @public
  */
 export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
   /**

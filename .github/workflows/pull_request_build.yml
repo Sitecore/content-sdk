@@ -42,6 +42,11 @@ jobs:
         run: |
           yarn lint-packages
 
+      - name: Verify API surface
+        uses: ./.github/workflows/verify-api-surface.yml
+        with:
+          node_version: '22'
+
       - name: Run tests and collect coverage
         run: yarn coverage-packages
         env:

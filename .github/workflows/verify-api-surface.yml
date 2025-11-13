@@ -1,0 +1,92 @@
+name: Verify API Surface
+
+on:
+  workflow_call:
+    inputs:
+      node_version:
+        required: false
+        type: string
+        default: '22'
+
+jobs:
+  verify-api:
+    runs-on: ubuntu-latest
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
+    steps:
+      # - uses: actions/checkout@v4
+      #   with:
+      #     ref: ${{ github.ref }}
+      #     fetch-depth: 0
+
+      # - name: Use Node.js ${{ inputs.node_version }}
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: ${{ inputs.node_version }}
+
+      # - name: Install dependencies
+      #   run: |
+      #     yarn cache clean --all
+      #     yarn install --immutable
+
+      # - name: Build packages
+      #   run: npm run build
+
+      # API Extractor verifies that public API changes are properly documented
+      # and helps prevent accidental breaking changes to the public API surface
+      - name: Verify API surface
+        run: |
+          echo "🔍 Checking API Extractor configuration..."
+          echo ""
+          echo "🔍 Verifying API surface compatibility..."
+          if ! yarn api-extractor:verify; then
+            echo ""
+            echo "❌ API Extractor verification failed!"
+            echo ""
+            echo "🔧 To fix this issue:"
+            echo "   1. Run 'yarn api-extractor' locally to update API reports"
+            echo "   2. Review the changes in the generated .api.md files"
+            echo "   3. Commit the updated API reports if the changes are intentional"
+            echo ""
+            echo "📋 This ensures API changes are properly reviewed and documented."
+            echo ""
+            exit 1
+          fi
+          echo "✅ API surface verification passed!"
+      - name: Upload API reports on failure
+        if: failure()
+        run: |
+          echo "## 🔍 API Changes Detected" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The following API changes were detected:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Find all temp API files and show diffs
+          for temp_file in packages/*/temp/*.api.md; do
+            if [ -f "$temp_file" ]; then
+              package_name=$(basename $(dirname $(dirname "$temp_file")))
+              api_file="${temp_file/temp/api}"
+              
+              echo "### 📦 Package: $package_name" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "<details>" >> $GITHUB_STEP_SUMMARY
+              echo "<summary>Click to view API changes</summary>" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`diff" >> $GITHUB_STEP_SUMMARY
+              if [ -f "$api_file" ]; then
+                diff -u "$api_file" "$temp_file" | head -100 >> $GITHUB_STEP_SUMMARY || true
+              else
+                echo "New API file detected" >> $GITHUB_STEP_SUMMARY
+                head -50 "$temp_file" >> $GITHUB_STEP_SUMMARY
+              fi
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "</details>" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+          echo "## 🔧 How to fix" >> $GITHUB_STEP_SUMMARY
+          echo "1. Run \`yarn api-extractor\` locally to update API reports" >> $GITHUB_STEP_SUMMARY
+          echo "2. Review the changes in the generated .api.md files" >> $GITHUB_STEP_SUMMARY
+          echo "3. Commit the updated API reports if the changes are intentional" >> $GITHUB_STEP_SUMMARY

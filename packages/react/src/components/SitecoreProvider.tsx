@@ -22,6 +22,10 @@ export interface SitecoreProviderProps {
   children: React.ReactNode;
 }
 
+/**
+ * The state for the SitecoreProvider component.
+ * @public
+ */
 export interface SitecoreProviderState {
   /**
    * Method to set the page.
@@ -39,11 +43,19 @@ export interface SitecoreProviderState {
   api?: SitecoreProviderProps['api'];
 }
 
+/**
+ * The context for the SitecoreProvider component.
+ * @public
+ */
 export const SitecoreProviderReactContext = React.createContext<SitecoreProviderState>(
   {} as SitecoreProviderState
 );
 export const ComponentMapReactContext = React.createContext<ComponentMap>(new Map());
 
+/**
+ * The SitecoreProvider component.
+ * @public
+ */
 export class SitecoreProvider extends React.Component<
   SitecoreProviderProps,
   SitecoreProviderState

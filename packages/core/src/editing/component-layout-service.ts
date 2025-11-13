@@ -53,6 +53,7 @@ export interface ComponentLayoutRequestParams {
 /**
  * Config for ComponentLayoutService.
  * Provide contextId (server) and optionally clientContextId (browser).
+ * @public
  */
 export interface ComponentLayoutServiceConfig {
   /**

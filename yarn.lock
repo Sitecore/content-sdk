@@ -2022,24 +2022,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor-model@npm:7.31.3":
-  version: 7.31.3
-  resolution: "@microsoft/api-extractor-model@npm:7.31.3"
+"@microsoft/api-extractor-model@npm:7.32.0":
+  version: 7.32.0
+  resolution: "@microsoft/api-extractor-model@npm:7.32.0"
   dependencies:
-    "@microsoft/tsdoc": ~0.15.1
-    "@microsoft/tsdoc-config": ~0.17.1
+    "@microsoft/tsdoc": ~0.16.0
+    "@microsoft/tsdoc-config": ~0.18.0
     "@rushstack/node-core-library": 5.18.0
-  checksum: 8f97f164e1191f3093505e1398e73dd3adb7b5a1df8d3ee7456769345e04b5b7d487ff6325bbb12e7ac513be8d0c96575672896085f0777bea9666a66273522e
+  checksum: c286176de5cd51d599a7d76d7cb2d1f4abbe6339cf64ea74f8c123954ac626df09a893487e818b966fcb6f3833ba0580e26582baf4b3f22001010ee950d516eb
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:^7.54.0":
-  version: 7.54.0
-  resolution: "@microsoft/api-extractor@npm:7.54.0"
+"@microsoft/api-extractor@npm:^7.55.0":
+  version: 7.55.0
+  resolution: "@microsoft/api-extractor@npm:7.55.0"
   dependencies:
-    "@microsoft/api-extractor-model": 7.31.3
-    "@microsoft/tsdoc": ~0.15.1
-    "@microsoft/tsdoc-config": ~0.17.1
+    "@microsoft/api-extractor-model": 7.32.0
+    "@microsoft/tsdoc": ~0.16.0
+    "@microsoft/tsdoc-config": ~0.18.0
     "@rushstack/node-core-library": 5.18.0
     "@rushstack/rig-package": 0.6.0
     "@rushstack/terminal": 0.19.3
@@ -2053,26 +2053,26 @@ __metadata:
     typescript: 5.8.2
   bin:
     api-extractor: bin/api-extractor
-  checksum: 53c396675dc0622d71dc484fd2918bc910ef3144303d6659d416b14eeaf2ac0f18e90a5aeb88b6ac5f116fe87927fcbd19a9e69a409c64e4c3a4a88e8ded32e0
+  checksum: c2b55028e78630c8d9d00fad107b903f6d0b8ce1b0966d339290ceebd69ad7e03665fd0eb3691a5f7266e04c01e16ced0f5dfa1d0eaf629de3d8372eb1c845b4
   languageName: node
   linkType: hard
 
-"@microsoft/tsdoc-config@npm:~0.17.1":
-  version: 0.17.1
-  resolution: "@microsoft/tsdoc-config@npm:0.17.1"
+"@microsoft/tsdoc-config@npm:~0.18.0":
+  version: 0.18.0
+  resolution: "@microsoft/tsdoc-config@npm:0.18.0"
   dependencies:
-    "@microsoft/tsdoc": 0.15.1
+    "@microsoft/tsdoc": 0.16.0
     ajv: ~8.12.0
     jju: ~1.4.0
     resolve: ~1.22.2
-  checksum: 19d3301af62c62eac5b3c244564070b18c529c0985d299b9e93d04cc75d2c1342458063d494c941f814c7154463ee364acdc76ea552db92cbbb0a3e28bbca87c
+  checksum: 2ecf902513e4e084b5698f62f89ba653d050d49f57f0daa34800770e3f00e88bf239a21790c0974082e0b358fa147d45b36d7653794e03afd2258b50a8a1daba
   languageName: node
   linkType: hard
 
-"@microsoft/tsdoc@npm:0.15.1, @microsoft/tsdoc@npm:~0.15.1":
-  version: 0.15.1
-  resolution: "@microsoft/tsdoc@npm:0.15.1"
-  checksum: 526f125c48b4e5511571ee552ff38691405131c0b72df85f091b1aa47571315e7ba5258cd9f48c41b8ef80f2c1f489e9b09c8b1fcc1599b7f8a35f917e03ec65
+"@microsoft/tsdoc@npm:0.16.0, @microsoft/tsdoc@npm:~0.16.0":
+  version: 0.16.0
+  resolution: "@microsoft/tsdoc@npm:0.16.0"
+  checksum: 8aece3371a45a18af4233a5d6f8ac94612c8baef65f782f925b0c1f5a98802f031e6bf8b487a849ceb35f4cc6c2ea15ba82a4497c72b50e5b33771ecd62729cd
   languageName: node
   linkType: hard
 
@@ -10939,7 +10939,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@microsoft/api-extractor": ^7.54.0
+    "@microsoft/api-extractor": ^7.55.0
     "@rushstack/eslint-patch": ^1.10.3
     "@stylistic/eslint-plugin": ^5.2.2
     "@typescript-eslint/eslint-plugin": ^8.39.0

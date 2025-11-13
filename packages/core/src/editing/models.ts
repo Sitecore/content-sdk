@@ -86,6 +86,7 @@ export enum DesignLibraryMode {
 
 /**
  * Variant generation mode for Design Library
+ * @public
  */
 export enum DesignLibraryVariantGeneration {
   Variant = 'variant',

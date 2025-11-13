@@ -6,6 +6,7 @@ import isServer from './is-server';
 /**
  * Omit properties from T that are in K. This is a simplified version of TypeScript's built-in `Omit` utility type.
  * Since default `Omit` doesn't support indexing types, we had to introduce this custom implementation.
+ * @public
  */
 // eslint-disable-next-line prettier/prettier
 export type EnhancedOmit<T, K extends PropertyKey> = { [P in keyof T as Exclude<P, K>]: T[P] };
@@ -30,6 +31,7 @@ function getQueryString(params: ParsedUrlQueryInput) {
  * @param {ParsedUrlQueryInput} params query string parameters
  * @returns a URL string
  * @throws {RangeError} if the provided url is an empty string
+ * @public
  */
 export function resolveUrl(urlBase: string, params: ParsedUrlQueryInput = {}): string {
   if (!urlBase) {
@@ -56,6 +58,12 @@ export function resolveUrl(urlBase: string, params: ParsedUrlQueryInput = {}): s
   return result;
 }
 
+/**
+ * Checks if the given URL is an absolute URL
+ * @param {string} url - The URL to check.
+ * @returns {boolean} - Returns true if the URL is an absolute URL, otherwise false.
+ * @public
+ */
 export const isAbsoluteUrl = (url: string) => {
   if (!url) {
     return false;
@@ -72,6 +80,7 @@ export const isAbsoluteUrl = (url: string) => {
  * Indicates whether the error is a timeout error
  * @param {unknown} error error
  * @returns {boolean} is timeout error
+ * @public
  */
 export const isTimeoutError = (error: unknown) => {
   return (error as ClientError).response?.status === 408 || (error as Error).name === 'AbortError';
@@ -89,6 +98,7 @@ const convertToWildcardRegex = (pattern: string) => {
 /**
  * Gets allowed origins from JSS_ALLOWED_ORIGINS env variable
  * @returns {string[]} list of allowed origins from JSS_ALLOWED_ORIGINS env variable
+ * @public
  */
 export const getAllowedOriginsFromEnv = () =>
   process.env.JSS_ALLOWED_ORIGINS
@@ -106,6 +116,7 @@ export const getAllowedOriginsFromEnv = () =>
  * @param {string[]} [allowedOrigins] additional list of origins to test against
  * @returns true if incoming origin matches the allowed lists, false when it does not
  * @deprecated use getEnforcedCorsHeaders instead
+ * @public
  */
 export const enforceCors = (
   req: IncomingMessage,
@@ -148,6 +159,15 @@ export const enforceCors = (
   return false;
 };
 
+/**
+ * Gets enforced CORS headers
+ * @param {string} requestMethod - The HTTP method of the request.
+ * @param {IncomingHttpHeaders | Headers} headers - The headers of the request.
+ * @param {string | string[]} presetCorsHeader - The preset CORS header.
+ * @param {string[]} [allowedOrigins] - The allowed origins.
+ * @returns {Record<string, string>} - The enforced CORS headers.
+ * @public
+ */
 export const getEnforcedCorsHeaders = ({
   requestMethod,
   headers,
@@ -201,6 +221,7 @@ export const getEnforcedCorsHeaders = ({
  * Determines whether the given input is a regular expression or resembles a URL.
  * @param {string} input - The input string to evaluate.
  * @returns {'regex' | 'url'} - Returns 'url' if the input looks like a URL, otherwise 'regex'.
+ * @public
  */
 export const isRegexOrUrl = (input: string): 'regex' | 'url' => {
   // Remove the trailing slash.
@@ -225,6 +246,7 @@ export const isRegexOrUrl = (input: string): 'regex' | 'url' => {
  * @param {URLSearchParams} params1 - The first set of URL search parameters.
  * @param {URLSearchParams} params2 - The second set of URL search parameters.
  * @returns {boolean} - Returns true if the parameters are equal, otherwise false.
+ * @public
  */
 export const areURLSearchParamsEqual = (
   params1: URLSearchParams,
@@ -248,6 +270,7 @@ export const areURLSearchParamsEqual = (
  * - For other strings, it escapes literal "?" characters but preserves regex quantifiers and special patterns.
  * @param {string} input - The input string or regex pattern.
  * @returns {string} - The modified string or regex with non-special "?" characters escaped.
+ * @public
  */
 export const escapeNonSpecialQuestionMarks = (input: string): string => {
   // If the input is already a regex pattern (starts with ^ or ends with $), return it unchanged
@@ -264,6 +287,7 @@ export const escapeNonSpecialQuestionMarks = (input: string): string => {
  * @param {URLSearchParams} params1 - The first set of URL search parameters.
  * @param {URLSearchParams} params2 - The second set of URL search parameters.
  * @returns {string} - A string representation of the merged URL search parameters.
+ * @public
  */
 export const mergeURLSearchParams = (
   params1: URLSearchParams,

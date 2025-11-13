@@ -24,7 +24,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.54.0",
+    "@microsoft/api-extractor": "^7.55.0",
     "@rushstack/eslint-patch": "^1.10.3",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@typescript-eslint/eslint-plugin": "^8.39.0",

@@ -34,6 +34,7 @@ interface WithEmptyFieldEditingComponentProps<Props> {
  * Returns the passed field component or default component in case field value is empty and edit mode is 'metadata'
  * @param {ComponentType<FieldComponentProps>} FieldComponent the field component
  * @param {WithEmptyFieldEditingComponentProps} options the options of the HOC;
+ * @public
  */
 export function withEmptyFieldEditingComponent<
   FieldComponentProps extends WithEmptyFieldEditingComponentProps<FieldComponentProps>,
