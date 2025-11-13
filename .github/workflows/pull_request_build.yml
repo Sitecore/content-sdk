@@ -44,25 +44,17 @@ jobs:
 
       - name: Verify API surface
         run: |
-          yarn api-extractor:verify || {
-            echo "::error::API surface verification failed. Showing differences:"
-            echo ""
-            echo "=== API Report Differences ==="
-            for pkg in packages/*/; do
-              pkg_name=$(basename "$pkg")
-              api_file="$pkg/api/content-sdk-${pkg_name}.api.md"
-              temp_file="$pkg/temp/content-sdk-${pkg_name}.api.md"
-              if [ -f "$temp_file" ] && [ -f "$api_file" ]; then
-                echo ""
-                echo "--- Differences in $pkg_name ---"
-                diff -u "$api_file" "$temp_file" || true
-              fi
-            done
-            echo ""
-            echo "=== Git diff of API files ==="
-            git diff --no-color packages/*/api/*.api.md || true
-            exit 1
-          }
+          yarn api-extractor:verify
+
+      - name: Upload API surface files on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-surface-files
+          path: |
+            packages/*/api/*.api.md
+            packages/*/temp/*.api.md
+          retention-days: 7
 
       - name: Run tests and collect coverage
         run: yarn coverage-packages
