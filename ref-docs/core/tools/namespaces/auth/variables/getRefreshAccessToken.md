@@ -8,7 +8,7 @@
 
 > **getRefreshAccessToken**: (`options`) => `Promise`\<[`RefreshAccessTokenResponse`](../../../interfaces/RefreshAccessTokenResponse.md)\> = `_getRefreshAccessToken`
 
-Defined in: [packages/core/src/tools/auth/renewal.ts:28](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/renewal.ts#L28)
+Defined in: [packages/core/src/tools/auth/renewal.ts:28](https://github.com/Sitecore/content-sdk/blob/2679db118be36890cde6af8a829cbb154334f57d/packages/core/src/tools/auth/renewal.ts#L28)
 
 Requests a new access token using the OAuth 2.0 refresh token grant type.
 This is used to "upgrade" an initial device flow token by including tenant-specific context.

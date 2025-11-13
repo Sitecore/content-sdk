@@ -6,7 +6,7 @@
 
 # Interface: AuthResponse
 
-Defined in: [packages/core/src/tools/auth/models.ts:246](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L246)
+Defined in: [packages/core/src/tools/auth/models.ts:246](https://github.com/Sitecore/content-sdk/blob/2679db118be36890cde6af8a829cbb154334f57d/packages/core/src/tools/auth/models.ts#L246)
 
 ## Indexable
 
@@ -18,7 +18,7 @@ Defined in: [packages/core/src/tools/auth/models.ts:246](https://github.com/Site
 
 > **access\_token**: `string`
 
-Defined in: [packages/core/src/tools/auth/models.ts:248](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L248)
+Defined in: [packages/core/src/tools/auth/models.ts:248](https://github.com/Sitecore/content-sdk/blob/2679db118be36890cde6af8a829cbb154334f57d/packages/core/src/tools/auth/models.ts#L248)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [packages/core/src/tools/auth/models.ts:248](https://github.com/Site
 
 > **expires\_in**: `number`
 
-Defined in: [packages/core/src/tools/auth/models.ts:249](https://github.com/Sitecore/content-sdk/blob/9a33e9e1db9023edc68e7b947d4b59cefcd02c89/packages/core/src/tools/auth/models.ts#L249)
+Defined in: [packages/core/src/tools/auth/models.ts:249](https://github.com/Sitecore/content-sdk/blob/2679db118be36890cde6af8a829cbb154334f57d/packages/core/src/tools/auth/models.ts#L249)
