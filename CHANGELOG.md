@@ -12,6 +12,10 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🧹 Chores
+
+* API Surface verification and reporting ([#283](https://github.com/Sitecore/content-sdk/pull/283))
+
 ## 1.2.1
 
 ### 🐛 Bug Fixes
