@@ -44,28 +44,17 @@ jobs:
 
       - name: Verify API surface
         run: |
-          set -o pipefail
-          echo "🔍 Verifying API surface compatibility..."
+          yarn api-extractor:verify
 
-          # Capture output from api-extractor:verify
-          if ! yarn api-extractor:verify 2>&1 | tee /tmp/api-extractor-output.log; then
-            echo ""
-            echo "## 🔍 API Extractor Verification Failed" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            cat /tmp/api-extractor-output.log >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "## 🔧 How to fix" >> $GITHUB_STEP_SUMMARY
-            echo "1. Run \`yarn api-extractor\` locally to update API reports" >> $GITHUB_STEP_SUMMARY
-            echo "2. Review the changes in the generated .api.md files" >> $GITHUB_STEP_SUMMARY
-            echo "3. Commit the updated API reports if the changes are intentional" >> $GITHUB_STEP_SUMMARY
-            
-            echo ""
-            echo "❌ API Extractor verification failed!"
-            exit 1
-          fi
-          echo "✅ API surface verification passed!"
+      - name: Upload API debug artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-extractor-debug
+          path: |
+            packages/*/api/*.api.md
+            packages/*/temp/*.api.md
+          retention-days: 7
 
       - name: Run tests and collect coverage
         run: yarn coverage-packages
