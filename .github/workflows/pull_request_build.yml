@@ -44,8 +44,9 @@ jobs:
 
       - name: Verify API surface
         run: |
+          set -o pipefail
           echo "🔍 Verifying API surface compatibility..."
-          
+
           # Capture output from api-extractor:verify
           if ! yarn api-extractor:verify 2>&1 | tee /tmp/api-extractor-output.log; then
             echo ""

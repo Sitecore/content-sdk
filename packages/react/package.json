@@ -17,7 +17,7 @@
     "coverage": "nyc npm test",
     "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/react src/index.ts --githubPages false",
     "api-extractor": "npm run build && api-extractor run --local --verbose",
-    "api-extractor:verify": "npm run build && api-extractor run"
+    "api-extractor:verify": "api-extractor run"
   },
   "engines": {
     "node": ">=22"
