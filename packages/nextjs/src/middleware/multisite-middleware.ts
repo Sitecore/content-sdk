@@ -51,6 +51,8 @@ export class MultisiteMiddleware extends MiddlewareBase {
 
       // We can't skip site name preservation for App Router in Preview since currently we rely on the site segment
       // to be present in the path.
+      // Additionally, App Router route structure always requires [site] segment, so disabling multisite
+      // will break regular requests even though Preview/Editing modes will still work.
 
       if (this.isPreview(req) && !this.isAppRouter(res)) {
         debug.multisite('skipped (preview)');
@@ -63,8 +65,12 @@ export class MultisiteMiddleware extends MiddlewareBase {
 
       if (!isSitecorePreview) {
         if (!this.config.enabled) {
-          debug.multisite('skipped (multisite middleware is disabled globally)');
-          return res;
+          this.shouldWarnWhenDisabled(res);
+          if (this.shouldSkipWhenDisabled()) {
+            debug.multisite('skipped (multisite middleware is disabled globally)');
+            return res;
+          }
+          // Continue execution if shouldSkipWhenDisabled returns false (App Router case)
         }
 
         if (this.disabled(req, res)) {
@@ -125,6 +131,24 @@ export class MultisiteMiddleware extends MiddlewareBase {
   protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
     // ignore files
     return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
+  }
+
+  /**
+   * Called when multisite is disabled. Override this method in subclasses to show router-specific warnings.
+   * @param {NextResponse} _res response
+   */
+  // eslint-disable-next-line no-unused-vars
+  protected shouldWarnWhenDisabled(_res: NextResponse): void {
+    // Base implementation does nothing - subclasses can override to show warnings
+  }
+
+  /**
+   * Determines if middleware should be skipped when multisite is disabled.
+   * Override in subclasses to provide router-specific behavior.
+   * @returns {boolean} true if middleware should be skipped when disabled
+   */
+  protected shouldSkipWhenDisabled(): boolean {
+    return true; // Base class skips when disabled
   }
 
   /**

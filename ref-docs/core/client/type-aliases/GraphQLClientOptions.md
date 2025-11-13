@@ -8,4 +8,4 @@
 
 > **GraphQLClientOptions** = `Pick`\<[`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md), `"api"`\> & [`FetchOptions`](FetchOptions.md)
 
-Defined in: [packages/core/src/client/utils.ts:6](https://github.com/Sitecore/content-sdk/blob/36824664470d8e82b6921950a53c09a3430b86e9/packages/core/src/client/utils.ts#L6)
+Defined in: [packages/core/src/client/utils.ts:6](https://github.com/Sitecore/content-sdk/blob/19aa69a9a562e99a4bcadccfe233621fb3fdc30e/packages/core/src/client/utils.ts#L6)
