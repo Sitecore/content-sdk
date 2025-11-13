@@ -1,3 +1,4 @@
+/* eslint-disable no-redeclare */
 import { ComponentRendering, ComponentFields, Field, GenericFieldValue } from './models';
 
 /**
@@ -13,8 +14,6 @@ export function getFieldValue<T>(
   renderingOrFields: ComponentRendering | ComponentFields,
   fieldName: string
 ): T | undefined;
-// eslint-disable-next-line no-redeclare
-
 /**
  * Safely extracts a field value from a rendering or fields object.
  * @param {ComponentRendering | ComponentFields} renderingOrFields the rendering or fields object to extract the field from
