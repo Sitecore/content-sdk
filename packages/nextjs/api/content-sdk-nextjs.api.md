@@ -194,6 +194,8 @@ export { AppPlaceholderProps }
 // @public
 export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
     protected getSiteRewrite(pathname: string, siteName: string): string;
+    protected shouldSkipWhenDisabled(): boolean;
+    protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
 
 export { BYOCClientWrapper }
@@ -638,6 +640,8 @@ export class MultisiteMiddleware extends MiddlewareBase {
     protected getSiteRewrite(pathname: string, siteName: string): string;
     // (undocumented)
     handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    protected shouldSkipWhenDisabled(): boolean;
+    protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
 
 // @public
