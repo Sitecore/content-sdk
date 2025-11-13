@@ -1,35 +1,7 @@
-/**
- * Config file for API Extractor.  For more info, please visit: https://api-extractor.com
- */
 {
   "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
-  /**
-   * A list of NPM package names whose exports should be treated as part of this package.
-   *
-   * For example, suppose that Webpack is used to generate a distributed bundle for the project "library1",
-   * and another NPM package "library2" is embedded in this bundle.  Some types from library2 may become part
-   * of the exported API for library1, but by default API Extractor would generate a .d.ts rollup that explicitly
-   * imports library2.  To avoid this, we might specify:
-   *
-   *   "bundledPackages": [ "library2" ],
-   *
-   * This would direct API Extractor to embed those types directly in the .d.ts rollup, as if they had been
-   * local files for library1.
-   *
-   * The "bundledPackages" elements may specify glob patterns using minimatch syntax.  To ensure deterministic
-   * output, globs are expanded by matching explicitly declared top-level dependencies only.  For example,
-   * the pattern below will NOT match "@my-company/example" unless it appears in a field such as "dependencies"
-   * or "devDependencies" of the project's package.json file:
-   *
-   *   "bundledPackages": [ "@my-company/*" ],
-   */
   "bundledPackages": [],
-
   "mainEntryPointFilePath": "<projectFolder>/api/api-surface.d.ts",
-
-  /**
-   * Configures how the API report file (*.api.md) will be generated.
-   */
   "apiReport": {
     "enabled": true,
     "reportFolder": "<projectFolder>/api/",
@@ -46,115 +18,54 @@
     "enabled": false
   },
   "messages": {
-    /**
-     * Configures handling of diagnostic messages reported by the TypeScript compiler engine while analyzing
-     * the input .d.ts files.
-     *
-     * TypeScript message identifiers start with "TS" followed by an integer.  For example: "TS2551"
-     *
-     * DEFAULT VALUE:  A single "default" entry with logLevel=warning.
-     */
     "compilerMessageReporting": {
-      /**
-       * Configures the default routing for messages that don't match an explicit rule in this table.
-       */
       "default": {
-        /**
-         * Specifies whether the message should be written to the the tool's output log.  Note that
-         * the "addToApiReportFile" property may supersede this option.
-         *
-         * Possible values: "error", "warning", "none"
-         *
-         * Errors cause the build to fail and return a nonzero exit code.  Warnings cause a production build fail
-         * and return a nonzero exit code.  For a non-production build (e.g. when "api-extractor run" includes
-         * the "--local" option), the warning is displayed but the build will not fail.
-         *
-         * DEFAULT VALUE: "warning"
-         */
         "logLevel": "warning"
-
-        /**
-         * When addToApiReportFile is true:  If API Extractor is configured to write an API report file (.api.md),
-         * then the message will be written inside that file; otherwise, the message is instead logged according to
-         * the "logLevel" option.
-         *
-         * DEFAULT VALUE: false
-         */
-        // "addToApiReportFile": false
       }
     },
-
-    /**
-     * Configures handling of messages reported by API Extractor during its analysis.
-     *
-     * API Extractor message identifiers start with "ae-".  For example: "ae-extra-release-tag"
-     *
-     * DEFAULT VALUE: See api-extractor-defaults.json for the complete table of extractorMessageReporting mappings
-     */
     "extractorMessageReporting": {
       "default": {
         "logLevel": "warning"
-        // "addToApiReportFile": false
       },
-
       "ae-internal-missing-underscore": {
         "logLevel": "none",
         "addToApiReportFile": false
       }
     },
-
-    /**
-     * Configures handling of messages reported by the TSDoc parser when analyzing code comments.
-     *
-     * TSDoc message identifiers start with "tsdoc-".  For example: "tsdoc-link-tag-unescaped-text"
-     *
-     * DEFAULT VALUE:  A single "default" entry with logLevel=warning.
-     */
     "tsdocMessageReporting": {
       "default": {
         "logLevel": "warning"
       },
-
       "tsdoc-undefined-tag": {
         "logLevel": "none"
       },
-
       "tsdoc-escape-right-brace": {
         "logLevel": "none"
       },
-      
       "tsdoc-html-tag-missing-string": {
         "logLevel": "none"
       },
-
       "tsdoc-param-tag-with-invalid-type": {
         "logLevel": "none"
       },
-
       "tsdoc-param-tag-with-invalid-name": {
         "logLevel": "none"
       },
-
       "tsdoc-malformed-inline-tag": {
         "logLevel": "none"
       },
-
       "tsdoc-escape-greater-than": {
         "logLevel": "none"
       },
-
       "tsdoc-param-tag-missing-hyphen": {
         "logLevel": "none"
       },
-
       "tsdoc-param-tag-with-invalid-optional-name": {
         "logLevel": "none"
       },
-
       "tsdoc-html-tag-missing-greater-than": {
         "logLevel": "none"
       },
-
       "tsdoc-at-sign-in-word": {
         "logLevel": "none"
       }
