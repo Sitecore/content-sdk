@@ -8,7 +8,7 @@
 
 > **ComponentMapEntry** = `object`
 
-Defined in: [packages/core/src/tools/templating/components.ts:41](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/core/src/tools/templating/components.ts#L41)
+Defined in: [packages/core/src/tools/templating/components.ts:41](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/tools/templating/components.ts#L41)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/core/src/tools/templating/components.ts:41](https://github
 
 > **annotateClient**: `boolean`
 
-Defined in: [packages/core/src/tools/templating/components.ts:47](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/core/src/tools/templating/components.ts#L47)
+Defined in: [packages/core/src/tools/templating/components.ts:47](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/tools/templating/components.ts#L47)
 
 whether base is client (and we're in main map)
 
@@ -26,7 +26,7 @@ whether base is client (and we're in main map)
 
 > **imports**: `string`[]
 
-Defined in: [packages/core/src/tools/templating/components.ts:45](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/core/src/tools/templating/components.ts#L45)
+Defined in: [packages/core/src/tools/templating/components.ts:45](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/tools/templating/components.ts#L45)
 
 namespace import lines needed for this entry
 
@@ -36,7 +36,7 @@ namespace import lines needed for this entry
 
 > **key**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:43](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/core/src/tools/templating/components.ts#L43)
+Defined in: [packages/core/src/tools/templating/components.ts:43](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/tools/templating/components.ts#L43)
 
 map entry key
 
@@ -46,6 +46,6 @@ map entry key
 
 > **valueExpr**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:49](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/core/src/tools/templating/components.ts#L49)
+Defined in: [packages/core/src/tools/templating/components.ts:49](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/tools/templating/components.ts#L49)
 
 expression used as the map value

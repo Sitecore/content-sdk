@@ -6,7 +6,7 @@
 
 # Enumeration: ComponentTemplateType
 
-Defined in: [packages/core/src/config/models.ts:287](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/core/src/config/models.ts#L287)
+Defined in: [packages/core/src/config/models.ts:287](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/config/models.ts#L287)
 
 Enumeration of default component templates
 
@@ -16,7 +16,7 @@ Enumeration of default component templates
 
 > **BYOC**: `"byoc"`
 
-Defined in: [packages/core/src/config/models.ts:288](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/core/src/config/models.ts#L288)
+Defined in: [packages/core/src/config/models.ts:288](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/config/models.ts#L288)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/core/src/config/models.ts:288](https://github.com/Sitecore
 
 > **DEFAULT**: `"default"`
 
-Defined in: [packages/core/src/config/models.ts:289](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/core/src/config/models.ts#L289)
+Defined in: [packages/core/src/config/models.ts:289](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/config/models.ts#L289)

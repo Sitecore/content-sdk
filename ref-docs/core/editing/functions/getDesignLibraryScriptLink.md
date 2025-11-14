@@ -8,7 +8,7 @@
 
 > **getDesignLibraryScriptLink**(`sitecoreEdgeUrl?`): `string`
 
-Defined in: [packages/core/src/editing/design-library.ts:155](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/core/src/editing/design-library.ts#L155)
+Defined in: [packages/core/src/editing/design-library.ts:155](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/editing/design-library.ts#L155)
 
 Generates the URL for the design library script link.
 

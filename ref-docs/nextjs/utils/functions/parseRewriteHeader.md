@@ -8,7 +8,7 @@
 
 > **parseRewriteHeader**(`headers`): `object`
 
-Defined in: [nextjs/src/utils/utils.ts:73](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/nextjs/src/utils/utils.ts#L73)
+Defined in: [nextjs/src/utils/utils.ts:73](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/nextjs/src/utils/utils.ts#L73)
 
 For App Router application, extracts the site and locale information from the rewrite header which is in format /[site]/[locale]/[...path].
 

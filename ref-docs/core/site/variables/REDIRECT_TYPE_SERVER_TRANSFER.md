@@ -8,4 +8,4 @@
 
 > `const` **REDIRECT\_TYPE\_SERVER\_TRANSFER**: `"SERVER_TRANSFER"` = `'SERVER_TRANSFER'`
 
-Defined in: [packages/core/src/site/redirects-service.ts:9](https://github.com/Sitecore/content-sdk/blob/8edf285d0686676f7abb43d86b8726921ea7685d/packages/core/src/site/redirects-service.ts#L9)
+Defined in: [packages/core/src/site/redirects-service.ts:9](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/site/redirects-service.ts#L9)
