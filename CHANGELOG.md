@@ -14,9 +14,8 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
-* `[template/next-app-router]` Remove component-level data fetching to prevent security vulnerability
-* `[core]` NativeFetcher response does not match actual returned data ([#284](https://github.com/Sitecore/content-sdk/pull/284))
 * `[template/next-app-router]` Remove component-level data fetching in favor of Server Components ([#282](https://github.com/Sitecore/content-sdk/pull/282))
+* `[core]` NativeFetcher response does not match actual returned data ([#284](https://github.com/Sitecore/content-sdk/pull/284))
 
 ## 1.2.1
 
