@@ -6,7 +6,7 @@
 
 # Class: RedirectsService
 
-Defined in: core/types/site/redirects-service.d.ts:38
+Defined in: core/types/site/redirects-service.d.ts:60
 
 The RedirectsService class is used to query the Content SDK redirects using Graphql endpoint
 
@@ -16,7 +16,7 @@ The RedirectsService class is used to query the Content SDK redirects using Grap
 
 > **new RedirectsService**(`options`): `RedirectsService`
 
-Defined in: core/types/site/redirects-service.d.ts:46
+Defined in: core/types/site/redirects-service.d.ts:68
 
 Creates an instance of graphQL redirects service with the provided options
 
@@ -38,7 +38,7 @@ Creates an instance of graphQL redirects service with the provided options
 
 > **get** `protected` **query**(): `string`
 
-Defined in: core/types/site/redirects-service.d.ts:47
+Defined in: core/types/site/redirects-service.d.ts:69
 
 ##### Returns
 
@@ -50,7 +50,7 @@ Defined in: core/types/site/redirects-service.d.ts:47
 
 > **fetchRedirects**(`siteName`, `fetchOptions?`): `Promise`\<[`RedirectInfo`](../type-aliases/RedirectInfo.md)[]\>
 
-Defined in: core/types/site/redirects-service.d.ts:55
+Defined in: core/types/site/redirects-service.d.ts:77
 
 Fetch an array of redirects from API
 
@@ -77,7 +77,7 @@ if the siteName is empty.
 
 > `protected` **getCacheClient**(): [`CacheClient`](../interfaces/CacheClient.md)\<`RedirectsQueryResult`\>
 
-Defined in: core/types/site/redirects-service.d.ts:68
+Defined in: core/types/site/redirects-service.d.ts:90
 
 Gets cache client implementation
 Override this method if custom cache needs to be used
@@ -94,7 +94,7 @@ CacheClient instance
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/site/redirects-service.d.ts:62
+Defined in: core/types/site/redirects-service.d.ts:84
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

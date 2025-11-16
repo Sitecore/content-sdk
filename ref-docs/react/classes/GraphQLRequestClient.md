@@ -6,7 +6,7 @@
 
 # Class: GraphQLRequestClient
 
-Defined in: packages/core/types/graphql-request-client.d.ts:75
+Defined in: packages/core/types/graphql-request-client.d.ts:81
 
 A GraphQL client for Sitecore APIs that uses the 'graphql-request' library.
 https://github.com/prisma-labs/graphql-request
@@ -21,7 +21,7 @@ https://github.com/prisma-labs/graphql-request
 
 > **new GraphQLRequestClient**(`endpoint`, `clientConfig?`): `GraphQLRequestClient`
 
-Defined in: packages/core/types/graphql-request-client.d.ts:89
+Defined in: packages/core/types/graphql-request-client.d.ts:95
 
 Provides ability to execute graphql query using given `endpoint`
 
@@ -42,7 +42,7 @@ Provides ability to execute graphql query using given `endpoint`
 
 > **request**\<`T`\>(`query`, `variables?`, `options?`): `Promise`\<`T`\>
 
-Defined in: packages/core/types/graphql-request-client.d.ts:102
+Defined in: packages/core/types/graphql-request-client.d.ts:108
 
 Execute graphql request
 
@@ -74,7 +74,7 @@ Execute graphql request
 
 > `static` **createClientFactory**(`config`): `GraphQLRequestClientFactory`
 
-Defined in: packages/core/types/graphql-request-client.d.ts:96
+Defined in: packages/core/types/graphql-request-client.d.ts:102
 
 Factory method for creating a GraphQLRequestClientFactory.
 

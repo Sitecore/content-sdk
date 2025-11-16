@@ -6,7 +6,9 @@
 
 # Interface: AppPlaceholderProps
 
-Defined in: react/types/components/Placeholder/models.d.ts:101
+Defined in: react/types/components/Placeholder/models.d.ts:109
+
+The interface for the AppPlaceholder component props.
 
 ## Extends
 
@@ -32,7 +34,7 @@ The message that gets displayed while component is loading
 
 > **componentMap**: [`ComponentMap`](../type-aliases/ComponentMap.md)
 
-Defined in: react/types/components/Placeholder/models.d.ts:107
+Defined in: react/types/components/Placeholder/models.d.ts:115
 
 Component Map will be used to map Sitecore component names to app implementation
 When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
@@ -127,7 +129,7 @@ but do not have a definition in the componentMap (i.e. don't have a React implem
 
 > `optional` **modifyComponentProps**: (`componentProps`) => `AppComponentProps`
 
-Defined in: react/types/components/Placeholder/models.d.ts:114
+Defined in: react/types/components/Placeholder/models.d.ts:122
 
 Modify final props of component (before render) provided by rendering data.
 Can be used in case when you need to insert additional data into the component.
@@ -198,7 +200,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 > `optional` **render**: (`components`, `data`, `props`) => `ReactNode`
 
-Defined in: react/types/components/Placeholder/models.d.ts:119
+Defined in: react/types/components/Placeholder/models.d.ts:127
 
 Render props function that enables control over the rendering of the components in the placeholder.
 Useful for techniques like wrapping each child in a wrapper component.

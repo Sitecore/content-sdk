@@ -8,7 +8,7 @@
 
 > `const` **getSrcSet**: (`url`, `srcSet`, `imageParams?`, `mediaUrlPrefix?`) => `string`
 
-Defined in: core/types/media/media-api.d.ts:51
+Defined in: core/types/media/media-api.d.ts:55
 
 Receives an array of `srcSet` parameters that are iterated and used as parameters to generate
 a corresponding set of updated Sitecore media URLs via

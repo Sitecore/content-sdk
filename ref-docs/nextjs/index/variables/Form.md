@@ -8,7 +8,9 @@
 
 > `const` **Form**: (`{ params, rendering }`) => `React.JSX.Element`
 
-Defined in: react/types/components/Form.d.ts:29
+Defined in: react/types/components/Form.d.ts:34
+
+The Form component.
 
 ## Parameters
 

@@ -8,4 +8,6 @@
 
 > `const` **DateField**: `React.FC`\<`DateFieldProps`\>
 
-Defined in: react/types/components/Date.d.ts:16
+Defined in: react/types/components/Date.d.ts:24
+
+The DateField component.

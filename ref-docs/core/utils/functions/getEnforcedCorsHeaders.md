@@ -8,7 +8,9 @@
 
 > **getEnforcedCorsHeaders**(`__namedParameters`): `null` \| \{\[`key`: `string`\]: `string`; \}
 
-Defined in: [packages/core/src/utils/utils.ts:151](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/utils/utils.ts#L151)
+Defined in: [packages/core/src/utils/utils.ts:171](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/utils/utils.ts#L171)
+
+Gets enforced CORS headers
 
 ## Parameters
 
@@ -23,3 +25,5 @@ Defined in: [packages/core/src/utils/utils.ts:151](https://github.com/Sitecore/c
 ## Returns
 
 `null` \| \{\[`key`: `string`\]: `string`; \}
+
+- The enforced CORS headers.

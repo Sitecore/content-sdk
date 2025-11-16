@@ -8,14 +8,18 @@
 
 > **BYOCServerWrapper**(`props`): `Promise`\<`Element`\>
 
-Defined in: [packages/react/src/components/FEaaS/BYOCServerWrapper.tsx:7](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/react/src/components/FEaaS/BYOCServerWrapper.tsx#L7)
+Defined in: [packages/react/src/components/FEaaS/BYOCServerWrapper.tsx:13](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/react/src/components/FEaaS/BYOCServerWrapper.tsx#L13)
+
+Server component for BYOC. Retrieves server props and renders client BYOCWrapper.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `BYOCServerWrapperProps` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `props` | `BYOCServerWrapperProps` | incoming props |
 
 ## Returns
 
 `Promise`\<`Element`\>
+
+rendered BYOCWrapper component

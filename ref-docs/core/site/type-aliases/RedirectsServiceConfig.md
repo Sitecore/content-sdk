@@ -8,7 +8,9 @@
 
 > **RedirectsServiceConfig** = [`CacheOptions`](../../index/interfaces/CacheOptions.md) & `object`
 
-Defined in: [packages/core/src/site/redirects-service.ts:36](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/core/src/site/redirects-service.ts#L36)
+Defined in: [packages/core/src/site/redirects-service.ts:58](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/site/redirects-service.ts#L58)
+
+Configuration for
 
 ## Type declaration
 
@@ -24,3 +26,7 @@ This factory function is used to create and configure GraphQL clients for making
 > `optional` **fetch**: *typeof* `fetch`
 
 Override fetch method. Uses 'GraphQLRequestClient' default otherwise.
+
+## See
+
+RedirectsService instances

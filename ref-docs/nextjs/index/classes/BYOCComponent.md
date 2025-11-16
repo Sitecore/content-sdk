@@ -6,7 +6,7 @@
 
 # Class: BYOCComponent
 
-Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:10
+Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:11
 
 BYOCComponent facilitate the rendering of external components. It manages potential errors,
 missing components, and customization of error messages or alternative rendering components.
@@ -25,7 +25,7 @@ component props
 
 > **new BYOCComponent**(`props`): `BYOCComponent`
 
-Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:14
+Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:15
 
 #### Parameters
 
@@ -89,7 +89,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:970
 
 > **state**: `Readonly`\<\{ `error?`: `Error`; \}\>
 
-Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:11
+Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:12
 
 #### Overrides
 
@@ -152,7 +152,7 @@ Only kept in types for backwards compatibility. Will be removed in a future majo
 
 > **componentDidCatch**(`error`): `void`
 
-Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:18
+Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:19
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
@@ -409,7 +409,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:19
+Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:20
 
 #### Returns
 
@@ -608,7 +608,7 @@ this from being invoked.
 
 > `static` **getDerivedStateFromError**(`error`): `object`
 
-Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:15
+Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:16
 
 #### Parameters
 

@@ -8,13 +8,15 @@
 
 > **RichText**(`props`): `Element`
 
-Defined in: [nextjs/src/components/RichText.tsx:45](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/nextjs/src/components/RichText.tsx#L45)
+Defined in: [nextjs/src/components/RichText.tsx:54](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/nextjs/src/components/RichText.tsx#L54)
+
+The RichText component.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `props` | [`RichTextProps`](../type-aliases/RichTextProps.md) |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `props` | [`RichTextProps`](../type-aliases/RichTextProps.md) | The props for the RichText component. |
 
 ## Returns
 

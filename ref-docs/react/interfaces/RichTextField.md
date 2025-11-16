@@ -6,7 +6,9 @@
 
 # Interface: RichTextField
 
-Defined in: [packages/react/src/components/RichText.tsx:9](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/react/src/components/RichText.tsx#L9)
+Defined in: [packages/react/src/components/RichText.tsx:13](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/react/src/components/RichText.tsx#L13)
+
+The interface for the RichText field.
 
 ## Extends
 
@@ -18,7 +20,7 @@ Defined in: [packages/react/src/components/RichText.tsx:9](https://github.com/Si
 
 > `optional` **metadata**: `object`
 
-Defined in: packages/core/types/layout/models.d.ts:107
+Defined in: packages/core/types/layout/models.d.ts:123
 
 #### Index Signature
 
@@ -34,4 +36,4 @@ Defined in: packages/core/types/layout/models.d.ts:107
 
 > `optional` **value**: `string`
 
-Defined in: [packages/react/src/components/RichText.tsx:10](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/react/src/components/RichText.tsx#L10)
+Defined in: [packages/react/src/components/RichText.tsx:14](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/react/src/components/RichText.tsx#L14)

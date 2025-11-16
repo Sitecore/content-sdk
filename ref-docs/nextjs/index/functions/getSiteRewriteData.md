@@ -8,7 +8,7 @@
 
 > **getSiteRewriteData**(`pathname`, `defaultSiteName`): `SiteRewriteData`
 
-Defined in: core/types/site/utils.d.ts:22
+Defined in: core/types/site/utils.d.ts:33
 
 Get site data from the rewrite path
 

@@ -8,7 +8,9 @@
 
 > **WithSitecoreHocProps**\<`ComponentProps`\> = `EnhancedOmit`\<`ComponentProps`, keyof [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)\>
 
-Defined in: react/types/enhancers/withSitecore.d.ts:27
+Defined in: react/types/enhancers/withSitecore.d.ts:39
+
+The type of the props that HOC will receive.
 
 ## Type Parameters
 

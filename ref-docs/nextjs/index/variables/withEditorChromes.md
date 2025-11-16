@@ -8,13 +8,15 @@
 
 > `const` **withEditorChromes**: (`WrappedComponent`) => `React.ComponentClass`
 
-Defined in: react/types/enhancers/withEditorChromes.d.ts:2
+Defined in: react/types/enhancers/withEditorChromes.d.ts:7
+
+HOC to inject editor chromes reset on component update.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `WrappedComponent` | `React.ComponentClass`\<`unknown`\> \| `React.FC`\<`unknown`\> |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `WrappedComponent` | `React.ComponentClass`\<`unknown`\> \| `React.FC`\<`unknown`\> | The component to wrap. |
 
 ## Returns
 

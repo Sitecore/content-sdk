@@ -8,7 +8,7 @@
 
 > `const` **EditingScripts**: () => `JSX.Element`
 
-Defined in: react/types/components/EditingScripts.d.ts:7
+Defined in: react/types/components/EditingScripts.d.ts:8
 
 Renders client scripts and data for editing/preview mode for Pages.
 Renders script required for the Design Library (when mode.isDesignLibrary is true).

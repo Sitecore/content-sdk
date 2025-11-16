@@ -6,7 +6,9 @@
 
 # Interface: ImageField
 
-Defined in: react/types/components/Image.d.ts:8
+Defined in: react/types/components/Image.d.ts:16
+
+The interface for the Image field.
 
 ## Properties
 
@@ -14,4 +16,4 @@ Defined in: react/types/components/Image.d.ts:8
 
 > `optional` **value**: [`ImageFieldValue`](ImageFieldValue.md)
 
-Defined in: react/types/components/Image.d.ts:9
+Defined in: react/types/components/Image.d.ts:17

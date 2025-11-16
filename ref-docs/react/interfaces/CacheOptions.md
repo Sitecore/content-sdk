@@ -6,7 +6,7 @@
 
 # Interface: CacheOptions
 
-Defined in: packages/core/types/cache-client.d.ts:23
+Defined in: packages/core/types/cache-client.d.ts:25
 
 Minimum configuration options for classes that implement
 
@@ -20,7 +20,7 @@ CacheClient
 
 > `optional` **cacheEnabled**: `boolean`
 
-Defined in: packages/core/types/cache-client.d.ts:28
+Defined in: packages/core/types/cache-client.d.ts:30
 
 Enable/disable caching mechanism
 
@@ -36,7 +36,7 @@ true
 
 > `optional` **cacheTimeout**: `number`
 
-Defined in: packages/core/types/cache-client.d.ts:33
+Defined in: packages/core/types/cache-client.d.ts:35
 
 Cache timeout (sec)
 

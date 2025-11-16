@@ -6,7 +6,7 @@
 
 # Interface: SitePathServiceConfig
 
-Defined in: packages/core/types/site/sitepath-service.d.ts:71
+Defined in: packages/core/types/site/sitepath-service.d.ts:72
 
 Configuration options for
 
@@ -24,7 +24,7 @@ SitePathService instances
 
 > **clientFactory**: `GraphQLRequestClientFactory`
 
-Defined in: packages/core/types/site/sitepath-service.d.ts:82
+Defined in: packages/core/types/site/sitepath-service.d.ts:83
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -63,7 +63,7 @@ Optional. Only paths starting with these provided prefixes will be returned.
 
 > `optional` **includePersonalizedRoutes**: `boolean`
 
-Defined in: packages/core/types/site/sitepath-service.d.ts:77
+Defined in: packages/core/types/site/sitepath-service.d.ts:78
 
 A flag for whether to include personalized routes in service output.
 Only works on XM Cloud for pages using Embedded Personalization (not Component A/B testing).

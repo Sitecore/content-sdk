@@ -8,4 +8,10 @@
 
 > `const` **File**: `React.FC`\<`FileProps`\>
 
-Defined in: react/types/components/File.d.ts:18
+Defined in: react/types/components/File.d.ts:27
+
+The File component.
+
+## Param
+
+component props

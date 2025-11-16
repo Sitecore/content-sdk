@@ -8,7 +8,9 @@
 
 > **ComponentMap**\<`TComponent`\> = `Map`\<`string`, `TComponent`\>
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:42](https://github.com/Sitecore/content-sdk/blob/2717352d92cf699951612a7f62785ea6697f83ae/packages/react/src/components/sharedTypes/components.ts#L42)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:51](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/react/src/components/sharedTypes/components.ts#L51)
+
+The type of the component map.
 
 ## Type Parameters
 

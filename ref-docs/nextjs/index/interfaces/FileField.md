@@ -6,7 +6,9 @@
 
 # Interface: FileField
 
-Defined in: react/types/components/File.d.ts:8
+Defined in: react/types/components/File.d.ts:12
+
+The interface for the File field.
 
 ## Properties
 
@@ -14,4 +16,4 @@ Defined in: react/types/components/File.d.ts:8
 
 > **value**: `FileFieldValue`
 
-Defined in: react/types/components/File.d.ts:9
+Defined in: react/types/components/File.d.ts:13

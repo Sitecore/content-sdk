@@ -6,7 +6,9 @@
 
 # Enumeration: SitecoreTemplateId
 
-Defined in: packages/core/types/constants.d.ts:1
+Defined in: packages/core/types/constants.d.ts:5
+
+Sitecore template IDs
 
 ## Enumeration Members
 
@@ -14,7 +16,7 @@ Defined in: packages/core/types/constants.d.ts:1
 
 > **ContentSdkApp**: `"061cba1554744b918a0617903b102b82"`
 
-Defined in: packages/core/types/constants.d.ts:2
+Defined in: packages/core/types/constants.d.ts:6
 
 ***
 
@@ -22,4 +24,4 @@ Defined in: packages/core/types/constants.d.ts:2
 
 > **DictionaryEntry**: `"6d1cd89719364a3aa511289a94c2a7b1"`
 
-Defined in: packages/core/types/constants.d.ts:3
+Defined in: packages/core/types/constants.d.ts:7

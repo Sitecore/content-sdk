@@ -10,6 +10,7 @@
 
 - [DesignLibraryMode](enumerations/DesignLibraryMode.md)
 - [DesignLibraryStatus](enumerations/DesignLibraryStatus.md)
+- [DesignLibraryVariantGeneration](enumerations/DesignLibraryVariantGeneration.md)
 - [LayoutKind](enumerations/LayoutKind.md)
 - [MetadataKind](enumerations/MetadataKind.md)
 
@@ -22,15 +23,18 @@
 ## Interfaces
 
 - [ComponentLayoutRequestParams](interfaces/ComponentLayoutRequestParams.md)
+- [ComponentLayoutServiceConfig](interfaces/ComponentLayoutServiceConfig.md)
 - [ComponentUpdateEventArgs](interfaces/ComponentUpdateEventArgs.md)
 - [DesignLibraryRenderPreviewData](interfaces/DesignLibraryRenderPreviewData.md)
 - [DesignLibraryStatusEvent](interfaces/DesignLibraryStatusEvent.md)
 - [EditingRenderQueryParams](interfaces/EditingRenderQueryParams.md)
+- [EditingServiceConfig](interfaces/EditingServiceConfig.md)
 - [Metadata](interfaces/Metadata.md)
 - [RenderComponentQueryParams](interfaces/RenderComponentQueryParams.md)
 
 ## Type Aliases
 
+- [EditingOptions](type-aliases/EditingOptions.md)
 - [EditingPreviewData](type-aliases/EditingPreviewData.md)
 
 ## Variables

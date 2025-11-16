@@ -6,7 +6,9 @@
 
 # Interface: WithSitecoreProps
 
-Defined in: react/types/enhancers/withSitecore.d.ts:11
+Defined in: react/types/enhancers/withSitecore.d.ts:19
+
+The props that HOC will inject.
 
 ## Properties
 
@@ -14,7 +16,7 @@ Defined in: react/types/enhancers/withSitecore.d.ts:11
 
 > `optional` **api**: `Required`\<\{ `edge?`: `Required`\<`undefined` \| \{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \}\>; `local?`: `Required`\<`undefined` \| \{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \}\>; \}\>
 
-Defined in: react/types/enhancers/withSitecore.d.ts:19
+Defined in: react/types/enhancers/withSitecore.d.ts:27
 
 The API configuration defined in the `SitecoreConfig`.
 
@@ -24,7 +26,7 @@ The API configuration defined in the `SitecoreConfig`.
 
 > **page**: [`Page`](../type-aliases/Page.md)
 
-Defined in: react/types/enhancers/withSitecore.d.ts:15
+Defined in: react/types/enhancers/withSitecore.d.ts:23
 
 The current page context.
 
@@ -34,7 +36,7 @@ The current page context.
 
 > `optional` **updatePage**: `false` \| (`value`) => `void`
 
-Defined in: react/types/enhancers/withSitecore.d.ts:25
+Defined in: react/types/enhancers/withSitecore.d.ts:33
 
 Method to update the page. This is only available if `updatable` is set to true.
 
