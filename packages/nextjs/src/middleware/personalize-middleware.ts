@@ -12,6 +12,10 @@ import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { SitecoreConfig } from '../config';
 
+/**
+ * The interface for the PersonalizeMiddleware configuration.
+ * @public
+ */
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['api']['edge'] &
   SitecoreConfig['personalize'] & {
@@ -43,6 +47,7 @@ type PersonalizeExecution = {
 
 /**
  * Middleware / handler to support Sitecore Personalize
+ * @public
  */
 export class PersonalizeMiddleware extends MiddlewareBase {
   protected personalizeService: PersonalizeService;

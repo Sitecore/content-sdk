@@ -88,6 +88,10 @@ export interface BasePlaceholderProps {
   renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
 }
 
+/**
+ * The interface for the Placeholder component props.
+ * @public
+ */
 export interface PlaceholderProps extends BasePlaceholderProps {
   [key: string]: unknown;
   /**
@@ -116,6 +120,10 @@ export interface PlaceholderProps extends BasePlaceholderProps {
   ) => React.ReactNode;
 }
 
+/**
+ * The interface for the AppPlaceholder component props.
+ * @public
+ */
 export interface AppPlaceholderProps extends BasePlaceholderProps {
   /**
    * Component Map will be used to map Sitecore component names to app implementation

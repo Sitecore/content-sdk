@@ -10,6 +10,7 @@ import {
 /**
  * Fetches server component props required for server rendering, based on rendering params.
  * @param {BYOCComponentParams} params component params
+ * @public
  */
 export async function fetchBYOCComponentServerProps(
   params: BYOCComponentParams
@@ -31,6 +32,7 @@ export async function fetchBYOCComponentServerProps(
  * @param {FEaaSComponentParams} params component params
  * @param {boolean} [isPageStateNormal] whether page is in normal mode
  * @param {string} [endpointOverride] optional override for component endpoint
+ * @public
  */
 export async function fetchFEaaSComponentServerProps(
   params: FEaaSComponentParams,

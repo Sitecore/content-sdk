@@ -125,6 +125,7 @@ export type RouteListQueryResult = {
 
 /**
  * Configuration options for @see SitePathService instances
+ * @public
  */
 export interface SitePathServiceConfig
   extends Omit<SiteRouteQueryVariables, 'language' | 'siteName'> {
@@ -146,6 +147,7 @@ export interface SitePathServiceConfig
  * Used to handle a single site
  * This list is used for SSG and Export functionality.
  * @mixes SearchQueryService<PageListQueryResult>
+ * @public
  */
 export class SitePathService {
   private _graphQLClient: GraphQLClient;

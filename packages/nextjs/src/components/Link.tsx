@@ -8,6 +8,10 @@ import {
   LinkProps as ReactLinkProps,
 } from '@sitecore-content-sdk/react';
 
+/**
+ * The interface for the Link component props.
+ * @public
+ */
 export type LinkProps = ReactLinkProps & {
   /**
    * If `href` match with `internalLinkMatcher` regexp, then it's internal link and NextLink will be rendered
@@ -25,6 +29,10 @@ export type LinkProps = ReactLinkProps & {
  */
 const FILE_EXTENSION_MATCHER = /^\/.*\.\w+$/;
 
+/**
+ * Next.js specific Link component implementation.
+ * @public
+ */
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
   (props: LinkProps, ref): JSX.Element | null => {
     const {

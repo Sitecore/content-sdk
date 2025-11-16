@@ -42,6 +42,7 @@ export function scaffoldFile(filePath: string, fileContent: string): string | nu
  * @param {string} templateName - The name of the template to use for scaffolding. If not provided, defaults to 'byoc' if `byoc` is true, otherwise 'default'.
  * @param {ScaffoldTemplate[]} templates - An array of template objects, each containing a name, a template function, and a getNextSteps function.
  * @throws Will throw an error if the specified template is not found.
+ * @internal
  */
 export function scaffoldComponent(
   outputFolderPath: string,

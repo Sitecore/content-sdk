@@ -34,6 +34,7 @@ export type GetItemsSettings<Item> = {
  * @param {string} itemPath base path to compare against, can be absolute or relative
  * @param {string} compare comparer, can be relate, absolute or regex string
  * @returns true if paths match, false otherwise
+ * @public
  */
 export const matchPath = (itemPath: string, compare: string): boolean => {
   if (

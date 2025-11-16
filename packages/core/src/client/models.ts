@@ -7,6 +7,7 @@ import { ErrorPagesService, SitePathService } from '../site';
 
 /**
  * Init options for Sitecore Client that allows you to override services too
+ * @public
  */
 export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' | 'personalize'> & {
   custom?: {

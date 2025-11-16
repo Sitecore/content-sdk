@@ -38,6 +38,11 @@ export type FormProps = {
   };
 };
 
+/**
+ * The Form component.
+ * @param {FormProps} props incoming props
+ * @public
+ */
 export const Form = ({ params, rendering }: FormProps) => {
   const id = params?.RenderingIdentifier;
   const [error, setError] = useState(false);

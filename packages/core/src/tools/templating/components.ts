@@ -2,6 +2,9 @@ import * as glob from 'glob';
 import fs from 'fs';
 import * as ts from 'typescript';
 
+/**
+ * @public
+ */
 export let getComponentList = _getComponentList;
 
 export const componentUnitMocks = {
@@ -17,14 +20,27 @@ const componentNamePattern = /^[\/]*(.+[\/\\])*(.+)\.[jt]sx?$/;
 
 const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
 
+/**
+ * @internal
+ */
 export type ComponentType = 'server' | 'client' | 'universal';
+
+/**
+ * @internal
+ */
 export type RouterType = 'app' | 'pages';
 
+/**
+ * @internal
+ */
 export type ComponentMapTemplate = (
   components: (ComponentFile | ComponentFileWithType)[],
   componentImports?: ComponentImport[]
 ) => string;
 
+/**
+ * @internal
+ */
 export type EnhancedComponentMapTemplate = (
   components: (ComponentFile | ComponentFileWithType)[],
   componentImports: ComponentImport[] | undefined,
@@ -35,8 +51,9 @@ export type EnhancedComponentMapTemplate = (
   }
 ) => string;
 
-/*
+/**
  * An entry in the component map, including import lines and value expression.
+ * @internal
  */
 export type ComponentMapEntry = {
   /** map entry key */
@@ -51,6 +68,7 @@ export type ComponentMapEntry = {
 
 /**
  * Definition for a component file
+ * @public
  */
 export interface ComponentFile {
   /** The original file path of the component */
@@ -65,8 +83,9 @@ export interface ComponentFile {
   componentType?: ComponentType;
 }
 
-/*
+/**
  * Definition for a component file with guaranteed componentType
+ * @internal
  */
 export interface ComponentFileWithType extends ComponentFile {
   /** Detected component type (server, client, or universal) */
@@ -76,6 +95,7 @@ export interface ComponentFileWithType extends ComponentFile {
 /**
  * Definition for custom components to be included in component map.
  * Use this to define components imported from modules/dependencies/packages
+ * @public
  */
 export interface ComponentImport {
   /** The name of the import (e.g., 'MyComponent')*/
@@ -136,6 +156,7 @@ function _getComponentList(
  * Detects the Next.js router type (App Router or Pages Router) based on directory structure.
  * @param {string} projectRoot - The project root directory. Defaults to current working directory.
  * @returns {RouterType} 'app' if App Router is detected, 'pages' otherwise
+ * @internal
  */
 export function detectRouterType(projectRoot: string = process.cwd()): RouterType {
   const appDirExists =
@@ -163,6 +184,7 @@ export function detectRouterType(projectRoot: string = process.cwd()): RouterTyp
  * @param {string} filePath - Path to the component file
  * @param {RouterType} [routerType] - Optional router type override. Auto-detected if not provided.
  * @returns {ComponentType} 'server', 'client', or 'universal'
+ * @internal
  */
 export function detectComponentType(filePath: string, routerType?: RouterType): ComponentType {
   try {
@@ -327,6 +349,7 @@ export function detectComponentType(filePath: string, routerType?: RouterType): 
  * @param {boolean} includeVariants - Whether to include variant components
  * @param {RouterType} [routerType] - Optional router type override for type detection. Auto-detected if not provided.
  * @returns {ComponentFileWithType[]} Array of components with their detected types
+ * @internal
  */
 export function getComponentListWithTypes(
   paths: string[],
@@ -348,6 +371,7 @@ export function getComponentListWithTypes(
  * @param {ComponentFileWithType[]} components - Array of components with types
  * @param {ComponentType[]} allowedTypes - Array of allowed component types to filter by
  * @returns {ComponentFileWithType[]} Filtered array containing only components matching allowed types
+ * @internal
  */
 export function filterComponentsByType(
   components: ComponentFileWithType[],

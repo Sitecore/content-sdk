@@ -4,10 +4,28 @@ import debug from '../debug';
 import { MemoryCacheClient, CacheOptions, CacheClient } from '../cache-client';
 import { GraphQLRequestClientFactory } from '../graphql-request-client';
 
+/**
+ * Redirect type for 301 redirects
+ * @public
+ */
 export const REDIRECT_TYPE_301 = 'REDIRECT_301';
+
+/**
+ * Redirect type for 302 redirects
+ * @public
+ */
 export const REDIRECT_TYPE_302 = 'REDIRECT_302';
+
+/**
+ * Redirect type for server transfer
+ * @public
+ */
 export const REDIRECT_TYPE_SERVER_TRANSFER = 'SERVER_TRANSFER';
 
+/**
+ * Object model of Redirect Info result
+ * @public
+ */
 export type RedirectInfo = {
   pattern: string;
   target: string;
@@ -33,6 +51,10 @@ const defaultQuery = /* GraphQL */ `
   }
 `;
 
+/**
+ * Configuration for @see RedirectsService instances
+ * @public
+ */
 export type RedirectsServiceConfig = CacheOptions & {
   /**
    * Override fetch method. Uses 'GraphQLRequestClient' default otherwise.
@@ -47,13 +69,15 @@ export type RedirectsServiceConfig = CacheOptions & {
 
 /**
  * The schema of data returned in response to redirects array request
+ * @public
  */
 export type RedirectsQueryResult = {
   site: { siteInfo: { redirects: RedirectInfo[] } | null };
 };
 
 /**
- *  The RedirectsService class is used to query the Content SDK redirects using Graphql endpoint
+ * The RedirectsService class is used to query the Content SDK redirects using Graphql endpoint
+ * @public
  */
 export class RedirectsService {
   private graphQLClient: GraphQLClient;

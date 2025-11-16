@@ -7,7 +7,8 @@ import { nonSerializedPlaceholderProps } from '../Placeholder/models';
 /**
  * Server component for FEaaS. Retrieves server props and renders client FEaaSWrapper.
  * @param {FEaaSComponentProps} props incoming props
- * @returns {Promise<JSX.Element>} rendered FEaaSWrapper component
+ * @returns rendered FEaaSWrapper component
+ * @public
  */
 export const FEaaSServerWrapper = async (props: FEaaSServerWrapperProps) => {
   const params = props.rendering?.params || {};

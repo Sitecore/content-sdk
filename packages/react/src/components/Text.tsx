@@ -6,6 +6,10 @@ import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditin
 import { EditableFieldProps } from './sharedTypes';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 
+/**
+ * The interface for the Text field.
+ * @public
+ */
 export interface TextField extends FieldMetadata {
   value?: string | number;
 }
@@ -24,6 +28,10 @@ export interface TextProps extends EditableFieldProps<TextProps> {
   encode?: boolean;
 }
 
+/**
+ * The Text component.
+ * @public
+ */
 export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
   withEmptyFieldEditingComponent<TextProps>(
     ({ field, tag, editable = true, encode = true, ...otherProps }) => {

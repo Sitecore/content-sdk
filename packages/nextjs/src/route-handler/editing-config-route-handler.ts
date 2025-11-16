@@ -27,6 +27,7 @@ export type EditingConfigRouteHandlerOptions = {
  * Provides configuration information to determine feature compatibility on Pages side.
  * @param {EditingConfigRouteHandlerOptions} options - The options for the route handler.
  * @returns The route handler with GET and OPTIONS methods.
+ * @public
  */
 export const createEditingConfigRouteHandler = (options: EditingConfigRouteHandlerOptions) => {
   const { components, metadata } = options;

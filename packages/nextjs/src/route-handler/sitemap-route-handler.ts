@@ -25,6 +25,7 @@ type RouteHandlerOptions = {
  * Creates a route handler to serve the sitemap.xml file.
  * @param {RouteHandlerOptions} options - The options for the route handler.
  * @returns The route handler.
+ * @public
  */
 export function createSitemapRouteHandler(options: RouteHandlerOptions) {
   const { client, sites, revalidate = 60 } = options;

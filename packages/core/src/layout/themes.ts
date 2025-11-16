@@ -15,6 +15,7 @@ const STYLES_LIBRARY_ID_REGEX = /-library--([^\s]+)/;
  * @param {string} sitecoreEdgeContextId Sitecore Edge Context ID
  * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io
  * @returns {HTMLLink[]} library stylesheet links
+ * @public
  */
 export function getDesignLibraryStylesheetLinks(
   layoutData: LayoutServiceData,

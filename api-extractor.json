@@ -1,0 +1,74 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
+  "bundledPackages": [],
+  "mainEntryPointFilePath": "<projectFolder>/api/api-surface.d.ts",
+  "apiReport": {
+    "enabled": true,
+    "reportFolder": "<projectFolder>/api/",
+    "reportTempFolder": "<projectFolder>/temp/",
+    "reportFileName": "content-sdk-<unscopedPackageName>.api.md"
+  },
+  "docModel": {
+    "enabled": false
+  },
+  "dtsRollup": {
+    "enabled": false
+  },
+  "tsdocMetadata": {
+    "enabled": false
+  },
+  "messages": {
+    "compilerMessageReporting": {
+      "default": {
+        "logLevel": "warning"
+      }
+    },
+    "extractorMessageReporting": {
+      "default": {
+        "logLevel": "warning"
+      },
+      "ae-internal-missing-underscore": {
+        "logLevel": "none",
+        "addToApiReportFile": false
+      }
+    },
+    "tsdocMessageReporting": {
+      "default": {
+        "logLevel": "warning"
+      },
+      "tsdoc-undefined-tag": {
+        "logLevel": "none"
+      },
+      "tsdoc-escape-right-brace": {
+        "logLevel": "none"
+      },
+      "tsdoc-html-tag-missing-string": {
+        "logLevel": "none"
+      },
+      "tsdoc-param-tag-with-invalid-type": {
+        "logLevel": "none"
+      },
+      "tsdoc-param-tag-with-invalid-name": {
+        "logLevel": "none"
+      },
+      "tsdoc-malformed-inline-tag": {
+        "logLevel": "none"
+      },
+      "tsdoc-escape-greater-than": {
+        "logLevel": "none"
+      },
+      "tsdoc-param-tag-missing-hyphen": {
+        "logLevel": "none"
+      },
+      "tsdoc-param-tag-with-invalid-optional-name": {
+        "logLevel": "none"
+      },
+      "tsdoc-html-tag-missing-greater-than": {
+        "logLevel": "none"
+      },
+      "tsdoc-at-sign-in-word": {
+        "logLevel": "none"
+      }
+    }
+  }
+}

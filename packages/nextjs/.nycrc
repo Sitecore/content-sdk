@@ -13,7 +13,8 @@
     "src/tools/codegen/test-data",
     "dist",
     "**/sharedTypes.ts",
-    "*.js"
+    "*.js",
+    "api"
   ],
   "all": true,
   "reporter": [

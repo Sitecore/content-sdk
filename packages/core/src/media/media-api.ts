@@ -7,6 +7,7 @@ const mediaUrlPrefixRegex = /\/([-~]{1})\/media\//i;
  * Get required query string params which should be merged with user params
  * @param {object} qs layout service parsed query string
  * @returns {object} requiredParams
+ * @public
  */
 export const getRequiredParams = (qs: { [key: string]: string | undefined }) => {
   const { rev, db, la, vs, ts } = qs;
@@ -20,6 +21,7 @@ export const getRequiredParams = (qs: { [key: string]: string | undefined }) => 
  * @param {string} url The URL to replace the media URL prefix in
  * @param {RegExp} [mediaUrlPrefix] The regex to match the media URL prefix
  * @returns {string} The URL with the media URL prefix replaced
+ * @public
  */
 export const replaceMediaUrlPrefix = (
   url: string,
@@ -46,6 +48,7 @@ export const replaceMediaUrlPrefix = (
  * @param {object} [params] The querystring parameters to use
  * @param {RegExp} [mediaUrlPrefix] The regex to match the media URL prefix
  * @returns {string} The prepared URL
+ * @public
  */
 export const updateImageUrl = (
   url: string,
@@ -91,6 +94,7 @@ export const updateImageUrl = (
  * @param {object} [imageParams] The querystring parameters to use
  * @param {RegExp} [mediaUrlPrefix] The regex to match the media URL prefix
  * @returns {string} The prepared URL
+ * @public
  */
 export const getSrcSet = (
   url: string,

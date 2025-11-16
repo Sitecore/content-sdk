@@ -286,7 +286,8 @@ const collectComponents = (opts: {
  * Template Customization:
  * - mapTemplate: Custom template for main component map (works for both single and dual map modes)
  * - clientMapTemplate: Custom template for client component map (only used when clientComponentMap is true)
- * @param {GenerateMapArgs} param0 params for generateMap
+ * @param {GenerateMapArgs} params - The parameters for the generateMap function.
+ * @public
  */
 export const generateMap: GenerateMapFunction = ({
   paths,

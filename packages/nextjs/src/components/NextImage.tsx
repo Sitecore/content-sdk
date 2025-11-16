@@ -15,6 +15,11 @@ import Image, { ImageProps as NextImageProperties } from 'next/image';
 import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 
 type NextImageProps = ImageProps & Partial<NextImageProperties>;
+
+/**
+ * Next.js specific Image component implementation.
+ * @public
+ */
 export const NextImage: React.FC<NextImageProps> = withFieldMetadata<NextImageProps>(
   withEmptyFieldEditingComponent<NextImageProps>(
     ({ editable = true, imageParams, field, mediaUrlPrefix, fill, priority, ...otherProps }) => {

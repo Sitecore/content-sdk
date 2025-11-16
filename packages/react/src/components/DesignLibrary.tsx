@@ -111,8 +111,9 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
  * wires the **variant generation** handshake so the parent (DL Studio) can send
  * generated code to preview and iterate on.
  * @param {DesignLibraryProps} props
- * @param {() => Promise<{ default: import('../codegen').ImportEntry[] }>} [props.loadImportMap] Optional async loader that resolves to the import-map used to resolve the generated component’s imports. Required when `isVariantGeneration` is true.
+ * @param {() => Promise} [props.loadImportMap] Optional async loader that resolves to the import-map used to resolve the generated component’s imports. Required when `isVariantGeneration` is true.
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
+ * @public
  */
 export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps) => {
   const { page } = useSitecore();

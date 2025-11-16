@@ -12,6 +12,7 @@ interface WithMetadataProps {
  * Wraps the field component with metadata markup intended to be used for chromes hydration in Pages
  * @param {ComponentType<FieldComponentProps>} FieldComponent the field component
  * @param {boolean} isForwardRef set to 'true' if forward reference is needed
+ * @public
  */
 export function withFieldMetadata<
   FieldComponentProps extends WithMetadataProps,

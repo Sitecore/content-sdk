@@ -10,6 +10,10 @@ import { PreviewCookies } from '../editing/utils';
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
 export const LOCALE_HEADER_NAME = 'x-sc-locale';
 
+/**
+ * The interface for the Middleware configuration.
+ * @public
+ */
 export type MiddlewareBaseConfig = {
   /**
    * function, determines if middleware execution should be skipped, based on cookie, header, or other considerations
@@ -35,6 +39,7 @@ export type MiddlewareBaseConfig = {
 
 /**
  * Middleware class to be extended by all middleware implementations
+ * @public
  */
 export abstract class Middleware {
   /**
@@ -48,6 +53,7 @@ export abstract class Middleware {
 
 /**
  * Base middleware class with common methods
+ * @public
  */
 export abstract class MiddlewareBase extends Middleware {
   protected defaultHostname: string;
@@ -223,6 +229,7 @@ export abstract class MiddlewareBase extends Middleware {
 /**
  * Define a middleware with a list of middlewares
  * @param {Middleware[]} middlewares List of middlewares to execute
+ * @public
  */
 export const defineMiddleware = (...middlewares: Middleware[]) => {
   return {

@@ -1,5 +1,6 @@
 /**
  * CLI arguments used for authentication and tenant identification.
+ * @public
  */
 export interface TenantArgs {
   /**

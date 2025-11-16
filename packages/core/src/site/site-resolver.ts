@@ -5,6 +5,7 @@ const DELIMITERS = /\||,|;/g;
 
 /**
  * Resolves site based on the provided host or site name
+ * @public
  */
 export class SiteResolver {
   /**

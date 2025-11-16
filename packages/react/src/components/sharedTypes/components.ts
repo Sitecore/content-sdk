@@ -12,9 +12,14 @@ export const DEFAULT_EXPORT_NAME = 'Default';
 
 /**
  * React component import with account for custom exports
+ * @public
  */
 export type ReactContentSdkComponent = ComponentType | ReactModule;
 
+/**
+ * The type of the React module.
+ * @public
+ */
 export type ReactModule = {
   /**
    * Custom exports
@@ -39,5 +44,9 @@ export type LazyComponentType = ComponentType & {
   render?: { [key: string]: unknown };
 };
 
+/**
+ * The type of the component map.
+ * @public
+ */
 export type ComponentMap<TComponent extends ReactContentSdkComponent = ReactContentSdkComponent> =
   Map<string, TComponent>;
