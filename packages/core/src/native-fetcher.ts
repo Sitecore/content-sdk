@@ -102,7 +102,12 @@ export class NativeDataFetcher {
         data: respData,
       });
 
-      return { ...response, data: respData as T };
+      return {
+        data: respData as T,
+        headers: response.headers,
+        status: response.status,
+        statusText: response.statusText,
+      };
     } catch (error) {
       this.abortTimeout?.clear();
       debug('Request failed: %o', error);
