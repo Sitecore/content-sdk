@@ -38,7 +38,7 @@ export enum ErrorPage {
 
 /**
  * Page mode name
- * @internal
+ * @public
  */
 type PageModeName = LayoutServicePageState | DesignLibraryMode;
 
