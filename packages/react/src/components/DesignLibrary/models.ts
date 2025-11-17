@@ -35,7 +35,9 @@ export type DesignLibraryServerProps = DesignLibraryProps & {
    * When rendered as a server placeholder, this prop must be provided.
    */
   componentMap?: ComponentMap;
-  /** Rendering data to be used when rendering the placeholder. */
+  /**
+   * Rendering data to be used when rendering the placeholder.
+   */
   rendering: ComponentRendering | RouteData;
   /**
    * Page data.

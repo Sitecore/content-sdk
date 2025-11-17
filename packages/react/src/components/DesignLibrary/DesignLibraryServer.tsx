@@ -2,7 +2,7 @@
 import React from 'react';
 import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/core/layout';
 import { DesignLibraryClientEvents } from './DesignLibraryClientEvents';
-import { getCacheAndClean, hasCache } from '@sitecore-content-sdk/core/utils';
+import * as globalCache from '@sitecore-content-sdk/core/utils';
 import {
   DesignLibraryStatus,
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
@@ -12,6 +12,15 @@ import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { AppPlaceholder, PlaceholderMetadata } from '../Placeholder';
 import { DLErrorBoundary } from './DLErrorBoundary';
 import { DynamicComponent, DesignLibraryServerProps } from './models';
+
+let { getCacheAndClean, hasCache } = globalCache;
+let { createComponentInstance } = codegen;
+
+export const __mockDependencies = (mocks: any) => {
+  getCacheAndClean = mocks.getCacheAndClean;
+  hasCache = mocks.hasCache;
+  createComponentInstance = mocks.createComponentInstance;
+};
 
 /**
  * Design Library component for rendering server components in app router application.
@@ -85,13 +94,13 @@ export const DesignLibraryServer = async ({
     if (isVariantGeneration && updateData.previewComponent && !importMapError) {
       try {
         // use provided code and import map to create the component instance
-        Component = codegen.createComponentInstance(
+        Component = createComponentInstance(
           importMap,
           updateData.previewComponent
         ) as DynamicComponent;
 
         // pass any raw styles to the client to be added to document head
-        previewComponentStyle = updateData.previewComponent.message.styles.content;
+        previewComponentStyle = updateData.previewComponent.message?.styles?.content;
       } catch (error) {
         // error during component initialization - send error to client
         importMapError = error.toString();

@@ -1,10 +1,6 @@
 'use client';
 import React, { useEffect } from 'react';
-import {
-  getDesignLibraryStatusEvent,
-  addComponentUpdateHandler,
-  postToDL,
-} from '@sitecore-content-sdk/core/editing';
+import * as dlHelpers from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { useSitecore } from '../../enhancers/withSitecore';
 import { updateServerComponentAction } from '../../server-actions/update-server-component-action';
@@ -17,6 +13,19 @@ let {
   addStyleElement,
   sendErrorEvent,
 } = codegen;
+let { getDesignLibraryStatusEvent, addComponentUpdateHandler, postToDL } = dlHelpers;
+let _updateServerComponentAction = updateServerComponentAction;
+
+export const __mockDependencies = (mocks: any) => {
+  postToDL = mocks.postToDL;
+  addComponentUpdateHandler = mocks.addComponentUpdateHandler;
+  _updateServerComponentAction = mocks.updateServerComponentAction;
+  addServerComponentPreviewHandler = mocks.addServerComponentPreviewHandler;
+  getDesignLibraryImportMapEvent = mocks.getDesignLibraryImportMapEvent;
+  getDesignLibraryComponentPropsEvent = mocks.getDesignLibraryComponentPropsEvent;
+  addStyleElement = mocks.addStyleElement;
+  sendErrorEvent = mocks.sendErrorEvent;
+};
 
 /**
  * Design Library component for rendering server components in app router application.
@@ -48,7 +57,7 @@ export const DesignLibraryClientEvents = ({
 
     // add the component update handler
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
-      updateServerComponentAction({ uid: updated.uid, updatedComponent: updated });
+      _updateServerComponentAction({ uid: updated.uid, updatedComponent: updated });
     });
 
     if (importMapError) {
@@ -58,7 +67,7 @@ export const DesignLibraryClientEvents = ({
       if (isDesignLibrary && isVariantGeneration) {
         // add the component preview handler
         unsubPreview = addServerComponentPreviewHandler((eventArgs) => {
-          updateServerComponentAction({ uid: component.uid, previewComponent: eventArgs });
+          _updateServerComponentAction({ uid: component.uid, previewComponent: eventArgs });
         });
 
         // post importmap event
