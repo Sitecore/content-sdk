@@ -17,7 +17,7 @@ Our versioning strategy is as follows:
   * `[nextjs]` [App Router] Add support for server components in Design Studio ([#280](https://github.com/Sitecore/content-sdk/pull/280))
    - additional react components to handle dynamic rendering of server components
    - includes refactoring of existing Design Library functionality
-   - this is a breaking change for Next.js App Router (beta) application
+   - this is a breaking change for applications based on Next.js App Router (beta) template. Please refer to the detailed upgrade guide for further instructions
 
 ## 1.2.1
 
