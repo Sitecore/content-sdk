@@ -10,6 +10,7 @@ import { extractFiles, ExtractFilesConfig } from './extract-files';
 import debug from './../../debug';
 
 describe('extract-files', () => {
+  const RENDERINGHOST_NAME = 'testRenderingHost';
   const sandbox = sinon.createSandbox();
   const defaultConfig = defineConfig({
     api: {
@@ -43,6 +44,7 @@ describe('extract-files', () => {
     process.env.SITECORE_BUILD = '0451';
     process.env.SITECORE_AUTH_CLIENT_ID = 'test-client-id';
     process.env.SITECORE_AUTH_CLIENT_SECRET = 'test-client-secret';
+    process.env.SITECORE_RENDERINGHOST_NAME = RENDERINGHOST_NAME;
 
     fetchBehavior = async () =>
       ({
@@ -66,6 +68,7 @@ describe('extract-files', () => {
     delete process.env.SITECORE_AUTH_CLIENT_ID;
     delete process.env.SITECORE_AUTH_CLIENT_SECRET;
     delete process.env.SITECORE_BUILD;
+    delete process.env.SITECORE_RENDERINGHOST_NAME;
   });
 
   const initialization = [
@@ -351,6 +354,50 @@ describe('extract-files', () => {
             ].join('\r\n')
           );
           expect(msgs).to.include(successMsg);
+        });
+      });
+
+      describe('renderingHost label', () => {
+        const prevCwd = process.cwd();
+        const mockComponentMapPath =
+          './src/tools/codegen/test-data/extract-components/regular-imports';
+        const appFolder = path.resolve(prevCwd, mockComponentMapPath);
+
+        beforeEach(() => {
+          process.chdir(appFolder);
+
+          const tokenStub = sandbox.stub().resolves({ accessToken: 'test-token' });
+          sandbox.replaceGetter(auth, 'clientCredentialsFlow', () => tokenStub);
+        });
+
+        afterEach(() => {
+          process.chdir(prevCwd);
+        });
+
+        it('should include renderingHost label when env variable is set', async () => {
+          await extractFiles(mockArgs as any)();
+
+          expect(fetchFake.callCount).to.equal(3);
+
+          const bodies = fetchFake.getCalls().map((call) => JSON.parse(call.args[1].body));
+
+          bodies.forEach(({ labels: { renderingHost } }) => {
+            expect(renderingHost).to.equal(RENDERINGHOST_NAME);
+          });
+        });
+
+        it('should not include renderingHost label when env variable is not set', async () => {
+          delete process.env.SITECORE_RENDERINGHOST_NAME;
+
+          await extractFiles(mockArgs as any)();
+
+          expect(fetchFake.callCount).to.equal(3);
+
+          const bodies = fetchFake.getCalls().map((call) => JSON.parse(call.args[1].body));
+
+          bodies.forEach(({ labels: { renderingHost } }) => {
+            expect(renderingHost).to.be.undefined;
+          });
         });
       });
     });
