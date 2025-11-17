@@ -88,7 +88,15 @@ export const DesignLibraryClientEvents = ({
       unsubUpdate && unsubUpdate();
       unsubPreview && unsubPreview();
     };
-  });
+  }, [
+    component,
+    designLibraryStatus,
+    importMap,
+    importMapError,
+    isDesignLibrary,
+    isVariantGeneration,
+    previewComponentStyle,
+  ]);
 
   return <></>;
 };
