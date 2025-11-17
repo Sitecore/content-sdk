@@ -25,7 +25,7 @@
     },
     "extractorMessageReporting": {
       "default": {
-        "logLevel": "warning"
+        "logLevel": "error"
       },
       "ae-internal-missing-underscore": {
         "logLevel": "none",
