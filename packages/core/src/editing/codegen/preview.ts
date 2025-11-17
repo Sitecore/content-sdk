@@ -247,17 +247,8 @@ export const addComponentPreviewHandler = (
 
       callback(null, Component);
     } catch (error) {
-      const errorEvent = getDesignLibraryComponentPreviewErrorEvent(
-        eventArgs.message.uid,
-        error,
-        DesignLibraryPreviewError.RenderInit
-      );
-
-      console.error('Component Library: sending error event', errorEvent);
-
+      sendErrorEvent(eventArgs.message.uid, error, DesignLibraryPreviewError.RenderInit);
       callback(error, null);
-
-      window.parent.postMessage(errorEvent, '*');
     }
   };
 
