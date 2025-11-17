@@ -27,14 +27,10 @@ export const __mockDependencies = async (mocks: any) => {
  *
  * Renders the **real** Sitecore component for `library` / `library-metadata` modes and,
  * when generation is enabled (`page.mode.designLibrary.isVariantGeneration === true`),
- * wires the **variant generation** handshake so the parent (DL Studio) can send
+ * wires the **variant generation** handshake so the parent (Design Library) can send
  * generated code to preview and iterate on.
- * Also Renders the DesignLibraryClientEvents component which serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
- * @param {DesignLibraryServerProps} [props]
- * @param {Page} [props.page] the page data.
- * @param {Record<string, DynamicComponent>} [props.componentMap] Component Map will be used by the placeholder to map Sitecore component names to app implementation
- * @param {ComponentRendering} [props.rendering] Rendering data to be used when rendering the placeholder.
- * @param {() => Promise<{ default: import('../codegen').ImportEntry[] }>} [props.loadImportMap] Optional async loader that resolves to the import-map used to resolve the generated component’s imports. Required when `isVariantGeneration` is true.
+ * Also renders the DesignLibraryClientEvents component which serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
+ * @param {DesignLibraryServerProps} [props] The props. {@link DesignLibraryServerProps}
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  */
 export const DesignLibraryServer = async ({

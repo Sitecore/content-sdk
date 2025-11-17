@@ -321,11 +321,9 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     filteredHeaders.set('Content-Security-Policy', getCSPHeader());
 
     // add expected CORS headers to response
-    Object.entries(expectedCorsHeaders as Record<string, string>).forEach(
-      ([key, value]: [string, string]) => {
-        filteredHeaders.set(key, value);
-      }
-    );
+    Object.entries(expectedCorsHeaders).forEach(([key, value]: [string, string]) => {
+      filteredHeaders.set(key, value);
+    });
 
     // remove nextjs preview cookies to not leak them to the browser
     const filteredCookies = cleanupNextPreviewCookies(filteredHeaders.get('Set-Cookie'));
