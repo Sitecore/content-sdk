@@ -15,7 +15,7 @@ import {
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { useSitecore } from '../../enhancers/withSitecore';
 import { Placeholder, PlaceholderMetadata } from '../Placeholder';
-import { DLErrorBoundary } from './DLErrorBoundary';
+import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DesignLibraryProps, DynamicComponent } from './models';
 
 let {
@@ -147,11 +147,11 @@ export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps) => {
   return (
     <main>
       {isGeneratedComponentActive ? (
-        <DLErrorBoundary uid={rendering.uid} renderKey={renderKey}>
+        <DesignLibraryErrorBoundary uid={rendering.uid} renderKey={renderKey}>
           <PlaceholderMetadata rendering={rendering}>
             <Component fields={propsState.fields} params={propsState.params} key={renderKey} />
           </PlaceholderMetadata>
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       ) : (
         <div id={EDITING_COMPONENT_ID}>
           {route && (

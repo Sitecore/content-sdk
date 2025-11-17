@@ -17,24 +17,24 @@ const ThrowError: React.FC<{ shouldThrow?: boolean }> = ({ shouldThrow = true })
   return <div>Success</div>;
 };
 
-describe('<DLErrorBoundary />', () => {
+describe('<DesignLibraryErrorBoundary />', () => {
   let sandbox: sinon.SinonSandbox;
   let sendErrorEventStub: sinon.SinonStub;
-  let DLErrorBoundary: any;
+  let DesignLibraryErrorBoundary: any;
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     sendErrorEventStub = sandbox.stub();
 
     // Use proxyquire to inject mocked sendErrorEvent
-    const module = proxyquire('./DLErrorBoundary', {
+    const module = proxyquire('./DesignLibraryErrorBoundary', {
       '@sitecore-content-sdk/core/codegen': {
         sendErrorEvent: sendErrorEventStub,
         DesignLibraryPreviewError: DesignLibraryPreviewError,
       },
     });
 
-    DLErrorBoundary = module.DLErrorBoundary;
+    DesignLibraryErrorBoundary = module.DesignLibraryErrorBoundary;
   });
 
   afterEach(() => {
@@ -44,9 +44,9 @@ describe('<DLErrorBoundary />', () => {
   describe('normal rendering', () => {
     it('should render children when no error occurs', () => {
       const { container } = render(
-        <DLErrorBoundary uid="test-uid">
+        <DesignLibraryErrorBoundary uid="test-uid">
           <div data-testid="child">Child Content</div>
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       );
 
       expect(container.querySelector('[data-testid="child"]')).to.exist;
@@ -57,9 +57,9 @@ describe('<DLErrorBoundary />', () => {
 
   it('should catch errors, send error event and display error message', () => {
     const { container } = render(
-      <DLErrorBoundary uid="test-uid">
+      <DesignLibraryErrorBoundary uid="test-uid">
         <ThrowError />
-      </DLErrorBoundary>
+      </DesignLibraryErrorBoundary>
     );
 
     expect(container.textContent).to.include('Error during component rendering');
@@ -76,9 +76,9 @@ describe('<DLErrorBoundary />', () => {
   describe('renderKey handling', () => {
     it('should reset error state when renderKey changes', () => {
       const { container, rerender } = render(
-        <DLErrorBoundary uid="test-uid" renderKey={1}>
+        <DesignLibraryErrorBoundary uid="test-uid" renderKey={1}>
           <ThrowError />
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       );
 
       // First render shows error
@@ -86,9 +86,9 @@ describe('<DLErrorBoundary />', () => {
 
       // Update with new renderKey and non-throwing component
       rerender(
-        <DLErrorBoundary uid="test-uid" renderKey={2}>
+        <DesignLibraryErrorBoundary uid="test-uid" renderKey={2}>
           <ThrowError shouldThrow={false} />
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       );
 
       // Error should be cleared
@@ -97,9 +97,9 @@ describe('<DLErrorBoundary />', () => {
 
     it('should work without renderKey prop', () => {
       const { container } = render(
-        <DLErrorBoundary uid="test-uid">
+        <DesignLibraryErrorBoundary uid="test-uid">
           <div>No RenderKey</div>
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       );
 
       expect(container.textContent).to.include('No RenderKey');
@@ -107,17 +107,17 @@ describe('<DLErrorBoundary />', () => {
 
     it('should handle renderKey from undefined to defined', () => {
       const { container, rerender } = render(
-        <DLErrorBoundary uid="test-uid">
+        <DesignLibraryErrorBoundary uid="test-uid">
           <ThrowError />
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       );
 
       expect(container.textContent).to.include('Error during component rendering');
 
       rerender(
-        <DLErrorBoundary uid="test-uid" renderKey={1}>
+        <DesignLibraryErrorBoundary uid="test-uid" renderKey={1}>
           <ThrowError shouldThrow={false} />
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       );
 
       // Error should be cleared when renderKey is added
@@ -126,34 +126,34 @@ describe('<DLErrorBoundary />', () => {
 
     it('should increment renderKey to reset error multiple times', () => {
       const { container, rerender } = render(
-        <DLErrorBoundary uid="test-uid" renderKey={1}>
+        <DesignLibraryErrorBoundary uid="test-uid" renderKey={1}>
           <ThrowError />
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       );
 
       expect(container.textContent).to.include('Error during component rendering');
 
       // First reset
       rerender(
-        <DLErrorBoundary uid="test-uid" renderKey={2}>
+        <DesignLibraryErrorBoundary uid="test-uid" renderKey={2}>
           <ThrowError shouldThrow={false} />
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       );
       expect(container.textContent).to.include('Success');
 
       // Trigger error again
       rerender(
-        <DLErrorBoundary uid="test-uid" renderKey={2}>
+        <DesignLibraryErrorBoundary uid="test-uid" renderKey={2}>
           <ThrowError />
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       );
       expect(container.textContent).to.include('Error during component rendering');
 
       // Second reset
       rerender(
-        <DLErrorBoundary uid="test-uid" renderKey={3}>
+        <DesignLibraryErrorBoundary uid="test-uid" renderKey={3}>
           <ThrowError shouldThrow={false} />
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       );
       expect(container.textContent).to.include('Success');
     });
@@ -169,9 +169,9 @@ describe('<DLErrorBoundary />', () => {
     const AsyncComponent = React.lazy(() => delay(500, ThrowError));
 
     const { container } = render(
-      <DLErrorBoundary uid="test-uid">
+      <DesignLibraryErrorBoundary uid="test-uid">
         <AsyncComponent />
-      </DLErrorBoundary>
+      </DesignLibraryErrorBoundary>
     );
 
     await waitFor(

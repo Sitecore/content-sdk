@@ -10,7 +10,7 @@ import {
 import { ComponentUpdateModel } from '../../server-actions/update-server-component-action';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { AppPlaceholder, PlaceholderMetadata } from '../Placeholder';
-import { DLErrorBoundary } from './DLErrorBoundary';
+import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DynamicComponent, DesignLibraryServerProps } from './models';
 
 let { getCacheAndClean, hasCache } = globalCache;
@@ -107,11 +107,11 @@ export const DesignLibraryServer = async ({
   return (
     <>
       {isVariantGeneration && Component ? (
-        <DLErrorBoundary uid={componentToUpdate.uid}>
+        <DesignLibraryErrorBoundary uid={componentToUpdate.uid}>
           <PlaceholderMetadata rendering={componentToUpdate}>
             <Component fields={componentToUpdate.fields} params={componentToUpdate.params} />
           </PlaceholderMetadata>
-        </DLErrorBoundary>
+        </DesignLibraryErrorBoundary>
       ) : (
         <AppPlaceholder
           name={EDITING_COMPONENT_PLACEHOLDER}
