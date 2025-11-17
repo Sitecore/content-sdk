@@ -3,7 +3,7 @@ import { getCacheAndClean, setCache, getCache, hasCache, DL_CACHE_NAMESPACE } fr
 
 describe('globalCache utility', () => {
   afterEach(() => {
-    delete (globalThis as any)[DL_CACHE_NAMESPACE];
+    delete globalThis.__dlCache;
   });
 
   it('should set and get cache value if cache not initialized', () => {
@@ -12,7 +12,7 @@ describe('globalCache utility', () => {
   });
 
   it('should set and get cache value', () => {
-    (globalThis as any)[DL_CACHE_NAMESPACE] = {};
+    globalThis.__dlCache = {};
     setCache('testKey', 'testValue');
     setCache('testKeySecond', 'testValueSecond');
     expect(getCache('testKey')).to.equal('testValue');

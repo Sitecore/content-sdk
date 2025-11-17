@@ -1,4 +1,7 @@
-export const DL_CACHE_NAMESPACE = '__dlCache';
+declare global {
+  // eslint-disable-next-line no-unused-vars
+  var __dlCache: Record<string, unknown>;
+}
 
 /**
  * Stores a value in the global cache under the specified key.
@@ -8,10 +11,10 @@ export const DL_CACHE_NAMESPACE = '__dlCache';
  * @param {unknown} data - The value to store in the cache.
  */
 export function setCache(key: string, data: unknown): void {
-  if (!(globalThis as any)[DL_CACHE_NAMESPACE]) {
-    (globalThis as any)[DL_CACHE_NAMESPACE] = {};
+  if (!globalThis.__dlCache) {
+    globalThis.__dlCache = {};
   }
-  (globalThis as any)[DL_CACHE_NAMESPACE][key] = data;
+  globalThis.__dlCache[key] = data;
 }
 
 /**
@@ -21,8 +24,8 @@ export function setCache(key: string, data: unknown): void {
  * @returns {T} - The cached value if present, otherwise undefined.
  */
 export function getCache<T>(key: string): T | undefined {
-  const cache = (globalThis as any)[DL_CACHE_NAMESPACE];
-  return cache?.[key];
+  const cache = globalThis.__dlCache;
+  return cache?.[key] as T;
 }
 
 /**
@@ -32,7 +35,7 @@ export function getCache<T>(key: string): T | undefined {
  * @returns {T} - The cached value if present, otherwise undefined.
  */
 export function getCacheAndClean<T>(key: string): T | undefined {
-  const cache = (globalThis as any)[DL_CACHE_NAMESPACE];
+  const cache = globalThis.__dlCache;
   const data = cache?.[key];
   delete cache?.[key];
   return data as T;
@@ -45,6 +48,6 @@ export function getCacheAndClean<T>(key: string): T | undefined {
  * @returns {boolean} - true if a value is present for the given key; otherwise false.
  */
 export function hasCache(key: string): boolean {
-  const cache = (globalThis as any)[DL_CACHE_NAMESPACE];
+  const cache = globalThis.__dlCache;
   return cache?.[key] !== undefined;
 }
