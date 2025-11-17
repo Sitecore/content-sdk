@@ -198,7 +198,7 @@ export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode {
  * Sends an event to the Design Library
  * @param {unknown} evt - The event object to send.
  */
-export const postToDL = (evt: unknown) => {
+export const postToDesignLibrary = (evt: unknown) => {
   if (typeof window === 'undefined') return;
 
   const target = window.parent && window.parent !== window ? window.parent : window;

@@ -10,7 +10,7 @@ import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
-  postToDL,
+  postToDesignLibrary,
 } from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { useSitecore } from '../../enhancers/withSitecore';
@@ -60,7 +60,7 @@ export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps) => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    postToDL(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, rendering.uid));
+    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, rendering.uid));
 
     if (!isVariantGeneration) {
       requestAnimationFrame(() => {
@@ -82,7 +82,7 @@ export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps) => {
     // Send a rendered event only as effect of a component update command
     if (renderKey === 0) return;
 
-    postToDL(getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, rendering.uid));
+    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, rendering.uid));
   }, [renderKey, rendering]);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -127,14 +127,14 @@ export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps) => {
       });
 
       const importMapEvent = getDesignLibraryImportMapEvent(rendering.uid, importMap);
-      postToDL(importMapEvent);
+      postToDesignLibrary(importMapEvent);
 
       const propsEvent = getDesignLibraryComponentPropsEvent(
         rendering.uid,
         propsState.fields,
         propsState.params
       );
-      postToDL(propsEvent);
+      postToDesignLibrary(propsEvent);
     })();
 
     // return function that calls unsubscribe - if the component was mounted correctly

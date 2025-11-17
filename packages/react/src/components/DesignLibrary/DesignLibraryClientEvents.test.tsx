@@ -21,7 +21,7 @@ import { __mockDependencies } from './DesignLibraryClientEvents';
 use(sinonChai);
 
 describe('<DesignLibrary />', () => {
-  let postToDlSpy: sinon.SinonStub;
+  let postToDesignLibrarySpy: sinon.SinonStub;
   let addComponentUpdateHandlerSpy: sinon.SinonStub;
   let updateServerComponentActionSpy: sinon.SinonStub;
   let addServerComponentPreviewHandlerSpy: sinon.SinonStub;
@@ -31,7 +31,7 @@ describe('<DesignLibrary />', () => {
   let sendErrorEventSpy: sinon.SinonStub;
 
   beforeEach(() => {
-    postToDlSpy = sandbox.stub();
+    postToDesignLibrarySpy = sandbox.stub();
     addComponentUpdateHandlerSpy = sandbox.stub();
     updateServerComponentActionSpy = sandbox.stub();
     addServerComponentPreviewHandlerSpy = sandbox.stub();
@@ -41,7 +41,7 @@ describe('<DesignLibrary />', () => {
     sendErrorEventSpy = sandbox.stub();
 
     __mockDependencies({
-      postToDL: postToDlSpy,
+      postToDesignLibrary: postToDesignLibrarySpy,
       addComponentUpdateHandler: addComponentUpdateHandlerSpy,
       updateServerComponentAction: updateServerComponentActionSpy,
       addServerComponentPreviewHandler: addServerComponentPreviewHandlerSpy,
@@ -118,7 +118,7 @@ describe('<DesignLibrary />', () => {
     });
 
     await waitFor(() => {
-      expect(postToDlSpy).to.have.been.calledWith(
+      expect(postToDesignLibrarySpy).to.have.been.calledWith(
         sinon.match({
           name: 'component:status',
           message: {
@@ -239,8 +239,8 @@ describe('<DesignLibrary />', () => {
       );
       expect(getDesignLibraryImportMapEventSpy).to.have.been.calledOnce;
       expect(getDesignLibraryComponentPropsEventSpy).to.have.been.calledOnce;
-      expect(postToDlSpy).to.have.been.calledWith(testImportEvent);
-      expect(postToDlSpy).to.have.been.calledWith(testPropsEvent);
+      expect(postToDesignLibrarySpy).to.have.been.calledWith(testImportEvent);
+      expect(postToDesignLibrarySpy).to.have.been.calledWith(testPropsEvent);
     });
 
     it('should call updateServerComponentAction when preview component event is received', async () => {

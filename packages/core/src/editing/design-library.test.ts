@@ -7,7 +7,7 @@ import {
   DesignLibraryStatus,
   getDesignLibraryScriptLink,
   isDesignLibraryMode,
-  postToDL,
+  postToDesignLibrary,
   validateEvent,
 } from './design-library';
 import testComponent from '../test-data/component-editing-data';
@@ -212,7 +212,7 @@ describe('component library utils', () => {
     });
   });
 
-  describe('postToDL', () => {
+  describe('postToDesignLibrary', () => {
     let originalWindow: any;
     let logSpy: sinon.SinonSpy;
     let errorSpy: sinon.SinonSpy;
@@ -232,7 +232,7 @@ describe('component library utils', () => {
 
     it('should return when window is undefined', () => {
       (global as any).window = undefined;
-      postToDL({ name: statusReadyEvent });
+      postToDesignLibrary({ name: statusReadyEvent });
       expect(logSpy.called).to.be.false;
       expect(errorSpy.called).to.be.false;
     });
@@ -243,7 +243,7 @@ describe('component library utils', () => {
         parent: { postMessage: parentPost },
         postMessage: sinon.stub(),
       };
-      postToDL({ name: statusReadyEvent, message: { status: 'ready', uid: 'x' } });
+      postToDesignLibrary({ name: statusReadyEvent, message: { status: 'ready', uid: 'x' } });
       expect(logSpy.calledOnce).to.be.true;
       expect(parentPost.calledOnce).to.be.true;
       const args = parentPost.getCall(0).args[0];
@@ -255,7 +255,7 @@ describe('component library utils', () => {
       const win: any = { postMessage: winPost };
       win.parent = win;
       (global as any).window = win;
-      postToDL({ name: statusReadyEvent });
+      postToDesignLibrary({ name: statusReadyEvent });
       expect(winPost.calledOnce).to.be.true;
     });
 
@@ -265,7 +265,7 @@ describe('component library utils', () => {
         parent: throwingParent,
         postMessage: sinon.stub(),
       };
-      postToDL({ name: statusReadyEvent });
+      postToDesignLibrary({ name: statusReadyEvent });
       expect(errorSpy.calledOnce).to.be.true;
       const errArg = errorSpy.getCall(0).args[1];
       expect((errArg as Error).message).to.equal('fail');

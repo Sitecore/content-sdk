@@ -13,11 +13,11 @@ let {
   addStyleElement,
   sendErrorEvent,
 } = codegen;
-let { getDesignLibraryStatusEvent, addComponentUpdateHandler, postToDL } = dlHelpers;
+let { getDesignLibraryStatusEvent, addComponentUpdateHandler, postToDesignLibrary } = dlHelpers;
 let _updateServerComponentAction = updateServerComponentAction;
 
 export const __mockDependencies = (mocks: any) => {
-  postToDL = mocks.postToDL;
+  postToDesignLibrary = mocks.postToDesignLibrary;
   addComponentUpdateHandler = mocks.addComponentUpdateHandler;
   _updateServerComponentAction = mocks.updateServerComponentAction;
   addServerComponentPreviewHandler = mocks.addServerComponentPreviewHandler;
@@ -53,7 +53,7 @@ export const DesignLibraryClientEvents = ({
   useEffect(() => {
     let unsubPreview: () => void;
     // - post to DL designlibraryStatus
-    postToDL(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
+    postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
 
     // add the component update handler
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
@@ -72,7 +72,7 @@ export const DesignLibraryClientEvents = ({
 
         // post importmap event
         const importMapEvent = getDesignLibraryImportMapEvent(component.uid, importMap);
-        postToDL(importMapEvent);
+        postToDesignLibrary(importMapEvent);
 
         // const props event
         const propsEvent = getDesignLibraryComponentPropsEvent(
@@ -80,7 +80,7 @@ export const DesignLibraryClientEvents = ({
           component.fields,
           component.params
         );
-        postToDL(propsEvent);
+        postToDesignLibrary(propsEvent);
 
         if (previewComponentStyle) {
           // the generated component has custom styles, so add the css in style element and add it to document head
