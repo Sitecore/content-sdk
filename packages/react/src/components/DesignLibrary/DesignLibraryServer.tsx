@@ -16,7 +16,7 @@ import { DynamicComponent, DesignLibraryServerProps } from './models';
 let { getCacheAndClean, hasCache } = globalCache;
 let { createComponentInstance } = codegen;
 
-export const __mockDependencies = (mocks: any) => {
+export const __mockDependencies = async (mocks: any) => {
   getCacheAndClean = mocks.getCacheAndClean;
   hasCache = mocks.hasCache;
   createComponentInstance = mocks.createComponentInstance;
