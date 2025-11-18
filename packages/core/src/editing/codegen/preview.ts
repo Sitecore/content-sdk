@@ -1,5 +1,5 @@
 import { ComponentFields, ComponentParams } from '../../layout/models';
-import { validateEvent } from '../design-library';
+import { validateEvent, DesignLibraryEvent } from '../design-library';
 
 /**
  * Event to send import map to design library
@@ -62,7 +62,7 @@ export type ComponentImport = {
 /**
  * Represents a component preview event data sent from design library
  */
-export interface ComponentPreviewEventArgs {
+export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
   message: {
     /**
@@ -109,7 +109,7 @@ export interface ComponentPreviewEventArgs {
 /**
  * Represents an event indicating the import map to be sent to design library
  */
-export interface DesignLibraryImportMapEvent {
+export interface DesignLibraryImportMapEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME;
   message: {
     uid: string;
@@ -123,7 +123,7 @@ export interface DesignLibraryImportMapEvent {
 /**
  * Represents an event indicating the component props to be sent to design library
  */
-export interface DesignLibraryComponentPropsEvent {
+export interface DesignLibraryComponentPropsEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME;
   message: {
     uid: string;
@@ -135,7 +135,7 @@ export interface DesignLibraryComponentPropsEvent {
 /**
  * Represents an event indicating the preview error to be sent to design library.
  */
-export interface DesignLibraryComponentPreviewErrorEvent {
+export interface DesignLibraryComponentPreviewErrorEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_ERROR_EVENT_NAME;
   message: {
     uid: string;

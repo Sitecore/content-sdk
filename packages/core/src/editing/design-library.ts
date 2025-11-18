@@ -14,9 +14,23 @@ const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
 export const COMPONENT_UPDATE_CACHE_KEY_PREFIX = 'component-update-';
 
 /**
+ * Base interface for all Design Library events.
+ */
+export interface DesignLibraryEvent {
+  /**
+   * The name of the event.
+   */
+  name: string;
+  /**
+   * The message payload for the event.
+   */
+  message: Record<string, unknown>;
+}
+
+/**
  * Represents an event indicating the status of a component in the library.
  */
-export interface DesignLibraryStatusEvent {
+export interface DesignLibraryStatusEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_STATUS_EVENT_NAME;
   message: {
     status: 'ready' | 'rendered';
@@ -35,7 +49,7 @@ export enum DesignLibraryStatus {
 /**
  * Event args for Design Library `update` event
  */
-export interface ComponentUpdateEventArgs {
+export interface ComponentUpdateEventArgs extends DesignLibraryEvent {
   name: string;
   details?: {
     uid: string;
@@ -196,16 +210,16 @@ export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode {
 
 /**
  * Sends an event to the Design Library
- * @param {unknown} evt - The event object to send.
+ * @param {DesignLibraryEvent} evt - The event object to send.
  */
-export const postToDesignLibrary = (evt: unknown) => {
+export const postToDesignLibrary = (evt: DesignLibraryEvent) => {
   if (typeof window === 'undefined') return;
 
   const target = window.parent && window.parent !== window ? window.parent : window;
 
   try {
-    console.log('Component Library: sending event', (evt as any)?.name, evt);
-    target.postMessage(evt as any, '*');
+    console.log('Component Library: sending event', evt.name, evt);
+    target.postMessage(evt, '*');
   } catch (err) {
     console.error('Component Library: postMessage failed', err, evt);
   }
