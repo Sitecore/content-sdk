@@ -13,6 +13,7 @@ import {
 } from '@sitecore-content-sdk/core/editing';
 import { ComponentUpdateModel } from '../../server-actions/update-server-component-action';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
+import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/core/codegen';
 import { AppPlaceholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import {
@@ -94,7 +95,7 @@ export const DesignLibraryServerVariantGeneration = async ({
   let importMapInfo: codegen.ImportEntryInfo[];
   let Component: DynamicComponent;
   let importMapError: string;
-  let previewComponentStyle: string;
+  let previewComponentData: ComponentPreviewEventArgs;
 
   // load importmap and importmap payload to pass to FE
   // if not provided, or errors during load set error to pass to FE
@@ -129,15 +130,13 @@ export const DesignLibraryServerVariantGeneration = async ({
     }
 
     if (updateData.previewComponent && !importMapError) {
+      previewComponentData = updateData.previewComponent;
       try {
         // use provided code and import map to create the component instance
         Component = createComponentInstance(
           importMap,
           updateData.previewComponent
         ) as DynamicComponent;
-
-        // pass any raw styles to the client to be added to document head
-        previewComponentStyle = updateData.previewComponent.message?.styles?.content;
       } catch (error) {
         // error during component initialization - send error to client
         importMapError = error.toString();
@@ -167,7 +166,7 @@ export const DesignLibraryServerVariantGeneration = async ({
         // pass a new object since we have mutated the original which leads to old reference passed to the client
         component={{ ...componentToUpdate }}
         importMapError={importMapError}
-        previewComponentStyle={previewComponentStyle}
+        previewComponentData={previewComponentData}
       />
     </>
   );

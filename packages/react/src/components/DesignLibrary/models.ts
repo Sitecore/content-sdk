@@ -7,6 +7,7 @@ import {
 } from '@sitecore-content-sdk/core/layout';
 import { DesignLibraryStatus } from '@sitecore-content-sdk/core/editing';
 import { Page } from '@sitecore-content-sdk/core/client';
+import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/core/codegen';
 import { ComponentMap } from '../sharedTypes';
 
 export type ImportMapImport = {
@@ -76,7 +77,7 @@ export type DesignLibraryVariantGenerationEventsProps = DesignLibraryPreviewEven
    */
   importMapError?: string;
   /**
-   * The preview component style contents to be added to the DOM when rendering generated component.
+   * The preview component data received from design library.
    */
-  previewComponentStyle?: string;
+  previewComponentData?: ComponentPreviewEventArgs;
 };
