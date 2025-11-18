@@ -53,13 +53,7 @@ type EditingHandlerOptions = {
 export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions) => {
   const dataFetcher = new NativeDataFetcher({ debugger: debug.editing });
 
-  const OPTIONS = (req: NextRequest) => {
-    // init query string values
-    const query: EditingRenderQueryParams = {} as EditingRenderQueryParams;
-    req.nextUrl.searchParams.forEach((value, key) => {
-      query[key] = value;
-    });
-
+  const getCorsHeaders = (req: NextRequest) => {
     const expectedCorsHeaders = getEnforcedCorsHeaders({
       requestMethod: req.method,
       headers: req.headers,
@@ -71,11 +65,45 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       debug.editing(
         'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
       );
-      return new Response(
-        `<html><body>Requests from origin ${req.headers.get('origin')} not allowed</body></html>`,
-        { status: 401 }
+    }
+
+    return expectedCorsHeaders;
+  };
+
+  const getOriginNotAllowedMessage = (origin: string) => {
+    return `<html><body>Requests from origin ${origin} not allowed</body></html>`;
+  };
+
+  const validateEditingSecret = (receivedSecret: string) => {
+    const editingSecret = getEditingSecret();
+    const secretIsvalid = editingSecret === receivedSecret;
+    if (!secretIsvalid) {
+      debug.editing(
+        'invalid editing secret - sent "%s" expected "%s"',
+        receivedSecret,
+        editingSecret
       );
     }
+
+    return secretIsvalid;
+  };
+
+  const invalidSecretBodyMessage = '<html><body>Missing or invalid secret</body></html>';
+
+  const OPTIONS = (req: NextRequest) => {
+    // init query string values
+    const query: EditingRenderQueryParams = {} as EditingRenderQueryParams;
+    req.nextUrl.searchParams.forEach((value, key) => {
+      query[key] = value;
+    });
+
+    const expectedCorsHeaders = getCorsHeaders(req);
+    if (!expectedCorsHeaders) {
+      return new Response(getOriginNotAllowedMessage(req.headers.get('origin') || ''), {
+        status: 401,
+      });
+    }
+
     debug.editing('preflight request');
     return new Response(null, { status: 204, headers: expectedCorsHeaders });
   };
@@ -94,32 +122,20 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       headers,
     });
 
-    const expectedCorsHeaders = getEnforcedCorsHeaders({
-      requestMethod: req.method,
-      headers: headers,
-      presetCorsHeader: headers.get('Access-Control-Allow-Origin') as string,
-      allowedOrigins: EDITING_ALLOWED_ORIGINS,
-    });
-
+    const expectedCorsHeaders = getCorsHeaders(req);
     if (!expectedCorsHeaders) {
-      debug.editing(
-        'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
-      );
-      return new Response(
-        `<html><body>Requests from origin ${req.headers.get('origin')} not allowed</body></html>`,
-        { status: 401 }
-      );
+      return new Response(getOriginNotAllowedMessage(req.headers.get('origin') || ''), {
+        status: 401,
+      });
     }
 
     const responseHeaders: { [key: string]: string } = expectedCorsHeaders;
 
     // Validate secret
-    const secret = query[QUERY_PARAM_EDITING_SECRET];
-    if (secret !== getEditingSecret()) {
-      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
+    if (!validateEditingSecret(query[QUERY_PARAM_EDITING_SECRET])) {
       return Response.json(
         {
-          html: '<html><body>Missing or invalid secret</body></html>',
+          html: invalidSecretBodyMessage,
         },
         { status: 401, headers: responseHeaders }
       );
@@ -246,30 +262,18 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
    * @param {NextRequest} req - The incoming request
    */
   const POST = async (req: NextRequest) => {
-    const expectedCorsHeaders = getEnforcedCorsHeaders({
-      requestMethod: req.method,
-      headers: req.headers,
-      presetCorsHeader: req.headers.get('Access-Control-Allow-Origin') as string,
-      allowedOrigins: EDITING_ALLOWED_ORIGINS,
-    });
-
+    const expectedCorsHeaders = getCorsHeaders(req);
     if (!expectedCorsHeaders) {
-      debug.editing(
-        'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
-      );
-      return new Response(
-        `<html><body>Requests from origin ${req.headers.get('origin')} not allowed</body></html>`,
-        { status: 401 }
-      );
+      return new Response(getOriginNotAllowedMessage(req.headers.get('origin') || ''), {
+        status: 401,
+      });
     }
 
     // Validate secret
-    const secret = req.nextUrl.searchParams.get(QUERY_PARAM_EDITING_SECRET);
-    if (secret !== getEditingSecret()) {
-      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
+    if (!validateEditingSecret(req.nextUrl.searchParams.get(QUERY_PARAM_EDITING_SECRET) || '')) {
       return Response.json(
         {
-          html: '<html><body>Missing or invalid secret</body></html>',
+          html: invalidSecretBodyMessage,
         },
         { status: 401, headers: expectedCorsHeaders }
       );

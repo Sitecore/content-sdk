@@ -649,7 +649,7 @@ describe('createEditingRenderRouteHandlers', () => {
     });
   });
 
-  describe.only('POST handler', () => {
+  describe('POST handler', () => {
     beforeEach(() => {
       req = {
         method: 'POST',
@@ -763,7 +763,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.headers.get('x-middleware-rewrite')).to.be.null;
       expect(res.headers.get('content-encoding')).to.be.null;
       expect(res.headers.get('content-length')).to.be.null;
-      expect(res.headers.get('content-type')).to.equal('text/html');
+      expect(res.headers.get('content-type')).to.equal('text/html; charset=utf-8');
     });
 
     it('should add Content-Security-Policy and CORS headers to response', async () => {
