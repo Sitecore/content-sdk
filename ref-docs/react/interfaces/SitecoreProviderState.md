@@ -6,7 +6,7 @@
 
 # Interface: SitecoreProviderState
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:29](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/react/src/components/SitecoreProvider.tsx#L29)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:29](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/react/src/components/SitecoreProvider.tsx#L29)
 
 The state for the SitecoreProvider component.
 
@@ -16,7 +16,7 @@ The state for the SitecoreProvider component.
 
 > `optional` **api**: `Required`\<\{ `edge?`: `Required`\<\{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \}\>; `local?`: `Required`\<\{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \}\>; \}\>
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:43](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/react/src/components/SitecoreProvider.tsx#L43)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:43](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/react/src/components/SitecoreProvider.tsx#L43)
 
 The API configuration defined in the `SitecoreConfig`.
 
@@ -26,7 +26,7 @@ The API configuration defined in the `SitecoreConfig`.
 
 > **page**: [`Page`](../type-aliases/Page.md)
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:39](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/react/src/components/SitecoreProvider.tsx#L39)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:39](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/react/src/components/SitecoreProvider.tsx#L39)
 
 The current page.
 
@@ -36,7 +36,7 @@ The current page.
 
 > **setPage**: (`value`) => `void`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:35](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/react/src/components/SitecoreProvider.tsx#L35)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:35](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/react/src/components/SitecoreProvider.tsx#L35)
 
 Method to set the page.
 
