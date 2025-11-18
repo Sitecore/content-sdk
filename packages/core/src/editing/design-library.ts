@@ -1,4 +1,10 @@
-import { ComponentRendering, Field, GenericFieldValue } from '../layout/models';
+import {
+  ComponentFields,
+  ComponentParams,
+  ComponentRendering,
+  Field,
+  GenericFieldValue,
+} from '../layout/models';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { normalizeUrl } from '../utils/normalize-url';
 import { DesignLibraryMode } from './models';
@@ -148,27 +154,43 @@ export const updateComponentHandler = (
     return null;
   };
 
-  const updateComponent = findComponent(rootComponent);
+  const componentToUpdate = findComponent(rootComponent);
 
-  if (updateComponent) {
+  if (componentToUpdate) {
     console.debug(
       'Found component with uid %s to update. Update fields: %o. Update params: %o.',
       eventArgs.details.uid,
       eventArgs.details.fields,
       eventArgs.details.params
     );
-    if (eventArgs.details.fields) {
-      updateComponent.fields = { ...updateComponent.fields, ...eventArgs.details.fields };
-    }
-    if (eventArgs.details.params) {
-      updateComponent.params = { ...updateComponent.params, ...eventArgs.details.params };
-    }
+
+    updateComponent(componentToUpdate, eventArgs.details.fields, eventArgs.details.params);
+
     if (successCallback) successCallback(rootComponent);
   } else {
     console.debug('Rendering with uid %s not found', eventArgs.details.uid);
   }
   // strictly for testing
   return rootComponent;
+};
+
+/**
+ * Updates a component's fields and params with the provided values.
+ * @param {ComponentRendering<ComponentFields>} component - The component to update.
+ * @param {ComponentFields | undefined} fields - The fields to merge into the component.
+ * @param {ComponentParams | undefined} params - The params to merge into the component.
+ */
+export const updateComponent = (
+  component: ComponentRendering<ComponentFields>,
+  fields: ComponentFields | undefined,
+  params: ComponentParams | undefined
+) => {
+  if (fields) {
+    component.fields = { ...component.fields, ...fields };
+  }
+  if (params) {
+    component.params = { ...component.params, ...params };
+  }
 };
 
 /**

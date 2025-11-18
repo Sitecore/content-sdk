@@ -9,10 +9,12 @@ import {
   isDesignLibraryMode,
   postToDesignLibrary,
   validateEvent,
+  updateComponent,
 } from './design-library';
 import testComponent from '../test-data/component-editing-data';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { DesignLibraryMode } from './models';
+import { ComponentRendering } from '../layout';
 
 describe('component library utils', () => {
   let debugSpy: sinon.SinonSpy;
@@ -159,6 +161,250 @@ describe('component library utils', () => {
       });
       updateComponentHandler(message, changedComponent, callbackStub);
       expect(callbackStub.called).to.be.true;
+    });
+  });
+
+  describe.only('updateComponent', () => {
+    it('should update fields when fields are provided', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {
+          title: { value: 'Original Title' },
+          content: { value: 'Original Content' },
+        },
+        params: {},
+      };
+
+      const newFields = {
+        title: { value: 'Updated Title' },
+      };
+
+      updateComponent(component, newFields, undefined);
+
+      expect(component.fields).to.deep.equal({
+        title: { value: 'Updated Title' },
+        content: { value: 'Original Content' },
+      });
+    });
+
+    it('should update params when params are provided', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {},
+        params: {
+          variant: 'primary',
+          theme: 'light',
+        },
+      };
+
+      const newParams = {
+        variant: 'secondary',
+      };
+
+      updateComponent(component, undefined, newParams);
+
+      expect(component.params).to.deep.equal({
+        variant: 'secondary',
+        theme: 'light',
+      });
+    });
+
+    it('should update both fields and params when both are provided', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {
+          heading: { value: 'Old Heading' },
+        },
+        params: {
+          size: 'medium',
+        },
+      };
+
+      const newFields = {
+        heading: { value: 'New Heading' },
+        subtitle: { value: 'New Subtitle' },
+      };
+
+      const newParams = {
+        size: 'large',
+        color: 'blue',
+      };
+
+      updateComponent(component, newFields, newParams);
+
+      expect(component.fields).to.deep.equal({
+        heading: { value: 'New Heading' },
+        subtitle: { value: 'New Subtitle' },
+      });
+      expect(component.params).to.deep.equal({
+        size: 'large',
+        color: 'blue',
+      });
+    });
+
+    it('should not update fields when fields are undefined', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {
+          title: { value: 'Original Title' },
+        },
+        params: {},
+      };
+
+      const originalFields = { ...component.fields };
+
+      updateComponent(component, undefined, undefined);
+
+      expect(component.fields).to.deep.equal(originalFields);
+    });
+
+    it('should not update params when params are undefined', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {},
+        params: {
+          variant: 'primary',
+        },
+      };
+
+      const originalParams = { ...component.params };
+
+      updateComponent(component, undefined, undefined);
+
+      expect(component.params).to.deep.equal(originalParams);
+    });
+
+    it('should handle empty fields object', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {
+          title: { value: 'Title' },
+        },
+        params: {},
+      };
+
+      updateComponent(component, {}, undefined);
+
+      expect(component.fields).to.deep.equal({
+        title: { value: 'Title' },
+      });
+    });
+
+    it('should handle empty params object', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {},
+        params: {
+          variant: 'primary',
+        },
+      };
+
+      updateComponent(component, undefined, {});
+
+      expect(component.params).to.deep.equal({
+        variant: 'primary',
+      });
+    });
+
+    it('should completely replace fields with same keys', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {
+          content: {
+            value: 'Old Content',
+            editable: '<p>Old Content</p>',
+          },
+        },
+        params: {},
+      };
+
+      const newFields = {
+        content: {
+          value: 'New Content',
+        },
+      };
+
+      updateComponent(component, newFields, undefined);
+
+      expect(component.fields.content).to.deep.equal({
+        value: 'New Content',
+      });
+      expect(component.fields.content).to.not.have.property('editable');
+    });
+
+    it('should completely replace params with same keys', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {},
+        params: {
+          styles: 'old-style-1 old-style-2',
+        },
+      };
+
+      const newParams = {
+        styles: 'new-style',
+      };
+
+      updateComponent(component, undefined, newParams);
+
+      expect(component.params.styles).to.equal('new-style');
+    });
+
+    it('should add new fields to existing ones', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {
+          title: { value: 'Title' },
+        },
+        params: {},
+      };
+
+      const newFields = {
+        subtitle: { value: 'Subtitle' },
+        description: { value: 'Description' },
+      };
+
+      updateComponent(component, newFields, undefined);
+
+      expect(component.fields).to.deep.equal({
+        title: { value: 'Title' },
+        subtitle: { value: 'Subtitle' },
+        description: { value: 'Description' },
+      });
+    });
+
+    it('should add new params to existing ones', () => {
+      const component: ComponentRendering = {
+        uid: 'test-uid',
+        componentName: 'TestComponent',
+        fields: {},
+        params: {
+          variant: 'primary',
+        },
+      };
+
+      const newParams = {
+        theme: 'dark',
+        size: 'large',
+      };
+
+      updateComponent(component, undefined, newParams);
+
+      expect(component.params).to.deep.equal({
+        variant: 'primary',
+        theme: 'dark',
+        size: 'large',
+      });
     });
   });
 

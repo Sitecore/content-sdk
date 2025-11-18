@@ -6,6 +6,7 @@ import * as globalCache from '@sitecore-content-sdk/core/utils';
 import {
   DesignLibraryStatus,
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
+  updateComponent,
 } from '@sitecore-content-sdk/core/editing';
 import { ComponentUpdateModel } from '../../server-actions/update-server-component-action';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
@@ -77,14 +78,11 @@ export const DesignLibraryServer = async ({
 
     // apply the updates to the component rendering
     if (updateData.updatedComponent) {
-      componentToUpdate.fields = {
-        ...componentToUpdate.fields,
-        ...updateData.updatedComponent.fields,
-      };
-      componentToUpdate.params = {
-        ...componentToUpdate.params,
-        ...updateData.updatedComponent.params,
-      };
+      updateComponent(
+        componentToUpdate,
+        updateData.updatedComponent.fields,
+        updateData.updatedComponent.params
+      );
     }
 
     if (isVariantGeneration && updateData.previewComponent && !importMapError) {
