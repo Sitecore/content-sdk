@@ -1,7 +1,10 @@
 'use server';
 import React from 'react';
 import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/core/layout';
-import { DesignLibraryClientEvents } from './DesignLibraryClientEvents';
+import {
+  DesignLibraryPreviewEvents,
+  DesignLibraryVariantGenerationEvents,
+} from './DesignLibraryClientEvents';
 import * as globalCache from '@sitecore-content-sdk/core/utils';
 import {
   DesignLibraryStatus,
@@ -12,7 +15,12 @@ import { ComponentUpdateModel } from '../../server-actions/update-server-compone
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { AppPlaceholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
-import { DynamicComponent, DesignLibraryServerProps } from './models';
+import {
+  DynamicComponent,
+  DesignLibraryServerProps,
+  DesignLibraryServerPreviewProps,
+  DesignLibraryServerVariantGenerationProps,
+} from './models';
 
 let { getCacheAndClean, hasCache } = globalCache;
 let { createComponentInstance } = codegen;
@@ -43,27 +51,62 @@ export const DesignLibraryServer = async ({
   if (!page.mode.isDesignLibrary) {
     return null;
   }
+
+  const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
+
+  if (isVariantGeneration) {
+    return (
+      <DesignLibraryServerVariantGeneration
+        page={page}
+        rendering={rendering}
+        loadImportMap={loadImportMap}
+        componentMap={componentMap}
+      />
+    );
+  }
+
+  return (
+    <DesignLibraryServerPreview page={page} rendering={rendering} componentMap={componentMap} />
+  );
+};
+
+/**
+ * Design Library component for rendering server components in app router application in variant generation mode.
+ *
+ * Renders the **real** Sitecore component for `library` / `library-metadata` modes on first render and,
+ * wires the **variant generation** handshake so the parent (Design Library) can send
+ * generated code to preview and iterate on.
+ * Also renders the DesignLibraryVariantGenerationEvents component which serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
+ * @param {DesignLibraryServerVariantGenerationProps} [props] The props. {@link DesignLibraryServerVariantGenerationProps}
+ * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
+ */
+export const DesignLibraryServerVariantGeneration = async ({
+  page,
+  rendering,
+  loadImportMap,
+  componentMap,
+}: DesignLibraryServerVariantGenerationProps) => {
+  if (!page.mode.isDesignLibrary) {
+    return null;
+  }
   let designLibraryStatus = DesignLibraryStatus.READY;
   let importMap: codegen.ImportEntry[];
   let importMapInfo: codegen.ImportEntryInfo[];
   let Component: DynamicComponent;
   let importMapError: string;
   let previewComponentStyle: string;
-  const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
 
   // load importmap and importmap payload to pass to FE
   // if not provided, or errors during load set error to pass to FE
-  if (isVariantGeneration) {
-    if (!loadImportMap) {
-      importMapError = 'No loadImportMap provided';
-    } else {
-      try {
-        const mod = await loadImportMap();
-        importMap = mod.default;
-        importMapInfo = codegen.getImportMapInfo(importMap);
-      } catch (e) {
-        importMapError = `Error loading import map: ${e}`;
-      }
+  if (!loadImportMap) {
+    importMapError = 'No loadImportMap provided';
+  } else {
+    try {
+      const mod = await loadImportMap();
+      importMap = mod.default;
+      importMapInfo = codegen.getImportMapInfo(importMap);
+    } catch (e) {
+      importMapError = `Error loading import map: ${e}`;
     }
   }
 
@@ -85,7 +128,7 @@ export const DesignLibraryServer = async ({
       );
     }
 
-    if (isVariantGeneration && updateData.previewComponent && !importMapError) {
+    if (updateData.previewComponent && !importMapError) {
       try {
         // use provided code and import map to create the component instance
         Component = createComponentInstance(
@@ -104,7 +147,7 @@ export const DesignLibraryServer = async ({
 
   return (
     <>
-      {isVariantGeneration && Component ? (
+      {Component ? (
         <DesignLibraryErrorBoundary uid={componentToUpdate.uid}>
           <PlaceholderMetadata rendering={componentToUpdate}>
             <Component fields={componentToUpdate.fields} params={componentToUpdate.params} />
@@ -118,13 +161,69 @@ export const DesignLibraryServer = async ({
           componentMap={componentMap}
         />
       )}
-      <DesignLibraryClientEvents
+      <DesignLibraryVariantGenerationEvents
         designLibraryStatus={designLibraryStatus}
         importMap={importMapInfo}
         // pass a new object since we have mutated the original which leads to old reference passed to the client
         component={{ ...componentToUpdate }}
         importMapError={importMapError}
         previewComponentStyle={previewComponentStyle}
+      />
+    </>
+  );
+};
+
+/**
+ * Design Library component for rendering server components in app router application when variant generation is not enabled.
+ *
+ * Renders the **real** Sitecore component for `library` / `library-metadata` modes and,
+ * wires the **component update** handshake so the parent (Design Library) can send
+ * updated component props.
+ * Also renders the DesignLibraryPreviewEvents component which serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
+ * @param {DesignLibraryServerPreviewProps} [props] The props. {@link DesignLibraryServerPreviewProps}
+ * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
+ */
+export const DesignLibraryServerPreview = async ({
+  page,
+  rendering,
+  componentMap,
+}: DesignLibraryServerPreviewProps) => {
+  if (!page.mode.isDesignLibrary) {
+    return null;
+  }
+  let designLibraryStatus = DesignLibraryStatus.READY;
+
+  let componentToUpdate = rendering?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
+  const componentUpdateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${componentToUpdate.uid}`;
+
+  // check if we have an update for this component in the global cache
+  if (hasCache(componentUpdateKey)) {
+    // we have an update, get it and clean the cache
+    designLibraryStatus = DesignLibraryStatus.RENDERED;
+    const updateData = getCacheAndClean<ComponentUpdateModel>(componentUpdateKey);
+
+    // apply the updates to the component rendering
+    if (updateData.updatedComponent) {
+      updateComponent(
+        componentToUpdate,
+        updateData.updatedComponent.fields,
+        updateData.updatedComponent.params
+      );
+    }
+  }
+
+  return (
+    <>
+      <AppPlaceholder
+        name={EDITING_COMPONENT_PLACEHOLDER}
+        page={page}
+        rendering={rendering}
+        componentMap={componentMap}
+      />
+      <DesignLibraryPreviewEvents
+        designLibraryStatus={designLibraryStatus}
+        // pass a new object since we have mutated the original which leads to old reference passed to the client
+        component={{ ...componentToUpdate }}
       />
     </>
   );

@@ -2,9 +2,11 @@
 import React, { useEffect } from 'react';
 import * as dlHelpers from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
-import { useSitecore } from '../../enhancers/withSitecore';
 import { updateServerComponentAction } from '../../server-actions/update-server-component-action';
-import { DesignLibraryClientEventsProps } from './models';
+import {
+  DesignLibraryPreviewEventsProps,
+  DesignLibraryVariantGenerationEventsProps,
+} from './models';
 
 let {
   getDesignLibraryComponentPropsEvent,
@@ -29,24 +31,16 @@ export const __mockDependencies = (mocks: any) => {
 
 /**
  * Design Library component for rendering server components in app router application.
- * DesignLibraryClientEvents component serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
+ * DesignLibraryPreviewEvents component serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
  * It posts messages to Design Library Studio and sets up handlers to receive updates and previews which are then passed to the server component via server function updateServerComponentAction.
- * @param {DesignLibraryClientEventsProps} [props] The props. {@link DesignLibraryClientEventsProps}
+ * @param {DesignLibraryPreviewEventsProps} [props] The props. {@link DesignLibraryPreviewEventsProps}
  * @returns {JSX.Element} empty JSX element.
  */
-export const DesignLibraryClientEvents = ({
+export const DesignLibraryPreviewEvents = ({
   designLibraryStatus,
   component,
-  importMap,
-  importMapError,
-  previewComponentStyle,
-}: DesignLibraryClientEventsProps) => {
-  const { page } = useSitecore();
-  const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
-  const isDesignLibrary = page.mode.isDesignLibrary;
-
+}: DesignLibraryPreviewEventsProps) => {
   useEffect(() => {
-    let unsubPreview: () => void;
     // - post to DL designlibraryStatus
     postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
 
@@ -55,32 +49,61 @@ export const DesignLibraryClientEvents = ({
       _updateServerComponentAction({ uid: updated.uid, updatedComponent: updated });
     });
 
+    return () => {
+      unsubUpdate && unsubUpdate();
+    };
+  });
+
+  return <></>;
+};
+
+/**
+ * Design Library component for rendering server components in app router application.
+ * DesignLibraryVariantGenerationEvents component serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side in variant generation mode.
+ * It posts messages to Design Library Studio and sets up handlers to receive updates and previews which are then passed to the server component via server function updateServerComponentAction.
+ * @param {DesignLibraryVariantGenerationEventsProps} [props] The props. {@link DesignLibraryVariantGenerationEventsProps}
+ * @returns {JSX.Element} empty JSX element.
+ */
+export const DesignLibraryVariantGenerationEvents = ({
+  designLibraryStatus,
+  component,
+  importMap,
+  importMapError,
+  previewComponentStyle,
+}: DesignLibraryVariantGenerationEventsProps) => {
+  useEffect(() => {
+    // - post to DL designlibraryStatus
+    postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
+
+    // add the component update handler
+    const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
+      _updateServerComponentAction({ uid: updated.uid, updatedComponent: updated });
+    });
+
+    // add the component preview handler
+    const unsubPreview = addServerComponentPreviewHandler((eventArgs) => {
+      _updateServerComponentAction({ uid: component.uid, previewComponent: eventArgs });
+    });
+
     if (importMapError) {
       // an import map error occurred on the server side in DesignLibraryServer, post error event to Design Studio
       sendErrorEvent(component.uid, importMapError, codegen.DesignLibraryPreviewError.RenderInit);
     } else {
-      if (isDesignLibrary && isVariantGeneration) {
-        // add the component preview handler
-        unsubPreview = addServerComponentPreviewHandler((eventArgs) => {
-          _updateServerComponentAction({ uid: component.uid, previewComponent: eventArgs });
-        });
+      // post importmap event
+      const importMapEvent = getDesignLibraryImportMapEvent(component.uid, importMap);
+      postToDesignLibrary(importMapEvent);
 
-        // post importmap event
-        const importMapEvent = getDesignLibraryImportMapEvent(component.uid, importMap);
-        postToDesignLibrary(importMapEvent);
+      // const props event
+      const propsEvent = getDesignLibraryComponentPropsEvent(
+        component.uid,
+        component.fields,
+        component.params
+      );
+      postToDesignLibrary(propsEvent);
 
-        // const props event
-        const propsEvent = getDesignLibraryComponentPropsEvent(
-          component.uid,
-          component.fields,
-          component.params
-        );
-        postToDesignLibrary(propsEvent);
-
-        if (previewComponentStyle) {
-          // the generated component has custom styles, so add the css in style element and add it to document head
-          addStyleElement(previewComponentStyle);
-        }
+      if (previewComponentStyle) {
+        // the generated component has custom styles, so add the css in style element and add it to document head
+        addStyleElement(previewComponentStyle);
       }
     }
 
@@ -88,15 +111,7 @@ export const DesignLibraryClientEvents = ({
       unsubUpdate && unsubUpdate();
       unsubPreview && unsubPreview();
     };
-  }, [
-    component,
-    designLibraryStatus,
-    importMap,
-    importMapError,
-    isDesignLibrary,
-    isVariantGeneration,
-    previewComponentStyle,
-  ]);
+  }, [component, designLibraryStatus, importMap, importMapError, previewComponentStyle]);
 
   return <></>;
 };

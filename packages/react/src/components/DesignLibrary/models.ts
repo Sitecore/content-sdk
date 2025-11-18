@@ -51,7 +51,11 @@ export type DesignLibraryServerProps = DesignLibraryProps & {
   loadImportMap?: () => Promise<ImportMapImport>;
 };
 
-export type DesignLibraryClientEventsProps = {
+export type DesignLibraryServerPreviewProps = Omit<DesignLibraryServerProps, 'loadImportMap'>;
+
+export type DesignLibraryServerVariantGenerationProps = DesignLibraryServerProps;
+
+export type DesignLibraryPreviewEventsProps = {
   /**
    * The design library status to be posted as a message to the Design Studio.
    */
@@ -60,6 +64,9 @@ export type DesignLibraryClientEventsProps = {
    * The component rendering data that is being edited in the Design Studio.
    */
   component: ComponentRendering;
+};
+
+export type DesignLibraryVariantGenerationEventsProps = DesignLibraryPreviewEventsProps & {
   /**
    * The import map info to be posted as a message to the Design Studio.
    */
