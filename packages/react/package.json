@@ -89,6 +89,18 @@
     "/*.js",
     "/*.d.ts"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./search": {
+      "import": "./dist/esm/search/index.js",
+      "require": "./dist/cjs/search/index.js",
+      "types": "./types/search/index.d.ts"
+    }
+  },
   "imports": {
     "#rsc-env": {
       "react-server": {

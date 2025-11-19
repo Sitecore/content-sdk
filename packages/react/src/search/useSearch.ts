@@ -128,6 +128,8 @@ export interface UseSearchReturn {
 export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
   const { api } = useSitecore();
 
+  console.log('useSearch hook called', api);
+
   const {
     initialQuery,
     searchIndexId,
@@ -174,7 +176,7 @@ export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
     onSearchCompleteRef.current = onSearchComplete;
   }, [searchIndexId, pageSize, searchParams, onSearchComplete]);
 
-  const search = useCallback(async (query: string, page: number = 1) => {
+  const search = useCallback(async (query: string = '', page: number = 1) => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
@@ -261,7 +263,8 @@ export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-  }, []);
+    search(initialQuery);
+  }, [search, initialQuery]);
 
   const isEmpty = useMemo(() => results.length === 0, [results]);
 
