@@ -1097,11 +1097,8 @@ describe('PersonalizeMiddleware', () => {
         });
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
-        expect(CDKPersonalizeStub.firstCall.args[1]).to.have.property('geo');
         expect(CDKPersonalizeStub.firstCall.args[1].geo).to.deep.equal(geo);
-        expect(CDKPersonalizeStub.secondCall.args[1]).to.have.property('geo');
         expect(CDKPersonalizeStub.secondCall.args[1].geo).to.deep.equal(geo);
-        expect(CDKPersonalizeStub.thirdCall.args[1]).to.have.property('geo');
         expect(CDKPersonalizeStub.thirdCall.args[1].geo).to.deep.equal(geo);
       });
 
