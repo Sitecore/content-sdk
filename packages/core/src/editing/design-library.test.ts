@@ -164,7 +164,7 @@ describe('component library utils', () => {
     });
   });
 
-  describe.only('updateComponent', () => {
+  describe('updateComponent', () => {
     it('should update fields when fields are provided', () => {
       const component: ComponentRendering = {
         uid: 'test-uid',
