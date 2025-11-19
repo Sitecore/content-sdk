@@ -19,7 +19,12 @@ export default function Providers({
   componentProps?: ComponentPropsCollection;
 }) {
   return (
-    <SitecoreProvider api={scConfig.api} componentMap={components} page={page}>
+    <SitecoreProvider
+      api={scConfig.api}
+      componentMap={components}
+      page={page}
+      loadImportMap={() => import('.sitecore/import-map')}
+    >
       <ComponentPropsContext value={componentProps}>{children}</ComponentPropsContext>
     </SitecoreProvider>
   );

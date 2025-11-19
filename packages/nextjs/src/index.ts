@@ -142,6 +142,7 @@ export {
   FileField,
   RichTextField,
   DesignLibrary,
+  DesignLibraryApp,
   DesignLibraryServer,
   DefaultEmptyFieldEditingComponentImage,
   DefaultEmptyFieldEditingComponentText,
