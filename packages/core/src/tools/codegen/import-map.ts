@@ -30,7 +30,7 @@ export let getImportMap = _getImportMap;
  * @param {Map<string, ImportModule>} indexedImportMap map to be processed into final component-map.ts file
  * @returns {string} file code for component-map.ts
  */
-export let nextJsMapTemplate = _nextJsMapTemplate;
+export let defaultMapTemplate = _defaultMapTemplate;
 
 export const importUnitMocks = {
   set getImportMap(mockImplementation) {
@@ -40,13 +40,13 @@ export const importUnitMocks = {
     return _getImportMap;
   },
 
-  set nextJsMapTemplate(
+  set defaultMapTemplate(
     mockImplementation: (indexedImportMap: Map<string, ModuleExports>) => string
   ) {
-    nextJsMapTemplate = mockImplementation;
+    defaultMapTemplate = mockImplementation;
   },
-  get nextJsMapTemplate() {
-    return _nextJsMapTemplate;
+  get defaultMapTemplate() {
+    return _defaultMapTemplate;
   },
 };
 
@@ -78,6 +78,10 @@ export type WriteImportMapArgs = {
    */
   scConfig?: SitecoreConfig;
   exclude?: string[];
+  /**
+   * generate separate import map for client components
+   */
+  clientImportMap?: boolean;
 };
 
 /**
@@ -319,21 +323,42 @@ function _getImportMap(paths: string[]) {
   return importMap;
 }
 
-const dividePaths = (paths: string[]) => {
+const prepImportMaps = async (paths: string[], prepareClient?: boolean) => {
+  const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
+  if (!prepareClient) {
+    return [{ map: getImportMap(paths), path: importMapFile }];
+  }
+  const appPath = process.cwd();
   const serverPaths: string[] = [];
   const clientPaths: string[] = [];
-  paths.forEach((p) => {
+  const importMapFileClient = path.join(process.cwd(), '.sitecore', 'import-map-client.ts');
+  for (const componentPath of paths) {
+    const fullPath = path.isAbsolute(componentPath)
+      ? componentPath
+      : path.resolve(appPath, componentPath);
     // read start of the file that may be 'use client'
-    const firstLine = fs
-      .createReadStream(p, { encoding: 'utf-8', start: 0, end: 12 })
-      .read() as string;
+    const firstLine = await new Promise<string>((resolve) => {
+      let readBuffer = '';
+      const stream = fs.createReadStream(componentPath, { end: 12 });
+      stream
+        .on('data', async (chunk) => {
+          readBuffer += chunk.toString();
+        })
+        .on('close', () => resolve(readBuffer))
+        .on('error', () => resolve(''));
+    });
+
+    if (!firstLine) continue;
     if (firstLine.match(/['"]use client['"]/)) {
-      clientPaths.push(p);
+      clientPaths.push(fullPath);
     } else {
-      serverPaths.push(p);
+      serverPaths.push(fullPath);
     }
-  });
-  return { serverPaths, clientPaths };
+  }
+  return [
+    { map: getImportMap(serverPaths), path: importMapFile },
+    { map: getImportMap(clientPaths), path: importMapFileClient },
+  ];
 };
 
 /**
@@ -355,31 +380,23 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
     }
     const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
     // TODO: don't run in pages router
-    const { serverPaths, clientPaths } = dividePaths(paths);
-    const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
-    const importMapFileClient = path.join(process.cwd(), '.sitecore', 'import-map-client.ts');
-    console.log(
-      `[Codegen] Generating import map: ${JSON.stringify({
-        paths: args.paths,
-        exclude: args.exclude,
-      })}.\n Writing into ${importMapFile} ...`
-    );
-    // get generated map and combine with default one
-    // const importMap = getImportMap(paths);
-    const serverImportMap = getImportMap(serverPaths);
-    const clientImportMap = getImportMap(clientPaths);
-    for (const importMap of [
-      { map: serverImportMap, path: importMapFile },
-      { map: clientImportMap, path: importMapFileClient },
-    ]) {
-      const importMapContent = nextJsMapTemplate(importMap.map);
+    const importMaps = await prepImportMaps(paths, args.clientImportMap);
+    for (const importMap of importMaps) {
+      console.log(
+        `[Codegen] Generating import map: ${JSON.stringify({
+          paths: args.paths,
+          exclude: args.exclude,
+        })}.\n Writing into ${importMap.path} ...`
+      );
+      // get generated map and combine with default one
+      const importMapContent = defaultMapTemplate(importMap.map);
       try {
         fs.writeFileSync(importMap.path, importMapContent, {
           encoding: 'utf8',
         });
       } catch (error) {
         console.error(
-          `[Codegen] Import Map generation failed. Error writing to file ${importMapFile}:`,
+          `[Codegen] Import Map generation failed. Error writing to file ${importMap.path}:`,
           error
         );
         throw error;
@@ -389,7 +406,7 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
 };
 
 // eslint-disable-next-line jsdoc/require-jsdoc
-function _nextJsMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
+function _defaultMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
   const outputExportEntries = (entry: ImportMapEntry) => {
     return (
       [...entry.namedExports, entry.defaultExport, entry.namespaceExport]

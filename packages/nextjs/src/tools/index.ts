@@ -10,7 +10,7 @@ export {
   ModuleType,
   GenerateMapArgs,
   extractFiles,
-  writeImportMap,
 } from '@sitecore-content-sdk/core/tools';
 
 export { generateMap } from './generate-map';
+export { writeImportMap } from './codegen/import-map';

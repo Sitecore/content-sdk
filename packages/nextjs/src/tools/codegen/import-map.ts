@@ -1,0 +1,18 @@
+import {
+  writeImportMap as writeImportMapCore,
+  WriteImportMapArgs,
+} from '@sitecore-content-sdk/core/tools';
+import { detectRouterType } from '../templating/utils';
+
+/**
+ * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
+ * @param {WriteImportMapArgs} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration.
+ * @public
+ */
+export const writeImportMap = (args: WriteImportMapArgs) => {
+  const generateClientMap = args.clientImportMap ?? detectRouterType() === 'app';
+  return writeImportMapCore({
+    ...args,
+    clientImportMap: generateClientMap,
+  });
+};

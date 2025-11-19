@@ -3,8 +3,6 @@ import {
   GenerateMapArgs,
   GenerateMapFunction,
   ComponentImport,
-  detectRouterType,
-  getComponentListWithTypes,
   filterComponentsByType,
   ComponentFileWithType,
   EnhancedComponentMapTemplate,
@@ -13,6 +11,7 @@ import {
 } from '@sitecore-content-sdk/core/tools';
 import * as path from 'path';
 import * as fs from 'fs';
+import { detectRouterType, getComponentListWithTypes } from './templating/utils';
 
 /**
  * A component source can be either a file or a file with type information.
@@ -81,13 +80,11 @@ const prepareComponentsForMap = (
       const annotateClient =
         !!group.base && 'componentType' in group.base && group.base.componentType === 'client';
 
-       let valueExpr: string;
+      let valueExpr: string;
       if (spreads.length) {
         valueExpr = spreads.join(', ');
       } else {
-        valueExpr = group.base
-          ? group.base.moduleName
-          : group.neighbors[0].moduleName;
+        valueExpr = group.base ? group.base.moduleName : group.neighbors[0].moduleName;
       }
 
       entries.push({
@@ -174,14 +171,14 @@ import { Form } from '@sitecore-content-sdk/nextjs';
   // Build entry lines (package named imports are appended below)
   const componentMapEntries: string[] = builtInMapEntries;
   for (const e of entries) {
-  const value =
-    !isClientMap && e.annotateClient
-      ? `{ ${e.valueExpr}, componentType: 'client' }`
-      : e.valueExpr.includes('...')
-      ? `{ ${e.valueExpr} }`
-      : e.valueExpr;
-  componentMapEntries.push(`['${e.key}', ${value}]`);
-}
+    const value =
+      !isClientMap && e.annotateClient
+        ? `{ ${e.valueExpr}, componentType: 'client' }`
+        : e.valueExpr.includes('...')
+        ? `{ ${e.valueExpr} }`
+        : e.valueExpr;
+    componentMapEntries.push(`['${e.key}', ${value}]`);
+  }
 
   // Add package-based entries
   componentImports?.forEach((pkg) => {
