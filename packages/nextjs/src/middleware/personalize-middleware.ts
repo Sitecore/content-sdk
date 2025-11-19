@@ -9,7 +9,7 @@ import {
 import { debug } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
-import { personalize } from '@sitecore-cloudsdk/personalize/server';
+import { personalize, PersonalizeData } from '@sitecore-cloudsdk/personalize/server';
 import { SitecoreConfig } from '../config';
 
 /**
@@ -21,6 +21,10 @@ export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
+    /**
+     * Geolocation data to send to Personalize service
+     */
+    geo?: PersonalizeData['geo'];
   };
 
 /**
@@ -89,11 +93,13 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
       const cdpTimeout = this.config.cdpTimeout;
+      const geo = this.config.geo;
 
       debug.personalize('personalize middleware start: %o', {
         pathname,
         language,
         hostname,
+        ...(geo && { geo }),
         headers: this.extractDebugHeaders(req.headers),
       });
 
@@ -160,6 +166,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
               params,
               language,
               timeout: cdpTimeout,
+              ...(geo && { geo }),
             },
             req
           ).then((personalization) => {
@@ -256,12 +263,14 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       language,
       timeout,
       variantIds,
+      geo,
     }: {
       params: ExperienceParams;
       friendlyId: string;
       language: string;
       timeout?: number;
       variantIds?: string[];
+      geo?: PersonalizeData['geo'];
     },
     request: NextRequest
   ) {
@@ -276,6 +285,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         params,
         language,
         pageVariantIds: variantIds,
+        ...(geo && { geo }),
       },
       { timeout }
     )) as {
