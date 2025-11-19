@@ -165,3 +165,5 @@ export {
   AppPlaceholder,
   AppPlaceholderProps,
 } from '@sitecore-content-sdk/react';
+
+export { search } from './search';

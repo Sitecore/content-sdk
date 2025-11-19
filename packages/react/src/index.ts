@@ -105,3 +105,4 @@ export {
 } from './components/DefaultEmptyFieldEditingComponents';
 export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
+export * as search from './search';

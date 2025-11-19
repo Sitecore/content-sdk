@@ -1,0 +1,1 @@
+export { SearchService, SearchParameters, SearchResponse } from './search-service';

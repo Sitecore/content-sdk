@@ -1,0 +1,1 @@
+export { search } from '@sitecore-content-sdk/react';

@@ -4,7 +4,7 @@
 import * as constants from './constants';
 import * as form from './form';
 
-export { default as debug, Debugger, enableDebug } from './debug';
+export { default as debug, Debugger, enableDebug, debugNamespace } from './debug';
 export {
   GraphQLClient,
   GraphQLRequestClient,

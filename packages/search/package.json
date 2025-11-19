@@ -1,0 +1,54 @@
+{
+  "name": "@sitecore-content-sdk/search",
+  "version": "1.3.0-canary.16",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
+    "clean": "del-cli dist types",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "test": "mocha \"./src/**/*.test.ts\"",
+    "prepublishOnly": "npm run build",
+    "coverage": "nyc npm test",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/core --entryPoints src/index.ts --githubPages false",
+    "api-extractor": "npm run build && api-extractor run --local --verbose",
+    "api-extractor:verify": "api-extractor run"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "author": {
+    "name": "Sitecore Corporation",
+    "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sitecore/content-sdk"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
+  "bugs": {
+    "url": "https://github.com/sitecore/content-sdk/issues"
+  },
+  "dependencies": {
+    "@sitecore-content-sdk/core": "1.3.0-canary.16"
+  },
+  "devDependencies": {
+    "del-cli": "^7.0.0",
+    "typescript": "~5.8.3"
+  },
+  "description": "",
+  "types": "types/index.d.ts",
+  "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
+  "files": [
+    "dist",
+    "types",
+    "/*.js",
+    "/*.d.ts"
+  ]
+}
