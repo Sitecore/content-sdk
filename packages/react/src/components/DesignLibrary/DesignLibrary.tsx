@@ -17,6 +17,7 @@ import { useSitecore } from '../../enhancers/withSitecore';
 import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DesignLibraryProps, DynamicComponent } from './models';
+import { withLoadImportMap } from '../../enhancers/withLoadImportMap';
 
 let {
   getDesignLibraryImportMapEvent,
@@ -40,7 +41,7 @@ export const __mockDependencies = (mocks: any) => {
  * @param {() => Promise<{ default: import('../codegen').ImportEntry[] }>} [props.loadImportMap] Optional async loader that resolves to the import-map used to resolve the generated component’s imports. Required when `isVariantGeneration` is true.
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  */
-export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps) => {
+const DesignLibraryComponent = ({ loadImportMap }: DesignLibraryProps) => {
   const { page } = useSitecore();
   const route = page.layout.sitecore.route;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
@@ -162,3 +163,5 @@ export const DesignLibrary = ({ loadImportMap }: DesignLibraryProps) => {
     </main>
   );
 };
+
+export const DesignLibrary = withLoadImportMap(DesignLibraryComponent);

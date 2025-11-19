@@ -29,7 +29,7 @@ export type DesignLibraryProps = {
   loadImportMap?: () => Promise<ImportMapImport>;
 };
 
-export type DesignLibraryServerProps = DesignLibraryProps & {
+export type DesignLibraryServerProps = {
   /**
    * Component Map will be used to map Sitecore component names to app implementation
    * When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
@@ -49,8 +49,10 @@ export type DesignLibraryServerProps = DesignLibraryProps & {
    * The dynamic import for import map to be used in variant generation mode.
    * Currently it's optional but it will be required in the next major version.
    */
-  loadImportMap?: () => Promise<ImportMapImport>;
+  loadServerImportMap?: () => Promise<ImportMapImport>;
 };
+
+export type DesingLibraryAppProps = DesignLibraryServerProps;
 
 export type DesignLibraryServerPreviewProps = Omit<DesignLibraryServerProps, 'loadImportMap'>;
 

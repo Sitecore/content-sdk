@@ -47,7 +47,7 @@ export const DesignLibraryServer = async ({
   page,
   componentMap,
   rendering,
-  loadImportMap,
+  loadServerImportMap,
 }: DesignLibraryServerProps) => {
   if (!page.mode.isDesignLibrary) {
     return null;
@@ -60,7 +60,7 @@ export const DesignLibraryServer = async ({
       <DesignLibraryServerVariantGeneration
         page={page}
         rendering={rendering}
-        loadImportMap={loadImportMap}
+        loadServerImportMap={loadServerImportMap}
         componentMap={componentMap}
       />
     );
@@ -84,7 +84,7 @@ export const DesignLibraryServer = async ({
 export const DesignLibraryServerVariantGeneration = async ({
   page,
   rendering,
-  loadImportMap,
+  loadServerImportMap,
   componentMap,
 }: DesignLibraryServerVariantGenerationProps) => {
   if (!page.mode.isDesignLibrary) {
@@ -99,11 +99,11 @@ export const DesignLibraryServerVariantGeneration = async ({
 
   // load importmap and importmap payload to pass to FE
   // if not provided, or errors during load set error to pass to FE
-  if (!loadImportMap) {
+  if (!loadServerImportMap) {
     importMapError = 'No loadImportMap provided';
   } else {
     try {
-      const mod = await loadImportMap();
+      const mod = await loadServerImportMap();
       importMap = mod.default;
       importMapInfo = codegen.getImportMapInfo(importMap);
     } catch (e) {
