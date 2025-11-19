@@ -319,6 +319,23 @@ function _getImportMap(paths: string[]) {
   return importMap;
 }
 
+const dividePaths = (paths: string[]) => {
+  const serverPaths: string[] = [];
+  const clientPaths: string[] = [];
+  paths.forEach((p) => {
+    // read start of the file that may be 'use client'
+    const firstLine = fs
+      .createReadStream(p, { encoding: 'utf-8', start: 0, end: 12 })
+      .read() as string;
+    if (firstLine.match(/['"]use client['"]/)) {
+      clientPaths.push(p);
+    } else {
+      serverPaths.push(p);
+    }
+  });
+  return { serverPaths, clientPaths };
+};
+
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
  * @param {WriteImportMapArgs} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration.
@@ -337,7 +354,10 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
       return;
     }
     const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
+    // TODO: don't run in pages router
+    const { serverPaths, clientPaths } = dividePaths(paths);
     const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
+    const importMapFileClient = path.join(process.cwd(), '.sitecore', 'import-map-client.ts');
     console.log(
       `[Codegen] Generating import map: ${JSON.stringify({
         paths: args.paths,
@@ -345,19 +365,25 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
       })}.\n Writing into ${importMapFile} ...`
     );
     // get generated map and combine with default one
-    const importMap = getImportMap(paths);
-
-    const importMapContent = nextJsMapTemplate(importMap);
-    try {
-      fs.writeFileSync(importMapFile, importMapContent, {
-        encoding: 'utf8',
-      });
-    } catch (error) {
-      console.error(
-        `[Codegen] Import Map generation failed. Error writing to file ${importMapFile}:`,
-        error
-      );
-      throw error;
+    // const importMap = getImportMap(paths);
+    const serverImportMap = getImportMap(serverPaths);
+    const clientImportMap = getImportMap(clientPaths);
+    for (const importMap of [
+      { map: serverImportMap, path: importMapFile },
+      { map: clientImportMap, path: importMapFileClient },
+    ]) {
+      const importMapContent = nextJsMapTemplate(importMap.map);
+      try {
+        fs.writeFileSync(importMap.path, importMapContent, {
+          encoding: 'utf8',
+        });
+      } catch (error) {
+        console.error(
+          `[Codegen] Import Map generation failed. Error writing to file ${importMapFile}:`,
+          error
+        );
+        throw error;
+      }
     }
   };
 };

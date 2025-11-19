@@ -398,14 +398,105 @@ describe('Import Map Generation', () => {
           unitMocks({ getComponentListStub });
           getImportMapStub.returns(new Map());
           const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+
+          // Mock fs.createReadStream for dividePaths
+          sandbox.stub(fs, 'createReadStream').returns({
+            read: () => 'import { funco',
+          } as any);
+
           nextJsMapTemplateStub.returns('// import map content');
           await run({ paths: ['foo'], exclude: ['bar'], scConfig });
 
           expect(getComponentListStub.called).to.be.true;
           expect(getComponentListStub.calledWith(['foo'], ['bar'])).to.be.true;
-          expect(getImportMapStub.calledWith(['component1.tsx', 'component2.tsx'])).to.be.true;
-          expect(fsWriteStub.calledOnce).to.be.true;
-          expect(nextJsMapTemplateStub.calledOnce).to.be.true;
+          expect(getImportMapStub.calledTwice).to.be.true;
+          expect(fsWriteStub.calledTwice).to.be.true;
+          expect(nextJsMapTemplateStub.calledTwice).to.be.true;
+        });
+
+        it('should write server and client import maps', async () => {
+          const scConfig = { disableCodeGeneration: false } as any;
+          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+          // Set up test component paths from test-data
+          const clientComponentPath = path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/import-map/client-components/A-client.tsx'
+          );
+          const serverComponentPath = path.resolve(
+            process.cwd(),
+            './src/tools/codegen/test-data/import-map/single-file-imports/named.ts'
+          );
+
+          const fakeEntries = [
+            { filePath: clientComponentPath },
+            { filePath: serverComponentPath },
+          ];
+          const getComponentListStub = sandbox.stub().returns(fakeEntries);
+          unitMocks({ getComponentListStub });
+
+          // Mock fs.createReadStream to simulate reading 'use client' from client component
+          const mockReadStream = sandbox.stub(fs, 'createReadStream');
+          mockReadStream.callsFake((filePath: any) => {
+            const isClientComponent = filePath.includes('client-components');
+            return {
+              read: () => (isClientComponent ? "'use client'" : 'import { funco'),
+            } as any;
+          });
+
+          // Set up different import maps for server and client paths
+          const serverImportMap = new Map<string, ModuleExports>();
+          serverImportMap.set('test-exports', {
+            namedExports: new Map([['funco', 'funco']]),
+            defaultExport: null,
+            namespaceExport: null,
+          });
+
+          const clientImportMap = new Map<string, ModuleExports>();
+          clientImportMap.set('fake-react', {
+            namedExports: new Map([['useEffect', 'useEffect']]),
+            defaultExport: 'React',
+            namespaceExport: null,
+          });
+
+          // Configure getImportMapStub to return different maps based on paths
+          getImportMapStub.callsFake((paths: string[]) => {
+            const hasClientComponent = paths.some((p) => p.includes('client-components'));
+            return hasClientComponent ? clientImportMap : serverImportMap;
+          });
+
+          nextJsMapTemplateStub.callsFake((map: Map<string, ModuleExports>) => {
+            if (map === serverImportMap) {
+              return '// server import map content';
+            } else if (map === clientImportMap) {
+              return '// client import map content\nimport React from "fake-react";';
+            }
+            return '// default content';
+          });
+
+          const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+
+          await run({
+            paths: ['import-map/client-components', 'import-map/single-file-imports'],
+            exclude: [],
+            scConfig,
+          });
+
+          // Assert fsWriteStub was called twice
+          expect(fsWriteStub.calledTwice).to.be.true;
+
+          // Assert server import map was written to import-map.ts
+          const serverCall = fsWriteStub.getCall(0);
+          expect(serverCall.args[0]).to.include('import-map.ts');
+          expect(serverCall.args[0]).to.not.include('import-map-client.ts');
+          expect(serverCall.args[1]).to.equal('// server import map content');
+
+          // Assert client import map was written to import-map-client.ts
+          const clientCall = fsWriteStub.getCall(1);
+          expect(clientCall.args[0]).to.include('import-map-client.ts');
+          expect(clientCall.args[1]).to.include('client import map content');
+          expect(clientCall.args[1]).to.include('React');
+          expect(clientCall.args[1]).to.include('fake-react');
         });
 
         it('should write output into import-map file', async () => {
@@ -416,11 +507,17 @@ describe('Import Map Generation', () => {
           getComponentListStub.returns(fakeEntries);
           getImportMapStub.returns(new Map());
           const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+
+          // Mock fs.createReadStream for dividePaths
+          sandbox.stub(fs, 'createReadStream').returns({
+            read: () => 'import { funco',
+          } as any);
+
           nextJsMapTemplateStub.returns('// import map content');
 
           await run({ paths: ['foo'], exclude: [], scConfig });
 
-          expect(fsWriteStub.calledOnce).to.be.true;
+          expect(fsWriteStub.calledTwice).to.be.true;
           const filePath = fsWriteStub.getCall(0).args[0];
           expect(filePath).to.include('.sitecore');
           expect(filePath).to.include('import-map.ts');
@@ -436,6 +533,12 @@ describe('Import Map Generation', () => {
           getComponentListStub.returns(fakeEntries);
           getImportMapStub.returns(new Map());
           const error = new Error('Unit test mocks: write failed');
+
+          // Mock fs.createReadStream for dividePaths
+          sandbox.stub(fs, 'createReadStream').returns({
+            read: () => 'import { funco',
+          } as any);
+
           sandbox.stub(require('fs'), 'writeFileSync').throws(error);
           nextJsMapTemplateStub.returns('// import map content');
 
