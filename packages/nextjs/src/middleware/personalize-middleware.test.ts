@@ -1086,6 +1086,15 @@ describe('PersonalizeMiddleware', () => {
 
         await middleware.handle(req, res);
 
+        validateDebugLog('personalize middleware start: %o', {
+          geo: geoData,
+          headers: {
+            ...req.headers,
+          },
+          hostname: 'foo.net',
+          pathname: '/styleguide',
+          language: 'en',
+        });
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
         expect(CDKPersonalizeStub.firstCall.args[1]).to.have.property('geo');
