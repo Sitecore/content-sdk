@@ -1075,10 +1075,10 @@ describe('PersonalizeMiddleware', () => {
       });
 
       it('should call personalize with geo data', async () => {
-        const geoData = { country: 'US', region: 'CA', city: 'San Francisco' };
+        const geo = { country: 'US', region: 'CA', city: 'San Francisco' };
 
         const { middleware, initPersonalizeServer } = createMiddleware({
-          geo: geoData,
+          geo,
           personalizeInfo,
         });
 
@@ -1087,7 +1087,7 @@ describe('PersonalizeMiddleware', () => {
         await middleware.handle(req, res);
 
         validateDebugLog('personalize middleware start: %o', {
-          geo: geoData,
+          geo,
           headers: {
             ...req.headers,
           },
@@ -1098,11 +1098,11 @@ describe('PersonalizeMiddleware', () => {
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
         expect(CDKPersonalizeStub.firstCall.args[1]).to.have.property('geo');
-        expect(CDKPersonalizeStub.firstCall.args[1].geo).to.deep.equal(geoData);
+        expect(CDKPersonalizeStub.firstCall.args[1].geo).to.deep.equal(geo);
         expect(CDKPersonalizeStub.secondCall.args[1]).to.have.property('geo');
-        expect(CDKPersonalizeStub.secondCall.args[1].geo).to.deep.equal(geoData);
+        expect(CDKPersonalizeStub.secondCall.args[1].geo).to.deep.equal(geo);
         expect(CDKPersonalizeStub.thirdCall.args[1]).to.have.property('geo');
-        expect(CDKPersonalizeStub.thirdCall.args[1].geo).to.deep.equal(geoData);
+        expect(CDKPersonalizeStub.thirdCall.args[1].geo).to.deep.equal(geo);
       });
 
       it('should call personalize without geo data when not available', async () => {
