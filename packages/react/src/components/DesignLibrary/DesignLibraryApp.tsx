@@ -11,7 +11,7 @@ import { DesignLibrary } from './DesignLibrary';
  * delegates to the appropriate rendering implementation:
  * - Client components are rendered using the `DesignLibrary` component
  * - Server components are rendered using the `DesignLibraryServer` component
- * @param {DesingLibraryAppProps} props - The properties for the Design Library App {@link DesingLibraryAppProps}.
+ * @param {DesingLibraryAppProps} props - The properties for the Design Library App.
  * @public
  */
 export const DesignLibraryApp = ({
