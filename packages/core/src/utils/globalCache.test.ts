@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getCacheAndClean, setCache, getCache, hasCache, DL_CACHE_NAMESPACE } from './globalCache';
+import { getCacheAndClean, setCache, getCache, hasCache } from './globalCache';
 
 describe('globalCache utility', () => {
   afterEach(() => {
