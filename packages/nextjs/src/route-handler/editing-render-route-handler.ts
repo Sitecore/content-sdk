@@ -306,7 +306,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     const forwardHeaders = new Headers(req.headers);
     forwardHeaders.set('cookie', forwardCookie);
 
-    const forwardedResponse = await fetch(targetUrl, {
+    const forwardedResponse = await dataFetcher.fetch<string>(targetUrl, {
       method: req.method,
       headers: forwardHeaders,
       body: req.body,
@@ -316,7 +316,8 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     // Filter out x-middleware headers since rewrites are not allowed in route handlers
     // Also filter out content-encoding and content-length to avoid issues when browser reads the payload
     const filteredHeaders = new Headers();
-    forwardedResponse.headers.forEach((value, key) => {
+    const forwardedHeaders = new Headers(forwardedResponse.headers);
+    forwardedHeaders.forEach((value, key) => {
       if (
         key !== 'x-middleware-next' &&
         key !== 'x-middleware-rewrite' &&
@@ -339,9 +340,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     const filteredCookies = cleanupNextPreviewCookies(filteredHeaders.get('Set-Cookie'));
     filteredHeaders.set('Set-Cookie', filteredCookies?.join('; ') || '');
 
-    const body = await forwardedResponse.text();
-
-    return new Response(body, {
+    return new Response(forwardedResponse.data, {
       status: forwardedResponse.status,
       statusText: forwardedResponse.statusText,
       headers: filteredHeaders,
