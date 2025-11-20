@@ -9,8 +9,17 @@ import {
 import { debug } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
-import { personalize, PersonalizeData } from '@sitecore-cloudsdk/personalize/server';
+import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { SitecoreConfig } from '../config';
+
+/**
+ * Represents the geolocation data used for personalization
+ */
+export type PersonalizeGeoData = {
+  city?: string;
+  country?: string;
+  region?: string;
+};
 
 /**
  * The interface for the PersonalizeMiddleware configuration.
@@ -21,10 +30,7 @@ export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
-    /**
-     * Geolocation data to send to Personalize service
-     */
-    geo?: PersonalizeData['geo'];
+    geo?: PersonalizeGeoData;
   };
 
 /**
@@ -270,7 +276,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       language: string;
       timeout?: number;
       variantIds?: string[];
-      geo?: PersonalizeData['geo'];
+      geo?: PersonalizeGeoData;
     },
     request: NextRequest
   ) {
