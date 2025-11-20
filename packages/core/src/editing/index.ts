@@ -8,6 +8,7 @@ export {
   getContentSdkPagesClientData,
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
+  INVALID_SECRET_HTML_MESSAGE,
   PAGES_EDITING_MARKER,
   ComponentUpdateEventArgs,
   PREVIEW_KEY,

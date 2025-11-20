@@ -4,6 +4,7 @@ import {
   EditingRenderQueryParams,
   PREVIEW_KEY,
   QUERY_PARAM_EDITING_SECRET,
+  INVALID_SECRET_HTML_MESSAGE,
 } from '@sitecore-content-sdk/core/editing';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
@@ -94,8 +95,6 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     return secretIsvalid;
   };
 
-  const invalidSecretBodyMessage = '<html><body>Missing or invalid secret</body></html>';
-
   const OPTIONS = (req: NextRequest) => {
     // init query string values
     const query: EditingRenderQueryParams = {} as EditingRenderQueryParams;
@@ -141,7 +140,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     if (!validateEditingSecret(query[QUERY_PARAM_EDITING_SECRET])) {
       return Response.json(
         {
-          html: invalidSecretBodyMessage,
+          html: INVALID_SECRET_HTML_MESSAGE,
         },
         { status: 401, headers: responseHeaders }
       );
@@ -279,7 +278,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     if (!validateEditingSecret(req.nextUrl.searchParams.get(QUERY_PARAM_EDITING_SECRET) || '')) {
       return Response.json(
         {
-          html: invalidSecretBodyMessage,
+          html: INVALID_SECRET_HTML_MESSAGE,
         },
         { status: 401, headers: expectedCorsHeaders }
       );

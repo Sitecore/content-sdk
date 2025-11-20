@@ -8,6 +8,7 @@ import { SERVER_PROPS_ID } from 'next/constants';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
+  INVALID_SECRET_HTML_MESSAGE,
   DesignLibraryMode,
   PREVIEW_KEY,
 } from '@sitecore-content-sdk/core/editing';
@@ -234,7 +235,7 @@ describe('createEditingRenderRouteHandlers', () => {
 
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
-      expect(responseBody.html).to.equal('<html><body>Missing or invalid secret</body></html>');
+      expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
     });
 
     it('should return 401 for missing editing secret', async () => {
@@ -250,7 +251,7 @@ describe('createEditingRenderRouteHandlers', () => {
 
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
-      expect(responseBody.html).to.equal('<html><body>Missing or invalid secret</body></html>');
+      expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
     });
 
     it('should return 400 for missing required query parameters', async () => {
@@ -697,7 +698,7 @@ describe('createEditingRenderRouteHandlers', () => {
 
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
-      expect(responseBody.html).to.equal('<html><body>Missing or invalid secret</body></html>');
+      expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
     });
 
     it('should return 401 for missing editing secret', async () => {
@@ -713,7 +714,7 @@ describe('createEditingRenderRouteHandlers', () => {
 
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
-      expect(responseBody.html).to.equal('<html><body>Missing or invalid secret</body></html>');
+      expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
     });
 
     it('should proxy POST request with correct headers and cookies', async () => {
