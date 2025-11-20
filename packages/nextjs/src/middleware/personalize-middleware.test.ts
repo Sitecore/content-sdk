@@ -12,19 +12,19 @@ import { CdpHelper } from '@sitecore-content-sdk/core/personalize';
 import { PersonalizeMiddlewareConfig } from './personalize-middleware';
 import proxyquire from 'proxyquire';
 
-const CDKPersonalizeStub = sinon.stub().callsFake(() => {
-  return Promise.resolve({ variantId: 'variant-2' });
-});
-
-const { PersonalizeMiddleware } = proxyquire('./personalize-middleware', {
-  '@sitecore-cloudsdk/personalize/server': { personalize: CDKPersonalizeStub },
-});
-
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 const sandbox = sinon.createSandbox();
 
 describe('PersonalizeMiddleware', () => {
+  const CDKPersonalizeStub = sandbox.stub().callsFake(() => {
+    return Promise.resolve({ variantId: 'variant-2' });
+  });
+
+  const { PersonalizeMiddleware } = proxyquire('./personalize-middleware', {
+    '@sitecore-cloudsdk/personalize/server': { personalize: CDKPersonalizeStub },
+  });
+
   const ua = 'user-agent-string';
   const userAgentStub = sandbox.stub(nextjs, 'userAgent').returns({ ua } as any);
   const debugSpy = spy(debug, 'personalize');
