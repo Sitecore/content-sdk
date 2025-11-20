@@ -41,6 +41,7 @@ export interface ComponentSpec {
  * Gets the component spec url.
  * @param {GetComponentSpecParams} params - The parameters for getting the component spec url.
  * @returns {string} The component spec url.
+ * @internal
  */
 export const getComponentSpecUrl = ({
   componentId,
@@ -61,6 +62,7 @@ export const getComponentSpecUrl = ({
  * Fetches the component spec.
  * @param {GetComponentSpecParams} params - The parameters for fetching the component spec.
  * @returns {Promise<ComponentSpec>} The component spec.
+ * @internal
  */
 export const getComponentSpec = async ({
   componentId,

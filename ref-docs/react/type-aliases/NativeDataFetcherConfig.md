@@ -8,4 +8,6 @@
 
 > **NativeDataFetcherConfig** = `NativeDataFetcherOptions` & `RequestInit`
 
-Defined in: packages/core/types/native-fetcher.d.ts:36
+Defined in: packages/core/types/native-fetcher.d.ts:42
+
+Native data fetcher configuration

@@ -8,7 +8,7 @@
 
 > `const` **DesignLibrary**: (`{ loadImportMap }`) => `React.JSX.Element`
 
-Defined in: react/types/components/DesignLibrary.d.ts:25
+Defined in: react/types/components/DesignLibrary.d.ts:26
 
 Design Library component.
 

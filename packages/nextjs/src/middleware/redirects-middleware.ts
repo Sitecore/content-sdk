@@ -26,7 +26,8 @@ const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
 type RedirectResult = RedirectInfo & { matchedQueryString?: string };
 
 /**
- * extended RedirectsMiddlewareConfig config type for RedirectsMiddleware
+ * The interface for the RedirectsMiddleware configuration.
+ * @public
  */
 export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> &
   SitecoreConfig['api']['edge'] &
@@ -37,6 +38,7 @@ export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | '
 /**
  * Middleware / handler fetches all redirects from Sitecore instance by grapqhl service
  * compares with current url and redirects to target url
+ * @public
  */
 export class RedirectsMiddleware extends MiddlewareBase {
   protected redirectsService: RedirectsService;
@@ -91,7 +93,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return res;
       }
 
-      const createResponse = async () => {
+      const createResponse = async (): Promise<NextResponse> => {
         if (this.isPreview(req)) {
           debug.redirects('skipped (preview)');
 
@@ -139,13 +141,24 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
         // Redirect logic for external (absolute) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
         if (REGEXP_ABSOLUTE_URL.test(existsRedirect.target)) {
-          return this.dispatchRedirect(
-            existsRedirect.target,
-            existsRedirect.redirectType,
-            req,
-            res,
-            true
-          );
+          // Perform variable substitution for absolute URLs
+          let finalTarget = existsRedirect.target;
+
+          if (isRegexOrUrl(existsRedirect.pattern) === 'regex') {
+            const matched = url.pathname
+              .replace(/\/*$/gi, '')
+              .match(regexParser(existsRedirect.pattern));
+            if (matched) {
+              finalTarget = existsRedirect.target.replace(
+                /\$(\d+)/g,
+                (_: string, index: string): string => {
+                  return matched[parseInt(index, 10)] || '';
+                }
+              );
+            }
+          }
+
+          return this.dispatchRedirect(finalTarget, existsRedirect.redirectType, req, res, true);
         } else {
           const isUrl = isRegexOrUrl(existsRedirect.pattern) === 'url';
           const targetParts = existsRedirect.target.split('/');

@@ -6,10 +6,18 @@ import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditin
 import { EditableFieldProps } from './sharedTypes';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 
+/**
+ * The interface for the RichText field.
+ * @public
+ */
 export interface RichTextField extends FieldMetadata {
   value?: string;
 }
 
+/**
+ * The interface for the RichText component props.
+ * @public
+ */
 export interface RichTextProps extends EditableFieldProps<RichTextProps> {
   [htmlAttributes: string]: unknown;
   /** The rich text field data. */
@@ -21,6 +29,11 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
   tag?: string;
 }
 
+/**
+ * The RichText component.
+ * @param {RichTextProps} props component props
+ * @public
+ */
 export const RichText: React.FC<RichTextProps> = withFieldMetadata<RichTextProps>(
   withEmptyFieldEditingComponent<RichTextProps>(
     forwardRef(

@@ -35,6 +35,7 @@ export interface DesignLibraryEvent {
 
 /**
  * Represents an event indicating the status of a component in the library.
+ * @internal
  */
 export interface DesignLibraryStatusEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_STATUS_EVENT_NAME;
@@ -46,6 +47,7 @@ export interface DesignLibraryStatusEvent extends DesignLibraryEvent {
 
 /**
  * Enumeration of statuses for the design library.
+ * @internal
  */
 export enum DesignLibraryStatus {
   READY = 'ready',
@@ -69,7 +71,8 @@ export interface ComponentUpdateEventArgs extends DesignLibraryEvent {
  * The event should update a component on page by uid, with fields and params from event args
  * @param {ComponentRendering} rootComponent root component displayed for Design Library page
  * @param {Function} successCallback  callback to be called after successful component update
- */
+ * @internal
+*/
 export const addComponentUpdateHandler = (
   rootComponent: ComponentRendering,
   successCallback?: (updatedRootComponent: ComponentRendering) => void
@@ -198,6 +201,7 @@ export const updateComponent = (
  * @param {DesignLibraryStatus} status - The status of rendering.
  * @param {string} uid - The unique identifier for the event.
  * @returns An object representing the DesignLibraryStatusEvent.
+ * @internal
  */
 export function getDesignLibraryStatusEvent(
   status: DesignLibraryStatus,
@@ -216,6 +220,7 @@ export function getDesignLibraryStatusEvent(
  * Generates the URL for the design library script link.
  * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io
  * @returns The full URL to the design library script.
+ * @internal
  */
 export function getDesignLibraryScriptLink(sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT): string {
   return `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/designlibrary/lib/rh-lib-script.js`;
@@ -225,6 +230,7 @@ export function getDesignLibraryScriptLink(sitecoreEdgeUrl = SITECORE_EDGE_URL_D
  * Checks if the given mode is a Design Library mode.
  * @param {unknown} mode - The mode to check.
  * @returns {boolean} True if the mode is a Design Library mode, false otherwise.
+ * @internal
  */
 export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode {
   return mode === DesignLibraryMode.Normal || mode === DesignLibraryMode.Metadata;

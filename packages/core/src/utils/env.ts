@@ -3,6 +3,7 @@
  * @param {string} envValue - can be undefined when providing values via process.env
  * @param {T} defaultValue - default value
  * @returns {T | string} parsed value
+ * @public
  */
 export const tryParseEnvValue = <T>(envValue: string | undefined, defaultValue: T): T => {
   if (!envValue) {

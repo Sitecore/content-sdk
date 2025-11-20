@@ -8,13 +8,15 @@
 
 > `const` **FEaaSClientWrapper**: (`props`) => `JSX.Element`
 
-Defined in: react/types/components/FEaaS/FEaaSWrapper.d.ts:7
+Defined in: react/types/components/FEaaS/FEaaSWrapper.d.ts:13
+
+The FEaaSWrapper component.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `props` | [`FEaaSComponentProps`](../type-aliases/FEaaSComponentProps.md) |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `props` | [`FEaaSComponentProps`](../type-aliases/FEaaSComponentProps.md) | component props |
 
 ## Returns
 

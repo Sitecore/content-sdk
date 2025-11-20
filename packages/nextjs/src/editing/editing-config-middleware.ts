@@ -11,6 +11,10 @@ import { getEditingSecret } from '../utils/utils';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { NextjsContentSdkComponent } from '../sharedTypes/component-props';
 
+/**
+ * The interface for the EditingConfigMiddleware configuration.
+ * @public
+ */
 export type EditingConfigMiddlewareConfig = {
   /**
    * Components available in the application
@@ -25,6 +29,7 @@ export type EditingConfigMiddlewareConfig = {
 /**
  * Middleware / handler used in the editing config API route in xmcloud add on (e.g. '/api/editing/config')
  * provides configuration information to determine feature compatibility on Pages side.
+ * @public
  */
 export class EditingConfigMiddleware {
   /**

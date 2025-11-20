@@ -22,6 +22,7 @@ const GRANT_TYPE = 'client_credentials';
  * @param {string} [args.baseUrl] - The base URL for the API, used to construct the audience. Defaults to `constants.DEFAULT_SITECORE_AUTH_BASE_URL`
  * @returns A Promise that resolves to the access token response (including access token, token type, expiry, etc.)
  * @throws Will log and exit the process if the request fails or returns a non-OK status
+ * @public
  */
 export let clientCredentialsFlow = _clientCredentialsFlow;
 

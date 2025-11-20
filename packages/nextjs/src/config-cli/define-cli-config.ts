@@ -9,6 +9,7 @@ import { generateMap } from '../tools/generate-map';
  * updated with the required default values.
  * @param {SitecoreCliConfigInput} cliConfig the cli configuration provided by the application
  * @returns {SitecoreCliConfig} full sitecore cli configuration to use with cli
+ * @public
  */
 export const defineCliConfig = (cliConfig: SitecoreCliConfigInput): SitecoreCliConfig => {
   addDefaultScaffoldTemplates(cliConfig);

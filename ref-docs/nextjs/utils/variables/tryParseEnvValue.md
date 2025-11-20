@@ -8,7 +8,7 @@
 
 > `const` **tryParseEnvValue**: \<`T`\>(`envValue`, `defaultValue`) => `T`
 
-Defined in: core/types/utils/env.d.ts:7
+Defined in: core/types/utils/env.d.ts:8
 
 Method to parse JSON-formatted environment variables
 

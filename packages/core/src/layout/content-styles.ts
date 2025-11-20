@@ -16,6 +16,7 @@ type Config = { loadStyles: boolean };
  * @param {string} sitecoreEdgeContextId Sitecore Edge Context ID
  * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io
  * @returns {HTMLLink | null} content styles link, null if no styles are used in layout
+ * @public
  */
 export const getContentStylesheetLink = (
   layoutData: LayoutServiceData,

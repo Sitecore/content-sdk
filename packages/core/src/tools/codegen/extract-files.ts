@@ -26,6 +26,7 @@ export type ExtractFilesConfig = {
 /**
  * Extracts components from the app folder and sends them to XMCloud.
  * @param {ExtractFilesConfig} args - Config for components extraction
+ * @public
  */
 export let extractFiles = _extractFiles;
 
@@ -48,6 +49,8 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
     authority: process.env.SITECORE_AUTH_AUTHORITY,
     audience: process.env.SITECORE_AUTH_AUDIENCE,
   };
+  const renderingHost = process.env.SITECORE_RENDERINGHOST_NAME;
+
   return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
     const config = args.scConfig ?? scConfig;
 
@@ -103,18 +106,19 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
 
         extraLabels = {
           ...(variantNames.length ? { variantNames } : {}),
+          ...(renderingHost ? { renderingHost } : {}),
         };
 
         fileDispatches.push(
           sendCode({
             file: {
+              labels: extraLabels,
               name: componentKey,
               path: filePath,
               type: fileType,
-              labels: extraLabels,
             },
-            token: accessToken,
             targetUrl,
+            token: accessToken,
           })
         );
       }
@@ -122,12 +126,13 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
       fileDispatches.push(
         sendCode({
           file: {
+            ...(renderingHost ? { labels: { renderingHost } } : {}),
             name: 'package.json',
             path: path.resolve(basePath, './package.json'),
             type: ExtractedFileType.PackageJson,
           },
-          token: accessToken,
           targetUrl,
+          token: accessToken,
         })
       );
 

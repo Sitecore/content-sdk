@@ -8,7 +8,9 @@
 
 > **getComponentListWithTypes**(`paths`, `exclude?`, `includeVariants?`, `routerType?`): [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md)[]
 
-Defined in: [packages/core/src/tools/templating/components.ts:331](https://github.com/Sitecore/content-sdk/blob/36824664470d8e82b6921950a53c09a3430b86e9/packages/core/src/tools/templating/components.ts#L331)
+Defined in: [packages/core/src/tools/templating/components.ts:354](https://github.com/Sitecore/content-sdk/blob/66c36d02e82e2d6af837d7bc73eac8efc8179d04/packages/core/src/tools/templating/components.ts#L354)
+
+**`Internal`**
 
 Get list of components with detected types (server, client, or universal).
 

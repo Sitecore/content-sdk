@@ -2,10 +2,15 @@ import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import { ComponentRendering, LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { ReactContentSdkComponent } from '@sitecore-content-sdk/react';
 
+/**
+ * The interface for the component props error.
+ * @public
+ */
 export type ComponentPropsError = { error: string; componentName: string };
 
 /**
  * Shape of component props storage
+ * @public
  */
 export type ComponentPropsCollection = {
   [componentUid: string]: unknown | ComponentPropsError;
@@ -31,11 +36,13 @@ export type ComponentPropsFetchFunction<FetchedProps = unknown> = {
  * It enables component-specific data loading that integrates with Next.js rendering flows.
  *
  * The returned props are passed directly to the component at render time.
+ * @public
  */
 export type GetComponentServerProps = ComponentPropsFetchFunction;
 
 /**
  * Represents a nextjs component import
+ * @public
  */
 export type NextjsContentSdkComponent = ReactContentSdkComponent & {
   /**

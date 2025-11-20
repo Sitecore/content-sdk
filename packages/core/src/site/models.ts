@@ -1,3 +1,7 @@
+/**
+ * Object model of Site Info result
+ * @public
+ */
 export type SiteInfo = {
   /**
    * Additional user-defined properties

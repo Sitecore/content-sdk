@@ -5,6 +5,7 @@ import { SiteInfo, SiteResolver } from '../site';
 /**
  * Middleware for handling sitemap requests in a Next.js application.
  * Encapsulates all HTTP-related logic for sitemap generation and delivery.
+ * @public
  */
 export class SitemapMiddleware {
   private client: SitecoreClient;

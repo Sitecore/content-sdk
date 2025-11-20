@@ -20,6 +20,7 @@
     "src/tests/*",
     "src/test-data/*",
     "**/*.test.ts",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "api"
   ]
 }

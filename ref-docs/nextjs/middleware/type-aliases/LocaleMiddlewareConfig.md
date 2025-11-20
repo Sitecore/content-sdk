@@ -8,9 +8,9 @@
 
 > **LocaleMiddlewareConfig** = [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `object`
 
-Defined in: [nextjs/src/middleware/locale-middleware.ts:11](https://github.com/Sitecore/content-sdk/blob/36824664470d8e82b6921950a53c09a3430b86e9/packages/nextjs/src/middleware/locale-middleware.ts#L11)
+Defined in: [nextjs/src/middleware/locale-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/66c36d02e82e2d6af837d7bc73eac8efc8179d04/packages/nextjs/src/middleware/locale-middleware.ts#L12)
 
-Locale middleware config
+The interface for the Locale middleware configuration.
 
 ## Type declaration
 

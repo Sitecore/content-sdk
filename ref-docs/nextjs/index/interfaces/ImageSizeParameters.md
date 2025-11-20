@@ -6,7 +6,9 @@
 
 # Interface: ImageSizeParameters
 
-Defined in: react/types/components/Image.d.ts:11
+Defined in: react/types/components/Image.d.ts:23
+
+The interface for the Image size parameters.
 
 ## Indexable
 
@@ -18,7 +20,7 @@ Defined in: react/types/components/Image.d.ts:11
 
 > `optional` **as**: `0` \| `1`
 
-Defined in: react/types/components/Image.d.ts:24
+Defined in: react/types/components/Image.d.ts:36
 
 Allow stretch
 
@@ -28,7 +30,7 @@ Allow stretch
 
 > `optional` **h**: `number`
 
-Defined in: react/types/components/Image.d.ts:16
+Defined in: react/types/components/Image.d.ts:28
 
 Fixed height of the image
 
@@ -38,7 +40,7 @@ Fixed height of the image
 
 > `optional` **iar**: `0` \| `1`
 
-Defined in: react/types/components/Image.d.ts:22
+Defined in: react/types/components/Image.d.ts:34
 
 Ignore aspect ratio
 
@@ -48,7 +50,7 @@ Ignore aspect ratio
 
 > `optional` **mh**: `number`
 
-Defined in: react/types/components/Image.d.ts:20
+Defined in: react/types/components/Image.d.ts:32
 
 Max height of the image
 
@@ -58,7 +60,7 @@ Max height of the image
 
 > `optional` **mw**: `number`
 
-Defined in: react/types/components/Image.d.ts:18
+Defined in: react/types/components/Image.d.ts:30
 
 Max width of the image
 
@@ -68,7 +70,7 @@ Max width of the image
 
 > `optional` **sc**: `number`
 
-Defined in: react/types/components/Image.d.ts:26
+Defined in: react/types/components/Image.d.ts:38
 
 Image scale. Defaults to 1.0
 
@@ -78,6 +80,6 @@ Image scale. Defaults to 1.0
 
 > `optional` **w**: `number`
 
-Defined in: react/types/components/Image.d.ts:14
+Defined in: react/types/components/Image.d.ts:26
 
 Fixed width of the image

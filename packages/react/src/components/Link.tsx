@@ -6,6 +6,10 @@ import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditi
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
 
+/**
+ * The interface for the Link field value.
+ * @public
+ */
 export interface LinkFieldValue {
   [attributeName: string]: unknown;
   href?: string;
@@ -19,10 +23,18 @@ export interface LinkFieldValue {
   linktype?: string;
 }
 
+/**
+ * The interface for the Link field.
+ * @public
+ */
 export interface LinkField {
   value: LinkFieldValue;
 }
 
+/**
+ * The interface for the Link component props.
+ * @public
+ */
 export type LinkProps = EditableFieldProps<LinkProps> &
   React.AnchorHTMLAttributes<HTMLAnchorElement> &
   RefAttributes<HTMLAnchorElement> & {
@@ -35,6 +47,11 @@ export type LinkProps = EditableFieldProps<LinkProps> &
     showLinkTextWithChildrenPresent?: boolean;
   };
 
+/**
+ * The Link component.
+ * @param {LinkProps} props component props
+ * @public
+ */
 export const Link: React.FC<LinkProps> = withFieldMetadata<LinkProps, HTMLAnchorElement>(
   withEmptyFieldEditingComponent<LinkProps, HTMLAnchorElement>(
     forwardRef<HTMLAnchorElement, LinkProps>(

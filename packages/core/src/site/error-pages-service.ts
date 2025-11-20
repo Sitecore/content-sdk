@@ -25,6 +25,10 @@ const defaultQuery = /* GraphQL */ `
   }
 `;
 
+/**
+ * Configuration for @see ErrorPagesService instances
+ * @public
+ */
 export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
   /**
    * The language
@@ -39,6 +43,7 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
 
 /**
  * Object model of Error Pages result
+ * @public
  */
 export type ErrorPages = {
   notFoundPage: { rendered: LayoutServiceData };
@@ -56,6 +61,7 @@ type ErrorPagesQueryResult = {
 
 /**
  * Service that fetch the error pages data using Sitecore's GraphQL API.
+ * @public
  */
 export class ErrorPagesService {
   private graphQLClient: GraphQLClient;

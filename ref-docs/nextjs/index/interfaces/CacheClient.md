@@ -6,7 +6,7 @@
 
 # Interface: CacheClient\<T\>
 
-Defined in: core/types/cache-client.d.ts:5
+Defined in: core/types/cache-client.d.ts:6
 
 An interface for cache clients.
 
@@ -22,7 +22,7 @@ An interface for cache clients.
 
 > **getCacheValue**(`key`): `null` \| `T`
 
-Defined in: core/types/cache-client.d.ts:18
+Defined in: core/types/cache-client.d.ts:19
 
 Retrieves a value from the cache.
 
@@ -44,7 +44,7 @@ The cache value as {T}, or null if the specified key was not found in the cache.
 
 > **setCacheValue**(`key`, `value`): `T`
 
-Defined in: core/types/cache-client.d.ts:12
+Defined in: core/types/cache-client.d.ts:13
 
 Adds a value to the cache for the specified cache key.
 

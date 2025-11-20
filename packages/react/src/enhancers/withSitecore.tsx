@@ -7,6 +7,10 @@ import {
 } from '../components/SitecoreProvider';
 import { Page } from '@sitecore-content-sdk/core/client';
 
+/**
+ * The options for the withSitecore HOC.
+ * @public
+ */
 export interface WithSitecoreOptions {
   /**
    * If set to true, the `updateContext` method will be injected into the component props.
@@ -14,7 +18,10 @@ export interface WithSitecoreOptions {
   updatable?: boolean;
 }
 
-// The props that HOC will inject
+/**
+ * The props that HOC will inject.
+ * @public
+ */
 export interface WithSitecoreProps {
   /**
    * The current page context.
@@ -32,7 +39,10 @@ export interface WithSitecoreProps {
   updatePage?: ((value: Page) => void) | false;
 }
 
-// The props that HOC will receive.
+/**
+ * The type of the props that HOC will receive.
+ * @public
+ */
 export type WithSitecoreHocProps<ComponentProps> = EnhancedOmit<
   ComponentProps,
   keyof WithSitecoreProps
@@ -40,6 +50,7 @@ export type WithSitecoreHocProps<ComponentProps> = EnhancedOmit<
 
 /**
  * @param {WithSitecoreProviderOptions} [options]
+ * @public
  */
 export function withSitecore(options?: WithSitecoreOptions) {
   return function withSitecoreProviderHoc<ComponentProps extends WithSitecoreProps>(
@@ -77,6 +88,7 @@ export function withSitecore(options?: WithSitecoreOptions) {
  *    return <span onClick={onClick}>Item id is {page.itemId}</span>
  * }
  * @returns {object} { api, page, updatePage }
+ * @public
  */
 export function useSitecore(options?: WithSitecoreOptions): WithSitecoreProps {
   const reactContext = React.useContext(SitecoreProviderReactContext);

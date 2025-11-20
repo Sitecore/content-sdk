@@ -13,6 +13,11 @@ import { ComponentPropsReactContext } from './ComponentPropsContext';
  */
 type PlaceholderProps = EnhancedOmit<PlaceholderComponentProps, keyof WithSitecoreProps>;
 
+/**
+ * The Placeholder component.
+ * @param {PlaceholderProps} props component props
+ * @public
+ */
 export const Placeholder = (props: PlaceholderProps) => {
   const componentPropsContext = useContext(ComponentPropsReactContext);
 

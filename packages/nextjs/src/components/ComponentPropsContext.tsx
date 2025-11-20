@@ -4,6 +4,7 @@ import { ComponentPropsCollection } from '../sharedTypes/component-props';
 
 /**
  * Component props context which we are using in order to store data fetched on components level (getComponentServerProps)
+ * @public 
  */
 export const ComponentPropsReactContext = createContext<ComponentPropsCollection>({});
 
@@ -12,6 +13,7 @@ export const ComponentPropsReactContext = createContext<ComponentPropsCollection
  * @see ComponentPropsContext
  * @param {string | undefined} componentUid component uId
  * @returns {ComponentData | undefined} component props
+ * @public
  */
 export function useComponentProps<ComponentData>(
   componentUid: string | undefined
@@ -25,11 +27,20 @@ export function useComponentProps<ComponentData>(
   return data[componentUid] as ComponentData;
 }
 
+/**
+ * The interface for the ComponentPropsContext component props.
+ * @public
+ */
 export type ComponentPropsContextProps = {
   children: ReactNode;
   value: ComponentPropsCollection;
 };
 
+/**
+ * The ComponentPropsContext component. Stores component props in a context.
+ * @param {ComponentPropsContextProps} props component props
+ * @public
+ */
 export const ComponentPropsContext = ({
   children,
   value,

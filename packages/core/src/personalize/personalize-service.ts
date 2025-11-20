@@ -3,6 +3,10 @@ import debug from '../debug';
 import { isTimeoutError } from '../utils';
 import { CacheClient, CacheOptions, MemoryCacheClient } from '../cache-client';
 
+/**
+ * Configuration for the PersonalizeService.
+ * @public
+ */
 export type PersonalizeServiceConfig = CacheOptions & {
   /**
    * Timeout (ms) for the Personalize request. Default is 400.
@@ -26,6 +30,7 @@ export type PersonalizeServiceConfig = CacheOptions & {
 
 /**
  * Object model of personlize info
+ * @public
  */
 export type PersonalizeInfo = {
   /**
@@ -42,6 +47,10 @@ type PersonalizeQueryResult = {
   layout: { item: { id: string; version: string; personalization: { variantIds: string[] } } };
 };
 
+/**
+ * Fetch personalize data using the Sitecore GraphQL endpoint.
+ * @public
+ */
 export class PersonalizeService {
   private graphQLClient: GraphQLClient;
   private cache: CacheClient<PersonalizeQueryResult>;
@@ -58,7 +67,7 @@ export class PersonalizeService {
 
   protected get query(): string {
     return /* GraphQL */ `
-      query($siteName: String!, $language: String!, $itemPath: String!) {
+      query ($siteName: String!, $language: String!, $itemPath: String!) {
         layout(site: $siteName, routePath: $itemPath, language: $language) {
           item {
             id

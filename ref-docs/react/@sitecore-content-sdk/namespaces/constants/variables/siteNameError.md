@@ -8,4 +8,8 @@
 
 > `const` **siteNameError**: `"The siteName cannot be empty"` = `"The siteName cannot be empty"`
 
-Defined in: packages/core/types/constants.d.ts:5
+Defined in: packages/core/types/constants.d.ts:13
+
+**`Internal`**
+
+Site name error

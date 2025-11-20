@@ -6,7 +6,7 @@
 
 # Interface: PluginDefinition
 
-Defined in: core/types/tools/templating/plugins.d.ts:18
+Defined in: core/types/tools/templating/plugins.d.ts:20
 
 Definition to be used for plugin registration during bootstrap
 
@@ -16,7 +16,7 @@ Definition to be used for plugin registration during bootstrap
 
 > **distPath**: `string`
 
-Defined in: core/types/tools/templating/plugins.d.ts:22
+Defined in: core/types/tools/templating/plugins.d.ts:24
 
 destination path to compile plugins to
 
@@ -26,7 +26,7 @@ destination path to compile plugins to
 
 > **moduleType**: [`ModuleType`](../enumerations/ModuleType.md)
 
-Defined in: core/types/tools/templating/plugins.d.ts:30
+Defined in: core/types/tools/templating/plugins.d.ts:32
 
 CJS or ESM - which type to compile plugins to
 
@@ -36,7 +36,7 @@ CJS or ESM - which type to compile plugins to
 
 > `optional` **relative**: `boolean`
 
-Defined in: core/types/tools/templating/plugins.d.ts:34
+Defined in: core/types/tools/templating/plugins.d.ts:36
 
 whether to use relative or absolute paths in the generated file. By default, absolute paths are used.
 
@@ -46,7 +46,7 @@ whether to use relative or absolute paths in the generated file. By default, abs
 
 > **rootPath**: `string`
 
-Defined in: core/types/tools/templating/plugins.d.ts:26
+Defined in: core/types/tools/templating/plugins.d.ts:28
 
 source path for where the plugins are defined
 
@@ -56,6 +56,6 @@ source path for where the plugins are defined
 
 > `optional` **silent**: `boolean`
 
-Defined in: core/types/tools/templating/plugins.d.ts:38
+Defined in: core/types/tools/templating/plugins.d.ts:40
 
 whether to suppress console output

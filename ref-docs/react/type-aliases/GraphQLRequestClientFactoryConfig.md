@@ -8,7 +8,7 @@
 
 > **GraphQLRequestClientFactoryConfig** = `object`
 
-Defined in: packages/core/types/graphql-request-client.d.ts:67
+Defined in: packages/core/types/graphql-request-client.d.ts:72
 
 Configuration type for
 
@@ -18,7 +18,7 @@ Configuration type for
 
 > `optional` **apiKey**: `string`
 
-Defined in: packages/core/types/graphql-request-client.d.ts:69
+Defined in: packages/core/types/graphql-request-client.d.ts:74
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: packages/core/types/graphql-request-client.d.ts:69
 
 > **endpoint**: `string`
 
-Defined in: packages/core/types/graphql-request-client.d.ts:68
+Defined in: packages/core/types/graphql-request-client.d.ts:73

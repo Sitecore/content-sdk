@@ -6,15 +6,17 @@
 
 # Function: Form()
 
-> **Form**(`__namedParameters`): `Element`
+> **Form**(`props`): `Element`
 
-Defined in: [packages/react/src/components/Form.tsx:41](https://github.com/Sitecore/content-sdk/blob/36824664470d8e82b6921950a53c09a3430b86e9/packages/react/src/components/Form.tsx#L41)
+Defined in: [packages/react/src/components/Form.tsx:46](https://github.com/Sitecore/content-sdk/blob/66c36d02e82e2d6af837d7bc73eac8efc8179d04/packages/react/src/components/Form.tsx#L46)
+
+The Form component.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `__namedParameters` | `FormProps` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `props` | `FormProps` | incoming props |
 
 ## Returns
 

@@ -8,7 +8,9 @@
 
 > **PersonalizeServiceConfig** = [`CacheOptions`](../../index/interfaces/CacheOptions.md) & `object`
 
-Defined in: core/types/personalize/personalize-service.d.ts:3
+Defined in: core/types/personalize/personalize-service.d.ts:7
+
+Configuration for the PersonalizeService.
 
 ## Type declaration
 

@@ -8,7 +8,7 @@
 
 > **getPersonalizedRewrite**(`pathname`, `variantIds`): `string`
 
-Defined in: core/types/personalize/utils.d.ts:13
+Defined in: core/types/personalize/utils.d.ts:17
 
 Get a personalized rewrite path for given pathname
 

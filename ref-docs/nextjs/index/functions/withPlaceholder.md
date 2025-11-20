@@ -8,7 +8,7 @@
 
 > **withPlaceholder**(`placeholders`, `options?`): (`WrappedComponent`) => (`props`) => `Element`
 
-Defined in: react/types/enhancers/withPlaceholder.d.ts:35
+Defined in: react/types/enhancers/withPlaceholder.d.ts:36
 
 HOC to provide client-side placeholder functionality to a component.
 

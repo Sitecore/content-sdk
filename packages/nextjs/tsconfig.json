@@ -33,5 +33,6 @@
     "**/*.test.ts",
     "**/*.test.tsx",
     "src/tools/codegen/test-data/*",
+    "api"
   ]
 }

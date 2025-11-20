@@ -1,6 +1,9 @@
+/** @internal */
 export const DEFAULT_VARIANT = '_default';
+/** @internal */
 export const VARIANT_PREFIX = '_variantId_';
 
+/** @public */
 export type PersonalizedRewriteData = {
   variantId: string;
   componentVariantIds?: string[];
@@ -11,6 +14,7 @@ export type PersonalizedRewriteData = {
  * @param {string} pathname the pathname
  * @param {string[]} variantIds the variantIds to include in the rewrite
  * @returns {string} the rewrite path
+ * @public
  */
 export function getPersonalizedRewrite(pathname: string, variantIds: string[]): string {
   const path = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
@@ -21,6 +25,7 @@ export function getPersonalizedRewrite(pathname: string, variantIds: string[]): 
  * Get personalize data from the rewrite path
  * @param {string} pathname the pathname
  * @returns {PersonalizedRewriteData} the personalize data from the rewrite
+ * @public
  */
 export function getPersonalizedRewriteData(pathname: string): PersonalizedRewriteData {
   const segments = pathname.split('/');
@@ -39,6 +44,7 @@ export function getPersonalizedRewriteData(pathname: string): PersonalizedRewrit
  * Parses a list of variantIds and divides into layout and component variants
  * @param {string[]} variantIds the list of variant IDs for a page
  * @returns {PersonalizedRewriteData} object with variant IDs sorted
+ * @public
  */
 export function getGroomedVariantIds(variantIds: string[]) {
   const data: PersonalizedRewriteData = {
@@ -65,6 +71,7 @@ export function getGroomedVariantIds(variantIds: string[]) {
  * Normalize a personalized rewrite path (remove personalize data)
  * @param {string} pathname the pathname
  * @returns {string} the pathname with personalize data removed
+ * @public
  */
 export function normalizePersonalizedRewrite(pathname: string): string {
   if (!pathname.includes(VARIANT_PREFIX)) {
@@ -79,6 +86,7 @@ export function normalizePersonalizedRewrite(pathname: string): string {
 
 /**
  * Static utility class for Sitecore CDP
+ * @public
  */
 export class CdpHelper {
   /**

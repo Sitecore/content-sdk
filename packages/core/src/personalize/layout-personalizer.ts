@@ -16,6 +16,7 @@ export type ComponentRenderingWithExperiences = ComponentRendering & {
  * @param {LayoutServiceData} layout Layout data
  * @param {string} variantId variant id
  * @param {string[]} [componentVariantIds] component variant ids
+ * @public
  */
 export function personalizeLayout(
   layout: LayoutServiceData,

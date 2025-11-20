@@ -6,7 +6,7 @@
 
 # Interface: ComponentFields
 
-Defined in: packages/core/types/layout/models.d.ts:72
+Defined in: packages/core/types/layout/models.d.ts:80
 
 Content field data passed to a component
 

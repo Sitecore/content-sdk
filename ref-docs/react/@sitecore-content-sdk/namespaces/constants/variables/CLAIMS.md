@@ -8,4 +8,8 @@
 
 > `const` **CLAIMS**: `"https://auth.sitecorecloud.io/claims"` = `"https://auth.sitecorecloud.io/claims"`
 
-Defined in: packages/core/types/constants.d.ts:8
+Defined in: packages/core/types/constants.d.ts:28
+
+**`Internal`**
+
+Claims URL

@@ -8,7 +8,9 @@
 
 > **SiteInfoServiceConfig** = [`CacheOptions`](../../index/interfaces/CacheOptions.md) & `object`
 
-Defined in: [packages/core/src/site/siteinfo-service.ts:19](https://github.com/Sitecore/content-sdk/blob/36824664470d8e82b6921950a53c09a3430b86e9/packages/core/src/site/siteinfo-service.ts#L19)
+Defined in: [packages/core/src/site/siteinfo-service.ts:23](https://github.com/Sitecore/content-sdk/blob/66c36d02e82e2d6af837d7bc73eac8efc8179d04/packages/core/src/site/siteinfo-service.ts#L23)
+
+Configuration for
 
 ## Type declaration
 
@@ -32,3 +34,7 @@ Optional. How many result items to fetch in each GraphQL call. This is needed fo
 ```ts
 10
 ```
+
+## See
+
+SiteInfoService instances

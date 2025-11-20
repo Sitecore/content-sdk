@@ -25,6 +25,10 @@ import {
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { StaticParams } from './models';
 
+/**
+ * The SitecoreNextjsClient class extends the SitecoreClient class to provide additional functionality for Next.js.
+ * @public
+ */
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
   constructor(protected initOptions: SitecoreClientInit) {

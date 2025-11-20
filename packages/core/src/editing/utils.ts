@@ -3,27 +3,32 @@ import isServer from '../utils/is-server';
 
 /**
  * Default value of uid for root placeholder when uid is not present.
+ * @internal
  */
 export const DEFAULT_PLACEHOLDER_UID = '00000000-0000-0000-0000-000000000000';
 
 /**
  * Query parameter for editing secret
+ * @internal
  */
 export const QUERY_PARAM_EDITING_SECRET = 'secret';
 
 /**
  * Key to identify whether the app is running in Sitecore Preview mode
+ * @internal
  */
 export const PREVIEW_KEY = 'sc_preview';
 
 /**
  * ID to be used as a marker for a script rendered in XMC Pages
  * Should identify app is in XM Cloud Pages editing mode
+ * @internal
  */
 export const PAGES_EDITING_MARKER = 'jss-hrz-editing';
 
 /**
  * Default allowed origins for editing requests. This is used to enforce CORS, CSP headers.
+ * @internal
  */
 export const EDITING_ALLOWED_ORIGINS = ['https://pages.sitecorecloud.io'];
 
@@ -41,6 +46,7 @@ type ExtendedWindow = Window &
 
 /**
  * Event args for Design Library `update` event
+ * @internal
  */
 export interface ComponentUpdateEventArgs {
   name: string;
@@ -52,6 +58,7 @@ export interface ComponentUpdateEventArgs {
 }
 /**
  * Application metadata
+ * @public
  */
 export interface Metadata {
   packages: { [key: string]: string };
@@ -66,6 +73,7 @@ export const ChromeRediscoveryGlobalFunctionName = {
 
 /**
  * Static utility class for Sitecore Pages Editor
+ * @public
  */
 export class PagesEditor {
   /**
@@ -96,6 +104,7 @@ export class PagesEditor {
  * Determines whether the current execution context is within a Sitecore editor.
  * Sitecore Editor environment can be identified only in the browser
  * @returns true if executing within a Sitecore editor
+ * @public
  */
 export const isEditorActive = (): boolean => {
   return PagesEditor.isActive();
@@ -103,6 +112,7 @@ export const isEditorActive = (): boolean => {
 
 /**
  * Resets Sitecore editor "chromes"
+ * @public
  */
 export const resetEditorChromes = (): void => {
   if (PagesEditor.isActive()) {
@@ -113,6 +123,7 @@ export const resetEditorChromes = (): void => {
 /**
  * Gets extra Content SDK clientData scripts to render in XMC Pages in addition to clientData from Pages itself
  * @returns {Record} collection of clientData
+ * @internal
  */
 export const getContentSdkPagesClientData = () => {
   const clientData: Record<string, Record<string, unknown>> = {};

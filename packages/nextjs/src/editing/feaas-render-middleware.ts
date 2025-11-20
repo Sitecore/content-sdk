@@ -10,6 +10,7 @@ import { enforceCors } from '@sitecore-content-sdk/core/utils';
 
 /**
  * Configuration for `FEAASRenderMiddleware`.
+ * @public
  */
 export interface FEAASRenderMiddlewareConfig {
   /**
@@ -23,6 +24,7 @@ export interface FEAASRenderMiddlewareConfig {
 /**
  * Middleware / handler for use in the feaas render Next.js API route (e.g. '/api/editing/feaas/render')
  * which is required for Sitecore editing support.
+ * @public
  */
 export class FEAASRenderMiddleware extends RenderMiddlewareBase {
   private pageUrl: string;

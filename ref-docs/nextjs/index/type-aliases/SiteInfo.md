@@ -8,7 +8,9 @@
 
 > **SiteInfo** = `object`
 
-Defined in: core/types/site/models.d.ts:1
+Defined in: core/types/site/models.d.ts:5
+
+Object model of Site Info result
 
 ## Indexable
 
@@ -22,7 +24,7 @@ Additional user-defined properties
 
 > **hostName**: `string`
 
-Defined in: core/types/site/models.d.ts:13
+Defined in: core/types/site/models.d.ts:17
 
 Site host name. May include multiple values (separated by '|') and wildcards ('*')
 
@@ -32,7 +34,7 @@ Site host name. May include multiple values (separated by '|') and wildcards ('*
 
 > **language**: `string`
 
-Defined in: core/types/site/models.d.ts:17
+Defined in: core/types/site/models.d.ts:21
 
 Site default language
 
@@ -42,6 +44,6 @@ Site default language
 
 > **name**: `string`
 
-Defined in: core/types/site/models.d.ts:9
+Defined in: core/types/site/models.d.ts:13
 
 Site name

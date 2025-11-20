@@ -8,14 +8,18 @@
 
 > **extractPath**(`context`): `string`
 
-Defined in: [nextjs/src/utils/utils.ts:50](https://github.com/Sitecore/content-sdk/blob/36824664470d8e82b6921950a53c09a3430b86e9/packages/nextjs/src/utils/utils.ts#L50)
+Defined in: [nextjs/src/utils/utils.ts:57](https://github.com/Sitecore/content-sdk/blob/66c36d02e82e2d6af837d7bc73eac8efc8179d04/packages/nextjs/src/utils/utils.ts#L57)
+
+Extracts the path from the Next.js context parameters.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `context` | `GetServerSidePropsContext` \| `GetStaticPropsContext` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `context` | `GetServerSidePropsContext` \| `GetStaticPropsContext` | The Next.js context parameters. |
 
 ## Returns
 
 `string`
+
+The extracted path.

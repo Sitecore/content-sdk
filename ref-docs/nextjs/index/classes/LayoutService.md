@@ -6,7 +6,7 @@
 
 # Class: LayoutService
 
-Defined in: core/types/layout/layout-service.d.ts:12
+Defined in: core/types/layout/layout-service.d.ts:21
 
 Service that fetch layout data using Sitecore's GraphQL API.
 
@@ -24,7 +24,7 @@ GraphQLRequestClient
 
 > **new LayoutService**(`serviceConfig`): `LayoutService`
 
-Defined in: core/types/layout/layout-service.d.ts:18
+Defined in: core/types/layout/layout-service.d.ts:27
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -60,7 +60,7 @@ Defined in: core/types/sitecore-service-base.d.ts:19
 
 > **serviceConfig**: `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\>
 
-Defined in: core/types/layout/layout-service.d.ts:13
+Defined in: core/types/layout/layout-service.d.ts:22
 
 #### Type declaration
 
@@ -87,7 +87,7 @@ Optional debug logger override
 
 > **fetchLayoutData**(`itemPath`, `routeOptions?`, `fetchOptions?`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
-Defined in: core/types/layout/layout-service.d.ts:26
+Defined in: core/types/layout/layout-service.d.ts:35
 
 Fetch layout data for an item.
 
@@ -131,7 +131,7 @@ implementation
 
 > `protected` **getLayoutQuery**(`itemPath`, `site?`, `language?`): `string`
 
-Defined in: core/types/layout/layout-service.d.ts:34
+Defined in: core/types/layout/layout-service.d.ts:43
 
 Returns GraphQL Layout query
 

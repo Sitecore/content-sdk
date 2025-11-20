@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-expressions */
-import { expect, use, spy } from 'chai';
+import { expect, use } from 'chai';
 import spies from 'chai-spies';
 import { NativeDataFetcher } from './native-fetcher';
 import debugApi from 'debug';
 import debug from './debug';
 
-use(spies);
+const { spy } = use(spies);
 
 let fetchInput: RequestInfo | URL | undefined;
 let fetchInit: RequestInit | undefined;
@@ -100,6 +100,8 @@ describe('NativeDataFetcher', () => {
 
       const response = await fetcher.fetch('http://test.com/api');
       expect(response.status).to.equal(200);
+      expect(response.statusText).to.equal('OK');
+      expect(response.headers).to.be.an('object');
       expect(fetchInput).to.equal('http://test.com/api');
       expect(fetchInit?.method).to.equal('GET');
       expect(fetchInit?.body).to.be.undefined;

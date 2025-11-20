@@ -15,6 +15,7 @@ import * as authModule from './auth';
  * restore via `sandbox.restore()` with no hidden global state.
  *
  * Public surface consumed by the rest of the codebase.
+ * @public
  */
 export const auth: {
   readonly clientCredentialsFlow: typeof authModule.clientCredentialsFlow;

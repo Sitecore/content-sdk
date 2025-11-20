@@ -6,7 +6,7 @@
 
 # Interface: NativeDataFetcherResponse\<T\>
 
-Defined in: packages/core/types/native-fetcher.d.ts:20
+Defined in: packages/core/types/native-fetcher.d.ts:21
 
 Response data for an HTTP request sent to an API
 
@@ -22,7 +22,7 @@ Response data for an HTTP request sent to an API
 
 > **data**: `T`
 
-Defined in: packages/core/types/native-fetcher.d.ts:26
+Defined in: packages/core/types/native-fetcher.d.ts:27
 
 Response content
 
@@ -32,7 +32,7 @@ Response content
 
 > `optional` **headers**: `HeadersInit`
 
-Defined in: packages/core/types/native-fetcher.d.ts:28
+Defined in: packages/core/types/native-fetcher.d.ts:29
 
 Response headers
 
@@ -42,7 +42,7 @@ Response headers
 
 > **status**: `number`
 
-Defined in: packages/core/types/native-fetcher.d.ts:22
+Defined in: packages/core/types/native-fetcher.d.ts:23
 
 HTTP status code of the response (i.e. 200, 404)
 
@@ -52,6 +52,6 @@ HTTP status code of the response (i.e. 200, 404)
 
 > **statusText**: `string`
 
-Defined in: packages/core/types/native-fetcher.d.ts:24
+Defined in: packages/core/types/native-fetcher.d.ts:25
 
 HTTP status text of the response (i.e. 'OK', 'Bad Request')

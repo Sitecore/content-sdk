@@ -6,7 +6,7 @@
 
 # Class: CdpHelper
 
-Defined in: core/types/personalize/utils.d.ts:35
+Defined in: core/types/personalize/utils.d.ts:43
 
 Static utility class for Sitecore CDP
 
@@ -26,7 +26,7 @@ Static utility class for Sitecore CDP
 
 > `static` **getComponentFriendlyId**(`pageId`, `componentId`, `language`, `scope?`): `string`
 
-Defined in: core/types/personalize/utils.d.ts:61
+Defined in: core/types/personalize/utils.d.ts:69
 
 Gets the friendly id for Component A/B Testing in the required format `component_[<scope>_]<pageId>_<componentId>_<language>*`
 
@@ -51,7 +51,7 @@ the friendly id
 
 > `static` **getPageFriendlyId**(`pageId`, `language`, `scope?`): `string`
 
-Defined in: core/types/personalize/utils.d.ts:52
+Defined in: core/types/personalize/utils.d.ts:60
 
 Gets the friendly id for (page-level) Embedded Personalization in the required format `embedded_[<scope>_]<id>_<lang>`
 
@@ -75,7 +75,7 @@ the friendly id
 
 > `static` **getPageVariantId**(`pageId`, `language`, `variantId`, `scope?`): `string`
 
-Defined in: core/types/personalize/utils.d.ts:44
+Defined in: core/types/personalize/utils.d.ts:52
 
 Gets the page variant id for CDP in the required format
 
@@ -100,7 +100,7 @@ the formatted page variant id
 
 > `static` **normalizeScope**(`scope?`): `string`
 
-Defined in: core/types/personalize/utils.d.ts:68
+Defined in: core/types/personalize/utils.d.ts:76
 
 Normalizes the scope from the given string value
 Removes all non-alphanumeric characters

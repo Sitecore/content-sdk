@@ -8,7 +8,7 @@
 
 > `const` **BYOCClientWrapper**: (`props`) => `JSX.Element`
 
-Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:26
+Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:28
 
 SXA wrapper for BYOC components
 
