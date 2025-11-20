@@ -174,6 +174,12 @@ describe('design library codegen', () => {
     });
 
     describe('addComponentPreviewHandler', () => {
+      it('should return undefined when window is not available', () => {
+        windowSpy = sinon.stub(global, 'window' as any).value(undefined);
+        const result = addComponentPreviewHandler(importMap, callbackStub);
+        expect(result).to.be.undefined;
+      });
+
       it('should add event listener for message events', () => {
         const unsubscribe = addComponentPreviewHandler(importMap, callbackStub);
         expect(addEventListenerSpy.calledOnce).to.be.true;
@@ -580,6 +586,16 @@ describe('design library codegen', () => {
         expect(() => sendErrorEvent(uid, error, errorType)).to.not.throw();
         expect(errorSpy.calledOnce).to.be.true;
       });
+
+      it('should use current window when parent equals window', () => {
+        const win: any = { postMessage: postMessageSpy };
+        win.parent = win;
+        (global as any).window = win;
+
+        sendErrorEvent('uid', 'error', DesignLibraryPreviewError.Render);
+
+        expect(postMessageSpy.calledOnce).to.be.true;
+      });
     });
   });
 
@@ -644,6 +660,12 @@ describe('design library codegen', () => {
           },
         },
       });
+    });
+
+    it('should handle empty fields and parameters', () => {
+      const event = getDesignLibraryComponentPropsEvent('uid-1', {}, {});
+      expect(event.message.fields).to.deep.equal({});
+      expect(event.message.parameters).to.deep.equal({});
     });
   });
 
@@ -846,6 +868,18 @@ describe('design library codegen', () => {
       expect(isImportEntryInfoArray(undefined)).to.be.false;
       expect(isImportEntryInfoArray({})).to.be.false;
       expect(isImportEntryInfoArray('string')).to.be.false;
+    });
+
+    it('should return false when module is not a string', () => {
+      expect(isImportEntryInfoArray([{ module: 123, exports: ['default'] }])).to.be.false;
+    });
+
+    it('should return false when exports is not an array', () => {
+      expect(isImportEntryInfoArray([{ module: 'react', exports: 'default' }])).to.be.false;
+    });
+
+    it('should return false when exports contains non-string values', () => {
+      expect(isImportEntryInfoArray([{ module: 'react', exports: [123, {}] }])).to.be.false;
     });
   });
 });

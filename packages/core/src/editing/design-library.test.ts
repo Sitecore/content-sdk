@@ -2,6 +2,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import {
+  addComponentUpdateHandler,
   updateComponentHandler,
   getDesignLibraryStatusEvent,
   DesignLibraryStatus,
@@ -10,6 +11,7 @@ import {
   postToDesignLibrary,
   validateEvent,
   updateComponent,
+  validateOrigin,
 } from './design-library';
 import testComponent from '../test-data/component-editing-data';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
@@ -161,6 +163,65 @@ describe('component library utils', () => {
       });
       updateComponentHandler(message, changedComponent, callbackStub);
       expect(callbackStub.called).to.be.true;
+    });
+  });
+
+  describe('addComponentUpdateHandler', () => {
+    it('should add event listener for message events', () => {
+      const addEventListenerSpy = sinon.spy();
+      (global as any).window = {
+        addEventListener: addEventListenerSpy,
+        removeEventListener: sinon.stub(),
+      };
+
+      const unsubscribe = addComponentUpdateHandler(testComponent);
+
+      expect(addEventListenerSpy.calledOnce).to.be.true;
+      console.log(addEventListenerSpy.getCalls()[0].args);
+      expect(addEventListenerSpy.calledWith('message', sinon.match.func)).to.be.true;
+      expect(typeof unsubscribe).to.equal('function');
+    });
+
+    it('should return unsubscribe function that removes event listener', () => {
+      const removeEventListenerSpy = sinon.spy();
+      (global as any).window = {
+        addEventListener: sinon.stub(),
+        removeEventListener: removeEventListenerSpy,
+      };
+
+      const unsubscribe = addComponentUpdateHandler(testComponent);
+      unsubscribe();
+
+      expect(removeEventListenerSpy.calledOnce).to.be.true;
+      expect(removeEventListenerSpy.calledWith('message')).to.be.true;
+    });
+
+    it('should call successCallback when component is updated', () => {
+      const addEventListenerSpy = sinon.spy();
+      const callbackStub = sinon.stub();
+      (global as any).window = {
+        addEventListener: addEventListenerSpy,
+        removeEventListener: sinon.stub(),
+      };
+
+      addComponentUpdateHandler(testComponent, callbackStub);
+
+      const handler = addEventListenerSpy.getCall(0).args[1];
+      const message = new MessageEvent('message', {
+        origin: 'http://localhost',
+        data: {
+          name: 'component:update',
+          details: {
+            uid: 'test-content',
+            fields: { test: { value: 'test' } },
+          },
+        },
+      });
+
+      handler(message);
+
+      expect(callbackStub.calledOnce).to.be.true;
+      expect(callbackStub.calledWith(testComponent)).to.be.true;
     });
   });
 
