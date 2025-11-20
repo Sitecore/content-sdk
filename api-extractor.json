@@ -17,6 +17,7 @@
   "tsdocMetadata": {
     "enabled": false
   },
+  "newlineKind": "lf",
   "messages": {
     "compilerMessageReporting": {
       "default": {
