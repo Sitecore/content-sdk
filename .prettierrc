@@ -4,7 +4,7 @@
   "tabWidth": 2,
   "arrowParens": "always",
   "printWidth": 100,
-  "endOfLine": "lf",
+  "endOfLine": "crlf",
   "overrides": [
     {
       "files": ["*.graphql"],
