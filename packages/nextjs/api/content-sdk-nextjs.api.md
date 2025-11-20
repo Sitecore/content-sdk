@@ -127,7 +127,6 @@ import { normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
 import { Page } from '@sitecore-content-sdk/core/client';
 import { PageMode } from '@sitecore-content-sdk/core/client';
 import { PageOptions } from '@sitecore-content-sdk/core/client';
-import { PersonalizeData } from '@sitecore-cloudsdk/personalize/server';
 import { PersonalizeInfo } from '@sitecore-content-sdk/core/personalize';
 import { personalizeLayout } from '@sitecore-content-sdk/core/personalize';
 import { PersonalizeService } from '@sitecore-content-sdk/core/personalize';
@@ -712,7 +711,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         language: string;
         timeout?: number;
         variantIds?: string[];
-        geo?: PersonalizeData['geo'];
+        geo?: PersonalizeGeoData;
     }, request: NextRequest): Promise<{
         variantId: string;
     }>;
@@ -724,7 +723,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
-    geo?: PersonalizeData['geo'];
+    geo?: PersonalizeGeoData;
 };
 
 export { PersonalizeService }
@@ -917,6 +916,7 @@ export { writeImportMap }
 
 // Warnings were encountered during analysis:
 //
+// src/middleware/personalize-middleware.ts:279:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
 // src/services/component-props-service.ts:61:5 - (ae-forgotten-export) The symbol "NextContext" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
