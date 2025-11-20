@@ -127,6 +127,7 @@ import { normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
 import { Page } from '@sitecore-content-sdk/core/client';
 import { PageMode } from '@sitecore-content-sdk/core/client';
 import { PageOptions } from '@sitecore-content-sdk/core/client';
+import { PersonalizeData } from '@sitecore-cloudsdk/personalize/server';
 import { PersonalizeInfo } from '@sitecore-content-sdk/core/personalize';
 import { personalizeLayout } from '@sitecore-content-sdk/core/personalize';
 import { PersonalizeService } from '@sitecore-content-sdk/core/personalize';
@@ -705,12 +706,13 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         response: NextResponse;
     }): Promise<void>;
     // (undocumented)
-    protected personalize({ params, friendlyId, language, timeout, variantIds, }: {
+    protected personalize({ params, friendlyId, language, timeout, variantIds, geo, }: {
         params: ExperienceParams;
         friendlyId: string;
         language: string;
         timeout?: number;
         variantIds?: string[];
+        geo?: PersonalizeData['geo'];
     }, request: NextRequest): Promise<{
         variantId: string;
     }>;
@@ -722,6 +724,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
+    geo?: PersonalizeData['geo'];
 };
 
 export { PersonalizeService }
