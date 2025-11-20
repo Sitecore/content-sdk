@@ -16,6 +16,7 @@ const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
 
 /**
  * Prefix for component update cache keys
+ * @internal
  */
 export const COMPONENT_UPDATE_CACHE_KEY_PREFIX = 'component-update-';
 
@@ -56,6 +57,7 @@ export enum DesignLibraryStatus {
 
 /**
  * Event args for Design Library `update` event
+ * @internal
  */
 export interface ComponentUpdateEventArgs extends DesignLibraryEvent {
   name: string;
@@ -72,7 +74,7 @@ export interface ComponentUpdateEventArgs extends DesignLibraryEvent {
  * @param {ComponentRendering} rootComponent root component displayed for Design Library page
  * @param {Function} successCallback  callback to be called after successful component update
  * @internal
-*/
+ */
 export const addComponentUpdateHandler = (
   rootComponent: ComponentRendering,
   successCallback?: (updatedRootComponent: ComponentRendering) => void
@@ -182,6 +184,7 @@ export const updateComponentHandler = (
  * @param {ComponentRendering<ComponentFields>} component - The component to update.
  * @param {ComponentFields | undefined} fields - The fields to merge into the component.
  * @param {ComponentParams | undefined} params - The params to merge into the component.
+ * @internal
  */
 export const updateComponent = (
   component: ComponentRendering<ComponentFields>,
@@ -239,6 +242,7 @@ export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode {
 /**
  * Sends an event to the Design Library
  * @param {DesignLibraryEvent} evt - The event object to send.
+ * @internal
  */
 export const postToDesignLibrary = (evt: DesignLibraryEvent) => {
   if (typeof window === 'undefined') return;

@@ -42,7 +42,7 @@ export const __mockDependencies = (mocks: any) => {
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  * @public
  */
-const DesignLibraryComponent = ({ loadImportMap }: DesignLibraryProps) => {
+export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibraryProps) => {
   const { page } = useSitecore();
   const route = page.layout.sitecore.route;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
@@ -163,6 +163,4 @@ const DesignLibraryComponent = ({ loadImportMap }: DesignLibraryProps) => {
       )}
     </main>
   );
-};
-
-export const DesignLibrary = withLoadImportMap(DesignLibraryComponent);
+});

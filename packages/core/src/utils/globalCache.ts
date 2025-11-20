@@ -9,6 +9,7 @@ declare global {
  * - Overwrites any existing value for the given key.
  * @param {string} key - The cache key to set.
  * @param {unknown} data - The value to store in the cache.
+ * @internal
  */
 export function setCache(key: string, data: unknown): void {
   if (!globalThis.__dlCache) {
@@ -22,6 +23,7 @@ export function setCache(key: string, data: unknown): void {
  *  - The cache is stored on `globalThis`
  * @param {string} key - The cache key to retrieve and remove.
  * @returns {T} - The cached value if present, otherwise undefined.
+ * @internal
  */
 export function getCache<T>(key: string): T | undefined {
   const cache = globalThis.__dlCache;
@@ -33,6 +35,7 @@ export function getCache<T>(key: string): T | undefined {
  *  - The cache is stored on `globalThis`
  * @param {string} key - The cache key to retrieve and remove.
  * @returns {T} - The cached value if present, otherwise undefined.
+ * @internal
  */
 export function getCacheAndClean<T>(key: string): T | undefined {
   const cache = globalThis.__dlCache;
@@ -46,6 +49,7 @@ export function getCacheAndClean<T>(key: string): T | undefined {
  *  - The cache is stored on `globalThis`
  * @param {string} key - The cache key to test for existence.
  * @returns {boolean} - true if a value is present for the given key; otherwise false.
+ * @internal
  */
 export function hasCache(key: string): boolean {
   const cache = globalThis.__dlCache;

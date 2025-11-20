@@ -143,7 +143,6 @@ export {
   RichTextField,
   DesignLibrary,
   DesignLibraryApp,
-  DesignLibraryServer,
   DefaultEmptyFieldEditingComponentImage,
   DefaultEmptyFieldEditingComponentText,
   PlaceholderComponentProps,

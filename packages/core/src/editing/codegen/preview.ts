@@ -33,6 +33,7 @@ export interface ImportEntry {
 
 /**
  * Represents the info for the import entry to be sent to design library.
+ * @internal
  */
 export interface ImportEntryInfo {
   module: string;
@@ -62,6 +63,7 @@ export type ComponentImport = {
 
 /**
  * Represents a component preview event data sent from design library
+ * @internal
  */
 export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
@@ -268,6 +270,7 @@ export const addComponentPreviewHandler = (
  * Adds the browser-side event handler for 'component:generation:component-preview' message used in Design Library for server components
  * The event should contain the component code, styles and imports.
  * @param {Function} callback callback to be called after component is received
+ * @internal
  */
 export const addServerComponentPreviewHandler = (
   callback: (eventArgs: ComponentPreviewEventArgs) => void
@@ -296,6 +299,7 @@ export const addServerComponentPreviewHandler = (
  * If an existing style element with the id "content-sdk-style-preview" is found, it is removed
  * to prevent duplicates
  * @param {string} stylesContent - The raw CSS text to inject into the style element.
+ * @internal
  */
 export function addStyleElement(stylesContent: string) {
   const styleId = 'content-sdk-style-preview';
@@ -319,6 +323,7 @@ export function addStyleElement(stylesContent: string) {
  * @param {ComponentPreviewEventArgs} previewEventArgs - The event arguments containing the component code, styles, and import definitions.
  * @returns The dynamically created React component instance.
  * @throws If any required modules or exports are missing from the import map, an error is thrown describing the missing dependencies.
+ * @internal
  */
 export const createComponentInstance = (
   importMap: ImportEntry[],
@@ -428,6 +433,7 @@ export function getDesignLibraryImportMapEvent(
 /**
  * Generates the payload for the import map to be sent to design library.
  * @param {ImportEntry[]} importMap - The imports map to be sent.
+ * @internal
  */
 export function getImportMapInfo(importMap: ImportEntry[]): ImportEntryInfo[] {
   return importMap.map((entry) => ({
@@ -456,6 +462,7 @@ export function isImportEntryInfoArray(data: unknown): data is ImportEntryInfo[]
  * @param {string} uid - The unique identifier of the component that's being edited.
  * @param {unknown} error - The error object or message to be sent.
  * @param {DesignLibraryPreviewError} type - The type of error, as defined in DesignLibraryPreviewError.
+ * @internal
  */
 export const sendErrorEvent = (uid: string, error: unknown, type: DesignLibraryPreviewError) => {
   const errorEvent = getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
