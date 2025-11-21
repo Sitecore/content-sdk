@@ -9,7 +9,7 @@ import * as globalCache from '@sitecore-content-sdk/core/utils';
 import {
   DesignLibraryStatus,
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
-  updateComponent,
+  updateComponent as updateComponentOriginal,
 } from '@sitecore-content-sdk/core/editing';
 import { ComponentUpdateModel } from '../../server-actions/update-server-component-action';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
@@ -24,12 +24,19 @@ import {
 } from './models';
 
 let { getCacheAndClean, hasCache } = globalCache;
-let { createComponentInstance } = codegen;
+let { createComponentInstance, getImportMapInfo } = codegen;
+let updateComponent = updateComponentOriginal;
 
 export const __mockDependencies = async (mocks: any) => {
   getCacheAndClean = mocks.getCacheAndClean;
   hasCache = mocks.hasCache;
   createComponentInstance = mocks.createComponentInstance;
+  if (mocks.updateComponent) {
+    updateComponent = mocks.updateComponent;
+  }
+  if (mocks.getImportMapInfo) {
+    getImportMapInfo = mocks.getImportMapInfo;
+  }
 };
 
 /**
@@ -88,8 +95,8 @@ export const DesignLibraryServerVariantGeneration = async ({
   componentMap,
 }: DesignLibraryServerVariantGenerationProps) => {
   let designLibraryStatus = DesignLibraryStatus.READY;
-  let importMap: codegen.ImportEntry[];
-  let importMapInfo: codegen.ImportEntryInfo[];
+  let importMap: codegen.ImportEntry[] | undefined;
+  let importMapInfo: codegen.ImportEntryInfo[] | undefined;
   let Component: DynamicComponent;
   let importMapError: string;
   let previewComponentData: ComponentPreviewEventArgs;
@@ -102,7 +109,7 @@ export const DesignLibraryServerVariantGeneration = async ({
     try {
       const mod = await loadServerImportMap();
       importMap = mod.default;
-      importMapInfo = codegen.getImportMapInfo(importMap);
+      importMapInfo = getImportMapInfo(importMap);
     } catch (e) {
       importMapError = `Error loading import map: ${e}`;
     }
