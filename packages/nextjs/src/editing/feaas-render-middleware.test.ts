@@ -4,7 +4,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect, use } from 'chai';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/core/editing';
+import {
+  QUERY_PARAM_EDITING_SECRET,
+  INVALID_SECRET_HTML_MESSAGE,
+} from '@sitecore-content-sdk/core/editing';
 import {
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
@@ -207,7 +210,7 @@ describe('FEAASRenderMiddleware', () => {
     expect(res.status).to.have.been.calledOnce;
     expect(res.status).to.have.been.calledWith(401);
     expect(res.send).to.have.been.calledOnce;
-    expect(res.send).to.have.been.calledWith('<html><body>Missing or invalid secret</body></html>');
+    expect(res.send).to.have.been.calledWith(INVALID_SECRET_HTML_MESSAGE);
   });
 
   it('should respond with 401 for invalid secret', async () => {
@@ -224,7 +227,7 @@ describe('FEAASRenderMiddleware', () => {
     expect(res.status).to.have.been.calledOnce;
     expect(res.status).to.have.been.calledWith(401);
     expect(res.send).to.have.been.calledOnce;
-    expect(res.send).to.have.been.calledWith('<html><body>Missing or invalid secret</body></html>');
+    expect(res.send).to.have.been.calledWith(INVALID_SECRET_HTML_MESSAGE);
   });
 
   it('should use custom pageUrl', async () => {

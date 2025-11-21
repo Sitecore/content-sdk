@@ -14,6 +14,10 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* `[nextjs]` [App Router] Add support for server components in Design Studio ([#280](https://github.com/Sitecore/content-sdk/pull/280))
+  - additional react components to handle dynamic rendering of server components
+  - includes refactoring of existing Design Library functionality
+  - this is a breaking change for applications based on Next.js App Router (beta) template. Please refer to the detailed upgrade guide for further instructions
 * `[core]` Provide information about rendering host as part of code extraction ([#286](https://github.com/Sitecore/content-sdk/pull/286))
 * `[template/next-app-router]` Add component runtime information for preventing mixing client/server operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))
 
@@ -22,6 +26,8 @@ Our versioning strategy is as follows:
 * `[template/next-app-router]` Remove component-level data fetching in favor of Server Components ([#282](https://github.com/Sitecore/content-sdk/pull/282))
 * `[core]` NativeFetcher response does not match actual returned data ([#284](https://github.com/Sitecore/content-sdk/pull/284))
 * `[nextjs]` Add regex variable substitution for absolute and external URL redirects. ([#287](https://github.com/Sitecore/jss/pull/287))
+* `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Geo based Personalization not possible in Content SDK Personalize Middleware. ([#288](https://github.com/Sitecore/jss/pull/288))
+* `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Geo based Personalization not possible in Content SDK Personalize Middleware. ([#290](https://github.com/Sitecore/jss/pull/290))
 
 ### 🧹 Chores
 

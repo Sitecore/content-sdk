@@ -8,11 +8,20 @@
 
 > **NextjsContentSdkComponent** = `ReactContentSdkComponent` & `object`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:47](https://github.com/Sitecore/content-sdk/blob/66c36d02e82e2d6af837d7bc73eac8efc8179d04/packages/nextjs/src/sharedTypes/component-props.ts#L47)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:47](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/nextjs/src/sharedTypes/component-props.ts#L47)
 
 Represents a nextjs component import
 
 ## Type declaration
+
+### componentType?
+
+> `optional` **componentType**: `"client"` \| `"server"` \| `"universal"`
+
+Indicates the type of the component in a Next.js app router context.
+- 'client': The component contains client only api's and will be rendered on the client side.
+- 'server': The component contains server only api's and will be rendered on the server side.
+- 'universal': The component is isomorphic and can be rendered on both server and client.
 
 ### dynamicModule()?
 

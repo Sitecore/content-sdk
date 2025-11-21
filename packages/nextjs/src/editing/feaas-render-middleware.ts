@@ -3,6 +3,7 @@ import { debug } from '@sitecore-content-sdk/core';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
+  INVALID_SECRET_HTML_MESSAGE,
 } from '@sitecore-content-sdk/core/editing';
 import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
@@ -79,7 +80,7 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
     const secret = query[QUERY_PARAM_EDITING_SECRET];
     if (secret !== getEditingSecret()) {
       debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
-      return res.status(401).send('<html><body>Missing or invalid secret</body></html>');
+      return res.status(401).send(INVALID_SECRET_HTML_MESSAGE);
     }
 
     // Handle preflight request

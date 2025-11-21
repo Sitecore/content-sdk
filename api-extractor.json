@@ -17,6 +17,7 @@
   "tsdocMetadata": {
     "enabled": false
   },
+  "newlineKind": "crlf",
   "messages": {
     "compilerMessageReporting": {
       "default": {

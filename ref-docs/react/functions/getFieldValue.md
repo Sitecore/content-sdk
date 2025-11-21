@@ -10,7 +10,7 @@
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`): `T`
 
-Defined in: packages/core/types/layout/utils.d.ts:11
+Defined in: packages/core/types/layout/utils.d.ts:10
 
 Safely extracts a field value from a rendering or fields object.
 Null will be returned if the field is not defined.
@@ -38,7 +38,7 @@ the field value or null if the field is not defined
 
 > **getFieldValue**\<`T`\>(`renderingOrFields`, `fieldName`, `defaultValue`): `T`
 
-Defined in: packages/core/types/layout/utils.d.ts:20
+Defined in: packages/core/types/layout/utils.d.ts:19
 
 Safely extracts a field value from a rendering or fields object.
 

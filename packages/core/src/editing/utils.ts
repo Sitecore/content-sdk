@@ -14,6 +14,12 @@ export const DEFAULT_PLACEHOLDER_UID = '00000000-0000-0000-0000-000000000000';
 export const QUERY_PARAM_EDITING_SECRET = 'secret';
 
 /**
+ * HTML returned for invalid or missing secret
+ * @internal
+ */
+export const INVALID_SECRET_HTML_MESSAGE = '<html><body>Missing or invalid secret</body></html>';
+
+/**
  * Key to identify whether the app is running in Sitecore Preview mode
  * @internal
  */
