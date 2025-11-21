@@ -29,29 +29,6 @@ export function useSearchService() {
 }
 
 /**
- * Hook to create and manage an AbortController.
- * @internal
- */
-export function useAbortController() {
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const isAbortedRef = useRef(false);
-
-  useEffect(() => {
-    abortControllerRef.current = new AbortController();
-
-    return () => {
-      abortControllerRef.current?.abort();
-      isAbortedRef.current = true;
-    };
-  }, []);
-
-  return {
-    abortController: abortControllerRef,
-    isAborted: isAbortedRef,
-  };
-}
-
-/**
  * Calculates the number of items to skip before returning results.
  * @param {number} page - The current page number (1-indexed).
  * @param {number} pageSize - The number of results per page.

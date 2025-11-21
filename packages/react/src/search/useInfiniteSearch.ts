@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { DEFAULT_PAGE_SIZE, useAbortController, useSearchService } from './utils';
+import { DEFAULT_PAGE_SIZE, useSearchService } from './utils';
 import { SearchParameters, SearchResponse } from '@sitecore-content-sdk/search';
 
 export type PrimitiveType = string | number | boolean;
@@ -103,10 +103,19 @@ export const useInfiniteSearch = (options: UseInfiniteSearchOptions): UseInfinit
   const previousQueryRef = useRef<string | undefined>(query);
 
   const { searchService } = useSearchService();
-  const { isAborted } = useAbortController();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const performSearch = useCallback(
     async (offset: number, append: boolean = false) => {
+      // Abort previous request if it exists
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      // Create new AbortController for this request
+      abortControllerRef.current = new AbortController();
+      const signal = abortControllerRef.current.signal;
+
       if (append) {
         setIsLoadingMore(true);
       } else {
@@ -129,7 +138,7 @@ export const useInfiniteSearch = (options: UseInfiniteSearchOptions): UseInfinit
         );
 
         // Check if request was aborted
-        if (isAborted.current) {
+        if (signal.aborted) {
           return;
         }
 
@@ -147,7 +156,7 @@ export const useInfiniteSearch = (options: UseInfiniteSearchOptions): UseInfinit
           setResults(searchResults);
         }
 
-        setHasNextPage(searchResults.length < totalResults);
+        setHasNextPage(updatedResults.length < totalResults);
 
         const totalPages = Math.ceil(totalResults / pageSize);
 
@@ -160,24 +169,29 @@ export const useInfiniteSearch = (options: UseInfiniteSearchOptions): UseInfinit
         });
       } catch (err) {
         // Don't set error if request was aborted
-        if (isAborted.current) {
+        if (signal.aborted) {
           return;
         }
 
         const errorMessage = err instanceof Error ? err : new Error('Search failed');
         setError(errorMessage);
-        setResults([]);
-        setTotal(0);
-        setTotalPages(0);
+
+        // Don't clean up existing results if appending results
+        if (!append) {
+          setResults([]);
+          setTotal(0);
+          setTotalPages(0);
+        }
+
         setHasNextPage(false);
       } finally {
-        if (!isAborted.current) {
+        if (!signal.aborted) {
           setIsLoading(false);
           setIsLoadingMore(false);
         }
       }
     },
-    [isAborted, searchService, pageSize, sort, onSuccess, query, searchIndexId]
+    [searchService, pageSize, sort, onSuccess, query, searchIndexId]
   );
 
   const search = useCallback(() => {
@@ -203,6 +217,13 @@ export const useInfiniteSearch = (options: UseInfiniteSearchOptions): UseInfinit
 
     search();
   }, [query, search, searchService]);
+
+  useEffect(() => {
+    return () => {
+      // Abort all requests when component unmounts
+      abortControllerRef.current?.abort();
+    };
+  }, []);
 
   const loadMore = useCallback(() => {
     // Don't load more if already loading or no more results available

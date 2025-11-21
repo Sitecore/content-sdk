@@ -1,12 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SearchParameters, SearchResponse } from '@sitecore-content-sdk/search';
-import {
-  DEFAULT_PAGE,
-  DEFAULT_PAGE_SIZE,
-  getOffset,
-  useAbortController,
-  useSearchService,
-} from './utils';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, getOffset, useSearchService } from './utils';
 
 export type PrimitiveType = string | number | boolean;
 
@@ -102,12 +96,21 @@ export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
   const [error, setError] = useState<Error | null>(null);
 
   const { searchService } = useSearchService();
-  const { isAborted } = useAbortController();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const search = useCallback(async () => {
     if (!searchService) {
       return;
     }
+
+    // Abort previous request if it exists
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create new AbortController for this request
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
 
     setIsLoading(true);
     setError(null);
@@ -126,7 +129,7 @@ export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
       const { results: searchResults, total } = await searchService.search(searchParams);
 
       // Check if request was aborted
-      if (isAborted.current) {
+      if (signal.aborted) {
         return;
       }
 
@@ -138,7 +141,7 @@ export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
       onSuccess?.({ total, results: searchResults, totalPages });
     } catch (err) {
       // Don't set error if request was aborted
-      if (isAborted.current) {
+      if (signal.aborted) {
         return;
       }
 
@@ -148,15 +151,22 @@ export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
       setTotal(0);
       setTotalPages(0);
     } finally {
-      if (!isAborted.current) {
+      if (!signal.aborted) {
         setIsLoading(false);
       }
     }
-  }, [isAborted, searchService, page, pageSize, sort, onSuccess, query, searchIndexId]);
+  }, [searchService, page, pageSize, sort, onSuccess, query, searchIndexId]);
 
   useEffect(() => {
     search();
   }, [search]);
+
+  useEffect(() => {
+    return () => {
+      // Abort all requests when component unmounts
+      abortControllerRef.current?.abort();
+    };
+  }, []);
 
   const isEmpty = useMemo(() => results.length === 0, [results]);
 
