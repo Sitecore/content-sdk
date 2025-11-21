@@ -1098,6 +1098,7 @@ describe('PersonalizeMiddleware', () => {
           pathname: '/styleguide',
           language: 'en',
         });
+        
         expect(geoDataCb.calledOnce).to.be.true;
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
@@ -1130,6 +1131,7 @@ describe('PersonalizeMiddleware', () => {
           pathname: '/styleguide',
           language: 'en',
         });
+        
         expect(geoDataCb.calledOnce).to.be.true;
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
