@@ -22,6 +22,7 @@ Our versioning strategy is as follows:
 * `[core]` NativeFetcher response does not match actual returned data ([#284](https://github.com/Sitecore/content-sdk/pull/284))
 * `[nextjs]` Add regex variable substitution for absolute and external URL redirects. ([#287](https://github.com/Sitecore/jss/pull/287))
 * `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Geo based Personalization not possible in Content SDK Personalize Middleware. ([#288](https://github.com/Sitecore/jss/pull/288))
+* `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Geo based Personalization not possible in Content SDK Personalize Middleware. ([#290](https://github.com/Sitecore/jss/pull/290))
 
 ### 🧹 Chores
 

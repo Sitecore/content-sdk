@@ -30,7 +30,7 @@ export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
-    geo?: PersonalizeGeoData;
+    extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
   };
 
 /**
@@ -99,7 +99,9 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
       const cdpTimeout = this.config.cdpTimeout;
-      const geo = this.config.geo;
+      const geo = this.config.extractGeoDataCb
+        ? await this.config.extractGeoDataCb(req)
+        : undefined;
 
       debug.personalize('personalize middleware start: %o', {
         pathname,
