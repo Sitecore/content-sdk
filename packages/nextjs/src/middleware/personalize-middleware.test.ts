@@ -1076,11 +1076,14 @@ describe('PersonalizeMiddleware', () => {
 
       it('should call personalize with geo data', async () => {
         const geo = { country: 'US', region: 'CA', city: 'San Francisco' };
+        const geoDataCb = sandbox.stub().returns(geo);
 
         const { middleware, initPersonalizeServer } = createMiddleware({
           geo,
           personalizeInfo,
         });
+
+        middleware.extractGeoDataCb(geoDataCb);
 
         middleware['personalize'] = PersonalizeMiddleware.prototype['personalize'];
 
@@ -1095,6 +1098,39 @@ describe('PersonalizeMiddleware', () => {
           pathname: '/styleguide',
           language: 'en',
         });
+        expect(geoDataCb.calledOnce).to.be.true;
+        expect(initPersonalizeServer.calledOnce).to.be.true;
+        expect(CDKPersonalizeStub.calledThrice).to.be.true;
+        expect(CDKPersonalizeStub.firstCall.args[1].geo).to.deep.equal(geo);
+        expect(CDKPersonalizeStub.secondCall.args[1].geo).to.deep.equal(geo);
+        expect(CDKPersonalizeStub.thirdCall.args[1].geo).to.deep.equal(geo);
+      });
+
+      it('should call personalize with geo data when an async cb is provided', async () => {
+        const geo = { country: 'US', region: 'CA', city: 'San Francisco' };
+        const geoDataCb = sandbox.stub().resolves(geo);
+
+        const { middleware, initPersonalizeServer } = createMiddleware({
+          geo,
+          personalizeInfo,
+        });
+
+        middleware.extractGeoDataCb(geoDataCb);
+
+        middleware['personalize'] = PersonalizeMiddleware.prototype['personalize'];
+
+        await middleware.handle(req, res);
+
+        validateDebugLog('personalize middleware start: %o', {
+          geo,
+          headers: {
+            ...req.headers,
+          },
+          hostname: 'foo.net',
+          pathname: '/styleguide',
+          language: 'en',
+        });
+        expect(geoDataCb.calledOnce).to.be.true;
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
         expect(CDKPersonalizeStub.firstCall.args[1].geo).to.deep.equal(geo);

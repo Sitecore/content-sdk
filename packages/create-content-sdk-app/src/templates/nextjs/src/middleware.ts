@@ -45,8 +45,8 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
 
   const personalize = new PersonalizeMiddleware({
     /**
-    * List of sites for site resolver to work with
-    */
+     * List of sites for site resolver to work with
+     */
     sites,
     ...scConfig.api.edge,
     ...scConfig.personalize,
@@ -55,15 +55,17 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
     // By default it is disabled while in development mode.
     // This is an important performance consideration since Next.js Edge middleware runs on every request
     skip: () => false,
-    // This is an example of how to provide geo data for personalization.
-    // This has to be set per request, as geo data varies between users.
-    // In real world scenarios, you would extract geo data from a 3rd party geo service or your own service.
-    // geo:{
-    //   city: 'Athens',
-    //   country: 'Greece',
-    //   region: 'Attica',
-    // }
   });
+
+  // This is an example of how to provide geo data for personalization.
+  // The provided callback will be called on each request to extract geo data.
+  // personalize.extractGeoDataCb(() => {
+  //   return {
+  //     city: 'Athens',
+  //     country: 'Greece',
+  //     region: 'Attica',
+  //   };
+  // });
 
   return defineMiddleware(multisite, redirects, personalize).exec(req, ev);
 }
