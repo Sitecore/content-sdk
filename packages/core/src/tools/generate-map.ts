@@ -7,7 +7,6 @@ export type GenerateMapFunction = (args: GenerateMapArgs) => void;
 
 /**
  * Arguments for the generateMap function.
- * @remarks
  * This type defines all configuration options for generating Sitecore component maps.
  * Component maps can be generated as a single file or split into server/client variants.
  * @public

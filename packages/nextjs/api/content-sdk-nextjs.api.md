@@ -32,6 +32,7 @@ import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/re
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core/client';
 import { DesignLibrary } from '@sitecore-content-sdk/react';
+import { DesignLibraryApp } from '@sitecore-content-sdk/react';
 import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/core/editing';
 import { DictionaryPhrases } from '@sitecore-content-sdk/core/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/core/i18n';
@@ -297,6 +298,7 @@ export const createEditingConfigRouteHandler: (options: EditingConfigRouteHandle
 // @public
 export const createEditingRenderRouteHandlers: (options: EditingHandlerOptions) => {
     GET: (req: NextRequest) => Promise<Response>;
+    POST: (req: NextRequest) => Promise<Response>;
     OPTIONS: (req: NextRequest) => Response;
 };
 
@@ -341,6 +343,8 @@ export const defineMiddleware: (...middlewares: Middleware[]) => {
 };
 
 export { DesignLibrary }
+
+export { DesignLibraryApp }
 
 export { DictionaryPhrases }
 
@@ -664,6 +668,7 @@ export const NextImage: React_2.FC<NextImageProps>;
 export type NextjsContentSdkComponent = ReactContentSdkComponent & {
     getComponentServerProps?: GetComponentServerProps;
     dynamicModule?: () => Promise<ReactContentSdkComponent>;
+    componentType?: 'client' | 'server' | 'universal';
 };
 
 export { normalizePersonalizedRewrite }
@@ -705,12 +710,13 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         response: NextResponse;
     }): Promise<void>;
     // (undocumented)
-    protected personalize({ params, friendlyId, language, timeout, variantIds, }: {
+    protected personalize({ params, friendlyId, language, timeout, variantIds, geo, }: {
         params: ExperienceParams;
         friendlyId: string;
         language: string;
         timeout?: number;
         variantIds?: string[];
+        geo?: PersonalizeGeoData;
     }, request: NextRequest): Promise<{
         variantId: string;
     }>;
@@ -722,6 +728,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
+    extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
 };
 
 export { PersonalizeService }
@@ -914,6 +921,7 @@ export { writeImportMap }
 
 // Warnings were encountered during analysis:
 //
+// src/middleware/personalize-middleware.ts:281:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
 // src/services/component-props-service.ts:61:5 - (ae-forgotten-export) The symbol "NextContext" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)

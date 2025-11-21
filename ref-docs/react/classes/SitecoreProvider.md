@@ -6,7 +6,7 @@
 
 # Class: SitecoreProvider
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:59](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/react/src/components/SitecoreProvider.tsx#L59)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:71](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/react/src/components/SitecoreProvider.tsx#L71)
 
 The SitecoreProvider component.
 
@@ -20,7 +20,7 @@ The SitecoreProvider component.
 
 > **new SitecoreProvider**(`props`): `SitecoreProvider`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:65](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/react/src/components/SitecoreProvider.tsx#L65)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:77](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/react/src/components/SitecoreProvider.tsx#L77)
 
 #### Parameters
 
@@ -129,7 +129,7 @@ class Foo extends React.Component {
 
 > `static` **displayName**: `string` = `'SitecoreProvider'`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:63](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/react/src/components/SitecoreProvider.tsx#L63)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:75](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/react/src/components/SitecoreProvider.tsx#L75)
 
 ***
 
@@ -199,7 +199,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:90](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/react/src/components/SitecoreProvider.tsx#L90)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:102](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/react/src/components/SitecoreProvider.tsx#L102)
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -411,7 +411,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:110](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/react/src/components/SitecoreProvider.tsx#L110)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:122](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/react/src/components/SitecoreProvider.tsx#L122)
 
 #### Returns
 
@@ -427,7 +427,7 @@ Defined in: [packages/react/src/components/SitecoreProvider.tsx:110](https://git
 
 > **setPage**(`value`): `void`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:104](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/react/src/components/SitecoreProvider.tsx#L104)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:116](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/react/src/components/SitecoreProvider.tsx#L116)
 
 Update page state.
 

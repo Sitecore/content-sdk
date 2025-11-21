@@ -8,7 +8,7 @@
 
 > **EditingOptions** = `object`
 
-Defined in: [packages/core/src/editing/editing-service.ts:41](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/core/src/editing/editing-service.ts#L41)
+Defined in: [packages/core/src/editing/editing-service.ts:41](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/core/src/editing/editing-service.ts#L41)
 
 Options for fetching editing data
 
@@ -18,7 +18,7 @@ Options for fetching editing data
 
 > **itemId**: `string`
 
-Defined in: [packages/core/src/editing/editing-service.ts:42](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/core/src/editing/editing-service.ts#L42)
+Defined in: [packages/core/src/editing/editing-service.ts:42](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/core/src/editing/editing-service.ts#L42)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/core/src/editing/editing-service.ts:42](https://github.com
 
 > **language**: `string`
 
-Defined in: [packages/core/src/editing/editing-service.ts:43](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/core/src/editing/editing-service.ts#L43)
+Defined in: [packages/core/src/editing/editing-service.ts:43](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/core/src/editing/editing-service.ts#L43)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/editing/editing-service.ts:43](https://github.com
 
 > `optional` **layoutKind**: [`LayoutKind`](../enumerations/LayoutKind.md)
 
-Defined in: [packages/core/src/editing/editing-service.ts:45](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/core/src/editing/editing-service.ts#L45)
+Defined in: [packages/core/src/editing/editing-service.ts:45](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/core/src/editing/editing-service.ts#L45)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/core/src/editing/editing-service.ts:45](https://github.com
 
 > **mode**: `Exclude`\<[`LayoutServicePageState`](../../layout/enumerations/LayoutServicePageState.md), `"Normal"`\>
 
-Defined in: [packages/core/src/editing/editing-service.ts:46](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/core/src/editing/editing-service.ts#L46)
+Defined in: [packages/core/src/editing/editing-service.ts:46](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/core/src/editing/editing-service.ts#L46)
 
 ***
 
@@ -50,4 +50,4 @@ Defined in: [packages/core/src/editing/editing-service.ts:46](https://github.com
 
 > `optional` **version**: `string`
 
-Defined in: [packages/core/src/editing/editing-service.ts:44](https://github.com/Sitecore/content-sdk/blob/4867cc2c17164b3451c55daacc6edef1f1f5d463/packages/core/src/editing/editing-service.ts#L44)
+Defined in: [packages/core/src/editing/editing-service.ts:44](https://github.com/Sitecore/content-sdk/blob/4a76edc8096a954a98e747ed55d4e818e5417d3d/packages/core/src/editing/editing-service.ts#L44)
