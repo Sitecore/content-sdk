@@ -723,7 +723,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
-    geo?: PersonalizeGeoData;
+    extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
 };
 
 export { PersonalizeService }
@@ -916,7 +916,7 @@ export { writeImportMap }
 
 // Warnings were encountered during analysis:
 //
-// src/middleware/personalize-middleware.ts:279:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
+// src/middleware/personalize-middleware.ts:281:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
 // src/services/component-props-service.ts:61:5 - (ae-forgotten-export) The symbol "NextContext" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)

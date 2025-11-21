@@ -21,10 +21,6 @@ export type PersonalizeGeoData = {
   region?: string;
 };
 
-export type PersonalizeGeoDataCallback = (
-  req?: NextRequest
-) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
-
 /**
  * The interface for the PersonalizeMiddleware configuration.
  * @public
@@ -34,7 +30,7 @@ export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
-    geo?: PersonalizeGeoData;
+    extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
   };
 
 /**
@@ -65,7 +61,6 @@ type PersonalizeExecution = {
  */
 export class PersonalizeMiddleware extends MiddlewareBase {
   protected personalizeService: PersonalizeService;
-  protected geoDataCb?: (req: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
 
   /**
    * @param {PersonalizeMiddlewareConfig} [config] Personalize middleware config
@@ -93,16 +88,6 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       });
   }
 
-  /**
-   * Sets a callback to extract geo data on each request
-   * @param {PersonalizeGeoDataCallback} cb The callback to extract geo data
-   */
-  extractGeoDataCb(
-    cb: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData
-  ): void {
-    this.geoDataCb = cb;
-  }
-
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize middleware is disabled globally)');
@@ -114,7 +99,9 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
       const cdpTimeout = this.config.cdpTimeout;
-      const geo = this.geoDataCb ? await this.geoDataCb(req) : undefined;
+      const geo = this.config.extractGeoDataCb
+        ? await this.config.extractGeoDataCb(req)
+        : undefined;
 
       debug.personalize('personalize middleware start: %o', {
         pathname,

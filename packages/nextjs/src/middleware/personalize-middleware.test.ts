@@ -178,6 +178,7 @@ describe('PersonalizeMiddleware', () => {
       personalizeStub?: sinon.SinonStub;
       handleCookieStub?: sinon.SinonStub;
       getClientFactoryStub?: sinon.SinonStub;
+      extractGeoDataCb?: sinon.SinonStub;
     } = { config: defaultConfig }
   ) => {
     const clientFactory = GraphQLRequestClient.createClientFactory({
@@ -1056,6 +1057,7 @@ describe('PersonalizeMiddleware', () => {
     });
 
     describe('geo data', () => {
+      const geo = { country: 'US', region: 'CA', city: 'San Francisco' };
       const req = createRequest();
       const res = createResponse();
       const personalizeInfo = {
@@ -1075,15 +1077,12 @@ describe('PersonalizeMiddleware', () => {
       });
 
       it('should call personalize with geo data', async () => {
-        const geo = { country: 'US', region: 'CA', city: 'San Francisco' };
-        const geoDataCb = sandbox.stub().returns(geo);
+        const extractGeoDataCb = sandbox.stub().returns(geo);
 
         const { middleware, initPersonalizeServer } = createMiddleware({
-          geo,
           personalizeInfo,
+          extractGeoDataCb,
         });
-
-        middleware.extractGeoDataCb(geoDataCb);
 
         middleware['personalize'] = PersonalizeMiddleware.prototype['personalize'];
 
@@ -1098,8 +1097,8 @@ describe('PersonalizeMiddleware', () => {
           pathname: '/styleguide',
           language: 'en',
         });
-        
-        expect(geoDataCb.calledOnce).to.be.true;
+
+        expect(extractGeoDataCb.calledOnce).to.be.true;
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
         expect(CDKPersonalizeStub.firstCall.args[1].geo).to.deep.equal(geo);
@@ -1108,15 +1107,12 @@ describe('PersonalizeMiddleware', () => {
       });
 
       it('should call personalize with geo data when an async cb is provided', async () => {
-        const geo = { country: 'US', region: 'CA', city: 'San Francisco' };
-        const geoDataCb = sandbox.stub().resolves(geo);
+        const extractGeoDataCb = sandbox.stub().resolves(geo);
 
         const { middleware, initPersonalizeServer } = createMiddleware({
-          geo,
+          extractGeoDataCb,
           personalizeInfo,
         });
-
-        middleware.extractGeoDataCb(geoDataCb);
 
         middleware['personalize'] = PersonalizeMiddleware.prototype['personalize'];
 
@@ -1131,8 +1127,8 @@ describe('PersonalizeMiddleware', () => {
           pathname: '/styleguide',
           language: 'en',
         });
-        
-        expect(geoDataCb.calledOnce).to.be.true;
+
+        expect(extractGeoDataCb.calledOnce).to.be.true;
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
         expect(CDKPersonalizeStub.firstCall.args[1].geo).to.deep.equal(geo);
