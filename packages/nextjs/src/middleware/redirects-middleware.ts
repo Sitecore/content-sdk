@@ -93,6 +93,8 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return res;
       }
 
+      const isAppRouterRequest = this.isAppRouter(res);
+
       const createResponse = async (): Promise<NextResponse> => {
         if (this.isPreview(req)) {
           debug.redirects('skipped (preview)');
@@ -134,7 +136,9 @@ export class RedirectsMiddleware extends MiddlewareBase {
             REGEXP_CONTEXT_SITE_LANG,
             site.language
           );
-          req.nextUrl.locale = site.language;
+          if (!isAppRouterRequest) {
+            req.nextUrl.locale = site.language;
+          }
         }
 
         const url = this.normalizeUrl(req.nextUrl.clone());
@@ -165,7 +169,9 @@ export class RedirectsMiddleware extends MiddlewareBase {
           const urlFirstPart = targetParts[1];
 
           if (this.locales.includes(urlFirstPart)) {
-            req.nextUrl.locale = urlFirstPart;
+            if (!isAppRouterRequest) {
+              req.nextUrl.locale = urlFirstPart;
+            }
             existsRedirect.target = existsRedirect.target.replace(`/${urlFirstPart}`, '');
           }
 
@@ -195,7 +201,9 @@ export class RedirectsMiddleware extends MiddlewareBase {
           url.href = prepareNewURL.href;
           url.pathname = prepareNewURL.pathname;
           url.search = prepareNewURL.search;
-          url.locale = req.nextUrl.locale;
+          if (!isAppRouterRequest) {
+            url.locale = req.nextUrl.locale;
+          }
         }
 
         /** return Response redirect with http code of redirect type */
