@@ -79,9 +79,10 @@ export type WriteImportMapArgs = {
   scConfig?: SitecoreConfig;
   exclude?: string[];
   /**
-   * generate separate import map for client components
+   * generate separate import map for server/client components
+   * when true, generates import-map-server.ts and import-map-client.ts
    */
-  clientImportMap?: boolean;
+  separateServerClientMaps?: boolean;
 };
 
 /**
@@ -323,23 +324,24 @@ function _getImportMap(paths: string[]) {
   return importMap;
 }
 
-const prepImportMaps = async (paths: string[], prepareClient?: boolean) => {
-  const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
-  if (!prepareClient) {
-    return [{ map: getImportMap(paths), path: importMapFile }];
+const prepImportMaps = async (paths: string[], separateMaps?: boolean) => {
+  const importMapFileDefault = path.join(process.cwd(), '.sitecore', 'import-map.ts');
+  if (!separateMaps) {
+    return [{ map: getImportMap(paths), path: importMapFileDefault }];
   }
   const appPath = process.cwd();
   const serverPaths: string[] = [];
   const clientPaths: string[] = [];
   const importMapFileClient = path.join(process.cwd(), '.sitecore', 'import-map-client.ts');
+  const importMapFileServer = path.join(process.cwd(), '.sitecore', 'import-map-server.ts');
   for (const componentPath of paths) {
     const fullPath = path.isAbsolute(componentPath)
       ? componentPath
       : path.resolve(appPath, componentPath);
-    // read start of the file that may be 'use client'
+    // read the start of the file that may be 'use client'
     const firstLine = await new Promise<string>((resolve) => {
       let readBuffer = '';
-      const stream = fs.createReadStream(componentPath, { end: 12 });
+      const stream = fs.createReadStream(fullPath, { end: 12 });
       stream
         .on('data', async (chunk) => {
           readBuffer += chunk.toString();
@@ -356,7 +358,7 @@ const prepImportMaps = async (paths: string[], prepareClient?: boolean) => {
     }
   }
   return [
-    { map: getImportMap(serverPaths), path: importMapFile },
+    { map: getImportMap(serverPaths), path: importMapFileServer },
     { map: getImportMap(clientPaths), path: importMapFileClient },
   ];
 };
@@ -380,7 +382,7 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
     }
     const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
     // TODO: don't run in pages router
-    const importMaps = await prepImportMaps(paths, args.clientImportMap);
+    const importMaps = await prepImportMaps(paths, args.separateServerClientMaps);
     for (const importMap of importMaps) {
       console.log(
         `[Codegen] Generating import map: ${JSON.stringify({

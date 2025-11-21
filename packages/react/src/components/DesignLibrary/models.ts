@@ -20,7 +20,7 @@ export type DynamicComponent = React.ComponentType<{
   params: ComponentParams;
 }>;
 
-// @MAJOR-RELEASE-TODO - Make importMap required in next major version
+// @MAJOR-RELEASE-TODO - Make loadImportMap required in next major version
 export type DesignLibraryProps = {
   /**
    * The dynamic import for import map to be used in variant generation mode.
@@ -49,7 +49,9 @@ export type DesignLibraryServerProps = {
   loadServerImportMap: () => Promise<ImportMapImport>;
 };
 
-export type DesingLibraryAppProps = DesignLibraryServerProps;
+export type DesingLibraryAppProps = DesignLibraryServerProps & {
+  loadClientImportMap: () => Promise<ImportMapImport>;
+};
 
 export type DesignLibraryServerPreviewProps = Omit<DesignLibraryServerProps, 'loadServerImportMap'>;
 
