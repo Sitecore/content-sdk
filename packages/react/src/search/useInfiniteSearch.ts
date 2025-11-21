@@ -231,8 +231,6 @@ export const useInfiniteSearch = (options: UseInfiniteSearchOptions): UseInfinit
       return;
     }
 
-    setIsLoadingMore(true);
-
     const nextOffset = currentOffset + pageSize;
     setCurrentOffset(nextOffset);
 
