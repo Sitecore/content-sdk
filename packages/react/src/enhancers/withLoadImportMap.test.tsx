@@ -12,7 +12,7 @@ import { ImportMapImport } from '../components/DesignLibrary/models';
 
 use(sinonChai);
 
-describe.only('withLoadImportMap', () => {
+describe('withLoadImportMap', () => {
   const mockImportMapData: ImportMapImport = {
     default: [
       {
