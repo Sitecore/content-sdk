@@ -39,6 +39,8 @@ describe('createEditingRenderRouteHandlers', () => {
   let fetchStub: sinon.SinonStub;
   let handlers: any;
   let req: Partial<NextRequest>;
+  let NativeDataFetcherStub: sinon.SinonStub;
+  let mockFetchInstance: any;
 
   let OriginalResponse: typeof Response;
   let originalTestCookieStore: any;
@@ -105,6 +107,13 @@ describe('createEditingRenderRouteHandlers', () => {
     // Set the global variable BEFORE proxyquire loads the module
     (global as any).__TEST_COOKIE_STORE__ = cookiesStub;
 
+    fetchStub = sandbox.stub();
+    mockFetchInstance = {
+      fetch: fetchStub,
+    };
+    // Create constructor stub that returns the mock instance
+    NativeDataFetcherStub = sandbox.stub().returns(mockFetchInstance);
+
     editingRenderRouteHandlerModule = proxyquire('./editing-render-route-handler', {
       '../utils/utils': { getEditingSecret: getEditingSecretStub },
       '@sitecore-content-sdk/core/utils': { getEnforcedCorsHeaders: getEnforcedCorsHeadersStub },
@@ -129,6 +138,9 @@ describe('createEditingRenderRouteHandlers', () => {
           version: query.sc_version,
           layoutKind: query.sc_layoutKind,
         })),
+      },
+      '@sitecore-content-sdk/core': {
+        NativeDataFetcher: NativeDataFetcherStub,
       },
     });
 
@@ -672,8 +684,6 @@ describe('createEditingRenderRouteHandlers', () => {
           }),
         } as any,
       };
-
-      fetchStub = sinon.stub(global, 'fetch');
     });
 
     it('should return 401 for invalid origin', async () => {
@@ -727,7 +737,7 @@ describe('createEditingRenderRouteHandlers', () => {
         status: 200,
         statusText: 'OK',
         headers: mockResponseHeaders,
-        text: sinon.stub().resolves('<html>Server Action Response</html>'),
+        data: '<html>Server Action Response</html>',
       });
 
       const res = await handlers.POST(req);
