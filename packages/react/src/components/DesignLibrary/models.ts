@@ -70,7 +70,7 @@ export type DesignLibraryVariantGenerationEventsProps = DesignLibraryPreviewEven
   /**
    * The import map info to be posted as a message to the Design Studio.
    */
-  importMap?: ImportEntryInfo[];
+  importMap: ImportEntryInfo[];
   /**
    * Any error that occurred while loading the import map to be posted as a message to the Design Studio.
    */

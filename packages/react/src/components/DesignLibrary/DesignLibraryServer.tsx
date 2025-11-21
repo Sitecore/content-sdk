@@ -40,7 +40,7 @@ export const __mockDependencies = async (mocks: any) => {
  * wires the **variant generation** handshake so the parent (Design Library) can send
  * generated code to preview and iterate on.
  * Also renders the DesignLibraryClientEvents component which serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
- * @param {DesignLibraryServerProps} [props] The props. {@link DesignLibraryServerProps}
+ * @param {DesignLibraryServerProps} props The props. {@link DesignLibraryServerProps}
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  */
 export const DesignLibraryServer = async ({
@@ -78,7 +78,7 @@ export const DesignLibraryServer = async ({
  * wires the **variant generation** handshake so the parent (Design Library) can send
  * generated code to preview and iterate on.
  * Also renders the DesignLibraryVariantGenerationEvents component which serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
- * @param {DesignLibraryServerVariantGenerationProps} [props] The props. {@link DesignLibraryServerVariantGenerationProps}
+ * @param {DesignLibraryServerVariantGenerationProps} props The props. {@link DesignLibraryServerVariantGenerationProps}
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  */
 export const DesignLibraryServerVariantGeneration = async ({
@@ -176,7 +176,7 @@ export const DesignLibraryServerVariantGeneration = async ({
  * wires the **component update** handshake so the parent (Design Library) can send
  * updated component props.
  * Also renders the DesignLibraryPreviewEvents component which serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
- * @param {DesignLibraryServerPreviewProps} [props] The props. {@link DesignLibraryServerPreviewProps}
+ * @param {DesignLibraryServerPreviewProps} props The props. {@link DesignLibraryServerPreviewProps}
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  */
 export const DesignLibraryServerPreview = async ({

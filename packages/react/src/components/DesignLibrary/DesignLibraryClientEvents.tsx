@@ -33,7 +33,7 @@ export const __mockDependencies = (mocks: any) => {
  * Design Library component for rendering server components in app router application.
  * DesignLibraryPreviewEvents component serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side.
  * It posts messages to Design Library Studio and sets up handlers to receive updates and previews which are then passed to the server component via server function updateServerComponentAction.
- * @param {DesignLibraryPreviewEventsProps} [props] The props. {@link DesignLibraryPreviewEventsProps}
+ * @param {DesignLibraryPreviewEventsProps} props The props. {@link DesignLibraryPreviewEventsProps}
  * @returns {JSX.Element} empty JSX element.
  */
 export const DesignLibraryPreviewEvents = ({
@@ -41,10 +41,8 @@ export const DesignLibraryPreviewEvents = ({
   component,
 }: DesignLibraryPreviewEventsProps) => {
   useEffect(() => {
-    // - post to DL designlibraryStatus
     postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
 
-    // add the component update handler
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
       _updateServerComponentAction({ uid: updated.uid, updatedComponent: updated });
     });
@@ -61,7 +59,7 @@ export const DesignLibraryPreviewEvents = ({
  * Design Library component for rendering server components in app router application.
  * DesignLibraryVariantGenerationEvents component serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side in variant generation mode.
  * It posts messages to Design Library Studio and sets up handlers to receive updates and previews which are then passed to the server component via server function updateServerComponentAction.
- * @param {DesignLibraryVariantGenerationEventsProps} [props] The props. {@link DesignLibraryVariantGenerationEventsProps}
+ * @param {DesignLibraryVariantGenerationEventsProps} props The props. {@link DesignLibraryVariantGenerationEventsProps}
  * @returns {JSX.Element} empty JSX element.
  */
 export const DesignLibraryVariantGenerationEvents = ({
@@ -72,10 +70,8 @@ export const DesignLibraryVariantGenerationEvents = ({
   previewComponentData,
 }: DesignLibraryVariantGenerationEventsProps) => {
   useEffect(() => {
-    // - post to DL designlibraryStatus
     postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
 
-    // add the component update handler
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
       _updateServerComponentAction({
         uid: updated.uid,
@@ -84,7 +80,6 @@ export const DesignLibraryVariantGenerationEvents = ({
       });
     });
 
-    // add the component preview handler
     const unsubPreview = addServerComponentPreviewHandler((eventArgs) => {
       _updateServerComponentAction({ uid: component.uid, previewComponent: eventArgs });
     });
@@ -93,11 +88,9 @@ export const DesignLibraryVariantGenerationEvents = ({
       // an import map error occurred on the server side in DesignLibraryServer, post error event to Design Studio
       sendErrorEvent(component.uid, importMapError, codegen.DesignLibraryPreviewError.RenderInit);
     } else {
-      // post importmap event
       const importMapEvent = getDesignLibraryImportMapEvent(component.uid, importMap);
       postToDesignLibrary(importMapEvent);
 
-      // const props event
       const propsEvent = getDesignLibraryComponentPropsEvent(
         component.uid,
         component.fields,

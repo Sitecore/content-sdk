@@ -407,7 +407,7 @@ describe('<DesignLibraryClientEvents />', () => {
       expect(addStyleElementSpy).to.have.been.calledWith(testStyle);
     });
 
-    it('should not add style element when previewComponentStyle style is not provided', async () => {
+    it('should not add style element when previewComponentData style is not provided', async () => {
       renderWithSitecore(
         {
           designLibraryStatus: DesignLibraryStatus.READY,
