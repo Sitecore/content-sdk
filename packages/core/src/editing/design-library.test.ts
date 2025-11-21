@@ -11,7 +11,6 @@ import {
   postToDesignLibrary,
   validateEvent,
   updateComponent,
-  validateOrigin,
 } from './design-library';
 import testComponent from '../test-data/component-editing-data';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
