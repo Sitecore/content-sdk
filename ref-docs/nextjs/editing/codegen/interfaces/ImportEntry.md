@@ -6,7 +6,7 @@
 
 # Interface: ImportEntry
 
-Defined in: core/types/editing/codegen/preview.d.ts:22
+Defined in: core/types/editing/codegen/preview.d.ts:23
 
 Represents an import map entry.
 
@@ -16,7 +16,7 @@ Represents an import map entry.
 
 > **exports**: `object`[]
 
-Defined in: core/types/editing/codegen/preview.d.ts:24
+Defined in: core/types/editing/codegen/preview.d.ts:25
 
 #### name
 
@@ -32,4 +32,4 @@ Defined in: core/types/editing/codegen/preview.d.ts:24
 
 > **module**: `string`
 
-Defined in: core/types/editing/codegen/preview.d.ts:23
+Defined in: core/types/editing/codegen/preview.d.ts:24
