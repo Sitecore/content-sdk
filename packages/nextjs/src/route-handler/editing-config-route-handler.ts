@@ -20,6 +20,10 @@ export type EditingConfigRouteHandlerOptions = {
    * Application metadata
    */
   metadata: Metadata;
+  /**
+   * Contains only client and universal components that can be used in client bundles
+   */
+  clientComponents?: ComponentMap<NextjsContentSdkComponent>;
 };
 
 /**
@@ -30,7 +34,7 @@ export type EditingConfigRouteHandlerOptions = {
  * @public
  */
 export const createEditingConfigRouteHandler = (options: EditingConfigRouteHandlerOptions) => {
-  const { components, metadata } = options;
+  const { components, metadata, clientComponents } = options;
 
   const validateRequest = (req: NextRequest) => {
     const secret = req.nextUrl.searchParams.get(QUERY_PARAM_EDITING_SECRET);
@@ -81,9 +85,12 @@ export const createEditingConfigRouteHandler = (options: EditingConfigRouteHandl
       }
 
       const componentNames = Array.from(components.keys());
+      const clientComponentNames = clientComponents ? Array.from(clientComponents.keys()) : [];
 
       const responseData = {
+        framework: 'nextjs-approuter',
         components: componentNames,
+        clientComponents: clientComponentNames,
         packages: metadata.packages,
         editMode: EditMode.Metadata,
       };

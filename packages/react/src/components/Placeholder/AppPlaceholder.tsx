@@ -45,6 +45,9 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => {
       const isClient = componentType === 'client';
       const key = rendering.uid || `component-${index}`;
 
+      // Use rsc context to determine the current runtime
+      const componentRuntime = rsc ? 'server' : 'client';
+
       const renderedProps = getAppComponentProps(props, rendering);
 
       const finalRenderedProps = props.modifyComponentProps
@@ -94,7 +97,7 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => {
       if (page.mode.isEditing) {
         const key = (rendering.uid as string) || `component-${index}`;
         return (
-          <PlaceholderMetadata key={key} rendering={rendering}>
+          <PlaceholderMetadata key={key} rendering={rendering} componentRuntime={componentRuntime}>
             {rendered}
           </PlaceholderMetadata>
         );

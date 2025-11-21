@@ -13,6 +13,10 @@ export interface PlaceholderMetadataProps {
   rendering: ComponentRendering;
   placeholderName?: string;
   children?: ReactNode;
+  /**
+   * Component runtime type. Used to add data-csdk-component-runtime attribute to rendering chromes
+   */
+  componentRuntime?: 'server' | 'client';
 }
 
 export type CodeBlockAttributes = {
@@ -21,6 +25,7 @@ export type CodeBlockAttributes = {
   className: string;
   kind: string;
   id?: string;
+  'data-csdk-component-runtime'?: 'server' | 'client';
 };
 
 /**
@@ -37,6 +42,7 @@ export const PlaceholderMetadata = ({
   rendering,
   placeholderName,
   children,
+  componentRuntime,
 }: PlaceholderMetadataProps): JSX.Element => {
   const getCodeBlockAttributes = (
     kind: MetadataKind,
@@ -79,6 +85,11 @@ export const PlaceholderMetadata = ({
         attributes.id = phId;
       } else {
         attributes.id = id;
+      }
+
+      // Add component runtime attribute for rendering chromes
+      if (chrometype === 'rendering' && componentRuntime) {
+        attributes['data-csdk-component-runtime'] = componentRuntime;
       }
     }
 
