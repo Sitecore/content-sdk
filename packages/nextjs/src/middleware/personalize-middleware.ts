@@ -13,6 +13,15 @@ import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { SitecoreConfig } from '../config';
 
 /**
+ * Represents the geolocation data used for personalization
+ */
+export type PersonalizeGeoData = {
+  city?: string;
+  country?: string;
+  region?: string;
+};
+
+/**
  * The interface for the PersonalizeMiddleware configuration.
  * @public
  */
@@ -21,6 +30,7 @@ export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
+    geo?: PersonalizeGeoData;
   };
 
 /**
@@ -89,11 +99,13 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
       const cdpTimeout = this.config.cdpTimeout;
+      const geo = this.config.geo;
 
       debug.personalize('personalize middleware start: %o', {
         pathname,
         language,
         hostname,
+        ...(geo && { geo }),
         headers: this.extractDebugHeaders(req.headers),
       });
 
@@ -160,6 +172,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
               params,
               language,
               timeout: cdpTimeout,
+              ...(geo && { geo }),
             },
             req
           ).then((personalization) => {
@@ -256,12 +269,14 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       language,
       timeout,
       variantIds,
+      geo,
     }: {
       params: ExperienceParams;
       friendlyId: string;
       language: string;
       timeout?: number;
       variantIds?: string[];
+      geo?: PersonalizeGeoData;
     },
     request: NextRequest
   ) {
@@ -276,6 +291,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         params,
         language,
         pageVariantIds: variantIds,
+        ...(geo && { geo }),
       },
       { timeout }
     )) as {

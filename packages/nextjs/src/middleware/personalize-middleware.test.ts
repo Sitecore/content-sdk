@@ -9,13 +9,22 @@ import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { GraphQLRequestClient, debug } from '@sitecore-content-sdk/core';
 import { SiteResolver } from '@sitecore-content-sdk/core/site';
 import { CdpHelper } from '@sitecore-content-sdk/core/personalize';
-import { PersonalizeMiddleware, PersonalizeMiddlewareConfig } from './personalize-middleware';
+import { PersonalizeMiddlewareConfig } from './personalize-middleware';
+import proxyquire from 'proxyquire';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 const sandbox = sinon.createSandbox();
 
 describe('PersonalizeMiddleware', () => {
+  const CDKPersonalizeStub = sandbox.stub().callsFake(() => {
+    return Promise.resolve({ variantId: 'variant-2' });
+  });
+
+  const { PersonalizeMiddleware } = proxyquire('./personalize-middleware', {
+    '@sitecore-cloudsdk/personalize/server': { personalize: CDKPersonalizeStub },
+  });
+
   const ua = 'user-agent-string';
   const userAgentStub = sandbox.stub(nextjs, 'userAgent').returns({ ua } as any);
   const debugSpy = spy(debug, 'personalize');
@@ -1044,6 +1053,70 @@ describe('PersonalizeMiddleware', () => {
       });
       expect(finalRes).to.deep.equal(res);
       nextRewriteStub.restore();
+    });
+
+    describe('geo data', () => {
+      const req = createRequest();
+      const res = createResponse();
+      const personalizeInfo = {
+        pageId,
+        variantIds: [
+          'component1_variant1',
+          'component2_variant1',
+          'component2_variant2',
+          'component3_variant1',
+          'component3_variant2',
+          'component3_variant3',
+        ],
+      };
+
+      afterEach(() => {
+        CDKPersonalizeStub.reset();
+      });
+
+      it('should call personalize with geo data', async () => {
+        const geo = { country: 'US', region: 'CA', city: 'San Francisco' };
+
+        const { middleware, initPersonalizeServer } = createMiddleware({
+          geo,
+          personalizeInfo,
+        });
+
+        middleware['personalize'] = PersonalizeMiddleware.prototype['personalize'];
+
+        await middleware.handle(req, res);
+
+        validateDebugLog('personalize middleware start: %o', {
+          geo,
+          headers: {
+            ...req.headers,
+          },
+          hostname: 'foo.net',
+          pathname: '/styleguide',
+          language: 'en',
+        });
+        expect(initPersonalizeServer.calledOnce).to.be.true;
+        expect(CDKPersonalizeStub.calledThrice).to.be.true;
+        expect(CDKPersonalizeStub.firstCall.args[1].geo).to.deep.equal(geo);
+        expect(CDKPersonalizeStub.secondCall.args[1].geo).to.deep.equal(geo);
+        expect(CDKPersonalizeStub.thirdCall.args[1].geo).to.deep.equal(geo);
+      });
+
+      it('should call personalize without geo data when not available', async () => {
+        const { middleware, initPersonalizeServer } = createMiddleware({
+          personalizeInfo,
+        });
+
+        middleware['personalize'] = PersonalizeMiddleware.prototype['personalize'];
+
+        await middleware.handle(req, res);
+
+        expect(initPersonalizeServer.calledOnce).to.be.true;
+        expect(CDKPersonalizeStub.calledThrice).to.be.true;
+        expect(CDKPersonalizeStub.firstCall.args[1]).to.not.have.property('geo');
+        expect(CDKPersonalizeStub.secondCall.args[1]).to.not.have.property('geo');
+        expect(CDKPersonalizeStub.thirdCall.args[1]).to.not.have.property('geo');
+      });
     });
 
     describe('getLanguage', () => {
