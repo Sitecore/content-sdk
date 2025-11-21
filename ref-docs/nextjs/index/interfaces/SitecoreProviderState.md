@@ -6,7 +6,7 @@
 
 # Interface: SitecoreProviderState
 
-Defined in: react/types/components/SitecoreProvider.d.ts:24
+Defined in: react/types/components/SitecoreProvider.d.ts:30
 
 The state for the SitecoreProvider component.
 
@@ -16,7 +16,7 @@ The state for the SitecoreProvider component.
 
 > `optional` **api**: `Required`\<\{ `edge?`: `Required`\<`undefined` \| \{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \}\>; `local?`: `Required`\<`undefined` \| \{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \}\>; \}\>
 
-Defined in: react/types/components/SitecoreProvider.d.ts:38
+Defined in: react/types/components/SitecoreProvider.d.ts:44
 
 The API configuration defined in the `SitecoreConfig`.
 
@@ -26,7 +26,7 @@ The API configuration defined in the `SitecoreConfig`.
 
 > **page**: [`Page`](../type-aliases/Page.md)
 
-Defined in: react/types/components/SitecoreProvider.d.ts:34
+Defined in: react/types/components/SitecoreProvider.d.ts:40
 
 The current page.
 
@@ -36,7 +36,7 @@ The current page.
 
 > **setPage**: (`value`) => `void`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:30
+Defined in: react/types/components/SitecoreProvider.d.ts:36
 
 Method to set the page.
 
