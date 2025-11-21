@@ -8,7 +8,7 @@
 
 > **GenerateMapArgs** = `object`
 
-Defined in: [packages/core/src/tools/generate-map.ts:15](https://github.com/Sitecore/content-sdk/blob/d2abf18666fba089b9dcf62cea47b87eef22e96d/packages/core/src/tools/generate-map.ts#L15)
+Defined in: [packages/core/src/tools/generate-map.ts:15](https://github.com/Sitecore/content-sdk/blob/9975f7e31344ef66c8d690f766f91fbfddf101f4/packages/core/src/tools/generate-map.ts#L15)
 
 Arguments for the generateMap function.
 
@@ -23,7 +23,7 @@ Component maps can be generated as a single file or split into server/client var
 
 > `optional` **clientComponentMap**: `boolean`
 
-Defined in: [packages/core/src/tools/generate-map.ts:35](https://github.com/Sitecore/content-sdk/blob/d2abf18666fba089b9dcf62cea47b87eef22e96d/packages/core/src/tools/generate-map.ts#L35)
+Defined in: [packages/core/src/tools/generate-map.ts:35](https://github.com/Sitecore/content-sdk/blob/9975f7e31344ef66c8d690f766f91fbfddf101f4/packages/core/src/tools/generate-map.ts#L35)
 
 Optional flag to generate separate client and server component maps. When true,
 generates both component-map.ts (all components) and component-map.client.ts (client + universal only).
@@ -35,7 +35,7 @@ When false or undefined, generates single component-map.ts (traditional behavior
 
 > `optional` **clientMapTemplate**: [`ComponentMapTemplate`](ComponentMapTemplate.md) \| [`EnhancedComponentMapTemplate`](EnhancedComponentMapTemplate.md)
 
-Defined in: [packages/core/src/tools/generate-map.ts:29](https://github.com/Sitecore/content-sdk/blob/d2abf18666fba089b9dcf62cea47b87eef22e96d/packages/core/src/tools/generate-map.ts#L29)
+Defined in: [packages/core/src/tools/generate-map.ts:29](https://github.com/Sitecore/content-sdk/blob/9975f7e31344ef66c8d690f766f91fbfddf101f4/packages/core/src/tools/generate-map.ts#L29)
 
 Optional custom template function to generate the client component map content (only used when clientComponentMap is true).
 
@@ -45,7 +45,7 @@ Optional custom template function to generate the client component map content (
 
 > `optional` **componentImports**: [`ComponentImport`](../interfaces/ComponentImport.md)[]
 
-Defined in: [packages/core/src/tools/generate-map.ts:21](https://github.com/Sitecore/content-sdk/blob/d2abf18666fba089b9dcf62cea47b87eef22e96d/packages/core/src/tools/generate-map.ts#L21)
+Defined in: [packages/core/src/tools/generate-map.ts:21](https://github.com/Sitecore/content-sdk/blob/9975f7e31344ef66c8d690f766f91fbfddf101f4/packages/core/src/tools/generate-map.ts#L21)
 
 Optional array of package definitions for component imports to include in the map.
 
@@ -55,7 +55,7 @@ Optional array of package definitions for component imports to include in the ma
 
 > `optional` **destination**: `string`
 
-Defined in: [packages/core/src/tools/generate-map.ts:19](https://github.com/Sitecore/content-sdk/blob/d2abf18666fba089b9dcf62cea47b87eef22e96d/packages/core/src/tools/generate-map.ts#L19)
+Defined in: [packages/core/src/tools/generate-map.ts:19](https://github.com/Sitecore/content-sdk/blob/9975f7e31344ef66c8d690f766f91fbfddf101f4/packages/core/src/tools/generate-map.ts#L19)
 
 Destination folder path for the generated map.
 
@@ -71,7 +71,7 @@ Destination folder path for the generated map.
 
 > `optional` **exclude**: `string`[]
 
-Defined in: [packages/core/src/tools/generate-map.ts:23](https://github.com/Sitecore/content-sdk/blob/d2abf18666fba089b9dcf62cea47b87eef22e96d/packages/core/src/tools/generate-map.ts#L23)
+Defined in: [packages/core/src/tools/generate-map.ts:23](https://github.com/Sitecore/content-sdk/blob/9975f7e31344ef66c8d690f766f91fbfddf101f4/packages/core/src/tools/generate-map.ts#L23)
 
 Optional array of glob paths to exclude from the map.
 
@@ -81,7 +81,7 @@ Optional array of glob paths to exclude from the map.
 
 > `optional` **includeVariants**: `boolean`
 
-Defined in: [packages/core/src/tools/generate-map.ts:37](https://github.com/Sitecore/content-sdk/blob/d2abf18666fba089b9dcf62cea47b87eef22e96d/packages/core/src/tools/generate-map.ts#L37)
+Defined in: [packages/core/src/tools/generate-map.ts:37](https://github.com/Sitecore/content-sdk/blob/9975f7e31344ef66c8d690f766f91fbfddf101f4/packages/core/src/tools/generate-map.ts#L37)
 
 Optional flag to include component's variants path in the component map.
 
@@ -91,7 +91,7 @@ Optional flag to include component's variants path in the component map.
 
 > `optional` **mapTemplate**: [`ComponentMapTemplate`](ComponentMapTemplate.md) \| [`EnhancedComponentMapTemplate`](EnhancedComponentMapTemplate.md)
 
-Defined in: [packages/core/src/tools/generate-map.ts:25](https://github.com/Sitecore/content-sdk/blob/d2abf18666fba089b9dcf62cea47b87eef22e96d/packages/core/src/tools/generate-map.ts#L25)
+Defined in: [packages/core/src/tools/generate-map.ts:25](https://github.com/Sitecore/content-sdk/blob/9975f7e31344ef66c8d690f766f91fbfddf101f4/packages/core/src/tools/generate-map.ts#L25)
 
 Optional custom template function to generate the main component map content.
 
@@ -101,6 +101,6 @@ Optional custom template function to generate the main component map content.
 
 > **paths**: `string`[]
 
-Defined in: [packages/core/src/tools/generate-map.ts:17](https://github.com/Sitecore/content-sdk/blob/d2abf18666fba089b9dcf62cea47b87eef22e96d/packages/core/src/tools/generate-map.ts#L17)
+Defined in: [packages/core/src/tools/generate-map.ts:17](https://github.com/Sitecore/content-sdk/blob/9975f7e31344ef66c8d690f766f91fbfddf101f4/packages/core/src/tools/generate-map.ts#L17)
 
 Array of component paths to include in component map.
