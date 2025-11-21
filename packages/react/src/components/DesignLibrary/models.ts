@@ -40,7 +40,6 @@ export type DesignLibraryServerProps = {
   rendering: ComponentRendering | RouteData;
   /**
    * Page data.
-   * This data is passed by the SitecoreProvider.
    */
   page: Page;
   /**
