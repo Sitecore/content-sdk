@@ -19,12 +19,6 @@ export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (e
 // @internal
 export const addComponentUpdateHandler: (rootComponent: ComponentRendering, successCallback?: (updatedRootComponent: ComponentRendering) => void) => (() => void) | undefined;
 
-// @internal
-export const addServerComponentPreviewHandler: (callback: (eventArgs: ComponentPreviewEventArgs) => void) => () => void;
-
-// @internal
-export function addStyleElement(stylesContent: string): void;
-
 // @public
 export const areURLSearchParamsEqual: (params1: URLSearchParams, params2: URLSearchParams) => boolean;
 
@@ -57,9 +51,6 @@ export class CdpHelper {
 const CLAIMS = "https://auth.sitecorecloud.io/claims";
 
 export { ClientError }
-
-// @internal
-export const COMPONENT_UPDATE_CACHE_KEY_PREFIX = "component-update-";
 
 // @public
 export interface ComponentFields {
@@ -137,33 +128,6 @@ export interface ComponentParams {
     [name: string]: string;
 }
 
-// Warning: (ae-forgotten-export) The symbol "DesignLibraryEvent" needs to be exported by the entry point api-surface.d.ts
-//
-// @internal
-export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
-    // (undocumented)
-    message: {
-        uid: string;
-        code: {
-            type: 'function';
-            content: string;
-        };
-        styles: {
-            type: 'style-element';
-            content: string;
-            styleImport: {
-                name: string;
-                content: unknown;
-            };
-        };
-        imports: ComponentImport_2[];
-    };
-    // Warning: (ae-forgotten-export) The symbol "DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME" needs to be exported by the entry point api-surface.d.ts
-    //
-    // (undocumented)
-    name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
-}
-
 // @public
 export interface ComponentRendering<T = ComponentFields> {
     // (undocumented)
@@ -216,9 +180,6 @@ declare namespace constants {
     }
 }
 export { constants }
-
-// @internal
-export const createComponentInstance: (importMap: ImportEntry[], previewEventArgs: ComponentPreviewEventArgs) => unknown;
 
 // @public
 export const createGraphQLClientFactory: (options: GraphQLClientOptions) => GraphQLRequestClientFactory;
@@ -329,7 +290,7 @@ export enum DesignLibraryStatus {
 }
 
 // @internal
-export interface DesignLibraryStatusEvent extends DesignLibraryEvent {
+export interface DesignLibraryStatusEvent {
     // (undocumented)
     message: {
         status: 'ready' | 'rendered';
@@ -612,12 +573,6 @@ export type GenericGraphQLClientError = Partial<Error> & {
 // @public
 export const getAllowedOriginsFromEnv: () => string[];
 
-// @internal
-export function getCache<T>(key: string): T | undefined;
-
-// @internal
-export function getCacheAndClean<T>(key: string): T | undefined;
-
 // @public
 export function getChildPlaceholder(rendering: ComponentRendering, placeholderName: string): ComponentRendering[];
 
@@ -657,7 +612,7 @@ export function getDesignLibraryComponentPropsEvent(uid: string, fields: Compone
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryImportMapEvent" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
-export function getDesignLibraryImportMapEvent(uid: string, importMap: ImportEntry[] | ImportEntryInfo[]): DesignLibraryImportMapEvent;
+export function getDesignLibraryImportMapEvent(uid: string, importMap: ImportEntry[]): DesignLibraryImportMapEvent;
 
 // @internal
 export function getDesignLibraryScriptLink(sitecoreEdgeUrl?: string): string;
@@ -695,9 +650,6 @@ export function getFieldValue<T>(renderingOrFields: ComponentRendering | Compone
 
 // @public
 export function getGroomedVariantIds(variantIds: string[]): PersonalizedRewriteData;
-
-// @internal
-export function getImportMapInfo(importMap: ImportEntry[]): ImportEntryInfo[];
 
 // @public
 export function getLocaleRewrite(pathname: string, locale: string): string;
@@ -778,9 +730,6 @@ export type GraphQLRequestClientFactoryConfig = {
 };
 
 // @internal
-export function hasCache(key: string): boolean;
-
-// @internal
 const HIDDEN_RENDERING_NAME = "Hidden Rendering";
 
 // @public
@@ -798,17 +747,6 @@ export interface ImportEntry {
     // (undocumented)
     module: string;
 }
-
-// @internal
-export interface ImportEntryInfo {
-    // (undocumented)
-    exports: string[];
-    // (undocumented)
-    module: string;
-}
-
-// @internal
-export const INVALID_SECRET_HTML_MESSAGE = "<html><body>Missing or invalid secret</body></html>";
 
 // @public
 export const isAbsoluteUrl: (url: string) => boolean;
@@ -1119,9 +1057,6 @@ export interface PluginDefinition {
 }
 
 // @internal
-export const postToDesignLibrary: (evt: DesignLibraryEvent) => void;
-
-// @internal
 export const PREVIEW_KEY = "sc_preview";
 
 // @internal
@@ -1288,12 +1223,6 @@ export type ScaffoldTemplate = {
     generateTemplate: (componentName: string) => string;
     getNextSteps?: (componentOutputPath: string) => string[];
 };
-
-// @internal
-export const sendErrorEvent: (uid: string, error: unknown, type: DesignLibraryPreviewError) => void;
-
-// @internal
-export function setCache(key: string, data: unknown): void;
 
 // @public
 export const SITE_KEY = "sc_site";
@@ -1574,9 +1503,6 @@ export interface TenantArgs {
 // @public
 export const tryParseEnvValue: <T>(envValue: string | undefined, defaultValue: T) => T;
 
-// @internal
-export const updateComponent: (component: ComponentRendering<ComponentFields>, fields: ComponentFields | undefined, params: ComponentParams | undefined) => void;
-
 // @public
 const updateImageUrl: (url: string, params?: {
     [key: string]: string | number | undefined;
@@ -1595,11 +1521,10 @@ export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }?: {
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:53:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/editing/codegen/preview.ts:108:5 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
-// src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
-// src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
-// src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
-// src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:25:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:25:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:29:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:29:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 // src/tools/index.ts:21:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
