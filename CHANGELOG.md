@@ -15,7 +15,7 @@ Our versioning strategy is as follows:
 ### 🎉 New Features & Improvements
 
 * `[core]` Provide information about rendering host as part of code extraction ([#286](https://github.com/Sitecore/content-sdk/pull/286))
-* `[template/next-app-router]` Add component runtime information for preventing mixing client/server operations in Sitecore Pages ([#289](https://github.com/Sitecore/content-sdk/pull/289))
+* `[template/next-app-router]` Add component runtime information for preventing mixing client/server operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))
 
 ### 🐛 Bug Fixes
 
