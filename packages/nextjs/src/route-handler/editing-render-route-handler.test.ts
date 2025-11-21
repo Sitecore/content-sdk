@@ -8,6 +8,7 @@ import { SERVER_PROPS_ID } from 'next/constants';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
+  INVALID_SECRET_HTML_MESSAGE,
   DesignLibraryMode,
   PREVIEW_KEY,
 } from '@sitecore-content-sdk/core/editing';
@@ -35,8 +36,11 @@ describe('createEditingRenderRouteHandlers', () => {
   let cookiesStub: any;
   let getRequiredQueryParamsStub: sinon.SinonStub;
   let getCSPHeaderStub: sinon.SinonStub;
+  let fetchStub: sinon.SinonStub;
   let handlers: any;
   let req: Partial<NextRequest>;
+  let NativeDataFetcherStub: sinon.SinonStub;
+  let mockFetchInstance: any;
 
   let OriginalResponse: typeof Response;
   let originalTestCookieStore: any;
@@ -103,6 +107,13 @@ describe('createEditingRenderRouteHandlers', () => {
     // Set the global variable BEFORE proxyquire loads the module
     (global as any).__TEST_COOKIE_STORE__ = cookiesStub;
 
+    fetchStub = sandbox.stub();
+    mockFetchInstance = {
+      fetch: fetchStub,
+    };
+    // Create constructor stub that returns the mock instance
+    NativeDataFetcherStub = sandbox.stub().returns(mockFetchInstance);
+
     editingRenderRouteHandlerModule = proxyquire('./editing-render-route-handler', {
       '../utils/utils': { getEditingSecret: getEditingSecretStub },
       '@sitecore-content-sdk/core/utils': { getEnforcedCorsHeaders: getEnforcedCorsHeadersStub },
@@ -127,6 +138,9 @@ describe('createEditingRenderRouteHandlers', () => {
           version: query.sc_version,
           layoutKind: query.sc_layoutKind,
         })),
+      },
+      '@sitecore-content-sdk/core': {
+        NativeDataFetcher: NativeDataFetcherStub,
       },
     });
 
@@ -233,7 +247,7 @@ describe('createEditingRenderRouteHandlers', () => {
 
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
-      expect(responseBody.html).to.equal('<html><body>Missing or invalid secret</body></html>');
+      expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
     });
 
     it('should return 401 for missing editing secret', async () => {
@@ -249,7 +263,7 @@ describe('createEditingRenderRouteHandlers', () => {
 
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
-      expect(responseBody.html).to.equal('<html><body>Missing or invalid secret</body></html>');
+      expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
     });
 
     it('should return 400 for missing required query parameters', async () => {
@@ -648,6 +662,155 @@ describe('createEditingRenderRouteHandlers', () => {
     });
   });
 
+  describe('POST handler', () => {
+    beforeEach(() => {
+      req = {
+        method: 'POST',
+        headers: new Headers({
+          origin: allowedOrigin,
+          host: 'localhost:3000',
+        }),
+        nextUrl: {
+          searchParams: mockSearchParams({
+            [QUERY_PARAM_EDITING_SECRET]: secret,
+            mode: 'edit',
+            route: '/styleguide',
+            sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+            sc_lang: 'en',
+            sc_site: 'website',
+            sc_variant: 'dev',
+            sc_version: 'latest',
+            sc_layoutKind: 'shared',
+          }),
+        } as any,
+      };
+    });
+
+    it('should return 401 for invalid origin', async () => {
+      getEnforcedCorsHeadersStub.returns(null);
+      const res = await handlers.POST(req as NextRequest);
+
+      expect(res.status).to.equal(401);
+      expect(res.body).to.include('not allowed');
+    });
+
+    it('should return 401 for invalid editing secret', async () => {
+      req.nextUrl!.searchParams = mockSearchParams({
+        [QUERY_PARAM_EDITING_SECRET]: 'wrong-secret',
+        mode: 'edit',
+        route: '/styleguide',
+        sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+        sc_lang: 'en',
+        sc_site: 'website',
+      });
+
+      const res = await handlers.POST(req as NextRequest);
+
+      expect(res.status).to.equal(401);
+      const responseBody = JSON.parse(res.body);
+      expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
+    });
+
+    it('should return 401 for missing editing secret', async () => {
+      req.nextUrl!.searchParams = mockSearchParams({
+        mode: 'edit',
+        route: '/styleguide',
+        sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+        sc_lang: 'en',
+        sc_site: 'website',
+      });
+
+      const res = await handlers.POST(req as NextRequest);
+
+      expect(res.status).to.equal(401);
+      const responseBody = JSON.parse(res.body);
+      expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
+    });
+
+    it('should proxy POST request with correct headers and cookies', async () => {
+      const mockResponseHeaders = new Headers({
+        'content-type': 'text/html',
+        'Set-Cookie': 'session=abc123',
+      });
+
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        headers: mockResponseHeaders,
+        data: '<html>Server Action Response</html>',
+      });
+
+      const res = await handlers.POST(req);
+      const text = await res.body;
+
+      expect(res.status).to.equal(200);
+      expect(text).to.equal('<html>Server Action Response</html>');
+      expect(fetchStub.calledOnce).to.be.true;
+
+      const fetchCall = fetchStub.getCall(0);
+      const fetchHeaders = fetchCall.args[1].headers as Headers;
+      expect(fetchHeaders.get('cookie')).to.include('__prerender_bypass=some-value');
+    });
+
+    it('should filter out x-middleware and content-encoding headers', async () => {
+      const mockResponseHeaders = new Headers({
+        'content-type': 'text/html',
+        'x-middleware-next': '1',
+        'x-middleware-rewrite': '/foo',
+        'content-encoding': 'gzip',
+        'content-length': '1234',
+        'Set-Cookie': 'foo=bar',
+      });
+
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        headers: mockResponseHeaders,
+        text: sinon.stub().resolves('<html>Response</html>'),
+      });
+
+      const res = await handlers.POST(req);
+      expect(res.headers.get('x-middleware-next')).to.be.null;
+      expect(res.headers.get('x-middleware-rewrite')).to.be.null;
+      expect(res.headers.get('content-encoding')).to.be.null;
+      expect(res.headers.get('content-length')).to.be.null;
+      expect(res.headers.get('content-type')).to.equal('text/html; charset=utf-8');
+    });
+
+    it('should add Content-Security-Policy and CORS headers to response', async () => {
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        headers: new Headers({ 'content-type': 'text/html' }),
+        text: sinon.stub().resolves('<html>Response</html>'),
+      });
+
+      const res = await handlers.POST(req);
+
+      expect(res.headers.get('Content-Security-Policy')).to.not.be.null;
+      expect(res.headers.get('Access-Control-Allow-Origin')).to.equal('https://allowed.com');
+    });
+
+    it('should clean up Next.js preview cookies from Set-Cookie header', async () => {
+      const mockResponseHeaders = new Headers({
+        'Set-Cookie': '__prerender_bypass=token; __next_preview_data=data; session=abc',
+      });
+
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        headers: mockResponseHeaders,
+        text: sinon.stub().resolves('<html>Response</html>'),
+      });
+
+      const res = await handlers.POST(req);
+
+      const setCookie = res.headers.get('Set-Cookie');
+      expect(setCookie).to.not.include('__prerender_bypass');
+      expect(setCookie).to.not.include('__next_preview_data');
+    });
+  });
+
   describe('Design Library handling', () => {
     const designLibraryQuery = {
       [QUERY_PARAM_EDITING_SECRET]: secret,
@@ -838,4 +1001,3 @@ describe('createEditingRenderRouteHandlers', () => {
     });
   });
 });
-

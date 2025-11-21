@@ -32,6 +32,7 @@ import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/re
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core/client';
 import { DesignLibrary } from '@sitecore-content-sdk/react';
+import { DesignLibraryApp } from '@sitecore-content-sdk/react';
 import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/core/editing';
 import { DictionaryPhrases } from '@sitecore-content-sdk/core/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/core/i18n';
@@ -297,6 +298,7 @@ export const createEditingConfigRouteHandler: (options: EditingConfigRouteHandle
 // @public
 export const createEditingRenderRouteHandlers: (options: EditingHandlerOptions) => {
     GET: (req: NextRequest) => Promise<Response>;
+    POST: (req: NextRequest) => Promise<Response>;
     OPTIONS: (req: NextRequest) => Response;
 };
 
@@ -341,6 +343,8 @@ export const defineMiddleware: (...middlewares: Middleware[]) => {
 };
 
 export { DesignLibrary }
+
+export { DesignLibraryApp }
 
 export { DictionaryPhrases }
 
@@ -664,6 +668,7 @@ export const NextImage: React_2.FC<NextImageProps>;
 export type NextjsContentSdkComponent = ReactContentSdkComponent & {
     getComponentServerProps?: GetComponentServerProps;
     dynamicModule?: () => Promise<ReactContentSdkComponent>;
+    componentType?: 'client' | 'server' | 'universal';
 };
 
 export { normalizePersonalizedRewrite }

@@ -14,7 +14,9 @@ export const DEFAULT_EXPORT_NAME = 'Default';
  * React component import with account for custom exports
  * @public
  */
-export type ReactContentSdkComponent = ComponentType | ReactModule;
+export type ReactContentSdkComponent = (ComponentType | ReactModule) & {
+  componentType?: 'server' | 'client' | 'universal';
+};
 
 /**
  * The type of the React module.

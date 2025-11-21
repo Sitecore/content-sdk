@@ -144,7 +144,6 @@ export type SitecoreConfigInput = {
      *
      * **For single-site setups**: Keep `enabled: true` and configure only one site in your sites configuration.
      * The middleware will always use that single site, achieving the desired single-site behavior.
-     *
      * @default true
      */
     enabled?: boolean;

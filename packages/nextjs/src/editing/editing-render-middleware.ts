@@ -2,6 +2,7 @@
 import { debug, NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   QUERY_PARAM_EDITING_SECRET,
+  INVALID_SECRET_HTML_MESSAGE,
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
 } from '@sitecore-content-sdk/core/editing';
@@ -104,7 +105,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     if (secret !== getEditingSecret()) {
       debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
       return res.status(401).json({
-        html: '<html><body>Missing or invalid secret</body></html>',
+        html: INVALID_SECRET_HTML_MESSAGE,
       });
     }
 
