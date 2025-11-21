@@ -21,6 +21,10 @@ export type PersonalizeGeoData = {
   region?: string;
 };
 
+export type PersonalizeGeoDataCallback = (
+  req?: NextRequest
+) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
+
 /**
  * The interface for the PersonalizeMiddleware configuration.
  * @public
@@ -89,6 +93,10 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       });
   }
 
+  /**
+   * Sets a callback to extract geo data on each request
+   * @param {PersonalizeGeoDataCallback} cb The callback to extract geo data
+   */
   extractGeoDataCb(
     cb: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData
   ): void {
