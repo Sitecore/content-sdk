@@ -1,1 +1,6 @@
-export { SearchService, SearchParameters, SearchResponse } from './search-service';
+export {
+  SearchService,
+  SearchParameters,
+  SearchServiceConfig,
+  SearchResponse,
+} from './search-service';

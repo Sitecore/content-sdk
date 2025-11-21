@@ -1,5 +1,4 @@
 import { NativeDataFetcher, debug } from '@sitecore-content-sdk/core';
-import { FacetFilter } from './facet-filter';
 
 type SortSetting = {
   name: string;
@@ -22,24 +21,26 @@ export interface SearchServiceConfig {
   contextId: string;
 }
 
-type Facet = {
-  fields: {
-    /**
-     * The name of the facet field to filter on.
-     */
-    name: string;
-    /**
-     * Array of filters to apply to this facet field.
-     *
-     */
-    filters?: FacetFilter[];
-  }[];
-};
+export interface SearchAPIResponse {
+  /**
+   * The search results.
+   */
+  content: Record<string, string | number | boolean>[];
+  /**
+   * The total number of search results.
+   */
+  total: number;
+}
 
 export interface SearchResponse {
-  content: Record<string, string | number | boolean>[];
+  /**
+   * The search results.
+   */
+  results: SearchAPIResponse['content'];
+  /**
+   * The total number of search results.
+   */
   total: number;
-  facet: Facet[];
 }
 
 export interface SearchParameters {
@@ -51,10 +52,6 @@ export interface SearchParameters {
    * Text value to search for. If not provided, the search will return all results.
    */
   keyphrase?: string;
-  /**
-   * Specifies the facets to apply to the search results.
-   */
-  facet?: Facet[];
   /**
    * Specifies the sorting of the search results.
    */
@@ -87,9 +84,9 @@ export class SearchService {
   }
 
   async search(params: SearchParameters): Promise<SearchResponse> {
-    const { searchIndexId, keyphrase = '', facet, sort, limit = 10, offset = 0 } = params;
+    const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0 } = params;
 
-    const { data } = await this.fetcher.post<SearchResponse>(
+    const { data } = await this.fetcher.post<SearchAPIResponse>(
       `${this.config.edgeUrl}/v1/search?sitecoreContextId=${this.config.contextId}`,
       {
         config: {
@@ -100,14 +97,16 @@ export class SearchService {
         query: {
           keyphrase,
         },
-        facet,
+        facet: {
+          fields: [],
+          all: true,
+        },
         sort,
       }
     );
 
     return {
-      content: data.content || [],
-      facet: data.facet,
+      results: data.content || [],
       total: data.total || 0,
     };
   }

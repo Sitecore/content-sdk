@@ -113,6 +113,11 @@
       "require": "./dist/cjs/editing/codegen/index.js",
       "types": "./types/editing/codegen/index.d.ts"
     },
+    "./component-props-loader": {
+      "import": "./dist/esm/component-props-loader/index.js",
+      "require": "./dist/cjs/component-props-loader/index.js",
+      "types": "./types/component-props-loader/index.d.ts"
+    },
     "./config": {
       "import": "./dist/esm/config/index.js",
       "require": "./dist/cjs/config/index.js",

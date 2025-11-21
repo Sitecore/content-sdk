@@ -1,1 +1,1 @@
-export { useSearch } from '@sitecore-content-sdk/react/search';
+export * from '@sitecore-content-sdk/react/search';
