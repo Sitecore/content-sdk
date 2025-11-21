@@ -490,6 +490,41 @@ describe('<DesignLibrary />', () => {
       });
     });
 
+    it('renders real component first, wires generation, then switches to generated component when loadImportMap provided via SitecoreProvider', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      const rendered = render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          '<p>This is a live set of examples of how to use Content SDK</p>\n',
+          '</div></div></div></main>',
+        ].join('')
+      );
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+      });
+
+      const TestComponent = () => <div>Generated!</div>;
+      callbackEvent(null, TestComponent);
+
+      await waitFor(() => {
+        expect(rendered.baseElement.innerHTML).to.contain('<div>Generated!</div>');
+      });
+    });
+
     it('updates via component:update after switch', async () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
 

@@ -13,14 +13,17 @@ import {
 } from '@sitecore-content-sdk/core/layout';
 import { DesignLibraryStatus, DesignLibraryMode } from '@sitecore-content-sdk/core/editing';
 import { DesignLibraryPreviewError } from '@sitecore-content-sdk/core/codegen';
-import { DesignLibraryClientEvents } from './DesignLibraryClientEvents';
+import {
+  DesignLibraryVariantGenerationEvents,
+  DesignLibraryPreviewEvents,
+} from './DesignLibraryClientEvents';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
 import { SitecoreProvider } from '../SitecoreProvider';
 import { __mockDependencies } from './DesignLibraryClientEvents';
 
 use(sinonChai);
 
-describe('<DesignLibrary />', () => {
+describe('<DesignLibraryClientEvents />', () => {
   let postToDesignLibrarySpy: sinon.SinonStub;
   let addComponentUpdateHandlerSpy: sinon.SinonStub;
   let updateServerComponentActionSpy: sinon.SinonStub;
@@ -100,70 +103,97 @@ describe('<DesignLibrary />', () => {
     isEditing: true,
   };
 
-  const renderWithSitecore = (props: any, pageMode: PageMode = modeLibrary) => {
+  const renderWithSitecore = (
+    props: any,
+    pageMode: PageMode = modeLibrary,
+    isVariantGeneration: boolean = false
+  ) => {
     const layoutData: LayoutServiceData = getTestLayoutData();
     const page = getPage(layoutData, pageMode);
 
     return render(
       <SitecoreProvider page={page} componentMap={components} api={api}>
-        <DesignLibraryClientEvents {...props} />
+        {isVariantGeneration ? (
+          <DesignLibraryVariantGenerationEvents {...props} />
+        ) : (
+          <DesignLibraryPreviewEvents {...props} />
+        )}
       </SitecoreProvider>
     );
   };
 
-  it('should post status event on mount', async () => {
-    renderWithSitecore({
-      designLibraryStatus: DesignLibraryStatus.READY,
-      component: testEditedComponent,
+  describe('DesignLibraryPreviewEvents', () => {
+    it('should post status event on mount', async () => {
+      renderWithSitecore({
+        designLibraryStatus: DesignLibraryStatus.READY,
+        component: testEditedComponent,
+      });
+
+      await waitFor(() => {
+        expect(postToDesignLibrarySpy).to.have.been.calledWith(
+          sinon.match({
+            name: 'component:status',
+            message: {
+              status: DesignLibraryStatus.READY,
+              uid: testEditedComponent.uid,
+            },
+          })
+        );
+      });
     });
 
-    await waitFor(() => {
-      expect(postToDesignLibrarySpy).to.have.been.calledWith(
-        sinon.match({
-          name: 'component:status',
-          message: {
-            status: DesignLibraryStatus.READY,
-            uid: testEditedComponent.uid,
-          },
-        })
+    it('should add component update handler on mount', async () => {
+      renderWithSitecore({
+        designLibraryStatus: DesignLibraryStatus.READY,
+        component: testEditedComponent,
+      });
+
+      expect(addComponentUpdateHandlerSpy).to.have.been.calledOnce;
+      expect(addComponentUpdateHandlerSpy).to.have.been.calledWith(
+        testEditedComponent,
+        sinon.match.func
       );
     });
-  });
 
-  it('should add component update handler on mount', async () => {
-    renderWithSitecore({
-      designLibraryStatus: DesignLibraryStatus.READY,
-      component: testEditedComponent,
+    it('should call updateServerComponentAction when component is updated', () => {
+      renderWithSitecore({
+        designLibraryStatus: DesignLibraryStatus.READY,
+        component: testEditedComponent,
+      });
+
+      const updateCallback = addComponentUpdateHandlerSpy.getCall(0).args[1];
+      const updatedComponent = {
+        ...testEditedComponent,
+        fields: { title: { value: 'Updated Title' } },
+      };
+
+      updateCallback(updatedComponent);
+
+      expect(updateServerComponentActionSpy).to.have.been.calledWith({
+        uid: updatedComponent.uid,
+        updatedComponent,
+      });
     });
 
-    expect(addComponentUpdateHandlerSpy).to.have.been.calledOnce;
-    expect(addComponentUpdateHandlerSpy).to.have.been.calledWith(
-      testEditedComponent,
-      sinon.match.func
-    );
-  });
+    it('should clean up event handlers on unmount', async () => {
+      const unsubUpdate = sinon.stub();
+      addComponentUpdateHandlerSpy.returns(unsubUpdate);
 
-  it('should call updateServerComponentAction when component is updated', () => {
-    renderWithSitecore({
-      designLibraryStatus: DesignLibraryStatus.READY,
-      component: testEditedComponent,
-    });
+      const { unmount } = renderWithSitecore(
+        {
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: testEditedComponent,
+        },
+        modeLibraryMetadata_Gen
+      );
 
-    const updateCallback = addComponentUpdateHandlerSpy.getCall(0).args[1];
-    const updatedComponent = {
-      ...testEditedComponent,
-      fields: { title: { value: 'Updated Title' } },
-    };
+      unmount();
 
-    updateCallback(updatedComponent);
-
-    expect(updateServerComponentActionSpy).to.have.been.calledWith({
-      uid: updatedComponent.uid,
-      updatedComponent,
+      expect(unsubUpdate).to.have.been.calledOnce;
     });
   });
 
-  describe('variant generation mode', () => {
+  describe('DesignLibraryVariantGenerationEvents', () => {
     const testPropsEvent = {
       uid: '82696f4f-15d5-4bca-895f-d4b66327807d',
       fields: {
@@ -211,6 +241,97 @@ describe('<DesignLibrary />', () => {
       },
     };
 
+    it('should post status event on mount', async () => {
+      renderWithSitecore(
+        {
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: testEditedComponent,
+        },
+        modeLibraryMetadata_Gen,
+        true
+      );
+
+      await waitFor(() => {
+        expect(postToDesignLibrarySpy).to.have.been.calledWith(
+          sinon.match({
+            name: 'component:status',
+            message: {
+              status: DesignLibraryStatus.READY,
+              uid: testEditedComponent.uid,
+            },
+          })
+        );
+      });
+    });
+
+    it('should add component update handler on mount', async () => {
+      renderWithSitecore(
+        {
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: testEditedComponent,
+        },
+        modeLibraryMetadata_Gen,
+        true
+      );
+
+      expect(addComponentUpdateHandlerSpy).to.have.been.calledOnce;
+      expect(addComponentUpdateHandlerSpy).to.have.been.calledWith(
+        testEditedComponent,
+        sinon.match.func
+      );
+    });
+
+    it('should call updateServerComponentAction when component is updated', () => {
+      const previewComponentData = {
+        message: { styles: { content: 'some style' }, code: { content: 'some code' } },
+      };
+      renderWithSitecore(
+        {
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: testEditedComponent,
+          previewComponentData: previewComponentData,
+        },
+        modeLibraryMetadata_Gen,
+        true
+      );
+
+      const updateCallback = addComponentUpdateHandlerSpy.getCall(0).args[1];
+      const updatedComponent = {
+        ...testEditedComponent,
+        fields: { title: { value: 'Updated Title' } },
+      };
+
+      updateCallback(updatedComponent);
+
+      expect(updateServerComponentActionSpy).to.have.been.calledWith({
+        uid: updatedComponent.uid,
+        updatedComponent,
+        previewComponent: previewComponentData,
+      });
+    });
+
+    it('should clean up event handlers on unmount', async () => {
+      const unsubUpdate = sinon.stub();
+      const unsubPreview = sinon.stub();
+      addComponentUpdateHandlerSpy.returns(unsubUpdate);
+      addServerComponentPreviewHandlerSpy.returns(unsubPreview);
+
+      const { unmount } = renderWithSitecore(
+        {
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: testEditedComponent,
+          importMap: importMap,
+        },
+        modeLibraryMetadata_Gen,
+        true
+      );
+
+      unmount();
+
+      expect(unsubUpdate).to.have.been.calledOnce;
+      expect(unsubPreview).to.have.been.calledOnce;
+    });
+
     it('should add server component preview handler in variant generation mode', () => {
       renderWithSitecore(
         {
@@ -218,7 +339,8 @@ describe('<DesignLibrary />', () => {
           component: testEditedComponent,
           importMap: importMap,
         },
-        modeLibraryMetadata_Gen
+        modeLibraryMetadata_Gen,
+        true
       );
 
       expect(addServerComponentPreviewHandlerSpy).to.have.been.calledOnce;
@@ -235,7 +357,8 @@ describe('<DesignLibrary />', () => {
           component: testEditedComponent,
           importMap: importMap,
         },
-        modeLibraryMetadata_Gen
+        modeLibraryMetadata_Gen,
+        true
       );
       expect(getDesignLibraryImportMapEventSpy).to.have.been.calledOnce;
       expect(getDesignLibraryComponentPropsEventSpy).to.have.been.calledOnce;
@@ -250,7 +373,8 @@ describe('<DesignLibrary />', () => {
           component: testEditedComponent,
           importMap: importMap,
         },
-        modeLibraryMetadata_Gen
+        modeLibraryMetadata_Gen,
+        true
       );
 
       const updateCallback = addServerComponentPreviewHandlerSpy.getCall(0).args[0];
@@ -266,34 +390,24 @@ describe('<DesignLibrary />', () => {
       });
     });
 
-    it('should not set up variant generation handlers when not in variant generation mode', async () => {
-      renderWithSitecore({
-        designLibraryStatus: DesignLibraryStatus.READY,
-        component: testEditedComponent,
-        importMap: importMap,
-      });
-
-      expect(addServerComponentPreviewHandlerSpy).to.not.have.been.called;
-      expect(getDesignLibraryImportMapEventSpy).to.not.have.been.called;
-    });
-
-    it('should add style element when previewComponentStyle is provided', async () => {
+    it('should add style element when previewComponentData style is provided', async () => {
       const testStyle = '.test-class { color: red; }';
-
+      const previewComponentData = { message: { styles: { content: testStyle } } };
       renderWithSitecore(
         {
           designLibraryStatus: DesignLibraryStatus.READY,
           component: testEditedComponent,
           importMap: importMap,
-          previewComponentStyle: testStyle,
+          previewComponentData: previewComponentData,
         },
-        modeLibraryMetadata_Gen
+        modeLibraryMetadata_Gen,
+        true
       );
 
       expect(addStyleElementSpy).to.have.been.calledWith(testStyle);
     });
 
-    it('should not add style element when previewComponentStyle is not provided', async () => {
+    it('should not add style element when previewComponentStyle style is not provided', async () => {
       renderWithSitecore(
         {
           designLibraryStatus: DesignLibraryStatus.READY,
@@ -305,60 +419,41 @@ describe('<DesignLibrary />', () => {
 
       expect(addStyleElementSpy).to.not.have.been.called;
     });
-  });
 
-  it('should send error event when importMapError is present', async () => {
-    const testError = 'something wrong happened';
+    it('should send error event when importMapError is present', async () => {
+      const testError = 'something wrong happened';
 
-    renderWithSitecore(
-      {
-        designLibraryStatus: DesignLibraryStatus.READY,
-        component: testEditedComponent,
-        importMap: importMap,
-        importMapError: testError,
-      },
-      modeLibraryMetadata_Gen
-    );
+      renderWithSitecore(
+        {
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: testEditedComponent,
+          importMap: importMap,
+          importMapError: testError,
+        },
+        modeLibraryMetadata_Gen,
+        true
+      );
 
-    expect(sendErrorEventSpy).to.have.been.called;
-    expect(sendErrorEventSpy).to.have.been.calledWith(
-      testEditedComponent.uid,
-      testError,
-      DesignLibraryPreviewError.RenderInit
-    );
-  });
+      expect(sendErrorEventSpy).to.have.been.called;
+      expect(sendErrorEventSpy).to.have.been.calledWith(
+        testEditedComponent.uid,
+        testError,
+        DesignLibraryPreviewError.RenderInit
+      );
+    });
 
-  it('should not set up preview handler when importMapError exists', async () => {
-    renderWithSitecore(
-      {
-        designLibraryStatus: DesignLibraryStatus.READY,
-        component: testEditedComponent,
-        importMap: importMap,
-      },
-      modeLibraryMetadata_Gen
-    );
+    it('should not set up preview handler when importMapError exists', async () => {
+      renderWithSitecore(
+        {
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: testEditedComponent,
+          importMap: importMap,
+        },
+        modeLibraryMetadata_Gen,
+        true
+      );
 
-    expect(sendErrorEventSpy).to.not.have.been.called;
-  });
-
-  it('should clean up event handlers on unmount', async () => {
-    const unsubUpdate = sinon.stub();
-    const unsubPreview = sinon.stub();
-    addComponentUpdateHandlerSpy.returns(unsubUpdate);
-    addServerComponentPreviewHandlerSpy.returns(unsubPreview);
-
-    const { unmount } = renderWithSitecore(
-      {
-        designLibraryStatus: DesignLibraryStatus.READY,
-        component: testEditedComponent,
-        importMap: importMap,
-      },
-      modeLibraryMetadata_Gen
-    );
-
-    unmount();
-
-    expect(unsubUpdate).to.have.been.calledOnce;
-    expect(unsubPreview).to.have.been.calledOnce;
+      expect(sendErrorEventSpy).to.not.have.been.called;
+    });
   });
 });

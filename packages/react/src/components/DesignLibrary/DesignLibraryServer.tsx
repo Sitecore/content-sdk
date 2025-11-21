@@ -87,9 +87,6 @@ export const DesignLibraryServerVariantGeneration = async ({
   loadServerImportMap,
   componentMap,
 }: DesignLibraryServerVariantGenerationProps) => {
-  if (!page.mode.isDesignLibrary) {
-    return null;
-  }
   let designLibraryStatus = DesignLibraryStatus.READY;
   let importMap: codegen.ImportEntry[];
   let importMapInfo: codegen.ImportEntryInfo[];
@@ -187,9 +184,6 @@ export const DesignLibraryServerPreview = async ({
   rendering,
   componentMap,
 }: DesignLibraryServerPreviewProps) => {
-  if (!page.mode.isDesignLibrary) {
-    return null;
-  }
   let designLibraryStatus = DesignLibraryStatus.READY;
 
   let componentToUpdate = rendering?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];

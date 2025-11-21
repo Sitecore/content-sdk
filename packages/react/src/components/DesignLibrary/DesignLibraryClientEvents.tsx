@@ -52,7 +52,7 @@ export const DesignLibraryPreviewEvents = ({
     return () => {
       unsubUpdate && unsubUpdate();
     };
-  });
+  }, [component, designLibraryStatus]);
 
   return <></>;
 };
