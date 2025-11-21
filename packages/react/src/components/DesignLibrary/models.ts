@@ -49,12 +49,12 @@ export type DesignLibraryServerProps = {
    * The dynamic import for import map to be used in variant generation mode.
    * Currently it's optional but it will be required in the next major version.
    */
-  loadServerImportMap?: () => Promise<ImportMapImport>;
+  loadServerImportMap: () => Promise<ImportMapImport>;
 };
 
 export type DesingLibraryAppProps = DesignLibraryServerProps;
 
-export type DesignLibraryServerPreviewProps = Omit<DesignLibraryServerProps, 'loadImportMap'>;
+export type DesignLibraryServerPreviewProps = Omit<DesignLibraryServerProps, 'loadServerImportMap'>;
 
 export type DesignLibraryServerVariantGenerationProps = DesignLibraryServerProps;
 
