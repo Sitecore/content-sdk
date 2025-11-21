@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
@@ -532,6 +533,7 @@ describe('<DesignLibraryServer />', () => {
         } as any);
         createComponentInstanceStub.returns((props) => {
           throw new Error('render component failed');
+          // eslint-disable-next-line no-unreachable
           return (
             <div>
               <h1>Generated Component</h1>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable no-unused-expressions */
 import React from 'react';
