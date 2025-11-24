@@ -18,7 +18,6 @@ import {
   __mockDependencies,
 } from './DesignLibraryServer';
 import * as DesignLibraryClient from './DesignLibraryClientEvents';
-import { __mockDependencies as mockErrorBoundary } from './DesignLibraryErrorBoundary';
 import * as rscUtils from '#rsc-env';
 
 use(sinonChai);
@@ -31,7 +30,6 @@ describe('<DesignLibraryServer />', () => {
   let createComponentInstanceStub: sinon.SinonStub;
   let updateComponentStub: sinon.SinonStub;
   let getImportMapInfoStub: sinon.SinonStub;
-  let sendErrorEventStub: sinon.SinonStub;
 
   beforeEach(() => {
     hasCacheStub = sandbox.stub();
@@ -47,7 +45,6 @@ describe('<DesignLibraryServer />', () => {
       }
     });
     getImportMapInfoStub = sandbox.stub().returns([]);
-    sendErrorEventStub = sandbox.stub();
     DesignLibraryPreviewEventsStub = sandbox
       .stub(DesignLibraryClient, 'DesignLibraryPreviewEvents')
       .callsFake(DlClientEventsMockPreview);
@@ -64,10 +61,6 @@ describe('<DesignLibraryServer />', () => {
       createComponentInstance: createComponentInstanceStub,
       updateComponent: updateComponentStub,
       getImportMapInfo: getImportMapInfoStub,
-    });
-
-    mockErrorBoundary({
-      sendErrorEvent: sendErrorEventStub,
     });
   });
 

@@ -1,15 +1,6 @@
 'use client';
 import React, { Suspense } from 'react';
-import { DesignLibraryPreviewError } from '@sitecore-content-sdk/core/codegen';
-import * as codegen from '@sitecore-content-sdk/core/codegen';
-
-let { sendErrorEvent } = codegen;
-
-export const __mockDependencies = (mocks: any) => {
-  if (mocks.sendErrorEvent) {
-    sendErrorEvent = mocks.sendErrorEvent;
-  }
-};
+import { DesignLibraryPreviewError, sendErrorEvent } from '@sitecore-content-sdk/core/codegen';
 
 type DesignLibraryErrorBoundaryProps = {
   uid: string;
