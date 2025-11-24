@@ -10,9 +10,9 @@ import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
-  postToDesignLibrary,
 } from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
+import * as editing from '@sitecore-content-sdk/core/editing';
 import { useSitecore } from '../../enhancers/withSitecore';
 import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
@@ -25,9 +25,16 @@ let {
   addComponentPreviewHandler,
   sendErrorEvent,
 } = codegen;
+let { postToDesignLibrary } = editing;
 
 export const __mockDependencies = (mocks: any) => {
   addComponentPreviewHandler = mocks.addComponentPreviewHandler;
+  if (mocks.postToDesignLibrary) {
+    postToDesignLibrary = mocks.postToDesignLibrary;
+  }
+  if (mocks.sendErrorEvent) {
+    sendErrorEvent = mocks.sendErrorEvent;
+  }
 };
 
 /**

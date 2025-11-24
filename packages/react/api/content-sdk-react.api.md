@@ -511,7 +511,7 @@ export interface WithSitecoreProps {
 
 // Warnings were encountered during analysis:
 //
-// src/components/DesignLibrary/DesignLibrary.tsx:45:27 - (ae-forgotten-export) The symbol "DesignLibraryProps" needs to be exported by the entry point index.d.ts
+// src/components/DesignLibrary/DesignLibrary.tsx:52:27 - (ae-forgotten-export) The symbol "DesignLibraryProps" needs to be exported by the entry point index.d.ts
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)

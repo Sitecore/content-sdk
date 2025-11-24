@@ -18,6 +18,7 @@ import {
   __mockDependencies,
 } from './DesignLibraryServer';
 import * as DesignLibraryClient from './DesignLibraryClientEvents';
+import * as rscUtils from '#rsc-env';
 
 use(sinonChai);
 
@@ -27,11 +28,23 @@ describe('<DesignLibraryServer />', () => {
   let hasCacheStub: sinon.SinonStub;
   let getCacheAndCleanStub: sinon.SinonStub;
   let createComponentInstanceStub: sinon.SinonStub;
+  let updateComponentStub: sinon.SinonStub;
+  let getImportMapInfoStub: sinon.SinonStub;
 
   beforeEach(() => {
     hasCacheStub = sandbox.stub();
     getCacheAndCleanStub = sandbox.stub();
     createComponentInstanceStub = sandbox.stub();
+    // updateComponent actually mutates the component object
+    updateComponentStub = sandbox.stub().callsFake((component: any, fields?: any, params?: any) => {
+      if (fields) {
+        component.fields = { ...component.fields, ...fields };
+      }
+      if (params) {
+        component.params = { ...component.params, ...params };
+      }
+    });
+    getImportMapInfoStub = sandbox.stub().returns([]);
     DesignLibraryPreviewEventsStub = sandbox
       .stub(DesignLibraryClient, 'DesignLibraryPreviewEvents')
       .callsFake(DlClientEventsMockPreview);
@@ -39,10 +52,15 @@ describe('<DesignLibraryServer />', () => {
       .stub(DesignLibraryClient, 'DesignLibraryVariantGenerationEvents')
       .callsFake(DlClientEventsMockVariantGeneration);
 
+    // Mock rsc to true since DesignLibraryServer is a server component
+    sandbox.replace(rscUtils, 'rsc', true as any);
+
     __mockDependencies({
       hasCache: hasCacheStub,
       getCacheAndClean: getCacheAndCleanStub,
       createComponentInstance: createComponentInstanceStub,
+      updateComponent: updateComponentStub,
+      getImportMapInfo: getImportMapInfoStub,
     });
   });
 
@@ -139,7 +157,7 @@ describe('<DesignLibraryServer />', () => {
       expect(rendered?.container.innerHTML).to.equal(
         [
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_00000000-0000-0000-0000-000000000000"></code>',
-          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content"></code>',
+          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content" data-csdk-component-runtime="server"></code>',
           '<div class="test"><h2>Content Block Component</h2><p>Content SDK Styleguide</p></div>',
           '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
@@ -331,7 +349,7 @@ describe('<DesignLibraryServer />', () => {
         expect(rendered?.container.innerHTML).to.equal(
           [
             '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_00000000-0000-0000-0000-000000000000"></code>',
-            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content"></code>',
+            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content" data-csdk-component-runtime="server"></code>',
             '<div class="test"><h2>Content Block Component</h2><p>Content SDK Styleguide</p></div>',
             '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
             '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
@@ -385,7 +403,7 @@ describe('<DesignLibraryServer />', () => {
         expect(rendered?.container.innerHTML).to.equal(
           [
             '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_00000000-0000-0000-0000-000000000000"></code>',
-            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content"></code>',
+            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content" data-csdk-component-runtime="server"></code>',
             `<div class="test"><h2>Content Block Component</h2><p class="${expectedParam}">${expectedHeadingField}</p></div>`,
             '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
             '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
@@ -506,7 +524,7 @@ describe('<DesignLibraryServer />', () => {
         expect(rendered?.container.innerHTML).to.equal(
           [
             '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_00000000-0000-0000-0000-000000000000"></code>',
-            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content"></code>',
+            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content" data-csdk-component-runtime="server"></code>',
             '<div class="test"><h2>Content Block Component</h2><p>Content SDK Styleguide</p></div>',
             '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
             '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
