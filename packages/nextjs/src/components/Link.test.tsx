@@ -181,14 +181,11 @@ describe('<Link />', () => {
 
     fireEvent.click(link!);
 
-    expect(pushSpy.calledOnce).to.be.true;
-    expect(
-      pushSpy.calledOnceWith('/lorem', '/custom', {
-        shallow: true,
-        locale: 'fr-FR',
-        scroll: true,
-      })
-    ).to.be.true;
+    expect(pushSpy).to.have.been.calledOnceWith('/lorem', '/custom', {
+      shallow: true,
+      locale: 'fr-FR',
+      scroll: true,
+    });
   });
 
   it('should pass NextLink props correctly', () => {
