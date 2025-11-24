@@ -15,7 +15,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsMiddleware } from './redirects-middleware';
-import { REWRITE_HEADER_NAME } from './middleware';
+import { LOCALE_HEADER_NAME, REWRITE_HEADER_NAME } from './middleware';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -2458,6 +2458,178 @@ describe('RedirectsMiddleware', () => {
         language: 'pl-PL',
         pathname: '/not-found',
       });
+    });
+
+    it('should update locale for pages router when target uses $siteLang token', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/da/found',
+        pathname: '/da/found',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        clone: cloneUrl,
+      };
+      setupRedirectStub(301);
+
+      const { res, req } = createTestRequestResponse({
+        response: { url },
+        request: {
+          nextUrl: {
+            pathname: '/not-found',
+            href: 'http://localhost:3000/not-found',
+            locale: 'en',
+            origin: 'http://localhost:3000',
+            clone: cloneUrl,
+          },
+        },
+        status: 301,
+      });
+
+      const { middleware } = createMiddleware({
+        pattern: '/not-found/',
+        target: '/$siteLang/found',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: false,
+        locale: 'en',
+        language: 'da',
+        sites: sitesFromConfigFile,
+      });
+
+      await middleware.handle(req, res);
+
+      const redirectArg = nextRedirectStub.firstCall?.args?.[0] as any;
+
+      expect(req.nextUrl.locale).to.equal('da');
+      expect(redirectArg.locale).to.equal('da');
+    });
+
+    it('should not update locale for app router when target uses $siteLang token', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/da/found',
+        pathname: '/da/found',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        clone: cloneUrl,
+      };
+      setupRedirectStub(301);
+
+      const { res, req } = createTestRequestResponse({
+        response: { url },
+        request: {
+          nextUrl: {
+            pathname: '/not-found',
+            href: 'http://localhost:3000/not-found',
+            locale: 'en',
+            origin: 'http://localhost:3000',
+            clone: cloneUrl,
+          },
+        },
+        status: 301,
+      });
+
+      res.headers.set(LOCALE_HEADER_NAME, 'da');
+
+      const { middleware } = createMiddleware({
+        pattern: '/not-found/',
+        target: '/$siteLang/found',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: false,
+        locale: 'en',
+        language: 'da',
+        sites: sitesFromConfigFile,
+      });
+
+      await middleware.handle(req, res);
+
+      const redirectArg = nextRedirectStub.firstCall?.args?.[0] as any;
+
+      expect(req.nextUrl.locale).to.equal('en');
+      expect(redirectArg.locale).to.equal('en');
+    });
+
+    it('should update locale for pages router when target starts with locale segment', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/ua/found',
+        pathname: '/ua/found',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        clone: cloneUrl,
+      };
+      setupRedirectStub(301);
+
+      const { res, req } = createTestRequestResponse({
+        response: { url },
+        request: {
+          nextUrl: {
+            pathname: '/not-found',
+            href: 'http://localhost:3000/not-found',
+            locale: 'en',
+            origin: 'http://localhost:3000',
+            clone: cloneUrl,
+          },
+        },
+        status: 301,
+      });
+
+      const { middleware } = createMiddleware({
+        pattern: 'not-found',
+        target: '/ua/found',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: false,
+        locale: 'en',
+      });
+
+      await middleware.handle(req, res);
+
+      const redirectArg = nextRedirectStub.firstCall?.args?.[0] as any;
+
+      expect(req.nextUrl.locale).to.equal('ua');
+      expect(redirectArg.locale).to.equal('ua');
+    });
+
+    it('should not update locale for app router when target starts with locale segment', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/ua/found',
+        pathname: '/ua/found',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        clone: cloneUrl,
+      };
+      setupRedirectStub(301);
+
+      const { res, req } = createTestRequestResponse({
+        response: { url },
+        request: {
+          nextUrl: {
+            pathname: '/not-found',
+            href: 'http://localhost:3000/not-found',
+            locale: 'en',
+            origin: 'http://localhost:3000',
+            clone: cloneUrl,
+          },
+        },
+        status: 301,
+      });
+
+      res.headers.set(LOCALE_HEADER_NAME, 'ua');
+
+      const { middleware } = createMiddleware({
+        pattern: 'not-found',
+        target: '/ua/found',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: false,
+        locale: 'en',
+      });
+
+      await middleware.handle(req, res);
+
+      const redirectArg = nextRedirectStub.firstCall?.args?.[0] as any;
+
+      expect(req.nextUrl.locale).to.equal('en');
+      expect(redirectArg.locale).to.equal('en');
     });
   });
 });
