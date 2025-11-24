@@ -1,6 +1,10 @@
-import { NativeDataFetcher, debug } from '@sitecore-content-sdk/core';
+import { NativeDataFetcher, debug, constants } from '@sitecore-content-sdk/core';
 
-type SortSetting = {
+/**
+ * Options for sorting the search results.
+ * @public
+ */
+export type SortSetting = {
   name: string;
   order: 'asc' | 'desc';
 };
@@ -21,7 +25,11 @@ export interface SearchServiceConfig {
   contextId: string;
 }
 
-export interface SearchAPIResponse {
+/**
+ * Response from the Search API.
+ * @internal
+ */
+interface SearchAPIResponse {
   /**
    * The search results.
    */
@@ -32,6 +40,10 @@ export interface SearchAPIResponse {
   total: number;
 }
 
+/**
+ * Response from the Search Service.
+ * @public
+ */
 export interface SearchResponse {
   /**
    * The search results.
@@ -43,6 +55,10 @@ export interface SearchResponse {
   total: number;
 }
 
+/**
+ * A set of request parameters for the Search Service.
+ * @public
+ */
 export interface SearchParameters {
   /**
    * The ID of the search index to use.
@@ -76,7 +92,7 @@ export class SearchService {
   private fetcher: NativeDataFetcher;
 
   constructor(private config: SearchServiceConfig) {
-    this.config = config;
+    this.config.edgeUrl = this.config.edgeUrl || constants.SITECORE_EDGE_URL_DEFAULT;
 
     this.fetcher = new NativeDataFetcher({
       debugger: debug.search,

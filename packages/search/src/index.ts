@@ -3,4 +3,5 @@ export {
   SearchParameters,
   SearchServiceConfig,
   SearchResponse,
+  SortSetting,
 } from './search-service';
