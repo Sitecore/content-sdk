@@ -70,6 +70,7 @@ type ImportMapEntry = {
 /**
  * Args for import map generation
  * Specifies paths to include and exclude when generating imports
+ * @public
  */
 export type WriteImportMapArgs = {
   paths: string[];
