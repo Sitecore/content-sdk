@@ -10,9 +10,9 @@ import { detectRouterType } from '../templating/utils';
  * @public
  */
 export const writeImportMap = (args: WriteImportMapArgs) => {
-  const generateClientMap = args.clientImportMap ?? detectRouterType() === 'app';
+  const separateServerClientMaps = args.separateServerClientMaps ?? detectRouterType() === 'app';
   return writeImportMapCore({
     ...args,
-    clientImportMap: generateClientMap,
+    separateServerClientMaps,
   });
 };

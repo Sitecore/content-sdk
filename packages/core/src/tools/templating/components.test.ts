@@ -1,16 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import {
-  getComponentList,
-  detectComponentType,
-  getComponentListWithTypes,
-  filterComponentsByType,
-  detectRouterType,
-} from './components';
+import { getComponentList, filterComponentsByType } from './components';
 import { ComponentFile, ComponentFileWithType } from './components';
 import path from 'path';
-import fs from 'fs';
 
 describe('components', () => {
   const sandbox = sinon.createSandbox();
