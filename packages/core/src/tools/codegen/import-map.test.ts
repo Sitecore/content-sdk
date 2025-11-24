@@ -310,7 +310,11 @@ describe('Import Map Generation', () => {
 
       // Should always include default service imports at the top
       expect(output).to.include(
-        "import { combineImportEntries, defaultImportEntries } from '@sitecore-content-sdk/nextjs/codegen';"
+        `import {
+  combineImportEntries,
+  defaultImportEntries,
+  ImportEntry,
+} from '@sitecore-content-sdk/nextjs/codegen';`
       );
     });
 
@@ -457,16 +461,17 @@ describe('Import Map Generation', () => {
           // Assert fsWriteStub was called twice
           expect(fsWriteStub.calledTwice).to.be.true;
 
-          // Assert server import map was written to import-map-server.ts
+          // Assert server import map was written to import-map.server.ts
           const serverCall = fsWriteStub.getCall(0);
-          expect(serverCall.args[0]).to.include('import-map-server.ts');
-          expect(serverCall.args[0]).to.not.include('import-map-client.ts');
+          expect(serverCall.args[0]).to.include('import-map.server.ts');
+          expect(serverCall.args[0]).to.not.include('import-map.client.ts');
           expect(serverCall.args[1]).to.match(/test-exports/);
           expect(serverCall.args[1]).to.not.match(/useEffect/);
 
-          // Assert client import map was written to import-map-client.ts
+          // Assert client import map was written to import-map.client.ts
           const clientCall = fsWriteStub.getCall(1);
-          expect(clientCall.args[0]).to.include('import-map-client.ts');
+          expect(clientCall.args[0]).to.include('import-map.client.ts');
+          expect(clientCall.args[1]).to.match(/\'use client\'/);
           expect(clientCall.args[1]).to.match(/useEffect/);
           expect(clientCall.args[1]).to.match(/fake-react/);
           expect(clientCall.args[1]).to.not.match(/test-exports/);
@@ -559,3 +564,4 @@ describe('Import Map Generation', () => {
     });
   });
 });
+

@@ -29,8 +29,8 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
               page={page}
               rendering={route}
               componentMap={componentMap}
-              loadServerImportMap={() => import('.sitecore/import-map-server')}
-              loadClientImportMap={() => import('.sitecore/import-map-client')}
+              loadServerImportMap={() => import('.sitecore/import-map.server')}
+              loadClientImportMap={() => import('.sitecore/import-map.client')}
             />
           )
         ) : (
