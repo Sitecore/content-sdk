@@ -456,6 +456,10 @@ describe('Import Map Generation', () => {
             exclude: [],
             scConfig,
             separateServerClientMaps: true,
+            clientTemplate: (indexedImportMap: Map<string, ModuleExports>) => {
+              return `'use client';
+${defaultMapTemplate(indexedImportMap)}`;
+            },
           });
 
           // Assert fsWriteStub was called twice

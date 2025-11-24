@@ -84,6 +84,19 @@ export type WriteImportMapArgs = {
    * when true, generates import-map.server.ts and import-map.client.ts
    */
   separateServerClientMaps?: boolean;
+  /**
+   * Function to return custom template for server import map file.
+   * Will be used as default template if separateServerClientMaps is false.
+   * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.ts or import-map.server.ts file
+   * @returns {string} contents for resulting import map file
+   */
+  serverTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
+  /**
+   * Function to return custom template for client import map file when separateServerClientMaps is true.
+   * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.client.ts file
+   * @returns {string} contents for resulting import map file
+   */
+  clientTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
 };
 
 /**
@@ -379,6 +392,9 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
   return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
     const config = args.scConfig ?? scConfig;
 
+    const defaultTemplate = args.serverTemplate || defaultMapTemplate;
+    const clientTemplate = args.clientTemplate || defaultMapTemplate;
+
     if (!config) {
       throw new Error('Sitecore configuration is required to be provided');
     }
@@ -400,8 +416,8 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
       // get generated map and combine with default one
       // can be expanded when adding support for non-react frameworks
       const importMapContent = importMap.isClient
-        ? reactClientMapTemplate(importMap.map)
-        : defaultMapTemplate(importMap.map);
+        ? clientTemplate(importMap.map)
+        : defaultTemplate(importMap.map);
       try {
         fs.writeFileSync(importMap.path, importMapContent, {
           encoding: 'utf8',
@@ -416,12 +432,6 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
     }
   };
 };
-
-// eslint-disable-next-line jsdoc/require-jsdoc
-function reactClientMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
-  return `'use client';
-  ${_defaultMapTemplate(indexedImportMap)}`;
-}
 
 // eslint-disable-next-line jsdoc/require-jsdoc
 function _defaultMapTemplate(indexedImportMap: Map<string, ModuleExports>) {

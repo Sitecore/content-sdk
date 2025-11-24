@@ -6,6 +6,7 @@ import {
 } from '@sitecore-content-sdk/core/tools';
 import ts from 'typescript';
 import fs from 'fs';
+import { defaultImportMapTemplate, ModuleExports } from '@sitecore-content-sdk/core/tools';
 
 /**
  * Detects the Next.js router type (App Router or Pages Router) based on directory structure.
@@ -219,4 +220,14 @@ export function getComponentListWithTypes(
     ...component,
     componentType: detectComponentType(component.filePath, detectedRouterType),
   }));
+}
+
+/**
+ * React-specific import map template with 'use client' directive. Used in App Router.
+ * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.client.ts file
+ * @returns {string} contents for resulting import map file
+ */
+export function reactClientMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
+  return `'use client';
+  ${defaultImportMapTemplate(indexedImportMap)}`;
 }
