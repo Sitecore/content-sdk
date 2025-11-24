@@ -119,6 +119,8 @@ describe('<DesignLibrary />', () => {
 
   const unsubscribeSpy = sandbox.spy();
   let addComponentPreviewHandlerSpy: sinon.SinonStub;
+  let postToDesignLibrarySpy: sinon.SinonStub;
+  let sendErrorEventSpy: sinon.SinonStub;
   let callbackEvent: any = null;
 
   const RENDER_ID = 'test-content';
@@ -165,6 +167,19 @@ describe('<DesignLibrary />', () => {
   beforeEach(() => {
     postMessageSpy.resetHistory();
     unsubscribeSpy.resetHistory();
+    postToDesignLibrarySpy = sandbox.stub().callsFake((evt) => {
+      // postToDesignLibrary calls window.postMessage internally
+      window.postMessage(evt, '*');
+    });
+    sendErrorEventSpy = sandbox.stub().callsFake((uid, error, type) => {
+      // sendErrorEvent calls window.postMessage internally
+      const errorEvent = getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
+      window.postMessage(errorEvent, '*');
+    });
+    __mockDependencies({
+      postToDesignLibrary: postToDesignLibrarySpy,
+      sendErrorEvent: sendErrorEventSpy,
+    });
 
     if (typeof (globalThis as any).requestAnimationFrame === 'undefined') {
       (globalThis as any).requestAnimationFrame = (cb: Function) => setTimeout(cb, 0);
@@ -394,7 +409,11 @@ describe('<DesignLibrary />', () => {
         callbackEvent = cb;
         return unsubscribeSpy;
       });
-      __mockDependencies({ addComponentPreviewHandler: addComponentPreviewHandlerSpy });
+      __mockDependencies({
+        addComponentPreviewHandler: addComponentPreviewHandlerSpy,
+        postToDesignLibrary: postToDesignLibrarySpy,
+        sendErrorEvent: sendErrorEventSpy,
+      });
 
       postMessageSpy.resetHistory();
     });
@@ -596,7 +615,11 @@ describe('<DesignLibrary />', () => {
         callbackEvent = cb;
         return unsubscribeSpy;
       });
-      __mockDependencies({ addComponentPreviewHandler: addComponentPreviewHandlerSpy });
+      __mockDependencies({
+        addComponentPreviewHandler: addComponentPreviewHandlerSpy,
+        postToDesignLibrary: postToDesignLibrarySpy,
+        sendErrorEvent: sendErrorEventSpy,
+      });
     });
 
     const expectedGeneratedParts = [
