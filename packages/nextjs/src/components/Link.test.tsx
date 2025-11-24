@@ -40,7 +40,7 @@ const Page = ({ children }: { children: ReactNode }) => (
   <RouterContext.Provider value={Router()}>{children}</RouterContext.Provider>
 );
 
-describe.only('<Link />', () => {
+describe('<Link />', () => {
   it('should render all value attributes', () => {
     const field = {
       value: {
