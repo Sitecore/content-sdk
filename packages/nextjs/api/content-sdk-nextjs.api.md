@@ -567,11 +567,12 @@ export { LinkField }
 
 export { LinkFieldValue }
 
+// Warning: (ae-forgotten-export) The symbol "supportedNextLinkProps" needs to be exported by the entry point api-surface.d.ts
+//
 // @public
 export type LinkProps = LinkProps_2 & {
     internalLinkMatcher?: RegExp;
-    prefetch?: LinkProps_3['prefetch'];
-};
+} & Pick<LinkProps_3, (typeof supportedNextLinkProps)[number]>;
 
 // @public
 export class LocaleMiddleware extends MiddlewareBase {
