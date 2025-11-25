@@ -9,6 +9,19 @@ import {
 } from '@sitecore-content-sdk/react';
 
 /**
+ * The list of NextLink props to be supported by the Link component.
+ */
+const supportedNextLinkProps = [
+  'as',
+  'onNavigate',
+  'passHref',
+  'prefetch',
+  'replace',
+  'scroll',
+  'shallow',
+] as const;
+
+/**
  * The interface for the Link component props.
  * @public
  */
@@ -18,7 +31,7 @@ export type LinkProps = ReactLinkProps & {
    * @default /^\//g
    */
   internalLinkMatcher?: RegExp;
-} & Omit<NextLinkProps, 'href' | 'locale'>;
+} & Pick<NextLinkProps, (typeof supportedNextLinkProps)[number]>;
 
 /**
  * Matches relative URLs that end with a file extension.
@@ -37,7 +50,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       children,
       internalLinkMatcher = /^\//g,
       showLinkTextWithChildrenPresent,
-      ...htmlLinkProps
+      ...rest
     } = props;
 
     if (!field || (!field.value && !(field as LinkFieldValue).href && !field.metadata)) {
@@ -67,7 +80,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
             title={value.title}
             target={value.target}
             className={value.class}
-            {...htmlLinkProps}
+            {...rest}
             locale={false}
             ref={ref}
             {...(process.env.TEST
