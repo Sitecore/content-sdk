@@ -8,7 +8,7 @@
 
 > **withPlaceholder**(`placeholders`, `options?`): (`WrappedComponent`) => (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:48](https://github.com/Sitecore/content-sdk/blob/b8770a767c9731c5f8837ae3dcaa6a34d29abaac/packages/react/src/enhancers/withPlaceholder.tsx#L48)
+Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:48](https://github.com/Sitecore/content-sdk/blob/c100101d0bcc8809858931dc72ddf6793f331bd0/packages/react/src/enhancers/withPlaceholder.tsx#L48)
 
 HOC to provide client-side placeholder functionality to a component.
 
