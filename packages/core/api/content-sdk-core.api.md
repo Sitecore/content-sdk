@@ -265,6 +265,11 @@ const DEFAULT_SITECORE_AUTH_DOMAIN = "https://auth.sitecorecloud.io";
 // @internal (undocumented)
 export const DEFAULT_VARIANT = "_default";
 
+// Warning: (ae-forgotten-export) The symbol "_defaultMapTemplate" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export let defaultImportMapTemplate: typeof _defaultMapTemplate;
+
 // @public
 export class DefaultRetryStrategy implements RetryStrategy {
     constructor(options?: {
@@ -346,12 +351,6 @@ export enum DesignLibraryVariantGeneration {
     // (undocumented)
     Variant = "variant"
 }
-
-// @internal
-export function detectComponentType(filePath: string, routerType?: RouterType): ComponentType;
-
-// @internal
-export function detectRouterType(projectRoot?: string): RouterType;
 
 // @public
 export interface DictionaryPhrases {
@@ -625,9 +624,6 @@ export function getChildPlaceholder(rendering: ComponentRendering, placeholderNa
 //
 // @public (undocumented)
 export let getComponentList: typeof _getComponentList;
-
-// @internal
-export function getComponentListWithTypes(paths: string[], exclude?: string[], includeVariants?: boolean, routerType?: RouterType): ComponentFileWithType[];
 
 // Warning: (ae-forgotten-export) The symbol "GetComponentSpecParams" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "ComponentSpec" needs to be exported by the entry point api-surface.d.ts
@@ -965,6 +961,13 @@ export enum MetadataKind {
     // (undocumented)
     Open = "open"
 }
+
+// @internal
+export type ModuleExports = {
+    namedExports: Map<string, string>;
+    defaultExport: string | null;
+    namespaceExport: string | null;
+};
 
 // @public
 export enum ModuleType {
@@ -1585,22 +1588,32 @@ const updateImageUrl: (url: string, params?: {
 // @internal (undocumented)
 export const VARIANT_PREFIX = "_variantId_";
 
-// Warning: (ae-forgotten-export) The symbol "WriteImportMapArgs" needs to be exported by the entry point api-surface.d.ts
-//
 // @public
 export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }?: {
     scConfig?: SitecoreConfig;
 }) => Promise<void>;
 
+// @public
+export type WriteImportMapArgs = {
+    paths: string[];
+    scConfig?: SitecoreConfig;
+    exclude?: string[];
+    separateServerClientMaps?: boolean;
+    serverTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
+    clientTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
+};
+
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:53:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:108:5 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
+// src/tools/codegen/import-map.ts:94:3 - (ae-incompatible-release-tags) The symbol "serverTemplate" is marked as @public, but its signature references "ModuleExports" which is marked as @internal
+// src/tools/codegen/import-map.ts:100:3 - (ae-incompatible-release-tags) The symbol "clientTemplate" is marked as @public, but its signature references "ModuleExports" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
-// src/tools/index.ts:21:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index.ts:26:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

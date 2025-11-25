@@ -23,8 +23,8 @@ export function withLoadImportMap<T extends WithLoadImportMapProps>(
 ) {
   const WithLoadImportMap = (props: T): JSX.Element => {
     const loadImportMapContext = useContext(ImportMapReactContext);
-
-    return <Component {...props} loadImportMap={props.loadImportMap || loadImportMapContext} />;
+    const loadClientImportMap = props.loadImportMap || loadImportMapContext;
+    return <Component {...props} loadImportMap={loadClientImportMap} />;
   };
 
   WithLoadImportMap.displayName = `withLoadImportMap(${

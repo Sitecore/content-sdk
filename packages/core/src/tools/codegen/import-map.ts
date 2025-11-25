@@ -29,8 +29,9 @@ export let getImportMap = _getImportMap;
  * Builds file contents for component map based on the default template
  * @param {Map<string, ImportModule>} indexedImportMap map to be processed into final component-map.ts file
  * @returns {string} file code for component-map.ts
+ * @internal
  */
-export let nextJsMapTemplate = _nextJsMapTemplate;
+export let defaultMapTemplate = _defaultMapTemplate;
 
 export const importUnitMocks = {
   set getImportMap(mockImplementation) {
@@ -40,13 +41,13 @@ export const importUnitMocks = {
     return _getImportMap;
   },
 
-  set nextJsMapTemplate(
+  set defaultMapTemplate(
     mockImplementation: (indexedImportMap: Map<string, ModuleExports>) => string
   ) {
-    nextJsMapTemplate = mockImplementation;
+    defaultMapTemplate = mockImplementation;
   },
-  get nextJsMapTemplate() {
-    return _nextJsMapTemplate;
+  get defaultMapTemplate() {
+    return _defaultMapTemplate;
   },
 };
 
@@ -70,6 +71,7 @@ type ImportMapEntry = {
 /**
  * Args for import map generation
  * Specifies paths to include and exclude when generating imports
+ * @public
  */
 export type WriteImportMapArgs = {
   paths: string[];
@@ -78,6 +80,24 @@ export type WriteImportMapArgs = {
    */
   scConfig?: SitecoreConfig;
   exclude?: string[];
+  /**
+   * generate separate import map for server/client components
+   * when true, generates import-map.server.ts and import-map.client.ts
+   */
+  separateServerClientMaps?: boolean;
+  /**
+   * Function to return custom template for server import map file.
+   * Will be used as default template if separateServerClientMaps is false.
+   * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.ts or import-map.server.ts file
+   * @returns {string} contents for resulting import map file
+   */
+  serverTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
+  /**
+   * Function to return custom template for client import map file when separateServerClientMaps is true.
+   * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.client.ts file
+   * @returns {string} contents for resulting import map file
+   */
+  clientTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
 };
 
 /**
@@ -94,6 +114,7 @@ export type ImportNames = {
 
 /**
  * Import module definition, specifying all the imports for a given import path
+ * @internal
  */
 export type ModuleExports = {
   // import { import1, import2 as imp3 }
@@ -102,6 +123,12 @@ export type ModuleExports = {
   defaultExport: string | null;
   // import * as coolName
   namespaceExport: string | null;
+};
+
+type ImportMapDef = {
+  map: Map<string, ModuleExports>;
+  path: string;
+  isClient?: boolean;
 };
 
 /**
@@ -319,6 +346,45 @@ function _getImportMap(paths: string[]) {
   return importMap;
 }
 
+const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<ImportMapDef[]> => {
+  const importMapFileDefault = path.join(process.cwd(), '.sitecore', 'import-map.ts');
+  if (!separateMaps) {
+    return [{ map: getImportMap(paths), path: importMapFileDefault }];
+  }
+  const appPath = process.cwd();
+  const serverPaths: string[] = [];
+  const clientPaths: string[] = [];
+  const importMapFileClient = path.join(process.cwd(), '.sitecore', 'import-map.client.ts');
+  const importMapFileServer = path.join(process.cwd(), '.sitecore', 'import-map.server.ts');
+  for (const componentPath of paths) {
+    const fullPath = path.isAbsolute(componentPath)
+      ? componentPath
+      : path.resolve(appPath, componentPath);
+    // read the start of the file that may be 'use client'
+    const firstLine = await new Promise<string>((resolve) => {
+      let readBuffer = '';
+      const stream = fs.createReadStream(fullPath, { end: 12 });
+      stream
+        .on('data', async (chunk) => {
+          readBuffer += chunk.toString();
+        })
+        .on('close', () => resolve(readBuffer))
+        .on('error', () => resolve(''));
+    });
+
+    if (!firstLine) continue;
+    if (firstLine.match(/['"]use client['"]/)) {
+      clientPaths.push(fullPath);
+    } else {
+      serverPaths.push(fullPath);
+    }
+  }
+  return [
+    { map: getImportMap(serverPaths), path: importMapFileServer },
+    { map: getImportMap(clientPaths), path: importMapFileClient, isClient: true },
+  ];
+};
+
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
  * @param {WriteImportMapArgs} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration.
@@ -327,6 +393,9 @@ function _getImportMap(paths: string[]) {
 export const writeImportMap = (args: WriteImportMapArgs) => {
   return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
     const config = args.scConfig ?? scConfig;
+
+    const defaultTemplate = args.serverTemplate || defaultMapTemplate;
+    const clientTemplate = args.clientTemplate || defaultMapTemplate;
 
     if (!config) {
       throw new Error('Sitecore configuration is required to be provided');
@@ -337,45 +406,39 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
       return;
     }
     const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
-    const importMapFile = path.join(process.cwd(), '.sitecore', 'import-map.ts');
-    console.log(
-      `[Codegen] Generating import map: ${JSON.stringify({
-        paths: args.paths,
-        exclude: args.exclude,
-      })}.\n Writing into ${importMapFile} ...`
-    );
-    // get generated map and combine with default one
-    const importMap = getImportMap(paths);
-
-    const importMapContent = nextJsMapTemplate(importMap);
-    try {
-      fs.writeFileSync(importMapFile, importMapContent, {
-        encoding: 'utf8',
-      });
-    } catch (error) {
-      console.error(
-        `[Codegen] Import Map generation failed. Error writing to file ${importMapFile}:`,
-        error
+    // TODO: don't run in pages router
+    const importMaps = await prepImportMaps(paths, args.separateServerClientMaps);
+    for (const importMap of importMaps) {
+      console.log(
+        `[Codegen] Generating import map: ${JSON.stringify({
+          paths: args.paths,
+          exclude: args.exclude,
+        })}.\n Writing into ${importMap.path} ...`
       );
-      throw error;
+      // get generated map and combine with default one
+      // can be expanded when adding support for non-react frameworks
+      const importMapContent = importMap.isClient
+        ? clientTemplate(importMap.map)
+        : defaultTemplate(importMap.map);
+      try {
+        fs.writeFileSync(importMap.path, importMapContent, {
+          encoding: 'utf8',
+        });
+      } catch (error) {
+        console.error(
+          `[Codegen] Import Map generation failed. Error writing to file ${importMap.path}:`,
+          error
+        );
+        throw error;
+      }
     }
   };
 };
 
 // eslint-disable-next-line jsdoc/require-jsdoc
-function _nextJsMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
-  const outputExportEntries = (entry: ImportMapEntry) => {
-    return (
-      [...entry.namedExports, entry.defaultExport, entry.namespaceExport]
-        .filter((entry) => entry.value !== null)
-        .map((namedExport) => `      { name: '${namedExport.name}', value: ${namedExport.value} }`)
-        .join(',\n') + ','
-    );
-  };
-
+function _defaultMapTemplate(indexedImportMap: Map<string, ModuleExports>, framework = 'core') {
   const importStatements: string[] = [];
   const importMapArray = Array.from(indexedImportMap);
-
   // get import map entries after
   const finalImportMap: ImportMapEntry[] = importMapArray.map(([modulePath, imports]) => {
     const defaultExport = {
@@ -420,9 +483,22 @@ function _nextJsMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
     }
   });
 
+  const outputExportEntries = (entry: ImportMapEntry) => {
+    return (
+      [...entry.namedExports, entry.defaultExport, entry.namespaceExport]
+        .filter((entry) => entry.value !== null)
+        .map((namedExport) => `      { name: '${namedExport.name}', value: ${namedExport.value} }`)
+        .join(',\n') + ','
+    );
+  };
+
   return `// This file is auto-generated by the Sitecore Content SDK.
 // Below are built-in Content SDK imports neccessary for the import map
-import { combineImportEntries, defaultImportEntries } from '@sitecore-content-sdk/nextjs/codegen';
+import {
+  combineImportEntries,
+  defaultImportEntries,
+  ImportEntry,
+} from '@sitecore-content-sdk/${framework}/codegen';
 // end of built-in imports
 
 ${importStatements.join('\n')}
@@ -442,7 +518,7 @@ ${finalImportMap
       .join('\n')
   )
   .join(',\n')}
-];
+] as ImportEntry[];
 
 export default combineImportEntries(defaultImportEntries, importMap);
 `;
