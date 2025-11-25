@@ -1,5 +1,5 @@
 import { SearchService } from '@sitecore-content-sdk/search';
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useSitecore } from '../enhancers/withSitecore';
 
 /** Hook related utilities */
@@ -12,20 +12,20 @@ export const DEFAULT_PAGE = 1;
  * Hook to initialize and manage SearchService lifecycle.
  * @internal
  */
-export function useSearchService() {
+export function useSearchService(): SearchService | null {
   const { api } = useSitecore();
-  const searchServiceRef = useRef<SearchService | null>(null);
+  const [searchService, setSearchService] = useState<SearchService | null>(null);
 
   useEffect(() => {
-    searchServiceRef.current = new SearchService({
+    if (!api.edge.clientContextId || !api.edge.edgeUrl) return;
+
+    setSearchService(new SearchService({
       contextId: api.edge.clientContextId,
       edgeUrl: api.edge.edgeUrl,
-    });
+    }));
   }, [api.edge.clientContextId, api.edge.edgeUrl]);
 
-  return {
-    searchService: searchServiceRef.current,
-  };
+  return searchService;
 }
 
 /**

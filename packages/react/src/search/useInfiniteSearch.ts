@@ -102,7 +102,7 @@ export const useInfiniteSearch = (options: UseInfiniteSearchOptions): UseInfinit
   // Track previous query to detect changes
   const previousQueryRef = useRef<string | undefined>(query);
 
-  const { searchService } = useSearchService();
+  const searchService = useSearchService();
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const performSearch = useCallback(

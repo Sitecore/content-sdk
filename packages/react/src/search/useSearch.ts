@@ -95,7 +95,7 @@ export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
   const [totalPages, setTotalPages] = useState(0);
   const [error, setError] = useState<Error | null>(null);
 
-  const { searchService } = useSearchService();
+  const searchService = useSearchService();
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const search = useCallback(async () => {
