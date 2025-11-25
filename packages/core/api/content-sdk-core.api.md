@@ -347,12 +347,6 @@ export enum DesignLibraryVariantGeneration {
     Variant = "variant"
 }
 
-// @internal
-export function detectComponentType(filePath: string, routerType?: RouterType): ComponentType;
-
-// @internal
-export function detectRouterType(projectRoot?: string): RouterType;
-
 // @public
 export interface DictionaryPhrases {
     // (undocumented)
@@ -625,9 +619,6 @@ export function getChildPlaceholder(rendering: ComponentRendering, placeholderNa
 //
 // @public (undocumented)
 export let getComponentList: typeof _getComponentList;
-
-// @internal
-export function getComponentListWithTypes(paths: string[], exclude?: string[], includeVariants?: boolean, routerType?: RouterType): ComponentFileWithType[];
 
 // Warning: (ae-forgotten-export) The symbol "GetComponentSpecParams" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "ComponentSpec" needs to be exported by the entry point api-surface.d.ts
