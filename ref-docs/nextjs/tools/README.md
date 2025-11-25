@@ -28,8 +28,8 @@
 - [generateMetadata](variables/generateMetadata.md)
 - [generateSites](variables/generateSites.md)
 - [getComponentList](variables/getComponentList.md)
-- [writeImportMap](variables/writeImportMap.md)
 
 ## Functions
 
 - [generatePlugins](functions/generatePlugins.md)
+- [writeImportMap](functions/writeImportMap.md)
