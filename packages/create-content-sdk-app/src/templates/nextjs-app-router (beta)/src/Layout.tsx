@@ -30,7 +30,6 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
               rendering={route}
               componentMap={componentMap}
               loadServerImportMap={() => import('.sitecore/import-map.server')}
-              loadClientImportMap={() => import('.sitecore/import-map.client')}
             />
           )
         ) : (

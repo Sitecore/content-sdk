@@ -51,6 +51,7 @@ export type DesignLibraryServerProps = {
 export type DesignLibraryClientProps = {
   /**
    * The dynamic import for client import map to be used in variant generation mode.
+   * Overrides the value from Sitecore Context if both are provided.
    */
   loadClientImportMap?: () => Promise<ImportMapImport>;
 };

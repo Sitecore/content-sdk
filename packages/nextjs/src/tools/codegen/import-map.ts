@@ -2,7 +2,11 @@ import {
   writeImportMap as writeImportMapCore,
   WriteImportMapArgs,
 } from '@sitecore-content-sdk/core/tools';
-import { detectRouterType, reactClientMapTemplate } from '../templating/utils';
+import {
+  detectRouterType,
+  nextjsClientMapTemplate,
+  nextjsDefaultMapTemplate,
+} from '../templating/utils';
 
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
@@ -15,6 +19,7 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
   return writeImportMapCore({
     ...args,
     separateServerClientMaps,
-    clientTemplate: reactClientMapTemplate,
+    serverTemplate: nextjsDefaultMapTemplate,
+    clientTemplate: nextjsClientMapTemplate,
   });
 };

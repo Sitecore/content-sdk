@@ -227,7 +227,16 @@ export function getComponentListWithTypes(
  * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.client.ts file
  * @returns {string} contents for resulting import map file
  */
-export function reactClientMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
+export function nextjsClientMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
   return `'use client';
-  ${defaultImportMapTemplate(indexedImportMap)}`;
+  ${defaultImportMapTemplate(indexedImportMap, 'nextjs')}`;
+}
+
+/**
+ * React-specific import map template with 'use client' directive. Used in App Router.
+ * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.client.ts file
+ * @returns {string} contents for resulting import map file
+ */
+export function nextjsDefaultMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
+  return defaultImportMapTemplate(indexedImportMap, 'nextjs');
 }

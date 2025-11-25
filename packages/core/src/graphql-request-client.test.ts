@@ -17,7 +17,7 @@ use(spies);
 const nodeStatusCode = ['ECONNRESET', 'ETIMEDOUT', 'EPROTO'];
 const statusErrorCodes = [429, 502, 503, 504, 520, 521, 522, 523, 524];
 
-xdescribe('GraphQLRequestClient', () => {
+describe('GraphQLRequestClient', () => {
   const endpoint = 'http://csdknextweb/graphql';
   let debugNamespaces: string;
 

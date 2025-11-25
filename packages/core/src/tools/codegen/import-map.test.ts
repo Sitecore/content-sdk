@@ -303,7 +303,7 @@ describe('Import Map Generation', () => {
       expect(output).to.match(/name: 'testo', value: aliased_testo/);
     });
 
-    it('should write default service imports from codegen submodule', () => {
+    it('should write default service imports from codegen submodule with fallback framework', () => {
       // Prepare a fake import map with no entries
       const importMap = new Map<string, ModuleExports>();
       const output = defaultMapTemplate(importMap);
@@ -314,7 +314,22 @@ describe('Import Map Generation', () => {
   combineImportEntries,
   defaultImportEntries,
   ImportEntry,
-} from '@sitecore-content-sdk/nextjs/codegen';`
+} from '@sitecore-content-sdk/core/codegen';`
+      );
+    });
+
+    it('should write default service imports from codegen submodule with custom framework', () => {
+      // Prepare a fake import map with no entries
+      const importMap = new Map<string, ModuleExports>();
+      const output = defaultMapTemplate(importMap, 'react');
+
+      // Should always include default service imports at the top
+      expect(output).to.include(
+        `import {
+  combineImportEntries,
+  defaultImportEntries,
+  ImportEntry,
+} from '@sitecore-content-sdk/react/codegen';`
       );
     });
 
