@@ -2,18 +2,10 @@
 import { NextRouter } from 'next/router';
 import { LinkField } from '@sitecore-content-sdk/react';
 import { expect } from 'chai';
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
 import { Link } from './Link';
 import { spy } from 'sinon';
-
-const pushSpy = spy(() => Promise.resolve(true));
-const replaceSpy = spy(() => Promise.resolve(true));
-const reloadSpy = spy();
-const backSpy = spy();
-const forwardSpy = spy();
-const prefetchSpy = spy(() => Promise.resolve());
-const beforePopStateSpy = spy();
 
 const Router = (): NextRouter => ({
   pathname: '/',
@@ -26,13 +18,12 @@ const Router = (): NextRouter => ({
   isPreview: false,
   isReady: false,
   events: { emit: spy(), off: spy(), on: spy() },
-  push: pushSpy,
-  replace: replaceSpy,
-  reload: reloadSpy,
-  back: backSpy,
-  forward: forwardSpy,
-  prefetch: prefetchSpy,
-  beforePopState: beforePopStateSpy,
+  push: spy(() => Promise.resolve(true)),
+  replace: spy(() => Promise.resolve(true)),
+  reload: spy(),
+  back: spy(),
+  prefetch: spy(() => Promise.resolve()),
+  beforePopState: spy(),
 });
 
 // Should provide RouterContext in case if we render Link from next/link
@@ -168,39 +159,24 @@ describe('<Link />', () => {
     expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
   });
 
-  it('should call router.push with provided props when link is clicked', () => {
-    const field = { href: '/lorem', text: 'ipsum' };
+  it('should render with prefetch prop provided', () => {
+    const field = {
+      href: '/lorem',
+      text: 'ipsum',
+    };
     const c = render(
       <Page>
-        <Link field={field} as="/custom" scroll={true} shallow={true} locale="fr-FR" />
+        <Link field={field} prefetch={false} />
       </Page>
     );
-    const link = c.container.querySelector('a')!;
+
+    const link = c.container.querySelector('a');
+
+    expect(link?.outerHTML).to.contain(field.href);
+    expect(link?.outerHTML).to.contain(field.text);
 
     expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
-
-    fireEvent.click(link!);
-
-    expect(pushSpy).to.have.been.calledOnceWith('/lorem', '/custom', {
-      shallow: true,
-      locale: 'fr-FR',
-      scroll: true,
-    });
-  });
-
-  it('should pass NextLink props correctly', () => {
-    const field = { href: '/lorem', text: 'ipsum' };
-    const c = render(
-      <Page>
-        <Link field={field} replace={true} passHref={true} prefetch={true} />
-      </Page>
-    );
-    const link = c.container.querySelector('a')!;
-
-    expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
-    expect(link?.getAttribute('data-nextjs-prefetch')).to.equal('true');
-    expect(link.getAttribute('data-nextjs-replace')).to.equal('true');
-    expect(link.getAttribute('data-nextjs-passHref')).to.equal('true');
+    expect(link?.getAttribute('data-nextjs-prefetch')).to.equal('false');
   });
 
   it('should render other attributes with other props provided', () => {

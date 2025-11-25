@@ -569,7 +569,7 @@ export { LinkFieldValue }
 // @public
 export type LinkProps = LinkProps_2 & {
     internalLinkMatcher?: RegExp;
-} & Omit<LinkProps_3, 'href'>;
+} & Omit<LinkProps_3, 'href' | 'locale'>;
 
 // @public
 export class LocaleMiddleware extends MiddlewareBase {

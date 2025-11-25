@@ -18,7 +18,7 @@ export type LinkProps = ReactLinkProps & {
    * @default /^\//g
    */
   internalLinkMatcher?: RegExp;
-} & Omit<NextLinkProps, 'href'>;
+} & Omit<NextLinkProps, 'href' | 'locale'>;
 
 /**
  * Matches relative URLs that end with a file extension.
@@ -64,19 +64,16 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
           <NextLink
             href={{ pathname: href, query: querystring, hash: anchor }}
             key="link"
-            locale={false}
             title={value.title}
             target={value.target}
             className={value.class}
-            prefetch={props.prefetch}
             {...htmlLinkProps}
+            locale={false}
             ref={ref}
             {...(process.env.TEST
               ? {
                   'data-nextjs-link': true,
-                  'data-nextjs-replace': props.replace,
                   'data-nextjs-prefetch': props.prefetch,
-                  'data-nextjs-passhref': props.passHref,
                 }
               : {})}
           >
@@ -87,10 +84,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       }
     }
 
-    // prevent passing internalLinkMatcher or prefetch as it is an invalid DOM element prop
-    const reactLinkProps = { ...props };
-    delete reactLinkProps.internalLinkMatcher;
-    delete reactLinkProps.prefetch;
+    const reactLinkProps = sanitizeLinkProps(props);
 
     return (
       <ReactLink
@@ -103,3 +97,29 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
 );
 
 Link.displayName = 'NextLink';
+
+/**
+ * Sanitize props for ReactLink by removing Next.js and internal props to prevent invalid DOM attributes.
+ * @param {LinkProps} props - The props the Link component received.
+ * @returns sanitized props for ReactLink.
+ * @internal
+ */
+function sanitizeLinkProps(props: LinkProps) {
+  const nextLinkProps: (keyof NextLinkProps)[] = [
+    'as',
+    'onNavigate',
+    'passHref',
+    'prefetch',
+    'replace',
+    'scroll',
+    'shallow',
+  ];
+  const internalProps: (keyof LinkProps)[] = ['internalLinkMatcher'];
+
+  const sanitizedProps: LinkProps = { ...props };
+  for (const prop of [...nextLinkProps, ...internalProps]) {
+    delete sanitizedProps[prop as keyof LinkProps];
+  }
+
+  return sanitizedProps;
+}
