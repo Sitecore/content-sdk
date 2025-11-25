@@ -9,6 +9,8 @@ export type SortSetting = {
   order: 'asc' | 'desc';
 };
 
+export type PrimitiveType = string | number | boolean;
+
 /**
  * Configuration for the Search Service.
  * @public
@@ -29,26 +31,28 @@ export interface SearchServiceConfig {
  * Response from the Search API.
  * @internal
  */
-interface SearchAPIResponse {
+interface SearchAPIResponse<Fields = GenericFields> {
   /**
    * The search results.
    */
-  content: Record<string, string | number | boolean>[];
+  content: Fields[];
   /**
    * The total number of search results.
    */
   total: number;
 }
 
+export type GenericFields = Record<string, PrimitiveType>;
+
 /**
  * Response from the Search Service.
  * @public
  */
-export interface SearchResponse {
+export interface SearchResponse<Fields = GenericFields> {
   /**
    * The search results.
    */
-  results: SearchAPIResponse['content'];
+  results: Fields[];
   /**
    * The total number of search results.
    */
@@ -99,10 +103,10 @@ export class SearchService {
     });
   }
 
-  async search(params: SearchParameters): Promise<SearchResponse> {
+  async search<Fields = GenericFields>(params: SearchParameters): Promise<SearchResponse<Fields>> {
     const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0 } = params;
 
-    const { data } = await this.fetcher.post<SearchAPIResponse>(
+    const { data } = await this.fetcher.post<SearchAPIResponse<Fields>>(
       `${this.config.edgeUrl}/v1/search?sitecoreContextId=${this.config.contextId}`,
       {
         config: {

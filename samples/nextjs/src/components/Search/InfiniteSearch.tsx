@@ -43,6 +43,24 @@ const parseKeywords = (keywords?: string): string[] => {
   }
 };
 
+type Event = {
+  title: string;
+  summary: string;
+  startDateTime: string;
+  venueName: string;
+  city: string;
+  country: string;
+  eventFormat: string;
+  cost: string;
+  durationMinutes: number;
+  keywords: string;
+  registrationUrl: string;
+  heroImageUrl: string;
+  eventType: string;
+  sc_item_id: string;
+  id: string;
+};
+
 const InfiniteSearch = () => {
   const [query, setQuery] = useState('');
 
@@ -56,7 +74,7 @@ const InfiniteSearch = () => {
     total,
     totalPages,
     isEmpty,
-  } = useInfiniteSearch({
+  } = useInfiniteSearch<Event>({
     searchIndexId: '790c2dae-7ea4-402b-819b-fc448ecf5dbc',
     query,
   });
@@ -262,7 +280,7 @@ const InfiniteSearch = () => {
           gap: '2rem',
         }}
       >
-        {results.map((event: Record<string, string | number | boolean>, index: number) => (
+        {results.map((event: Event, index: number) => (
           <div
             key={(event.sc_item_id as string) || (event.id as string) || index}
             style={{

@@ -43,11 +43,29 @@ const parseKeywords = (keywords?: string): string[] => {
   }
 };
 
+type Event = {
+  title: string;
+  summary: string;
+  startDateTime: string;
+  venueName: string;
+  city: string;
+  country: string;
+  eventFormat: string;
+  cost: string;
+  durationMinutes: number;
+  keywords: string;
+  registrationUrl: string;
+  heroImageUrl: string;
+  eventType: string;
+  sc_item_id: string;
+  id: string;
+}
+
 const Search = () => {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
 
-  const { isLoading, error, results, total, totalPages, isEmpty } = useSearch({
+  const { isLoading, error, results, total, totalPages, isEmpty } = useSearch<Event>({
     searchIndexId: '790c2dae-7ea4-402b-819b-fc448ecf5dbc',
     query,
     page,

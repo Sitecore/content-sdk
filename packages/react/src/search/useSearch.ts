@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { SearchParameters, SearchResponse } from '@sitecore-content-sdk/search';
+import { GenericFields, SearchParameters } from '@sitecore-content-sdk/search';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, getOffset, useSearchService } from './utils';
 
-export type PrimitiveType = string | number | boolean;
-
-export interface UseSearchOptions {
+export interface UseSearchOptions<Fields = GenericFields> {
   /**
    * The query string to search for.
    * By default empty string is used.
@@ -31,22 +29,18 @@ export interface UseSearchOptions {
   /**
    * Callback fired when search is completed.
    */
-  onSuccess?: (data: {
-    total: number;
-    results: SearchResponse['results'];
-    totalPages: number;
-  }) => void;
+  onSuccess?: (data: { total: number; results: Fields[]; totalPages: number }) => void;
 }
 
 /**
  * Return type for the useSearch hook.
  * @public
  */
-export interface UseSearchReturn {
+export interface UseSearchReturn<Fields = GenericFields> {
   /**
    * Array of search results. Each result is a record with string keys and primitive values.
    */
-  results: Record<string, PrimitiveType>[];
+  results: Fields[];
   /**
    * Whether the search has no results.
    */
@@ -75,7 +69,9 @@ export interface UseSearchReturn {
  * @returns {UseSearchReturn} Search state and handler functions.
  * @public
  */
-export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
+export const useSearch = <Fields = GenericFields>(
+  options: UseSearchOptions<Fields>
+): UseSearchReturn<Fields> => {
   const {
     query,
     page = DEFAULT_PAGE,
@@ -89,7 +85,7 @@ export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
     throw new Error('useSearch: searchIndexId is required');
   }
 
-  const [results, setResults] = useState<Record<string, PrimitiveType>[]>([]);
+  const [results, setResults] = useState<Fields[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -126,7 +122,7 @@ export const useSearch = (options: UseSearchOptions): UseSearchReturn => {
         sort,
       };
 
-      const { results: searchResults, total } = await searchService.search(searchParams);
+      const { results: searchResults, total } = await searchService.search<Fields>(searchParams);
 
       // Check if request was aborted
       if (signal.aborted) {
