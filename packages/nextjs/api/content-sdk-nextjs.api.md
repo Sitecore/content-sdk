@@ -569,7 +569,7 @@ export { LinkFieldValue }
 // @public
 export type LinkProps = LinkProps_2 & {
     internalLinkMatcher?: RegExp;
-} & Pick<LinkProps_3, 'prefetch' | 'locale' | 'replace' | 'scroll' | 'shallow' | 'as' | 'onNavigate' | 'passHref'>;
+} & Omit<LinkProps_3, 'href'>;
 
 // @public
 export class LocaleMiddleware extends MiddlewareBase {
