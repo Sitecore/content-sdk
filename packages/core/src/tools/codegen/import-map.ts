@@ -29,6 +29,7 @@ export let getImportMap = _getImportMap;
  * Builds file contents for component map based on the default template
  * @param {Map<string, ImportModule>} indexedImportMap map to be processed into final component-map.ts file
  * @returns {string} file code for component-map.ts
+ * @internal
  */
 export let defaultMapTemplate = _defaultMapTemplate;
 
@@ -113,6 +114,7 @@ export type ImportNames = {
 
 /**
  * Import module definition, specifying all the imports for a given import path
+ * @internal
  */
 export type ModuleExports = {
   // import { import1, import2 as imp3 }
