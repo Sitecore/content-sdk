@@ -18,10 +18,7 @@ export type LinkProps = ReactLinkProps & {
    * @default /^\//g
    */
   internalLinkMatcher?: RegExp;
-} & Pick<
-    NextLinkProps,
-    'prefetch' | 'locale' | 'replace' | 'scroll' | 'shallow' | 'as' | 'onNavigate' | 'passHref'
-  >;
+} & Omit<NextLinkProps, 'href'>;
 
 /**
  * Matches relative URLs that end with a file extension.
