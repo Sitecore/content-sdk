@@ -14,6 +14,13 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* Introduced Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
+  * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
+    - `SearchService` class for performing search queries with support for pagination, sorting.
+    - Type-safe search parameters and responses with support for generic fields.
+  * `[react]` Added React hooks for search functionality
+    - `useSearch` hook for paginated search queries with automatic state management
+    - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality
 * `[nextjs]` [App Router] Add support for server components in Design Studio ([#280](https://github.com/Sitecore/content-sdk/pull/280))
   - additional react components to handle dynamic rendering of server components
   - includes refactoring of existing Design Library functionality
@@ -24,6 +31,7 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
+* Added package.json "exports" field to ensure correct ESM/CJS module resolution for submodule imports. Previously defaulted to CJS bundles even when ESM was available. ([#296](https://github.com/Sitecore/content-sdk/pull/296))
 * `[template/next-app-router]` Remove component-level data fetching in favor of Server Components ([#282](https://github.com/Sitecore/content-sdk/pull/282))
 * `[core]` NativeFetcher response does not match actual returned data ([#284](https://github.com/Sitecore/content-sdk/pull/284))
 * `[nextjs]` Add regex variable substitution for absolute and external URL redirects. ([#287](https://github.com/Sitecore/jss/pull/287))
