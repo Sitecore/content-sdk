@@ -27,6 +27,7 @@ export type PersonalizeGeoData = {
  */
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['api']['edge'] &
+  SitecoreConfig['api']['local'] &
   SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
@@ -73,6 +74,11 @@ export class PersonalizeMiddleware extends MiddlewareBase {
           contextId: this.config.contextId,
           clientContextId: this.config.clientContextId,
           edgeUrl: this.config.edgeUrl,
+        },
+        local: {
+          apiHost: this.config.apiHost,
+          apiKey: this.config.apiKey,
+          path: this.config.path,
         },
       },
     };

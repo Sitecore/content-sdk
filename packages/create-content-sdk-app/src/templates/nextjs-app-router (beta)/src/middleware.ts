@@ -31,7 +31,6 @@ const multisite = new AppRouterMultisiteMiddleware({
    * List of sites for site resolver to work with
    */
   sites,
-  ...scConfig.api.edge,
   ...scConfig.multisite,
   // This function determines if the middleware should be turned off on per-request basis.
   // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to disable more.
@@ -45,6 +44,7 @@ const redirects = new RedirectsMiddleware({
    */
   sites,
   ...scConfig.api.edge,
+  ...scConfig.api.local,
   ...scConfig.redirects,
   // This function determines if the middleware should be turned off on per-request basis.
   // Certain paths are ignored by default (e.g. Next.js API routes), but you may wish to disable more.
@@ -59,6 +59,7 @@ const personalize = new PersonalizeMiddleware({
    */
   sites,
   ...scConfig.api.edge,
+  ...scConfig.api.local,
   ...scConfig.personalize,
   // This function determines if the middleware should be turned off on per-request basis.
   // Certain paths are ignored by default (e.g. Next.js API routes), but you may wish to disable more.
