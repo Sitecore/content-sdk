@@ -10,7 +10,7 @@ export type GenericFields = {
 };
 
 // @public
-export interface SearchParameters<T extends GenericFields = GenericFields> {
+export interface SearchParameters<T = GenericFields> {
     keyphrase?: string;
     limit?: number;
     offset?: number;
@@ -19,7 +19,7 @@ export interface SearchParameters<T extends GenericFields = GenericFields> {
 }
 
 // @public
-export interface SearchResponse<T extends GenericFields = GenericFields> {
+export interface SearchResponse<T = GenericFields> {
     results: T[];
     total: number;
 }
@@ -27,7 +27,7 @@ export interface SearchResponse<T extends GenericFields = GenericFields> {
 // @public
 export class SearchService {
     constructor(config: SearchServiceConfig);
-    search<T extends GenericFields = GenericFields>(params: SearchParameters<T>, fetchOptions?: RequestInit): Promise<SearchResponse<T>>;
+    search<T = GenericFields>(params: SearchParameters<T>, fetchOptions?: RequestInit): Promise<SearchResponse<T>>;
 }
 
 // @public
@@ -37,7 +37,7 @@ export interface SearchServiceConfig {
 }
 
 // @public
-export type SortSetting<T extends GenericFields = GenericFields> = {
+export type SortSetting<T = GenericFields> = {
     name: PathsToStringProps<T>;
     order: 'asc' | 'desc';
 };

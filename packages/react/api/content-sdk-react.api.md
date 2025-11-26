@@ -465,10 +465,10 @@ export interface TextField extends FieldMetadata {
 }
 
 // @public
-export const useInfiniteSearch: <T extends GenericFields = GenericFields>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;
+export const useInfiniteSearch: <T = GenericFields>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;
 
 // @public
-export interface UseInfiniteSearchOptions<T extends GenericFields = GenericFields> {
+export interface UseInfiniteSearchOptions<T = GenericFields> {
     pageSize?: number;
     query?: string;
     searchIndexId: string;
@@ -476,7 +476,7 @@ export interface UseInfiniteSearchOptions<T extends GenericFields = GenericField
 }
 
 // @public
-export interface UseInfiniteSearchState<T extends GenericFields = GenericFields> {
+export interface UseInfiniteSearchState<T = GenericFields> {
     error: Error | null;
     hasNextPage: boolean;
     isError: boolean;
@@ -491,10 +491,10 @@ export interface UseInfiniteSearchState<T extends GenericFields = GenericFields>
 }
 
 // @public
-export const useSearch: <T extends GenericFields = GenericFields>(options: UseSearchOptions<T>) => UseSearchState<T>;
+export const useSearch: <T = GenericFields>(options: UseSearchOptions<T>) => UseSearchState<T>;
 
 // @public
-export interface UseSearchOptions<T extends GenericFields = GenericFields> {
+export interface UseSearchOptions<T = GenericFields> {
     page?: number;
     pageSize?: number;
     query?: string;
@@ -503,7 +503,7 @@ export interface UseSearchOptions<T extends GenericFields = GenericFields> {
 }
 
 // @public
-export interface UseSearchState<T extends GenericFields = GenericFields> {
+export interface UseSearchState<T = GenericFields> {
     error: Error | null;
     isError: boolean;
     isLoading: boolean;

@@ -6,7 +6,7 @@ import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, getOffset, useSearchService } from './
  * Options for the useSearch hook.
  * @public
  */
-export interface UseSearchOptions<T extends GenericFields = GenericFields> {
+export interface UseSearchOptions<T = GenericFields> {
   /**
    * The query string to search for.
    * By default empty string is used.
@@ -36,7 +36,7 @@ export interface UseSearchOptions<T extends GenericFields = GenericFields> {
  * The state of the useSearch hook.
  * @public
  */
-export interface UseSearchState<T extends GenericFields = GenericFields> {
+export interface UseSearchState<T = GenericFields> {
   /**
    * The search results.
    */
@@ -73,7 +73,7 @@ export interface UseSearchState<T extends GenericFields = GenericFields> {
  * @returns {UseSearchState} The search state.
  * @public
  */
-export const useSearch = <T extends GenericFields = GenericFields>(
+export const useSearch = <T = GenericFields>(
   options: UseSearchOptions<T>
 ): UseSearchState<T> => {
   const { query, page = DEFAULT_PAGE, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort } = options;

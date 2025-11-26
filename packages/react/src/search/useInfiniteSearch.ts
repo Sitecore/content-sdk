@@ -6,7 +6,7 @@ import { GenericFields, SearchParameters } from '@sitecore-content-sdk/search';
  * Options for the useInfiniteSearch hook.
  * @public
  */
-export interface UseInfiniteSearchOptions<T extends GenericFields = GenericFields> {
+export interface UseInfiniteSearchOptions<T = GenericFields> {
   /**
    * The query string to search for.
    * By default empty string is used.
@@ -31,7 +31,7 @@ export interface UseInfiniteSearchOptions<T extends GenericFields = GenericField
  * The state of the useInfiniteSearch hook.
  * @public
  */
-export interface UseInfiniteSearchState<T extends GenericFields = GenericFields> {
+export interface UseInfiniteSearchState<T = GenericFields> {
   /**
    * The search results.
    */
@@ -84,7 +84,7 @@ export interface UseInfiniteSearchState<T extends GenericFields = GenericFields>
  * @returns {UseInfiniteSearchState} The infinite search state.
  * @public
  */
-export const useInfiniteSearch = <T extends GenericFields = GenericFields>(
+export const useInfiniteSearch = <T = GenericFields>(
   options: UseInfiniteSearchOptions<T>
 ): UseInfiniteSearchState<T> => {
   const { query, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort } = options;

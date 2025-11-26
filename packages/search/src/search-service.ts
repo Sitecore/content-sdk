@@ -5,7 +5,7 @@ import { GenericFields, PathsToStringProps } from './models';
  * Options for sorting the search results.
  * @public
  */
-export type SortSetting<T extends GenericFields = GenericFields> = {
+export type SortSetting<T = GenericFields> = {
   name: PathsToStringProps<T>;
   order: 'asc' | 'desc';
 };
@@ -30,7 +30,7 @@ export interface SearchServiceConfig {
  * Response from the Search API.
  * @internal
  */
-interface SearchAPIResponse<T extends GenericFields = GenericFields> {
+interface SearchAPIResponse<T = GenericFields> {
   /**
    * The search results.
    */
@@ -45,7 +45,7 @@ interface SearchAPIResponse<T extends GenericFields = GenericFields> {
  * Response from the Search Service.
  * @public
  */
-export interface SearchResponse<T extends GenericFields = GenericFields> {
+export interface SearchResponse<T = GenericFields> {
   /**
    * The search results.
    */
@@ -60,7 +60,7 @@ export interface SearchResponse<T extends GenericFields = GenericFields> {
  * A set of request parameters for the Search Service.
  * @public
  */
-export interface SearchParameters<T extends GenericFields = GenericFields> {
+export interface SearchParameters<T = GenericFields> {
   /**
    * The ID of the search index to use.
    */
@@ -106,7 +106,7 @@ export class SearchService {
    * @param {RequestInit} [fetchOptions] - The fetch options.
    * @returns {Promise<SearchResponse<T>>} The search response.
    */
-  async search<T extends GenericFields = GenericFields>(
+  async search<T = GenericFields>(
     params: SearchParameters<T>,
     fetchOptions?: RequestInit
   ): Promise<SearchResponse<T>> {
@@ -146,7 +146,7 @@ export class SearchService {
     };
   }
 
-  private validateParameters<T extends GenericFields = GenericFields>(params: SearchParameters<T>) {
+  private validateParameters<T = GenericFields>(params: SearchParameters<T>) {
     const { limit, offset, searchIndexId, sort } = params;
 
     if (limit && limit < 0) {
