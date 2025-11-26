@@ -8,7 +8,7 @@ import * as component from './component';
  */
 export function builder(yargs: Argv) {
   return yargs.command({
-    command: 'project',
+    command: ['project', 'p'],
     describe: 'Performs project level operations',
     builder: (_yargs: Argv) => {
       _yargs = _yargs
