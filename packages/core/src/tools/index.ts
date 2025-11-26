@@ -6,6 +6,7 @@ export { extractFiles } from './codegen/extract-files';
 export {
   writeImportMap,
   WriteImportMapArgs,
+  WriteImportMapArgsInternal,
   defaultMapTemplate as defaultImportMapTemplate,
   ModuleExports,
 } from './codegen/import-map';
