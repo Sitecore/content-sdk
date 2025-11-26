@@ -20,7 +20,7 @@ Our versioning strategy is as follows:
   - this is a breaking change for applications based on Next.js App Router (beta) template. Please refer to the detailed upgrade guide for further instructions
   - separate server and client import-map generation ([#293](https://github.com/Sitecore/content-sdk/pull/293))
 * `[core]` Provide information about rendering host as part of code extraction ([#286](https://github.com/Sitecore/content-sdk/pull/286))
-* `[template/next-app-router]` Add component runtime information to prevent invalid client/server component operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))
+* `[template/next-app-router]` Add component runtime information to prevent invalid client/server component operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))([#299](https://github.com/Sitecore/content-sdk/pull/299))
 
 ### 🐛 Bug Fixes
 
