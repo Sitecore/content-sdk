@@ -4,5 +4,5 @@ export {
   SearchServiceConfig,
   SearchResponse,
   SortSetting,
-  GenericFields,
 } from './search-service';
+export { GenericFields } from './models';

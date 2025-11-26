@@ -1,15 +1,14 @@
 import { NativeDataFetcher, debug, constants } from '@sitecore-content-sdk/core';
+import { GenericFields, PathsToStringProps } from './models';
 
 /**
  * Options for sorting the search results.
  * @public
  */
-export type SortSetting<T extends string = string> = {
-  name: T;
+export type SortSetting<T extends GenericFields = GenericFields> = {
+  name: PathsToStringProps<T>;
   order: 'asc' | 'desc';
 };
-
-export type PrimitiveType = string | number | boolean;
 
 /**
  * Configuration for the Search Service.
@@ -43,15 +42,6 @@ interface SearchAPIResponse<T extends GenericFields = GenericFields> {
 }
 
 /**
- * Generic Search fields type.
- * @public
- */
-export type GenericFields = Record<
-  string,
-  PrimitiveType | PrimitiveType[] | { [key: string]: GenericFields }
->;
-
-/**
  * Response from the Search Service.
  * @public
  */
@@ -82,7 +72,7 @@ export interface SearchParameters<T extends GenericFields = GenericFields> {
   /**
    * Specifies the sorting of the search results.
    */
-  sort?: SortSetting<Extract<keyof T, string>>[] | SortSetting<Extract<keyof T, string>>;
+  sort?: SortSetting<T>[] | SortSetting<T>;
   /**
    * Specifies the maximum number of items to return. Maximum value 500.
    * @default 10
@@ -93,14 +83,6 @@ export interface SearchParameters<T extends GenericFields = GenericFields> {
    * @default 0
    */
   offset?: number;
-}
-
-/**
- * Options for the fetch request.
- * @public
- */
-interface FetchOptions {
-  signal?: AbortSignal;
 }
 
 /**
@@ -121,12 +103,12 @@ export class SearchService {
   /**
    * Search for items in the search index.
    * @param {SearchParameters<T>} params - The search parameters.
-   * @param {FetchOptions} fetchOptions - The fetch options.
+   * @param {RequestInit} [fetchOptions] - The fetch options.
    * @returns {Promise<SearchResponse<T>>} The search response.
    */
   async search<T extends GenericFields = GenericFields>(
     params: SearchParameters<T>,
-    fetchOptions: FetchOptions = {}
+    fetchOptions?: RequestInit
   ): Promise<SearchResponse<T>> {
     const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0 } = params;
 
@@ -155,7 +137,7 @@ export class SearchService {
         },
         sort,
       },
-      { signal: fetchOptions.signal }
+      fetchOptions
     );
 
     return {
