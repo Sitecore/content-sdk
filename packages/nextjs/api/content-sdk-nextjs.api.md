@@ -160,6 +160,7 @@ import { SitecoreCliConfig } from '@sitecore-content-sdk/core/config';
 import { SitecoreCliConfigInput } from '@sitecore-content-sdk/core/config';
 import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/core/client';
 import { SitecoreClientInit } from '@sitecore-content-sdk/core/client';
+import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/core/config';
 import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/core/config';
 import { SitecoreProvider } from '@sitecore-content-sdk/react';
 import { SitecoreProviderReactContext } from '@sitecore-content-sdk/react';
@@ -186,7 +187,7 @@ import { withSitecore } from '@sitecore-content-sdk/react';
 import { WithSitecoreHocProps } from '@sitecore-content-sdk/react';
 import { WithSitecoreOptions } from '@sitecore-content-sdk/react';
 import { WithSitecoreProps } from '@sitecore-content-sdk/react';
-import { writeImportMap } from '@sitecore-content-sdk/core/tools';
+import { WriteImportMapArgs } from '@sitecore-content-sdk/core/tools';
 
 export { AppPlaceholder }
 
@@ -566,11 +567,12 @@ export { LinkField }
 
 export { LinkFieldValue }
 
+// Warning: (ae-forgotten-export) The symbol "supportedNextLinkProps" needs to be exported by the entry point api-surface.d.ts
+//
 // @public
 export type LinkProps = LinkProps_2 & {
     internalLinkMatcher?: RegExp;
-    prefetch?: LinkProps_3['prefetch'];
-};
+} & Pick<LinkProps_3, (typeof supportedNextLinkProps)[number]>;
 
 // @public
 export class LocaleMiddleware extends MiddlewareBase {
@@ -725,7 +727,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 }
 
 // @public
-export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
+export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['api']['local'] & SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
@@ -773,7 +775,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
 }
 
 // @public
-export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> & SitecoreConfig['api']['edge'] & MiddlewareBaseConfig & SitecoreConfig['redirects'] & {
+export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> & SitecoreConfig['api']['edge'] & SitecoreConfig['api']['local'] & MiddlewareBaseConfig & SitecoreConfig['redirects'] & {
     redirectsService?: RedirectsService;
 };
 
@@ -917,11 +919,14 @@ export { WithSitecoreOptions }
 
 export { WithSitecoreProps }
 
-export { writeImportMap }
+// @public
+export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }?: {
+    scConfig?: SitecoreConfig_2;
+}) => Promise<void>;
 
 // Warnings were encountered during analysis:
 //
-// src/middleware/personalize-middleware.ts:281:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
+// src/middleware/personalize-middleware.ts:287:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
 // src/services/component-props-service.ts:61:5 - (ae-forgotten-export) The symbol "NextContext" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
