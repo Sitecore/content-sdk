@@ -118,19 +118,10 @@ Link.displayName = 'NextLink';
  * @internal
  */
 function sanitizeLinkProps(props: LinkProps) {
-  const nextLinkProps: (keyof NextLinkProps)[] = [
-    'as',
-    'onNavigate',
-    'passHref',
-    'prefetch',
-    'replace',
-    'scroll',
-    'shallow',
-  ];
   const internalProps: (keyof LinkProps)[] = ['internalLinkMatcher'];
 
   const sanitizedProps: LinkProps = { ...props };
-  for (const prop of [...nextLinkProps, ...internalProps]) {
+  for (const prop of [...supportedNextLinkProps, ...internalProps]) {
     delete sanitizedProps[prop as keyof LinkProps];
   }
 
