@@ -2,7 +2,7 @@
 import debug from 'debug';
 import isServer from './utils/is-server';
 
-export const rootNamespace = 'content-sdk';
+const rootNamespace = 'content-sdk';
 
 /**
  * Debugger type
