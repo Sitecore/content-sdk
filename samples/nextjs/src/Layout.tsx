@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { Field, Page } from '@sitecore-content-sdk/nextjs';
 // import Scripts from 'src/Scripts';
 // import SitecoreStyles from 'src/components/content-sdk/SitecoreStyles';
-import Search from './components/Search/Search';
+// import Search from './components/Search/Search';
 import InfiniteSearch from 'components/Search/InfiniteSearch';
 
 interface LayoutProps {
@@ -44,8 +44,8 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
           </header>
           <main>
             <div id="content">
-              <Search />
-              {/* <InfiniteSearch /> */}
+              {/* <Search /> */}
+              <InfiniteSearch />
               {/* <Placeholder name="headless-main" rendering={route!} /> */}
             </div>
           </main>

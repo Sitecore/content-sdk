@@ -64,20 +64,12 @@ type Event = {
 const InfiniteSearch = () => {
   const [query, setQuery] = useState('');
 
-  const {
-    isLoading,
-    isLoadingMore,
-    error,
-    results,
-    loadMore,
-    hasNextPage,
-    total,
-    totalPages,
-    isEmpty,
-  } = useInfiniteSearch<Event>({
-    searchIndexId: '790c2dae-7ea4-402b-819b-fc448ecf5dbc',
-    query,
-  });
+  const { isLoading, isLoadingMore, error, results, loadMore, hasNextPage, total, totalPages } =
+    useInfiniteSearch<Event>({
+      searchIndexId: '790c2dae-7ea4-402b-819b-fc448ecf5dbc',
+      query,
+      pageSize: 30,
+    });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -151,7 +143,7 @@ const InfiniteSearch = () => {
     );
   }
 
-  if (isEmpty && !isLoading) {
+  if (results.length === 0 && !isLoading) {
     return (
       <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
         <div style={{ marginBottom: '2rem' }}>
@@ -247,7 +239,7 @@ const InfiniteSearch = () => {
           <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
             Showing {results.length} of {total} results
             {totalPages > 1 && ` • ${totalPages} pages available`}
-            {isEmpty && ' • No results'}
+            {results.length === 0 && ' • No results'}
           </div>
         </div>
         <button

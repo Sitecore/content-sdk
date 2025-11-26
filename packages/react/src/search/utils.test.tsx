@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { describe, it } from 'mocha';
-import { SearchResponse, SearchService } from '@sitecore-content-sdk/search';
+import { createSandbox, SinonSandbox, SinonStub, spy } from 'sinon';
+import { SearchService } from '@sitecore-content-sdk/search';
 import { expect } from 'chai';
-import { getOffset, useSearchService } from './utils';
 import { render, waitFor } from '@testing-library/react';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import {
@@ -10,7 +10,7 @@ import {
   SitecoreProviderState,
 } from '../components/SitecoreProvider';
 import { useSitecore } from '../enhancers/withSitecore';
-import { createSandbox, SinonSandbox, SinonStub, spy } from 'sinon';
+import { getOffset, useSearchService } from './utils';
 
 describe('search utils', () => {
   let sandbox: SinonSandbox;
@@ -66,14 +66,14 @@ describe('search utils', () => {
       const TestComponent: React.FC<any> = () => {
         const { api } = useSitecore();
         const searchService = useSearchService();
-        const [results, setResults] = useState<SearchResponse['results']>([]);
+        const [results, setResults] = useState<{ id: string }[]>([]);
         const [total, setTotal] = useState(0);
 
         useEffect(() => {
           if (!searchService) return;
 
           const fetchResults = async () => {
-            const searchResults = await searchService?.search({
+            const searchResults = await searchService?.search<{ id: string }>({
               searchIndexId: '1234567890',
               keyphrase: 'test',
             });

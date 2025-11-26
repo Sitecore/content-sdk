@@ -2,7 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GenericFields, SearchParameters } from '@sitecore-content-sdk/search';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, getOffset, useSearchService } from './utils';
 
-export interface UseSearchOptions<Fields = GenericFields> {
+/**
+ * Options for the useSearch hook.
+ * @public
+ */
+export interface UseSearchOptions<T extends GenericFields = GenericFields> {
   /**
    * The query string to search for.
    * By default empty string is used.
@@ -25,40 +29,40 @@ export interface UseSearchOptions<Fields = GenericFields> {
   /**
    * Specifies the sorting of the search results.
    */
-  sort?: SearchParameters['sort'];
-  /**
-   * Callback fired when search is completed.
-   */
-  onSuccess?: (data: { total: number; results: Fields[]; totalPages: number }) => void;
+  sort?: SearchParameters<T>['sort'];
 }
 
 /**
- * Return type for the useSearch hook.
+ * The state of the useSearch hook.
  * @public
  */
-export interface UseSearchReturn<Fields = GenericFields> {
+export interface UseSearchState<T extends GenericFields = GenericFields> {
   /**
-   * Array of search results. Each result is a record with string keys and primitive values.
+   * The search results.
    */
-  results: Fields[];
-  /**
-   * Whether the search has no results.
-   */
-  isEmpty: boolean;
+  results: T[];
   /**
    * Whether a search request is currently in progress.
    */
   isLoading: boolean;
   /**
+   * Whether the search request was successful.
+   */
+  isSuccess: boolean;
+  /**
+   * Whether the search request failed.
+   */
+  isError: boolean;
+  /**
    * Total number of results across all pages.
    */
   total: number;
   /**
-   * Total number of pages available based on totalResults and pageSize.
+   * Total number of pages available based on `total` and `pageSize`.
    */
   totalPages: number;
   /**
-   * Error object if the last search request failed, or null if no error occurred.
+   * The error object if the last search request failed, or null if no error occurred.
    */
   error: Error | null;
 }
@@ -66,55 +70,61 @@ export interface UseSearchReturn<Fields = GenericFields> {
 /**
  * React hook for performing search queries with pagination.
  * @param {UseSearchOptions} options - Configuration options for the search hook.
- * @returns {UseSearchReturn} Search state and handler functions.
+ * @returns {UseSearchState} The search state.
  * @public
  */
-export const useSearch = <Fields = GenericFields>(
-  options: UseSearchOptions<Fields>
-): UseSearchReturn<Fields> => {
-  const {
-    query,
-    page = DEFAULT_PAGE,
-    searchIndexId,
-    pageSize = DEFAULT_PAGE_SIZE,
-    sort,
-    onSuccess,
-  } = options;
+export const useSearch = <T extends GenericFields = GenericFields>(
+  options: UseSearchOptions<T>
+): UseSearchState<T> => {
+  const { query, page = DEFAULT_PAGE, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort } = options;
 
   if (!searchIndexId) {
     throw new Error('useSearch: searchIndexId is required');
   }
 
-  const [results, setResults] = useState<Fields[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [error, setError] = useState<Error | null>(null);
+  const [state, setState] = useState<{
+    results: T[];
+    isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+    total: number;
+    totalPages: number;
+    error: Error | null;
+  }>({
+    results: [],
+    isLoading: true,
+    isSuccess: false,
+    isError: false,
+    total: 0,
+    totalPages: 0,
+    error: null,
+  });
 
   const searchService = useSearchService();
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const search = useCallback(async () => {
-    if (!searchService) {
-      return;
-    }
-
-    // Abort previous request if it exists
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
 
-    // Create new AbortController for this request
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
 
-    setIsLoading(true);
-    setError(null);
+    setState({
+      results: [],
+      isLoading: true,
+      isSuccess: false,
+      isError: false,
+      total: 0,
+      totalPages: 0,
+      error: null,
+    });
 
     try {
       const offset = getOffset(page, pageSize);
 
-      const searchParams: SearchParameters = {
+      const searchParams: SearchParameters<T> = {
         searchIndexId,
         keyphrase: query,
         limit: pageSize,
@@ -122,19 +132,27 @@ export const useSearch = <Fields = GenericFields>(
         sort,
       };
 
-      const { results: searchResults, total } = await searchService.search<Fields>(searchParams);
+      if (signal.aborted) {
+        return;
+      }
 
-      // Check if request was aborted
+      const { results: searchResults, total } = await searchService.search<T>(searchParams);
+
       if (signal.aborted) {
         return;
       }
 
       const totalPages = Math.ceil(total / pageSize);
 
-      setResults(searchResults);
-      setTotal(total);
-      setTotalPages(totalPages);
-      onSuccess?.({ total, results: searchResults, totalPages });
+      setState({
+        results: searchResults,
+        total,
+        totalPages,
+        isSuccess: true,
+        isError: false,
+        isLoading: false,
+        error: null,
+      });
     } catch (err) {
       // Don't set error if request was aborted
       if (signal.aborted) {
@@ -142,16 +160,17 @@ export const useSearch = <Fields = GenericFields>(
       }
 
       const errorMessage = err instanceof Error ? err : new Error('Search failed');
-      setError(errorMessage);
-      setResults([]);
-      setTotal(0);
-      setTotalPages(0);
-    } finally {
-      if (!signal.aborted) {
-        setIsLoading(false);
-      }
+      setState({
+        results: [],
+        total: 0,
+        totalPages: 0,
+        isSuccess: false,
+        isError: true,
+        isLoading: false,
+        error: errorMessage,
+      });
     }
-  }, [searchService, page, pageSize, sort, onSuccess, query, searchIndexId]);
+  }, [searchService, searchIndexId, page, pageSize, sort, query]);
 
   useEffect(() => {
     search();
@@ -164,17 +183,16 @@ export const useSearch = <Fields = GenericFields>(
     };
   }, []);
 
-  const isEmpty = useMemo(() => results.length === 0, [results]);
-
   return useMemo(
     () => ({
-      results,
-      isEmpty,
-      isLoading,
-      total,
-      totalPages,
-      error,
+      results: state.results,
+      isLoading: state.isLoading,
+      isSuccess: state.isSuccess,
+      isError: state.isError,
+      total: state.total,
+      totalPages: state.totalPages,
+      error: state.error,
     }),
-    [results, isEmpty, isLoading, total, totalPages, error]
+    [state]
   );
 };

@@ -4,8 +4,8 @@ import { NativeDataFetcher, debug, constants } from '@sitecore-content-sdk/core'
  * Options for sorting the search results.
  * @public
  */
-export type SortSetting = {
-  name: string;
+export type SortSetting<T extends string = string> = {
+  name: T;
   order: 'asc' | 'desc';
 };
 
@@ -31,28 +31,31 @@ export interface SearchServiceConfig {
  * Response from the Search API.
  * @internal
  */
-interface SearchAPIResponse<Fields = GenericFields> {
+interface SearchAPIResponse<T extends GenericFields = GenericFields> {
   /**
    * The search results.
    */
-  content: Fields[];
+  content: T[];
   /**
    * The total number of search results.
    */
   total: number;
 }
 
-export type GenericFields = Record<string, PrimitiveType>;
+export type GenericFields = Record<
+  string,
+  PrimitiveType | PrimitiveType[] | { [key: string]: GenericFields }
+>;
 
 /**
  * Response from the Search Service.
  * @public
  */
-export interface SearchResponse<Fields = GenericFields> {
+export interface SearchResponse<T extends GenericFields = GenericFields> {
   /**
    * The search results.
    */
-  results: Fields[];
+  results: T[];
   /**
    * The total number of search results.
    */
@@ -63,7 +66,7 @@ export interface SearchResponse<Fields = GenericFields> {
  * A set of request parameters for the Search Service.
  * @public
  */
-export interface SearchParameters {
+export interface SearchParameters<T extends GenericFields = GenericFields> {
   /**
    * The ID of the search index to use.
    */
@@ -75,7 +78,7 @@ export interface SearchParameters {
   /**
    * Specifies the sorting of the search results.
    */
-  sort?: SortSetting[] | SortSetting;
+  sort?: SortSetting<Extract<keyof T, string>>[] | SortSetting<Extract<keyof T, string>>;
   /**
    * Specifies the maximum number of items to return. Maximum value 500.
    * @default 10
@@ -103,10 +106,20 @@ export class SearchService {
     });
   }
 
-  async search<Fields = GenericFields>(params: SearchParameters): Promise<SearchResponse<Fields>> {
+  async search<T extends GenericFields = GenericFields>(
+    params: SearchParameters<T>
+  ): Promise<SearchResponse<T>> {
     const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0 } = params;
 
-    const { data } = await this.fetcher.post<SearchAPIResponse<Fields>>(
+    this.validateParameters<T>({
+      searchIndexId,
+      keyphrase,
+      sort,
+      limit,
+      offset,
+    });
+
+    const { data } = await this.fetcher.post<SearchAPIResponse<T>>(
       `${this.config.edgeUrl}/v1/search?sitecoreContextId=${this.config.contextId}`,
       {
         config: {
@@ -129,5 +142,25 @@ export class SearchService {
       results: data.content || [],
       total: data.total || 0,
     };
+  }
+
+  private validateParameters<T extends GenericFields = GenericFields>(params: SearchParameters<T>) {
+    const { limit, offset, searchIndexId, sort } = params;
+
+    if (limit && limit < 0) {
+      throw new Error('Limit must be a positive number');
+    }
+
+    if (offset && offset < 0) {
+      throw new Error('Offset must be a positive number');
+    }
+
+    if (!searchIndexId) {
+      throw new Error('Search index ID is required');
+    }
+
+    if (sort && !Array.isArray(sort) && typeof sort !== 'object') {
+      throw new Error('Sort must be an array or an object');
+    }
   }
 }

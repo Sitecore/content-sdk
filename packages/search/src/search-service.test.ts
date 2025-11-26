@@ -299,4 +299,89 @@ describe('SearchService', () => {
     expect(searchResponse.results).to.deep.equal([]);
     expect(searchResponse.total).to.equal(0);
   });
+
+  describe('validation', () => {
+    it('should throw an error if limit is not a positive number', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          keyphrase: 'test',
+          limit: -1,
+        });
+      } catch (error) {
+        expect(error)
+          .to.be.an('error')
+          .and.to.have.property('message', 'Limit must be a positive number');
+      }
+    });
+
+    it('should throw an error if offset is not a positive number', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          keyphrase: 'test',
+          offset: -1,
+        });
+      } catch (error) {
+        expect(error)
+          .to.be.an('error')
+          .and.to.have.property('message', 'Offset must be a positive number');
+      }
+    });
+
+    it('should throw an error if search index ID is not provided', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId: '',
+          keyphrase: 'test',
+        });
+      } catch (error) {
+        expect(error)
+          .to.be.an('error')
+          .and.to.have.property('message', 'Search index ID is required');
+      }
+    });
+
+    it('should throw an error if sort is not an array or an object', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          keyphrase: 'test',
+          sort: 'test' as unknown as SortSetting,
+        });
+      } catch (error) {
+        expect(error)
+          .to.be.an('error')
+          .and.to.have.property('message', 'Sort must be an array or an object');
+      }
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          keyphrase: 'test',
+          sort: 1 as unknown as SortSetting,
+        });
+      } catch (error) {
+        expect(error)
+          .to.be.an('error')
+          .and.to.have.property('message', 'Sort must be an array or an object');
+      }
+    });
+  });
 });

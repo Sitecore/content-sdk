@@ -1,2 +1,6 @@
-export { useSearch } from './useSearch';
-export { useInfiniteSearch } from './useInfiniteSearch';
+export { useSearch, UseSearchState, UseSearchOptions } from './useSearch';
+export {
+  useInfiniteSearch,
+  UseInfiniteSearchState,
+  UseInfiniteSearchOptions,
+} from './useInfiniteSearch';
