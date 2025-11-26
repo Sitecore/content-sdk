@@ -4,27 +4,32 @@
 
 ```ts
 
+// Warning: (ae-forgotten-export) The symbol "PrimitiveType" needs to be exported by the entry point index.d.ts
+//
 // @public
-export interface SearchParameters {
+export type GenericFields = Record<string, PrimitiveType | PrimitiveType[] | {
+    [key: string]: GenericFields;
+}>;
+
+// @public
+export interface SearchParameters<T extends GenericFields = GenericFields> {
     keyphrase?: string;
     limit?: number;
     offset?: number;
     searchIndexId: string;
-    sort?: SortSetting[] | SortSetting;
+    sort?: SortSetting<Extract<keyof T, string>>[] | SortSetting<Extract<keyof T, string>>;
 }
 
 // @public
-export interface SearchResponse {
-    // Warning: (ae-forgotten-export) The symbol "SearchAPIResponse" needs to be exported by the entry point index.d.ts
-    results: SearchAPIResponse['content'];
+export interface SearchResponse<T extends GenericFields = GenericFields> {
+    results: T[];
     total: number;
 }
 
 // @public
 export class SearchService {
     constructor(config: SearchServiceConfig);
-    // (undocumented)
-    search(params: SearchParameters): Promise<SearchResponse>;
+    search<T extends GenericFields = GenericFields>(params: SearchParameters<T>): Promise<SearchResponse<T>>;
 }
 
 // @public
@@ -34,8 +39,8 @@ export interface SearchServiceConfig {
 }
 
 // @public
-export type SortSetting = {
-    name: string;
+export type SortSetting<T extends string = string> = {
+    name: T;
     order: 'asc' | 'desc';
 };
 

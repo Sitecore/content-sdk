@@ -42,6 +42,10 @@ interface SearchAPIResponse<T extends GenericFields = GenericFields> {
   total: number;
 }
 
+/**
+ * Generic Search fields type.
+ * @public
+ */
 export type GenericFields = Record<
   string,
   PrimitiveType | PrimitiveType[] | { [key: string]: GenericFields }
@@ -106,6 +110,11 @@ export class SearchService {
     });
   }
 
+  /**
+   * Search for items in the search index.
+   * @param {SearchParameters<T>} params - The search parameters.
+   * @returns {Promise<SearchResponse<T>>} The search response.
+   */
   async search<T extends GenericFields = GenericFields>(
     params: SearchParameters<T>
   ): Promise<SearchResponse<T>> {
