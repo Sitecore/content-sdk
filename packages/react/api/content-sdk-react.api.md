@@ -7,7 +7,6 @@
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
 import { ClientError } from '@sitecore-content-sdk/core';
-import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { ComponentFields } from '@sitecore-content-sdk/core/layout';
 import { ComponentParams } from '@sitecore-content-sdk/core/layout';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
@@ -31,6 +30,7 @@ import { getFieldValue } from '@sitecore-content-sdk/core/layout';
 import { GraphQLClientError } from '@sitecore-content-sdk/core/client';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/core/client';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core/client';
+import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
 import { isEditorActive } from '@sitecore-content-sdk/core/editing';
 import { Item } from '@sitecore-content-sdk/core/layout';
 import { JSX as JSX_2 } from 'react';
@@ -161,10 +161,16 @@ export const DefaultEmptyFieldEditingComponentText: React_2.FC<{
 
 export { DefaultRetryStrategy }
 
-// Warning: (ae-forgotten-export) The symbol "DesignLibraryProps" needs to be exported by the entry point index.d.ts
+// @public
+export const DesignLibrary: {
+    (props: DesignLibraryProps): React_2.JSX.Element;
+    displayName: string;
+};
+
+// Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point index.d.ts
 //
 // @public
-export const DesignLibrary: ({ loadImportMap }: DesignLibraryProps) => React_2.JSX.Element;
+export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, loadClientImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element;
 
 export { DictionaryPhrases }
 
@@ -382,7 +388,9 @@ export { PlaceholderProps as PlaceholderComponentProps }
 export { PlaceholderProps }
 
 // @public
-export type ReactContentSdkComponent = ComponentType | ReactModule;
+export type ReactContentSdkComponent = (ComponentType | ReactModule) & {
+    componentType?: 'server' | 'client' | 'universal';
+};
 
 // @public
 export type ReactModule = {
@@ -503,6 +511,7 @@ export interface WithSitecoreProps {
 
 // Warnings were encountered during analysis:
 //
+// src/components/DesignLibrary/DesignLibrary.tsx:52:27 - (ae-forgotten-export) The symbol "DesignLibraryProps" needs to be exported by the entry point index.d.ts
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)

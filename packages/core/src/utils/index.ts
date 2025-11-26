@@ -12,4 +12,5 @@ export {
   escapeNonSpecialQuestionMarks,
   mergeURLSearchParams,
 } from './utils';
+export { hasCache, getCache, getCacheAndClean, setCache } from './globalCache';
 export { tryParseEnvValue } from './env';

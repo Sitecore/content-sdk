@@ -6,7 +6,7 @@
 
 # Interface: LayoutServiceContext
 
-Defined in: [packages/core/src/layout/models.ts:33](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/layout/models.ts#L33)
+Defined in: [packages/core/src/layout/models.ts:33](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/layout/models.ts#L33)
 
 Shape of context data from the Sitecore Layout Service
 
@@ -20,7 +20,7 @@ Shape of context data from the Sitecore Layout Service
 
 > `optional` **clientData**: `Record`\<`string`, `Record`\<`string`, `unknown`\>\>
 
-Defined in: [packages/core/src/layout/models.ts:45](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/layout/models.ts#L45)
+Defined in: [packages/core/src/layout/models.ts:45](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/layout/models.ts#L45)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/core/src/layout/models.ts:45](https://github.com/Sitecore/
 
 > `optional` **clientScripts**: `string`[]
 
-Defined in: [packages/core/src/layout/models.ts:44](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/layout/models.ts#L44)
+Defined in: [packages/core/src/layout/models.ts:44](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/layout/models.ts#L44)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [packages/core/src/layout/models.ts:44](https://github.com/Sitecore/
 
 > `optional` **itemPath**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:37](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/layout/models.ts#L37)
+Defined in: [packages/core/src/layout/models.ts:37](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/layout/models.ts#L37)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/core/src/layout/models.ts:37](https://github.com/Sitecore/
 
 > `optional` **language**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:36](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/layout/models.ts#L36)
+Defined in: [packages/core/src/layout/models.ts:36](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/layout/models.ts#L36)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [packages/core/src/layout/models.ts:36](https://github.com/Sitecore/
 
 > `optional` **pageEditing**: `boolean`
 
-Defined in: [packages/core/src/layout/models.ts:35](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/layout/models.ts#L35)
+Defined in: [packages/core/src/layout/models.ts:35](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/layout/models.ts#L35)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [packages/core/src/layout/models.ts:35](https://github.com/Sitecore/
 
 > `optional` **pageState**: [`LayoutServicePageState`](../enumerations/LayoutServicePageState.md)
 
-Defined in: [packages/core/src/layout/models.ts:38](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/layout/models.ts#L38)
+Defined in: [packages/core/src/layout/models.ts:38](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/layout/models.ts#L38)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [packages/core/src/layout/models.ts:38](https://github.com/Sitecore/
 
 > `optional` **renderingType**: [`Component`](../enumerations/RenderingType.md#component)
 
-Defined in: [packages/core/src/layout/models.ts:43](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/layout/models.ts#L43)
+Defined in: [packages/core/src/layout/models.ts:43](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/layout/models.ts#L43)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [packages/core/src/layout/models.ts:43](https://github.com/Sitecore/
 
 > `optional` **site**: `object`
 
-Defined in: [packages/core/src/layout/models.ts:40](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/layout/models.ts#L40)
+Defined in: [packages/core/src/layout/models.ts:40](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/layout/models.ts#L40)
 
 #### name?
 
@@ -88,4 +88,4 @@ Defined in: [packages/core/src/layout/models.ts:40](https://github.com/Sitecore/
 
 > `optional` **visitorIdentificationTimestamp**: `number`
 
-Defined in: [packages/core/src/layout/models.ts:39](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/core/src/layout/models.ts#L39)
+Defined in: [packages/core/src/layout/models.ts:39](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/layout/models.ts#L39)

@@ -9,6 +9,7 @@ import { generateMap } from './generate-map';
 import fs from 'fs';
 import { ComponentImport } from '@sitecore-content-sdk/core/tools';
 import * as coreTools from '@sitecore-content-sdk/core/tools';
+import * as templatingUtils from './templating/utils';
 
 describe('generateMap', () => {
   const sandbox = sinon.createSandbox();
@@ -77,12 +78,10 @@ describe('generateMap', () => {
       filterComponentsByTypeStub = sandbox.stub().returns(fakeComponentsWithTypes);
 
       sandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
-      sandbox.replaceGetter(
-        coreTools,
-        'getComponentListWithTypes',
-        () => getComponentListWithTypesStub
-      );
-      sandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
+      sandbox
+        .stub(templatingUtils, 'getComponentListWithTypes')
+        .callsFake(getComponentListWithTypesStub);
+      sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
       sandbox.stub(fs, 'writeFileSync');
     });
@@ -100,12 +99,10 @@ describe('generateMap', () => {
       filterComponentsByTypeStub = sandbox.stub().returns(fakeComponentsWithTypes);
 
       sandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
-      sandbox.replaceGetter(
-        coreTools,
-        'getComponentListWithTypes',
-        () => getComponentListWithTypesStub
-      );
-      sandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
+      sandbox
+        .stub(templatingUtils, 'getComponentListWithTypes')
+        .callsFake(getComponentListWithTypesStub);
+        sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
       sandbox.stub(fs, 'writeFileSync');
 
@@ -704,12 +701,10 @@ describe('generateMap', () => {
         fakeComponentsWithTypes[2], // UniversalCard
       ]);
 
-      sandbox.replaceGetter(
-        coreTools,
-        'getComponentListWithTypes',
-        () => getComponentListWithTypesStub
-      );
-      sandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
+      sandbox
+        .stub(templatingUtils, 'getComponentListWithTypes')
+        .callsFake(getComponentListWithTypesStub);
+      sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
       sandbox.stub(fs, 'writeFileSync');
     });
@@ -840,13 +835,11 @@ describe('generateMap', () => {
         const detectRouterTypeStub = sb.stub().returns('app');
 
         sb.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
-        sb.replaceGetter(
-          coreTools,
-          'getComponentListWithTypes',
-          () => getComponentListWithTypesStub
+        sb.stub(templatingUtils, 'getComponentListWithTypes').callsFake(
+          getComponentListWithTypesStub
         );
         sb.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
-        sb.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
+        sb.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
 
         // Defensively un-stub if already wrapped, then stub once
         const wf = fs.writeFileSync as any;
@@ -985,12 +978,10 @@ describe('generateMap', () => {
         const getComponentListWithTypesStub = newSandbox.stub().returns(fakeComponentList);
         const detectRouterTypeStub = newSandbox.stub().returns('pages'); // auto-detect Pages Router
 
-        newSandbox.replaceGetter(
-          coreTools,
-          'getComponentListWithTypes',
-          () => getComponentListWithTypesStub
-        );
-        newSandbox.replaceGetter(coreTools, 'detectRouterType', () => detectRouterTypeStub);
+        newSandbox
+          .stub(templatingUtils, 'getComponentListWithTypes')
+          .callsFake(getComponentListWithTypesStub);
+        newSandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
 
         // Defensively un-stub fs.writeFileSync if some other test wrapped it
         const wf = fs.writeFileSync as any;

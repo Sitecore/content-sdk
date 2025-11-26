@@ -93,7 +93,9 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return res;
       }
 
-      const createResponse = async () => {
+      const isAppRouterRequest = this.isAppRouter(res);
+
+      const createResponse = async (): Promise<NextResponse> => {
         if (this.isPreview(req)) {
           debug.redirects('skipped (preview)');
 
@@ -134,27 +136,42 @@ export class RedirectsMiddleware extends MiddlewareBase {
             REGEXP_CONTEXT_SITE_LANG,
             site.language
           );
-          req.nextUrl.locale = site.language;
+          if (!isAppRouterRequest) {
+            req.nextUrl.locale = site.language;
+          }
         }
 
         const url = this.normalizeUrl(req.nextUrl.clone());
 
         // Redirect logic for external (absolute) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
         if (REGEXP_ABSOLUTE_URL.test(existsRedirect.target)) {
-          return this.dispatchRedirect(
-            existsRedirect.target,
-            existsRedirect.redirectType,
-            req,
-            res,
-            true
-          );
+          // Perform variable substitution for absolute URLs
+          let finalTarget = existsRedirect.target;
+
+          if (isRegexOrUrl(existsRedirect.pattern) === 'regex') {
+            const matched = url.pathname
+              .replace(/\/*$/gi, '')
+              .match(regexParser(existsRedirect.pattern));
+            if (matched) {
+              finalTarget = existsRedirect.target.replace(
+                /\$(\d+)/g,
+                (_: string, index: string): string => {
+                  return matched[parseInt(index, 10)] || '';
+                }
+              );
+            }
+          }
+
+          return this.dispatchRedirect(finalTarget, existsRedirect.redirectType, req, res, true);
         } else {
           const isUrl = isRegexOrUrl(existsRedirect.pattern) === 'url';
           const targetParts = existsRedirect.target.split('/');
           const urlFirstPart = targetParts[1];
 
           if (this.locales.includes(urlFirstPart)) {
-            req.nextUrl.locale = urlFirstPart;
+            if (!isAppRouterRequest) {
+              req.nextUrl.locale = urlFirstPart;
+            }
             existsRedirect.target = existsRedirect.target.replace(`/${urlFirstPart}`, '');
           }
 
@@ -184,7 +201,9 @@ export class RedirectsMiddleware extends MiddlewareBase {
           url.href = prepareNewURL.href;
           url.pathname = prepareNewURL.pathname;
           url.search = prepareNewURL.search;
-          url.locale = req.nextUrl.locale;
+          if (!isAppRouterRequest) {
+            url.locale = req.nextUrl.locale;
+          }
         }
 
         /** return Response redirect with http code of redirect type */

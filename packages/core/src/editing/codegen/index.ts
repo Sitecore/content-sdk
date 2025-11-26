@@ -1,8 +1,15 @@
 export {
   addComponentPreviewHandler,
+  addServerComponentPreviewHandler,
   getDesignLibraryComponentPreviewErrorEvent,
   getDesignLibraryComponentPropsEvent,
   getDesignLibraryImportMapEvent,
+  getImportMapInfo,
+  addStyleElement,
+  createComponentInstance,
+  sendErrorEvent,
   DesignLibraryPreviewError,
   ImportEntry,
+  ImportEntryInfo,
+  ComponentPreviewEventArgs,
 } from './preview';

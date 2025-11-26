@@ -39,8 +39,10 @@
 
 ## Variables
 
+- [COMPONENT\_UPDATE\_CACHE\_KEY\_PREFIX](variables/COMPONENT_UPDATE_CACHE_KEY_PREFIX.md)
 - [DEFAULT\_PLACEHOLDER\_UID](variables/DEFAULT_PLACEHOLDER_UID.md)
 - [EDITING\_ALLOWED\_ORIGINS](variables/EDITING_ALLOWED_ORIGINS.md)
+- [INVALID\_SECRET\_HTML\_MESSAGE](variables/INVALID_SECRET_HTML_MESSAGE.md)
 - [PAGES\_EDITING\_MARKER](variables/PAGES_EDITING_MARKER.md)
 - [PREVIEW\_KEY](variables/PREVIEW_KEY.md)
 - [QUERY\_PARAM\_EDITING\_SECRET](variables/QUERY_PARAM_EDITING_SECRET.md)
@@ -53,4 +55,6 @@
 - [getDesignLibraryStatusEvent](functions/getDesignLibraryStatusEvent.md)
 - [isDesignLibraryMode](functions/isDesignLibraryMode.md)
 - [isEditorActive](functions/isEditorActive.md)
+- [postToDesignLibrary](functions/postToDesignLibrary.md)
 - [resetEditorChromes](functions/resetEditorChromes.md)
+- [updateComponent](functions/updateComponent.md)

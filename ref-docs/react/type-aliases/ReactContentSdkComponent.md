@@ -6,8 +6,14 @@
 
 # Type Alias: ReactContentSdkComponent
 
-> **ReactContentSdkComponent** = `ComponentType` \| [`ReactModule`](ReactModule.md)
+> **ReactContentSdkComponent** = `ComponentType` \| [`ReactModule`](ReactModule.md) & `object`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:17](https://github.com/Sitecore/content-sdk/blob/3e0ae66bfd4d249466803a430fcb3f11a2a9a4a8/packages/react/src/components/sharedTypes/components.ts#L17)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:17](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/react/src/components/sharedTypes/components.ts#L17)
 
 React component import with account for custom exports
+
+## Type declaration
+
+### componentType?
+
+> `optional` **componentType**: `"server"` \| `"client"` \| `"universal"`

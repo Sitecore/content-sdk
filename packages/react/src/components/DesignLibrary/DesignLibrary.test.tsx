@@ -8,11 +8,11 @@ import { Page, PageMode } from '@sitecore-content-sdk/core/client';
 import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
-import { getTestLayoutData } from '../test-data/component-editing-data';
-import { SitecoreProvider } from './SitecoreProvider';
-import { RichText } from './RichText';
-import { Text } from './Text';
-import { Placeholder } from './Placeholder';
+import { getTestLayoutData } from '../../test-data/component-editing-data';
+import { SitecoreProvider } from '../SitecoreProvider';
+import { RichText } from '../RichText';
+import { Text } from '../Text';
+import { Placeholder } from '../Placeholder';
 
 import {
   DesignLibraryStatus,
@@ -119,6 +119,8 @@ describe('<DesignLibrary />', () => {
 
   const unsubscribeSpy = sandbox.spy();
   let addComponentPreviewHandlerSpy: sinon.SinonStub;
+  let postToDesignLibrarySpy: sinon.SinonStub;
+  let sendErrorEventSpy: sinon.SinonStub;
   let callbackEvent: any = null;
 
   const RENDER_ID = 'test-content';
@@ -165,6 +167,19 @@ describe('<DesignLibrary />', () => {
   beforeEach(() => {
     postMessageSpy.resetHistory();
     unsubscribeSpy.resetHistory();
+    postToDesignLibrarySpy = sandbox.stub().callsFake((evt) => {
+      // postToDesignLibrary calls window.postMessage internally
+      window.postMessage(evt, '*');
+    });
+    sendErrorEventSpy = sandbox.stub().callsFake((uid, error, type) => {
+      // sendErrorEvent calls window.postMessage internally
+      const errorEvent = getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
+      window.postMessage(errorEvent, '*');
+    });
+    __mockDependencies({
+      postToDesignLibrary: postToDesignLibrarySpy,
+      sendErrorEvent: sendErrorEventSpy,
+    });
 
     if (typeof (globalThis as any).requestAnimationFrame === 'undefined') {
       (globalThis as any).requestAnimationFrame = (cb: Function) => setTimeout(cb, 0);
@@ -394,7 +409,11 @@ describe('<DesignLibrary />', () => {
         callbackEvent = cb;
         return unsubscribeSpy;
       });
-      __mockDependencies({ addComponentPreviewHandler: addComponentPreviewHandlerSpy });
+      __mockDependencies({
+        addComponentPreviewHandler: addComponentPreviewHandlerSpy,
+        postToDesignLibrary: postToDesignLibrarySpy,
+        sendErrorEvent: sendErrorEventSpy,
+      });
 
       postMessageSpy.resetHistory();
     });
@@ -490,6 +509,41 @@ describe('<DesignLibrary />', () => {
       });
     });
 
+    it('renders real component first, wires generation, then switches to generated component when loadImportMap provided via SitecoreProvider', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      const rendered = render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          '<p>This is a live set of examples of how to use Content SDK</p>\n',
+          '</div></div></div></main>',
+        ].join('')
+      );
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+      });
+
+      const TestComponent = () => <div>Generated!</div>;
+      callbackEvent(null, TestComponent);
+
+      await waitFor(() => {
+        expect(rendered.baseElement.innerHTML).to.contain('<div>Generated!</div>');
+      });
+    });
+
     it('updates via component:update after switch', async () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
 
@@ -561,7 +615,11 @@ describe('<DesignLibrary />', () => {
         callbackEvent = cb;
         return unsubscribeSpy;
       });
-      __mockDependencies({ addComponentPreviewHandler: addComponentPreviewHandlerSpy });
+      __mockDependencies({
+        addComponentPreviewHandler: addComponentPreviewHandlerSpy,
+        postToDesignLibrary: postToDesignLibrarySpy,
+        sendErrorEvent: sendErrorEventSpy,
+      });
     });
 
     const expectedGeneratedParts = [

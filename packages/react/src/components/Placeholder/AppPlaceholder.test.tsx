@@ -1135,10 +1135,10 @@ describe('App Placeholder logic', () => {
       expect(wrapper?.baseElement.innerHTML).to.equal(
         [
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
-          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123"></code>',
+          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123" data-csdk-component-runtime="server"></code>',
           '<div class="header-wrapper">',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="logo_nested123"></code>',
-          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123"></code>',
+          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123" data-csdk-component-runtime="server"></code>',
           '<div class="Logo-mock"></div>',
           '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
@@ -1149,6 +1149,55 @@ describe('App Placeholder logic', () => {
       );
 
       expect(wrapper?.container.querySelectorAll('.scpm').length).to.equal(8);
+    });
+
+    it('should add data-csdk-component-runtime="server" when rsc is true', () => {
+      // rsc is already set to true in beforeEach, so we just verify
+      const wrapper = render(
+        <AppPlaceholder
+          name="main"
+          rendering={layoutData.sitecore.route}
+          componentMap={componentMap}
+          page={page}
+        />,
+        { container: document.body }
+      );
+
+      const renderingChromes = wrapper?.baseElement.querySelectorAll(
+        'code[chrometype="rendering"][kind="open"]'
+      );
+      expect(renderingChromes?.length).to.be.greaterThan(0);
+      renderingChromes?.forEach((chrome) => {
+        expect(chrome.getAttribute('data-csdk-component-runtime')).to.equal('server');
+      });
+    });
+
+    it('should add data-csdk-component-runtime="client" when rsc is false', () => {
+      // Restore and replace rsc to false
+      sandbox.restore();
+      sandbox = createSandbox();
+      sandbox.replace(rscUtils, 'rsc', false as any);
+      const wrapper = render(
+        <AppPlaceholder
+          name="main"
+          rendering={layoutData.sitecore.route}
+          componentMap={componentMap}
+          page={page}
+        />,
+        { container: document.body }
+      );
+
+      const renderingChromes = wrapper?.baseElement.querySelectorAll(
+        'code[chrometype="rendering"][kind="open"]'
+      );
+      expect(renderingChromes?.length).to.be.greaterThan(0);
+      renderingChromes?.forEach((chrome) => {
+        expect(chrome.getAttribute('data-csdk-component-runtime')).to.equal('client');
+      });
+      // Restore sandbox and reset rsc to true for subsequent tests
+      sandbox.restore();
+      sandbox = createSandbox();
+      sandbox.replace(rscUtils, 'rsc', true as any);
     });
 
     it('should render code blocks even if placeholder is empty', () => {
@@ -1188,7 +1237,7 @@ describe('App Placeholder logic', () => {
       expect(wrapper?.container.innerHTML).to.equal(
         [
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
-          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123"></code>',
+          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123" data-csdk-component-runtime="server"></code>',
           '<div style="background: darkorange; outline: 5px solid orange; padding: 10px; color: white; max-width: 500px;"><h2>Unknown</h2><p>Content SDK component is missing React implementation. See the developer console for more information.</p></div>',
           '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
@@ -1213,10 +1262,10 @@ describe('App Placeholder logic', () => {
       expect(wrapper?.container.innerHTML).to.equal(
         [
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="container-{*}_00000000-0000-0000-0000-000000000000"></code>',
-          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123"></code>',
+          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123" data-csdk-component-runtime="server"></code>',
           '<div class="header-wrapper">',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="logo_nested123"></code>',
-          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123"></code>',
+          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123" data-csdk-component-runtime="server"></code>',
           '<div class="Logo-mock"></div><code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
           '</div>',
@@ -1244,10 +1293,10 @@ describe('App Placeholder logic', () => {
       expect(wrapper?.container.innerHTML).to.equal(
         [
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="container-1-{*}_00000000-0000-0000-0000-000000000000"></code>',
-          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123"></code>',
+          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123" data-csdk-component-runtime="server"></code>',
           '<div class="header-wrapper">',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="logo_nested123"></code>',
-          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123"></code>',
+          '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123" data-csdk-component-runtime="server"></code>',
           '<div class="Logo-mock"></div><code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
           '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
           '</div>',
