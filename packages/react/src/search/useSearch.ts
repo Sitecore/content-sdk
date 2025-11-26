@@ -132,11 +132,9 @@ export const useSearch = <T extends GenericFields = GenericFields>(
         sort,
       };
 
-      if (signal.aborted) {
-        return;
-      }
-
-      const { results: searchResults, total } = await searchService.search<T>(searchParams);
+      const { results: searchResults, total } = await searchService.search<T>(searchParams, {
+        signal,
+      });
 
       if (signal.aborted) {
         return;

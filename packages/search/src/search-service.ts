@@ -96,6 +96,14 @@ export interface SearchParameters<T extends GenericFields = GenericFields> {
 }
 
 /**
+ * Options for the fetch request.
+ * @public
+ */
+interface FetchOptions {
+  signal?: AbortSignal;
+}
+
+/**
  * Service that fetches search results from Sitecore.
  * @public
  */
@@ -113,10 +121,12 @@ export class SearchService {
   /**
    * Search for items in the search index.
    * @param {SearchParameters<T>} params - The search parameters.
+   * @param {FetchOptions} fetchOptions - The fetch options.
    * @returns {Promise<SearchResponse<T>>} The search response.
    */
   async search<T extends GenericFields = GenericFields>(
-    params: SearchParameters<T>
+    params: SearchParameters<T>,
+    fetchOptions: FetchOptions = {}
   ): Promise<SearchResponse<T>> {
     const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0 } = params;
 
@@ -144,7 +154,8 @@ export class SearchService {
           all: true,
         },
         sort,
-      }
+      },
+      { signal: fetchOptions.signal }
     );
 
     return {

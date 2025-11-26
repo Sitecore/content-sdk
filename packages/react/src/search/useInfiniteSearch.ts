@@ -169,12 +169,9 @@ export const useInfiniteSearch = <T extends GenericFields = GenericFields>(
           sort,
         };
 
-        if (signal.aborted) {
-          return;
-        }
-
         const { results: searchResults, total: totalResults } = await searchService.search<T>(
-          searchParams
+          searchParams,
+          { signal }
         );
 
         if (signal.aborted) {
