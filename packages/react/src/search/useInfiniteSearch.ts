@@ -6,7 +6,7 @@ import { GenericFields, SearchParameters } from '@sitecore-content-sdk/search';
  * Options for the useInfiniteSearch hook.
  * @public
  */
-export interface UseInfiniteSearchOptions<Fields = GenericFields> {
+export interface UseInfiniteSearchOptions<T extends GenericFields = GenericFields> {
   /**
    * The query string to search for.
    * By default empty string is used.
@@ -24,22 +24,18 @@ export interface UseInfiniteSearchOptions<Fields = GenericFields> {
   /**
    * Specifies the sorting of the search results.
    */
-  sort?: SearchParameters['sort'];
-  /**
-   * Callback fired when search is completed.
-   */
-  onSuccess?: (data: { total: number; results: Fields[]; totalPages: number }) => void;
+  sort?: SearchParameters<T>['sort'];
 }
 
 /**
  * The state of the useInfiniteSearch hook.
  * @public
  */
-export interface UseInfiniteSearchState<Fields = GenericFields> {
+export interface UseInfiniteSearchState<T extends GenericFields = GenericFields> {
   /**
    * The search results.
    */
-  results: Fields[];
+  results: T[];
   /**
    * Whether a search request is currently in progress.
    */
@@ -161,7 +157,7 @@ export const useInfiniteSearch = <T extends GenericFields = GenericFields>(
       }
 
       try {
-        const searchParams: SearchParameters = {
+        const searchParams: SearchParameters<T> = {
           searchIndexId,
           keyphrase: query,
           limit: pageSize,

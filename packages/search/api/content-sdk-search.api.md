@@ -4,12 +4,10 @@
 
 ```ts
 
-// Warning: (ae-forgotten-export) The symbol "PrimitiveType" needs to be exported by the entry point index.d.ts
-//
 // @public
-export type GenericFields = Record<string, PrimitiveType | PrimitiveType[] | {
-    [key: string]: GenericFields;
-}>;
+export type GenericFields = {
+    [key: string]: PrimitiveType | PrimitiveType[] | GenericFields | GenericFields[];
+};
 
 // @public
 export interface SearchParameters<T extends GenericFields = GenericFields> {
@@ -17,7 +15,7 @@ export interface SearchParameters<T extends GenericFields = GenericFields> {
     limit?: number;
     offset?: number;
     searchIndexId: string;
-    sort?: SortSetting<Extract<keyof T, string>>[] | SortSetting<Extract<keyof T, string>>;
+    sort?: SortSetting<T>[] | SortSetting<T>;
 }
 
 // @public
@@ -29,7 +27,7 @@ export interface SearchResponse<T extends GenericFields = GenericFields> {
 // @public
 export class SearchService {
     constructor(config: SearchServiceConfig);
-    search<T extends GenericFields = GenericFields>(params: SearchParameters<T>): Promise<SearchResponse<T>>;
+    search<T extends GenericFields = GenericFields>(params: SearchParameters<T>, fetchOptions?: RequestInit): Promise<SearchResponse<T>>;
 }
 
 // @public
@@ -39,10 +37,15 @@ export interface SearchServiceConfig {
 }
 
 // @public
-export type SortSetting<T extends string = string> = {
-    name: T;
+export type SortSetting<T extends GenericFields = GenericFields> = {
+    name: PathsToStringProps<T>;
     order: 'asc' | 'desc';
 };
+
+// Warnings were encountered during analysis:
+//
+// src/models.ts:8:3 - (ae-forgotten-export) The symbol "PrimitiveType" needs to be exported by the entry point index.d.ts
+// src/search-service.ts:9:3 - (ae-forgotten-export) The symbol "PathsToStringProps" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

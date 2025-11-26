@@ -468,20 +468,15 @@ export interface TextField extends FieldMetadata {
 export const useInfiniteSearch: <T extends GenericFields = GenericFields>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;
 
 // @public
-export interface UseInfiniteSearchOptions<Fields = GenericFields> {
-    onSuccess?: (data: {
-        total: number;
-        results: Fields[];
-        totalPages: number;
-    }) => void;
+export interface UseInfiniteSearchOptions<T extends GenericFields = GenericFields> {
     pageSize?: number;
     query?: string;
     searchIndexId: string;
-    sort?: SearchParameters['sort'];
+    sort?: SearchParameters<T>['sort'];
 }
 
 // @public
-export interface UseInfiniteSearchState<Fields = GenericFields> {
+export interface UseInfiniteSearchState<T extends GenericFields = GenericFields> {
     error: Error | null;
     hasNextPage: boolean;
     isError: boolean;
@@ -490,7 +485,7 @@ export interface UseInfiniteSearchState<Fields = GenericFields> {
     isLoadingMoreError: boolean;
     isSuccess: boolean;
     loadMore: () => void;
-    results: Fields[];
+    results: T[];
     total: number;
     totalPages: number;
 }
