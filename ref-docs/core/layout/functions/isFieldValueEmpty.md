@@ -8,7 +8,7 @@
 
 > **isFieldValueEmpty**(`field`): `boolean`
 
-Defined in: [packages/core/src/layout/utils.ts:119](https://github.com/Sitecore/content-sdk/blob/c100101d0bcc8809858931dc72ddf6793f331bd0/packages/core/src/layout/utils.ts#L119)
+Defined in: [packages/core/src/layout/utils.ts:119](https://github.com/Sitecore/content-sdk/blob/65b824ad50a7283719a2d728d11f015787868529/packages/core/src/layout/utils.ts#L119)
 
 Determines if the passed in field object's value is empty.
 

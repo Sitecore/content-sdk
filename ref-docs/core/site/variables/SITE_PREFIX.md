@@ -8,6 +8,6 @@
 
 > `const` **SITE\_PREFIX**: `"_site_"` = `'_site_'`
 
-Defined in: [packages/core/src/site/utils.ts:5](https://github.com/Sitecore/content-sdk/blob/c100101d0bcc8809858931dc72ddf6793f331bd0/packages/core/src/site/utils.ts#L5)
+Defined in: [packages/core/src/site/utils.ts:5](https://github.com/Sitecore/content-sdk/blob/65b824ad50a7283719a2d728d11f015787868529/packages/core/src/site/utils.ts#L5)
 
 Site prefix for rewrite path

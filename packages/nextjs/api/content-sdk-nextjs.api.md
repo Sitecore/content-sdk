@@ -160,6 +160,7 @@ import { SitecoreCliConfig } from '@sitecore-content-sdk/core/config';
 import { SitecoreCliConfigInput } from '@sitecore-content-sdk/core/config';
 import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/core/client';
 import { SitecoreClientInit } from '@sitecore-content-sdk/core/client';
+import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/core/config';
 import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/core/config';
 import { SitecoreProvider } from '@sitecore-content-sdk/react';
 import { SitecoreProviderReactContext } from '@sitecore-content-sdk/react';
@@ -186,7 +187,7 @@ import { withSitecore } from '@sitecore-content-sdk/react';
 import { WithSitecoreHocProps } from '@sitecore-content-sdk/react';
 import { WithSitecoreOptions } from '@sitecore-content-sdk/react';
 import { WithSitecoreProps } from '@sitecore-content-sdk/react';
-import { writeImportMap } from '@sitecore-content-sdk/core/tools';
+import { WriteImportMapArgs } from '@sitecore-content-sdk/core/tools';
 
 export { AppPlaceholder }
 
@@ -918,7 +919,10 @@ export { WithSitecoreOptions }
 
 export { WithSitecoreProps }
 
-export { writeImportMap }
+// @public
+export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }?: {
+    scConfig?: SitecoreConfig_2;
+}) => Promise<void>;
 
 // Warnings were encountered during analysis:
 //

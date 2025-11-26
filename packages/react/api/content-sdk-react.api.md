@@ -170,7 +170,7 @@ export const DesignLibrary: {
 // Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point index.d.ts
 //
 // @public
-export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element;
+export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, loadClientImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element;
 
 export { DictionaryPhrases }
 

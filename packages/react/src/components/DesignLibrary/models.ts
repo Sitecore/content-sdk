@@ -20,7 +20,7 @@ export type DynamicComponent = React.ComponentType<{
   params: ComponentParams;
 }>;
 
-// @MAJOR-RELEASE-TODO - Make importMap required in next major version
+// @MAJOR-RELEASE-TODO - Make loadImportMap required in next major version
 export type DesignLibraryProps = {
   /**
    * The dynamic import for import map to be used in variant generation mode.
@@ -43,13 +43,20 @@ export type DesignLibraryServerProps = {
    */
   page: Page;
   /**
-   * The dynamic import for import map to be used in variant generation mode.
-   * Currently it's optional but it will be required in the next major version.
+   * The dynamic import for sever import map to be used in variant generation mode.
    */
   loadServerImportMap: () => Promise<ImportMapImport>;
 };
 
-export type DesingLibraryAppProps = DesignLibraryServerProps;
+export type DesignLibraryClientProps = {
+  /**
+   * The dynamic import for client import map to be used in variant generation mode.
+   * Overrides the value from Sitecore Context if both are provided.
+   */
+  loadClientImportMap?: () => Promise<ImportMapImport>;
+};
+
+export type DesingLibraryAppProps = DesignLibraryServerProps & DesignLibraryClientProps;
 
 export type DesignLibraryServerPreviewProps = Omit<DesignLibraryServerProps, 'loadServerImportMap'>;
 
