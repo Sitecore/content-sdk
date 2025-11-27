@@ -27,7 +27,6 @@ export type PersonalizeGeoData = {
  */
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['api']['edge'] &
-  SitecoreConfig['api']['local'] &
   SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
@@ -61,24 +60,31 @@ type PersonalizeExecution = {
  * @public
  */
 export class PersonalizeMiddleware extends MiddlewareBase {
-  protected personalizeService: PersonalizeService;
+  protected personalizeService: PersonalizeService | null;
 
   /**
    * @param {PersonalizeMiddlewareConfig} [config] Personalize middleware config
    */
   constructor(protected config: PersonalizeMiddlewareConfig) {
     super(config);
+
+    // Validate edge config is present - personalize requires Edge platform
+    if (!this.config.contextId && !this.config.clientContextId) {
+      console.warn(
+        '[PersonalizeMiddleware] Personalize middleware requires Edge configuration (contextId/clientContextId). ' +
+          'Personalize features will be disabled. This is expected in local container development.'
+      );
+      // Set to null to indicate service is disabled
+      this.personalizeService = null;
+      return;
+    }
+
     const graphQLOptions = {
       api: {
         edge: {
           contextId: this.config.contextId,
           clientContextId: this.config.clientContextId,
           edgeUrl: this.config.edgeUrl,
-        },
-        local: {
-          apiHost: this.config.apiHost,
-          apiKey: this.config.apiKey,
-          path: this.config.path,
         },
       },
     };
@@ -95,6 +101,12 @@ export class PersonalizeMiddleware extends MiddlewareBase {
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+    // Skip if service wasn't initialized (no edge config)
+    if (!this.personalizeService) {
+      debug.personalize('skipped (personalize service not configured - edge config required)');
+      return res;
+    }
+
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize middleware is disabled globally)');
       return res;
