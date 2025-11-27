@@ -663,7 +663,22 @@ describe('createEditingRenderRouteHandlers', () => {
   });
 
   describe('POST handler', () => {
+    let mockQuery: { [key: string]: string };
+
     beforeEach(() => {
+      mockQuery = {
+        [QUERY_PARAM_EDITING_SECRET]: secret,
+        mode: 'edit',
+        route: '/styleguide',
+        sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+        sc_lang: 'en',
+        sc_site: 'website',
+        sc_variant: 'dev',
+        sc_version: 'latest',
+        sc_layoutKind: 'shared',
+        sc_language: 'en',
+      };
+
       req = {
         method: 'POST',
         headers: new Headers({
@@ -671,17 +686,7 @@ describe('createEditingRenderRouteHandlers', () => {
           host: 'localhost:3000',
         }),
         nextUrl: {
-          searchParams: mockSearchParams({
-            [QUERY_PARAM_EDITING_SECRET]: secret,
-            mode: 'edit',
-            route: '/styleguide',
-            sc_itemid: '{11111111-1111-1111-1111-111111111111}',
-            sc_lang: 'en',
-            sc_site: 'website',
-            sc_variant: 'dev',
-            sc_version: 'latest',
-            sc_layoutKind: 'shared',
-          }),
+          searchParams: mockSearchParams(mockQuery),
         } as any,
       };
     });
@@ -750,6 +755,43 @@ describe('createEditingRenderRouteHandlers', () => {
       const fetchCall = fetchStub.getCall(0);
       const fetchHeaders = fetchCall.args[1].headers as Headers;
       expect(fetchHeaders.get('cookie')).to.include('__prerender_bypass=some-value');
+    });
+
+    it('should proxy POST request with mapped querry string parameters and propagated vercel protection parameters', async () => {
+      const protectionParams = {
+        [QUERY_PARAM_VERCEL_PROTECTION_BYPASS]: 'bypass-token-123',
+        [QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE]: 'true',
+      };
+
+      getQueryParamsForPropagationStub.returns(protectionParams);
+
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        data: '<html>Server Action Response</html>',
+      });
+
+      const res = await handlers.POST(req);
+      const text = await res.body;
+
+      expect(res.status).to.equal(200);
+      expect(text).to.equal('<html>Server Action Response</html>');
+      expect(fetchStub.calledOnce).to.be.true;
+
+      const fetchCall = fetchStub.getCall(0);
+
+      const targetUrl = new URL(fetchCall.args[0]);
+      expect(targetUrl.searchParams.get('itemId')).to.equal(mockQuery.sc_itemid);
+      expect(targetUrl.searchParams.get('language')).to.equal(mockQuery.sc_language);
+      expect(targetUrl.searchParams.get('site')).to.equal(mockQuery.sc_site);
+      expect(targetUrl.searchParams.get('mode')).to.equal(mockQuery.mode);
+      expect(targetUrl.searchParams.get('variantIds')).to.equal(mockQuery.sc_variant);
+      expect(targetUrl.searchParams.get('version')).to.equal(mockQuery.sc_version);
+      expect(targetUrl.searchParams.get('layoutKind')).to.equal(mockQuery.sc_layoutKind);
+      expect(targetUrl.searchParams.get(QUERY_PARAM_VERCEL_PROTECTION_BYPASS)).to.equal(
+        'bypass-token-123'
+      );
+      expect(targetUrl.searchParams.get(QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE)).to.equal('true');
     });
 
     it('should filter out x-middleware and content-encoding headers', async () => {
