@@ -153,7 +153,11 @@ export const DesignLibraryServerVariantGeneration = async ({
       {Component ? (
         <DesignLibraryErrorBoundary uid={componentToUpdate.uid}>
           <PlaceholderMetadata rendering={componentToUpdate}>
-            <Component fields={componentToUpdate.fields} params={componentToUpdate.params} />
+            <Component
+              fields={componentToUpdate.fields}
+              params={componentToUpdate.params}
+              key={Date.now()}
+            />
           </PlaceholderMetadata>
         </DesignLibraryErrorBoundary>
       ) : (
@@ -162,6 +166,7 @@ export const DesignLibraryServerVariantGeneration = async ({
           page={page}
           rendering={rendering}
           componentMap={componentMap}
+          key={Date.now()}
         />
       )}
       <DesignLibraryVariantGenerationEvents
