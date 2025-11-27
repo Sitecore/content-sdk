@@ -290,14 +290,10 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       query[key] = value;
     });
 
-    console.log('query', query);
-
     const propagatedQsParams = {
       ...getQueryParamsForPropagation(query as { [key: string]: string }),
       ...mapEditingParams(query as { [key: string]: string }),
     };
-
-    console.log('propagatedQsParams', propagatedQsParams);
 
     const base = resolveServerUrl(req);
     const targetUrl = new URL('/', base);
