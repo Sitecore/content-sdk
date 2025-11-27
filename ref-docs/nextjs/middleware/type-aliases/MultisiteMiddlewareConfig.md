@@ -8,6 +8,6 @@
 
 > **MultisiteMiddlewareConfig** = [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `SitecoreConfig`\[`"multisite"`\]
 
-Defined in: [nextjs/src/middleware/multisite-middleware.ts:29](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/nextjs/src/middleware/multisite-middleware.ts#L29)
+Defined in: [nextjs/src/middleware/multisite-middleware.ts:29](https://github.com/Sitecore/content-sdk/blob/f50ad68591b7b5a53e2085990d302267e3320840/packages/nextjs/src/middleware/multisite-middleware.ts#L29)
 
 The interface for the MultisiteMiddleware configuration.

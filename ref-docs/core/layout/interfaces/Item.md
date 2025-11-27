@@ -6,7 +6,7 @@
 
 # Interface: Item
 
-Defined in: [packages/core/src/layout/models.ts:145](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/layout/models.ts#L145)
+Defined in: [packages/core/src/layout/models.ts:145](https://github.com/Sitecore/content-sdk/blob/f50ad68591b7b5a53e2085990d302267e3320840/packages/core/src/layout/models.ts#L145)
 
 Content data returned from Layout Service
 
@@ -16,7 +16,7 @@ Content data returned from Layout Service
 
 > `optional` **displayName**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:147](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/layout/models.ts#L147)
+Defined in: [packages/core/src/layout/models.ts:147](https://github.com/Sitecore/content-sdk/blob/f50ad68591b7b5a53e2085990d302267e3320840/packages/core/src/layout/models.ts#L147)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/core/src/layout/models.ts:147](https://github.com/Sitecore
 
 > **fields**: `object`
 
-Defined in: [packages/core/src/layout/models.ts:150](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/layout/models.ts#L150)
+Defined in: [packages/core/src/layout/models.ts:150](https://github.com/Sitecore/content-sdk/blob/f50ad68591b7b5a53e2085990d302267e3320840/packages/core/src/layout/models.ts#L150)
 
 #### Index Signature
 
@@ -36,7 +36,7 @@ Defined in: [packages/core/src/layout/models.ts:150](https://github.com/Sitecore
 
 > `optional` **id**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:148](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/layout/models.ts#L148)
+Defined in: [packages/core/src/layout/models.ts:148](https://github.com/Sitecore/content-sdk/blob/f50ad68591b7b5a53e2085990d302267e3320840/packages/core/src/layout/models.ts#L148)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/core/src/layout/models.ts:148](https://github.com/Sitecore
 
 > **name**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:146](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/layout/models.ts#L146)
+Defined in: [packages/core/src/layout/models.ts:146](https://github.com/Sitecore/content-sdk/blob/f50ad68591b7b5a53e2085990d302267e3320840/packages/core/src/layout/models.ts#L146)
 
 ***
 
@@ -52,4 +52,4 @@ Defined in: [packages/core/src/layout/models.ts:146](https://github.com/Sitecore
 
 > `optional` **url**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:149](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/layout/models.ts#L149)
+Defined in: [packages/core/src/layout/models.ts:149](https://github.com/Sitecore/content-sdk/blob/f50ad68591b7b5a53e2085990d302267e3320840/packages/core/src/layout/models.ts#L149)
