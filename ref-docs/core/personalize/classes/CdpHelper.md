@@ -6,7 +6,7 @@
 
 # Class: CdpHelper
 
-Defined in: [packages/core/src/personalize/utils.ts:91](https://github.com/Sitecore/content-sdk/blob/06ad485c7d11230f3625a1e62808b2e82a33f895/packages/core/src/personalize/utils.ts#L91)
+Defined in: [packages/core/src/personalize/utils.ts:91](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/personalize/utils.ts#L91)
 
 Static utility class for Sitecore CDP
 
@@ -26,7 +26,7 @@ Static utility class for Sitecore CDP
 
 > `static` **getComponentFriendlyId**(`pageId`, `componentId`, `language`, `scope?`): `string`
 
-Defined in: [packages/core/src/personalize/utils.ts:138](https://github.com/Sitecore/content-sdk/blob/06ad485c7d11230f3625a1e62808b2e82a33f895/packages/core/src/personalize/utils.ts#L138)
+Defined in: [packages/core/src/personalize/utils.ts:138](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/personalize/utils.ts#L138)
 
 Gets the friendly id for Component A/B Testing in the required format `component_[<scope>_]<pageId>_<componentId>_<language>*`
 
@@ -51,7 +51,7 @@ the friendly id
 
 > `static` **getPageFriendlyId**(`pageId`, `language`, `scope?`): `string`
 
-Defined in: [packages/core/src/personalize/utils.ts:123](https://github.com/Sitecore/content-sdk/blob/06ad485c7d11230f3625a1e62808b2e82a33f895/packages/core/src/personalize/utils.ts#L123)
+Defined in: [packages/core/src/personalize/utils.ts:123](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/personalize/utils.ts#L123)
 
 Gets the friendly id for (page-level) Embedded Personalization in the required format `embedded_[<scope>_]<id>_<lang>`
 
@@ -75,7 +75,7 @@ the friendly id
 
 > `static` **getPageVariantId**(`pageId`, `language`, `variantId`, `scope?`): `string`
 
-Defined in: [packages/core/src/personalize/utils.ts:100](https://github.com/Sitecore/content-sdk/blob/06ad485c7d11230f3625a1e62808b2e82a33f895/packages/core/src/personalize/utils.ts#L100)
+Defined in: [packages/core/src/personalize/utils.ts:100](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/personalize/utils.ts#L100)
 
 Gets the page variant id for CDP in the required format
 
@@ -100,7 +100,7 @@ the formatted page variant id
 
 > `static` **normalizeScope**(`scope?`): `string`
 
-Defined in: [packages/core/src/personalize/utils.ts:157](https://github.com/Sitecore/content-sdk/blob/06ad485c7d11230f3625a1e62808b2e82a33f895/packages/core/src/personalize/utils.ts#L157)
+Defined in: [packages/core/src/personalize/utils.ts:157](https://github.com/Sitecore/content-sdk/blob/88ea2007457764e489c77332ca810c2d7a64fcd2/packages/core/src/personalize/utils.ts#L157)
 
 Normalizes the scope from the given string value
 Removes all non-alphanumeric characters
