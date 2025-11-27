@@ -8,7 +8,7 @@
 
 > **PersonalizeMiddlewareConfig** = [`MiddlewareBaseConfig`](MiddlewareBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:28](https://github.com/Sitecore/content-sdk/blob/65b824ad50a7283719a2d728d11f015787868529/packages/nextjs/src/middleware/personalize-middleware.ts#L28)
+Defined in: [nextjs/src/middleware/personalize-middleware.ts:28](https://github.com/Sitecore/content-sdk/blob/06ad485c7d11230f3625a1e62808b2e82a33f895/packages/nextjs/src/middleware/personalize-middleware.ts#L28)
 
 The interface for the PersonalizeMiddleware configuration.
 

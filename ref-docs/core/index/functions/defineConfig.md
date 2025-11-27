@@ -8,7 +8,7 @@
 
 > **defineConfig**(`config`): [`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md)
 
-Defined in: [packages/core/src/config/define-config.ts:222](https://github.com/Sitecore/content-sdk/blob/65b824ad50a7283719a2d728d11f015787868529/packages/core/src/config/define-config.ts#L222)
+Defined in: [packages/core/src/config/define-config.ts:222](https://github.com/Sitecore/content-sdk/blob/06ad485c7d11230f3625a1e62808b2e82a33f895/packages/core/src/config/define-config.ts#L222)
 
 Accepts a SitecoreConfigInput object and returns full sitecore configuration
 
