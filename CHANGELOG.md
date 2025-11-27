@@ -22,6 +22,7 @@ Our versioning strategy is as follows:
 * `[core]` Provide information about rendering host as part of code extraction ([#286](https://github.com/Sitecore/content-sdk/pull/286))
 * `[template/next-app-router]` Add component runtime information to prevent invalid client/server component operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))
 * `[template/next-app-router]` Fix middleware initialization errors in local container development ([#297](https://github.com/Sitecore/content-sdk/pull/297))
+* `[cli]` Create short flags for CLI commands ([#298](https://github.com/Sitecore/content-sdk/pull/298))
 
 ### 🐛 Bug Fixes
 

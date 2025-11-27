@@ -7,7 +7,7 @@ import loadCliConfig from '../../../utils/load-config';
  */
 export function builder(yargs: Argv<GenerateMapCliArgs>) {
   return yargs.command<GenerateMapCliArgs>(
-    'generate-map',
+    ['generate-map', 'g'],
     'Generates component map based on provided paths',
     args,
     handler
@@ -40,12 +40,14 @@ export function args(yargs: Argv<GenerateMapCliArgs>) {
       describe:
         'If true, watches for changes in the specified paths and updates the component map accordingly.',
       default: false,
+      alias: 'w',
     })
     .option('config', {
       requiresArg: false,
       type: 'string',
       describe:
         'Path to the `sitecore.cli.config` file. Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats',
+      alias: 'c',
     });
 }
 
