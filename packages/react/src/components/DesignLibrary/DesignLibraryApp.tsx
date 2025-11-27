@@ -18,7 +18,6 @@ export const DesignLibraryApp = ({
   page,
   componentMap,
   loadServerImportMap,
-  loadClientImportMap,
 }: DesingLibraryAppProps) => {
   const { route } = page.layout.sitecore;
   if (!route) return null;
@@ -30,7 +29,7 @@ export const DesignLibraryApp = ({
   return (
     <>
       {isClient ? (
-        <DesignLibrary loadImportMap={loadClientImportMap} />
+        <DesignLibrary />
       ) : (
         <DesignLibraryServer
           page={page}

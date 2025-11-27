@@ -18,7 +18,7 @@ Our versioning strategy is as follows:
   - additional react components to handle dynamic rendering of server components
   - includes refactoring of existing Design Library functionality
   - this is a breaking change for applications based on Next.js App Router (beta) template. Please refer to the detailed upgrade guide for further instructions
-  - separate server and client import-map generation ([#293](https://github.com/Sitecore/content-sdk/pull/293))
+  - separate server and client import-map generation ([#293](https://github.com/Sitecore/content-sdk/pull/293))([#299](https://github.com/Sitecore/content-sdk/pull/299)
 * `[core]` Provide information about rendering host as part of code extraction ([#286](https://github.com/Sitecore/content-sdk/pull/286))
 * `[template/next-app-router]` Add component runtime information to prevent invalid client/server component operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))
 * `[template/next-app-router]` Fix middleware initialization errors in local container development ([#297](https://github.com/Sitecore/content-sdk/pull/297))

@@ -8,7 +8,7 @@ import {
   unitMocks,
   writeImportMap,
   getImportValueAlias,
-  WriteImportMapArgs,
+  WriteImportMapArgsInternal,
 } from './import-map';
 import debug from './../../debug';
 import sinon from 'sinon';
@@ -378,14 +378,14 @@ describe('Import Map Generation', () => {
     const initialization = [
       {
         title: 'Using deprecated scConfig',
-        run: (config: WriteImportMapArgs) => {
+        run: (config: WriteImportMapArgsInternal) => {
           const generate = writeImportMap(config);
           return generate();
         },
       },
       {
         title: 'Using new config passed as argument',
-        run: ({ scConfig, ...rest }: WriteImportMapArgs) => {
+        run: ({ scConfig, ...rest }: WriteImportMapArgsInternal) => {
           const generate = writeImportMap(rest);
           return generate({ scConfig });
         },

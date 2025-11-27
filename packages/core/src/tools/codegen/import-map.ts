@@ -80,9 +80,18 @@ export type WriteImportMapArgs = {
    */
   scConfig?: SitecoreConfig;
   exclude?: string[];
+};
+
+/**
+ * Internal args for import map generation
+ * Extends WriteImportMapArgs with additional settings for templates and server/client maps applied within Content SDK
+ * @internal
+ */
+export type WriteImportMapArgsInternal = WriteImportMapArgs & {
   /**
    * generate separate import map for server/client components
    * when true, generates import-map.server.ts and import-map.client.ts
+   * @internal
    */
   separateServerClientMaps?: boolean;
   /**
@@ -90,12 +99,14 @@ export type WriteImportMapArgs = {
    * Will be used as default template if separateServerClientMaps is false.
    * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.ts or import-map.server.ts file
    * @returns {string} contents for resulting import map file
+   * @internal
    */
   serverTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
   /**
    * Function to return custom template for client import map file when separateServerClientMaps is true.
    * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.client.ts file
    * @returns {string} contents for resulting import map file
+   * @internal
    */
   clientTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
 };
@@ -387,10 +398,10 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
 
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
- * @param {WriteImportMapArgs} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration.
+ * @param {WriteImportMapArgsInternal} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration.
  * @public
  */
-export const writeImportMap = (args: WriteImportMapArgs) => {
+export const writeImportMap = (args: WriteImportMapArgsInternal) => {
   return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
     const config = args.scConfig ?? scConfig;
 
