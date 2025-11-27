@@ -723,7 +723,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         variantId: string;
     }>;
     // (undocumented)
-    protected personalizeService: PersonalizeService;
+    protected personalizeService: PersonalizeService | null;
 }
 
 // @public
