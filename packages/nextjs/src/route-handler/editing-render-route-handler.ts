@@ -284,9 +284,26 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       );
     }
 
-    const queryString = req.nextUrl.searchParams.toString();
+    // propagate vercel protection query parameters; map query parameters for design library request
+    const query: EditingRenderQueryParams = {} as EditingRenderQueryParams;
+    req.nextUrl.searchParams.forEach((value, key) => {
+      query[key] = value;
+    });
+
+    const propagatedQsParams = {
+      ...getQueryParamsForPropagation(query as { [key: string]: string }),
+      ...mapEditingParams(query as { [key: string]: string }),
+    };
+
     const base = resolveServerUrl(req);
-    const targetUrl = new URL(`/?${queryString}`, base).toString();
+    const targetUrl = new URL('/', base);
+
+    for (const key in propagatedQsParams) {
+      if ({}.hasOwnProperty.call(propagatedQsParams, key)) {
+        propagatedQsParams[key] && targetUrl.searchParams.append(key, propagatedQsParams[key]);
+      }
+    }
+    targetUrl.searchParams.append('timestamp', Date.now().toString());
 
     // enable draft mode in order to get prerender bypass cookie from request
     const draft = await draftMode();
@@ -305,7 +322,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     const forwardHeaders = new Headers(req.headers);
     forwardHeaders.set('cookie', forwardCookie);
 
-    const forwardedResponse = await dataFetcher.fetch<string>(targetUrl, {
+    const forwardedResponse = await dataFetcher.fetch<string>(targetUrl.toString(), {
       method: req.method,
       headers: forwardHeaders,
       body: req.body,

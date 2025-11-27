@@ -8,7 +8,7 @@ import * as generateMap from './generate-map';
  */
 export function builder(yargs: Argv) {
   return yargs.command({
-    command: 'component',
+    command: ['component', 'c'],
     describe: 'Performs component level operations',
     builder: (_yargs: Argv) => {
       _yargs = _yargs

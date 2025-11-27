@@ -14,13 +14,14 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* `[nextjs]` [App Router] Add support for server components in Design Studio ([#280](https://github.com/Sitecore/content-sdk/pull/280))
+* `[nextjs]` [App Router] Add support for server components in Design Studio ([#280](https://github.com/Sitecore/content-sdk/pull/280))([#300](https://github.com/Sitecore/content-sdk/pull/300))
   - additional react components to handle dynamic rendering of server components
   - includes refactoring of existing Design Library functionality
   - this is a breaking change for applications based on Next.js App Router (beta) template. Please refer to the detailed upgrade guide for further instructions
-  - separate server and client import-map generation ([#293](https://github.com/Sitecore/content-sdk/pull/293))
+  - separate server and client import-map generation ([#293](https://github.com/Sitecore/content-sdk/pull/293))([#299](https://github.com/Sitecore/content-sdk/pull/299)
 * `[core]` Provide information about rendering host as part of code extraction ([#286](https://github.com/Sitecore/content-sdk/pull/286))
-* `[template/next-app-router]` Add component runtime information to prevent invalid client/server component operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))([#299](https://github.com/Sitecore/content-sdk/pull/299))
+* `[template/next-app-router]` Add component runtime information to prevent invalid client/server component operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))
+* `[cli]` Create short flags for CLI commands ([#298](https://github.com/Sitecore/content-sdk/pull/298))
 
 ### 🐛 Bug Fixes
 
