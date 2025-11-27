@@ -28,3 +28,4 @@
 !.sitecore/component-map.client.ts
 !.sitecore/import-map.ts
 !.sitecore/import-map.server.ts
+!.sitecore/import-map.client.ts
