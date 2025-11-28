@@ -1,12 +1,13 @@
+/* eslint-disable no-unused-vars */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { DEFAULT_PAGE_SIZE, useSearchService } from './utils';
-import { GenericFields, SearchParameters } from '@sitecore-content-sdk/search';
+import { DEFAULT_PAGE_SIZE, SearchStatus, useSearchService } from './utils';
+import { SearchDocument, SearchParameters } from '@sitecore-content-sdk/search';
 
 /**
  * Options for the useInfiniteSearch hook.
  * @public
  */
-export interface UseInfiniteSearchOptions<T = GenericFields> {
+export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocument> {
   /**
    * The query string to search for.
    * By default empty string is used.
@@ -25,17 +26,29 @@ export interface UseInfiniteSearchOptions<T = GenericFields> {
    * Specifies the sorting of the search results.
    */
   sort?: SearchParameters<T>['sort'];
+  /**
+   * Specifies whether the search should automatically run.
+   * @default true
+   */
+  enabled?: boolean;
 }
 
 /**
  * The state of the useInfiniteSearch hook.
  * @public
  */
-export interface UseInfiniteSearchState<T = GenericFields> {
+export type UseInfiniteSearchState<T extends SearchDocument = SearchDocument> = Omit<
+  InternalInfiniteSearchState<T>,
+  'offset' | 'loadMoreStatus'
+> & {
   /**
-   * The search results.
+   * Load the next page of results.
    */
-  results: T[];
+  loadMore: () => void;
+  /**
+   * Whether there are more results available.
+   */
+  hasNextPage: boolean;
   /**
    * Whether a search request is currently in progress.
    */
@@ -56,14 +69,13 @@ export interface UseInfiniteSearchState<T = GenericFields> {
    * Whether the search request for more results failed.
    */
   isLoadingMoreError: boolean;
+};
+
+type InternalInfiniteSearchState<T extends SearchDocument = SearchDocument> = {
   /**
-   * Load more results.
+   * The search results.
    */
-  loadMore: () => void;
-  /**
-   * Whether there are more results available.
-   */
-  hasNextPage: boolean;
+  results: T[];
   /**
    * Total number of results across all pages.
    */
@@ -76,7 +88,25 @@ export interface UseInfiniteSearchState<T = GenericFields> {
    * The error object if the last search request failed, or null if no error occurred.
    */
   error: Error | null;
-}
+  /**
+   * The current offset of the search results.
+   */
+  offset: number;
+  /**
+   * The status of the initial search request.
+   * It will be set to:
+   * - 'idle' if no search request has been made yet.
+   * - 'loading' if a search request is currently in progress.
+   * - 'success' if a search request was successful.
+   * - 'error' if a search request failed.
+   * @default 'idle'
+   */
+  status: SearchStatus;
+  /**
+   * The status of the "load more" request.
+   */
+  loadMoreStatus: SearchStatus;
+};
 
 /**
  * React hook for performing infinite search queries.
@@ -84,49 +114,37 @@ export interface UseInfiniteSearchState<T = GenericFields> {
  * @returns {UseInfiniteSearchState} The infinite search state.
  * @public
  */
-export const useInfiniteSearch = <T = GenericFields>(
+export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
   options: UseInfiniteSearchOptions<T>
 ): UseInfiniteSearchState<T> => {
-  const { query, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort } = options;
+  const { query, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort, enabled = true } = options;
 
   if (!searchIndexId) {
     throw new Error('useInfiniteSearch: searchIndexId is required');
   }
 
-  const [state, setState] = useState<{
-    results: T[];
-    isLoading: boolean;
-    isLoadingMore: boolean;
-    total: number;
-    totalPages: number;
-    error: Error | null;
-    hasNextPage: boolean;
-    currentOffset: number;
-    isSuccess: boolean;
-    isError: boolean;
-    isLoadingMoreError: boolean;
-  }>({
+  const [state, setState] = useState<InternalInfiniteSearchState<T>>({
     results: [],
-    isLoading: true,
-    isLoadingMore: false,
     total: 0,
     totalPages: 0,
     error: null,
-    hasNextPage: false,
-    currentOffset: 0,
-    isSuccess: false,
-    isError: false,
-    isLoadingMoreError: false,
+    offset: 0,
+    status: 'idle',
+    loadMoreStatus: 'idle',
   });
+
+  const hasNextPage = useMemo(
+    () => state.results.length < state.total,
+    [state.results.length, state.total]
+  );
 
   const searchService = useSearchService();
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const search = useCallback(
     async (offset: number, isLoadingMore: boolean = false) => {
-      // Abort previous request if it exists
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
+      if (!searchService) {
+        return;
       }
 
       abortControllerRef.current = new AbortController();
@@ -135,24 +153,18 @@ export const useInfiniteSearch = <T = GenericFields>(
       if (isLoadingMore) {
         setState((prev) => ({
           ...prev,
-          isLoadingMore: true,
           error: null,
-          isLoadingMoreError: false,
-          currentOffset: offset,
+          loadMoreStatus: 'loading',
         }));
       } else {
         setState({
           results: [],
-          isLoading: true,
-          isLoadingMore: false,
           total: 0,
           totalPages: 0,
           error: null,
-          hasNextPage: false,
-          currentOffset: 0,
-          isSuccess: false,
-          isError: false,
-          isLoadingMoreError: false,
+          offset: 0,
+          status: 'loading',
+          loadMoreStatus: 'idle',
         });
       }
 
@@ -177,20 +189,14 @@ export const useInfiniteSearch = <T = GenericFields>(
         setState((prev) => {
           const results = isLoadingMore ? [...prev.results, ...searchResults] : searchResults;
           const totalPages = Math.ceil(totalResults / pageSize);
-          const hasNextPage = results.length < totalResults;
-
           return {
             results,
-            isLoading: false,
             error: null,
-            currentOffset: prev.currentOffset,
+            offset,
+            status: 'success',
+            loadMoreStatus: 'idle',
             total: totalResults,
             totalPages,
-            hasNextPage: hasNextPage,
-            isSuccess: true,
-            isError: false,
-            isLoadingMore: false,
-            isLoadingMoreError: false,
           };
         });
       } catch (err) {
@@ -199,29 +205,24 @@ export const useInfiniteSearch = <T = GenericFields>(
           return;
         }
 
-        const errorMessage = err instanceof Error ? err : new Error('Search failed');
+        const errorMessage = err instanceof Error ? err : new Error(JSON.stringify(err));
 
         // Don't clean up existing results if appending results
         if (isLoadingMore) {
           setState((prev) => ({
             ...prev,
-            isLoadingMoreError: true,
-            isLoadingMore: false,
             error: errorMessage,
+            loadMoreStatus: 'error',
           }));
         } else {
           setState({
             results: [],
-            isLoading: false,
-            isLoadingMore: false,
             total: 0,
             totalPages: 0,
             error: errorMessage,
-            hasNextPage: false,
-            currentOffset: 0,
-            isSuccess: false,
-            isError: true,
-            isLoadingMoreError: false,
+            offset: 0,
+            status: 'error',
+            loadMoreStatus: 'idle',
           });
         }
       }
@@ -230,34 +231,41 @@ export const useInfiniteSearch = <T = GenericFields>(
   );
 
   useEffect(() => {
-    search(0, false);
+    if (enabled) {
+      search(0, false);
+    }
 
     return () => {
-      // Abort all requests when component unmounts
       abortControllerRef.current?.abort();
     };
-  }, [search]);
+  }, [search, enabled]);
 
   const loadMore = useCallback(() => {
-    const nextOffset = state.currentOffset + pageSize;
+    // Don't load more if already loading or no more pages
+    if (state.loadMoreStatus === 'loading' || !hasNextPage) {
+      return;
+    }
+
+    const nextOffset = state.offset + pageSize;
 
     search(nextOffset, true);
-  }, [state.currentOffset, pageSize, search]);
+  }, [search, pageSize, state.offset, hasNextPage, state.loadMoreStatus]);
 
   return useMemo(
     () => ({
       results: state.results,
-      loadMore,
-      hasNextPage: state.hasNextPage,
-      isLoading: state.isLoading,
-      isLoadingMore: state.isLoadingMore,
-      isSuccess: state.isSuccess,
-      isError: state.isError,
-      isLoadingMoreError: state.isLoadingMoreError,
+      status: state.status,
       total: state.total,
       totalPages: state.totalPages,
       error: state.error,
+      loadMore,
+      hasNextPage,
+      isLoading: state.status === 'loading',
+      isSuccess: state.status === 'success',
+      isError: state.status === 'error',
+      isLoadingMore: state.loadMoreStatus === 'loading',
+      isLoadingMoreError: state.loadMoreStatus === 'error',
     }),
-    [state, loadMore]
+    [state, loadMore, hasNextPage]
   );
 };

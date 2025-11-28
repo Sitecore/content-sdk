@@ -66,6 +66,7 @@ describe('useInfiniteSearch', () => {
     expect(wrapper.container.querySelector('#error')?.textContent).equal(
       state.error ? state.error.message : 'null'
     );
+    expect(wrapper.container.querySelector('#status')?.textContent).equal(state.status);
     state.results.forEach((result, index) => {
       expect(wrapper.container.querySelector('#results')?.children[index].textContent).equal(
         result.id.toString()
@@ -85,6 +86,7 @@ describe('useInfiniteSearch', () => {
         <span id="total">Total: {state.total}</span>
         <span id="totalPages">Pages: {state.totalPages}</span>
         <span id="error">{state.error ? state.error.message : 'null'}</span>
+        <span id="status">{state.status}</span>
         <button id="loadMore" onClick={state.loadMore}>
           Load More
         </button>
@@ -99,36 +101,12 @@ describe('useInfiniteSearch', () => {
 
   it('should search', async () => {
     const TestComponent: React.FC<any> = () => {
-      const {
-        results,
-        loadMore,
-        hasNextPage,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        total,
-        totalPages,
-        error,
-      } = useInfiniteSearch<Model>({
+      const state = useInfiniteSearch<Model>({
         searchIndexId: '1234567890',
         query: 'test',
       });
 
-      return renderState({
-        results,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        hasNextPage,
-        total,
-        totalPages,
-        error,
-        loadMore,
-      });
+      return renderState(state);
     };
 
     searchServiceStub.resolves({ results: [{ id: 1 }, { id: 2 }, { id: 3 }], total: 3 });
@@ -150,6 +128,7 @@ describe('useInfiniteSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
     });
 
     expect(
@@ -175,6 +154,94 @@ describe('useInfiniteSearch', () => {
         error: null,
         total: 3,
         totalPages: 1,
+        status: 'success',
+      });
+    });
+  });
+
+  it('should not automatically search when search is disabled', async () => {
+    const TestComponent: React.FC<any> = () => {
+      const [enabled, setEnabled] = useState(false);
+      const state = useInfiniteSearch<Model>({
+        searchIndexId: '1234567890',
+        query: 'test',
+        enabled,
+      });
+
+      return (
+        <>
+          <button id="enable" onClick={() => setEnabled(true)}>
+            Enable
+          </button>
+          {renderState(state)}
+        </>
+      );
+    };
+
+    searchServiceStub.resolves({ results: [{ id: 1 }, { id: 2 }, { id: 3 }], total: 3 });
+
+    const wrapper = render(
+      <SitecoreProviderReactContext.Provider value={defaultProviderState}>
+        <TestComponent />
+      </SitecoreProviderReactContext.Provider>
+    );
+
+    assertState(wrapper, {
+      results: [],
+      isLoading: false,
+      isSuccess: false,
+      isError: false,
+      isLoadingMore: false,
+      isLoadingMoreError: false,
+      hasNextPage: false,
+      error: null,
+      total: 0,
+      totalPages: 0,
+      status: 'idle',
+    });
+
+    expect(searchServiceStub.called).to.be.false;
+
+    fireEvent.click(wrapper.container.querySelector('#enable') as Element);
+
+    assertState(wrapper, {
+      results: [],
+      isLoading: true,
+      isSuccess: false,
+      isError: false,
+      isLoadingMore: false,
+      isLoadingMoreError: false,
+      hasNextPage: false,
+      error: null,
+      total: 0,
+      totalPages: 0,
+      status: 'loading',
+    });
+
+    expect(
+      searchServiceStub.calledOnceWith({
+        searchIndexId: '1234567890',
+        keyphrase: 'test',
+        limit: 10,
+        offset: 0,
+        sort: undefined,
+      })
+    ).to.be.true;
+
+    // Wait for async to complete and test final state
+    await waitFor(() => {
+      assertState(wrapper, {
+        results: [{ id: '1' }, { id: '2' }, { id: '3' }],
+        isLoading: false,
+        isSuccess: true,
+        isError: false,
+        isLoadingMore: false,
+        isLoadingMoreError: false,
+        hasNextPage: false,
+        error: null,
+        total: 3,
+        totalPages: 1,
+        status: 'success',
       });
     });
   });
@@ -182,19 +249,7 @@ describe('useInfiniteSearch', () => {
   it('should search when the query is changed', async () => {
     const TestComponent: React.FC<any> = () => {
       const [query, setQuery] = useState('initial');
-      const {
-        results,
-        loadMore,
-        hasNextPage,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        total,
-        totalPages,
-        error,
-      } = useInfiniteSearch<Model>({
+      const state = useInfiniteSearch<Model>({
         searchIndexId: '1234567890',
         query: query,
       });
@@ -205,19 +260,7 @@ describe('useInfiniteSearch', () => {
             Change Query
           </button>
           <span id="query">Query: {query}</span>
-          {renderState({
-            results,
-            loadMore,
-            hasNextPage,
-            isLoading,
-            isSuccess,
-            isError,
-            isLoadingMore,
-            isLoadingMoreError,
-            total,
-            totalPages,
-            error,
-          })}
+          {renderState(state)}
         </>
       );
     };
@@ -251,6 +294,7 @@ describe('useInfiniteSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
     });
 
     // Wait for initial search to complete
@@ -266,6 +310,7 @@ describe('useInfiniteSearch', () => {
         error: null,
         total: 2,
         totalPages: 1,
+        status: 'success',
       });
     });
 
@@ -293,6 +338,7 @@ describe('useInfiniteSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
     });
 
     expect(wrapper.container.querySelector('#query')?.textContent).equal('Query: updated');
@@ -309,6 +355,7 @@ describe('useInfiniteSearch', () => {
         error: null,
         total: 3,
         totalPages: 1,
+        status: 'success',
       });
     });
 
@@ -325,39 +372,15 @@ describe('useInfiniteSearch', () => {
 
   it('should search when custom search parameters are provided', async () => {
     const TestComponent: React.FC<any> = () => {
-      const [sort] = useState<SortSetting<'id'>[]>([{ name: 'id', order: 'desc' }]);
-      const {
-        results,
-        loadMore,
-        hasNextPage,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        total,
-        totalPages,
-        error,
-      } = useInfiniteSearch<Model>({
+      const [sort] = useState<SortSetting<Model>[]>([{ name: 'id', order: 'desc' }]);
+      const state = useInfiniteSearch<Model>({
         searchIndexId: '1234567890',
         query: 'test',
         sort,
         pageSize: 20,
       });
 
-      return renderState({
-        results,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        hasNextPage,
-        total,
-        totalPages,
-        error,
-        loadMore,
-      });
+      return renderState(state);
     };
 
     searchServiceStub.resolves({ results: [{ id: 1 }, { id: 2 }, { id: 3 }], total: 3 });
@@ -380,6 +403,7 @@ describe('useInfiniteSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
     });
 
     expect(
@@ -405,42 +429,19 @@ describe('useInfiniteSearch', () => {
         error: null,
         total: 3,
         totalPages: 1,
+        status: 'success',
       });
     });
   });
 
   it('should load more results', async () => {
     const TestComponent: React.FC<any> = () => {
-      const {
-        results,
-        loadMore,
-        hasNextPage,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        total,
-        totalPages,
-        error,
-      } = useInfiniteSearch<Model>({
+      const state = useInfiniteSearch<Model>({
         searchIndexId: '1234567890',
         query: 'test',
       });
 
-      return renderState({
-        results,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        hasNextPage,
-        total,
-        totalPages,
-        error,
-        loadMore,
-      });
+      return renderState(state);
     };
 
     const firstCallResults = Array.from({ length: 10 }, (_, index) => ({ id: index + 1 }));
@@ -475,6 +476,7 @@ describe('useInfiniteSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
     });
 
     expect(
@@ -500,6 +502,7 @@ describe('useInfiniteSearch', () => {
         error: null,
         total: 20,
         totalPages: 2,
+        status: 'success',
       });
     });
 
@@ -517,6 +520,7 @@ describe('useInfiniteSearch', () => {
       total: 20,
       totalPages: 2,
       error: null,
+      status: 'success',
     });
 
     await waitFor(() => {
@@ -531,42 +535,19 @@ describe('useInfiniteSearch', () => {
         total: 20,
         totalPages: 2,
         error: null,
+        status: 'success',
       });
     });
   });
 
   it('should return error when initial search fails', async () => {
     const TestComponent: React.FC<any> = () => {
-      const {
-        results,
-        loadMore,
-        hasNextPage,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        total,
-        totalPages,
-        error,
-      } = useInfiniteSearch<Model>({
+      const state = useInfiniteSearch<Model>({
         searchIndexId: '1234567890',
         query: 'test',
       });
 
-      return renderState({
-        results,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        hasNextPage,
-        total,
-        totalPages,
-        error,
-        loadMore,
-      });
+      return renderState(state);
     };
 
     searchServiceStub.rejects(new Error('Search failed'));
@@ -588,6 +569,7 @@ describe('useInfiniteSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
     });
 
     expect(
@@ -613,42 +595,19 @@ describe('useInfiniteSearch', () => {
         error: new Error('Search failed'),
         total: 0,
         totalPages: 0,
+        status: 'error',
       });
     });
   });
 
   it('should return error when load more fails', async () => {
     const TestComponent: React.FC<any> = () => {
-      const {
-        results,
-        loadMore,
-        hasNextPage,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        total,
-        totalPages,
-        error,
-      } = useInfiniteSearch<Model>({
+      const state = useInfiniteSearch<Model>({
         searchIndexId: '1234567890',
         query: 'test',
       });
 
-      return renderState({
-        results,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        hasNextPage,
-        total,
-        totalPages,
-        error,
-        loadMore,
-      });
+      return renderState(state);
     };
 
     const firstCallResults = Array.from({ length: 10 }, (_, index) => ({ id: index + 1 }));
@@ -679,6 +638,7 @@ describe('useInfiniteSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
     });
 
     expect(
@@ -704,6 +664,7 @@ describe('useInfiniteSearch', () => {
         error: null,
         total: 20,
         totalPages: 2,
+        status: 'success',
       });
     });
 
@@ -721,6 +682,7 @@ describe('useInfiniteSearch', () => {
       total: 20,
       totalPages: 2,
       error: null,
+      status: 'success',
     });
 
     await waitFor(() => {
@@ -735,6 +697,7 @@ describe('useInfiniteSearch', () => {
         total: 20,
         totalPages: 2,
         error: new Error('Load more failed'),
+        status: 'success',
       });
     });
   });
@@ -758,9 +721,7 @@ describe('useInfiniteSearch', () => {
     }).to.throw('useInfiniteSearch: searchIndexId is required');
   });
 
-  it('should abort previous load more request when a new load more request is triggered', async () => {
-    const abortSpy = sandbox.spy(AbortController.prototype, 'abort');
-
+  it('should not execute "load more" request when a previous "load more" request is in progress', async () => {
     let resolveFirstLoadMore: (value: { results: Model[]; total: number }) => void;
     const firstLoadMorePromise = new Promise<{ results: Model[]; total: number }>((resolve) => {
       resolveFirstLoadMore = resolve;
@@ -784,36 +745,12 @@ describe('useInfiniteSearch', () => {
       });
 
     const TestComponent: React.FC<any> = () => {
-      const {
-        results,
-        loadMore,
-        hasNextPage,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        total,
-        totalPages,
-        error,
-      } = useInfiniteSearch<Model>({
+      const state = useInfiniteSearch<Model>({
         searchIndexId: '1234567890',
         query: 'test',
       });
 
-      return renderState({
-        results,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        hasNextPage,
-        total,
-        totalPages,
-        error,
-        loadMore,
-      });
+      return renderState(state);
     };
 
     const wrapper = render(
@@ -833,6 +770,7 @@ describe('useInfiniteSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
     });
 
     await waitFor(() => {
@@ -847,6 +785,7 @@ describe('useInfiniteSearch', () => {
         error: null,
         total: 6,
         totalPages: 1,
+        status: 'success',
       });
     });
 
@@ -863,152 +802,29 @@ describe('useInfiniteSearch', () => {
       error: null,
       total: 6,
       totalPages: 1,
+      status: 'success',
     });
 
     fireEvent.click(wrapper.container.querySelector('#loadMore') as Element);
 
     await waitFor(() => {
       assertState(wrapper, {
-        results: [...initialResults, ...loadMoreResults],
+        results: initialResults,
         isLoading: false,
         isSuccess: true,
         isError: false,
-        isLoadingMore: false,
+        isLoadingMore: true,
         isLoadingMoreError: false,
-        hasNextPage: false,
+        hasNextPage: true,
         error: null,
         total: 6,
         totalPages: 1,
+        status: 'success',
       });
     });
 
     resolveFirstLoadMore!({ results: loadMoreResults, total: 6 });
 
-    // Verify that state is unchanged since the first load more request was aborted
-    assertState(wrapper, {
-      results: [...initialResults, ...loadMoreResults],
-      isLoading: false,
-      isSuccess: true,
-      isError: false,
-      isLoadingMore: false,
-      isLoadingMoreError: false,
-      hasNextPage: false,
-      error: null,
-      total: 6,
-      totalPages: 1,
-    });
-
-    expect(abortSpy.calledTwice).to.be.true;
-    expect(searchServiceStub.calledThrice).to.be.true;
-  });
-
-  it('should abort failed previous load more request when a new load more request is triggered', async () => {
-    const abortSpy = sandbox.spy(AbortController.prototype, 'abort');
-
-    const initialResults = [{ id: 1 }, { id: 2 }, { id: 3 }];
-    const loadMoreResults = [{ id: 4 }, { id: 5 }, { id: 6 }];
-
-    // Create a delayed promise for the first loadMore that will fail
-    let rejectFirstLoadMore: (reason?: any) => void;
-    const firstLoadMorePromise = new Promise<{ results: Model[]; total: number }>((_, reject) => {
-      rejectFirstLoadMore = reject;
-    });
-
-    // First search succeeds, first loadMore fails (delayed), second loadMore succeeds
-    searchServiceStub
-      .onFirstCall()
-      .resolves({
-        results: initialResults,
-        total: 6,
-      })
-      .onSecondCall()
-      .returns(firstLoadMorePromise)
-      .onThirdCall()
-      .resolves({
-        results: loadMoreResults,
-        total: 6,
-      });
-
-    const TestComponent: React.FC<any> = () => {
-      const {
-        results,
-        loadMore,
-        hasNextPage,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        total,
-        totalPages,
-        error,
-      } = useInfiniteSearch<Model>({
-        searchIndexId: '1234567890',
-        query: 'test',
-      });
-
-      return renderState({
-        results,
-        isLoading,
-        isSuccess,
-        isError,
-        isLoadingMore,
-        isLoadingMoreError,
-        hasNextPage,
-        total,
-        totalPages,
-        error,
-        loadMore,
-      });
-    };
-
-    const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={defaultProviderState}>
-        <TestComponent />
-      </SitecoreProviderReactContext.Provider>
-    );
-
-    // Wait for initial search to complete
-    await waitFor(() => {
-      assertState(wrapper, {
-        results: initialResults,
-        isLoading: false,
-        isSuccess: true,
-        isError: false,
-        isLoadingMore: false,
-        isLoadingMoreError: false,
-        hasNextPage: true,
-        error: null,
-        total: 6,
-        totalPages: 1,
-      });
-    });
-
-    // Trigger first loadMore (will fail but is delayed)
-    fireEvent.click(wrapper.container.querySelector('#loadMore') as Element);
-
-    // Verify first loadMore was initiated
-    expect(searchServiceStub.calledTwice).to.be.true;
-    assertState(wrapper, {
-      results: initialResults,
-      isLoading: false,
-      isSuccess: true,
-      isError: false,
-      isLoadingMore: true,
-      isLoadingMoreError: false,
-      hasNextPage: true,
-      error: null,
-      total: 6,
-      totalPages: 1,
-    });
-
-    // Trigger second loadMore before first loadMore completes (fails)
-    fireEvent.click(wrapper.container.querySelector('#loadMore') as Element);
-
-    expect(searchServiceStub.calledThrice).to.be.true;
-
-    expect(abortSpy.callCount).to.be.equal(2);
-
     await waitFor(() => {
       assertState(wrapper, {
         results: [...initialResults, ...loadMoreResults],
@@ -1021,23 +837,10 @@ describe('useInfiniteSearch', () => {
         error: null,
         total: 6,
         totalPages: 1,
+        status: 'success',
       });
     });
 
-    rejectFirstLoadMore!(new Error('Load more failed'));
-
-    // Verify state still shows second loadMore results (first loadMore was aborted)
-    assertState(wrapper, {
-      results: [...initialResults, ...loadMoreResults],
-      isLoading: false,
-      isSuccess: true,
-      isError: false,
-      isLoadingMore: false,
-      isLoadingMoreError: false,
-      hasNextPage: false,
-      error: null,
-      total: 6,
-      totalPages: 1,
-    });
+    expect(searchServiceStub.calledTwice).to.be.true;
   });
 });

@@ -1,11 +1,11 @@
 import { NativeDataFetcher, debug, constants } from '@sitecore-content-sdk/core';
-import { GenericFields, PathsToStringProps } from './models';
+import { SearchDocument, PathsToStringProps } from './models';
 
 /**
  * Options for sorting the search results.
  * @public
  */
-export type SortSetting<T = GenericFields> = {
+export type SortSetting<T extends SearchDocument = SearchDocument> = {
   name: PathsToStringProps<T>;
   order: 'asc' | 'desc';
 };
@@ -30,7 +30,7 @@ export interface SearchServiceConfig {
  * Response from the Search API.
  * @internal
  */
-interface SearchAPIResponse<T = GenericFields> {
+interface SearchAPIResponse<T extends SearchDocument = SearchDocument> {
   /**
    * The search results.
    */
@@ -45,7 +45,7 @@ interface SearchAPIResponse<T = GenericFields> {
  * Response from the Search Service.
  * @public
  */
-export interface SearchResponse<T = GenericFields> {
+export interface SearchResponse<T extends SearchDocument = SearchDocument> {
   /**
    * The search results.
    */
@@ -60,7 +60,7 @@ export interface SearchResponse<T = GenericFields> {
  * A set of request parameters for the Search Service.
  * @public
  */
-export interface SearchParameters<T = GenericFields> {
+export interface SearchParameters<T extends SearchDocument = SearchDocument> {
   /**
    * The ID of the search index to use.
    */
@@ -105,8 +105,13 @@ export class SearchService {
    * @param {SearchParameters<T>} params - The search parameters.
    * @param {RequestInit} [fetchOptions] - The fetch options.
    * @returns {Promise<SearchResponse<T>>} The search response.
+   * @throws {RangeError} If limit is not a positive number.
+   * @throws {RangeError} If limit is greater than 500.
+   * @throws {RangeError} If offset is not a positive number.
+   * @throws {TypeError} If search index ID is not provided.
+   * @throws {TypeError} If sort is not an array or an object.
    */
-  async search<T = GenericFields>(
+  async search<T extends SearchDocument = SearchDocument>(
     params: SearchParameters<T>,
     fetchOptions?: RequestInit
   ): Promise<SearchResponse<T>> {
@@ -120,8 +125,11 @@ export class SearchService {
       offset,
     });
 
+    const url = new URL('/v1/search', this.config.edgeUrl);
+    url.searchParams.set('sitecoreContextId', this.config.contextId);
+
     const { data } = await this.fetcher.post<SearchAPIResponse<T>>(
-      `${this.config.edgeUrl}/v1/search?sitecoreContextId=${this.config.contextId}`,
+      url.toString(),
       {
         config: {
           id: searchIndexId,
@@ -146,23 +154,27 @@ export class SearchService {
     };
   }
 
-  private validateParameters<T = GenericFields>(params: SearchParameters<T>) {
+  private validateParameters<T extends SearchDocument = SearchDocument>(params: SearchParameters<T>) {
     const { limit, offset, searchIndexId, sort } = params;
 
     if (limit && limit < 0) {
-      throw new Error('Limit must be a positive number');
+      throw new RangeError('Limit must be a positive number');
+    }
+
+    if (limit && limit > 500) {
+      throw new RangeError('Limit must be less than or equal to 500');
     }
 
     if (offset && offset < 0) {
-      throw new Error('Offset must be a positive number');
+      throw new RangeError('Offset must be a positive number');
     }
 
     if (!searchIndexId) {
-      throw new Error('Search index ID is required');
+      throw new TypeError('Search index ID is required');
     }
 
     if (sort && !Array.isArray(sort) && typeof sort !== 'object') {
-      throw new Error('Sort must be an array or an object');
+      throw new TypeError('Sort must be an array or an object');
     }
   }
 }

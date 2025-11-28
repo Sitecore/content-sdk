@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { GenericFields, SearchParameters } from '@sitecore-content-sdk/search';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, getOffset, useSearchService } from './utils';
+import { SearchDocument, SearchParameters } from '@sitecore-content-sdk/search';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, getOffset, SearchStatus, useSearchService } from './utils';
 
 /**
  * Options for the useSearch hook.
  * @public
  */
-export interface UseSearchOptions<T = GenericFields> {
+export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
   /**
    * The query string to search for.
    * By default empty string is used.
@@ -30,17 +30,60 @@ export interface UseSearchOptions<T = GenericFields> {
    * Specifies the sorting of the search results.
    */
   sort?: SearchParameters<T>['sort'];
+  /**
+   * Specifies whether the search should automatically run.
+   * @default true
+   */
+  enabled?: boolean;
+  /**
+   * Specifies whether the previous search results should be kept when fetching new results.
+   * @default false
+   */
+  keepPreviousData?: boolean;
 }
+
+type InternalState<T extends SearchDocument = SearchDocument> = {
+  /**
+   * The search results.
+   */
+  results: T[];
+  /**
+   * Total number of results across all pages.
+   */
+  total: number;
+  /**
+   * Total number of pages available based on `total` and `pageSize`.
+   */
+  totalPages: number;
+  /**
+   * The error object if the last search request failed, or null if no error occurred.
+   */
+  error: Error | null;
+  /**
+   * The status of the search.
+   * It will be set to:
+   * - 'idle' if no search request has been made yet.
+   * - 'loading' if a search request is currently in progress.
+   * - 'success' if a search request was successful.
+   * - 'error' if a search request failed.
+   * @default 'idle'
+   */
+  status: SearchStatus;
+  /**
+   * The status of the previous search request.
+   * @default 'idle'
+   */
+  previousStatus: SearchStatus;
+};
 
 /**
  * The state of the useSearch hook.
  * @public
  */
-export interface UseSearchState<T = GenericFields> {
-  /**
-   * The search results.
-   */
-  results: T[];
+export type UseSearchState<T extends SearchDocument = SearchDocument> = Omit<
+  InternalState<T>,
+  'previousStatus'
+> & {
   /**
    * Whether a search request is currently in progress.
    */
@@ -54,18 +97,11 @@ export interface UseSearchState<T = GenericFields> {
    */
   isError: boolean;
   /**
-   * Total number of results across all pages.
+   * Whether the search results from the previous query are returned.
+   * Will be `true` if `keepPreviousData` is set.
    */
-  total: number;
-  /**
-   * Total number of pages available based on `total` and `pageSize`.
-   */
-  totalPages: number;
-  /**
-   * The error object if the last search request failed, or null if no error occurred.
-   */
-  error: Error | null;
-}
+  isPreviousData: boolean;
+};
 
 /**
  * React hook for performing search queries with pagination.
@@ -73,53 +109,51 @@ export interface UseSearchState<T = GenericFields> {
  * @returns {UseSearchState} The search state.
  * @public
  */
-export const useSearch = <T = GenericFields>(
+export const useSearch = <T extends SearchDocument = SearchDocument>(
   options: UseSearchOptions<T>
 ): UseSearchState<T> => {
-  const { query, page = DEFAULT_PAGE, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort } = options;
+  const {
+    query,
+    page = DEFAULT_PAGE,
+    searchIndexId,
+    pageSize = DEFAULT_PAGE_SIZE,
+    sort,
+    enabled = true,
+    keepPreviousData = false,
+  } = options;
 
   if (!searchIndexId) {
     throw new Error('useSearch: searchIndexId is required');
   }
 
-  const [state, setState] = useState<{
-    results: T[];
-    isLoading: boolean;
-    isSuccess: boolean;
-    isError: boolean;
-    total: number;
-    totalPages: number;
-    error: Error | null;
-  }>({
+  const [state, setState] = useState<InternalState<T>>({
     results: [],
-    isLoading: true,
-    isSuccess: false,
-    isError: false,
     total: 0,
     totalPages: 0,
     error: null,
+    status: 'idle',
+    previousStatus: 'idle',
   });
 
   const searchService = useSearchService();
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const search = useCallback(async () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
+    if (!searchService) {
+      return;
     }
 
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
 
-    setState({
-      results: [],
-      isLoading: true,
-      isSuccess: false,
-      isError: false,
-      total: 0,
-      totalPages: 0,
+    setState((prev) => ({
+      results: keepPreviousData ? prev.results : [],
+      status: 'loading',
+      total: keepPreviousData ? prev.total : 0,
+      totalPages: keepPreviousData ? prev.totalPages : 0,
       error: null,
-    });
+      previousStatus: prev.status,
+    }));
 
     try {
       const offset = getOffset(page, pageSize);
@@ -146,10 +180,9 @@ export const useSearch = <T = GenericFields>(
         results: searchResults,
         total,
         totalPages,
-        isSuccess: true,
-        isError: false,
-        isLoading: false,
+        status: 'success',
         error: null,
+        previousStatus: 'success',
       });
     } catch (err) {
       // Don't set error if request was aborted
@@ -157,40 +190,41 @@ export const useSearch = <T = GenericFields>(
         return;
       }
 
-      const errorMessage = err instanceof Error ? err : new Error('Search failed');
+      const errorMessage = err instanceof Error ? err : new Error(JSON.stringify(err));
       setState({
         results: [],
         total: 0,
         totalPages: 0,
-        isSuccess: false,
-        isError: true,
-        isLoading: false,
+        status: 'error',
         error: errorMessage,
+        previousStatus: 'error',
       });
     }
-  }, [searchService, searchIndexId, page, pageSize, sort, query]);
+  }, [searchService, searchIndexId, page, pageSize, sort, query, keepPreviousData]);
 
   useEffect(() => {
-    search();
-  }, [search]);
+    if (enabled) {
+      search();
+    }
 
-  useEffect(() => {
     return () => {
-      // Abort all requests when component unmounts
       abortControllerRef.current?.abort();
     };
-  }, []);
+  }, [search, enabled]);
 
   return useMemo(
     () => ({
+      error: state.error,
       results: state.results,
-      isLoading: state.isLoading,
-      isSuccess: state.isSuccess,
-      isError: state.isError,
       total: state.total,
       totalPages: state.totalPages,
-      error: state.error,
+      status: state.status,
+      isLoading: state.status === 'loading',
+      isSuccess: state.status === 'success',
+      isError: state.status === 'error',
+      isPreviousData:
+        keepPreviousData && state.previousStatus === 'success' && state.status === 'loading',
     }),
-    [state]
+    [state, keepPreviousData]
   );
 };

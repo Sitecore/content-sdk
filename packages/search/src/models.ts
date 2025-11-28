@@ -1,11 +1,11 @@
 export type PrimitiveType = string | number | boolean;
 
 /**
- * Generic Search fields type.
+ * Generic Search document type.
  * @public
  */
-export type GenericFields = {
-  [key: string]: PrimitiveType | PrimitiveType[] | GenericFields | GenericFields[];
+export type SearchDocument = {
+  [key: string]: PrimitiveType | PrimitiveType[] | SearchDocument | SearchDocument[];
 };
 
 /**
@@ -18,7 +18,7 @@ export type PathsToStringProps<T> = T extends PrimitiveType
       [K in keyof T]: K extends string
         ? T[K] extends PrimitiveType | PrimitiveType[]
           ? K
-          : T[K] extends GenericFields | GenericFields[]
+          : T[K] extends SearchDocument | SearchDocument[]
           ? K | `${K}.${PathsToStringProps<T[K]>}`
           : K
         : never;

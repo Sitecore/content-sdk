@@ -314,8 +314,26 @@ describe('SearchService', () => {
         });
       } catch (error) {
         expect(error)
-          .to.be.an('error')
+          .to.be.an.instanceOf(RangeError)
           .and.to.have.property('message', 'Limit must be a positive number');
+      }
+    });
+
+    it('should throw an error if limit is greater than 500', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          keyphrase: 'test',
+          limit: 501,
+        });
+      } catch (error) {
+        expect(error)
+          .to.be.an.instanceOf(RangeError)
+          .and.to.have.property('message', 'Limit must be less than or equal to 500');
       }
     });
 
@@ -332,7 +350,7 @@ describe('SearchService', () => {
         });
       } catch (error) {
         expect(error)
-          .to.be.an('error')
+          .to.be.an.instanceOf(RangeError)
           .and.to.have.property('message', 'Offset must be a positive number');
       }
     });
@@ -349,7 +367,7 @@ describe('SearchService', () => {
         });
       } catch (error) {
         expect(error)
-          .to.be.an('error')
+          .to.be.an.instanceOf(TypeError)
           .and.to.have.property('message', 'Search index ID is required');
       }
     });
@@ -367,7 +385,7 @@ describe('SearchService', () => {
         });
       } catch (error) {
         expect(error)
-          .to.be.an('error')
+          .to.be.an.instanceOf(TypeError)
           .and.to.have.property('message', 'Sort must be an array or an object');
       }
 
@@ -379,7 +397,7 @@ describe('SearchService', () => {
         });
       } catch (error) {
         expect(error)
-          .to.be.an('error')
+          .to.be.an.instanceOf(TypeError)
           .and.to.have.property('message', 'Sort must be an array or an object');
       }
     });

@@ -6,10 +6,12 @@ export const DEFAULT_PAGE_SIZE = 10;
 
 export const DEFAULT_PAGE = 1;
 
+export type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
+
 /**
  * Hook to initialize and manage SearchService.
  */
-export function useSearchService(): SearchService | null {
+export function useSearchService() {
   const { api } = useSitecore();
 
   return useMemo(() => {
@@ -21,7 +23,7 @@ export function useSearchService(): SearchService | null {
       contextId: api.edge.clientContextId,
       edgeUrl: api.edge.edgeUrl,
     });
-  }, [api.edge.clientContextId, api.edge.edgeUrl]);
+  }, [api?.edge?.clientContextId, api?.edge?.edgeUrl]);
 }
 
 /**

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { describe, it } from 'mocha';
-import { createSandbox, SinonSandbox, SinonStub, spy } from 'sinon';
+import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
 import { SearchService } from '@sitecore-content-sdk/search';
 import { expect } from 'chai';
 import { render, waitFor } from '@testing-library/react';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import {
   SitecoreProviderReactContext,
   SitecoreProviderState,
@@ -16,39 +15,14 @@ describe('search utils', () => {
   let sandbox: SinonSandbox;
 
   const testComponentProps: SitecoreProviderState = {
-    page: {
-      layout: {
-        sitecore: {
-          context: {},
-          route: null,
-        },
-      },
-      locale: 'en',
-      mode: {
-        name: LayoutServicePageState.Normal,
-        isNormal: true,
-        isPreview: false,
-        isEditing: false,
-        isDesignLibrary: false,
-        designLibrary: {
-          isVariantGeneration: false,
-        },
-      },
-    },
     api: {
       edge: {
         contextId: 'id',
         edgeUrl: 'url',
         clientContextId: 'clientId',
       },
-      local: {
-        apiKey: 'apiKey',
-        apiHost: 'apiHost',
-        path: 'path',
-      },
     },
-    setPage: spy(),
-  };
+  } as SitecoreProviderState;
 
   let searchServiceStub: SinonStub;
 
@@ -114,6 +88,17 @@ describe('search utils', () => {
         expect(wrapper.container.querySelector('#results')?.children[1].textContent).equal('2');
         expect(wrapper.container.querySelector('#results')?.children[2].textContent).equal('3');
       });
+    });
+
+    it('should return null if api configuration is not provided', () => {
+      const TestComponent: React.FC<any> = () => {
+        const searchService = useSearchService();
+        return <span id="searchService">{searchService ? 'true' : 'false'}</span>;
+      };
+
+      const wrapper = render(<TestComponent />);
+
+      expect(wrapper.container.querySelector('#searchService')?.textContent).equal('false');
     });
   });
 

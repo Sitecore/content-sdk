@@ -70,6 +70,8 @@ describe('useSearch', () => {
         <span id="isLoading">{state.isLoading ? 'true' : 'false'}</span>
         <span id="isSuccess">{state.isSuccess ? 'true' : 'false'}</span>
         <span id="isError">{state.isError ? 'true' : 'false'}</span>
+        <span id="status">{state.status}</span>
+        <span id="isPreviousData">{state.isPreviousData ? 'true' : 'false'}</span>
         <span id="total">Total: {state.total}</span>
         <span id="totalPages">Pages: {state.totalPages}</span>
         <span id="error">{state.error ? state.error.message : 'null'}</span>
@@ -84,22 +86,12 @@ describe('useSearch', () => {
 
   it('should search', async () => {
     const TestComponent: React.FC<any> = () => {
-      const { results, total, isLoading, isSuccess, isError, totalPages, error } = useSearch<Model>(
-        {
-          searchIndexId: '1234567890',
-          query: 'test',
-        }
-      );
-
-      return renderState({
-        results,
-        total,
-        isLoading,
-        isSuccess,
-        isError,
-        totalPages,
-        error,
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: 'test',
       });
+
+      return renderState(state);
     };
 
     searchServiceStub.resolves({ results: [{ id: 1 }, { id: 2 }, { id: 3 }], total: 3 });
@@ -110,7 +102,6 @@ describe('useSearch', () => {
       </SitecoreProviderReactContext.Provider>
     );
 
-    // Test initial state (before async completes)
     assertState(wrapper, {
       results: [],
       isLoading: true,
@@ -119,6 +110,8 @@ describe('useSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
+      isPreviousData: false,
     });
 
     expect(
@@ -141,6 +134,88 @@ describe('useSearch', () => {
         error: null,
         total: 3,
         totalPages: 1,
+        status: 'success',
+        isPreviousData: false,
+      });
+    });
+  });
+
+  it('should not automatically search when search is disabled', async () => {
+    const TestComponent: React.FC<any> = () => {
+      const [enabled, setEnabled] = useState(false);
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: 'test',
+        enabled,
+      });
+
+      return (
+        <>
+          <button id="enable" onClick={() => setEnabled(true)}>
+            Enable
+          </button>
+          {renderState(state)}
+        </>
+      );
+    };
+
+    searchServiceStub.resolves({ results: [{ id: 1 }, { id: 2 }, { id: 3 }], total: 3 });
+
+    const wrapper = render(
+      <SitecoreProviderReactContext.Provider value={defaultProviderState}>
+        <TestComponent />
+      </SitecoreProviderReactContext.Provider>
+    );
+
+    assertState(wrapper, {
+      results: [],
+      isLoading: false,
+      isSuccess: false,
+      isError: false,
+      error: null,
+      total: 0,
+      totalPages: 0,
+      status: 'idle',
+      isPreviousData: false,
+    });
+
+    expect(searchServiceStub.called).to.be.false;
+
+    fireEvent.click(wrapper.container.querySelector('#enable') as Element);
+
+    assertState(wrapper, {
+      results: [],
+      isLoading: true,
+      isSuccess: false,
+      isError: false,
+      error: null,
+      total: 0,
+      totalPages: 0,
+      status: 'loading',
+      isPreviousData: false,
+    });
+
+    expect(
+      searchServiceStub.calledOnceWith({
+        searchIndexId: '1234567890',
+        keyphrase: 'test',
+        limit: 10,
+        offset: 0,
+        sort: undefined,
+      })
+    ).to.be.true;
+
+    await waitFor(() => {
+      assertState(wrapper, {
+        results: [{ id: '1' }, { id: '2' }, { id: '3' }],
+        isLoading: false,
+        isSuccess: true,
+        isError: false,
+        error: null,
+        total: 3,
+        totalPages: 1,
+        status: 'success',
+        isPreviousData: false,
       });
     });
   });
@@ -148,12 +223,10 @@ describe('useSearch', () => {
   it('should search when the query is changed', async () => {
     const TestComponent: React.FC<any> = () => {
       const [query, setQuery] = useState('initial');
-      const { results, total, isLoading, isSuccess, isError, totalPages, error } = useSearch<Model>(
-        {
-          searchIndexId: '1234567890',
-          query: query,
-        }
-      );
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: query,
+      });
 
       return (
         <>
@@ -161,15 +234,7 @@ describe('useSearch', () => {
             Change Query
           </button>
           <span id="query">Query: {query}</span>
-          {renderState({
-            results,
-            total,
-            isLoading,
-            isSuccess,
-            isError,
-            totalPages,
-            error,
-          })}
+          {renderState(state)}
         </>
       );
     };
@@ -202,6 +267,8 @@ describe('useSearch', () => {
         error: null,
         total: 2,
         totalPages: 1,
+        status: 'success',
+        isPreviousData: false,
       });
     });
 
@@ -228,6 +295,8 @@ describe('useSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
+      isPreviousData: false,
     });
     expect(wrapper.container.querySelector('#query')?.textContent).equal('Query: updated');
 
@@ -241,6 +310,8 @@ describe('useSearch', () => {
         error: null,
         total: 3,
         totalPages: 1,
+        status: 'success',
+        isPreviousData: false,
       });
     });
 
@@ -259,14 +330,12 @@ describe('useSearch', () => {
   it('should search when the page is changed', async () => {
     const TestComponent: React.FC<any> = () => {
       const [page, setPage] = useState(1);
-      const { results, total, isLoading, isSuccess, isError, totalPages, error } = useSearch<Model>(
-        {
-          searchIndexId: '1234567890',
-          query: 'test',
-          page: page,
-          pageSize: 10,
-        }
-      );
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: 'test',
+        page: page,
+        pageSize: 10,
+      });
 
       return (
         <>
@@ -274,15 +343,7 @@ describe('useSearch', () => {
             Change Page
           </button>
           <span id="page">Page: {page}</span>
-          {renderState({
-            results,
-            total,
-            isLoading,
-            isSuccess,
-            isError,
-            totalPages,
-            error,
-          })}
+          {renderState(state)}
         </>
       );
     };
@@ -327,6 +388,8 @@ describe('useSearch', () => {
         error: null,
         total: 25,
         totalPages: 3,
+        status: 'success',
+        isPreviousData: false,
       });
     });
 
@@ -354,6 +417,8 @@ describe('useSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
+      isPreviousData: false,
     });
     expect(wrapper.container.querySelector('#page')?.textContent).equal('Page: 2');
 
@@ -367,6 +432,8 @@ describe('useSearch', () => {
         error: null,
         total: 25,
         totalPages: 3,
+        status: 'success',
+        isPreviousData: false,
       });
     });
 
@@ -385,22 +452,12 @@ describe('useSearch', () => {
 
   it('should return an error when the search fails', async () => {
     const TestComponent: React.FC<any> = () => {
-      const { results, total, isLoading, isSuccess, isError, totalPages, error } = useSearch<Model>(
-        {
-          searchIndexId: '1234567890',
-          query: 'test',
-        }
-      );
-
-      return renderState({
-        results,
-        total,
-        isLoading,
-        isSuccess,
-        isError,
-        totalPages,
-        error,
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: 'test',
       });
+
+      return renderState(state);
     };
 
     searchServiceStub.rejects(new Error('Search failed'));
@@ -411,7 +468,6 @@ describe('useSearch', () => {
       </SitecoreProviderReactContext.Provider>
     );
 
-    // Test initial state (before async completes)
     assertState(wrapper, {
       results: [],
       isLoading: true,
@@ -420,6 +476,8 @@ describe('useSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
+      isPreviousData: false,
     });
 
     expect(
@@ -442,32 +500,24 @@ describe('useSearch', () => {
         error: new Error('Search failed'),
         total: 0,
         totalPages: 0,
+        status: 'error',
+        isPreviousData: false,
       });
     });
   });
 
   it('should search when custom search parameters are provided', async () => {
     const TestComponent: React.FC<any> = () => {
-      const [sort] = useState<SortSetting<'id'>[]>([{ name: 'id', order: 'desc' }]);
-      const { results, total, isLoading, isSuccess, isError, totalPages, error } = useSearch<Model>(
-        {
-          searchIndexId: '1234567890',
-          query: 'test',
-          sort,
-          pageSize: 20,
-          page: 3,
-        }
-      );
-
-      return renderState({
-        results,
-        total,
-        isLoading,
-        isSuccess,
-        isError,
-        totalPages,
-        error,
+      const [sort] = useState<SortSetting<Model>[]>([{ name: 'id', order: 'desc' }]);
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: 'test',
+        sort,
+        pageSize: 20,
+        page: 3,
       });
+
+      return renderState(state);
     };
 
     searchServiceStub.resolves({ results: [{ id: 1 }, { id: 2 }, { id: 3 }], total: 3 });
@@ -478,7 +528,6 @@ describe('useSearch', () => {
       </SitecoreProviderReactContext.Provider>
     );
 
-    // Test initial state (before async completes)
     assertState(wrapper, {
       results: [],
       isLoading: true,
@@ -487,6 +536,8 @@ describe('useSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
+      isPreviousData: false,
     });
 
     expect(
@@ -509,6 +560,8 @@ describe('useSearch', () => {
         error: null,
         total: 3,
         totalPages: 1,
+        status: 'success',
+        isPreviousData: false,
       });
     });
   });
@@ -523,22 +576,12 @@ describe('useSearch', () => {
     searchServiceStub.returns(searchPromise);
 
     const TestComponent: React.FC<any> = () => {
-      const { results, total, isLoading, isSuccess, isError, totalPages, error } = useSearch<Model>(
-        {
-          searchIndexId: '1234567890',
-          query: 'test',
-        }
-      );
-
-      return renderState({
-        results,
-        total,
-        isLoading,
-        isSuccess,
-        isError,
-        totalPages,
-        error,
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: 'test',
       });
+
+      return renderState(state);
     };
 
     const wrapper = render(
@@ -557,6 +600,8 @@ describe('useSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
+      isPreviousData: false,
     });
 
     // Unmount the component - this should trigger abort
@@ -590,27 +635,17 @@ describe('useSearch', () => {
 
     const TestComponent: React.FC<any> = () => {
       const [query, setQuery] = useState('initial');
-      const { results, total, isLoading, isSuccess, isError, totalPages, error } = useSearch<Model>(
-        {
-          searchIndexId: '1234567890',
-          query: query,
-        }
-      );
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: query,
+      });
 
       return (
         <>
           <button id="changeQuery" onClick={() => setQuery('updated')}>
             Change Query
           </button>
-          {renderState({
-            results,
-            total,
-            isLoading,
-            isSuccess,
-            isError,
-            totalPages,
-            error,
-          })}
+          {renderState(state)}
         </>
       );
     };
@@ -631,6 +666,8 @@ describe('useSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
+      isPreviousData: false,
     });
 
     // Trigger second search before first search completes
@@ -650,6 +687,8 @@ describe('useSearch', () => {
         error: null,
         total: 2,
         totalPages: 1,
+        status: 'success',
+        isPreviousData: false,
       });
     });
 
@@ -677,6 +716,8 @@ describe('useSearch', () => {
         error: null,
         total: 2,
         totalPages: 1,
+        status: 'success',
+        isPreviousData: false,
       });
     });
   });
@@ -699,27 +740,17 @@ describe('useSearch', () => {
 
     const TestComponent: React.FC<any> = () => {
       const [query, setQuery] = useState('initial');
-      const { results, total, isLoading, isSuccess, isError, totalPages, error } = useSearch<Model>(
-        {
-          searchIndexId: '1234567890',
-          query: query,
-        }
-      );
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: query,
+      });
 
       return (
         <>
           <button id="changeQuery" onClick={() => setQuery('updated')}>
             Change Query
           </button>
-          {renderState({
-            results,
-            total,
-            isLoading,
-            isSuccess,
-            isError,
-            totalPages,
-            error,
-          })}
+          {renderState(state)}
         </>
       );
     };
@@ -740,6 +771,8 @@ describe('useSearch', () => {
       error: null,
       total: 0,
       totalPages: 0,
+      status: 'loading',
+      isPreviousData: false,
     });
 
     // Trigger second search before first search completes
@@ -759,6 +792,8 @@ describe('useSearch', () => {
         error: null,
         total: 2,
         totalPages: 1,
+        status: 'success',
+        isPreviousData: false,
       });
     });
 
@@ -786,6 +821,8 @@ describe('useSearch', () => {
         error: null,
         total: 2,
         totalPages: 1,
+        status: 'success',
+        isPreviousData: false,
       });
     });
   });

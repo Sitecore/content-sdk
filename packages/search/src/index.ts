@@ -5,4 +5,4 @@ export {
   SearchResponse,
   SortSetting,
 } from './search-service';
-export { GenericFields } from './models';
+export { SearchDocument } from './models';
