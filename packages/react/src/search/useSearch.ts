@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SearchDocument, SearchParameters } from '@sitecore-content-sdk/search';
-import {
-  DEFAULT_PAGE_SIZE,
-  getOffset,
-  SearchStatus,
-  useSearchService,
-} from './utils';
+import { DEFAULT_PAGE_SIZE, getOffset, SearchStatus, useSearchService } from './utils';
 
 /**
  * Options for the useSearch hook.
@@ -128,24 +123,28 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
     keepPreviousData = false,
   } = options;
 
-  if (!searchIndexId) {
-    throw new Error('useSearch: searchIndexId is required');
-  }
+  const [state, setState] = useState<InternalState<T>>(() => {
+    const error = !searchIndexId
+      ? new Error('useSearch: searchIndexId is required when initializing the hook')
+      : null;
 
-  const [state, setState] = useState<InternalState<T>>({
-    results: [],
-    total: 0,
-    totalPages: 0,
-    error: null,
-    status: 'idle',
-    previousStatus: 'idle',
+    const status = !searchIndexId ? 'error' : 'idle';
+
+    return {
+      results: [],
+      total: 0,
+      totalPages: 0,
+      error,
+      status,
+      previousStatus: 'idle',
+    };
   });
 
   const searchService = useSearchService();
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const search = useCallback(async () => {
-    if (!searchService) {
+    if (!searchService || !searchIndexId) {
       return;
     }
 

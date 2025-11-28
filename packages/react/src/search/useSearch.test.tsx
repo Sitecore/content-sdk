@@ -827,22 +827,32 @@ describe('useSearch', () => {
     });
   });
 
-  it('should throw an error if the search index id is not provided', () => {
+  it('should return error when search index id is not provided', () => {
     const TestComponent: React.FC<any> = () => {
-      const searchParameters = useSearch<Model>({
-        searchIndexId: '',
+      const state = useSearch<Model>({
+        searchIndexId: null as unknown as string,
         query: 'test',
       });
 
-      return JSON.stringify(searchParameters);
+      return renderState(state);
     };
 
-    expect(() => {
-      render(
-        <SitecoreProviderReactContext.Provider value={defaultProviderState}>
-          <TestComponent />
-        </SitecoreProviderReactContext.Provider>
-      );
-    }).to.throw('useSearch: searchIndexId is required');
+    const wrapper = render(
+      <SitecoreProviderReactContext.Provider value={defaultProviderState}>
+        <TestComponent />
+      </SitecoreProviderReactContext.Provider>
+    );
+
+    assertState(wrapper, {
+      results: [],
+      isLoading: false,
+      isSuccess: false,
+      isError: true,
+      error: new Error('useSearch: searchIndexId is required when initializing the hook'),
+      total: 0,
+      totalPages: 0,
+      status: 'error',
+      isPreviousData: false,
+    });
   });
 });

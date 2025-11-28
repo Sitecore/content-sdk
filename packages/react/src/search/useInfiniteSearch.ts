@@ -125,18 +125,22 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
 ): UseInfiniteSearchState<T> => {
   const { query, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort, enabled = true } = options;
 
-  if (!searchIndexId) {
-    throw new Error('useInfiniteSearch: searchIndexId is required');
-  }
+  const [state, setState] = useState<InternalInfiniteSearchState<T>>(() => {
+    const error = !searchIndexId
+      ? new Error('useInfiniteSearch: searchIndexId is required when initializing the hook')
+      : null;
 
-  const [state, setState] = useState<InternalInfiniteSearchState<T>>({
-    results: [],
-    total: 0,
-    totalPages: 0,
-    error: null,
-    offset: 0,
-    status: 'idle',
-    loadMoreStatus: 'idle',
+    const status = !searchIndexId ? 'error' : 'idle';
+
+    return {
+      results: [],
+      total: 0,
+      totalPages: 0,
+      error,
+      offset: 0,
+      status,
+      loadMoreStatus: 'idle',
+    };
   });
 
   const hasNextPage = useMemo(
@@ -149,7 +153,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
 
   const search = useCallback(
     async (offset: number, isLoadingMore: boolean = false) => {
-      if (!searchService) {
+      if (!searchService || !searchIndexId) {
         return;
       }
 
