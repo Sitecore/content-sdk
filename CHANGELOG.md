@@ -34,6 +34,7 @@ Our versioning strategy is as follows:
 ### 🐛 Bug Fixes
 
 * Added package.json "exports" field to ensure correct ESM/CJS module resolution for submodule imports. Previously defaulted to CJS bundles even when ESM was available. ([#296](https://github.com/Sitecore/content-sdk/pull/296))
+* `[core]` NativeDataFetcher error does not include Error instance properties (name, message, stack) ([#295](https://github.com/Sitecore/content-sdk/pull/295))
 * `[template/next-app-router]` Remove component-level data fetching in favor of Server Components ([#282](https://github.com/Sitecore/content-sdk/pull/282))
 * `[core]` NativeFetcher response does not match actual returned data ([#284](https://github.com/Sitecore/content-sdk/pull/284))
 * `[nextjs]` Add regex variable substitution for absolute and external URL redirects. ([#287](https://github.com/Sitecore/jss/pull/287))

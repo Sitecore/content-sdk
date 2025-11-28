@@ -1,5 +1,5 @@
 import { describe, it } from 'mocha';
-import { constants } from '@sitecore-content-sdk/core';
+import { constants, NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { SearchService, SortSetting } from './search-service';
 import { expect } from 'chai';
 import nock from 'nock';
@@ -288,6 +288,46 @@ describe('SearchService', () => {
 
     expect(searchResponse.results).to.deep.equal([]);
     expect(searchResponse.total).to.equal(0);
+  });
+
+  it('should throw an error if the request fails', async () => {
+    nock(constants.SITECORE_EDGE_URL_DEFAULT)
+      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+        config: {
+          id: searchIndexId,
+        },
+        limit: 10,
+        offset: 0,
+        query: {
+          keyphrase: '',
+        },
+        sort: {
+          fields: [],
+        },
+      })
+      .reply(500, { message: 'Internal server error' });
+
+    const searchService = new SearchService({
+      contextId,
+    });
+
+    try {
+      await searchService.search({
+        searchIndexId,
+      });
+    } catch (error) {
+      expect((error as NativeDataFetcherError).name).to.equal('Error');
+      expect((error as NativeDataFetcherError).message).to.equal('HTTP 500 Internal Server Error');
+      expect((error as NativeDataFetcherError).stack).to.be.a('string');
+      expect((error as NativeDataFetcherError).response).to.deep.equal({
+        status: 500,
+        statusText: 'Internal Server Error',
+        headers: {
+          'content-type': 'application/json',
+        },
+        data: { message: 'Internal server error' },
+      });
+    }
   });
 
   describe('validation', () => {
