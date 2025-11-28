@@ -31,7 +31,6 @@ const multisite = new AppRouterMultisiteMiddleware({
    * List of sites for site resolver to work with
    */
   sites,
-  ...scConfig.api.edge,
   ...scConfig.multisite,
   // This function determines if the middleware should be turned off on per-request basis.
   // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to disable more.
@@ -45,6 +44,7 @@ const redirects = new RedirectsMiddleware({
    */
   sites,
   ...scConfig.api.edge,
+  ...scConfig.api.local,
   ...scConfig.redirects,
   // This function determines if the middleware should be turned off on per-request basis.
   // Certain paths are ignored by default (e.g. Next.js API routes), but you may wish to disable more.
@@ -64,6 +64,8 @@ const personalize = new PersonalizeMiddleware({
   // Certain paths are ignored by default (e.g. Next.js API routes), but you may wish to disable more.
   // By default it is disabled while in development mode.
   // This is an important performance consideration since Next.js Edge middleware runs on every request.
+  // NOTE: Personalize requires Edge configuration and cannot work with local containers.
+  // The middleware will disable itself if Edge config is not present.
   skip: () => false,
   // This is an example of how to provide geo data for personalization.
   // The provided callback will be called on each request to extract geo data.

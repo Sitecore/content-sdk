@@ -94,19 +94,16 @@ describe('<DesignLibraryApp />', () => {
     const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
     const page = getPage(layoutData, modeLibrary);
     const componentMap = createComponentMap('ContentBlock', 'client');
-    const loadClientImportMapStub = sinon.stub();
     const awaitedDesignLibraryServer = DesignLibraryApp({
       page,
       rendering: layoutData.sitecore.route as any,
       componentMap,
       loadServerImportMap: sinon.stub(),
-      loadClientImportMap: loadClientImportMapStub,
     });
 
     render(awaitedDesignLibraryServer);
 
     expect(DesignLibraryStub).to.have.been.calledOnce;
-    expect(DesignLibraryStub).to.have.been.calledWith({ loadImportMap: loadClientImportMapStub });
     expect(DesignLibraryServerStub).to.not.have.been.called;
   });
 

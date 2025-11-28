@@ -6,7 +6,7 @@
 
 # Variable: DesignLibraryApp()
 
-> `const` **DesignLibraryApp**: (`{ page, componentMap, loadServerImportMap, loadClientImportMap, }`) => `React.JSX.Element`
+> `const` **DesignLibraryApp**: (`{ page, componentMap, loadServerImportMap, }`) => `React.JSX.Element`
 
 Defined in: react/types/components/DesignLibrary/DesignLibraryApp.d.ts:13
 
@@ -21,7 +21,7 @@ delegates to the appropriate rendering implementation:
 
 | Parameter | Type |
 | ------ | ------ |
-| `{ page, componentMap, loadServerImportMap, loadClientImportMap, }` | `DesingLibraryAppProps` |
+| `{ page, componentMap, loadServerImportMap, }` | `DesingLibraryAppProps` |
 
 ## Returns
 

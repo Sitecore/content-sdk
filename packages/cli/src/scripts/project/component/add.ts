@@ -65,30 +65,35 @@ export function args(yargs: Argv<AddArgs>) {
       type: 'string',
       describe: 'The authentication token.',
       demandOption: true,
+      alias: 't',
     })
     .option('target-path', {
       requiresArg: false,
       type: 'string',
       describe:
         'The relative target path for the component.\n(Example: components/Promo.WithText.ts)',
+      alias: 'p',
     })
     .option('skip-component-map', {
       requiresArg: false,
       type: 'boolean',
       describe: 'If true, skips the component map generation.',
       default: false,
+      alias: 's',
     })
     .option('overwrite', {
       requiresArg: false,
       type: 'boolean',
       describe: 'If true, overwrites the existing component.',
       default: false,
+      alias: 'o',
     })
     .option('config', {
       requiresArg: false,
       type: 'string',
       describe:
         'Path to the `sitecore.cli.config` file. Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats',
+      alias: 'c',
     });
 }
 
@@ -97,7 +102,12 @@ export function args(yargs: Argv<AddArgs>) {
  */
 export function builder(yargs: Argv<AddArgs>) {
   /* istanbul ignore next */
-  return yargs.command<AddArgs>('add <component-id>', 'Adds a component', args, handler);
+  return yargs.command<AddArgs>(
+    ['add <component-id>', 'a <component-id>'],
+    'Adds a component',
+    args,
+    handler
+  );
 }
 
 /**

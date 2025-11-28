@@ -30,6 +30,7 @@
 - [ModuleExports](type-aliases/ModuleExports.md)
 - [RouterType](type-aliases/RouterType.md)
 - [WriteImportMapArgs](type-aliases/WriteImportMapArgs.md)
+- [WriteImportMapArgsInternal](type-aliases/WriteImportMapArgsInternal.md)
 
 ## Variables
 

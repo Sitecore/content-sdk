@@ -8,7 +8,7 @@
 
 > **writeImportMap**(`args`): (`__namedParameters`) => `Promise`\<`void`\>
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:393](https://github.com/Sitecore/content-sdk/blob/f86a113eddbeb48a7786fff2ebd64724e9f61199/packages/core/src/tools/codegen/import-map.ts#L393)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:404](https://github.com/Sitecore/content-sdk/blob/eb33917be6c3687d0dff26e8414bb7c0dc360115/packages/core/src/tools/codegen/import-map.ts#L404)
 
 Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
 
@@ -16,7 +16,7 @@ Entry point function for generating import-map. Parses provided paths and output
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `args` | [`WriteImportMapArgs`](../type-aliases/WriteImportMapArgs.md) | include/exclude paths settings to be processed for import-map, and the Sitecore configuration. |
+| `args` | [`WriteImportMapArgsInternal`](../type-aliases/WriteImportMapArgsInternal.md) | include/exclude paths settings to be processed for import-map, and the Sitecore configuration. |
 
 ## Returns
 
