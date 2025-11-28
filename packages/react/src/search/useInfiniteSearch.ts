@@ -39,7 +39,7 @@ export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocum
  */
 export type UseInfiniteSearchState<T extends SearchDocument = SearchDocument> = Omit<
   InternalInfiniteSearchState<T>,
-  'offset' | 'loadMoreStatus'
+  'offset'
 > & {
   /**
    * Load the next page of results.
@@ -104,8 +104,13 @@ type InternalInfiniteSearchState<T extends SearchDocument = SearchDocument> = {
   status: SearchStatus;
   /**
    * The status of the "load more" request.
+   * It will be set to:
+   * - 'idle' if no "load more" request has been made yet.
+   * - 'loading' if a "load more" request is currently in progress.
+   * - 'error' if a "load more" request failed.
+   * @default 'idle'
    */
-  loadMoreStatus: SearchStatus;
+  loadMoreStatus: Omit<SearchStatus, 'success'>;
 };
 
 /**
@@ -252,9 +257,10 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
   }, [search, pageSize, state.offset, hasNextPage, state.loadMoreStatus]);
 
   return useMemo(
-    () => ({
+    (): UseInfiniteSearchState<T> => ({
       results: state.results,
       status: state.status,
+      loadMoreStatus: state.loadMoreStatus,
       total: state.total,
       totalPages: state.totalPages,
       error: state.error,

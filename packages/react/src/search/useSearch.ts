@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SearchDocument, SearchParameters } from '@sitecore-content-sdk/search';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, getOffset, SearchStatus, useSearchService } from './utils';
+import {
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  getOffset,
+  SearchStatus,
+  useSearchService,
+} from './utils';
 
 /**
  * Options for the useSearch hook.
@@ -213,7 +219,7 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
   }, [search, enabled]);
 
   return useMemo(
-    () => ({
+    (): UseSearchState<T> => ({
       error: state.error,
       results: state.results,
       total: state.total,

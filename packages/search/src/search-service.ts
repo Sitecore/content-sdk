@@ -86,6 +86,12 @@ export interface SearchParameters<T extends SearchDocument = SearchDocument> {
 }
 
 /**
+ * Fetch options for the Search Service.
+ * @public
+ */
+export type SearchServiceFetchOptions = Omit<RequestInit, 'method' | 'body' | 'mode'>;
+
+/**
  * Service that fetches search results from Sitecore.
  * @public
  */
@@ -103,7 +109,7 @@ export class SearchService {
   /**
    * Search for items in the search index.
    * @param {SearchParameters<T>} params - The search parameters.
-   * @param {RequestInit} [fetchOptions] - The fetch options.
+   * @param {SearchServiceFetchOptions} [fetchOptions] - The fetch options.
    * @returns {Promise<SearchResponse<T>>} The search response.
    * @throws {RangeError} If limit is not a positive number.
    * @throws {RangeError} If limit is greater than 500.
@@ -113,7 +119,7 @@ export class SearchService {
    */
   async search<T extends SearchDocument = SearchDocument>(
     params: SearchParameters<T>,
-    fetchOptions?: RequestInit
+    fetchOptions?: SearchServiceFetchOptions
   ): Promise<SearchResponse<T>> {
     const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0 } = params;
 
@@ -139,10 +145,6 @@ export class SearchService {
         query: {
           keyphrase,
         },
-        facet: {
-          fields: [],
-          all: true,
-        },
         sort,
       },
       fetchOptions
@@ -154,7 +156,9 @@ export class SearchService {
     };
   }
 
-  private validateParameters<T extends SearchDocument = SearchDocument>(params: SearchParameters<T>) {
+  private validateParameters<T extends SearchDocument = SearchDocument>(
+    params: SearchParameters<T>
+  ) {
     const { limit, offset, searchIndexId, sort } = params;
 
     if (limit && limit < 0) {

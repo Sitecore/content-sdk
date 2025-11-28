@@ -67,6 +67,9 @@ describe('useInfiniteSearch', () => {
       state.error ? state.error.message : 'null'
     );
     expect(wrapper.container.querySelector('#status')?.textContent).equal(state.status);
+    expect(wrapper.container.querySelector('#loadMoreStatus')?.textContent).equal(
+      state.loadMoreStatus
+    );
     state.results.forEach((result, index) => {
       expect(wrapper.container.querySelector('#results')?.children[index].textContent).equal(
         result.id.toString()
@@ -87,6 +90,7 @@ describe('useInfiniteSearch', () => {
         <span id="totalPages">Pages: {state.totalPages}</span>
         <span id="error">{state.error ? state.error.message : 'null'}</span>
         <span id="status">{state.status}</span>
+        <span id="loadMoreStatus">{state.loadMoreStatus}</span>
         <button id="loadMore" onClick={state.loadMore}>
           Load More
         </button>
@@ -129,6 +133,7 @@ describe('useInfiniteSearch', () => {
       total: 0,
       totalPages: 0,
       status: 'loading',
+      loadMoreStatus: 'idle',
     });
 
     expect(
@@ -155,6 +160,7 @@ describe('useInfiniteSearch', () => {
         total: 3,
         totalPages: 1,
         status: 'success',
+        loadMoreStatus: 'idle',
       });
     });
   });
@@ -198,6 +204,7 @@ describe('useInfiniteSearch', () => {
       total: 0,
       totalPages: 0,
       status: 'idle',
+      loadMoreStatus: 'idle',
     });
 
     expect(searchServiceStub.called).to.be.false;
@@ -216,6 +223,7 @@ describe('useInfiniteSearch', () => {
       total: 0,
       totalPages: 0,
       status: 'loading',
+      loadMoreStatus: 'idle',
     });
 
     expect(
@@ -242,6 +250,7 @@ describe('useInfiniteSearch', () => {
         total: 3,
         totalPages: 1,
         status: 'success',
+        loadMoreStatus: 'idle',
       });
     });
   });
@@ -295,6 +304,7 @@ describe('useInfiniteSearch', () => {
       total: 0,
       totalPages: 0,
       status: 'loading',
+      loadMoreStatus: 'idle',
     });
 
     // Wait for initial search to complete
@@ -311,6 +321,7 @@ describe('useInfiniteSearch', () => {
         total: 2,
         totalPages: 1,
         status: 'success',
+        loadMoreStatus: 'idle',
       });
     });
 
@@ -339,6 +350,7 @@ describe('useInfiniteSearch', () => {
       total: 0,
       totalPages: 0,
       status: 'loading',
+      loadMoreStatus: 'idle',
     });
 
     expect(wrapper.container.querySelector('#query')?.textContent).equal('Query: updated');
@@ -356,6 +368,7 @@ describe('useInfiniteSearch', () => {
         total: 3,
         totalPages: 1,
         status: 'success',
+        loadMoreStatus: 'idle',
       });
     });
 
@@ -404,6 +417,7 @@ describe('useInfiniteSearch', () => {
       total: 0,
       totalPages: 0,
       status: 'loading',
+      loadMoreStatus: 'idle',
     });
 
     expect(
@@ -430,6 +444,7 @@ describe('useInfiniteSearch', () => {
         total: 3,
         totalPages: 1,
         status: 'success',
+        loadMoreStatus: 'idle',
       });
     });
   });
@@ -477,6 +492,7 @@ describe('useInfiniteSearch', () => {
       total: 0,
       totalPages: 0,
       status: 'loading',
+      loadMoreStatus: 'idle',
     });
 
     expect(
@@ -503,6 +519,7 @@ describe('useInfiniteSearch', () => {
         total: 20,
         totalPages: 2,
         status: 'success',
+        loadMoreStatus: 'idle',
       });
     });
 
@@ -521,6 +538,7 @@ describe('useInfiniteSearch', () => {
       totalPages: 2,
       error: null,
       status: 'success',
+      loadMoreStatus: 'loading',
     });
 
     await waitFor(() => {
@@ -536,6 +554,7 @@ describe('useInfiniteSearch', () => {
         totalPages: 2,
         error: null,
         status: 'success',
+        loadMoreStatus: 'idle',
       });
     });
   });
@@ -570,6 +589,7 @@ describe('useInfiniteSearch', () => {
       total: 0,
       totalPages: 0,
       status: 'loading',
+      loadMoreStatus: 'idle',
     });
 
     expect(
@@ -596,6 +616,7 @@ describe('useInfiniteSearch', () => {
         total: 0,
         totalPages: 0,
         status: 'error',
+        loadMoreStatus: 'idle',
       });
     });
   });
@@ -639,6 +660,7 @@ describe('useInfiniteSearch', () => {
       total: 0,
       totalPages: 0,
       status: 'loading',
+      loadMoreStatus: 'idle',
     });
 
     expect(
@@ -665,6 +687,7 @@ describe('useInfiniteSearch', () => {
         total: 20,
         totalPages: 2,
         status: 'success',
+        loadMoreStatus: 'idle',
       });
     });
 
@@ -683,6 +706,7 @@ describe('useInfiniteSearch', () => {
       totalPages: 2,
       error: null,
       status: 'success',
+      loadMoreStatus: 'loading',
     });
 
     await waitFor(() => {
@@ -698,6 +722,7 @@ describe('useInfiniteSearch', () => {
         totalPages: 2,
         error: new Error('Load more failed'),
         status: 'success',
+        loadMoreStatus: 'error',
       });
     });
   });
@@ -771,6 +796,7 @@ describe('useInfiniteSearch', () => {
       total: 0,
       totalPages: 0,
       status: 'loading',
+      loadMoreStatus: 'idle',
     });
 
     await waitFor(() => {
@@ -786,6 +812,7 @@ describe('useInfiniteSearch', () => {
         total: 6,
         totalPages: 1,
         status: 'success',
+        loadMoreStatus: 'idle',
       });
     });
 
@@ -803,6 +830,7 @@ describe('useInfiniteSearch', () => {
       total: 6,
       totalPages: 1,
       status: 'success',
+      loadMoreStatus: 'loading',
     });
 
     fireEvent.click(wrapper.container.querySelector('#loadMore') as Element);
@@ -820,6 +848,7 @@ describe('useInfiniteSearch', () => {
         total: 6,
         totalPages: 1,
         status: 'success',
+        loadMoreStatus: 'loading',
       });
     });
 
@@ -838,6 +867,7 @@ describe('useInfiniteSearch', () => {
         total: 6,
         totalPages: 1,
         status: 'success',
+        loadMoreStatus: 'idle',
       });
     });
 
