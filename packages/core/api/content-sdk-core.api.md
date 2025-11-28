@@ -1588,10 +1588,8 @@ const updateImageUrl: (url: string, params?: {
 // @internal (undocumented)
 export const VARIANT_PREFIX = "_variantId_";
 
-// Warning: (ae-incompatible-release-tags) The symbol "writeImportMap" is marked as @public, but its signature references "WriteImportMapArgsInternal" which is marked as @internal
-//
 // @public
-export const writeImportMap: (args: WriteImportMapArgsInternal) => ({ scConfig }?: {
+export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }?: {
     scConfig?: SitecoreConfig;
 }) => Promise<void>;
 
@@ -1600,10 +1598,6 @@ export type WriteImportMapArgs = {
     paths: string[];
     scConfig?: SitecoreConfig;
     exclude?: string[];
-};
-
-// @internal
-export type WriteImportMapArgsInternal = WriteImportMapArgs & {
     separateServerClientMaps?: boolean;
     serverTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
     clientTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
@@ -1613,11 +1607,13 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 //
 // src/client/sitecore-client.ts:53:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:108:5 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
+// src/tools/codegen/import-map.ts:94:3 - (ae-incompatible-release-tags) The symbol "serverTemplate" is marked as @public, but its signature references "ModuleExports" which is marked as @internal
+// src/tools/codegen/import-map.ts:100:3 - (ae-incompatible-release-tags) The symbol "clientTemplate" is marked as @public, but its signature references "ModuleExports" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
-// src/tools/index.ts:27:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index.ts:26:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 
