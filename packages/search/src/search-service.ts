@@ -111,6 +111,7 @@ export class SearchService {
    * @param {SearchParameters<T>} params - The search parameters.
    * @param {SearchServiceFetchOptions} [fetchOptions] - The fetch options.
    * @returns {Promise<SearchResponse<T>>} The search response.
+   * @throws {Error} if the request fails.
    * @throws {RangeError} If limit is not a positive number.
    * @throws {RangeError} If limit is greater than 500.
    * @throws {RangeError} If offset is not a positive number.

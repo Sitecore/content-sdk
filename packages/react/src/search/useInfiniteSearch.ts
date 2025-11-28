@@ -117,6 +117,7 @@ type InternalInfiniteSearchState<T extends SearchDocument = SearchDocument> = {
  * React hook for performing infinite search queries.
  * @param {UseInfiniteSearchOptions} options - Configuration options for the infinite search hook.
  * @returns {UseInfiniteSearchState} The infinite search state.
+ * @throws {Error} if the search index ID is not provided.
  * @public
  */
 export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(

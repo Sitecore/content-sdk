@@ -113,6 +113,7 @@ export type UseSearchState<T extends SearchDocument = SearchDocument> = Omit<
  * React hook for performing search queries with pagination.
  * @param {UseSearchOptions} options - Configuration options for the search hook.
  * @returns {UseSearchState} The search state.
+ * @throws {Error} if the search index ID is not provided.
  * @public
  */
 export const useSearch = <T extends SearchDocument = SearchDocument>(
