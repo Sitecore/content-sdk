@@ -727,7 +727,7 @@ describe('useInfiniteSearch', () => {
     });
   });
 
-  it('should throw an error if the search index id is not provided', () => {
+  it('should return error when search index id is not provided', () => {
     const TestComponent: React.FC<any> = () => {
       const state = useInfiniteSearch<Model>({
         searchIndexId: null as unknown as string,
