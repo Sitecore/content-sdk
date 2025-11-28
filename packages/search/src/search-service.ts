@@ -134,6 +134,8 @@ export class SearchService {
     const url = new URL('/v1/search', this.config.edgeUrl);
     url.searchParams.set('sitecoreContextId', this.config.contextId);
 
+    const sortFields = sort ? (Array.isArray(sort) ? sort : [sort]) : [];
+
     const { data } = await this.fetcher.post<SearchAPIResponse<T>>(
       url.toString(),
       {
@@ -145,7 +147,9 @@ export class SearchService {
         query: {
           keyphrase,
         },
-        sort,
+        sort: {
+          fields: sortFields,
+        },
       },
       fetchOptions
     );

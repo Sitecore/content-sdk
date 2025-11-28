@@ -14,19 +14,19 @@ describe('SearchService', () => {
 
   it('should send a request with the keyphrase', async () => {
     nock(constants.SITECORE_EDGE_URL_DEFAULT)
-      .post(
-        `/v1/search?sitecoreContextId=${contextId}`,
-        {
-          config: {
-            id: searchIndexId,
-          },
-          limit: 10,
-          offset: 0,
-          query: {
-            keyphrase: 'test',
-          },
-        }
-      )
+      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+        config: {
+          id: searchIndexId,
+        },
+        limit: 10,
+        offset: 0,
+        query: {
+          keyphrase: 'test',
+        },
+        sort: {
+          fields: [],
+        },
+      })
       .reply(200, {
         content: [{ id: 1 }, { id: 2 }, { id: 3 }],
         total: 3,
@@ -55,6 +55,9 @@ describe('SearchService', () => {
         offset: 0,
         query: {
           keyphrase: '',
+        },
+        sort: {
+          fields: [],
         },
       })
       .reply(200, {
@@ -86,6 +89,9 @@ describe('SearchService', () => {
         offset: 0,
         query: {
           keyphrase: 'test',
+        },
+        sort: {
+          fields: [],
         },
       })
       .reply(200, {
@@ -120,6 +126,9 @@ describe('SearchService', () => {
         query: {
           keyphrase: 'test',
         },
+        sort: {
+          fields: [],
+        },
       })
       .reply(200, {
         content: [{ id: 1 }, { id: 2 }, { id: 3 }],
@@ -152,6 +161,9 @@ describe('SearchService', () => {
         offset,
         query: {
           keyphrase: 'test',
+        },
+        sort: {
+          fields: [],
         },
       })
       .reply(200, {
@@ -186,7 +198,9 @@ describe('SearchService', () => {
         query: {
           keyphrase: 'test',
         },
-        sort,
+        sort: {
+          fields: [sort],
+        },
       })
       .reply(200, {
         content: [{ id: 1 }, { id: 2 }, { id: 3 }],
@@ -223,7 +237,9 @@ describe('SearchService', () => {
         query: {
           keyphrase: 'test',
         },
-        sort,
+        sort: {
+          fields: sort,
+        },
       })
       .reply(200, {
         content: [{ id: 1 }, { id: 2 }, { id: 3 }],
@@ -254,6 +270,9 @@ describe('SearchService', () => {
         offset: 0,
         query: {
           keyphrase: 'test',
+        },
+        sort: {
+          fields: [],
         },
       })
       .reply(200, {});
