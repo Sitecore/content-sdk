@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SearchDocument, SearchParameters } from '@sitecore-content-sdk/search';
 import {
-  DEFAULT_PAGE,
   DEFAULT_PAGE_SIZE,
   getOffset,
   SearchStatus,
@@ -121,7 +120,7 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
 ): UseSearchState<T> => {
   const {
     query,
-    page = DEFAULT_PAGE,
+    page = 1,
     searchIndexId,
     pageSize = DEFAULT_PAGE_SIZE,
     sort,

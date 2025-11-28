@@ -4,8 +4,6 @@ import { useSitecore } from '../enhancers/withSitecore';
 
 export const DEFAULT_PAGE_SIZE = 10;
 
-export const DEFAULT_PAGE = 1;
-
 export type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
 
 /**
