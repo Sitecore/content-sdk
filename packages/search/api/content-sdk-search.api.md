@@ -5,12 +5,12 @@
 ```ts
 
 // @public
-export type GenericFields = {
-    [key: string]: PrimitiveType | PrimitiveType[] | GenericFields | GenericFields[];
+export type SearchDocument = {
+    [key: string]: PrimitiveType | PrimitiveType[] | SearchDocument | SearchDocument[];
 };
 
 // @public
-export interface SearchParameters<T = GenericFields> {
+export interface SearchParameters<T extends SearchDocument = SearchDocument> {
     keyphrase?: string;
     limit?: number;
     offset?: number;
@@ -19,7 +19,7 @@ export interface SearchParameters<T = GenericFields> {
 }
 
 // @public
-export interface SearchResponse<T = GenericFields> {
+export interface SearchResponse<T extends SearchDocument = SearchDocument> {
     results: T[];
     total: number;
 }
@@ -27,7 +27,7 @@ export interface SearchResponse<T = GenericFields> {
 // @public
 export class SearchService {
     constructor(config: SearchServiceConfig);
-    search<T = GenericFields>(params: SearchParameters<T>, fetchOptions?: RequestInit): Promise<SearchResponse<T>>;
+    search<T extends SearchDocument = SearchDocument>(params: SearchParameters<T>, fetchOptions?: SearchServiceFetchOptions): Promise<SearchResponse<T>>;
 }
 
 // @public
@@ -37,7 +37,10 @@ export interface SearchServiceConfig {
 }
 
 // @public
-export type SortSetting<T = GenericFields> = {
+export type SearchServiceFetchOptions = Omit<RequestInit, 'method' | 'body' | 'mode'>;
+
+// @public
+export type SortSetting<T extends SearchDocument = SearchDocument> = {
     name: PathsToStringProps<T>;
     order: 'asc' | 'desc';
 };

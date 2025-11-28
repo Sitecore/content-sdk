@@ -22,7 +22,6 @@ import { ErrorPage } from '@sitecore-content-sdk/core/client';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { Field } from '@sitecore-content-sdk/core/layout';
 import { FieldMetadata } from '@sitecore-content-sdk/core/layout';
-import { GenericFields } from '@sitecore-content-sdk/search';
 import { GenericFieldValue } from '@sitecore-content-sdk/core/layout';
 import { getChildPlaceholder } from '@sitecore-content-sdk/core/layout';
 import { getContentStylesheetLink } from '@sitecore-content-sdk/core/layout';
@@ -52,6 +51,7 @@ import { RefAttributes } from 'react';
 import { resetEditorChromes } from '@sitecore-content-sdk/core/editing';
 import { RetryStrategy } from '@sitecore-content-sdk/core/client';
 import { RouteData } from '@sitecore-content-sdk/core/layout';
+import { SearchDocument } from '@sitecore-content-sdk/search';
 import { SearchParameters } from '@sitecore-content-sdk/search';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { SitePathService } from '@sitecore-content-sdk/core/site';
@@ -465,36 +465,37 @@ export interface TextField extends FieldMetadata {
 }
 
 // @public
-export const useInfiniteSearch: <T = GenericFields>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;
+export const useInfiniteSearch: <T extends SearchDocument = SearchDocument>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;
 
 // @public
-export interface UseInfiniteSearchOptions<T = GenericFields> {
+export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocument> {
+    enabled?: boolean;
     pageSize?: number;
     query?: string;
     searchIndexId: string;
     sort?: SearchParameters<T>['sort'];
 }
 
+// Warning: (ae-forgotten-export) The symbol "InternalInfiniteSearchState" needs to be exported by the entry point api-surface.d.ts
+//
 // @public
-export interface UseInfiniteSearchState<T = GenericFields> {
-    error: Error | null;
+export type UseInfiniteSearchState<T extends SearchDocument = SearchDocument> = Omit<InternalInfiniteSearchState<T>, 'offset'> & {
+    loadMore: () => void;
     hasNextPage: boolean;
-    isError: boolean;
     isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
     isLoadingMore: boolean;
     isLoadingMoreError: boolean;
-    isSuccess: boolean;
-    loadMore: () => void;
-    results: T[];
-    total: number;
-    totalPages: number;
-}
+};
 
 // @public
-export const useSearch: <T = GenericFields>(options: UseSearchOptions<T>) => UseSearchState<T>;
+export const useSearch: <T extends SearchDocument = SearchDocument>(options: UseSearchOptions<T>) => UseSearchState<T>;
 
 // @public
-export interface UseSearchOptions<T = GenericFields> {
+export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
+    enabled?: boolean;
+    keepPreviousData?: boolean;
     page?: number;
     pageSize?: number;
     query?: string;
@@ -502,16 +503,15 @@ export interface UseSearchOptions<T = GenericFields> {
     sort?: SearchParameters<T>['sort'];
 }
 
+// Warning: (ae-forgotten-export) The symbol "InternalState" needs to be exported by the entry point api-surface.d.ts
+//
 // @public
-export interface UseSearchState<T = GenericFields> {
-    error: Error | null;
-    isError: boolean;
+export type UseSearchState<T extends SearchDocument = SearchDocument> = Omit<InternalState<T>, 'previousStatus'> & {
     isLoading: boolean;
     isSuccess: boolean;
-    results: T[];
-    total: number;
-    totalPages: number;
-}
+    isError: boolean;
+    isPreviousData: boolean;
+};
 
 // @public
 export function useSitecore(options?: WithSitecoreOptions): WithSitecoreProps;
