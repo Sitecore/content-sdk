@@ -424,6 +424,9 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
 
 export { RouteData }
 
+// @public
+export type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
+
 // Warning: (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public

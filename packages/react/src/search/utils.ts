@@ -4,6 +4,10 @@ import { useSitecore } from '../enhancers/withSitecore';
 
 export const DEFAULT_PAGE_SIZE = 10;
 
+/**
+ * The status of a search request.
+ * @public
+ */
 export type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
 
 /**

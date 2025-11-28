@@ -4,3 +4,4 @@ export {
   UseInfiniteSearchState,
   UseInfiniteSearchOptions,
 } from './useInfiniteSearch';
+export { SearchStatus } from './utils';
