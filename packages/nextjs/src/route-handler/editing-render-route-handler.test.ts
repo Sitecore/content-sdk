@@ -709,14 +709,14 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.body).to.include('not allowed');
     });
 
-    it('should allow request when in xmc environment - internalServerUrl is https://localhost:3000', async () => {
+    it('should allow request when in xmc or local environment - request hostname is localhost', async () => {
       getEnforcedCorsHeadersStub.returns(null);
       const mockResponseHeaders = new Headers({
         'content-type': 'text/html',
         'Set-Cookie': 'session=abc123',
       });
 
-      req.nextUrl!.host = 'localhost:3000';
+      req.nextUrl!.hostname = 'localhost';
 
       fetchStub.resolves({
         status: 200,
@@ -733,7 +733,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(fetchStub.calledOnce).to.be.true;
     });
 
-    it('should allow request when request origin is the same as internalServerUrl', async () => {
+    it('should allow request when request host is the same as origin host', async () => {
       getEnforcedCorsHeadersStub.returns(null);
       const mockResponseHeaders = new Headers({
         'content-type': 'text/html',
@@ -744,7 +744,6 @@ describe('createEditingRenderRouteHandlers', () => {
 
       req.headers = new Headers({
         origin: 'https://some-url',
-        host: 'localhost:3000',
       });
 
       fetchStub.resolves({

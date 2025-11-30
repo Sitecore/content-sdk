@@ -271,13 +271,12 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     const originHost = new URL(requestOrigin).host;
     const expectedCorsHeaders = getCorsHeaders(req);
 
-    // Allow request if:
-    // we are in local or sitecore environment - requested host is 'localhost:3000'
+    // Bypass CORS if:
+    // we are in local or sitecore environment - requested hostname is 'localhost'
     // or the request is same origin (e.g. in vercel netlify environment)
-    const isAllowedRequest =
-      req.nextUrl.host === 'localhost:3000' || req.nextUrl.host === originHost;
+    const bypassCors = req.nextUrl.hostname === 'localhost' || req.nextUrl.host === originHost;
 
-    if (!isAllowedRequest && !expectedCorsHeaders) {
+    if (!bypassCors && !expectedCorsHeaders) {
       return new Response(getOriginNotAllowedMessage(requestOrigin), {
         status: 401,
       });
