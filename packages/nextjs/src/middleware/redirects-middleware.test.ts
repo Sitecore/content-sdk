@@ -145,12 +145,14 @@ describe('RedirectsMiddleware', () => {
         target: string;
         redirectType?: string;
         isQueryStringPreserved?: boolean;
+        isLanguagePreserved?: boolean;
       }[];
       // for single rule
       pattern?: string;
       target?: string;
       redirectType?: string;
       isQueryStringPreserved?: boolean;
+      isLanguagePreserved?: boolean;
       locale?: string;
       fetchRedirectsStub?: sinon.SinonStub;
       getClientFactoryStub?: sinon.SinonStub;
@@ -197,6 +199,7 @@ describe('RedirectsMiddleware', () => {
         target: props.target,
         redirectType: props.redirectType,
         isQueryStringPreserved: props.isQueryStringPreserved,
+        isLanguagePreserved: props.isLanguagePreserved,
       });
     }
 
@@ -2040,11 +2043,119 @@ describe('RedirectsMiddleware', () => {
           res
         );
 
-        expect(finalRes.url).to.equal(externalUrl);
-      });
+      expect(finalRes.url).to.equal(externalUrl);
     });
 
-    describe('should redirect to normalized path when nextjs specific "path" query string parameter is provided', () => {
+    it('should redirect to URL with current language as prefix, when isLanguagePreserved is set to true', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/en/target/',
+        pathname: '/en/target/',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        search: '',
+        clone: cloneUrl,
+      };
+
+      const { res, req } = createTestRequestResponse({
+        response: { url },
+        request: {
+          nextUrl: {
+            pathname: '/source',
+            href: 'http://localhost:3000/source',
+            origin: 'http://localhost:3000',
+            locale: 'en',
+            clone: cloneUrl,
+          },
+        },
+        status: 301,
+      });
+
+      setupRedirectStub(301);
+
+      const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+        {
+          pattern: '/source',
+          target: '/target/',
+          redirectType: REDIRECT_TYPE_301,
+          isQueryStringPreserved: false,
+          isLanguagePreserved: true,
+          locale: 'en',
+        },
+        req,
+        res
+      );
+
+      validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+        headers: {},
+        redirected: undefined,
+        status: 301,
+        url,
+      });
+
+      expect(siteResolver.getByHost).to.be.calledWith(hostname);
+      // eslint-disable-next-line no-unused-expressions
+      expect(fetchRedirects.called).to.be.true;
+      expect(finalRes.status).to.equal(res.status);
+      expect(normalizeUrl(finalRes.url)).to.equal('http://localhost:3000/en/target/');
+    });
+
+    it('should redirect to URL with locale, when target contains locale prefix and isLanguagePreserved is true', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/da-DK/target/',
+        pathname: '/da-DK/target/',
+        origin: 'http://localhost:3000',
+        locale: 'da-DK',
+        search: '',
+        clone: cloneUrl,
+      };
+
+      const { res, req } = createTestRequestResponse({
+        response: { url },
+        request: {
+          nextUrl: {
+            pathname: '/source',
+            href: 'http://localhost:3000/source',
+            origin: 'http://localhost:3000',
+            locale: 'en',
+            clone: cloneUrl,
+          },
+        },
+        status: 301,
+      });
+
+      setupRedirectStub(301);
+
+      const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+        {
+          pattern: '/source',
+          target: '/da-DK/target/',
+          redirectType: REDIRECT_TYPE_301,
+          isQueryStringPreserved: false,
+          isLanguagePreserved: true,
+          locale: 'en',
+        },
+        req,
+        res
+      );
+
+      validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+        headers: {},
+        redirected: undefined,
+        status: 301,
+        url,
+      });
+
+      expect(siteResolver.getByHost).to.be.calledWith(hostname);
+      // eslint-disable-next-line no-unused-expressions
+      expect(fetchRedirects.called).to.be.true;
+      expect(finalRes.status).to.equal(res.status);
+      expect(normalizeUrl(finalRes.url)).to.equal('http://localhost:3000/da-DK/target/');
+    });
+  });
+
+  describe('should redirect to normalized path when nextjs specific "path" query string parameter is provided', () => {
       it('should return 301 redirect', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {

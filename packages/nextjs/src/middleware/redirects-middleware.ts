@@ -130,6 +130,11 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
         debug.redirects('Matched redirect rule: %o', { existsRedirect });
 
+        const sitecoreLanguageRegex = /^\/?[a-z]{2,4}(-([A-Za-z]){2})?\//;
+
+        const targetContainsDifferentLocale =
+          existsRedirect.target.match(sitecoreLanguageRegex) &&
+          existsRedirect.target.match(sitecoreLanguageRegex)![0].replace(/\//g, '') !== language;
         // Find context site language and replace token
         if (
           REGEXP_CONTEXT_SITE_LANG.test(existsRedirect.target) &&
@@ -199,8 +204,14 @@ export class RedirectsMiddleware extends MiddlewareBase {
               )
             : targetQueryString || '';
 
+          // apply language prefix unless target contains different locale
+          const appendedLocale =
+            existsRedirect.isLanguagePreserved && !targetContainsDifferentLocale
+              ? `/${language}`
+              : '';
+
           const prepareNewURL = new URL(
-            `${targetPath}${mergedQueryString ? '?' + mergedQueryString : ''}`,
+            `${appendedLocale}${targetPath}${mergedQueryString ? '?' + mergedQueryString : ''}`,
             url.origin
           );
 
@@ -250,7 +261,6 @@ export class RedirectsMiddleware extends MiddlewareBase {
     const locale = this.getLanguage(req);
     const normalizedPath = incomingURL.replace(/\/*$/gi, '').toLowerCase();
     const redirects = await this.redirectsService.fetchRedirects(siteName);
-    const language = this.getLanguage(req);
     const modifyRedirects = structuredClone(redirects);
     let matchedQueryString: string | undefined;
     const localePath = `/${locale.toLowerCase()}${normalizedPath}`;
@@ -286,7 +296,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
           // Modify the redirect pattern to ignore the language prefix in the path
           // And escapes non-special "?" characters in a string or regex.
           redirect.pattern = escapeNonSpecialQuestionMarks(
-            redirect.pattern.replace(new RegExp(`^[^]?/${language}/`, 'gi'), '')
+            redirect.pattern.replace(new RegExp(`^[^]?/${locale}/`, 'gi'), '')
           );
 
           // Prepare the redirect pattern as a regular expression, making it more flexible for matching URLs
