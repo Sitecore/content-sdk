@@ -6,7 +6,7 @@
 
 # Interface: SearchServiceConfig
 
-Defined in: [search-service.ts:17](https://github.com/Sitecore/content-sdk/blob/c6756650301531e58e70485a5296dc72f05e30c4/packages/search/src/search-service.ts#L17)
+Defined in: [search-service.ts:17](https://github.com/Sitecore/content-sdk/blob/140bbc1e75bfdfba8ce71ae365777faf84e31370/packages/search/src/search-service.ts#L17)
 
 Configuration for the Search Service.
 
@@ -16,7 +16,7 @@ Configuration for the Search Service.
 
 > **contextId**: `string`
 
-Defined in: [search-service.ts:26](https://github.com/Sitecore/content-sdk/blob/c6756650301531e58e70485a5296dc72f05e30c4/packages/search/src/search-service.ts#L26)
+Defined in: [search-service.ts:26](https://github.com/Sitecore/content-sdk/blob/140bbc1e75bfdfba8ce71ae365777faf84e31370/packages/search/src/search-service.ts#L26)
 
 A unified identifier used to connect and retrieve data.
 
@@ -26,7 +26,7 @@ A unified identifier used to connect and retrieve data.
 
 > `optional` **edgeUrl**: `string`
 
-Defined in: [search-service.ts:22](https://github.com/Sitecore/content-sdk/blob/c6756650301531e58e70485a5296dc72f05e30c4/packages/search/src/search-service.ts#L22)
+Defined in: [search-service.ts:22](https://github.com/Sitecore/content-sdk/blob/140bbc1e75bfdfba8ce71ae365777faf84e31370/packages/search/src/search-service.ts#L22)
 
 XM Cloud endpoint that the app will communicate and retrieve data from.
 

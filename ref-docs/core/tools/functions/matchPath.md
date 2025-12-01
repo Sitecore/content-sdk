@@ -8,7 +8,7 @@
 
 > **matchPath**(`itemPath`, `compare`): `boolean`
 
-Defined in: [packages/core/src/tools/templating/utils.ts:39](https://github.com/Sitecore/content-sdk/blob/c6756650301531e58e70485a5296dc72f05e30c4/packages/core/src/tools/templating/utils.ts#L39)
+Defined in: [packages/core/src/tools/templating/utils.ts:39](https://github.com/Sitecore/content-sdk/blob/140bbc1e75bfdfba8ce71ae365777faf84e31370/packages/core/src/tools/templating/utils.ts#L39)
 
 Compares two paths to determine if they match.
 
