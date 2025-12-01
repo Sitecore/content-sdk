@@ -32,7 +32,7 @@ Our versioning strategy is as follows:
 * `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Geo based Personalization not possible in Content SDK Personalize Middleware. ([#290](https://github.com/Sitecore/jss/pull/290))
 * `[nextjs]` Remove locale property assignments in redirects middleware for App Router compatibility. ([#292](https://github.com/Sitecore/jss/pull/292))
 * `[nextjs]` Next Link props unavailable when using Sitecore Link component ([#294](https://github.com/Sitecore/content-sdk/pull/294)) ([#296](https://github.com/Sitecore/content-sdk/pull/296))
-* `[template/next-app-router]` Fix middleware initialization errors in local container development ([#297](https://github.com/Sitecore/content-sdk/pull/297))([#302](https://github.com/Sitecore/content-sdk/pull/302))
+* `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Fix middleware initialization errors in local container development ([#297](https://github.com/Sitecore/content-sdk/pull/297))([#302](https://github.com/Sitecore/content-sdk/pull/302))
 
 ### 🧹 Chores
 
