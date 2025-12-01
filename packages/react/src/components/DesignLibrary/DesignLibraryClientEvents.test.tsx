@@ -192,6 +192,37 @@ describe('<DesignLibraryClientEvents />', () => {
 
       expect(unsubUpdate).to.have.been.calledOnce;
     });
+
+    describe('error handling', () => {
+      it('should not post status event when component UID is missing', async () => {
+        renderWithSitecore({
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: { ...testEditedComponent, uid: undefined },
+        });
+
+        await waitFor(() => {
+          expect(postToDesignLibrarySpy).to.not.have.been.called;
+        });
+      });
+
+      it('should not add component update handler when component UID is missing', () => {
+        renderWithSitecore({
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: { ...testEditedComponent, uid: undefined },
+        });
+
+        expect(addComponentUpdateHandlerSpy).to.not.have.been.called;
+      });
+
+      it('should not add component update handler when component is null', () => {
+        renderWithSitecore({
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: null,
+        });
+
+        expect(addComponentUpdateHandlerSpy).to.not.have.been.called;
+      });
+    });
   });
 
   describe('DesignLibraryVariantGenerationEvents', () => {
@@ -455,6 +486,66 @@ describe('<DesignLibraryClientEvents />', () => {
       );
 
       expect(sendErrorEventSpy).to.not.have.been.called;
+    });
+
+    describe('error handling', () => {
+      it('should not post status event when component UID is missing', async () => {
+        renderWithSitecore(
+          {
+            designLibraryStatus: DesignLibraryStatus.READY,
+            component: { ...testEditedComponent, uid: undefined },
+            importMap: importMap,
+          },
+          modeLibraryMetadata_Gen,
+          true
+        );
+
+        await waitFor(() => {
+          expect(postToDesignLibrarySpy).to.not.have.been.called;
+        });
+      });
+
+      it('should not add component update handler when component UID is missing', () => {
+        renderWithSitecore(
+          {
+            designLibraryStatus: DesignLibraryStatus.READY,
+            component: { ...testEditedComponent, uid: undefined },
+            importMap: importMap,
+          },
+          modeLibraryMetadata_Gen,
+          true
+        );
+
+        expect(addComponentUpdateHandlerSpy).to.not.have.been.called;
+      });
+
+      it('should not add server component preview handler when component UID is missing', () => {
+        renderWithSitecore(
+          {
+            designLibraryStatus: DesignLibraryStatus.READY,
+            component: { ...testEditedComponent, uid: undefined },
+            importMap: importMap,
+          },
+          modeLibraryMetadata_Gen,
+          true
+        );
+
+        expect(addServerComponentPreviewHandlerSpy).to.not.have.been.called;
+      });
+
+      it('should not add component update handler when component is null', () => {
+        renderWithSitecore(
+          {
+            designLibraryStatus: DesignLibraryStatus.READY,
+            component: null,
+            importMap: importMap,
+          },
+          modeLibraryMetadata_Gen,
+          true
+        );
+
+        expect(addComponentUpdateHandlerSpy).to.not.have.been.called;
+      });
     });
   });
 });

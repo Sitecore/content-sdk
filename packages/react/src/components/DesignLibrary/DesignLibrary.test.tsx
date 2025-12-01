@@ -5,7 +5,10 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
-import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
+import {
+  LayoutServiceData,
+  EDITING_COMPONENT_PLACEHOLDER,
+} from '@sitecore-content-sdk/core/layout';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
@@ -658,6 +661,41 @@ describe('<DesignLibrary />', () => {
       await waitFor(() => expectContains(rendered.baseElement.innerHTML, expectedGeneratedParts));
 
       await waitFor(() => expectStatus(postMessageSpy, DesignLibraryStatus.RENDERED, RENDER_ID));
+    });
+  });
+
+  describe('error handling', () => {
+    it('should render ErrorComponent when rendering UID is missing', () => {
+      const layoutData = getTestLayoutData().layoutData;
+
+      // Remove UID from the component
+      const renderingWithoutUid = {
+        ...layoutData.sitecore.route,
+        placeholders: {
+          [EDITING_COMPONENT_PLACEHOLDER]: [
+            {
+              ...layoutData.sitecore.route.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0],
+              uid: undefined,
+            },
+          ],
+        },
+      };
+
+      const page = {
+        locale: 'en',
+        layout: { ...layoutData, sitecore: { ...layoutData.sitecore, route: renderingWithoutUid } },
+        mode: modeLibraryMetadata,
+      };
+
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        'Rendering UID is missing in the rendering data'
+      );
     });
   });
   after(() => {

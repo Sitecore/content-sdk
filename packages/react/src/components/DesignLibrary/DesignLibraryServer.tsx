@@ -22,6 +22,7 @@ import {
   DesignLibraryServerPreviewProps,
   DesignLibraryServerVariantGenerationProps,
 } from './models';
+import { ErrorComponent } from '../ErrorBoundary';
 
 let { getCacheAndClean, hasCache } = globalCache;
 let { createComponentInstance, getImportMapInfo } = codegen;
@@ -97,9 +98,9 @@ export const DesignLibraryServerVariantGeneration = async ({
   let designLibraryStatus = DesignLibraryStatus.READY;
   let importMap: codegen.ImportEntry[] | undefined;
   let importMapInfo: codegen.ImportEntryInfo[] | undefined;
-  let Component: DynamicComponent;
-  let importMapError: string;
-  let previewComponentData: ComponentPreviewEventArgs;
+  let Component: DynamicComponent | undefined;
+  let importMapError: string | undefined;
+  let previewComponentData: ComponentPreviewEventArgs | undefined;
 
   // load importmap and importmap payload to pass to FE
   // if not provided, or errors during load set error to pass to FE
@@ -115,8 +116,14 @@ export const DesignLibraryServerVariantGeneration = async ({
     }
   }
 
-  let componentToUpdate = rendering?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
-  const componentUpdateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${componentToUpdate.uid}`;
+  let componentToUpdate = rendering?.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0];
+  if (!componentToUpdate) return <ErrorComponent message="Rendering data is missing" />;
+
+  if (!componentToUpdate.uid)
+    return <ErrorComponent message="Rendering UID is missing in the rendering data" />;
+
+  const uid = componentToUpdate.uid;
+  const componentUpdateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${uid}`;
 
   // check if we have an update for this component in the global cache
   if (hasCache(componentUpdateKey)) {
@@ -125,7 +132,7 @@ export const DesignLibraryServerVariantGeneration = async ({
     const updateData = getCacheAndClean<ComponentUpdateModel>(componentUpdateKey);
 
     // apply the updates to the component rendering
-    if (updateData.updatedComponent) {
+    if (updateData?.updatedComponent) {
       updateComponent(
         componentToUpdate,
         updateData.updatedComponent.fields,
@@ -133,7 +140,7 @@ export const DesignLibraryServerVariantGeneration = async ({
       );
     }
 
-    if (updateData.previewComponent && !importMapError) {
+    if (updateData?.previewComponent && !importMapError && importMap) {
       previewComponentData = updateData.previewComponent;
       try {
         // use provided code and import map to create the component instance
@@ -143,7 +150,7 @@ export const DesignLibraryServerVariantGeneration = async ({
         ) as DynamicComponent;
       } catch (error) {
         // error during component initialization - send error to client
-        importMapError = error.toString();
+        importMapError = (error as Error | string).toString();
       }
     }
   }
@@ -198,7 +205,11 @@ export const DesignLibraryServerPreview = async ({
 }: DesignLibraryServerPreviewProps) => {
   let designLibraryStatus = DesignLibraryStatus.READY;
 
-  let componentToUpdate = rendering?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
+  let componentToUpdate = rendering?.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0];
+  if (!componentToUpdate) return <ErrorComponent message="Rendering data is missing" />;
+  if (!componentToUpdate.uid)
+    return <ErrorComponent message="Rendering UID is missing in the rendering data" />;
+
   const componentUpdateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${componentToUpdate.uid}`;
 
   // check if we have an update for this component in the global cache
@@ -208,7 +219,7 @@ export const DesignLibraryServerPreview = async ({
     const updateData = getCacheAndClean<ComponentUpdateModel>(componentUpdateKey);
 
     // apply the updates to the component rendering
-    if (updateData.updatedComponent) {
+    if (updateData?.updatedComponent) {
       updateComponent(
         componentToUpdate,
         updateData.updatedComponent.fields,

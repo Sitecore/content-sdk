@@ -18,14 +18,23 @@ export type ErrorBoundaryProps = {
   disableSuspense?: boolean;
 };
 
+/**
+ * Simple error component applying basic error styling.
+ * @param {string} message The error message to display.
+ * @returns A JSX element containing the error message in a div.
+ * @internal
+ */
+export const ErrorComponent = ({ message }: { message: string }) => {
+  return <div className="sc-content-sdk-placeholder-error">{message}</div>;
+};
+
 class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   defaultErrorMessage = 'There was a problem loading this section.';
   defaultLoadingMessage = 'Loading component...';
-  state: { error: Error };
+  state: { error: Error | null } = { error: null };
 
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { error: null };
   }
 
   static getDerivedStateFromError(error: Error) {
@@ -69,7 +78,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
         } else {
           return (
             <div>
-              <div className="sc-content-sdk-placeholder-error">{this.defaultErrorMessage}</div>
+              <ErrorComponent message={this.defaultErrorMessage} />
             </div>
           );
         }

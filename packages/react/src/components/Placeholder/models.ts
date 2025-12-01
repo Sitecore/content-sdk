@@ -21,7 +21,7 @@ export interface AppComponentProps {
     [name: string]: Field | Item | Item[];
   };
   params: {
-    [name: string]: string;
+    [name: string]: string | undefined;
   };
   rendering: ComponentRendering;
 }
@@ -150,7 +150,7 @@ export interface AppPlaceholderProps extends BasePlaceholderProps {
   ) => React.ReactNode;
 }
 
-export type RenderedProps = Omit<PlaceholderProps, 'fields' | 'params'> & {
+export type RenderedProps = Omit<PlaceholderProps, 'fields' | 'params' | 'name'> & {
   key: string;
   fields: { [field: string]: unknown };
   params: { [param: string]: unknown };

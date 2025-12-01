@@ -10,7 +10,7 @@ import { FEaaSComponentProps } from './models';
  * @param {FEaaSComponentProps} props component props
  * @public
  */
-export const FEaaSComponent = (props: FEaaSComponentProps): JSX.Element => {
+export const FEaaSComponent = (props: FEaaSComponentProps): JSX.Element | null => {
   const computedRevision = props.params?.ComponentRevision || props.revisionFallback;
   if (
     !props.template &&
@@ -35,10 +35,10 @@ export const FEaaSComponent = (props: FEaaSComponentProps): JSX.Element => {
     <FEAAS.Component
       data={data}
       template={props.template}
-      cdn={props.params?.ComponentHostName}
-      library={props.params?.LibraryId}
-      version={props.params?.ComponentVersion}
-      component={props.params?.ComponentId}
+      cdn={props.params?.ComponentHostName as string}
+      library={props.params?.LibraryId as string}
+      version={props.params?.ComponentVersion as string}
+      component={props.params?.ComponentId as string}
       instance={props.params?.ComponentInstanceId}
       revision={computedRevision}
       fetch={[]}

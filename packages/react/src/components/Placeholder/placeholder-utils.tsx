@@ -48,17 +48,17 @@ export const getPlaceholderRenderings = (
    * For Metadata EditMode, we need to keep the raw placeholder name in place.
    */
   if (rendering?.placeholders) {
-    Object.keys(rendering.placeholders).forEach((placeholder) => {
-      const patternPlaceholder = isDynamicPlaceholder(placeholder)
-        ? getDynamicPlaceholderPattern(placeholder)
+    Object.entries(rendering.placeholders).forEach(([key, value]) => {
+      const patternPlaceholder = isDynamicPlaceholder(key)
+        ? getDynamicPlaceholderPattern(key)
         : null;
 
       if (patternPlaceholder && patternPlaceholder.test(phName)) {
         if (isEditing) {
-          phName = placeholder;
+          phName = key;
         } else {
-          rendering.placeholders[phName] = rendering.placeholders[placeholder];
-          delete rendering.placeholders[placeholder];
+          rendering.placeholders![phName] = value;
+          delete rendering.placeholders![key];
         }
       }
     });
@@ -124,7 +124,8 @@ export const getRenderedComponentProps = (
   const { fields, params: placeholderParams, ...passThroughProps } = placeholderProps;
   delete passThroughProps.missingComponentComponent;
   delete passThroughProps.hiddenRenderingComponent;
-  delete passThroughProps.name;
+  delete (passThroughProps as { name?: string }).name;
+
   const mergedContentProps = getAppComponentProps(placeholderProps, componentRendering);
 
   return {

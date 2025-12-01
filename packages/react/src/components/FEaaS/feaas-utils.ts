@@ -4,6 +4,8 @@ import {
   BYOCServerProps,
   FEaaSComponentParams,
   FEaaSComponentServerProps,
+  isFEaaSComponentParamsComplete,
+  RequiredFEaaSParams,
   RevisionType,
 } from './models';
 
@@ -38,8 +40,18 @@ export async function fetchFEaaSComponentServerProps(
   params: FEaaSComponentParams,
   isPageStateNormal?: boolean,
   endpointOverride?: string
-): Promise<FEaaSComponentServerProps> {
+): Promise<FEaaSComponentServerProps | null> {
   const revisionFallback = isPageStateNormal ? 'published' : 'staged';
+
+  if (!isFEaaSComponentParamsComplete(params)) {
+    // Missing FEaaS component required props
+    return {
+      fetchedData: {},
+      revisionFallback,
+      template: '',
+    };
+  }
+
   const src = endpointOverride || composeComponentEndpoint(params, revisionFallback);
   let template = '';
   let fetchedData: FEAAS.DataScopes = {};
@@ -110,12 +122,13 @@ async function fetchData(dataOptions: FEAAS.DataOptions): Promise<FEAAS.DataScop
  * @returns component endpoint URL
  */
 export const composeComponentEndpoint = (
-  params: FEaaSComponentParams,
+  params: FEaaSComponentParams & RequiredFEaaSParams,
   revisionFallback: RevisionType
 ) => {
   const revision = params.ComponentRevision || revisionFallback;
   const hostname = params.ComponentHostName.startsWith('https://')
     ? params.ComponentHostName
     : `https://${params.ComponentHostName}`;
+
   return `${hostname}/components/${params.LibraryId}/${params.ComponentId}/${params.ComponentVersion}/${revision}`;
 };
