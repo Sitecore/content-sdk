@@ -51,6 +51,8 @@ import { RefAttributes } from 'react';
 import { resetEditorChromes } from '@sitecore-content-sdk/core/editing';
 import { RetryStrategy } from '@sitecore-content-sdk/core/client';
 import { RouteData } from '@sitecore-content-sdk/core/layout';
+import { SearchDocument } from '@sitecore-content-sdk/search';
+import { SearchParameters } from '@sitecore-content-sdk/search';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { SitePathService } from '@sitecore-content-sdk/core/site';
 import { SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
@@ -58,12 +60,12 @@ import { SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
 // @public
 export const AppPlaceholder: (props: AppPlaceholderProps) => string | number | bigint | boolean | Iterable<React_2.ReactNode> | Promise<string | number | bigint | boolean | React_2.ReactPortal | React_2.ReactElement<unknown, string | React_2.JSXElementConstructor<any>> | Iterable<React_2.ReactNode> | null | undefined> | React_2.JSX.Element | (string | number | bigint | boolean | Iterable<React_2.ReactNode> | Promise<string | number | bigint | boolean | React_2.ReactPortal | React_2.ReactElement<unknown, string | React_2.JSXElementConstructor<any>> | Iterable<React_2.ReactNode> | null | undefined> | React_2.JSX.Element | null | undefined)[] | null | undefined;
 
-// Warning: (ae-forgotten-export) The symbol "BasePlaceholderProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BasePlaceholderProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export interface AppPlaceholderProps extends BasePlaceholderProps {
     componentMap: ComponentMap;
-    // Warning: (ae-forgotten-export) The symbol "AppComponentProps" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "AppComponentProps" needs to be exported by the entry point api-surface.d.ts
     modifyComponentProps?: (componentProps: AppComponentProps) => AppComponentProps;
     render?: (components: React.ReactNode[], data: ComponentRendering[], props: AppPlaceholderProps) => React.ReactNode;
 }
@@ -94,13 +96,13 @@ export type BYOCComponentParams = {
     RenderingIdentifier?: string;
 };
 
-// Warning: (ae-forgotten-export) The symbol "BYOCComponentClientProps" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "BYOCServerProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BYOCComponentClientProps" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "BYOCServerProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export type BYOCComponentProps = BYOCComponentClientProps & BYOCServerProps;
 
-// Warning: (ae-forgotten-export) The symbol "BYOCServerWrapperProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BYOCServerWrapperProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export const BYOCServerWrapper: (props: BYOCServerWrapperProps) => Promise<React_2.JSX.Element>;
@@ -133,7 +135,7 @@ export { constants }
 // @public
 export const DateField: React_2.FC<DateFieldProps>;
 
-// Warning: (ae-forgotten-export) The symbol "EditableFieldProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "EditableFieldProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
@@ -167,7 +169,7 @@ export const DesignLibrary: {
     displayName: string;
 };
 
-// Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element | null;
@@ -204,13 +206,13 @@ export type FEaaSComponentParams = {
     RenderingIdentifier?: string;
 };
 
-// Warning: (ae-forgotten-export) The symbol "FEaaSComponentServerProps" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "FEaaSComponentClientProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "FEaaSComponentServerProps" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "FEaaSComponentClientProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export type FEaaSComponentProps = FEaaSComponentServerProps & FEaaSComponentClientProps;
 
-// Warning: (ae-forgotten-export) The symbol "FEaaSServerWrapperProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "FEaaSServerWrapperProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export const FEaaSServerWrapper: (props: FEaaSServerWrapperProps) => Promise<React_2.JSX.Element>;
@@ -228,7 +230,7 @@ export function fetchFEaaSComponentServerProps(params: FEaaSComponentParams, isP
 
 export { Field }
 
-// Warning: (ae-forgotten-export) The symbol "FileProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "FileProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 const File_2: React_2.FC<FileProps>;
@@ -236,13 +238,13 @@ export { File_2 as File }
 
 // @public
 export interface FileField {
-    // Warning: (ae-forgotten-export) The symbol "FileFieldValue" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "FileFieldValue" needs to be exported by the entry point api-surface.d.ts
     //
     // (undocumented)
     value: FileFieldValue;
 }
 
-// Warning: (ae-forgotten-export) The symbol "FormProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "FormProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export const Form: ({ params, rendering }: FormProps) => React_2.JSX.Element;
@@ -380,7 +382,7 @@ interface PlaceholderProps extends BasePlaceholderProps {
     // (undocumented)
     [key: string]: unknown;
     componentMap?: ComponentMap;
-    // Warning: (ae-forgotten-export) The symbol "ComponentProps" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "ComponentProps" needs to be exported by the entry point api-surface.d.ts
     modifyComponentProps?: (componentProps: ComponentProps) => ComponentProps;
     render?: (components: React.ReactNode[], data: ComponentRendering[], props: PlaceholderProps) => React.ReactNode;
 }
@@ -422,7 +424,10 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
 
 export { RouteData }
 
-// Warning: (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point index.d.ts
+// @public
+export type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
+
+// Warning: (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export class SitecoreProvider extends React_2.Component<SitecoreProviderProps, SitecoreProviderState> {
@@ -450,7 +455,7 @@ export { SitePathService }
 
 export { SitePathServiceConfig }
 
-// Warning: (ae-forgotten-export) The symbol "TextProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "TextProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 const Text_2: React_2.FC<TextProps>;
@@ -463,10 +468,59 @@ export interface TextField extends FieldMetadata {
 }
 
 // @public
+export const useInfiniteSearch: <T extends SearchDocument = SearchDocument>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;
+
+// @public
+export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocument> {
+    enabled?: boolean;
+    pageSize?: number;
+    query?: string;
+    searchIndexId: string;
+    sort?: SearchParameters<T>['sort'];
+}
+
+// Warning: (ae-forgotten-export) The symbol "InternalInfiniteSearchState" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export type UseInfiniteSearchState<T extends SearchDocument = SearchDocument> = Omit<InternalInfiniteSearchState<T>, 'offset'> & {
+    loadMore: () => void;
+    hasNextPage: boolean;
+    isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+    isLoadingMore: boolean;
+    isLoadingMoreError: boolean;
+};
+
+// @public
+export const useSearch: <T extends SearchDocument = SearchDocument>(options: UseSearchOptions<T>) => UseSearchState<T>;
+
+// @public
+export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
+    enabled?: boolean;
+    keepPreviousData?: boolean;
+    page?: number;
+    pageSize?: number;
+    query?: string;
+    searchIndexId: string;
+    sort?: SearchParameters<T>['sort'];
+}
+
+// Warning: (ae-forgotten-export) The symbol "InternalState" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export type UseSearchState<T extends SearchDocument = SearchDocument> = Omit<InternalState<T>, 'previousStatus'> & {
+    isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+    isPreviousData: boolean;
+};
+
+// @public
 export function useSitecore(options?: WithSitecoreOptions): WithSitecoreProps;
 
-// Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckOptions" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckOptions" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export function withDatasourceCheck(options?: WithDatasourceCheckOptions): <ComponentProps extends WithDatasourceCheckProps>(Component: React_2.ComponentType<ComponentProps>) => (props: ComponentProps) => JSX_2.Element | null;
@@ -474,19 +528,19 @@ export function withDatasourceCheck(options?: WithDatasourceCheckOptions): <Comp
 // @public
 export const withEditorChromes: (WrappedComponent: React_2.ComponentClass<unknown> | React_2.FC<unknown>) => React_2.ComponentClass;
 
-// Warning: (ae-forgotten-export) The symbol "WithEmptyFieldEditingComponentProps" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "WithEmptyFieldEditingComponentOptions" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "WithEmptyFieldEditingComponentProps" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "WithEmptyFieldEditingComponentOptions" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export function withEmptyFieldEditingComponent<FieldComponentProps extends WithEmptyFieldEditingComponentProps<FieldComponentProps>, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, options: WithEmptyFieldEditingComponentOptions): React_2.ForwardRefExoticComponent<React_2.PropsWithoutRef<FieldComponentProps> & React_2.RefAttributes<RefElementType>> | ((props: FieldComponentProps) => React_2.JSX.Element);
 
-// Warning: (ae-forgotten-export) The symbol "WithMetadataProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "WithMetadataProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export function withFieldMetadata<FieldComponentProps extends WithMetadataProps, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, isForwardRef?: boolean): React_2.ForwardRefExoticComponent<React_2.PropsWithoutRef<FieldComponentProps> & React_2.RefAttributes<RefElementType>> | ((props: FieldComponentProps) => React_2.JSX.Element);
 
-// Warning: (ae-forgotten-export) The symbol "WithPlaceholderSpec" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "WithPlaceholderOptions" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "WithPlaceholderSpec" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "WithPlaceholderOptions" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export function withPlaceholder(placeholders: WithPlaceholderSpec, options?: WithPlaceholderOptions): (WrappedComponent: React_2.ComponentClass<PlaceholderProps> | React_2.FunctionComponent<PlaceholderProps>) => (props: EnhancedOmit<PlaceholderProps, keyof WithSitecoreProps>) => React_2.JSX.Element;
@@ -511,8 +565,8 @@ export interface WithSitecoreProps {
 
 // Warnings were encountered during analysis:
 //
-// src/components/DesignLibrary/DesignLibrary.tsx:53:27 - (ae-forgotten-export) The symbol "DesignLibraryProps" needs to be exported by the entry point index.d.ts
-// src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point index.d.ts
+// src/components/DesignLibrary/DesignLibrary.tsx:52:27 - (ae-forgotten-export) The symbol "DesignLibraryProps" needs to be exported by the entry point api-surface.d.ts
+// src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

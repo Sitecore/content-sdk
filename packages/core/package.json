@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/core",
-  "version": "1.3.0-canary.30",
+  "version": "1.3.0-canary.36",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -91,7 +91,73 @@
   "files": [
     "dist",
     "types",
-    "/*.js",
     "/*.d.ts"
-  ]
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./client": {
+      "import": "./dist/esm/client/index.js",
+      "require": "./dist/cjs/client/index.js",
+      "types": "./types/client/index.d.ts"
+    },
+    "./config": {
+      "import": "./dist/esm/config/index.js",
+      "require": "./dist/cjs/config/index.js",
+      "types": "./types/config/index.d.ts"
+    },
+    "./config-cli": {
+      "import": "./dist/esm/config-cli/index.js",
+      "require": "./dist/cjs/config-cli/index.js",
+      "types": "./types/config-cli/index.d.ts"
+    },
+    "./codegen": {
+      "import": "./dist/esm/editing/codegen/index.js",
+      "require": "./dist/cjs/editing/codegen/index.js",
+      "types": "./types/editing/codegen/index.d.ts"
+    },
+    "./editing": {
+      "import": "./dist/esm/editing/index.js",
+      "require": "./dist/cjs/editing/index.js",
+      "types": "./types/editing/index.d.ts"
+    },
+    "./i18n": {
+      "import": "./dist/esm/i18n/index.js",
+      "require": "./dist/cjs/i18n/index.js",
+      "types": "./types/i18n/index.d.ts"
+    },
+    "./layout": {
+      "import": "./dist/esm/layout/index.js",
+      "require": "./dist/cjs/layout/index.js",
+      "types": "./types/layout/index.d.ts"
+    },
+    "./media": {
+      "import": "./dist/esm/media/index.js",
+      "require": "./dist/cjs/media/index.js",
+      "types": "./types/media/index.d.ts"
+    },
+    "./personalize": {
+      "import": "./dist/esm/personalize/index.js",
+      "require": "./dist/cjs/personalize/index.js",
+      "types": "./types/personalize/index.d.ts"
+    },
+    "./site": {
+      "import": "./dist/esm/site/index.js",
+      "require": "./dist/cjs/site/index.js",
+      "types": "./types/site/index.d.ts"
+    },
+    "./tools": {
+      "import": "./dist/esm/tools/index.js",
+      "require": "./dist/cjs/tools/index.js",
+      "types": "./types/tools/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/esm/utils/index.js",
+      "require": "./dist/cjs/utils/index.js",
+      "types": "./types/utils/index.d.ts"
+    }
+  }
 }

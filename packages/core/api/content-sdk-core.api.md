@@ -225,6 +225,7 @@ export const createGraphQLClientFactory: (options: GraphQLClientOptions) => Grap
 
 // @public
 const debug_2: {
+    search: debug_3.Debugger;
     common: debug_3.Debugger;
     form: debug_3.Debugger;
     http: debug_3.Debugger;

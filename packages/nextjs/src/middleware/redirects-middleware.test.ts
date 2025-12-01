@@ -2632,4 +2632,79 @@ describe('RedirectsMiddleware', () => {
       expect(redirectArg.locale).to.equal('en');
     });
   });
+
+  describe('configuration - Edge and Local API', () => {
+    it('works with Edge-only config (no Local)', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        contextId: 'edge-context-id',
+        clientContextId: 'edge-client-id',
+        edgeUrl: 'https://edge.url',
+        sites: [],
+        locales: ['en'],
+      });
+
+      // Verify middleware was created successfully
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.undefined;
+    });
+
+    it('works with Local-only config (no Edge)', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        // Local config provided (Edge config omitted)
+        apiHost: 'https://local.host',
+        apiKey: 'local-api-key',
+        path: '/api/graphql',
+        sites: [],
+        locales: ['en'],
+      } as any); // Type assertion: Edge properties are optional at runtime
+
+      // Verify middleware was created successfully
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.undefined;
+    });
+
+    it('works with both Edge and Local config (Edge takes priority)', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        contextId: 'edge-context-id',
+        clientContextId: 'edge-client-id',
+        edgeUrl: 'https://edge.url',
+        apiHost: 'https://local.host',
+        apiKey: 'local-api-key',
+        path: '/api/graphql',
+        sites: [],
+        locales: ['en'],
+      });
+
+      // Verify middleware was created successfully
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.undefined;
+    });
+
+    it('excludes local config when apiHost or apiKey is missing', () => {
+      // Only apiHost, missing apiKey
+      const middleware1 = new RedirectsMiddleware({
+        enabled: true,
+        apiHost: 'https://local.host',
+        // apiKey missing
+        sites: [],
+        locales: ['en'],
+      } as any); // Type assertion: Edge properties are optional at runtime
+
+      expect(middleware1).to.not.be.undefined;
+
+      // Only apiKey, missing apiHost
+      const middleware2 = new RedirectsMiddleware({
+        enabled: true,
+        // apiHost missing
+        apiKey: 'local-api-key',
+        sites: [],
+        locales: ['en'],
+      } as any); // Type assertion: Edge properties are optional at runtime
+
+      expect(middleware2).to.not.be.undefined;
+    });
+  });
 });

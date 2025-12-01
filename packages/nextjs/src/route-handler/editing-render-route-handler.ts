@@ -267,9 +267,17 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
    * @param {NextRequest} req - The incoming request
    */
   const POST = async (req: NextRequest) => {
+    const requestOrigin = req.headers.get('origin') || '';
+    const originHost = new URL(requestOrigin).host;
     const expectedCorsHeaders = getCorsHeaders(req);
-    if (!expectedCorsHeaders) {
-      return new Response(getOriginNotAllowedMessage(req.headers.get('origin') || ''), {
+
+    // Bypass CORS if:
+    // we are in local or sitecore environment - requested hostname is 'localhost'
+    // or the request is same origin (e.g. in vercel netlify environment)
+    const bypassCors = req.nextUrl.hostname === 'localhost' || req.nextUrl.host === originHost;
+
+    if (!bypassCors && !expectedCorsHeaders) {
+      return new Response(getOriginNotAllowedMessage(requestOrigin), {
         status: 401,
       });
     }
@@ -280,7 +288,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
         {
           html: INVALID_SECRET_HTML_MESSAGE,
         },
-        { status: 401, headers: expectedCorsHeaders }
+        { status: 401, headers: expectedCorsHeaders ?? {} }
       );
     }
 
@@ -348,7 +356,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     filteredHeaders.set('Content-Security-Policy', getCSPHeader());
 
     // add expected CORS headers to response
-    Object.entries(expectedCorsHeaders).forEach(([key, value]: [string, string]) => {
+    Object.entries(expectedCorsHeaders ?? {}).forEach(([key, value]: [string, string]) => {
       filteredHeaders.set(key, value);
     });
 
