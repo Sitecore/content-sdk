@@ -2635,7 +2635,6 @@ describe('RedirectsMiddleware', () => {
 
   describe('configuration - Edge and Local API', () => {
     it('works with Edge-only config (no Local)', () => {
-      const getClientFactorySpy = sandbox.spy();
       const middleware = new RedirectsMiddleware({
         enabled: true,
         contextId: 'edge-context-id',
@@ -2653,12 +2652,13 @@ describe('RedirectsMiddleware', () => {
     it('works with Local-only config (no Edge)', () => {
       const middleware = new RedirectsMiddleware({
         enabled: true,
+        // Local config provided (Edge config omitted)
         apiHost: 'https://local.host',
         apiKey: 'local-api-key',
         path: '/api/graphql',
         sites: [],
         locales: ['en'],
-      });
+      } as any); // Type assertion: Edge properties are optional at runtime
 
       // Verify middleware was created successfully
       expect(middleware).to.not.be.undefined;
@@ -2691,7 +2691,7 @@ describe('RedirectsMiddleware', () => {
         // apiKey missing
         sites: [],
         locales: ['en'],
-      });
+      } as any); // Type assertion: Edge properties are optional at runtime
 
       expect(middleware1).to.not.be.undefined;
 
@@ -2702,7 +2702,7 @@ describe('RedirectsMiddleware', () => {
         apiKey: 'local-api-key',
         sites: [],
         locales: ['en'],
-      });
+      } as any); // Type assertion: Edge properties are optional at runtime
 
       expect(middleware2).to.not.be.undefined;
     });
