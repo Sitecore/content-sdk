@@ -924,6 +924,9 @@ export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }?: {
     scConfig?: SitecoreConfig_2;
 }) => Promise<void>;
 
+
+export * from "@sitecore-content-sdk/react/search";
+
 // Warnings were encountered during analysis:
 //
 // src/middleware/personalize-middleware.ts:299:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts

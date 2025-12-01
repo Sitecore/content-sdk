@@ -24,6 +24,7 @@
     "monitoring.d.ts",
     "component-props-loader.d.ts",
     "site.d.ts",
+    "search.d.ts",
     "client.d.ts",
     "utils.d.ts",
     "tools.d.ts",
