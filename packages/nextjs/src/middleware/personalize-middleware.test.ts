@@ -1261,4 +1261,57 @@ describe('PersonalizeMiddleware', () => {
       expect(finalRes).to.deep.equal(res);
     });
   });
+
+  describe('configuration - Edge API required', () => {
+    it('gracefully disables when Edge config is missing', () => {
+      // Create middleware without Edge config (no contextId or clientContextId)
+      const middleware = new PersonalizeMiddleware({
+        enabled: true,
+        edgeTimeout: 400,
+        cdpTimeout: 400,
+        sites: [],
+        // No contextId or clientContextId - Edge config missing
+      });
+
+      // Verify middleware was created but personalizeService is null
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['personalizeService']).to.be.null;
+    });
+
+    it('skips execution when personalizeService is null', async () => {
+      const req = createRequest();
+      const res = createResponse();
+
+      // Create middleware without Edge config
+      const middleware = new PersonalizeMiddleware({
+        enabled: true,
+        edgeTimeout: 400,
+        cdpTimeout: 400,
+        sites: [],
+        // No contextId or clientContextId
+      });
+
+      const finalRes = await middleware.handle(req, res);
+
+      // Should skip execution and return response unchanged
+      validateDebugLog('skipped (personalize service not configured - edge config required)');
+      expect(finalRes).to.deep.equal(res);
+    });
+
+    it('works normally when Edge config is provided', () => {
+      const middleware = new PersonalizeMiddleware({
+        enabled: true,
+        contextId: 'edge-context-id',
+        clientContextId: 'edge-client-id',
+        edgeUrl: 'https://edge.url',
+        edgeTimeout: 400,
+        cdpTimeout: 400,
+        sites: [],
+      });
+
+      // Verify middleware was created and personalizeService is initialized
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['personalizeService']).to.not.be.null;
+    });
+  });
 });

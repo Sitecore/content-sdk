@@ -28,7 +28,6 @@ Our versioning strategy is as follows:
   - separate server and client import-map generation ([#293](https://github.com/Sitecore/content-sdk/pull/293))([#299](https://github.com/Sitecore/content-sdk/pull/299)
 * `[core]` Provide information about rendering host as part of code extraction ([#286](https://github.com/Sitecore/content-sdk/pull/286))
 * `[template/next-app-router]` Add component runtime information to prevent invalid client/server component operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))
-* `[template/next-app-router]` Fix middleware initialization errors in local container development ([#297](https://github.com/Sitecore/content-sdk/pull/297))
 * `[cli]` Create short flags for CLI commands ([#298](https://github.com/Sitecore/content-sdk/pull/298))
 
 ### 🐛 Bug Fixes
@@ -42,6 +41,7 @@ Our versioning strategy is as follows:
 * `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Geo based Personalization not possible in Content SDK Personalize Middleware. ([#290](https://github.com/Sitecore/jss/pull/290))
 * `[nextjs]` Remove locale property assignments in redirects middleware for App Router compatibility. ([#292](https://github.com/Sitecore/jss/pull/292))
 * `[nextjs]` Next Link props unavailable when using Sitecore Link component ([#294](https://github.com/Sitecore/content-sdk/pull/294)) ([#296](https://github.com/Sitecore/content-sdk/pull/296))
+* `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Fix middleware initialization errors in local container development ([#297](https://github.com/Sitecore/content-sdk/pull/297))([#302](https://github.com/Sitecore/content-sdk/pull/302))
 
 ### 🧹 Chores
 
