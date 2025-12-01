@@ -8,7 +8,7 @@
 
 > `const` **getComponentServerProps**: [`GetComponentServerProps`](../../../type-aliases/GetComponentServerProps.md)
 
-Defined in: [nextjs/src/components/FEaaSWrapper.tsx:22](https://github.com/Sitecore/content-sdk/blob/189151b46e44c05bfb20a441374476ce234c4e77/packages/nextjs/src/components/FEaaSWrapper.tsx#L22)
+Defined in: [nextjs/src/components/FEaaSWrapper.tsx:22](https://github.com/Sitecore/content-sdk/blob/63252e0290b61f21cc14fef821285d75a991d463/packages/nextjs/src/components/FEaaSWrapper.tsx#L22)
 
 **`Internal`**
 
