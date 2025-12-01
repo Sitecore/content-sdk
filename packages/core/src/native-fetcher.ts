@@ -239,8 +239,14 @@ export class NativeDataFetcher {
    * @returns {NativeDataFetcherError} - The constructed error object.
    */
   private createError(response: Response, data?: unknown): NativeDataFetcherError {
+    const error = new Error(
+      `HTTP ${response.status}${response.statusText ? ` ${response.statusText}` : ''}`
+    );
+
     return {
-      ...new Error(`HTTP ${response.status} ${response.statusText}`),
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
       response: {
         status: response.status,
         statusText: response.statusText,
