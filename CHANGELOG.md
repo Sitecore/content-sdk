@@ -37,6 +37,7 @@ Our versioning strategy is as follows:
 ### 🧹 Chores
 
 * API Surface verification and reporting ([#283](https://github.com/Sitecore/content-sdk/pull/283))
+* `[core]` `[react]` Remove "strictNullChecks: false" tsconfig property ([#304](https://github.com/Sitecore/content-sdk/pull/304))
 
 ## 1.2.1
 

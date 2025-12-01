@@ -819,7 +819,7 @@ export const isDynamicPlaceholder: (placeholder: string) => boolean;
 export const isEditorActive: () => boolean;
 
 // @public
-export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field>): boolean;
+export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
 
 // @public
 export const isRegexOrUrl: (input: string) => "regex" | "url";

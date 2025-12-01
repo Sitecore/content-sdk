@@ -56,7 +56,7 @@ import { SitePathService } from '@sitecore-content-sdk/core/site';
 import { SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
 
 // @public
-export const AppPlaceholder: (props: AppPlaceholderProps) => string | number | bigint | boolean | Iterable<React_2.ReactNode> | Promise<string | number | bigint | boolean | React_2.ReactPortal | React_2.ReactElement<unknown, string | React_2.JSXElementConstructor<any>> | Iterable<React_2.ReactNode>> | React_2.JSX.Element | (string | number | bigint | boolean | Iterable<React_2.ReactNode> | Promise<string | number | bigint | boolean | React_2.ReactPortal | React_2.ReactElement<unknown, string | React_2.JSXElementConstructor<any>> | Iterable<React_2.ReactNode>> | React_2.JSX.Element)[];
+export const AppPlaceholder: (props: AppPlaceholderProps) => string | number | bigint | boolean | Iterable<React_2.ReactNode> | Promise<string | number | bigint | boolean | React_2.ReactPortal | React_2.ReactElement<unknown, string | React_2.JSXElementConstructor<any>> | Iterable<React_2.ReactNode> | null | undefined> | React_2.JSX.Element | (string | number | bigint | boolean | Iterable<React_2.ReactNode> | Promise<string | number | bigint | boolean | React_2.ReactPortal | React_2.ReactElement<unknown, string | React_2.JSXElementConstructor<any>> | Iterable<React_2.ReactNode> | null | undefined> | React_2.JSX.Element | null | undefined)[] | null | undefined;
 
 // Warning: (ae-forgotten-export) The symbol "BasePlaceholderProps" needs to be exported by the entry point index.d.ts
 //
@@ -170,7 +170,7 @@ export const DesignLibrary: {
 // Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point index.d.ts
 //
 // @public
-export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element;
+export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element | null;
 
 export { DictionaryPhrases }
 
@@ -188,7 +188,7 @@ export { EnhancedOmit }
 export { ErrorPage }
 
 // @public (undocumented)
-export const FEaaSComponent: (props: FEaaSComponentProps) => JSX_2.Element;
+export const FEaaSComponent: (props: FEaaSComponentProps) => JSX_2.Element | null;
 
 // @public
 export type FEaaSComponentParams = {
@@ -224,7 +224,7 @@ export { FEaaSWrapper }
 export function fetchBYOCComponentServerProps(params: BYOCComponentParams): Promise<BYOCServerProps>;
 
 // @public
-export function fetchFEaaSComponentServerProps(params: FEaaSComponentParams, isPageStateNormal?: boolean, endpointOverride?: string): Promise<FEaaSComponentServerProps>;
+export function fetchFEaaSComponentServerProps(params: FEaaSComponentParams, isPageStateNormal?: boolean, endpointOverride?: string): Promise<FEaaSComponentServerProps | null>;
 
 export { Field }
 
@@ -469,7 +469,7 @@ export function useSitecore(options?: WithSitecoreOptions): WithSitecoreProps;
 // Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckProps" needs to be exported by the entry point index.d.ts
 //
 // @public
-export function withDatasourceCheck(options?: WithDatasourceCheckOptions): <ComponentProps extends WithDatasourceCheckProps>(Component: React_2.ComponentType<ComponentProps>) => (props: ComponentProps) => JSX_2.Element;
+export function withDatasourceCheck(options?: WithDatasourceCheckOptions): <ComponentProps extends WithDatasourceCheckProps>(Component: React_2.ComponentType<ComponentProps>) => (props: ComponentProps) => JSX_2.Element | null;
 
 // @public
 export const withEditorChromes: (WrappedComponent: React_2.ComponentClass<unknown> | React_2.FC<unknown>) => React_2.ComponentClass;
@@ -511,7 +511,7 @@ export interface WithSitecoreProps {
 
 // Warnings were encountered during analysis:
 //
-// src/components/DesignLibrary/DesignLibrary.tsx:52:27 - (ae-forgotten-export) The symbol "DesignLibraryProps" needs to be exported by the entry point index.d.ts
+// src/components/DesignLibrary/DesignLibrary.tsx:53:27 - (ae-forgotten-export) The symbol "DesignLibraryProps" needs to be exported by the entry point index.d.ts
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
