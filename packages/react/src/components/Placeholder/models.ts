@@ -150,7 +150,7 @@ export interface AppPlaceholderProps extends BasePlaceholderProps {
   ) => React.ReactNode;
 }
 
-export type RenderedProps = Omit<PlaceholderProps, 'fields' | 'params'> & {
+export type RenderedProps = Omit<PlaceholderProps, 'fields' | 'params' | 'name'> & {
   key: string;
   fields: { [field: string]: unknown };
   params: { [param: string]: unknown };

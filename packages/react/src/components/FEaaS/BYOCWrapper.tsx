@@ -59,11 +59,10 @@ export class BYOCComponent extends React.Component<BYOCComponentProps> {
       const noNameProps = {
         errorOverride: 'BYOC: The ComponentName for this rendering is missing',
       };
-      return props.missingComponentComponent ? (
-        <this.props.missingComponentComponent {...noNameProps} />
-      ) : (
-        <MissingComponent {...noNameProps} />
-      );
+
+      const MissingComp = this.props.missingComponentComponent;
+
+      return MissingComp ? <MissingComp {...noNameProps} /> : <MissingComponent {...noNameProps} />;
     }
 
     const unRegisteredComponentProps = {

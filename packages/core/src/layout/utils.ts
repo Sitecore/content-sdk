@@ -116,7 +116,11 @@ export const EMPTY_DATE_FIELD_VALUE = '0001-01-01T00:00:00Z';
  * @returns True if the field value is empty
  * @public
  */
-export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field>): boolean {
+export function isFieldValueEmpty(
+  field: GenericFieldValue | Partial<Field> | null | undefined
+): field is null | undefined {
+  if (!field) return true;
+
   const isImageFieldEmpty = (fieldValue: GenericFieldValue) =>
     !(fieldValue as { [key: string]: unknown }).src;
   const isFileFieldEmpty = (fieldValue: GenericFieldValue) =>
@@ -153,8 +157,6 @@ export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field>): bo
       return !fieldValue || isDateFieldEmpty(fieldValue);
     }
   };
-
-  if (!field) return true;
 
   const dynamicField = field as Partial<Field>;
   if (dynamicField.value !== undefined) {

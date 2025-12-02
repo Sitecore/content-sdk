@@ -393,8 +393,8 @@ export function getDesignLibraryComponentPreviewErrorEvent(
  */
 export function getDesignLibraryComponentPropsEvent(
   uid: string,
-  fields: ComponentFields,
-  parameters: ComponentParams
+  fields: ComponentFields = {},
+  parameters: ComponentParams = {}
 ): DesignLibraryComponentPropsEvent {
   return {
     name: DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME,
