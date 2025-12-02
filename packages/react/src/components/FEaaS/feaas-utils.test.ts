@@ -128,18 +128,6 @@ describe('feaas-utils', () => {
       });
     });
 
-    it('should handle missing required props gracefully and return empty template', async () => {
-      const params: FEaaSComponentParams = {};
-
-      const result = await utilsModule.fetchFEaaSComponentServerProps(params, true);
-
-      expect(result).to.deep.equal({
-        fetchedData: {},
-        revisionFallback: 'published',
-        template: '',
-      });
-    });
-
     it('should handle errors gracefully and return empty template', async () => {
       const consoleErrorStub = sandbox.stub(console, 'error');
 

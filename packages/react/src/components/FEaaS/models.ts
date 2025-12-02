@@ -147,33 +147,3 @@ export type FEaaSComponentClientProps = {
    */
   fields?: ComponentFields;
 };
-
-/**
- * Interface representing the required parameters for a FEaaS component.
- */
-export type RequiredFEaaSParams = {
-  LibraryId: string;
-  ComponentId: string;
-  ComponentVersion: string;
-  ComponentHostName: string;
-};
-
-export type ValidatedFEaaSComponentParams = FEaaSComponentParams & RequiredFEaaSParams;
-
-/**
- * Type guard to check if FEaaSComponentParams has the required fields for component rendering.
- * @param { FEaaSComponentParams } params the params to check
- * @returns true if params has LibraryId, ComponentId, ComponentVersion, and ComponentHostName defined
- */
-export function isFEaaSComponentParamsComplete(
-  params?: FEaaSComponentParams
-): params is ValidatedFEaaSComponentParams {
-  if (!params) return false;
-
-  return !!(
-    params.LibraryId &&
-    params.ComponentId &&
-    params.ComponentVersion &&
-    params.ComponentHostName
-  );
-}

@@ -88,7 +88,7 @@ export const getPlaceholderRenderings = (
  * @returns {object} converted SXA params
  */
 export const getSXAParams = (rendering: ComponentRendering) => {
-  if (!rendering.params) return {};
+  if (!rendering.params) return { styles: '' };
 
   const { GridParameters, Styles } = rendering.params;
 

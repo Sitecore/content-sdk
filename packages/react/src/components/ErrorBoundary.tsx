@@ -18,14 +18,20 @@ export type ErrorBoundaryProps = {
   disableSuspense?: boolean;
 };
 
+type ErrorComponentWrapperProps =
+  | { message: React.ReactNode; children?: never }
+  | { children: React.ReactNode; message?: never };
+
 /**
  * Simple error component applying basic error styling.
- * @param {string} message The error message to display.
- * @returns A JSX element containing the error message in a div.
- * @internal
+ * @param {ErrorComponentWrapperProps} props The props can be either a message or React children, not both.
  */
-export const ErrorComponent = ({ message }: { message: string }) => {
-  return <div className="sc-content-sdk-placeholder-error">{message}</div>;
+export const ErrorComponentWrapper = (props: ErrorComponentWrapperProps) => {
+  return (
+    <div className="sc-content-sdk-placeholder-error">
+      {props.message ? props.message : props.children}
+    </div>
+  );
 };
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
@@ -67,18 +73,18 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
         if (this.showErrorDetails()) {
           return (
             <div>
-              <div className="sc-content-sdk-placeholder-error">
+              <ErrorComponentWrapper>
                 A rendering error occurred in component{' '}
                 <em>{this.props.rendering?.componentName}</em>
                 <br />
                 Error: <em>{this.state.error.message || JSON.stringify(this.state.error)}</em>
-              </div>
+              </ErrorComponentWrapper>
             </div>
           );
         } else {
           return (
             <div>
-              <ErrorComponent message={this.defaultErrorMessage} />
+              <ErrorComponentWrapper message={this.defaultErrorMessage} />
             </div>
           );
         }

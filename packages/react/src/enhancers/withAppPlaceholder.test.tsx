@@ -97,7 +97,6 @@ describe('withAppPlaceholder HOC', () => {
 
   // Basic functionality tests
   it('should render without placeholders', () => {
-    // Create simple test data with only valid components
     const cleanComponent: ComponentRendering = {
       componentName: 'TestComponent',
       uid: 'clean-test-123',
@@ -123,7 +122,6 @@ describe('withAppPlaceholder HOC', () => {
   });
 
   it('should render a single placeholder correctly', () => {
-    // Create simple test data with only valid components
     const cleanComponent: ComponentRendering = {
       componentName: 'TestComponent',
       uid: 'clean-test-123',

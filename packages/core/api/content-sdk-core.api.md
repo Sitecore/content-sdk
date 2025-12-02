@@ -649,7 +649,7 @@ export function getDesignLibraryComponentPreviewErrorEvent(uid: string, error: u
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPropsEvent" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
-export function getDesignLibraryComponentPropsEvent(uid: string, fields: ComponentFields, parameters: ComponentParams): DesignLibraryComponentPropsEvent;
+export function getDesignLibraryComponentPropsEvent(uid: string, fields?: ComponentFields, parameters?: ComponentParams): DesignLibraryComponentPropsEvent;
 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryImportMapEvent" needs to be exported by the entry point api-surface.d.ts
 //

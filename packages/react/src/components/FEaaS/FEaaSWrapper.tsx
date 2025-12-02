@@ -35,10 +35,10 @@ export const FEaaSComponent = (props: FEaaSComponentProps): JSX.Element | null =
     <FEAAS.Component
       data={data}
       template={props.template}
-      cdn={props.params?.ComponentHostName as string}
-      library={props.params?.LibraryId as string}
-      version={props.params?.ComponentVersion as string}
-      component={props.params?.ComponentId as string}
+      cdn={props.params?.ComponentHostName}
+      library={props.params?.LibraryId ?? ''}
+      version={props.params?.ComponentVersion}
+      component={props.params?.ComponentId ?? ''}
       instance={props.params?.ComponentInstanceId}
       revision={computedRevision}
       fetch={[]}

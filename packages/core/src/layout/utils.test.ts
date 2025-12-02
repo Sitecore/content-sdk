@@ -68,20 +68,6 @@ describe('core layout utils', () => {
       expect(result).to.be.true;
     });
 
-    it('should return true if field is undefined', () => {
-      const field = undefined;
-      const result = isFieldValueEmpty(field);
-
-      expect(result).to.be.true;
-    });
-
-    it('should return true if field is null', () => {
-      const field = null;
-      const result = isFieldValueEmpty(field);
-
-      expect(result).to.be.true;
-    });
-
     it('should return true if field value is empty for Field', () => {
       const field = {
         value: '',

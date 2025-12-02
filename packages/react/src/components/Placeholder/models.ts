@@ -21,7 +21,7 @@ export interface AppComponentProps {
     [name: string]: Field | Item | Item[];
   };
   params: {
-    [name: string]: string | undefined;
+    [name: string]: string;
   };
   rendering: ComponentRendering;
 }

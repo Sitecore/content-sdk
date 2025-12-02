@@ -7,7 +7,7 @@ import {
   PlaceholderProps,
   getPlaceholderRenderings,
 } from '../components/Placeholder';
-import { ErrorComponent } from '../components/ErrorBoundary';
+import { ErrorComponentWrapper } from '../components/ErrorBoundary';
 
 export interface WithPlaceholderOptions {
   /**
@@ -75,7 +75,9 @@ export function withPlaceholder(
           }
 
           return (
-            <ErrorComponent message={`A rendering error occurred: ${this.state.error.message}.`} />
+            <ErrorComponentWrapper
+              message={`A rendering error occurred: ${this.state.error.message}.`}
+            />
           );
         }
 

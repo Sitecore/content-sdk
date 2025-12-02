@@ -22,7 +22,7 @@ import {
   DesignLibraryServerPreviewProps,
   DesignLibraryServerVariantGenerationProps,
 } from './models';
-import { ErrorComponent } from '../ErrorBoundary';
+import { ErrorComponentWrapper } from '../ErrorBoundary';
 
 let { getCacheAndClean, hasCache } = globalCache;
 let { createComponentInstance, getImportMapInfo } = codegen;
@@ -117,10 +117,10 @@ export const DesignLibraryServerVariantGeneration = async ({
   }
 
   let componentToUpdate = rendering?.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0];
-  if (!componentToUpdate) return <ErrorComponent message="Rendering data is missing" />;
+  if (!componentToUpdate) return <ErrorComponentWrapper message="Rendering data is missing" />;
 
   if (!componentToUpdate.uid)
-    return <ErrorComponent message="Rendering UID is missing in the rendering data" />;
+    return <ErrorComponentWrapper message="Rendering UID is missing in the rendering data" />;
 
   const uid = componentToUpdate.uid;
   const componentUpdateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${uid}`;
@@ -206,9 +206,9 @@ export const DesignLibraryServerPreview = async ({
   let designLibraryStatus = DesignLibraryStatus.READY;
 
   let componentToUpdate = rendering?.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0];
-  if (!componentToUpdate) return <ErrorComponent message="Rendering data is missing" />;
+  if (!componentToUpdate) return <ErrorComponentWrapper message="Rendering data is missing" />;
   if (!componentToUpdate.uid)
-    return <ErrorComponent message="Rendering UID is missing in the rendering data" />;
+    return <ErrorComponentWrapper message="Rendering UID is missing in the rendering data" />;
 
   const componentUpdateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${componentToUpdate.uid}`;
 

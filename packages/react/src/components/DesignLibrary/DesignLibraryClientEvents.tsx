@@ -98,8 +98,8 @@ export const DesignLibraryVariantGenerationEvents = ({
 
       const propsEvent = getDesignLibraryComponentPropsEvent(
         component.uid,
-        component.fields || {},
-        component.params || {}
+        component.fields,
+        component.params
       );
       postToDesignLibrary(propsEvent);
 
