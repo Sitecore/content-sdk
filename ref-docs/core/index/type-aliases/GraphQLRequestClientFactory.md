@@ -8,7 +8,7 @@
 
 > **GraphQLRequestClientFactory** = (`config?`) => [`GraphQLRequestClient`](../classes/GraphQLRequestClient.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:76](https://github.com/Sitecore/content-sdk/blob/11355ebc3060a277b17c0c4283ad36afabfc2b0e/packages/core/src/graphql-request-client.ts#L76)
+Defined in: [packages/core/src/graphql-request-client.ts:76](https://github.com/Sitecore/content-sdk/blob/ea905f88f4dfeb082edef85ad5a67c03322f2c71/packages/core/src/graphql-request-client.ts#L76)
 
 A GraphQL Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.

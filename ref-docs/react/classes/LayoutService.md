@@ -32,7 +32,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `serviceConfig` | `LayoutServiceConfig` | configuration |
+| `serviceConfig` | `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\> | configuration |
 
 #### Returns
 
@@ -58,9 +58,24 @@ Defined in: packages/core/types/sitecore-service-base.d.ts:19
 
 ### serviceConfig
 
-> **serviceConfig**: `LayoutServiceConfig`
+> **serviceConfig**: `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\>
 
 Defined in: packages/core/types/layout/layout-service.d.ts:22
+
+#### Type declaration
+
+##### clientFactory
+
+> **clientFactory**: `GraphQLRequestClientFactory`
+
+A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
+This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
+
+##### debugger?
+
+> `optional` **debugger**: `Debugger`
+
+Optional debug logger override
 
 #### Overrides
 
