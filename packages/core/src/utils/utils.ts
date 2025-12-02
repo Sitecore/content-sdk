@@ -206,6 +206,8 @@ export const getEnforcedCorsHeaders = ({
     const corsHeaders: { [key: string]: string } = {
       'Access-Control-Allow-Origin': origin,
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+      'x-middleware-cache': 'no-cache',
+      'Cache-Control': 'no-store, must-revalidate',
     };
     // set the allowed headers for preflight requests
     if (requestMethod === 'OPTIONS') {
