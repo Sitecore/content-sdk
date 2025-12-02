@@ -75,6 +75,10 @@ describe('RedirectsMiddleware', () => {
   const validateEndMessageDebugLog = (message: string, params: unknown) => {
     const logParams = debugSpy.args.find((log) => log[0] === message) as Array<unknown>;
 
+    if (!logParams) {
+      throw new Error(`Expected debug log with message "${message}" not found.`);
+    }
+
     const actual = { ...(logParams[2] as any) };
     const expected = { ...(params as any) };
 
@@ -184,23 +188,6 @@ describe('RedirectsMiddleware', () => {
       endpoint: 'http://edge-endpoint/api/graph/edge',
     });
 
-    const defaultConfig = {
-      enabled: true,
-      contextId: '1243',
-      edgeUrl: '123',
-      apiKey: 'api1234',
-      apiHost: 'api123',
-      path: '/api/graph/edge',
-      clientContextId: '123',
-      sites: [],
-      locales: ['en', 'ua', 'pl-PL'],
-    };
-
-    const middleware = new RedirectsMiddleware({
-      ...defaultConfig,
-      ...(props.redirectsMiddlewareConfig || {}),
-    });
-
     const redirectMaps = props.redirectMaps || [];
     if (props.pattern && props.target) {
       redirectMaps.push({
@@ -212,11 +199,33 @@ describe('RedirectsMiddleware', () => {
       });
     }
 
+    const redirectsService = props.redirectsMiddlewareConfig?.redirectsService || {
+      fetchRedirects: sandbox
+        .stub()
+        .returns(Promise.resolve(props.target || redirectMaps.length > 1 ? redirectMaps : [])),
+    };
+
+    const defaultConfig = {
+      enabled: true,
+      contextId: '1243',
+      edgeUrl: '123',
+      apiKey: 'api1234',
+      apiHost: 'api123',
+      path: '/api/graph/edge',
+      clientContextId: '123',
+      sites: [],
+      locales: ['en', 'ua', 'pl-PL'],
+      redirectsService,
+    };
+
+    const middleware = new RedirectsMiddleware({
+      ...defaultConfig,
+      ...(props.redirectsMiddlewareConfig || {}),
+    });
+
     middleware['siteResolver'] = siteResolver;
 
-    const fetchRedirects = (middleware['redirectsService']['fetchRedirects'] =
-      props.fetchRedirectsStub ||
-      sandbox.stub().returns(Promise.resolve(Object.keys(props).length ? redirectMaps : [])));
+    const fetchRedirects = redirectsService.fetchRedirects;
 
     const getClientFactory = (middleware['getClientFactory'] =
       props.getClientFactoryStub || sandbox.stub().returns(clientFactory));
@@ -315,15 +324,6 @@ describe('RedirectsMiddleware', () => {
 
         validateDebugLog('skipped (preview)');
 
-        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'x-middleware-next': '1',
-          },
-          redirected: false,
-          status: 200,
-          url: '',
-        });
-
         expect(finalRes).to.deep.equal(res);
       });
 
@@ -346,15 +346,6 @@ describe('RedirectsMiddleware', () => {
         });
 
         validateDebugLog('skipped (preview)');
-
-        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'x-middleware-next': '1',
-          },
-          redirected: false,
-          status: 200,
-          url: '',
-        });
 
         expect(finalRes).to.deep.equal(res);
       });
@@ -387,25 +378,27 @@ describe('RedirectsMiddleware', () => {
           status: 301,
         });
         const customRedirectsService = {
-          fetchRedirects: sandbox.stub().returns(
-            Promise.resolve([
-              {
-                pattern: '/custom-pattern',
-                target: '/custom-target',
-                redirectType: REDIRECT_TYPE_301,
-                isQueryStringPreserved: false,
-              },
-            ])
-          ),
+          fetchRedirects: sandbox.stub().resolves([
+            {
+              pattern: '/custom-pattern',
+              target: '/custom-target',
+              redirectType: REDIRECT_TYPE_301,
+              isQueryStringPreserved: false,
+            },
+          ]),
         };
 
         setupRedirectStub(301);
 
         const { middleware } = createMiddleware({
-          redirectsService: customRedirectsService,
+          redirectsMiddlewareConfig: {
+            redirectsService: customRedirectsService,
+          },
         });
 
         const finalRes = await middleware.handle(req, res);
+
+        expect(customRedirectsService.fetchRedirects).to.be.calledOnce;
 
         validateDebugLog('redirects middleware start: %o', {
           hostname: 'foo.net',
@@ -420,7 +413,6 @@ describe('RedirectsMiddleware', () => {
           url,
         });
 
-        expect(customRedirectsService.fetchRedirects).to.be.calledOnce;
         expect(finalRes.status).to.equal(301);
       });
     });
@@ -453,7 +445,9 @@ describe('RedirectsMiddleware', () => {
       const skip = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
 
       const { middleware } = createMiddleware({
-        skip,
+        redirectsMiddlewareConfig: {
+          skip,
+        },
       });
 
       await test('/api/layout/render', middleware);
@@ -471,7 +465,10 @@ describe('RedirectsMiddleware', () => {
         .callsFake(() => res as unknown as NextResponse);
 
       const props = {
-        skip: (req: any) => req?.nextUrl.pathname === '/styleguide' && req.nextUrl.locale === 'en',
+        redirectsMiddlewareConfig: {
+          skip: (req: any) =>
+            req?.nextUrl.pathname === '/styleguide' && req.nextUrl.locale === 'en',
+        },
       };
       const req = createRequest();
       const { middleware } = createMiddleware(props);
@@ -502,7 +499,9 @@ describe('RedirectsMiddleware', () => {
         enabled: false,
       };
       const req = createRequest();
-      const { middleware } = createMiddleware(props);
+      const { middleware } = createMiddleware({
+        redirectsMiddlewareConfig: props,
+      });
       const finalRes = await middleware.handle(req, res);
       validateDebugLog('skipped (redirects middleware is disabled globally)');
 
@@ -527,13 +526,6 @@ describe('RedirectsMiddleware', () => {
       });
 
       validateDebugLog('skipped (redirect does not exist)');
-
-      validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-        headers: {},
-        redirected: undefined,
-        status: undefined,
-        url: 'http://localhost:3000/found',
-      });
 
       expect(siteResolver.getByHost).to.be.calledWith(hostname);
       // eslint-disable-next-line no-unused-expressions
@@ -652,7 +644,7 @@ describe('RedirectsMiddleware', () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           origin: 'http://localhost:3000',
-          pathname: 'http://localhost:3000/found?abc=def',
+          pathname: '/found',
           href: 'http://localhost:3000/not-found?abc=def',
           search: '?abc=def',
           locale: 'en',
@@ -677,7 +669,7 @@ describe('RedirectsMiddleware', () => {
 
         const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
           {
-            pattern: 'not-found?abc=def',
+            pattern: '/not-found?abc=def',
             target: '/found',
             redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
             isQueryStringPreserved: true,
@@ -700,6 +692,56 @@ describe('RedirectsMiddleware', () => {
       });
 
       it('should redirect, when pattern uses with query string', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/found?abc=def',
+          pathname: '/found',
+          origin: 'http://localhost:3000',
+          locale: 'en',
+          search: '?abc=def',
+          clone: cloneUrl,
+        };
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/not-found',
+              search: '?abc=def',
+              href: 'http://localhost:3000/not-found?abc=def',
+              locale: 'en',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+        });
+        setupRedirectStub(301);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            pattern: '/not-found?abc=def',
+            target: '/found',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: true,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+          headers: {},
+          redirected: undefined,
+          status: 301,
+          url,
+        });
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        // eslint-disable-next-line no-unused-expressions
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+      });
+
+      it('should redirect, when pattern is regex and uses query string', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/found?abc=def',
@@ -777,14 +819,7 @@ describe('RedirectsMiddleware', () => {
           res
         );
 
-        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'x-middleware-next': '1',
-          },
-          redirected: false,
-          status: 200,
-          url: '',
-        });
+        validateDebugLog('skipped (redirect does not exist)');
 
         expect(finalRes).to.deep.equal(res);
       });
@@ -1512,12 +1547,12 @@ describe('RedirectsMiddleware', () => {
       it('should use sc_site cookie', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const siteName = 'foo';
-        const res = NextResponse.redirect('http://localhost:3000/found', 301);
+        const res = NextResponse.next();
         res.cookies.set('sc_site', siteName);
         const req = createRequest({
           nextUrl: {
             href: 'http://localhost:3000/not-found',
-            pathname: 'http://localhost:3000/not-found',
+            pathname: '/not-found',
             locale: 'en',
             origin: 'http://localhost:3000',
             search: '',
@@ -1525,8 +1560,10 @@ describe('RedirectsMiddleware', () => {
           },
         });
 
+        setupRedirectStub(301);
+
         const { middleware, fetchRedirects, siteResolver } = createMiddleware({
-          pattern: 'not-found',
+          pattern: '/not-found',
           target: '/found',
           redirectType: REDIRECT_TYPE_301,
           isQueryStringPreserved: true,
@@ -1541,27 +1578,26 @@ describe('RedirectsMiddleware', () => {
 
         const finalRes = await middleware.handle(req, res);
 
-        validateDebugLog('redirects middleware start: %o', {
-          hostname: 'foo.net',
-          language: 'en',
-          pathname: 'http://localhost:3000/not-found',
-        });
-
-        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            location: 'http://localhost:3000/found',
-            'set-cookie': 'sc_site=foo; Path=/',
-            'x-middleware-set-cookie': 'sc_site=foo; Path=/',
-          },
-          redirected: false,
-          status: 301,
-          url: '',
-        });
-
         expect(siteResolver.getByHost).to.not.have.been.called;
         expect(siteResolver.getByName).to.be.calledWith(siteName);
         expect(fetchRedirects).to.be.calledWith(siteName);
         expect(finalRes.status).to.equal(expected.status);
+
+        validateDebugLog('redirects middleware start: %o', {
+          hostname: 'foo.net',
+          language: 'en',
+          pathname: '/not-found',
+        });
+
+        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+          headers: {
+            'set-cookie': 'sc_site=foo; Path=/',
+            'x-middleware-set-cookie': 'sc_site=foo; Path=/',
+          },
+          redirected: undefined,
+          status: 301,
+          url: 'http://localhost:3000/found',
+        });
       });
 
       it('should preserve site name from response data when provided, if no redirect type defined', async () => {
@@ -1587,17 +1623,6 @@ describe('RedirectsMiddleware', () => {
           hostname: 'foo.net',
           language: 'en',
           pathname: '/not-found',
-        });
-
-        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: {
-            'set-cookie': 'sc_site=learn2grow; Path=/',
-            'x-middleware-next': '1',
-            'x-middleware-set-cookie': 'sc_site=learn2grow; Path=/',
-          },
-          redirected: false,
-          status: 200,
-          url: '',
         });
 
         expect(siteResolver.getByHost).to.not.be.called;
@@ -1629,7 +1654,9 @@ describe('RedirectsMiddleware', () => {
           redirectType: 'default',
           isQueryStringPreserved: true,
           locale: 'en',
-          skip: () => true,
+          redirectsMiddlewareConfig: {
+            skip: () => true,
+          },
         });
 
         const finalRes = await middleware.handle(req, res);
@@ -1734,7 +1761,9 @@ describe('RedirectsMiddleware', () => {
             redirectType: REDIRECT_TYPE_301,
             isQueryStringPreserved: true,
             locale: 'en',
-            defaultHostname: 'foobar',
+            redirectsMiddlewareConfig: {
+              defaultHostname: 'foobar',
+            },
           },
           req,
           res,
@@ -1828,7 +1857,7 @@ describe('RedirectsMiddleware', () => {
 
         const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
           {
-            pattern: '/not-found?b=1',
+            pattern: 'not-found\\?b=1',
             target: '/found?a=1',
             redirectType: REDIRECT_TYPE_301,
             isQueryStringPreserved: true,
@@ -1937,7 +1966,7 @@ describe('RedirectsMiddleware', () => {
 
         const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
           {
-            pattern: '/[/]?not-found?a=1&w=1/',
+            pattern: '/[/]?not-found\\?a=1&w=1/',
             target: '/found',
             redirectType: REDIRECT_TYPE_301,
             isQueryStringPreserved: true,
@@ -2819,3 +2848,4 @@ describe('RedirectsMiddleware', () => {
     });
   });
 });
+

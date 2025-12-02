@@ -19,6 +19,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';
 import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
 import { SitecoreConfig } from '../config';
+import { language } from '@sitecore-cloudsdk/core/internal';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
@@ -119,23 +120,16 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return true;
       };
 
+      if (!validateRequest()) {
+        return res;
+      }
+
       const processAbsoluteUrlTarget = (
         url: NextURL,
         existsRedirect: RedirectResult
       ): NextResponse => {
         // Redirect logic for absolute (external or not) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
         let targetUrl = existsRedirect.target;
-        const isRegex = isRegexOrUrl(existsRedirect.pattern) === 'regex';
-        if (isRegex) {
-          const matched = url.pathname
-            .replace(/\/*$/gi, '')
-            .match(regexParser(existsRedirect.pattern));
-          if (matched) {
-            targetUrl = targetUrl.replace(/\$(\d+)/g, (_: string, index: string): string => {
-              return matched[parseInt(index, 10)] || '';
-            });
-          }
-        }
 
         if (url.search && existsRedirect.isQueryStringPreserved) {
           const incomingQS = new URLSearchParams(url.search ?? '');
@@ -187,7 +181,13 @@ export class RedirectsMiddleware extends MiddlewareBase {
         }
 
         /** return Response redirect with http code of redirect type */
-        return this.dispatchRedirect(url, existsRedirect.redirectType, req, res, false);
+        return this.dispatchRedirect(
+          this.normalizeUrl(url),
+          existsRedirect.redirectType,
+          req,
+          res,
+          false
+        );
       };
       site = this.getSite(req, res);
 
@@ -208,15 +208,24 @@ export class RedirectsMiddleware extends MiddlewareBase {
         site.language
       );
 
-      const url = this.normalizeUrl(req.nextUrl.clone());
+      const reqUrl = this.normalizeUrl(req.nextUrl.clone());
+
+      // Apply regex replacements to the target URL if the pattern is a regex
+      const matched = reqUrl.pathname
+        .replace(/\/*$/gi, '')
+        .match(regexParser(existsRedirect.pattern));
+      if (matched) {
+        existsRedirect.target = existsRedirect.target.replace(
+          /\$(\d+)/g,
+          (_: string, index: string): string => {
+            return matched[parseInt(index, 10)] || '';
+          }
+        );
+      }
 
       const redirectedResponse = REGEXP_ABSOLUTE_URL.test(existsRedirect.target)
-        ? processAbsoluteUrlTarget(url, existsRedirect)
-        : processRelativeUrlTarget(url, existsRedirect);
-
-      if (!validateRequest()) {
-        return res;
-      }
+        ? processAbsoluteUrlTarget(reqUrl, existsRedirect)
+        : processRelativeUrlTarget(reqUrl, existsRedirect);
 
       debug.redirects('redirects middleware end in %dms: %o', Date.now() - startTimestamp, {
         redirected: redirectedResponse.redirected,
@@ -285,7 +294,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
           // Modify the redirect pattern to ignore the language prefix in the path
           // And escapes non-special "?" characters in a string or regex.
           redirect.pattern = escapeNonSpecialQuestionMarks(
-            redirect.pattern.replace(new RegExp(`^[^]?/${locale}/`, 'gi'), '')
+            '^' + redirect.pattern.replace(new RegExp(`^[^]?/${language}/`, 'gi'), '') // ensure function thinks input is regex
           );
 
           // Prepare the redirect pattern as a regular expression, making it more flexible for matching URLs
