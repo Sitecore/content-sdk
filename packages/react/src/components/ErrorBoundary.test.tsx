@@ -17,7 +17,6 @@ describe('<ErrorComponent />', () => {
     const rendered = render(<ErrorComponent message={message} />);
 
     const errorDiv = rendered.container.querySelector('.sc-content-sdk-placeholder-error');
-    expect(errorDiv).to.not.be.null;
     expect(errorDiv?.textContent).to.equal(message);
   });
 
@@ -29,7 +28,6 @@ describe('<ErrorComponent />', () => {
     );
 
     const errorDiv = rendered.container.querySelector('.sc-content-sdk-placeholder-error');
-    expect(errorDiv).to.not.be.null;
     expect(errorDiv?.textContent).to.equal('Child error content');
   });
 });
