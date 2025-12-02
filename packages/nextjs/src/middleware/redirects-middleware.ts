@@ -101,11 +101,11 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
       const isAppRouterRequest = this.isAppRouter(res);
 
-      const createResponse = async (): Promise<NextResponse> => {
+      const validateRequest = () => {
         if (this.isPreview(req)) {
           debug.redirects('skipped (preview)');
 
-          return res;
+          return false;
         }
 
         // Skip prefetch requests from Next.js, which are not original client requests
@@ -114,9 +114,46 @@ export class RedirectsMiddleware extends MiddlewareBase {
           debug.redirects('skipped (prefetch)');
           res.headers.set('x-middleware-cache', 'no-cache');
           res.headers.set('Cache-Control', 'no-store, must-revalidate');
-          return res;
+          return false;
+        }
+        return true;
+      };
+
+      const replaceSiteLangTokenIfPresent = (url: string, siteLanguage: string): string => {
+        return url.replace(REGEXP_CONTEXT_SITE_LANG, siteLanguage);
+      };
+
+      const processAbsoluteUrlTarget = (
+        url: NextURL,
+        existsRedirect: RedirectResult
+      ): NextResponse => {
+        let targetUrl = existsRedirect.target;
+        const isRegex = isRegexOrUrl(existsRedirect.pattern) === 'regex';
+        if (isRegex) {
+          const matched = url.pathname
+            .replace(/\/*$/gi, '')
+            .match(regexParser(existsRedirect.pattern));
+          if (matched) {
+            targetUrl = targetUrl.replace(/\$(\d+)/g, (_: string, index: string): string => {
+              return matched[parseInt(index, 10)] || '';
+            });
+          }
         }
 
+        if (url.search && existsRedirect.isQueryStringPreserved) {
+          const incomingQS = new URLSearchParams(url.search ?? '');
+          const [targetMainUrl, targetQS] = targetUrl.split('?');
+          const mergedQueryString = mergeURLSearchParams(
+            incomingQS,
+            new URLSearchParams(targetQS || '')
+          );
+          targetUrl = `${targetMainUrl}?${mergedQueryString}`;
+        }
+
+        return this.dispatchRedirect(targetUrl, existsRedirect.redirectType, req, res, true);
+      };
+
+      const createResponse = async (): Promise<NextResponse> => {
         site = this.getSite(req, res);
 
         // Find the redirect from result of RedirectService
@@ -129,103 +166,51 @@ export class RedirectsMiddleware extends MiddlewareBase {
         }
 
         debug.redirects('Matched redirect rule: %o', { existsRedirect });
+        const url = this.normalizeUrl(req.nextUrl.clone());
+        existsRedirect.target = replaceSiteLangTokenIfPresent(existsRedirect.target, site.language);
 
-        const sitecoreLanguageRegex = /^\/?[a-z]{2,4}(-([A-Za-z]){2})?\//;
-
-        const targetContainsDifferentLocale =
-          existsRedirect.target.match(sitecoreLanguageRegex) &&
-          existsRedirect.target.match(sitecoreLanguageRegex)![0].replace(/\//g, '') !== language;
-        // Find context site language and replace token
-        if (
-          REGEXP_CONTEXT_SITE_LANG.test(existsRedirect.target) &&
-          !(
-            REGEXP_ABSOLUTE_URL.test(existsRedirect.target) &&
-            existsRedirect.target.includes(hostname)
-          )
-        ) {
-          existsRedirect.target = existsRedirect.target.replace(
-            REGEXP_CONTEXT_SITE_LANG,
-            site.language
-          );
-          if (!isAppRouterRequest) {
-            req.nextUrl.locale = site.language;
-          }
+        // Redirect logic for absolute (external or not) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
+        if (REGEXP_ABSOLUTE_URL.test(existsRedirect.target)) {
+          return processAbsoluteUrlTarget(url, existsRedirect);
         }
 
-        const url = this.normalizeUrl(req.nextUrl.clone());
+        const isUrl = isRegexOrUrl(existsRedirect.pattern) === 'url';
+        let targetUrl = existsRedirect.target;
+        const possiblyLocalePrefix = targetUrl.split('/')[1];
+        let [targetMainUrl, targetQS] = targetUrl.split('?');
+        let targetLocale = '';
 
-        // Redirect logic for external (absolute) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
-        if (REGEXP_ABSOLUTE_URL.test(existsRedirect.target)) {
-          // Perform variable substitution for absolute URLs
-          let finalTarget = existsRedirect.target;
+        if (this.locales.includes(possiblyLocalePrefix)) {
+          targetLocale = possiblyLocalePrefix;
+          targetUrl = targetUrl.replace(`/${possiblyLocalePrefix}`, '');
+        } else if (existsRedirect.isLanguagePreserved) {
+          targetLocale = language;
+        }
 
-          if (isRegexOrUrl(existsRedirect.pattern) === 'regex') {
-            const matched = url.pathname
-              .replace(/\/*$/gi, '')
-              .match(regexParser(existsRedirect.pattern));
-            if (matched) {
-              finalTarget = existsRedirect.target.replace(
-                /\$(\d+)/g,
-                (_: string, index: string): string => {
-                  return matched[parseInt(index, 10)] || '';
-                }
-              );
-            }
-          }
+        if (url.search && existsRedirect.isQueryStringPreserved) {
+          const incomingQS = new URLSearchParams(url.search ?? '');
+          targetQS = mergeURLSearchParams(incomingQS, new URLSearchParams(targetQS || ''));
+        }
 
-          return this.dispatchRedirect(finalTarget, existsRedirect.redirectType, req, res, true);
-        } else {
-          const isUrl = isRegexOrUrl(existsRedirect.pattern) === 'url';
-          const targetParts = existsRedirect.target.split('/');
-          const urlFirstPart = targetParts[1];
+        const prepareNewURL = new URL(
+          `${targetMainUrl}${targetQS ? '?' + targetQS : ''}`,
+          url.origin
+        );
 
-          if (this.locales.includes(urlFirstPart)) {
-            if (!isAppRouterRequest) {
-              req.nextUrl.locale = urlFirstPart;
-            }
-            existsRedirect.target = existsRedirect.target.replace(`/${urlFirstPart}`, '');
-          }
-
-          const targetSegments = isUrl
-            ? existsRedirect.target.split('?')
-            : url.pathname.replace(/\/*$/gi, '') + existsRedirect.matchedQueryString;
-
-          const [targetPath, targetQueryString] = isUrl
-            ? targetSegments
-            : (targetSegments as string)
-                .replace(regexParser(existsRedirect.pattern), existsRedirect.target)
-                .replace(/^\/\//, '/')
-                .split('?');
-
-          const mergedQueryString = existsRedirect.isQueryStringPreserved
-            ? mergeURLSearchParams(
-                new URLSearchParams(url.search ?? ''),
-                new URLSearchParams(targetQueryString || '')
-              )
-            : targetQueryString || '';
-
-          // apply language prefix unless target contains different locale
-          const appendedLocale =
-            existsRedirect.isLanguagePreserved && !targetContainsDifferentLocale
-              ? `/${language}`
-              : '';
-
-          const prepareNewURL = new URL(
-            `${appendedLocale}${targetPath}${mergedQueryString ? '?' + mergedQueryString : ''}`,
-            url.origin
-          );
-
-          url.href = prepareNewURL.href;
-          url.pathname = prepareNewURL.pathname;
-          url.search = prepareNewURL.search;
-          if (!isAppRouterRequest) {
-            url.locale = req.nextUrl.locale;
-          }
+        url.href = prepareNewURL.href;
+        url.pathname = prepareNewURL.pathname;
+        url.search = prepareNewURL.search;
+        if (!isAppRouterRequest) {
+          url.locale = targetLocale;
         }
 
         /** return Response redirect with http code of redirect type */
         return this.dispatchRedirect(url, existsRedirect.redirectType, req, res, false);
       };
+
+      if (!validateRequest()) {
+        return res;
+      }
 
       const response = await createResponse();
 

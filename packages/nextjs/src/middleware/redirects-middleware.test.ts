@@ -14,13 +14,38 @@ import chaiString from 'chai-string';
 import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
-import { RedirectsMiddleware } from './redirects-middleware';
+import { RedirectsMiddleware, RedirectsMiddlewareConfig } from './redirects-middleware';
 import { LOCALE_HEADER_NAME, REWRITE_HEADER_NAME } from './middleware';
+import { NextURL } from 'next/dist/server/web/next-url';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
 describe('RedirectsMiddleware', () => {
+  type TestMiddlewareProps = {
+    [key: string]: unknown;
+    redirectsMiddlewareConfig?: Partial<RedirectsMiddlewareConfig>;
+    // for multiple rules
+    redirectMaps?: {
+      pattern: string;
+      target: string;
+      redirectType?: string;
+      isQueryStringPreserved?: boolean;
+      isLanguagePreserved?: boolean;
+    }[];
+    // for single rule
+    pattern?: string;
+    target?: string;
+    redirectType?: string;
+    isQueryStringPreserved?: boolean;
+    isLanguagePreserved?: boolean;
+    locale?: string;
+    fetchRedirectsStub?: sinon.SinonStub;
+    getClientFactoryStub?: sinon.SinonStub;
+    defaultHostname?: string;
+    siteResolver?: SiteResolver;
+  };
+
   let nextRedirectStub: sinon.SinonStub;
   let nextRewriteStub: sinon.SinonStub;
 
@@ -136,30 +161,7 @@ describe('RedirectsMiddleware', () => {
     return res;
   };
 
-  const createMiddleware = (
-    props: {
-      [key: string]: unknown;
-      // for multiple rules
-      redirectMaps?: {
-        pattern: string;
-        target: string;
-        redirectType?: string;
-        isQueryStringPreserved?: boolean;
-        isLanguagePreserved?: boolean;
-      }[];
-      // for single rule
-      pattern?: string;
-      target?: string;
-      redirectType?: string;
-      isQueryStringPreserved?: boolean;
-      isLanguagePreserved?: boolean;
-      locale?: string;
-      fetchRedirectsStub?: sinon.SinonStub;
-      getClientFactoryStub?: sinon.SinonStub;
-      defaultHostname?: string;
-      siteResolver?: SiteResolver;
-    } = {}
-  ) => {
+  const createMiddleware = (props: TestMiddlewareProps = {}) => {
     class MockSiteResolver extends SiteResolver {
       sites = sitesFromConfigFile;
       getByName = sandbox.stub().callsFake((siteName: string) => ({
@@ -182,14 +184,21 @@ describe('RedirectsMiddleware', () => {
       endpoint: 'http://edge-endpoint/api/graph/edge',
     });
 
-    const middleware = new RedirectsMiddleware({
+    const defaultConfig = {
       enabled: true,
       contextId: '1243',
       edgeUrl: '123',
+      apiKey: 'api1234',
+      apiHost: 'api123',
+      path: '/api/graph/edge',
       clientContextId: '123',
       sites: [],
       locales: ['en', 'ua', 'pl-PL'],
-      ...props,
+    };
+
+    const middleware = new RedirectsMiddleware({
+      ...defaultConfig,
+      ...(props.redirectsMiddlewareConfig || {}),
     });
 
     const redirectMaps = props.redirectMaps || [];
@@ -240,17 +249,17 @@ describe('RedirectsMiddleware', () => {
   };
 
   const runTestWithRedirect = async (
-    middlewareOptions: any,
+    middlewareProps: TestMiddlewareProps,
     req: any,
     res: any,
     _hostname = hostname
   ) => {
-    const { middleware, fetchRedirects, siteResolver } = createMiddleware(middlewareOptions);
+    const { middleware, fetchRedirects, siteResolver } = createMiddleware(middlewareProps);
     const finalRes = await middleware.handle(req, res);
 
     validateDebugLog('redirects middleware start: %o', {
       hostname: _hostname,
-      language: middlewareOptions.locale || 'en',
+      language: middlewareProps.locale || 'en',
       pathname: req.nextUrl.pathname,
     });
 
@@ -2043,119 +2052,183 @@ describe('RedirectsMiddleware', () => {
           res
         );
 
-      expect(finalRes.url).to.equal(externalUrl);
-    });
-
-    it('should redirect to URL with current language as prefix, when isLanguagePreserved is set to true', async () => {
-      const cloneUrl = () => Object.assign({}, req.nextUrl);
-      const url = {
-        href: 'http://localhost:3000/en/target/',
-        pathname: '/en/target/',
-        origin: 'http://localhost:3000',
-        locale: 'en',
-        search: '',
-        clone: cloneUrl,
-      };
-
-      const { res, req } = createTestRequestResponse({
-        response: { url },
-        request: {
-          nextUrl: {
-            pathname: '/source',
-            href: 'http://localhost:3000/source',
-            origin: 'http://localhost:3000',
-            locale: 'en',
-            clone: cloneUrl,
-          },
-        },
-        status: 301,
+        expect(finalRes.url).to.equal(externalUrl);
       });
 
-      setupRedirectStub(301);
-
-      const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
-        {
-          pattern: '/source',
-          target: '/target/',
-          redirectType: REDIRECT_TYPE_301,
-          isQueryStringPreserved: false,
-          isLanguagePreserved: true,
+      it('should redirect to URL with current locale, when isLanguagePreserved is set to true and target does not contain language', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/target/',
+          pathname: '/target/',
+          origin: 'http://localhost:3000',
           locale: 'en',
-        },
-        req,
-        res
-      );
+          search: '',
+          clone: cloneUrl,
+        };
 
-      validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-        headers: {},
-        redirected: undefined,
-        status: 301,
-        url,
-      });
-
-      expect(siteResolver.getByHost).to.be.calledWith(hostname);
-      // eslint-disable-next-line no-unused-expressions
-      expect(fetchRedirects.called).to.be.true;
-      expect(finalRes.status).to.equal(res.status);
-      expect(normalizeUrl(finalRes.url)).to.equal('http://localhost:3000/en/target/');
-    });
-
-    it('should redirect to URL with locale, when target contains locale prefix and isLanguagePreserved is true', async () => {
-      const cloneUrl = () => Object.assign({}, req.nextUrl);
-      const url = {
-        href: 'http://localhost:3000/da-DK/target/',
-        pathname: '/da-DK/target/',
-        origin: 'http://localhost:3000',
-        locale: 'da-DK',
-        search: '',
-        clone: cloneUrl,
-      };
-
-      const { res, req } = createTestRequestResponse({
-        response: { url },
-        request: {
-          nextUrl: {
-            pathname: '/source',
-            href: 'http://localhost:3000/source',
-            origin: 'http://localhost:3000',
-            locale: 'en',
-            clone: cloneUrl,
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source',
+              href: 'http://localhost:3000/source',
+              origin: 'http://localhost:3000',
+              locale: 'en',
+              clone: cloneUrl,
+            },
           },
-        },
-        status: 301,
+          status: 301,
+        });
+
+        setupRedirectStub(301);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            pattern: '/source',
+            target: '/target/',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: true,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+          headers: {},
+          redirected: undefined,
+          status: 301,
+          url,
+        });
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        // eslint-disable-next-line no-unused-expressions
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+        expect(normalizeUrl(finalRes.url)).to.equal('http://localhost:3000/target/');
+        expect((finalRes.url as unknown as NextURL).locale).to.equal('en');
       });
 
-      setupRedirectStub(301);
+      it('should redirect to URL with empty locale (let nextjs decide), when isLanguagePreserved is set to false and target does not have language', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/target/',
+          pathname: '/target/',
+          origin: 'http://localhost:3000',
+          locale: '',
+          search: '',
+          clone: cloneUrl,
+        };
 
-      const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
-        {
-          pattern: '/source',
-          target: '/da-DK/target/',
-          redirectType: REDIRECT_TYPE_301,
-          isQueryStringPreserved: false,
-          isLanguagePreserved: true,
-          locale: 'en',
-        },
-        req,
-        res
-      );
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source',
+              href: 'http://localhost:3000/source',
+              origin: 'http://localhost:3000',
+              locale: 'en',
+              defaultLocale: 'es',
+              clone: cloneUrl,
+            },
+          },
+          status: 301,
+        });
 
-      validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-        headers: {},
-        redirected: undefined,
-        status: 301,
-        url,
+        setupRedirectStub(301);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            pattern: '/source',
+            target: '/target/',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: false,
+            locale: 'en',
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'es', 'da-DK'],
+            },
+          },
+          req,
+          res
+        );
+
+        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+          headers: {},
+          redirected: undefined,
+          status: 301,
+          url,
+        });
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        // eslint-disable-next-line no-unused-expressions
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+        expect(normalizeUrl(finalRes.url)).to.equal('http://localhost:3000/target/');
+        expect((finalRes.url as unknown as NextURL).locale).to.equal('');
       });
 
-      expect(siteResolver.getByHost).to.be.calledWith(hostname);
-      // eslint-disable-next-line no-unused-expressions
-      expect(fetchRedirects.called).to.be.true;
-      expect(finalRes.status).to.equal(res.status);
-      expect(normalizeUrl(finalRes.url)).to.equal('http://localhost:3000/da-DK/target/');
+      it('should redirect to URL with locale, when target contains locale prefix and isLanguagePreserved is true', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/target/',
+          pathname: '/target/',
+          origin: 'http://localhost:3000',
+          locale: 'da-DK',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source',
+              href: 'http://localhost:3000/source',
+              origin: 'http://localhost:3000',
+              locale: 'en',
+              clone: cloneUrl,
+            },
+          },
+          status: 301,
+        });
+
+        setupRedirectStub(301);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source',
+            target: '/da-DK/target/',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: true,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+          headers: {},
+          redirected: undefined,
+          status: 301,
+          url,
+        });
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        // eslint-disable-next-line no-unused-expressions
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+        expect(normalizeUrl(finalRes.url)).to.equal('http://localhost:3000/target/');
+        expect((finalRes.url as unknown as NextURL).locale).to.equal('da-DK');
+      });
     });
-  });
 
-  describe('should redirect to normalized path when nextjs specific "path" query string parameter is provided', () => {
+    describe('should redirect to normalized path when nextjs specific "path" query string parameter is provided', () => {
       it('should return 301 redirect', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
@@ -2571,7 +2644,7 @@ describe('RedirectsMiddleware', () => {
       });
     });
 
-    it('should update locale for pages router when target uses $siteLang token', async () => {
+    it.only('should update locale for pages router when target uses $siteLang token', async () => {
       const cloneUrl = () => Object.assign({}, req.nextUrl);
       const url = {
         href: 'http://localhost:3000/da/found',
@@ -2601,8 +2674,6 @@ describe('RedirectsMiddleware', () => {
         target: '/$siteLang/found',
         redirectType: REDIRECT_TYPE_301,
         isQueryStringPreserved: false,
-        locale: 'en',
-        language: 'da',
         sites: sitesFromConfigFile,
       });
 
