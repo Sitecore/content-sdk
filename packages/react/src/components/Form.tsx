@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { form } from '@sitecore-content-sdk/core';
 import { useSitecore } from '../enhancers/withSitecore';
-import { ErrorComponentWrapper } from './ErrorBoundary';
+import { ErrorComponent } from './ErrorBoundary';
 
 let { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
 
@@ -89,7 +89,7 @@ export const Form = ({ params, rendering }: FormProps) => {
   }, [content]);
 
   if (isEditing && error) {
-    return <ErrorComponentWrapper message="There was a problem loading this section" />;
+    return <ErrorComponent message="There was a problem loading this section" />;
   }
 
   return (

@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import { render, waitFor } from '@testing-library/react';
 import { spy } from 'sinon';
-import ErrorBoundary, { ErrorComponentWrapper } from './ErrorBoundary';
+import ErrorBoundary, { ErrorComponent } from './ErrorBoundary';
 import {
   SitecoreProvider,
   SitecoreProviderReactContext,
@@ -11,10 +11,10 @@ import {
 import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { Page } from '@sitecore-content-sdk/core/client';
 
-describe('<ErrorComponentWrapper />', () => {
+describe('<ErrorComponent />', () => {
   it('should render message prop with correct CSS class', () => {
     const message = 'Test error message';
-    const rendered = render(<ErrorComponentWrapper message={message} />);
+    const rendered = render(<ErrorComponent message={message} />);
 
     const errorDiv = rendered.container.querySelector('.sc-content-sdk-placeholder-error');
     expect(errorDiv).to.not.be.null;
@@ -23,9 +23,9 @@ describe('<ErrorComponentWrapper />', () => {
 
   it('should render children when provided without message', () => {
     const rendered = render(
-      <ErrorComponentWrapper>
+      <ErrorComponent>
         <span>Child error content</span>
-      </ErrorComponentWrapper>
+      </ErrorComponent>
     );
 
     const errorDiv = rendered.container.querySelector('.sc-content-sdk-placeholder-error');

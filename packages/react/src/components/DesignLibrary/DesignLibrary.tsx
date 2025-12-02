@@ -18,7 +18,7 @@ import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DesignLibraryProps, DynamicComponent } from './models';
 import { withLoadImportMap } from '../../enhancers/withLoadImportMap';
-import { ErrorComponentWrapper } from '../ErrorBoundary';
+import { ErrorComponent } from '../ErrorBoundary';
 
 let {
   getDesignLibraryImportMapEvent,
@@ -69,8 +69,7 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
 
   if (!isDesignLibrary) return null;
 
-  if (!uid)
-    return <ErrorComponentWrapper message="Rendering UID is missing in the rendering data" />;
+  if (!uid) return <ErrorComponent message="Rendering UID is missing in the rendering data" />;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
