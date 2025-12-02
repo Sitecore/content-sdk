@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { form } from '@sitecore-content-sdk/core';
 import { useSitecore } from '../enhancers/withSitecore';
+import { ErrorComponent } from './ErrorBoundary';
 
 let { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
 
@@ -76,6 +77,8 @@ export const Form = ({ params, rendering }: FormProps) => {
           setError(true);
         });
     } else {
+      if (!formRef.current) return;
+
       // If we are in editing mode, we don't want to send any events
       if (!isEditing) {
         subscribeToFormSubmitEvent(formRef.current, rendering.uid);
@@ -86,11 +89,7 @@ export const Form = ({ params, rendering }: FormProps) => {
   }, [content]);
 
   if (isEditing && error) {
-    return (
-      <div className="sc-content-sdk-placeholder-error">
-        There was a problem loading this section
-      </div>
-    );
+    return <ErrorComponent message="There was a problem loading this section" />;
   }
 
   return (

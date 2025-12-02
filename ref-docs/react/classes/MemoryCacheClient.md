@@ -60,7 +60,7 @@ Defined in: packages/core/types/cache-client.d.ts:45
 
 ### getCacheValue()
 
-> **getCacheValue**(`key`): `T`
+> **getCacheValue**(`key`): `null` \| `T`
 
 Defined in: packages/core/types/cache-client.d.ts:58
 
@@ -74,7 +74,7 @@ Retrieves a value from the cache.
 
 #### Returns
 
-`T`
+`null` \| `T`
 
 The cache value as {T}, or null if the specified key is not found in the cache.
 

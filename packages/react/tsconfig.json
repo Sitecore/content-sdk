@@ -5,7 +5,6 @@
     "module": "commonjs",
     "jsx": "react",
     "outDir": "dist/cjs",
-    "strictNullChecks": false,
     "types": ["node", "mocha"],
     "typeRoots": ["node_modules/@types"],
     "declarationDir": "./types",

@@ -41,10 +41,12 @@ export const DesignLibraryPreviewEvents = ({
   component,
 }: DesignLibraryPreviewEventsProps) => {
   useEffect(() => {
+    if (!component?.uid) return;
+
     postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
 
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
-      _updateServerComponentAction({ uid: updated.uid, updatedComponent: updated });
+      _updateServerComponentAction({ uid: updated.uid!, updatedComponent: updated });
     });
 
     return () => {
@@ -59,6 +61,7 @@ export const DesignLibraryPreviewEvents = ({
  * Design Library component for rendering server components in app router application.
  * DesignLibraryVariantGenerationEvents component serves as a communication bridge between DesignLibraryServer and the Design Studio on the client side in variant generation mode.
  * It posts messages to Design Library Studio and sets up handlers to receive updates and previews which are then passed to the server component via server function updateServerComponentAction.
+ * If the import map is not present then the import map error will be sent to Design Studio.
  * @param {DesignLibraryVariantGenerationEventsProps} props The props. {@link DesignLibraryVariantGenerationEventsProps}
  * @returns {JSX.Element} empty JSX element.
  */
@@ -70,25 +73,27 @@ export const DesignLibraryVariantGenerationEvents = ({
   previewComponentData,
 }: DesignLibraryVariantGenerationEventsProps) => {
   useEffect(() => {
+    if (!component?.uid) return;
+
     postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
 
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
       _updateServerComponentAction({
-        uid: updated.uid,
+        uid: updated.uid!,
         updatedComponent: updated,
         previewComponent: previewComponentData,
       });
     });
 
     const unsubPreview = addServerComponentPreviewHandler((eventArgs) => {
-      _updateServerComponentAction({ uid: component.uid, previewComponent: eventArgs });
+      _updateServerComponentAction({ uid: component.uid!, previewComponent: eventArgs });
     });
 
     if (importMapError) {
       // an import map error occurred on the server side in DesignLibraryServer, post error event to Design Studio
       sendErrorEvent(component.uid, importMapError, codegen.DesignLibraryPreviewError.RenderInit);
     } else {
-      const importMapEvent = getDesignLibraryImportMapEvent(component.uid, importMap);
+      const importMapEvent = getDesignLibraryImportMapEvent(component.uid, importMap!);
       postToDesignLibrary(importMapEvent);
 
       const propsEvent = getDesignLibraryComponentPropsEvent(
