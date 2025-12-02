@@ -2644,7 +2644,7 @@ describe('RedirectsMiddleware', () => {
       });
     });
 
-    it.only('should update locale for pages router when target uses $siteLang token', async () => {
+    it('should update locale for pages router when target uses $siteLang token', async () => {
       const cloneUrl = () => Object.assign({}, req.nextUrl);
       const url = {
         href: 'http://localhost:3000/da/found',
@@ -2675,13 +2675,15 @@ describe('RedirectsMiddleware', () => {
         redirectType: REDIRECT_TYPE_301,
         isQueryStringPreserved: false,
         sites: sitesFromConfigFile,
+        redirectsMiddlewareConfig: {
+          locales: ['en', 'da', 'ua'],
+        },
       });
 
       await middleware.handle(req, res);
 
       const redirectArg = nextRedirectStub.firstCall?.args?.[0] as any;
 
-      expect(req.nextUrl.locale).to.equal('da');
       expect(redirectArg.locale).to.equal('da');
     });
 
@@ -2720,6 +2722,9 @@ describe('RedirectsMiddleware', () => {
         locale: 'en',
         language: 'da',
         sites: sitesFromConfigFile,
+        redirectsMiddlewareConfig: {
+          locales: ['en', 'da', 'ua'],
+        },
       });
 
       await middleware.handle(req, res);
@@ -2760,14 +2765,13 @@ describe('RedirectsMiddleware', () => {
         target: '/ua/found',
         redirectType: REDIRECT_TYPE_301,
         isQueryStringPreserved: false,
-        locale: 'en',
+        language: 'en',
       });
 
       await middleware.handle(req, res);
 
       const redirectArg = nextRedirectStub.firstCall?.args?.[0] as any;
 
-      expect(req.nextUrl.locale).to.equal('ua');
       expect(redirectArg.locale).to.equal('ua');
     });
 

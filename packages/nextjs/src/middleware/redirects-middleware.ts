@@ -119,14 +119,11 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return true;
       };
 
-      const replaceSiteLangTokenIfPresent = (url: string, siteLanguage: string): string => {
-        return url.replace(REGEXP_CONTEXT_SITE_LANG, siteLanguage);
-      };
-
       const processAbsoluteUrlTarget = (
         url: NextURL,
         existsRedirect: RedirectResult
       ): NextResponse => {
+        // Redirect logic for absolute (external or not) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
         let targetUrl = existsRedirect.target;
         const isRegex = isRegexOrUrl(existsRedirect.pattern) === 'regex';
         if (isRegex) {
@@ -153,31 +150,12 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return this.dispatchRedirect(targetUrl, existsRedirect.redirectType, req, res, true);
       };
 
-      const createResponse = async (): Promise<NextResponse> => {
-        site = this.getSite(req, res);
-
-        // Find the redirect from result of RedirectService
-        const existsRedirect = await this.getExistsRedirect(req, site.name);
-
-        if (!existsRedirect) {
-          debug.redirects('skipped (redirect does not exist)');
-
-          return res;
-        }
-
-        debug.redirects('Matched redirect rule: %o', { existsRedirect });
-        const url = this.normalizeUrl(req.nextUrl.clone());
-        existsRedirect.target = replaceSiteLangTokenIfPresent(existsRedirect.target, site.language);
-
-        // Redirect logic for absolute (external or not) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
-        if (REGEXP_ABSOLUTE_URL.test(existsRedirect.target)) {
-          return processAbsoluteUrlTarget(url, existsRedirect);
-        }
-
-        const isUrl = isRegexOrUrl(existsRedirect.pattern) === 'url';
+      const processRelativeUrlTarget = (
+        url: NextURL,
+        existsRedirect: RedirectResult
+      ): NextResponse => {
         let targetUrl = existsRedirect.target;
         const possiblyLocalePrefix = targetUrl.split('/')[1];
-        let [targetMainUrl, targetQS] = targetUrl.split('?');
         let targetLocale = '';
 
         if (this.locales.includes(possiblyLocalePrefix)) {
@@ -187,6 +165,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
           targetLocale = language;
         }
 
+        let [targetMainUrl, targetQS] = targetUrl.split('?');
         if (url.search && existsRedirect.isQueryStringPreserved) {
           const incomingQS = new URLSearchParams(url.search ?? '');
           targetQS = mergeURLSearchParams(incomingQS, new URLSearchParams(targetQS || ''));
@@ -202,26 +181,51 @@ export class RedirectsMiddleware extends MiddlewareBase {
         url.search = prepareNewURL.search;
         if (!isAppRouterRequest) {
           url.locale = targetLocale;
+        } else {
+          // In App Router, we need to set the locale in the pathname
+          url.pathname = `/${targetLocale}${url.pathname}`;
         }
 
         /** return Response redirect with http code of redirect type */
         return this.dispatchRedirect(url, existsRedirect.redirectType, req, res, false);
       };
+      site = this.getSite(req, res);
+
+      // Find the redirect from result of RedirectService
+      const existsRedirect = await this.getExistsRedirect(req, site.name);
+
+      if (!existsRedirect) {
+        debug.redirects('skipped (redirect does not exist)');
+
+        return res;
+      }
+
+      debug.redirects('Matched redirect rule: %o', { existsRedirect });
+
+      // replace $siteLang token in target if exists
+      existsRedirect.target = existsRedirect.target.replace(
+        REGEXP_CONTEXT_SITE_LANG,
+        site.language
+      );
+
+      const url = this.normalizeUrl(req.nextUrl.clone());
+
+      const redirectedResponse = REGEXP_ABSOLUTE_URL.test(existsRedirect.target)
+        ? processAbsoluteUrlTarget(url, existsRedirect)
+        : processRelativeUrlTarget(url, existsRedirect);
 
       if (!validateRequest()) {
         return res;
       }
 
-      const response = await createResponse();
-
       debug.redirects('redirects middleware end in %dms: %o', Date.now() - startTimestamp, {
-        redirected: response.redirected,
-        status: response.status,
-        url: response.url,
-        headers: this.extractDebugHeaders(response.headers),
+        redirected: redirectedResponse.redirected,
+        status: redirectedResponse.status,
+        url: redirectedResponse.url,
+        headers: this.extractDebugHeaders(redirectedResponse.headers),
       });
 
-      return response;
+      return redirectedResponse;
     } catch (error) {
       console.log('Redirect middleware failed:');
       console.log(error);
