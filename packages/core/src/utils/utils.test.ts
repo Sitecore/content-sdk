@@ -110,7 +110,7 @@ describe('utils', () => {
     });
   });
 
-  describe.only('getEnforcedCorsHeaders', () => {
+  describe('getEnforcedCorsHeaders', () => {
     const mockOrigin = 'https://maybeallowed.com';
     const mockHeaders = {
       origin: mockOrigin,

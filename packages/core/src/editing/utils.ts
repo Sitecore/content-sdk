@@ -38,7 +38,7 @@ export const PAGES_EDITING_MARKER = 'jss-hrz-editing';
  */
 export const EDITING_ALLOWED_ORIGINS = [
   'https://pages.sitecorecloud.io',
-  'https://xmapps.sitecorecloud.io/',
+  'https://xmapps.sitecorecloud.io',
   'https://designlibrary.sitecorecloud.io',
 ];
 
