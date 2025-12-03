@@ -61,7 +61,7 @@ describe('<FEaaSComponent />', () => {
     const template = '<div>test output</div>';
     const wrapper = render(<FEaaSComponent template={template} />, { container: document.body });
     expect(wrapper.baseElement.innerHTML).to.equal(
-      `<feaas-component class="-feaas" fetch="">${template}</feaas-component>`
+      `<feaas-component class="-feaas" library="" component="" fetch="">${template}</feaas-component>`
     );
   });
 

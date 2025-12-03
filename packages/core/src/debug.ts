@@ -34,6 +34,7 @@ export const enableDebug = (namespaces: string) => debug.enable(namespaces);
  * See {@link https://www.npmjs.com/package/debug} for details.
  */
 export default {
+  search: debug(`${rootNamespace}:search`),
   common: debug(`${rootNamespace}:common`),
   form: debug(`${rootNamespace}:form`),
   http: debug(`${rootNamespace}:http`),

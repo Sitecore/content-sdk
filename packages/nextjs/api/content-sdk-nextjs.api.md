@@ -775,7 +775,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
 }
 
 // @public
-export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> & SitecoreConfig['api']['edge'] & SitecoreConfig['api']['local'] & MiddlewareBaseConfig & SitecoreConfig['redirects'] & {
+export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> & SitecoreConfig['api']['edge'] & Partial<NonNullable<SitecoreConfig['api']['local']>> & MiddlewareBaseConfig & SitecoreConfig['redirects'] & {
     redirectsService?: RedirectsService;
 };
 
@@ -923,6 +923,9 @@ export { WithSitecoreProps }
 export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }?: {
     scConfig?: SitecoreConfig_2;
 }) => Promise<void>;
+
+
+export * from "@sitecore-content-sdk/react/search";
 
 // Warnings were encountered during analysis:
 //

@@ -6,7 +6,7 @@
 
 # Variable: FEaaSComponent()
 
-> `const` **FEaaSComponent**: (`props`) => `JSX.Element`
+> `const` **FEaaSComponent**: (`props`) => `JSX.Element` \| `null`
 
 Defined in: react/types/components/FEaaS/FEaaSWrapper.d.ts:7
 
@@ -18,4 +18,4 @@ Defined in: react/types/components/FEaaS/FEaaSWrapper.d.ts:7
 
 ## Returns
 
-`JSX.Element`
+`JSX.Element` \| `null`

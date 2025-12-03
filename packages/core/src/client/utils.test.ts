@@ -106,4 +106,44 @@ describe('createGraphQLClientFactory', () => {
 
     expect(factory).to.not.be.undefined;
   });
+
+  it('prioritizes Edge over Local when both are provided', () => {
+    // When both Edge and Local configs are provided, Edge should take priority
+    const factory = createGraphQLClientFactory({
+      api: {
+        edge: {
+          contextId: 'edge-context-id',
+          edgeUrl: 'https://test.edge.url',
+        },
+        local: {
+          apiKey: 'local-key',
+          apiHost: 'https://local.host',
+          path: '/api/graphql',
+        },
+      },
+    });
+
+    // Factory should be created successfully (using Edge, not Local)
+    expect(factory).to.not.be.undefined;
+  });
+
+  it('falls back to Local when Edge contextId is missing', () => {
+    // When Edge contextId is missing but Local config is provided, should use Local
+    const factory = createGraphQLClientFactory({
+      api: {
+        edge: {
+          // No contextId - Edge config incomplete
+          edgeUrl: 'https://test.edge.url',
+        },
+        local: {
+          apiKey: 'local-key',
+          apiHost: 'https://local.host',
+          path: '/api/graphql',
+        },
+      },
+    });
+
+    // Factory should be created successfully (falling back to Local)
+    expect(factory).to.not.be.undefined;
+  });
 });

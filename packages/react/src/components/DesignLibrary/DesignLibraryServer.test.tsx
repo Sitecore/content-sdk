@@ -8,7 +8,10 @@ import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { render } from '@testing-library/react';
 import { Page, PageMode } from '@sitecore-content-sdk/core/client';
-import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
+import {
+  LayoutServiceData,
+  EDITING_COMPONENT_PLACEHOLDER,
+} from '@sitecore-content-sdk/core/layout';
 import { DesignLibraryStatus, DesignLibraryMode } from '@sitecore-content-sdk/core/editing';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
 import {
@@ -274,6 +277,52 @@ describe('<DesignLibraryServer />', () => {
       const propsPassed = DesignLibraryPreviewEventsStub.getCall(0).args[0];
       expect(propsPassed.designLibraryStatus).to.equal(DesignLibraryStatus.RENDERED);
     });
+
+    describe('error handling', () => {
+      it('should render ErrorComponent when rendering data is missing', async () => {
+        const page = getPage(undefined, modeLibrary);
+
+        const awaitedDesignLibraryServer = await DesignLibraryServerPreview({
+          page,
+          rendering: { placeholders: {} } as any,
+          componentMap: components,
+        });
+
+        const rendered = render(awaitedDesignLibraryServer);
+
+        expect(rendered?.container.innerHTML).to.include('Rendering data is missing');
+      });
+
+      it('should render ErrorComponent when component UID is missing', async () => {
+        const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
+        const page = getPage(layoutData, modeLibrary);
+
+        // Remove UID from the component
+        const renderingWithoutUid = {
+          ...layoutData.sitecore.route,
+          placeholders: {
+            [EDITING_COMPONENT_PLACEHOLDER]: [
+              {
+                ...layoutData.sitecore.route.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0],
+                uid: undefined,
+              },
+            ],
+          },
+        };
+
+        const awaitedDesignLibraryServer = await DesignLibraryServerPreview({
+          page,
+          rendering: renderingWithoutUid as any,
+          componentMap: components,
+        });
+
+        const rendered = render(awaitedDesignLibraryServer);
+
+        expect(rendered?.container.innerHTML).to.include(
+          'Rendering UID is missing in the rendering data'
+        );
+      });
+    });
   });
 
   describe('DesignLibraryServerVariantGeneration', () => {
@@ -360,6 +409,56 @@ describe('<DesignLibraryServer />', () => {
         expect(DesignLibraryVariantGenerationEventsStub).to.have.been.calledOnce;
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
         expect(propsPassed.designLibraryStatus).to.equal(DesignLibraryStatus.READY);
+      });
+    });
+
+    describe('error handling', () => {
+      beforeEach(() => {
+        hasCacheStub.returns(false);
+      });
+
+      it('should render ErrorComponent when rendering data is missing', async () => {
+        const page = getPage(undefined, modeLibraryMetadata_Gen);
+
+        const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
+          page,
+          rendering: { placeholders: {} } as any,
+          componentMap: components,
+        });
+
+        const rendered = render(awaitedDesignLibraryServer);
+
+        expect(rendered?.container.innerHTML).to.include('Rendering data is missing');
+      });
+
+      it('should render ErrorComponent when component UID is missing', async () => {
+        const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
+        const page = getPage(layoutData, modeLibraryMetadata_Gen);
+
+        // Remove UID from the component
+        const renderingWithoutUid = {
+          ...layoutData.sitecore.route,
+          placeholders: {
+            [EDITING_COMPONENT_PLACEHOLDER]: [
+              {
+                ...layoutData.sitecore.route.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0],
+                uid: undefined,
+              },
+            ],
+          },
+        };
+
+        const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
+          page,
+          rendering: renderingWithoutUid as any,
+          componentMap: components,
+        });
+
+        const rendered = render(awaitedDesignLibraryServer);
+
+        expect(rendered?.container.innerHTML).to.include(
+          'Rendering UID is missing in the rendering data'
+        );
       });
     });
 

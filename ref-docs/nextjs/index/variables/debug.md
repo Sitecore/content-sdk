@@ -67,6 +67,10 @@ See [https://www.npmjs.com/package/debug](https://www.npmjs.com/package/debug) f
 
 > **robots**: `debug.Debugger`
 
+### search
+
+> **search**: `debug.Debugger`
+
 ### sitemap
 
 > **sitemap**: `debug.Debugger`

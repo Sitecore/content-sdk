@@ -20,3 +20,4 @@ export * from '../route-handler';
 export * from '../site';
 export * from '../tools';
 export * from '../utils';
+export * from '../search';

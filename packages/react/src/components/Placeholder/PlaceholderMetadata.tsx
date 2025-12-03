@@ -45,11 +45,15 @@ export const PlaceholderMetadata = ({
   children,
   componentRuntime,
 }: PlaceholderMetadataProps): JSX.Element => {
-  const getCodeBlockAttributes = (
-    kind: MetadataKind,
-    id: string,
-    placeholderName?: string
-  ): CodeBlockAttributes => {
+  const getCodeBlockAttributes = ({
+    kind,
+    id,
+    placeholderName,
+  }: {
+    kind: MetadataKind;
+    id?: string;
+    placeholderName?: string;
+  }): CodeBlockAttributes => {
     const chrometype = placeholderName ? 'placeholder' : 'rendering';
 
     const attributes: CodeBlockAttributes = {
@@ -63,7 +67,7 @@ export const PlaceholderMetadata = ({
       if (chrometype === 'placeholder' && placeholderName) {
         let phId = '';
 
-        for (const placeholder of Object.keys(rendering.placeholders)) {
+        for (const placeholder of Object.keys(rendering.placeholders ?? {})) {
           if (placeholderName === placeholder) {
             phId = id
               ? `${placeholderName}_${id}`
@@ -97,13 +101,13 @@ export const PlaceholderMetadata = ({
     return attributes;
   };
 
-  const renderComponent = (uid: string, placeholderName?: string) => (
+  return (
     <>
-      <code {...getCodeBlockAttributes(MetadataKind.Open, uid, placeholderName)} />
+      <code
+        {...getCodeBlockAttributes({ kind: MetadataKind.Open, id: rendering.uid, placeholderName })}
+      />
       {children}
-      <code {...getCodeBlockAttributes(MetadataKind.Close, uid, placeholderName)} />
+      <code {...getCodeBlockAttributes({ kind: MetadataKind.Close, placeholderName })} />
     </>
   );
-
-  return <>{renderComponent(rendering.uid, placeholderName)}</>;
 };

@@ -6,7 +6,7 @@
 
 # Function: fetchFEaaSComponentServerProps()
 
-> **fetchFEaaSComponentServerProps**(`params`, `isPageStateNormal?`, `endpointOverride?`): `Promise`\<`FEaaSComponentServerProps`\>
+> **fetchFEaaSComponentServerProps**(`params`, `isPageStateNormal?`, `endpointOverride?`): `Promise`\<`null` \| `FEaaSComponentServerProps`\>
 
 Defined in: react/types/components/FEaaS/feaas-utils.d.ts:16
 
@@ -23,4 +23,4 @@ Component endpoint will either be retrieved from params or from endpointOverride
 
 ## Returns
 
-`Promise`\<`FEaaSComponentServerProps`\>
+`Promise`\<`null` \| `FEaaSComponentServerProps`\>

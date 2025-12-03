@@ -18,6 +18,7 @@ import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DesignLibraryProps, DynamicComponent } from './models';
 import { withLoadImportMap } from '../../enhancers/withLoadImportMap';
+import { ErrorComponent } from '../ErrorBoundary';
 
 let {
   getDesignLibraryImportMapEvent,
@@ -53,6 +54,7 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
   const { page } = useSitecore();
   const route = page.layout.sitecore.route;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
+  const uid = rendering?.uid;
 
   const { isDesignLibrary } = page.mode;
   const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
@@ -67,9 +69,11 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
 
   if (!isDesignLibrary) return null;
 
+  if (!uid) return <ErrorComponent message="Rendering UID is missing in the rendering data" />;
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, rendering.uid));
+    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, uid));
 
     if (!isVariantGeneration) {
       requestAnimationFrame(() => {
@@ -84,19 +88,19 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
 
     // useEffect will cleanup event handler on re-render
     return () => unsubUpdate && unsubUpdate();
-  }, [isVariantGeneration, rendering]);
+  }, [isVariantGeneration, rendering, uid]);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     // Send a rendered event only as effect of a component update command
     if (renderKey === 0) return;
 
-    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, rendering.uid));
-  }, [renderKey, rendering]);
+    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, uid));
+  }, [renderKey, uid]);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    if (!isDesignLibrary || !isVariantGeneration) return undefined;
+    if (!isDesignLibrary || !isVariantGeneration) return;
 
     let cancelled = false;
     // since import map is loaded lazily, we only need to add preview event handler once the import map is loaded
@@ -106,7 +110,7 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
     (async () => {
       if (!loadImportMap) {
         sendErrorEvent(
-          rendering.uid,
+          uid,
           'No loadImportMap provided',
           codegen.DesignLibraryPreviewError.RenderInit
         );
@@ -119,7 +123,7 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
         importMap = mod.default;
       } catch (e) {
         sendErrorEvent(
-          rendering.uid,
+          uid,
           `Error loading import map: ${e}`,
           codegen.DesignLibraryPreviewError.RenderInit
         );
@@ -135,11 +139,11 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
         setRenderKey((k) => k + 1);
       });
 
-      const importMapEvent = getDesignLibraryImportMapEvent(rendering.uid, importMap);
+      const importMapEvent = getDesignLibraryImportMapEvent(uid, importMap);
       postToDesignLibrary(importMapEvent);
 
       const propsEvent = getDesignLibraryComponentPropsEvent(
-        rendering.uid,
+        uid,
         propsState.fields,
         propsState.params
       );
@@ -151,12 +155,12 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
       cancelled = true;
       unsubscribe && unsubscribe();
     };
-  }, [isVariantGeneration, rendering]);
+  }, [isVariantGeneration, uid]);
 
   return (
     <main>
       {isGeneratedComponentActive ? (
-        <DesignLibraryErrorBoundary uid={rendering.uid} renderKey={renderKey}>
+        <DesignLibraryErrorBoundary uid={uid} renderKey={renderKey}>
           <PlaceholderMetadata rendering={rendering}>
             <Component fields={propsState.fields} params={propsState.params} key={renderKey} />
           </PlaceholderMetadata>

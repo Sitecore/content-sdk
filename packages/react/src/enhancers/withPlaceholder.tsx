@@ -7,6 +7,7 @@ import {
   PlaceholderProps,
   getPlaceholderRenderings,
 } from '../components/Placeholder';
+import { ErrorComponent } from '../components/ErrorBoundary';
 
 export interface WithPlaceholderOptions {
   /**
@@ -74,9 +75,7 @@ export function withPlaceholder(
           }
 
           return (
-            <div className="sc-content-sdk-placeholder-error">
-              A rendering error occurred: {this.state.error.message}.
-            </div>
+            <ErrorComponent message={`A rendering error occurred: ${this.state.error.message}.`} />
           );
         }
 
