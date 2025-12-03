@@ -19,7 +19,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';
 import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
 import { SitecoreConfig } from '../config';
-import { language } from '@sitecore-cloudsdk/core/internal';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
@@ -294,7 +293,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
           // Modify the redirect pattern to ignore the language prefix in the path
           // And escapes non-special "?" characters in a string or regex.
           redirect.pattern = escapeNonSpecialQuestionMarks(
-            '^' + redirect.pattern.replace(new RegExp(`^[^]?/${language}/`, 'gi'), '') // ensure function thinks input is regex
+            '^' + redirect.pattern.replace(new RegExp(`^[^]?/${locale}/`, 'gi'), '') // ensure function thinks input is regex
           );
 
           // Prepare the redirect pattern as a regular expression, making it more flexible for matching URLs
