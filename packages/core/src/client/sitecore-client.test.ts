@@ -5,7 +5,7 @@ import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import { DocumentNode } from 'graphql';
 import { ErrorPage, SitecoreClient } from './sitecore-client';
-import { LayoutKind, DesignLibraryMode } from '../../editing';
+import { LayoutKind, DesignLibraryMode } from '../../src/editing';
 import { LayoutServiceData } from '../../layout';
 import { DefaultRetryStrategy } from '../retries';
 import { LayoutServicePageState } from '../layout';

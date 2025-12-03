@@ -3,8 +3,14 @@ export { generateMetadata } from './generateMetadata';
 export { scaffoldComponent } from './scaffold';
 export { GenerateMapFunction, GenerateMapArgs } from './generate-map';
 export { extractFiles } from './codegen/extract-files';
-export { writeImportMap } from './codegen/import-map';
-export { getComponentVariantSpec, getComponentVariantSpecUrl } from './codegen/component-variant';
+export {
+  writeImportMap,
+  WriteImportMapArgs,
+  WriteImportMapArgsInternal,
+  defaultMapTemplate as defaultImportMapTemplate,
+  ModuleExports,
+} from './codegen/import-map';
+export { getComponentSpec, getComponentSpecUrl } from './codegen/component-generation';
 export * from './templating';
 export * from './auth/models';
 import * as authModule from './auth';
@@ -15,6 +21,7 @@ import * as authModule from './auth';
  * restore via `sandbox.restore()` with no hidden global state.
  *
  * Public surface consumed by the rest of the codebase.
+ * @public
  */
 export const auth: {
   readonly clientCredentialsFlow: typeof authModule.clientCredentialsFlow;

@@ -6,7 +6,7 @@
 
 # Interface: LayoutServiceData
 
-Defined in: core/types/layout/models.d.ts:4
+Defined in: core/types/layout/models.d.ts:5
 
 A reply from the Sitecore Layout Service
 
@@ -16,7 +16,7 @@ A reply from the Sitecore Layout Service
 
 > **sitecore**: [`LayoutServiceContextData`](LayoutServiceContextData.md) & `object`
 
-Defined in: core/types/layout/models.d.ts:5
+Defined in: core/types/layout/models.d.ts:6
 
 #### Type declaration
 

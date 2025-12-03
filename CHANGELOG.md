@@ -10,6 +10,39 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
+## 1.3.0
+
+### 🎉 New Features & Improvements
+
+* Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
+  * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
+    - `SearchService` class for performing search queries with support for pagination, sorting, request cancellation.
+    - Type-safe search parameters and responses with support for generic fields.
+  * `[react]` Added React hooks for search functionality
+    - `useSearch` hook for paginated search queries with automatic state management, request cancellation, request status tracking.
+    - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
+* `[nextjs]` [App Router] Add support for server components in Design Studio ([#280](https://github.com/Sitecore/content-sdk/pull/280))([#300](https://github.com/Sitecore/content-sdk/pull/300))([#301](https://github.com/Sitecore/content-sdk/pull/301))([#303](https://github.com/Sitecore/content-sdk/pull/303))
+  - additional react components to handle dynamic rendering of server components
+  - includes refactoring of existing Design Library functionality
+  - this is a breaking change for applications based on Next.js App Router (beta) template. Please refer to the detailed upgrade guide for further instructions
+  - separate server and client import-map generation ([#293](https://github.com/Sitecore/content-sdk/pull/293))([#299](https://github.com/Sitecore/content-sdk/pull/299)
+* `[core]` Provide information about rendering host as part of code extraction ([#286](https://github.com/Sitecore/content-sdk/pull/286))
+* `[template/next-app-router]` Add component runtime information to prevent invalid client/server component operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))
+* `[cli]` Create short flags for CLI commands ([#298](https://github.com/Sitecore/content-sdk/pull/298))
+
+### 🐛 Bug Fixes
+
+* Added package.json "exports" field to ensure correct ESM/CJS module resolution for submodule imports. Previously defaulted to CJS bundles even when ESM was available. ([#296](https://github.com/Sitecore/content-sdk/pull/296))
+* `[core]` NativeDataFetcher error does not include Error instance properties (name, message, stack) ([#295](https://github.com/Sitecore/content-sdk/pull/295))
+* `[template/next-app-router]` Remove component-level data fetching in favor of Server Components ([#282](https://github.com/Sitecore/content-sdk/pull/282))
+* `[core]` NativeFetcher response does not match actual returned data ([#284](https://github.com/Sitecore/content-sdk/pull/284))
+* `[nextjs]` Add regex variable substitution for absolute and external URL redirects. ([#287](https://github.com/Sitecore/jss/pull/287))
+* `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Geo based Personalization not possible in Content SDK Personalize Middleware. ([#288](https://github.com/Sitecore/jss/pull/288))
+* `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Geo based Personalization not possible in Content SDK Personalize Middleware. ([#290](https://github.com/Sitecore/jss/pull/290))
+* `[nextjs]` Remove locale property assignments in redirects middleware for App Router compatibility. ([#292](https://github.com/Sitecore/jss/pull/292))
+* `[nextjs]` Next Link props unavailable when using Sitecore Link component ([#294](https://github.com/Sitecore/content-sdk/pull/294)) ([#296](https://github.com/Sitecore/content-sdk/pull/296))
+* `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Fix middleware initialization errors in local container development ([#297](https://github.com/Sitecore/content-sdk/pull/297))([#302](https://github.com/Sitecore/content-sdk/pull/302))
+
 ## 1.2.1
 
 ### 🐛 Bug Fixes

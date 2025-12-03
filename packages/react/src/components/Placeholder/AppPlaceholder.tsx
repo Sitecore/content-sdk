@@ -18,6 +18,7 @@ import { rsc } from '#rsc-env';
  * Pulls components from the provided component map.
  * @param {AppPlaceholderProps} props Placeholder props
  * @returns {React.ReactNode | React.ReactElement[]} rendered component(s)
+ * @public
  */
 export const AppPlaceholder = (props: AppPlaceholderProps) => {
   const { rendering: parentRendering, componentMap, page } = props;
@@ -43,6 +44,9 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => {
       );
       const isClient = componentType === 'client';
       const key = rendering.uid || `component-${index}`;
+
+      // Use rsc context to determine the current runtime
+      const componentRuntime = rsc ? 'server' : 'client';
 
       const renderedProps = getAppComponentProps(props, rendering);
 
@@ -93,7 +97,7 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => {
       if (page.mode.isEditing) {
         const key = (rendering.uid as string) || `component-${index}`;
         return (
-          <PlaceholderMetadata key={key} rendering={rendering}>
+          <PlaceholderMetadata key={key} rendering={rendering} componentRuntime={componentRuntime}>
             {rendered}
           </PlaceholderMetadata>
         );

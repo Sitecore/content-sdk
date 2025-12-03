@@ -1,3 +1,4 @@
+/* eslint-disable no-redeclare */
 import { ComponentRendering, ComponentFields, Field, GenericFieldValue } from './models';
 
 /**
@@ -5,14 +6,21 @@ import { ComponentRendering, ComponentFields, Field, GenericFieldValue } from '.
  * Null will be returned if the field is not defined.
  * @param {ComponentRendering | Fields} renderingOrFields the rendering or fields object to extract the field from
  * @param {string} fieldName the name of the field to extract
- * @param defaultValue
  * @returns {T | undefined} the field value or null if the field is not defined
+ * @public
  */
 export function getFieldValue<T>(
   renderingOrFields: ComponentRendering | ComponentFields,
   fieldName: string
 ): T | undefined;
-// eslint-disable-next-line no-redeclare
+/**
+ * Safely extracts a field value from a rendering or fields object.
+ * @param {ComponentRendering | ComponentFields} renderingOrFields the rendering or fields object to extract the field from
+ * @param {string} fieldName the name of the field to extract
+ * @param {T} defaultValue the default value to return if the field is not defined
+ * @returns {T} the field value or the default value if the field is not defined
+ * @public
+ */
 export function getFieldValue<T>(
   renderingOrFields: ComponentRendering | ComponentFields,
   fieldName: string,
@@ -23,6 +31,7 @@ export function getFieldValue<T>(
  * @param {string} fieldName the name of the field to extract
  * @param {T} [defaultValue] the default value to return if the field is not defined
  * @returns {Field | T} the field value or the default value if the field is not defined
+ * @public
  */
 // eslint-disable-next-line no-redeclare
 export function getFieldValue<T>(
@@ -57,6 +66,7 @@ export function getFieldValue<T>(
  * @param {ComponentRendering} rendering
  * @param {string} placeholderName
  * @returns {ComponentRendering[]} child placeholder
+ * @public
  */
 export function getChildPlaceholder(
   rendering: ComponentRendering,
@@ -78,6 +88,7 @@ export function getChildPlaceholder(
  * Returns a regular expression pattern for a dynamic placeholder name.
  * @param {string} placeholder Placeholder name with a dynamic segment (e.g. 'main-{*}')
  * @returns Regular expression pattern for the dynamic segment
+ * @internal
  */
 export const getDynamicPlaceholderPattern = (placeholder: string) => {
   return new RegExp(`^${placeholder.replace(/\{\*\}+/i, '\\d+')}$`);
@@ -87,12 +98,14 @@ export const getDynamicPlaceholderPattern = (placeholder: string) => {
  * Checks if the placeholder name is dynamic.
  * @param {string} placeholder Placeholder name
  * @returns True if the placeholder name is dynamic
+ * @internal
  */
 export const isDynamicPlaceholder = (placeholder: string) => placeholder.indexOf('{*}') !== -1;
 
 /**
  * The default value for an empty Date field.
  * This value is defined as a default one by .NET
+ * @internal
  */
 export const EMPTY_DATE_FIELD_VALUE = '0001-01-01T00:00:00Z';
 
@@ -100,8 +113,14 @@ export const EMPTY_DATE_FIELD_VALUE = '0001-01-01T00:00:00Z';
  * Determines if the passed in field object's value is empty.
  * @param {GenericFieldValue | Partial<Field>} field the field object.
  * Partial<T> type is used here because _field.value_ could be required or optional for the different field types
+ * @returns True if the field value is empty
+ * @public
  */
-export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field>): boolean {
+export function isFieldValueEmpty(
+  field: GenericFieldValue | Partial<Field> | null | undefined
+): field is null | undefined {
+  if (!field) return true;
+
   const isImageFieldEmpty = (fieldValue: GenericFieldValue) =>
     !(fieldValue as { [key: string]: unknown }).src;
   const isFileFieldEmpty = (fieldValue: GenericFieldValue) =>
@@ -138,8 +157,6 @@ export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field>): bo
       return !fieldValue || isDateFieldEmpty(fieldValue);
     }
   };
-
-  if (!field) return true;
 
   const dynamicField = field as Partial<Field>;
   if (dynamicField.value !== undefined) {

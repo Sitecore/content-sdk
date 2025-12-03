@@ -5,6 +5,15 @@ import { getDataFromFields } from '../../utils';
 import { BYOCComponentProps, ErrorComponentProps } from './models';
 import { MissingComponent } from '../MissingComponent';
 
+// Allow mocking of FEAAS.ExternalComponent for testing
+let { ExternalComponent } = FEAAS;
+
+export const __mockDependencies = (mocks: any) => {
+  if (mocks.ExternalComponent) {
+    ExternalComponent = mocks.ExternalComponent;
+  }
+};
+
 const DefaultErrorComponent = (props: ErrorComponentProps) => (
   <div>A rendering error occurred: {props.error?.message}.</div>
 );
@@ -16,6 +25,7 @@ const DefaultErrorComponent = (props: ErrorComponentProps) => (
  * missing components, and customization of error messages or alternative rendering components.
  * @param {ByocComponentProps} props component props
  * @returns dynamically rendered component or Missing Component error frame
+ * @public
  */
 export class BYOCComponent extends React.Component<BYOCComponentProps> {
   state: Readonly<{ error?: Error }>;
@@ -49,11 +59,10 @@ export class BYOCComponent extends React.Component<BYOCComponentProps> {
       const noNameProps = {
         errorOverride: 'BYOC: The ComponentName for this rendering is missing',
       };
-      return props.missingComponentComponent ? (
-        <this.props.missingComponentComponent {...noNameProps} />
-      ) : (
-        <MissingComponent {...noNameProps} />
-      );
+
+      const MissingComp = this.props.missingComponentComponent;
+
+      return MissingComp ? <MissingComp {...noNameProps} /> : <MissingComponent {...noNameProps} />;
     }
 
     const unRegisteredComponentProps = {
@@ -92,7 +101,7 @@ export class BYOCComponent extends React.Component<BYOCComponentProps> {
 
     // we render fallback on client to avoid problems with client-only components
     return (
-      <FEAAS.ExternalComponent
+      <ExternalComponent
         {...props.rendering}
         componentName={componentName}
         clientFallback={fallbackComponent}
@@ -107,6 +116,7 @@ export class BYOCComponent extends React.Component<BYOCComponentProps> {
  * SXA wrapper for BYOC components
  * @param {BYOCComponentProps} props component props
  * @returns wrapped BYOC component
+ * @public
  */
 export const BYOCWrapper = (props: BYOCComponentProps): JSX.Element => {
   const styles = props.params?.styles?.trimEnd();

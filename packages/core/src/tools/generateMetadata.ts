@@ -31,6 +31,7 @@ export type GenerateMetadataConfig = {
  * @param {GenerateMetadataConfig} config - Optional configuration for generating metadata.
  * If not provided, the default '.sitecore/metadata.json' will be used and allowWorkspaces will be set to false.
  * @returns {Promise<void>} A promise that resolves when the metadata generation is complete.
+ * @public
  */
 export const generateMetadata = (config?: GenerateMetadataConfig): (() => Promise<void>) => {
   return async () => {

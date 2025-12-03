@@ -148,6 +148,32 @@ export const convertedLayoutServiceData = {
   },
 };
 
+export const dynamicComponentLayout = {
+  sitecore: {
+    context: {
+      pageEditing: false,
+    },
+    route: {
+      name: 'home',
+      displayName: 'Home',
+      placeholders: {
+        main: [
+          {
+            uid: '77777777-845d-4de4-bf8e-1f4feddf8908',
+            componentName: 'DynamicComponent',
+            fields: {
+              title: {
+                value: 'Dynamic Component',
+              },
+            },
+          },
+        ],
+      },
+      fields: {},
+    },
+  },
+};
+
 export const sxaRenderingVariantData = {
   sitecore: {
     context: {

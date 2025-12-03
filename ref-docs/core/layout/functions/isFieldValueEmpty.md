@@ -6,9 +6,9 @@
 
 # Function: isFieldValueEmpty()
 
-> **isFieldValueEmpty**(`field`): `boolean`
+> **isFieldValueEmpty**(`field`): field is undefined \| null
 
-Defined in: [packages/core/src/layout/utils.ts:104](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/core/src/layout/utils.ts#L104)
+Defined in: [packages/core/src/layout/utils.ts:119](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/layout/utils.ts#L119)
 
 Determines if the passed in field object's value is empty.
 
@@ -16,8 +16,10 @@ Determines if the passed in field object's value is empty.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `field` | [`GenericFieldValue`](../type-aliases/GenericFieldValue.md) \| `Partial`\<[`Field`](../interfaces/Field.md)\<[`GenericFieldValue`](../type-aliases/GenericFieldValue.md)\>\> | the field object. Partial<T> type is used here because _field.value_ could be required or optional for the different field types |
+| `field` | `undefined` \| `null` \| [`GenericFieldValue`](../type-aliases/GenericFieldValue.md) \| `Partial`\<[`Field`](../interfaces/Field.md)\<[`GenericFieldValue`](../type-aliases/GenericFieldValue.md)\>\> | the field object. Partial<T> type is used here because _field.value_ could be required or optional for the different field types |
 
 ## Returns
 
-`boolean`
+field is undefined \| null
+
+True if the field value is empty

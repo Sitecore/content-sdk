@@ -6,7 +6,7 @@
 
 # Class: MemoryCacheClient\<T\>
 
-Defined in: packages/core/types/cache-client.d.ts:41
+Defined in: packages/core/types/cache-client.d.ts:44
 
 A cache client that uses the 'memory-cache' library (https://github.com/ptarjan/node-cache).
 This class is meant to be extended or used as a mixin; it's not meant to be used directly.
@@ -29,7 +29,7 @@ This class is meant to be extended or used as a mixin; it's not meant to be used
 
 > **new MemoryCacheClient**\<`T`\>(`options`): `MemoryCacheClient`\<`T`\>
 
-Defined in: packages/core/types/cache-client.d.ts:48
+Defined in: packages/core/types/cache-client.d.ts:51
 
 Initializes a new instance of
 
@@ -54,15 +54,15 @@ Initializes a new instance of
 
 > **options**: [`CacheOptions`](../interfaces/CacheOptions.md)
 
-Defined in: packages/core/types/cache-client.d.ts:42
+Defined in: packages/core/types/cache-client.d.ts:45
 
 ## Methods
 
 ### getCacheValue()
 
-> **getCacheValue**(`key`): `T`
+> **getCacheValue**(`key`): `null` \| `T`
 
-Defined in: packages/core/types/cache-client.d.ts:55
+Defined in: packages/core/types/cache-client.d.ts:58
 
 Retrieves a value from the cache.
 
@@ -74,7 +74,7 @@ Retrieves a value from the cache.
 
 #### Returns
 
-`T`
+`null` \| `T`
 
 The cache value as {T}, or null if the specified key is not found in the cache.
 
@@ -88,7 +88,7 @@ The cache value as {T}, or null if the specified key is not found in the cache.
 
 > **setCacheValue**(`key`, `value`): `T`
 
-Defined in: packages/core/types/cache-client.d.ts:63
+Defined in: packages/core/types/cache-client.d.ts:66
 
 Adds a value to the cache for the specified cache key.
 

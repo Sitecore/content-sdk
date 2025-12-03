@@ -270,7 +270,12 @@ describe('define-config', () => {
 
       const config = defineConfig(badConfig);
 
-      expect(() => config.api).to.throw('Configuration error: provide either Edge contextId');
+      expect(() => config.api.edge.contextId).to.throw(
+        'Configuration error: provide either Edge contextId'
+      );
+      expect(() => config.api.local.apiKey).to.throw(
+        'Configuration error: provide either Edge contextId'
+      );
     });
 
     it('fails when API configuration is empty', () => {
@@ -278,7 +283,12 @@ describe('define-config', () => {
 
       const config = defineConfig(cfg);
 
-      expect(() => config.api).to.throw('Configuration error: provide either Edge contextId');
+      expect(() => config.api.edge.contextId).to.throw(
+        'Configuration error: provide either Edge contextId'
+      );
+      expect(() => config.api.local.apiKey).to.throw(
+        'Configuration error: provide either Edge contextId'
+      );
     });
   });
 
@@ -333,7 +343,9 @@ describe('define-config', () => {
       it('requires Edge or Local; clientContextId alone is insufficient', () => {
         const cfg = { api: { edge: { contextId: '', clientContextId: 'client-id' } } };
         const config = defineConfig(cfg);
-        expect(() => config.api).to.throw('Configuration error: provide either Edge contextId');
+        expect(() => config.api.edge.contextId).to.throw(
+          'Configuration error: provide either Edge contextId'
+        );
       });
     });
   });

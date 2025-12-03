@@ -8,7 +8,7 @@
 
 > `const` **FEaaSServerWrapper**: (`props`) => `Promise`\<`React.JSX.Element`\>
 
-Defined in: react/types/components/FEaaS/FEaaSSeverWrapper.d.ts:8
+Defined in: react/types/components/FEaaS/FEaaSSeverWrapper.d.ts:9
 
 Server component for FEaaS. Retrieves server props and renders client FEaaSWrapper.
 

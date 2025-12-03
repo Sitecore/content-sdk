@@ -6,7 +6,7 @@
 
 # Class: LayoutService
 
-Defined in: packages/core/types/layout/layout-service.d.ts:12
+Defined in: packages/core/types/layout/layout-service.d.ts:21
 
 Service that fetch layout data using Sitecore's GraphQL API.
 
@@ -24,7 +24,7 @@ GraphQLRequestClient
 
 > **new LayoutService**(`serviceConfig`): `LayoutService`
 
-Defined in: packages/core/types/layout/layout-service.d.ts:18
+Defined in: packages/core/types/layout/layout-service.d.ts:27
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -32,7 +32,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `serviceConfig` | `LayoutServiceConfig` | configuration |
+| `serviceConfig` | `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\> | configuration |
 
 #### Returns
 
@@ -58,9 +58,24 @@ Defined in: packages/core/types/sitecore-service-base.d.ts:19
 
 ### serviceConfig
 
-> **serviceConfig**: `LayoutServiceConfig`
+> **serviceConfig**: `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\>
 
-Defined in: packages/core/types/layout/layout-service.d.ts:13
+Defined in: packages/core/types/layout/layout-service.d.ts:22
+
+#### Type declaration
+
+##### clientFactory
+
+> **clientFactory**: `GraphQLRequestClientFactory`
+
+A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
+This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
+
+##### debugger?
+
+> `optional` **debugger**: `Debugger`
+
+Optional debug logger override
 
 #### Overrides
 
@@ -72,7 +87,7 @@ Defined in: packages/core/types/layout/layout-service.d.ts:13
 
 > **fetchLayoutData**(`itemPath`, `routeOptions?`, `fetchOptions?`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
-Defined in: packages/core/types/layout/layout-service.d.ts:26
+Defined in: packages/core/types/layout/layout-service.d.ts:35
 
 Fetch layout data for an item.
 
@@ -116,7 +131,7 @@ implementation
 
 > `protected` **getLayoutQuery**(`itemPath`, `site?`, `language?`): `string`
 
-Defined in: packages/core/types/layout/layout-service.d.ts:34
+Defined in: packages/core/types/layout/layout-service.d.ts:43
 
 Returns GraphQL Layout query
 

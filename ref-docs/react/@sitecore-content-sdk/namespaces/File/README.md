@@ -6,6 +6,12 @@
 
 # File
 
+The File component.
+
+## Param
+
+component props
+
 ## Variables
 
 - [displayName](variables/displayName.md)

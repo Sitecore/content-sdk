@@ -8,7 +8,7 @@
 
 > `const` **updateImageUrl**: (`url`, `params?`, `mediaUrlPrefix?`) => `string`
 
-Defined in: packages/core/types/media/media-api.d.ts:34
+Defined in: packages/core/types/media/media-api.d.ts:37
 
 Prepares a Sitecore media URL with `params` for use by the Content SDK media handler.
 This is done by replacing `/~/media` or `/-/media` with `/~/jssmedia` or `/-/jssmedia`, respectively.
@@ -21,7 +21,7 @@ If no `params` are sent, the original media URL is returned.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `url` | `string` | The URL to prepare |
-| `params?` | \{\[`key`: `string`\]: `string` \| `number`; \} \| `null` | The querystring parameters to use |
+| `params?` | \{\[`key`: `string`\]: `undefined` \| `string` \| `number`; \} \| `null` | The querystring parameters to use |
 | `mediaUrlPrefix?` | `RegExp` | The regex to match the media URL prefix |
 
 ## Returns

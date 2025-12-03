@@ -6,7 +6,9 @@
 
 # Class: SiteInfoService
 
-Defined in: core/types/site/siteinfo-service.d.ts:24
+Defined in: core/types/site/siteinfo-service.d.ts:36
+
+Service to fetch site information
 
 ## Constructors
 
@@ -14,7 +16,7 @@ Defined in: core/types/site/siteinfo-service.d.ts:24
 
 > **new SiteInfoService**(`config`): `SiteInfoService`
 
-Defined in: core/types/site/siteinfo-service.d.ts:32
+Defined in: core/types/site/siteinfo-service.d.ts:44
 
 Creates an instance of graphQL service to retrieve site configuration list from Sitecore
 
@@ -36,7 +38,7 @@ Creates an instance of graphQL service to retrieve site configuration list from 
 
 > **get** `protected` **siteQuery**(): `string`
 
-Defined in: core/types/site/siteinfo-service.d.ts:36
+Defined in: core/types/site/siteinfo-service.d.ts:48
 
 site query is available on XM Cloud and XP 10.4+
 
@@ -50,7 +52,7 @@ site query is available on XM Cloud and XP 10.4+
 
 > **fetchSiteInfo**(`fetchOptions?`): `Promise`\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
 
-Defined in: core/types/site/siteinfo-service.d.ts:37
+Defined in: core/types/site/siteinfo-service.d.ts:49
 
 #### Parameters
 
@@ -68,7 +70,7 @@ Defined in: core/types/site/siteinfo-service.d.ts:37
 
 > `protected` **getCacheClient**(): [`CacheClient`](../interfaces/CacheClient.md)\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
 
-Defined in: core/types/site/siteinfo-service.d.ts:43
+Defined in: core/types/site/siteinfo-service.d.ts:55
 
 Gets cache client implementation
 Override this method if custom cache needs to be used
@@ -85,7 +87,7 @@ CacheClient instance
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/site/siteinfo-service.d.ts:50
+Defined in: core/types/site/siteinfo-service.d.ts:62
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

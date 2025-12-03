@@ -29,6 +29,7 @@
     "src/**/*.test.ts",
     "src/test-data/**/*",
     "src/tools/templating/test-data/**/*",
-    "src/tools/codegen/test-data/**/*"
+    "src/tools/codegen/test-data/**/*",
+    "api"
   ]
 }

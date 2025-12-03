@@ -42,6 +42,10 @@ jobs:
         run: |
           yarn lint-packages
 
+      - name: Verify API surface
+        run: |
+          yarn api-extractor:verify
+
       - name: Run tests and collect coverage
         run: yarn coverage-packages
         env:

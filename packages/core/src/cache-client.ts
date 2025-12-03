@@ -3,6 +3,7 @@ import { Cache, CacheClass } from 'memory-cache';
 /**
  * An interface for cache clients.
  * @template T The type of data being cached.
+ * @public
  */
 export interface CacheClient<T> {
   /**
@@ -31,6 +32,7 @@ const DEFAULTS = Object.freeze({
 
 /**
  * Minimum configuration options for classes that implement @see CacheClient
+ * @public
  */
 export interface CacheOptions {
   /**
@@ -50,6 +52,7 @@ export interface CacheOptions {
  * This class is meant to be extended or used as a mixin; it's not meant to be used directly.
  * @template T The type of data being cached.
  * @mixin
+ * @public
  */
 export class MemoryCacheClient<T> implements CacheClient<T> {
   private cache: CacheClass<string, T>;

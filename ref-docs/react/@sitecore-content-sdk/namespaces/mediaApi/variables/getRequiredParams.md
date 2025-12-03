@@ -8,7 +8,7 @@
 
 > `const` **getRequiredParams**: (`qs`) => `object`
 
-Defined in: packages/core/types/media/media-api.d.ts:6
+Defined in: packages/core/types/media/media-api.d.ts:7
 
 Get required query string params which should be merged with user params
 
@@ -16,7 +16,7 @@ Get required query string params which should be merged with user params
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `qs` | \{\[`key`: `string`\]: `string`; \} | layout service parsed query string |
+| `qs` | \{\[`key`: `string`\]: `undefined` \| `string`; \} | layout service parsed query string |
 
 ## Returns
 

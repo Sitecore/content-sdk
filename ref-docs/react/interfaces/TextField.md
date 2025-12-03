@@ -6,7 +6,9 @@
 
 # Interface: TextField
 
-Defined in: [packages/react/src/components/Text.tsx:9](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/Text.tsx#L9)
+Defined in: [packages/react/src/components/Text.tsx:13](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/Text.tsx#L13)
+
+The interface for the Text field.
 
 ## Extends
 
@@ -18,7 +20,7 @@ Defined in: [packages/react/src/components/Text.tsx:9](https://github.com/Siteco
 
 > `optional` **metadata**: `object`
 
-Defined in: packages/core/types/layout/models.d.ts:107
+Defined in: packages/core/types/layout/models.d.ts:123
 
 #### Index Signature
 
@@ -34,4 +36,4 @@ Defined in: packages/core/types/layout/models.d.ts:107
 
 > `optional` **value**: `string` \| `number`
 
-Defined in: [packages/react/src/components/Text.tsx:10](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/Text.tsx#L10)
+Defined in: [packages/react/src/components/Text.tsx:14](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/Text.tsx#L14)

@@ -1,5 +1,5 @@
 import { ComponentFields, ComponentParams } from '../../layout/models';
-import { validateOrigin } from '../design-library';
+import { validateEvent, DesignLibraryEvent } from '../design-library';
 
 /**
  * Event to send import map to design library
@@ -24,10 +24,20 @@ const DESIGN_LIBRARY_COMPONENT_PREVIEW_ERROR_EVENT_NAME =
 
 /**
  * Represents an import map entry.
+ * @public
  */
 export interface ImportEntry {
   module: string;
   exports: { name: string | 'default' | '*'; value: unknown }[];
+}
+
+/**
+ * Represents the info for the import entry to be sent to design library.
+ * @internal
+ */
+export interface ImportEntryInfo {
+  module: string;
+  exports: string[];
 }
 
 /**
@@ -53,8 +63,9 @@ export type ComponentImport = {
 
 /**
  * Represents a component preview event data sent from design library
+ * @internal
  */
-export interface ComponentPreviewEventArgs {
+export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
   message: {
     /**
@@ -101,7 +112,7 @@ export interface ComponentPreviewEventArgs {
 /**
  * Represents an event indicating the import map to be sent to design library
  */
-export interface DesignLibraryImportMapEvent {
+export interface DesignLibraryImportMapEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME;
   message: {
     uid: string;
@@ -115,7 +126,7 @@ export interface DesignLibraryImportMapEvent {
 /**
  * Represents an event indicating the component props to be sent to design library
  */
-export interface DesignLibraryComponentPropsEvent {
+export interface DesignLibraryComponentPropsEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME;
   message: {
     uid: string;
@@ -127,7 +138,7 @@ export interface DesignLibraryComponentPropsEvent {
 /**
  * Represents an event indicating the preview error to be sent to design library.
  */
-export interface DesignLibraryComponentPreviewErrorEvent {
+export interface DesignLibraryComponentPreviewErrorEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_ERROR_EVENT_NAME;
   message: {
     uid: string;
@@ -138,6 +149,7 @@ export interface DesignLibraryComponentPreviewErrorEvent {
 
 /**
  * Enumeration of error types for the design library preview.
+ * @internal
  */
 export enum DesignLibraryPreviewError {
   /**
@@ -217,6 +229,7 @@ export function buildComponentDependencies(
  * The event should contain the component code, styles and imports.
  * @param {ImportEntry[]} importMap - The import map to be used for the component.
  * @param {Function} callback callback to be called after component is received
+ * @internal
  */
 export const addComponentPreviewHandler = (
   importMap: ImportEntry[],
@@ -228,82 +241,19 @@ export const addComponentPreviewHandler = (
     const eventArgs: ComponentPreviewEventArgs = e.data;
 
     try {
-      if (!e.origin || !eventArgs || eventArgs.name !== 'component:generation:component-preview') {
-        // avoid extra noise in logs
-        if (!validateOrigin(e)) {
-          console.debug(
-            'Component Library: event skipped - invalid origin: message %s from origin %s',
-            eventArgs.name,
-            e.origin
-          );
-        }
-
+      if (!validateEvent(e, DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME)) {
         return;
       }
 
       console.debug('Component Library: message received', eventArgs);
 
-      const { message } = eventArgs;
+      const Component = createComponentInstance(importMap, eventArgs);
+      addStyleElement(eventArgs.message.styles.content);
 
-      const dependencies = buildComponentDependencies(message.imports, importMap);
-
-      if (dependencies.missing.modules.length > 0 || dependencies.missing.exports.length > 0) {
-        let errorMessage = '';
-
-        dependencies.missing.modules.forEach((mod) => {
-          errorMessage += `Missing module: '${mod.module}' with alias: '${mod.alias}'\n`;
-        });
-
-        dependencies.missing.exports.forEach((exp) => {
-          const alias = exp.export !== exp.alias ? ` with alias: '${exp.alias}'` : '';
-          errorMessage += `Missing export: '${exp.export}' from module: '${exp.module}'${alias}\n`;
-        });
-
-        throw errorMessage;
-      }
-
-      const importNames = dependencies.successful.map((entry) => entry.name);
-      const importInstances = dependencies.successful.map((entry) => entry.value);
-
-      const styleId = 'content-sdk-style-preview';
-      const styleElement = document.getElementById(styleId);
-
-      // remove existing style element if it exists to avoid duplicates
-      if (styleElement) {
-        styleElement.remove();
-      }
-
-      // create new style element and attach it to DOM
-      const style = document.createElement('style');
-      style.setAttribute('id', styleId);
-      style.innerHTML = message.styles.content;
-      document.head.appendChild(style);
-
-      const exports: { Component: unknown } = { Component: null };
-
-      const componentFn = new Function(
-        'exports',
-        message.styles.styleImport.name,
-        ...importNames,
-        message.code.content
-      );
-
-      // Function will set exports.Component
-      componentFn(exports, message.styles.styleImport.content, ...importInstances);
-
-      callback(null, exports.Component);
+      callback(null, Component);
     } catch (error) {
-      const errorEvent = getDesignLibraryComponentPreviewErrorEvent(
-        eventArgs.message.uid,
-        error,
-        DesignLibraryPreviewError.RenderInit
-      );
-
-      console.error('Component Library: sending error event', errorEvent);
-
+      sendErrorEvent(eventArgs.message.uid, error, DesignLibraryPreviewError.RenderInit);
       callback(error, null);
-
-      window.parent.postMessage(errorEvent, '*');
     }
   };
 
@@ -317,11 +267,110 @@ export const addComponentPreviewHandler = (
 };
 
 /**
+ * Adds the browser-side event handler for 'component:generation:component-preview' message used in Design Library for server components
+ * The event should contain the component code, styles and imports.
+ * @param {Function} callback callback to be called after component is received
+ * @internal
+ */
+export const addServerComponentPreviewHandler = (
+  callback: (eventArgs: ComponentPreviewEventArgs) => void
+) => {
+  const handler = (e: MessageEvent) => {
+    if (!validateEvent(e, DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME)) {
+      return;
+    }
+
+    console.debug('Component Library: message received', e.data);
+
+    callback(e.data as ComponentPreviewEventArgs);
+  };
+
+  window.addEventListener('message', handler);
+
+  const unsubscribe = () => {
+    window.removeEventListener('message', handler);
+  };
+
+  return unsubscribe;
+};
+
+/**
+ * Adds <style> element in the document head with the provided CSS.
+ * If an existing style element with the id "content-sdk-style-preview" is found, it is removed
+ * to prevent duplicates
+ * @param {string} stylesContent - The raw CSS text to inject into the style element.
+ * @internal
+ */
+export function addStyleElement(stylesContent: string) {
+  const styleId = 'content-sdk-style-preview';
+  const styleElement = document.getElementById(styleId);
+
+  // remove existing style element if it exists to avoid duplicates
+  if (styleElement) {
+    styleElement.remove();
+  }
+
+  // create new style element and attach it to DOM
+  const style = document.createElement('style');
+  style.setAttribute('id', styleId);
+  style.innerHTML = stylesContent;
+  document.head.appendChild(style);
+}
+
+/**
+ * Dynamically creates a React component instance from provided importMap and from code, styles, and dependencies provided in the preview event.
+ * @param {ImportEntry[]} importMap - The import map containing module and export references that might be injected as dependencies in the provided code.
+ * @param {ComponentPreviewEventArgs} previewEventArgs - The event arguments containing the component code, styles, and import definitions.
+ * @returns The dynamically created React component instance.
+ * @throws If any required modules or exports are missing from the import map, an error is thrown describing the missing dependencies.
+ * @internal
+ */
+export const createComponentInstance = (
+  importMap: ImportEntry[],
+  previewEventArgs: ComponentPreviewEventArgs
+): unknown => {
+  const { message } = previewEventArgs;
+  const dependencies = buildComponentDependencies(message.imports, importMap);
+
+  if (dependencies.missing.modules.length > 0 || dependencies.missing.exports.length > 0) {
+    let errorMessage = '';
+
+    dependencies.missing.modules.forEach((mod) => {
+      errorMessage += `Missing module: '${mod.module}' with alias: '${mod.alias}'\n`;
+    });
+
+    dependencies.missing.exports.forEach((exp) => {
+      const alias = exp.export !== exp.alias ? ` with alias: '${exp.alias}'` : '';
+      errorMessage += `Missing export: '${exp.export}' from module: '${exp.module}'${alias}\n`;
+    });
+
+    throw errorMessage;
+  }
+
+  const importNames = dependencies.successful.map((entry) => entry.name);
+  const importInstances = dependencies.successful.map((entry) => entry.value);
+
+  const exports: { Component: unknown } = { Component: null };
+  const componentFn = new Function(
+    'exports',
+    message.styles.styleImport.name,
+    ...importNames,
+    message.code.content
+  );
+
+  // Function will set exports.Component
+  componentFn(exports, message.styles.styleImport.content, ...importInstances);
+
+  return exports.Component;
+};
+
+/**
  * Generates a DesignLibraryComponentPreviewErrorEvent with the given uid and error.
  * @param {string} uid - The unique identifier for the event.
  * @param {unknown} error - The error to be sent.
  * @param {DesignLibraryPreviewError} type - The type of error.
  * @returns An object representing the DesignLibraryComponentPreviewErrorEvent.
+ * @internal
  */
 export function getDesignLibraryComponentPreviewErrorEvent(
   uid: string,
@@ -340,11 +389,12 @@ export function getDesignLibraryComponentPreviewErrorEvent(
  * @param {ComponentFields} fields - The fields of the component.
  * @param {ComponentParams} parameters - The parameters of the component.
  * @returns An object representing the DesignLibraryComponentPropsEvent.
+ * @internal
  */
 export function getDesignLibraryComponentPropsEvent(
   uid: string,
-  fields: ComponentFields,
-  parameters: ComponentParams
+  fields: ComponentFields = {},
+  parameters: ComponentParams = {}
 ): DesignLibraryComponentPropsEvent {
   return {
     name: DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME,
@@ -361,15 +411,15 @@ export function getDesignLibraryComponentPropsEvent(
  * @param {string} uid - The unique identifier for the event.
  * @param {ImportEntry[]} importMap - The imports map to be sent.
  * @returns An object representing the DesignLibraryImportMapEvent.
+ * @internal
  */
 export function getDesignLibraryImportMapEvent(
   uid: string,
-  importMap: ImportEntry[]
+  importMap: ImportEntry[] | ImportEntryInfo[]
 ): DesignLibraryImportMapEvent {
-  const importMapPayload = importMap.map((entry) => ({
-    module: entry.module,
-    exports: entry.exports.map((exp) => exp.name),
-  }));
+  const importMapPayload = isImportEntryInfoArray(importMap)
+    ? importMap
+    : getImportMapInfo(importMap);
 
   return {
     name: DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME,
@@ -379,3 +429,46 @@ export function getDesignLibraryImportMapEvent(
     },
   };
 }
+
+/**
+ * Generates the payload for the import map to be sent to design library.
+ * @param {ImportEntry[]} importMap - The imports map to be sent.
+ * @internal
+ */
+export function getImportMapInfo(importMap: ImportEntry[]): ImportEntryInfo[] {
+  return importMap.map((entry) => ({
+    module: entry.module,
+    exports: entry.exports.map((exp) => exp.name),
+  }));
+}
+
+/**
+ * Type guard for ImportEntryInfo[]
+ * @param {unknown} data import entry data to check
+ * @returns true if the data is ImportEntryInfo array
+ */
+export function isImportEntryInfoArray(data: unknown): data is ImportEntryInfo[] {
+  return (
+    Array.isArray(data) &&
+    data.length > 0 &&
+    typeof data[0].module === 'string' &&
+    Array.isArray(data[0].exports) &&
+    typeof data[0].exports[0] === 'string'
+  );
+}
+
+/**
+ * Sends a component preview error event to the design library
+ * @param {string} uid - The unique identifier of the component that's being edited.
+ * @param {unknown} error - The error object or message to be sent.
+ * @param {DesignLibraryPreviewError} type - The type of error, as defined in DesignLibraryPreviewError.
+ * @internal
+ */
+export const sendErrorEvent = (uid: string, error: unknown, type: DesignLibraryPreviewError) => {
+  const errorEvent = getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
+  console.error('Component Library: sending error event', errorEvent);
+  if (typeof window !== 'undefined') {
+    const target = window.parent && window.parent !== window ? window.parent : window;
+    target.postMessage(errorEvent, '*');
+  }
+};

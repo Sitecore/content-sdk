@@ -8,7 +8,7 @@
 
 > `const` **replaceMediaUrlPrefix**: (`url`, `mediaUrlPrefix?`) => `string`
 
-Defined in: packages/core/types/media/media-api.d.ts:22
+Defined in: packages/core/types/media/media-api.d.ts:24
 
 Replace `/~/media` or `/-/media` with `/~/jssmedia` or `/-/jssmedia`, respectively.
 Can use `mediaUrlPrefix` in order to use a custom prefix.

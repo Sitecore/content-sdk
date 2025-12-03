@@ -6,7 +6,9 @@
 
 # Class: SitecoreProvider
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:47](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/SitecoreProvider.tsx#L47)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:71](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/SitecoreProvider.tsx#L71)
+
+The SitecoreProvider component.
 
 ## Extends
 
@@ -18,7 +20,7 @@ Defined in: [packages/react/src/components/SitecoreProvider.tsx:47](https://gith
 
 > **new SitecoreProvider**(`props`): `SitecoreProvider`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:53](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/SitecoreProvider.tsx#L53)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:77](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/SitecoreProvider.tsx#L77)
 
 #### Parameters
 
@@ -127,7 +129,7 @@ class Foo extends React.Component {
 
 > `static` **displayName**: `string` = `'SitecoreProvider'`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:51](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/SitecoreProvider.tsx#L51)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:75](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/SitecoreProvider.tsx#L75)
 
 ***
 
@@ -197,7 +199,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:78](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/SitecoreProvider.tsx#L78)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:102](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/SitecoreProvider.tsx#L102)
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -409,7 +411,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:98](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/SitecoreProvider.tsx#L98)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:122](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/SitecoreProvider.tsx#L122)
 
 #### Returns
 
@@ -425,7 +427,7 @@ Defined in: [packages/react/src/components/SitecoreProvider.tsx:98](https://gith
 
 > **setPage**(`value`): `void`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:92](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/SitecoreProvider.tsx#L92)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:116](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/SitecoreProvider.tsx#L116)
 
 Update page state.
 
@@ -457,7 +459,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:962
 
 | Parameter | Type |
 | ------ | ------ |
-| `state` | [`SitecoreProviderState`](../interfaces/SitecoreProviderState.md) \| (`prevState`, `props`) => [`SitecoreProviderState`](../interfaces/SitecoreProviderState.md) \| `Pick`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md), `K`\> \| `Pick`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md), `K`\> |
+| `state` | `null` \| [`SitecoreProviderState`](../interfaces/SitecoreProviderState.md) \| (`prevState`, `props`) => `null` \| [`SitecoreProviderState`](../interfaces/SitecoreProviderState.md) \| `Pick`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md), `K`\> \| `Pick`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md), `K`\> |
 | `callback?` | () => `void` |
 
 #### Returns

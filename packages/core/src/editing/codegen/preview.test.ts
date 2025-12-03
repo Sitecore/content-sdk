@@ -6,12 +6,18 @@ import {
   getDesignLibraryComponentPropsEvent,
   getDesignLibraryImportMapEvent,
   addComponentPreviewHandler,
+  addServerComponentPreviewHandler,
   ImportEntry,
   ComponentImport,
   buildComponentDependencies,
   getDesignLibraryComponentPreviewErrorEvent,
   DesignLibraryPreviewError,
   ComponentPreviewEventArgs,
+  addStyleElement,
+  createComponentInstance,
+  getImportMapInfo,
+  isImportEntryInfoArray,
+  sendErrorEvent,
 } from './preview';
 
 describe('design library codegen', () => {
@@ -28,7 +34,7 @@ describe('design library codegen', () => {
     debugSpy.restore();
   });
 
-  describe('addComponentPreviewHandler', () => {
+  describe('component preview event handling', () => {
     let documentSpy: sinon.SinonSpy;
     let windowSpy: sinon.SinonSpy;
     let addEventListenerSpy: sinon.SinonSpy;
@@ -149,6 +155,7 @@ describe('design library codegen', () => {
         parent: {
           postMessage: postMessageSpy,
         },
+        postMessage: postMessageSpy,
       });
       global.document = {} as any;
       documentSpy = sinon.stub(global, 'document' as any).value({
@@ -166,220 +173,458 @@ describe('design library codegen', () => {
       documentSpy.restore();
     });
 
-    it('should add event listener for message events', () => {
-      const unsubscribe = addComponentPreviewHandler(importMap, callbackStub);
-      expect(addEventListenerSpy.calledOnce).to.be.true;
-      expect(addEventListenerSpy.calledWith('message')).to.be.true;
-      expect(typeof unsubscribe).to.equal('function');
+    describe('addComponentPreviewHandler', () => {
+      it('should return undefined when window is not available', () => {
+        windowSpy = sinon.stub(global, 'window' as any).value(undefined);
+        const result = addComponentPreviewHandler(importMap, callbackStub);
+        expect(result).to.be.undefined;
+      });
+
+      it('should add event listener for message events', () => {
+        const unsubscribe = addComponentPreviewHandler(importMap, callbackStub);
+        expect(addEventListenerSpy.calledOnce).to.be.true;
+        expect(addEventListenerSpy.calledWith('message')).to.be.true;
+        expect(typeof unsubscribe).to.equal('function');
+      });
+
+      it('should ignore events without origin', () => {
+        addComponentPreviewHandler(importMap, callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          data: previewMessage,
+        });
+
+        handler(message);
+
+        expect(debugSpy.called).to.be.false;
+        expect(callbackStub.called).to.be.false;
+      });
+
+      it('should ignore events with wrong event name', () => {
+        addComponentPreviewHandler(importMap, callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: { name: 'component:test' },
+        });
+
+        handler(message);
+
+        expect(debugSpy.called).to.be.false;
+        expect(callbackStub.called).to.be.false;
+      });
+
+      it('should ignore events without data', () => {
+        addComponentPreviewHandler(importMap, callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: null,
+        });
+
+        handler(message);
+
+        expect(debugSpy.called).to.be.false;
+        expect(callbackStub.called).to.be.false;
+      });
+
+      it('should handle valid component preview event', () => {
+        addComponentPreviewHandler(importMap, callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: previewMessage,
+        });
+
+        handler(message);
+
+        expect(debugSpy.calledWith('Component Library: message received', previewMessage)).to.be
+          .true;
+
+        expect(createElementSpy.calledOnceWith('style')).to.be.true;
+        const styleElement = createElementSpy.getCall(0).returnValue;
+        expect(styleElement.innerHTML).to.equal('body { background-color: red; }');
+        expect(appendChildSpy.calledOnceWith(styleElement)).to.be.true;
+
+        expect(callbackStub.calledOnce).to.be.true;
+        expect(callbackStub.calledWith(null, sinon.match.func)).to.be.true;
+
+        const generatedComponent = callbackStub.getCall(0).args[1];
+
+        expect(callbackStub.getCall(0).args[0]).to.be.null;
+        expect(generatedComponent()).to.deep.equal({
+          value: 'Test',
+          useMemoFn,
+          useCallback: useCallbackFn,
+          useStateFn,
+          NextImage,
+          stylesModule,
+        });
+      });
+
+      it('should not insert style element if it already exists', () => {
+        getElementByIdSpy.returns({
+          remove: removeSpy,
+        });
+
+        addComponentPreviewHandler(importMap, callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: previewMessage,
+        });
+
+        handler(message);
+
+        expect(getElementByIdSpy.calledOnceWith('content-sdk-style-preview')).to.be.true;
+
+        expect(removeSpy.calledOnce).to.be.true;
+
+        expect(debugSpy.calledWith('Component Library: message received', previewMessage)).to.be
+          .true;
+
+        expect(createElementSpy.calledOnceWith('style')).to.be.true;
+        const styleElement = createElementSpy.getCall(0).returnValue;
+        expect(styleElement.innerHTML).to.equal('body { background-color: red; }');
+        expect(appendChildSpy.calledOnceWith(styleElement)).to.be.true;
+
+        expect(callbackStub.calledOnce).to.be.true;
+        expect(callbackStub.calledWith(null, sinon.match.func)).to.be.true;
+
+        const generatedComponent = callbackStub.getCall(0).args[1];
+
+        expect(callbackStub.getCall(0).args[0]).to.be.null;
+        expect(generatedComponent()).to.deep.equal({
+          value: 'Test',
+          useMemoFn,
+          useCallback: useCallbackFn,
+          useStateFn,
+          NextImage,
+          stylesModule,
+        });
+      });
+
+      it('should send error when component fails to initialze', () => {
+        addComponentPreviewHandler(importMap, callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: corruptedPreviewMessage,
+        });
+
+        handler(message);
+
+        expect(debugSpy.calledWith('Component Library: message received', corruptedPreviewMessage))
+          .to.be.true;
+
+        const errorLogArgs = errorSpy.getCall(0).args;
+        expect(errorLogArgs[0]).to.equal('Component Library: sending error event');
+
+        const errorEvent = errorLogArgs[1];
+
+        expect(errorEvent.name).to.equal('component:generation:component-preview-error');
+        expect(errorEvent.message.uid).to.equal('test-uid');
+        expect(errorEvent.message.error.toString()).to.include(
+          'ReferenceError: NotExistingComponent is not defined'
+        );
+        expect(errorEvent.message.type).to.equal(DesignLibraryPreviewError.RenderInit);
+
+        expect(callbackStub.calledOnce).to.be.true;
+        expect(callbackStub.getCall(0).args[0]).to.be.instanceOf(Error);
+        expect(callbackStub.getCall(0).args[1]).to.be.null;
+
+        expect(postMessageSpy.calledOnce).to.be.true;
+        expect(postMessageSpy.calledWith(errorEvent, '*')).to.be.true;
+      });
+
+      it('should send error when component dependencies are missing', () => {
+        addComponentPreviewHandler(
+          [{ module: 'react', exports: [{ name: 'useMemo', value: useMemoFn }] }],
+          callbackStub
+        );
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: corruptedPreviewMessage,
+        });
+
+        handler(message);
+
+        expect(debugSpy.calledWith('Component Library: message received', corruptedPreviewMessage))
+          .to.be.true;
+
+        const errorLogArgs = errorSpy.getCall(0).args;
+        expect(errorLogArgs[0]).to.equal('Component Library: sending error event');
+
+        const errorEvent = errorLogArgs[1];
+
+        expect(errorEvent.name).to.equal('component:generation:component-preview-error');
+        expect(errorEvent.message.uid).to.equal('test-uid');
+        expect(errorEvent.message.error.toString()).to.include(
+          [
+            "Missing module: 'next/image' with alias: 'NextImage'\n",
+            "Missing export: 'useCallback' from module: 'react'\n",
+            "Missing export: 'useState' from module: 'react' with alias: 'useStateFn'\n",
+          ].join('')
+        );
+        expect(errorEvent.message.type).to.equal(DesignLibraryPreviewError.RenderInit);
+
+        expect(callbackStub.calledOnce).to.be.true;
+        expect(callbackStub.getCall(0).args[1]).to.be.null;
+
+        expect(postMessageSpy.calledOnce).to.be.true;
+        expect(postMessageSpy.calledWith(errorEvent, '*')).to.be.true;
+      });
+
+      it('should unsubscribe from component preview event', () => {
+        const unsubscribe = addComponentPreviewHandler(importMap, callbackStub);
+
+        if (unsubscribe) {
+          unsubscribe();
+        }
+
+        expect(removeEventListenerSpy.calledOnce).to.be.true;
+        expect(removeEventListenerSpy.calledWith('message')).to.be.true;
+      });
     });
 
-    it('should ignore events without origin', () => {
-      addComponentPreviewHandler(importMap, callbackStub);
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        data: previewMessage,
+    describe('addServerComponentPreviewHandler', () => {
+      it('should add event listener for message events', () => {
+        const unsubscribe = addServerComponentPreviewHandler(callbackStub);
+        expect(addEventListenerSpy.calledOnce).to.be.true;
+        expect(addEventListenerSpy.calledWith('message')).to.be.true;
+        expect(typeof unsubscribe).to.equal('function');
       });
 
-      handler(message);
+      it('should ignore events without origin', () => {
+        addServerComponentPreviewHandler(callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          data: previewMessage,
+        });
 
-      expect(debugSpy.called).to.be.false;
-      expect(callbackStub.called).to.be.false;
-    });
+        handler(message);
 
-    it('should ignore events with wrong event name', () => {
-      addComponentPreviewHandler(importMap, callbackStub);
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
-        data: { name: 'component:test' },
+        expect(debugSpy.called).to.be.false;
+        expect(callbackStub.called).to.be.false;
       });
 
-      handler(message);
+      it('should ignore events with wrong event name', () => {
+        addServerComponentPreviewHandler(callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: { name: 'component:test' },
+        });
 
-      expect(debugSpy.called).to.be.false;
-      expect(callbackStub.called).to.be.false;
-    });
+        handler(message);
 
-    it('should ignore events without data', () => {
-      addComponentPreviewHandler(importMap, callbackStub);
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
-        data: null,
+        expect(debugSpy.called).to.be.false;
+        expect(callbackStub.called).to.be.false;
       });
 
-      handler(message);
+      it('should ignore events without data', () => {
+        addServerComponentPreviewHandler(callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: null,
+        });
 
-      expect(debugSpy.called).to.be.false;
-      expect(callbackStub.called).to.be.false;
-    });
+        handler(message);
 
-    it('should handle valid component preview event', () => {
-      addComponentPreviewHandler(importMap, callbackStub);
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
-        data: previewMessage,
+        expect(debugSpy.called).to.be.false;
+        expect(callbackStub.called).to.be.false;
       });
 
-      handler(message);
+      it('should handle valid component preview event', () => {
+        addServerComponentPreviewHandler(callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: previewMessage,
+        });
 
-      expect(debugSpy.calledWith('Component Library: message received', previewMessage)).to.be.true;
+        handler(message);
 
-      expect(createElementSpy.calledOnceWith('style')).to.be.true;
-      const styleElement = createElementSpy.getCall(0).returnValue;
-      expect(styleElement.innerHTML).to.equal('body { background-color: red; }');
-      expect(appendChildSpy.calledOnceWith(styleElement)).to.be.true;
+        expect(debugSpy.calledWith('Component Library: message received', previewMessage)).to.be
+          .true;
 
-      expect(callbackStub.calledOnce).to.be.true;
-      expect(callbackStub.calledWith(null, sinon.match.func)).to.be.true;
-
-      const generatedComponent = callbackStub.getCall(0).args[1];
-
-      expect(callbackStub.getCall(0).args[0]).to.be.null;
-      expect(generatedComponent()).to.deep.equal({
-        value: 'Test',
-        useMemoFn,
-        useCallback: useCallbackFn,
-        useStateFn,
-        NextImage,
-        stylesModule,
-      });
-    });
-
-    it('should not insert style element if it already exists', () => {
-      getElementByIdSpy.returns({
-        remove: removeSpy,
+        expect(callbackStub.calledOnce).to.be.true;
+        expect(callbackStub.calledWith(previewMessage)).to.be.true;
       });
 
-      addComponentPreviewHandler(importMap, callbackStub);
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
-        data: previewMessage,
-      });
+      it('should unsubscribe from component preview event', () => {
+        const unsubscribe = addServerComponentPreviewHandler(callbackStub);
 
-      handler(message);
+        if (unsubscribe) {
+          unsubscribe();
+        }
 
-      expect(getElementByIdSpy.calledOnceWith('content-sdk-style-preview')).to.be.true;
-
-      expect(removeSpy.calledOnce).to.be.true;
-
-      expect(debugSpy.calledWith('Component Library: message received', previewMessage)).to.be.true;
-
-      expect(createElementSpy.calledOnceWith('style')).to.be.true;
-      const styleElement = createElementSpy.getCall(0).returnValue;
-      expect(styleElement.innerHTML).to.equal('body { background-color: red; }');
-      expect(appendChildSpy.calledOnceWith(styleElement)).to.be.true;
-
-      expect(callbackStub.calledOnce).to.be.true;
-      expect(callbackStub.calledWith(null, sinon.match.func)).to.be.true;
-
-      const generatedComponent = callbackStub.getCall(0).args[1];
-
-      expect(callbackStub.getCall(0).args[0]).to.be.null;
-      expect(generatedComponent()).to.deep.equal({
-        value: 'Test',
-        useMemoFn,
-        useCallback: useCallbackFn,
-        useStateFn,
-        NextImage,
-        stylesModule,
+        expect(removeEventListenerSpy.calledOnce).to.be.true;
+        expect(removeEventListenerSpy.calledWith('message')).to.be.true;
       });
     });
 
-    it('should send error when component fails to initialze', () => {
-      addComponentPreviewHandler(importMap, callbackStub);
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
-        data: corruptedPreviewMessage,
+    describe('addStyleElement', () => {
+      it('should add a style element to the document', () => {
+        getElementByIdSpy.returns(undefined);
+
+        addStyleElement('body { color: blue; }');
+
+        expect(removeSpy.notCalled).to.be.true;
+        expect(createElementSpy.calledOnceWith('style')).to.be.true;
+        const styleElement = createElementSpy.getCall(0).returnValue;
+        expect(setAttributeSpy.calledOnceWith('id', 'content-sdk-style-preview')).to.be.true;
+        expect(styleElement.innerHTML).to.equal('body { color: blue; }');
+        expect(appendChildSpy.calledOnceWith(styleElement)).to.be.true;
       });
 
-      handler(message);
+      it('should remove existing style element before adding a new one', () => {
+        getElementByIdSpy.returns({
+          remove: removeSpy,
+        });
 
-      expect(debugSpy.calledWith('Component Library: message received', corruptedPreviewMessage)).to
-        .be.true;
+        addStyleElement('body { color: blue; }');
 
-      const errorLogArgs = errorSpy.getCall(0).args;
-      expect(errorLogArgs[0]).to.equal('Component Library: sending error event');
-
-      const errorEvent = errorLogArgs[1];
-
-      expect(errorEvent.name).to.equal('component:generation:component-preview-error');
-      expect(errorEvent.message.uid).to.equal('test-uid');
-      expect(errorEvent.message.error.toString()).to.include(
-        'ReferenceError: NotExistingComponent is not defined'
-      );
-      expect(errorEvent.message.type).to.equal(DesignLibraryPreviewError.RenderInit);
-
-      expect(callbackStub.calledOnce).to.be.true;
-      expect(callbackStub.getCall(0).args[0]).to.be.instanceOf(Error);
-      expect(callbackStub.getCall(0).args[1]).to.be.null;
-
-      expect(postMessageSpy.calledOnce).to.be.true;
-      expect(postMessageSpy.calledWith(errorEvent, '*')).to.be.true;
+        expect(removeSpy.calledOnce).to.be.true;
+        expect(createElementSpy.calledOnceWith('style')).to.be.true;
+        const styleElement = createElementSpy.getCall(0).returnValue;
+        expect(setAttributeSpy.calledOnceWith('id', 'content-sdk-style-preview')).to.be.true;
+        expect(styleElement.innerHTML).to.equal('body { color: blue; }');
+        expect(appendChildSpy.calledOnceWith(styleElement)).to.be.true;
+      });
     });
 
-    it('should send error when component dependencies are missing', () => {
-      addComponentPreviewHandler(
-        [{ module: 'react', exports: [{ name: 'useMemo', value: useMemoFn }] }],
-        callbackStub
-      );
-      const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
-        data: corruptedPreviewMessage,
+    describe('createComponentInstance', () => {
+      it('should create a component instance with the provided dependencies', () => {
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: previewMessage,
+        });
+
+        const generatedComponent: any = createComponentInstance(importMap, message.data);
+
+        expect(generatedComponent()).to.deep.equal({
+          value: 'Test',
+          useMemoFn,
+          useCallback: useCallbackFn,
+          useStateFn,
+          NextImage,
+          stylesModule,
+        });
       });
 
-      handler(message);
+      it('should throw an error if the component fails to initialize', () => {
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: corruptedPreviewMessage,
+        });
 
-      expect(debugSpy.calledWith('Component Library: message received', corruptedPreviewMessage)).to
-        .be.true;
+        expect(() => createComponentInstance(importMap, message.data)).to.throw(
+          /NotExistingComponent is not defined/
+        );
+      });
 
-      const errorLogArgs = errorSpy.getCall(0).args;
-      expect(errorLogArgs[0]).to.equal('Component Library: sending error event');
+      it('should throw an error if dependencies are missing', () => {
+        const message = new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: corruptedPreviewMessage,
+        });
 
-      const errorEvent = errorLogArgs[1];
-
-      expect(errorEvent.name).to.equal('component:generation:component-preview-error');
-      expect(errorEvent.message.uid).to.equal('test-uid');
-      expect(errorEvent.message.error.toString()).to.include(
-        [
+        const expectedMessage = [
           "Missing module: 'next/image' with alias: 'NextImage'\n",
           "Missing export: 'useCallback' from module: 'react'\n",
           "Missing export: 'useState' from module: 'react' with alias: 'useStateFn'\n",
-        ].join('')
-      );
-      expect(errorEvent.message.type).to.equal(DesignLibraryPreviewError.RenderInit);
+        ].join('');
 
-      expect(callbackStub.calledOnce).to.be.true;
-      expect(callbackStub.getCall(0).args[1]).to.be.null;
-
-      expect(postMessageSpy.calledOnce).to.be.true;
-      expect(postMessageSpy.calledWith(errorEvent, '*')).to.be.true;
+        expect(() =>
+          createComponentInstance(
+            [{ module: 'react', exports: [{ name: 'useMemo', value: useMemoFn }] }],
+            message.data
+          )
+        ).to.throw(new RegExp(expectedMessage));
+      });
     });
 
-    it('should unsubscribe from component preview event', () => {
-      const unsubscribe = addComponentPreviewHandler(importMap, callbackStub);
+    describe('sendErrorEvent', () => {
+      const uid = '123-uid';
+      const error = 'Test error message';
+      const errorType = DesignLibraryPreviewError.Render;
 
-      if (unsubscribe) {
-        unsubscribe();
-      }
+      it('should post error event to parent window if available', () => {
+        sendErrorEvent(uid, error, errorType);
 
-      expect(removeEventListenerSpy.calledOnce).to.be.true;
-      expect(removeEventListenerSpy.calledWith('message')).to.be.true;
+        expect(postMessageSpy.calledOnce).to.be.true;
+        const eventArg = postMessageSpy.getCall(0).args[0];
+        expect(eventArg.name).to.equal('component:generation:component-preview-error');
+        expect(eventArg.message.uid).to.equal(uid);
+        expect(eventArg.message.error).to.equal(error);
+        expect(eventArg.message.type).to.equal(errorType);
+        expect(errorSpy.calledOnce).to.be.true;
+        expect(errorSpy.getCall(0).args[0]).to.include('Component Library: sending error event');
+      });
+
+      it('should post error event to current window if parent is not available', () => {
+        (globalThis as any).window.parent = undefined;
+        const postMessageCurrentStub = (globalThis as any).window.postMessage;
+        const { sendErrorEvent } = require('./preview.ts');
+        sendErrorEvent(uid, error, errorType);
+
+        expect(postMessageCurrentStub.calledOnce).to.be.true;
+        const eventArg = postMessageCurrentStub.getCall(0).args[0];
+        expect(eventArg.name).to.equal('component:generation:component-preview-error');
+        expect(eventArg.message.uid).to.equal(uid);
+        expect(eventArg.message.error).to.equal(error);
+        expect(eventArg.message.type).to.equal(errorType);
+        expect(errorSpy.calledOnce).to.be.true;
+      });
+
+      it('should not throw if window is undefined', () => {
+        delete (globalThis as any).window;
+        const { sendErrorEvent } = require('./preview.ts');
+        expect(() => sendErrorEvent(uid, error, errorType)).to.not.throw();
+        expect(errorSpy.calledOnce).to.be.true;
+      });
+
+      it('should use current window when parent equals window', () => {
+        const win: any = { postMessage: postMessageSpy };
+        win.parent = win;
+        (global as any).window = win;
+
+        sendErrorEvent('uid', 'error', DesignLibraryPreviewError.Render);
+
+        expect(postMessageSpy.calledOnce).to.be.true;
+      });
     });
   });
 
   describe('getDesignLibraryImportMapEvent', () => {
-    it('should return a valid import map event', () => {
+    it('should return a valid import map event for ImportEntry[]', () => {
       const importMapEvent = getDesignLibraryImportMapEvent('uid-1', [
         {
           module: 'react',
           exports: [{ name: 'default', value: 'React' }],
         },
       ]);
+
+      expect(importMapEvent).to.deep.equal({
+        name: 'component:generation:import-map',
+        message: {
+          uid: 'uid-1',
+          importMap: [{ module: 'react', exports: ['default'] }],
+        },
+      });
+    });
+
+    it('should return a valid import map event for ImportEntryInfo[]', () => {
+      const isImportEntryInfoArray = getImportMapInfo([
+        {
+          module: 'react',
+          exports: [{ name: 'default', value: 'React' }],
+        },
+      ]);
+      const importMapEvent = getDesignLibraryImportMapEvent('uid-1', isImportEntryInfoArray);
 
       expect(importMapEvent).to.deep.equal({
         name: 'component:generation:import-map',
@@ -415,6 +660,19 @@ describe('design library codegen', () => {
           },
         },
       });
+    });
+
+    it('should handle empty fields and parameters', () => {
+      const event = getDesignLibraryComponentPropsEvent('uid-1', {}, {});
+      expect(event.message.fields).to.deep.equal({});
+      expect(event.message.parameters).to.deep.equal({});
+    });
+
+    it('should use default empty object for fields and parameters when not provided', () => {
+      const event = getDesignLibraryComponentPropsEvent('uid-2');
+
+      expect(event.message.fields).to.deep.equal({});
+      expect(event.message.parameters).to.deep.equal({});
     });
   });
 
@@ -533,6 +791,102 @@ describe('design library codegen', () => {
           type: DesignLibraryPreviewError.RenderInit,
         },
       });
+    });
+  });
+
+  describe('getImportMapInfo', () => {
+    it('should convert ImportEntry[] to ImportEntryInfo[] with correct module and exports', () => {
+      const importMap = [
+        {
+          module: 'react',
+          exports: [
+            { name: 'default', value: {} },
+            { name: 'useMemo', value: () => {} },
+          ],
+        },
+        {
+          module: 'next/image',
+          exports: [{ name: 'default', value: {} }],
+        },
+      ];
+
+      const result = getImportMapInfo(importMap);
+
+      expect(result).to.deep.equal([
+        { module: 'react', exports: ['default', 'useMemo'] },
+        { module: 'next/image', exports: ['default'] },
+      ]);
+    });
+
+    it('should handle empty exports array', () => {
+      const importMap = [
+        {
+          module: 'empty-module',
+          exports: [],
+        },
+      ];
+
+      const result = getImportMapInfo(importMap);
+
+      expect(result).to.deep.equal([{ module: 'empty-module', exports: [] }]);
+    });
+
+    it('should return an empty array for empty importMap', () => {
+      const result = getImportMapInfo([]);
+      expect(result).to.deep.equal([]);
+    });
+  });
+
+  describe('isImportEntryInfoArray', () => {
+    it('should return true for valid ImportEntryInfo[]', () => {
+      const validArray = [
+        { module: 'react', exports: ['default', 'useMemo'] },
+        { module: 'next/image', exports: ['default'] },
+      ];
+
+      expect(isImportEntryInfoArray(validArray)).to.be.true;
+    });
+
+    it('should return false for ImportEntry[]', () => {
+      const importEntryArray = [
+        {
+          module: 'react',
+          exports: [
+            { name: 'default', value: {} },
+            { name: 'useMemo', value: () => {} },
+          ],
+        },
+      ];
+
+      expect(isImportEntryInfoArray(importEntryArray)).to.be.false;
+    });
+
+    it('should return false for array with wrong exports type', () => {
+      const wrongExportsArray = [{ module: 'react', exports: [123, true] }];
+      expect(isImportEntryInfoArray(wrongExportsArray)).to.be.false;
+    });
+
+    it('should return false for empty array', () => {
+      expect(isImportEntryInfoArray([])).to.be.false;
+    });
+
+    it('should return false for non-array input', () => {
+      expect(isImportEntryInfoArray(null)).to.be.false;
+      expect(isImportEntryInfoArray(undefined)).to.be.false;
+      expect(isImportEntryInfoArray({})).to.be.false;
+      expect(isImportEntryInfoArray('string')).to.be.false;
+    });
+
+    it('should return false when module is not a string', () => {
+      expect(isImportEntryInfoArray([{ module: 123, exports: ['default'] }])).to.be.false;
+    });
+
+    it('should return false when exports is not an array', () => {
+      expect(isImportEntryInfoArray([{ module: 'react', exports: 'default' }])).to.be.false;
+    });
+
+    it('should return false when exports contains non-string values', () => {
+      expect(isImportEntryInfoArray([{ module: 'react', exports: [123, {}] }])).to.be.false;
     });
   });
 });

@@ -9,16 +9,28 @@ import { EditableFieldProps } from './sharedTypes';
 import { FieldMetadata } from '@sitecore-content-sdk/core/layout';
 import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 
+/**
+ * The interface for the Image field value.
+ * @public
+ */
 export interface ImageFieldValue {
   [attributeName: string]: unknown;
   src?: string;
   /** HTML attributes that will be appended to the rendered <img /> tag. */
 }
 
+/**
+ * The interface for the Image field.
+ * @public
+ */
 export interface ImageField {
   value?: ImageFieldValue;
 }
 
+/**
+ * The interface for the Image size parameters.
+ * @public
+ */
 export interface ImageSizeParameters {
   [attr: string]: string | number | undefined;
   /** Fixed width of the image */
@@ -37,6 +49,10 @@ export interface ImageSizeParameters {
   sc?: number;
 }
 
+/**
+ * The interface for the Image component props.
+ * @public
+ */
 export interface ImageProps extends EditableFieldProps<ImageProps> {
   [attributeName: string]: unknown;
   /** Image field data (consistent with other field types) */
@@ -96,6 +112,11 @@ const getImageAttrs = (
   return newAttrs;
 };
 
+/**
+ * The Image component.
+ * @param {ImageProps} props component props
+ * @public
+ */
 export const Image: React.FC<ImageProps> = withFieldMetadata<ImageProps>(
   withEmptyFieldEditingComponent<ImageProps>(
     ({ editable = true, imageParams, field, mediaUrlPrefix, ...otherProps }) => {

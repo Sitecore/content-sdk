@@ -6,9 +6,9 @@
 
 # Variable: AppPlaceholder()
 
-> `const` **AppPlaceholder**: (`props`) => `string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\>\> \| `React.JSX.Element` \| (`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\>\> \| `React.JSX.Element`)[]
+> `const` **AppPlaceholder**: (`props`) => `string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\> \| `null` \| `undefined`\> \| `React.JSX.Element` \| (`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\> \| `null` \| `undefined`\> \| `React.JSX.Element` \| `null` \| `undefined`)[] \| `null` \| `undefined`
 
-Defined in: react/types/components/Placeholder/AppPlaceholder.d.ts:10
+Defined in: react/types/components/Placeholder/AppPlaceholder.d.ts:11
 
 The implemention of placeholder compatible with React Server Components.
 Renders components from the layout data for the given placeholder name, with consideration for page edit mode.
@@ -22,6 +22,6 @@ Pulls components from the provided component map.
 
 ## Returns
 
-`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\>\> \| `React.JSX.Element` \| (`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\>\> \| `React.JSX.Element`)[]
+`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\> \| `null` \| `undefined`\> \| `React.JSX.Element` \| (`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\> \| `null` \| `undefined`\> \| `React.JSX.Element` \| `null` \| `undefined`)[] \| `null` \| `undefined`
 
 rendered component(s)

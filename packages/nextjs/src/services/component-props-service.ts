@@ -25,6 +25,10 @@ export type ComponentPropsRequest = {
   context: NextContext;
 };
 
+/**
+ * The service for fetching component props.
+ * @public
+ */
 export class ComponentPropsService {
   async fetchComponentProps(
     params: FetchComponentPropsArguments

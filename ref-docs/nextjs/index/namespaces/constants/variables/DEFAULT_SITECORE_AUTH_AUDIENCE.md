@@ -8,4 +8,8 @@
 
 > `const` **DEFAULT\_SITECORE\_AUTH\_AUDIENCE**: `"https://api.sitecorecloud.io"` = `"https://api.sitecorecloud.io"`
 
-Defined in: core/types/constants.d.ts:10
+Defined in: core/types/constants.d.ts:38
+
+**`Internal`**
+
+Default Sitecore auth audience

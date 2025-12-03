@@ -16,6 +16,10 @@ const defaultQuery = /* GraphQL */ `
   }
 `;
 
+/**
+ * Configuration for @see SitemapXmlService instances
+ * @public
+ */
 export type SitemapXmlServiceConfig = {
   /**
    * The Content SDK application name
@@ -30,11 +34,13 @@ export type SitemapXmlServiceConfig = {
 
 /**
  * The schema of data returned in response to sitemaps request
+ * @public
  */
 export type SitemapQueryResult = { site: { siteInfo: { sitemap: string[] } } };
 
 /**
  * Service that fetch the sitemaps data using Sitecore's GraphQL API.
+ * @public
  */
 export class SitemapXmlService {
   private graphQLClient: GraphQLClient;

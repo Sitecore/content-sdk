@@ -6,7 +6,8 @@ import { getLocaleRewrite } from '@sitecore-content-sdk/core/i18n';
 import { MiddlewareBase, MiddlewareBaseConfig, LOCALE_HEADER_NAME } from './middleware';
 
 /**
- * Locale middleware config
+ * The interface for the Locale middleware configuration.
+ * @public
  */
 export type LocaleMiddlewareConfig = MiddlewareBaseConfig & {
   /**
@@ -19,6 +20,7 @@ export type LocaleMiddlewareConfig = MiddlewareBaseConfig & {
  * Middleware/handler for handling locale-based routing in the Next.js App Router.
  * This middleware is responsible for extracting the locale from the request path and rewriting it if necessary.
  * It also sets the locale header in the response.
+ * @public
  */
 export class LocaleMiddleware extends MiddlewareBase {
   /**

@@ -3,12 +3,12 @@
 import { expect } from 'chai';
 import {
   ModuleExports,
-  nextJsMapTemplate,
+  defaultMapTemplate,
   getImportMap,
   unitMocks,
   writeImportMap,
   getImportValueAlias,
-  WriteImportMapArgs,
+  WriteImportMapArgsInternal,
 } from './import-map';
 import debug from './../../debug';
 import sinon from 'sinon';
@@ -19,11 +19,21 @@ import { importUnitMocks } from './import-map';
 import { componentUnitMocks } from './../templating/components';
 
 describe('Import Map Generation', () => {
-  describe('getImportMap', () => {
-    const sandbox = sinon.createSandbox();
-    let cwdStub: sinon.SinonStub;
-    let testExportsModulePath = '';
+  const sandbox = sinon.createSandbox();
+  let cwdStub: sinon.SinonStub;
+  let testExportsModulePath = '';
 
+  beforeEach(() => {
+    const appFolder = path.resolve(process.cwd(), './src/tools/codegen/test-data/import-map');
+    cwdStub = sandbox.stub(process, 'cwd').returns(appFolder);
+    testExportsModulePath = 'test-exports';
+  });
+
+  afterEach(() => {
+    cwdStub.restore();
+  });
+
+  describe('getImportMap', () => {
     const convertToTestable = (importMap: Map<string, ModuleExports>) =>
       Array.from(importMap).map(([modulePath, imports]) => {
         const namedImports = Array.from(imports.namedExports).map(([key, value]) => {
@@ -39,16 +49,6 @@ describe('Import Map Generation', () => {
           namedImports,
         };
       });
-
-    beforeEach(() => {
-      const appFolder = path.resolve(process.cwd(), './src/tools/codegen/test-data/import-map');
-      cwdStub = sandbox.stub(process, 'cwd').returns(appFolder);
-      testExportsModulePath = 'test-exports';
-    });
-
-    afterEach(() => {
-      cwdStub.restore();
-    });
 
     it('should return map with named imports (named.ts)', () => {
       const result = getImportMap(['single-file-imports/named.ts']);
@@ -250,7 +250,7 @@ describe('Import Map Generation', () => {
     });
   });
 
-  describe('nextJsMapTemplate', () => {
+  describe('defaultMapTemplate', () => {
     it('should accept a Map object and transform it into file content with imports', () => {
       // Prepare a fake import map with both named and default imports
       const importMap = new Map<string, ModuleExports>();
@@ -269,7 +269,7 @@ describe('Import Map Generation', () => {
         namespaceExport: 'React',
       });
 
-      const output = nextJsMapTemplate(importMap);
+      const output = defaultMapTemplate(importMap);
 
       // Check that import statements are present
       expect(output).to.include(
@@ -292,7 +292,7 @@ describe('Import Map Generation', () => {
         namespaceExport: 'everything',
       });
 
-      const output = nextJsMapTemplate(importMap);
+      const output = defaultMapTemplate(importMap);
 
       // Check that the export const importMap is present and contains correct entries
       expect(output).to.include('const importMap = [');
@@ -303,14 +303,33 @@ describe('Import Map Generation', () => {
       expect(output).to.match(/name: 'testo', value: aliased_testo/);
     });
 
-    it('should write default service imports from codegen submodule', () => {
+    it('should write default service imports from codegen submodule with fallback framework', () => {
       // Prepare a fake import map with no entries
       const importMap = new Map<string, ModuleExports>();
-      const output = nextJsMapTemplate(importMap);
+      const output = defaultMapTemplate(importMap);
 
       // Should always include default service imports at the top
       expect(output).to.include(
-        "import { combineImportEntries, defaultImportEntries } from '@sitecore-content-sdk/nextjs/codegen';"
+        `import {
+  combineImportEntries,
+  defaultImportEntries,
+  ImportEntry,
+} from '@sitecore-content-sdk/core/codegen';`
+      );
+    });
+
+    it('should write default service imports from codegen submodule with custom framework', () => {
+      // Prepare a fake import map with no entries
+      const importMap = new Map<string, ModuleExports>();
+      const output = defaultMapTemplate(importMap, 'react');
+
+      // Should always include default service imports at the top
+      expect(output).to.include(
+        `import {
+  combineImportEntries,
+  defaultImportEntries,
+  ImportEntry,
+} from '@sitecore-content-sdk/react/codegen';`
       );
     });
 
@@ -323,7 +342,7 @@ describe('Import Map Generation', () => {
         namespaceExport: null,
       });
 
-      const output = nextJsMapTemplate(importMap);
+      const output = defaultMapTemplate(importMap);
 
       // Should export default using combineImportEntries
       expect(output).to.match(
@@ -336,32 +355,37 @@ describe('Import Map Generation', () => {
     const sandbox = sinon.createSandbox();
     afterEach(() => {
       sandbox.restore();
+      /* eslint-disable-next-line */
+      importUnitMocks.getImportMap = importUnitMocks.getImportMap;
+      /* eslint-disable-next-line */
+      importUnitMocks.defaultMapTemplate = importUnitMocks.defaultMapTemplate;
+      unitMocks({ getComponentListStub: componentUnitMocks.getComponentList });
     });
 
     let getImportMapStub: sinon.SinonStub;
-    let nextJsMapTemplateStub: sinon.SinonStub;
+    let defaultMapTemplateStub: sinon.SinonStub;
     let getComponentListStub: sinon.SinonStub;
 
     beforeEach(() => {
       getImportMapStub = sandbox.stub();
-      nextJsMapTemplateStub = sandbox.stub();
+      defaultMapTemplateStub = sandbox.stub();
       getComponentListStub = sandbox.stub();
-      sandbox.replace.usingAccessor(importUnitMocks, 'getImportMap', getImportMapStub);
-      sandbox.replace.usingAccessor(importUnitMocks, 'nextJsMapTemplate', nextJsMapTemplateStub);
-      sandbox.replace.usingAccessor(componentUnitMocks, 'getComponentList', getComponentListStub);
+      importUnitMocks.getImportMap = getImportMapStub;
+      importUnitMocks.defaultMapTemplate = defaultMapTemplateStub;
+      unitMocks({ getComponentListStub });
     });
 
     const initialization = [
       {
         title: 'Using deprecated scConfig',
-        run: (config: WriteImportMapArgs) => {
+        run: (config: WriteImportMapArgsInternal) => {
           const generate = writeImportMap(config);
           return generate();
         },
       },
       {
         title: 'Using new config passed as argument',
-        run: ({ scConfig, ...rest }: WriteImportMapArgs) => {
+        run: ({ scConfig, ...rest }: WriteImportMapArgsInternal) => {
           const generate = writeImportMap(rest);
           return generate({ scConfig });
         },
@@ -398,14 +422,78 @@ describe('Import Map Generation', () => {
           unitMocks({ getComponentListStub });
           getImportMapStub.returns(new Map());
           const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
-          nextJsMapTemplateStub.returns('// import map content');
+
+          // Mock fs.createReadStream for prepImportMaps with proper event emitter
+          const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
+          createReadStreamStub.callsFake(() => {
+            const handlers: any = {};
+            const mockStream = {
+              on: (event: string, handler: any) => {
+                handlers[event] = handler;
+                if (event === 'error') {
+                  // Don't trigger error
+                } else if (event === 'close') {
+                  // Trigger close after data
+                  setImmediate(() => handler());
+                }
+                return mockStream;
+              },
+            };
+            // Trigger data event
+            setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
+            return mockStream as any;
+          });
+
+          defaultMapTemplateStub.returns('// import map content');
           await run({ paths: ['foo'], exclude: ['bar'], scConfig });
 
           expect(getComponentListStub.called).to.be.true;
           expect(getComponentListStub.calledWith(['foo'], ['bar'])).to.be.true;
           expect(getImportMapStub.calledWith(['component1.tsx', 'component2.tsx'])).to.be.true;
           expect(fsWriteStub.calledOnce).to.be.true;
-          expect(nextJsMapTemplateStub.calledOnce).to.be.true;
+          expect(defaultMapTemplateStub.calledOnce).to.be.true;
+        });
+
+        it('should write server and client import maps', async () => {
+          // run the full unobstructed flow for this test
+          /* eslint-disable-next-line */
+          importUnitMocks.getImportMap = importUnitMocks.getImportMap;
+          /* eslint-disable-next-line */
+          importUnitMocks.defaultMapTemplate = importUnitMocks.defaultMapTemplate;
+          unitMocks({ getComponentListStub: componentUnitMocks.getComponentList });
+          const scConfig = { disableCodeGeneration: false } as any;
+          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+          const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+
+          await run({
+            paths: ['client-components/*', 'single-file-imports/named.ts'],
+            exclude: [],
+            scConfig,
+            separateServerClientMaps: true,
+            clientTemplate: (indexedImportMap: Map<string, ModuleExports>) => {
+              return `'use client';
+${defaultMapTemplate(indexedImportMap)}`;
+            },
+          });
+
+          // Assert fsWriteStub was called twice
+          expect(fsWriteStub.calledTwice).to.be.true;
+
+          // Assert server import map was written to import-map.server.ts
+          const serverCall = fsWriteStub.getCall(0);
+          expect(serverCall.args[0]).to.include('import-map.server.ts');
+          expect(serverCall.args[0]).to.not.include('import-map.client.ts');
+          expect(serverCall.args[1]).to.match(/test-exports/);
+          expect(serverCall.args[1]).to.not.match(/useEffect/);
+
+          // Assert client import map was written to import-map.client.ts
+          const clientCall = fsWriteStub.getCall(1);
+          expect(clientCall.args[0]).to.include('import-map.client.ts');
+          expect(clientCall.args[1]).to.match(/\'use client\'/);
+          expect(clientCall.args[1]).to.match(/useEffect/);
+          expect(clientCall.args[1]).to.match(/fake-react/);
+          expect(clientCall.args[1]).to.not.match(/test-exports/);
         });
 
         it('should write output into import-map file', async () => {
@@ -416,7 +504,29 @@ describe('Import Map Generation', () => {
           getComponentListStub.returns(fakeEntries);
           getImportMapStub.returns(new Map());
           const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
-          nextJsMapTemplateStub.returns('// import map content');
+
+          // Mock fs.createReadStream for prepImportMaps with proper event emitter
+          const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
+          createReadStreamStub.callsFake(() => {
+            const handlers: any = {};
+            const mockStream = {
+              on: (event: string, handler: any) => {
+                handlers[event] = handler;
+                if (event === 'error') {
+                  // Don't trigger error
+                } else if (event === 'close') {
+                  // Trigger close after data
+                  setImmediate(() => handler());
+                }
+                return mockStream;
+              },
+            };
+            // Trigger data event
+            setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
+            return mockStream as any;
+          });
+
+          defaultMapTemplateStub.returns('// import map content');
 
           await run({ paths: ['foo'], exclude: [], scConfig });
 
@@ -436,8 +546,30 @@ describe('Import Map Generation', () => {
           getComponentListStub.returns(fakeEntries);
           getImportMapStub.returns(new Map());
           const error = new Error('Unit test mocks: write failed');
+
+          // Mock fs.createReadStream for prepImportMaps with proper event emitter
+          const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
+          createReadStreamStub.callsFake(() => {
+            const handlers: any = {};
+            const mockStream = {
+              on: (event: string, handler: any) => {
+                handlers[event] = handler;
+                if (event === 'error') {
+                  // Don't trigger error
+                } else if (event === 'close') {
+                  // Trigger close after data
+                  setImmediate(() => handler());
+                }
+                return mockStream;
+              },
+            };
+            // Trigger data event
+            setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
+            return mockStream as any;
+          });
+
           sandbox.stub(require('fs'), 'writeFileSync').throws(error);
-          nextJsMapTemplateStub.returns('// import map content');
+          defaultMapTemplateStub.returns('// import map content');
 
           let thrownError: Error | undefined;
           try {
@@ -451,3 +583,4 @@ describe('Import Map Generation', () => {
     });
   });
 });
+

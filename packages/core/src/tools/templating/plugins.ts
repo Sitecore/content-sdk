@@ -4,6 +4,7 @@ import { getItems } from './utils';
 
 /**
  * Identifies the format of the module to be compiled
+ * @public
  */
 export enum ModuleType {
   CJS,
@@ -20,6 +21,7 @@ export interface PluginFile {
 
 /**
  * Definition to be used for plugin registration during bootstrap
+ * @public
  */
 export interface PluginDefinition {
   /**
@@ -86,6 +88,7 @@ export function getPluginList({
  * ESM: export { fooPlugin } from '{pluginPath}';
  * @example generatePlugins({ distPath: 'src/temp/foo-plugins.js', rootPath: 'src/foo/plugins', moduleType: ModuleType.CJS })
  * @param {PluginDefinition} definition plugin definition
+ * @public
  */
 export function generatePlugins(definition: PluginDefinition) {
   const { rootPath, distPath, moduleType, relative = false, silent } = definition;

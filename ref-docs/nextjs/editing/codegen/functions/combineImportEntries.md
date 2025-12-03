@@ -8,15 +8,19 @@
 
 > **combineImportEntries**(`defaultImportEntries`, `generatedImportEntries`): [`ImportEntry`](../interfaces/ImportEntry.md)[]
 
-Defined in: [nextjs/src/editing/codegen/import-map.ts:95](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/nextjs/src/editing/codegen/import-map.ts#L95)
+Defined in: [nextjs/src/editing/codegen/import-map.ts:106](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/nextjs/src/editing/codegen/import-map.ts#L106)
+
+Combines the default import entries with the generated import entries.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `defaultImportEntries` | [`ImportEntry`](../interfaces/ImportEntry.md)[] |
-| `generatedImportEntries` | [`ImportEntry`](../interfaces/ImportEntry.md)[] |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `defaultImportEntries` | [`ImportEntry`](../interfaces/ImportEntry.md)[] | The default import entries. |
+| `generatedImportEntries` | [`ImportEntry`](../interfaces/ImportEntry.md)[] | The generated import entries. |
 
 ## Returns
 
 [`ImportEntry`](../interfaces/ImportEntry.md)[]
+
+The combined import entries.

@@ -1,5 +1,10 @@
 import React from 'react';
 
+/**
+ * The DefaultEmptyFieldEditingComponentText component.
+ * @param {object} props - The props for the component.
+ * @public
+ */
 export const DefaultEmptyFieldEditingComponentText: React.FC<{
   [key: string]: unknown;
   tag?: string;
@@ -7,6 +12,11 @@ export const DefaultEmptyFieldEditingComponentText: React.FC<{
   return React.createElement(props.tag || 'span', props, '[No text in field]');
 };
 
+/**
+ * The DefaultEmptyFieldEditingComponentImage component.
+ * @param {object} props - The props for the component.
+ * @public
+ */
 export const DefaultEmptyFieldEditingComponentImage: React.FC<{
   [key: string]: unknown;
   className?: string;

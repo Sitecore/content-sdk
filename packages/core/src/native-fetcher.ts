@@ -1,7 +1,7 @@
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './utils/timeout-promise';
 
-type NativeDataFetcherOptions = {
+export type NativeDataFetcherOptions = {
   /**
    * Override debugger for logging. Uses 'content-sdk:http' by default.
    */
@@ -19,6 +19,7 @@ type NativeDataFetcherOptions = {
 /**
  * Response data for an HTTP request sent to an API
  * @template T the type of data model requested
+ * @public
  */
 export interface NativeDataFetcherResponse<T> {
   /** HTTP status code of the response (i.e. 200, 404) */
@@ -33,13 +34,22 @@ export interface NativeDataFetcherResponse<T> {
 
 /**
  * Native fetcher error type to include response text and status
+ * @public
  */
 export type NativeDataFetcherError = Error & {
   response: NativeDataFetcherResponse<unknown>;
 };
 
+/**
+ * Native data fetcher configuration
+ * @public
+ */
 export type NativeDataFetcherConfig = NativeDataFetcherOptions & RequestInit;
 
+/**
+ * Native data fetcher class
+ * @public
+ */
 export class NativeDataFetcher {
   private abortTimeout?: TimeoutPromise;
 
@@ -92,7 +102,12 @@ export class NativeDataFetcher {
         data: respData,
       });
 
-      return { ...response, data: respData as T };
+      return {
+        data: respData as T,
+        headers: response.headers,
+        status: response.status,
+        statusText: response.statusText,
+      };
     } catch (error) {
       this.abortTimeout?.clear();
       debug('Request failed: %o', error);
@@ -224,8 +239,14 @@ export class NativeDataFetcher {
    * @returns {NativeDataFetcherError} - The constructed error object.
    */
   private createError(response: Response, data?: unknown): NativeDataFetcherError {
+    const error = new Error(
+      `HTTP ${response.status}${response.statusText ? ` ${response.statusText}` : ''}`
+    );
+
     return {
-      ...new Error(`HTTP ${response.status} ${response.statusText}`),
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
       response: {
         status: response.status,
         statusText: response.statusText,

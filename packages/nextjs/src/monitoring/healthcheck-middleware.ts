@@ -2,6 +2,7 @@ import { NextApiResponse, NextApiRequest } from 'next';
 
 /**
  * Middleware / handler for use in healthcheck Next.js API route (e.g. '/api/healthz').
+ * @public
  */
 export class HealthcheckMiddleware {
   /**

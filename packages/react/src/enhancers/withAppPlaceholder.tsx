@@ -20,8 +20,9 @@ export const withAppPlaceholder = <T extends ComponentProps, W extends T & Wrapp
   Component: ComponentType<T>
 ) => {
   return (props: W) => {
-    const placeholders = props.rendering.placeholders;
+    const placeholders = props.rendering.placeholders || {};
     const phProps: Record<string, unknown> = {};
+
     for (const placeholder of Object.keys(placeholders)) {
       phProps[placeholder] = (
         <AppPlaceholder
@@ -32,6 +33,7 @@ export const withAppPlaceholder = <T extends ComponentProps, W extends T & Wrapp
         />
       );
     }
+
     const displayName = Component.displayName || Component.name || 'Component';
     const propsCopy: T = { ...props, displayName };
 

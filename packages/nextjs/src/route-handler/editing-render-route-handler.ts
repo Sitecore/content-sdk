@@ -4,6 +4,7 @@ import {
   EditingRenderQueryParams,
   PREVIEW_KEY,
   QUERY_PARAM_EDITING_SECRET,
+  INVALID_SECRET_HTML_MESSAGE,
 } from '@sitecore-content-sdk/core/editing';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
@@ -50,16 +51,16 @@ type EditingHandlerOptions = {
   sitecoreInternalEditingHostUrl?: string;
 };
 
+/**
+ * Creates a route handler for the editing render API route (e.g. '/api/editing/render')
+ * @param {EditingHandlerOptions} options - The options for the route handler.
+ * @returns The route handler object with GET and OPTIONS methods.
+ * @public
+ */
 export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions) => {
   const dataFetcher = new NativeDataFetcher({ debugger: debug.editing });
 
-  const OPTIONS = (req: NextRequest) => {
-    // init query string values
-    const query: EditingRenderQueryParams = {} as EditingRenderQueryParams;
-    req.nextUrl.searchParams.forEach((value, key) => {
-      query[key] = value;
-    });
-
+  const getCorsHeaders = (req: NextRequest) => {
     const expectedCorsHeaders = getEnforcedCorsHeaders({
       requestMethod: req.method,
       headers: req.headers,
@@ -71,11 +72,43 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       debug.editing(
         'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
       );
-      return new Response(
-        `<html><body>Requests from origin ${req.headers.get('origin')} not allowed</body></html>`,
-        { status: 401 }
+    }
+
+    return expectedCorsHeaders;
+  };
+
+  const getOriginNotAllowedMessage = (origin: string) => {
+    return `<html><body>Requests from origin ${origin} not allowed</body></html>`;
+  };
+
+  const validateEditingSecret = (receivedSecret: string) => {
+    const editingSecret = getEditingSecret();
+    const secretIsvalid = editingSecret === receivedSecret;
+    if (!secretIsvalid) {
+      debug.editing(
+        'invalid editing secret - sent "%s" expected "%s"',
+        receivedSecret,
+        editingSecret
       );
     }
+
+    return secretIsvalid;
+  };
+
+  const OPTIONS = (req: NextRequest) => {
+    // init query string values
+    const query: EditingRenderQueryParams = {} as EditingRenderQueryParams;
+    req.nextUrl.searchParams.forEach((value, key) => {
+      query[key] = value;
+    });
+
+    const expectedCorsHeaders = getCorsHeaders(req);
+    if (!expectedCorsHeaders) {
+      return new Response(getOriginNotAllowedMessage(req.headers.get('origin') || ''), {
+        status: 401,
+      });
+    }
+
     debug.editing('preflight request');
     return new Response(null, { status: 204, headers: expectedCorsHeaders });
   };
@@ -94,32 +127,20 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       headers,
     });
 
-    const expectedCorsHeaders = getEnforcedCorsHeaders({
-      requestMethod: req.method,
-      headers: headers,
-      presetCorsHeader: headers.get('Access-Control-Allow-Origin') as string,
-      allowedOrigins: EDITING_ALLOWED_ORIGINS,
-    });
-
+    const expectedCorsHeaders = getCorsHeaders(req);
     if (!expectedCorsHeaders) {
-      debug.editing(
-        'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
-      );
-      return new Response(
-        `<html><body>Requests from origin ${req.headers.get('origin')} not allowed</body></html>`,
-        { status: 401 }
-      );
+      return new Response(getOriginNotAllowedMessage(req.headers.get('origin') || ''), {
+        status: 401,
+      });
     }
 
     const responseHeaders: { [key: string]: string } = expectedCorsHeaders;
 
     // Validate secret
-    const secret = query[QUERY_PARAM_EDITING_SECRET];
-    if (secret !== getEditingSecret()) {
-      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
+    if (!validateEditingSecret(query[QUERY_PARAM_EDITING_SECRET])) {
       return Response.json(
         {
-          html: '<html><body>Missing or invalid secret</body></html>',
+          html: INVALID_SECRET_HTML_MESSAGE,
         },
         { status: 401, headers: responseHeaders }
       );
@@ -238,7 +259,119 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     }
   };
 
-  return { GET, OPTIONS };
+  /**
+   * This POST handler serves as proxy for server action call when Design Library is rendering server component.
+   * When Design Library needs to dynamically update or render a generated variant of server component a server action {@link updateServerComponentAction} is called from the client side.
+   * The way server functions work is that the action call is made to the same URL with POST method, which in normal page render is handled internally by Next.js.
+   * However, in editing mode we are in an api route handler scenario so we need to proxy the POST request to be able to process the server action correctly.
+   * @param {NextRequest} req - The incoming request
+   */
+  const POST = async (req: NextRequest) => {
+    const requestOrigin = req.headers.get('origin') || '';
+    const originHost = new URL(requestOrigin).host;
+    const expectedCorsHeaders = getCorsHeaders(req);
+
+    // Bypass CORS if:
+    // we are in local or sitecore environment - requested hostname is 'localhost'
+    // or the request is same origin (e.g. in vercel netlify environment)
+    const bypassCors = req.nextUrl.hostname === 'localhost' || req.nextUrl.host === originHost;
+
+    if (!bypassCors && !expectedCorsHeaders) {
+      return new Response(getOriginNotAllowedMessage(requestOrigin), {
+        status: 401,
+      });
+    }
+
+    // Validate secret
+    if (!validateEditingSecret(req.nextUrl.searchParams.get(QUERY_PARAM_EDITING_SECRET) || '')) {
+      return Response.json(
+        {
+          html: INVALID_SECRET_HTML_MESSAGE,
+        },
+        { status: 401, headers: expectedCorsHeaders ?? {} }
+      );
+    }
+
+    // propagate vercel protection query parameters; map query parameters for design library request
+    const query: EditingRenderQueryParams = {} as EditingRenderQueryParams;
+    req.nextUrl.searchParams.forEach((value, key) => {
+      query[key] = value;
+    });
+
+    const propagatedQsParams = {
+      ...getQueryParamsForPropagation(query as { [key: string]: string }),
+      ...mapEditingParams(query as { [key: string]: string }),
+    };
+
+    const base = resolveServerUrl(req);
+    const targetUrl = new URL('/', base);
+
+    for (const key in propagatedQsParams) {
+      if ({}.hasOwnProperty.call(propagatedQsParams, key)) {
+        propagatedQsParams[key] && targetUrl.searchParams.append(key, propagatedQsParams[key]);
+      }
+    }
+    targetUrl.searchParams.append('timestamp', Date.now().toString());
+
+    // enable draft mode in order to get prerender bypass cookie from request
+    const draft = await draftMode();
+    draft.enable();
+
+    // add prerender bypass cookie to forwarded request in order to enable draft mode
+    const cookieStore = await getNextCookies();
+    const reqCookie = req.headers.get('cookie') || '';
+    const prerenderBypassCookie = `${PreviewCookies.PRERENDER_BYPASS}=${
+      cookieStore.get(PreviewCookies.PRERENDER_BYPASS)?.value || ''
+    }`;
+    const forwardCookie = reqCookie
+      ? `${reqCookie}; ${prerenderBypassCookie}`
+      : prerenderBypassCookie;
+
+    const forwardHeaders = new Headers(req.headers);
+    forwardHeaders.set('cookie', forwardCookie);
+
+    const forwardedResponse = await dataFetcher.fetch<string>(targetUrl.toString(), {
+      method: req.method,
+      headers: forwardHeaders,
+      body: req.body,
+      duplex: 'half',
+    } as any);
+
+    // Filter out x-middleware headers since rewrites are not allowed in route handlers
+    // Also filter out content-encoding and content-length to avoid issues when browser reads the payload
+    const filteredHeaders = new Headers();
+    const forwardedHeaders = new Headers(forwardedResponse.headers);
+    forwardedHeaders.forEach((value, key) => {
+      if (
+        key !== 'x-middleware-next' &&
+        key !== 'x-middleware-rewrite' &&
+        key !== 'content-encoding' &&
+        key !== 'content-length'
+      ) {
+        filteredHeaders.set(key, value);
+      }
+    });
+
+    // Restrict the page to be rendered only within the allowed origins
+    filteredHeaders.set('Content-Security-Policy', getCSPHeader());
+
+    // add expected CORS headers to response
+    Object.entries(expectedCorsHeaders ?? {}).forEach(([key, value]: [string, string]) => {
+      filteredHeaders.set(key, value);
+    });
+
+    // remove nextjs preview cookies to not leak them to the browser
+    const filteredCookies = cleanupNextPreviewCookies(filteredHeaders.get('Set-Cookie'));
+    filteredHeaders.set('Set-Cookie', filteredCookies?.join('; ') || '');
+
+    return new Response(forwardedResponse.data, {
+      status: forwardedResponse.status,
+      statusText: forwardedResponse.statusText,
+      headers: filteredHeaders,
+    });
+  };
+
+  return { GET, POST, OPTIONS };
 };
 
 type NextCookie = {

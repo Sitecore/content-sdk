@@ -6,7 +6,9 @@
 
 # Interface: TextField
 
-Defined in: react/types/components/Text.d.ts:4
+Defined in: react/types/components/Text.d.ts:8
+
+The interface for the Text field.
 
 ## Extends
 
@@ -18,7 +20,7 @@ Defined in: react/types/components/Text.d.ts:4
 
 > `optional` **metadata**: `object`
 
-Defined in: core/types/layout/models.d.ts:107
+Defined in: core/types/layout/models.d.ts:123
 
 #### Index Signature
 
@@ -34,4 +36,4 @@ Defined in: core/types/layout/models.d.ts:107
 
 > `optional` **value**: `string` \| `number`
 
-Defined in: react/types/components/Text.d.ts:5
+Defined in: react/types/components/Text.d.ts:9

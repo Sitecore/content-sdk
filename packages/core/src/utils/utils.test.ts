@@ -125,6 +125,8 @@ describe('utils', () => {
       expect(result).to.deep.equal({
         'Access-Control-Allow-Origin': mockOrigin,
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+        'x-middleware-cache': 'no-cache',
+        'Cache-Control': 'no-store, must-revalidate',
       });
       delete process.env.JSS_ALLOWED_ORIGINS;
     });
@@ -146,6 +148,8 @@ describe('utils', () => {
       expect(result).to.deep.equal({
         'Access-Control-Allow-Origin': 'http://allowed.com',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+        'x-middleware-cache': 'no-cache',
+        'Cache-Control': 'no-store, must-revalidate',
       });
     });
 
@@ -169,6 +173,8 @@ describe('utils', () => {
       expect(result).to.deep.equal({
         'Access-Control-Allow-Origin': 'https://allowed.dev.com',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+        'x-middleware-cache': 'no-cache',
+        'Cache-Control': 'no-store, must-revalidate',
       });
     });
 
@@ -182,6 +188,8 @@ describe('utils', () => {
         'Access-Control-Allow-Origin': mockOrigin,
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'x-middleware-cache': 'no-cache',
+        'Cache-Control': 'no-store, must-revalidate',
       });
     });
 
@@ -194,6 +202,8 @@ describe('utils', () => {
       expect(result).to.deep.equal({
         'Access-Control-Allow-Origin': 'https://preallowed.com',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+        'x-middleware-cache': 'no-cache',
+        'Cache-Control': 'no-store, must-revalidate',
       });
     });
     it('should handle two different types of headers', () => {
@@ -211,6 +221,8 @@ describe('utils', () => {
       expect(result1).to.deep.equal({
         'Access-Control-Allow-Origin': 'http://allowed.com',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+        'x-middleware-cache': 'no-cache',
+        'Cache-Control': 'no-store, must-revalidate',
       });
 
       // Test with Headers
@@ -226,6 +238,8 @@ describe('utils', () => {
       expect(result2).to.deep.equal({
         'Access-Control-Allow-Origin': 'http://allowed.com',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
+        'x-middleware-cache': 'no-cache',
+        'Cache-Control': 'no-store, must-revalidate',
       });
     });
   });
