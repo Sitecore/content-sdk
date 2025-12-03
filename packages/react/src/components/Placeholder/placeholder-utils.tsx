@@ -251,15 +251,22 @@ export const getComponentForRendering = (
   // Render SXA Rendering Variant if available
   const exportName = renderingDefinition.params?.FieldNames;
 
-  const renderedComponent =
+  // Try to find a named export matching the variant, otherwise fallback to default export
+  const variantComponent =
     exportName && exportName !== DEFAULT_EXPORT_NAME
       ? ((component as ReactModule)[exportName] as ComponentType)
-      : (component as ReactModule).default ||
-        (component as ReactModule).Default ||
-        (component as ComponentType);
+      : undefined;
+
+  const defaultComponent =
+    (component as ReactModule).default ||
+    (component as ReactModule).Default ||
+    (component as ComponentType);
+
+  // Use variant if found, otherwise fallback to default export
+  const renderedComponent = variantComponent || defaultComponent;
 
   if (!renderedComponent) {
-    logUnknownComponentError(exportName !== DEFAULT_EXPORT_NAME ? exportName : undefined);
+    logUnknownComponentError();
 
     return {
       component: missingComponentComponent ?? MissingComponent,
