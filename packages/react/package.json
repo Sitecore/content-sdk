@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/react",
-  "version": "1.4.0-canary.1",
+  "version": "1.3.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -76,8 +76,7 @@
     "react-dom": "^19.1.0"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "1.4.0-canary.1",
-    "@sitecore-content-sdk/search": "1.4.0-canary.1",
+    "@sitecore-content-sdk/core": "^1.3.0",
     "fast-deep-equal": "^3.1.3"
   },
   "description": "",
@@ -85,21 +84,8 @@
   "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
   "files": [
     "dist",
-    "types",
-    "/*.d.ts"
+    "types"
   ],
-  "exports": {
-    ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./types/index.d.ts"
-    },
-    "./search": {
-      "import": "./dist/esm/search/index.js",
-      "require": "./dist/cjs/search/index.js",
-      "types": "./types/search/index.d.ts"
-    }
-  },
   "imports": {
     "#rsc-env": {
       "react-server": {
