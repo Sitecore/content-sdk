@@ -1,9 +1,8 @@
 /**
- * Omitting keys/properties from an object
- *
- * @param data - The source object.
- * @param keys - An array of keys to omit.
- * @returns - An object without the keys passed.
+ * Omits the provided keys from the given object.
+ * @param {Data} data The source object.
+ * @param {Keys[]} keys Keys to omit from the source object.
+ * @returns {Omit<Data, Keys>} Object without the specified keys.
  */
 export function omit<Data extends object, Keys extends keyof Data>(
   data: Data,

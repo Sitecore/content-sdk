@@ -1,11 +1,9 @@
 import type { HttpResponse, MiddlewareNextResponse } from '../interfaces';
 
 /**
- * Checks if the given 'response' object is a valid MiddlewareNextResponse Response
- * by verifying the presence of necessary properties.
- *
- * @param response - MiddlewareNextResponse | HttpResponse - The response object to be validated.
- * @returns Returns true if 'response' is a valid MiddlewareNextResponse Response, otherwise false.
+ * Determines whether the given response is a Next.js middleware response.
+ * @param {MiddlewareNextResponse | HttpResponse} response The response candidate to validate.
+ * @returns {response is MiddlewareNextResponse} True when the response exposes middleware cookie helpers.
  */
 export function isNextJsMiddlewareResponse(
   response: MiddlewareNextResponse | HttpResponse

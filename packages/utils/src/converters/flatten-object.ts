@@ -1,21 +1,21 @@
 import type { BasicTypes } from '../interfaces';
 
 /**
- * A function that flattens an object, by combining the keys with an "_".
- * @param data - An object that has the required data to perform the flattening
- * @returns - A new flattened object
+ * Flattens a nested object by concatenating keys with an underscore.
+ * @param {FlattenObjectDataParameters} data Parameters describing the flatten operation.
+ * @returns {FlattenedObject} A new flattened object.
  * @example
- *
  * ```ts
- * const object = {order:{amount: 1, delivered: false}}
- * const flattenedObject = flattenObject(object)
- * // flattenedObject will be {order_amount: 1, order_delivered: false}
+ * const object = { order: { amount: 1, delivered: false } };
+ * const flattenedObject = flattenObject(object);
+ * // flattenedObject is { order_amount: 1, order_delivered: false }
  * ```
  */
 export function flattenObject(data: FlattenObjectDataParameters) {
   const { currentKey, object } = data;
   const newObject = data.newObject ?? {};
 
+  // eslint-disable-next-line guard-for-in
   for (const key in object) {
     const value = object[key];
 

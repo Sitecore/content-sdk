@@ -1,10 +1,10 @@
 import { getCookie } from './get-cookie';
 
 /**
- * Retrieves the cookie name and value from the request header
- * @param cookiesHeader - The cookie string of the request header
- * @param cookieName - The cookie name to be found
- * @returns - The name and value of the cookie, or undefined
+ * Retrieves a cookie from the server-side request header string.
+ * @param {string | undefined} cookiesHeader Raw `cookie` header contents.
+ * @param {string} cookieName The cookie name to look up.
+ * @returns {{ name: string; value: string } | undefined} The resolved cookie information when found.
  */
 export function getCookieServerSide(
   cookiesHeader: string | undefined,

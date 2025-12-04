@@ -1,15 +1,16 @@
 /**
- * Checks if the provided string is a shortened version of ISO 8601 date format ‘YYYY-MM-DD’T’hh:mm’
- * @param date - The date string provided by the developer
- * @returns - A boolean if the string is valid otherwise false
+ * Checks if the provided string matches the shortened ISO 8601 format (`YYYY-MM-DDThh:mm`).
+ * @param {string} date The date string to validate.
+ * @returns {boolean} True when the value conforms to the shortened ISO format.
  */
-export function isShortISODateString(date: string) {
+export function isShortISODateString(date: string): boolean {
   try {
     const dateString = date + 'Z';
     const convertedDate = new Date(dateString).toISOString().substring(0, 16);
 
     return convertedDate === date;
-  } catch (_) {
+    // eslint-disable-next-line no-unused-vars
+  } catch (error) {
     return false;
   }
 }

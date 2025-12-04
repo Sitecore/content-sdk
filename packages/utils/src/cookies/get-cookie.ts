@@ -1,8 +1,8 @@
 /**
- * Retrieves the cookie, if it exists in the cookie string
- * @param cookieStr - The cookie string containing every cookie
- * @param cookieName - The cookie name to be found
- * @returns - an object that contains the cookie name and value or undefined, if not found
+ * Retrieves a cookie by name from a cookie string.
+ * @param {string | undefined} cookieStr Cookie string containing serialized cookies.
+ * @param {string} cookieName The cookie name to locate.
+ * @returns {{ name: string; value: string } | undefined} The cookie name/value pair when found.
  */
 export function getCookie(
   cookieStr: string | undefined,

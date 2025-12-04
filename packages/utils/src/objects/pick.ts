@@ -1,9 +1,8 @@
 /**
- * Picking keys/properties from an object
- *
- * @param data - The source object.
- * @param keys - An array of keys to pick.
- * @returns - An object with the keys passed.
+ * Picks the provided keys from the given object.
+ * @param {Data} data The source object.
+ * @param {Keys[]} keys Keys to retain from the source object.
+ * @returns {Pick<Data, Keys>} Object containing only the specified keys.
  */
 export function pick<Data extends object, Keys extends keyof Data>(
   data: Data,

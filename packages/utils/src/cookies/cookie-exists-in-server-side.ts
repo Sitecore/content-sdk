@@ -1,10 +1,10 @@
 import { getCookieServerSide } from './get-cookie-server-side';
 
 /**
- * Evaluates whether a specified cookie name exists in the request header
- * @param cookiesHeader - The cookie string of the request header
- * @param cookieName - The cookie name to be found
- * @returns - A boolean value if cookie exists
+ * Checks whether a cookie exists in a server-side request header string.
+ * @param {string} cookiesHeader Raw `cookie` header contents.
+ * @param {string} cookieName The cookie name to search for.
+ * @returns {boolean} True when the cookie is present.
  */
 export function cookieExistsInServerSide(cookiesHeader: string, cookieName: string): boolean {
   return getCookieServerSide(cookiesHeader, cookieName) !== undefined;

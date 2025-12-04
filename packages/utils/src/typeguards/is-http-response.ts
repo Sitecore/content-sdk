@@ -1,11 +1,9 @@
 import type { HttpResponse, MiddlewareNextResponse } from '../interfaces';
 
 /**
- * Checks if the given 'response' object is a valid HTTP Response
- * by verifying the presence of necessary properties.
- *
- * @param response - MiddlewareNextResponse | HttpResponse - The response object to be validated.
- * @returns Returns true if 'response' is a valid HTTP Response, otherwise false.
+ * Determines whether the given response is an HTTP response instance.
+ * @param {MiddlewareNextResponse | HttpResponse} response The response candidate to validate.
+ * @returns {response is HttpResponse} True when the response implements the required HTTP methods.
  */
 export function isHttpResponse(
   response: MiddlewareNextResponse | HttpResponse

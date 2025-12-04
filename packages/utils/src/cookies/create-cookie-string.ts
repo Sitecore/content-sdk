@@ -1,11 +1,11 @@
 import type { CookieProperties } from './interfaces';
 
 /**
- * Creates the cookie string with the respectively cookie attributes
- * @param name - name of the cookie
- * @param value - value of the cookie
- * @param attributes - an object of supported cookie attributes
- * @returns - a string that will be passed to document.cookie
+ * Creates a cookie string with the provided attributes.
+ * @param {string} name Cookie name.
+ * @param {string} value Cookie value.
+ * @param {CookieProperties} attributes Supported cookie attributes.
+ * @returns {string} Serialized cookie ready to be assigned to `document.cookie`.
  */
 export function createCookieString(
   name: string,

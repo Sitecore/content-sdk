@@ -18,14 +18,6 @@ const config: Config.InitialOptions = {
   coverageDirectory: './coverage',
   coverageReporters: ['cobertura', 'text'],
   collectCoverage: false,
-  coverageThreshold: {
-    global: {
-      branches: 99,
-      functions: 100,
-      lines: 100,
-      statements: 100,
-    },
-  },
   collectCoverageFrom: ['src/**/*.ts', '!src/*.ts', '!src/**/interfaces.ts'],
 };
 

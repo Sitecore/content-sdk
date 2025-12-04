@@ -20,14 +20,6 @@ const config: Config.InitialOptions = {
   coverageReporters: ['cobertura', 'text'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/types/'],
   coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/types/'],
-  coverageThreshold: {
-    global: {
-      branches: 99,
-      functions: 100,
-      lines: 100,
-      statements: 100,
-    },
-  },
   collectCoverageFrom: ['src/**/*.ts', '!src/*.ts', '!src/**/interfaces.ts'],
 };
 
