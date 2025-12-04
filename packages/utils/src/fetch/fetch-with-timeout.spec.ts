@@ -17,21 +17,25 @@ describe('fetchWithTimeout', () => {
       json: () =>
         Promise.resolve({
           ref: 'ref',
-        } as unknown),
+        }),
     });
 
-    global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
+    global.fetch = jest.fn().mockImplementationOnce(() => mockFetch) as typeof fetch;
 
     const result = await fetchWithTimeout(url, timeout, fetchOptions);
 
     expect(await result?.json()).toEqual({ ref: 'ref' });
+
+    jest.restoreAllMocks();
   });
 
   it('should handle a timeout and return null when the server does not respond within the timeout', async () => {
     jest.useFakeTimers();
     global.fetch = jest
       .fn()
-      .mockImplementation(() => Promise.resolve({ json: () => Promise.resolve('anything') }));
+      .mockImplementation(() =>
+        Promise.resolve({ json: () => Promise.resolve('anything') })
+      ) as typeof fetch;
 
     const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
     const timeout = 100;
@@ -66,7 +70,7 @@ describe('fetchWithTimeout', () => {
     const abortError = new Error(ErrorMessages.IE_0002);
     abortError.name = 'AbortError';
 
-    global.fetch = jest.fn(() => Promise.reject(abortError));
+    global.fetch = jest.fn(() => Promise.reject(abortError)) as typeof fetch;
     let result;
     try {
       result = await fetchWithTimeout(url, timeout, fetchOptions);
@@ -84,7 +88,7 @@ describe('fetchWithTimeout', () => {
     const abortError = new Error(ErrorMessages.IE_0002);
     abortError.name = 'AbortError';
 
-    global.fetch = jest.fn(() => Promise.reject(abortError));
+    global.fetch = jest.fn(() => Promise.reject(abortError)) as typeof fetch;
 
     const result = await fetchWithTimeout(url, timeout, fetchOptions).catch((error) => {
       expect(error).toBeInstanceOf(Error);
@@ -101,7 +105,7 @@ describe('fetchWithTimeout', () => {
     const abortError = new Error(ErrorMessages.IE_0002);
     abortError.name = 'AbortError ';
 
-    global.fetch = jest.fn(() => Promise.reject(abortError));
+    global.fetch = jest.fn(() => Promise.reject(abortError)) as typeof fetch;
 
     expect(async () => {
       const result = await fetchWithTimeout(url, timeout, fetchOptions);
@@ -115,7 +119,7 @@ describe('fetchWithTimeout', () => {
     const abortError = new Error(ErrorMessages.IV_0006);
     abortError.name = '  ';
 
-    global.fetch = jest.fn(() => Promise.reject(abortError));
+    global.fetch = jest.fn(() => Promise.reject(abortError)) as typeof fetch;
 
     expect(async () => {
       const result = await fetchWithTimeout(url, timeout, fetchOptions);
@@ -126,7 +130,7 @@ describe('fetchWithTimeout', () => {
   it('should catch an error and return null if the fetch request fails', async () => {
     const timeout = 1000; // 1 second timeout
 
-    global.fetch = jest.fn(() => Promise.reject());
+    global.fetch = jest.fn(() => Promise.reject()) as typeof fetch;
 
     let result;
     try {
@@ -144,7 +148,9 @@ describe('fetchWithTimeout', () => {
     const abortError = new Error('Failed to fetch');
     abortError.name = 'abc';
 
-    global.fetch = jest.fn().mockImplementation(() => Promise.reject(abortError));
+    global.fetch = jest
+      .fn()
+      .mockImplementation(() => Promise.reject(abortError as any)) as typeof fetch;
 
     expect(async () => {
       const result = await fetchWithTimeout(url, timeout, fetchOptions);
@@ -157,7 +163,9 @@ describe('fetchWithTimeout', () => {
   it('should return bad object if response has no .json method', async () => {
     const timeout = 1000; // 1 second timeout
 
-    global.fetch = jest.fn().mockImplementation(() => Promise.resolve('bad object'));
+    global.fetch = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve('bad object')) as typeof fetch;
 
     const result = await fetchWithTimeout(url, timeout, fetchOptions);
 

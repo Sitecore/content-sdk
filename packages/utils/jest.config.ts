@@ -4,8 +4,14 @@ import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
   displayName: 'utils',
+  preset: 'ts-jest',
   transform: {
-    '^.+\\.[tj]s$': 'babel-jest',
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.spec.json',
+      },
+    ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   testEnvironment: 'jsdom',
