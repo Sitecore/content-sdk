@@ -96,8 +96,32 @@ describe('withAppPlaceholder HOC', () => {
   });
 
   // Basic functionality tests
+  it('should render without placeholders', () => {
+    const cleanComponent: ComponentRendering = {
+      componentName: 'TestComponent',
+      uid: 'clean-test-123',
+      fields: {
+        title: { value: 'Test Title' },
+      },
+    };
+
+    const props: WrapperProps = {
+      rendering: cleanComponent,
+      page: getPage(),
+      componentMap,
+    };
+    const Element = withAppPlaceholder(Home);
+    const renderedComponent = render(
+      <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
+        <Element {...props} />
+      </SitecoreProvider>
+    );
+
+    expect(renderedComponent.container.querySelectorAll('.home-mock').length).to.equal(1);
+    expect(renderedComponent.container.querySelector('.home-mock')?.children.length).to.equal(0);
+  });
+
   it('should render a single placeholder correctly', () => {
-    // Create simple test data with only valid components
     const cleanComponent: ComponentRendering = {
       componentName: 'TestComponent',
       uid: 'clean-test-123',

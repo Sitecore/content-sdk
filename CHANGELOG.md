@@ -21,7 +21,7 @@ Our versioning strategy is as follows:
   * `[react]` Added React hooks for search functionality
     - `useSearch` hook for paginated search queries with automatic state management, request cancellation, request status tracking.
     - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
-* `[nextjs]` [App Router] Add support for server components in Design Studio ([#280](https://github.com/Sitecore/content-sdk/pull/280))([#300](https://github.com/Sitecore/content-sdk/pull/300))([#301](https://github.com/Sitecore/content-sdk/pull/301))
+* `[nextjs]` [App Router] Add support for server components in Design Studio ([#280](https://github.com/Sitecore/content-sdk/pull/280))([#300](https://github.com/Sitecore/content-sdk/pull/300))([#301](https://github.com/Sitecore/content-sdk/pull/301))([#303](https://github.com/Sitecore/content-sdk/pull/303))
   - additional react components to handle dynamic rendering of server components
   - includes refactoring of existing Design Library functionality
   - this is a breaking change for applications based on Next.js App Router (beta) template. Please refer to the detailed upgrade guide for further instructions
@@ -46,6 +46,7 @@ Our versioning strategy is as follows:
 ### 🧹 Chores
 
 * API Surface verification and reporting ([#283](https://github.com/Sitecore/content-sdk/pull/283))
+* `[core]` `[react]` Remove "strictNullChecks: false" tsconfig property ([#304](https://github.com/Sitecore/content-sdk/pull/304))
 
 ## 1.2.1
 

@@ -667,6 +667,13 @@ describe('design library codegen', () => {
       expect(event.message.fields).to.deep.equal({});
       expect(event.message.parameters).to.deep.equal({});
     });
+
+    it('should use default empty object for fields and parameters when not provided', () => {
+      const event = getDesignLibraryComponentPropsEvent('uid-2');
+
+      expect(event.message.fields).to.deep.equal({});
+      expect(event.message.parameters).to.deep.equal({});
+    });
   });
 
   describe('buildComponentDependencies', () => {

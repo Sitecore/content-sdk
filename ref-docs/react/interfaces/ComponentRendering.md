@@ -52,7 +52,7 @@ Defined in: packages/core/types/layout/models.d.ts:100
 
 ### placeholders?
 
-> `optional` **placeholders**: `PlaceholdersData`
+> `optional` **placeholders**: `PlaceholdersData`\<`string`\>
 
 Defined in: packages/core/types/layout/models.d.ts:98
 
