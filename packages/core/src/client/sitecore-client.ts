@@ -27,6 +27,8 @@ import { RobotsService } from '../site/robots-service';
 import { DesignLibraryVariantGeneration } from '../editing/models';
 import debug from '../debug';
 
+/* This is just a test comment to check Lerna's independent mode is working */
+
 /**
  * Error page codes
  * @public
