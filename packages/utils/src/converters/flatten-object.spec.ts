@@ -1,5 +1,4 @@
 import { flattenObject } from './flatten-object';
-import { expect, it, describe } from '@jest/globals';
 
 describe('flattenObject', () => {
   it('should return a properly flattened object', () => {

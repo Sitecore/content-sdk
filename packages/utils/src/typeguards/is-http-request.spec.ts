@@ -1,6 +1,5 @@
 import type { Request } from '../interfaces';
 import { isHttpRequest } from './is-http-request';
-import { expect, it, describe, jest } from '@jest/globals';
 
 describe('isHttpRequest', () => {
   it('should return true for a valid HTTP Request', () => {

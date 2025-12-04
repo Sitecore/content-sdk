@@ -1,6 +1,5 @@
 import * as coreBrowserModule from '../initializer/browser/initializer';
 import { getBrowserId } from './get-browser-id';
-import { expect, it, describe, jest } from '@jest/globals';
 
 jest.mock('../initializer/browser/initializer');
 

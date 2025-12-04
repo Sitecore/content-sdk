@@ -1,5 +1,4 @@
 import { generateV4UUID } from './generate-v4-uuid';
-import { expect, it, describe, jest } from '@jest/globals';
 
 describe('generateV4UUID', () => {
   it('should generate random V4UUID', () => {

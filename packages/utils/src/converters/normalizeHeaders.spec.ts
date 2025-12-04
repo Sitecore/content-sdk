@@ -1,5 +1,4 @@
 import { normalizeHeaders } from './normalizeHeaders';
-import { expect, it, describe } from '@jest/globals';
 
 describe('normalizeHeaders', () => {
   it('should return an empty object when input is empty', () => {

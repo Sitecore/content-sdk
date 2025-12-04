@@ -1,5 +1,5 @@
 import { isValidLocation } from './is-valid-location';
-import { expect, it, describe } from '@jest/globals';
+import { it } from '@jest/globals';
 
 describe('location', () => {
   const invalidLons = [-190, 190];

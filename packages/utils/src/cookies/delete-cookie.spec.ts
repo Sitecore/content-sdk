@@ -1,5 +1,4 @@
 import { deleteCookie } from './delete-cookie';
-import { expect, it, describe, jest } from '@jest/globals';
 
 describe('deleteCookie', () => {
   afterEach(() => {

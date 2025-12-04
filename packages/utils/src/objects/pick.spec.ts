@@ -1,5 +1,4 @@
 import { pick } from './pick';
-import { expect, it, describe } from '@jest/globals';
 
 interface ExampleObject {
   [key: string | symbol]: any;

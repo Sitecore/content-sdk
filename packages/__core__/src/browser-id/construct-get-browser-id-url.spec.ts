@@ -1,6 +1,5 @@
 import { SITECORE_EDGE_URL } from '../consts';
 import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';
-import { expect, it, describe } from '@jest/globals';
 
 describe('constructGetBrowserIdUrl', () => {
   it('should correctly create the URL for retrieving the browser Id from EDGE events proxy', () => {

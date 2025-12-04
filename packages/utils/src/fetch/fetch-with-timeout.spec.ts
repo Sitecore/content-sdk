@@ -1,6 +1,5 @@
 import { ErrorMessages } from '../consts';
 import { fetchWithTimeout } from './fetch-with-timeout'; // Update with your actual module path
-import { expect, it, describe, jest } from '@jest/globals';
 
 describe('fetchWithTimeout', () => {
   const url = 'https://example.com/api/data';

@@ -4,7 +4,6 @@ import { ErrorMessages, LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
 import type { EPResponse } from '../interfaces';
 import * as constructGetBrowserIdUrl from './construct-get-browser-id-url';
 import { fetchBrowserIdFromEdgeProxy } from './fetch-browser-id-from-edge-proxy';
-import { expect, it, describe, jest } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/utils', () => {
   const originalModule = jest.requireActual<typeof import('@sitecore-content-sdk/utils')>(

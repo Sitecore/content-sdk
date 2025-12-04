@@ -1,6 +1,5 @@
 import type { Request } from '../interfaces';
 import { isNextJsMiddlewareRequest } from './is-next-js-middleware-request';
-import { expect, it, describe, jest } from '@jest/globals';
 
 describe('isNextJsMiddlewareRequest', () => {
   it('should return true for a valid Next.js Middleware Request', () => {

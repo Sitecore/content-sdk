@@ -1,5 +1,4 @@
 import { getCookieValueClientSide } from './get-cookie-value-client-side';
-import { expect, it, describe } from '@jest/globals';
 
 describe('getCookieValue', () => {
   it('should return the cookie value for a given cookie name', () => {

@@ -1,5 +1,4 @@
 import { cookieExists } from './cookie-exists';
-import { expect, it, describe } from '@jest/globals';
 
 describe('cookieExists', () => {
   const cookieValue = 'cookieValue';

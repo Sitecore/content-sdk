@@ -3,7 +3,6 @@
  */
 
 import { convertToBase64 } from './base-64-converter';
-import { expect, it, describe, jest, beforeAll } from '@jest/globals';
 
 describe('convertToBase64', () => {
   afterEach(() => {

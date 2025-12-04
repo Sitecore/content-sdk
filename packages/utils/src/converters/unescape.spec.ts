@@ -1,5 +1,5 @@
 import { unescape } from './unescape';
-import { expect, it, describe } from '@jest/globals';
+import { describe } from '@jest/globals';
 
 describe('unescape', () => {
   describe.each([

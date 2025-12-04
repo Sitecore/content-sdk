@@ -5,7 +5,6 @@ import type {
   GetGuestRefResponseError,
 } from './fetch-guest-id-from-edge-proxy';
 import { fetchGuestIdFromEdgeProxy } from './fetch-guest-id-from-edge-proxy';
-import { expect, it, describe } from '@jest/globals';
 
 describe('fetchGuestIdFromEdgeProxy', () => {
   const bid = 'bid';

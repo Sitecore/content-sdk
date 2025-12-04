@@ -1,5 +1,4 @@
 import { isShortISODateString } from './is-short-iso-date-string';
-import { expect, it, describe, jest } from '@jest/globals';
 
 describe('isShortISODateString', () => {
   it('should return false if the date string is short', () => {

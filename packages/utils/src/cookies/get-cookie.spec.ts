@@ -1,5 +1,4 @@
 import { getCookie } from './get-cookie';
-import { expect, it, describe } from '@jest/globals';
 
 describe('getCookie', () => {
   const cookieName = 'cookieName';

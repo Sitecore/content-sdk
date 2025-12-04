@@ -1,6 +1,5 @@
 import type { HttpResponse, MiddlewareNextResponse } from '../interfaces';
 import { isNextJsMiddlewareResponse } from './is-next-js-middleware-response';
-import { expect, it, describe, jest } from '@jest/globals';
 
 describe('isNextJsMiddlewareResponse', () => {
   it('should return false if response does not have Next Js Middleware Response properties', () => {

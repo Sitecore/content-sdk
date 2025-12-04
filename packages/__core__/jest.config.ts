@@ -1,5 +1,3 @@
-/* eslint-disable */
-// Importing @jest/types allows us to have intellisense over InitialOptions of Jest
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
