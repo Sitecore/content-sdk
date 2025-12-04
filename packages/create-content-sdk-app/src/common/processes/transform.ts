@@ -5,7 +5,6 @@ import path, { sep } from 'path';
 import { Data, renderFile } from 'ejs';
 import { writeFileToPath, isDevEnvironment } from '../utils/helpers';
 import { BaseAppArgs } from '../base/args';
-const { version } = require('../../../package.json');
 
 const FILE_FOR_COPY_REGEXP =
   /(index\.html)$|\.(gif|jpg|jpeg|tiff|png|svg|ashx|ico|pdf|jar|eot|woff|ttf|woff2)$/;
@@ -17,9 +16,12 @@ export type JsonObjectType = {
 
 export const populateEjsData = (args: BaseAppArgs, destination?: string) => {
   // pass in helper to args object
-
+  const { version } = require(path.resolve(
+    __dirname,
+    `../../../src/initializers/${args.template}/settings.json`
+  ));
   // Use exact version for Content SDK dependencies in beta and canary versions
-  const contentSdkVersion: string = version.match(/(\-[a-zA-Z]+\.\d+)$/) ? version : `~${version}`;
+  const contentSdkVersion: string = `^${version}`;
 
   const ejsData: Data = {
     ...args,

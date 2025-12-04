@@ -3003,7 +3003,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/core": 1.4.0-canary.2
+    "@sitecore-content-sdk/core": ^1.4.0-canary
     "@stylistic/eslint-plugin": ^5.2.2
     "@types/chai": ^5.2.2
     "@types/inquirer": ^9.0.9
@@ -3042,7 +3042,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/core@1.4.0-canary.2, @sitecore-content-sdk/core@workspace:packages/core":
+"@sitecore-content-sdk/core@npm:1.4.0-canary.2, @sitecore-content-sdk/core@npm:^1.4.0-canary":
+  version: 1.4.0-canary.2
+  resolution: "@sitecore-content-sdk/core@npm:1.4.0-canary.2"
+  dependencies:
+    chalk: ^4.1.2
+    debug: ^4.4.0
+    glob: ^11.0.2
+    graphql: ^16.11.0
+    graphql-request: ^6.1.0
+    memory-cache: ^0.2.0
+    sinon-chai: ^4.0.0
+    url-parse: ^1.5.10
+  peerDependencies:
+    "@sitecore-cloudsdk/events": ^0.5.1
+  checksum: 178984332f4f4e94ab5d577e550bd02db287bae4f1238602639c3e6e56ddf319dcbd5c5a44147bf184df941cf25486e6430cd297c7fa366f4befa68dae4e67e9
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
@@ -3101,8 +3119,8 @@ __metadata:
     "@babel/parser": ^7.27.2
     "@sitecore-cloudsdk/core": ^0.5.1
     "@sitecore-cloudsdk/personalize": ^0.5.1
-    "@sitecore-content-sdk/core": 1.4.0-canary.2
-    "@sitecore-content-sdk/react": 1.4.0-canary.2
+    "@sitecore-content-sdk/core": ^1.4.0-canary
+    "@sitecore-content-sdk/react": ^1.4.0-canary
     "@stylistic/eslint-plugin": ^5.2.2
     "@testing-library/dom": ^10.4.0
     "@testing-library/react": ^16.3.0
@@ -3160,12 +3178,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/react@1.4.0-canary.2, @sitecore-content-sdk/react@workspace:packages/react":
-  version: 0.0.0-use.local
-  resolution: "@sitecore-content-sdk/react@workspace:packages/react"
+"@sitecore-content-sdk/react@npm:^1.4.0-canary":
+  version: 1.4.0-canary.2
+  resolution: "@sitecore-content-sdk/react@npm:1.4.0-canary.2"
   dependencies:
     "@sitecore-content-sdk/core": 1.4.0-canary.2
     "@sitecore-content-sdk/search": 1.4.0-canary.2
+    fast-deep-equal: ^3.1.3
+  peerDependencies:
+    "@sitecore-cloudsdk/events": ^0.5.1
+    "@sitecore-feaas/clientside": ^0.6.0
+    react: ^19.2.1
+    react-dom: ^19.2.1
+  checksum: e65aa9d903b2e3c5ac5a9ab0db40cf956552555d5d0937e6f760ec979b36a5e76af2e408b5076812e1da53578234edfc34f38569487ae5c6275e7a06c639bb1b
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/react@workspace:packages/react":
+  version: 0.0.0-use.local
+  resolution: "@sitecore-content-sdk/react@workspace:packages/react"
+  dependencies:
+    "@sitecore-content-sdk/core": ^1.4.0-canary
+    "@sitecore-content-sdk/search": ^1.4.0-canary
     "@sitecore-feaas/clientside": ^0.6.0
     "@stylistic/eslint-plugin": ^5.2.2
     "@testing-library/dom": ^10.4.0
@@ -3211,11 +3245,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/search@1.4.0-canary.2, @sitecore-content-sdk/search@workspace:packages/search":
+"@sitecore-content-sdk/search@npm:1.4.0-canary.2, @sitecore-content-sdk/search@npm:^1.4.0-canary":
+  version: 1.4.0-canary.2
+  resolution: "@sitecore-content-sdk/search@npm:1.4.0-canary.2"
+  dependencies:
+    "@sitecore-content-sdk/core": 1.4.0-canary.2
+  checksum: d5d0ad8b5be28b7edbf3895d5940edd0de21f3af81bdda80e285b4271b8223a1b9d58618de1c2f0cf39ff2235aa06bbf31f77c1c92df613f9801f0700319fff7
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/search@workspace:packages/search":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/search@workspace:packages/search"
   dependencies:
-    "@sitecore-content-sdk/core": 1.4.0-canary.2
+    "@sitecore-content-sdk/core": ^1.4.0-canary
     "@types/chai": ^5.2.3
     "@types/mocha": ^10.0.10
     chai: ^6.2.1
