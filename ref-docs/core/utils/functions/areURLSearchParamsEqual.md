@@ -8,7 +8,7 @@
 
 > **areURLSearchParamsEqual**(`params1`, `params2`): `boolean`
 
-Defined in: [packages/core/src/utils/utils.ts:253](https://github.com/Sitecore/content-sdk/blob/c1fd60008e2a47b74892c00f1b7c89e3813a6047/packages/core/src/utils/utils.ts#L253)
+Defined in: [packages/core/src/utils/utils.ts:253](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/utils/utils.ts#L253)
 
 Compares two URLSearchParams objects to determine if they are equal.
 
