@@ -6,7 +6,7 @@
 
 # Interface: ComponentFileWithType
 
-Defined in: [packages/core/src/tools/templating/components.ts:88](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/tools/templating/components.ts#L88)
+Defined in: [packages/core/src/tools/templating/components.ts:88](https://github.com/Sitecore/content-sdk/blob/33c723218db508a661afdd4878be30490d492d87/packages/core/src/tools/templating/components.ts#L88)
 
 **`Internal`**
 
@@ -22,7 +22,7 @@ Definition for a component file with guaranteed componentType
 
 > **componentName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:79](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/tools/templating/components.ts#L79)
+Defined in: [packages/core/src/tools/templating/components.ts:79](https://github.com/Sitecore/content-sdk/blob/33c723218db508a661afdd4878be30490d492d87/packages/core/src/tools/templating/components.ts#L79)
 
 Name of the code file
 
@@ -36,7 +36,7 @@ Name of the code file
 
 > **componentType**: [`ComponentType`](../type-aliases/ComponentType.md)
 
-Defined in: [packages/core/src/tools/templating/components.ts:90](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/tools/templating/components.ts#L90)
+Defined in: [packages/core/src/tools/templating/components.ts:90](https://github.com/Sitecore/content-sdk/blob/33c723218db508a661afdd4878be30490d492d87/packages/core/src/tools/templating/components.ts#L90)
 
 Detected component type (server, client, or universal)
 
@@ -50,7 +50,7 @@ Detected component type (server, client, or universal)
 
 > **filePath**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:73](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/tools/templating/components.ts#L73)
+Defined in: [packages/core/src/tools/templating/components.ts:73](https://github.com/Sitecore/content-sdk/blob/33c723218db508a661afdd4878be30490d492d87/packages/core/src/tools/templating/components.ts#L73)
 
 The original file path of the component
 
@@ -64,7 +64,7 @@ The original file path of the component
 
 > **importPath**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:75](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/tools/templating/components.ts#L75)
+Defined in: [packages/core/src/tools/templating/components.ts:75](https://github.com/Sitecore/content-sdk/blob/33c723218db508a661afdd4878be30490d492d87/packages/core/src/tools/templating/components.ts#L75)
 
 Normalized path that can be used for import statements
 
@@ -78,7 +78,7 @@ Normalized path that can be used for import statements
 
 > **moduleName**: `string`
 
-Defined in: [packages/core/src/tools/templating/components.ts:77](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/tools/templating/components.ts#L77)
+Defined in: [packages/core/src/tools/templating/components.ts:77](https://github.com/Sitecore/content-sdk/blob/33c723218db508a661afdd4878be30490d492d87/packages/core/src/tools/templating/components.ts#L77)
 
 Normalized name that can be used as import
 
