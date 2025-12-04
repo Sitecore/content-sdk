@@ -15,38 +15,40 @@ import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsMiddleware } from './redirects-middleware';
-import { REWRITE_HEADER_NAME } from './middleware';
+import { LOCALE_HEADER_NAME, REWRITE_HEADER_NAME } from './middleware';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
 describe('RedirectsMiddleware', () => {
-  let nextRedirectStub, nextRewriteStub;
+  let nextRedirectStub: sinon.SinonStub;
+  let nextRewriteStub: sinon.SinonStub;
 
   const sandbox = sinon.createSandbox();
 
   const debugSpy = spy(debug, 'redirects');
-  const validateDebugLog = (message, ...params) =>
+  const validateDebugLog = (message: string, ...params: unknown[]) =>
     expect(debugSpy.args.find((log) => log[0] === message)).to.deep.equal([message, ...params]);
-  const validateEndMessageDebugLog = (message, params) => {
+
+  const normalizeUrl = (u: any) => {
+    if (typeof u === 'string') return u;
+    if (u && typeof u === 'object') return typeof u.href === 'string' ? u.href : String(u);
+    return u;
+  };
+
+  const normalizeHeaders = (h: any) => {
+    if (!h) return h;
+    // Convert Headers -> plain object so deep-equal is stable
+    if (typeof Headers !== 'undefined' && h instanceof Headers) {
+      return Object.fromEntries(h.entries());
+    }
+    // In case something stringified to "[object Headers]"
+    if (h === '[object Headers]') return {};
+    return h;
+  };
+
+  const validateEndMessageDebugLog = (message: string, params: unknown) => {
     const logParams = debugSpy.args.find((log) => log[0] === message) as Array<unknown>;
-
-    const normalizeUrl = (u: any) => {
-      if (typeof u === 'string') return u;
-      if (u && typeof u === 'object') return typeof u.href === 'string' ? u.href : String(u);
-      return u;
-    };
-
-    const normalizeHeaders = (h: any) => {
-      if (!h) return h;
-      // Convert Headers -> plain object so deep-equal is stable
-      if (typeof Headers !== 'undefined' && h instanceof Headers) {
-        return Object.fromEntries(h.entries());
-      }
-      // In case something stringified to "[object Headers]"
-      if (h === '[object Headers]') return {};
-      return h;
-    };
 
     const actual = { ...(logParams[2] as any) };
     const expected = { ...(params as any) };
@@ -84,14 +86,16 @@ describe('RedirectsMiddleware', () => {
       },
       cookies: {
         get(key: string) {
-          return { value: req.cookies[key] };
+          const cookies = { ...props.cookies };
+          return { value: cookies[key] };
         },
         ...props.cookies,
       },
       headers: {
         host: hostname,
         get(key: string) {
-          return req.headers[key];
+          const headers = { host: hostname, ...props.headerValues };
+          return headers[key];
         },
         ...props.headerValues,
       },
@@ -113,16 +117,16 @@ describe('RedirectsMiddleware', () => {
 
     Object.defineProperties(res.headers, {
       set: {
-        value: (key, value) => {
+        value: (key: any, value: any) => {
           res.headers[key] = value;
         },
         enumerable: false,
       },
       get: {
-        value: (key) => res.headers[key],
+        value: (key: any) => res.headers[key],
       },
       forEach: {
-        value: (cb) => {
+        value: (cb: any) => {
           Object.keys(res.headers).forEach((key) => cb(res.headers[key], key, res.headers));
         },
         enumerable: false,
@@ -221,7 +225,7 @@ describe('RedirectsMiddleware', () => {
     });
   };
 
-  const setupRewriteStub = (status = 200, res) => {
+  const setupRewriteStub = (status = 200, res: any) => {
     nextRewriteStub = sandbox.stub(NextResponse, 'rewrite').callsFake((url) => {
       return {
         url,
@@ -232,7 +236,12 @@ describe('RedirectsMiddleware', () => {
     });
   };
 
-  const runTestWithRedirect = async (middlewareOptions, req, res, _hostname = hostname) => {
+  const runTestWithRedirect = async (
+    middlewareOptions: any,
+    req: any,
+    res: any,
+    _hostname = hostname
+  ) => {
     const { middleware, fetchRedirects, siteResolver } = createMiddleware(middlewareOptions);
     const finalRes = await middleware.handle(req, res);
 
@@ -245,7 +254,7 @@ describe('RedirectsMiddleware', () => {
     return { finalRes, fetchRedirects, siteResolver };
   };
 
-  const createTestRequestResponse = ({ response, request, status = 301 }) => {
+  const createTestRequestResponse = ({ response, request, status = 301 }: any) => {
     const res =
       status !== 404
         ? createResponse({
@@ -407,7 +416,7 @@ describe('RedirectsMiddleware', () => {
     it('should apply both default and custom rules when custom disabled function provided', async () => {
       const res = NextResponse.next();
 
-      const test = async (pathname: string, middleware) => {
+      const test = async (pathname: string, middleware: any) => {
         const req = createRequest({
           nextUrl: {
             pathname,
@@ -450,7 +459,7 @@ describe('RedirectsMiddleware', () => {
         .callsFake(() => res as unknown as NextResponse);
 
       const props = {
-        skip: (req) => req?.nextUrl.pathname === '/styleguide' && req.nextUrl.locale === 'en',
+        skip: (req: any) => req?.nextUrl.pathname === '/styleguide' && req.nextUrl.locale === 'en',
       };
       const req = createRequest();
       const { middleware } = createMiddleware(props);
@@ -1074,6 +1083,270 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
+      it('should perform variable substitution for regex redirects to external absolute URLs', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const expectedUrl = 'https://museum.olympics.com/docs/AOTC/LONGUEURSDAVANCE-9.4-DE.pdf';
+
+        const url = {
+          href: expectedUrl,
+          pathname: '/docs/AOTC/LONGUEURSDAVANCE-9.4-DE.pdf',
+          origin: 'https://museum.olympics.com',
+          locale: 'en',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/redirect/docs/AOTC/LONGUEURSDAVANCE-9.4-DE.pdf',
+              href: 'http://localhost:3000/redirect/docs/AOTC/LONGUEURSDAVANCE-9.4-DE.pdf',
+              origin: 'http://localhost:3000',
+              locale: 'en',
+              clone: cloneUrl,
+            },
+          },
+          status: 302,
+        });
+
+        setupRedirectStub(302);
+
+        const { finalRes } = await runTestWithRedirect(
+          {
+            pattern: '^/redirect/docs/([^/]+)/([^/]+)$',
+            target: 'https://museum.olympics.com/docs/$1/$2',
+            redirectType: REDIRECT_TYPE_302,
+            isQueryStringPreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(normalizeUrl(finalRes.url)).to.equal(expectedUrl);
+      });
+
+      it('should perform variable substitution for regex redirects to internal absolute URLs', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const expectedUrl = 'http://localhost:3000/About/fruit/apple';
+
+        const url = {
+          href: expectedUrl,
+          pathname: '/About/fruit/apple',
+          origin: 'http://localhost:3000',
+          locale: 'en',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/redirect/fruit/apple',
+              href: 'http://localhost:3000/redirect/fruit/apple',
+              origin: 'http://localhost:3000',
+              locale: 'en',
+              clone: cloneUrl,
+            },
+          },
+          status: 301,
+        });
+
+        setupRedirectStub(301);
+
+        const { finalRes } = await runTestWithRedirect(
+          {
+            pattern: '^/redirect/(.*)/(.*)$',
+            target: 'http://localhost:3000/About/$1/$2',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(normalizeUrl(finalRes.url)).to.equal(expectedUrl);
+      });
+
+      it('should handle multiple capture groups in regex redirects to external URLs', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const expectedUrl = 'https://example.com/products/electronics/laptop/dell';
+
+        const url = {
+          href: expectedUrl,
+          pathname: '/products/electronics/laptop/dell',
+          origin: 'https://example.com',
+          locale: 'en',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/old-shop/electronics/laptop/dell',
+              href: 'http://localhost:3000/old-shop/electronics/laptop/dell',
+              origin: 'http://localhost:3000',
+              locale: 'en',
+              clone: cloneUrl,
+            },
+          },
+          status: 301,
+        });
+
+        setupRedirectStub(301);
+
+        const { finalRes } = await runTestWithRedirect(
+          {
+            pattern: '^/old-shop/([^/]+)/([^/]+)/([^/]+)$',
+            target: 'https://example.com/products/$1/$2/$3',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(normalizeUrl(finalRes.url)).to.equal(expectedUrl);
+      });
+
+      it('should handle regex redirects with no capture groups to external URLs', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const expectedUrl = 'https://example.com/static-page';
+
+        const url = {
+          href: expectedUrl,
+          pathname: '/static-page',
+          origin: 'https://example.com',
+          locale: 'en',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/old-static',
+              href: 'http://localhost:3000/old-static',
+              origin: 'http://localhost:3000',
+              locale: 'en',
+              clone: cloneUrl,
+            },
+          },
+          status: 302,
+        });
+
+        setupRedirectStub(302);
+
+        const { finalRes } = await runTestWithRedirect(
+          {
+            pattern: '^/old-static$',
+            target: 'https://example.com/static-page',
+            redirectType: REDIRECT_TYPE_302,
+            isQueryStringPreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(normalizeUrl(finalRes.url)).to.equal(expectedUrl);
+      });
+
+      it('should handle regex redirects with trailing slash in external URLs', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const expectedUrl = 'https://example.com/docs/guide/intro/';
+
+        const url = {
+          href: expectedUrl,
+          pathname: '/docs/guide/intro/',
+          origin: 'https://example.com',
+          locale: 'en',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/documentation/guide/intro/',
+              href: 'http://localhost:3000/documentation/guide/intro/',
+              origin: 'http://localhost:3000',
+              locale: 'en',
+              clone: cloneUrl,
+            },
+          },
+          status: 301,
+        });
+
+        setupRedirectStub(301);
+
+        const { finalRes } = await runTestWithRedirect(
+          {
+            pattern: '^/documentation/([^/]+)/([^/]+)/?$',
+            target: 'https://example.com/docs/$1/$2/',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(normalizeUrl(finalRes.url)).to.equal(expectedUrl);
+      });
+
+      it('should preserve unmatched placeholder variables as literal text in external URLs', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const expectedUrl = 'https://example.com/path/first/second/';
+
+        const url = {
+          href: expectedUrl,
+          pathname: '/path/first/second/',
+          origin: 'https://example.com',
+          locale: 'en',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/old/first/second',
+              href: 'http://localhost:3000/old/first/second',
+              origin: 'http://localhost:3000',
+              locale: 'en',
+              clone: cloneUrl,
+            },
+          },
+          status: 301,
+        });
+
+        setupRedirectStub(301);
+
+        const { finalRes } = await runTestWithRedirect(
+          {
+            pattern: '^/old/([^/]+)/([^/]+)$',
+            target: 'https://example.com/path/$1/$2/$3',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(normalizeUrl(finalRes.url)).to.equal(expectedUrl);
+      });
+
       it('should redirect uses token $siteLang in target url', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
@@ -1273,7 +1546,7 @@ describe('RedirectsMiddleware', () => {
           url: '',
         });
 
-        expect(siteResolver.getByHost).not.called.to.equal(true);
+        expect(siteResolver.getByHost).to.not.have.been.called;
         expect(siteResolver.getByName).to.be.calledWith(siteName);
         expect(fetchRedirects).to.be.calledWith(siteName);
         expect(finalRes.status).to.equal(expected.status);
@@ -2185,6 +2458,253 @@ describe('RedirectsMiddleware', () => {
         language: 'pl-PL',
         pathname: '/not-found',
       });
+    });
+
+    it('should update locale for pages router when target uses $siteLang token', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/da/found',
+        pathname: '/da/found',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        clone: cloneUrl,
+      };
+      setupRedirectStub(301);
+
+      const { res, req } = createTestRequestResponse({
+        response: { url },
+        request: {
+          nextUrl: {
+            pathname: '/not-found',
+            href: 'http://localhost:3000/not-found',
+            locale: 'en',
+            origin: 'http://localhost:3000',
+            clone: cloneUrl,
+          },
+        },
+        status: 301,
+      });
+
+      const { middleware } = createMiddleware({
+        pattern: '/not-found/',
+        target: '/$siteLang/found',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: false,
+        locale: 'en',
+        language: 'da',
+        sites: sitesFromConfigFile,
+      });
+
+      await middleware.handle(req, res);
+
+      const redirectArg = nextRedirectStub.firstCall?.args?.[0] as any;
+
+      expect(req.nextUrl.locale).to.equal('da');
+      expect(redirectArg.locale).to.equal('da');
+    });
+
+    it('should not update locale for app router when target uses $siteLang token', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/da/found',
+        pathname: '/da/found',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        clone: cloneUrl,
+      };
+      setupRedirectStub(301);
+
+      const { res, req } = createTestRequestResponse({
+        response: { url },
+        request: {
+          nextUrl: {
+            pathname: '/not-found',
+            href: 'http://localhost:3000/not-found',
+            locale: 'en',
+            origin: 'http://localhost:3000',
+            clone: cloneUrl,
+          },
+        },
+        status: 301,
+      });
+
+      res.headers.set(LOCALE_HEADER_NAME, 'da');
+
+      const { middleware } = createMiddleware({
+        pattern: '/not-found/',
+        target: '/$siteLang/found',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: false,
+        locale: 'en',
+        language: 'da',
+        sites: sitesFromConfigFile,
+      });
+
+      await middleware.handle(req, res);
+
+      const redirectArg = nextRedirectStub.firstCall?.args?.[0] as any;
+
+      expect(req.nextUrl.locale).to.equal('en');
+      expect(redirectArg.locale).to.equal('en');
+    });
+
+    it('should update locale for pages router when target starts with locale segment', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/ua/found',
+        pathname: '/ua/found',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        clone: cloneUrl,
+      };
+      setupRedirectStub(301);
+
+      const { res, req } = createTestRequestResponse({
+        response: { url },
+        request: {
+          nextUrl: {
+            pathname: '/not-found',
+            href: 'http://localhost:3000/not-found',
+            locale: 'en',
+            origin: 'http://localhost:3000',
+            clone: cloneUrl,
+          },
+        },
+        status: 301,
+      });
+
+      const { middleware } = createMiddleware({
+        pattern: 'not-found',
+        target: '/ua/found',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: false,
+        locale: 'en',
+      });
+
+      await middleware.handle(req, res);
+
+      const redirectArg = nextRedirectStub.firstCall?.args?.[0] as any;
+
+      expect(req.nextUrl.locale).to.equal('ua');
+      expect(redirectArg.locale).to.equal('ua');
+    });
+
+    it('should not update locale for app router when target starts with locale segment', async () => {
+      const cloneUrl = () => Object.assign({}, req.nextUrl);
+      const url = {
+        href: 'http://localhost:3000/ua/found',
+        pathname: '/ua/found',
+        origin: 'http://localhost:3000',
+        locale: 'en',
+        clone: cloneUrl,
+      };
+      setupRedirectStub(301);
+
+      const { res, req } = createTestRequestResponse({
+        response: { url },
+        request: {
+          nextUrl: {
+            pathname: '/not-found',
+            href: 'http://localhost:3000/not-found',
+            locale: 'en',
+            origin: 'http://localhost:3000',
+            clone: cloneUrl,
+          },
+        },
+        status: 301,
+      });
+
+      res.headers.set(LOCALE_HEADER_NAME, 'ua');
+
+      const { middleware } = createMiddleware({
+        pattern: 'not-found',
+        target: '/ua/found',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: false,
+        locale: 'en',
+      });
+
+      await middleware.handle(req, res);
+
+      const redirectArg = nextRedirectStub.firstCall?.args?.[0] as any;
+
+      expect(req.nextUrl.locale).to.equal('en');
+      expect(redirectArg.locale).to.equal('en');
+    });
+  });
+
+  describe('configuration - Edge and Local API', () => {
+    it('works with Edge-only config (no Local)', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        contextId: 'edge-context-id',
+        clientContextId: 'edge-client-id',
+        edgeUrl: 'https://edge.url',
+        sites: [],
+        locales: ['en'],
+      });
+
+      // Verify middleware was created successfully
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.undefined;
+    });
+
+    it('works with Local-only config (no Edge)', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        // Local config provided (Edge config omitted)
+        apiHost: 'https://local.host',
+        apiKey: 'local-api-key',
+        path: '/api/graphql',
+        sites: [],
+        locales: ['en'],
+      } as any); // Type assertion: Edge properties are optional at runtime
+
+      // Verify middleware was created successfully
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.undefined;
+    });
+
+    it('works with both Edge and Local config (Edge takes priority)', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        contextId: 'edge-context-id',
+        clientContextId: 'edge-client-id',
+        edgeUrl: 'https://edge.url',
+        apiHost: 'https://local.host',
+        apiKey: 'local-api-key',
+        path: '/api/graphql',
+        sites: [],
+        locales: ['en'],
+      });
+
+      // Verify middleware was created successfully
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.undefined;
+    });
+
+    it('excludes local config when apiHost or apiKey is missing', () => {
+      // Only apiHost, missing apiKey
+      const middleware1 = new RedirectsMiddleware({
+        enabled: true,
+        apiHost: 'https://local.host',
+        // apiKey missing
+        sites: [],
+        locales: ['en'],
+      } as any); // Type assertion: Edge properties are optional at runtime
+
+      expect(middleware1).to.not.be.undefined;
+
+      // Only apiKey, missing apiHost
+      const middleware2 = new RedirectsMiddleware({
+        enabled: true,
+        // apiHost missing
+        apiKey: 'local-api-key',
+        sites: [],
+        locales: ['en'],
+      } as any); // Type assertion: Edge properties are optional at runtime
+
+      expect(middleware2).to.not.be.undefined;
     });
   });
 });

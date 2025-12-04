@@ -8,4 +8,6 @@
 
 > `const` **defaultImportEntries**: [`ImportEntry`](../interfaces/ImportEntry.md)[]
 
-Defined in: [nextjs/src/editing/codegen/import-map.ts:42](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/nextjs/src/editing/codegen/import-map.ts#L42)
+Defined in: [nextjs/src/editing/codegen/import-map.ts:46](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/nextjs/src/editing/codegen/import-map.ts#L46)
+
+The default import entries for the import map.

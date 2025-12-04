@@ -8,4 +8,10 @@
 
 > `const` **DefaultEmptyFieldEditingComponentText**: `React.FC`\<\{\[`key`: `string`\]: `unknown`; `tag?`: `string`; \}\>
 
-Defined in: react/types/components/DefaultEmptyFieldEditingComponents.d.ts:2
+Defined in: react/types/components/DefaultEmptyFieldEditingComponents.d.ts:7
+
+The DefaultEmptyFieldEditingComponentText component.
+
+## Param
+
+The props for the component.

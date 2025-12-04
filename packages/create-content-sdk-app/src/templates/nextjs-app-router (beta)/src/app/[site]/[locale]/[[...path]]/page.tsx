@@ -9,7 +9,6 @@ import scConfig from 'sitecore.config';
 <% } -%>
 import client from 'src/lib/sitecore-client';
 import Layout, { RouteFields } from 'src/Layout';
-import components from '.sitecore/component-map';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
@@ -44,12 +43,9 @@ export default async function Page({ params, searchParams }: PageProps) {
     notFound();
   }
 
-  // Fetch the component data from Sitecore (Likely will be deprecated)
-  const componentProps = await client.getComponentData(page.layout, {}, components);
-
   return (
     <NextIntlClientProvider>
-      <Providers page={page} componentProps={componentProps}>
+      <Providers page={page}>
         <Layout page={page} />
       </Providers>
     </NextIntlClientProvider>

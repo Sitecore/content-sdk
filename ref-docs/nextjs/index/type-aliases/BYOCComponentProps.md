@@ -8,4 +8,6 @@
 
 > **BYOCComponentProps** = `BYOCComponentClientProps` & `BYOCServerProps`
 
-Defined in: react/types/components/FEaaS/models.d.ts:69
+Defined in: react/types/components/FEaaS/models.d.ts:74
+
+Props for BYOCComponent.

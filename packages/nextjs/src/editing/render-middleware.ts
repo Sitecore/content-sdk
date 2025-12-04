@@ -7,7 +7,7 @@ import { IncomingHttpHeaders } from 'http';
 
 /**
  * Base class for middleware that handles pages and components rendering in Sitecore Editors.
- * @deprecated getQueryParamsForPropagation and getHeadersForPropagation methods have been moved to separate exports
+ * @internal
  */
 export abstract class RenderMiddlewareBase {
   /**

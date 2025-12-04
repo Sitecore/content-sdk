@@ -126,16 +126,15 @@ describe('EditingRenderMiddleware', () => {
 
     await handler(req, res);
 
+    const setHeaders = res.setHeader.getCalls().map((call) => call.args);
+
     expect(res.status).to.have.been.calledOnceWith(204);
-    expect(res.setHeader.getCall(0).args).to.deep.equal([
-      'Access-Control-Allow-Origin',
-      allowedOrigin,
-    ]);
-    expect(res.setHeader.getCall(1).args).to.deep.equal([
+    expect(setHeaders).to.deep.include(['Access-Control-Allow-Origin', allowedOrigin]);
+    expect(setHeaders).to.deep.include([
       'Access-Control-Allow-Methods',
       'GET, POST, OPTIONS, DELETE, PUT, PATCH',
     ]);
-    expect(res.setHeader.getCall(2).args).to.deep.equal([
+    expect(setHeaders).to.deep.include([
       'Access-Control-Allow-Headers',
       'Content-Type, Authorization',
     ]);

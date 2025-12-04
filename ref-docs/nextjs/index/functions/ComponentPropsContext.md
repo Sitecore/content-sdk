@@ -6,15 +6,17 @@
 
 # Function: ComponentPropsContext()
 
-> **ComponentPropsContext**(`__namedParameters`): `Element`
+> **ComponentPropsContext**(`props`): `Element`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:33](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/nextjs/src/components/ComponentPropsContext.tsx#L33)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:44](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/nextjs/src/components/ComponentPropsContext.tsx#L44)
+
+The ComponentPropsContext component. Stores component props in a context.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `__namedParameters` | [`ComponentPropsContextProps`](../type-aliases/ComponentPropsContextProps.md) |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `props` | [`ComponentPropsContextProps`](../type-aliases/ComponentPropsContextProps.md) | component props |
 
 ## Returns
 

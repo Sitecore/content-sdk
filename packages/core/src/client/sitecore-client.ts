@@ -29,6 +29,7 @@ import debug from '../debug';
 
 /**
  * Error page codes
+ * @public
  */
 export enum ErrorPage {
   NotFound = '404',
@@ -37,11 +38,13 @@ export enum ErrorPage {
 
 /**
  * Page mode name
+ * @public
  */
 type PageModeName = LayoutServicePageState | DesignLibraryMode;
 
 /**
  * Represents the mode of the page
+ * @public
  */
 export type PageMode = {
   /**
@@ -77,6 +80,7 @@ export type PageMode = {
 
 /**
  * Represent a Page model returned from Edge endpoint
+ * @public
  */
 export type Page = {
   /**
@@ -97,12 +101,17 @@ export type Page = {
   mode: PageMode;
 };
 
+/**
+ * Page options
+ * @public
+ */
 export type PageOptions = Partial<RouteOptions> & {
   personalize?: PersonalizedRewriteData;
 };
 
 /**
  * Request options for the getSiteMap method
+ * @public
  */
 export type SitemapXmlOptions = {
   /** The hostname from the request (e.g., 'example.com') */
@@ -251,6 +260,7 @@ export interface BaseServiceOptions {
 /**
  * This is a generic content client that can be used by any framework.
  * Use it to retrieve pages, preview data, dictionary and other data
+ * @public
  */
 export class SitecoreClient implements BaseSitecoreClient {
   protected layoutService: LayoutService;

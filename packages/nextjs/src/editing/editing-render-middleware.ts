@@ -2,6 +2,7 @@
 import { debug, NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   QUERY_PARAM_EDITING_SECRET,
+  INVALID_SECRET_HTML_MESSAGE,
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
 } from '@sitecore-content-sdk/core/editing';
@@ -23,6 +24,7 @@ import {
 
 /**
  * Configuration for the Editing Render Middleware.
+ * @public
  */
 export type EditingRenderMiddlewareConfig = {
   /**
@@ -49,6 +51,7 @@ export type EditingNextApiRequest = NextApiRequest & {
 /**
  * Middleware / handler for use in the editing render Next.js API route (e.g. '/api/editing/render')
  * which is required for Sitecore editing support.
+ * @public
  */
 export class EditingRenderMiddleware extends RenderMiddlewareBase {
   private dataFetcher: NativeDataFetcher;
@@ -102,7 +105,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     if (secret !== getEditingSecret()) {
       debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
       return res.status(401).json({
-        html: '<html><body>Missing or invalid secret</body></html>',
+        html: INVALID_SECRET_HTML_MESSAGE,
       });
     }
 

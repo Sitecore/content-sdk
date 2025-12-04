@@ -6,7 +6,9 @@
 
 # Interface: WithSitecoreOptions
 
-Defined in: react/types/enhancers/withSitecore.d.ts:5
+Defined in: react/types/enhancers/withSitecore.d.ts:9
+
+The options for the withSitecore HOC.
 
 ## Properties
 
@@ -14,6 +16,6 @@ Defined in: react/types/enhancers/withSitecore.d.ts:5
 
 > `optional` **updatable**: `boolean`
 
-Defined in: react/types/enhancers/withSitecore.d.ts:9
+Defined in: react/types/enhancers/withSitecore.d.ts:13
 
 If set to true, the `updateContext` method will be injected into the component props.

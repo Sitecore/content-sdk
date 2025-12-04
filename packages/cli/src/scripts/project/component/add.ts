@@ -1,35 +1,34 @@
 import { Argv } from 'yargs';
+import fs from 'fs';
+import path from 'path';
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import * as tools from '@sitecore-content-sdk/core/tools';
 import inquirer from 'inquirer';
-import loadCliConfig from '../../../utils/load-config';
 import { handler as generateMapHandler } from './generate-map';
+import loadCliConfig from '../../../utils/load-config';
 
-let { getComponentVariantSpec, getComponentList, getComponentVariantSpecUrl } = tools;
+let { getComponentSpec, getComponentList, getComponentSpecUrl } = tools;
 
 export const unitMocks = (
-  toolsModule: Pick<
-    typeof tools,
-    'getComponentVariantSpec' | 'getComponentList' | 'getComponentVariantSpecUrl'
-  >
+  toolsModule: Pick<typeof tools, 'getComponentSpec' | 'getComponentList' | 'getComponentSpecUrl'>
 ) => {
-  getComponentVariantSpec = toolsModule.getComponentVariantSpec;
+  getComponentSpec = toolsModule.getComponentSpec;
   getComponentList = toolsModule.getComponentList;
-  getComponentVariantSpecUrl = toolsModule.getComponentVariantSpecUrl;
+  getComponentSpecUrl = toolsModule.getComponentSpecUrl;
 };
 
 type AddArgs = {
   /**
-   * The unique identifier of the newly created variant.
+   * The unique identifier of the newly created component.
    */
-  variantId: string;
+  componentId: string;
   /**
    * The authentication token.
    */
   token: string;
   /**
-   * The target path for the component variant.
+   * The target path for the component.
    */
   targetPath?: string;
   /**
@@ -55,40 +54,46 @@ type AddArgs = {
 export function args(yargs: Argv<AddArgs>) {
   /* istanbul ignore next */
   return yargs
-    .positional('variantId', {
+    .positional('componentId', {
       requiresArg: true,
       positional: true,
       type: 'string',
-      describe: `The unique identifier of the newly created variant.`,
+      describe: `The unique identifier of the newly created component.`,
     })
     .option('token', {
       requiresArg: true,
       type: 'string',
       describe: 'The authentication token.',
       demandOption: true,
+      alias: 't',
     })
     .option('target-path', {
       requiresArg: false,
       type: 'string',
-      describe: 'The target path for the component variant.',
+      describe:
+        'The relative target path for the component.\n(Example: components/Promo.WithText.ts)',
+      alias: 'p',
     })
     .option('skip-component-map', {
       requiresArg: false,
       type: 'boolean',
       describe: 'If true, skips the component map generation.',
       default: false,
+      alias: 's',
     })
     .option('overwrite', {
       requiresArg: false,
       type: 'boolean',
       describe: 'If true, overwrites the existing component.',
       default: false,
+      alias: 'o',
     })
     .option('config', {
       requiresArg: false,
       type: 'string',
       describe:
         'Path to the `sitecore.cli.config` file. Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats',
+      alias: 'c',
     });
 }
 
@@ -97,17 +102,52 @@ export function args(yargs: Argv<AddArgs>) {
  */
 export function builder(yargs: Argv<AddArgs>) {
   /* istanbul ignore next */
-  return yargs.command<AddArgs>('add <variant-id>', 'Adds a component variant', args, handler);
+  return yargs.command<AddArgs>(
+    ['add <component-id>', 'a <component-id>'],
+    'Adds a component',
+    args,
+    handler
+  );
 }
+
+/**
+ * Validates the target path. If no target path is provided, returns true.
+ * @param {string} [targetPath] - The target path to validate.
+ * @returns {boolean | string} True if the target path is valid, the error message otherwise.
+ */
+const validateTargetPath = (targetPath?: string) => {
+  if (!targetPath) {
+    return true;
+  }
+
+  // Check for unsafe absolute path starting with "/"
+  if (path.isAbsolute(targetPath)) {
+    return 'Target path cannot be an absolute path starting with "/"';
+  }
+
+  // Check for path traversal attempts
+  if (targetPath.includes('..')) {
+    return 'Target path cannot contain ".." (path traversal)';
+  }
+
+  return true;
+};
 
 /**
  * Handler for the add command.
  * @param {AddArgs} argv - The arguments passed to the command.
  */
 export async function handler(argv: AddArgs) {
-  const { variantId, token, targetPath: targetPathArg, skipComponentMap, config, overwrite } = argv;
+  const {
+    componentId,
+    token,
+    targetPath: targetPathArg,
+    skipComponentMap,
+    config,
+    overwrite,
+  } = argv;
 
-  console.log(chalk.green('Adding component variant'));
+  console.log(chalk.green('Adding component'));
 
   let targetPath = targetPathArg;
 
@@ -121,11 +161,18 @@ export async function handler(argv: AddArgs) {
   }
 
   const { edgeUrl } = cliConfig.config.api.edge;
+  let backupPath: string | undefined;
+  let resolvedFilePath: string | undefined;
 
   try {
-    const spec = await getComponentVariantSpec({
+    if (validateTargetPath(targetPath) !== true) {
+      console.error(chalk.red(validateTargetPath(targetPath)));
+      return;
+    }
+
+    const spec = await getComponentSpec({
       edgeUrl,
-      variantId,
+      componentId,
       targetPath,
       token,
     });
@@ -162,32 +209,64 @@ export async function handler(argv: AddArgs) {
             type: 'input',
             name: 'targetPath',
             required: true,
-            message: `Enter the target path for the component variant.\nThe filename must follow the format: {componentName}.{variantName}.{extension}\n(example: src/components/MyComponent/MyComponent.variantA.ts):`,
+            message: `Enter the target path for the component.\n(Example: components/Promo.WithText.ts):`,
+            validate: validateTargetPath,
           })
           .then((answer) => answer.targetPath);
       }
     }
 
-    const variantSpecUrl = getComponentVariantSpecUrl({
-      variantId,
+    resolvedFilePath = path.resolve(process.cwd(), targetPath as string);
+    const isFileAlreadyExists = fs.existsSync(resolvedFilePath);
+    backupPath = `${resolvedFilePath}.backup`;
+
+    if (isFileAlreadyExists) {
+      if (!overwrite) {
+        const shouldOverwrite = await inquirer.prompt({
+          type: 'confirm',
+          name: 'overwrite',
+          message: `File already exists: ${targetPath}. Overwrite?`,
+          default: false,
+        });
+
+        if (!shouldOverwrite.overwrite) {
+          return;
+        }
+      }
+
+      fs.renameSync(resolvedFilePath, backupPath);
+
+      console.log(chalk.yellow(`Overwriting existing file: ${targetPath}`));
+    }
+
+    const componentSpecUrl = getComponentSpecUrl({
+      componentId,
       targetPath: targetPath as string,
       edgeUrl,
       token,
     });
 
-    execSync(`npx shadcn@^3.4.2 add "${variantSpecUrl}"${overwrite ? ' --overwrite' : ''}`, {
+    execSync(`npx shadcn@^3.4.2 add "${componentSpecUrl}"`, {
       stdio: 'inherit',
       cwd: process.cwd(),
     });
+
+    if (isFileAlreadyExists) {
+      fs.unlinkSync(backupPath);
+    }
 
     if (!skipComponentMap) {
       generateMapHandler({ config });
     }
 
-    console.log(chalk.green(`Component variant ${variantName} added successfully`));
+    console.log(chalk.green(`Component ${componentName} added successfully`));
   } catch (error) {
+    if (backupPath && resolvedFilePath && fs.existsSync(backupPath)) {
+      fs.renameSync(backupPath, resolvedFilePath);
+    }
+
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error(chalk.red(`Failed to add component variant: ${errorMessage}`));
+    console.error(chalk.red(`Failed to add component: ${errorMessage}`));
     return;
   }
 }

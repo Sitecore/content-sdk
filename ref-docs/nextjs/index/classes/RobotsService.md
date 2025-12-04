@@ -6,7 +6,7 @@
 
 # Class: RobotsService
 
-Defined in: core/types/site/robots-service.d.ts:27
+Defined in: core/types/site/robots-service.d.ts:33
 
 Service that fetch the robots.txt data using Sitecore's GraphQL API.
 
@@ -16,7 +16,7 @@ Service that fetch the robots.txt data using Sitecore's GraphQL API.
 
 > **new RobotsService**(`options`): `RobotsService`
 
-Defined in: core/types/site/robots-service.d.ts:34
+Defined in: core/types/site/robots-service.d.ts:40
 
 Creates an instance of graphQL robots.txt service with the provided options
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL robots.txt service with the provided options
 
 > **options**: [`RobotsServiceConfig`](../type-aliases/RobotsServiceConfig.md)
 
-Defined in: core/types/site/robots-service.d.ts:28
+Defined in: core/types/site/robots-service.d.ts:34
 
 ## Accessors
 
@@ -46,7 +46,7 @@ Defined in: core/types/site/robots-service.d.ts:28
 
 > **get** `protected` **query**(): `string`
 
-Defined in: core/types/site/robots-service.d.ts:35
+Defined in: core/types/site/robots-service.d.ts:41
 
 ##### Returns
 
@@ -58,7 +58,7 @@ Defined in: core/types/site/robots-service.d.ts:35
 
 > **fetchRobots**(`fetchOptions?`): `Promise`\<`string`\>
 
-Defined in: core/types/site/robots-service.d.ts:42
+Defined in: core/types/site/robots-service.d.ts:48
 
 Fetch a data of robots.txt from API
 
@@ -84,7 +84,7 @@ if the siteName is empty.
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/site/robots-service.d.ts:49
+Defined in: core/types/site/robots-service.d.ts:55
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

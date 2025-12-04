@@ -12,11 +12,25 @@ import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { SitecoreConfig } from '../config';
 
+/**
+ * Represents the geolocation data used for personalization
+ */
+export type PersonalizeGeoData = {
+  city?: string;
+  country?: string;
+  region?: string;
+};
+
+/**
+ * The interface for the PersonalizeMiddleware configuration.
+ * @public
+ */
 export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
   SitecoreConfig['api']['edge'] &
   SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
+    extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
   };
 
 /**
@@ -43,15 +57,28 @@ type PersonalizeExecution = {
 
 /**
  * Middleware / handler to support Sitecore Personalize
+ * @public
  */
 export class PersonalizeMiddleware extends MiddlewareBase {
-  protected personalizeService: PersonalizeService;
+  protected personalizeService: PersonalizeService | null;
 
   /**
    * @param {PersonalizeMiddlewareConfig} [config] Personalize middleware config
    */
   constructor(protected config: PersonalizeMiddlewareConfig) {
     super(config);
+
+    // Validate edge config is present - personalize requires Edge platform
+    if (!this.config.contextId && !this.config.clientContextId) {
+      console.warn(
+        '[PersonalizeMiddleware] Personalize middleware requires Edge configuration (contextId/clientContextId). ' +
+          'Personalize features will be disabled. This is expected in local container development.'
+      );
+      // Set to null to indicate service is disabled
+      this.personalizeService = null;
+      return;
+    }
+
     const graphQLOptions = {
       api: {
         edge: {
@@ -74,6 +101,12 @@ export class PersonalizeMiddleware extends MiddlewareBase {
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+    // Skip if service wasn't initialized (no edge config)
+    if (!this.personalizeService) {
+      debug.personalize('skipped (personalize service not configured - edge config required)');
+      return res;
+    }
+
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize middleware is disabled globally)');
       return res;
@@ -84,11 +117,15 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
       const cdpTimeout = this.config.cdpTimeout;
+      const geo = this.config.extractGeoDataCb
+        ? await this.config.extractGeoDataCb(req)
+        : undefined;
 
       debug.personalize('personalize middleware start: %o', {
         pathname,
         language,
         hostname,
+        ...(geo && { geo }),
         headers: this.extractDebugHeaders(req.headers),
       });
 
@@ -155,6 +192,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
               params,
               language,
               timeout: cdpTimeout,
+              ...(geo && { geo }),
             },
             req
           ).then((personalization) => {
@@ -251,12 +289,14 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       language,
       timeout,
       variantIds,
+      geo,
     }: {
       params: ExperienceParams;
       friendlyId: string;
       language: string;
       timeout?: number;
       variantIds?: string[];
+      geo?: PersonalizeGeoData;
     },
     request: NextRequest
   ) {
@@ -271,6 +311,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         params,
         language,
         pageVariantIds: variantIds,
+        ...(geo && { geo }),
       },
       { timeout }
     )) as {

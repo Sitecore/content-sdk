@@ -8,7 +8,9 @@
 
 > **RedirectInfo** = `object`
 
-Defined in: core/types/site/redirects-service.d.ts:7
+Defined in: core/types/site/redirects-service.d.ts:23
+
+Object model of Redirect Info result
 
 ## Properties
 
@@ -16,7 +18,7 @@ Defined in: core/types/site/redirects-service.d.ts:7
 
 > **isQueryStringPreserved**: `boolean`
 
-Defined in: core/types/site/redirects-service.d.ts:11
+Defined in: core/types/site/redirects-service.d.ts:27
 
 ***
 
@@ -24,7 +26,7 @@ Defined in: core/types/site/redirects-service.d.ts:11
 
 > **locale**: `string`
 
-Defined in: core/types/site/redirects-service.d.ts:12
+Defined in: core/types/site/redirects-service.d.ts:28
 
 ***
 
@@ -32,7 +34,7 @@ Defined in: core/types/site/redirects-service.d.ts:12
 
 > **pattern**: `string`
 
-Defined in: core/types/site/redirects-service.d.ts:8
+Defined in: core/types/site/redirects-service.d.ts:24
 
 ***
 
@@ -40,7 +42,7 @@ Defined in: core/types/site/redirects-service.d.ts:8
 
 > **redirectType**: `string`
 
-Defined in: core/types/site/redirects-service.d.ts:10
+Defined in: core/types/site/redirects-service.d.ts:26
 
 ***
 
@@ -48,4 +50,4 @@ Defined in: core/types/site/redirects-service.d.ts:10
 
 > **target**: `string`
 
-Defined in: core/types/site/redirects-service.d.ts:9
+Defined in: core/types/site/redirects-service.d.ts:25

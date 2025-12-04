@@ -4,6 +4,10 @@ import isServer from './utils/is-server';
 
 const rootNamespace = 'content-sdk';
 
+/**
+ * Debugger type
+ * @public
+ */
 export type Debugger = debug.Debugger;
 
 // On server/node side, allow switching from the built-in
@@ -21,6 +25,7 @@ if (
 /**
  * Enable debug logging dynamically
  * @param {string} namespaces space-separated list of namespaces to enable
+ * @public
  */
 export const enableDebug = (namespaces: string) => debug.enable(namespaces);
 
@@ -29,6 +34,7 @@ export const enableDebug = (namespaces: string) => debug.enable(namespaces);
  * See {@link https://www.npmjs.com/package/debug} for details.
  */
 export default {
+  search: debug(`${rootNamespace}:search`),
   common: debug(`${rootNamespace}:common`),
   form: debug(`${rootNamespace}:form`),
   http: debug(`${rootNamespace}:http`),

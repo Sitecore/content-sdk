@@ -3,6 +3,7 @@ import { debug } from '@sitecore-content-sdk/core';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
+  INVALID_SECRET_HTML_MESSAGE,
 } from '@sitecore-content-sdk/core/editing';
 import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
@@ -10,6 +11,7 @@ import { enforceCors } from '@sitecore-content-sdk/core/utils';
 
 /**
  * Configuration for `FEAASRenderMiddleware`.
+ * @public
  */
 export interface FEAASRenderMiddlewareConfig {
   /**
@@ -23,6 +25,7 @@ export interface FEAASRenderMiddlewareConfig {
 /**
  * Middleware / handler for use in the feaas render Next.js API route (e.g. '/api/editing/feaas/render')
  * which is required for Sitecore editing support.
+ * @public
  */
 export class FEAASRenderMiddleware extends RenderMiddlewareBase {
   private pageUrl: string;
@@ -77,7 +80,7 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
     const secret = query[QUERY_PARAM_EDITING_SECRET];
     if (secret !== getEditingSecret()) {
       debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
-      return res.status(401).send('<html><body>Missing or invalid secret</body></html>');
+      return res.status(401).send(INVALID_SECRET_HTML_MESSAGE);
     }
 
     // Handle preflight request

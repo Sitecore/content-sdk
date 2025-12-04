@@ -8,7 +8,7 @@ import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
  */
 export function builder(yargs: Argv<ScaffoldArgs>) {
   return yargs.command<ScaffoldArgs>(
-    'scaffold <componentName>',
+    ['scaffold <componentName>', 's <componentName>'],
     'Scaffolds a new component',
     args,
     handler
@@ -32,18 +32,21 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder. Exa
       type: 'string',
       describe:
         'Path to the `sitecore.cli.config` file. Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats',
+      alias: 'c',
     })
     .option('templateName', {
       requiresArg: false,
       type: 'string',
       describe:
         'Name of the template that will be used to scaffold the component. Can be configured in the cli.config.',
+      alias: 't',
     })
     .option('byoc', {
       requiresArg: false,
       type: 'boolean',
       describe: 'If true, scaffolds a byoc component.',
       default: false,
+      alias: 'b',
     });
 }
 

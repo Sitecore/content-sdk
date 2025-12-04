@@ -6,7 +6,7 @@
 
 # Class: DefaultRetryStrategy
 
-Defined in: core/types/retries.d.ts:7
+Defined in: core/types/retries.d.ts:8
 
 Represents a default retry strategy for handling retry attempts in case of specific HTTP status codes.
 This class implements the RetryStrategy interface and provides methods to determine whether a request
@@ -22,7 +22,7 @@ should be retried and calculates the delay before the next retry attempt.
 
 > **new DefaultRetryStrategy**(`options?`): `DefaultRetryStrategy`
 
-Defined in: core/types/retries.d.ts:17
+Defined in: core/types/retries.d.ts:18
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: core/types/retries.d.ts:17
 
 > **getDelay**(`error`, `attempt`): `number`
 
-Defined in: core/types/retries.d.ts:23
+Defined in: core/types/retries.d.ts:24
 
 Calculates the delay (in milliseconds) before the next retry based on the given error and attempt count.
 
@@ -70,7 +70,7 @@ The delay in milliseconds before the next retry.
 
 > **shouldRetry**(`error`, `attempt`, `retries`): `boolean`
 
-Defined in: core/types/retries.d.ts:22
+Defined in: core/types/retries.d.ts:23
 
 Determines whether a request should be retried based on the given error and attempt count.
 

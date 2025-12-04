@@ -8,6 +8,10 @@ export interface FileFieldValue {
   displayName?: string;
 }
 
+/**
+ * The interface for the File field.
+ * @public
+ */
 export interface FileField {
   value: FileFieldValue;
 }
@@ -20,6 +24,11 @@ export interface FileProps {
   children?: React.ReactNode;
 }
 
+/**
+ * The File component.
+ * @param {FileProps} props component props
+ * @public
+ */
 export const File: React.FC<FileProps> = ({ field, children, ...otherProps }) => {
   const dynamicField: FileField | FileFieldValue = field;
 

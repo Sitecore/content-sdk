@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "newLine": "LF",
+    "newLine": "crlf",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
@@ -10,15 +10,14 @@
     "noImplicitReturns": true,
     "strict": true,
     "declaration": true,
+    "declarationMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": true
   },
-  "exclude": [
-    "packages/create-content-sdk-app/src/templates/**/*"
-  ]
+  "exclude": ["packages/create-content-sdk-app/src/templates/**/*"]
 }

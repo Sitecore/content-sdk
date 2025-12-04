@@ -8,4 +8,10 @@
 
 > `const` **DefaultEmptyFieldEditingComponentImage**: `React.FC`\<\{\[`key`: `string`\]: `unknown`; `className?`: `string`; \}\>
 
-Defined in: [packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx:10](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx#L10)
+Defined in: [packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx:20](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx#L20)
+
+The DefaultEmptyFieldEditingComponentImage component.
+
+## Param
+
+The props for the component.

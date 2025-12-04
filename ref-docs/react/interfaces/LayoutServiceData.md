@@ -6,7 +6,7 @@
 
 # Interface: LayoutServiceData
 
-Defined in: packages/core/types/layout/models.d.ts:4
+Defined in: packages/core/types/layout/models.d.ts:5
 
 A reply from the Sitecore Layout Service
 
@@ -16,10 +16,10 @@ A reply from the Sitecore Layout Service
 
 > **sitecore**: [`LayoutServiceContextData`](LayoutServiceContextData.md) & `object`
 
-Defined in: packages/core/types/layout/models.d.ts:5
+Defined in: packages/core/types/layout/models.d.ts:6
 
 #### Type declaration
 
 ##### route
 
-> **route**: [`RouteData`](RouteData.md)\<`Record`\<`string`, [`Field`](Field.md)\<`GenericFieldValue`\> \| [`Item`](Item.md) \| [`Item`](Item.md)[]\>\>
+> **route**: `null` \| [`RouteData`](RouteData.md)\<`Record`\<`string`, [`Field`](Field.md)\<`GenericFieldValue`\> \| [`Item`](Item.md) \| [`Item`](Item.md)[]\>\>

@@ -139,4 +139,89 @@ describe('PlaceholderMetadata', () => {
       ].join('')
     );
   });
+
+  it('adds data-csdk-component-runtime attribute to rendering chrome when componentRuntime is server', () => {
+    const children = <div className="richtext-class"></div>;
+
+    const wrapper = render(
+      <PlaceholderMetadata
+        rendering={{ uid: '123', componentName: 'RichText' }}
+        componentRuntime="server"
+      >
+        {children}
+      </PlaceholderMetadata>
+    );
+
+    expect(wrapper.container.innerHTML).to.equal(
+      [
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123" data-csdk-component-runtime="server"></code>',
+        '<div class="richtext-class"></div>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
+      ].join('')
+    );
+  });
+
+  it('adds data-csdk-component-runtime attribute to rendering chrome when componentRuntime is client', () => {
+    const children = <div className="richtext-class"></div>;
+
+    const wrapper = render(
+      <PlaceholderMetadata
+        rendering={{ uid: '123', componentName: 'RichText' }}
+        componentRuntime="client"
+      >
+        {children}
+      </PlaceholderMetadata>
+    );
+
+    expect(wrapper.container.innerHTML).to.equal(
+      [
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123" data-csdk-component-runtime="client"></code>',
+        '<div class="richtext-class"></div>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
+      ].join('')
+    );
+  });
+
+  it('does not add data-csdk-component-runtime attribute to placeholder chrome even when componentRuntime is provided', () => {
+    const children = <div className="richtext-mock"></div>;
+    const wrapper = render(
+      <PlaceholderMetadata
+        rendering={{
+          uid: '123',
+          componentName: 'RichText',
+          placeholders: { main: [] },
+        }}
+        placeholderName={'main'}
+        componentRuntime="server"
+      >
+        {children}
+      </PlaceholderMetadata>
+    );
+
+    expect(wrapper.container.innerHTML).to.equal(
+      [
+        '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_123"></code>',
+        '<div class="richtext-mock"></div>',
+        '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
+      ].join('')
+    );
+  });
+
+  it('does not add data-csdk-component-runtime attribute when componentRuntime is not provided', () => {
+    const children = <div className="richtext-class"></div>;
+
+    const wrapper = render(
+      <PlaceholderMetadata rendering={{ uid: '123', componentName: 'RichText' }}>
+        {children}
+      </PlaceholderMetadata>
+    );
+
+    expect(wrapper.container.innerHTML).to.equal(
+      [
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123"></code>',
+        '<div class="richtext-class"></div>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
+      ].join('')
+    );
+  });
 });

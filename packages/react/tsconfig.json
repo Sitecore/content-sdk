@@ -1,11 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2017",
     "module": "commonjs",
     "jsx": "react",
     "outDir": "dist/cjs",
-    "strictNullChecks": false,
     "types": ["node", "mocha"],
     "typeRoots": ["node_modules/@types"],
     "declarationDir": "./types",
@@ -17,9 +16,11 @@
     "types",
     "typings",
     "dist",
+    "search.d.ts",
     "src/tests/*",
     "src/test-data/*",
     "**/*.test.ts",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "api"
   ]
 }

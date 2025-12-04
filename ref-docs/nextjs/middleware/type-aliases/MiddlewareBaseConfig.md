@@ -8,7 +8,9 @@
 
 > **MiddlewareBaseConfig** = `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:13](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/nextjs/src/middleware/middleware.ts#L13)
+Defined in: [nextjs/src/middleware/middleware.ts:17](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/nextjs/src/middleware/middleware.ts#L17)
+
+The interface for the Middleware configuration.
 
 ## Properties
 
@@ -16,7 +18,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:13](https://github.com/Sitecore
 
 > `optional` **defaultHostname**: `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:24](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/nextjs/src/middleware/middleware.ts#L24)
+Defined in: [nextjs/src/middleware/middleware.ts:28](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/nextjs/src/middleware/middleware.ts#L28)
 
 Fallback hostname in case `host` header is not present
 
@@ -32,7 +34,7 @@ localhost
 
 > `optional` **defaultLanguage**: `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:29](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/nextjs/src/middleware/middleware.ts#L29)
+Defined in: [nextjs/src/middleware/middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/nextjs/src/middleware/middleware.ts#L33)
 
 Fallback language in locale cannot be extracted from request URL
 
@@ -48,7 +50,7 @@ Fallback language in locale cannot be extracted from request URL
 
 > **sites**: [`SiteInfo`](../../index/type-aliases/SiteInfo.md)[]
 
-Defined in: [nextjs/src/middleware/middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/nextjs/src/middleware/middleware.ts#L33)
+Defined in: [nextjs/src/middleware/middleware.ts:37](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/nextjs/src/middleware/middleware.ts#L37)
 
 Site resolution implementation by name/hostname
 
@@ -58,7 +60,7 @@ Site resolution implementation by name/hostname
 
 > `optional` **skip**: (`req`, `res`) => `boolean`
 
-Defined in: [nextjs/src/middleware/middleware.ts:19](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/nextjs/src/middleware/middleware.ts#L19)
+Defined in: [nextjs/src/middleware/middleware.ts:23](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/nextjs/src/middleware/middleware.ts#L23)
 
 function, determines if middleware execution should be skipped, based on cookie, header, or other considerations
 

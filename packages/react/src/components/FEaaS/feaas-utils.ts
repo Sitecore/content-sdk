@@ -10,6 +10,7 @@ import {
 /**
  * Fetches server component props required for server rendering, based on rendering params.
  * @param {BYOCComponentParams} params component params
+ * @public
  */
 export async function fetchBYOCComponentServerProps(
   params: BYOCComponentParams
@@ -31,13 +32,15 @@ export async function fetchBYOCComponentServerProps(
  * @param {FEaaSComponentParams} params component params
  * @param {boolean} [isPageStateNormal] whether page is in normal mode
  * @param {string} [endpointOverride] optional override for component endpoint
+ * @public
  */
 export async function fetchFEaaSComponentServerProps(
   params: FEaaSComponentParams,
   isPageStateNormal?: boolean,
   endpointOverride?: string
-): Promise<FEaaSComponentServerProps> {
+): Promise<FEaaSComponentServerProps | null> {
   const revisionFallback = isPageStateNormal ? 'published' : 'staged';
+
   const src = endpointOverride || composeComponentEndpoint(params, revisionFallback);
   let template = '';
   let fetchedData: FEAAS.DataScopes = {};
@@ -112,8 +115,9 @@ export const composeComponentEndpoint = (
   revisionFallback: RevisionType
 ) => {
   const revision = params.ComponentRevision || revisionFallback;
-  const hostname = params.ComponentHostName.startsWith('https://')
+  const hostname = params.ComponentHostName?.startsWith('https://')
     ? params.ComponentHostName
     : `https://${params.ComponentHostName}`;
+
   return `${hostname}/components/${params.LibraryId}/${params.ComponentId}/${params.ComponentVersion}/${revision}`;
 };

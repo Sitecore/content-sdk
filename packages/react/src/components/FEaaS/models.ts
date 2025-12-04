@@ -19,6 +19,7 @@ export type BYOCServerProps = {
 
 /**
  * Data from rendering params on Sitecore's BYOC rendering
+ * @public
  */
 export type BYOCComponentParams = {
   /**
@@ -73,6 +74,10 @@ export type BYOCServerWrapperProps = BYOCComponentProps & {
   rendering: ComponentRendering;
 };
 
+/**
+ * Props for BYOCComponent.
+ * @public
+ */
 export type BYOCComponentProps = BYOCComponentClientProps & BYOCServerProps;
 
 export type ErrorComponentProps = {
@@ -82,6 +87,7 @@ export type ErrorComponentProps = {
 
 /**
  * Params from a Sitecore FEaaS rendering
+ * @public
  */
 export type FEaaSComponentParams = {
   LibraryId?: string;
@@ -103,6 +109,10 @@ export type FEaaSServerWrapperProps = FEaaSComponentProps & {
   page?: Page;
 };
 
+/**
+ * The FEaaS component props.
+ * @public
+ */
 export type FEaaSComponentProps = FEaaSComponentServerProps & FEaaSComponentClientProps;
 
 /**

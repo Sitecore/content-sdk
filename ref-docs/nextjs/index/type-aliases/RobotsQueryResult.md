@@ -8,7 +8,7 @@
 
 > **RobotsQueryResult** = `object`
 
-Defined in: core/types/site/robots-service.d.ts:17
+Defined in: core/types/site/robots-service.d.ts:22
 
 The schema of data returned in response to robots.txt request
 
@@ -18,7 +18,7 @@ The schema of data returned in response to robots.txt request
 
 > **site**: `object`
 
-Defined in: core/types/site/robots-service.d.ts:18
+Defined in: core/types/site/robots-service.d.ts:23
 
 #### siteInfo
 

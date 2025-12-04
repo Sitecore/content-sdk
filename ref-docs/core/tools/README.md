@@ -27,25 +27,26 @@
 - [GenerateMapArgs](type-aliases/GenerateMapArgs.md)
 - [GenerateMapFunction](type-aliases/GenerateMapFunction.md)
 - [GenerateSitesConfig](type-aliases/GenerateSitesConfig.md)
+- [ModuleExports](type-aliases/ModuleExports.md)
 - [RouterType](type-aliases/RouterType.md)
+- [WriteImportMapArgs](type-aliases/WriteImportMapArgs.md)
+- [WriteImportMapArgsInternal](type-aliases/WriteImportMapArgsInternal.md)
 
 ## Variables
 
 - [auth](variables/auth.md)
+- [defaultImportMapTemplate](variables/defaultImportMapTemplate.md)
 - [extractFiles](variables/extractFiles.md)
 - [getComponentList](variables/getComponentList.md)
 
 ## Functions
 
-- [detectComponentType](functions/detectComponentType.md)
-- [detectRouterType](functions/detectRouterType.md)
 - [filterComponentsByType](functions/filterComponentsByType.md)
 - [generateMetadata](functions/generateMetadata.md)
 - [generatePlugins](functions/generatePlugins.md)
 - [generateSites](functions/generateSites.md)
-- [getComponentListWithTypes](functions/getComponentListWithTypes.md)
-- [getComponentVariantSpec](functions/getComponentVariantSpec.md)
-- [getComponentVariantSpecUrl](functions/getComponentVariantSpecUrl.md)
+- [getComponentSpec](functions/getComponentSpec.md)
+- [getComponentSpecUrl](functions/getComponentSpecUrl.md)
 - [matchPath](functions/matchPath.md)
 - [scaffoldComponent](functions/scaffoldComponent.md)
 - [writeImportMap](functions/writeImportMap.md)

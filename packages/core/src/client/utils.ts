@@ -3,12 +3,17 @@ import { GraphQLRequestClient, GraphQLRequestClientFactoryConfig } from '../grap
 import { getEdgeProxyContentUrl } from './edge-proxy';
 import { FetchOptions } from '../models';
 
+/**
+ * GraphQL client options
+ * @public
+ */
 export type GraphQLClientOptions = Pick<SitecoreConfigInput, 'api'> & FetchOptions;
 
 /**
  * Creates a new GraphQLRequestClientFactory instance
  * @param {GraphQLClientOptions} options content sdk config
  * @returns GraphQLRequestClientFactory instance
+ * @public
  */
 export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
   let clientConfig: GraphQLRequestClientFactoryConfig | undefined;

@@ -8,13 +8,15 @@
 
 > **withEditorChromes**(`WrappedComponent`): `ComponentClass`\<\{ \}, `any`\>
 
-Defined in: [packages/react/src/enhancers/withEditorChromes.tsx:4](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/enhancers/withEditorChromes.tsx#L4)
+Defined in: [packages/react/src/enhancers/withEditorChromes.tsx:9](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/enhancers/withEditorChromes.tsx#L9)
+
+HOC to inject editor chromes reset on component update.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `WrappedComponent` | `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\> |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `WrappedComponent` | `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\> | The component to wrap. |
 
 ## Returns
 

@@ -8,7 +8,7 @@
 
 > **BYOCComponentParams** = `object`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:23](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/FEaaS/models.ts#L23)
+Defined in: [packages/react/src/components/FEaaS/models.ts:24](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/FEaaS/models.ts#L24)
 
 Data from rendering params on Sitecore's BYOC rendering
 
@@ -18,7 +18,7 @@ Data from rendering params on Sitecore's BYOC rendering
 
 > `optional` **ComponentDataOverride**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:35](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/FEaaS/models.ts#L35)
+Defined in: [packages/react/src/components/FEaaS/models.ts:36](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/FEaaS/models.ts#L36)
 
 A JSON object with data sources to be fetched and passed to the component
 
@@ -28,7 +28,7 @@ A JSON object with data sources to be fetched and passed to the component
 
 > `optional` **ComponentName**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:27](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/FEaaS/models.ts#L27)
+Defined in: [packages/react/src/components/FEaaS/models.ts:28](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/FEaaS/models.ts#L28)
 
 Name of the component to render
 
@@ -38,7 +38,7 @@ Name of the component to render
 
 > `optional` **ComponentProps**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:31](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/FEaaS/models.ts#L31)
+Defined in: [packages/react/src/components/FEaaS/models.ts:32](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/FEaaS/models.ts#L32)
 
 JSON props to pass into rendered component
 
@@ -48,7 +48,7 @@ JSON props to pass into rendered component
 
 > `optional` **RenderingIdentifier**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:40](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/FEaaS/models.ts#L40)
+Defined in: [packages/react/src/components/FEaaS/models.ts:41](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/FEaaS/models.ts#L41)
 
 ***
 
@@ -56,6 +56,6 @@ Defined in: [packages/react/src/components/FEaaS/models.ts:40](https://github.co
 
 > `optional` **styles**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:39](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/react/src/components/FEaaS/models.ts#L39)
+Defined in: [packages/react/src/components/FEaaS/models.ts:40](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/FEaaS/models.ts#L40)
 
 A string with classes that can be used to apply themes, via SXA functionality

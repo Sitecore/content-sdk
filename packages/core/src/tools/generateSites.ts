@@ -12,6 +12,7 @@ const DEFAULT_SITES_DIST_PATH = '.sitecore/sites.json';
 
 /**
  * Configuration object for generating sites.
+ * @public
  */
 export type GenerateSitesConfig = {
   /**
@@ -31,6 +32,7 @@ export type GenerateSitesConfig = {
  * Generates site information and writes it to a specified destination path.
  * @param {GenerateSitesConfig} config - The configuration for generating site info.
  * @returns {Promise<Function>} - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
+ * @public 
  */
 export const generateSites = ({
   scConfig: deprecatedScConfig,

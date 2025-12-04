@@ -30,7 +30,9 @@ describe('createEditingConfigRouteHandler', () => {
   const metadata = { packages: { testPackageOne: '0.1.1' } };
 
   const expectedResult = {
+    framework: 'nextjs-approuter',
     components: ['TestComponentOne', 'TestComponentTwo'],
+    clientComponents: [],
     packages: { testPackageOne: '0.1.1' },
     editMode: 'metadata',
   };
@@ -189,33 +191,77 @@ describe('createEditingConfigRouteHandler', () => {
     });
   });
 
-  it('should convert components map to array correctly', async () => {
-    const customComponents = new Map();
-    customComponents.set('Component1', {});
-    customComponents.set('Component2', {});
-    customComponents.set('Component3', {});
+  describe('component map handling', () => {
+    it('should convert components map to array correctly', async () => {
+      const customComponents = new Map();
+      customComponents.set('Component1', {});
+      customComponents.set('Component2', {});
+      customComponents.set('Component3', {});
 
-    const customHandler = editingConfigRouteHandlerModule.createEditingConfigRouteHandler({
-      components: customComponents,
-      metadata,
+      const customHandler = editingConfigRouteHandlerModule.createEditingConfigRouteHandler({
+        components: customComponents,
+        metadata,
+      });
+
+      const req = {
+        method: 'GET',
+        headers: new Headers({
+          origin: allowedOrigin,
+        }),
+        nextUrl: {
+          searchParams: new URLSearchParams({
+            [QUERY_PARAM_EDITING_SECRET]: secret,
+          }),
+        } as any,
+      };
+
+      const res = await customHandler.GET(req as NextRequest);
+
+      expect(res.status).to.equal(200);
+      const responseBody = JSON.parse(res.body);
+      expect(responseBody.components).to.deep.equal(['Component1', 'Component2', 'Component3']);
+      expect(responseBody.framework).to.equal('nextjs-approuter');
+      expect(responseBody.clientComponents).to.deep.equal([]);
     });
 
-    const req = {
-      method: 'GET',
-      headers: new Headers({
-        origin: allowedOrigin,
-      }),
-      nextUrl: {
-        searchParams: new URLSearchParams({
-          [QUERY_PARAM_EDITING_SECRET]: secret,
+    it('should include clientComponents in response when provided', async () => {
+      const clientComponentsMap: ComponentMap<NextjsContentSdkComponent> = new Map();
+      clientComponentsMap.set('ClientComponent1', {} as NextjsContentSdkComponent);
+      clientComponentsMap.set('ClientComponent2', {} as NextjsContentSdkComponent);
+
+      const customHandler = editingConfigRouteHandlerModule.createEditingConfigRouteHandler({
+        components: componentsMap,
+        clientComponents: clientComponentsMap,
+        metadata,
+      });
+
+      const req = {
+        method: 'GET',
+        headers: new Headers({
+          origin: allowedOrigin,
         }),
-      } as any,
-    };
+        nextUrl: {
+          searchParams: new URLSearchParams({
+            [QUERY_PARAM_EDITING_SECRET]: secret,
+          }),
+        } as any,
+      };
 
-    const res = await customHandler.GET(req as NextRequest);
+      const res = await customHandler.GET(req as NextRequest);
 
-    expect(res.status).to.equal(200);
-    const responseBody = JSON.parse(res.body);
-    expect(responseBody.components).to.deep.equal(['Component1', 'Component2', 'Component3']);
+      expect(res.status).to.equal(200);
+      const responseBody = JSON.parse(res.body);
+      expect(responseBody.framework).to.equal('nextjs-approuter');
+      expect(responseBody.clientComponents).to.deep.equal(['ClientComponent1', 'ClientComponent2']);
+    });
+
+    it('should return empty clientComponents array when not provided', async () => {
+      const res = await handler.GET(req as NextRequest);
+
+      expect(res.status).to.equal(200);
+      const responseBody = JSON.parse(res.body);
+      expect(responseBody.framework).to.equal('nextjs-approuter');
+      expect(responseBody.clientComponents).to.deep.equal([]);
+    });
   });
 });

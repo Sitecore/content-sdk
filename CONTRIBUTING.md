@@ -115,6 +115,50 @@ In the root of a package:
 yarn test
 ```
 
+## API surface verification
+
+The project uses [API Extractor](https://api-extractor.com/) to track and verify the public API surface of all packages. This ensures that breaking changes to public APIs are caught before merging.
+
+### When API surface verification is required
+
+API surface verification runs automatically in Github Actions for all pull requests. You'll need to update the API surface files if you add, remove, or modify public exports (classes, functions, interfaces, types).
+
+### Verifying API surface locally
+
+Before pushing your changes, verify the API surface matches the existing report in the `api/` folder.
+
+### From the root of the monorepo
+
+```shell
+yarn api-extractor:verify
+```
+
+This checks all packages and will fail if there are mismatches.
+
+### Updating API surface files
+
+If you've intentionally changed the public API, update the API surface files:
+
+### From the root of the monorepo (updates all packages)
+
+```shell
+yarn api-extractor
+```
+
+### From a specific package directory
+
+```shell
+cd packages/<package-name>
+npm run api-extractor
+```
+
+This will:
+1. Build the package
+2. Generate a new API report in the `temp/` folder
+3. Compare it with the existing report in the `api/` folder. If there are differences, copy the new report to `api/`
+
+**Important:** Always review the generated API reports (`packages/*/api/*.api.md`) to ensure they reflect your intended changes. Commit these updated files along with your code changes.
+
 # Troubleshooting
 
 Problem: Build of package or sample fails with the following error: `cannot find module ...`

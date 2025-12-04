@@ -12,7 +12,7 @@ import {
 } from './placeholder-utils';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
-import ErrorBoundary from '../ErrorBoundary';
+import ErrorBoundary, { ErrorComponent } from '../ErrorBoundary';
 
 export class PlaceholderComponent extends React.Component<PlaceholderProps> {
   isEmpty = false;
@@ -132,9 +132,7 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
       }
 
       return (
-        <div className="sc-content-sdk-placeholder-error">
-          A rendering error occurred: {this.state.error.message}.
-        </div>
+        <ErrorComponent message={`A rendering error occurred: ${this.state.error.message}.`} />
       );
     }
 
@@ -177,4 +175,8 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
 
 const PlaceholderWithComponentMap = withComponentMap(PlaceholderComponent);
 
+/**
+ * The Placeholder component.
+ * @public
+ */
 export const Placeholder = withSitecore()(PlaceholderWithComponentMap);

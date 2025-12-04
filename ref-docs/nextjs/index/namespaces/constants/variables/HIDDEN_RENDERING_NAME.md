@@ -8,4 +8,8 @@
 
 > `const` **HIDDEN\_RENDERING\_NAME**: `"Hidden Rendering"` = `"Hidden Rendering"`
 
-Defined in: core/types/constants.d.ts:7
+Defined in: core/types/constants.d.ts:23
+
+**`Internal`**
+
+Hidden rendering name

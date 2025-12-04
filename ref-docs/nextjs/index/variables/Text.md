@@ -8,4 +8,6 @@
 
 > `const` **Text**: `React.FC`\<`TextProps`\>
 
-Defined in: react/types/components/Text.d.ts:20
+Defined in: react/types/components/Text.d.ts:28
+
+The Text component.

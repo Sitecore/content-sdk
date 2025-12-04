@@ -4,6 +4,7 @@ import { RetryStrategy, GenericGraphQLClientError } from './models';
  * Represents a default retry strategy for handling retry attempts in case of specific HTTP status codes.
  * This class implements the RetryStrategy interface and provides methods to determine whether a request
  * should be retried and calculates the delay before the next retry attempt.
+ * @public
  */
 export class DefaultRetryStrategy implements RetryStrategy {
   private statusCodes: number[];

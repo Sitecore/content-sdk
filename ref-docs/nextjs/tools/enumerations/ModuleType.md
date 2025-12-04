@@ -6,7 +6,7 @@
 
 # Enumeration: ModuleType
 
-Defined in: core/types/tools/templating/plugins.d.ts:4
+Defined in: core/types/tools/templating/plugins.d.ts:5
 
 Identifies the format of the module to be compiled
 
@@ -16,7 +16,7 @@ Identifies the format of the module to be compiled
 
 > **CJS**: `0`
 
-Defined in: core/types/tools/templating/plugins.d.ts:5
+Defined in: core/types/tools/templating/plugins.d.ts:6
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: core/types/tools/templating/plugins.d.ts:5
 
 > **ESM**: `1`
 
-Defined in: core/types/tools/templating/plugins.d.ts:6
+Defined in: core/types/tools/templating/plugins.d.ts:7

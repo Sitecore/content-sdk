@@ -24,7 +24,8 @@ type RouteHandlerOptions = {
 /**
  * Creates a route handler to serve the robots.txt file.
  * @param {RouteHandlerOptions} options - The options for the route handler.
- * @returns The route handler.
+ * @returns The route handler object with GET method.
+ * @public
  */
 export const createRobotsRouteHandler = (options: RouteHandlerOptions) => {
   const { client, sites, revalidate = 60 } = options;

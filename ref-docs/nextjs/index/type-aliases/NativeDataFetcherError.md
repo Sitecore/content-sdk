@@ -8,7 +8,7 @@
 
 > **NativeDataFetcherError** = `Error` & `object`
 
-Defined in: core/types/native-fetcher.d.ts:33
+Defined in: core/types/native-fetcher.d.ts:35
 
 Native fetcher error type to include response text and status
 

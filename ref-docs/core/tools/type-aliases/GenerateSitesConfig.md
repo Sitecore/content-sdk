@@ -8,7 +8,7 @@
 
 > **GenerateSitesConfig** = `object`
 
-Defined in: [packages/core/src/tools/generateSites.ts:16](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/core/src/tools/generateSites.ts#L16)
+Defined in: [packages/core/src/tools/generateSites.ts:17](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/tools/generateSites.ts#L17)
 
 Configuration object for generating sites.
 
@@ -18,7 +18,7 @@ Configuration object for generating sites.
 
 > `optional` **destinationPath**: `string`
 
-Defined in: [packages/core/src/tools/generateSites.ts:27](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/core/src/tools/generateSites.ts#L27)
+Defined in: [packages/core/src/tools/generateSites.ts:28](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/tools/generateSites.ts#L28)
 
 Optional path where the generated sites will be saved.
 If not provided, the default '.sitecore/sites.json' will be used.
@@ -29,7 +29,7 @@ If not provided, the default '.sitecore/sites.json' will be used.
 
 > `optional` **scConfig**: [`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md)
 
-Defined in: [packages/core/src/tools/generateSites.ts:21](https://github.com/Sitecore/content-sdk/blob/061bfb2f11b7d5f4d122da03559164da794593bb/packages/core/src/tools/generateSites.ts#L21)
+Defined in: [packages/core/src/tools/generateSites.ts:22](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/tools/generateSites.ts#L22)
 
 The Sitecore configuration used at build and run time.
 

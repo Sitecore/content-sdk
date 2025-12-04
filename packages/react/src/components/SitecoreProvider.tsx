@@ -5,6 +5,7 @@ import { Page } from '@sitecore-content-sdk/core/client';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { constants } from '@sitecore-content-sdk/core';
 import { ComponentMap } from './sharedTypes';
+import { ImportMapImport } from './DesignLibrary/models';
 
 export interface SitecoreProviderProps {
   /**
@@ -19,9 +20,19 @@ export interface SitecoreProviderProps {
    * The page data.
    */
   page: Page;
+  /**
+   * The dynamic import for import map to be used in variant generation mode.
+   * Currently it's optional but it will be required in the next major version.
+   */
+  loadImportMap?: () => Promise<ImportMapImport>;
+
   children: React.ReactNode;
 }
 
+/**
+ * The state for the SitecoreProvider component.
+ * @public
+ */
 export interface SitecoreProviderState {
   /**
    * Method to set the page.
@@ -39,11 +50,24 @@ export interface SitecoreProviderState {
   api?: SitecoreProviderProps['api'];
 }
 
+/**
+ * The context for the SitecoreProvider component.
+ * @public
+ */
 export const SitecoreProviderReactContext = React.createContext<SitecoreProviderState>(
   {} as SitecoreProviderState
 );
+
 export const ComponentMapReactContext = React.createContext<ComponentMap>(new Map());
 
+export const ImportMapReactContext = React.createContext<
+  (() => Promise<ImportMapImport>) | undefined
+>(undefined);
+
+/**
+ * The SitecoreProvider component.
+ * @public
+ */
 export class SitecoreProvider extends React.Component<
   SitecoreProviderProps,
   SitecoreProviderState
@@ -97,11 +121,13 @@ export class SitecoreProvider extends React.Component<
 
   render() {
     return (
-      <ComponentMapReactContext.Provider value={this.props.componentMap}>
-        <SitecoreProviderReactContext.Provider value={this.state}>
-          {this.props.children}
-        </SitecoreProviderReactContext.Provider>
-      </ComponentMapReactContext.Provider>
+      <ImportMapReactContext.Provider value={this.props.loadImportMap}>
+        <ComponentMapReactContext.Provider value={this.props.componentMap}>
+          <SitecoreProviderReactContext.Provider value={this.state}>
+            {this.props.children}
+          </SitecoreProviderReactContext.Provider>
+        </ComponentMapReactContext.Provider>
+      </ImportMapReactContext.Provider>
     );
   }
 }

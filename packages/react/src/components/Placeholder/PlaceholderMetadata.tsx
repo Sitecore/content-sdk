@@ -13,6 +13,10 @@ export interface PlaceholderMetadataProps {
   rendering: ComponentRendering;
   placeholderName?: string;
   children?: ReactNode;
+  /**
+   * Component runtime type. Used to add data-csdk-component-runtime attribute to rendering chromes
+   */
+  componentRuntime?: 'server' | 'client';
 }
 
 export type CodeBlockAttributes = {
@@ -21,6 +25,7 @@ export type CodeBlockAttributes = {
   className: string;
   kind: string;
   id?: string;
+  'data-csdk-component-runtime'?: 'server' | 'client';
 };
 
 /**
@@ -30,6 +35,7 @@ export type CodeBlockAttributes = {
  * @param {object} props The properties passed to the component.
  * @param {ComponentRendering} props.rendering The rendering data.
  * @param {string} [props.placeholderName] The name of the placeholder.
+ * @param {'server' | 'client'} [props.componentRuntime] Component runtime type. Used to add data-csdk-component-runtime attribute to rendering chromes.
  * @param {JSX.Element} props.children The child components or elements to be wrapped by the metadata code blocks.
  * @returns {JSX.Element} A React fragment containing open and close code blocks surrounding the children elements.
  */
@@ -37,12 +43,17 @@ export const PlaceholderMetadata = ({
   rendering,
   placeholderName,
   children,
+  componentRuntime,
 }: PlaceholderMetadataProps): JSX.Element => {
-  const getCodeBlockAttributes = (
-    kind: MetadataKind,
-    id: string,
-    placeholderName?: string
-  ): CodeBlockAttributes => {
+  const getCodeBlockAttributes = ({
+    kind,
+    id,
+    placeholderName,
+  }: {
+    kind: MetadataKind;
+    id?: string;
+    placeholderName?: string;
+  }): CodeBlockAttributes => {
     const chrometype = placeholderName ? 'placeholder' : 'rendering';
 
     const attributes: CodeBlockAttributes = {
@@ -56,7 +67,7 @@ export const PlaceholderMetadata = ({
       if (chrometype === 'placeholder' && placeholderName) {
         let phId = '';
 
-        for (const placeholder of Object.keys(rendering.placeholders)) {
+        for (const placeholder of Object.keys(rendering.placeholders ?? {})) {
           if (placeholderName === placeholder) {
             phId = id
               ? `${placeholderName}_${id}`
@@ -80,18 +91,23 @@ export const PlaceholderMetadata = ({
       } else {
         attributes.id = id;
       }
+
+      // Add component runtime attribute for rendering chromes
+      if (chrometype === 'rendering' && componentRuntime) {
+        attributes['data-csdk-component-runtime'] = componentRuntime;
+      }
     }
 
     return attributes;
   };
 
-  const renderComponent = (uid: string, placeholderName?: string) => (
+  return (
     <>
-      <code {...getCodeBlockAttributes(MetadataKind.Open, uid, placeholderName)} />
+      <code
+        {...getCodeBlockAttributes({ kind: MetadataKind.Open, id: rendering.uid, placeholderName })}
+      />
       {children}
-      <code {...getCodeBlockAttributes(MetadataKind.Close, uid, placeholderName)} />
+      <code {...getCodeBlockAttributes({ kind: MetadataKind.Close, placeholderName })} />
     </>
   );
-
-  return <>{renderComponent(rendering.uid, placeholderName)}</>;
 };
