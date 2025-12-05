@@ -91,6 +91,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
       debug.redirects('redirects middleware start: %o', {
         pathname,
         language,
+        defaultLanaguge: req.nextUrl.defaultLocale,
         hostname,
       });
 
@@ -149,7 +150,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
       ): NextResponse => {
         let targetUrl = existsRedirect.target;
         const possiblyLocalePrefix = targetUrl.split('/')[1];
-        let targetLocale = '';
+        let targetLocale = req.nextUrl.defaultLocale || '';
 
         if (this.locales.includes(possiblyLocalePrefix)) {
           targetLocale = possiblyLocalePrefix;
