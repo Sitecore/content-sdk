@@ -40,14 +40,13 @@ export class CloudSDKServerInitializer {
   private response: Response;
 
   /**
-   * Runs the initialization logic. Enables packages and create cookies for CloudSDK.
-   * @param request - The request object, either a Middleware Request or an HTTP Request
-   * @param response - The response object, either a Middleware Next Response or an HTTP Response
-   * @param settings - Common settings for the CloudSDK
-   * @throws the following errors:
-   * {@link ErrorMessages.MV_0001}
-   * {@link ErrorMessages.MV_0002}
-   * {@link ErrorMessages.IV_0001}
+   * Runs the initialization logic. Enables packages and creates cookies for CloudSDK.
+   * @param {Request} request - The request object, either a Middleware Request or an HTTP Request.
+   * @param {Response} response - The response object, either a Middleware Next Response or an HTTP Response.
+   * @param {ServerSettings} settings - Common settings for the CloudSDK.
+   * @throws ErrorMessages.MV_0001
+   * @throws ErrorMessages.MV_0002
+   * @throws ErrorMessages.IV_0001
    */
   constructor(request: Request, response: Response, settings: ServerSettings) {
     this.validateSettings(settings);
@@ -72,10 +71,9 @@ export class CloudSDKServerInitializer {
 
   /**
    * Validates the core settings to ensure they meet required criteria.
-   *
    * This function validates the provided core settings object to ensure that essential properties
    * such as "sitecoreEdgeContextId" and "siteName" meet specific criteria and are not empty.
-   *
+   * @param {ServerSettings} settings - The settings object to validate.
    * @throws Error with specific error codes if any required property is missing or empty.
    */
   private validateSettings(settings: ServerSettings) {
@@ -88,11 +86,16 @@ export class CloudSDKServerInitializer {
     if (sitecoreEdgeUrl !== undefined)
       try {
         new URL(sitecoreEdgeUrl);
-      } catch (e) {
+      } catch {
         throw new Error(ErrorMessages.IV_0001);
       }
   }
 
+  /**
+   * Creates the settings object for CloudSDK.
+   * @param {ServerSettings} settings - The server settings to process.
+   * @returns {Settings} The processed settings object.
+   */
   private createSettings(settings: ServerSettings): Settings {
     const {
       siteName,
@@ -196,24 +199,46 @@ export class CloudSDKServerInitializer {
   }
 }
 
+/**
+ * Gets the current CloudSDK settings.
+ * @returns {Settings} The CloudSDK settings.
+ * @throws ErrorMessages.IE_0013 if settings are not initialized.
+ */
 export function getCloudSDKSettings() {
   if (!cloudSDKSettings) throw new Error(ErrorMessages.IE_0013);
 
   return cloudSDKSettings;
 }
 
+/**
+ * Gets an enabled package by name.
+ * @param {string} packageName - The name of the package to retrieve.
+ * @returns {PackageInitializerServer | undefined} The package initializer or undefined if not found.
+ */
 export function getEnabledPackage(packageName: string) {
   return enabledPackages.get(packageName);
 }
 
+/**
+ * Gets the current CloudSDK request object.
+ * @returns {Request} The request object.
+ */
 export function getCloudSDKRequest() {
   return cloudSKDRequest;
 }
 
+/**
+ * Gets the current CloudSDK response object.
+ * @returns {Response} The response object.
+ */
 export function getCloudSDKResponse() {
   return cloudSKDResponse;
 }
 
+/**
+ * Gets the cookie values fetched from Edge.
+ * @returns {ProxySettings | undefined} The proxy settings from Edge or undefined if not available.
+ */
 export function getCookiesValuesFromEdge() {
   return cookiesValuesFromEdge;
 }
@@ -221,15 +246,14 @@ export function getCookiesValuesFromEdge() {
 export let builderInstance: null | CloudSDKServerInitializer = null;
 
 /**
- * Runs the initialization logic. Enables packages and create cookies for CloudSDK.
- * @param request - The request object, either a Middleware Request or an HTTP Request
- * @param response - The response object, either a Middleware Next Response or an HTTP Response
- * @param settings - Common settings for the CloudSDK
- * @returns An instance of {@link CloudSDKServerInitializer}
- * @throws the following errors:
- * {@link ErrorMessages.MV_0001}
- * {@link ErrorMessages.MV_0002}
- * {@link ErrorMessages.IV_0001}
+ * Runs the initialization logic. Enables packages and creates cookies for CloudSDK.
+ * @param {Request} request - The request object, either a Middleware Request or an HTTP Request.
+ * @param {Response} response - The response object, either a Middleware Next Response or an HTTP Response.
+ * @param {ServerSettings} settings - Common settings for the CloudSDK.
+ * @returns {CloudSDKServerInitializer} An instance of CloudSDKServerInitializer.
+ * @throws ErrorMessages.MV_0001
+ * @throws ErrorMessages.MV_0002
+ * @throws ErrorMessages.IV_0001
  */
 export function CloudSDK(
   request: Request,

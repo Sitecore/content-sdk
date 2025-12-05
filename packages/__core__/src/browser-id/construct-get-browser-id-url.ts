@@ -1,11 +1,10 @@
 import { API_VERSION } from '../consts';
 /**
- * Constructs the URL for retrieving the proxy settings from EDGE events proxy
- * @param sitecoreEdgeUrl - The baseURL for the EDGE proxy
- * @param sitecoreEdgeContextId - The sitecoreContextId for the EDGE proxy
- * @returns The URL string for retrieving the browser ID and ClientKey
+ * Constructs the URL for retrieving the proxy settings from the EDGE events proxy.
+ * @param {string} sitecoreEdgeUrl - The base URL for the EDGE proxy.
+ * @param {string} sitecoreEdgeContextId - The Sitecore context ID for the EDGE proxy.
+ * @returns {string} The URL string for retrieving the browser ID and client key.
  */
-
 export function constructGetBrowserIdUrl(
   sitecoreEdgeUrl: string,
   sitecoreEdgeContextId: string

@@ -76,6 +76,7 @@ describe('initializer server', () => {
       };
 
       const instance = new initializerModule.CloudSDKServerInitializer(request, response, settings);
+      // eslint-disable-next-line dot-notation
       const result = instance['createSettings'](settings);
 
       expect(result.cookieSettings.domain).toBeUndefined();

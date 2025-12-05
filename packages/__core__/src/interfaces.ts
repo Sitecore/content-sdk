@@ -1,5 +1,5 @@
 /**
- * The response object that Sitecore EP returns
+ * The response object that Sitecore EP returns.
  */
 export interface EPResponse {
   ref: string;
@@ -17,7 +17,7 @@ export interface ProxySettings {
 }
 
 /**
- * Interface for supporting response IncomingMessage http node type
+ * Interface for supporting response `IncomingMessage` HTTP node type.
  */
 export interface Infer {
   language: () => string | undefined;
@@ -25,7 +25,7 @@ export interface Infer {
 }
 
 /**
- * Interface for supporting debug object
+ * Interface for supporting the debug object.
  */
 export interface DebugResponse {
   headers?: {

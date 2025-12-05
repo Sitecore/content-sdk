@@ -23,13 +23,12 @@ export let cookiesValuesFromEdge: ProxySettings | undefined;
 
 export class CloudSDKBrowserInitializer {
   /**
-   * Runs the initialization logic. Enables packages and create cookies for CloudSDK.
-   * @param settings - Common settings for the CloudSDK
-   * @throws the following errors:
-   * {@link ErrorMessages.MV_0001}
-   * {@link ErrorMessages.MV_0002}
-   * {@link ErrorMessages.IE_0001}
-   * {@link ErrorMessages.IV_0001}
+   * Runs the initialization logic. Enables packages and creates cookies for CloudSDK.
+   * @param {BrowserSettings} settings - Common settings for the CloudSDK.
+   * @throws ErrorMessages.MV_0001
+   * @throws ErrorMessages.MV_0002
+   * @throws ErrorMessages.IE_0001
+   * @throws ErrorMessages.IV_0001
    */
   constructor(settings: BrowserSettings) {
     if (typeof window === 'undefined') throw new Error(ErrorMessages.IE_0001);
@@ -75,10 +74,9 @@ export class CloudSDKBrowserInitializer {
 
   /**
    * Validates the core settings to ensure they meet required criteria.
-   *
    * This function validates the provided core settings object to ensure that essential properties
    * such as "sitecoreEdgeContextId" and "siteName" meet specific criteria and are not empty.
-   *
+   * @param {BrowserSettings} settings - The settings object to validate.
    * @throws Error with specific error codes if any required property is missing or empty.
    */
   private validateSettings(settings: BrowserSettings) {
@@ -91,11 +89,16 @@ export class CloudSDKBrowserInitializer {
     if (sitecoreEdgeUrl !== undefined)
       try {
         new URL(sitecoreEdgeUrl);
-      } catch (e) {
+      } catch {
         throw new Error(ErrorMessages.IV_0001);
       }
   }
 
+  /**
+   * Creates the settings object for CloudSDK.
+   * @param {BrowserSettings} settings - The browser settings to process.
+   * @returns {Settings} The processed settings object.
+   */
   private createSettings(settings: BrowserSettings): Settings {
     const {
       siteName,
@@ -151,30 +154,43 @@ export class CloudSDKBrowserInitializer {
   }
 }
 
+/**
+ * Gets the current CloudSDK settings.
+ * @returns {Settings} The CloudSDK settings.
+ * @throws ErrorMessages.IE_0012 if settings are not initialized.
+ */
 export function getCloudSDKSettings() {
   if (!cloudSDKSettings) throw new Error(ErrorMessages.IE_0012);
   return cloudSDKSettings;
 }
 
+/**
+ * Gets an enabled package by name.
+ * @param {string} packageName - The name of the package to retrieve.
+ * @returns {PackageInitializer | undefined} The package initializer or undefined if not found.
+ */
 export function getEnabledPackage(packageName: string) {
   return enabledPackages.get(packageName);
 }
 
 export let builderInstance: null | CloudSDKBrowserInitializer = null;
 
+/**
+ * Gets the cookie values fetched from Edge.
+ * @returns {ProxySettings | undefined} The proxy settings from Edge or undefined if not available.
+ */
 export function getCookiesValuesFromEdge() {
   return cookiesValuesFromEdge;
 }
 
 /**
- * Runs the initialization logic. Enables packages and create cookies for CloudSDK.
- * @param settings - Common settings for the CloudSDK
- * @returns An instance of {@link CloudSDKBrowserInitializer}
- * @throws the following errors:
- * {@link ErrorMessages.MV_0001}
- * {@link ErrorMessages.MV_0002}
- * {@link ErrorMessages.IE_0001}
- * {@link ErrorMessages.IV_0001}
+ * Runs the initialization logic. Enables packages and creates cookies for CloudSDK.
+ * @param {BrowserSettings} settings - Common settings for the CloudSDK.
+ * @returns {CloudSDKBrowserInitializer} An instance of CloudSDKBrowserInitializer.
+ * @throws ErrorMessages.MV_0001
+ * @throws ErrorMessages.MV_0002
+ * @throws ErrorMessages.IE_0001
+ * @throws ErrorMessages.IV_0001
  */
 export function CloudSDK(settings: BrowserSettings): CloudSDKBrowserInitializer {
   builderInstance = new CloudSDKBrowserInitializer(settings);

@@ -1,11 +1,12 @@
 import { API_VERSION, ErrorMessages, LIBRARY_VERSION } from '../consts';
 
 /**
- * A function that gets the guest ref from EP.
- * @param browserId - The browser id of the client
- * @param sitecoreEdgeContextId - The sitecoreEdgeContextId
- * @returns - A promise that resolves with the guest ref
- * @throws - Will throw an error if the clientKey/browser id is invalid
+ * Gets the guest ref from EP.
+ * @param {string} browserId - The browser ID of the client.
+ * @param {string} sitecoreEdgeContextId - The Sitecore Edge context ID.
+ * @param {string} sitecoreEdgeUrl - The Sitecore Edge base URL.
+ * @returns {Promise<string>} A promise that resolves with the guest ref.
+ * @throws Will throw an error if the client key or browser ID is invalid.
  */
 export async function fetchGuestIdFromEdgeProxy(
   browserId: string,

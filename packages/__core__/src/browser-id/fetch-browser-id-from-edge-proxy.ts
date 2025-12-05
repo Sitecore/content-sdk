@@ -4,11 +4,11 @@ import { ErrorMessages as UtilsErrorMessages, fetchWithTimeout } from '@sitecore
 import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';
 
 /**
- * Gets the browser ID and Client Key from Sitecore Edge Proxy
- * @param sitecoreEdgeUrl - The baseURL for the Edge Proxy API.
- * @param sitecoreEdgeContextId - The sitecoreContextId param for the edge Proxy API.
- * @param timeout - The timeout for the call to proxy
- * @returns the browser ID
+ * Gets the browser ID and client key from Sitecore Edge proxy.
+ * @param {string} sitecoreEdgeUrl - The base URL for the Edge proxy API.
+ * @param {string} sitecoreEdgeContextId - The Sitecore context ID parameter for the Edge proxy API.
+ * @param {number} [timeout] - The timeout in milliseconds for the call to the proxy.
+ * @returns {Promise<ProxySettings>} The browser ID and guest ID from the proxy.
  */
 export async function fetchBrowserIdFromEdgeProxy(
   sitecoreEdgeUrl: string,

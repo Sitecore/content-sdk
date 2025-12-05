@@ -125,6 +125,7 @@ describe('initializer browser', () => {
       };
 
       const instance = new initializerModule.CloudSDKBrowserInitializer(settings);
+      // eslint-disable-next-line dot-notation
       const result = instance['createSettings'](settings);
 
       expect(result.cookieSettings.domain).toBeUndefined();
@@ -264,6 +265,7 @@ describe('initializer browser', () => {
       const instance = new initializerModule.CloudSDKBrowserInitializer(mockSettingsParamsPublic);
       instance.initialize();
 
+      // eslint-disable-next-line dot-notation
       expect(instance['createCookies']).toHaveBeenCalled();
       expect(debugMock).toHaveBeenCalled();
       expect(debugMock).toHaveBeenLastCalledWith(CORE_NAMESPACE);
@@ -301,6 +303,7 @@ describe('initializer browser', () => {
 
       instance.initialize();
 
+      // eslint-disable-next-line dot-notation
       expect(instance['createCookies']).toHaveBeenCalled();
       expect(debugMock).not.toHaveBeenCalled();
       expect(getDefaultCookieAttributesSpy).toHaveBeenCalledTimes(1);
@@ -328,6 +331,7 @@ describe('initializer browser', () => {
 
       await new Promise((resolve) => setTimeout(resolve, 0));
 
+      // eslint-disable-next-line dot-notation
       expect(instance['createCookies']).toHaveBeenCalled();
       expect(getBrowserIdCookieSpy).toHaveBeenCalledTimes(1);
       expect(getDefaultCookieAttributesSpy).toHaveBeenCalledTimes(1);
@@ -356,6 +360,7 @@ describe('initializer browser', () => {
 
       await new Promise((resolve) => setTimeout(resolve, 0));
 
+      // eslint-disable-next-line dot-notation
       expect(instance['createCookies']).toHaveBeenCalled();
       expect(getCookieSpy).toHaveBeenCalledTimes(1);
       expect(fetchBrowserIdFromEdgeProxySpy).not.toHaveBeenCalled();
