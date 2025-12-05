@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 const htmlUnescape: Record<string, string> = {
   '&#39;': "'",
   '&amp;': '&',
@@ -6,7 +5,6 @@ const htmlUnescape: Record<string, string> = {
   '&lt;': '<',
   '&quot;': '"',
 } as const;
-/* eslint-enable @typescript-eslint/naming-convention */
 
 /** Used to match HTML entities and HTML characters. */
 const reEscapedHtml = /&(?:amp|lt|gt|quot|#(0+)?39);/g;

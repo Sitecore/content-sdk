@@ -20,7 +20,6 @@ describe('flattenObject', () => {
       n: '',
     };
 
-    /* eslint-disable @typescript-eslint/naming-convention */
     const expected = {
       a: 'a',
       b: true,
@@ -32,7 +31,6 @@ describe('flattenObject', () => {
       e_j_k: 'k',
       n: '',
     };
-    /* eslint-enable @typescript-eslint/naming-convention */
     const result = flattenObject({ object });
 
     expect(result).toEqual(expected);
@@ -71,7 +69,6 @@ describe('flattenObject', () => {
       },
     };
 
-    /* eslint-disable @typescript-eslint/naming-convention */
     const expected = {
       f: 'f',
       g: false,

@@ -28,4 +28,18 @@ describe('convertToBase64', () => {
     expect(global.Buffer).toBeUndefined();
     expect(convertToBase64({ foo: 'bar' })).toBe('eyJmb28iOiJiYXIifQ==');
   });
+
+  it('Returns the object as stringify if Buffer and Window are not present ', () => {
+    Object.defineProperty(global, 'Buffer', {
+      get: jest.fn().mockReturnValueOnce(undefined),
+    });
+
+    Object.defineProperty(global, 'window', {
+      get: jest.fn().mockReturnValueOnce(undefined),
+    });
+
+    expect(global.window).toBeUndefined();
+    expect(global.Buffer).toBeUndefined();
+    expect(convertToBase64({ foo: 'bar' })).toBe('{"foo":"bar"}');
+  });
 });

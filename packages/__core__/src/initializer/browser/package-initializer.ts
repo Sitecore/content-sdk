@@ -7,13 +7,11 @@ import type { PackageContext, PackageContextDependency } from './interfaces';
  * It manages package dependencies, initialization state, and side effects execution.
  */
 export class PackageInitializer {
-  /* eslint-disable @typescript-eslint/naming-convention */
   private _initState: Promise<void> | null = null;
   private _settings?: unknown;
   private _sideEffects: () => Promise<void>;
   private _dependencies: PackageContextDependency[];
 
-  /* eslint-enable @typescript-eslint/naming-convention */
   /**
    * Creates a new PackageInitializer instance.
    * @param {PackageContext} packageContext - The package context containing side effects, settings, and dependencies.

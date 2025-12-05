@@ -7,11 +7,9 @@ import type { PackageContext, PackageContextDependencyServer } from './interface
  * It manages package dependencies, settings, and side effects execution on the server.
  */
 export class PackageInitializerServer {
-  /* eslint-disable @typescript-eslint/naming-convention */
   private _settings: unknown;
   private _sideEffects: () => Promise<void>;
   private _dependencies: PackageContextDependencyServer[];
-  /* eslint-enable @typescript-eslint/naming-convention */
   /**
    * Creates a new PackageInitializerServer instance.
    * @param {PackageContext} packageContext - The package context containing side effects, settings, and dependencies.

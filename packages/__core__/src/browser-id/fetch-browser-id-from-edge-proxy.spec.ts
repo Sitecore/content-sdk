@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import * as utils from '@sitecore-content-sdk/utils';
 import { ErrorMessages, LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
 import type { EPResponse } from '../interfaces';
