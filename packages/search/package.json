@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/search",
-  "version": "1.4.0-canary.3",
+  "version": "0.1.0-canary.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
