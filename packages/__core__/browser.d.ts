@@ -1,2 +1,2 @@
-export * from './types/browser';
+export * from './types/src/browser';
 
