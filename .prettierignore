@@ -1,2 +1,4 @@
 package.json
 *.md
+
+/.nx/workspace-data
