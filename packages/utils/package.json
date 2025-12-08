@@ -1,43 +1,12 @@
 {
-  "name": "@sitecore-content-sdk/utils",
-  "version": "0.1.0",
-  "description": "> TODO: description",
   "author": {
     "name": "Sitecore Corporation",
     "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
   },
-  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
-  "license": "Apache-2.0",
-  "main": "dist/cjs/src/index.js",
-  "module": "dist/esm/src/index.js",
-  "types": "types/src/index.d.ts",
-  "files": [
-    "dist",
-    "types",
-    "/*.d.ts"
-  ],
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
-  "scripts": {
-    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
-    "clean": "del-cli dist types",
-    "lint": "eslint \"./src/**/*.ts\"",
-    "test": "jest --config jest.config.ts",
-    "prepublishOnly": "npm run build",
-    "coverage": "jest --config jest.config.ts --coverage"
-  },
   "bugs": {
     "url": "https://github.com/Sitecore/content-sdk/issues"
   },
-  "exports": {
-    ".": {
-      "import": "./dist/esm/src/index.js",
-      "require": "./dist/cjs/src/index.js",
-      "types": "./types/src/index.d.ts"
-    }
-  },
+  "description": "> TODO: description",
   "devDependencies": {
     "@jest/types": "^29.6.3",
     "@stylistic/eslint-plugin": "^5.2.2",
@@ -56,5 +25,32 @@
     "jest-environment-node": "^29.7.0",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2"
-  }
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/src/index.js",
+      "require": "./dist/cjs/src/index.js",
+      "types": "./types/src/index.d.ts"
+    }
+  },
+  "files": ["dist", "types", "/*.d.ts"],
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
+  "license": "Apache-2.0",
+  "main": "dist/cjs/src/index.js",
+  "module": "dist/esm/src/index.js",
+  "name": "@sitecore-content-sdk/utils",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
+    "clean": "del-cli dist types",
+    "coverage": "jest --config jest.config.ts --coverage",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "prepublishOnly": "npm run build",
+    "test": "jest --config jest.config.ts"
+  },
+  "types": "types/src/index.d.ts",
+  "version": "0.1.0"
 }

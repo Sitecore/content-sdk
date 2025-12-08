@@ -1,46 +1,17 @@
 {
-  "name": "@sitecore-content-sdk/events",
-  "version": "0.1.0",
-  "description": "> TODO: description",
   "author": {
     "name": "Sitecore Corporation",
     "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
   },
-  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
-  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/Sitecore/content-sdk/issues"
   },
-  "main": "dist/events.js",
-  "exports": {
-    "./server": {
-      "import": "./server.js",
-      "require": "./server.cjs",
-      "types": "./server.d.ts"
-    },
-    "./browser": {
-      "import": "./browser.js",
-      "require": "./browser.cjs",
-      "types": "./browser.d.ts"
-    }
+  "dependencies": {
+    "@sitecore-content-sdk/__core__": "0.1.0",
+    "@sitecore-content-sdk/utils": "0.1.0",
+    "debug": "^4.4.3"
   },
-  "files": [
-    "dist",
-    "types",
-    "/*.d.ts"
-  ],
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
-  "scripts": {
-    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
-    "clean": "del-cli dist types",
-    "lint": "eslint \"./src/**/*.ts\"",
-    "test": "jest --config jest.config.ts",
-    "prepublishOnly": "npm run build",
-    "coverage": "jest --config jest.config.ts --coverage"
-  },
+  "description": "> TODO: description",
   "devDependencies": {
     "@jest/globals": "^30.2.0",
     "@jest/types": "^29.6.3",
@@ -61,9 +32,33 @@
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2"
   },
-  "dependencies": {
-    "@sitecore-content-sdk/__core__": "0.1.0",
-    "@sitecore-content-sdk/utils": "0.1.0",
-    "debug": "^4.4.3"
-  }
+  "exports": {
+    "./browser": {
+      "import": "./dist/esm/src/browser.js",
+      "require": "./dist/cjs/src/browser.js",
+      "types": "./types/src/browser.d.ts"
+    },
+    "./server": {
+      "import": "./dist/esm/src/server.js",
+      "require": "./dist/cjs/src/server.js",
+      "types": "./types/src/server.d.ts"
+    }
+  },
+  "files": ["dist", "types", "/*.d.ts"],
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
+  "license": "Apache-2.0",
+  "name": "@sitecore-content-sdk/events",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
+    "clean": "del-cli dist types",
+    "coverage": "jest --config jest.config.ts --coverage",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "prepublishOnly": "npm run build",
+    "test": "jest --config jest.config.ts"
+  },
+  "version": "0.1.0"
 }
