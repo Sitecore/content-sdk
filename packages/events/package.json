@@ -48,6 +48,7 @@
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
   "license": "Apache-2.0",
   "name": "@sitecore-content-sdk/events",
+  "private": true,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -56,10 +57,10 @@
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
     "coverage": "jest --config jest.config.ts --coverage",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/events --entryPoints src/browser.ts --entryPoints src/server.ts --githubPages false",
     "lint": "eslint \"./src/**/*.ts\"",
     "prepublishOnly": "npm run build",
-    "test": "jest --config jest.config.ts",
-    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/events --entryPoints src/browser.ts --entryPoints src/server.ts --githubPages false"
+    "test": "jest --config jest.config.ts"
   },
   "version": "0.1.0"
 }

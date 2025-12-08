@@ -39,6 +39,7 @@
   "main": "dist/cjs/src/index.js",
   "module": "dist/esm/src/index.js",
   "name": "@sitecore-content-sdk/utils",
+  "private": true,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
