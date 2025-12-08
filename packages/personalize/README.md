@@ -5,7 +5,7 @@ This package provides browser- and server-side functions to run personalizations
 ## Installation
 
 ```bash
-npm install @sitecore-content-sdk/personalize
+npm install @sitecore-cloudsdk/personalize
 ```
 
 ## Usage
@@ -24,8 +24,8 @@ Run personalizations from the browser side:
 'use client';
 
 import { useEffect } from 'react';
-import { CloudSDK } from '@sitecore-content-sdk/__core__/browser';
-import { personalize } from '@sitecore-content-sdk/personalize/browser';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { personalize } from '@sitecore-cloudsdk/personalize/browser';
 
 export default function Home() {
   const getPersonalizeData = async () => {
@@ -58,8 +58,8 @@ Run personalizations from the server side:
 
 ```ts
 import type { NextRequest, NextResponse } from 'next/server';
-import { CloudSDK } from '@sitecore-content-sdk/__core__/server';
-import { personalize } from '@sitecore-content-sdk/personalize/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { personalize } from '@sitecore-cloudsdk/personalize/server';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();

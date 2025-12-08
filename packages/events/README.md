@@ -5,12 +5,12 @@ This package provides browser- and server-side functions to ​capture events in
 ## Installation
 
 ```bash
-npm install @sitecore-__REPLACE_cloudsdk__/events
+npm install @sitecore-cloudsdk/events
 ```
 
 ## Usage
 
-1. Initialize the package using the `__REPLACE_cloudsdk__` function, available in the `core` package.
+1. Initialize the package using the `CloudSDK` function, available in the `core` package.
 2. Send events using the following functions:
    - `pageView` - send a VIEW event.
    - `identity` - send an IDENTITY event.
@@ -25,12 +25,12 @@ Capture and send a VIEW event from the browser side:
 'use client';
 
 import { useEffect } from 'react';
-import { __REPLACE_cloudsdk__ } from '@sitecore-__REPLACE_cloudsdk__/core/browser';
-import { pageView } from '@sitecore-__REPLACE_cloudsdk__/events/browser';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { pageView } from '@sitecore-cloudsdk/events/browser';
 
 export default function Home() {
   useEffect(() => {
-    __REPLACE_cloudsdk__({
+    CloudSDK({
       /* Initialization settings. See `core` package code examples. */
     })
       .addEvents()
@@ -48,13 +48,13 @@ Capture and send a VIEW event from the server side:
 
 ```ts
 import type { NextRequest, NextResponse } from 'next/server';
-import { __REPLACE_cloudsdk__ } from '@sitecore-__REPLACE_cloudsdk__/core/server';
-import { pageView } from '@sitecore-__REPLACE_cloudsdk__/events/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { pageView } from '@sitecore-cloudsdk/events/server';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
-  await __REPLACE_cloudsdk__(request, response, {
+  await CloudSDK(request, response, {
     /* Initialization settings. See `core` package code examples. */
   })
     .addEvents()

@@ -1,41 +1,41 @@
 # core
 
-This package is for initializing the __REPLACE_Cloud__SDK__ and its other packages in your app.
+This package is for initializing the Cloud SDK and its other packages in your app.
 
 ## Installation
 
 ```bash
-npm install @sitecore-__REPLACE_cloudsdk__/core
+npm install @sitecore-cloudsdk/core
 ```
 
-To initialize other __REPLACE_Cloud__SDK__ packages, first install them:
+To initialize other Cloud SDK packages, first install them:
 
 ```bash
-npm install @sitecore-__REPLACE_cloudsdk__/events
-npm install @sitecore-__REPLACE_cloudsdk__/personalize
-npm install @sitecore-__REPLACE_cloudsdk__/search
+npm install @sitecore-cloudsdk/events
+npm install @sitecore-cloudsdk/personalize
+npm install @sitecore-cloudsdk/search
 ```
 
 ## Usage
 
-1. Import the modules of all installed __REPLACE_Cloud__SDK__ packages that you want to initialize.
-2. Initialize the __REPLACE_Cloud__SDK__ and its packages using the `__REPLACE_CloudSDK__` function, available in the `core` package.
+1. Import the modules of all installed Cloud SDK packages that you want to initialize.
+2. Initialize the Cloud SDK and its packages using the `CloudSDK` function, available in the `core` package.
 
 ## Code examples
 
-Initialize the __REPLACE_Cloud__SDK__ and its packages on the browser side:
+Initialize the Cloud SDK and its packages on the browser side:
 
 ```tsx
 'use client';
 
 import { useEffect } from 'react';
-import { __REPLACE_CloudSDK__ } from '@sitecore-__REPLACE_cloudsdk__/core/browser';
-import '@sitecore-__REPLACE_cloudsdk__/events/browser';
-import '@sitecore-__REPLACE_cloudsdk__/personalize/browser';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import '@sitecore-cloudsdk/events/browser';
+import '@sitecore-cloudsdk/personalize/browser';
 
 export default function Home() {
   useEffect(() => {
-    __REPLACE_CloudSDK__({
+    CloudSDK({
       sitecoreEdgeContextId: '<YOUR_CONTEXT_ID>',
       siteName: '<YOUR_SITE_NAME>',
       enableBrowserCookie: true
@@ -53,18 +53,18 @@ export default function Home() {
 }
 ```
 
-Initialize the __REPLACE_Cloud__SDK__ and its packages on the server side:
+Initialize the Cloud SDK and its packages on the server side:
 
 ```ts
 import type { NextRequest, NextResponse } from 'next/server';
-import { __REPLACE_CloudSDK__ } from '@sitecore-__REPLACE_cloudsdk__/core/server';
-import '@sitecore-__REPLACE_cloudsdk__/events/server';
-import '@sitecore-__REPLACE_cloudsdk__/personalize/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import '@sitecore-cloudsdk/events/server';
+import '@sitecore-cloudsdk/personalize/server';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
-  await __REPLACE_CloudSDK__(request, response, {
+  await CloudSDK(request, response, {
     sitecoreEdgeContextId: '<YOUR_CONTEXT_ID>',
     siteName: '<YOUR_SITE_NAME>',
     enableServerCookie: true
@@ -80,4 +80,4 @@ export async function middleware(request: NextRequest) {
 
 ## Documentation
 
-[Official Sitecore __REPLACE_Cloud__SDK__ documentation](https://doc.sitecore.com/xmc/en/developers/sdk/latest/cloud-sdk/index.html)
+[Official Sitecore Cloud SDK documentation](https://doc.sitecore.com/xmc/en/developers/sdk/latest/cloud-sdk/index.html)
