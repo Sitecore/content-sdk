@@ -1,5 +1,5 @@
 {
-  "name": "@sitecore-content-sdk/__core__",
+  "name": "@sitecore-content-sdk/personalize",
   "version": "0.1.0",
   "description": "> TODO: description",
   "author": {
@@ -8,6 +8,8 @@
   },
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
   "license": "Apache-2.0",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "files": [
     "dist",
     "types",
@@ -41,11 +43,6 @@
       "import": "./dist/esm/browser.js",
       "require": "./dist/cjs/browser.js",
       "types": "./types/browser/index.d.ts"
-    },
-    "./internal": {
-      "import": "./dist/esm/internal.js",
-      "require": "./dist/cjs/internal.js",
-      "types": "./types/internal/index.d.ts"
     }
   },
   "devDependencies": {
@@ -68,6 +65,8 @@
     "ts-node": "^10.9.2"
   },
   "dependencies": {
+    "@sitecore-content-sdk/__core__": "0.1.0",
+    "@sitecore-content-sdk/events": "0.1.0",
     "@sitecore-content-sdk/utils": "0.1.0",
     "debug": "^4.4.3"
   }

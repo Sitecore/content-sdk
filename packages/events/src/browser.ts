@@ -1,4 +1,4 @@
-import './lib/initializer/browser/initializer';
+import './initializer/browser/initializer';
 
 export type { PageViewData, EventData, IdentityData } from './events';
 export { addToEventQueue } from './eventStorage/addToEventQueue';

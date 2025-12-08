@@ -1,4 +1,4 @@
-import './lib/initializer/server/initializer';
+import './initializer/server/initializer';
 
 export { eventServer as event } from './events/custom-event/eventServer';
 export { identityServer as identity } from './events/identity/identityServer';
