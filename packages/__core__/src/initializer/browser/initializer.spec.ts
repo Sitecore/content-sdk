@@ -2,6 +2,7 @@ import debug from 'debug';
 import * as utils from '@sitecore-content-sdk/utils';
 import * as fetchBrowserIdFromEdgeProxy from '../../browser-id/fetch-browser-id-from-edge-proxy';
 import {
+  BROWSER_ID_COOKIE_NAME,
   COOKIE_NAME_PREFIX,
   DEFAULT_COOKIE_EXPIRY_DAYS,
   ErrorMessages,
@@ -45,7 +46,7 @@ const mockSettingsParamsInternal: Settings = {
     domain: 'cDomain',
     enableBrowserCookie: true,
     expiryDays: 730,
-    name: { browserId: `${COOKIE_NAME_PREFIX}123` },
+    name: { browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}` },
     path: '/',
   },
   siteName: '456',
@@ -132,7 +133,9 @@ describe('initializer browser', () => {
       expect(result.cookieSettings.enableBrowserCookie).toBe(false);
       expect(result.cookieSettings.expiryDays).toBe(DEFAULT_COOKIE_EXPIRY_DAYS);
       expect(result.cookieSettings.path).toBe('/');
-      expect(result.cookieSettings.name.browserId).toBe(`${COOKIE_NAME_PREFIX}123`);
+      expect(result.cookieSettings.name.browserId).toBe(
+        `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`
+      );
       expect(result.sitecoreEdgeUrl).toBe(SITECORE_EDGE_URL);
     });
   });

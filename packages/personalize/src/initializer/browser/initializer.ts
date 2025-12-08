@@ -7,6 +7,7 @@ import {
   getEnabledPackageBrowser,
   type PackageContextDependencyBrowser,
   PackageInitializer,
+  BROWSER_ID_COOKIE_NAME,
 } from '@sitecore-content-sdk/__core__/internal';
 import {
   PACKAGE_NAME as EVENTS_PACKAGE_NAME,
@@ -76,7 +77,7 @@ export function addPersonalize(
 
   const cookieSettings = {
     name: {
-      guestId: `${COOKIE_NAME_PREFIX}${getCloudSDKSettings().sitecoreEdgeContextId}_personalize`,
+      guestId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}_personalize`,
     },
   };
 

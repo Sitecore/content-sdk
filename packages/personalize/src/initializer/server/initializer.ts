@@ -7,6 +7,7 @@ import {
   getCloudSDKSettingsServer,
   getEnabledPackageServer,
   PackageInitializerServer,
+  BROWSER_ID_COOKIE_NAME,
 } from '@sitecore-content-sdk/__core__/internal';
 import { CloudSDKServerInitializer } from '@sitecore-content-sdk/__core__/server';
 import { ErrorMessages, PACKAGE_NAME, PERSONALIZE_NAMESPACE } from '../../consts';
@@ -47,9 +48,7 @@ export function addPersonalize(
 ): CloudSDKServerInitializer {
   const cookieSettings = {
     name: {
-      guestId: `${COOKIE_NAME_PREFIX}${
-        getCloudSDKSettingsServer().sitecoreEdgeContextId
-      }_personalize`,
+      guestId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}_personalize`,
     },
   };
 

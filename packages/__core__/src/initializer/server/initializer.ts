@@ -16,6 +16,7 @@ import {
 } from '@sitecore-content-sdk/utils';
 import { fetchBrowserIdFromEdgeProxy } from '../../browser-id/fetch-browser-id-from-edge-proxy';
 import {
+  BROWSER_ID_COOKIE_NAME,
   COOKIE_NAME_PREFIX,
   DEFAULT_COOKIE_EXPIRY_DAYS,
   ErrorMessages,
@@ -114,7 +115,7 @@ export class CloudSDKServerInitializer {
         enableServerCookie: enableServerCookie ?? false,
         expiryDays: cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
         name: {
-          browserId: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`,
+          browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`,
         },
         path: cookiePath || '/',
       },

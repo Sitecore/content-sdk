@@ -5,6 +5,7 @@ import * as createPersonalizeCookieModule from './createPersonalizeCookie';
 import * as initializerModule from './initializer';
 import { verifyPersonalizePackageExistence } from './initializer';
 import { jest, expect } from '@jest/globals';
+import { BROWSER_ID_COOKIE_NAME } from '@sitecore-content-sdk/__core__/internal';
 
 jest.mock('@sitecore-content-sdk/__core__/internal', () => {
   const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/internal');
@@ -28,12 +29,15 @@ describe('sideEffects', () => {
   });
 
   it('should run the side effects, debug the status and call createPersonalizeCookie if conditions met', async () => {
-    jest
-      .spyOn(coreInternalModule, 'getCloudSDKSettingsServer')
-      .mockReturnValue({ cookieSettings: { enableServerCookie: true, name: 'bid' } } as any);
+    jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockReturnValue({
+      cookieSettings: { enableServerCookie: true, name: `sc_${BROWSER_ID_COOKIE_NAME}` },
+    } as any);
 
     jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue({
-      settings: { cookieSettings: { name: 'gid' }, enablePersonalizeCookie: true },
+      settings: {
+        cookieSettings: { name: `sc_${BROWSER_ID_COOKIE_NAME}_personalize` },
+        enablePersonalizeCookie: true,
+      },
     } as any);
 
     const createPersonalizeCookieSpy = jest
@@ -83,7 +87,7 @@ describe('addPersonalize', () => {
     expect(PackageInitializerServer).toHaveBeenCalledTimes(1);
     expect(PackageInitializerServer).toHaveBeenCalledWith({
       settings: {
-        cookieSettings: { name: { guestId: 'sc_undefined_personalize' } },
+        cookieSettings: { name: { guestId: `sc_${BROWSER_ID_COOKIE_NAME}_personalize` } },
         enablePersonalizeCookie: false,
       },
       sideEffects: initializerModule.sideEffects,

@@ -14,6 +14,7 @@ export {
   LIBRARY_VERSION,
   SITECORE_EDGE_URL,
   CORRELATION_ID_HEADER,
+  BROWSER_ID_COOKIE_NAME,
 } from './consts';
 
 // Interfaces

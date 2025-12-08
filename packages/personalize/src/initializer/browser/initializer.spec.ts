@@ -194,7 +194,7 @@ describe('addPersonalize', () => {
     expect(PackageInitializer).toHaveBeenCalledWith({
       dependencies: [],
       settings: {
-        cookieSettings: { name: { guestId: 'sc_undefined_personalize' } },
+        cookieSettings: { name: { guestId: 'sc_cid_personalize' } },
         enablePersonalizeCookie: false,
         webPersonalization: false,
       },
@@ -215,7 +215,7 @@ describe('addPersonalize', () => {
     expect(PackageInitializer).toHaveBeenCalledWith({
       dependencies: [],
       settings: {
-        cookieSettings: { name: { guestId: 'sc_undefined_personalize' } },
+        cookieSettings: { name: { guestId: 'sc_cid_personalize' } },
         enablePersonalizeCookie: false,
         webPersonalization: false,
       },
@@ -236,7 +236,7 @@ describe('addPersonalize', () => {
     expect(PackageInitializer).toHaveBeenCalledWith({
       dependencies: [{ method: 'addEvents', name: '@sitecore-content-sdk/events' }],
       settings: {
-        cookieSettings: { name: { guestId: 'sc_undefined_personalize' } },
+        cookieSettings: { name: { guestId: 'sc_cid_personalize' } },
         enablePersonalizeCookie: true,
         webPersonalization: { async: true, defer: false },
       },
@@ -253,7 +253,7 @@ describe('addPersonalize', () => {
     expect(PackageInitializer).toHaveBeenCalledWith({
       dependencies: [{ method: 'addEvents', name: '@sitecore-content-sdk/events' }],
       settings: {
-        cookieSettings: { name: { guestId: 'sc_undefined_personalize' } },
+        cookieSettings: { name: { guestId: 'sc_cid_personalize' } },
         webPersonalization: { async: true, defer: true },
       },
       sideEffects,
@@ -269,7 +269,7 @@ describe('addPersonalize', () => {
     expect(PackageInitializer).toHaveBeenCalledWith({
       dependencies: [{ method: 'addEvents', name: '@sitecore-content-sdk/events' }],
       settings: {
-        cookieSettings: { name: { guestId: 'sc_undefined_personalize' } },
+        cookieSettings: { name: { guestId: 'sc_cid_personalize' } },
         webPersonalization: { async: false, defer: false },
       },
       sideEffects,
@@ -286,7 +286,7 @@ describe('addPersonalize', () => {
     expect(PackageInitializer).toHaveBeenCalledWith({
       dependencies: [{ method: 'addEvents', name: '@sitecore-content-sdk/events' }],
       settings: {
-        cookieSettings: { name: { guestId: 'sc_undefined_personalize' } },
+        cookieSettings: { name: { guestId: 'sc_cid_personalize' } },
         webPersonalization: { async: false, defer: true },
       },
       sideEffects,
@@ -301,7 +301,7 @@ describe('addPersonalize', () => {
     expect(PackageInitializer).toHaveBeenCalledWith({
       dependencies: [{ method: 'addEvents', name: '@sitecore-content-sdk/events' }],
       settings: {
-        cookieSettings: { name: { guestId: 'sc_undefined_personalize' } },
+        cookieSettings: { name: { guestId: 'sc_cid_personalize' } },
         webPersonalization: { async: true, defer: false },
       },
       sideEffects,
