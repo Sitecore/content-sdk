@@ -61,7 +61,7 @@
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
     "coverage": "jest --config jest.config.ts --coverage",
-    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/react src/index.ts --githubPages false",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/__core__ --entryPoints src/browser.ts --entryPoints src/server.ts --entryPoints src/internal.ts --githubPages false",
     "lint": "eslint \"./src/**/*.ts\"",
     "prepublishOnly": "npm run build",
     "test": "jest --config jest.config.ts"

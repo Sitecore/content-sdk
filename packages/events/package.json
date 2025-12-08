@@ -58,7 +58,8 @@
     "coverage": "jest --config jest.config.ts --coverage",
     "lint": "eslint \"./src/**/*.ts\"",
     "prepublishOnly": "npm run build",
-    "test": "jest --config jest.config.ts"
+    "test": "jest --config jest.config.ts",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/events --entryPoints src/browser.ts --entryPoints src/server.ts --githubPages false"
   },
   "version": "0.1.0"
 }
