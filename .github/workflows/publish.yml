@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - dev
-      - 'release/**'
+      - "release/**"
     paths:
-      - '**'
+      - "**"
 
 jobs:
   publish:
@@ -56,13 +56,13 @@ jobs:
 
       - name: Pre-release version update
         run: |
-          npx lerna version prerelease --exact --preid canary --force-publish --message "%s [skip ci]" --yes
+          npx lerna version prerelease --preid canary --message "%s [skip ci]" --yes
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
 
       - name: Pre-release canary publish
         run: |
           echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
-          npx lerna publish from-git --exact --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
+          npx lerna publish from-git --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
