@@ -1,7 +1,7 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-  displayName: 'events',
+  displayName: 'personalize',
   preset: 'ts-jest',
   transform: {
     '^.+\\.ts$': [
