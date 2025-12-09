@@ -36,7 +36,7 @@ describe('Test Identity', () => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
     });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch);
+    global.fetch = jest.fn().mockImplementation(() => mockFetch) as any;
 
     data = {
       channel: 'WEB',
@@ -390,7 +390,7 @@ describe('Test Identity', () => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
     });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch);
+    global.fetch = jest.fn().mockImplementation(() => mockFetch) as any;
 
     const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
 
@@ -604,7 +604,7 @@ describe('Test Identity', () => {
 
     expect(sendEventSpy).toHaveBeenCalledWith(
       expect.not.objectContaining({ ext: {} }),
-      expect.objectContaining(settings)
+      expect.objectContaining(settings as any)
     );
   });
 });
