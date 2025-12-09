@@ -4,7 +4,11 @@
  * @returns {boolean} True when the email matches the allowed pattern.
  */
 export function isValidEmail(email: string): boolean {
-  const regx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const regx = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  if (!email || email.length > 320) {
+    return false;
+  }
 
   return regx.test(email);
 }
