@@ -12,7 +12,10 @@
     "generate-docs": "lerna run generate-docs",
     "api-extractor": "lerna run api-extractor",
     "api-extractor:verify": "lerna run api-extractor:verify",
-    "version": "yarn install && git stage yarn.lock"
+    "version": "yarn install && git stage yarn.lock",
+    "changeset:add": "changeset add",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish"
   },
   "author": {
     "name": "Sitecore Corporation",
