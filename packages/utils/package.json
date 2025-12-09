@@ -33,7 +33,11 @@
       "types": "./types/src/index.d.ts"
     }
   },
-  "files": ["dist", "types", "/*.d.ts"],
+  "files": [
+    "dist",
+    "types",
+    "/*.d.ts"
+  ],
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
   "license": "Apache-2.0",
   "main": "dist/cjs/src/index.js",
