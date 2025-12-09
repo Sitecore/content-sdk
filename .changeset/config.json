@@ -2,15 +2,15 @@
   "$schema": "https://unpkg.com/@changesets/config@3.1.2/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [[
-    "create-content-sdk-app",
-    "nextjs"
-  ]],
+  "fixed": [],
   "linked": [
-    ["react", "core"],
-    ["nextjs", "core"],
-    ["search", "core"],
-    ["cli", "core"]
+    [
+      "@sitecore-content-sdk/nextjs",
+      "@sitecore-content-sdk/react",
+      "@sitecore-content-sdk/search",
+      "@sitecore-content-sdk/cli",
+      "@sitecore-content-sdk/core"
+    ]
   ],
   "access": "public",
   "baseBranch": "dev",
