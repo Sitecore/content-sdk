@@ -61,8 +61,6 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "api-extractor": "npm run build && api-extractor run --local --verbose",
-    "api-extractor:verify": "api-extractor run",
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
     "coverage": "jest --config jest.config.ts --coverage",
