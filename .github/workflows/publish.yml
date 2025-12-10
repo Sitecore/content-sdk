@@ -54,15 +54,47 @@ jobs:
           git add ./ref-docs/**/*
           git commit -m "Update API docs"
 
-      - name: Pre-release version update
+      # CANARY RELEASES (dev branch) - Use Lerna
+      - name: Check for change files (Canary)
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          echo "Running canary release workflow with Lerna"
+          echo "Branch: ${{ github.ref }}"
+
+      - name: Pre-release version update (Canary - Lerna)
+        if: github.ref == 'refs/heads/dev'
         run: |
           npx lerna version prerelease --preid canary --message "%s [skip ci]" --yes
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
 
-      - name: Pre-release canary publish
+      - name: Pre-release canary publish (Lerna)
+        if: github.ref == 'refs/heads/dev'
         run: |
           echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
           npx lerna publish from-git --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # STABLE RELEASES (release/** branches) - Use Beachball
+      - name: Check for change files (Stable - Beachball)
+        if: startsWith(github.ref, 'refs/heads/release/')
+        run: |
+          echo "Running stable release workflow with Beachball"
+          echo "Branch: ${{ github.ref }}"
+          yarn beachball check
+
+      - name: Stable version update (Beachball)
+        if: startsWith(github.ref, 'refs/heads/release/')
+        run: |
+          yarn beachball bump --message "%s [skip ci]" --yes
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Stable publish (Beachball)
+        if: startsWith(github.ref, 'refs/heads/release/')
+        run: |
+          echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+          yarn beachball publish --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

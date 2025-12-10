@@ -3,18 +3,10 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [],
-  "linked": [
-    [
-      "@sitecore-content-sdk/nextjs",
-      "@sitecore-content-sdk/react",
-      "@sitecore-content-sdk/search",
-      "@sitecore-content-sdk/cli",
-      "@sitecore-content-sdk/core"
-    ]
-  ],
+  "linked": [],
   "access": "public",
   "baseBranch": "dev",
-  "updateInternalDependencies": "patch",
+  "updateInternalDependencies": "minor",
   "ignore": []
 }
 
