@@ -1,0 +1,7 @@
+{
+  "type": "patch",
+  "comment": "Test beachball dependency updates",
+  "packageName": "@sitecore-content-sdk/core",
+  "email": "men.nasies@gmail.com",
+  "dependentChangeType": "patch"
+}
