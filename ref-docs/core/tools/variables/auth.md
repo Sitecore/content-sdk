@@ -8,7 +8,7 @@
 
 > `const` **auth**: `object`
 
-Defined in: [packages/core/src/tools/index.ts:26](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/tools/index.ts#L26)
+Defined in: [packages/core/src/tools/index.ts:26](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/tools/index.ts#L26)
 
 Preserve "live binding" semantics similar to ES module imports: production
 code always sees the current implementation; tests can swap it safely and
@@ -16,7 +16,7 @@ restore via `sandbox.restore()` with no hidden global state.
 
 Public surface consumed by the rest of the codebase.
 
-## Type declaration
+## Type Declaration
 
 ### clientCredentialsFlow
 

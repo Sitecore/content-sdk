@@ -6,9 +6,9 @@
 
 # Function: getCache()
 
-> **getCache**\<`T`\>(`key`): `undefined` \| `T`
+> **getCache**\<`T`\>(`key`): `T` \| `undefined`
 
-Defined in: [packages/core/src/utils/globalCache.ts:28](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/utils/globalCache.ts#L28)
+Defined in: [packages/core/src/utils/globalCache.ts:28](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/utils/globalCache.ts#L28)
 
 **`Internal`**
 
@@ -29,6 +29,6 @@ Retrieves a value from the global cache by key.
 
 ## Returns
 
-`undefined` \| `T`
+`T` \| `undefined`
 
 - The cached value if present, otherwise undefined.

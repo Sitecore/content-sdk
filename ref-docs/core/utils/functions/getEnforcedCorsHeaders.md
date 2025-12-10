@@ -6,24 +6,24 @@
 
 # Function: getEnforcedCorsHeaders()
 
-> **getEnforcedCorsHeaders**(`__namedParameters`): `null` \| \{\[`key`: `string`\]: `string`; \}
+> **getEnforcedCorsHeaders**(`requestMethod`): \{\[`key`: `string`\]: `string`; \} \| `null`
 
-Defined in: [packages/core/src/utils/utils.ts:171](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/utils/utils.ts#L171)
+Defined in: [packages/core/src/utils/utils.ts:171](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/utils/utils.ts#L171)
 
 Gets enforced CORS headers
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `__namedParameters` | \{ `allowedOrigins?`: `string`[]; `headers`: `Headers` \| `IncomingHttpHeaders`; `presetCorsHeader?`: `string` \| `string`[]; `requestMethod`: `undefined` \| `string`; \} |
-| `__namedParameters.allowedOrigins?` | `string`[] |
-| `__namedParameters.headers` | `Headers` \| `IncomingHttpHeaders` |
-| `__namedParameters.presetCorsHeader?` | `string` \| `string`[] |
-| `__namedParameters.requestMethod` | `undefined` \| `string` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `requestMethod` | \{ `allowedOrigins?`: `string`[]; `headers`: `Headers` \| `IncomingHttpHeaders`; `presetCorsHeader?`: `string` \| `string`[]; `requestMethod`: `string` \| `undefined`; \} | The HTTP method of the request. |
+| `requestMethod.allowedOrigins?` | `string`[] | - |
+| `requestMethod.headers` | `Headers` \| `IncomingHttpHeaders` | - |
+| `requestMethod.presetCorsHeader?` | `string` \| `string`[] | - |
+| `requestMethod.requestMethod` | `string` \| `undefined` | - |
 
 ## Returns
 
-`null` \| \{\[`key`: `string`\]: `string`; \}
+\{\[`key`: `string`\]: `string`; \} \| `null`
 
 - The enforced CORS headers.

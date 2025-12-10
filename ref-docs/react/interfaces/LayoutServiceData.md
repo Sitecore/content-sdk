@@ -18,8 +18,8 @@ A reply from the Sitecore Layout Service
 
 Defined in: packages/core/types/layout/models.d.ts:6
 
-#### Type declaration
+#### Type Declaration
 
 ##### route
 
-> **route**: `null` \| [`RouteData`](RouteData.md)\<`Record`\<`string`, [`Field`](Field.md)\<`GenericFieldValue`\> \| [`Item`](Item.md) \| [`Item`](Item.md)[]\>\>
+> **route**: [`RouteData`](RouteData.md)\<`Record`\<`string`, [`Field`](Field.md)\<`GenericFieldValue`\> \| [`Item`](Item.md) \| [`Item`](Item.md)[]\>\> \| `null`

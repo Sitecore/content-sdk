@@ -12,7 +12,7 @@ Defined in: core/types/site/redirects-service.d.ts:34
 
 Configuration for
 
-## Type declaration
+## Type Declaration
 
 ### clientFactory
 

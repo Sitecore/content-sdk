@@ -12,7 +12,7 @@ Defined in: core/types/client/models.d.ts:11
 
 Init options for Sitecore Client that allows you to override services too
 
-## Type declaration
+## Type Declaration
 
 ### custom?
 

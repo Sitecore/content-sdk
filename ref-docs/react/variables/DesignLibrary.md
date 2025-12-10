@@ -8,7 +8,7 @@
 
 > `const` **DesignLibrary**: \{(`props`): `Element`; `displayName`: `string`; \}
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibrary.tsx:53](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/react/src/components/DesignLibrary/DesignLibrary.tsx#L53)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibrary.tsx:53](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/react/src/components/DesignLibrary/DesignLibrary.tsx#L53)
 
 Design Library component.
 
@@ -17,7 +17,7 @@ when generation is enabled (`page.mode.designLibrary.isVariantGeneration === tru
 wires the **variant generation** handshake so the parent (DL Studio) can send
 generated code to preview and iterate on.
 
-## Type declaration
+## Type Declaration
 
 ## Parameters
 

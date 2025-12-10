@@ -6,9 +6,9 @@
 
 # Function: getContentStylesheetLink()
 
-> **getContentStylesheetLink**(`layoutData`, `sitecoreEdgeContextId`, `sitecoreEdgeUrl?`): `null` \| [`HTMLLink`](../../index/type-aliases/HTMLLink.md)
+> **getContentStylesheetLink**(`layoutData`, `sitecoreEdgeContextId`, `sitecoreEdgeUrl?`): [`HTMLLink`](../../index/type-aliases/HTMLLink.md) \| `null`
 
-Defined in: [packages/core/src/layout/content-styles.ts:21](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/layout/content-styles.ts#L21)
+Defined in: [packages/core/src/layout/content-styles.ts:21](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/layout/content-styles.ts#L21)
 
 Get the content styles link to be loaded from the Sitecore Edge Platform
 
@@ -22,6 +22,6 @@ Get the content styles link to be loaded from the Sitecore Edge Platform
 
 ## Returns
 
-`null` \| [`HTMLLink`](../../index/type-aliases/HTMLLink.md)
+[`HTMLLink`](../../index/type-aliases/HTMLLink.md) \| `null`
 
 content styles link, null if no styles are used in layout

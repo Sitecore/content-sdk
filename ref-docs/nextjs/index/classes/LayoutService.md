@@ -32,7 +32,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `serviceConfig` | `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\> | configuration |
+| `serviceConfig` | `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: (`siteName`, `itemPath`, `locale?`) => `string` \| `null`; \}\> | configuration |
 
 #### Returns
 
@@ -58,11 +58,11 @@ Defined in: core/types/sitecore-service-base.d.ts:19
 
 ### serviceConfig
 
-> **serviceConfig**: `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: `null` \| (`siteName`, `itemPath`, `locale?`) => `string`; \}\>
+> **serviceConfig**: `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: (`siteName`, `itemPath`, `locale?`) => `string` \| `null`; \}\>
 
 Defined in: core/types/layout/layout-service.d.ts:22
 
-#### Type declaration
+#### Type Declaration
 
 ##### clientFactory
 

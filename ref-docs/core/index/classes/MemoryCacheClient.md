@@ -6,7 +6,7 @@
 
 # Class: MemoryCacheClient\<T\>
 
-Defined in: [packages/core/src/cache-client.ts:57](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/cache-client.ts#L57)
+Defined in: [packages/core/src/cache-client.ts:57](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/cache-client.ts#L57)
 
 A cache client that uses the 'memory-cache' library (https://github.com/ptarjan/node-cache).
 This class is meant to be extended or used as a mixin; it's not meant to be used directly.
@@ -29,7 +29,7 @@ This class is meant to be extended or used as a mixin; it's not meant to be used
 
 > **new MemoryCacheClient**\<`T`\>(`options`): `MemoryCacheClient`\<`T`\>
 
-Defined in: [packages/core/src/cache-client.ts:64](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/cache-client.ts#L64)
+Defined in: [packages/core/src/cache-client.ts:64](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/cache-client.ts#L64)
 
 Initializes a new instance of
 
@@ -54,7 +54,7 @@ Initializes a new instance of
 
 > **options**: [`CacheOptions`](../interfaces/CacheOptions.md)
 
-Defined in: [packages/core/src/cache-client.ts:64](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/cache-client.ts#L64)
+Defined in: [packages/core/src/cache-client.ts:64](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/cache-client.ts#L64)
 
 Configuration options
 
@@ -62,9 +62,9 @@ Configuration options
 
 ### getCacheValue()
 
-> **getCacheValue**(`key`): `null` \| `T`
+> **getCacheValue**(`key`): `T` \| `null`
 
-Defined in: [packages/core/src/cache-client.ts:80](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/cache-client.ts#L80)
+Defined in: [packages/core/src/cache-client.ts:80](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/cache-client.ts#L80)
 
 Retrieves a value from the cache.
 
@@ -76,7 +76,7 @@ Retrieves a value from the cache.
 
 #### Returns
 
-`null` \| `T`
+`T` \| `null`
 
 The cache value as {T}, or null if the specified key is not found in the cache.
 
@@ -90,7 +90,7 @@ The cache value as {T}, or null if the specified key is not found in the cache.
 
 > **setCacheValue**(`key`, `value`): `T`
 
-Defined in: [packages/core/src/cache-client.ts:91](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/cache-client.ts#L91)
+Defined in: [packages/core/src/cache-client.ts:91](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/cache-client.ts#L91)
 
 Adds a value to the cache for the specified cache key.
 

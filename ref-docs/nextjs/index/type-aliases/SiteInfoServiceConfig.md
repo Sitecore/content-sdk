@@ -12,7 +12,7 @@ Defined in: core/types/site/siteinfo-service.d.ts:9
 
 Configuration for
 
-## Type declaration
+## Type Declaration
 
 ### clientFactory
 

@@ -8,7 +8,7 @@
 
 > **updateImageUrl**(`url`, `params?`, `mediaUrlPrefix?`): `string`
 
-Defined in: [packages/core/src/media/media-api.ts:53](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/media/media-api.ts#L53)
+Defined in: [packages/core/src/media/media-api.ts:53](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/media/media-api.ts#L53)
 
 Prepares a Sitecore media URL with `params` for use by the Content SDK media handler.
 This is done by replacing `/~/media` or `/-/media` with `/~/jssmedia` or `/-/jssmedia`, respectively.
@@ -21,7 +21,7 @@ If no `params` are sent, the original media URL is returned.
 | Parameter | Type | Default value | Description |
 | ------ | ------ | ------ | ------ |
 | `url` | `string` | `undefined` | The URL to prepare |
-| `params?` | `null` \| \{\[`key`: `string`\]: `undefined` \| `string` \| `number`; \} | `undefined` | The querystring parameters to use |
+| `params?` | \{\[`key`: `string`\]: `string` \| `number` \| `undefined`; \} \| `null` | `undefined` | The querystring parameters to use |
 | `mediaUrlPrefix?` | `RegExp` | `mediaUrlPrefixRegex` | The regex to match the media URL prefix |
 
 ## Returns

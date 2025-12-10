@@ -6,7 +6,7 @@
 
 # Class: ErrorPagesService
 
-Defined in: [packages/core/src/site/error-pages-service.ts:66](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/site/error-pages-service.ts#L66)
+Defined in: [packages/core/src/site/error-pages-service.ts:66](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/site/error-pages-service.ts#L66)
 
 Service that fetch the error pages data using Sitecore's GraphQL API.
 
@@ -16,7 +16,7 @@ Service that fetch the error pages data using Sitecore's GraphQL API.
 
 > **new ErrorPagesService**(`options`): `ErrorPagesService`
 
-Defined in: [packages/core/src/site/error-pages-service.ts:73](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/site/error-pages-service.ts#L73)
+Defined in: [packages/core/src/site/error-pages-service.ts:73](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/site/error-pages-service.ts#L73)
 
 Creates an instance of graphQL error pages service with the provided options
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL error pages service with the provided options
 
 > **options**: [`ErrorPagesServiceConfig`](../interfaces/ErrorPagesServiceConfig.md)
 
-Defined in: [packages/core/src/site/error-pages-service.ts:73](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/site/error-pages-service.ts#L73)
+Defined in: [packages/core/src/site/error-pages-service.ts:73](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/site/error-pages-service.ts#L73)
 
 instance
 
@@ -48,7 +48,7 @@ instance
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [packages/core/src/site/error-pages-service.ts:77](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/site/error-pages-service.ts#L77)
+Defined in: [packages/core/src/site/error-pages-service.ts:77](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/site/error-pages-service.ts#L77)
 
 ##### Returns
 
@@ -58,9 +58,9 @@ Defined in: [packages/core/src/site/error-pages-service.ts:77](https://github.co
 
 ### fetchErrorPages()
 
-> **fetchErrorPages**(`siteName`, `locale?`, `fetchOptions?`): `Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
+> **fetchErrorPages**(`siteName`, `locale?`, `fetchOptions?`): `Promise`\<[`ErrorPages`](../type-aliases/ErrorPages.md) \| `null`\>
 
-Defined in: [packages/core/src/site/error-pages-service.ts:89](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/site/error-pages-service.ts#L89)
+Defined in: [packages/core/src/site/error-pages-service.ts:89](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/site/error-pages-service.ts#L89)
 
 Fetch list of error pages for the site
 
@@ -74,7 +74,7 @@ Fetch list of error pages for the site
 
 #### Returns
 
-`Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
+`Promise`\<[`ErrorPages`](../type-aliases/ErrorPages.md) \| `null`\>
 
 list of url's error pages
 
@@ -88,7 +88,7 @@ if the siteName is empty.
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/site/error-pages-service.ts:120](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/site/error-pages-service.ts#L120)
+Defined in: [packages/core/src/site/error-pages-service.ts:120](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/site/error-pages-service.ts#L120)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

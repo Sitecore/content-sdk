@@ -13,7 +13,7 @@ Defined in: core/types/debug.d.ts:17
 Default Sitecore Content SDK 'debug' module debuggers. Uses namespace prefix 'content-sdk:'.
 See [https://www.npmjs.com/package/debug](https://www.npmjs.com/package/debug) for details.
 
-## Type declaration
+## Type Declaration
 
 ### common
 

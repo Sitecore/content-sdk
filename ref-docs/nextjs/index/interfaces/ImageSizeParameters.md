@@ -12,7 +12,7 @@ The interface for the Image size parameters.
 
 ## Indexable
 
-\[`attr`: `string`\]: `undefined` \| `string` \| `number`
+\[`attr`: `string`\]: `string` \| `number` \| `undefined`
 
 ## Properties
 

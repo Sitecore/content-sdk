@@ -111,7 +111,7 @@ implementation
 
 ### getPersonalizeInfo()
 
-> **getPersonalizeInfo**(`itemPath`, `language`, `siteName`): `Promise`\<`undefined` \| `PersonalizeInfo`\>
+> **getPersonalizeInfo**(`itemPath`, `language`, `siteName`): `Promise`\<`PersonalizeInfo` \| `undefined`\>
 
 Defined in: core/types/personalize/personalize-service.d.ts:73
 
@@ -127,6 +127,6 @@ Get personalize information for a route
 
 #### Returns
 
-`Promise`\<`undefined` \| `PersonalizeInfo`\>
+`Promise`\<`PersonalizeInfo` \| `undefined`\>
 
 the personalize information or undefined (if itemPath / language not found)

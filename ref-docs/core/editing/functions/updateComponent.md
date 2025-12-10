@@ -8,7 +8,7 @@
 
 > **updateComponent**(`component`, `fields`, `params`): `void`
 
-Defined in: [packages/core/src/editing/design-library.ts:189](https://github.com/Sitecore/content-sdk/blob/3ca8429b451816c5b357bf7ad37b7b8d995cee29/packages/core/src/editing/design-library.ts#L189)
+Defined in: [packages/core/src/editing/design-library.ts:189](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/core/src/editing/design-library.ts#L189)
 
 **`Internal`**
 
@@ -19,8 +19,8 @@ Updates a component's fields and params with the provided values.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `component` | [`ComponentRendering`](../../layout/interfaces/ComponentRendering.md)\<[`ComponentFields`](../../layout/interfaces/ComponentFields.md)\> | The component to update. |
-| `fields` | `undefined` \| [`ComponentFields`](../../layout/interfaces/ComponentFields.md) | The fields to merge into the component. |
-| `params` | `undefined` \| [`ComponentParams`](../../layout/interfaces/ComponentParams.md) | The params to merge into the component. |
+| `fields` | [`ComponentFields`](../../layout/interfaces/ComponentFields.md) \| `undefined` | The fields to merge into the component. |
+| `params` | [`ComponentParams`](../../layout/interfaces/ComponentParams.md) \| `undefined` | The params to merge into the component. |
 
 ## Returns
 

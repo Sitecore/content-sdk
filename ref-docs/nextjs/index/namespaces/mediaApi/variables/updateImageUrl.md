@@ -21,7 +21,7 @@ If no `params` are sent, the original media URL is returned.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `url` | `string` | The URL to prepare |
-| `params?` | \{\[`key`: `string`\]: `undefined` \| `string` \| `number`; \} \| `null` | The querystring parameters to use |
+| `params?` | \{\[`key`: `string`\]: `string` \| `number` \| `undefined`; \} \| `null` | The querystring parameters to use |
 | `mediaUrlPrefix?` | `RegExp` | The regex to match the media URL prefix |
 
 ## Returns

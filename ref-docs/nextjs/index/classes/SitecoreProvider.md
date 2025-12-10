@@ -459,7 +459,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:962
 
 | Parameter | Type |
 | ------ | ------ |
-| `state` | `null` \| [`SitecoreProviderState`](../interfaces/SitecoreProviderState.md) \| (`prevState`, `props`) => `null` \| [`SitecoreProviderState`](../interfaces/SitecoreProviderState.md) \| `Pick`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md), `K`\> \| `Pick`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md), `K`\> |
+| `state` | [`SitecoreProviderState`](../interfaces/SitecoreProviderState.md) \| (`prevState`, `props`) => [`SitecoreProviderState`](../interfaces/SitecoreProviderState.md) \| `Pick`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md), `K`\> \| `null` \| `Pick`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md), `K`\> \| `null` |
 | `callback?` | () => `void` |
 
 #### Returns
