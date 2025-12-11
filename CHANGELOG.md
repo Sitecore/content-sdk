@@ -36,6 +36,11 @@ Our versioning strategy is as follows:
 * `[nextjs]` Next Link props unavailable when using Sitecore Link component ([#294](https://github.com/Sitecore/content-sdk/pull/294)) ([#296](https://github.com/Sitecore/content-sdk/pull/296))
 * `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Fix middleware initialization errors in local container development ([#297](https://github.com/Sitecore/content-sdk/pull/297))([#302](https://github.com/Sitecore/content-sdk/pull/302))
 
+### 🧹 Chores
+
+* API Surface verification and reporting ([#283](https://github.com/Sitecore/content-sdk/pull/283))
+* `[core]` `[react]` Remove "strictNullChecks: false" tsconfig property ([#304](https://github.com/Sitecore/content-sdk/pull/304))
+
 ## 1.2.1
 
 ### 🐛 Bug Fixes
