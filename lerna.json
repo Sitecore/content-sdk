@@ -1,7 +1,14 @@
 {
   "lerna": "3.22.1",
-  "packages": ["packages/*", "samples/*"],
-  "version": "1.3.0-canary.40",
+  "version": "independent",
+  "package": [
+    "packages/react",
+    "packages/core",
+    "packages/cli",
+    "packages/create-content-sdk-app",
+    "packages/nextjs",
+    "samples/*"
+  ],
   "npmClient": "yarn",
   "useWorkspaces": true
 }
