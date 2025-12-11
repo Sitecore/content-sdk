@@ -1,0 +1,135 @@
+# PR-Based Release Workflow
+
+## Overview
+
+Releases are now triggered by merging Pull Requests with `(release)` prefix in the title, instead of direct branch pushes.
+
+## Important Notes
+
+⚠️ **Breaking Change:** Direct pushes to `release/**` branches will **NOT** trigger releases anymore. You must create and merge a PR with `(release)` prefix to trigger a release.
+
+**Before:** Push to `release/1.4.0` → automatic release  
+**Now:** Create PR with `(release)` prefix → merge → release
+
+## How It Works
+
+### Canary Releases (Automatic)
+- **Trigger:** Push to `dev` branch
+- **Tool:** Lerna
+- **Process:** Automatic - no PR needed
+- **Versions:** `1.4.0-canary.3` format
+
+### Stable Releases (PR-Based)
+- **Trigger:** Merge PR with `(release)` prefix in title
+- **Tool:** Beachball
+- **Process:** Manual PR creation and merge
+- **Versions:** `1.4.0`, `1.5.0`, etc.
+
+## PR Title Format
+
+**Required format:**
+```
+(release) Description of the release
+```
+
+**Examples:**
+- `(release) Release version 1.4.0`
+- `(release) Patch release 1.3.1`
+- `(release) Minor release 1.5.0`
+
+**Important:** PRs without `(release)` prefix will NOT trigger a release, even if merged.
+
+## Security
+
+- PR title validation: Must contain `(release)` prefix
+- Only merged PRs trigger releases
+- Branch protection rules should be configured for `release/**` branches
+
+## Workflow Steps
+
+### Regular Release
+
+1. Create release branch (if needed)
+2. Make changes and create change files: `yarn beachball change`
+3. Commit changes and change files
+4. Create PR with title: `(release) Description`
+5. Merge PR → GitHub Actions automatically:
+   - Validates PR title
+   - Runs `beachball check`
+   - Runs `beachball bump` (updates versions, generates changelog)
+   - Publishes to npm
+
+### Patch Release
+
+**Option A: Automated (Recommended)**
+
+1. Go to **Actions** → **Prepare Release Branch** → **Run workflow**
+2. Fill in inputs:
+   - Version pattern: `1.3.x`
+   - Release type: `patch`
+   - Base tag: `v1.3.0`
+3. Click **Run workflow**
+4. Checkout the created branch: `git checkout release/1.3.x`
+5. Make patch changes
+6. Create change files: `yarn beachball change` (select patch)
+7. Create PR with title: `(release) Patch release 1.3.1`
+8. Merge PR → GitHub Actions publishes patch
+
+**Option B: Manual**
+
+1. Checkout release commit: `git checkout v1.3.0`
+2. Create release branch: `git checkout -b release/1.3.x`
+3. Push branch: `git push -u origin release/1.3.x`
+4. Make patch changes
+5. Create change files: `yarn beachball change` (select patch)
+6. Create PR with title: `(release) Patch release 1.3.1`
+7. Merge PR → GitHub Actions publishes patch
+
+## Troubleshooting
+
+### Release didn't trigger
+- ✅ Check PR title contains `(release)` prefix
+- ✅ Check PR was merged (not just closed)
+- ✅ Check base branch is `dev` or `release/**`
+- ✅ Check GitHub Actions logs for validation errors
+
+### Validation failed
+- PR title must contain `(release)` prefix
+- Format: `(release) Your description here`
+
+## Prep-Release Automation
+
+The **Prepare Release Branch** workflow automates the first 3 steps of patch releases:
+
+1. ✅ Validates inputs (version pattern, base tag)
+2. ✅ Verifies base tag exists
+3. ✅ Checks if branch already exists
+4. ✅ Creates release branch from tag
+5. ✅ Pushes branch to remote
+
+**Usage:**
+- Go to Actions → Prepare Release Branch → Run workflow
+- Fill in the inputs and run
+- Branch is created automatically
+
+## Next Steps
+
+- [x] PR-based release workflow (Phase 1) ✅
+- [x] Prep-release automation (Phase 2) ✅
+- [ ] Configure branch protection rules for `release/**` branches (manual GitHub settings)
+- [ ] Add team-based security checks (optional)
+
+### Branch Protection Rules (Manual Configuration)
+
+To enhance security, configure branch protection rules in GitHub Settings → Branches:
+
+**Recommended settings for `release/**` branches:**
+- ✅ Require a pull request before merging
+- ✅ Require approvals (1-2 reviewers)
+- ✅ Require status checks to pass (optional: require publish workflow)
+- ✅ Restrict who can push to matching branches (only via PR)
+- ✅ Do not allow force pushes
+- ✅ Do not allow deletions
+
+**Note:** This is a manual configuration step in GitHub repository settings, not something we can automate in code.
+
