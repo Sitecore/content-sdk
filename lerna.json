@@ -1,14 +1,7 @@
 {
   "lerna": "3.22.1",
-  "version": "independent",
-  "package": [
-    "packages/react",
-    "packages/core",
-    "packages/cli",
-    "packages/create-content-sdk-app",
-    "packages/nextjs",
-    "samples/*"
-  ],
+  "packages": ["packages/*", "samples/*"],
+  "version": "1.3.0",
   "npmClient": "yarn",
   "useWorkspaces": true
 }
