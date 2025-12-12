@@ -6,7 +6,7 @@
 
 # Interface: IdentityData
 
-Defined in: [events/src/events/identity/identity-event.ts:121](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L121)
+Defined in: [events/src/events/identity/identity-event.ts:121](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L121)
 
 Interface with the necessary attributes for the input for sending Identity events
 
@@ -20,7 +20,7 @@ Interface with the necessary attributes for the input for sending Identity event
 
 > `optional` **channel**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/common-interfaces.ts#L9)
+Defined in: [events/src/events/common-interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/common-interfaces.ts#L9)
 
 #### Inherited from
 
@@ -32,7 +32,7 @@ Defined in: [events/src/events/common-interfaces.ts:9](https://github.com/Siteco
 
 > `optional` **city**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:122](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L122)
+Defined in: [events/src/events/identity/identity-event.ts:122](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L122)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [events/src/events/identity/identity-event.ts:122](https://github.co
 
 > `optional` **country**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:123](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L123)
+Defined in: [events/src/events/identity/identity-event.ts:123](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L123)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [events/src/events/identity/identity-event.ts:123](https://github.co
 
 > `optional` **currency**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:10](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/common-interfaces.ts#L10)
+Defined in: [events/src/events/common-interfaces.ts:10](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/common-interfaces.ts#L10)
 
 #### Inherited from
 
@@ -60,7 +60,7 @@ Defined in: [events/src/events/common-interfaces.ts:10](https://github.com/Sitec
 
 > `optional` **dob**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:124](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L124)
+Defined in: [events/src/events/identity/identity-event.ts:124](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L124)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [events/src/events/identity/identity-event.ts:124](https://github.co
 
 > `optional` **email**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:125](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L125)
+Defined in: [events/src/events/identity/identity-event.ts:125](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L125)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [events/src/events/identity/identity-event.ts:125](https://github.co
 
 > `optional` **extensionData**: `NestedObject`
 
-Defined in: [events/src/events/identity/identity-event.ts:136](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L136)
+Defined in: [events/src/events/identity/identity-event.ts:136](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L136)
 
 ***
 
@@ -84,7 +84,7 @@ Defined in: [events/src/events/identity/identity-event.ts:136](https://github.co
 
 > `optional` **firstName**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:126](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L126)
+Defined in: [events/src/events/identity/identity-event.ts:126](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L126)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [events/src/events/identity/identity-event.ts:126](https://github.co
 
 > `optional` **gender**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:127](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L127)
+Defined in: [events/src/events/identity/identity-event.ts:127](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L127)
 
 ***
 
@@ -100,7 +100,7 @@ Defined in: [events/src/events/identity/identity-event.ts:127](https://github.co
 
 > **identifiers**: `Identifier`[]
 
-Defined in: [events/src/events/identity/identity-event.ts:128](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L128)
+Defined in: [events/src/events/identity/identity-event.ts:128](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L128)
 
 ***
 
@@ -108,7 +108,7 @@ Defined in: [events/src/events/identity/identity-event.ts:128](https://github.co
 
 > `optional` **language**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/common-interfaces.ts#L7)
+Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/common-interfaces.ts#L7)
 
 #### Inherited from
 
@@ -120,7 +120,7 @@ Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Siteco
 
 > `optional` **lastName**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:129](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L129)
+Defined in: [events/src/events/identity/identity-event.ts:129](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L129)
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: [events/src/events/identity/identity-event.ts:129](https://github.co
 
 > `optional` **mobile**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:130](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L130)
+Defined in: [events/src/events/identity/identity-event.ts:130](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L130)
 
 ***
 
@@ -136,7 +136,7 @@ Defined in: [events/src/events/identity/identity-event.ts:130](https://github.co
 
 > `optional` **page**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/common-interfaces.ts#L8)
+Defined in: [events/src/events/common-interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/common-interfaces.ts#L8)
 
 #### Inherited from
 
@@ -148,7 +148,7 @@ Defined in: [events/src/events/common-interfaces.ts:8](https://github.com/Siteco
 
 > `optional` **phone**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:131](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L131)
+Defined in: [events/src/events/identity/identity-event.ts:131](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L131)
 
 ***
 
@@ -156,7 +156,7 @@ Defined in: [events/src/events/identity/identity-event.ts:131](https://github.co
 
 > `optional` **postalCode**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:132](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L132)
+Defined in: [events/src/events/identity/identity-event.ts:132](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L132)
 
 ***
 
@@ -164,7 +164,7 @@ Defined in: [events/src/events/identity/identity-event.ts:132](https://github.co
 
 > `optional` **state**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:133](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L133)
+Defined in: [events/src/events/identity/identity-event.ts:133](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L133)
 
 ***
 
@@ -172,7 +172,7 @@ Defined in: [events/src/events/identity/identity-event.ts:133](https://github.co
 
 > `optional` **street**: `string`[]
 
-Defined in: [events/src/events/identity/identity-event.ts:134](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L134)
+Defined in: [events/src/events/identity/identity-event.ts:134](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L134)
 
 ***
 
@@ -180,4 +180,4 @@ Defined in: [events/src/events/identity/identity-event.ts:134](https://github.co
 
 > `optional` **title**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:135](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/events/identity/identity-event.ts#L135)
+Defined in: [events/src/events/identity/identity-event.ts:135](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/events/src/events/identity/identity-event.ts#L135)

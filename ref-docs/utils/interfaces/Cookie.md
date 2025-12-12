@@ -6,7 +6,7 @@
 
 # Interface: Cookie
 
-Defined in: [cookies/interfaces.ts:17](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/utils/src/cookies/interfaces.ts#L17)
+Defined in: [cookies/interfaces.ts:17](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/utils/src/cookies/interfaces.ts#L17)
 
 Interface that represents a cookie (name, value)
 
@@ -16,7 +16,7 @@ Interface that represents a cookie (name, value)
 
 > **name**: `string`
 
-Defined in: [cookies/interfaces.ts:18](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/utils/src/cookies/interfaces.ts#L18)
+Defined in: [cookies/interfaces.ts:18](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/utils/src/cookies/interfaces.ts#L18)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [cookies/interfaces.ts:18](https://github.com/Sitecore/content-sdk/b
 
 > **value**: `string`
 
-Defined in: [cookies/interfaces.ts:19](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/utils/src/cookies/interfaces.ts#L19)
+Defined in: [cookies/interfaces.ts:19](https://github.com/Sitecore/content-sdk/blob/7aac741918fcea8b66b74d1b742cf4a79d490c91/packages/utils/src/cookies/interfaces.ts#L19)

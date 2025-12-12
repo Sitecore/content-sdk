@@ -176,6 +176,35 @@ describe('<DesignLibraryClientEvents />', () => {
       });
     });
 
+    // TODO: Remove this test when server component variant generation is supported
+    it('should add server component preview handler on mount', () => {
+      renderWithSitecore({
+        designLibraryStatus: DesignLibraryStatus.READY,
+        component: testEditedComponent,
+      });
+
+      expect(addServerComponentPreviewHandlerSpy).to.have.been.called;
+    });
+
+    // TODO: Remove this test when server component variant generation is supported
+    it('should call console error when preview component event is received', async () => {
+      const consoleErrorStub = sandbox.stub(console, 'error');
+
+      renderWithSitecore({
+        designLibraryStatus: DesignLibraryStatus.READY,
+        component: testEditedComponent,
+      });
+
+      const previewCallback = addServerComponentPreviewHandlerSpy.getCall(0).args[0];
+      const eventArgs = { data: { a: 'b' } };
+
+      previewCallback(eventArgs);
+      expect(consoleErrorStub).to.have.been.calledOnce;
+      expect(consoleErrorStub).to.have.been.calledWith(
+        'Component Library variant generation for server components is temporarily disabled.'
+      );
+    });
+
     it('should clean up event handlers on unmount', async () => {
       const unsubUpdate = sinon.stub();
       addComponentUpdateHandlerSpy.returns(unsubUpdate);
