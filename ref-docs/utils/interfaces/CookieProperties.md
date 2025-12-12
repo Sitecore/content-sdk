@@ -6,7 +6,7 @@
 
 # Interface: CookieProperties
 
-Defined in: [cookies/interfaces.ts:4](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/utils/src/cookies/interfaces.ts#L4)
+Defined in: [cookies/interfaces.ts:4](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/cookies/interfaces.ts#L4)
 
 Cookie properties
 
@@ -16,7 +16,7 @@ Cookie properties
 
 > `optional` **domain**: `string`
 
-Defined in: [cookies/interfaces.ts:11](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/utils/src/cookies/interfaces.ts#L11)
+Defined in: [cookies/interfaces.ts:11](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/cookies/interfaces.ts#L11)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [cookies/interfaces.ts:11](https://github.com/Sitecore/content-sdk/b
 
 > `optional` **expires**: `Date`
 
-Defined in: [cookies/interfaces.ts:10](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/utils/src/cookies/interfaces.ts#L10)
+Defined in: [cookies/interfaces.ts:10](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/cookies/interfaces.ts#L10)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [cookies/interfaces.ts:10](https://github.com/Sitecore/content-sdk/b
 
 > `optional` **httpOnly**: `boolean`
 
-Defined in: [cookies/interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/utils/src/cookies/interfaces.ts#L9)
+Defined in: [cookies/interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/cookies/interfaces.ts#L9)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [cookies/interfaces.ts:9](https://github.com/Sitecore/content-sdk/bl
 
 > **maxAge**: `number`
 
-Defined in: [cookies/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/utils/src/cookies/interfaces.ts#L5)
+Defined in: [cookies/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/cookies/interfaces.ts#L5)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [cookies/interfaces.ts:5](https://github.com/Sitecore/content-sdk/bl
 
 > `optional` **path**: `string`
 
-Defined in: [cookies/interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/utils/src/cookies/interfaces.ts#L8)
+Defined in: [cookies/interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/cookies/interfaces.ts#L8)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [cookies/interfaces.ts:8](https://github.com/Sitecore/content-sdk/bl
 
 > **sameSite**: `string`
 
-Defined in: [cookies/interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/utils/src/cookies/interfaces.ts#L6)
+Defined in: [cookies/interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/cookies/interfaces.ts#L6)
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: [cookies/interfaces.ts:6](https://github.com/Sitecore/content-sdk/bl
 
 > **secure**: `boolean`
 
-Defined in: [cookies/interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/utils/src/cookies/interfaces.ts#L7)
+Defined in: [cookies/interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/cookies/interfaces.ts#L7)

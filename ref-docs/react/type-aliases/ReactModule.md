@@ -8,7 +8,7 @@
 
 > **ReactModule** = `object`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:25](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/react/src/components/sharedTypes/components.ts#L25)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:25](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/react/src/components/sharedTypes/components.ts#L25)
 
 The type of the React module.
 
@@ -24,7 +24,7 @@ Custom exports
 
 > `optional` **default**: `ComponentType`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:37](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/react/src/components/sharedTypes/components.ts#L37)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:37](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/react/src/components/sharedTypes/components.ts#L37)
 
 Default non-standard export
 
@@ -34,6 +34,6 @@ Default non-standard export
 
 > `optional` **Default**: `ComponentType`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:33](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/react/src/components/sharedTypes/components.ts#L33)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:33](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/react/src/components/sharedTypes/components.ts#L33)
 
 Default module export

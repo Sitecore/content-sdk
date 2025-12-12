@@ -8,7 +8,7 @@
 
 > **isHttpRequest**(`request`): `request is HttpRequest`
 
-Defined in: [typeguards/is-http-request.ts:8](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/utils/src/typeguards/is-http-request.ts#L8)
+Defined in: [typeguards/is-http-request.ts:8](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/typeguards/is-http-request.ts#L8)
 
 Determines whether the given request is an HTTP request instance.
 

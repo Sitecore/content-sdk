@@ -6,7 +6,7 @@
 
 # Interface: FileField
 
-Defined in: [packages/react/src/components/File.tsx:15](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/react/src/components/File.tsx#L15)
+Defined in: [packages/react/src/components/File.tsx:15](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/react/src/components/File.tsx#L15)
 
 The interface for the File field.
 
@@ -16,4 +16,4 @@ The interface for the File field.
 
 > **value**: `FileFieldValue`
 
-Defined in: [packages/react/src/components/File.tsx:16](https://github.com/Sitecore/content-sdk/blob/989287a2df1ab364e25b013c2e5fd976abe491b5/packages/react/src/components/File.tsx#L16)
+Defined in: [packages/react/src/components/File.tsx:16](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/react/src/components/File.tsx#L16)
