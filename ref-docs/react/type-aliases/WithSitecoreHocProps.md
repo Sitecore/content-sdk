@@ -8,7 +8,7 @@
 
 > **WithSitecoreHocProps**\<`ComponentProps`\> = [`EnhancedOmit`](EnhancedOmit.md)\<`ComponentProps`, keyof [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)\>
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:46](https://github.com/Sitecore/content-sdk/blob/e860e313e1fd16b0af1abcbc0952ae7951f74946/packages/react/src/enhancers/withSitecore.tsx#L46)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:46](https://github.com/Sitecore/content-sdk/blob/22b14a80ff7e1ace0a01259e7ee7c2378713a030/packages/react/src/enhancers/withSitecore.tsx#L46)
 
 The type of the props that HOC will receive.
 
