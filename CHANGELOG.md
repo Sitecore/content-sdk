@@ -20,6 +20,13 @@ Our versioning strategy is as follows:
     - `useSearch` hook for paginated search queries with automatic state management, request cancellation, request status tracking.
     - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
 
+## 1.3.1
+
+### 🧹 Chores
+
+* `[react]` Disable variant generation mode for server components in Design Studio ([#320](https://github.com/Sitecore/content-sdk/pull/320))
+
+
 ## 1.3.0
 
 ### 🎉 New Features & Improvements
