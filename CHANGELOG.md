@@ -20,6 +20,12 @@ Our versioning strategy is as follows:
     - `useSearch` hook for paginated search queries with automatic state management, request cancellation, request status tracking.
     - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
 
+## 1.3.1
+
+### 🧹 Chores
+
+* Upgrade Next.js to the latest major version ([#322](https://github.com/Sitecore/content-sdk/pull/322))
+
 ## 1.3.0
 
 ### 🎉 New Features & Improvements
