@@ -8,7 +8,7 @@
 
 > **clearEventQueue**(): `Promise`\<`void`\>
 
-Defined in: [events/src/eventStorage/clearEventQueue.ts:7](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/events/src/eventStorage/clearEventQueue.ts#L7)
+Defined in: [events/src/eventStorage/clearEventQueue.ts:7](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/events/src/eventStorage/clearEventQueue.ts#L7)
 
 Deletes the queue from session.
 

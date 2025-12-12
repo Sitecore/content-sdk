@@ -8,7 +8,7 @@
 
 > **getCookieServerSide**(`cookiesHeader`, `cookieName`): \{ `name`: `string`; `value`: `string`; \} \| `undefined`
 
-Defined in: [cookies/get-cookie-server-side.ts:9](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/utils/src/cookies/get-cookie-server-side.ts#L9)
+Defined in: [cookies/get-cookie-server-side.ts:9](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/utils/src/cookies/get-cookie-server-side.ts#L9)
 
 Retrieves a cookie from the server-side request header string.
 

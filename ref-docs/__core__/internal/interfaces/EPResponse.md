@@ -6,7 +6,7 @@
 
 # Interface: EPResponse
 
-Defined in: [src/interfaces.ts:4](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/__core__/src/interfaces.ts#L4)
+Defined in: [src/interfaces.ts:4](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/__core__/src/interfaces.ts#L4)
 
 The response object that Sitecore EP returns.
 
@@ -16,7 +16,7 @@ The response object that Sitecore EP returns.
 
 > **client\_key**: `string`
 
-Defined in: [src/interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/__core__/src/interfaces.ts#L8)
+Defined in: [src/interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/__core__/src/interfaces.ts#L8)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/8
 
 > **customer\_ref**: `string`
 
-Defined in: [src/interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/__core__/src/interfaces.ts#L9)
+Defined in: [src/interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/__core__/src/interfaces.ts#L9)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/8
 
 > **ref**: `string`
 
-Defined in: [src/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/__core__/src/interfaces.ts#L5)
+Defined in: [src/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/__core__/src/interfaces.ts#L5)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/8
 
 > **status**: `string`
 
-Defined in: [src/interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/__core__/src/interfaces.ts#L6)
+Defined in: [src/interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/__core__/src/interfaces.ts#L6)
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: [src/interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/8
 
 > **version**: `string`
 
-Defined in: [src/interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/8e5f2b9913cec1e148485adebc3da876466ee643/packages/__core__/src/interfaces.ts#L7)
+Defined in: [src/interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/0047c4587b25d5bd56acc3affb1056399099369e/packages/__core__/src/interfaces.ts#L7)
