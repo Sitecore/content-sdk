@@ -15,6 +15,7 @@ Our versioning strategy is as follows:
 
 ### 🧹 Chores
 
+* `[create-content-sdk-app]` Remove beta from files and paths in nextjs-app-router template ([#321](https://github.com/Sitecore/content-sdk/pull/321))
 * `[react]` Disable variant generation mode for server components in Design Studio ([#320](https://github.com/Sitecore/content-sdk/pull/320))
 
 ## 1.3.0
