@@ -20,6 +20,12 @@ Our versioning strategy is as follows:
     - `useSearch` hook for paginated search queries with automatic state management, request cancellation, request status tracking.
     - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
 
+## 1.3.1
+
+### 🧹 Chores
+
+* `[create-content-sdk-app]` Remove beta from files and paths in nextjs-app-router template ([#321](https://github.com/Sitecore/content-sdk/pull/321))
+
 ## 1.3.0
 
 ### 🎉 New Features & Improvements
