@@ -14,13 +14,6 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
-  * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
-    - `SearchService` class for performing search queries with support for pagination, sorting, request cancellation.
-    - Type-safe search parameters and responses with support for generic fields.
-  * `[react]` Added React hooks for search functionality
-    - `useSearch` hook for paginated search queries with automatic state management, request cancellation, request status tracking.
-    - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
 * `[nextjs]` [App Router] Add support for server components in Design Studio ([#280](https://github.com/Sitecore/content-sdk/pull/280))([#300](https://github.com/Sitecore/content-sdk/pull/300))([#301](https://github.com/Sitecore/content-sdk/pull/301))([#303](https://github.com/Sitecore/content-sdk/pull/303))
   - additional react components to handle dynamic rendering of server components
   - includes refactoring of existing Design Library functionality
@@ -42,6 +35,11 @@ Our versioning strategy is as follows:
 * `[nextjs]` Remove locale property assignments in redirects middleware for App Router compatibility. ([#292](https://github.com/Sitecore/jss/pull/292))
 * `[nextjs]` Next Link props unavailable when using Sitecore Link component ([#294](https://github.com/Sitecore/content-sdk/pull/294)) ([#296](https://github.com/Sitecore/content-sdk/pull/296))
 * `[nextjs]` `[template/next-app-router]` `[template/nextjs]` Fix middleware initialization errors in local container development ([#297](https://github.com/Sitecore/content-sdk/pull/297))([#302](https://github.com/Sitecore/content-sdk/pull/302))
+
+### 🧹 Chores
+
+* API Surface verification and reporting ([#283](https://github.com/Sitecore/content-sdk/pull/283))
+* `[core]` `[react]` Remove "strictNullChecks: false" tsconfig property ([#304](https://github.com/Sitecore/content-sdk/pull/304))
 
 ## 1.2.1
 
