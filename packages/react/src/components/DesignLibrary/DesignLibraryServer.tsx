@@ -63,7 +63,9 @@ export const DesignLibraryServer = async ({
 
   const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
 
-  if (isVariantGeneration) {
+  // Temporarily disable server side variant generation due to potential security vulerability
+  // eslint-disable-next-line no-constant-condition
+  if (isVariantGeneration && false) {
     return (
       <DesignLibraryServerVariantGeneration
         page={page}
