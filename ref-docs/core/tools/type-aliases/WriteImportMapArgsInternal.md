@@ -8,14 +8,14 @@
 
 > **WriteImportMapArgsInternal** = [`WriteImportMapArgs`](WriteImportMapArgs.md) & `object`
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:90](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/tools/codegen/import-map.ts#L90)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:90](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/core/src/tools/codegen/import-map.ts#L90)
 
 **`Internal`**
 
 Internal args for import map generation
 Extends WriteImportMapArgs with additional settings for templates and server/client maps applied within Content SDK
 
-## Type declaration
+## Type Declaration
 
 ### clientTemplate()?
 

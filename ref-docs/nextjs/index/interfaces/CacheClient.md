@@ -20,7 +20,7 @@ An interface for cache clients.
 
 ### getCacheValue()
 
-> **getCacheValue**(`key`): `null` \| `T`
+> **getCacheValue**(`key`): `T` \| `null`
 
 Defined in: core/types/cache-client.d.ts:19
 
@@ -34,7 +34,7 @@ Retrieves a value from the cache.
 
 #### Returns
 
-`null` \| `T`
+`T` \| `null`
 
 The cache value as {T}, or null if the specified key was not found in the cache.
 

@@ -58,7 +58,7 @@ if a matching site is not found
 
 ### getByName()
 
-> **getByName**: (`siteName`) => `undefined` \| [`SiteInfo`](../type-aliases/SiteInfo.md)
+> **getByName**: (`siteName`) => [`SiteInfo`](../type-aliases/SiteInfo.md) \| `undefined`
 
 Defined in: core/types/site/site-resolver.d.ts:24
 
@@ -72,7 +72,7 @@ Resolve site by site name
 
 #### Returns
 
-`undefined` \| [`SiteInfo`](../type-aliases/SiteInfo.md)
+[`SiteInfo`](../type-aliases/SiteInfo.md) \| `undefined`
 
 the resolved site or undefined if not found
 

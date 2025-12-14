@@ -12,8 +12,6 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
-### 🎉 New Features & Improvements
-
 * Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
   * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
     - `SearchService` class for performing search queries with support for pagination, sorting, request cancellation.
@@ -21,6 +19,19 @@ Our versioning strategy is as follows:
   * `[react]` Added React hooks for search functionality
     - `useSearch` hook for paginated search queries with automatic state management, request cancellation, request status tracking.
     - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
+
+## 1.3.1
+
+### 🧹 Chores
+
+* Upgrade Next.js to the latest patch version ([#322](https://github.com/Sitecore/content-sdk/pull/322))
+* `[create-content-sdk-app]` Remove beta from files and paths in nextjs-app-router template ([#321](https://github.com/Sitecore/content-sdk/pull/321))
+* `[react]` Disable variant generation mode for server components in Design Studio ([#320](https://github.com/Sitecore/content-sdk/pull/320))
+
+## 1.3.0
+
+### 🎉 New Features & Improvements
+
 * `[nextjs]` [App Router] Add support for server components in Design Studio ([#280](https://github.com/Sitecore/content-sdk/pull/280))([#300](https://github.com/Sitecore/content-sdk/pull/300))([#301](https://github.com/Sitecore/content-sdk/pull/301))([#303](https://github.com/Sitecore/content-sdk/pull/303))
   - additional react components to handle dynamic rendering of server components
   - includes refactoring of existing Design Library functionality

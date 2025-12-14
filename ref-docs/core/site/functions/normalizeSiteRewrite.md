@@ -8,7 +8,7 @@
 
 > **normalizeSiteRewrite**(`pathname`): `string`
 
-Defined in: [packages/core/src/site/utils.ts:62](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/site/utils.ts#L62)
+Defined in: [packages/core/src/site/utils.ts:62](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/core/src/site/utils.ts#L62)
 
 Normalize a site rewrite path (remove site data)
 

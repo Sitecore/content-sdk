@@ -19,7 +19,7 @@ a corresponding set of updated Sitecore media URLs via
 | ------ | ------ | ------ |
 | `url` | `string` | The URL to prepare |
 | `srcSet` | `object`[] | The array of parameters to use |
-| `imageParams?` | \{\[`key`: `string`\]: `undefined` \| `string` \| `number`; \} | The querystring parameters to use |
+| `imageParams?` | \{\[`key`: `string`\]: `string` \| `number` \| `undefined`; \} | The querystring parameters to use |
 | `mediaUrlPrefix?` | `RegExp` | The regex to match the media URL prefix |
 
 ## Returns

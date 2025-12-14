@@ -56,7 +56,7 @@ Defined in: core/types/site/error-pages-service.d.ts:46
 
 ### fetchErrorPages()
 
-> **fetchErrorPages**(`siteName`, `locale?`, `fetchOptions?`): `Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
+> **fetchErrorPages**(`siteName`, `locale?`, `fetchOptions?`): `Promise`\<[`ErrorPages`](../type-aliases/ErrorPages.md) \| `null`\>
 
 Defined in: core/types/site/error-pages-service.d.ts:55
 
@@ -72,7 +72,7 @@ Fetch list of error pages for the site
 
 #### Returns
 
-`Promise`\<`null` \| [`ErrorPages`](../type-aliases/ErrorPages.md)\>
+`Promise`\<[`ErrorPages`](../type-aliases/ErrorPages.md) \| `null`\>
 
 list of url's error pages
 

@@ -100,7 +100,7 @@ implementation
 
 ### getSitemap()
 
-> **getSitemap**(`id`): `Promise`\<`undefined` \| `string`\>
+> **getSitemap**(`id`): `Promise`\<`string` \| `undefined`\>
 
 Defined in: core/types/site/sitemap-xml-service.d.ts:54
 
@@ -114,6 +114,6 @@ Get sitemap file path for sitemap id
 
 #### Returns
 
-`Promise`\<`undefined` \| `string`\>
+`Promise`\<`string` \| `undefined`\>
 
 the sitemap file path or undefined if one doesn't exist

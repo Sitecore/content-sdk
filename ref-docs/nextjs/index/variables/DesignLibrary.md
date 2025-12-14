@@ -17,7 +17,7 @@ when generation is enabled (`page.mode.designLibrary.isVariantGeneration === tru
 wires the **variant generation** handshake so the parent (DL Studio) can send
 generated code to preview and iterate on.
 
-## Type declaration
+## Type Declaration
 
 ## Parameters
 

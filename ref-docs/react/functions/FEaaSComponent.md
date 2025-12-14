@@ -6,9 +6,9 @@
 
 # Function: FEaaSComponent()
 
-> **FEaaSComponent**(`props`): `null` \| `Element`
+> **FEaaSComponent**(`props`): `Element` \| `null`
 
-Defined in: [packages/react/src/components/FEaaS/FEaaSWrapper.tsx:13](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/FEaaS/FEaaSWrapper.tsx#L13)
+Defined in: [packages/react/src/components/FEaaS/FEaaSWrapper.tsx:13](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/react/src/components/FEaaS/FEaaSWrapper.tsx#L13)
 
 ## Parameters
 
@@ -18,4 +18,4 @@ Defined in: [packages/react/src/components/FEaaS/FEaaSWrapper.tsx:13](https://gi
 
 ## Returns
 
-`null` \| `Element`
+`Element` \| `null`

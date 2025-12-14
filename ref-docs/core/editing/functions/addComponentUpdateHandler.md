@@ -6,9 +6,9 @@
 
 # Function: addComponentUpdateHandler()
 
-> **addComponentUpdateHandler**(`rootComponent`, `successCallback?`): `undefined` \| () => `void`
+> **addComponentUpdateHandler**(`rootComponent`, `successCallback?`): () => `void` \| `undefined`
 
-Defined in: [packages/core/src/editing/design-library.ts:78](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/core/src/editing/design-library.ts#L78)
+Defined in: [packages/core/src/editing/design-library.ts:78](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/core/src/editing/design-library.ts#L78)
 
 **`Internal`**
 
@@ -24,4 +24,4 @@ The event should update a component on page by uid, with fields and params from 
 
 ## Returns
 
-`undefined` \| () => `void`
+() => `void` \| `undefined`

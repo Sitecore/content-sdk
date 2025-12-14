@@ -16,7 +16,7 @@ Get required query string params which should be merged with user params
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `qs` | \{\[`key`: `string`\]: `undefined` \| `string`; \} | layout service parsed query string |
+| `qs` | \{\[`key`: `string`\]: `string` \| `undefined`; \} | layout service parsed query string |
 
 ## Returns
 

@@ -6,7 +6,7 @@
 
 # Function: withDatasourceCheck()
 
-> **withDatasourceCheck**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `null` \| `Element`
+> **withDatasourceCheck**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element` \| `null`
 
 Defined in: react/types/enhancers/withDatasourceCheck.d.ts:22
 
@@ -23,7 +23,7 @@ Checks whether a Sitecore datasource is present and renders appropriately depend
 The wrapped component, if a datasource is present.
  A null component (in normal mode) or an error component (in editing mode), if a datasource is not present.
 
-> \<`ComponentProps`\>(`Component`): (`props`) => `null` \| `Element`
+> \<`ComponentProps`\>(`Component`): (`props`) => `Element` \| `null`
 
 ### Type Parameters
 
@@ -39,7 +39,7 @@ The wrapped component, if a datasource is present.
 
 ### Returns
 
-> (`props`): `null` \| `Element`
+> (`props`): `Element` \| `null`
 
 #### Parameters
 
@@ -49,4 +49,4 @@ The wrapped component, if a datasource is present.
 
 #### Returns
 
-`null` \| `Element`
+`Element` \| `null`

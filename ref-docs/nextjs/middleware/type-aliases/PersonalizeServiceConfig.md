@@ -12,7 +12,7 @@ Defined in: core/types/personalize/personalize-service.d.ts:7
 
 Configuration for the PersonalizeService.
 
-## Type declaration
+## Type Declaration
 
 ### clientFactory
 

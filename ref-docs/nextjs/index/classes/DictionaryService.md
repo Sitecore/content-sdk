@@ -96,7 +96,7 @@ implementation
 
 ### getCacheValue()
 
-> **getCacheValue**(`key`): `null` \| [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
+> **getCacheValue**(`key`): [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md) \| `null`
 
 Defined in: core/types/i18n/dictionary-service.d.ts:119
 
@@ -110,7 +110,7 @@ Retrieves a
 
 #### Returns
 
-`null` \| [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
+[`DictionaryPhrases`](../interfaces/DictionaryPhrases.md) \| `null`
 
 The
 

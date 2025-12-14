@@ -437,7 +437,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:962
 
 | Parameter | Type |
 | ------ | ------ |
-| `state` | `null` \| \{ \} \| (`prevState`, `props`) => `null` \| \{ \} \| `Pick`\<\{ \}, `K`\> \| `Pick`\<\{ \}, `K`\> |
+| `state` | \{ \} \| (`prevState`, `props`) => \{ \} \| `Pick`\<\{ \}, `K`\> \| `null` \| `Pick`\<\{ \}, `K`\> \| `null` |
 | `callback?` | () => `void` |
 
 #### Returns
