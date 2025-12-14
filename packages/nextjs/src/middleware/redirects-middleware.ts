@@ -31,7 +31,7 @@ type RedirectResult = RedirectInfo & { matchedQueryString?: string };
  */
 export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> &
   SitecoreConfig['api']['edge'] &
-  SitecoreConfig['api']['local'] &
+  Partial<NonNullable<SitecoreConfig['api']['local']>> &
   MiddlewareBaseConfig &
   SitecoreConfig['redirects'] & {
     redirectsService?: RedirectsService;
@@ -57,11 +57,15 @@ export class RedirectsMiddleware extends MiddlewareBase {
           clientContextId: this.config.clientContextId,
           edgeUrl: this.config.edgeUrl,
         },
-        local: {
-          apiHost: this.config.apiHost,
-          apiKey: this.config.apiKey,
-          path: this.config.path,
-        },
+        ...(this.config.apiHost && this.config.apiKey
+          ? {
+              local: {
+                apiHost: this.config.apiHost,
+                apiKey: this.config.apiKey,
+                path: this.config.path,
+              },
+            }
+          : {}),
       },
     };
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime

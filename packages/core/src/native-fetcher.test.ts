@@ -222,6 +222,9 @@ describe('NativeDataFetcher', () => {
       await fetcher.fetch('http://test.com/api').catch((error) => {
         expect(error.response.status).to.equal(400);
         expect(error.response.data.data).to.deep.equal({ test: 'test?' });
+        expect(error.name).to.equal('Error');
+        expect(error.message).to.equal('HTTP 400 ERROR');
+        expect(error.stack).to.be.a('string');
       });
     });
 

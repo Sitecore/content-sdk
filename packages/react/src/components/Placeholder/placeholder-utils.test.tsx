@@ -171,7 +171,7 @@ describe('placeholder-utils', () => {
       });
     });
 
-    it('should return empty object when no params', () => {
+    it('should return empty styles string when no params', () => {
       const rendering: ComponentRendering = {
         componentName: 'TestComponent',
         uid: 'test-uid',
@@ -179,7 +179,7 @@ describe('placeholder-utils', () => {
 
       const result = getSXAParams(rendering);
 
-      expect(result).to.deep.equal({});
+      expect(result).to.deep.equal({ styles: '' });
     });
   });
 

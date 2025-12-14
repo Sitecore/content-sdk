@@ -18,14 +18,29 @@ export type ErrorBoundaryProps = {
   disableSuspense?: boolean;
 };
 
+/**
+ * Simple error component applying basic error styling.
+ * @param {object} props - Either with `message` (string) or with `children` (ReactNode), but not both.
+ */
+export const ErrorComponent = (
+  props:
+    | { message: React.ReactNode; children?: never }
+    | { children: React.ReactNode; message?: never }
+) => {
+  return (
+    <div className="sc-content-sdk-placeholder-error">
+      {props.message ? props.message : props.children}
+    </div>
+  );
+};
+
 class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   defaultErrorMessage = 'There was a problem loading this section.';
   defaultLoadingMessage = 'Loading component...';
-  state: { error: Error };
+  state: { error: Error | null } = { error: null };
 
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { error: null };
   }
 
   static getDerivedStateFromError(error: Error) {
@@ -58,18 +73,18 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
         if (this.showErrorDetails()) {
           return (
             <div>
-              <div className="sc-content-sdk-placeholder-error">
+              <ErrorComponent>
                 A rendering error occurred in component{' '}
                 <em>{this.props.rendering?.componentName}</em>
                 <br />
                 Error: <em>{this.state.error.message || JSON.stringify(this.state.error)}</em>
-              </div>
+              </ErrorComponent>
             </div>
           );
         } else {
           return (
             <div>
-              <div className="sc-content-sdk-placeholder-error">{this.defaultErrorMessage}</div>
+              <ErrorComponent message={this.defaultErrorMessage} />
             </div>
           );
         }

@@ -8,7 +8,7 @@
 
 > `const` **Placeholder**: (`props`) => `Element`
 
-Defined in: [packages/react/src/components/Placeholder/Placeholder.tsx:184](https://github.com/Sitecore/content-sdk/blob/eb33917be6c3687d0dff26e8414bb7c0dc360115/packages/react/src/components/Placeholder/Placeholder.tsx#L184)
+Defined in: [packages/react/src/components/Placeholder/Placeholder.tsx:182](https://github.com/Sitecore/content-sdk/blob/9b2bdd65f66ee69853daa1ed4741d23c859b9661/packages/react/src/components/Placeholder/Placeholder.tsx#L182)
 
 The Placeholder component.
 

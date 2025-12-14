@@ -126,18 +126,18 @@ describe('EditingConfigMiddleware', () => {
 
     await handler(req, res);
 
-    expect(res.setHeader.getCall(0).args).to.deep.equal([
-      'Access-Control-Allow-Origin',
-      allowedOrigin,
-    ]);
-    expect(res.setHeader.getCall(1).args).to.deep.equal([
+    const setHeaders = res.setHeader.getCalls().map((call) => call.args);
+
+    expect(setHeaders).to.deep.include(['Access-Control-Allow-Origin', allowedOrigin]);
+    expect(setHeaders).to.deep.include([
       'Access-Control-Allow-Methods',
       'GET, POST, OPTIONS, DELETE, PUT, PATCH',
     ]);
-    expect(res.setHeader.getCall(2).args).to.deep.equal([
+    expect(setHeaders).to.deep.include([
       'Access-Control-Allow-Headers',
       'Content-Type, Authorization',
     ]);
+
     expect(res.status).to.have.been.calledWith(204);
     expect(res.send).to.have.been.calledOnceWith(null);
   });

@@ -225,6 +225,7 @@ export const createGraphQLClientFactory: (options: GraphQLClientOptions) => Grap
 
 // @public
 const debug_2: {
+    search: debug_3.Debugger;
     common: debug_3.Debugger;
     form: debug_3.Debugger;
     http: debug_3.Debugger;
@@ -648,7 +649,7 @@ export function getDesignLibraryComponentPreviewErrorEvent(uid: string, error: u
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPropsEvent" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
-export function getDesignLibraryComponentPropsEvent(uid: string, fields: ComponentFields, parameters: ComponentParams): DesignLibraryComponentPropsEvent;
+export function getDesignLibraryComponentPropsEvent(uid: string, fields?: ComponentFields, parameters?: ComponentParams): DesignLibraryComponentPropsEvent;
 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryImportMapEvent" needs to be exported by the entry point api-surface.d.ts
 //
@@ -819,7 +820,7 @@ export const isDynamicPlaceholder: (placeholder: string) => boolean;
 export const isEditorActive: () => boolean;
 
 // @public
-export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field>): boolean;
+export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
 
 // @public
 export const isRegexOrUrl: (input: string) => "regex" | "url";

@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import { render, waitFor } from '@testing-library/react';
 import { spy } from 'sinon';
-import ErrorBoundary from './ErrorBoundary';
+import ErrorBoundary, { ErrorComponent } from './ErrorBoundary';
 import {
   SitecoreProvider,
   SitecoreProviderReactContext,
@@ -10,6 +10,27 @@ import {
 } from '../components/SitecoreProvider';
 import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { Page } from '@sitecore-content-sdk/core/client';
+
+describe('<ErrorComponent />', () => {
+  it('should render message prop with correct CSS class', () => {
+    const message = 'Test error message';
+    const rendered = render(<ErrorComponent message={message} />);
+
+    const errorDiv = rendered.container.querySelector('.sc-content-sdk-placeholder-error');
+    expect(errorDiv?.textContent).to.equal(message);
+  });
+
+  it('should render children when provided without message', () => {
+    const rendered = render(
+      <ErrorComponent>
+        <span>Child error content</span>
+      </ErrorComponent>
+    );
+
+    const errorDiv = rendered.container.querySelector('.sc-content-sdk-placeholder-error');
+    expect(errorDiv?.textContent).to.equal('Child error content');
+  });
+});
 
 describe('ErrorBoundary', () => {
   const setPage = spy();

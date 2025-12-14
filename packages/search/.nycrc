@@ -1,0 +1,7 @@
+{
+  "extension": [".ts"],
+  "exclude": ["**/index.ts", "**/*.test.ts", "dist", "api"],
+  "all": true,
+  "reporter": ["cobertura", "text"],
+  "import": ["tsx"]
+}

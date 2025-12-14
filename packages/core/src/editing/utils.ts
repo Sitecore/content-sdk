@@ -36,7 +36,11 @@ export const PAGES_EDITING_MARKER = 'jss-hrz-editing';
  * Default allowed origins for editing requests. This is used to enforce CORS, CSP headers.
  * @internal
  */
-export const EDITING_ALLOWED_ORIGINS = ['https://pages.sitecorecloud.io'];
+export const EDITING_ALLOWED_ORIGINS = [
+  'https://pages.sitecorecloud.io',
+  'https://xmapps.sitecorecloud.io',
+  'https://designlibrary.sitecorecloud.io',
+];
 
 type ExtendedWindow = Window &
   typeof globalThis & {

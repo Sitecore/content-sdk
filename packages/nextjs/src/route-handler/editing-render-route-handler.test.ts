@@ -687,6 +687,7 @@ describe('createEditingRenderRouteHandlers', () => {
         }),
         nextUrl: {
           searchParams: mockSearchParams(mockQuery),
+          host: '',
         } as any,
       };
     });
@@ -697,6 +698,67 @@ describe('createEditingRenderRouteHandlers', () => {
 
       expect(res.status).to.equal(401);
       expect(res.body).to.include('not allowed');
+    });
+
+    it('should return 401 when invalid origin and POST request is not same origin or localhost', async () => {
+      getEnforcedCorsHeadersStub.returns(null);
+      resolveServerUrlStub.returns('http://some-other-host:8080');
+      const res = await handlers.POST(req as NextRequest);
+
+      expect(res.status).to.equal(401);
+      expect(res.body).to.include('not allowed');
+    });
+
+    it('should allow request when in xmc or local environment - request hostname is localhost', async () => {
+      getEnforcedCorsHeadersStub.returns(null);
+      const mockResponseHeaders = new Headers({
+        'content-type': 'text/html',
+        'Set-Cookie': 'session=abc123',
+      });
+
+      req.nextUrl!.hostname = 'localhost';
+
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        headers: mockResponseHeaders,
+        data: '<html>Server Action Response</html>',
+      });
+
+      const res = await handlers.POST(req);
+      const text = await res.body;
+
+      expect(res.status).to.equal(200);
+      expect(text).to.equal('<html>Server Action Response</html>');
+      expect(fetchStub.calledOnce).to.be.true;
+    });
+
+    it('should allow request when request host is the same as origin host', async () => {
+      getEnforcedCorsHeadersStub.returns(null);
+      const mockResponseHeaders = new Headers({
+        'content-type': 'text/html',
+        'Set-Cookie': 'session=abc123',
+      });
+
+      req.nextUrl!.host = 'some-url';
+
+      req.headers = new Headers({
+        origin: 'https://some-url',
+      });
+
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        headers: mockResponseHeaders,
+        data: '<html>Server Action Response</html>',
+      });
+
+      const res = await handlers.POST(req);
+      const text = await res.body;
+
+      expect(res.status).to.equal(200);
+      expect(text).to.equal('<html>Server Action Response</html>');
+      expect(fetchStub.calledOnce).to.be.true;
     });
 
     it('should return 401 for invalid editing secret', async () => {
