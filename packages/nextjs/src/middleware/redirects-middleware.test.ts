@@ -2139,13 +2139,13 @@ describe('RedirectsMiddleware', () => {
         expect((finalRes.url as unknown as NextURL).locale).to.equal('en');
       });
 
-      it('should redirect to URL with empty locale (let nextjs decide), when isLanguagePreserved is set to false and target does not have language', async () => {
+      it('should redirect to URL with default locale, when isLanguagePreserved is set to false and target does not have language', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/target/',
           pathname: '/target/',
           origin: 'http://localhost:3000',
-          locale: '',
+          locale: 'es',
           search: '',
           clone: cloneUrl,
         };
@@ -2195,7 +2195,7 @@ describe('RedirectsMiddleware', () => {
         expect(fetchRedirects.called).to.be.true;
         expect(finalRes.status).to.equal(res.status);
         expect(normalizeUrl(finalRes.url)).to.equal('http://localhost:3000/target/');
-        expect((finalRes.url as unknown as NextURL).locale).to.equal('');
+        expect((finalRes.url as unknown as NextURL).locale).to.equal('es');
       });
 
       it('should redirect to URL with locale, when target contains locale prefix and isLanguagePreserved is true', async () => {
@@ -3220,4 +3220,3 @@ describe('RedirectsMiddleware', () => {
     });
   });
 });
-
