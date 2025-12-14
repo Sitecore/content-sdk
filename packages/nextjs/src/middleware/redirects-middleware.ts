@@ -124,6 +124,19 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return res;
       }
 
+      site = this.getSite(req, res);
+
+      // Find the redirect from result of RedirectService
+      const existsRedirect = await this.getExistsRedirect(req, site.name);
+
+      if (!existsRedirect) {
+        debug.redirects('skipped (redirect does not exist)');
+
+        return res;
+      }
+
+      debug.redirects('Matched redirect rule: %o', { existsRedirect });
+
       const processAbsoluteUrlTarget = (
         url: NextURL,
         existsRedirect: RedirectResult
@@ -189,18 +202,6 @@ export class RedirectsMiddleware extends MiddlewareBase {
           false
         );
       };
-      site = this.getSite(req, res);
-
-      // Find the redirect from result of RedirectService
-      const existsRedirect = await this.getExistsRedirect(req, site.name);
-
-      if (!existsRedirect) {
-        debug.redirects('skipped (redirect does not exist)');
-
-        return res;
-      }
-
-      debug.redirects('Matched redirect rule: %o', { existsRedirect });
 
       // replace $siteLang token in target if exists
       existsRedirect.target = existsRedirect.target.replace(
