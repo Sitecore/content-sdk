@@ -166,7 +166,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
       ): NextResponse => {
         let targetUrl = existsRedirect.target;
         const possiblyLocalePrefix = targetUrl.split('/')[1];
-        let targetLocale = req.nextUrl.defaultLocale || 'en';
+        let targetLocale = '';
 
         if (this.locales.includes(possiblyLocalePrefix)) {
           targetLocale = possiblyLocalePrefix;
@@ -190,10 +190,11 @@ export class RedirectsMiddleware extends MiddlewareBase {
         url.pathname = prepareNewURL.pathname;
         url.search = prepareNewURL.search;
         if (!isAppRouterRequest) {
-          url.locale = targetLocale;
+          // for pages router i18n implementation, apply default locale as backup
+          url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
         } else {
-          // In App Router, we need to set the locale in the pathname
-          url.pathname = `/${targetLocale}${url.pathname}`;
+          // In App Router, we need to set the locale in the pathname, if present
+          if (targetLocale) url.pathname = `/${targetLocale}${url.pathname}`;
         }
 
         /** return Response redirect with http code of redirect type */

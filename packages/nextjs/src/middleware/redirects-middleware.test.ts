@@ -2139,7 +2139,7 @@ describe('RedirectsMiddleware', () => {
         expect((finalRes.url as unknown as NextURL).locale).to.equal('en');
       });
 
-      it('should redirect to URL with default locale, when isLanguagePreserved is set to false and target does not have language', async () => {
+      it('[pages router] should redirect to URL with default locale, when isLanguagePreserved is set to false and target does not have language', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/target/',
@@ -2198,7 +2198,7 @@ describe('RedirectsMiddleware', () => {
         expect((finalRes.url as unknown as NextURL).locale).to.equal('es');
       });
 
-      it('should redirect to URL with locale, when target contains locale prefix and isLanguagePreserved is true', async () => {
+      it('[pages router] should redirect to URL with locale, when target contains locale prefix and isLanguagePreserved is true', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/target/',
@@ -2256,7 +2256,66 @@ describe('RedirectsMiddleware', () => {
         expect((finalRes.url as unknown as NextURL).locale).to.equal('da-DK');
       });
 
-      it('should redirect to locale path in app router, when isLanguagePreserved is true and incoming request has locale path', async () => {
+      it('[app router] should redirect to locale path, when isLanguagePreserved is true and incoming request has locale path', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/target/',
+          pathname: '/da-DK/target/',
+          origin: 'http://localhost:3000',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/da-DK/source',
+              href: 'http://localhost:3000/da-DK/source',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 301,
+        });
+
+        // Set locale header to indicate app router
+        res.headers.set(LOCALE_HEADER_NAME, 'da-DK');
+
+        setupRedirectStub(301);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/da-DK/source',
+            target: '/target/',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: true,
+            locale: 'da-DK',
+          },
+          req,
+          res
+        );
+
+        validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
+          headers: {},
+          redirected: undefined,
+          status: 301,
+          url,
+        });
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        // eslint-disable-next-line no-unused-expressions
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+        // App router should have locale preserved on the URL
+        expect((finalRes.url as unknown as NextURL).pathname).to.equal('/da-DK/target/');
+      });
+
+      it('[app router] should redirect to path without locale, when isLanguagePreserved is false and incoming request has locale path', async () => {
         const cloneUrl = () => Object.assign({}, req.nextUrl);
         const url = {
           href: 'http://localhost:3000/target/',
@@ -2295,7 +2354,7 @@ describe('RedirectsMiddleware', () => {
             target: '/target/',
             redirectType: REDIRECT_TYPE_301,
             isQueryStringPreserved: false,
-            isLanguagePreserved: true,
+            isLanguagePreserved: false,
             locale: 'en',
           },
           req,
@@ -2314,7 +2373,7 @@ describe('RedirectsMiddleware', () => {
         expect(fetchRedirects.called).to.be.true;
         expect(finalRes.status).to.equal(res.status);
         // App router should have locale preserved on the URL
-        expect((finalRes.url as unknown as NextURL).locale).to.equal('en');
+        expect((finalRes.url as unknown as NextURL).pathname).to.equal('/target/');
       });
 
       it('should set response locale correctly when target contains locale in mixed upper-lower case', async () => {
