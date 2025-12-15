@@ -12,6 +12,8 @@ Our versioning strategy is as follows:
 
 ## Unreleased
 
+### 🎉 New Features & Improvements
+
 * Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
   * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
     - `SearchService` class for performing search queries with support for pagination, sorting, request cancellation.
@@ -19,6 +21,13 @@ Our versioning strategy is as follows:
   * `[react]` Added React hooks for search functionality
     - `useSearch` hook for paginated search queries with automatic state management, request cancellation, request status tracking.
     - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
+
+### 🛠 Breaking Changes
+
+* `[nextjs]` Expand SXA redirects logic with support for isLanguagePreserved flag. This provides an option to preserve current locale when target redirect URL does not have a locale prefix ([#305](https://github.com/Sitecore/content-sdk/pull/305))
+  - This changes the default redirects behavior out of the box.
+    - Previously, `/da/source -> /target` rule would redirect to `/da/target` path when default locale is not `da`
+    - Now, `/da/source -> /target` rule would redirect to `/target` path, using default locale, unless the `Shall language be preserved upon redirect?` checkbox is enabled in Redirect Map.
 
 ## 1.3.1
 
@@ -40,7 +49,7 @@ Our versioning strategy is as follows:
 * `[core]` Provide information about rendering host as part of code extraction ([#286](https://github.com/Sitecore/content-sdk/pull/286))
 * `[template/next-app-router]` Add component runtime information to prevent invalid client/server component operations in Sitecore Pages ([#291](https://github.com/Sitecore/content-sdk/pull/291))
 * `[cli]` Create short flags for CLI commands ([#298](https://github.com/Sitecore/content-sdk/pull/298))
-* `[nextjs]` Expand SXA redirects logic with support for isLanguagePreserved flag. This provides an option to preserve current locale when target redirect URL does not have a locale prefix ([#305](https://github.com/Sitecore/content-sdk/pull/305))
+
 
 ### 🐛 Bug Fixes
 
