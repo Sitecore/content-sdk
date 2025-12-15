@@ -771,7 +771,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
     handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
     protected normalizeUrl(url: NextURL): NextURL;
     // (undocumented)
-    protected redirectsService: RedirectsService;
+    protected redirectsService: RedirectsService | null;
 }
 
 // @public
