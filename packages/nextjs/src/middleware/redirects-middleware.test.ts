@@ -202,7 +202,8 @@ describe('RedirectsMiddleware', () => {
 
     middleware['siteResolver'] = siteResolver;
 
-    const fetchRedirects = (middleware['redirectsService']['fetchRedirects'] =
+    // In test helper, we always provide API config, so redirectsService should never be null
+    const fetchRedirects = (middleware['redirectsService']!['fetchRedirects'] =
       props.fetchRedirectsStub ||
       sandbox.stub().returns(Promise.resolve(Object.keys(props).length ? redirectMaps : [])));
 
@@ -2694,6 +2695,8 @@ describe('RedirectsMiddleware', () => {
       } as any); // Type assertion: Edge properties are optional at runtime
 
       expect(middleware1).to.not.be.undefined;
+      // Should be null since local config is incomplete (missing apiKey)
+      expect(middleware1['redirectsService']).to.be.null;
 
       // Only apiKey, missing apiHost
       const middleware2 = new RedirectsMiddleware({
@@ -2705,6 +2708,103 @@ describe('RedirectsMiddleware', () => {
       } as any); // Type assertion: Edge properties are optional at runtime
 
       expect(middleware2).to.not.be.undefined;
+      // Should be null since local config is incomplete (missing apiHost)
+      expect(middleware2['redirectsService']).to.be.null;
+    });
+  });
+
+  describe('configuration - missing API config', () => {
+    it('gracefully disables when no API config is provided', () => {
+      // Create middleware without any API config (no Edge, no Local)
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        sites: [],
+        locales: ['en'],
+        // No contextId, clientContextId, apiHost, or apiKey
+      } as any); // Type assertion: API properties are optional at runtime
+
+      // Verify middleware was created but redirectsService is null
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.be.null;
+    });
+
+    it('works with only contextId (no clientContextId, no local)', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        // Only contextId, but no clientContextId and no local config
+        contextId: 'edge-context-id',
+        edgeUrl: 'https://edge.url',
+        sites: [],
+        locales: ['en'],
+      } as any);
+
+      // Should work with contextId only (Edge config)
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.null;
+    });
+
+    it('works with only clientContextId (no contextId, no local)', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        // Only clientContextId, but no contextId and no local config
+        clientContextId: 'edge-client-id',
+        edgeUrl: 'https://edge.url',
+        sites: [],
+        locales: ['en'],
+      } as any);
+
+      // Should work with clientContextId only (Edge config)
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.null;
+    });
+
+    it('skips execution when redirectsService is null', async () => {
+      const req = createRequest();
+      const res = createResponse();
+
+      // Create middleware without any API config
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        sites: [],
+        locales: ['en'],
+        // No API config
+      } as any);
+
+      const finalRes = await middleware.handle(req, res);
+
+      // Should skip execution and return response unchanged
+      validateDebugLog('skipped (redirects service not configured - API config required)');
+      expect(finalRes).to.deep.equal(res);
+    });
+
+    it('works normally when Edge config is provided', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        contextId: 'edge-context-id',
+        clientContextId: 'edge-client-id',
+        edgeUrl: 'https://edge.url',
+        sites: [],
+        locales: ['en'],
+      });
+
+      // Verify middleware was created and redirectsService is initialized
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.null;
+    });
+
+    it('works normally when local config is provided', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        apiHost: 'https://local.host',
+        apiKey: 'local-api-key',
+        path: '/api/graphql',
+        sites: [],
+        locales: ['en'],
+      } as any);
+
+      // Verify middleware was created and redirectsService is initialized
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.null;
     });
   });
 });
