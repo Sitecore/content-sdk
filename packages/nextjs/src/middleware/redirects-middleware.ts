@@ -95,15 +95,6 @@ export class RedirectsMiddleware extends MiddlewareBase {
       });
   }
 
-  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
-    // Check if API config is missing - if so, disable the middleware
-    if (!this.redirectsService) {
-      debug.redirects('skipped (redirects service not configured - API config required)');
-      return true;
-    }
-    return super.disabled(req, res);
-  }
-
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.redirects('skipped (redirects middleware is disabled globally)');
@@ -260,6 +251,15 @@ export class RedirectsMiddleware extends MiddlewareBase {
       return res;
     }
   };
+
+  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
+    // Check if API config is missing - if so, disable the middleware
+    if (!this.redirectsService) {
+      debug.redirects('skipped (redirects service not configured - API config required)');
+      return true;
+    }
+    return super.disabled(req, res);
+  }
 
   /**
    * Method returns RedirectInfo when matches

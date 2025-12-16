@@ -100,16 +100,6 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       });
   }
 
-  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
-    // Check if API config is missing - if so, disable the middleware
-    if (!this.personalizeService) {
-      debug.personalize('skipped (personalize service not configured - edge config required)');
-      return true;
-    }
-    // ignore files
-    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
-  }
-
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize middleware is disabled globally)');
@@ -244,6 +234,16 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       return res;
     }
   };
+
+  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
+    // Check if API config is missing - if so, disable the middleware
+    if (!this.personalizeService) {
+      debug.personalize('skipped (personalize service not configured - edge config required)');
+      return true;
+    }
+    // ignore files
+    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
+  }
 
   protected getExperienceParams(req: NextRequest): ExperienceParams {
     const extraParams = this.config.getExtraUtmParams ? this.config.getExtraUtmParams(req) : {};
