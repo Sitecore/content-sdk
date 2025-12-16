@@ -100,13 +100,17 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       });
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
-    // Skip if service wasn't initialized (no edge config)
+  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
+    // Check if API config is missing - if so, disable the middleware
     if (!this.personalizeService) {
       debug.personalize('skipped (personalize service not configured - edge config required)');
-      return res;
+      return true;
     }
+    // ignore files
+    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
+  }
 
+  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize middleware is disabled globally)');
       return res;
@@ -253,11 +257,6 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       referrer: req.headers.get('referer') || req.referrer,
       utm,
     };
-  }
-
-  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
-    // ignore files
-    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
   }
 
   protected async initPersonalizeServer({

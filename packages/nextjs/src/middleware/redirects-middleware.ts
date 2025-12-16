@@ -95,13 +95,16 @@ export class RedirectsMiddleware extends MiddlewareBase {
       });
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
-    // Skip if service wasn't initialized (no API config)
+  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
+    // Check if API config is missing - if so, disable the middleware
     if (!this.redirectsService) {
       debug.redirects('skipped (redirects service not configured - API config required)');
-      return res;
+      return true;
     }
+    return super.disabled(req, res);
+  }
 
+  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.redirects('skipped (redirects middleware is disabled globally)');
       return res;
