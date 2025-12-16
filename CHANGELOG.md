@@ -23,7 +23,8 @@ Our versioning strategy is as follows:
     - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
 
 ### 🐛 Bug Fixes
-* [nextjs] Add "use client" directive to import-map.ts for React hooks compatibility ([#326](https://github.com/Sitecore/content-sdk/pull/326))
+
+* `[nextjs]` Add "use client" directive to import-map.ts for React hooks compatibility ([#326](https://github.com/Sitecore/content-sdk/pull/326))
 
 ## 1.3.1
 
