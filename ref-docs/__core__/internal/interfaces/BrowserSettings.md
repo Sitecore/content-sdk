@@ -6,7 +6,7 @@
 
 # Interface: BrowserSettings
 
-Defined in: [src/initializer/browser/interfaces.ts:1](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/__core__/src/initializer/browser/interfaces.ts#L1)
+Defined in: [src/initializer/browser/interfaces.ts:1](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/__core__/src/initializer/browser/interfaces.ts#L1)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/initializer/browser/interfaces.ts:1](https://github.com/Sitecor
 
 > `optional` **cookieDomain**: `string`
 
-Defined in: [src/initializer/browser/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/__core__/src/initializer/browser/interfaces.ts#L5)
+Defined in: [src/initializer/browser/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/__core__/src/initializer/browser/interfaces.ts#L5)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/initializer/browser/interfaces.ts:5](https://github.com/Sitecor
 
 > `optional` **cookieExpiryDays**: `number`
 
-Defined in: [src/initializer/browser/interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/__core__/src/initializer/browser/interfaces.ts#L6)
+Defined in: [src/initializer/browser/interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/__core__/src/initializer/browser/interfaces.ts#L6)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/initializer/browser/interfaces.ts:6](https://github.com/Sitecor
 
 > `optional` **cookiePath**: `string`
 
-Defined in: [src/initializer/browser/interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/__core__/src/initializer/browser/interfaces.ts#L7)
+Defined in: [src/initializer/browser/interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/__core__/src/initializer/browser/interfaces.ts#L7)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/initializer/browser/interfaces.ts:7](https://github.com/Sitecor
 
 > `optional` **enableBrowserCookie**: `boolean`
 
-Defined in: [src/initializer/browser/interfaces.ts:4](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/__core__/src/initializer/browser/interfaces.ts#L4)
+Defined in: [src/initializer/browser/interfaces.ts:4](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/__core__/src/initializer/browser/interfaces.ts#L4)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/initializer/browser/interfaces.ts:4](https://github.com/Sitecor
 
 > **sitecoreEdgeContextId**: `string`
 
-Defined in: [src/initializer/browser/interfaces.ts:2](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/__core__/src/initializer/browser/interfaces.ts#L2)
+Defined in: [src/initializer/browser/interfaces.ts:2](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/__core__/src/initializer/browser/interfaces.ts#L2)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/initializer/browser/interfaces.ts:2](https://github.com/Sitecor
 
 > `optional` **sitecoreEdgeUrl**: `string`
 
-Defined in: [src/initializer/browser/interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/__core__/src/initializer/browser/interfaces.ts#L8)
+Defined in: [src/initializer/browser/interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/__core__/src/initializer/browser/interfaces.ts#L8)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: [src/initializer/browser/interfaces.ts:8](https://github.com/Sitecor
 
 > **siteName**: `string`
 
-Defined in: [src/initializer/browser/interfaces.ts:3](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/__core__/src/initializer/browser/interfaces.ts#L3)
+Defined in: [src/initializer/browser/interfaces.ts:3](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/__core__/src/initializer/browser/interfaces.ts#L3)

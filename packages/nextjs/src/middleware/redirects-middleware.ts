@@ -42,7 +42,7 @@ export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | '
  * @public
  */
 export class RedirectsMiddleware extends MiddlewareBase {
-  protected redirectsService: RedirectsService;
+  protected redirectsService: RedirectsService | null;
   private locales: string[];
 
   /**
@@ -50,6 +50,22 @@ export class RedirectsMiddleware extends MiddlewareBase {
    */
   constructor(protected config: RedirectsMiddlewareConfig) {
     super(config);
+    this.locales = config.locales;
+
+    // Validate API config is present - redirects requires either Edge or local API configuration
+    const hasEdgeConfig = !!(this.config.contextId || this.config.clientContextId);
+    const hasLocalConfig = !!(this.config.apiHost && this.config.apiKey);
+
+    if (!hasEdgeConfig && !hasLocalConfig) {
+      console.warn(
+        '[RedirectsMiddleware] Redirects middleware requires either Edge configuration (contextId/clientContextId) or local API configuration (apiHost/apiKey). ' +
+          'Redirects features will be disabled. This is expected when API configuration is not available.'
+      );
+      // Set to null to indicate service is disabled
+      this.redirectsService = null;
+      return;
+    }
+
     const graphQLOptions = {
       api: {
         edge: {
@@ -77,7 +93,6 @@ export class RedirectsMiddleware extends MiddlewareBase {
         clientFactory: this.getClientFactory(graphQLOptions),
         fetch: fetch,
       });
-    this.locales = config.locales;
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
@@ -247,6 +262,15 @@ export class RedirectsMiddleware extends MiddlewareBase {
     }
   };
 
+  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
+    // Check if API config is missing - if so, disable the middleware
+    if (!this.redirectsService) {
+      debug.redirects('skipped (redirects service not configured - API config required)');
+      return true;
+    }
+    return super.disabled(req, res);
+  }
+
   /**
    * Method returns RedirectInfo when matches
    * @param {NextRequest} req request
@@ -258,6 +282,10 @@ export class RedirectsMiddleware extends MiddlewareBase {
     req: NextRequest,
     siteName: string
   ): Promise<RedirectResult | undefined> {
+    if (!this.redirectsService) {
+      return undefined;
+    }
+
     const { pathname: incomingURL, search: incomingQS = '' } = this.normalizeUrl(
       req.nextUrl.clone()
     );
