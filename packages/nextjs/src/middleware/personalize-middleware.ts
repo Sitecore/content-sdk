@@ -149,6 +149,10 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       const site = this.getSite(req, res);
 
       // Get personalization info from Experience Edge
+      // personalizeService is guaranteed to be non-null here because disabled() check passed
+      if (!this.personalizeService) {
+        return res;
+      }
       const personalizeInfo = await this.personalizeService.getPersonalizeInfo(
         pathname,
         language,
