@@ -8,7 +8,7 @@
 
 > **getCookieValueClientSide**(`cookieName`): `string`
 
-Defined in: [cookies/get-cookie-value-client-side.ts:8](https://github.com/Sitecore/content-sdk/blob/55f235f39656ca4cac0c702c82119648ac304966/packages/utils/src/cookies/get-cookie-value-client-side.ts#L8)
+Defined in: [cookies/get-cookie-value-client-side.ts:8](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/utils/src/cookies/get-cookie-value-client-side.ts#L8)
 
 Retrieves the value of a cookie in the browser context.
 

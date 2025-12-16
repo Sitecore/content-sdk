@@ -8,7 +8,7 @@
 
 > **appendScriptWithAttributes**(`attributes`): `void`
 
-Defined in: [browser/appendScriptWithAttributes.ts:5](https://github.com/Sitecore/content-sdk/blob/55f235f39656ca4cac0c702c82119648ac304966/packages/utils/src/browser/appendScriptWithAttributes.ts#L5)
+Defined in: [browser/appendScriptWithAttributes.ts:5](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/utils/src/browser/appendScriptWithAttributes.ts#L5)
 
 Appends a script element to the document head with the specified attributes.
 

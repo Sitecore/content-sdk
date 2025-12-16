@@ -8,7 +8,7 @@
 
 > `const` **DesignLibrary**: \{(`props`): `Element`; `displayName`: `string`; \}
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibrary.tsx:53](https://github.com/Sitecore/content-sdk/blob/55f235f39656ca4cac0c702c82119648ac304966/packages/react/src/components/DesignLibrary/DesignLibrary.tsx#L53)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibrary.tsx:53](https://github.com/Sitecore/content-sdk/blob/6eb16655f677d9f2c9f82dbf67e6f8a92dd58ada/packages/react/src/components/DesignLibrary/DesignLibrary.tsx#L53)
 
 Design Library component.
 
