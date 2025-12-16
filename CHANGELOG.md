@@ -25,6 +25,7 @@ Our versioning strategy is as follows:
 ### 🐛 Bug Fixes
 
 * `[nextjs]` Add "use client" directive to import-map.ts for React hooks compatibility ([#326](https://github.com/Sitecore/content-sdk/pull/326))
+* `[nextjs]` `[template/nextjs]` `[template/nextjs-app-router]` Fix middleware initialization errors when API configuration is missing ([#325](https://github.com/Sitecore/content-sdk/pull/325))
 
 ## 1.3.1
 

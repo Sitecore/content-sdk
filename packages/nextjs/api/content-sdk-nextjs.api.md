@@ -764,6 +764,8 @@ export class RedirectsMiddleware extends MiddlewareBase {
     // (undocumented)
     protected config: RedirectsMiddlewareConfig;
     protected createRedirectResponse(url: NextURL | string, res: Response | undefined, status: number, statusText: string): NextResponse;
+    // (undocumented)
+    protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected dispatchRedirect(target: NextURL | string, type: string, req: NextRequest, res: NextResponse, isExternal?: boolean): NextResponse;
     // Warning: (ae-forgotten-export) The symbol "RedirectResult" needs to be exported by the entry point api-surface.d.ts
     protected getExistsRedirect(req: NextRequest, siteName: string): Promise<RedirectResult | undefined>;
@@ -771,7 +773,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
     handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
     protected normalizeUrl(url: NextURL): NextURL;
     // (undocumented)
-    protected redirectsService: RedirectsService;
+    protected redirectsService: RedirectsService | null;
 }
 
 // @public
@@ -929,7 +931,7 @@ export * from "@sitecore-content-sdk/react/search";
 
 // Warnings were encountered during analysis:
 //
-// src/middleware/personalize-middleware.ts:299:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
+// src/middleware/personalize-middleware.ts:302:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
 // src/services/component-props-service.ts:61:5 - (ae-forgotten-export) The symbol "NextContext" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
