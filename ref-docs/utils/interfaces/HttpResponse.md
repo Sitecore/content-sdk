@@ -6,7 +6,7 @@
 
 # Interface: HttpResponse
 
-Defined in: [interfaces.ts:29](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/interfaces.ts#L29)
+Defined in: [interfaces.ts:29](https://github.com/Sitecore/content-sdk/blob/55f235f39656ca4cac0c702c82119648ac304966/packages/utils/src/interfaces.ts#L29)
 
 Interface for supporting response OutgoingMessage http node type
 
@@ -16,7 +16,7 @@ Interface for supporting response OutgoingMessage http node type
 
 > **setHeader**(`name`, `value`): `void`
 
-Defined in: [interfaces.ts:30](https://github.com/Sitecore/content-sdk/blob/6eae15c675a64fb02f95da52f5ad7786bf53c7c0/packages/utils/src/interfaces.ts#L30)
+Defined in: [interfaces.ts:30](https://github.com/Sitecore/content-sdk/blob/55f235f39656ca4cac0c702c82119648ac304966/packages/utils/src/interfaces.ts#L30)
 
 #### Parameters
 
