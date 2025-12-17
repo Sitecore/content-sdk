@@ -8,7 +8,7 @@
 
 > **RedirectsServiceConfig** = [`CacheOptions`](../interfaces/CacheOptions.md) & `object`
 
-Defined in: core/types/site/redirects-service.d.ts:34
+Defined in: core/types/site/redirects-service.d.ts:35
 
 Configuration for
 

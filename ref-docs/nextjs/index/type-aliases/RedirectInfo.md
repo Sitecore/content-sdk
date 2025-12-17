@@ -14,6 +14,14 @@ Object model of Redirect Info result
 
 ## Properties
 
+### isLanguagePreserved?
+
+> `optional` **isLanguagePreserved**: `boolean`
+
+Defined in: core/types/site/redirects-service.d.ts:28
+
+***
+
 ### isQueryStringPreserved
 
 > **isQueryStringPreserved**: `boolean`
@@ -26,7 +34,7 @@ Defined in: core/types/site/redirects-service.d.ts:27
 
 > **locale**: `string`
 
-Defined in: core/types/site/redirects-service.d.ts:28
+Defined in: core/types/site/redirects-service.d.ts:29
 
 ***
 
