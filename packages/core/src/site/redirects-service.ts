@@ -31,6 +31,7 @@ export type RedirectInfo = {
   target: string;
   redirectType: string;
   isQueryStringPreserved: boolean;
+  isLanguagePreserved?: boolean;
   locale: string;
 };
 
@@ -44,6 +45,7 @@ const defaultQuery = /* GraphQL */ `
           target
           redirectType
           isQueryStringPreserved
+          isLanguagePreserved
           locale
         }
       }

@@ -1146,6 +1146,7 @@ export type RedirectInfo = {
     target: string;
     redirectType: string;
     isQueryStringPreserved: boolean;
+    isLanguagePreserved?: boolean;
     locale: string;
 };
 

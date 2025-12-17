@@ -120,11 +120,11 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
       const isAppRouterRequest = this.isAppRouter(res);
 
-      const createResponse = async (): Promise<NextResponse> => {
+      const validateRequest = () => {
         if (this.isPreview(req)) {
           debug.redirects('skipped (preview)');
 
-          return res;
+          return false;
         }
 
         // Skip prefetch requests from Next.js, which are not original client requests
@@ -133,118 +133,128 @@ export class RedirectsMiddleware extends MiddlewareBase {
           debug.redirects('skipped (prefetch)');
           res.headers.set('x-middleware-cache', 'no-cache');
           res.headers.set('Cache-Control', 'no-store, must-revalidate');
-          return res;
+          return false;
         }
+        return true;
+      };
 
-        site = this.getSite(req, res);
+      if (!validateRequest()) {
+        return res;
+      }
 
-        // Find the redirect from result of RedirectService
-        const existsRedirect = await this.getExistsRedirect(req, site.name);
+      site = this.getSite(req, res);
 
-        if (!existsRedirect) {
-          debug.redirects('skipped (redirect does not exist)');
+      // Find the redirect from result of RedirectService
+      const existsRedirect = await this.getExistsRedirect(req, site.name);
 
-          return res;
-        }
+      if (!existsRedirect) {
+        debug.redirects('skipped (redirect does not exist)');
 
-        debug.redirects('Matched redirect rule: %o', { existsRedirect });
+        return res;
+      }
 
-        // Find context site language and replace token
-        if (
-          REGEXP_CONTEXT_SITE_LANG.test(existsRedirect.target) &&
-          !(
-            REGEXP_ABSOLUTE_URL.test(existsRedirect.target) &&
-            existsRedirect.target.includes(hostname)
-          )
-        ) {
-          existsRedirect.target = existsRedirect.target.replace(
-            REGEXP_CONTEXT_SITE_LANG,
-            site.language
+      debug.redirects('Matched redirect rule: %o', { existsRedirect });
+
+      const processAbsoluteUrlTarget = (
+        url: NextURL,
+        existsRedirect: RedirectResult
+      ): NextResponse => {
+        // Redirect logic for absolute (external or not) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
+        let targetUrl = existsRedirect.target;
+
+        if (url.search && existsRedirect.isQueryStringPreserved) {
+          const incomingQS = new URLSearchParams(url.search ?? '');
+          const [targetMainUrl, targetQS] = targetUrl.split('?');
+          const mergedQueryString = mergeURLSearchParams(
+            incomingQS,
+            new URLSearchParams(targetQS || '')
           );
-          if (!isAppRouterRequest) {
-            req.nextUrl.locale = site.language;
-          }
+          targetUrl = `${targetMainUrl}?${mergedQueryString}`;
         }
 
-        const url = this.normalizeUrl(req.nextUrl.clone());
+        return this.dispatchRedirect(targetUrl, existsRedirect.redirectType, req, res, true);
+      };
 
-        // Redirect logic for external (absolute) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
-        if (REGEXP_ABSOLUTE_URL.test(existsRedirect.target)) {
-          // Perform variable substitution for absolute URLs
-          let finalTarget = existsRedirect.target;
+      const processRelativeUrlTarget = (
+        url: NextURL,
+        existsRedirect: RedirectResult
+      ): NextResponse => {
+        let targetUrl = existsRedirect.target;
+        const possiblyLocalePrefix = targetUrl.split('/')[1];
+        let targetLocale = '';
 
-          if (isRegexOrUrl(existsRedirect.pattern) === 'regex') {
-            const matched = url.pathname
-              .replace(/\/*$/gi, '')
-              .match(regexParser(existsRedirect.pattern));
-            if (matched) {
-              finalTarget = existsRedirect.target.replace(
-                /\$(\d+)/g,
-                (_: string, index: string): string => {
-                  return matched[parseInt(index, 10)] || '';
-                }
-              );
-            }
-          }
+        if (this.locales.includes(possiblyLocalePrefix)) {
+          targetLocale = possiblyLocalePrefix;
+          targetUrl = targetUrl.replace(`/${possiblyLocalePrefix}`, '');
+        } else if (existsRedirect.isLanguagePreserved) {
+          targetLocale = language;
+        }
 
-          return this.dispatchRedirect(finalTarget, existsRedirect.redirectType, req, res, true);
+        let [targetMainUrl, targetQS] = targetUrl.split('?');
+        if (url.search && existsRedirect.isQueryStringPreserved) {
+          const incomingQS = new URLSearchParams(url.search ?? '');
+          targetQS = mergeURLSearchParams(incomingQS, new URLSearchParams(targetQS || ''));
+        }
+
+        const prepareNewURL = new URL(
+          `${targetMainUrl}${targetQS ? '?' + targetQS : ''}`,
+          url.origin
+        );
+
+        url.href = prepareNewURL.href;
+        url.pathname = prepareNewURL.pathname;
+        url.search = prepareNewURL.search;
+        if (!isAppRouterRequest) {
+          // for pages router i18n implementation, apply default locale as backup
+          url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
         } else {
-          const isUrl = isRegexOrUrl(existsRedirect.pattern) === 'url';
-          const targetParts = existsRedirect.target.split('/');
-          const urlFirstPart = targetParts[1];
-
-          if (this.locales.includes(urlFirstPart)) {
-            if (!isAppRouterRequest) {
-              req.nextUrl.locale = urlFirstPart;
-            }
-            existsRedirect.target = existsRedirect.target.replace(`/${urlFirstPart}`, '');
-          }
-
-          const targetSegments = isUrl
-            ? existsRedirect.target.split('?')
-            : url.pathname.replace(/\/*$/gi, '') + existsRedirect.matchedQueryString;
-
-          const [targetPath, targetQueryString] = isUrl
-            ? targetSegments
-            : (targetSegments as string)
-                .replace(regexParser(existsRedirect.pattern), existsRedirect.target)
-                .replace(/^\/\//, '/')
-                .split('?');
-
-          const mergedQueryString = existsRedirect.isQueryStringPreserved
-            ? mergeURLSearchParams(
-                new URLSearchParams(url.search ?? ''),
-                new URLSearchParams(targetQueryString || '')
-              )
-            : targetQueryString || '';
-
-          const prepareNewURL = new URL(
-            `${targetPath}${mergedQueryString ? '?' + mergedQueryString : ''}`,
-            url.origin
-          );
-
-          url.href = prepareNewURL.href;
-          url.pathname = prepareNewURL.pathname;
-          url.search = prepareNewURL.search;
-          if (!isAppRouterRequest) {
-            url.locale = req.nextUrl.locale;
-          }
+          // In App Router, we need to set the locale in the pathname, if present
+          if (targetLocale) url.pathname = `/${targetLocale}${url.pathname}`;
         }
 
         /** return Response redirect with http code of redirect type */
-        return this.dispatchRedirect(url, existsRedirect.redirectType, req, res, false);
+        return this.dispatchRedirect(
+          this.normalizeUrl(url),
+          existsRedirect.redirectType,
+          req,
+          res,
+          false
+        );
       };
 
-      const response = await createResponse();
+      // replace $siteLang token in target if exists
+      existsRedirect.target = existsRedirect.target.replace(
+        REGEXP_CONTEXT_SITE_LANG,
+        site.language
+      );
+
+      const reqUrl = this.normalizeUrl(req.nextUrl.clone());
+
+      // Apply regex replacements to the target URL if the pattern is a regex
+      const matched = reqUrl.pathname
+        .replace(/\/*$/gi, '')
+        .match(regexParser(existsRedirect.pattern));
+      if (matched) {
+        existsRedirect.target = existsRedirect.target.replace(
+          /\$(\d+)/g,
+          (_: string, index: string): string => {
+            return matched[parseInt(index, 10)] || '';
+          }
+        );
+      }
+
+      const redirectedResponse = REGEXP_ABSOLUTE_URL.test(existsRedirect.target)
+        ? processAbsoluteUrlTarget(reqUrl, existsRedirect)
+        : processRelativeUrlTarget(reqUrl, existsRedirect);
 
       debug.redirects('redirects middleware end in %dms: %o', Date.now() - startTimestamp, {
-        redirected: response.redirected,
-        status: response.status,
-        url: response.url,
-        headers: this.extractDebugHeaders(response.headers),
+        redirected: redirectedResponse.redirected,
+        status: redirectedResponse.status,
+        url: redirectedResponse.url,
+        headers: this.extractDebugHeaders(redirectedResponse.headers),
       });
 
-      return response;
+      return redirectedResponse;
     } catch (error) {
       console.log('Redirect middleware failed:');
       console.log(error);
@@ -282,7 +292,6 @@ export class RedirectsMiddleware extends MiddlewareBase {
     const locale = this.getLanguage(req);
     const normalizedPath = incomingURL.replace(/\/*$/gi, '').toLowerCase();
     const redirects = await this.redirectsService.fetchRedirects(siteName);
-    const language = this.getLanguage(req);
     const modifyRedirects = structuredClone(redirects);
     let matchedQueryString: string | undefined;
     const localePath = `/${locale.toLowerCase()}${normalizedPath}`;
@@ -318,7 +327,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
           // Modify the redirect pattern to ignore the language prefix in the path
           // And escapes non-special "?" characters in a string or regex.
           redirect.pattern = escapeNonSpecialQuestionMarks(
-            redirect.pattern.replace(new RegExp(`^[^]?/${language}/`, 'gi'), '')
+            '^' + redirect.pattern.replace(new RegExp(`^[^]?/${locale}/`, 'gi'), '') // ensure function thinks input is regex
           );
 
           // Prepare the redirect pattern as a regular expression, making it more flexible for matching URLs
