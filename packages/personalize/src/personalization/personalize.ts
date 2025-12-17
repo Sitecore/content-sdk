@@ -1,11 +1,12 @@
 import {
-  getCloudSDKSettingsBrowser as getCloudSDKSettings,
-  getEnabledPackageBrowser as getEnabledPackage,
-} from '@sitecore-content-sdk/__core__/internal';
+  getGroupSettings,
+  getInitState,
+  getPlugin,
+  TrackingGroupSettings,
+} from '@sitecore-content-sdk/core';
 import { getCookieValueClientSide } from '@sitecore-content-sdk/utils';
 import { PACKAGE_NAME } from '../consts';
-import { awaitInit } from '../initializer/browser/initializer';
-import type { PersonalizeSettings } from '../initializer/browser/interfaces';
+import type { PersonalizePluginSettings } from '../plugin/personalize-plugin-base';
 import type { PersonalizeData } from './personalizer';
 import { Personalizer } from './personalizer';
 import type { FailedCalledFlowsResponse } from './send-call-flows-request';
@@ -30,16 +31,37 @@ export async function personalize(
   personalizeData: PersonalizeData,
   opts?: PersonalizeOpts
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
-  await awaitInit();
+  const initState = getInitState();
+  const config = initState.config!;
 
-  const cloudSDKSettings = getCloudSDKSettings();
-  const personalizeSettings = getEnabledPackage(PACKAGE_NAME)?.settings as PersonalizeSettings;
-  const browserId = getCookieValueClientSide(cloudSDKSettings.cookieSettings.name.browserId);
-  const guestId = getCookieValueClientSide(personalizeSettings.cookieSettings.name.guestId);
+  // Get browser ID cookie name from tracking group
+  const trackingSettings = getGroupSettings<TrackingGroupSettings>('tracking');
+  const browserId = trackingSettings?.browserIdCookieName
+    ? getCookieValueClientSide(trackingSettings.browserIdCookieName)
+    : undefined;
 
-  return new Personalizer(browserId, guestId).getInteractiveExperienceData(
+  // Get guest ID cookie name from personalize plugin settings
+  const personalizePlugin = getPlugin<PersonalizePluginSettings>(PACKAGE_NAME);
+  const guestId = personalizePlugin?.settings?.guestIdCookieName
+    ? getCookieValueClientSide(personalizePlugin.settings.guestIdCookieName)
+    : undefined;
+
+  // Build settings object for Personalizer (compatible with legacy Settings interface)
+  const settings = {
+    sitecoreEdgeContextId: config.sitecoreContextId,
+    sitecoreEdgeUrl: config.sitecoreEdgeUrl || 'https://edge-platform.sitecorecloud.io',
+    siteName: '', // Not required for personalize API
+    cookieSettings: {
+      name: {
+        browserId: trackingSettings?.browserIdCookieName || '',
+      },
+      expiryDays: 365,
+    },
+  };
+
+  return new Personalizer(browserId || '', guestId).getInteractiveExperienceData(
     personalizeData,
-    cloudSDKSettings,
+    settings,
     window.location.search,
     {
       timeout: opts?.timeout,

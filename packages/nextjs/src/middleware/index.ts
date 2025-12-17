@@ -19,3 +19,17 @@ export {
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectInfo,
 } from '@sitecore-content-sdk/core/site';
+
+// Middleware plugins for SDK init system
+export {
+  multisitePlugin,
+  MultisitePluginSettings,
+  getMultisiteMiddleware,
+  MULTISITE_PLUGIN_NAME,
+  personalizeMiddlewarePlugin,
+  PersonalizeMiddlewarePluginSettings,
+  getPersonalizeMiddleware,
+  PERSONALIZE_MIDDLEWARE_PLUGIN_NAME,
+  executeMiddlewares,
+  ExecuteMiddlewaresOptions,
+} from './plugin';

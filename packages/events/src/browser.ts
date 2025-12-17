@@ -14,3 +14,7 @@ export {
   PACKAGE_NAME,
   PACKAGE_INITIALIZER_METHOD_NAME,
 } from './consts';
+
+// Plugin settings management
+export { updateEventsSettings, isEventsEnabled } from './plugin/events-plugin-base';
+export type { EventsPluginSettings } from './plugin/events-plugin-base';

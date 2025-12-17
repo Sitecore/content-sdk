@@ -1,219 +1,206 @@
-import * as coreBrowserModule from '@sitecore-content-sdk/__core__/browser';
-import * as coreInternalModule from '@sitecore-content-sdk/__core__/internal';
-import * as utilsModule from '@sitecore-content-sdk/utils';
-import * as initializerModule from '../initializer/browser/initializer';
+/**
+ * @jest-environment jsdom
+ */
 import { personalize } from './personalize';
 import { Personalizer } from './personalizer';
-import { expect } from '@jest/globals';
+import type { PersonalizeData } from './personalizer';
 
+// Mock the core module
+jest.mock('@sitecore-content-sdk/core', () => ({
+  getInitState: jest.fn(),
+  getGroupSettings: jest.fn(),
+  getPlugin: jest.fn(),
+}));
+
+// Mock utils
+jest.mock('@sitecore-content-sdk/utils', () => ({
+  getCookieValueClientSide: jest.fn(),
+}));
+
+// Mock the Personalizer
 jest.mock('./personalizer');
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+import { getInitState, getGroupSettings, getPlugin } from '@sitecore-content-sdk/core';
+import { getCookieValueClientSide } from '@sitecore-content-sdk/utils';
 
-  return {
-    __esModule: true,
-    ...originalModule,
-    getCloudSDKSettingsBrowser: jest.fn(),
-  };
-});
+const mockGetInitState = getInitState as jest.MockedFunction<typeof getInitState>;
+const mockGetGroupSettings = getGroupSettings as jest.MockedFunction<typeof getGroupSettings>;
+const mockGetPlugin = getPlugin as jest.MockedFunction<typeof getPlugin>;
+const mockGetCookieValueClientSide = getCookieValueClientSide as jest.MockedFunction<
+  typeof getCookieValueClientSide
+>;
 
-jest.mock('@sitecore-content-sdk/__core__/browser', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/browser');
-
-  return {
-    __esModule: true,
-    ...originalModule,
-    getBrowserId: jest.fn(),
-  };
-});
-
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/utils');
-
-  return {
-    __esModule: true,
-    ...originalModule,
-  };
-});
 describe('personalize', () => {
-  describe('new init', () => {
-    const browserId = 'browser_id_value';
-    const guestId = 'guest_id_value';
-    const personalizeData = {
-      channel: 'WEB',
-      currency: 'EUR',
-      friendlyId: 'personalizeintegrationtest',
-      language: 'EN',
-      page: 'races',
-      pointOfSale: 'spinair.com',
-    };
+  const personalizeData: PersonalizeData = {
+    channel: 'WEB',
+    currency: 'EUR',
+    friendlyId: 'personalizeintegrationtest',
+    language: 'EN',
+  };
 
-    const settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
-      siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
-    };
+  const mockConfig = {
+    sitecoreContextId: 'test-context-id',
+    sitecoreEdgeUrl: 'https://edge.example.com',
+  };
 
-    const personalizeSettings = {
-      initState: true,
+  const mockEnvironment = {
+    getCookie: jest.fn(),
+    setCookie: jest.fn(),
+  };
+
+  const getInteractiveExperienceDataSpy = jest.spyOn(
+    Personalizer.prototype,
+    'getInteractiveExperienceData'
+  );
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    // Default mock implementations
+    mockGetInitState.mockReturnValue({
+      config: mockConfig,
+      environment: mockEnvironment,
+      initialized: true,
+      plugins: [],
+      pluginSettings: {},
+      groups: {},
+      groupSettings: {},
+    } as any);
+
+    mockGetGroupSettings.mockReturnValue({
+      browserIdCookieName: 'bid_test',
+      browserIdCookieMaxAge: 31536000,
+    });
+
+    mockGetPlugin.mockReturnValue({
+      name: '@sitecore-content-sdk/personalize',
       settings: {
-        cookieSettings: { name: { guestId: '123456' } },
-        enablePersonalizeCookie: false,
+        guestIdCookieName: 'gid_test',
       },
-    };
-
-    let windowSpy: jest.Spied<typeof globalThis.Window>;
-
-    const mockFetch = () => Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
-    global.fetch = jest.fn().mockImplementation(mockFetch);
-    jest.spyOn(coreBrowserModule, 'getBrowserId').mockReturnValue(browserId);
-    jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValue(guestId);
-
-    beforeEach(() => {
-      jest.clearAllMocks();
-      windowSpy = jest.spyOn(globalThis, 'window', 'get');
-    });
-    it('should return an object with available functionality', async () => {
-      jest
-        .spyOn(coreInternalModule, 'getEnabledPackageBrowser')
-        .mockReturnValue(personalizeSettings as any);
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-
-      const getInteractiveExperienceDataSpy = jest.spyOn(
-        Personalizer.prototype,
-        'getInteractiveExperienceData'
-      );
-      const getSettingsSpy = jest
-        .spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser')
-        .mockReturnValue(settings);
-
-      expect(typeof personalize).toBe('function');
-
-      getSettingsSpy.mockReturnValue(settings);
-
-      await personalize(personalizeData);
-
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-      expect(Personalizer).toHaveBeenCalledTimes(1);
-      expect(utilsModule.getCookieValueClientSide).toHaveBeenCalledWith(
-        personalizeSettings.settings.cookieSettings.name.guestId
-      );
     });
 
-    it('should throw error if settings have not been configured properly', async () => {
-      jest
-        .spyOn(coreInternalModule, 'getEnabledPackageBrowser')
-        .mockReturnValue({ initState: true } as any);
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-
-      const getSettingsSpy = jest.spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser');
-
-      getSettingsSpy.mockImplementation(() => {
-        throw new Error(`Test error`);
-      });
-
-      await expect(async () => await personalize(personalizeData)).rejects.toThrow(`Test error`);
+    mockGetCookieValueClientSide.mockImplementation((name: string) => {
+      if (name === 'bid_test') return 'browser-id-123';
+      if (name === 'gid_test') return 'guest-id-456';
+      return '';
     });
 
-    it('should call getInteractiveExperience with timeout in opts object', async () => {
-      jest
-        .spyOn(coreInternalModule, 'getEnabledPackageBrowser')
-        .mockReturnValue(personalizeSettings as any);
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-      const getInteractiveExperienceDataSpy = jest.spyOn(
-        Personalizer.prototype,
-        'getInteractiveExperienceData'
-      );
-
-      expect(typeof personalize).toBe('function');
-
-      const getSettingsSpy = jest
-        .spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser')
-        .mockReturnValue(settings);
-
-      await personalize(personalizeData, { timeout: 100 });
-
-      const expectedOpts = { timeout: 100 };
-      const expectedData = personalizeData;
-      const expectedSettings = settings;
-
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
-        expectedData,
-        expectedSettings,
-        window.location.search,
-        expectedOpts
-      );
+    // Mock fetch
+    global.fetch = jest.fn().mockResolvedValue({
+      json: () => Promise.resolve({ ref: 'ref' }),
     });
 
-    it('should call getInteractiveExperience without opts object', async () => {
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-      const getInteractiveExperienceDataSpy = jest.spyOn(
-        Personalizer.prototype,
-        'getInteractiveExperienceData'
-      );
-
-      expect(typeof personalize).toBe('function');
-
-      const getSettingsSpy = jest
-        .spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser')
-        .mockReturnValue(settings);
-
-      await personalize(personalizeData);
-
-      const expectedOpts = { timeout: undefined };
-      const expectedData = personalizeData;
-      const expectedSettings = settings;
-
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
-        expectedData,
-        expectedSettings,
-        window.location.search,
-        expectedOpts
-      );
-    });
-
-    it('should call getInteractiveExperience without search params', async () => {
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-      const getInteractiveExperienceDataSpy = jest.spyOn(
-        Personalizer.prototype,
-        'getInteractiveExperienceData'
-      );
-
-      const getSettingsSpy = jest
-        .spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser')
-        .mockReturnValue(settings);
-
-      windowSpy.mockImplementation(
-        () =>
-          ({
-            location: {
-              search: '?utm_campaign=campaign&utm_medium=email',
-            },
-          } as any)
-      );
-
-      await personalize(personalizeData);
-
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
-        personalizeData,
-        settings,
-        '?utm_campaign=campaign&utm_medium=email',
-        { timeout: undefined }
-      );
+    // Mock window.location
+    Object.defineProperty(window, 'location', {
+      value: { search: '?utm_source=test' },
+      writable: true,
     });
   });
+
+  it('should be a function', () => {
+    expect(typeof personalize).toBe('function');
+  });
+
+  it('should call Personalizer with browser ID and guest ID from cookies', async () => {
+    await personalize(personalizeData);
+
+    expect(Personalizer).toHaveBeenCalledWith('browser-id-123', 'guest-id-456');
+  });
+
+  it('should get browser ID cookie name from tracking group settings', async () => {
+    await personalize(personalizeData);
+
+    expect(mockGetGroupSettings).toHaveBeenCalledWith('tracking');
+    expect(mockGetCookieValueClientSide).toHaveBeenCalledWith('bid_test');
+  });
+
+  it('should get guest ID cookie name from personalize plugin settings', async () => {
+    await personalize(personalizeData);
+
+    expect(mockGetPlugin).toHaveBeenCalledWith('@sitecore-content-sdk/personalize');
+    expect(mockGetCookieValueClientSide).toHaveBeenCalledWith('gid_test');
+  });
+
+  it('should build settings with config values', async () => {
+    await personalize(personalizeData);
+
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+      personalizeData,
+      expect.objectContaining({
+        sitecoreEdgeContextId: 'test-context-id',
+        sitecoreEdgeUrl: 'https://edge.example.com',
+        siteName: '',
+      }),
+      expect.any(String),
+      expect.any(Object)
+    );
+  });
+
+  it('should use default Edge URL if not provided', async () => {
+    mockGetInitState.mockReturnValue({
+      config: {
+        sitecoreContextId: 'test-context-id',
+        sitecoreEdgeUrl: undefined,
+      },
+      environment: mockEnvironment,
+      initialized: true,
+      plugins: [],
+      pluginSettings: {},
+      groups: {},
+      groupSettings: {},
+    } as any);
+
+    await personalize(personalizeData);
+
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+      personalizeData,
+      expect.objectContaining({
+        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
+      }),
+      expect.any(String),
+      expect.any(Object)
+    );
+  });
+
+  it('should pass window.location.search to Personalizer', async () => {
+    await personalize(personalizeData);
+
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+      personalizeData,
+      expect.any(Object),
+      '?utm_source=test',
+      expect.any(Object)
+    );
+  });
+
+  it('should pass timeout option', async () => {
+    await personalize(personalizeData, { timeout: 5000 });
+
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+      personalizeData,
+      expect.any(Object),
+      expect.any(String),
+      expect.objectContaining({
+        timeout: 5000,
+      })
+    );
+  });
+
+  it('should handle missing browser ID cookie name gracefully', async () => {
+    mockGetGroupSettings.mockReturnValue(undefined);
+    mockGetCookieValueClientSide.mockImplementation(() => '');
+
+    await personalize(personalizeData);
+
+    expect(Personalizer).toHaveBeenCalledWith('', '');
+  });
+
+  it('should handle missing guest ID cookie name gracefully', async () => {
+    mockGetPlugin.mockReturnValue(undefined);
+
+    await personalize(personalizeData);
+
+    expect(Personalizer).toHaveBeenCalledWith('browser-id-123', undefined);
+  });
 });
+

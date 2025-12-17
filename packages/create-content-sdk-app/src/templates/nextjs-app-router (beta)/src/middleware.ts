@@ -69,16 +69,14 @@ const personalize = new PersonalizeMiddleware({
   skip: () => false,
   // This is an example of how to provide geo data for personalization.
   // The provided callback will be called on each request to extract geo data.
-  // extractGeoDataCb: () => {
-  //   return {
-  //     city: 'Athens',
-  //     country: 'Greece',
-  //     region: 'Attica',
-  //   };
-  // },
+  env: (req, res) => {
+    console.log('banana');
+  },
 });
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
+  updateSitecoreEnvironment(req, res);
+
   return defineMiddleware(locale, multisite, redirects, personalize).exec(req, ev);
 }
 

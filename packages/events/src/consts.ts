@@ -7,6 +7,11 @@ export const PACKAGE_NAME = packageJson.name;
 export const PACKAGE_INITIALIZER_METHOD_NAME = 'addEvents';
 
 /**
+ * Default Sitecore Edge URL for events API
+ */
+export const DEFAULT_EDGE_URL = 'https://edge-platform.sitecorecloud.io';
+
+/**
  * Returns the name & version of the library in a String.
  */
 export const X_CLIENT_SOFTWARE_ID = `${PACKAGE_NAME} ${PACKAGE_VERSION}`;

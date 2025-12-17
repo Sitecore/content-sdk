@@ -133,6 +133,11 @@
       "require": "./dist/cjs/editing/index.js",
       "types": "./types/editing/index.d.ts"
     },
+    "./init": {
+      "import": "./dist/esm/init/index.js",
+      "require": "./dist/cjs/init/index.js",
+      "types": "./types/init/index.d.ts"
+    },
     "./middleware": {
       "import": "./dist/esm/middleware/index.js",
       "require": "./dist/cjs/middleware/index.js",

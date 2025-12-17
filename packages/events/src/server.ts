@@ -10,3 +10,7 @@ export {
   PACKAGE_INITIALIZER_METHOD_NAME,
 } from './consts';
 export type { PageViewData, EventData, IdentityData } from './events';
+
+// Plugin settings management
+export { updateEventsSettings, isEventsEnabled } from './plugin/events-plugin-base';
+export type { EventsPluginSettings } from './plugin/events-plugin-base';

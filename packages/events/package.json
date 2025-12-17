@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@sitecore-content-sdk/__core__": "0.1.0",
+    "@sitecore-content-sdk/core": "1.4.0-canary.2",
     "@sitecore-content-sdk/utils": "0.1.0",
     "debug": "^4.4.3"
   },
@@ -42,6 +43,11 @@
       "import": "./dist/esm/src/server.js",
       "require": "./dist/cjs/src/server.js",
       "types": "./types/src/server.d.ts"
+    },
+    "./plugin": {
+      "import": "./dist/esm/src/plugin/index.js",
+      "require": "./dist/cjs/src/plugin/index.js",
+      "types": "./types/src/plugin/index.d.ts"
     }
   },
   "files": [
