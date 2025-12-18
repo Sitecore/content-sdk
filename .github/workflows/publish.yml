@@ -80,7 +80,7 @@ jobs:
 
       - name: Pre-release version update (Canary - Lerna)
         run: |
-          npx lerna version prerelease --preid canary --message "%s [skip ci]" --yes
+          npx lerna version prerelease --preid canary --message "%s [skip ci]" --no-git-tag-version --yes
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
 
