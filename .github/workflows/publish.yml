@@ -87,6 +87,6 @@ jobs:
       - name: Pre-release canary publish (Lerna)
         run: |
           echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
-          npx lerna version prerelease --preid canary --message "%s [skip ci]" --no-git-tag-version --yes
+          npx lerna publish from-package --canary --pre-dist-tag canary --preid canary --no-verify-access --no --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
