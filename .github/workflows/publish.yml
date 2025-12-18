@@ -1,19 +1,13 @@
 name: Publish
 
 on:
-  # Canary releases (dev branch) - keep push-based for automatic canaries
+  # Trigger for canary and stable releases. (release) prefix will trigger full release - otherwise canary
   push:
     branches:
       - dev
+      - 'release/**'
     paths:
-      - "**"
-
-  # Stable releases - PR-based with (release) prefix
-  pull_request:
-    types: [closed]
-    branches:
-      - dev
-      - "release/**"
+      - '**'
 
 jobs:
   publish:
@@ -29,29 +23,23 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
-      - name: Determine checkout ref
-        id: checkout-ref
+      - name: Configure action
+        id: configure-action
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ github.event.pull_request.merged }}" == "true" ]; then
-            echo "ref=${{ github.event.pull_request.merge_commit_sha }}" >> $GITHUB_OUTPUT
+          COMMIT_MSG="${{ github.event.push.message }}"
+          if [[ "$COMMIT_MSG" =~ ^\(release\) ]]; then
+          echo "::set-output name=isFullRelease::true"
           else
-            echo "ref=${{ github.ref }}" >> $GITHUB_OUTPUT
+          echo "::set-output name=isFullRelease::false"
           fi
 
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ steps.checkout-ref.outputs.ref }}
+          ref: ${{ github.ref }}
           fetch-depth: 0
           persist-credentials: false
           token: ${{ steps.generate-token.outputs.token }}
-
-      - name: Check if PR was merged
-        if: github.event_name == 'pull_request'
-        run: |
-          if [ "${{ github.event.pull_request.merged }}" != "true" ]; then
-            echo "ℹ️ PR was closed but not merged, skipping release workflow"
-            exit 0
-          fi
 
       - name: Set git configuration
         run: |
@@ -72,21 +60,13 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Validate release PR
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+      - name: Full publish
+        if: steps.configure-action.outputs.isFullRelease == 'true'
         run: |
-          PR_TITLE="${{ github.event.pull_request.title }}"
-          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
-
-          # Check for (release) prefix
-          if [[ ! "$PR_TITLE" =~ \(release\) ]]; then
-            echo "❌ PR title must contain '(release)' prefix to trigger release"
-            echo "Current title: $PR_TITLE"
-            echo "Expected format: (release) Description"
-            exit 1
-          fi
-
-          echo "✅ Release PR validated: $PR_TITLE by $PR_AUTHOR"
+          echo "Full release triggered by commit message: ${{ github.event.head_commit.message }}"
+          npx beachball publish --token ${NPM_TOKEN}} --yes
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Generate API docs
         run: |
@@ -98,60 +78,15 @@ jobs:
             echo "No API doc changes to commit"
           fi
 
-      # CANARY RELEASES (dev branch) - Use Lerna (push-based for automatic canaries)
-      - name: Check for change files (Canary)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
-        run: |
-          echo "Running canary release workflow with Lerna"
-          echo "Branch: ${{ github.ref }}"
-
       - name: Pre-release version update (Canary - Lerna)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
         run: |
           npx lerna version prerelease --preid canary --message "%s [skip ci]" --yes
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
 
       - name: Pre-release canary publish (Lerna)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
         run: |
           echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
-          npx lerna publish from-git --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # STABLE RELEASES (release/** branches or dev) - Use Beachball (PR-based)
-      - name: Check for change files (Stable - Beachball)
-        if: |
-          github.event_name == 'pull_request' &&
-          github.event.pull_request.merged == true &&
-          contains(github.event.pull_request.title, '(release)') &&
-          (startsWith(github.event.pull_request.base.ref, 'release/') || github.event.pull_request.base.ref == 'dev')
-        run: |
-          echo "Running stable release workflow with Beachball"
-          echo "PR: ${{ github.event.pull_request.title }}"
-          echo "Base branch: ${{ github.event.pull_request.base.ref }}"
-          yarn beachball check
-
-      - name: Stable version update (Beachball)
-        if: |
-          github.event_name == 'pull_request' &&
-          github.event.pull_request.merged == true &&
-          contains(github.event.pull_request.title, '(release)') &&
-          (startsWith(github.event.pull_request.base.ref, 'release/') || github.event.pull_request.base.ref == 'dev')
-        run: |
-          yarn beachball bump --message "%s [skip ci]" --yes
-        env:
-          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-
-      - name: Stable publish (Beachball)
-        if: |
-          github.event_name == 'pull_request' &&
-          github.event.pull_request.merged == true &&
-          contains(github.event.pull_request.title, '(release)') &&
-          (startsWith(github.event.pull_request.base.ref, 'release/') || github.event.pull_request.base.ref == 'dev')
-        run: |
-          echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
-          yarn beachball publish --yes
+          npx lerna version prerelease --preid canary --message "%s [skip ci]" --no-git-tag-version --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

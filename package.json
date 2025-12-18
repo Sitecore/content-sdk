@@ -17,7 +17,7 @@
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
     "checkchange": "beachball check",
-    "change": "beachball change",
+    "change": "beachball change --no-commit",
     "release": "beachball publish"
   },
   "author": {
