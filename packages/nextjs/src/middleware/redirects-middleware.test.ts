@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable dot-notation */
@@ -3375,6 +3375,292 @@ describe('RedirectsMiddleware', () => {
       // Verify middleware was created and redirectsService is initialized
       expect(middleware).to.not.be.undefined;
       expect(middleware['redirectsService']).to.not.be.null;
+    });
+  });
+
+  describe('Server Transfer', () => {
+    describe('App Router locale fallback', () => {
+      it('[app router] should include locale in pathname even when isLanguagePreserved is false', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/en/target-page',
+          pathname: '/en/target-page',
+          origin: 'http://localhost:3000',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source-page',
+              href: 'http://localhost:3000/source-page',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 200,
+        });
+
+        // Set locale header to indicate App Router
+        res.headers.set(LOCALE_HEADER_NAME, 'en');
+
+        setupRewriteStub(200, res);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source-page',
+            target: '/target-page',
+            redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: false, // Not preserving language explicitly
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+
+        // App Router should have locale in the rewrite path even when isLanguagePreserved is false
+        const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
+        expect(rewriteHeader).to.include('/en/');
+      });
+
+      it('[app router] should use explicit locale from target when provided', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/da-DK/target-page',
+          pathname: '/da-DK/target-page',
+          origin: 'http://localhost:3000',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source-page',
+              href: 'http://localhost:3000/source-page',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 200,
+        });
+
+        // Set locale header to indicate App Router
+        res.headers.set(LOCALE_HEADER_NAME, 'en');
+
+        setupRewriteStub(200, res);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source-page',
+            target: '/da-DK/target-page', // Explicit locale in target
+            redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+
+        // Should use the explicit locale from target, not the fallback
+        const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
+        expect(rewriteHeader).to.include('/da-DK/');
+      });
+    });
+
+    describe('Site prefix preservation', () => {
+      it('[app router] should preserve site prefix from MultisiteMiddleware in Server Transfer rewrite', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/my-site/en/target-page',
+          pathname: '/my-site/en/target-page',
+          origin: 'http://localhost:3000',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source-page',
+              href: 'http://localhost:3000/source-page',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 200,
+        });
+
+        // Set locale header to indicate App Router
+        res.headers.set(LOCALE_HEADER_NAME, 'en');
+
+        // Simulate MultisiteMiddleware having already added site prefix
+        res.headers.set(REWRITE_HEADER_NAME, '/my-site/en/source-page');
+
+        setupRewriteStub(200, res);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source-page',
+            target: '/target-page',
+            redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+
+        // The rewrite should include the site prefix from the incoming x-sc-rewrite header
+        const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
+        expect(rewriteHeader).to.include('/my-site/');
+        expect(rewriteHeader).to.include('/en/');
+        expect(rewriteHeader).to.include('/target-page');
+      });
+
+      it('[app router] should work without site prefix when MultisiteMiddleware has not run', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/en/target-page',
+          pathname: '/en/target-page',
+          origin: 'http://localhost:3000',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source-page',
+              href: 'http://localhost:3000/source-page',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 200,
+        });
+
+        // Set locale header to indicate App Router
+        res.headers.set(LOCALE_HEADER_NAME, 'en');
+
+        // Simulate LocaleMiddleware having run (no site prefix, just locale)
+        res.headers.set(REWRITE_HEADER_NAME, '/en/source-page');
+
+        setupRewriteStub(200, res);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source-page',
+            target: '/target-page',
+            redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+
+        // Should work without site prefix (locale at position 0 means no site prefix)
+        const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
+        expect(rewriteHeader).to.include('/en/');
+        expect(rewriteHeader).to.include('/target-page');
+      });
+
+      it('[app router] should preserve site prefix with query string', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/my-site/en/target-page?foo=bar',
+          pathname: '/my-site/en/target-page',
+          origin: 'http://localhost:3000',
+          search: '?foo=bar',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source-page',
+              href: 'http://localhost:3000/source-page?foo=bar',
+              origin: 'http://localhost:3000',
+              search: '?foo=bar',
+              clone: cloneUrl,
+            },
+          },
+          status: 200,
+        });
+
+        // Set locale header to indicate App Router
+        res.headers.set(LOCALE_HEADER_NAME, 'en');
+
+        // Simulate MultisiteMiddleware having already added site prefix
+        res.headers.set(REWRITE_HEADER_NAME, '/my-site/en/source-page');
+
+        setupRewriteStub(200, res);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source-page',
+            target: '/target-page',
+            redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+            isQueryStringPreserved: true,
+            isLanguagePreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+
+        // Should include site prefix, locale, target, and query string
+        const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
+        expect(rewriteHeader).to.include('/my-site/');
+        expect(rewriteHeader).to.include('/en/');
+        expect(rewriteHeader).to.include('/target-page');
+      });
     });
   });
 });

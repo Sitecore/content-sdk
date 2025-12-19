@@ -1,4 +1,4 @@
-﻿import { debug } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/core';
 import {
   RedirectsService,
   RedirectsServiceConfig,
@@ -208,8 +208,11 @@ export class RedirectsMiddleware extends MiddlewareBase {
           // for pages router i18n implementation, apply default locale as backup
           url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
         } else {
-          // In App Router, we need to set the locale in the pathname, if present
-          if (targetLocale) url.pathname = `/${targetLocale}${url.pathname}`;
+          // In App Router, locale must be in the pathname for proper routing
+          // Use the target locale if specified, otherwise preserve the current language
+          // This ensures Server Transfer (rewrite) works correctly since the route structure requires locale
+          const localeToUse = targetLocale || language;
+          url.pathname = `/${localeToUse}${url.pathname}`;
         }
 
         /** return Response redirect with http code of redirect type */
@@ -427,14 +430,32 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return this.createRedirectResponse(target, res, 301, 'Moved Permanently');
       case REDIRECT_TYPE_302:
         return this.createRedirectResponse(target, res, 302, 'Found');
-      case REDIRECT_TYPE_SERVER_TRANSFER:
-        // rewrite expects a string; unwrap NextURL if needed
-        return this.rewrite(
-          typeof target === 'string' ? target : target.href,
-          req,
-          res,
-          isExternal
-        );
+      case REDIRECT_TYPE_SERVER_TRANSFER: {
+        // rewrite expects a path string; for NextURL extract pathname + search
+        let rewritePath =
+          typeof target === 'string' ? target : `${target.pathname}${target.search || ''}`;
+
+        // Check if it has a site prefix
+        // If so, preserve it for the redirect target to maintain proper routing
+        const incomingRewrite = res?.headers.get(REWRITE_HEADER_NAME);
+        if (incomingRewrite && !isExternal) {
+          // Extract locale from target path
+          const targetPathParts = rewritePath.split('/').filter(Boolean);
+          const targetLocale = targetPathParts[0];
+
+          // Find locale position in incoming rewrite to extract site prefix
+          if (targetLocale) {
+            const localePattern = `/${targetLocale}/`;
+            const localeIndex = incomingRewrite.indexOf(localePattern);
+            if (localeIndex > 0) {
+              const sitePrefix = incomingRewrite.substring(0, localeIndex);
+              rewritePath = `${sitePrefix}${rewritePath}`;
+            }
+          }
+        }
+
+        return this.rewrite(rewritePath, req, res, isExternal);
+      }
       default:
         return res;
     }
