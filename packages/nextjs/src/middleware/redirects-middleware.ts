@@ -208,11 +208,8 @@ export class RedirectsMiddleware extends MiddlewareBase {
           // for pages router i18n implementation, apply default locale as backup
           url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
         } else {
-          // In App Router, locale must be in the pathname for proper routing
-          // Use the target locale if specified, otherwise preserve the current language
-          // This ensures Server Transfer (rewrite) works correctly since the route structure requires locale
-          const localeToUse = targetLocale || language;
-          url.pathname = `/${localeToUse}${url.pathname}`;
+          // In App Router, we need to set the locale in the pathname, if present
+          if (targetLocale) url.pathname = `/${targetLocale}${url.pathname}`;
         }
 
         /** return Response redirect with http code of redirect type */
@@ -434,6 +431,19 @@ export class RedirectsMiddleware extends MiddlewareBase {
         // rewrite expects a path string; for NextURL extract pathname + search
         let rewritePath =
           typeof target === 'string' ? target : `${target.pathname}${target.search || ''}`;
+
+        // For App Router Server Transfer, ensure locale is in the path
+        // This is needed because the route structure requires [locale] segment
+        if (this.isAppRouter(res) && !isExternal) {
+          const pathParts = rewritePath.split('/').filter(Boolean);
+          const firstSegment = pathParts[0];
+          // Check if path doesn't start with a locale
+          if (!this.locales.includes(firstSegment)) {
+            // Add current language as locale prefix
+            const language = this.getLanguage(req, res);
+            rewritePath = `/${language}${rewritePath}`;
+          }
+        }
 
         // Check if it has a site prefix
         // If so, preserve it for the redirect target to maintain proper routing

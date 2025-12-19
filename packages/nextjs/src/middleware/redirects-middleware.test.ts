@@ -626,9 +626,9 @@ describe('RedirectsMiddleware', () => {
           res
         );
 
-        // rewrite path -> expect our custom rewrite header
+        // rewrite path -> expect our custom rewrite header (pathname only, not full URL)
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: { 'x-sc-rewrite': 'http://localhost:3000/found' },
+          headers: { 'x-sc-rewrite': '/found' },
           redirected: undefined,
           status: 200,
           url,
@@ -679,7 +679,7 @@ describe('RedirectsMiddleware', () => {
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: { 'x-sc-rewrite': 'http://localhost:3000/found?abc=def' },
+          headers: { 'x-sc-rewrite': '/found?abc=def' },
           redirected: undefined,
           status: 200,
           url,
@@ -3403,7 +3403,6 @@ describe('RedirectsMiddleware', () => {
           status: 200,
         });
 
-        // Set locale header to indicate App Router
         res.headers.set(LOCALE_HEADER_NAME, 'en');
 
         setupRewriteStub(200, res);
@@ -3456,7 +3455,6 @@ describe('RedirectsMiddleware', () => {
           status: 200,
         });
 
-        // Set locale header to indicate App Router
         res.headers.set(LOCALE_HEADER_NAME, 'en');
 
         setupRewriteStub(200, res);
@@ -3467,7 +3465,7 @@ describe('RedirectsMiddleware', () => {
               locales: ['en', 'da-DK'],
             },
             pattern: '/source-page',
-            target: '/da-DK/target-page', // Explicit locale in target
+            target: '/da-DK/target-page',
             redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
             isQueryStringPreserved: false,
             isLanguagePreserved: false,
@@ -3481,7 +3479,6 @@ describe('RedirectsMiddleware', () => {
         expect(fetchRedirects.called).to.be.true;
         expect(finalRes.status).to.equal(res.status);
 
-        // Should use the explicit locale from target, not the fallback
         const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
         expect(rewriteHeader).to.include('/da-DK/');
       });
@@ -3511,10 +3508,8 @@ describe('RedirectsMiddleware', () => {
           status: 200,
         });
 
-        // Set locale header to indicate App Router
         res.headers.set(LOCALE_HEADER_NAME, 'en');
 
-        // Simulate MultisiteMiddleware having already added site prefix
         res.headers.set(REWRITE_HEADER_NAME, '/my-site/en/source-page');
 
         setupRewriteStub(200, res);
@@ -3539,7 +3534,6 @@ describe('RedirectsMiddleware', () => {
         expect(fetchRedirects.called).to.be.true;
         expect(finalRes.status).to.equal(res.status);
 
-        // The rewrite should include the site prefix from the incoming x-sc-rewrite header
         const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
         expect(rewriteHeader).to.include('/my-site/');
         expect(rewriteHeader).to.include('/en/');
@@ -3569,10 +3563,8 @@ describe('RedirectsMiddleware', () => {
           status: 200,
         });
 
-        // Set locale header to indicate App Router
         res.headers.set(LOCALE_HEADER_NAME, 'en');
 
-        // Simulate LocaleMiddleware having run (no site prefix, just locale)
         res.headers.set(REWRITE_HEADER_NAME, '/en/source-page');
 
         setupRewriteStub(200, res);
@@ -3597,7 +3589,6 @@ describe('RedirectsMiddleware', () => {
         expect(fetchRedirects.called).to.be.true;
         expect(finalRes.status).to.equal(res.status);
 
-        // Should work without site prefix (locale at position 0 means no site prefix)
         const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
         expect(rewriteHeader).to.include('/en/');
         expect(rewriteHeader).to.include('/target-page');
@@ -3627,10 +3618,8 @@ describe('RedirectsMiddleware', () => {
           status: 200,
         });
 
-        // Set locale header to indicate App Router
         res.headers.set(LOCALE_HEADER_NAME, 'en');
 
-        // Simulate MultisiteMiddleware having already added site prefix
         res.headers.set(REWRITE_HEADER_NAME, '/my-site/en/source-page');
 
         setupRewriteStub(200, res);
@@ -3655,7 +3644,6 @@ describe('RedirectsMiddleware', () => {
         expect(fetchRedirects.called).to.be.true;
         expect(finalRes.status).to.equal(res.status);
 
-        // Should include site prefix, locale, target, and query string
         const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
         expect(rewriteHeader).to.include('/my-site/');
         expect(rewriteHeader).to.include('/en/');
