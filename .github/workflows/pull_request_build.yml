@@ -4,9 +4,9 @@ on:
   pull_request:
     branches:
       - dev
-      - 'release/**'
+      - "release/**"
     paths:
-      - '**'
+      - "**"
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.x
-          dotnet-quality: 'ga'
+          dotnet-quality: "ga"
 
       - name: Install dependencies
         run: |
@@ -37,6 +37,21 @@ jobs:
 
       - name: Build packages
         run: npm run build
+
+      - name: Check for beachball change files
+        run: |
+          echo "Checking for beachball change files..."
+          if [ -z "$(find change -name '*.json' 2>/dev/null)" ]; then
+            echo "⚠️ No beachball change files found in change/ directory"
+            echo "Run 'yarn beachball change' to create a change file for your changes"
+            echo "This check is informational - PR will not be blocked"
+          else
+            echo "✅ Change files found:"
+            find change -name '*.json' | head -5
+            echo ""
+            echo "Verifying change files with beachball check..."
+            npx beachball check || echo "⚠️ beachball check found issues (see above)"
+          fi
 
       - name: Lint packages
         run: |
@@ -55,9 +70,9 @@ jobs:
       - name: Generate code coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@v5
         with:
-          reports: '**/cobertura-coverage.xml'
-          targetdir: './coverlet'
-          reporttypes: 'HtmlInline;MarkdownSummaryGithub;Cobertura'
+          reports: "**/cobertura-coverage.xml"
+          targetdir: "./coverlet"
+          reporttypes: "HtmlInline;MarkdownSummaryGithub;Cobertura"
 
       - name: Upload code coverage report
         uses: actions/upload-artifact@v4

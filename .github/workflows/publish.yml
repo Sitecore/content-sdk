@@ -1,13 +1,15 @@
 name: Publish
 
 on:
-  # Trigger for canary and stable releases. (release) prefix will trigger full release - otherwise canary
+  # Trigger for canary and stable releases:
+  # - Full release: Push to release/** branch with (release) prefix in commit message
+  # - Canary release: Push to dev branch (without (release) prefix)
   push:
     branches:
       - dev
-      - 'release/**'
+      - "release/**"
     paths:
-      - '**'
+      - "**"
 
 jobs:
   publish:
@@ -26,11 +28,13 @@ jobs:
       - name: Configure action
         id: configure-action
         run: |
-          COMMIT_MSG="${{ github.event.push.message }}"
+          # Check commit message for (release) prefix to determine if this is a full release
+          # For push events, head_commit.message contains the commit message
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
           if [[ "$COMMIT_MSG" =~ ^\(release\) ]]; then
-          echo "::set-output name=isFullRelease::true"
+            echo "isFullRelease=true" >> $GITHUB_OUTPUT
           else
-          echo "::set-output name=isFullRelease::false"
+            echo "isFullRelease=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Checkout repository
@@ -60,32 +64,40 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Full publish
+      - name: Full release - Publish to npm (Lerna)
         if: steps.configure-action.outputs.isFullRelease == 'true'
         run: |
           echo "Full release triggered by commit message: ${{ github.event.head_commit.message }}"
-          npx beachball publish --token ${NPM_TOKEN}} --yes
+          echo "Publishing packages to npm using lerna (versions should already be bumped by beachball bump in PR)..."
+          echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+          npx lerna publish from-package --no-verify-access --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Generate API docs
+        # Generate API docs for both full releases and canary releases
         run: |
           yarn generate-docs
           if [ -n "$(git status --porcelain)" ]; then
             git add ./ref-docs/**/*
-            git commit -m "Update API docs"
+            git commit -m "Update API docs" || echo "⚠️ Failed to commit API docs (may already be committed)"
+            git push origin HEAD:${{ github.ref_name }} || echo "⚠️ Failed to push API docs (may already be pushed or no changes)"
           else
             echo "No API doc changes to commit"
           fi
 
       - name: Pre-release version update (Canary - Lerna)
+        if: steps.configure-action.outputs.isFullRelease != 'true' && github.ref_name == 'dev'
         run: |
+          echo "Creating canary release on dev branch..."
           npx lerna version prerelease --preid canary --message "%s [skip ci]" --no-git-tag-version --yes
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
 
       - name: Pre-release canary publish (Lerna)
+        if: steps.configure-action.outputs.isFullRelease != 'true' && github.ref_name == 'dev'
         run: |
+          echo "Publishing canary packages to npm..."
           echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
           npx lerna publish from-package --canary --pre-dist-tag canary --preid canary --no-verify-access --no --yes
         env:

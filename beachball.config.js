@@ -4,6 +4,9 @@ module.exports = {
   // Independent versioning mode
   disallowedChangeTypes: [],
 
+  // Explicitly enable changelog generation
+  generateChangelog: true,
+
   // Packages to include
   packages: {
     'packages/core': {
@@ -32,9 +35,9 @@ module.exports = {
   // Automatically update dependent packages
   bumpDeps: true,
 
-  // Generate changelogs
+  // Generate changelogs that includes commit links
   changelog: {
-    customRenderers: changelog,
+    customRenderers: changelog, // Custom renderer adds commit links to entries
     groups: [
       {
         mainPackageName: '@sitecore-content-sdk/nextjs',

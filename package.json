@@ -18,6 +18,7 @@
     "changeset:publish": "changeset publish",
     "checkchange": "beachball check",
     "change": "beachball change --no-commit",
+    "bump": "beachball bump --keep-change-files",
     "release": "beachball publish"
   },
   "author": {
