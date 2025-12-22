@@ -8,7 +8,7 @@
 
 > **pageName**(): `string`
 
-Defined in: [src/infer/infer.ts:17](https://github.com/Sitecore/content-sdk/blob/b9eabc8ce098d7517165f563b75988b7b13408e0/packages/__core__/src/infer/infer.ts#L17)
+Defined in: [src/infer/infer.ts:17](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/__core__/src/infer/infer.ts#L17)
 
 Returns the name of the current page extracted from the URL's pathname.
 If it's the home page, it returns `Home Page`.

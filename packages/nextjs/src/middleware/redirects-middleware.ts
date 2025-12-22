@@ -1,4 +1,4 @@
-﻿import { debug } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/core';
 import {
   RedirectsService,
   RedirectsServiceConfig,
@@ -427,14 +427,45 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return this.createRedirectResponse(target, res, 301, 'Moved Permanently');
       case REDIRECT_TYPE_302:
         return this.createRedirectResponse(target, res, 302, 'Found');
-      case REDIRECT_TYPE_SERVER_TRANSFER:
-        // rewrite expects a string; unwrap NextURL if needed
-        return this.rewrite(
-          typeof target === 'string' ? target : target.href,
-          req,
-          res,
-          isExternal
-        );
+      case REDIRECT_TYPE_SERVER_TRANSFER: {
+        // rewrite expects a path string; for NextURL extract pathname + search
+        let rewritePath =
+          typeof target === 'string' ? target : `${target.pathname}${target.search || ''}`;
+
+        // For App Router Server Transfer, ensure locale is in the path
+        // This is needed because the route structure requires [locale] segment
+        if (this.isAppRouter(res) && !isExternal) {
+          const pathParts = rewritePath.split('/').filter(Boolean);
+          const firstSegment = pathParts[0];
+          // Check if path doesn't start with a locale
+          if (!this.locales.includes(firstSegment)) {
+            // Add current language as locale prefix
+            const language = this.getLanguage(req, res);
+            rewritePath = `/${language}${rewritePath}`;
+          }
+        }
+
+        // Check if it has a site prefix
+        // If so, preserve it for the redirect target to maintain proper routing
+        const incomingRewrite = res?.headers.get(REWRITE_HEADER_NAME);
+        if (incomingRewrite && !isExternal) {
+          // Extract locale from target path
+          const targetPathParts = rewritePath.split('/').filter(Boolean);
+          const targetLocale = targetPathParts[0];
+
+          // Find locale position in incoming rewrite to extract site prefix
+          if (targetLocale) {
+            const localePattern = `/${targetLocale}/`;
+            const localeIndex = incomingRewrite.indexOf(localePattern);
+            if (localeIndex > 0) {
+              const sitePrefix = incomingRewrite.substring(0, localeIndex);
+              rewritePath = `${sitePrefix}${rewritePath}`;
+            }
+          }
+        }
+
+        return this.rewrite(rewritePath, req, res, isExternal);
+      }
       default:
         return res;
     }

@@ -8,7 +8,7 @@
 
 > **getCookieValueFromRequest**\<`T`\>(`request`, `cookieName`): `string`
 
-Defined in: [src/cookie/get-cookie-value-from-request.ts:15](https://github.com/Sitecore/content-sdk/blob/b9eabc8ce098d7517165f563b75988b7b13408e0/packages/__core__/src/cookie/get-cookie-value-from-request.ts#L15)
+Defined in: [src/cookie/get-cookie-value-from-request.ts:15](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/__core__/src/cookie/get-cookie-value-from-request.ts#L15)
 
 Retrieves the cookie value from the provided request object, using the specified `cookieName`.
 

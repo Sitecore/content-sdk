@@ -8,7 +8,7 @@
 
 > **isValidEmail**(`email`): `boolean`
 
-Defined in: [validators/is-valid-email.ts:6](https://github.com/Sitecore/content-sdk/blob/b9eabc8ce098d7517165f563b75988b7b13408e0/packages/utils/src/validators/is-valid-email.ts#L6)
+Defined in: [validators/is-valid-email.ts:6](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/utils/src/validators/is-valid-email.ts#L6)
 
 Validates whether the provided value matches a basic email pattern.
 

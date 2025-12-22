@@ -6,7 +6,7 @@
 
 # Interface: Field\<T\>
 
-Defined in: [packages/core/src/layout/models.ts:129](https://github.com/Sitecore/content-sdk/blob/b9eabc8ce098d7517165f563b75988b7b13408e0/packages/core/src/layout/models.ts#L129)
+Defined in: [packages/core/src/layout/models.ts:129](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/core/src/layout/models.ts#L129)
 
 Field interface
 
@@ -26,7 +26,7 @@ Field interface
 
 > `optional` **metadata**: `object`
 
-Defined in: [packages/core/src/layout/models.ts:138](https://github.com/Sitecore/content-sdk/blob/b9eabc8ce098d7517165f563b75988b7b13408e0/packages/core/src/layout/models.ts#L138)
+Defined in: [packages/core/src/layout/models.ts:138](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/core/src/layout/models.ts#L138)
 
 #### Index Signature
 
@@ -42,4 +42,4 @@ Defined in: [packages/core/src/layout/models.ts:138](https://github.com/Sitecore
 
 > **value**: `T`
 
-Defined in: [packages/core/src/layout/models.ts:130](https://github.com/Sitecore/content-sdk/blob/b9eabc8ce098d7517165f563b75988b7b13408e0/packages/core/src/layout/models.ts#L130)
+Defined in: [packages/core/src/layout/models.ts:130](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/core/src/layout/models.ts#L130)
