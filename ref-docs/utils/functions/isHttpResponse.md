@@ -8,7 +8,7 @@
 
 > **isHttpResponse**(`response`): `response is HttpResponse`
 
-Defined in: [typeguards/is-http-response.ts:8](https://github.com/Sitecore/content-sdk/blob/b9eabc8ce098d7517165f563b75988b7b13408e0/packages/utils/src/typeguards/is-http-response.ts#L8)
+Defined in: [typeguards/is-http-response.ts:8](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/utils/src/typeguards/is-http-response.ts#L8)
 
 Determines whether the given response is an HTTP response instance.
 
