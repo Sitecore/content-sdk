@@ -12,7 +12,10 @@
     "generate-docs": "lerna run generate-docs",
     "api-extractor": "lerna run api-extractor",
     "api-extractor:verify": "lerna run api-extractor:verify",
-    "version": "yarn install && git stage yarn.lock"
+    "version": "yarn install && git stage yarn.lock",
+    "checkchange": "beachball check",
+    "change": "beachball change --no-commit",
+    "prep-release": "beachball bump"
   },
   "author": {
     "name": "Sitecore Corporation",
@@ -24,11 +27,13 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@microsoft/api-extractor": "^7.55.0",
     "@rushstack/eslint-patch": "^1.10.3",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",
+    "beachball": "2.60.1",
     "eslint": "^9.32.0",
     "eslint-config-next": "15.4.6",
     "eslint-config-prettier": "^10.1.8",
@@ -37,7 +42,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "lerna": "^5.6.2",
+    "lerna": "^9.0.3",
     "prettier": "^2.8.0",
     "typedoc": "^0.28.4",
     "typedoc-plugin-markdown": "^4.6.3",
@@ -51,5 +56,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "@rushstack/eslint-patch": "1.12.0"
   },
-  "packageManager": "yarn@3.1.0"
+  "packageManager": "yarn@3.1.0",
+  "dependencies": {
+    "conventional-changelog": "^7.1.1"
+  }
 }

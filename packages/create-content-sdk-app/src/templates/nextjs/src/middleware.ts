@@ -1,4 +1,4 @@
-import { type NextRequest, type NextFetchEvent } from 'next/server';
+import { type NextRequest, type NextFetchEvent, NextResponse } from 'next/server';
 import {
   defineMiddleware,
   MultisiteMiddleware,
@@ -9,8 +9,13 @@ import sites from '.sitecore/sites.json';
 import scConfig from 'sitecore.config';
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
+  // Skip middlewares only if neither Edge nor local API configuration is available.
+  // Middlewares can work with either Edge (contextId) or local (apiHost/apiKey) configuration.
+  if (!scConfig.api?.edge?.contextId && !scConfig.api?.local?.apiHost) {
+    return NextResponse.next();
+  }
+
   // Instantiate middlewares - they will use Edge config if available, otherwise fall back to local config
-  // Each middleware will skip processing if required API configuration is not available
   const multisite = new MultisiteMiddleware({
     /**
      * List of sites for site resolver to work with

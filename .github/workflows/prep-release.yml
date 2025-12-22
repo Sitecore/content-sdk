@@ -1,0 +1,150 @@
+name: Prepare Release Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_pattern:
+        description: 'Version pattern (e.g., 1.3.x)'
+        required: true
+        type: string
+      release_type:
+        description: 'Release type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      base_tag:
+        description: 'Base git tag (e.g., v1.3.0)'
+        required: true
+        type: string
+
+jobs:
+  prep-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Set git configuration
+        run: |
+          git config --global user.email builds@sitecore.com
+          git config --global user.name "content-sdk-bot"
+          git remote set-url origin https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}
+
+      - name: Verify base tag exists
+        run: |
+          BASE_TAG="${{ inputs.base_tag }}"
+          if ! git rev-parse "$BASE_TAG" >/dev/null 2>&1; then
+            echo "❌ Tag $BASE_TAG does not exist"
+            echo "Available tags:"
+            git tag --list | tail -10
+            exit 1
+          fi
+          echo "✅ Tag $BASE_TAG exists"
+
+      - name: Check if branch already exists
+        id: check-branch
+        run: |
+          BRANCH_NAME="release/${{ inputs.version_pattern }}"
+          if git ls-remote --heads origin "$BRANCH_NAME" | grep -q "$BRANCH_NAME"; then
+            echo "⚠️ Branch $BRANCH_NAME already exists"
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Branch $BRANCH_NAME does not exist"
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: |
+          yarn cache clean --all
+          yarn install --immutable
+
+      - name: Create release branch
+        if: steps.check-branch.outputs.exists == 'false'
+        run: |
+          BASE_TAG="${{ inputs.base_tag }}"
+          BRANCH_NAME="release/${{ inputs.version_pattern }}"
+
+          echo "Creating branch $BRANCH_NAME from tag $BASE_TAG"
+          git checkout -b "$BRANCH_NAME" "$BASE_TAG" || {
+            echo "❌ Failed to create branch $BRANCH_NAME"
+            exit 1
+          }
+          git push -u origin "$BRANCH_NAME" || {
+            echo "❌ Failed to push branch $BRANCH_NAME"
+            exit 1
+          }
+
+          echo "✅ Branch $BRANCH_NAME created and pushed"
+
+      - name: Branch already exists
+        if: steps.check-branch.outputs.exists == 'true'
+        run: |
+          BRANCH_NAME="release/${{ inputs.version_pattern }}"
+          echo "⚠️ Branch $BRANCH_NAME already exists"
+          echo "If you want to use it, checkout the branch manually:"
+          echo "  git checkout $BRANCH_NAME"
+          echo "If you want to recreate it, delete the branch first:"
+          echo "  git push origin --delete $BRANCH_NAME"
+
+      - name: Prepare release - Bump versions (optional)
+        if: steps.check-branch.outputs.exists == 'false'
+        run: |
+          BRANCH_NAME="release/${{ inputs.version_pattern }}"
+          echo "Checking if change files exist..."
+          if [ -n "$(find change -name '*.json' 2>/dev/null)" ]; then
+            echo "Change files found. Bumping versions and generating changelogs..."
+            npx beachball bump --keep-change-files --yes || echo "⚠️ No changes to bump or bump failed"
+            if [ -n "$(git status --porcelain)" ]; then
+              echo "Committing version bumps and changelogs..."
+              git add .
+              git commit -m "chore: bump versions and update changelogs for release ${{ inputs.version_pattern }}" || {
+                echo "⚠️ Failed to commit version bumps (may already be committed)"
+                exit 0
+              }
+              git push origin "$BRANCH_NAME" || {
+                echo "⚠️ Failed to push version bumps (may already be pushed or no changes)"
+                exit 0
+              }
+              echo "✅ Versions bumped and committed to $BRANCH_NAME"
+            else
+              echo "⚠️ No version changes to commit"
+            fi
+          else
+            echo "⚠️ No change files found. Create change files first with: yarn beachball change"
+          fi
+
+      - name: Summary
+        run: |
+          BRANCH_NAME="release/${{ inputs.version_pattern }}"
+          echo "## Release Branch Prepared" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Branch:** \`$BRANCH_NAME\`" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Base tag:** \`${{ inputs.base_tag }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Release type:** \`${{ inputs.release_type }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Checkout the branch: \`git checkout $BRANCH_NAME\`" >> $GITHUB_STEP_SUMMARY
+          echo "2. Make your patch changes" >> $GITHUB_STEP_SUMMARY
+          echo "3. Create change files: \`yarn beachball change\` (select patch)" >> $GITHUB_STEP_SUMMARY
+          echo "4. Run \`yarn bump\` to update versions and generate changelogs (or let prep-release do it)" >> $GITHUB_STEP_SUMMARY
+          echo "5. Create PR with title: \`(release) Patch release ${{ inputs.version_pattern }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "6. Merge PR to trigger release (lerna will publish already-bumped versions)" >> $GITHUB_STEP_SUMMARY
