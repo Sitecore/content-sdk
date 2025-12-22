@@ -111,4 +111,15 @@ describe('RobotsMiddleware', () => {
     expect(res.status).to.have.been.calledWith(200);
     expect(res.send).to.have.been.calledWith('User-agent: *\nDisallow: /');
   });
+
+  it('should use x-forwarded-host header when present', async () => {
+    req.headers = {
+      'x-forwarded-host': 'proxy.forwarded.com',
+      host: 'localhost:3000',
+    };
+
+    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+
+    expect(siteResolverStub.getByHost).to.have.been.calledWith('proxy.forwarded.com');
+  });
 });

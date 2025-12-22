@@ -1,8 +1,8 @@
-import { SitecoreClient, SitemapXmlOptions } from "@sitecore-content-sdk/core/client";
-import { SiteInfo, SiteResolver } from "@sitecore-content-sdk/core/site";
-import { debug } from "@sitecore-content-sdk/core";
-import { NextRequest } from "next/server";
-import { unstable_cache } from "next/cache";
+import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/core/client';
+import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
+import { debug } from '@sitecore-content-sdk/core';
+import { NextRequest } from 'next/server';
+import { unstable_cache } from 'next/cache';
 
 type RouteHandlerOptions = {
   /**
@@ -34,7 +34,7 @@ export function createSitemapRouteHandler(options: RouteHandlerOptions) {
 
   const getOptions = (req: NextRequest): SitemapXmlOptions => {
     const id = req.nextUrl.pathname.match(/^\/sitemap-(\d+)\.xml$/i)?.[1] || '';
-    const reqHost = req.headers.get('host') || '';
+    const reqHost = req.headers.get('x-forwarded-host') || req.headers.get('host') || '';
     const reqProtocol = req.headers.get('x-forwarded-proto') || 'https';
     const site = siteResolver.getByHost(reqHost);
 

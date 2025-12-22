@@ -862,6 +862,33 @@ describe('editing/utils', () => {
 
       expect(result).to.equal('http://localhost:3000');
     });
+
+    it('should prioritize x-forwarded-host over host header (NextApiRequest)', () => {
+      const req = {
+        headers: {
+          'x-forwarded-host': 'forwarded.com',
+          host: 'localhost:3000',
+        },
+      } as NextApiRequest;
+
+      const result = resolveServerUrl(req);
+
+      expect(result).to.equal('http://forwarded.com');
+    });
+
+    it('should use x-forwarded-host header when present (NextRequest)', () => {
+      const headers = new Headers();
+      headers.set('x-forwarded-host', 'proxy.example.com');
+      headers.set('host', 'internal-host.local');
+
+      const req = {
+        headers,
+      } as NextRequest;
+
+      const result = resolveServerUrl(req);
+
+      expect(result).to.equal('http://proxy.example.com');
+    });
   });
 
   describe('getCSPHeader', () => {
