@@ -6,7 +6,7 @@
 
 # Class: SiteResolver
 
-Defined in: [packages/core/src/site/site-resolver.ts:10](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/core/src/site/site-resolver.ts#L10)
+Defined in: [packages/core/src/site/site-resolver.ts:10](https://github.com/Sitecore/content-sdk/blob/4ac6c0b08031d0f8d3e3046612ef022854196c98/packages/core/src/site/site-resolver.ts#L10)
 
 Resolves site based on the provided host or site name
 
@@ -16,7 +16,7 @@ Resolves site based on the provided host or site name
 
 > **new SiteResolver**(`sites`): `SiteResolver`
 
-Defined in: [packages/core/src/site/site-resolver.ts:14](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/core/src/site/site-resolver.ts#L14)
+Defined in: [packages/core/src/site/site-resolver.ts:14](https://github.com/Sitecore/content-sdk/blob/4ac6c0b08031d0f8d3e3046612ef022854196c98/packages/core/src/site/site-resolver.ts#L14)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/site/site-resolver.ts:14](https://github.com/Site
 
 > `readonly` **sites**: [`SiteInfo`](../type-aliases/SiteInfo.md)[]
 
-Defined in: [packages/core/src/site/site-resolver.ts:14](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/core/src/site/site-resolver.ts#L14)
+Defined in: [packages/core/src/site/site-resolver.ts:14](https://github.com/Sitecore/content-sdk/blob/4ac6c0b08031d0f8d3e3046612ef022854196c98/packages/core/src/site/site-resolver.ts#L14)
 
 Array of sites to be used in resolution
 
@@ -44,7 +44,7 @@ Array of sites to be used in resolution
 
 > **getByHost**(`hostName`): [`SiteInfo`](../type-aliases/SiteInfo.md)
 
-Defined in: [packages/core/src/site/site-resolver.ts:22](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/core/src/site/site-resolver.ts#L22)
+Defined in: [packages/core/src/site/site-resolver.ts:22](https://github.com/Sitecore/content-sdk/blob/4ac6c0b08031d0f8d3e3046612ef022854196c98/packages/core/src/site/site-resolver.ts#L22)
 
 Resolve site by host name
 
@@ -70,7 +70,7 @@ if a matching site is not found
 
 > **getByName**(`siteName`): [`SiteInfo`](../type-aliases/SiteInfo.md) \| `undefined`
 
-Defined in: [packages/core/src/site/site-resolver.ts:36](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/core/src/site/site-resolver.ts#L36)
+Defined in: [packages/core/src/site/site-resolver.ts:36](https://github.com/Sitecore/content-sdk/blob/4ac6c0b08031d0f8d3e3046612ef022854196c98/packages/core/src/site/site-resolver.ts#L36)
 
 Resolve site by site name
 
@@ -92,7 +92,7 @@ the resolved site or undefined if not found
 
 > `protected` **getHostMap**(): `Map`\<`string`, [`SiteInfo`](../type-aliases/SiteInfo.md)\>
 
-Defined in: [packages/core/src/site/site-resolver.ts:44](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/core/src/site/site-resolver.ts#L44)
+Defined in: [packages/core/src/site/site-resolver.ts:44](https://github.com/Sitecore/content-sdk/blob/4ac6c0b08031d0f8d3e3046612ef022854196c98/packages/core/src/site/site-resolver.ts#L44)
 
 #### Returns
 
@@ -104,7 +104,7 @@ Defined in: [packages/core/src/site/site-resolver.ts:44](https://github.com/Site
 
 > `protected` **matchesPattern**(`hostname`, `pattern`): `boolean`
 
-Defined in: [packages/core/src/site/site-resolver.ts:73](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/core/src/site/site-resolver.ts#L73)
+Defined in: [packages/core/src/site/site-resolver.ts:73](https://github.com/Sitecore/content-sdk/blob/4ac6c0b08031d0f8d3e3046612ef022854196c98/packages/core/src/site/site-resolver.ts#L73)
 
 #### Parameters
 
