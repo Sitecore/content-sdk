@@ -47,7 +47,10 @@ export const createRobotsRouteHandler = (options: RouteHandlerOptions) => {
     try {
       const startTimestamp = Date.now();
 
-      const hostName = req.headers.get('host')?.split(':')[0] || 'localhost';
+      const hostName =
+        req.headers.get('x-forwarded-host') ||
+        req.headers.get('host')?.split(':')[0] ||
+        'localhost';
       const site = siteResolver.getByHost(hostName);
 
       debug.robots('robots route handler start: %o', {

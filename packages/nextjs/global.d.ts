@@ -19,3 +19,9 @@ declare namespace NodeJS {
     HTMLElement: HTMLElement;
   }
 }
+
+declare module 'http' {
+  interface IncomingHttpHeaders {
+    'x-forwarded-host'?: string | undefined;
+  }
+}

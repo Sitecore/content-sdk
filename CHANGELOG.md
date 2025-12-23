@@ -33,6 +33,7 @@ Our versioning strategy is as follows:
 * `[nextjs]` Add "use client" directive to import-map.ts for React hooks compatibility ([#326](https://github.com/Sitecore/content-sdk/pull/326))
 * `[nextjs]` `[template/nextjs]` `[template/nextjs-app-router]` Fix middleware initialization errors when API configuration is missing ([#325](https://github.com/Sitecore/content-sdk/pull/325))
 * `[nextjs]` Fixes Server Transfer (rewrite) redirects ([#329](https://github.com/Sitecore/content-sdk/pull/329))
+* `[nextjs]` Sitecore Content SDK does not support X-Forwarded-Host, causing incorrect hostname resolution behind proxies ([#330](https://github.com/Sitecore/content-sdk/pull/330))
 
 ## 1.3.1
 

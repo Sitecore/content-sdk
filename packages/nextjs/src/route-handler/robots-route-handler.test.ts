@@ -114,6 +114,21 @@ describe('createRobotsRouteHandler', () => {
     expect(res.body).to.equal('User-agent: *\nDisallow: /');
   });
 
+  it('should use x-forwarded-host header when present', async () => {
+    const req = {
+      headers: new Headers({
+        'x-forwarded-host': 'example.com',
+        host: 'localhost:3000',
+      }),
+    };
+
+    sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
+
+    await handler.GET(req as NextRequest);
+
+    expect(sitecoreClientStub.getRobots).to.have.been.calledWith('test-site');
+  });
+
   it('should cache the response for default revalidate time', async () => {
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
 

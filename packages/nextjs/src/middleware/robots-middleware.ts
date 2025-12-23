@@ -22,7 +22,8 @@ export class RobotsMiddleware {
   private async handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     res.setHeader('Content-Type', 'text/plain');
 
-    const hostName = req.headers.host?.split(':')[0] || 'localhost';
+    const hostName =
+      req.headers['x-forwarded-host'] || req.headers.host?.split(':')[0] || 'localhost';
     const site = this.siteResolver.getByHost(hostName);
 
     try {
