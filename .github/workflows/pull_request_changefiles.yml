@@ -1,0 +1,83 @@
+name: Check if changeset files present
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - 'release/**'
+
+jobs:
+  check-change-files:
+    runs-on: ubuntu-latest
+    # Skip this check for release PRs (title starts with [chore], [release] or (release))
+    if: ${{ !startsWith(github.event.pull_request.title, '[chore]') && !startsWith(github.event.pull_request.title, '[release]') && !startsWith(github.event.pull_request.title, '(release)') }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Check for changeset files
+        id: check-changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Checking for changeset files in PR #${{ github.event.pull_request.number }}..."
+
+          # Get list of files changed in this PR
+          CHANGED_FILES=$(gh pr view ${{ github.event.pull_request.number }} --json files --jq '.files[].path')
+
+          # Check if any changed files are changeset files (.md files in .changeset/ directory, excluding README.md)
+          CHANGE_FILES=$(echo "$CHANGED_FILES" | grep -E '^\.changeset/.*\.md$' | grep -v 'README.md' || true)
+
+          if [ -z "$CHANGE_FILES" ]; then
+            echo "::warning::⚠️ No changeset files found in this PR."
+            echo "found=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Changeset files found in PR:"
+            echo "$CHANGE_FILES"
+            echo "found=true" >> $GITHUB_OUTPUT
+            echo "files<<EOF" >> $GITHUB_OUTPUT
+            echo "$CHANGE_FILES" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate warning comment
+        if: steps.check-changes.outputs.found == 'false'
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          cat > change-files-comment.md << EOF
+          ## ⚠️ Changeset Files Missing
+
+          @${PR_AUTHOR}, no changeset files were found in this PR.
+
+          If this PR includes changes that should be released, please run the following command and commit the generated changeset file:
+
+          \`\`\`bash
+          yarn changeset
+          \`\`\`
+
+          You can continue with the merge if this is a chore PR that doesn't require a changelog entry.
+          EOF
+
+      - name: Generate success comment
+        if: steps.check-changes.outputs.found == 'true'
+        env:
+          CHANGE_FILES: ${{ steps.check-changes.outputs.files }}
+        run: |
+          cat > change-files-comment.md << EOF
+          ## ✅ Changeset Files Found
+
+          The following changeset files were found in this PR:
+
+          \`\`\`
+          ${CHANGE_FILES}
+          \`\`\`
+          EOF
+
+      - name: Post PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: Changeset Files Check
+          path: change-files-comment.md

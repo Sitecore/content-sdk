@@ -30,17 +30,17 @@
   "dependencies": {
     "@sitecore-cloudsdk/core": "^0.5.4",
     "@sitecore-cloudsdk/events": "^0.5.4",
-    "@sitecore-content-sdk/nextjs": "<%- version %>",
+    "@sitecore-content-sdk/nextjs": "<%- versions['@sitecore-content-sdk/nextjs'] %>",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",
-    "next": "^15.5.9",
+    "next": "^15.5.7",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "next-intl": "^4.3.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@sitecore-content-sdk/cli": "<%- version %>",
+    "@sitecore-content-sdk/cli": "<%- versions['@sitecore-content-sdk/cli'] %>",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22.15.14",
     "@types/react": "^19.2.7",

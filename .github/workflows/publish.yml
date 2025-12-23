@@ -1,6 +1,9 @@
 name: Publish
 
 on:
+  # Trigger for canary and stable releases:
+  # - Full release: Push to release/** branch with (release) prefix in commit message
+  # - Canary release: Push to dev branch (without (release) prefix)
   push:
     branches:
       - dev
@@ -22,7 +25,20 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
-      - uses: actions/checkout@v4
+      - name: Configure action
+        id: configure-action
+        run: |
+          # Check commit message for (release) prefix to determine if this is a full release
+          # For push events, head_commit.message contains the commit message
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          if [[ "$COMMIT_MSG" =~ ^\(release\) ]]; then
+            echo "isFullRelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "isFullRelease=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
@@ -48,21 +64,51 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Generate API docs
+      - name: Full release (conditional) - Publish to npm
+        if: steps.configure-action.outputs.isFullRelease == 'true'
         run: |
-          yarn generate-docs
-          git add ./ref-docs/**/*
-          git commit -m "Update API docs"
-
-      - name: Pre-release version update
-        run: |
-          npx lerna version prerelease --exact --preid canary --force-publish --message "%s [skip ci]" --yes
-        env:
-          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-
-      - name: Pre-release canary publish
-        run: |
-          echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
-          npx lerna publish from-git --exact --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
+          echo "Full release triggered by commit message: ${{ github.event.head_commit.message }}"
+          echo "Publishing packages to npm using changesets (versions should already be bumped by changeset version in PR)..."
+          echo "registry=https://${NPM_REGISTRY}/" > .npmrc
+          echo "@sitecore-content-sdk:registry=https://${NPM_REGISTRY}/" >> .npmrc
+          echo "//${NPM_REGISTRY}/:_authToken=${NPM_TOKEN}" >> .npmrc
+          npx lerna publish from-package --no-verify-access --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+
+      - name: Generate API docs
+        # Generate API docs for both full releases and canary releases
+        run: |
+          yarn generate-docs
+          if [ -n "$(git status --porcelain)" ]; then
+            git add ./ref-docs/**/*
+            git commit -m "Update API docs [skip ci]" || echo "⚠️ Failed to commit API docs (may already be committed)"
+            git push origin HEAD:${{ github.ref_name }} || echo "⚠️ Failed to push API docs (may already be pushed or no changes)"
+          else
+            echo "No API doc changes to commit"
+          fi
+
+      - name: Pre-release version update (Canary)
+        if: steps.configure-action.outputs.isFullRelease != 'true' && github.ref_name == 'dev'
+        run: |
+          echo "Creating canary release on dev branch (no tags)..."
+          npx lerna version prerelease --preid canary --message "%s [skip ci]" --sign-git-tag false --yes --no-git-tag-version
+          echo "Fixing dependency ranges (removing carets from canary versions)..."
+          node scripts/fix-dependency-ranges.js
+          git commit -a -m "chore: bump versions for canary release [skip ci]"
+          git push origin dev
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Pre-release canary publish
+        if: steps.configure-action.outputs.isFullRelease != 'true' && github.ref_name == 'dev'
+        run: |
+          echo "Publishing canary packages to npm..."
+          echo "registry=https://${NPM_REGISTRY}/" > .npmrc
+          echo "@sitecore-content-sdk:registry=https://${NPM_REGISTRY}/" >> .npmrc
+          echo "//${NPM_REGISTRY}/:_authToken=${NPM_TOKEN}" >> .npmrc
+          npx lerna publish from-package --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
