@@ -19,7 +19,6 @@ lerna-debug.log
 coverage/
 /badges
 packages/*/*.tgz
-samples/
 
 .idea
 .next
@@ -27,3 +26,5 @@ samples/
 .npmrc
 
 packages/*/temp/
+/samples/*
+!/samples/angular/
