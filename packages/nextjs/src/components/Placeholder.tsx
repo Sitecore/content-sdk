@@ -24,7 +24,10 @@ export const Placeholder = (props: PlaceholderProps) => {
   return (
     <ReactPlaceholder
       {...props}
+      re
       modifyComponentProps={(initialProps) => {
+        initialProps = props.modifyComponentProps?.(initialProps) ?? initialProps;
+
         if (!initialProps.rendering.uid) return initialProps;
 
         const data = componentPropsContext[initialProps.rendering.uid] as {
