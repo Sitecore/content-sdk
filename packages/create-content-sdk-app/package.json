@@ -12,7 +12,7 @@
     "coverage": "nyc npm test"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "repository": {
     "type": "git",

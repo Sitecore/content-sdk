@@ -20,7 +20,7 @@
     "api-extractor:verify": "api-extractor run"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "author": {
     "name": "Sitecore Corporation",

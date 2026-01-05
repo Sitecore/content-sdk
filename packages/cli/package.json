@@ -18,7 +18,7 @@
     "coverage": "nyc --require ts-node/register/transpile-only npm test"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "preferGlobal": true,
   "bin": {
