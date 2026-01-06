@@ -3574,7 +3574,7 @@ __metadata:
     "@types/chai": "npm:^5.2.2"
     "@types/inquirer": "npm:^9.0.9"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.10.4"
     "@types/resolve": "npm:^1.20.6"
     "@types/sinon": "npm:^17.0.4"
     "@types/tmp": "npm:^0.2.6"
@@ -3621,7 +3621,7 @@ __metadata:
     "@types/jsdom": "npm:^21.1.7"
     "@types/memory-cache": "npm:^0.2.6"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.10.4"
     "@types/proxyquire": "npm:^1.3.31"
     "@types/sinon": "npm:^17.0.4"
     "@types/sinon-chai": "npm:^4.0.0"
@@ -3703,7 +3703,7 @@ __metadata:
     "@types/chai": "npm:^5.2.2"
     "@types/chai-string": "npm:^1.4.5"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.10.4"
     "@types/proxyquire": "npm:^1.3.31"
     "@types/react": "npm:^19.2.7"
     "@types/react-dom": "npm:^19.2.3"
@@ -3795,7 +3795,7 @@ __metadata:
     "@types/chai": "npm:^5.2.2"
     "@types/chai-string": "npm:^1.4.5"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.10.4"
     "@types/proxyquire": "npm:^1.3.31"
     "@types/react": "npm:^19.2.7"
     "@types/react-dom": "npm:^19.2.3"
@@ -4305,7 +4305,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^24.1.0":
+"@types/node@npm:^24.10.4":
   version: 24.10.4
   resolution: "@types/node@npm:24.10.4"
   dependencies:
@@ -6384,7 +6384,7 @@ __metadata:
     "@types/inquirer": "npm:^9.0.8"
     "@types/minimist": "npm:^1.2.5"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^24.1.0"
+    "@types/node": "npm:^24.10.4"
     "@types/proxyquire": "npm:^1.3.31"
     "@types/sinon": "npm:17.0.4"
     "@types/sinon-chai": "npm:^4.0.0"
