@@ -3574,7 +3574,7 @@ __metadata:
     "@types/chai": "npm:^5.2.2"
     "@types/inquirer": "npm:^9.0.9"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^22.15.13"
+    "@types/node": "npm:^24.1.0"
     "@types/resolve": "npm:^1.20.6"
     "@types/sinon": "npm:^17.0.4"
     "@types/tmp": "npm:^0.2.6"
@@ -3621,7 +3621,7 @@ __metadata:
     "@types/jsdom": "npm:^21.1.7"
     "@types/memory-cache": "npm:^0.2.6"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^22.15.14"
+    "@types/node": "npm:^24.1.0"
     "@types/proxyquire": "npm:^1.3.31"
     "@types/sinon": "npm:^17.0.4"
     "@types/sinon-chai": "npm:^4.0.0"
@@ -3703,7 +3703,7 @@ __metadata:
     "@types/chai": "npm:^5.2.2"
     "@types/chai-string": "npm:^1.4.5"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:~22.15.14"
+    "@types/node": "npm:^24.1.0"
     "@types/proxyquire": "npm:^1.3.31"
     "@types/react": "npm:^19.2.7"
     "@types/react-dom": "npm:^19.2.3"
@@ -3795,7 +3795,7 @@ __metadata:
     "@types/chai": "npm:^5.2.2"
     "@types/chai-string": "npm:^1.4.5"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:22.15.14"
+    "@types/node": "npm:^24.1.0"
     "@types/proxyquire": "npm:^1.3.31"
     "@types/react": "npm:^19.2.7"
     "@types/react-dom": "npm:^19.2.3"
@@ -4305,30 +4305,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:22.15.14":
-  version: 22.15.14
-  resolution: "@types/node@npm:22.15.14"
+"@types/node@npm:^24.1.0":
+  version: 24.10.4
+  resolution: "@types/node@npm:24.10.4"
   dependencies:
-    undici-types: "npm:~6.21.0"
-  checksum: 10/94d24bb024a770d5ca7c4462f5c6186dee3d3429513d28f0ee7af1cf0f9adc938b0410183bb638c2ee99609384618e53e4c0fa2089915c8b31f514553a02d242
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^22.15.13, @types/node@npm:^22.15.14":
-  version: 22.19.2
-  resolution: "@types/node@npm:22.19.2"
-  dependencies:
-    undici-types: "npm:~6.21.0"
-  checksum: 10/c7e72fde4aef120d984416f4aa01d23b0704eeed7a0a63cdf6178783361f3985abb02a65133b80f47226ad61f38a27fe82c3cd6dd6a62d5b82bc643fe54b9c97
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:~22.15.14":
-  version: 22.15.35
-  resolution: "@types/node@npm:22.15.35"
-  dependencies:
-    undici-types: "npm:~6.21.0"
-  checksum: 10/68cbfe4bcfc20397956af69d6c01096ded6dadd87c2ae5cfd61e0a43537c09741f125738268787455b87ba831c3fbefbceb1189c09fec1c94fc6276ef7563018
+    undici-types: "npm:~7.16.0"
+  checksum: 10/a0b318b99a97103d151589a10e20d7d3ce93188a0e6466040eb2ce5fae33ca6785306737b4006560fe3152073cbb2b14747b854fa303296275c22afc8a37da2a
   languageName: node
   linkType: hard
 
@@ -6402,7 +6384,7 @@ __metadata:
     "@types/inquirer": "npm:^9.0.8"
     "@types/minimist": "npm:^1.2.5"
     "@types/mocha": "npm:^10.0.10"
-    "@types/node": "npm:^22.15.14"
+    "@types/node": "npm:^24.1.0"
     "@types/proxyquire": "npm:^1.3.31"
     "@types/sinon": "npm:17.0.4"
     "@types/sinon-chai": "npm:^4.0.0"
@@ -14745,13 +14727,6 @@ __metadata:
     has-symbols: "npm:^1.1.0"
     which-boxed-primitive: "npm:^1.1.1"
   checksum: 10/fadb347020f66b2c8aeacf8b9a79826fa34cc5e5457af4eb0bbc4e79bd87fed0fa795949825df534320f7c13f199259516ad30abc55a6e7b91d8d996ca069e50
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:~6.21.0":
-  version: 6.21.0
-  resolution: "undici-types@npm:6.21.0"
-  checksum: 10/ec8f41aa4359d50f9b59fa61fe3efce3477cc681908c8f84354d8567bb3701fafdddf36ef6bff307024d3feb42c837cf6f670314ba37fc8145e219560e473d14
   languageName: node
   linkType: hard
 
