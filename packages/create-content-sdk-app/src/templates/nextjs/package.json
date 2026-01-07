@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@sitecore-content-sdk/cli": "<%- version %>",
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@stylistic/eslint-plugin": "^5.2.2",

@@ -42,7 +42,7 @@
     "@eslint/eslintrc": "^3",
     "@sitecore-content-sdk/cli": "<%- version %>",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "cross-env": "^10.0.0",
