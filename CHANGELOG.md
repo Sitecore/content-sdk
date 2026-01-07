@@ -28,6 +28,8 @@ Our versioning strategy is as follows:
   - This changes the default redirects behavior out of the box.
     - Previously, `/da/source -> /target` rule would redirect to `/da/target` path when default locale is not `da`
     - Now, `/da/source -> /target` rule would redirect to `/target` path, using default locale, unless the `Shall language be preserved upon redirect?` checkbox is enabled in Redirect Map.
+* Upgrade to Node.js 24.x ([#332](https://github.com/Sitecore/content-sdk/pull/332))
+
 ### 🐛 Bug Fixes
 
 * `[nextjs]` Add "use client" directive to import-map.ts for React hooks compatibility ([#326](https://github.com/Sitecore/content-sdk/pull/326))
