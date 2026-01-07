@@ -8,7 +8,7 @@
 
 > **combineImportEntries**(`defaultImportEntries`, `generatedImportEntries`): [`ImportEntry`](../interfaces/ImportEntry.md)[]
 
-Defined in: [nextjs/src/editing/codegen/import-map.ts:108](https://github.com/Sitecore/content-sdk/blob/4ac6c0b08031d0f8d3e3046612ef022854196c98/packages/nextjs/src/editing/codegen/import-map.ts#L108)
+Defined in: [nextjs/src/editing/codegen/import-map.ts:108](https://github.com/Sitecore/content-sdk/blob/a92cd174849c6a63e55e22ffdf4753663b81fab9/packages/nextjs/src/editing/codegen/import-map.ts#L108)
 
 Combines the default import entries with the generated import entries.
 

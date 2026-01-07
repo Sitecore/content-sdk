@@ -8,4 +8,4 @@
 
 > `const` **DAILY\_SECONDS**: `86400` = `86400`
 
-Defined in: [src/consts.ts:11](https://github.com/Sitecore/content-sdk/blob/4ac6c0b08031d0f8d3e3046612ef022854196c98/packages/__core__/src/consts.ts#L11)
+Defined in: [src/consts.ts:11](https://github.com/Sitecore/content-sdk/blob/a92cd174849c6a63e55e22ffdf4753663b81fab9/packages/__core__/src/consts.ts#L11)
