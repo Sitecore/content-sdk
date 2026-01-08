@@ -8,4 +8,4 @@
 
 > **Request** = [`HttpRequest`](../interfaces/HttpRequest.md) \| [`MiddlewareRequest`](../interfaces/MiddlewareRequest.md)
 
-Defined in: [interfaces.ts:33](https://github.com/Sitecore/content-sdk/blob/a92cd174849c6a63e55e22ffdf4753663b81fab9/packages/utils/src/interfaces.ts#L33)
+Defined in: [interfaces.ts:33](https://github.com/Sitecore/content-sdk/blob/023f19d2fff3551ed770203ada2f4a63414ca701/packages/utils/src/interfaces.ts#L33)
