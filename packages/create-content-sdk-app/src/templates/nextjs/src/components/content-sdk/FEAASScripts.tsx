@@ -15,15 +15,11 @@ const FEAASScripts = (): JSX.Element => {
   const shouldOptimize = (src: string) => {
     if (src.startsWith('http')) {
       const url = new URL(src);
-      const domains: string[] = nextConfig.images?.domains || [];
       const remotePatterns = nextConfig.images?.remotePatterns || [];
-      return (
-        domains.some(domain => url.hostname === domain) ||
-        remotePatterns.some(
-          pattern =>
-            pattern.protocol === url.protocol.slice(0, -1) &&
-            new RegExp('^' + convertToRegex(pattern.hostname) + '$').test(url.hostname)
-        )
+      return remotePatterns.some(
+        (pattern) =>
+          pattern.protocol === url.protocol.slice(0, -1) &&
+          new RegExp('^' + convertToRegex(pattern.hostname) + '$').test(url.hostname)
       );
     }
     return true;

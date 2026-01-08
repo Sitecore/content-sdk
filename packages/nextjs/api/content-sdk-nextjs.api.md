@@ -340,7 +340,7 @@ export const defineConfig: (config?: SitecoreConfigInput) => SitecoreConfig;
 
 // @public
 export const defineMiddleware: (...middlewares: Middleware[]) => {
-    exec: (req: NextRequest, ev: NextFetchEvent, res?: NextResponse) => Promise<NextResponse<unknown>>;
+    exec: (req: NextRequest, ev?: NextFetchEvent, res?: NextResponse) => Promise<NextResponse<unknown>>;
 };
 
 export { DesignLibrary }

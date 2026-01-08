@@ -45,13 +45,14 @@ export const createRobotsRouteHandler = (options: RouteHandlerOptions) => {
 
   const GET = async (req: NextRequest) => {
     try {
-      const startTimestamp = Date.now();
-
       const hostName =
         req.headers.get('x-forwarded-host') ||
         req.headers.get('host')?.split(':')[0] ||
         'localhost';
       const site = siteResolver.getByHost(hostName);
+
+      // Access request data first, then capture timestamp for Next.js 16 compatibility
+      const startTimestamp = Date.now();
 
       debug.robots('robots route handler start: %o', {
         hostName,
@@ -80,6 +81,11 @@ export const createRobotsRouteHandler = (options: RouteHandlerOptions) => {
         },
       });
     } catch (error) {
+      // Re-throw prerender bail-out errors so Next.js can handle them properly
+      if (error instanceof Error && (error as any).digest === 'NEXT_PRERENDER_INTERRUPTED') {
+        throw error;
+      }
+
       console.log('Robots route handler failed:');
       console.log(error);
 

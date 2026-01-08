@@ -1,4 +1,4 @@
-﻿import { SITE_KEY, SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
+import { SITE_KEY, SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
 import { debug, GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { NextRequest, NextFetchEvent, NextResponse } from 'next/server';
 import {
@@ -236,18 +236,21 @@ export const defineMiddleware = (...middlewares: Middleware[]) => {
     /**
      * Execute all middlewares
      * @param {NextRequest} req request
-     * @param {NextFetchEvent} ev fetch event
+     * @param {NextFetchEvent} [ev] fetch event (optional for Next.js 16+)
      * @param {NextResponse} [res] response
      */
-    exec: async (req: NextRequest, ev: NextFetchEvent, res?: NextResponse) => {
+    exec: async (req: NextRequest, ev?: NextFetchEvent, res?: NextResponse) => {
       const response = res || NextResponse.next();
 
       debug.common('middleware start');
 
       const start = Date.now();
 
+      // For Next.js 16+, ev is optional. Pass undefined if not provided.
+      const fetchEvent = ev || ({} as NextFetchEvent);
+
       const middlewareResponse = await middlewares.reduce(
-        (p, middleware) => p.then((res) => middleware.handle(req, res, ev)),
+        (p, middleware) => p.then((res) => middleware.handle(req, res, fetchEvent)),
         Promise.resolve(response)
       );
 

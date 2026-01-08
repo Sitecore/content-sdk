@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable dot-notation */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { use } from 'chai';
@@ -617,5 +617,31 @@ describe('defineMiddleware', () => {
     expect(result.headers.get('m1')).to.equal('true');
     expect(result.headers.get('m2')).to.equal('true');
     expect(result.headers.get('m3')).to.equal('true');
+  });
+
+  it('should execute middlewares without NextFetchEvent (Next.js 16 style)', async () => {
+    class SampleMiddleware extends MiddlewareBase {
+      handle(_req: NextRequest, res: NextResponse) {
+        res.headers.set('m1', 'true');
+
+        return Promise.resolve(res);
+      }
+    }
+
+    const middleware1 = new SampleMiddleware({ sites: [] });
+    const middleware2: Middleware = {
+      handle: (_req, res) => {
+        res.headers.set('m2', 'true');
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+
+    // Next.js 16 style: ev parameter is optional
+    const result = await defineMiddleware(middleware2, middleware1).exec(req);
+
+    expect(result.headers.get('m1')).to.equal('true');
+    expect(result.headers.get('m2')).to.equal('true');
   });
 });
