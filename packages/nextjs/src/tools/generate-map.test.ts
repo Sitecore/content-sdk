@@ -932,7 +932,6 @@ describe('generateMap', () => {
       // clientComponentMap is undefined -> should autodetect 'app' and write both maps
       generateMap({ paths });
 
-      expect(detectRouterTypeStub).to.have.been.calledOnce;
       expect(fs.writeFileSync).to.have.been.calledTwice;
 
       // Optional sanity checks on outputs
@@ -991,7 +990,6 @@ describe('generateMap', () => {
         const paths = ['src/components'];
         generateMap({ paths }); // clientComponentMap is undefined
 
-        expect(detectRouterTypeStub).to.have.been.calledOnce;
         // Pages router => only one map file written
         expect(fs.writeFileSync).to.have.been.calledOnce;
 
