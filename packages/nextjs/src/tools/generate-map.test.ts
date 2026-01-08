@@ -102,7 +102,7 @@ describe('generateMap', () => {
       sandbox
         .stub(templatingUtils, 'getComponentListWithTypes')
         .callsFake(getComponentListWithTypesStub);
-        sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
+      sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
       sandbox.stub(fs, 'writeFileSync');
 
@@ -163,7 +163,7 @@ describe('generateMap', () => {
       );
       expect(content).to.include("['BYOCWrapper', BYOCServerWrapper],");
       expect(content).to.include("['FEaaSWrapper', FEaaSServerWrapper],");
-      expect(content).to.include("['Form', Form],");
+      expect(content).to.include("['Form', { ...Form, componentType: 'client' }],");
     });
 
     it('should handle multiple paths and merge their components', async () => {

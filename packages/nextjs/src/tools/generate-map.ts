@@ -323,7 +323,7 @@ import { Form } from '@sitecore-content-sdk/nextjs';
       const builtInMapEntries = [
         `['BYOCWrapper', BYOCServerWrapper]`,
         `['FEaaSWrapper', FEaaSServerWrapper]`,
-        `['Form', Form]`,
+        `['Form', { ...Form, componentType: 'client' }]`,
       ];
       mainContent = buildNextjsMapContent(getComponents.entries, componentImports, {
         headerComment:
