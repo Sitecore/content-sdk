@@ -15,9 +15,9 @@ use(spies);
 
 describe('EditingService', () => {
   const hostname = 'http://site';
-  const endpointPath = '/?sitecoreContextId=context-id';
   const clientFactory = GraphQLRequestClient.createClientFactory({
-    endpoint: hostname + endpointPath,
+    endpoint: hostname,
+    contextId: 'test-context-id',
   });
   const language = 'en';
   const version = 'latest';
@@ -55,8 +55,10 @@ describe('EditingService', () => {
   });
 
   it('should fetch editing data', async () => {
-    nock(hostname, { reqheaders: { sc_editMode: 'true' } })
-      .post(endpointPath, /EditingQuery/gi)
+    nock(hostname, {
+      reqheaders: { sc_editMode: 'true', 'x-sitecore-contextid': 'test-context-id' },
+    })
+      .post('/', /EditingQuery/gi)
       .reply(200, editingData);
 
     const clientFactorySpy = sinon.spy(clientFactory);
@@ -105,7 +107,7 @@ describe('EditingService', () => {
 
   it('should fetch preview data', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'false' } })
-      .post(endpointPath, /EditingQuery/gi)
+      .post('/', /EditingQuery/gi)
       .reply(200, editingData);
 
     const clientFactorySpy = sinon.spy(clientFactory);
@@ -154,7 +156,7 @@ describe('EditingService', () => {
 
   it('should return empty layout', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true' } })
-      .post(endpointPath, /EditingQuery/gi)
+      .post('/', /EditingQuery/gi)
       .reply(200, {
         data: {
           item: null,
@@ -212,7 +214,7 @@ describe('EditingService', () => {
 
   it('should fetch editing data with missing optional params', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true' } })
-      .post(endpointPath, /EditingQuery/gi)
+      .post('/', /EditingQuery/gi)
       .reply(200, editingData);
 
     const clientFactorySpy = sinon.spy(clientFactory);
@@ -260,7 +262,7 @@ describe('EditingService', () => {
 
   it('should fetch shared layout editing data', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true', sc_layoutKind: 'shared' } })
-      .post(endpointPath, /EditingQuery/gi)
+      .post('/', /EditingQuery/gi)
       .reply(200, editingData);
 
     const clientFactorySpy = sinon.spy(clientFactory);
@@ -322,7 +324,7 @@ describe('EditingService', () => {
 
   it('should throw an error when fetching editing data', async () => {
     nock(hostname, { reqheaders: { sc_editMode: 'true' } })
-      .post(endpointPath, /EditingQuery/gi)
+      .post('/', /EditingQuery/gi)
       .reply(500, 'Internal server error');
 
     const service = new EditingService({

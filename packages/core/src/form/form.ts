@@ -16,7 +16,7 @@ export const loadForm = async (contextId: string, formId: string, edgeUrl?: stri
     return '';
   }
 
-  const url = getEdgeProxyFormsUrl(contextId, formId, edgeUrl);
+  const url = getEdgeProxyFormsUrl(formId, edgeUrl);
 
   try {
     debug.form(`Fetching form data from ${url}`);
@@ -24,6 +24,9 @@ export const loadForm = async (contextId: string, formId: string, edgeUrl?: stri
     const rsp = await fetch(url, {
       method: 'GET',
       cache: 'no-cache',
+      headers: {
+        'x-sitecore-contextid': contextId,
+      },
     });
 
     if (rsp.status !== 200) {

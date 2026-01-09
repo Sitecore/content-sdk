@@ -76,6 +76,23 @@ describe('GraphQLRequestClient', () => {
     expect(result).to.deep.equal({ result: 'Hello world...' });
   });
 
+  it('should send x-sitecore-contextid header', async () => {
+    const contextId = 'test-context-id';
+    nock('http://csdknextweb')
+      .matchHeader('x-sitecore-contextid', contextId)
+      .post('/graphql')
+      .reply(200, {
+        data: {
+          result: 'test',
+        },
+      });
+
+    const graphQLClient = new GraphQLRequestClient(endpoint, { contextId });
+    const result = await graphQLClient.request('test');
+
+    expect(result).to.deep.equal({ result: 'test' });
+  });
+
   it('should send additional request headers configured through options', async () => {
     const apiKey = 'cjhNRWNVOHRFTklwUjhYa0RSTnBhSStIam1mNE1KN1pyeW13c3FnRVExTT18bXRzdC1kLTAxOQ==';
     const customHeader = 'Custom-Header-Value';
