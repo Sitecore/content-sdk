@@ -14,7 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching
+* `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching ([#334](https://github.com/Sitecore/content-sdk/pull/334))
   - Enabled `cacheComponents: true` for explicit caching with "use cache" directive
   - Enabled `experimental.turbopackFileSystemCacheForDev: true` for faster dev startup (beta)
   - Available in both Pages Router and App Router templates
@@ -29,7 +29,7 @@ Our versioning strategy is as follows:
 
 ### 🛠 Breaking Changes
 
-* `[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16
+* `[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16 ([#334](https://github.com/Sitecore/content-sdk/pull/334))
   - Next.js 16 is now required (minimum version `^16.0.0`)
   - `middleware.ts` renamed to `proxy.ts` with updated function signature
   - Removed deprecated `images.domains` usage (use `remotePatterns` instead)
