@@ -2,8 +2,8 @@ name: Publish
 
 on:
   # Trigger for canary and stable releases:
-  # - Full release: Push to release/** branch with (release) prefix in commit message
-  # - Canary release: Push to dev branch (without (release) prefix)
+  # - Full release: When PR from changeset-release/dev branch is merged
+  # - Canary release: Push to dev branch (not from changeset-release/dev)
   push:
     branches:
       - dev
@@ -31,7 +31,7 @@ jobs:
           # Check commit message for (release) prefix to determine if this is a full release
           # For push events, head_commit.message contains the commit message
           COMMIT_MSG="${{ github.event.head_commit.message }}"
-          if [[ "$COMMIT_MSG" =~ ^\(release\) ]]; then
+          if [[ "$COMMIT_MSG" =~ ^\[release\] ]]; then
             echo "isFullRelease=true" >> $GITHUB_OUTPUT
           else
             echo "isFullRelease=false" >> $GITHUB_OUTPUT
@@ -64,19 +64,6 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Full release (conditional) - Publish to npm
-        if: steps.configure-action.outputs.isFullRelease == 'true'
-        run: |
-          echo "Full release triggered by commit message: ${{ github.event.head_commit.message }}"
-          echo "Publishing packages to npm using changesets (versions should already be bumped by changeset version in PR)..."
-          echo "registry=https://${NPM_REGISTRY}/" > .npmrc
-          echo "@sitecore-content-sdk:registry=https://${NPM_REGISTRY}/" >> .npmrc
-          echo "//${NPM_REGISTRY}/:_authToken=${NPM_TOKEN}" >> .npmrc
-          npx lerna publish from-package --no-verify-access --yes
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-
       - name: Generate API docs
         # Generate API docs for both full releases and canary releases
         run: |
@@ -96,6 +83,7 @@ jobs:
           npx lerna version prerelease --preid canary --message "%s [skip ci]" --sign-git-tag false --yes --no-git-tag-version
           echo "Fixing dependency ranges (removing carets from canary versions)..."
           node scripts/fix-dependency-ranges.js
+          yarn install
           git commit -a -m "chore: bump versions for canary release [skip ci]"
           git push origin dev
         env:
@@ -112,3 +100,27 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+
+      - name: Creating .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            @sitecore-content-sdk:registry=https://$NPM_REGISTRY
+            registry=https://$NPM_REGISTRY
+            //$NPM_REGISTRY/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: yarn prep-release
+          publish: yarn changeset:publish
+          commit: '[release][ci] changelog, release and version bump'
+          title: '[csdk] release'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}

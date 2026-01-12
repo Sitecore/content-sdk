@@ -14,9 +14,8 @@
     "api-extractor:verify": "lerna run api-extractor:verify",
     "version": "yarn install && git stage yarn.lock",
     "changeset": "changeset",
-    "changeset:add": "changeset add",
-    "changeset:prep-release": "changeset version && node scripts/fix-dependency-ranges.js && yarn install",
-    "changeset:status": "changeset status"
+    "changeset:cascade-version": "tsx ./scripts/changesets/cascade-version.ts",
+    "prep-release": "yarn changeset:cascade-version && yarn install"
   },
   "author": {
     "name": "Sitecore Corporation",
@@ -44,6 +43,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "lerna": "^9.0.3",
     "prettier": "^2.8.0",
+    "tsx": "^4.19.4",
     "typedoc": "^0.28.4",
     "typedoc-plugin-markdown": "^4.6.3",
     "typescript": "~5.8.3"
