@@ -83,7 +83,14 @@ export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
         children = output;
       }
 
-      if (tag || !encode) {
+      // adjust rendering for Pages canvas
+      if (field.metadata) {
+        return React.createElement(
+          tag || 'span',
+          { ...htmlProps, suppressHydrationWarning: true },
+          children
+        );
+      } else if (tag || !encode) {
         return React.createElement(tag || 'span', htmlProps, children);
       } else {
         return <React.Fragment>{children}</React.Fragment>;
