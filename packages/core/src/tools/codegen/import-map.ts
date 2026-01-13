@@ -368,23 +368,10 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
   const importMapFileClient = path.join(process.cwd(), '.sitecore', 'import-map.client.ts');
   const importMapFileServer = path.join(process.cwd(), '.sitecore', 'import-map.server.ts');
   for (const componentPath of paths) {
-    const fullPath = path.isAbsolute(componentPath)
+    const fullPath: string = path.isAbsolute(componentPath)
       ? componentPath
       : path.resolve(appPath, componentPath);
-    // read the start of the file that may be 'use client'
-    const firstLine = await new Promise<string>((resolve) => {
-      let readBuffer = '';
-      const stream = fs.createReadStream(fullPath, { end: 12 });
-      stream
-        .on('data', async (chunk) => {
-          readBuffer += chunk.toString();
-        })
-        .on('close', () => resolve(readBuffer))
-        .on('error', () => resolve(''));
-    });
-
-    if (!firstLine) continue;
-    if (firstLine.match(/['"]use client['"]/)) {
+    if (await isClientComponent(fullPath)) {
       clientPaths.push(fullPath);
     } else {
       serverPaths.push(fullPath);
@@ -395,6 +382,43 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
     { map: getImportMap(clientPaths), path: importMapFileClient, isClient: true },
   ];
 };
+
+async function isClientComponent(fullPath: string) {
+  // Read a small prefix (fast) but large enough to include any BOM/leading comments and the directive.
+  // 512B is typically sufficient and avoids reading entire files during codegen.
+  // Can be overridden via env var CODEGEN_CLIENT_DIRECTIVE_PREFIX_BYTES.
+  const envPrefixBytes = Number.parseInt(
+    process.env.CODEGEN_CLIENT_DIRECTIVE_PREFIX_BYTES || '',
+    10
+  );
+  const PREFIX_BYTES = Number.isFinite(envPrefixBytes)
+    ? Math.min(Math.max(envPrefixBytes, 64), 8192)
+    : 512;
+  let fileHandle: fs.promises.FileHandle | undefined;
+
+  try {
+    fileHandle = await fs.promises.open(fullPath, 'r');
+    const buffer = Buffer.alloc(PREFIX_BYTES);
+    const { bytesRead } = await fileHandle.read(buffer, 0, PREFIX_BYTES, 0);
+    if (bytesRead <= 0) return false;
+
+    // Strip UTF-8 BOM if present.
+    let content = buffer.toString('utf8', 0, bytesRead);
+    if (content.charCodeAt(0) === 0xfeff) {
+      content = content.slice(1);
+    }
+
+    // Detect 'use client' directive as the first executable statement.
+    // Allow leading whitespace/newlines and any number of leading comments.
+    // Accept optional trailing semicolon.
+    const clientRegex = /^\s*(?:\/\/[^\n]*(?:\r?\n)|\/\*[\s\S]*?\*\/\s*)*['"]use client['"]\s*;?/;
+    return clientRegex.test(content);
+  } catch {
+    return false;
+  } finally {
+    await fileHandle?.close();
+  }
+}
 
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
