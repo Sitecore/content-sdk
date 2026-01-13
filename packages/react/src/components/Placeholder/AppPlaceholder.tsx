@@ -109,7 +109,7 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => {
   const finalRendering = page.mode.isEditing
     ? [
         <PlaceholderMetadata
-          key={(parentRendering as ComponentRendering).uid}
+          key={(parentRendering as ComponentRendering).uid || 'placeholder-metadata-root'}
           placeholderName={props.name}
           rendering={parentRendering as ComponentRendering}
         >
