@@ -30,12 +30,9 @@ describe('form', () => {
 
   describe('loadForm', () => {
     it('should load form', async () => {
-      nock(getEdgeProxyFormsUrl('formId', 'https://bar.com'), {
-        reqheaders: {
-          'x-sitecore-contextid': 'contextId',
-        },
-      })
+      nock(getEdgeProxyFormsUrl('contextId', 'formId', 'https://bar.com'))
         .get('')
+        .query({ sitecoreContextId: 'contextId' })
         .reply(200, 'form data');
 
       const result = await loadForm('contextId', 'formId', 'https://bar.com');
@@ -44,12 +41,9 @@ describe('form', () => {
     });
 
     it('should throw error if form loading fails', async () => {
-      nock(getEdgeProxyFormsUrl('formId', 'https://bar.com'), {
-        reqheaders: {
-          'x-sitecore-contextid': 'contextId',
-        },
-      })
+      nock(getEdgeProxyFormsUrl('contextId', 'formId', 'https://bar.com'))
         .get('')
+        .query({ sitecoreContextId: 'contextId' })
         .reply(500);
 
       try {
