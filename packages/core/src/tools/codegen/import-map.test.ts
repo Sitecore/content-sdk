@@ -355,6 +355,7 @@ describe('Import Map Generation', () => {
     const sandbox = sinon.createSandbox();
     afterEach(() => {
       sandbox.restore();
+      delete process.env.CODEGEN_CLIENT_DIRECTIVE_PREFIX_BYTES;
       /* eslint-disable-next-line */
       importUnitMocks.getImportMap = importUnitMocks.getImportMap;
       /* eslint-disable-next-line */
@@ -423,26 +424,16 @@ describe('Import Map Generation', () => {
           getImportMapStub.returns(new Map());
           const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
 
-          // Mock fs.createReadStream for prepImportMaps with proper event emitter
-          const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
-          createReadStreamStub.callsFake(() => {
-            const handlers: any = {};
-            const mockStream = {
-              on: (event: string, handler: any) => {
-                handlers[event] = handler;
-                if (event === 'error') {
-                  // Don't trigger error
-                } else if (event === 'close') {
-                  // Trigger close after data
-                  setImmediate(() => handler());
-                }
-                return mockStream;
-              },
-            };
-            // Trigger data event
-            setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
-            return mockStream as any;
-          });
+          // Mock fs.promises.open for prepImportMaps client component detection
+          const openStub = sandbox.stub(fs.promises, 'open');
+          openStub.resolves({
+            read: async (buffer: Buffer) => {
+              const payload = Buffer.from('import { funco', 'utf8');
+              payload.copy(buffer, 0, 0, payload.length);
+              return { bytesRead: payload.length, buffer } as any;
+            },
+            close: async () => undefined,
+          } as any);
 
           defaultMapTemplateStub.returns('// import map content');
           await run({ paths: ['foo'], exclude: ['bar'], scConfig });
@@ -505,26 +496,16 @@ ${defaultMapTemplate(indexedImportMap)}`;
           getImportMapStub.returns(new Map());
           const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
 
-          // Mock fs.createReadStream for prepImportMaps with proper event emitter
-          const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
-          createReadStreamStub.callsFake(() => {
-            const handlers: any = {};
-            const mockStream = {
-              on: (event: string, handler: any) => {
-                handlers[event] = handler;
-                if (event === 'error') {
-                  // Don't trigger error
-                } else if (event === 'close') {
-                  // Trigger close after data
-                  setImmediate(() => handler());
-                }
-                return mockStream;
-              },
-            };
-            // Trigger data event
-            setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
-            return mockStream as any;
-          });
+          // Mock fs.promises.open for prepImportMaps client component detection
+          const openStub = sandbox.stub(fs.promises, 'open');
+          openStub.resolves({
+            read: async (buffer: Buffer) => {
+              const payload = Buffer.from('import { funco', 'utf8');
+              payload.copy(buffer, 0, 0, payload.length);
+              return { bytesRead: payload.length, buffer } as any;
+            },
+            close: async () => undefined,
+          } as any);
 
           defaultMapTemplateStub.returns('// import map content');
 
@@ -547,26 +528,16 @@ ${defaultMapTemplate(indexedImportMap)}`;
           getImportMapStub.returns(new Map());
           const error = new Error('Unit test mocks: write failed');
 
-          // Mock fs.createReadStream for prepImportMaps with proper event emitter
-          const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
-          createReadStreamStub.callsFake(() => {
-            const handlers: any = {};
-            const mockStream = {
-              on: (event: string, handler: any) => {
-                handlers[event] = handler;
-                if (event === 'error') {
-                  // Don't trigger error
-                } else if (event === 'close') {
-                  // Trigger close after data
-                  setImmediate(() => handler());
-                }
-                return mockStream;
-              },
-            };
-            // Trigger data event
-            setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
-            return mockStream as any;
-          });
+          // Mock fs.promises.open for prepImportMaps client component detection
+          const openStub = sandbox.stub(fs.promises, 'open');
+          openStub.resolves({
+            read: async (buffer: Buffer) => {
+              const payload = Buffer.from('import { funco', 'utf8');
+              payload.copy(buffer, 0, 0, payload.length);
+              return { bytesRead: payload.length, buffer } as any;
+            },
+            close: async () => undefined,
+          } as any);
 
           sandbox.stub(require('fs'), 'writeFileSync').throws(error);
           defaultMapTemplateStub.returns('// import map content');
@@ -579,8 +550,87 @@ ${defaultMapTemplate(indexedImportMap)}`;
           }
           expect(thrownError).to.equal(error);
         });
+
+        it("should detect 'use client' with leading whitespace/comments/BOM and optional semicolon", async () => {
+          const scConfig = { disableCodeGeneration: false } as any;
+          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+          const fakeEntries = [{ filePath: 'a.tsx' }, { filePath: 'b.tsx' }];
+          getComponentListStub.returns(fakeEntries);
+
+          const openStub = sandbox.stub(fs.promises, 'open');
+          openStub.callsFake(async (filePath: any) => {
+            const normalized = String(filePath).replace(/\\/g, '/');
+            const content = normalized.endsWith('/a.tsx')
+              ? "\ufeff\n// comment\n/* block */\n 'use client';\nexport default function A() { return null; }"
+              : '\n  /* comment */\n  "use client"\nexport default function B() { return null; }';
+
+            return {
+              read: async (buffer: Buffer) => {
+                const payload = Buffer.from(content, 'utf8');
+                payload.copy(buffer, 0, 0, Math.min(payload.length, buffer.length));
+                return { bytesRead: Math.min(payload.length, buffer.length), buffer } as any;
+              },
+              close: async () => undefined,
+            } as any;
+          });
+
+          const importMapServer = new Map<string, ModuleExports>();
+          const importMapClient = new Map<string, ModuleExports>();
+          getImportMapStub.onCall(0).returns(importMapServer);
+          getImportMapStub.onCall(1).returns(importMapClient);
+          defaultMapTemplateStub.returns('// import map content');
+          const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+
+          await run({ paths: ['foo'], exclude: [], scConfig, separateServerClientMaps: true });
+
+          const appFolder = process.cwd();
+          const aFullPath = path.resolve(appFolder, 'a.tsx');
+          const bFullPath = path.resolve(appFolder, 'b.tsx');
+
+          expect(getImportMapStub.calledTwice).to.be.true;
+          expect(getImportMapStub.getCall(0).args[0]).to.deep.equal([]);
+          expect(getImportMapStub.getCall(1).args[0]).to.deep.equal([aFullPath, bFullPath]);
+          expect(fsWriteStub.calledTwice).to.be.true;
+        });
+
+        it("should honor CODEGEN_CLIENT_DIRECTIVE_PREFIX_BYTES when detecting 'use client'", async () => {
+          const scConfig = { disableCodeGeneration: false } as any;
+          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+          const fakeEntries = [{ filePath: 'late.tsx' }];
+          getComponentListStub.returns(fakeEntries);
+
+          process.env.CODEGEN_CLIENT_DIRECTIVE_PREFIX_BYTES = '64';
+          const openStub = sandbox.stub(fs.promises, 'open');
+          openStub.callsFake(async () => {
+            const prefix = ' '.repeat(120);
+            const content = `${prefix}'use client';\nexport default function Late() { return null; }`;
+            return {
+              read: async (buffer: Buffer, offset?: number, length?: number) => {
+                expect(buffer.length).to.equal(64);
+                const payload = Buffer.from(content, 'utf8');
+                payload.copy(buffer, 0, 0, Math.min(payload.length, buffer.length));
+                return { bytesRead: Math.min(payload.length, buffer.length), buffer } as any;
+              },
+              close: async () => undefined,
+            } as any;
+          });
+
+          getImportMapStub.onCall(0).returns(new Map());
+          getImportMapStub.onCall(1).returns(new Map());
+          defaultMapTemplateStub.returns('// import map content');
+          sandbox.stub(require('fs'), 'writeFileSync');
+
+          await run({ paths: ['foo'], exclude: [], scConfig, separateServerClientMaps: true });
+
+          const appFolder = process.cwd();
+          const lateFullPath = path.resolve(appFolder, 'late.tsx');
+          expect(getImportMapStub.calledTwice).to.be.true;
+          expect(getImportMapStub.getCall(0).args[0]).to.deep.equal([lateFullPath]);
+          expect(getImportMapStub.getCall(1).args[0]).to.deep.equal([]);
+        });
       });
     });
   });
 });
-
