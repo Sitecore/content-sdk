@@ -7,7 +7,7 @@ import { Form } from '@sitecore-content-sdk/nextjs';
 export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['BYOCWrapper', BYOCWrapper],
   ['FEaaSWrapper', FEaaSWrapper],
-  ['Form', Form],
+  ['Form', { ...Form, componentType: 'client' }],
 ]);
 
 export default componentMap;
