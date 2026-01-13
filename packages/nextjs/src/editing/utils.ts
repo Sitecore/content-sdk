@@ -294,8 +294,9 @@ export const resolveServerUrl = (req: NextApiRequest | NextRequest) => {
   // to preserve auth headers, use https if we're in our 3 main hosting options
   const useHttps = (process.env.VERCEL || process.env.NETLIFY) !== undefined;
   const host = (req.headers as Headers).get
-    ? (req.headers as Headers).get('host')
-    : (req as NextApiRequest).headers.host;
+    ? (req.headers as Headers).get('x-forwarded-host') || (req.headers as Headers).get('host')
+    : (req as NextApiRequest).headers['x-forwarded-host'] || (req as NextApiRequest).headers.host;
+
   // use https for requests with auth but also support unsecured http rendering hosts
   return `${useHttps ? 'https' : 'http'}://${host}`;
 };

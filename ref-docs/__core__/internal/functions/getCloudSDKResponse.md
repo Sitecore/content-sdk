@@ -8,7 +8,7 @@
 
 > **getCloudSDKResponse**(): `Response`
 
-Defined in: [src/initializer/server/initializer.ts:235](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/__core__/src/initializer/server/initializer.ts#L235)
+Defined in: [src/initializer/server/initializer.ts:235](https://github.com/Sitecore/content-sdk/blob/023f19d2fff3551ed770203ada2f4a63414ca701/packages/__core__/src/initializer/server/initializer.ts#L235)
 
 Gets the current CloudSDK response object.
 

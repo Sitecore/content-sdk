@@ -8,7 +8,7 @@
 
 > **normalizeHeaders**(`incomingHeaders`): `Record`\<`string`, `string` \| `string`[]\>
 
-Defined in: [converters/normalizeHeaders.ts:6](https://github.com/Sitecore/content-sdk/blob/d905c41e68457d1a6a8bb86464339100ff85d126/packages/utils/src/converters/normalizeHeaders.ts#L6)
+Defined in: [converters/normalizeHeaders.ts:6](https://github.com/Sitecore/content-sdk/blob/023f19d2fff3551ed770203ada2f4a63414ca701/packages/utils/src/converters/normalizeHeaders.ts#L6)
 
 Converts headers from various formats into a uniform key-value pair object.
 

@@ -22,7 +22,7 @@ export class SitemapMiddleware {
 
   private async handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
-    const reqHost = req.headers.host || '';
+    const reqHost = req.headers['x-forwarded-host'] || req.headers.host || '';
     const reqProtocol = req.headers['x-forwarded-proto'] || 'https';
     const site = this.siteResolver.getByHost(reqHost);
 

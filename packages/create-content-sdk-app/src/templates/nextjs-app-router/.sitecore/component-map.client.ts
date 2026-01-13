@@ -1,14 +1,14 @@
 // Client-safe component map for App Router
 import {
-  BYOCServerWrapper,
+  BYOCClientWrapper,
   NextjsContentSdkComponent,
-  FEaaSServerWrapper,
+  FEaaSClientWrapper,
 } from '@sitecore-content-sdk/nextjs';
 import { Form } from '@sitecore-content-sdk/nextjs';
 
 export const componentMap = new Map<string, NextjsContentSdkComponent>([
-  ['BYOCWrapper', BYOCServerWrapper],
-  ['FEaaSWrapper', FEaaSServerWrapper],
+  ['BYOCWrapper', BYOCClientWrapper],
+  ['FEaaSWrapper', FEaaSClientWrapper],
   ['Form', Form],
 ]);
 
