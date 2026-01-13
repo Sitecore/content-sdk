@@ -6,10 +6,10 @@ import {
 import { IncomingHttpHeaders } from 'http';
 
 /**
- * Base class for middleware that handles pages and components rendering in Sitecore Editors.
+ * Base class for proxy that handles pages and components rendering in Sitecore Editors.
  * @internal
  */
-export abstract class RenderMiddlewareBase {
+export abstract class RenderProxyBase {
   /**
    * Gets query parameters that should be passed along to subsequent requests (e.g. for deployment protection bypass)
    * @param {object} query Object of query parameters from incoming URL

@@ -1,4 +1,4 @@
-﻿import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { debug, NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   QUERY_PARAM_EDITING_SECRET,
@@ -8,7 +8,7 @@ import {
 } from '@sitecore-content-sdk/core/editing';
 import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
 import { getEditingSecret } from '../utils/utils';
-import { RenderMiddlewareBase } from './render-middleware';
+import { RenderProxyBase } from './render-proxy';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
 import {
   getPreviewCookies,
@@ -23,10 +23,10 @@ import {
 } from './utils';
 
 /**
- * Configuration for the Editing Render Middleware.
+ * Configuration for the Editing Render Proxy.
  * @public
  */
-export type EditingRenderMiddlewareConfig = {
+export type EditingRenderProxyConfig = {
   /**
    * Function used to determine route/page URL to render.
    * This may be necessary for certain custom Next.js routing configurations.
@@ -49,16 +49,16 @@ export type EditingNextApiRequest = NextApiRequest & {
 };
 
 /**
- * Middleware / handler for use in the editing render Next.js API route (e.g. '/api/editing/render')
+ * Proxy / handler for use in the editing render Next.js API route (e.g. '/api/editing/render')
  * which is required for Sitecore editing support.
  * @public
  */
-export class EditingRenderMiddleware extends RenderMiddlewareBase {
+export class EditingRenderProxy extends RenderProxyBase {
   private dataFetcher: NativeDataFetcher;
   /**
-   * @param {EditingRenderMiddlewareConfig} [config] Editing render middleware config
+   * @param {EditingRenderProxyConfig} [config] Editing render proxy config
    */
-  constructor(public config?: EditingRenderMiddlewareConfig) {
+  constructor(public config?: EditingRenderProxyConfig) {
     super();
     this.dataFetcher = new NativeDataFetcher({ debugger: debug.editing });
   }
@@ -74,7 +74,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
   private handler = async (req: EditingNextApiRequest, res: NextApiResponse): Promise<void> => {
     const { body, method, headers, query } = req;
 
-    debug.editing('editing render middleware start: %o', {
+    debug.editing('editing render proxy start: %o', {
       method,
       query,
       headers,
@@ -199,7 +199,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         filteredCookies && res.setHeader('Set-Cookie', filteredCookies);
       }
 
-      debug.editing('editing render middleware end in %dms: %o', Date.now() - startTimestamp, {
+      debug.editing('editing render proxy end in %dms: %o', Date.now() - startTimestamp, {
         status: 200,
         route,
       });
@@ -213,7 +213,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       if (error.response) {
         console.info(
           // eslint-disable-next-line quotes
-          "Hint: for non-standard server or Next.js route configurations, you may need to override 'resolvePageUrl' or set the 'sitecoreInternalEditingHostUrl' (or SITECORE_INTERNAL_EDITING_HOST_URL env variable) available on the 'EditingRenderMiddleware' config."
+          "Hint: for non-standard server or Next.js route configurations, you may need to override 'resolvePageUrl' or set the 'sitecoreInternalEditingHostUrl' (or SITECORE_INTERNAL_EDITING_HOST_URL env variable) available on the 'EditingRenderProxy' config."
         );
       }
 

@@ -3,13 +3,13 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { debug } from '@sitecore-content-sdk/core';
 import { getLocaleRewrite } from '@sitecore-content-sdk/core/i18n';
-import { MiddlewareBase, MiddlewareBaseConfig, LOCALE_HEADER_NAME } from './middleware';
+import { ProxyBase, ProxyBaseConfig, LOCALE_HEADER_NAME } from './proxy';
 
 /**
- * The interface for the Locale middleware configuration.
+ * The interface for the Locale proxy configuration.
  * @public
  */
-export type LocaleMiddlewareConfig = MiddlewareBaseConfig & {
+export type LocaleProxyConfig = ProxyBaseConfig & {
   /**
    * List of locales supported by the application
    */
@@ -17,16 +17,16 @@ export type LocaleMiddlewareConfig = MiddlewareBaseConfig & {
 };
 
 /**
- * Middleware/handler for handling locale-based routing in the Next.js App Router.
- * This middleware is responsible for extracting the locale from the request path and rewriting it if necessary.
+ * Proxy/handler for handling locale-based routing in the Next.js App Router.
+ * This proxy is responsible for extracting the locale from the request path and rewriting it if necessary.
  * It also sets the locale header in the response.
  * @public
  */
-export class LocaleMiddleware extends MiddlewareBase {
+export class LocaleProxy extends ProxyBase {
   /**
-   * @param {LocaleMiddlewareConfig} config Locale middleware config
+   * @param {LocaleProxyConfig} config Locale proxy config
    */
-  constructor(protected config: LocaleMiddlewareConfig) {
+  constructor(protected config: LocaleProxyConfig) {
     super(config);
   }
 
@@ -37,13 +37,13 @@ export class LocaleMiddleware extends MiddlewareBase {
       const localeFromPath = this.getLocaleFromPath(pathname);
       const locale = localeFromPath || this.getLanguage(req, res);
 
-      debug.locale('locale middleware start: %o', {
+      debug.locale('locale proxy start: %o', {
         pathname,
         locale,
       });
 
       if (this.disabled(req, res)) {
-        debug.locale('skipped (locale middleware is disabled)');
+        debug.locale('skipped (locale proxy is disabled)');
         return res;
       }
 
@@ -53,7 +53,7 @@ export class LocaleMiddleware extends MiddlewareBase {
         const response = this.rewrite(rewritePath, req, res);
         this.setLocaleHeader(response, locale);
 
-        debug.locale('locale middleware end, with rewrite: %o', {
+        debug.locale('locale proxy end, with rewrite: %o', {
           pathname,
           locale,
           rewritePath,
@@ -64,14 +64,14 @@ export class LocaleMiddleware extends MiddlewareBase {
 
       this.setLocaleHeader(res, locale);
 
-      debug.locale('locale middleware end, no rewrite: %o', {
+      debug.locale('locale proxy end, no rewrite: %o', {
         pathname,
         locale,
       });
 
       return res;
     } catch (error) {
-      console.log('Locale middleware failed:');
+      console.log('Locale proxy failed:');
       console.log(error);
       return res;
     }

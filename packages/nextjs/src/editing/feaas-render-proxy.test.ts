@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable quotes */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -12,7 +12,7 @@ import {
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from './constants';
-import { FEAASRenderMiddleware } from './feaas-render-middleware';
+import { FEAASRenderProxy } from './feaas-render-proxy';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 
@@ -61,7 +61,7 @@ const mockResponse = () => {
   return res;
 };
 
-describe('FEAASRenderMiddleware', () => {
+describe('FEAASRenderProxy', () => {
   const secret = 'secret1234';
 
   beforeEach(() => {
@@ -81,8 +81,8 @@ describe('FEAASRenderMiddleware', () => {
     const req = mockRequest(query);
     const res = mockResponse();
 
-    const middleware = new FEAASRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new FEAASRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -100,8 +100,8 @@ describe('FEAASRenderMiddleware', () => {
     const req = mockRequest(query);
     const res = mockResponse();
 
-    const middleware = new FEAASRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new FEAASRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -119,8 +119,8 @@ describe('FEAASRenderMiddleware', () => {
     const req = mockRequest(query, 'OPTIONS');
     const res = mockResponse();
 
-    const middleware = new FEAASRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new FEAASRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -151,8 +151,8 @@ describe('FEAASRenderMiddleware', () => {
       throw new Error('Test Error');
     });
 
-    const middleware = new FEAASRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new FEAASRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -167,8 +167,8 @@ describe('FEAASRenderMiddleware', () => {
     const req = mockRequest({}, 'POST');
     const res = mockResponse();
 
-    const middleware = new FEAASRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new FEAASRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -184,8 +184,8 @@ describe('FEAASRenderMiddleware', () => {
   it('should stop request and return 401 when CORS match is not met', async () => {
     const req = mockRequest({}, 'POST', { origin: 'https://notallowed.com' });
     const res = mockResponse();
-    const middleware = new FEAASRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new FEAASRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -202,8 +202,8 @@ describe('FEAASRenderMiddleware', () => {
     const req = mockRequest(query);
     const res = mockResponse();
 
-    const middleware = new FEAASRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new FEAASRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -219,8 +219,8 @@ describe('FEAASRenderMiddleware', () => {
     const req = mockRequest(query);
     const res = mockResponse();
 
-    const middleware = new FEAASRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new FEAASRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -238,10 +238,10 @@ describe('FEAASRenderMiddleware', () => {
 
     const pageUrl = '/some/path/feaas/render';
 
-    const middleware = new FEAASRenderMiddleware({
+    const proxy = new FEAASRenderProxy({
       pageUrl,
     });
-    const handler = middleware.getHandler();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -261,8 +261,8 @@ describe('FEAASRenderMiddleware', () => {
     const req = mockRequest(query);
     const res = mockResponse();
 
-    const middleware = new FEAASRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new FEAASRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 

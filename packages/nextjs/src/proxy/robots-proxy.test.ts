@@ -2,16 +2,16 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { RobotsMiddleware } from './robots-middleware';
+import { RobotsProxy } from './robots-proxy';
 import { SitecoreClient } from '@sitecore-content-sdk/core/client';
 import { SiteInfo } from '@sitecore-content-sdk/core/site';
 
 chai.use(sinonChai);
 
-describe('RobotsMiddleware', () => {
+describe('RobotsProxy', () => {
   const sandbox = sinon.createSandbox();
   let sitecoreClientStub: sinon.SinonStubbedInstance<SitecoreClient>;
-  let middleware: RobotsMiddleware;
+  let proxy: RobotsProxy;
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
   let siteResolverStub = {
@@ -46,8 +46,8 @@ describe('RobotsMiddleware', () => {
       },
     };
 
-    middleware = new RobotsMiddleware(sitecoreClientStub as unknown as SitecoreClient, sites);
-    (middleware as any).siteResolver = siteResolverStub;
+    proxy = new RobotsProxy(sitecoreClientStub as unknown as SitecoreClient, sites);
+    (proxy as any).siteResolver = siteResolverStub;
     siteResolverStub.getByHost.callsFake((hostName) =>
       sites.find((site) => site.hostName === hostName)
     );
@@ -60,7 +60,7 @@ describe('RobotsMiddleware', () => {
   it('should set the content type header to text/plain', async () => {
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
 
-    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+    await proxy.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
     expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/plain');
   });
@@ -68,7 +68,7 @@ describe('RobotsMiddleware', () => {
   it('should call getRobots with the correct siteName', async () => {
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
 
-    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+    await proxy.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
     expect(sitecoreClientStub.getRobots).to.have.been.calledWith('test-site');
   });
@@ -76,7 +76,7 @@ describe('RobotsMiddleware', () => {
   it('should return 200 with robots content', async () => {
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
 
-    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+    await proxy.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
     expect(res.status).to.have.been.calledWith(200);
     expect(res.send).to.have.been.calledWith('User-agent: *\nDisallow: /');
@@ -85,7 +85,7 @@ describe('RobotsMiddleware', () => {
   it('should return 404 if getRobots returns null', async () => {
     sitecoreClientStub.getRobots.resolves(undefined);
 
-    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+    await proxy.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
     expect(res.status).to.have.been.calledWith(404);
     expect(res.send).to.have.been.calledWith('User-agent: *\nDisallow: /');
@@ -94,7 +94,7 @@ describe('RobotsMiddleware', () => {
   it('should return 500 if getRobots throws an error', async () => {
     sitecoreClientStub.getRobots.rejects(new Error('Unexpected failure'));
 
-    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+    await proxy.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
     expect(res.status).to.have.been.calledWith(500);
     expect(res.send).to.have.been.calledWith('Internal Server Error');
@@ -105,7 +105,7 @@ describe('RobotsMiddleware', () => {
 
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
 
-    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+    await proxy.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
     expect(sitecoreClientStub.getRobots).to.have.been.calledWith('test-site-two');
     expect(res.status).to.have.been.calledWith(200);
@@ -118,7 +118,7 @@ describe('RobotsMiddleware', () => {
       host: 'localhost:3000',
     };
 
-    await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+    await proxy.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
     expect(siteResolverStub.getByHost).to.have.been.calledWith('proxy.forwarded.com');
   });

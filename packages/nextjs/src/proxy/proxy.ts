@@ -11,14 +11,14 @@ export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
 export const LOCALE_HEADER_NAME = 'x-sc-locale';
 
 /**
- * The interface for the Middleware configuration.
+ * The interface for the Proxy configuration.
  * @public
  */
-export type MiddlewareBaseConfig = {
+export type ProxyBaseConfig = {
   /**
-   * function, determines if middleware execution should be skipped, based on cookie, header, or other considerations
-   * @param {NextRequest} req request object from middleware handler
-   * @param {NextResponse} res response object from middleware handler
+   * function, determines if proxy execution should be skipped, based on cookie, header, or other considerations
+   * @param {NextRequest} req request object from proxy handler
+   * @param {NextResponse} res response object from proxy handler
    */
   skip?: (req: NextRequest, res: NextResponse) => boolean;
   /**
@@ -38,12 +38,12 @@ export type MiddlewareBaseConfig = {
 };
 
 /**
- * Middleware class to be extended by all middleware implementations
+ * Proxy class to be extended by all proxy implementations
  * @public
  */
-export abstract class Middleware {
+export abstract class Proxy {
   /**
-   * Handler method to execute middleware logic
+   * Handler method to execute proxy logic
    * @param {NextRequest} req request
    * @param {NextResponse} res response
    */
@@ -51,14 +51,14 @@ export abstract class Middleware {
 }
 
 /**
- * Base middleware class with common methods
+ * Base proxy class with common methods
  * @public
  */
-export abstract class MiddlewareBase extends Middleware {
+export abstract class ProxyBase extends Proxy {
   protected defaultHostname: string;
   protected siteResolver: SiteResolver;
 
-  constructor(protected config: MiddlewareBaseConfig) {
+  constructor(protected config: ProxyBaseConfig) {
     super();
     this.siteResolver = new SiteResolver(config.sites);
     this.defaultHostname = config.defaultHostname || 'localhost';
@@ -98,16 +98,16 @@ export abstract class MiddlewareBase extends Middleware {
 
     const purpose = req.headers.get('purpose');
     const nextRouterPrefetch = req.headers.get('Next-Router-Prefetch');
-    const middlewarePrefetch = req.headers.get('x-middleware-prefetch');
+    const proxyPrefetch = req.headers.get('x-middleware-prefetch');
 
     // Some real navigations on different devices may incorrectly include 'prefetch' headers.
     // To avoid skipping personalization in such cases, we treat 'x-middleware-prefetch' as a more reliable signal of true prefetch behavior.
-    if (isKnownDevice && middlewarePrefetch === '1') {
+    if (isKnownDevice && proxyPrefetch === '1') {
       return false;
     }
 
     // Otherwise, standard prefetch detection
-    return purpose === 'prefetch' || nextRouterPrefetch === '1' || middlewarePrefetch === '1';
+    return purpose === 'prefetch' || nextRouterPrefetch === '1' || proxyPrefetch === '1';
   }
   protected disabled(req: NextRequest, res: NextResponse) {
     const { pathname } = req.nextUrl;
@@ -122,7 +122,7 @@ export abstract class MiddlewareBase extends Middleware {
 
   /**
    * Safely extract all headers for debug logging
-   * Necessary to avoid middleware issue https://github.com/vercel/next.js/issues/39765
+   * Necessary to avoid proxy issue https://github.com/vercel/next.js/issues/39765
    * @param {Headers} incomingHeaders Incoming headers
    * @returns Object with headers as key/value pairs
    */
@@ -150,7 +150,7 @@ export abstract class MiddlewareBase extends Middleware {
 
   /**
    * Extract language from locale header of the response
-   * set by LocaleMiddleware for app router application
+   * set by LocaleProxy for app router application
    * @param {NextResponse} res response
    * @returns {string | undefined} language or undefined if not found
    */
@@ -214,9 +214,10 @@ export abstract class MiddlewareBase extends Middleware {
     // Note an absolute URL is required: https://nextjs.org/docs/messages/middleware-relative-urls
     const rewriteUrl = req.nextUrl.clone();
     rewriteUrl.pathname = rewritePath;
-    const response = NextResponse.rewrite(rewriteUrl, res);
+    // NextResponse.rewrite requires a string URL, not a NextURL object
+    const response = NextResponse.rewrite(rewriteUrl.href, res);
 
-    // Share rewrite path with following executed middlewares
+    // Share rewrite path with following executed proxies
     if (!skipHeader) {
       response.headers.set(REWRITE_HEADER_NAME, rewritePath);
     }
@@ -226,32 +227,32 @@ export abstract class MiddlewareBase extends Middleware {
 }
 
 /**
- * Define a middleware with a list of middlewares
- * @param {Middleware[]} middlewares List of middlewares to execute
+ * Define a proxy with a list of proxies
+ * @param {Proxy[]} proxies List of proxies to execute
  * @public
  */
-export const defineMiddleware = (...middlewares: Middleware[]) => {
+export const defineProxy = (...proxies: Proxy[]) => {
   return {
     /**
-     * Execute all middlewares
+     * Execute all proxies
      * @param {NextRequest} req request
      * @param {NextResponse} [res] response
      */
     exec: async (req: NextRequest, res?: NextResponse) => {
       const response = res || NextResponse.next();
 
-      debug.common('middleware start');
+      debug.common('proxy start');
 
       const start = Date.now();
 
-      const middlewareResponse = await middlewares.reduce(
-        (p, middleware) => p.then((res) => middleware.handle(req, res)),
+      const proxyResponse = await proxies.reduce(
+        (p, proxy) => p.then((res) => proxy.handle(req, res)),
         Promise.resolve(response)
       );
 
-      debug.common('middleware end in %dms', Date.now() - start);
+      debug.common('proxy end in %dms', Date.now() - start);
 
-      return middlewareResponse;
+      return proxyResponse;
     },
   };
 };

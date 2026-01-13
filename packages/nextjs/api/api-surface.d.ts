@@ -14,7 +14,7 @@ export * from '../component-props-loader';
 export * from '../config-cli';
 export * from '../config';
 export * from '../editing';
-export * from '../middleware';
+export * from '../proxy';
 export * from '../monitoring';
 export * from '../route-handler';
 export * from '../site';

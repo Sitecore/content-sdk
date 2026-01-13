@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable dot-notation */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -11,7 +11,7 @@ import {
   EditingRenderQueryParams,
   DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
-import { EditingRenderMiddleware, EditingNextApiRequest } from './editing-render-middleware';
+import { EditingRenderProxy, EditingNextApiRequest } from './editing-render-proxy';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
@@ -77,7 +77,7 @@ const mockResponse = () => {
   return res;
 };
 
-describe('EditingRenderMiddleware', () => {
+describe('EditingRenderProxy', () => {
   const secret = 'secret1234';
 
   beforeEach(() => {
@@ -101,8 +101,8 @@ describe('EditingRenderMiddleware', () => {
     });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -121,8 +121,8 @@ describe('EditingRenderMiddleware', () => {
     });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -149,8 +149,8 @@ describe('EditingRenderMiddleware', () => {
     });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -164,8 +164,8 @@ describe('EditingRenderMiddleware', () => {
       headers: { origin: 'https://notallowed.com' },
     });
     const res = mockResponse();
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -182,8 +182,8 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -208,11 +208,11 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
@@ -249,11 +249,11 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
@@ -281,11 +281,11 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query: queryWithoutOptionalParams });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
@@ -313,16 +313,16 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware({
+    const proxy = new EditingRenderProxy({
       resolvePageUrl: (itemPath) => {
         return `/custom/path${itemPath}`;
       },
     });
 
-    const handler = middleware.getHandler();
+    const handler = proxy.getHandler();
 
     sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
@@ -358,11 +358,11 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
@@ -389,8 +389,8 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query: { sc_site: 'website', secret } });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -407,11 +407,11 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
@@ -432,12 +432,12 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query: { ...query, ...protectedQuery } });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
+    const proxy = new EditingRenderProxy();
 
-    const handler = middleware.getHandler();
+    const handler = proxy.getHandler();
 
     const fetcherGetStub = sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
@@ -461,11 +461,11 @@ describe('EditingRenderMiddleware', () => {
 
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     const fetcherGetStub = sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
@@ -485,11 +485,11 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
@@ -501,11 +501,11 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
     await handler(req, res);
@@ -518,10 +518,10 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
-    sinon.stub(middleware['dataFetcher'], 'get').resolves({
+    sinon.stub(proxy['dataFetcher'], 'get').resolves({
       status: 200,
       statusText: 'success',
       data: `<div>some html ${STATIC_PROPS_ID}</div>`,
@@ -537,11 +537,11 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
     sinon
-      .stub(middleware['dataFetcher'], 'get')
+      .stub(proxy['dataFetcher'], 'get')
       .resolves({ status: 200, statusText: 'success', data: '' });
 
     await handler(req, res);
@@ -555,10 +555,10 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new EditingRenderProxy();
+    const handler = proxy.getHandler();
 
-    sinon.stub(middleware['dataFetcher'], 'get').throws(new Error('Request failed'));
+    sinon.stub(proxy['dataFetcher'], 'get').throws(new Error('Request failed'));
 
     await handler(req, res);
 
@@ -585,11 +585,11 @@ describe('EditingRenderMiddleware', () => {
       const req = mockRequest({ query });
       const res = mockResponse();
 
-      const middleware = new EditingRenderMiddleware();
-      const handler = middleware.getHandler();
+      const proxy = new EditingRenderProxy();
+      const handler = proxy.getHandler();
 
       sinon
-        .stub(middleware['dataFetcher'], 'get')
+        .stub(proxy['dataFetcher'], 'get')
         .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
       await handler(req, res);
@@ -617,11 +617,11 @@ describe('EditingRenderMiddleware', () => {
       const req = mockRequest({ query: { ...query, mode: DesignLibraryMode.Metadata } });
       const res = mockResponse();
 
-      const middleware = new EditingRenderMiddleware();
-      const handler = middleware.getHandler();
+      const proxy = new EditingRenderProxy();
+      const handler = proxy.getHandler();
 
       sinon
-        .stub(middleware['dataFetcher'], 'get')
+        .stub(proxy['dataFetcher'], 'get')
         .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
       await handler(req, res);
@@ -651,8 +651,8 @@ describe('EditingRenderMiddleware', () => {
       });
       const res = mockResponse();
 
-      const middleware = new EditingRenderMiddleware();
-      const handler = middleware.getHandler();
+      const proxy = new EditingRenderProxy();
+      const handler = proxy.getHandler();
 
       await handler(req, res);
 
@@ -682,11 +682,11 @@ describe('EditingRenderMiddleware', () => {
       const req = mockRequest({ query });
       const res = mockResponse();
 
-      const middleware = new EditingRenderMiddleware();
-      const handler = middleware.getHandler();
+      const proxy = new EditingRenderProxy();
+      const handler = proxy.getHandler();
 
       sinon
-        .stub(middleware['dataFetcher'], 'get')
+        .stub(proxy['dataFetcher'], 'get')
         .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
       await handler(req, res);
@@ -729,12 +729,12 @@ describe('EditingRenderMiddleware', () => {
       req.headers['host'] = reqHost;
       const res = mockResponse();
 
-      const middleware = new EditingRenderMiddleware();
+      const proxy = new EditingRenderProxy();
 
-      const handler = middleware.getHandler();
+      const handler = proxy.getHandler();
 
       const fetcherGetStub = sinon
-        .stub(middleware['dataFetcher'], 'get')
+        .stub(proxy['dataFetcher'], 'get')
         .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
       await handler(req, res);
@@ -751,12 +751,12 @@ describe('EditingRenderMiddleware', () => {
       req.headers['host'] = reqHost;
       const res = mockResponse();
 
-      const middleware = new EditingRenderMiddleware();
+      const proxy = new EditingRenderProxy();
 
-      const handler = middleware.getHandler();
+      const handler = proxy.getHandler();
 
       const fetcherGetStub = sinon
-        .stub(middleware['dataFetcher'], 'get')
+        .stub(proxy['dataFetcher'], 'get')
         .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
       await handler(req, res);
@@ -773,12 +773,12 @@ describe('EditingRenderMiddleware', () => {
       const req = mockRequest({ query });
       const res = mockResponse();
 
-      const middleware = new EditingRenderMiddleware();
+      const proxy = new EditingRenderProxy();
 
-      const handler = middleware.getHandler();
+      const handler = proxy.getHandler();
 
       const fetcherGetStub = sinon
-        .stub(middleware['dataFetcher'], 'get')
+        .stub(proxy['dataFetcher'], 'get')
         .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
       await handler(req, res);
@@ -796,14 +796,14 @@ describe('EditingRenderMiddleware', () => {
       const req = mockRequest({ query });
       const res = mockResponse();
 
-      const middleware = new EditingRenderMiddleware({
+      const proxy = new EditingRenderProxy({
         sitecoreInternalEditingHostUrl: reqHostConfig,
       });
 
-      const handler = middleware.getHandler();
+      const handler = proxy.getHandler();
 
       const fetcherGetStub = sinon
-        .stub(middleware['dataFetcher'], 'get')
+        .stub(proxy['dataFetcher'], 'get')
         .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
 
       await handler(req, res);

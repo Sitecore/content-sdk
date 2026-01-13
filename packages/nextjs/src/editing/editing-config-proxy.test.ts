@@ -1,8 +1,8 @@
-﻿﻿/* eslint-disable no-unused-expressions */
+/* eslint-disable no-unused-expressions */
 import { NextApiRequest, NextApiResponse } from 'next';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { EditingConfigMiddleware } from './editing-config-middleware';
+import { EditingConfigProxy } from './editing-config-proxy';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/core/editing';
 
 type Query = {
@@ -55,7 +55,7 @@ const expectedResultWithMetadata = {
 
 const expectedResultForbidden = { message: 'Missing or invalid editing secret' };
 
-describe('EditingConfigMiddleware', () => {
+describe('EditingConfigProxy', () => {
   const secret = 'jss-editing-secret-mock';
 
   beforeEach(() => {
@@ -74,8 +74,8 @@ describe('EditingConfigMiddleware', () => {
     const req = mockRequest('GET', query);
     const res = mockResponse();
 
-    const middleware = new EditingConfigMiddleware({ components: componentsMap, metadata });
-    const handler = middleware.getHandler();
+    const proxy = new EditingConfigProxy({ components: componentsMap, metadata });
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -87,8 +87,8 @@ describe('EditingConfigMiddleware', () => {
   it('should stop request and return 401 when CORS match is not met', async () => {
     const req = mockRequest('GET', {}, { origin: 'https://notallowed.com' });
     const res = mockResponse();
-    const middleware = new EditingConfigMiddleware({ components: componentsMap, metadata });
-    const handler = middleware.getHandler();
+    const proxy = new EditingConfigProxy({ components: componentsMap, metadata });
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -105,8 +105,8 @@ describe('EditingConfigMiddleware', () => {
     const req = mockRequest('GET', query);
     const res = mockResponse();
 
-    const middleware = new EditingConfigMiddleware({ components: componentsMap, metadata });
-    const handler = middleware.getHandler();
+    const proxy = new EditingConfigProxy({ components: componentsMap, metadata });
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -121,8 +121,8 @@ describe('EditingConfigMiddleware', () => {
     const req = mockRequest('OPTIONS', query);
     const res = mockResponse();
 
-    const middleware = new EditingConfigMiddleware({ components: componentsMap, metadata });
-    const handler = middleware.getHandler();
+    const proxy = new EditingConfigProxy({ components: componentsMap, metadata });
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 
@@ -148,8 +148,8 @@ describe('EditingConfigMiddleware', () => {
     query[QUERY_PARAM_EDITING_SECRET] = secret;
     const req = mockRequest('GET', query);
     const res = mockResponse();
-    const middleware = new EditingConfigMiddleware({ components, metadata });
-    const handler = middleware.getHandler();
+    const proxy = new EditingConfigProxy({ components, metadata });
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 

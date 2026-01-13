@@ -1,4 +1,4 @@
-﻿﻿import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
@@ -12,10 +12,10 @@ import { ComponentMap } from '@sitecore-content-sdk/react';
 import { NextjsContentSdkComponent } from '../sharedTypes/component-props';
 
 /**
- * The interface for the EditingConfigMiddleware configuration.
+ * The interface for the EditingConfigProxy configuration.
  * @public
  */
-export type EditingConfigMiddlewareConfig = {
+export type EditingConfigProxyConfig = {
   /**
    * Components available in the application
    */
@@ -27,19 +27,19 @@ export type EditingConfigMiddlewareConfig = {
 };
 
 /**
- * Middleware / handler used in the editing config API route in xmcloud add on (e.g. '/api/editing/config')
+ * Proxy / handler used in the editing config API route in xmcloud add on (e.g. '/api/editing/config')
  * provides configuration information to determine feature compatibility on Pages side.
  * @public
  */
-export class EditingConfigMiddleware {
+export class EditingConfigProxy {
   /**
-   * @param {EditingConfigMiddlewareConfig} [config] Editing configuration middleware config
+   * @param {EditingConfigProxyConfig} [config] Editing configuration proxy config
    */
-  constructor(protected config: EditingConfigMiddlewareConfig) {}
+  constructor(protected config: EditingConfigProxyConfig) {}
 
   /**
    * Gets the Next.js API route handler
-   * @returns middleware handler
+   * @returns proxy handler
    */
   public getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void> {
     return this.handler;

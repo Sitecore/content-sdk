@@ -1,18 +1,18 @@
-﻿export { EditingService } from '@sitecore-content-sdk/core/editing';
+export { EditingService } from '@sitecore-content-sdk/core/editing';
 export {
-  EditingRenderMiddleware,
-  EditingRenderMiddlewareConfig,
-} from './editing-render-middleware';
+  EditingRenderProxy,
+  EditingRenderProxyConfig,
+} from './editing-render-proxy';
 export {
   isDesignLibraryPreviewData,
   getQueryParamsForPropagation,
   getHeadersForPropagation,
 } from './utils';
-export { FEAASRenderMiddleware, FEAASRenderMiddlewareConfig } from './feaas-render-middleware';
+export { FEAASRenderProxy, FEAASRenderProxyConfig } from './feaas-render-proxy';
 export {
-  EditingConfigMiddleware,
-  EditingConfigMiddlewareConfig,
-} from './editing-config-middleware';
+  EditingConfigProxy,
+  EditingConfigProxyConfig,
+} from './editing-config-proxy';
 export {
   RenderingType,
   EDITING_COMPONENT_PLACEHOLDER,

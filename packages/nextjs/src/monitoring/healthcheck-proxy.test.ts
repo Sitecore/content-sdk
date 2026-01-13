@@ -3,7 +3,7 @@ import { expect, use } from 'chai';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
-import { HealthcheckMiddleware } from './healthcheck-middleware';
+import { HealthcheckProxy } from './healthcheck-proxy';
 
 use(sinonChai);
 
@@ -24,13 +24,13 @@ const mockResponse = () => {
   return res;
 };
 
-describe('HealthcheckMiddleware', () => {
+describe('HealthcheckProxy', () => {
   it('should handle request', async () => {
     const req = mockRequest();
     const res = mockResponse();
 
-    const middleware = new HealthcheckMiddleware();
-    const handler = middleware.getHandler();
+    const proxy = new HealthcheckProxy();
+    const handler = proxy.getHandler();
 
     await handler(req, res);
 

@@ -1,4 +1,4 @@
-﻿import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { debug } from '@sitecore-content-sdk/core';
 import {
   EDITING_ALLOWED_ORIGINS,
@@ -6,14 +6,14 @@ import {
   INVALID_SECRET_HTML_MESSAGE,
 } from '@sitecore-content-sdk/core/editing';
 import { getEditingSecret } from '../utils/utils';
-import { RenderMiddlewareBase } from './render-middleware';
+import { RenderProxyBase } from './render-proxy';
 import { enforceCors } from '@sitecore-content-sdk/core/utils';
 
 /**
- * Configuration for `FEAASRenderMiddleware`.
+ * Configuration for `FEAASRenderProxy`.
  * @public
  */
-export interface FEAASRenderMiddlewareConfig {
+export interface FEAASRenderProxyConfig {
   /**
    * Defines FEAAS page route to render.
    * This may be necessary for certain custom Next.js routing configurations.
@@ -23,18 +23,18 @@ export interface FEAASRenderMiddlewareConfig {
 }
 
 /**
- * Middleware / handler for use in the feaas render Next.js API route (e.g. '/api/editing/feaas/render')
+ * Proxy / handler for use in the feaas render Next.js API route (e.g. '/api/editing/feaas/render')
  * which is required for Sitecore editing support.
  * @public
  */
-export class FEAASRenderMiddleware extends RenderMiddlewareBase {
+export class FEAASRenderProxy extends RenderProxyBase {
   private pageUrl: string;
   private defaultPageUrl = '/feaas/render';
 
   /**
-   * @param {EditingRenderMiddlewareConfig} [config] Editing render middleware config
+   * @param {FEAASRenderProxyConfig} [config] FEAAS render proxy config
    */
-  constructor(protected config?: FEAASRenderMiddlewareConfig) {
+  constructor(protected config?: FEAASRenderProxyConfig) {
     super();
 
     this.pageUrl = config?.pageUrl ?? this.defaultPageUrl;
@@ -53,7 +53,7 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
 
     const startTimestamp = Date.now();
 
-    debug.editing('feaas render middleware start: %o', {
+    debug.editing('feaas render proxy start: %o', {
       method,
       query,
       headers,
@@ -116,7 +116,7 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
 
       debug.editing('redirecting to page route %s', redirectUrl);
 
-      debug.editing('feaas render middleware end in %dms', Date.now() - startTimestamp);
+      debug.editing('feaas render proxy end in %dms', Date.now() - startTimestamp);
 
       res.redirect(redirectUrl);
     } catch (err) {
@@ -124,7 +124,7 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
 
       console.info(
         // eslint-disable-next-line quotes
-        "Hint: for non-standard server or Next.js route configurations, you may need to override the 'pageUrl' available on the 'FEAASRenderMiddleware' config."
+        "Hint: for non-standard server or Next.js route configurations, you may need to override the 'pageUrl' available on the 'FEAASRenderProxy' config."
       );
 
       res.status(500).send(`<html><body>${error}</body></html>`);

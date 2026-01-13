@@ -1,8 +1,8 @@
-﻿/* eslint-disable dot-notation */
+/* eslint-disable dot-notation */
 import chai from 'chai';
 import chaiString from 'chai-string';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/core/editing';
-import { RenderMiddlewareBase } from './render-middleware';
+import { RenderProxyBase } from './render-proxy';
 import {
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
@@ -15,12 +15,12 @@ type Query = {
   [key: string]: string;
 };
 
-describe('RenderMiddlewareBase', () => {
-  class SampleMiddleware extends RenderMiddlewareBase {}
+describe('RenderProxyBase', () => {
+  class SampleProxy extends RenderProxyBase {}
 
   describe('getQueryParamsForPropagation', () => {
     it('should construct query params for protection bypass', () => {
-      const middleware = new SampleMiddleware();
+      const proxy = new SampleProxy();
 
       const secret = 'secret1234';
       const query = {} as Query;
@@ -30,7 +30,7 @@ describe('RenderMiddlewareBase', () => {
       query[QUERY_PARAM_VERCEL_PROTECTION_BYPASS] = vercelBypassToken;
       query[QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE] = vercelBypassCookie;
 
-      expect(middleware['getQueryParamsForPropagation'](query)).to.deep.equal({
+      expect(proxy['getQueryParamsForPropagation'](query)).to.deep.equal({
         [QUERY_PARAM_VERCEL_PROTECTION_BYPASS]: vercelBypassToken,
         [QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE]: vercelBypassCookie,
       });
@@ -39,7 +39,7 @@ describe('RenderMiddlewareBase', () => {
 
   describe('getHeadersForPropagation', () => {
     it('should return approved headers', () => {
-      const middleware = new SampleMiddleware();
+      const proxy = new SampleProxy();
 
       const approvedHeaders = {};
       EDITING_PASS_THROUGH_HEADERS.forEach((key) => (approvedHeaders[key] = `${key}-value`));
@@ -49,7 +49,7 @@ describe('RenderMiddlewareBase', () => {
         'should-not-pass': 'n/a',
       };
 
-      expect(middleware['getHeadersForPropagation'](allHeaders)).to.deep.equal(approvedHeaders);
+      expect(proxy['getHeadersForPropagation'](allHeaders)).to.deep.equal(approvedHeaders);
     });
   });
 });

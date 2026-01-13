@@ -1,4 +1,4 @@
-﻿import { SitemapMiddleware } from '@sitecore-content-sdk/nextjs/middleware';
+import { SitemapProxy } from '@sitecore-content-sdk/nextjs/proxy';
 import scClient from 'lib/sitecore-client';
 import sites from '.sitecore/sites.json';
 
@@ -9,7 +9,7 @@ import sites from '.sitecore/sites.json';
  * The sitemap configuration can be managed within XM Cloud.
  */
 
-// Wire up the SitemapMiddleware handler
-const handler = new SitemapMiddleware(scClient, sites).getHandler();
+// Wire up the SitemapProxy handler
+const handler = new SitemapProxy(scClient, sites).getHandler();
 
 export default handler;

@@ -5,8 +5,8 @@ import sinon, { spy } from 'sinon';
 import { debug } from '@sitecore-content-sdk/core';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
 
-import { LocaleMiddleware } from './locale-middleware';
-import { REWRITE_HEADER_NAME, LOCALE_HEADER_NAME } from './middleware';
+import { LocaleProxy } from './locale-proxy';
+import { REWRITE_HEADER_NAME, LOCALE_HEADER_NAME } from './proxy';
 
 chai.use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -18,14 +18,14 @@ const defaultConfig = {
   defaultHostname: '',
 };
 
-const createMiddleware = (input: { [key: string]: any } = {}) => {
+const createProxy = (input: { [key: string]: any } = {}) => {
   const props = { ...defaultConfig, ...input.config };
 
-  const middleware = new LocaleMiddleware({
+  const proxy = new LocaleProxy({
     ...props,
   });
 
-  return { middleware };
+  return { proxy };
 };
 
 const createRequest = (props: any = {}) => {
@@ -99,7 +99,7 @@ const createResponse = (props: any = {}) => {
   return res;
 };
 
-describe('LocaleMiddleware', () => {
+describe('LocaleProxy', () => {
   const debugSpy = spy(debug, 'locale');
   const validateDebugLog = (message, ...params) => {
     expect(debugSpy.args.find((log) => log[0] === message)).to.deep.equal([message, ...params]);
@@ -112,21 +112,21 @@ describe('LocaleMiddleware', () => {
   describe('disabled / skip', () => {
     const res = createResponse();
 
-    const test = async (pathname: string, middleware) => {
+    const test = async (pathname: string, proxy) => {
       const req = createRequest({
         nextUrl: {
           pathname,
         },
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('locale middleware start: %o', {
+      validateDebugLog('locale proxy start: %o', {
         pathname,
         locale: 'en',
       });
 
-      const message = 'skipped (locale middleware is disabled)';
+      const message = 'skipped (locale proxy is disabled)';
       validateDebugLog(message);
 
       expect(finalRes).to.deep.equal(res);
@@ -135,26 +135,26 @@ describe('LocaleMiddleware', () => {
     };
 
     it('default', async () => {
-      const { middleware } = createMiddleware({ config: { locales: ['en'] } });
+      const { proxy } = createProxy({ config: { locales: ['en'] } });
 
-      await test('/src/image.png', middleware);
-      await test('/api/layout/render', middleware);
-      await test('/sitecore/render', middleware);
-      await test('/_next/webpack', middleware);
+      await test('/src/image.png', proxy);
+      await test('/api/layout/render', proxy);
+      await test('/sitecore/render', proxy);
+      await test('/_next/webpack', proxy);
     });
 
     it('should apply both default and custom rules when custom disabled function provided', async () => {
       const skip = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
 
-      const { middleware } = createMiddleware({
+      const { proxy } = createProxy({
         config: { ...defaultConfig, skip, locales: ['en'] },
       });
 
-      await test('/src/image.png', middleware);
-      await test('/api/layout/render', middleware);
-      await test('/sitecore/render', middleware);
-      await test('/_next/webpack', middleware);
-      await test('/crazypath/luna', middleware);
+      await test('/src/image.png', proxy);
+      await test('/api/layout/render', proxy);
+      await test('/sitecore/render', proxy);
+      await test('/_next/webpack', proxy);
+      await test('/crazypath/luna', proxy);
     });
   });
 
@@ -166,7 +166,7 @@ describe('LocaleMiddleware', () => {
     });
 
     it('should set locale header if locale in path', async () => {
-      const { middleware } = createMiddleware({
+      const { proxy } = createProxy({
         config: { ...defaultConfig, locales: ['en', 'de-DE'] },
       });
 
@@ -180,14 +180,14 @@ describe('LocaleMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('locale middleware start: %o', {
+      validateDebugLog('locale proxy start: %o', {
         pathname: '/de-DE/about',
         locale: 'de-DE',
       });
 
-      validateDebugLog('locale middleware end, no rewrite: %o', {
+      validateDebugLog('locale proxy end, no rewrite: %o', {
         pathname: '/de-DE/about',
         locale: 'de-DE',
       });
@@ -196,7 +196,7 @@ describe('LocaleMiddleware', () => {
     });
 
     it('should rewrite path and set locale header with default locale if locale not in path', async () => {
-      const { middleware } = createMiddleware({
+      const { proxy } = createProxy({
         config: { ...defaultConfig, locales: ['en', 'de-DE'] },
       });
 
@@ -210,14 +210,14 @@ describe('LocaleMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('locale middleware start: %o', {
+      validateDebugLog('locale proxy start: %o', {
         pathname: '/about',
         locale: 'en',
       });
 
-      validateDebugLog('locale middleware end, with rewrite: %o', {
+      validateDebugLog('locale proxy end, with rewrite: %o', {
         pathname: '/about',
         locale: 'en',
         rewritePath: '/en/about',
@@ -228,7 +228,7 @@ describe('LocaleMiddleware', () => {
     });
 
     it('should rewrite path and set locale header with default locale setting if locale not in path', async () => {
-      const { middleware } = createMiddleware({
+      const { proxy } = createProxy({
         config: { ...defaultConfig, defaultLanguage: 'de-DE', locales: ['en', 'de-DE'] },
       });
 
@@ -242,14 +242,14 @@ describe('LocaleMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('locale middleware start: %o', {
+      validateDebugLog('locale proxy start: %o', {
         pathname: '/about',
         locale: 'de-DE',
       });
 
-      validateDebugLog('locale middleware end, with rewrite: %o', {
+      validateDebugLog('locale proxy end, with rewrite: %o', {
         pathname: '/about',
         locale: 'de-DE',
         rewritePath: '/de-DE/about',

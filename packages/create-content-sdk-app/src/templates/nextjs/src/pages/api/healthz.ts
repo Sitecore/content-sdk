@@ -1,4 +1,4 @@
-﻿import { HealthcheckMiddleware } from '@sitecore-content-sdk/nextjs/monitoring';
+import { HealthcheckProxy } from '@sitecore-content-sdk/nextjs/monitoring';
 
 /**
  * This Next.js API route is used to handle healthz check request.
@@ -6,7 +6,7 @@
  * but could be used in other deployment scenarios.
  */
 
-// Wire up the HealthcheckMiddleware handler
-const handler = new HealthcheckMiddleware().getHandler();
+// Wire up the HealthcheckProxy handler
+const handler = new HealthcheckProxy().getHandler();
 
 export default handler;

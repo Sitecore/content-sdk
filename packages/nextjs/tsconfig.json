@@ -18,7 +18,7 @@
     "codegen.d.ts",
     "context.d.ts",
     "config.d.ts",
-    "middleware.d.ts",
+    "proxy.d.ts",
     "route-handler.d.ts",
     "editing.d.ts",
     "monitoring.d.ts",

@@ -1,4 +1,4 @@
-﻿import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import {
   PersonalizeService,
   getPersonalizedRewrite,
@@ -7,7 +7,7 @@ import {
   DEFAULT_VARIANT,
 } from '@sitecore-content-sdk/core/personalize';
 import { debug } from '@sitecore-content-sdk/core';
-import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
+import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { SitecoreConfig } from '../config';
@@ -22,10 +22,10 @@ export type PersonalizeGeoData = {
 };
 
 /**
- * The interface for the PersonalizeMiddleware configuration.
+ * The interface for the PersonalizeProxy configuration.
  * @public
  */
-export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig &
+export type PersonalizeProxyConfig = ProxyBaseConfig &
   SitecoreConfig['api']['edge'] &
   SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
@@ -56,22 +56,22 @@ type PersonalizeExecution = {
 };
 
 /**
- * Middleware / handler to support Sitecore Personalize
+ * Proxy / handler to support Sitecore Personalize
  * @public
  */
-export class PersonalizeMiddleware extends MiddlewareBase {
+export class PersonalizeProxy extends ProxyBase {
   protected personalizeService: PersonalizeService | null;
 
   /**
-   * @param {PersonalizeMiddlewareConfig} [config] Personalize middleware config
+   * @param {PersonalizeProxyConfig} [config] Personalize proxy config
    */
-  constructor(protected config: PersonalizeMiddlewareConfig) {
+  constructor(protected config: PersonalizeProxyConfig) {
     super(config);
 
     // Validate edge config is present - personalize requires Edge platform
     if (!this.config.contextId && !this.config.clientContextId) {
       console.warn(
-        '[PersonalizeMiddleware] Personalize middleware requires Edge configuration (contextId/clientContextId). ' +
+        '[PersonalizeProxy] Personalize proxy requires Edge configuration (contextId/clientContextId). ' +
           'Personalize features will be disabled. This is expected in local container development.'
       );
       // Set to null to indicate service is disabled
@@ -102,7 +102,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
-      debug.personalize('skipped (personalize middleware is disabled globally)');
+      debug.personalize('skipped (personalize proxy is disabled globally)');
       return res;
     }
     try {
@@ -115,7 +115,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         ? await this.config.extractGeoDataCb(req)
         : undefined;
 
-      debug.personalize('personalize middleware start: %o', {
+      debug.personalize('personalize proxy start: %o', {
         pathname,
         language,
         hostname,
@@ -124,7 +124,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
       });
 
       if (this.disabled(req, res)) {
-        debug.personalize('skipped (personalize middleware is disabled)');
+        debug.personalize('skipped (personalize proxy is disabled)');
         return res;
       }
 
@@ -164,8 +164,8 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         // Personalized, but this is a prefetch request.
         // In this case, don't execute a personalize request; otherwise, the metrics for component A/B experiments would be inaccurate.
         // Disable preflight caching to force revalidation on client-side navigation (personalization WILL be influenced).
-        // Note the reason we don't move this any earlier in the middleware is that we would then be sacrificing performance for non-personalized pages.
-        res.headers.set('x-middleware-cache', 'no-cache');
+        // Note the reason we don't move this any earlier in the proxy is that we would then be sacrificing performance for non-personalized pages.
+        res.headers.set('x-proxy-cache', 'no-cache');
         res.headers.set('Cache-Control', 'no-store, must-revalidate');
         return res;
       }
@@ -211,7 +211,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
         return res;
       }
 
-      // Path can be rewritten by previously executed middleware
+      // Path can be rewritten by previously executed proxy
       const basePath = res?.headers.get(REWRITE_HEADER_NAME) || pathname;
 
       // Rewrite to persononalized path
@@ -220,23 +220,23 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 
       // Disable preflight caching to force revalidation on client-side navigation (personalization MAY be influenced).
       // See https://github.com/vercel/next.js/pull/32767
-      response.headers.set('x-middleware-cache', 'no-cache');
+      response.headers.set('x-proxy-cache', 'no-cache');
 
-      debug.personalize('personalize middleware end in %dms: %o', Date.now() - startTimestamp, {
+      debug.personalize('personalize proxy end in %dms: %o', Date.now() - startTimestamp, {
         rewritePath,
         headers: this.extractDebugHeaders(response.headers),
       });
 
       return response;
     } catch (error) {
-      console.log('Personalize middleware failed:');
+      console.log('Personalize proxy failed:');
       console.log(error);
       return res;
     }
   };
 
   protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
-    // Check if API config is missing - if so, disable the middleware
+    // Check if API config is missing - if so, disable the proxy
     if (!this.personalizeService) {
       debug.personalize('skipped (personalize service not configured - edge config required)');
       return true;
