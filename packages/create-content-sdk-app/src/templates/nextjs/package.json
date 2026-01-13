@@ -27,7 +27,7 @@
     "@sitecore-content-sdk/nextjs": "<%- version %>",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",
-    "next": "^16.0.0",
+    "next": "^16.1.1",
     "next-localization": "^0.12.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1"

@@ -119,7 +119,6 @@ import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
-import { NextFetchEvent } from 'next/server';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
@@ -340,7 +339,7 @@ export const defineConfig: (config?: SitecoreConfigInput) => SitecoreConfig;
 
 // @public
 export const defineMiddleware: (...middlewares: Middleware[]) => {
-    exec: (req: NextRequest, ev?: NextFetchEvent, res?: NextResponse) => Promise<NextResponse<unknown>>;
+    exec: (req: NextRequest, res?: NextResponse) => Promise<NextResponse<unknown>>;
 };
 
 export { DesignLibrary }
@@ -597,7 +596,7 @@ export { MemoryCacheClient }
 
 // @public
 export abstract class Middleware {
-    abstract handle(req: NextRequest, res: NextResponse, ev: NextFetchEvent): Promise<NextResponse>;
+    abstract handle(req: NextRequest, res: NextResponse): Promise<NextResponse>;
 }
 
 // @public

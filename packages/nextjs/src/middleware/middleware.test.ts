@@ -6,7 +6,7 @@ import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
 import { defineMiddleware, Middleware, MiddlewareBase, REWRITE_HEADER_NAME } from './middleware';
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { SiteResolver } from '../site';
 
 use(sinonChai);
@@ -577,9 +577,8 @@ describe('defineMiddleware', () => {
     const res = {
       params: [],
     } as unknown as NextResponse;
-    const ev = {} as NextFetchEvent;
 
-    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev, res);
+    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, res);
 
     expect(result).to.deep.equal({
       params: ['m2', 'm1', 'm3'],
@@ -610,9 +609,8 @@ describe('defineMiddleware', () => {
     };
 
     const req = {} as NextRequest;
-    const ev = {} as NextFetchEvent;
 
-    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev);
+    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req);
 
     expect(result.headers.get('m1')).to.equal('true');
     expect(result.headers.get('m2')).to.equal('true');
@@ -638,7 +636,7 @@ describe('defineMiddleware', () => {
 
     const req = {} as NextRequest;
 
-    // Next.js 16 style: ev parameter is optional
+    // Next.js 16 style: ev parameter removed
     const result = await defineMiddleware(middleware2, middleware1).exec(req);
 
     expect(result.headers.get('m1')).to.equal('true');

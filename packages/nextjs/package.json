@@ -63,7 +63,7 @@
     "glob": "^11.0.2",
     "jsdom": "^26.1.0",
     "mocha": "^11.2.2",
-    "next": "^16.0.0",
+    "next": "^16.1.1",
     "nock": "14.0.0-beta.7",
     "nyc": "^17.1.0",
     "prettier": "^2.8.0",
@@ -79,7 +79,7 @@
     "@sitecore-cloudsdk/core": "^0.5.1",
     "@sitecore-cloudsdk/events": "^0.5.1",
     "@sitecore-cloudsdk/personalize": "^0.5.1",
-    "next": "^16.0.0",
+    "next": "^16.1.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "typescript": "^5.4.0"
