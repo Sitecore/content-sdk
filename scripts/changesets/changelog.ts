@@ -1,8 +1,4 @@
-import type {
-  ChangelogFunctions,
-  NewChangesetWithCommit,
-  ModCompWithPackage,
-} from '@changesets/types';
+import type { ChangelogFunctions, NewChangesetWithCommit } from '@changesets/types';
 
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */

@@ -76,31 +76,6 @@ jobs:
             echo "No API doc changes to commit"
           fi
 
-      - name: Pre-release version update (Canary)
-        if: steps.configure-action.outputs.isFullRelease != 'true' && github.ref_name == 'dev'
-        run: |
-          echo "Creating canary release on dev branch (no tags)..."
-          npx lerna version prerelease --preid canary --message "%s [skip ci]" --sign-git-tag false --yes --no-git-tag-version
-          echo "Fixing dependency ranges (removing carets from canary versions)..."
-          node scripts/fix-dependency-ranges.js
-          yarn install
-          git commit -a -m "chore: bump versions for canary release [skip ci]"
-          git push origin dev
-        env:
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-
-      - name: Pre-release canary publish
-        if: steps.configure-action.outputs.isFullRelease != 'true' && github.ref_name == 'dev'
-        run: |
-          echo "Publishing canary packages to npm..."
-          echo "registry=https://${NPM_REGISTRY}/" > .npmrc
-          echo "@sitecore-content-sdk:registry=https://${NPM_REGISTRY}/" >> .npmrc
-          echo "//${NPM_REGISTRY}/:_authToken=${NPM_TOKEN}" >> .npmrc
-          npx lerna publish from-package --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-
       - name: Creating .npmrc
         run: |
           cat << EOF > "$HOME/.npmrc"
@@ -112,12 +87,36 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
 
+      - name: Pre-release version update (Canary)
+        if: steps.configure-action.outputs.isFullRelease != 'true' && github.ref_name == 'dev'
+        run: |
+          echo "Creating canary release on dev branch (no tags)..."
+          npx lerna version prerelease --exact --preid canary --sign-git-tag false --yes --no-git-tag-version
+          yarn install
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -a -m "chore: bump versions for canary release [skip ci]"
+            git push origin dev
+          else
+            echo "No version changes to commit"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Pre-release canary publish
+        if: steps.configure-action.outputs.isFullRelease != 'true' && github.ref_name == 'dev'
+        run: |
+          echo "Publishing canary packages to npm..."
+          npx lerna publish from-package --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
           version: yarn prep-release
-          publish: yarn changeset:publish
+          publish: yarn publish-release
           commit: '[release][ci] changelog, release and version bump'
           title: '[csdk] release'
         env:
