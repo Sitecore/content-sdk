@@ -669,7 +669,7 @@ export function getDesignLibraryStylesheetLinks(layoutData: LayoutServiceData, s
 export const getDynamicPlaceholderPattern: (placeholder: string) => RegExp;
 
 // @public
-export const getEdgeProxyContentUrl: (sitecoreEdgeContextId: string, sitecoreEdgeUrl?: string) => string;
+export const getEdgeProxyContentUrl: (sitecoreEdgeUrl?: string) => string;
 
 // @internal
 export const getEdgeProxyFormsUrl: (sitecoreEdgeContextId: string, formId: string, sitecoreEdgeUrl?: string) => string;
@@ -748,7 +748,7 @@ export type GraphQLClientOptions = Pick<SitecoreConfigInput, 'api'> & FetchOptio
 // @public
 export class GraphQLRequestClient implements GraphQLClient {
     constructor(endpoint: string, clientConfig?: GraphQLRequestClientConfig);
-    static createClientFactory({ endpoint, apiKey, }: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory;
+    static createClientFactory({ endpoint, apiKey, contextId, }: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory;
     request<T>(query: string | DocumentNode, variables?: {
         [key: string]: unknown;
     }, options?: FetchOptions): Promise<T>;
@@ -757,6 +757,7 @@ export class GraphQLRequestClient implements GraphQLClient {
 // @public
 export type GraphQLRequestClientConfig = {
     apiKey?: string;
+    contextId?: string;
     debugger?: Debugger;
     fetch?: typeof fetch;
     timeout?: number;
@@ -766,12 +767,13 @@ export type GraphQLRequestClientConfig = {
 };
 
 // @public
-export type GraphQLRequestClientFactory = (config?: Omit<GraphQLRequestClientConfig, 'apiKey'>) => GraphQLRequestClient;
+export type GraphQLRequestClientFactory = (config?: Omit<GraphQLRequestClientConfig, 'apiKey' | 'contextId'>) => GraphQLRequestClient;
 
 // @public
 export type GraphQLRequestClientFactoryConfig = {
     endpoint: string;
     apiKey?: string;
+    contextId?: string;
 };
 
 // @internal

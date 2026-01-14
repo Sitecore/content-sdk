@@ -8,10 +8,14 @@ export async function getCdnUrl(
   sitecoreEdgeContextId: string,
   sitecoreEdgeUrl: string
 ): Promise<string | null> {
-  const requestUrl = `${sitecoreEdgeUrl}/v1/personalize/cdn-url?sitecoreContextId=${sitecoreEdgeContextId}&client_key=`;
+  const requestUrl = `${sitecoreEdgeUrl}/v1/personalize/cdn-url?client_key=`;
 
   try {
-    const response = await fetch(requestUrl);
+    const response = await fetch(requestUrl, {
+      headers: {
+        'x-sitecore-contextid': sitecoreEdgeContextId,
+      },
+    });
     if (!response.ok) return null;
 
     return await response.text();

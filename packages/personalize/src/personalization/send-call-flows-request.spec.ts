@@ -107,7 +107,7 @@ describe('sendCallFlowsRequest', () => {
         'Personalize request: %s with options: %O'
       );
       expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
-        'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
+        'http://testurl/v1/personalize?siteId=site'
       );
 
       expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
@@ -149,7 +149,7 @@ describe('sendCallFlowsRequest', () => {
         'Personalize request: %s with options: %O'
       );
       expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
-        'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
+        'http://testurl/v1/personalize?siteId=site'
       );
       expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
         'Personalize response in %dms : %O'
@@ -177,7 +177,7 @@ describe('sendCallFlowsRequest', () => {
         'Personalize request: %s with options: %O'
       );
       expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
-        'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
+        'http://testurl/v1/personalize?siteId=site'
       );
       expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
         'Error personalize response: %O'
@@ -203,7 +203,7 @@ describe('sendCallFlowsRequest', () => {
         'Personalize request: %s with options: %O'
       );
       expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
-        'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
+        'http://testurl/v1/personalize?siteId=site'
       );
       expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
         'Personalize response in %dms : %O'
@@ -258,7 +258,7 @@ describe('sendCallFlowsRequest', () => {
         'Personalize request: %s with options: %O'
       );
       expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
-        'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
+        'http://testurl/v1/personalize?siteId=site'
       );
       expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
         'Personalize response in %dms : %O'
@@ -316,7 +316,7 @@ describe('sendCallFlowsRequest', () => {
 
   describe('opts object', () => {
     const personalizeData: EPCallFlowsBody = { ...personalizeDataOriginal, email: 'test' };
-    const expectedUrl = 'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site';
+    const expectedUrl = 'http://testurl/v1/personalize?siteId=site';
     const expectedOpts = {
       body: JSON.stringify({
         channel: 'WEB',
@@ -334,6 +334,7 @@ describe('sendCallFlowsRequest', () => {
         'Content-Type': 'application/json',
         'X-Library-Version': PACKAGE_VERSION,
         'x-sc-correlation-id': 'b10bb699bfb3419bb63f638c62ed1aa7',
+        'x-sitecore-contextid': '123',
         /* eslint-enable @typescript-eslint/naming-convention */
       },
       method: 'POST',

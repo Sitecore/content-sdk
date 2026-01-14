@@ -25,7 +25,7 @@ export async function sendCallFlowsRequest(
   let debugResponse: DebugResponse = {};
 
   // eslint-disable-next-line max-len
-  const requestUrl = `${settings.sitecoreEdgeUrl}/v1/personalize?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
+  const requestUrl = `${settings.sitecoreEdgeUrl}/v1/personalize?siteId=${settings.siteName}`;
 
   const fetchOptions: FetchOptions = {
     body: JSON.stringify(epCallFlowsBody),
@@ -34,6 +34,7 @@ export async function sendCallFlowsRequest(
       'Content-Type': 'application/json',
       'X-Library-Version': PACKAGE_VERSION,
       'x-sc-correlation-id': generateCorrelationId(),
+      'x-sitecore-contextid': settings.sitecoreEdgeContextId,
       /* eslint-enable @typescript-eslint/naming-convention */
     },
     method: 'POST',
