@@ -6,6 +6,10 @@ on:
       - dev
       - 'release/**'
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   check-change-files:
     runs-on: ubuntu-latest
