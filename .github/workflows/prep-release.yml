@@ -1,5 +1,8 @@
 name: Prepare Release Branch
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
     inputs:
