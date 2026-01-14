@@ -74,8 +74,8 @@ describe('EditingConfigMiddleware', () => {
     const req = mockRequest('GET', query);
     const res = mockResponse();
 
-    const proxy = new EditingConfigMiddleware({ components: componentsMap, metadata });
-    const handler = proxy.getHandler();
+    const middleware = new EditingConfigMiddleware({ components: componentsMap, metadata });
+    const handler = middleware.getHandler();
 
     await handler(req, res);
 
@@ -87,8 +87,8 @@ describe('EditingConfigMiddleware', () => {
   it('should stop request and return 401 when CORS match is not met', async () => {
     const req = mockRequest('GET', {}, { origin: 'https://notallowed.com' });
     const res = mockResponse();
-    const proxy = new EditingConfigMiddleware({ components: componentsMap, metadata });
-    const handler = proxy.getHandler();
+    const middleware = new EditingConfigMiddleware({ components: componentsMap, metadata });
+    const handler = middleware.getHandler();
 
     await handler(req, res);
 
@@ -105,8 +105,8 @@ describe('EditingConfigMiddleware', () => {
     const req = mockRequest('GET', query);
     const res = mockResponse();
 
-    const proxy = new EditingConfigMiddleware({ components: componentsMap, metadata });
-    const handler = proxy.getHandler();
+    const middleware = new EditingConfigMiddleware({ components: componentsMap, metadata });
+    const handler = middleware.getHandler();
 
     await handler(req, res);
 
@@ -121,8 +121,8 @@ describe('EditingConfigMiddleware', () => {
     const req = mockRequest('OPTIONS', query);
     const res = mockResponse();
 
-    const proxy = new EditingConfigMiddleware({ components: componentsMap, metadata });
-    const handler = proxy.getHandler();
+    const middleware = new EditingConfigMiddleware({ components: componentsMap, metadata });
+    const handler = middleware.getHandler();
 
     await handler(req, res);
 
@@ -148,8 +148,8 @@ describe('EditingConfigMiddleware', () => {
     query[QUERY_PARAM_EDITING_SECRET] = secret;
     const req = mockRequest('GET', query);
     const res = mockResponse();
-    const proxy = new EditingConfigMiddleware({ components, metadata });
-    const handler = proxy.getHandler();
+    const middleware = new EditingConfigMiddleware({ components, metadata });
+    const handler = middleware.getHandler();
 
     await handler(req, res);
 
