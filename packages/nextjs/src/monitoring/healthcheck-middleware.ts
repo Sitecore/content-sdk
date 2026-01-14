@@ -1,10 +1,10 @@
 import { NextApiResponse, NextApiRequest } from 'next';
 
 /**
- * Proxy / handler for use in healthcheck Next.js API route (e.g. '/api/healthz').
+ * Middleware / handler for use in healthcheck Next.js API route (e.g. '/api/healthz').
  * @public
  */
-export class HealthcheckProxy {
+export class HealthcheckMiddleware {
   /**
    * Gets the Next.js API route handler
    * @returns route handler

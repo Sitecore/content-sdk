@@ -1,1 +1,1 @@
-export { HealthcheckProxy } from './healthcheck-proxy';
+export { HealthcheckMiddleware } from './healthcheck-middleware';
