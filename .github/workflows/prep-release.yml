@@ -1,25 +1,17 @@
 name: Prepare Release Branch
 
 permissions:
-  contents: read
+  contents: write
 
 on:
   workflow_dispatch:
     inputs:
-      version_pattern:
-        description: 'Version pattern (e.g., 1.3.x)'
+      package_name:
+        description: 'Short name of package (nextjs, angular, create-content-sdk-app, etc.)'
         required: true
         type: string
-      release_type:
-        description: 'Release type'
-        required: true
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
-      base_tag:
-        description: 'Base git tag (e.g., v1.3.0)'
+      version:
+        description: 'Version to patch (e.g., 1.2, 1.2.x, or 1.2.3). Will pick latest released patch'
         required: true
         type: string
 
@@ -47,21 +39,34 @@ jobs:
           git config --global user.name "content-sdk-bot"
           git remote set-url origin https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}
 
-      - name: Verify base tag exists
-        run: |
-          BASE_TAG="${{ inputs.base_tag }}"
-          if ! git rev-parse "$BASE_TAG" >/dev/null 2>&1; then
-            echo "❌ Tag $BASE_TAG does not exist"
-            echo "Available tags:"
-            git tag --list | tail -10
-            exit 1
-          fi
-          echo "✅ Tag $BASE_TAG exists"
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
-      - name: Check if branch already exists
+      # Validate inputs and put values for further processing into GH output
+      - name: Resolve package name
+        id: resolve-package
+        run: node scripts/resolve-package.js "${{ inputs.package_name }}" >> $GITHUB_OUTPUT
+
+      - name: Parse version input
+        id: parse-version
+        run: node scripts/parse-version.js "${{ inputs.version }}" >> $GITHUB_OUTPUT
+
+      - name: Find release tag
+        id: find-tag
+        run: |
+          node scripts/find-release-tag.js \
+            "${{ steps.resolve-package.outputs.full_name }}" \
+            "${{ steps.parse-version.outputs.version }}" >> $GITHUB_OUTPUT
+
+      - name: Check if release branch already exists
         id: check-branch
         run: |
-          BRANCH_NAME="release/${{ inputs.version_pattern }}"
+          PACKAGE_NAME="${{ steps.resolve-package.outputs.full_name }}"
+          NEXT_VERSION="${{ steps.find-tag.outputs.next_version }}"
+          BRANCH_NAME="release/${PACKAGE_NAME}@${NEXT_VERSION}"
+
           if git ls-remote --heads origin "$BRANCH_NAME" | grep -q "$BRANCH_NAME"; then
             echo "⚠️ Branch $BRANCH_NAME already exists"
             echo "exists=true" >> $GITHUB_OUTPUT
@@ -70,24 +75,16 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: |
-          yarn cache clean --all
-          yarn install --immutable
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
 
       - name: Create release branch
         if: steps.check-branch.outputs.exists == 'false'
         run: |
-          BASE_TAG="${{ inputs.base_tag }}"
-          BRANCH_NAME="release/${{ inputs.version_pattern }}"
+          LATEST_TAG="${{ steps.find-tag.outputs.latest_tag }}"
+          BRANCH_NAME="${{ steps.check-branch.outputs.branch_name }}"
 
-          echo "Creating branch $BRANCH_NAME from tag $BASE_TAG"
-          git checkout -b "$BRANCH_NAME" "$BASE_TAG" || {
+          echo "Creating branch $BRANCH_NAME from tag $LATEST_TAG"
+          git checkout -b "$BRANCH_NAME" "$LATEST_TAG" || {
             echo "❌ Failed to create branch $BRANCH_NAME"
             exit 1
           }
@@ -101,53 +98,32 @@ jobs:
       - name: Branch already exists
         if: steps.check-branch.outputs.exists == 'true'
         run: |
-          BRANCH_NAME="release/${{ inputs.version_pattern }}"
+          BRANCH_NAME="${{ steps.check-branch.outputs.branch_name }}"
           echo "⚠️ Branch $BRANCH_NAME already exists"
           echo "If you want to use it, checkout the branch manually:"
           echo "  git checkout $BRANCH_NAME"
           echo "If you want to recreate it, delete the branch first:"
           echo "  git push origin --delete $BRANCH_NAME"
 
-      - name: Prepare release - Bump versions (optional)
-        if: steps.check-branch.outputs.exists == 'false'
-        run: |
-          BRANCH_NAME="release/${{ inputs.version_pattern }}"
-          echo "Checking if change files exist..."
-          if [ -n "$(find change -name '*.json' 2>/dev/null)" ]; then
-            echo "Change files found. Bumping versions and generating changelogs..."
-            npx beachball bump --keep-change-files --yes || echo "⚠️ No changes to bump or bump failed"
-            if [ -n "$(git status --porcelain)" ]; then
-              echo "Committing version bumps and changelogs..."
-              git add .
-              git commit -m "chore: bump versions and update changelogs for release ${{ inputs.version_pattern }}" || {
-                echo "⚠️ Failed to commit version bumps (may already be committed)"
-                exit 0
-              }
-              git push origin "$BRANCH_NAME" || {
-                echo "⚠️ Failed to push version bumps (may already be pushed or no changes)"
-                exit 0
-              }
-              echo "✅ Versions bumped and committed to $BRANCH_NAME"
-            else
-              echo "⚠️ No version changes to commit"
-            fi
-          else
-            echo "⚠️ No change files found. Create change files first with: yarn beachball change"
-          fi
-
       - name: Summary
         run: |
-          BRANCH_NAME="release/${{ inputs.version_pattern }}"
+          PACKAGE_NAME="${{ steps.resolve-package.outputs.full_name }}"
+          BRANCH_NAME="${{ steps.check-branch.outputs.branch_name }}"
+          LATEST_TAG="${{ steps.find-tag.outputs.latest_tag }}"
+          NEXT_VERSION="${{ steps.find-tag.outputs.next_version }}"
+
           echo "## Release Branch Prepared" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ **Branch:** \`$BRANCH_NAME\`" >> $GITHUB_STEP_SUMMARY
-          echo "✅ **Base tag:** \`${{ inputs.base_tag }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "✅ **Release type:** \`${{ inputs.release_type }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Package** | \`$PACKAGE_NAME\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Base tag** | \`$LATEST_TAG\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Branch** | \`$BRANCH_NAME\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Target version** | \`$NEXT_VERSION\` |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
           echo "1. Checkout the branch: \`git checkout $BRANCH_NAME\`" >> $GITHUB_STEP_SUMMARY
-          echo "2. Make your patch changes" >> $GITHUB_STEP_SUMMARY
-          echo "3. Create change files: \`yarn beachball change\` (select patch)" >> $GITHUB_STEP_SUMMARY
-          echo "4. Run \`yarn bump\` to update versions and generate changelogs (or let prep-release do it)" >> $GITHUB_STEP_SUMMARY
-          echo "5. Create PR with title: \`(release) Patch release ${{ inputs.version_pattern }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "6. Merge PR to trigger release (lerna will publish already-bumped versions)" >> $GITHUB_STEP_SUMMARY
+          echo "2. Cherrypick or add patch changes" >> $GITHUB_STEP_SUMMARY
+          echo "3. Add changesets (\`yarn changeset\`)" >> $GITHUB_STEP_SUMMARY
+          echo "4. Push changes - canary versions will be published automatically" >> $GITHUB_STEP_SUMMARY
+          echo "5. Merge patch release PR to trigger the release" >> $GITHUB_STEP_SUMMARY

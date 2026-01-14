@@ -1,9 +1,13 @@
 name: Publish
 
+permissions:
+  contents: write
+  pull-requests: write
+
 on:
   # Trigger for canary and stable releases:
-  # - Full release: When PR from changeset-release/dev branch is merged
-  # - Canary release: Push to dev branch (not from changeset-release/dev)
+  # - Full release: When PR from changeset-release/* branch is merged
+  # - Canary release: Push to dev or release/* branches (not from changeset-release merge)
   push:
     branches:
       - dev
@@ -28,7 +32,7 @@ jobs:
       - name: Configure action
         id: configure-action
         run: |
-          # Check commit message for (release) prefix to determine if this is a full release
+          # Check commit message for [release] prefix to determine if this is a full release
           # For push events, head_commit.message contains the commit message
           COMMIT_MSG="${{ github.event.head_commit.message }}"
           if [[ "$COMMIT_MSG" =~ ^\[release\] ]]; then
@@ -90,12 +94,19 @@ jobs:
       - name: Pre-release version update (Canary)
         if: steps.configure-action.outputs.isFullRelease != 'true' && github.ref_name == 'dev'
         run: |
+          BRANCH_NAME="${{ github.ref_name }}"
+          if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
+            TIMESTAMP=$(date -u +%Y%m%d%H%M%S)
+            # For patch canaries: use timestamp to avoid potential canary version conflicts
+            PREID="canary.${TIMESTAMP}"
+          else
+            PREID="canary"
           echo "Creating canary release on dev branch (no tags)..."
-          npx lerna version prerelease --exact --preid canary --sign-git-tag false --yes --no-git-tag-version
+          npx lerna version prerelease --exact --preid "$PREID" --sign-git-tag false --yes --no-git-tag-version
           yarn install
           if [ -n "$(git status --porcelain)" ]; then
             git commit -a -m "chore: bump versions for canary release [skip ci]"
-            git push origin dev
+            git push origin HEAD:$BRANCH_NAME
           else
             echo "No version changes to commit"
           fi
@@ -111,6 +122,10 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
 
+      # ========== FULL RELEASES ==========
+      # Changesets action handles creating release PRs and publishing
+      # For dev branch: creates PR from changeset-release/dev
+      # For release/* branches: creates PR from changeset-release/release/*
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
@@ -118,7 +133,7 @@ jobs:
           version: yarn prep-release
           publish: yarn publish-release
           commit: '[release][ci] changelog, release and version bump'
-          title: '[csdk] release'
+          title: ${{ github.ref_name == 'dev' && '[csdk] latest release' || format('[csdk] patch release - {0}', github.ref_name) }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
