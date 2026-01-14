@@ -519,7 +519,7 @@ export { GraphQLRequestClientFactoryConfig }
 export const handleEditorFastRefresh: (forceReload?: boolean) => void;
 
 // @public
-export class HealthcheckProxy {
+export class HealthcheckMiddleware {
     getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 }
 
