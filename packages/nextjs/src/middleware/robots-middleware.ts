@@ -3,10 +3,10 @@ import { SitecoreClient } from '@sitecore-content-sdk/core/client';
 import { SiteInfo, SiteResolver } from '../site';
 
 /**
- * Proxy for handling robots.txt requests in a Next.js application.
+ * Middleware for handling robots.txt requests in a Next.js application.
  * @public
  */
-export class RobotsProxy {
+export class RobotsMiddleware {
   private client: SitecoreClient;
   private siteResolver: SiteResolver;
 

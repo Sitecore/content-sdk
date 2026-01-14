@@ -1,4 +1,4 @@
-import { RobotsProxy } from '@sitecore-content-sdk/nextjs/proxy';
+import { RobotsMiddleware } from '@sitecore-content-sdk/nextjs/middleware';
 import scClient from 'lib/sitecore-client';
 import sites from '.sitecore/sites.json';
 
@@ -10,7 +10,7 @@ import sites from '.sitecore/sites.json';
  * used by search engine crawlers to determine crawl and indexing rules.
  */
 
-// Wire up the RobotsProxy handler
-const handler = new RobotsProxy(scClient, sites).getHandler();
+// Wire up the RobotsMiddleware handler
+const handler = new RobotsMiddleware(scClient, sites).getHandler();
 
 export default handler;

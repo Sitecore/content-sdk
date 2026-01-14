@@ -357,32 +357,32 @@ export { EDITING_COMPONENT_ID }
 export { EDITING_COMPONENT_PLACEHOLDER }
 
 // @public
-export class EditingConfigProxy {
-    constructor(config: EditingConfigProxyConfig);
+export class EditingConfigMiddleware {
+    constructor(config: EditingConfigMiddlewareConfig);
     // (undocumented)
-    protected config: EditingConfigProxyConfig;
+    protected config: EditingConfigMiddlewareConfig;
     getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 }
 
 // @public
-export type EditingConfigProxyConfig = {
+export type EditingConfigMiddlewareConfig = {
     components: ComponentMap<NextjsContentSdkComponent>;
     metadata: Metadata;
 };
 
-// Warning: (ae-forgotten-export) The symbol "RenderProxyBase" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "RenderMiddlewareBase" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export class EditingRenderProxy extends RenderProxyBase {
-    constructor(config?: EditingRenderProxyConfig | undefined);
+export class EditingRenderMiddleware extends RenderMiddlewareBase {
+    constructor(config?: EditingRenderMiddlewareConfig | undefined);
     // (undocumented)
-    config?: EditingRenderProxyConfig | undefined;
+    config?: EditingRenderMiddlewareConfig | undefined;
     // Warning: (ae-forgotten-export) The symbol "EditingNextApiRequest" needs to be exported by the entry point api-surface.d.ts
     getHandler(): (req: EditingNextApiRequest, res: NextApiResponse) => Promise<void>;
 }
 
 // @public
-export type EditingRenderProxyConfig = {
+export type EditingRenderMiddlewareConfig = {
     resolvePageUrl?: (itemPath: string) => string;
     sitecoreInternalEditingHostUrl?: string;
 };
@@ -417,15 +417,15 @@ export { FEaaSComponentParams }
 export { FEaaSComponentProps }
 
 // @public
-export class FEAASRenderProxy extends RenderProxyBase {
-    constructor(config?: FEAASRenderProxyConfig | undefined);
+export class FEAASRenderMiddleware extends RenderMiddlewareBase {
+    constructor(config?: FEAASRenderMiddlewareConfig | undefined);
     // (undocumented)
-    protected config?: FEAASRenderProxyConfig | undefined;
+    protected config?: FEAASRenderMiddlewareConfig | undefined;
     getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 }
 
 // @public
-export interface FEAASRenderProxyConfig {
+export interface FEAASRenderMiddlewareConfig {
     pageUrl?: string;
 }
 
@@ -808,7 +808,7 @@ export type RichTextProps = RichTextProps_2 & {
 };
 
 // @public
-export class RobotsProxy {
+export class RobotsMiddleware {
     constructor(client: SitecoreClient_2, sites: SiteInfo[]);
     // (undocumented)
     getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
@@ -874,7 +874,7 @@ export { SiteInfoService }
 export { SiteInfoServiceConfig }
 
 // @public
-export class SitemapProxy {
+export class SitemapMiddleware {
     constructor(client: SitecoreClient_2, sites: SiteInfo[]);
     // (undocumented)
     getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;

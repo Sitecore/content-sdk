@@ -11,7 +11,7 @@ import {
   EditingRenderQueryParams,
   DesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
-import { EditingRenderProxy, EditingNextApiRequest } from './editing-render-proxy';
+import { EditingRenderMiddleware, EditingNextApiRequest } from './editing-render-middleware';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
@@ -77,7 +77,7 @@ const mockResponse = () => {
   return res;
 };
 
-describe('EditingRenderProxy', () => {
+describe('EditingRenderMiddleware', () => {
   const secret = 'secret1234';
 
   beforeEach(() => {
@@ -101,7 +101,7 @@ describe('EditingRenderProxy', () => {
     });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     await handler(req, res);
@@ -121,7 +121,7 @@ describe('EditingRenderProxy', () => {
     });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     await handler(req, res);
@@ -149,7 +149,7 @@ describe('EditingRenderProxy', () => {
     });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     await handler(req, res);
@@ -164,7 +164,7 @@ describe('EditingRenderProxy', () => {
       headers: { origin: 'https://notallowed.com' },
     });
     const res = mockResponse();
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     await handler(req, res);
@@ -182,7 +182,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     await handler(req, res);
@@ -208,7 +208,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     sinon
@@ -249,7 +249,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     sinon
@@ -281,7 +281,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query: queryWithoutOptionalParams });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     sinon
@@ -313,7 +313,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy({
+    const proxy = new EditingRenderMiddleware({
       resolvePageUrl: (itemPath) => {
         return `/custom/path${itemPath}`;
       },
@@ -358,7 +358,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     sinon
@@ -389,7 +389,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query: { sc_site: 'website', secret } });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     await handler(req, res);
@@ -407,7 +407,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     sinon
@@ -432,7 +432,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query: { ...query, ...protectedQuery } });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
 
     const handler = proxy.getHandler();
 
@@ -461,7 +461,7 @@ describe('EditingRenderProxy', () => {
 
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     const fetcherGetStub = sinon
@@ -485,7 +485,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     sinon
@@ -501,7 +501,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     sinon
@@ -518,7 +518,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     sinon.stub(proxy['dataFetcher'], 'get').resolves({
@@ -537,7 +537,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     sinon
@@ -555,7 +555,7 @@ describe('EditingRenderProxy', () => {
     const req = mockRequest({ query });
     const res = mockResponse();
 
-    const proxy = new EditingRenderProxy();
+    const proxy = new EditingRenderMiddleware();
     const handler = proxy.getHandler();
 
     sinon.stub(proxy['dataFetcher'], 'get').throws(new Error('Request failed'));
@@ -585,7 +585,7 @@ describe('EditingRenderProxy', () => {
       const req = mockRequest({ query });
       const res = mockResponse();
 
-      const proxy = new EditingRenderProxy();
+      const proxy = new EditingRenderMiddleware();
       const handler = proxy.getHandler();
 
       sinon
@@ -617,7 +617,7 @@ describe('EditingRenderProxy', () => {
       const req = mockRequest({ query: { ...query, mode: DesignLibraryMode.Metadata } });
       const res = mockResponse();
 
-      const proxy = new EditingRenderProxy();
+      const proxy = new EditingRenderMiddleware();
       const handler = proxy.getHandler();
 
       sinon
@@ -651,7 +651,7 @@ describe('EditingRenderProxy', () => {
       });
       const res = mockResponse();
 
-      const proxy = new EditingRenderProxy();
+      const proxy = new EditingRenderMiddleware();
       const handler = proxy.getHandler();
 
       await handler(req, res);
@@ -682,7 +682,7 @@ describe('EditingRenderProxy', () => {
       const req = mockRequest({ query });
       const res = mockResponse();
 
-      const proxy = new EditingRenderProxy();
+      const proxy = new EditingRenderMiddleware();
       const handler = proxy.getHandler();
 
       sinon
@@ -729,7 +729,7 @@ describe('EditingRenderProxy', () => {
       req.headers['host'] = reqHost;
       const res = mockResponse();
 
-      const proxy = new EditingRenderProxy();
+      const proxy = new EditingRenderMiddleware();
 
       const handler = proxy.getHandler();
 
@@ -751,7 +751,7 @@ describe('EditingRenderProxy', () => {
       req.headers['host'] = reqHost;
       const res = mockResponse();
 
-      const proxy = new EditingRenderProxy();
+      const proxy = new EditingRenderMiddleware();
 
       const handler = proxy.getHandler();
 
@@ -773,7 +773,7 @@ describe('EditingRenderProxy', () => {
       const req = mockRequest({ query });
       const res = mockResponse();
 
-      const proxy = new EditingRenderProxy();
+      const proxy = new EditingRenderMiddleware();
 
       const handler = proxy.getHandler();
 
@@ -796,7 +796,7 @@ describe('EditingRenderProxy', () => {
       const req = mockRequest({ query });
       const res = mockResponse();
 
-      const proxy = new EditingRenderProxy({
+      const proxy = new EditingRenderMiddleware({
         sitecoreInternalEditingHostUrl: reqHostConfig,
       });
 

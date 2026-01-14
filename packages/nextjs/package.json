@@ -15,7 +15,7 @@
     "test": "mocha --require ./test/setup.js \"./src/**/*.test.ts\" \"./src/**/*.test.tsx\" --exit",
     "prepublishOnly": "npm run build",
     "coverage": "nyc npm test",
-    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/nextjs --entryPoints src/index.ts --entryPoints src/monitoring/index.ts --entryPoints src/editing/index.ts --entryPoints src/proxy/index.ts --entryPoints src/context/index.ts --entryPoints src/utils/index.ts --entryPoints src/site/index.ts --entryPoints src/client/index.ts --entryPoints src/tools/index.ts --entryPoints src/editing/codegen/index.ts --entryPoints src/route-handler/index.ts --githubPages false",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/nextjs --entryPoints src/index.ts --entryPoints src/monitoring/index.ts --entryPoints src/editing/index.ts --entryPoints src/proxy/index.ts --entryPoints src/middleware/index.ts --entryPoints src/context/index.ts --entryPoints src/utils/index.ts --entryPoints src/site/index.ts --entryPoints src/client/index.ts --entryPoints src/tools/index.ts --entryPoints src/editing/codegen/index.ts --entryPoints src/route-handler/index.ts --githubPages false",
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
@@ -137,6 +137,11 @@
       "import": "./dist/esm/proxy/index.js",
       "require": "./dist/cjs/proxy/index.js",
       "types": "./types/proxy/index.d.ts"
+    },
+    "./middleware": {
+      "import": "./dist/esm/middleware/index.js",
+      "require": "./dist/cjs/middleware/index.js",
+      "types": "./types/middleware/index.d.ts"
     },
     "./monitoring": {
       "import": "./dist/esm/monitoring/index.js",

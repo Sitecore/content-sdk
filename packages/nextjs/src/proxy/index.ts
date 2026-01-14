@@ -4,8 +4,6 @@ export { RedirectsProxy, RedirectsProxyConfig } from './redirects-proxy';
 export { PersonalizeProxy, PersonalizeProxyConfig } from './personalize-proxy';
 export { MultisiteProxy, MultisiteProxyConfig } from './multisite-proxy';
 export { AppRouterMultisiteProxy } from './app-router-multisite-proxy';
-export { SitemapProxy } from './sitemap-proxy';
-export { RobotsProxy } from './robots-proxy';
 export { LocaleProxy, LocaleProxyConfig } from './locale-proxy';
 export {
   PersonalizeService,

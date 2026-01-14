@@ -3,11 +3,11 @@ import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/core/cl
 import { SiteInfo, SiteResolver } from '../site';
 
 /**
- * Proxy for handling sitemap requests in a Next.js application.
+ * Middleware for handling sitemap requests in a Next.js application.
  * Encapsulates all HTTP-related logic for sitemap generation and delivery.
  * @public
  */
-export class SitemapProxy {
+export class SitemapMiddleware {
   private client: SitecoreClient;
   private siteResolver: SiteResolver;
 

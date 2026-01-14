@@ -3,15 +3,15 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { SitemapProxy } from './sitemap-proxy';
+import { SitemapMiddleware } from './sitemap-middleware';
 import { SitecoreClient } from '@sitecore-content-sdk/core/client';
 
 chai.use(sinonChai);
 
-describe('SitemapProxy', () => {
+describe('SitemapMiddleware', () => {
   const sandbox = sinon.createSandbox();
   let sitecoreClientStub: sinon.SinonStubbedInstance<SitecoreClient>;
-  let proxy: SitemapProxy;
+  let middleware: SitemapMiddleware;
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
   let siteResolverStub = {
@@ -47,8 +47,8 @@ describe('SitemapProxy', () => {
       getByName: sandbox.stub(),
     };
 
-    proxy = new SitemapProxy(sitecoreClientStub as unknown as SitecoreClient, sites);
-    (proxy as any).siteResolver = siteResolverStub;
+    middleware = new SitemapMiddleware(sitecoreClientStub as unknown as SitecoreClient, sites);
+    (middleware as any).siteResolver = siteResolverStub;
     siteResolverStub.getByHost.callsFake((hostName) =>
       sites.find((site) => site.hostName === hostName)
     );
@@ -60,7 +60,7 @@ describe('SitemapProxy', () => {
 
   describe('getHandler', () => {
     it('should return a handler function', () => {
-      const handler = proxy.getHandler();
+      const handler = middleware.getHandler();
       expect(handler).to.be.a('function');
     });
   });
@@ -72,7 +72,7 @@ describe('SitemapProxy', () => {
 
       sitecoreClientStub.getSiteMap.resolves(xmlContent);
 
-      const handler = proxy.getHandler();
+      const handler = middleware.getHandler();
       await handler(req as NextApiRequest, res as NextApiResponse);
 
       expect(sitecoreClientStub.getSiteMap.calledOnce).to.be.true;
@@ -95,7 +95,7 @@ describe('SitemapProxy', () => {
 
       sitecoreClientStub.getSiteMap.resolves(xmlContent);
 
-      const handler = proxy.getHandler();
+      const handler = middleware.getHandler();
       await handler(req as NextApiRequest, res as NextApiResponse);
 
       expect(sitecoreClientStub.getSiteMap.firstCall.args[0]).to.deep.include({
@@ -115,7 +115,7 @@ describe('SitemapProxy', () => {
 
       sitecoreClientStub.getSiteMap.resolves(xmlContent);
 
-      const handler = proxy.getHandler();
+      const handler = middleware.getHandler();
       await handler(req as NextApiRequest, res as NextApiResponse);
 
       expect(sitecoreClientStub.getSiteMap.firstCall.args[0]).to.deep.include({
@@ -131,7 +131,7 @@ describe('SitemapProxy', () => {
 
       sitecoreClientStub.getSiteMap.resolves(xmlContent);
 
-      const handler = proxy.getHandler();
+      const handler = middleware.getHandler();
       await handler(reqWithoutProto as NextApiRequest, res as NextApiResponse);
 
       expect(sitecoreClientStub.getSiteMap.firstCall.args[0]).to.deep.include({
@@ -147,7 +147,7 @@ describe('SitemapProxy', () => {
         host: 'localhost:3000',
       };
 
-      await proxy.getHandler()(req as NextApiRequest, res as NextApiResponse);
+      await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
       expect(siteResolverStub.getByHost).to.have.been.calledWith('example.com');
     });
@@ -160,7 +160,7 @@ describe('SitemapProxy', () => {
 
       sitecoreClientStub.getSiteMap.resolves(xmlContent);
 
-      await proxy.getHandler()(req as NextApiRequest, res as NextApiResponse);
+      await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
       expect(sitecoreClientStub.getSiteMap.firstCall.args[0]).to.deep.include({
         reqHost: '',
@@ -173,7 +173,7 @@ describe('SitemapProxy', () => {
 
       sitecoreClientStub.getSiteMap.rejects(error);
 
-      const handler = proxy.getHandler();
+      const handler = middleware.getHandler();
       await handler(req as NextApiRequest, res as NextApiResponse);
 
       expect(res.redirect).to.have.been.calledWith('/404');
@@ -185,7 +185,7 @@ describe('SitemapProxy', () => {
 
       sitecoreClientStub.getSiteMap.rejects(error);
 
-      const handler = proxy.getHandler();
+      const handler = middleware.getHandler();
       await handler(req as NextApiRequest, res as NextApiResponse);
 
       expect(res.status).to.have.been.calledWith(500);
