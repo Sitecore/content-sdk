@@ -80,13 +80,14 @@ describe('form event', () => {
     expect(getSettingsSpy).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenLastCalledWith(
-      'https://edge-platform.sitecorecloud.io/v1/events/v1.2/events?sitecoreContextId=123&siteId=456',
+      'https://edge-platform.sitecorecloud.io/v1/events/v1.2/events?siteId=456',
       {
         body: expectedBody,
         headers: {
           'Content-Type': 'application/json',
           'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
           'X-Library-Version': PACKAGE_VERSION,
+          'x-sitecore-contextid': '123',
         },
         method: 'POST',
       }

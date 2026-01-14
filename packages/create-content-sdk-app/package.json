@@ -1,6 +1,6 @@
 {
   "name": "create-content-sdk-app",
-  "version": "1.4.0-canary.14",
+  "version": "1.4.0-canary.15",
   "description": "Sitecore Content SDK initializer",
   "bin": "./dist/index.js",
   "scripts": {
@@ -39,6 +39,8 @@
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.2.2",
+    "@sitecore-content-sdk/nextjs": "1.4.0-canary.15",
+    "@sitecore-content-sdk/cli": "1.4.0-canary.15",
     "@types/chai": "^5.2.2",
     "@types/cross-spawn": "^6.0.6",
     "@types/ejs": "^3.1.5",

@@ -80,7 +80,7 @@ describe('EventApiClient', () => {
     });
 
     const expectedBody = JSON.stringify(eventData);
-    const expectedUrl = 'http://testurl/v1/events/v1.2/events?sitecoreContextId=123&siteId=site';
+    const expectedUrl = 'http://testurl/v1/events/v1.2/events?siteId=site';
 
     await sendEvent(eventData, settingsObj).then((data) => {
       expect(data).toEqual({
@@ -96,6 +96,7 @@ describe('EventApiClient', () => {
         'Content-Type': 'application/json',
         'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
         'X-Library-Version': PACKAGE_VERSION,
+        'x-sitecore-contextid': '123',
       },
       method: 'POST',
     });
@@ -114,7 +115,7 @@ describe('EventApiClient', () => {
     });
 
     const expectedBody = JSON.stringify(eventData);
-    const expectedUrl = 'http://testurl/v1/events/v1.2/events?sitecoreContextId=123&siteId=site';
+    const expectedUrl = 'http://testurl/v1/events/v1.2/events?siteId=site';
 
     await sendEvent(eventData, settingsObj).then((data) => {
       expect(data).toEqual({
@@ -130,6 +131,7 @@ describe('EventApiClient', () => {
         'Content-Type': 'application/json',
         'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
         'X-Library-Version': PACKAGE_VERSION,
+        'x-sitecore-contextid': '123',
       },
       method: 'POST',
     });
