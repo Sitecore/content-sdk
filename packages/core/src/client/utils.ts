@@ -25,12 +25,14 @@ export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
   if (edge?.contextId) {
     // Real client for server-side rendering / API routes
     clientConfig = {
-      endpoint: getEdgeProxyContentUrl(edge.contextId, edge.edgeUrl),
+      endpoint: getEdgeProxyContentUrl(edge.edgeUrl),
+      contextId: edge.contextId,
     };
   } else if (isBrowser && edge?.clientContextId) {
     // Real client for client-side requests
     clientConfig = {
-      endpoint: getEdgeProxyContentUrl(edge.clientContextId, edge.edgeUrl),
+      endpoint: getEdgeProxyContentUrl(edge.edgeUrl),
+      contextId: edge.clientContextId,
     };
   } else if (local?.apiKey && local?.apiHost) {
     // Fallback to local API settings

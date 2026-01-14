@@ -14,9 +14,14 @@ export async function fetchGuestIdFromEdgeProxy(
   sitecoreEdgeUrl: string
 ): Promise<string> {
   // eslint-disable-next-line max-len
-  const url = `${sitecoreEdgeUrl}/v1/events/${API_VERSION}/browser/${browserId}/show.json?sitecoreContextId=${sitecoreEdgeContextId}&client_key=&api_token=`;
+  const url = `${sitecoreEdgeUrl}/v1/events/${API_VERSION}/browser/${browserId}/show.json?client_key=&api_token=`;
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const response = await fetch(url, { headers: { 'X-Library-Version': LIBRARY_VERSION } });
+  const response = await fetch(url, {
+    headers: {
+      'X-Library-Version': LIBRARY_VERSION,
+      'x-sitecore-contextid': sitecoreEdgeContextId,
+    },
+  });
   const data = await response.json();
 
   if (!response.ok) {

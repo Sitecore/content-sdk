@@ -37,10 +37,14 @@ describe('ComponentLayoutService', () => {
   });
 
   it('should fetch component data', () => {
-    nock(SITECORE_EDGE_URL_DEFAULT)
-      .get(
-        '/layout/component?sitecoreContextId=test-context-id&item=123&uid=456&sc_site=supersite&sc_lang=en'
-      )
+    nock(SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+        'content-type': 'application/json',
+        sc_editmode: 'false',
+      },
+    })
+      .get('/layout/component?item=123&uid=456&sc_site=supersite&sc_lang=en')
       .reply(200, () => defaultTestData);
 
     const service = new ComponentLayoutService({
@@ -57,12 +61,12 @@ describe('ComponentLayoutService', () => {
   it('should fetch component data in metadata mode', () => {
     nock(SITECORE_EDGE_URL_DEFAULT, {
       reqheaders: {
-        sc_editMode: 'true',
+        'x-sitecore-contextid': contextId,
+        'content-type': 'application/json',
+        sc_editmode: 'true',
       },
     })
-      .get(
-        '/layout/component?sitecoreContextId=test-context-id&item=123&uid=456&sc_site=supersite&sc_lang=en'
-      )
+      .get('/layout/component?item=123&uid=456&sc_site=supersite&sc_lang=en')
       .reply(200, () => defaultTestData);
 
     const service = new ComponentLayoutService({
@@ -110,9 +114,15 @@ describe('ComponentLayoutService', () => {
       },
     };
 
-    nock(SITECORE_EDGE_URL_DEFAULT)
+    nock(SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+        'content-type': 'application/json',
+        sc_editmode: 'false',
+      },
+    })
       .get(
-        '/layout/component?sitecoreContextId=test-context-id&item=123&uid=456&dataSourceId=789&renderingItemId=000&version=1&sc_site=supersite&sc_lang=en'
+        '/layout/component?item=123&uid=456&dataSourceId=789&renderingItemId=000&version=1&sc_site=supersite&sc_lang=en'
       )
       .reply(200, () => testExpectedData);
 
@@ -132,11 +142,10 @@ describe('ComponentLayoutService', () => {
       reqheaders: {
         my_header: 'my_value',
         sc_editMode: 'false',
+        'x-sitecore-contextid': contextId,
       },
     })
-      .get(
-        '/layout/component?sitecoreContextId=test-context-id&item=123&uid=456&sc_site=supersite&sc_lang=en'
-      )
+      .get('/layout/component?item=123&uid=456&sc_site=supersite&sc_lang=en')
       .reply(200, () => defaultTestData);
 
     const service = new ComponentLayoutService({
@@ -162,10 +171,13 @@ describe('ComponentLayoutService', () => {
       edgeUrl: customEdgeUrl,
     });
 
-    nock(customEdgeUrl)
-      .get(
-        '/layout/component?sitecoreContextId=test-context-id&item=123&uid=456&sc_site=supersite&sc_lang=en'
-      )
+    nock(customEdgeUrl, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+        sc_editMode: 'false',
+      },
+    })
+      .get('/layout/component?item=123&uid=456&sc_site=supersite&sc_lang=en')
       .reply(200, () => defaultTestData);
 
     return service
@@ -176,10 +188,13 @@ describe('ComponentLayoutService', () => {
   });
 
   it('should catch 404 when request layout data', () => {
-    nock(SITECORE_EDGE_URL_DEFAULT)
-      .get(
-        '/layout/component?sitecoreContextId=test-context-id&item=123&uid=456&sc_site=supersite&sc_lang=en'
-      )
+    nock(SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+        sc_editMode: 'false',
+      },
+    })
+      .get('/layout/component?item=123&uid=456&sc_site=supersite&sc_lang=en')
       .reply(404, () => ({
         data: {
           sitecore: { context: { pageEditing: false, language: 'en' }, route: null },
@@ -208,10 +223,13 @@ describe('ComponentLayoutService', () => {
   });
 
   it('should allow non 404 errors through', () => {
-    nock(SITECORE_EDGE_URL_DEFAULT)
-      .get(
-        '/layout/component?sitecoreContextId=test-context-id&item=123&uid=456&sc_site=supersite&sc_lang=en'
-      )
+    nock(SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+        sc_editMode: 'false',
+      },
+    })
+      .get('/layout/component?item=123&uid=456&sc_site=supersite&sc_lang=en')
       .reply(401, { message: 'whoops' });
 
     const service = new ComponentLayoutService({
@@ -222,6 +240,24 @@ describe('ComponentLayoutService', () => {
       expect(error.response.status).to.equal(401);
       expect(error.response.data.message).to.equal('whoops');
     });
+  });
+
+  it('should throw error when contextId is not provided', () => {
+    const service = new ComponentLayoutService({
+      contextId: '',
+    });
+
+    expect(() => service.fetchComponentData(defaultTestInput)).to.throw(
+      'ComponentLayoutService misconfigured: contextId is missing.'
+    );
+  });
+
+  it('should throw error when both contextId and clientContextId are missing', () => {
+    const service = new ComponentLayoutService({} as any);
+
+    expect(() => service.fetchComponentData(defaultTestInput)).to.throw(
+      'ComponentLayoutService misconfigured: contextId is missing.'
+    );
   });
 
   describe('getComponentFetchParams', () => {
@@ -240,7 +276,6 @@ describe('ComponentLayoutService', () => {
       };
 
       const expectedResult = {
-        sitecoreContextId: contextId,
         item: testParams.itemId,
         uid: testParams.componentUid,
         dataSourceId: testParams.dataSourceId,
@@ -270,7 +305,6 @@ describe('ComponentLayoutService', () => {
       };
 
       const expectedResult = {
-        sitecoreContextId: contextId,
         item: testParams.itemId,
         uid: testParams.componentUid,
         renderingItemId: testParams.renderingId,

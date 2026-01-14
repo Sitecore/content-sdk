@@ -10,7 +10,7 @@ describe('getCdnUrl', () => {
     global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: true,
-        text: () => Promise.resolve(mockResponse)
+        text: () => Promise.resolve(mockResponse),
       })
     );
   });
@@ -22,9 +22,11 @@ describe('getCdnUrl', () => {
   it('should return the correct request URL', async () => {
     const result = await getCdnUrl(sitecoreEdgeContextId, sitecoreEdgeUrl);
 
-    expect(fetch).toHaveBeenCalledWith(
-      'https://example.com/v1/personalize/cdn-url?sitecoreContextId=12345&client_key='
-    );
+    expect(fetch).toHaveBeenCalledWith('https://example.com/v1/personalize/cdn-url?client_key=', {
+      headers: {
+        'x-sitecore-contextid': sitecoreEdgeContextId,
+      },
+    });
     expect(result).toEqual(mockResponse);
   });
 
@@ -32,15 +34,17 @@ describe('getCdnUrl', () => {
     global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: false,
-        text: () => Promise.resolve({ error: 'error' })
+        text: () => Promise.resolve({ error: 'error' }),
       })
     );
 
     const result = await getCdnUrl(sitecoreEdgeContextId, sitecoreEdgeUrl);
 
-    expect(fetch).toHaveBeenCalledWith(
-      'https://example.com/v1/personalize/cdn-url?sitecoreContextId=12345&client_key='
-    );
+    expect(fetch).toHaveBeenCalledWith('https://example.com/v1/personalize/cdn-url?client_key=', {
+      headers: {
+        'x-sitecore-contextid': sitecoreEdgeContextId,
+      },
+    });
     expect(result).toEqual(null);
   });
 

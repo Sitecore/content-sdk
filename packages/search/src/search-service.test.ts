@@ -13,8 +13,12 @@ describe('SearchService', () => {
   });
 
   it('should send a request with the keyphrase', async () => {
-    nock(constants.SITECORE_EDGE_URL_DEFAULT)
-      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+    nock(constants.SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+      },
+    })
+      .post(`/v1/search`, {
         config: {
           id: searchIndexId,
         },
@@ -46,8 +50,12 @@ describe('SearchService', () => {
   });
 
   it('should send a request with empty keyphrase', async () => {
-    nock(constants.SITECORE_EDGE_URL_DEFAULT)
-      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+    nock(constants.SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+      },
+    })
+      .post(`/v1/search`, {
         config: {
           id: searchIndexId,
         },
@@ -80,8 +88,12 @@ describe('SearchService', () => {
   it('should send a request with custom edge url', async () => {
     const customEdgeUrl = 'https://custom-edge-url.com';
 
-    nock(customEdgeUrl)
-      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+    nock(customEdgeUrl, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+      },
+    })
+      .post(`/v1/search`, {
         config: {
           id: searchIndexId,
         },
@@ -116,8 +128,12 @@ describe('SearchService', () => {
   it('should send a request with custom limit', async () => {
     const limit = 20;
 
-    nock(constants.SITECORE_EDGE_URL_DEFAULT)
-      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+    nock(constants.SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+      },
+    })
+      .post(`/v1/search`, {
         config: {
           id: searchIndexId,
         },
@@ -152,8 +168,12 @@ describe('SearchService', () => {
   it('should sent a request with custom offset', async () => {
     const offset = 50;
 
-    nock(constants.SITECORE_EDGE_URL_DEFAULT)
-      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+    nock(constants.SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+      },
+    })
+      .post(`/v1/search`, {
         config: {
           id: searchIndexId,
         },
@@ -188,8 +208,12 @@ describe('SearchService', () => {
   it('should send a request with custom sort', async () => {
     const sort: SortSetting = { name: 'event', order: 'asc' };
 
-    nock(constants.SITECORE_EDGE_URL_DEFAULT)
-      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+    nock(constants.SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+      },
+    })
+      .post(`/v1/search`, {
         config: {
           id: searchIndexId,
         },
@@ -227,8 +251,12 @@ describe('SearchService', () => {
       { name: 'title', order: 'desc' },
     ];
 
-    nock(constants.SITECORE_EDGE_URL_DEFAULT)
-      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+    nock(constants.SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+      },
+    })
+      .post(`/v1/search`, {
         config: {
           id: searchIndexId,
         },
@@ -261,8 +289,12 @@ describe('SearchService', () => {
   });
 
   it('should return a default response when no results are found', async () => {
-    nock(constants.SITECORE_EDGE_URL_DEFAULT)
-      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+    nock(constants.SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+      },
+    })
+      .post(`/v1/search`, {
         config: {
           id: searchIndexId,
         },
@@ -291,8 +323,12 @@ describe('SearchService', () => {
   });
 
   it('should throw an error if the request fails', async () => {
-    nock(constants.SITECORE_EDGE_URL_DEFAULT)
-      .post(`/v1/search?sitecoreContextId=${contextId}`, {
+    nock(constants.SITECORE_EDGE_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+      },
+    })
+      .post(`/v1/search`, {
         config: {
           id: searchIndexId,
         },

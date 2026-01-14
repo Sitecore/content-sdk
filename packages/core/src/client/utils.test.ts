@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
+import sinon from 'sinon';
+import { GraphQLRequestClient } from '../graphql-request-client';
 import { createGraphQLClientFactory } from './utils';
 
 describe('createGraphQLClientFactory', () => {
@@ -13,9 +15,12 @@ describe('createGraphQLClientFactory', () => {
   afterEach(() => {
     // Restore window
     global.window = originalWindow;
+    sinon.restore();
   });
 
   it('creates client with edge context when contextId is provided (server side)', () => {
+    const createClientFactorySpy = sinon.spy(GraphQLRequestClient, 'createClientFactory');
+
     const factory = createGraphQLClientFactory({
       api: {
         edge: {
@@ -26,9 +31,16 @@ describe('createGraphQLClientFactory', () => {
     });
 
     expect(factory).to.not.be.undefined;
+    expect(createClientFactorySpy.calledOnce).to.be.true;
+    expect(createClientFactorySpy.firstCall.args[0]).to.deep.include({
+      endpoint: 'https://test.edge.url/v1/content/api/graphql/v1',
+      contextId: 'test-context-id',
+    });
   });
 
   it('creates client with clientContextId in a browser environment', () => {
+    const createClientFactorySpy = sinon.spy(GraphQLRequestClient, 'createClientFactory');
+
     // Simulate browser
     (global as any).window = {};
 
@@ -42,9 +54,16 @@ describe('createGraphQLClientFactory', () => {
     });
 
     expect(factory).to.not.be.undefined;
+    expect(createClientFactorySpy.calledOnce).to.be.true;
+    expect(createClientFactorySpy.firstCall.args[0]).to.deep.include({
+      endpoint: 'https://test.edge.url/v1/content/api/graphql/v1',
+      contextId: 'browser-id',
+    });
   });
 
   it('creates client with local API settings when provided', () => {
+    const createClientFactorySpy = sinon.spy(GraphQLRequestClient, 'createClientFactory');
+
     const factory = createGraphQLClientFactory({
       api: {
         local: {
@@ -56,6 +75,8 @@ describe('createGraphQLClientFactory', () => {
     });
 
     expect(factory).to.not.be.undefined;
+    expect(createClientFactorySpy.calledOnce).to.be.true;
+    expect(createClientFactorySpy.firstCall.args[0]).to.not.have.property('contextId');
   });
 
   it('handles browser environment with no valid IDs by falling back (does not throw)', () => {
