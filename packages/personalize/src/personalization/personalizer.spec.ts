@@ -912,7 +912,7 @@ describe('Test Personalizer Class', () => {
 
       expect(fetch).toHaveBeenCalledWith(
         // eslint-disable-next-line max-len
-        `${core.SITECORE_EDGE_URL}/v1/personalize?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
+        `${core.SITECORE_EDGE_URL}/v1/personalize?siteId=${settingsMock.siteName}`,
         {
           // eslint-disable-next-line max-len
           body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","guestRef":"guestId","language":"EN","pointOfSale":"","browserId":"browserId"}',
@@ -921,6 +921,7 @@ describe('Test Personalizer Class', () => {
             'Content-Type': 'application/json',
             'X-Library-Version': PACKAGE_VERSION,
             'x-sc-correlation-id': 'b10bb699bfb3419bb63f638c62ed1aa7',
+            'x-sitecore-contextid': '123',
           },
           /* eslint-enable @typescript-eslint/naming-convention */
           method: 'POST',
@@ -933,7 +934,7 @@ describe('Test Personalizer Class', () => {
         'Personalize request: %s with options: %O'
       );
       expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
-        'https://edge-platform.sitecorecloud.io/v1/personalize?sitecoreContextId=123&siteId=456'
+        'https://edge-platform.sitecorecloud.io/v1/personalize?siteId=456'
       );
       expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
         'Personalize response in %dms : %O'

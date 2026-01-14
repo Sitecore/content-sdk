@@ -18,7 +18,7 @@ export async function sendEvent(
   settings: Settings
 ): Promise<EPResponse | null> {
   // eslint-disable-next-line max-len
-  const eventUrl = `${settings.sitecoreEdgeUrl}/v1/events/${API_VERSION}/events?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
+  const eventUrl = `${settings.sitecoreEdgeUrl}/v1/events/${API_VERSION}/events?siteId=${settings.siteName}`;
   const startTimestamp = Date.now();
   let debugResponse: DebugResponse = {};
 
@@ -28,6 +28,7 @@ export async function sendEvent(
       'Content-Type': 'application/json',
       'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
       'X-Library-Version': PACKAGE_VERSION,
+      'x-sitecore-contextid': settings.sitecoreEdgeContextId,
     },
     method: 'POST',
   };

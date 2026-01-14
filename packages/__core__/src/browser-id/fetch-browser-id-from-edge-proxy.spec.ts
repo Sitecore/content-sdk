@@ -41,30 +41,32 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     expect(fetchWithTimeoutSpy).toHaveBeenCalled();
     expect(fetchWithTimeoutSpy).toHaveBeenCalledWith(
       // eslint-disable-next-line max-len
-      `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
+      `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?client_key=`,
       3000,
       {
         headers: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           'X-Library-Version': LIBRARY_VERSION,
+          'x-sitecore-contextid': sitecoreEdgeContextId,
         },
       }
     );
 
     expect(fetch).toHaveBeenCalledWith(
       // eslint-disable-next-line max-len
-      `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
+      `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?client_key=`,
       {
         headers: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           'X-Library-Version': LIBRARY_VERSION,
+          'x-sitecore-contextid': sitecoreEdgeContextId,
         },
         signal: new AbortController().signal,
       }
     );
     expect(res).toMatchObject({ browserId: mockResponse.ref });
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(SITECORE_EDGE_URL, sitecoreEdgeContextId);
+    expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(SITECORE_EDGE_URL);
   });
 
   it('should resolve with an appropriate response object', () => {
@@ -77,18 +79,16 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
         // eslint-disable-next-line max-len
-        `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
+        `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?client_key=`,
         {
           headers: {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             'X-Library-Version': LIBRARY_VERSION,
+            'x-sitecore-contextid': sitecoreEdgeContextId,
           },
         }
       );
-      expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(
-        SITECORE_EDGE_URL,
-        sitecoreEdgeContextId
-      );
+      expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(SITECORE_EDGE_URL);
     });
   });
 

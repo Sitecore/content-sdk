@@ -8,7 +8,7 @@
 
 > **isNextJsMiddlewareResponse**(`response`): `response is MiddlewareNextResponse`
 
-Defined in: [typeguards/is-next-js-middleware-response.ts:8](https://github.com/Sitecore/content-sdk/blob/4ac6c0b08031d0f8d3e3046612ef022854196c98/packages/utils/src/typeguards/is-next-js-middleware-response.ts#L8)
+Defined in: [typeguards/is-next-js-middleware-response.ts:8](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/utils/src/typeguards/is-next-js-middleware-response.ts#L8)
 
 Determines whether the given response is a Next.js middleware response.
 

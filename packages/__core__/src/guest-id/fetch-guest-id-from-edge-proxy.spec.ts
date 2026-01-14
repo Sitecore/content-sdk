@@ -32,7 +32,7 @@ describe('fetchGuestIdFromEdgeProxy', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    const expectedUrl = `${SITECORE_EDGE_URL}/v1/events/${API_VERSION}/browser/${bid}/show.json?sitecoreContextId=${sitecoreEdgeContextId}&client_key=&api_token=`;
+    const expectedUrl = `${SITECORE_EDGE_URL}/v1/events/${API_VERSION}/browser/${bid}/show.json?client_key=&api_token=`;
     await fetchGuestIdFromEdgeProxy(bid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
 
     expect(fetch).toHaveBeenCalledTimes(1);
@@ -40,6 +40,7 @@ describe('fetchGuestIdFromEdgeProxy', () => {
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'X-Library-Version': LIBRARY_VERSION,
+        'x-sitecore-contextid': sitecoreEdgeContextId,
       },
     });
   });

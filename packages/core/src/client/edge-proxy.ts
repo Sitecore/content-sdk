@@ -2,18 +2,12 @@ import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { normalizeUrl } from '../utils/normalize-url';
 /**
  * Generates a URL for accessing Sitecore Edge Platform Content using the provided endpoint and context ID.
- * @param {string} sitecoreEdgeContextId - The unique context id.
  * @param {string} [sitecoreEdgeUrl] - The base endpoint URL for the Edge Platform. Default is https://edge-platform.sitecorecloud.io
  * @returns {string} The complete URL for accessing content through the Edge Platform.
  * @public
  */
-export const getEdgeProxyContentUrl = (
-  sitecoreEdgeContextId: string,
-  sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT
-) =>
-  `${normalizeUrl(
-    sitecoreEdgeUrl
-  )}/v1/content/api/graphql/v1?sitecoreContextId=${sitecoreEdgeContextId}`;
+export const getEdgeProxyContentUrl = (sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT) =>
+  `${normalizeUrl(sitecoreEdgeUrl)}/v1/content/api/graphql/v1`;
 
 /**
  * Generates a URL for accessing Sitecore Edge Platform Forms using the provided form ID and context ID.

@@ -40,6 +40,10 @@ export type GraphQLRequestClientConfig = {
    */
   apiKey?: string;
   /**
+   * A unified identifier used to connect and retrieve data from XM Cloud instance
+   */
+  contextId?: string;
+  /**
    * Override debugger for logging. Uses 'content-sdk:http' by default.
    */
   debugger?: Debugger;
@@ -74,7 +78,7 @@ export type GraphQLRequestClientConfig = {
  * @public
  */
 export type GraphQLRequestClientFactory = (
-  config?: Omit<GraphQLRequestClientConfig, 'apiKey'>
+  config?: Omit<GraphQLRequestClientConfig, 'apiKey' | 'contextId'>
 ) => GraphQLRequestClient;
 
 /**
@@ -84,6 +88,7 @@ export type GraphQLRequestClientFactory = (
 export type GraphQLRequestClientFactoryConfig = {
   endpoint: string;
   apiKey?: string;
+  contextId?: string;
 };
 
 /**
@@ -112,6 +117,9 @@ export class GraphQLRequestClient implements GraphQLClient {
     if (clientConfig.headers) {
       this.headers = { ...this.headers, ...clientConfig.headers };
     }
+    if (clientConfig.contextId) {
+      this.headers['x-sitecore-contextid'] = clientConfig.contextId;
+    }
 
     if (!endpoint || !parse(endpoint).hostname) {
       throw new Error(
@@ -136,13 +144,15 @@ export class GraphQLRequestClient implements GraphQLClient {
    * @param {object} config - client configuration options.
    * @param {string} config.endpoint - endpoint
    * @param {string} [config.apiKey] - apikey
+   * @param {string} [config.contextId] - contextId
    */
   static createClientFactory({
     endpoint,
     apiKey,
+    contextId,
   }: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory {
-    return (config: Omit<GraphQLRequestClientConfig, 'apiKey'> = {}) =>
-      new GraphQLRequestClient(endpoint, { ...config, apiKey });
+    return (config: Omit<GraphQLRequestClientConfig, 'apiKey' | 'contextId'> = {}) =>
+      new GraphQLRequestClient(endpoint, { ...config, apiKey, contextId });
   }
 
   /**
