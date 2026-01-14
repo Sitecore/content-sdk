@@ -116,8 +116,13 @@ jobs:
       - name: Pre-release canary publish
         if: steps.configure-action.outputs.isFullRelease != 'true' && github.ref_name == 'dev'
         run: |
+          BRANCH_NAME="${{ github.ref_name }}"
+          if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
+            NPM_TAG="rc.canary"
+          else
+            NPM_TAG="canary"
           echo "Publishing canary packages to npm..."
-          npx lerna publish from-package --canary --pre-dist-tag canary --preid canary --no-verify-access --yes
+          npx lerna publish from-package --canary --pre-dist-tag "$NPM_TAG" --preid canary --no-verify-access --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
