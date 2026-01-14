@@ -83,7 +83,6 @@ export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
         children = output;
       }
 
-      // adjust rendering for Pages canvas
       if (field.metadata) {
         return React.createElement(
           tag || 'span',

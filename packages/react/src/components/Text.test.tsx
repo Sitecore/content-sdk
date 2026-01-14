@@ -225,7 +225,7 @@ describe('<Text />', () => {
       expect(rendered.container.innerHTML).to.equal('');
     });
 
-    it('should apply suppressHydrationWarning prop when in editing mode and field.metadata is present', () => {
+    it('should apply suppressHydrationWarning prop when in editing mode', () => {
       const field = {
         value: 'value',
         metadata: testMetadata,
