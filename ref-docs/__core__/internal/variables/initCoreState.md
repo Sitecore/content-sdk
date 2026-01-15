@@ -8,4 +8,4 @@
 
 > **initCoreState**: `Promise`\<`void`\> \| `null` = `null`
 
-Defined in: [src/initializer/browser/initializer.ts:22](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/__core__/src/initializer/browser/initializer.ts#L22)
+Defined in: [src/initializer/browser/initializer.ts:22](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/__core__/src/initializer/browser/initializer.ts#L22)
