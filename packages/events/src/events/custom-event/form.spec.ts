@@ -1,6 +1,6 @@
 import * as coreInternalModule from '@sitecore-content-sdk/analytics-core/internal';
 import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
-import * as utils from '@sitecore-content-sdk/utils';
+import * as utils from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages, PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import * as initializerModule from '../../initializer/browser/initializer';
 import { form } from './form';
@@ -14,8 +14,8 @@ jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
     ...originalModule,
   };
 });
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

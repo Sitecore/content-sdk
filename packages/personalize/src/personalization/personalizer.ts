@@ -1,6 +1,6 @@
 import type { Settings } from '@sitecore-content-sdk/analytics-core/internal';
 import { language } from '@sitecore-content-sdk/analytics-core/internal';
-import type { NestedObject } from '@sitecore-content-sdk/utils';
+import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages, UTM_PREFIX } from '../consts';
 import type { EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { sendCallFlowsRequest } from './send-call-flows-request';

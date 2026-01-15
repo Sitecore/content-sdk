@@ -4,8 +4,8 @@ import { addEvents, awaitInit, sideEffects } from './initializer';
 import * as initModule from './initializer';
 import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

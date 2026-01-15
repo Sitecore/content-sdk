@@ -8,7 +8,7 @@ import * as eventQueue from './eventStorage';
 jest.mock('../events/custom-event/custom-event');
 jest.mock('@sitecore-content-sdk/analytics-core/internal');
 
-jest.mock('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils');
 describe('Event Storage', () => {
   const eventData: EventData = {
     channel: 'WEB',

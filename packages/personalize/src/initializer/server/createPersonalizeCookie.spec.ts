@@ -1,9 +1,9 @@
-import * as utilsModule from '@sitecore-content-sdk/utils';
+import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import * as createPersonalizeCookieModule from './createPersonalizeCookie';
 import * as handleHttpCookieModule from './handleHttpCookie';
 import * as handleNextJsMiddlewareCookieModule from './handleNextJsMiddlewareCookie';
 
-jest.mock('@sitecore-content-sdk/utils', () => ({
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => ({
   __esModule: true,
   isHttpRequest: jest.fn(),
   isHttpResponse: jest.fn(),

@@ -10,7 +10,7 @@ import type {
   MiddlewareRequest,
   Request,
   Response,
-} from '@sitecore-content-sdk/utils';
+} from '@sitecore-content-sdk/analytics-core/utils';
 import type { PersonalizeSettings } from './interfaces';
 
 /**

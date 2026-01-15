@@ -1,5 +1,5 @@
 import debug from 'debug';
-import * as utils from '@sitecore-content-sdk/utils';
+import * as utils from '../../utils';
 import * as fetchBrowserIdFromEdgeProxy from '../../browser-id/fetch-browser-id-from-edge-proxy';
 import {
   BROWSER_ID_COOKIE_NAME,
@@ -24,12 +24,6 @@ jest.mock('debug', () => {
     default: jest.fn(() => jest.fn()),
   };
 });
-
-jest.mock('@sitecore-content-sdk/utils', () => ({
-  cookieExists: jest.fn(),
-  createCookieString: jest.fn(),
-  getCookie: jest.fn(),
-}));
 
 const mockSettingsParamsPublic: BrowserSettings = {
   cookieDomain: 'cDomain',

@@ -3,7 +3,7 @@ import {
   getCloudSDKSettingsServer as getCloudSDKSettings,
   getCookieValueFromRequest,
 } from '@sitecore-content-sdk/analytics-core/internal';
-import type { Request } from '@sitecore-content-sdk/utils';
+import type { Request } from '@sitecore-content-sdk/analytics-core/utils';
 import { verifyEventsPackageExistence } from '../../initializer/server/initializer';
 import { sendEvent } from '../send-event/sendEvent';
 import type { IdentityData } from './identity-event';

@@ -1,5 +1,5 @@
 import * as coreInternalModule from '@sitecore-content-sdk/analytics-core/internal';
-import type { MiddlewareRequest } from '@sitecore-content-sdk/utils';
+import type { MiddlewareRequest } from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages } from '../consts';
 import type { PersonalizeData } from './personalizer';
 import { Personalizer } from './personalizer';

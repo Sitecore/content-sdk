@@ -1,6 +1,6 @@
 import * as browserModule from '@sitecore-content-sdk/analytics-core/browser';
 import * as internalModule from '@sitecore-content-sdk/analytics-core/internal';
-import * as utilsModule from '@sitecore-content-sdk/utils';
+import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import * as createPersonalizeCookieModule from './createPersonalizeCookie';
 
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
@@ -15,7 +15,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/browser', () => ({
   getGuestId: jest.fn(),
 }));
 
-jest.mock('@sitecore-content-sdk/utils', () => ({
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => ({
   __esModule: true,
   createCookieString: jest.fn(),
   getCookieValueClientSide: jest.fn(),

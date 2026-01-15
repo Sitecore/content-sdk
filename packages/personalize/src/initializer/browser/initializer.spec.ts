@@ -1,14 +1,14 @@
 import * as internal from '@sitecore-content-sdk/analytics-core/internal';
 import { PackageInitializer } from '@sitecore-content-sdk/analytics-core/internal';
-import * as utilsModule from '@sitecore-content-sdk/utils';
+import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 import * as getCdnUrl from '../../web-personalization/get-cdn-url';
 import * as createPersonalizeCookieModule from './createPersonalizeCookie';
 import { addPersonalize, awaitInit, sideEffects } from './initializer';
 import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     __esModule: true,

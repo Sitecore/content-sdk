@@ -1,4 +1,4 @@
-import { generateV4UUID } from '@sitecore-content-sdk/utils';
+import { generateV4UUID } from '../utils';
 
 /**
  * Generates a correlation id.

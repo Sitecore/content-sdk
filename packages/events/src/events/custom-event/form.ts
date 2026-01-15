@@ -1,6 +1,6 @@
 import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCookieValueClientSide } from '@sitecore-content-sdk/utils';
+import { getCookieValueClientSide } from '@sitecore-content-sdk/analytics-core/utils';
 import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';

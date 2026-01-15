@@ -1,19 +1,9 @@
 import * as customDebug from './debug';
-import * as utils from '@sitecore-content-sdk/utils';
+import * as utils from '../utils';
 import debug from 'debug';
 jest.mock('debug', () => ({
   enabled: jest.fn(),
 }));
-
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-  };
-});
 
 describe('processDebugResponse', () => {
   const mockHeaders = new Headers({

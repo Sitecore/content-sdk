@@ -1,5 +1,5 @@
 import debug from 'debug';
-import { normalizeHeaders } from '@sitecore-content-sdk/utils';
+import { normalizeHeaders } from '../utils';
 import type { DebugResponse } from '../interfaces';
 
 export { debug };

@@ -1,4 +1,4 @@
-import type { Cookie, MiddlewareRequest } from '@sitecore-content-sdk/utils';
+import type { Cookie, MiddlewareRequest } from '../utils';
 
 /**
  * Extracts the cookie value from the provided middleware request by reading the

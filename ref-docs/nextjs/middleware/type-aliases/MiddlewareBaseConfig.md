@@ -8,7 +8,7 @@
 
 > **MiddlewareBaseConfig** = `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:17](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/nextjs/src/middleware/middleware.ts#L17)
+Defined in: nextjs/src/middleware/middleware.ts:17
 
 The interface for the Middleware configuration.
 
@@ -18,7 +18,7 @@ The interface for the Middleware configuration.
 
 > `optional` **defaultHostname**: `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:28](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/nextjs/src/middleware/middleware.ts#L28)
+Defined in: nextjs/src/middleware/middleware.ts:28
 
 Fallback hostname in case `host` header is not present
 
@@ -34,7 +34,7 @@ localhost
 
 > `optional` **defaultLanguage**: `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/nextjs/src/middleware/middleware.ts#L33)
+Defined in: nextjs/src/middleware/middleware.ts:33
 
 Fallback language in locale cannot be extracted from request URL
 
@@ -50,7 +50,7 @@ Fallback language in locale cannot be extracted from request URL
 
 > **sites**: [`SiteInfo`](../../index/type-aliases/SiteInfo.md)[]
 
-Defined in: [nextjs/src/middleware/middleware.ts:37](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/nextjs/src/middleware/middleware.ts#L37)
+Defined in: nextjs/src/middleware/middleware.ts:37
 
 Site resolution implementation by name/hostname
 
@@ -60,7 +60,7 @@ Site resolution implementation by name/hostname
 
 > `optional` **skip**: (`req`, `res`) => `boolean`
 
-Defined in: [nextjs/src/middleware/middleware.ts:23](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/nextjs/src/middleware/middleware.ts#L23)
+Defined in: nextjs/src/middleware/middleware.ts:23
 
 function, determines if middleware execution should be skipped, based on cookie, header, or other considerations
 

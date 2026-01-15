@@ -13,7 +13,7 @@ import {
   PACKAGE_NAME as EVENTS_PACKAGE_NAME,
   PACKAGE_INITIALIZER_METHOD_NAME,
 } from '@sitecore-content-sdk/events/browser';
-import { appendScriptWithAttributes } from '@sitecore-content-sdk/utils';
+import { appendScriptWithAttributes } from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages, PACKAGE_NAME, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 import { personalize } from '../../personalization/personalize';
 import { getCdnUrl } from '../../web-personalization/get-cdn-url';

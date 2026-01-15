@@ -1,19 +1,8 @@
-import * as utils from '@sitecore-content-sdk/utils';
+import * as utils from '../utils';
 import { ErrorMessages, LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
 import type { EPResponse } from '../interfaces';
 import * as constructGetBrowserIdUrl from './construct-get-browser-id-url';
 import { fetchBrowserIdFromEdgeProxy } from './fetch-browser-id-from-edge-proxy';
-
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual<typeof import('@sitecore-content-sdk/utils')>(
-    '@sitecore-content-sdk/utils'
-  );
-
-  return {
-    __esModule: true,
-    ...originalModule,
-  };
-});
 
 describe('fetchBrowserIdFromEdgeProxy', () => {
   const constructBrowserIdUrlSpy = jest.spyOn(constructGetBrowserIdUrl, 'constructGetBrowserIdUrl');

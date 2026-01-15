@@ -1,6 +1,6 @@
 import * as coreBrowserModule from '@sitecore-content-sdk/analytics-core/browser';
 import * as core from '@sitecore-content-sdk/analytics-core/internal';
-import { ErrorMessages as UtilsErrorMessages } from '@sitecore-content-sdk/utils';
+import { ErrorMessages as UtilsErrorMessages } from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import type { PersonalizeData, PersonalizeIdentifierInput } from './personalizer';
 import { Personalizer } from './personalizer';

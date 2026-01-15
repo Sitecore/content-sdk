@@ -1,9 +1,13 @@
 import type { EPResponse, Infer, Settings } from '@sitecore-content-sdk/analytics-core/internal';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
-import { flattenObject, isShortISODateString, isValidEmail } from '@sitecore-content-sdk/utils';
+import {
+  flattenObject,
+  isShortISODateString,
+  isValidEmail,
+} from '@sitecore-content-sdk/analytics-core/utils';
 import { BaseEvent } from '../base-event';
 import { ErrorMessages } from '../../consts';
-import type { FlattenedObject } from '@sitecore-content-sdk/utils';
+import type { FlattenedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { SendEvent } from '../send-event/sendEvent';
 

@@ -1,9 +1,5 @@
-import {
-  getCookieServerSide,
-  isHttpRequest,
-  isNextJsMiddlewareRequest,
-} from '@sitecore-content-sdk/utils';
-import type { Request } from '@sitecore-content-sdk/utils';
+import { getCookieServerSide, isHttpRequest, isNextJsMiddlewareRequest } from '../utils';
+import type { Request } from '../utils';
 import { getCookieValueFromMiddlewareRequest } from './get-cookie-value-from-middleware-request';
 
 /**

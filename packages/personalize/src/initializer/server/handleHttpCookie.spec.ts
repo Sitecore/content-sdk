@@ -1,5 +1,5 @@
 import * as internalModule from '@sitecore-content-sdk/analytics-core/internal';
-import * as utilsModule from '@sitecore-content-sdk/utils';
+import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import * as handleHttpCookieModule from './handleHttpCookie';
 
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
@@ -10,7 +10,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   getGuestIdServer: jest.fn(),
 }));
 
-jest.mock('@sitecore-content-sdk/utils', () => ({
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => ({
   __esModule: true,
   createCookieString: jest.fn(),
   getCookieServerSide: jest.fn(),

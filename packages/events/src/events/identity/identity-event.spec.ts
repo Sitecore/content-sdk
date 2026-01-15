@@ -1,5 +1,5 @@
 import type * as core from '@sitecore-content-sdk/analytics-core/internal';
-import * as utils from '@sitecore-content-sdk/utils';
+import * as utils from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages } from '../../consts';
 import { BaseEvent } from '../base-event';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
@@ -9,8 +9,8 @@ import { IdentityEvent } from './identity-event';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('../base-event');
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     __esModule: true,

@@ -7,7 +7,6 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/utils": "1.4.0-canary.15",
     "debug": "^4.4.3"
   },
   "description": "> TODO: description",
@@ -45,6 +44,11 @@
       "import": "./dist/esm/src/server.js",
       "require": "./dist/cjs/src/server.js",
       "types": "./types/src/server/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/esm/src/utils.js",
+      "require": "./dist/cjs/src/utils.js",
+      "types": "./types/src/utils/index.d.ts"
     }
   },
   "files": [

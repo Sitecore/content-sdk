@@ -1,6 +1,6 @@
 import type { EPResponse, ProxySettings } from '../interfaces';
 import { ErrorMessages, LIBRARY_VERSION } from '../consts';
-import { ErrorMessages as UtilsErrorMessages, fetchWithTimeout } from '@sitecore-content-sdk/utils';
+import { ErrorMessages as UtilsErrorMessages, fetchWithTimeout } from '../utils';
 import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';
 
 /**

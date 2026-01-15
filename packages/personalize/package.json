@@ -9,7 +9,6 @@
   "dependencies": {
     "@sitecore-content-sdk/analytics-core": "1.4.0-canary.15",
     "@sitecore-content-sdk/events": "1.4.0-canary.15",
-    "@sitecore-content-sdk/utils": "1.4.0-canary.15",
     "debug": "^4.4.3"
   },
   "description": "> TODO: description",

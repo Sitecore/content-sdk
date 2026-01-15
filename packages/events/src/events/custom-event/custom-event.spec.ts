@@ -1,14 +1,14 @@
 import * as core from '@sitecore-content-sdk/analytics-core/internal';
 import type { Settings } from '@sitecore-content-sdk/analytics-core/internal';
-import * as utils from '@sitecore-content-sdk/utils';
+import * as utils from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages } from '../../consts';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as sendEventModule from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
 import type { EventData } from './custom-event';
 
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

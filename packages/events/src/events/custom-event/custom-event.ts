@@ -1,6 +1,10 @@
 import type { EPResponse, Settings } from '@sitecore-content-sdk/analytics-core/internal';
-import type { BasicTypes, FlattenedObject, NestedObject } from '@sitecore-content-sdk/utils';
-import { flattenObject } from '@sitecore-content-sdk/utils';
+import type {
+  BasicTypes,
+  FlattenedObject,
+  NestedObject,
+} from '@sitecore-content-sdk/analytics-core/utils';
+import { flattenObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages } from '../../consts';
 import { BaseEvent } from '../base-event';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';

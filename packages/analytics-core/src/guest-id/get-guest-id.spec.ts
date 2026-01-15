@@ -1,17 +1,7 @@
-import * as utilsModule from '@sitecore-content-sdk/utils';
+import * as utilsModule from '../utils';
 import * as initializerModule from '../initializer/browser/initializer';
 import * as fetchGuestIdFromEdgeProxyModule from './fetch-guest-id-from-edge-proxy';
 import { getGuestId } from './get-guest-id';
-
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-  };
-});
 
 describe('getGuestId', () => {
   afterEach(() => {

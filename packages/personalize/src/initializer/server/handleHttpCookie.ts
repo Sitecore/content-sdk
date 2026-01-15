@@ -11,7 +11,7 @@ import {
   type HttpResponse,
   type Request,
   type Response,
-} from '@sitecore-content-sdk/utils';
+} from '@sitecore-content-sdk/analytics-core/utils';
 import type { PersonalizeSettings } from './interfaces';
 
 /**

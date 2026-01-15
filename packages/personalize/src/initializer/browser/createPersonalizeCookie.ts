@@ -3,7 +3,10 @@ import {
   getCookiesValuesFromEdgeBrowser,
   getDefaultCookieAttributes,
 } from '@sitecore-content-sdk/analytics-core/internal';
-import { createCookieString, getCookieValueClientSide } from '@sitecore-content-sdk/utils';
+import {
+  createCookieString,
+  getCookieValueClientSide,
+} from '@sitecore-content-sdk/analytics-core/utils';
 import type { PersonalizeSettings } from './interfaces';
 
 /**

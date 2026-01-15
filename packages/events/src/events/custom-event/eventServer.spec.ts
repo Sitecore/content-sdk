@@ -7,8 +7,8 @@ import { eventServer } from './eventServer';
 
 jest.mock('./custom-event');
 
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

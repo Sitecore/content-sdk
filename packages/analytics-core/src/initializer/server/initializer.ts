@@ -5,7 +5,7 @@ import type {
   MiddlewareRequest,
   Request,
   Response,
-} from '@sitecore-content-sdk/utils';
+} from '../../utils';
 import {
   createCookieString,
   getCookieServerSide,
@@ -13,7 +13,7 @@ import {
   isHttpResponse,
   isNextJsMiddlewareRequest,
   isNextJsMiddlewareResponse,
-} from '@sitecore-content-sdk/utils';
+} from '../../utils';
 import { fetchBrowserIdFromEdgeProxy } from '../../browser-id/fetch-browser-id-from-edge-proxy';
 import {
   BROWSER_ID_COOKIE_NAME,

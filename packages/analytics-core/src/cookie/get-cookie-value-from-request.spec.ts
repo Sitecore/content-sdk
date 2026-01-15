@@ -1,15 +1,5 @@
-import * as utils from '@sitecore-content-sdk/utils';
+import * as utils from '../utils';
 import { getCookieValueFromRequest } from './get-cookie-value-from-request';
-
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-  };
-});
 
 describe('getCookieValueFromRequest', () => {
   const cookieName = 'BID_pqsDATA3lw12v5a9rrHPW1c4hET73GxQ';

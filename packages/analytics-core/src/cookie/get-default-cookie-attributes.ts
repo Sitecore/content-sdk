@@ -1,5 +1,5 @@
 import { DAILY_SECONDS, DEFAULT_COOKIE_EXPIRY_DAYS } from '../consts';
-import type { CookieProperties } from '@sitecore-content-sdk/utils';
+import type { CookieProperties } from '../utils';
 
 /**
  * Gets the default cookie attributes.

@@ -13,9 +13,6 @@ const config: Config.InitialOptions = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   testEnvironment: 'jsdom',
-  moduleNameMapper: {
-    '^@sitecore-content-sdk/utils$': '<rootDir>/../utils/src/index.ts',
-  },
   coverageDirectory: './coverage',
   coverageReporters: ['cobertura', 'text'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/types/'],

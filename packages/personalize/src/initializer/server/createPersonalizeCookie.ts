@@ -6,7 +6,7 @@ import {
   isNextJsMiddlewareResponse,
   type Request,
   type Response,
-} from '@sitecore-content-sdk/utils';
+} from '@sitecore-content-sdk/analytics-core/utils';
 import { handleHttpCookie } from './handleHttpCookie';
 import { handleNextJsMiddlewareCookie } from './handleNextJsMiddlewareCookie';
 import type { PersonalizeSettings } from './interfaces';

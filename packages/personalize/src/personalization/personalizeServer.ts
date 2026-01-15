@@ -4,8 +4,8 @@ import {
   getEnabledPackageServer,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import type { Settings as CloudSDKSettings } from '@sitecore-content-sdk/analytics-core/server';
-import type { Request } from '@sitecore-content-sdk/utils';
-import { isNextJsMiddlewareRequest } from '@sitecore-content-sdk/utils';
+import type { Request } from '@sitecore-content-sdk/analytics-core/utils';
+import { isNextJsMiddlewareRequest } from '@sitecore-content-sdk/analytics-core/utils';
 import { PACKAGE_NAME } from '../consts';
 import type { PersonalizeSettings } from '../initializer/browser/interfaces';
 import { verifyPersonalizePackageExistence } from '../initializer/server/initializer';

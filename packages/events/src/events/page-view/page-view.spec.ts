@@ -1,5 +1,5 @@
 import * as core from '@sitecore-content-sdk/analytics-core/internal';
-import * as utilsModule from '@sitecore-content-sdk/utils';
+import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages } from '../../consts';
 import * as initializerModule from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
@@ -26,8 +26,8 @@ jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
     getCloudSDKSettings: jest.fn(),
   };
 });
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -45,8 +45,8 @@ jest.mock('./page-view-event', () => {
     }),
   };
 });
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

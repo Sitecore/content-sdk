@@ -1,4 +1,4 @@
-import { createCookieString, getCookie } from '@sitecore-content-sdk/utils';
+import { createCookieString, getCookie } from '../../utils';
 import { fetchBrowserIdFromEdgeProxy } from '../../browser-id/fetch-browser-id-from-edge-proxy';
 import { getBrowserId } from '../../browser-id/get-browser-id';
 import {
