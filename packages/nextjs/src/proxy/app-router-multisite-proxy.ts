@@ -1,20 +1,20 @@
 import { NextResponse } from 'next/server';
-import { MultisiteMiddleware } from './multisite-middleware';
+import { MultisiteProxy } from './multisite-proxy';
 
 /**
- * Middleware/handler for enabling multisite support in the Next.js App Router.
+ * Proxy/handler for enabling multisite support in the Next.js App Router.
  * @public
  */
-export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
+export class AppRouterMultisiteProxy extends MultisiteProxy {
   /**
    * Warns when multisite is disabled in App Router.
-   * The middleware will still run to prevent routing errors.
+   * The proxy will still run to prevent routing errors.
    * @param {NextResponse} _res response (unused, kept for method signature compatibility)
    */
   // eslint-disable-next-line no-unused-vars
   protected shouldWarnWhenDisabled(_res: NextResponse): void {
     console.warn(
-      '⚠️ Warning: Multisite is disabled in App Router configuration, but the middleware will continue running. ' +
+      '⚠️ Warning: Multisite is disabled in App Router configuration, but the proxy will continue running. ' +
         'Disabling multisite in App Router would cause 404 errors for regular page requests because the route structure requires the [site] segment. ' +
         'Preview/Editing modes will still work. ' +
         'For single-site setups, keep multisite enabled and configure only one site.'
@@ -22,7 +22,7 @@ export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
   }
 
   /**
-   * In App Router, we cannot skip the middleware even if enabled is false,
+   * In App Router, we cannot skip the proxy even if enabled is false,
    * because the route structure requires the [site] segment.
    * @returns {boolean} always returns false (never skip) for App Router
    */

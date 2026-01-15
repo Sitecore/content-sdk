@@ -1,9 +1,9 @@
-﻿/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 import { NextResponse, NextRequest } from 'next/server';
 import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/core/site';
 import { debug } from '@sitecore-content-sdk/core';
-import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
+import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/core/editing';
 
@@ -23,32 +23,32 @@ export type CookieAttributes = {
 };
 
 /**
- * The interface for the MultisiteMiddleware configuration.
+ * The interface for the MultisiteProxy configuration.
  * @public
  */
-export type MultisiteMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['multisite'];
+export type MultisiteProxyConfig = ProxyBaseConfig & SitecoreConfig['multisite'];
 
 /**
- * Middleware / handler for multisite support
+ * Proxy / handler for multisite support
  * @public
  */
-export class MultisiteMiddleware extends MiddlewareBase {
+export class MultisiteProxy extends ProxyBase {
   /**
-   * @param {MultisiteMiddlewareConfig} [config] Multisite middleware config
+   * @param {MultisiteProxyConfig} [config] Multisite proxy config
    */
-  constructor(protected config: MultisiteMiddlewareConfig) {
+  constructor(protected config: MultisiteProxyConfig) {
     super(config);
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     try {
-      // Path can be rewritten by previously executed middleware
+      // Path can be rewritten by previously executed proxy
       const pathname = res?.headers.get(REWRITE_HEADER_NAME) || req.nextUrl.pathname;
       const language = this.getLanguage(req, res);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
 
-      debug.multisite('multisite middleware start: %o', {
+      debug.multisite('multisite proxy start: %o', {
         pathname,
         language,
         hostname,
@@ -72,14 +72,14 @@ export class MultisiteMiddleware extends MiddlewareBase {
         if (!this.config.enabled) {
           this.shouldWarnWhenDisabled(res);
           if (this.shouldSkipWhenDisabled()) {
-            debug.multisite('skipped (multisite middleware is disabled globally)');
+            debug.multisite('skipped (multisite proxy is disabled globally)');
             return res;
           }
           // Continue execution if shouldSkipWhenDisabled returns false (App Router case)
         }
 
         if (this.disabled(req, res)) {
-          debug.multisite('skipped (multisite middleware is disabled)');
+          debug.multisite('skipped (multisite proxy is disabled)');
 
           return res;
         }
@@ -115,10 +115,10 @@ export class MultisiteMiddleware extends MiddlewareBase {
         sameSite: 'none',
       } as CookieAttributes;
 
-      // Share site name with the following executed middlewares
+      // Share site name with the following executed proxies
       response.cookies.set(SITE_KEY, siteName, defaultCookieAttributes);
 
-      debug.multisite('multisite middleware end in %dms: %o', Date.now() - startTimestamp, {
+      debug.multisite('multisite proxy end in %dms: %o', Date.now() - startTimestamp, {
         rewritePath,
         siteName,
         headers: this.extractDebugHeaders(response.headers),
@@ -127,7 +127,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
 
       return response;
     } catch (error) {
-      console.log('Multisite middleware failed:');
+      console.log('Multisite proxy failed:');
       console.log(error);
       return res;
     }
@@ -148,9 +148,9 @@ export class MultisiteMiddleware extends MiddlewareBase {
   }
 
   /**
-   * Determines if middleware should be skipped when multisite is disabled.
+   * Determines if proxy should be skipped when multisite is disabled.
    * Override in subclasses to provide router-specific behavior.
-   * @returns {boolean} true if middleware should be skipped when disabled
+   * @returns {boolean} true if proxy should be skipped when disabled
    */
   protected shouldSkipWhenDisabled(): boolean {
     return true; // Base class skips when disabled

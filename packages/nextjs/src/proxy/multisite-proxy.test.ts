@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */
 import chai, { use } from 'chai';
@@ -8,13 +8,13 @@ import sinon, { spy } from 'sinon';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { debug } from '@sitecore-content-sdk/core';
 
-import { MultisiteMiddleware } from './multisite-middleware';
+import { MultisiteProxy } from './multisite-proxy';
 import { SiteResolver } from '@sitecore-content-sdk/core/site';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
-describe('MultisiteMiddleware', () => {
+describe('MultisiteProxy', () => {
   let debugSpy;
   const validateDebugLog = (message, ...params) =>
     expect(debugSpy.args.find((log) => log[0] === message)).to.deep.equal([message, ...params]);
@@ -34,21 +34,18 @@ describe('MultisiteMiddleware', () => {
   };
 
   const createRequest = (props: any = {}) => {
-    const req = {
+    const nextUrlBase = {
+      pathname: props.nextUrl?.pathname || '/styleguide',
+      origin: props.nextUrl?.origin || 'http://localhost:3000',
+      search: props.nextUrl?.search || '',
+      locale: props.nextUrl?.locale || 'en',
+      defaultLocale: props.nextUrl?.defaultLocale || 'en',
+      searchParams: props.nextUrl?.searchParams || {},
+    };
+    
+    const req: any = {
       ...props,
-      nextUrl: {
-        pathname: '/styleguide',
-        clone() {
-          return Object.assign({}, req.nextUrl);
-        },
-        searchParams: {
-          get(key) {
-            return req.nextUrl.searchParams[key];
-          },
-          ...props.searchParams,
-        },
-        ...props.nextUrl,
-      },
+      nextUrl: null as any,
       headers: {
         get(key: string) {
           const headers = {
@@ -69,6 +66,41 @@ describe('MultisiteMiddleware', () => {
       },
     } as NextRequest;
 
+    // Create nextUrl with computed href
+    req.nextUrl = {
+      ...nextUrlBase,
+      get href() {
+        return `${this.origin}${this.pathname}${this.search}`;
+      },
+      clone() {
+        const cloned: any = {
+          pathname: req.nextUrl.pathname,
+          search: req.nextUrl.search,
+          origin: req.nextUrl.origin,
+          locale: req.nextUrl.locale,
+          defaultLocale: req.nextUrl.defaultLocale,
+          searchParams: req.nextUrl.searchParams,
+        };
+        // Define href as a getter that computes from current pathname, search, and origin
+        Object.defineProperty(cloned, 'href', {
+          get() {
+            return `${this.origin}${this.pathname}${this.search}`;
+          },
+          enumerable: true,
+          configurable: true,
+        });
+        return cloned;
+      },
+      searchParams: {
+        get(key) {
+          const searchParams = req.nextUrl.searchParams || {};
+          return searchParams[key];
+        },
+        ...props.searchParams,
+      },
+      ...props.nextUrl,
+    };
+
     return req;
   };
 
@@ -86,7 +118,7 @@ describe('MultisiteMiddleware', () => {
     Object.defineProperties(res.headers, {
       set: {
         value: (key, value) => {
-          res.headers[key] = value;
+        res.headers[key] = value;
         },
         enumerable: false,
       },
@@ -95,7 +127,7 @@ describe('MultisiteMiddleware', () => {
       },
       forEach: {
         value: (cb) => {
-          Object.keys(res.headers).forEach((key) => cb(res.headers[key], key, res.headers));
+        Object.keys(res.headers).forEach((key) => cb(res.headers[key], key, res.headers));
         },
         enumerable: false,
       },
@@ -104,7 +136,7 @@ describe('MultisiteMiddleware', () => {
     return res;
   };
 
-  const createMiddleware = (input: { [key: string]: any; siteResolver?: SiteResolver } = {}) => {
+  const createProxy = (input: { [key: string]: any; siteResolver?: SiteResolver } = {}) => {
     const props = { ...defaultConfig, ...input.config };
     class MockSiteResolver extends SiteResolver {
       getByName = sinon.stub().returns({
@@ -121,12 +153,12 @@ describe('MultisiteMiddleware', () => {
     }
 
     const siteResolver = input.siteResolver || new MockSiteResolver([]);
-    const middleware = new MultisiteMiddleware({
+    const proxy = new MultisiteProxy({
       ...props,
     });
-    middleware['siteResolver'] = siteResolver;
+    proxy['siteResolver'] = siteResolver;
 
-    return { middleware, siteResolver };
+    return { proxy, siteResolver };
   };
 
   // Stub for NextResponse generation, see https://github.com/vercel/next.js/issues/42374
@@ -144,18 +176,18 @@ describe('MultisiteMiddleware', () => {
     describe('disabled / skip', () => {
       const res = createResponse();
 
-      const test = async (pathname: string, middleware) => {
+      const test = async (pathname: string, proxy) => {
         const req = createRequest({
           nextUrl: {
             pathname,
           },
         });
 
-        const finalRes = await middleware.handle(req, res);
-        const isDisabledGlobally = middleware['config'].enabled === false;
+        const finalRes = await proxy.handle(req, res);
+        const isDisabledGlobally = proxy['config'].enabled === false;
 
         if (!isDisabledGlobally) {
-          validateDebugLog('multisite middleware start: %o', {
+          validateDebugLog('multisite proxy start: %o', {
             pathname,
             language: 'en',
             hostname: 'foo.net',
@@ -163,8 +195,8 @@ describe('MultisiteMiddleware', () => {
         }
 
         const message = isDisabledGlobally
-          ? 'skipped (multisite middleware is disabled globally)'
-          : 'skipped (multisite middleware is disabled)';
+          ? 'skipped (multisite proxy is disabled globally)'
+          : 'skipped (multisite proxy is disabled)';
         validateDebugLog(message);
 
         expect(finalRes).to.deep.equal(res);
@@ -173,32 +205,32 @@ describe('MultisiteMiddleware', () => {
       };
 
       it('default', async () => {
-        const { middleware } = createMiddleware();
+        const { proxy } = createProxy();
 
-        await test('/src/image.png', middleware);
-        await test('/api/layout/render', middleware);
-        await test('/sitecore/render', middleware);
-        await test('/_next/webpack', middleware);
+        await test('/src/image.png', proxy);
+        await test('/api/layout/render', proxy);
+        await test('/sitecore/render', proxy);
+        await test('/_next/webpack', proxy);
       });
 
       it('should apply both default and custom rules when custom disabled function provided', async () => {
         const skip = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
 
-        const { middleware } = createMiddleware({
+        const { proxy } = createProxy({
           config: { ...defaultConfig, skip },
         });
 
-        await test('/src/image.png', middleware);
-        await test('/api/layout/render', middleware);
-        await test('/sitecore/render', middleware);
-        await test('/_next/webpack', middleware);
-        await test('/crazypath/luna', middleware);
+        await test('/src/image.png', proxy);
+        await test('/api/layout/render', proxy);
+        await test('/sitecore/render', proxy);
+        await test('/_next/webpack', proxy);
+        await test('/crazypath/luna', proxy);
       });
     });
 
     describe('preview', () => {
       it('prerender bypass cookie is present', async () => {
-        const { middleware } = createMiddleware();
+        const { proxy } = createProxy();
         const res = NextResponse.next();
 
         const req = createRequest({
@@ -207,7 +239,7 @@ describe('MultisiteMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.handle(req, res);
+        const finalRes = await proxy.handle(req, res);
 
         validateDebugLog('skipped (preview)');
 
@@ -215,7 +247,7 @@ describe('MultisiteMiddleware', () => {
       });
 
       it('preview data cookie is present', async () => {
-        const { middleware } = createMiddleware();
+        const { proxy } = createProxy();
         const res = NextResponse.next();
 
         const req = createRequest({
@@ -224,7 +256,7 @@ describe('MultisiteMiddleware', () => {
           },
         });
 
-        const finalRes = await middleware.handle(req, res);
+        const finalRes = await proxy.handle(req, res);
 
         validateDebugLog('skipped (preview)');
 
@@ -254,19 +286,19 @@ describe('MultisiteMiddleware', () => {
 
         nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-        const { middleware, siteResolver } = createMiddleware({
+        const { proxy, siteResolver } = createProxy({
           config: { ...defaultConfig, useCookieResolution: () => true },
         });
 
-        const finalRes = await middleware.handle(req, res);
+        const finalRes = await proxy.handle(req, res);
 
-        validateDebugLog('multisite middleware start: %o', {
+        validateDebugLog('multisite proxy start: %o', {
           pathname: '/styleguide',
           language: 'en',
           hostname: 'foo.net',
         });
 
-        validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+        validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
           rewritePath: '/_site_foobar/styleguide',
           siteName: 'foobar',
           headers: {
@@ -286,13 +318,10 @@ describe('MultisiteMiddleware', () => {
 
         expect(finalRes).to.deep.equal(res);
 
-        expect(nextRewriteStub).calledWith({
-          ...req.nextUrl,
-          pathname: '/_site_foobar/styleguide',
-        });
+        expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foobar/styleguide');
       });
 
-      it('should not be skipped if multisite middleware is disabled globally', async () => {
+      it('should not be skipped if multisite proxy is disabled globally', async () => {
         const defaultSiteCookieAttributes = {
           secure: true,
           httpOnly: true,
@@ -307,19 +336,19 @@ describe('MultisiteMiddleware', () => {
 
         nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-        const { middleware, siteResolver } = createMiddleware({
+        const { proxy, siteResolver } = createProxy({
           config: { ...defaultConfig, enabled: false, useCookieResolution: () => true },
         });
 
-        const finalRes = await middleware.handle(req, res);
+        const finalRes = await proxy.handle(req, res);
 
-        validateDebugLog('multisite middleware start: %o', {
+        validateDebugLog('multisite proxy start: %o', {
           pathname: '/styleguide',
           language: 'en',
           hostname: 'foo.net',
         });
 
-        validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+        validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
           rewritePath: '/_site_foobar/styleguide',
           siteName: 'foobar',
           headers: {
@@ -339,10 +368,7 @@ describe('MultisiteMiddleware', () => {
 
         expect(finalRes).to.deep.equal(res);
 
-        expect(nextRewriteStub).calledWith({
-          ...req.nextUrl,
-          pathname: '/_site_foobar/styleguide',
-        });
+        expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foobar/styleguide');
       });
     });
   });
@@ -368,19 +394,19 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware({
+      const { proxy, siteResolver } = createProxy({
         config: { ...defaultConfig, defaultHostname: 'bar.net' },
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/styleguide',
         language: 'en',
         hostname: 'bar.net',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_foo/styleguide',
         siteName: 'foo',
         headers: {
@@ -399,10 +425,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_foo/styleguide',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/styleguide');
     });
 
     it('nexturl request pathname is used', async () => {
@@ -413,19 +436,19 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware({
+      const { proxy, siteResolver } = createProxy({
         config: { ...defaultConfig },
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/styleguide/foo',
         language: 'en',
         hostname: 'foo.net',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_foo/styleguide/foo',
         siteName: 'foo',
         headers: {
@@ -444,10 +467,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_foo/styleguide/foo',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/styleguide/foo');
     });
 
     it('app router application and next preview cookies are present', async () => {
@@ -464,19 +484,19 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware({
+      const { proxy, siteResolver } = createProxy({
         config: { ...defaultConfig },
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/en/some/otherpath',
         language: 'en',
         hostname: 'foo.net',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_foo/en/some/otherpath',
         siteName: 'foo',
         headers: {
@@ -496,10 +516,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_foo/en/some/otherpath',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/en/some/otherpath');
     });
 
     it('rewritten pathname from header is used when present in response', async () => {
@@ -512,19 +529,19 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware({
+      const { proxy, siteResolver } = createProxy({
         config: { ...defaultConfig },
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/en/some/otherpath',
         language: 'en',
         hostname: 'foo.net',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_foo/en/some/otherpath',
         siteName: 'foo',
         headers: {
@@ -543,10 +560,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_foo/en/some/otherpath',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/en/some/otherpath');
     });
 
     it('fallback default hostName is used', async () => {
@@ -558,17 +572,17 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware();
+      const { proxy, siteResolver } = createProxy();
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/styleguide',
         language: 'en',
         hostname: 'localhost',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_foo/styleguide',
         siteName: 'foo',
         headers: {
@@ -587,10 +601,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_foo/styleguide',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/styleguide');
     });
 
     it('host header is used', async () => {
@@ -600,17 +611,17 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware();
+      const { proxy, siteResolver } = createProxy();
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/styleguide',
         language: 'en',
         hostname: 'foo.net',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_foo/styleguide',
         siteName: 'foo',
         headers: {
@@ -629,10 +640,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_foo/styleguide',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/styleguide');
     });
 
     it('custom response object is not provided', async () => {
@@ -642,17 +650,17 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware({});
+      const { proxy, siteResolver } = createProxy({});
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/styleguide',
         language: 'en',
         hostname: 'foo.net',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_foo/styleguide',
         siteName: 'foo',
         headers: {
@@ -671,10 +679,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_foo/styleguide',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/styleguide');
     });
 
     it('site querystring parameter is provided', async () => {
@@ -686,19 +691,19 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware({
+      const { proxy, siteResolver } = createProxy({
         useCookieResolution: () => true,
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/styleguide',
         language: 'en',
         hostname: 'foo.net',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_qsFoo/styleguide',
         siteName: 'qsFoo',
         headers: {
@@ -714,10 +719,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_qsFoo/styleguide',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_qsFoo/styleguide');
     });
 
     it('sc_site querystring parameter is provided', async () => {
@@ -729,19 +731,19 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware({
+      const { proxy, siteResolver } = createProxy({
         useCookieResolution: () => true,
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/styleguide',
         language: 'en',
         hostname: 'foo.net',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_qsFoo/styleguide',
         siteName: 'qsFoo',
         headers: {
@@ -761,10 +763,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_qsFoo/styleguide',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_qsFoo/styleguide');
     });
 
     it('sc_site cookie is provided and its usage enabled', async () => {
@@ -776,19 +775,19 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware({
+      const { proxy, siteResolver } = createProxy({
         config: { ...defaultConfig, useCookieResolution: () => true },
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/styleguide',
         language: 'en',
         hostname: 'foo.net',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_foobar/styleguide',
         siteName: 'foobar',
         headers: {
@@ -808,10 +807,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_foobar/styleguide',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foobar/styleguide');
     });
 
     it('sc_site cookie is provided and its usage disabled', async () => {
@@ -823,17 +819,17 @@ describe('MultisiteMiddleware', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { middleware, siteResolver } = createMiddleware();
+      const { proxy, siteResolver } = createProxy();
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('multisite middleware start: %o', {
+      validateDebugLog('multisite proxy start: %o', {
         pathname: '/styleguide',
         language: 'en',
         hostname: 'foo.net',
       });
 
-      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_foo/styleguide',
         siteName: 'foo',
         headers: {
@@ -852,10 +848,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(finalRes).to.deep.equal(res);
 
-      expect(nextRewriteStub).calledWith({
-        ...req.nextUrl,
-        pathname: '/_site_foo/styleguide',
-      });
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/styleguide');
     });
   });
 
@@ -890,13 +883,13 @@ describe('MultisiteMiddleware', () => {
         };
       }
 
-      const { middleware } = createMiddleware({
+      const { proxy } = createProxy({
         siteResolver: new SampleSiteResolver([]),
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      expect(errorSpy.getCall(0).calledWith('Multisite middleware failed:')).to.be.true;
+      expect(errorSpy.getCall(0).calledWith('Multisite proxy failed:')).to.be.true;
       expect(errorSpy.getCall(1).calledWith(error)).to.be.true;
 
       expect(finalRes).to.deep.equal(res);

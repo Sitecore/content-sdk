@@ -1,4 +1,4 @@
-﻿import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { debug } from '@sitecore-content-sdk/core';
 import {
   EDITING_ALLOWED_ORIGINS,
@@ -32,7 +32,7 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
   private defaultPageUrl = '/feaas/render';
 
   /**
-   * @param {EditingRenderMiddlewareConfig} [config] Editing render middleware config
+   * @param {FEAASRenderMiddlewareConfig} [config] FEAAS render middleware config
    */
   constructor(protected config?: FEAASRenderMiddlewareConfig) {
     super();

@@ -5,12 +5,12 @@ import chai, { use } from 'chai';
 import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 
-import { AppRouterMultisiteMiddleware } from './app-router-multisite-middleware';
+import { AppRouterMultisiteProxy } from './app-router-multisite-proxy';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
-describe('AppRouterMultisiteMiddleware', () => {
+describe('AppRouterMultisiteProxy', () => {
   const defaultConfig = {
     sites: [],
     enabled: true,
@@ -19,27 +19,27 @@ describe('AppRouterMultisiteMiddleware', () => {
   };
 
   describe('getSiteRewrite', () => {
-    const middleware = new AppRouterMultisiteMiddleware({
+    const proxy = new AppRouterMultisiteProxy({
       ...defaultConfig,
     });
 
     it('should rewrite path for site without _site_ prefix', async () => {
-      const result = middleware['getSiteRewrite']('/some/path', 'mysite');
+      const result = proxy['getSiteRewrite']('/some/path', 'mysite');
       expect(result).to.equal('/mysite/some/path');
     });
 
     it('should return the correct rewrite path with leading slash in pathname', () => {
-      const result = middleware['getSiteRewrite']('/some/path', 'mysite');
+      const result = proxy['getSiteRewrite']('/some/path', 'mysite');
       expect(result).to.equal('/mysite/some/path');
     });
 
     it('should return the correct rewrite path without leading slash in pathname', () => {
-      const result = middleware['getSiteRewrite']('some/path', 'mysite');
+      const result = proxy['getSiteRewrite']('some/path', 'mysite');
       expect(result).to.equal('/mysite/some/path');
     });
 
     it('should handle root path correctly', () => {
-      const result = middleware['getSiteRewrite']('/', 'mysite');
+      const result = proxy['getSiteRewrite']('/', 'mysite');
       expect(result).to.equal('/mysite/');
     });
   });

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import { REWRITE_HEADER_NAME } from '../middleware/middleware';
+import { REWRITE_HEADER_NAME } from '../proxy/proxy';
 import { getEditingSecret, parseRewriteHeader } from './utils';
 
 describe('utils', () => {

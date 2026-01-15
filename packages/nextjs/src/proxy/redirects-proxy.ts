@@ -17,7 +17,7 @@ import {
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';
-import { MiddlewareBase, MiddlewareBaseConfig, REWRITE_HEADER_NAME } from './middleware';
+import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
@@ -26,31 +26,37 @@ const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
 type RedirectResult = RedirectInfo & { matchedQueryString?: string };
 
 /**
- * The interface for the RedirectsMiddleware configuration.
+ * The interface for the RedirectsProxy configuration.
  * @public
  */
-export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> &
+export type RedirectsProxyConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> &
   SitecoreConfig['api']['edge'] &
   Partial<NonNullable<SitecoreConfig['api']['local']>> &
-  MiddlewareBaseConfig &
+  ProxyBaseConfig &
   SitecoreConfig['redirects'] & {
     redirectsService?: RedirectsService;
   };
 /**
- * Middleware / handler fetches all redirects from Sitecore instance by grapqhl service
+ * Proxy / handler fetches all redirects from Sitecore instance by grapqhl service
  * compares with current url and redirects to target url
  * @public
  */
-export class RedirectsMiddleware extends MiddlewareBase {
+export class RedirectsProxy extends ProxyBase {
   protected redirectsService: RedirectsService | null;
   private locales: string[];
 
   /**
-   * @param {RedirectsMiddlewareConfig} [config] redirects middleware config
+   * @param {RedirectsProxyConfig} [config] redirects proxy config
    */
-  constructor(protected config: RedirectsMiddlewareConfig) {
+  constructor(protected config: RedirectsProxyConfig) {
     super(config);
     this.locales = config.locales;
+
+    // If redirectsService is provided directly (e.g., for testing), use it
+    if (this.config.redirectsService) {
+      this.redirectsService = this.config.redirectsService;
+      return;
+    }
 
     // Validate API config is present - redirects requires either Edge or local API configuration
     const hasEdgeConfig = !!(this.config.contextId || this.config.clientContextId);
@@ -58,7 +64,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
     if (!hasEdgeConfig && !hasLocalConfig) {
       console.warn(
-        '[RedirectsMiddleware] Redirects middleware requires either Edge configuration (contextId/clientContextId) or local API configuration (apiHost/apiKey). ' +
+        '[RedirectsProxy] Redirects proxy requires either Edge configuration (contextId/clientContextId) or local API configuration (apiHost/apiKey). ' +
           'Redirects features will be disabled. This is expected when API configuration is not available.'
       );
       // Set to null to indicate service is disabled
@@ -86,18 +92,16 @@ export class RedirectsMiddleware extends MiddlewareBase {
     };
     // NOTE: we provide native fetch for compatibility on Next.js Edge Runtime
     // (underlying default 'cross-fetch' is not currently compatible: https://github.com/lquixada/cross-fetch/issues/78)
-    this.redirectsService =
-      this.config.redirectsService ??
-      new RedirectsService({
-        ...config,
-        clientFactory: this.getClientFactory(graphQLOptions),
-        fetch: fetch,
-      });
+    this.redirectsService = new RedirectsService({
+      ...config,
+      clientFactory: this.getClientFactory(graphQLOptions),
+      fetch: fetch,
+    });
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     if (!this.config.enabled) {
-      debug.redirects('skipped (redirects middleware is disabled globally)');
+      debug.redirects('skipped (redirects proxy is disabled globally)');
       return res;
     }
     try {
@@ -107,14 +111,14 @@ export class RedirectsMiddleware extends MiddlewareBase {
       let site: SiteInfo | undefined;
       const startTimestamp = Date.now();
 
-      debug.redirects('redirects middleware start: %o', {
+      debug.redirects('redirects proxy start: %o', {
         pathname,
         language,
         hostname,
       });
 
       if (this.disabled(req, res)) {
-        debug.redirects('skipped (redirects middleware is disabled)');
+        debug.redirects('skipped (redirects proxy is disabled)');
         return res;
       }
 
@@ -128,10 +132,10 @@ export class RedirectsMiddleware extends MiddlewareBase {
         }
 
         // Skip prefetch requests from Next.js, which are not original client requests
-        // as they load unnecessary requests that burden the redirects middleware with meaningless traffic
+        // as they load unnecessary requests that burden the redirects proxy with meaningless traffic
         if (this.isPrefetch(req)) {
           debug.redirects('skipped (prefetch)');
-          res.headers.set('x-middleware-cache', 'no-cache');
+          res.headers.set('x-proxy-cache', 'no-cache');
           res.headers.set('Cache-Control', 'no-store, must-revalidate');
           return false;
         }
@@ -247,7 +251,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
         ? processAbsoluteUrlTarget(reqUrl, existsRedirect)
         : processRelativeUrlTarget(reqUrl, existsRedirect);
 
-      debug.redirects('redirects middleware end in %dms: %o', Date.now() - startTimestamp, {
+      debug.redirects('redirects proxy end in %dms: %o', Date.now() - startTimestamp, {
         redirected: redirectedResponse.redirected,
         status: redirectedResponse.status,
         url: redirectedResponse.url,
@@ -256,19 +260,20 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
       return redirectedResponse;
     } catch (error) {
-      console.log('Redirect middleware failed:');
+      console.log('Redirect proxy failed:');
       console.log(error);
       return res;
     }
   };
 
   protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
-    // Check if API config is missing - if so, disable the middleware
+    // Check if API config is missing - if so, disable the proxy
     if (!this.redirectsService) {
       debug.redirects('skipped (redirects service not configured - API config required)');
       return true;
     }
-    return super.disabled(req, res);
+    // ignore files
+    return req.nextUrl.pathname.includes('.') || super.disabled(req, res);
   }
 
   /**
@@ -382,7 +387,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
     /**
      * Remove special parameters(Next.JS)
      * Example: /about/contact/us
-     * When a user clicks on this link, Next.js should generate a link for the middleware, formatted like this:
+     * When a user clicks on this link, Next.js should generate a link for the proxy, formatted like this:
      * http://host/about/contact/us?path=about&path=contact&path=us
      */
     const newQueryString = url.search
@@ -472,7 +477,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
   }
 
   /**
-   * Helper function to create a redirect response and remove the x-middleware-next header.
+   * Helper function to create a redirect response and remove the x-proxy-next header.
    * @param {NextURL | string} url The URL to redirect to.
    * @param {Response} res The response object.
    * @param {number} status The HTTP status code of the redirect.
@@ -485,14 +490,16 @@ export class RedirectsMiddleware extends MiddlewareBase {
     status: number,
     statusText: string
   ): NextResponse {
-    const redirect = NextResponse.redirect(url, {
+    // Convert NextURL to string if needed - NextResponse.redirect requires a string URL
+    const urlString = typeof url === 'string' ? url : url.href;
+    const redirect = NextResponse.redirect(urlString, {
       status,
       statusText,
       headers: res?.headers,
     });
     if (res?.headers) {
-      redirect.headers.delete('x-middleware-next');
-      redirect.headers.delete('x-middleware-rewrite');
+      redirect.headers.delete('x-proxy-next');
+      redirect.headers.delete('x-proxy-rewrite');
       redirect.headers.delete(REWRITE_HEADER_NAME);
     }
     return redirect;

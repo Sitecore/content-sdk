@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */
 import chai, { use } from 'chai';
@@ -9,19 +9,19 @@ import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { GraphQLRequestClient, debug } from '@sitecore-content-sdk/core';
 import { SiteResolver } from '@sitecore-content-sdk/core/site';
 import { CdpHelper } from '@sitecore-content-sdk/core/personalize';
-import { PersonalizeMiddlewareConfig } from './personalize-middleware';
+import { PersonalizeProxyConfig } from './personalize-proxy';
 import proxyquire from 'proxyquire';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 const sandbox = sinon.createSandbox();
 
-describe('PersonalizeMiddleware', () => {
+describe('PersonalizeProxy', () => {
   const CDKPersonalizeStub = sandbox.stub().callsFake(() => {
     return Promise.resolve({ variantId: 'variant-2' });
   });
 
-  const { PersonalizeMiddleware } = proxyquire('./personalize-middleware', {
+  const { PersonalizeProxy } = proxyquire('./personalize-proxy', {
     '@sitecore-cloudsdk/personalize/server': { personalize: CDKPersonalizeStub },
   });
 
@@ -44,7 +44,7 @@ describe('PersonalizeMiddleware', () => {
   const defaultLang = 'en';
   const referrer = 'http://localhost:3000';
 
-  const defaultConfig: Omit<PersonalizeMiddlewareConfig, 'clientFactory'> = {
+  const defaultConfig: Omit<PersonalizeProxyConfig, 'clientFactory'> = {
     enabled: true,
     edgeTimeout: 400,
     cdpTimeout: 400,
@@ -163,10 +163,10 @@ describe('PersonalizeMiddleware', () => {
     return res;
   };
 
-  const createMiddleware = (
+  const createProxy = (
     props: {
       [key: string]: unknown;
-      config?: Omit<PersonalizeMiddlewareConfig, 'clientFactory'>;
+      config?: Omit<PersonalizeProxyConfig, 'clientFactory'>;
       language?: string;
       siteResolver?: SiteResolver;
       variantId?: string;
@@ -205,18 +205,18 @@ describe('PersonalizeMiddleware', () => {
     }
 
     const siteResolver: SiteResolver = props.siteResolver || new MockSiteResolver([]);
-    const middleware = new PersonalizeMiddleware({
+    const proxy = new PersonalizeProxy({
       ...props,
       ...personalizeConfig,
     });
-    middleware['siteResolver'] = siteResolver;
+    proxy['siteResolver'] = siteResolver;
 
-    const initPersonalizeServer = (middleware['initPersonalizeServer'] = sandbox.stub());
+    const initPersonalizeServer = (proxy['initPersonalizeServer'] = sandbox.stub());
 
-    const getClientFactory = (middleware['getClientFactory'] =
+    const getClientFactory = (proxy['getClientFactory'] =
       props.getClientFactoryStub || sandbox.stub().returns(clientFactory));
 
-    const personalize = (middleware['personalize'] =
+    const personalize = (proxy['personalize'] =
       props.personalizeStub ||
       sandbox.stub().returns(
         Promise.resolve({
@@ -224,7 +224,7 @@ describe('PersonalizeMiddleware', () => {
         })
       ));
 
-    const getPersonalizeInfo = (middleware['personalizeService']['getPersonalizeInfo'] =
+    const getPersonalizeInfo = (proxy['personalizeService']['getPersonalizeInfo'] =
       props.getPersonalizeInfoStub ||
       sandbox.stub().returns(
         Promise.resolve(
@@ -238,7 +238,7 @@ describe('PersonalizeMiddleware', () => {
       ));
 
     return {
-      middleware,
+      proxy,
       getPersonalizeInfo,
       siteResolver,
       initPersonalizeServer,
@@ -275,8 +275,8 @@ describe('PersonalizeMiddleware', () => {
 
       const getOverrideExperienceParamsStub = sandbox.stub().returns(customParams);
 
-      const { middleware, getPersonalizeInfo, initPersonalizeServer, personalize } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } =
+        createProxy({
           variantId: 'variant-2',
           config: {
             ...defaultConfig,
@@ -284,9 +284,9 @@ describe('PersonalizeMiddleware', () => {
           },
         });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: {
           ...req.headers,
         },
@@ -304,11 +304,11 @@ describe('PersonalizeMiddleware', () => {
         personalize.calledWith(sandbox.match({ params: { utm: customParams } }), sandbox.match.any)
       ).to.be.true;
 
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
@@ -331,7 +331,7 @@ describe('PersonalizeMiddleware', () => {
         ),
       };
 
-      const { middleware, initPersonalizeServer, personalize } = createMiddleware({
+      const { proxy, initPersonalizeServer, personalize } = createProxy({
         config: {
           ...defaultConfig,
           personalizeService: customPersonalizeService,
@@ -339,14 +339,14 @@ describe('PersonalizeMiddleware', () => {
         variantId: variantIds[1],
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
       expect(customPersonalizeService.getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be
         .true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
 
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: {
           ...req.headers,
         },
@@ -355,11 +355,11 @@ describe('PersonalizeMiddleware', () => {
         language: 'en',
       });
 
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
@@ -375,11 +375,11 @@ describe('PersonalizeMiddleware', () => {
 
       const res = createResponse({ redirected: true });
 
-      const { middleware } = createMiddleware();
+      const { proxy } = createProxy();
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         hostname: 'foo.net',
         pathname: '/styleguide',
         language: 'en',
@@ -401,11 +401,11 @@ describe('PersonalizeMiddleware', () => {
           },
         });
         const res = createResponse();
-        const { middleware } = createMiddleware();
+        const { proxy } = createProxy();
         const getCookiesSpy = spy(req.cookies, 'get');
-        const finalRes = await middleware.handle(req, res);
+        const finalRes = await proxy.handle(req, res);
 
-        validateDebugLog('personalize middleware start: %o', {
+        validateDebugLog('personalize proxy start: %o', {
           hostname: 'foo.net',
           pathname: '/styleguide',
           language: 'en',
@@ -425,11 +425,11 @@ describe('PersonalizeMiddleware', () => {
           },
         });
         const res = createResponse();
-        const { middleware } = createMiddleware();
+        const { proxy } = createProxy();
         const getCookiesSpy = spy(req.cookies, 'get');
-        const finalRes = await middleware.handle(req, res);
+        const finalRes = await proxy.handle(req, res);
 
-        validateDebugLog('personalize middleware start: %o', {
+        validateDebugLog('personalize proxy start: %o', {
           hostname: 'foo.net',
           pathname: '/styleguide',
           language: 'en',
@@ -446,18 +446,18 @@ describe('PersonalizeMiddleware', () => {
     describe('disabled / skip', () => {
       const res = createResponse();
 
-      const test = async (pathname: string, middleware: PersonalizeMiddleware) => {
+      const test = async (pathname: string, proxy: PersonalizeProxy) => {
         const req = createRequest({
           nextUrl: {
             pathname,
           },
         });
-        const finalRes = await middleware.handle(req, res);
+        const finalRes = await proxy.handle(req, res);
         const headers = {};
         req.headers.forEach((value, key) => (headers[key] = value));
-        const isDisabledGlobally = middleware['config'].enabled === false;
+        const isDisabledGlobally = proxy['config'].enabled === false;
         if (!isDisabledGlobally) {
-          validateDebugLog('personalize middleware start: %o', {
+          validateDebugLog('personalize proxy start: %o', {
             hostname: 'foo.net',
             pathname,
             language: 'en',
@@ -465,52 +465,52 @@ describe('PersonalizeMiddleware', () => {
           });
         }
         const message = isDisabledGlobally
-          ? 'skipped (personalize middleware is disabled globally)'
-          : 'skipped (personalize middleware is disabled)';
+          ? 'skipped (personalize proxy is disabled globally)'
+          : 'skipped (personalize proxy is disabled)';
         validateDebugLog(message);
         expect(finalRes).to.deep.equal(res);
         debugSpy.resetHistory();
       };
 
       it('default', async () => {
-        const { middleware } = createMiddleware();
-        await test('/src/image.png', middleware);
-        await test('/api/layout/render', middleware);
-        await test('/sitecore/render', middleware);
-        await test('/_next/webpack', middleware);
+        const { proxy } = createProxy();
+        await test('/src/image.png', proxy);
+        await test('/api/layout/render', proxy);
+        await test('/sitecore/render', proxy);
+        await test('/_next/webpack', proxy);
       });
       it('should apply both default and custom rules when custom skip function provided', async () => {
         const skip = (req: NextRequest) => req.nextUrl.pathname === '/crazypath/luna';
-        const { middleware } = createMiddleware({
+        const { proxy } = createProxy({
           config: { ...defaultConfig, skip },
         });
-        await test('/src/image.png', middleware);
-        await test('/api/layout/render', middleware);
-        await test('/sitecore/render', middleware);
-        await test('/_next/webpack', middleware);
-        await test('/crazypath/luna', middleware);
+        await test('/src/image.png', proxy);
+        await test('/api/layout/render', proxy);
+        await test('/sitecore/render', proxy);
+        await test('/_next/webpack', proxy);
+        await test('/crazypath/luna', proxy);
       });
       it('should be disable when "enable" prop is false', async () => {
-        const { middleware } = createMiddleware({
+        const { proxy } = createProxy({
           config: { ...defaultConfig, enabled: false },
         });
-        await test('/src/image.png', middleware);
-        await test('/api/layout/render', middleware);
-        await test('/sitecore/render', middleware);
-        await test('/_next/webpack', middleware);
-        await test('/crazypath/luna', middleware);
+        await test('/src/image.png', proxy);
+        await test('/api/layout/render', proxy);
+        await test('/sitecore/render', proxy);
+        await test('/_next/webpack', proxy);
+        await test('/crazypath/luna', proxy);
       });
     });
     it('personalize info not found', async () => {
       const req = createRequest();
       const res = createResponse();
-      const { middleware, getPersonalizeInfo } = createMiddleware({
+      const { proxy, getPersonalizeInfo } = createProxy({
         personalizeInfo: null,
       });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
       const headers = {};
       req.headers.forEach((value, key) => (headers[key] = value));
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         hostname: 'foo.net',
         pathname: '/styleguide',
         language: 'en',
@@ -523,16 +523,16 @@ describe('PersonalizeMiddleware', () => {
     it('no personalization configured', async () => {
       const req = createRequest();
       const res = createResponse();
-      const { middleware, getPersonalizeInfo } = createMiddleware({
+      const { proxy, getPersonalizeInfo } = createProxy({
         personalizeInfo: {
           pageId,
           variantIds: [],
         },
       });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
       const headers = {};
       req.headers.forEach((value, key) => (headers[key] = value));
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         hostname: 'foo.net',
         pathname: '/styleguide',
         language: 'en',
@@ -545,14 +545,14 @@ describe('PersonalizeMiddleware', () => {
     it('no variant identified', async () => {
       const req = createRequest();
       const res = createResponse();
-      const { middleware, getPersonalizeInfo, initPersonalizeServer, personalize } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } =
+        createProxy({
           variantId: undefined,
         });
       const headers = {};
       req.headers.forEach((value, key) => (headers[key] = value));
-      const finalRes = await middleware.handle(req, res);
-      validateDebugLog('personalize middleware start: %o', {
+      const finalRes = await proxy.handle(req, res);
+      validateDebugLog('personalize proxy start: %o', {
         hostname: 'foo.net',
         pathname: '/styleguide',
         language: 'en',
@@ -569,8 +569,8 @@ describe('PersonalizeMiddleware', () => {
       const res = createResponse();
       const handleCookieStub = sandbox.stub().resolves();
       const invalidVariant = 'invalid-variant';
-      const { middleware, getPersonalizeInfo, initPersonalizeServer, personalize } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } =
+        createProxy({
           personalizeInfo: {
             pageId,
             variantIds,
@@ -578,10 +578,10 @@ describe('PersonalizeMiddleware', () => {
           variantId: invalidVariant,
           handleCookieStub,
         });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
       const headers = {};
       req.headers.forEach((value, key) => (headers[key] = value));
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         hostname: 'foo.net',
         pathname: '/styleguide',
         language: 'en',
@@ -601,10 +601,10 @@ describe('PersonalizeMiddleware', () => {
         },
       });
       const res = createResponse();
-      const { middleware } = createMiddleware();
-      const finalRes = await middleware.handle(req, res);
+      const { proxy } = createProxy();
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         hostname: 'foo.net',
         pathname: '/styleguide',
         language: 'en',
@@ -614,7 +614,7 @@ describe('PersonalizeMiddleware', () => {
       });
       validateDebugLog('skipped (prefetch)');
       expect(finalRes).to.deep.equal(res);
-      expect(finalRes.headers['x-middleware-cache']).to.equal('no-cache');
+      expect(finalRes.headers['x-proxy-cache']).to.equal('no-cache');
       expect(finalRes.headers['Cache-Control']).to.equal('no-store, must-revalidate');
     });
   });
@@ -630,8 +630,8 @@ describe('PersonalizeMiddleware', () => {
       });
       const res = createResponse();
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const { middleware, getPersonalizeInfo, siteResolver, initPersonalizeServer, personalize } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, siteResolver, initPersonalizeServer, personalize } =
+        createProxy({
           language,
           variantId: 'variant-2',
           personalizeInfo: {
@@ -639,9 +639,9 @@ describe('PersonalizeMiddleware', () => {
             pageId,
           },
         });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: {
           ...req.headers,
         },
@@ -652,11 +652,11 @@ describe('PersonalizeMiddleware', () => {
       expect(getPersonalizeInfo.calledWith('/styleguide', 'da-DK')).to.be.true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
@@ -674,13 +674,13 @@ describe('PersonalizeMiddleware', () => {
       });
       const res = createResponse();
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const { middleware, getPersonalizeInfo, siteResolver, initPersonalizeServer, personalize } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, siteResolver, initPersonalizeServer, personalize } =
+        createProxy({
           variantId: 'variant-2',
         });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: {
           ...req.headers,
         },
@@ -691,11 +691,11 @@ describe('PersonalizeMiddleware', () => {
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be.true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
@@ -708,16 +708,16 @@ describe('PersonalizeMiddleware', () => {
       const req = createRequest();
       const res = createResponse();
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const { middleware, getPersonalizeInfo, siteResolver, initPersonalizeServer, personalize } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, siteResolver, initPersonalizeServer, personalize } =
+        createProxy({
           variantId: 'variant-2',
         });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be.true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: {
           ...req.headers,
         },
@@ -725,11 +725,11 @@ describe('PersonalizeMiddleware', () => {
         pathname: '/styleguide',
         language: 'en',
       });
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
@@ -743,13 +743,13 @@ describe('PersonalizeMiddleware', () => {
       const req = createRequest({ headerValues: { referer: null } });
       const res = createResponse();
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const { middleware, getPersonalizeInfo, siteResolver, initPersonalizeServer, personalize } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, siteResolver, initPersonalizeServer, personalize } =
+        createProxy({
           variantId: 'variant-2',
         });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: {
           ...req.headers,
         },
@@ -760,11 +760,11 @@ describe('PersonalizeMiddleware', () => {
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be.true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
@@ -781,13 +781,13 @@ describe('PersonalizeMiddleware', () => {
         },
       });
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const { middleware, getPersonalizeInfo, initPersonalizeServer, personalize, siteResolver } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize, siteResolver } =
+        createProxy({
           variantId: 'variant-2',
         });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: {
           ...req.headers,
         },
@@ -798,11 +798,11 @@ describe('PersonalizeMiddleware', () => {
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en', 'foo')).to.be.true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
@@ -820,13 +820,13 @@ describe('PersonalizeMiddleware', () => {
         },
       });
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const { middleware, getPersonalizeInfo, initPersonalizeServer, personalize, siteResolver } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize, siteResolver } =
+        createProxy({
           variantId: 'variant-2',
         });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: {
           ...req.headers,
         },
@@ -837,11 +837,11 @@ describe('PersonalizeMiddleware', () => {
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en', siteName)).to.be.true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/_site_nextjs-app/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite': '/_site_nextjs-app/styleguide/_variantId_variant-2',
         },
       });
@@ -858,13 +858,13 @@ describe('PersonalizeMiddleware', () => {
       });
       const res = createResponse();
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const { middleware, getPersonalizeInfo, initPersonalizeServer, personalize, siteResolver } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize, siteResolver } =
+        createProxy({
           variantId: 'variant-2',
         });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: {
           ...req.headers,
         },
@@ -875,11 +875,11 @@ describe('PersonalizeMiddleware', () => {
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en', siteName)).to.be.true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
@@ -896,26 +896,26 @@ describe('PersonalizeMiddleware', () => {
       });
       const res = createResponse();
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
-      const { middleware, getPersonalizeInfo, initPersonalizeServer, personalize, siteResolver } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize, siteResolver } =
+        createProxy({
           variantId: 'variant-2',
           defaultHostname: 'foobar',
         });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalize.calledOnce).to.be.true;
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: { ...req.headers },
         hostname: 'foobar',
         pathname: '/styleguide',
         language: 'en',
       });
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en', siteName)).to.be.true;
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/styleguide/_variantId_variant-2',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite': '/styleguide/_variantId_variant-2',
         },
       });
@@ -931,7 +931,7 @@ describe('PersonalizeMiddleware', () => {
       const res = createResponse();
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const personalizeStub = sandbox.stub().returns(Promise.resolve({ variantId: undefined }));
-      const { middleware, getPersonalizeInfo, personalize } = createMiddleware({
+      const { proxy, getPersonalizeInfo, personalize } = createProxy({
         config: { ...defaultConfig, scope },
         personalizeInfo: {
           pageId,
@@ -939,7 +939,7 @@ describe('PersonalizeMiddleware', () => {
         },
         personalizeStub,
       });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en', siteName)).to.be.true;
       expect(
@@ -960,7 +960,7 @@ describe('PersonalizeMiddleware', () => {
       const res = createResponse();
       const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
       const personalizeStub = sandbox.stub().returns(Promise.resolve({ variantId: undefined }));
-      const { middleware, personalize } = createMiddleware({
+      const { proxy, personalize } = createProxy({
         config: { ...defaultConfig, edgeTimeout, cdpTimeout },
         personalizeInfo: {
           pageId,
@@ -968,9 +968,9 @@ describe('PersonalizeMiddleware', () => {
         },
         personalizeStub,
       });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
-      expect(middleware['personalizeService']['config'].timeout).to.equal(edgeTimeout);
+      expect(proxy['personalizeService']['config'].timeout).to.equal(edgeTimeout);
       expect(personalize.calledWith(sandbox.match({ timeout: cdpTimeout }), sandbox.match.any)).to
         .be.true;
       expect(finalRes).to.deep.equal(res);
@@ -1015,7 +1015,7 @@ describe('PersonalizeMiddleware', () => {
           sandbox.match.any
         )
         .returns(Promise.resolve({ variantId: 'component3_variant3' }));
-      const { middleware, getPersonalizeInfo, initPersonalizeServer } = createMiddleware({
+      const { proxy, getPersonalizeInfo, initPersonalizeServer } = createProxy({
         personalizeInfo: {
           pageId,
           variantIds: [
@@ -1029,12 +1029,12 @@ describe('PersonalizeMiddleware', () => {
         },
         personalizeStub,
       });
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be.true;
       expect(initPersonalizeServer.calledOnce).to.be.true;
       expect(personalizeStub.calledThrice).to.be.true;
-      validateDebugLog('personalize middleware start: %o', {
+      validateDebugLog('personalize proxy start: %o', {
         headers: {
           ...req.headers,
         },
@@ -1042,12 +1042,12 @@ describe('PersonalizeMiddleware', () => {
         pathname: '/styleguide',
         language: 'en',
       });
-      validateEndMessageDebugLog('personalize middleware end in %dms: %o', {
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath:
           '/styleguide/_variantId_component1_default/_variantId_component2_variant1/_variantId_component3_variant3',
         headers: {
           ...res.headers,
-          'x-middleware-cache': 'no-cache',
+          'x-proxy-cache': 'no-cache',
           'x-sc-rewrite':
             '/styleguide/_variantId_component1_default/_variantId_component2_variant1/_variantId_component3_variant3',
         },
@@ -1079,16 +1079,16 @@ describe('PersonalizeMiddleware', () => {
       it('should call personalize with geo data', async () => {
         const extractGeoDataCb = sandbox.stub().returns(geo);
 
-        const { middleware, initPersonalizeServer } = createMiddleware({
+        const { proxy, initPersonalizeServer } = createProxy({
           personalizeInfo,
           extractGeoDataCb,
         });
 
-        middleware['personalize'] = PersonalizeMiddleware.prototype['personalize'];
+        proxy['personalize'] = PersonalizeProxy.prototype['personalize'];
 
-        await middleware.handle(req, res);
+        await proxy.handle(req, res);
 
-        validateDebugLog('personalize middleware start: %o', {
+        validateDebugLog('personalize proxy start: %o', {
           geo,
           headers: {
             ...req.headers,
@@ -1109,16 +1109,16 @@ describe('PersonalizeMiddleware', () => {
       it('should call personalize with geo data when an async cb is provided', async () => {
         const extractGeoDataCb = sandbox.stub().resolves(geo);
 
-        const { middleware, initPersonalizeServer } = createMiddleware({
+        const { proxy, initPersonalizeServer } = createProxy({
           extractGeoDataCb,
           personalizeInfo,
         });
 
-        middleware['personalize'] = PersonalizeMiddleware.prototype['personalize'];
+        proxy['personalize'] = PersonalizeProxy.prototype['personalize'];
 
-        await middleware.handle(req, res);
+        await proxy.handle(req, res);
 
-        validateDebugLog('personalize middleware start: %o', {
+        validateDebugLog('personalize proxy start: %o', {
           geo,
           headers: {
             ...req.headers,
@@ -1137,13 +1137,13 @@ describe('PersonalizeMiddleware', () => {
       });
 
       it('should call personalize without geo data when not available', async () => {
-        const { middleware, initPersonalizeServer } = createMiddleware({
+        const { proxy, initPersonalizeServer } = createProxy({
           personalizeInfo,
         });
 
-        middleware['personalize'] = PersonalizeMiddleware.prototype['personalize'];
+        proxy['personalize'] = PersonalizeProxy.prototype['personalize'];
 
-        await middleware.handle(req, res);
+        await proxy.handle(req, res);
 
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
@@ -1164,7 +1164,7 @@ describe('PersonalizeMiddleware', () => {
         });
         const res = createResponse({ headers: { 'x-sc-locale': languageInHeader } });
         const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
-        const { middleware, getPersonalizeInfo } = createMiddleware({
+        const { proxy, getPersonalizeInfo } = createProxy({
           language,
           variantId: 'variant-2',
           personalizeInfo: {
@@ -1172,9 +1172,9 @@ describe('PersonalizeMiddleware', () => {
             pageId,
           },
         });
-        await middleware.handle(req, res);
+        await proxy.handle(req, res);
 
-        validateDebugLog('personalize middleware start: %o', {
+        validateDebugLog('personalize proxy start: %o', {
           headers: {
             ...req.headers,
           },
@@ -1195,7 +1195,7 @@ describe('PersonalizeMiddleware', () => {
         });
         const res = createResponse({ headers: {} });
         const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
-        const { middleware, getPersonalizeInfo } = createMiddleware({
+        const { proxy, getPersonalizeInfo } = createProxy({
           language,
           variantId: 'variant-2',
           personalizeInfo: {
@@ -1203,9 +1203,9 @@ describe('PersonalizeMiddleware', () => {
             pageId,
           },
         });
-        await middleware.handle(req, res);
+        await proxy.handle(req, res);
 
-        validateDebugLog('personalize middleware start: %o', {
+        validateDebugLog('personalize proxy start: %o', {
           headers: {
             ...req.headers,
           },
@@ -1244,18 +1244,18 @@ describe('PersonalizeMiddleware', () => {
 
       const getPersonalizeInfoWithError = sandbox.stub().throws(error);
 
-      const { middleware, getPersonalizeInfo, initPersonalizeServer, personalize } =
-        createMiddleware({
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } =
+        createProxy({
           getPersonalizeInfoStub: getPersonalizeInfoWithError,
         });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
       expect(initPersonalizeServer.called).to.be.false;
       expect(personalize.called).to.be.false;
 
       expect(getPersonalizeInfo.called).to.be.true;
-      expect(errorSpy.getCall(0).calledWith('Personalize middleware failed:')).to.be.true;
+      expect(errorSpy.getCall(0).calledWith('Personalize proxy failed:')).to.be.true;
       expect(errorSpy.getCall(1).calledWith(error)).to.be.true;
 
       expect(finalRes).to.deep.equal(res);
@@ -1264,8 +1264,8 @@ describe('PersonalizeMiddleware', () => {
 
   describe('configuration - Edge API required', () => {
     it('gracefully disables when Edge config is missing', () => {
-      // Create middleware without Edge config (no contextId or clientContextId)
-      const middleware = new PersonalizeMiddleware({
+      // Create proxy without Edge config (no contextId or clientContextId)
+      const proxy = new PersonalizeProxy({
         enabled: true,
         edgeTimeout: 400,
         cdpTimeout: 400,
@@ -1273,17 +1273,17 @@ describe('PersonalizeMiddleware', () => {
         // No contextId or clientContextId - Edge config missing
       });
 
-      // Verify middleware was created but personalizeService is null
-      expect(middleware).to.not.be.undefined;
-      expect(middleware['personalizeService']).to.be.null;
+      // Verify proxy was created but personalizeService is null
+      expect(proxy).to.not.be.undefined;
+      expect(proxy['personalizeService']).to.be.null;
     });
 
     it('skips execution when personalizeService is null', async () => {
       const req = createRequest();
       const res = createResponse();
 
-      // Create middleware without Edge config
-      const middleware = new PersonalizeMiddleware({
+      // Create proxy without Edge config
+      const proxy = new PersonalizeProxy({
         enabled: true,
         edgeTimeout: 400,
         cdpTimeout: 400,
@@ -1291,7 +1291,7 @@ describe('PersonalizeMiddleware', () => {
         // No contextId or clientContextId
       });
 
-      const finalRes = await middleware.handle(req, res);
+      const finalRes = await proxy.handle(req, res);
 
       // Should skip execution and return response unchanged
       validateDebugLog('skipped (personalize service not configured - edge config required)');
@@ -1299,7 +1299,7 @@ describe('PersonalizeMiddleware', () => {
     });
 
     it('works normally when Edge config is provided', () => {
-      const middleware = new PersonalizeMiddleware({
+      const proxy = new PersonalizeProxy({
         enabled: true,
         contextId: 'edge-context-id',
         clientContextId: 'edge-client-id',
@@ -1309,9 +1309,9 @@ describe('PersonalizeMiddleware', () => {
         sites: [],
       });
 
-      // Verify middleware was created and personalizeService is initialized
-      expect(middleware).to.not.be.undefined;
-      expect(middleware['personalizeService']).to.not.be.null;
+      // Verify proxy was created and personalizeService is initialized
+      expect(proxy).to.not.be.undefined;
+      expect(proxy['personalizeService']).to.not.be.null;
     });
   });
 });

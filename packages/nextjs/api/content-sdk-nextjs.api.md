@@ -119,7 +119,6 @@ import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
-import { NextFetchEvent } from 'next/server';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
@@ -194,7 +193,7 @@ export { AppPlaceholder }
 export { AppPlaceholderProps }
 
 // @public
-export class AppRouterMultisiteMiddleware extends MultisiteMiddleware {
+export class AppRouterMultisiteProxy extends MultisiteProxy {
     protected getSiteRewrite(pathname: string, siteName: string): string;
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
@@ -339,8 +338,8 @@ export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCli
 export const defineConfig: (config?: SitecoreConfigInput) => SitecoreConfig;
 
 // @public
-export const defineMiddleware: (...middlewares: Middleware[]) => {
-    exec: (req: NextRequest, ev: NextFetchEvent, res?: NextResponse) => Promise<NextResponse<unknown>>;
+export const defineProxy: (...proxies: ProxyHandler_2[]) => {
+    exec: (req: NextRequest, res?: NextResponse) => Promise<NextResponse<unknown>>;
 };
 
 export { DesignLibrary }
@@ -575,10 +574,10 @@ export type LinkProps = LinkProps_2 & {
 } & Pick<LinkProps_3, (typeof supportedNextLinkProps)[number]>;
 
 // @public
-export class LocaleMiddleware extends MiddlewareBase {
-    constructor(config: LocaleMiddlewareConfig);
+export class LocaleProxy extends ProxyBase {
+    constructor(config: LocaleProxyConfig);
     // (undocumented)
-    protected config: LocaleMiddlewareConfig;
+    protected config: LocaleProxyConfig;
     // (undocumented)
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected getLocaleFromPath(path: string): string | undefined;
@@ -587,7 +586,7 @@ export class LocaleMiddleware extends MiddlewareBase {
 }
 
 // @public
-export type LocaleMiddlewareConfig = MiddlewareBaseConfig & {
+export type LocaleProxyConfig = ProxyBaseConfig & {
     locales: string[];
 };
 
@@ -595,52 +594,13 @@ export { mediaApi }
 
 export { MemoryCacheClient }
 
-// @public
-export abstract class Middleware {
-    abstract handle(req: NextRequest, res: NextResponse, ev: NextFetchEvent): Promise<NextResponse>;
-}
-
-// @public
-export abstract class MiddlewareBase extends Middleware {
-    constructor(config: MiddlewareBaseConfig);
-    // (undocumented)
-    protected config: MiddlewareBaseConfig;
-    // (undocumented)
-    protected defaultHostname: string;
-    // (undocumented)
-    protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
-    protected extractDebugHeaders(incomingHeaders: Headers): {
-        [key: string]: string;
-    };
-    // (undocumented)
-    protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
-    protected getHostHeader(req: NextRequest): string | undefined;
-    protected getLanguage(req: NextRequest, res?: NextResponse): string;
-    protected getLanguageFromHeader(res?: NextResponse): string | undefined;
-    protected getSite(req: NextRequest, res?: NextResponse): SiteInfo;
-    protected isAppRouter(res: NextResponse): boolean;
-    protected isPrefetch(req: NextRequest): boolean;
-    protected isPreview(req: NextRequest): boolean;
-    protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean): NextResponse;
-    // (undocumented)
-    protected siteResolver: SiteResolver;
-}
-
-// @public
-export type MiddlewareBaseConfig = {
-    skip?: (req: NextRequest, res: NextResponse) => boolean;
-    defaultHostname?: string;
-    defaultLanguage?: string;
-    sites: SiteInfo[];
-};
-
 export { ModuleType }
 
 // @public
-export class MultisiteMiddleware extends MiddlewareBase {
-    constructor(config: MultisiteMiddlewareConfig);
+export class MultisiteProxy extends ProxyBase {
+    constructor(config: MultisiteProxyConfig);
     // (undocumented)
-    protected config: MultisiteMiddlewareConfig;
+    protected config: MultisiteProxyConfig;
     // (undocumented)
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected getSiteRewrite(pathname: string, siteName: string): string;
@@ -651,7 +611,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
 }
 
 // @public
-export type MultisiteMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['multisite'];
+export type MultisiteProxyConfig = ProxyBaseConfig & SitecoreConfig['multisite'];
 
 export { NativeDataFetcher }
 
@@ -690,10 +650,10 @@ export const parseRewriteHeader: (headers: Headers) => {
 export { personalizeLayout }
 
 // @public
-export class PersonalizeMiddleware extends MiddlewareBase {
-    constructor(config: PersonalizeMiddlewareConfig);
+export class PersonalizeProxy extends ProxyBase {
+    constructor(config: PersonalizeProxyConfig);
     // (undocumented)
-    protected config: PersonalizeMiddlewareConfig;
+    protected config: PersonalizeProxyConfig;
     // (undocumented)
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     // Warning: (ae-forgotten-export) The symbol "ExperienceParams" needs to be exported by the entry point api-surface.d.ts
@@ -727,7 +687,7 @@ export class PersonalizeMiddleware extends MiddlewareBase {
 }
 
 // @public
-export type PersonalizeMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
+export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
@@ -750,6 +710,46 @@ export { PlaceholdersData }
 
 export { PluginDefinition }
 
+// @public
+export abstract class ProxyBase extends ProxyHandler_2 {
+    constructor(config: ProxyBaseConfig);
+    // (undocumented)
+    protected config: ProxyBaseConfig;
+    // (undocumented)
+    protected defaultHostname: string;
+    // (undocumented)
+    protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
+    protected extractDebugHeaders(incomingHeaders: Headers): {
+        [key: string]: string;
+    };
+    // (undocumented)
+    protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
+    protected getHostHeader(req: NextRequest): string | undefined;
+    protected getLanguage(req: NextRequest, res?: NextResponse): string;
+    protected getLanguageFromHeader(res?: NextResponse): string | undefined;
+    protected getSite(req: NextRequest, res?: NextResponse): SiteInfo;
+    protected isAppRouter(res: NextResponse): boolean;
+    protected isPrefetch(req: NextRequest): boolean;
+    protected isPreview(req: NextRequest): boolean;
+    protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean): NextResponse;
+    // (undocumented)
+    protected siteResolver: SiteResolver;
+}
+
+// @public
+export type ProxyBaseConfig = {
+    skip?: (req: NextRequest, res: NextResponse) => boolean;
+    defaultHostname?: string;
+    defaultLanguage?: string;
+    sites: SiteInfo[];
+};
+
+// @public
+abstract class ProxyHandler_2 {
+    abstract handle(req: NextRequest, res: NextResponse): Promise<NextResponse>;
+}
+export { ProxyHandler_2 as ProxyHandler }
+
 export { REDIRECT_TYPE_301 }
 
 export { REDIRECT_TYPE_302 }
@@ -759,10 +759,10 @@ export { REDIRECT_TYPE_SERVER_TRANSFER }
 export { RedirectInfo }
 
 // @public
-export class RedirectsMiddleware extends MiddlewareBase {
-    constructor(config: RedirectsMiddlewareConfig);
+export class RedirectsProxy extends ProxyBase {
+    constructor(config: RedirectsProxyConfig);
     // (undocumented)
-    protected config: RedirectsMiddlewareConfig;
+    protected config: RedirectsProxyConfig;
     protected createRedirectResponse(url: NextURL | string, res: Response | undefined, status: number, statusText: string): NextResponse;
     // (undocumented)
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
@@ -777,7 +777,7 @@ export class RedirectsMiddleware extends MiddlewareBase {
 }
 
 // @public
-export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> & SitecoreConfig['api']['edge'] & Partial<NonNullable<SitecoreConfig['api']['local']>> & MiddlewareBaseConfig & SitecoreConfig['redirects'] & {
+export type RedirectsProxyConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> & SitecoreConfig['api']['edge'] & Partial<NonNullable<SitecoreConfig['api']['local']>> & ProxyBaseConfig & SitecoreConfig['redirects'] & {
     redirectsService?: RedirectsService;
 };
 
@@ -931,7 +931,7 @@ export * from "@sitecore-content-sdk/react/search";
 
 // Warnings were encountered during analysis:
 //
-// src/middleware/personalize-middleware.ts:302:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
+// src/proxy/personalize-proxy.ts:302:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
 // src/services/component-props-service.ts:61:5 - (ae-forgotten-export) The symbol "NextContext" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)

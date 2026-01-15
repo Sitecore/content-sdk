@@ -1,4 +1,4 @@
-﻿import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/core/client';
 import { SiteInfo, SiteResolver } from '../site';
 

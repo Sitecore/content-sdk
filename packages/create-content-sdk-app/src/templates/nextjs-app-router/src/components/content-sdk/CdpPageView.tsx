@@ -1,9 +1,8 @@
 'use client';
 import { CdpHelper, useSitecore } from '@sitecore-content-sdk/nextjs';
-import React, { useEffect } from 'react';
+import { useEffect, JSX } from 'react';
 import { pageView } from '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
-import { JSX } from 'react';
 
 /**
  * This is the CDP page view component.
@@ -52,7 +51,7 @@ const CdpPageView = (): JSX.Element => {
       page: route.name,
       pageVariantId,
       language,
-    }).catch(e => console.debug(e));
+    }).catch((e) => console.debug(e));
   }, [mode, route, context.variantId, siteName]);
 
   return <></>;

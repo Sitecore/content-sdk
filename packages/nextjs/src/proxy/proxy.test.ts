@@ -1,12 +1,12 @@
-﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable dot-notation */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
-import { defineMiddleware, Middleware, MiddlewareBase, REWRITE_HEADER_NAME } from './middleware';
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
+import { defineProxy, ProxyHandler, ProxyBase, REWRITE_HEADER_NAME } from './proxy';
+import { NextRequest, NextResponse } from 'next/server';
 import { SiteResolver } from '../site';
 
 use(sinonChai);
@@ -26,8 +26,8 @@ class MockSiteResolver extends SiteResolver {
   }));
 }
 
-describe('MiddlewareBase', () => {
-  class SampleMiddleware extends MiddlewareBase {
+describe('ProxyBase', () => {
+  class SampleProxy extends ProxyBase {
     handle() {
       return Promise.resolve({} as NextResponse);
     }
@@ -70,7 +70,7 @@ describe('MiddlewareBase', () => {
     Object.defineProperties(res.headers, {
       set: {
         value: (key, value) => {
-          res.headers[key] = value;
+        res.headers[key] = value;
         },
         enumerable: false,
       },
@@ -84,115 +84,115 @@ describe('MiddlewareBase', () => {
 
   describe('defaultHostname', () => {
     it('should set default hostname', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
 
-      expect(middleware['defaultHostname']).to.equal('localhost');
+      expect(proxy['defaultHostname']).to.equal('localhost');
     });
 
     it('should set custom hostname', () => {
-      const middleware = new SampleMiddleware({
+      const proxy = new SampleProxy({
         sites: [],
         defaultHostname: 'foo',
       });
 
-      expect(middleware['defaultHostname']).to.equal('foo');
+      expect(proxy['defaultHostname']).to.equal('foo');
     });
   });
 
   describe('isPreview', () => {
     it('should return true prerender bypass cookie is provided', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         cookieValues: {
           __prerender_bypass: true,
         },
       });
 
-      expect(middleware['isPreview'](req)).to.equal(true);
+      expect(proxy['isPreview'](req)).to.equal(true);
     });
 
     it('should return true when preview data cookie is provided', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         cookieValues: {
           __next_preview_data: true,
         },
       });
 
-      expect(middleware['isPreview'](req)).to.equal(true);
+      expect(proxy['isPreview'](req)).to.equal(true);
     });
 
     it('should return false when required cookie is not provided', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq();
 
-      expect(middleware['isPreview'](req)).to.equal(false);
+      expect(proxy['isPreview'](req)).to.equal(false);
     });
   });
 
   describe('isAppRouter', () => {
     it('should return true when locale header is provided', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const res = createRes({
         headers: {
           'x-sc-locale': 'en-US',
         },
       });
 
-      expect(middleware['isAppRouter'](res)).to.equal(true);
+      expect(proxy['isAppRouter'](res)).to.equal(true);
     });
 
     it('should return false when locale header is missing', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const res = createRes({});
 
-      expect(middleware['isAppRouter'](res)).to.equal(false);
+      expect(proxy['isAppRouter'](res)).to.equal(false);
     });
   });
 
   describe('isPrefetch', () => {
     it('should return true when purpose header is prefetch', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         headerValues: {
           purpose: 'prefetch',
         },
       });
 
-      expect(middleware['isPrefetch'](req)).to.equal(true);
+      expect(proxy['isPrefetch'](req)).to.equal(true);
     });
 
     it('should return true when Next-Router-Prefetch header is 1', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         headerValues: {
           'Next-Router-Prefetch': '1',
         },
       });
 
-      expect(middleware['isPrefetch'](req)).to.equal(true);
+      expect(proxy['isPrefetch'](req)).to.equal(true);
     });
 
     it('should return true when x-middleware-prefetch header is 1', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         headerValues: {
           'x-middleware-prefetch': '1',
         },
       });
 
-      expect(middleware['isPrefetch'](req)).to.equal(true);
+      expect(proxy['isPrefetch'](req)).to.equal(true);
     });
 
     it('should return false when required header is not provided', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq();
 
-      expect(middleware['isPrefetch'](req)).to.equal(false);
+      expect(proxy['isPrefetch'](req)).to.equal(false);
     });
 
     it('returns false for known device with x-middleware-prefetch header', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         headerValues: {
           'x-middleware-prefetch': '1',
@@ -200,11 +200,11 @@ describe('MiddlewareBase', () => {
         },
       });
 
-      expect(middleware['isPrefetch'](req)).to.equal(false);
+      expect(proxy['isPrefetch'](req)).to.equal(false);
     });
 
     it('should return true when it is a desktop device and purpose is prefetch', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         headerValues: {
           purpose: 'prefetch',
@@ -212,16 +212,16 @@ describe('MiddlewareBase', () => {
         },
       });
 
-      expect(middleware['isPrefetch'](req)).to.equal(true);
+      expect(proxy['isPrefetch'](req)).to.equal(true);
     });
   });
 
   describe('disabled / skip', () => {
     it('default', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
 
       expect(
-        middleware['disabled'](
+        proxy['disabled'](
           createReq({
             nextUrl: {
               pathname: '/api/layout/render',
@@ -231,7 +231,7 @@ describe('MiddlewareBase', () => {
         )
       ).to.equal(true);
       expect(
-        middleware['disabled'](
+        proxy['disabled'](
           createReq({
             nextUrl: {
               pathname: '/sitecore/render',
@@ -241,7 +241,7 @@ describe('MiddlewareBase', () => {
         )
       ).to.equal(true);
       expect(
-        middleware['disabled'](
+        proxy['disabled'](
           createReq({
             nextUrl: {
               pathname: '/_next/webpack',
@@ -253,7 +253,7 @@ describe('MiddlewareBase', () => {
     });
 
     it('custom function', () => {
-      const middleware = new SampleMiddleware({
+      const proxy = new SampleProxy({
         sites: [],
         skip(req: NextRequest) {
           const path = req.nextUrl.pathname;
@@ -262,7 +262,7 @@ describe('MiddlewareBase', () => {
       });
 
       expect(
-        middleware['disabled'](
+        proxy['disabled'](
           createReq({
             nextUrl: {
               pathname: 'bar',
@@ -272,7 +272,7 @@ describe('MiddlewareBase', () => {
         )
       ).to.equal(false);
       expect(
-        middleware['disabled'](
+        proxy['disabled'](
           createReq({
             nextUrl: {
               pathname: 'foo',
@@ -285,13 +285,13 @@ describe('MiddlewareBase', () => {
   });
 
   it('extractDebugHeaders', () => {
-    const middleware = new SampleMiddleware({ sites: [] });
+    const proxy = new SampleProxy({ sites: [] });
 
     const headers = new Headers({});
     headers.set('foo', 'net');
     headers.set('bar', 'one');
 
-    expect(middleware['extractDebugHeaders'](headers)).to.deep.equal({
+    expect(proxy['extractDebugHeaders'](headers)).to.deep.equal({
       foo: 'net',
       bar: 'one',
     });
@@ -299,18 +299,18 @@ describe('MiddlewareBase', () => {
 
   describe('getHostHeader', () => {
     it('should return default hostname when header is not present', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         headerValues: {
           foo: 'one',
         },
       });
 
-      expect(middleware['getHostHeader'](req)).to.equal(undefined);
+      expect(proxy['getHostHeader'](req)).to.equal(undefined);
     });
 
     it('should return host header', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         headerValues: {
           foo: 'one',
@@ -318,11 +318,11 @@ describe('MiddlewareBase', () => {
         },
       });
 
-      expect(middleware['getHostHeader'](req)).to.equal('bar.net');
+      expect(proxy['getHostHeader'](req)).to.equal('bar.net');
     });
 
     it('should return x-forwarded-host header when present', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         headerValues: {
           'x-forwarded-host': 'proxy.forwarded.com',
@@ -330,13 +330,13 @@ describe('MiddlewareBase', () => {
         },
       });
 
-      expect(middleware['getHostHeader'](req)).to.equal('proxy.forwarded.com');
+      expect(proxy['getHostHeader'](req)).to.equal('proxy.forwarded.com');
     });
   });
 
   describe('getLanguage', () => {
     it('should return defined language', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         nextUrl: {
           locale: 'be',
@@ -344,36 +344,36 @@ describe('MiddlewareBase', () => {
         },
       });
 
-      expect(middleware['getLanguage'](req)).to.equal('be');
+      expect(proxy['getLanguage'](req)).to.equal('be');
     });
 
     it('should return defined default language', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         nextUrl: {
           defaultLocale: 'fr',
         },
       });
 
-      expect(middleware['getLanguage'](req)).to.equal('fr');
+      expect(proxy['getLanguage'](req)).to.equal('fr');
     });
 
     it('should use fallback language from config when present', () => {
-      const middleware = new SampleMiddleware({ sites: [], defaultLanguage: 'es-ES' });
+      const proxy = new SampleProxy({ sites: [], defaultLanguage: 'es-ES' });
       const req = createReq();
 
-      expect(middleware['getLanguage'](req)).to.equal('es-ES');
+      expect(proxy['getLanguage'](req)).to.equal('es-ES');
     });
 
     it('should return fallback language', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq();
 
-      expect(middleware['getLanguage'](req)).to.equal('en');
+      expect(proxy['getLanguage'](req)).to.equal('en');
     });
 
     it('should return language from resp header if present', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         nextUrl: {
           defaultLocale: 'fr',
@@ -385,33 +385,33 @@ describe('MiddlewareBase', () => {
         },
       });
 
-      expect(middleware['getLanguage'](req, res)).to.equal('de-DE');
+      expect(proxy['getLanguage'](req, res)).to.equal('de-DE');
     });
   });
 
   describe('getLanguageFromHeader', () => {
     it('should return language from resp header if present', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const res = createRes({
         headers: {
           'x-sc-locale': 'de-DE',
         },
       });
 
-      expect(middleware['getLanguageFromHeader'](res)).to.equal('de-DE');
+      expect(proxy['getLanguageFromHeader'](res)).to.equal('de-DE');
     });
 
     it('should return undefined from resp header if not present', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
       const res = createRes();
 
-      expect(middleware['getLanguageFromHeader'](res)).to.equal(undefined);
+      expect(proxy['getLanguageFromHeader'](res)).to.equal(undefined);
     });
 
     it('should return undefined from resp header if res not passed', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
+      const proxy = new SampleProxy({ sites: [] });
 
-      expect(middleware['getLanguageFromHeader']()).to.equal(undefined);
+      expect(proxy['getLanguageFromHeader']()).to.equal(undefined);
     });
   });
 
@@ -423,11 +423,11 @@ describe('MiddlewareBase', () => {
           sc_site: 'xxx',
         },
       });
-      const middleware = new SampleMiddleware({ sites: [] });
-      middleware['siteResolver'] = new MockSiteResolver([]);
+      const proxy = new SampleProxy({ sites: [] });
+      proxy['siteResolver'] = new MockSiteResolver([]);
 
-      expect(middleware['getSite'](req, res).name).to.equal('xxx');
-      expect(middleware['siteResolver'].getByName).to.be.calledWith('xxx');
+      expect(proxy['getSite'](req, res).name).to.equal('xxx');
+      expect(proxy['siteResolver'].getByName).to.be.calledWith('xxx');
     });
 
     it('should get default site info when site cookie is provided', () => {
@@ -442,15 +442,15 @@ describe('MiddlewareBase', () => {
           sc_site: 'xxx',
         },
       });
-      const middleware = new SampleMiddleware({ sites: [] });
-      middleware['siteResolver'] = new MockSiteResolver([]);
+      const proxy = new SampleProxy({ sites: [] });
+      proxy['siteResolver'] = new MockSiteResolver([]);
 
-      expect(middleware['getSite'](req, res)).deep.equal({
+      expect(proxy['getSite'](req, res)).deep.equal({
         name: 'xxx',
         language: 'en',
         hostName: '*',
       });
-      expect(middleware['siteResolver'].getByName).to.be.calledWith('xxx');
+      expect(proxy['siteResolver'].getByName).to.be.calledWith('xxx');
     });
   });
 
@@ -461,39 +461,40 @@ describe('MiddlewareBase', () => {
       },
     });
     const res = createRes();
-    const middleware = new SampleMiddleware({ sites: [] });
-    middleware['siteResolver'] = new MockSiteResolver([]);
+    const proxy = new SampleProxy({ sites: [] });
+    proxy['siteResolver'] = new MockSiteResolver([]);
 
-    expect(middleware['getSite'](req, res).hostName).to.equal('xxx.net');
-    expect(middleware['siteResolver'].getByHost).to.be.calledWith('xxx.net');
+    expect(proxy['getSite'](req, res).hostName).to.equal('xxx.net');
+    expect(proxy['siteResolver'].getByHost).to.be.calledWith('xxx.net');
   });
 
   it('should get site by default host', () => {
     const req = createReq();
     const res = createRes();
-    const middleware = new SampleMiddleware({ sites: [] });
-    middleware['siteResolver'] = new MockSiteResolver([]);
+    const proxy = new SampleProxy({ sites: [] });
+    proxy['siteResolver'] = new MockSiteResolver([]);
 
-    expect(middleware['getSite'](req, res).hostName).to.equal('localhost');
-    expect(middleware['siteResolver'].getByHost).to.be.calledWith('localhost');
+    expect(proxy['getSite'](req, res).hostName).to.equal('localhost');
+    expect(proxy['siteResolver'].getByHost).to.be.calledWith('localhost');
   });
 
   it('should get site by custom default host', () => {
     const req = createReq();
     const res = createRes();
-    const middleware = new SampleMiddleware({ sites: [], defaultHostname: 'yyy.net' });
-    middleware['siteResolver'] = new MockSiteResolver([]);
+    const proxy = new SampleProxy({ sites: [], defaultHostname: 'yyy.net' });
+    proxy['siteResolver'] = new MockSiteResolver([]);
 
-    expect(middleware['getSite'](req, res).hostName).to.equal('yyy.net');
-    expect(middleware['siteResolver'].getByHost).to.be.calledWith('yyy.net');
+    expect(proxy['getSite'](req, res).hostName).to.equal('yyy.net');
+    expect(proxy['siteResolver'].getByHost).to.be.calledWith('yyy.net');
   });
 
   describe('rewrite', () => {
     let rewriteStub = sinon.stub();
     before(() => {
       rewriteStub = sinon.stub(NextResponse, 'rewrite').callsFake((rewritePath) => {
+        // rewritePath is now a string URL
         return createRes({
-          url: typeof rewritePath === 'string' ? rewritePath : rewritePath.pathname,
+          url: rewritePath,
           headers: new Map<string, unknown>(),
         });
       });
@@ -504,52 +505,88 @@ describe('MiddlewareBase', () => {
     });
 
     it('should rewrite path and add header by default', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
-      const cloneUrl = () => Object.assign({}, req.nextUrl);
-      const url = {
-        clone: cloneUrl,
-        href: 'http://localhost:3000/not-found',
+      const proxy = new SampleProxy({ sites: [] });
+      const url: any = {
+        origin: 'http://localhost:3000',
+        pathname: '/not-found',
+        search: '',
+        clone() {
+          const cloned: any = {
+            pathname: url.pathname,
+            origin: url.origin,
+            search: url.search,
+            locale: url.locale,
+          };
+          Object.defineProperty(cloned, 'href', {
+            get() {
+              return `${this.origin}${this.pathname}${this.search}`;
+            },
+            enumerable: true,
+            configurable: true,
+          });
+          return cloned;
+        },
+        get href() {
+          return `${this.origin}${this.pathname}${this.search}`;
+        },
         locale: 'en',
-        pathname: 'http://localhost:3000/found',
       };
       const req = createReq({
         nextUrl: url,
       });
       const res = createRes({});
 
-      const response = middleware['rewrite']('/new', req, res);
+      const response = proxy['rewrite']('/new', req, res);
 
       expect(response.headers.get(REWRITE_HEADER_NAME)).to.equal('/new');
       expect(response.url).to.endWith('/new');
     });
 
     it('should rewrite path and not rewrite header when skipHeader is true', () => {
-      const middleware = new SampleMiddleware({ sites: [] });
-      const cloneUrl = () => Object.assign({}, req.nextUrl);
-      const url = {
-        clone: cloneUrl,
-        href: 'http://localhost:3000/not-found',
+      const proxy = new SampleProxy({ sites: [] });
+      const url: any = {
+        origin: 'http://localhost:3000',
+        pathname: '/not-found',
+        search: '',
+        clone() {
+          const cloned: any = {
+            pathname: url.pathname,
+            origin: url.origin,
+            search: url.search,
+            locale: url.locale,
+          };
+          Object.defineProperty(cloned, 'href', {
+            get() {
+              return `${this.origin}${this.pathname}${this.search}`;
+            },
+            enumerable: true,
+            configurable: true,
+          });
+          return cloned;
+        },
+        get href() {
+          return `${this.origin}${this.pathname}${this.search}`;
+        },
         locale: 'en',
-        pathname: 'http://localhost:3000/found',
       };
       const req = createReq({
         nextUrl: url,
       });
       const res = createRes();
 
-      const response = middleware['rewrite']('/new', req, res, true);
+      const response = proxy['rewrite']('/new', req, res, true);
       expect(response.headers.get(REWRITE_HEADER_NAME)).to.be.undefined;
       expect(response.url).to.endWith('/new');
     });
   });
 });
 
-describe('defineMiddleware', () => {
-  it('should execute middlewares', async () => {
+describe('defineProxy', () => {
+  it('should execute proxies', async () => {
     type CustomResponse = {
       params: string[];
     } & NextResponse;
-    class SampleMiddleware extends MiddlewareBase {
+    class SampleProxy extends ProxyBase {
       handle(_req: NextRequest, res: CustomResponse) {
         res.params.push('m1');
 
@@ -557,16 +594,16 @@ describe('defineMiddleware', () => {
       }
     }
 
-    const middleware1 = new SampleMiddleware({
+    const proxy1 = new SampleProxy({
       sites: [],
     });
-    const middleware2: Middleware = {
+    const proxy2: ProxyHandler = {
       handle: (_req, res) => {
         (res as CustomResponse).params.push('m2');
         return Promise.resolve(res);
       },
     };
-    const middleware3: Middleware = {
+    const proxy3: ProxyHandler = {
       handle: (_req, res) => {
         (res as CustomResponse).params.push('m3');
         return Promise.resolve(res);
@@ -577,17 +614,16 @@ describe('defineMiddleware', () => {
     const res = {
       params: [],
     } as unknown as NextResponse;
-    const ev = {} as NextFetchEvent;
 
-    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev, res);
+    const result = await defineProxy(proxy2, proxy1, proxy3).exec(req, res);
 
     expect(result).to.deep.equal({
       params: ['m2', 'm1', 'm3'],
     });
   });
 
-  it('should execute middlewares with empty response', async () => {
-    class SampleMiddleware extends MiddlewareBase {
+  it('should execute proxies with empty response', async () => {
+    class SampleProxy extends ProxyBase {
       handle(_req: NextRequest, res: NextResponse) {
         res.headers.set('m1', 'true');
 
@@ -595,14 +631,14 @@ describe('defineMiddleware', () => {
       }
     }
 
-    const middleware1 = new SampleMiddleware({ sites: [] });
-    const middleware2: Middleware = {
+    const proxy1 = new SampleProxy({ sites: [] });
+    const proxy2: ProxyHandler = {
       handle: (_req, res) => {
         res.headers.set('m2', 'true');
         return Promise.resolve(res);
       },
     };
-    const middleware3: Middleware = {
+    const proxy3: ProxyHandler = {
       handle: (_req, res) => {
         res.headers.set('m3', 'true');
         return Promise.resolve(res);
@@ -610,12 +646,37 @@ describe('defineMiddleware', () => {
     };
 
     const req = {} as NextRequest;
-    const ev = {} as NextFetchEvent;
 
-    const result = await defineMiddleware(middleware2, middleware1, middleware3).exec(req, ev);
+    const result = await defineProxy(proxy2, proxy1, proxy3).exec(req);
 
     expect(result.headers.get('m1')).to.equal('true');
     expect(result.headers.get('m2')).to.equal('true');
     expect(result.headers.get('m3')).to.equal('true');
+  });
+
+  it('should execute proxies without NextFetchEvent (Next.js 16 style)', async () => {
+    class SampleProxy extends ProxyBase {
+      handle(_req: NextRequest, res: NextResponse) {
+        res.headers.set('m1', 'true');
+
+        return Promise.resolve(res);
+      }
+    }
+
+    const proxy1 = new SampleProxy({ sites: [] });
+    const proxy2: ProxyHandler = {
+      handle: (_req, res) => {
+        res.headers.set('m2', 'true');
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+
+    // Next.js 16 style: ev parameter removed
+    const result = await defineProxy(proxy2, proxy1).exec(req);
+
+    expect(result.headers.get('m1')).to.equal('true');
+    expect(result.headers.get('m2')).to.equal('true');
   });
 });

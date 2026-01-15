@@ -43,7 +43,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
    */
   getSiteNameFromPath(path: string | string[]) {
     const resolvedPath = super.parsePath(path);
-    // Get site name (from path rewritten in middleware)
+    // Get site name (from path rewritten in proxy)
     const siteData = getSiteRewriteData(resolvedPath, this.initOptions.defaultSite);
 
     return siteData.siteName;
