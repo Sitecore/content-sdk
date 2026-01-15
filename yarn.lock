@@ -3501,50 +3501,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sitecore-cloudsdk/core@npm:^0.5.1, @sitecore-cloudsdk/core@npm:^0.5.8":
-  version: 0.5.8
-  resolution: "@sitecore-cloudsdk/core@npm:0.5.8"
-  dependencies:
-    "@sitecore-cloudsdk/utils": "npm:^0.5.8"
-    debug: "npm:^4.3.4"
-  checksum: 10/e53b5f0e93b05aafbbfb82f830e72e752db5176b16bf3f6008f3b1da0cbb9aa5a95dad07df9bfaf1ff5710d4bcdc3ed7546d27746dc6bd48384394d2629c340c
-  languageName: node
-  linkType: hard
-
-"@sitecore-cloudsdk/events@npm:^0.5.1, @sitecore-cloudsdk/events@npm:^0.5.8":
-  version: 0.5.8
-  resolution: "@sitecore-cloudsdk/events@npm:0.5.8"
-  dependencies:
-    "@sitecore-cloudsdk/core": "npm:^0.5.8"
-    "@sitecore-cloudsdk/utils": "npm:^0.5.8"
-  checksum: 10/c40bcc1a7cc39856b09b073554df65a90fb05138642d39ffceff76b8408a56e6876323c4428af52b8805b13a57dde99caf6687415dc8a27bcc3c8764b99f999c
-  languageName: node
-  linkType: hard
-
-"@sitecore-cloudsdk/personalize@npm:^0.5.1":
-  version: 0.5.8
-  resolution: "@sitecore-cloudsdk/personalize@npm:0.5.8"
-  dependencies:
-    "@sitecore-cloudsdk/core": "npm:^0.5.8"
-    "@sitecore-cloudsdk/events": "npm:^0.5.8"
-    "@sitecore-cloudsdk/utils": "npm:^0.5.8"
-  checksum: 10/5540e3cf1dd069ac690961f47c3d52f2bfdfb54d8494e05b38d30b43643d48803f10bd4a39bcf1585a520fc80597e052a7b170362c94e6e1f06955ef8c4cb49f
-  languageName: node
-  linkType: hard
-
-"@sitecore-cloudsdk/utils@npm:^0.5.8":
-  version: 0.5.8
-  resolution: "@sitecore-cloudsdk/utils@npm:0.5.8"
-  checksum: 10/c869f5d69a53a9b15a25bfeced219ca29de10bea995dabe9c88a58026ddab614e3bc9d180b879bca112bd3de779b15b33fb268701fa32cb6ec8d38a4275d6724
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/__core__@npm:1.4.0-canary.15, @sitecore-content-sdk/__core__@workspace:packages/__core__":
+"@sitecore-content-sdk/analytics-core@npm:1.4.0-canary.15, @sitecore-content-sdk/analytics-core@workspace:packages/analytics-core":
   version: 0.0.0-use.local
-  resolution: "@sitecore-content-sdk/__core__@workspace:packages/__core__"
+  resolution: "@sitecore-content-sdk/analytics-core@workspace:packages/analytics-core"
   dependencies:
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/utils": "npm:1.4.0-canary.15"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3565,7 +3526,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/cli@workspace:packages/cli":
+"@sitecore-content-sdk/cli@npm:1.4.0-canary.15, @sitecore-content-sdk/cli@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
@@ -3612,7 +3573,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
-    "@sitecore-cloudsdk/events": "npm:^0.5.1"
+    "@sitecore-content-sdk/events": "npm:1.4.0-canary.15"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/chai-spies": "npm:^1.0.6"
@@ -3656,7 +3617,7 @@ __metadata:
     typescript: "npm:~5.8.3"
     url-parse: "npm:^1.5.10"
   peerDependencies:
-    "@sitecore-cloudsdk/events": ^0.5.1
+    "@sitecore-content-sdk/events": 1.4.0-canary.15
   languageName: unknown
   linkType: soft
 
@@ -3666,8 +3627,7 @@ __metadata:
   dependencies:
     "@jest/globals": "npm:^30.2.0"
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/__core__": "npm:1.4.0-canary.15"
-    "@sitecore-content-sdk/utils": "npm:1.4.0-canary.15"
+    "@sitecore-content-sdk/analytics-core": "npm:1.4.0-canary.15"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3688,14 +3648,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/nextjs@workspace:packages/nextjs":
+"@sitecore-content-sdk/nextjs@npm:1.4.0-canary.15, @sitecore-content-sdk/nextjs@workspace:packages/nextjs":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/nextjs@workspace:packages/nextjs"
   dependencies:
     "@babel/parser": "npm:^7.27.2"
-    "@sitecore-cloudsdk/core": "npm:^0.5.1"
-    "@sitecore-cloudsdk/personalize": "npm:^0.5.1"
+    "@sitecore-content-sdk/analytics-core": "npm:1.4.0-canary.15"
     "@sitecore-content-sdk/core": "npm:1.4.0-canary.15"
+    "@sitecore-content-sdk/personalize": "npm:1.4.0-canary.15"
     "@sitecore-content-sdk/react": "npm:1.4.0-canary.15"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
@@ -3741,9 +3701,9 @@ __metadata:
     ts-node: "npm:^10.9.2"
     typescript: "npm:~5.8.3"
   peerDependencies:
-    "@sitecore-cloudsdk/core": ^0.5.1
-    "@sitecore-cloudsdk/events": ^0.5.1
-    "@sitecore-cloudsdk/personalize": ^0.5.1
+    "@sitecore-content-sdk/analytics-core": 1.4.0-canary.15
+    "@sitecore-content-sdk/events": 1.4.0-canary.15
+    "@sitecore-content-sdk/personalize": 1.4.0-canary.15
     next: ^15.5.9
     react: ^19.2.1
     react-dom: ^19.2.1
@@ -3754,14 +3714,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/personalize@workspace:packages/personalize":
+"@sitecore-content-sdk/personalize@npm:1.4.0-canary.15, @sitecore-content-sdk/personalize@workspace:packages/personalize":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/personalize@workspace:packages/personalize"
   dependencies:
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/__core__": "npm:1.4.0-canary.15"
+    "@sitecore-content-sdk/analytics-core": "npm:1.4.0-canary.15"
     "@sitecore-content-sdk/events": "npm:1.4.0-canary.15"
-    "@sitecore-content-sdk/utils": "npm:1.4.0-canary.15"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3826,7 +3785,7 @@ __metadata:
     ts-node: "npm:^10.9.2"
     typescript: "npm:~5.8.3"
   peerDependencies:
-    "@sitecore-cloudsdk/events": ^0.5.1
+    "@sitecore-content-sdk/events": 1.4.0-canary.15
     "@sitecore-feaas/clientside": ^0.6.0
     react: ^19.2.1
     react-dom: ^19.2.1
@@ -3854,30 +3813,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/utils@npm:1.4.0-canary.15, @sitecore-content-sdk/utils@workspace:packages/utils":
-  version: 0.0.0-use.local
-  resolution: "@sitecore-content-sdk/utils@workspace:packages/utils"
-  dependencies:
-    "@jest/types": "npm:^29.6.3"
-    "@stylistic/eslint-plugin": "npm:^5.2.2"
-    "@types/debug": "npm:^4.1.12"
-    "@types/jest": "npm:^29.5.12"
-    "@typescript-eslint/eslint-plugin": "npm:8.39.0"
-    "@typescript-eslint/parser": "npm:8.39.0"
-    del-cli: "npm:^6.0.0"
-    eslint: "npm:^9.32.0"
-    eslint-config-prettier: "npm:^10.1.8"
-    eslint-plugin-import: "npm:2.32.0"
-    eslint-plugin-jsdoc: "npm:52.0.3"
-    eslint-plugin-prettier: "npm:^4.0.0"
-    jest: "npm:^29.7.0"
-    jest-environment-jsdom: "npm:^29.7.0"
-    jest-environment-node: "npm:^29.7.0"
-    ts-jest: "npm:^29.4.6"
-    ts-node: "npm:^10.9.2"
-  languageName: unknown
-  linkType: soft
-
 "@sitecore-feaas/clientside@npm:^0.6.0":
   version: 0.6.4
   resolution: "@sitecore-feaas/clientside@npm:0.6.4"
@@ -3896,6 +3831,15 @@ __metadata:
     "@rjsf/utils": "npm:*"
     json-schema: "npm:^0.4.0"
   checksum: 10/3bb7a126c22a6a8953e6b85e4c6caa8b5e65d1f0b1d9f9d589c5e5541f616a222b030e8a75efb16a11d5b90bcffa47989898eaca6cc86dc3ef3b80c5d15c98e4
+  languageName: node
+  linkType: hard
+
+"@sitecore/components@npm:~2.1.0":
+  version: 2.1.0
+  resolution: "@sitecore/components@npm:2.1.0"
+  peerDependencies:
+    "@sitecore/byoc": ^0.3.0
+  checksum: 10/dba34482e2c7bc57390fdf318b1ba7cbdcf939102723c60215aba7400d2502cccef0c75fc5647c70db3eb69515eda9539700628d360404054eaf254b79258fff
   languageName: node
   linkType: hard
 
@@ -5148,7 +5092,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-styles@npm:^6.1.0":
+"ansi-styles@npm:^6.1.0, ansi-styles@npm:^6.2.1":
   version: 6.2.3
   resolution: "ansi-styles@npm:6.2.3"
   checksum: 10/c49dad7639f3e48859bd51824c93b9eb0db628afc243c51c3dd2410c4a15ede1a83881c6c7341aa2b159c4f90c11befb38f2ba848c07c66c9f9de4bcd7cb9f30
@@ -6235,6 +6179,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"content-sdk-nextjs@workspace:samples/nextjs":
+  version: 0.0.0-use.local
+  resolution: "content-sdk-nextjs@workspace:samples/nextjs"
+  dependencies:
+    "@sitecore-content-sdk/analytics-core": "npm:1.4.0-canary.15"
+    "@sitecore-content-sdk/cli": "npm:1.4.0-canary.15"
+    "@sitecore-content-sdk/events": "npm:1.4.0-canary.15"
+    "@sitecore-content-sdk/nextjs": "npm:1.4.0-canary.15"
+    "@sitecore-feaas/clientside": "npm:^0.6.0"
+    "@sitecore/components": "npm:~2.1.0"
+    "@stylistic/eslint-plugin": "npm:^5.2.2"
+    "@types/node": "npm:^24.10.4"
+    "@types/react": "npm:^19.2.7"
+    "@types/react-dom": "npm:^19.2.3"
+    "@typescript-eslint/eslint-plugin": "npm:8.39.0"
+    "@typescript-eslint/parser": "npm:8.39.0"
+    cross-env: "npm:~7.0.3"
+    eslint: "npm:^9.32.0"
+    eslint-config-next: "npm:15.4.6"
+    eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-import: "npm:2.32.0"
+    eslint-plugin-jsdoc: "npm:52.0.3"
+    eslint-plugin-prettier: "npm:^5.5.3"
+    eslint-plugin-react: "npm:7.37.5"
+    eslint-plugin-react-hooks: "npm:5.2.0"
+    next: "npm:^15.5.9"
+    next-localization: "npm:^0.12.0"
+    npm-run-all2: "npm:~8.0.1"
+    prettier: "npm:^3.6.2"
+    react: "npm:^19.2.1"
+    react-dom: "npm:^19.2.1"
+    typescript: "npm:~5.8.3"
+  languageName: unknown
+  linkType: soft
+
 "conventional-changelog-angular@npm:^5.0.12":
   version: 5.0.13
   resolution: "conventional-changelog-angular@npm:5.0.13"
@@ -6442,6 +6421,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-env@npm:~7.0.3":
+  version: 7.0.3
+  resolution: "cross-env@npm:7.0.3"
+  dependencies:
+    cross-spawn: "npm:^7.0.1"
+  bin:
+    cross-env: src/bin/cross-env.js
+    cross-env-shell: src/bin/cross-env-shell.js
+  checksum: 10/e99911f0d31c20e990fd92d6fd001f4b01668a303221227cc5cb42ed155f086351b1b3bd2699b200e527ab13011b032801f8ce638e6f09f854bdf744095e604c
+  languageName: node
+  linkType: hard
+
 "cross-fetch@npm:^3.1.5":
   version: 3.2.0
   resolution: "cross-fetch@npm:3.2.0"
@@ -6460,7 +6451,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.3, cross-spawn@npm:^7.0.6":
+"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.1, cross-spawn@npm:^7.0.3, cross-spawn@npm:^7.0.6":
   version: 7.0.6
   resolution: "cross-spawn@npm:7.0.6"
   dependencies:
@@ -6876,6 +6867,13 @@ __metadata:
   dependencies:
     path-type: "npm:^4.0.0"
   checksum: 10/fa05e18324510d7283f55862f3161c6759a3f2f8dbce491a2fc14c8324c498286c54282c1f0e933cb930da8419b30679389499b919122952a4f8592362ef4615
+  languageName: node
+  linkType: hard
+
+"dlv@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "dlv@npm:1.1.3"
+  checksum: 10/836459ec6b50e43e9ed388a5fc28954be99e3481af3fa4b5d82a600762eb65ef8faacd454097ed7fc2f8a60aea2800d65a4cece5cd0d81ab82b2031f3f759e6e
   languageName: node
   linkType: hard
 
@@ -7557,6 +7555,26 @@ __metadata:
     eslint-config-prettier:
       optional: true
   checksum: 10/8e5838bff6c5753c370069a1b71cb0057929d467b7b5ba0efe066365de1e944a27d1d44cb0c2e8c3beb2c806c1b98e98fc320f96dd59f11741c4309856383868
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-prettier@npm:^5.5.3":
+  version: 5.5.5
+  resolution: "eslint-plugin-prettier@npm:5.5.5"
+  dependencies:
+    prettier-linter-helpers: "npm:^1.0.1"
+    synckit: "npm:^0.11.12"
+  peerDependencies:
+    "@types/eslint": ">=8.0.0"
+    eslint: ">=8.0.0"
+    eslint-config-prettier: ">= 7.0.0 <10.0.0 || >=10.1.0"
+    prettier: ">=3.0.0"
+  peerDependenciesMeta:
+    "@types/eslint":
+      optional: true
+    eslint-config-prettier:
+      optional: true
+  checksum: 10/36c22c2fa2fd7c61ed292af1280e1d8f94dfe1671eacc5a503a249ca4b27fd226dbf6a1820457d611915926946f42729488d2dc7a5c320601e6cf1fad0d28f66
   languageName: node
   linkType: hard
 
@@ -10376,6 +10394,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json-parse-even-better-errors@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "json-parse-even-better-errors@npm:4.0.0"
+  checksum: 10/da1ae7ef0cc9db02972a06a71322f26bdcda5d7f648c23b28ce7f158ba35707461bcbd91945d8aace10d8d79c383b896725c65ffa410242352692328aa9b5edf
+  languageName: node
+  linkType: hard
+
 "json-schema-traverse@npm:^0.4.1":
   version: 0.4.1
   resolution: "json-schema-traverse@npm:0.4.1"
@@ -10952,6 +10977,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"memorystream@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "memorystream@npm:0.3.1"
+  checksum: 10/2e34a1e35e6eb2e342f788f75f96c16f115b81ff6dd39e6c2f48c78b464dbf5b1a4c6ebfae4c573bd0f8dbe8c57d72bb357c60523be184655260d25855c03902
+  languageName: node
+  linkType: hard
+
 "meow@npm:^13.2.0":
   version: 13.2.0
   resolution: "meow@npm:13.2.0"
@@ -11402,6 +11434,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"next-localization@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "next-localization@npm:0.12.0"
+  dependencies:
+    rosetta: "npm:1.1.0"
+  peerDependencies:
+    react: ">=17.0.1"
+  checksum: 10/c7d53f2aa869f69b8adcf2f47e4f88264e14f827d16c907ece389a0e263ec060553d82c0a0290ee2b93509697261d81273620448a398b3ec3813ad60ae340f16
+  languageName: node
+  linkType: hard
+
 "next@npm:^15.5.9":
   version: 15.5.9
   resolution: "next@npm:15.5.9"
@@ -11697,6 +11740,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"npm-normalize-package-bin@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "npm-normalize-package-bin@npm:4.0.0"
+  checksum: 10/e1a0971e5640bc116c5197f9707d86dc404b6d8e13da2c7ea82baa5583b8da279a3c8607234aa1d733c2baac3b3eba87b156f021f20ae183dc4806530e61675d
+  languageName: node
+  linkType: hard
+
 "npm-package-arg@npm:8.1.1":
   version: 8.1.1
   resolution: "npm-package-arg@npm:8.1.1"
@@ -11758,6 +11808,27 @@ __metadata:
     npm-package-arg: "npm:^9.0.1"
     proc-log: "npm:^2.0.0"
   checksum: 10/eb8ea7f5eccdc3fe595e70cafbfbffc8e0d5bc0abbb9a48fdf224d9c3e6d37fc6bf3cfdf879e7f8cdbcfba38c03e73316be6e3bf649a2cd6636a37e62d0e67cb
+  languageName: node
+  linkType: hard
+
+"npm-run-all2@npm:~8.0.1":
+  version: 8.0.4
+  resolution: "npm-run-all2@npm:8.0.4"
+  dependencies:
+    ansi-styles: "npm:^6.2.1"
+    cross-spawn: "npm:^7.0.6"
+    memorystream: "npm:^0.3.1"
+    picomatch: "npm:^4.0.2"
+    pidtree: "npm:^0.6.0"
+    read-package-json-fast: "npm:^4.0.0"
+    shell-quote: "npm:^1.7.3"
+    which: "npm:^5.0.0"
+  bin:
+    npm-run-all: bin/npm-run-all/index.js
+    npm-run-all2: bin/npm-run-all/index.js
+    run-p: bin/run-p/index.js
+    run-s: bin/run-s/index.js
+  checksum: 10/6e485f0d71fdfcf5bd872e5bbb8440ea5816ebeed88e6e39ff6e758d76adefa516b3101ed7ddc8de117d61b499f176417c87b0c595394e15733738834ad6ef0a
   languageName: node
   linkType: hard
 
@@ -12464,6 +12535,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pidtree@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "pidtree@npm:0.6.0"
+  bin:
+    pidtree: bin/pidtree.js
+  checksum: 10/ea67fb3159e170fd069020e0108ba7712df9f0fd13c8db9b2286762856ddce414fb33932e08df4bfe36e91fe860b51852aee49a6f56eb4714b69634343add5df
+  languageName: node
+  linkType: hard
+
 "pify@npm:^2.3.0":
   version: 2.3.0
   resolution: "pify@npm:2.3.0"
@@ -12549,12 +12629,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier-linter-helpers@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "prettier-linter-helpers@npm:1.0.1"
+  dependencies:
+    fast-diff: "npm:^1.1.2"
+  checksum: 10/2dc35f5036a35f4c4f5e645887edda1436acb63687a7f12b2383e0a6f3c1f76b8a0a4709fe4d82e19157210feb5984b159bb714d43290022911ab53d606474ec
+  languageName: node
+  linkType: hard
+
 "prettier@npm:^2.8.0":
   version: 2.8.8
   resolution: "prettier@npm:2.8.8"
   bin:
     prettier: bin-prettier.js
   checksum: 10/00cdb6ab0281f98306cd1847425c24cbaaa48a5ff03633945ab4c701901b8e96ad558eb0777364ffc312f437af9b5a07d0f45346266e8245beaf6247b9c62b24
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^3.6.2":
+  version: 3.8.0
+  resolution: "prettier@npm:3.8.0"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 10/a643c62f095c2987a34cea4fceddce8dea12cc3ee024494aff690cfac22ef20be835e212b39b718c833014fd22890ae156be67b75a26e2bc9b7acde9a34d31fa
   languageName: node
   linkType: hard
 
@@ -12841,6 +12939,16 @@ __metadata:
     json-parse-even-better-errors: "npm:^2.3.0"
     npm-normalize-package-bin: "npm:^1.0.1"
   checksum: 10/fca37b3b2160b9dda7c5588b767f6a2b8ce68d03a044000e568208e20bea0cf6dd2de17b90740ce8da8b42ea79c0b3859649dadf29510bbe77224ea65326a903
+  languageName: node
+  linkType: hard
+
+"read-package-json-fast@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "read-package-json-fast@npm:4.0.0"
+  dependencies:
+    json-parse-even-better-errors: "npm:^4.0.0"
+    npm-normalize-package-bin: "npm:^4.0.0"
+  checksum: 10/bf0becd7d0b652dcc5874b466d1dbd98313180e89505c072f35ff48a1ad6bdaf2427143301e1924d64e4af5064cda8be5df16f14de882f03130e29051bbaab87
   languageName: node
   linkType: hard
 
@@ -13207,6 +13315,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"rosetta@npm:1.1.0":
+  version: 1.1.0
+  resolution: "rosetta@npm:1.1.0"
+  dependencies:
+    dlv: "npm:^1.1.3"
+    templite: "npm:^1.1.0"
+  checksum: 10/1ab7e12ca7cf496834e10ee2bc8bc50fba09ccb51d00ab3eba72aae0f1f02b27d3c6703c8ac3c9e07c23da859ced2f7f94307f6ecdb5f200f599dbc4ede5f477
+  languageName: node
+  linkType: hard
+
 "rrweb-cssom@npm:^0.8.0":
   version: 0.8.0
   resolution: "rrweb-cssom@npm:0.8.0"
@@ -13521,6 +13639,13 @@ __metadata:
   version: 3.0.0
   resolution: "shebang-regex@npm:3.0.0"
   checksum: 10/1a2bcae50de99034fcd92ad4212d8e01eedf52c7ec7830eedcf886622804fe36884278f2be8be0ea5fde3fd1c23911643a4e0f726c8685b61871c8908af01222
+  languageName: node
+  linkType: hard
+
+"shell-quote@npm:^1.7.3":
+  version: 1.8.3
+  resolution: "shell-quote@npm:1.8.3"
+  checksum: 10/5473e354637c2bd698911224129c9a8961697486cff1fb221f234d71c153fc377674029b0223d1d3c953a68d451d79366abfe53d1a0b46ee1f28eb9ade928f4c
   languageName: node
   linkType: hard
 
@@ -14121,6 +14246,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"synckit@npm:^0.11.12":
+  version: 0.11.12
+  resolution: "synckit@npm:0.11.12"
+  dependencies:
+    "@pkgr/core": "npm:^0.2.9"
+  checksum: 10/2f51978bfed81aaf0b093f596709a72c49b17909020f42b43c5549f9c0fe18b1fe29f82e41ef771172d729b32e9ce82900a85d2b87fa14d59f886d4df8d7a329
+  languageName: node
+  linkType: hard
+
 "synckit@npm:^0.11.7, synckit@npm:^0.11.8":
   version: 0.11.11
   resolution: "synckit@npm:0.11.11"
@@ -14174,6 +14308,13 @@ __metadata:
   version: 1.0.0
   resolution: "temp-dir@npm:1.0.0"
   checksum: 10/cb2b58ddfb12efa83e939091386ad73b425c9a8487ea0095fe4653192a40d49184a771a1beba99045fbd011e389fd563122d79f54f82be86a55620667e08a6b2
+  languageName: node
+  linkType: hard
+
+"templite@npm:^1.1.0":
+  version: 1.2.0
+  resolution: "templite@npm:1.2.0"
+  checksum: 10/4c02803b99320b1fe401ee1a4c15f1699a84dca0176d5ca847d8e3b55ce2dd7796e9ccd59209252f8fceefdc6ee41c0f92843f506c1a3d8ac45aba6ed37bb157
   languageName: node
   linkType: hard
 
@@ -15179,6 +15320,17 @@ __metadata:
   bin:
     node-which: ./bin/node-which
   checksum: 10/4782f8a1d6b8fc12c65e968fea49f59752bf6302dc43036c3bf87da718a80710f61a062516e9764c70008b487929a73546125570acea95c5b5dcc8ac3052c70f
+  languageName: node
+  linkType: hard
+
+"which@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "which@npm:5.0.0"
+  dependencies:
+    isexe: "npm:^3.1.1"
+  bin:
+    node-which: bin/which.js
+  checksum: 10/6ec99e89ba32c7e748b8a3144e64bfc74aa63e2b2eacbb61a0060ad0b961eb1a632b08fb1de067ed59b002cec3e21de18299216ebf2325ef0f78e0f121e14e90
   languageName: node
   linkType: hard
 
