@@ -2,6 +2,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
+import sinon from 'sinon';
 
 import { Text, TextField } from './Text';
 
@@ -163,7 +164,7 @@ describe('<Text />', () => {
           `<code type="text/sitecore" chrometype="field" class="scpm" kind="open">${JSON.stringify(
             testMetadata
           )}</code>`,
-          'value',
+          '<span>value</span>',
           '<code type="text/sitecore" chrometype="field" class="scpm" kind="close"></code>',
         ].join('')
       );
@@ -222,6 +223,30 @@ describe('<Text />', () => {
       const rendered = render(<Text field={field} editable={false} />);
 
       expect(rendered.container.innerHTML).to.equal('');
+    });
+
+    it('should apply suppressHydrationWarning prop when in editing mode', () => {
+      const field = {
+        value: 'value',
+        metadata: testMetadata,
+      };
+
+      const createElementSpy = sinon.spy(React, 'createElement');
+
+      try {
+        render(<Text field={field} tag="span" />);
+
+        // Find createElement calls for 'span' with suppressHydrationWarning: true
+        const spanCall = createElementSpy
+          .getCalls()
+          .find(
+            (call) => call.args[0] === 'span' && call.args[1]?.suppressHydrationWarning === true
+          );
+
+        expect(spanCall).to.not.be.undefined;
+      } finally {
+        createElementSpy.restore();
+      }
     });
   });
 });

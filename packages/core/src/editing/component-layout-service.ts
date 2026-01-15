@@ -83,6 +83,16 @@ export class ComponentLayoutService {
     params: ComponentLayoutRequestParams,
     fetchOptions?: FetchOptions
   ): Promise<LayoutServiceData> {
+    // Choose the correct Edge ID per environment
+    const sitecoreContextId = this.config.contextId || this.config.clientContextId;
+
+    if (!sitecoreContextId) {
+      throw new Error(
+        `ComponentLayoutService misconfigured: contextId is missing.
+         Provide contextId on the server, and clientContextId in the browser if you need to full client-side functionality.`
+      );
+    }
+
     const fetcher = new NativeDataFetcher({ debugger: debug.layout });
 
     debug.layout(
@@ -99,6 +109,7 @@ export class ComponentLayoutService {
         ...fetchOptions,
         headers: {
           ...fetchOptions?.headers,
+          'x-sitecore-contextid': sitecoreContextId,
           sc_editMode: `${params.mode === DesignLibraryMode.Metadata}`,
         },
       })
@@ -112,20 +123,9 @@ export class ComponentLayoutService {
   }
 
   protected getComponentFetchParams(params: ComponentLayoutRequestParams) {
-    // Choose the correct Edge ID per environment
-    const sitecoreContextId = this.config.contextId || this.config.clientContextId;
-
-    if (!sitecoreContextId) {
-      throw new Error(
-        `ComponentLayoutService misconfigured: contextId is missing.
-         Provide contextId on the server, and clientContextId in the browser if you need to full client-side functionality.`
-      );
-    }
-
     // strip undefined fields
     return JSON.parse(
       JSON.stringify({
-        sitecoreContextId,
         item: params.itemId,
         uid: params.componentUid,
         dataSourceId: params.dataSourceId,

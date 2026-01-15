@@ -43,9 +43,7 @@ export function withEmptyFieldEditingComponent<
   FieldComponent: ComponentType<FieldComponentProps>,
   options: WithEmptyFieldEditingComponentOptions
 ) {
-  const getEmptyFieldEditingComponent = (
-    props: FieldComponentProps
-  ) => {
+  const getEmptyFieldEditingComponent = (props: FieldComponentProps) => {
     const { editable = true } = props;
     if (props.field?.metadata && editable && isFieldValueEmpty(props.field)) {
       const Component =
@@ -63,7 +61,7 @@ export function withEmptyFieldEditingComponent<
         };
       }
 
-      return <Component {...resolvedProps} />;
+      return <Component {...resolvedProps} suppressHydrationWarning={true} />;
     }
 
     return null;

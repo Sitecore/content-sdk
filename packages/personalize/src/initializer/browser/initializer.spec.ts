@@ -308,6 +308,23 @@ describe('addPersonalize', () => {
     });
     expect(result).toEqual(fakeThis);
   });
+  it('should run the addPersonalize function and use provided language for web personalize', async () => {
+    const fakeThis = {};
+    const result = addPersonalize.call(fakeThis as any, {
+      webPersonalization: { language: 'en' },
+    });
+
+    expect(PackageInitializer).toHaveBeenCalledTimes(1);
+    expect(PackageInitializer).toHaveBeenCalledWith({
+      dependencies: [{ method: 'addEvents', name: '@sitecore-content-sdk/events' }],
+      settings: {
+        cookieSettings: { name: { guestId: 'sc_cid_personalize' } },
+        webPersonalization: { async: true, defer: false, language: 'en' },
+      },
+      sideEffects,
+    });
+    expect(result).toEqual(fakeThis);
+  });
   it('should throw with undefined initState', async () => {
     jest.spyOn(internal, 'getEnabledPackageBrowser').mockReturnValue(undefined);
 

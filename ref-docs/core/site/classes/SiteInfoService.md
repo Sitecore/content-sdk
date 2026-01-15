@@ -6,7 +6,7 @@
 
 # Class: SiteInfoService
 
-Defined in: [packages/core/src/site/siteinfo-service.ts:58](https://github.com/Sitecore/content-sdk/blob/023f19d2fff3551ed770203ada2f4a63414ca701/packages/core/src/site/siteinfo-service.ts#L58)
+Defined in: [packages/core/src/site/siteinfo-service.ts:58](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/core/src/site/siteinfo-service.ts#L58)
 
 Service to fetch site information
 
@@ -16,7 +16,7 @@ Service to fetch site information
 
 > **new SiteInfoService**(`config`): `SiteInfoService`
 
-Defined in: [packages/core/src/site/siteinfo-service.ts:66](https://github.com/Sitecore/content-sdk/blob/023f19d2fff3551ed770203ada2f4a63414ca701/packages/core/src/site/siteinfo-service.ts#L66)
+Defined in: [packages/core/src/site/siteinfo-service.ts:66](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/core/src/site/siteinfo-service.ts#L66)
 
 Creates an instance of graphQL service to retrieve site configuration list from Sitecore
 
@@ -38,7 +38,7 @@ Creates an instance of graphQL service to retrieve site configuration list from 
 
 > **get** `protected` **siteQuery**(): `string`
 
-Defined in: [packages/core/src/site/siteinfo-service.ts:74](https://github.com/Sitecore/content-sdk/blob/023f19d2fff3551ed770203ada2f4a63414ca701/packages/core/src/site/siteinfo-service.ts#L74)
+Defined in: [packages/core/src/site/siteinfo-service.ts:74](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/core/src/site/siteinfo-service.ts#L74)
 
 site query is available on XM Cloud and XP 10.4+
 
@@ -52,7 +52,7 @@ site query is available on XM Cloud and XP 10.4+
 
 > **fetchSiteInfo**(`fetchOptions?`): `Promise`\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
 
-Defined in: [packages/core/src/site/siteinfo-service.ts:78](https://github.com/Sitecore/content-sdk/blob/023f19d2fff3551ed770203ada2f4a63414ca701/packages/core/src/site/siteinfo-service.ts#L78)
+Defined in: [packages/core/src/site/siteinfo-service.ts:78](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/core/src/site/siteinfo-service.ts#L78)
 
 #### Parameters
 
@@ -70,7 +70,7 @@ Defined in: [packages/core/src/site/siteinfo-service.ts:78](https://github.com/S
 
 > `protected` **getCacheClient**(): [`CacheClient`](../../index/interfaces/CacheClient.md)\<[`SiteInfo`](../type-aliases/SiteInfo.md)[]\>
 
-Defined in: [packages/core/src/site/siteinfo-service.ts:113](https://github.com/Sitecore/content-sdk/blob/023f19d2fff3551ed770203ada2f4a63414ca701/packages/core/src/site/siteinfo-service.ts#L113)
+Defined in: [packages/core/src/site/siteinfo-service.ts:113](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/core/src/site/siteinfo-service.ts#L113)
 
 Gets cache client implementation
 Override this method if custom cache needs to be used
@@ -87,7 +87,7 @@ CacheClient instance
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/site/siteinfo-service.ts:126](https://github.com/Sitecore/content-sdk/blob/023f19d2fff3551ed770203ada2f4a63414ca701/packages/core/src/site/siteinfo-service.ts#L126)
+Defined in: [packages/core/src/site/siteinfo-service.ts:126](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/core/src/site/siteinfo-service.ts#L126)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

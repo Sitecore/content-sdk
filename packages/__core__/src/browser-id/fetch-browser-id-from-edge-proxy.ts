@@ -17,10 +17,13 @@ export async function fetchBrowserIdFromEdgeProxy(
 ): Promise<ProxySettings> {
   const fetchOptions = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    headers: { 'X-Library-Version': LIBRARY_VERSION },
+    headers: {
+      'X-Library-Version': LIBRARY_VERSION,
+      'x-sitecore-contextid': sitecoreEdgeContextId,
+    },
   };
 
-  const url = constructGetBrowserIdUrl(sitecoreEdgeUrl, sitecoreEdgeContextId);
+  const url = constructGetBrowserIdUrl(sitecoreEdgeUrl);
   let payload;
 
   if (timeout !== undefined)

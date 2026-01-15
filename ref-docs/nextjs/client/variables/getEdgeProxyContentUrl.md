@@ -6,9 +6,9 @@
 
 # Variable: getEdgeProxyContentUrl()
 
-> `const` **getEdgeProxyContentUrl**: (`sitecoreEdgeContextId`, `sitecoreEdgeUrl?`) => `string`
+> `const` **getEdgeProxyContentUrl**: (`sitecoreEdgeUrl?`) => `string`
 
-Defined in: core/types/client/edge-proxy.d.ts:8
+Defined in: core/types/client/edge-proxy.d.ts:7
 
 Generates a URL for accessing Sitecore Edge Platform Content using the provided endpoint and context ID.
 
@@ -16,7 +16,6 @@ Generates a URL for accessing Sitecore Edge Platform Content using the provided 
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `sitecoreEdgeContextId` | `string` | The unique context id. |
 | `sitecoreEdgeUrl?` | `string` | The base endpoint URL for the Edge Platform. Default is https://edge-platform.sitecorecloud.io |
 
 ## Returns
