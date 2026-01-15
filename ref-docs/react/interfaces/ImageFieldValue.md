@@ -1,4 +1,4 @@
-  [**@sitecore-content-sdk/react**](../README.md)
+[**@sitecore-content-sdk/react**](../README.md)
 
 ***
 

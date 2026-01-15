@@ -20,8 +20,11 @@ Defined in: [search-service.ts:101](https://github.com/Sitecore/content-sdk/blob
 
 #### Parameters
 
+| Parameter | Type |
 | ------ | ------ |
+| `config` | [`SearchServiceConfig`](../interfaces/SearchServiceConfig.md) |
 
+#### Returns
 
 `SearchService`
 
