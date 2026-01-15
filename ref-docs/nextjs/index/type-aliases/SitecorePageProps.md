@@ -8,7 +8,7 @@
 
 > **SitecorePageProps** = `object`
 
-Defined in: nextjs/src/sharedTypes/sitecore-page-props.ts:9
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:9](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L9)
 
 The interface for the application page props.
 
@@ -18,7 +18,7 @@ The interface for the application page props.
 
 > `optional` **componentProps**: [`ComponentPropsCollection`](ComponentPropsCollection.md)
 
-Defined in: nextjs/src/sharedTypes/sitecore-page-props.ts:12
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:12](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L12)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: nextjs/src/sharedTypes/sitecore-page-props.ts:12
 
 > `optional` **dictionary**: [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: nextjs/src/sharedTypes/sitecore-page-props.ts:11
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:11](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L11)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: nextjs/src/sharedTypes/sitecore-page-props.ts:11
 
 > `optional` **notFound**: `boolean`
 
-Defined in: nextjs/src/sharedTypes/sitecore-page-props.ts:13
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:13](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L13)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: nextjs/src/sharedTypes/sitecore-page-props.ts:13
 
 > **page**: [`Page`](Page.md) \| `null`
 
-Defined in: nextjs/src/sharedTypes/sitecore-page-props.ts:10
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:10](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L10)

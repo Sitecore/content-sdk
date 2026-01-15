@@ -14,6 +14,11 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching ([#334](https://github.com/Sitecore/content-sdk/pull/334))
+  - Enabled `cacheComponents: true` for explicit caching with "use cache" directive
+  - Enabled `experimental.turbopackFileSystemCacheForDev: true` for faster dev startup (beta)
+  - Available in both Pages Router and App Router templates
+
 * Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
   * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
     - `SearchService` class for performing search queries with support for pagination, sorting, request cancellation.
@@ -24,6 +29,11 @@ Our versioning strategy is as follows:
   * `[analytics]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Reorganize Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))
 
 ### 🛠 Breaking Changes
+
+* `[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16 ([#334](https://github.com/Sitecore/content-sdk/pull/334))
+  - Next.js 16 is now required (minimum version `^16.0.0`)
+  - `middleware.ts` renamed to `proxy.ts` with updated function signature
+  - Removed deprecated `images.domains` usage (use `remotePatterns` instead)
 
 * `[nextjs]` Expand SXA redirects logic with support for isLanguagePreserved flag. This provides an option to preserve current locale when target redirect URL does not have a locale prefix ([#305](https://github.com/Sitecore/content-sdk/pull/305))
   - This changes the default redirects behavior out of the box.
@@ -39,6 +49,7 @@ Our versioning strategy is as follows:
 * `[nextjs]` Fixes Server Transfer (rewrite) redirects ([#329](https://github.com/Sitecore/content-sdk/pull/329))
 * `[nextjs]` Sitecore Content SDK does not support X-Forwarded-Host, causing incorrect hostname resolution behind proxies ([#330](https://github.com/Sitecore/content-sdk/pull/330))
 * `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
+* `[nextjs]` `[react]` Fix fields becoming uneditable in Pages when running Editing Host in dev mode ([#339](https://github.com/Sitecore/content-sdk/pull/339))
 
 ## 1.3.1
 

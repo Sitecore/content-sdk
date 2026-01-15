@@ -6,7 +6,7 @@
 
 # Interface: LinkFieldValue
 
-Defined in: packages/react/src/components/Link.tsx:13
+Defined in: [packages/react/src/components/Link.tsx:13](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/Link.tsx#L13)
 
 The interface for the Link field value.
 
@@ -20,7 +20,7 @@ The interface for the Link field value.
 
 > `optional` **anchor**: `string`
 
-Defined in: packages/react/src/components/Link.tsx:21
+Defined in: [packages/react/src/components/Link.tsx:21](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/Link.tsx#L21)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: packages/react/src/components/Link.tsx:21
 
 > `optional` **class**: `string`
 
-Defined in: packages/react/src/components/Link.tsx:17
+Defined in: [packages/react/src/components/Link.tsx:17](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/Link.tsx#L17)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: packages/react/src/components/Link.tsx:17
 
 > `optional` **className**: `string`
 
-Defined in: packages/react/src/components/Link.tsx:16
+Defined in: [packages/react/src/components/Link.tsx:16](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/Link.tsx#L16)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: packages/react/src/components/Link.tsx:16
 
 > `optional` **href**: `string`
 
-Defined in: packages/react/src/components/Link.tsx:15
+Defined in: [packages/react/src/components/Link.tsx:15](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/Link.tsx#L15)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: packages/react/src/components/Link.tsx:15
 
 > `optional` **linktype**: `string`
 
-Defined in: packages/react/src/components/Link.tsx:23
+Defined in: [packages/react/src/components/Link.tsx:23](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/Link.tsx#L23)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: packages/react/src/components/Link.tsx:23
 
 > `optional` **querystring**: `string`
 
-Defined in: packages/react/src/components/Link.tsx:22
+Defined in: [packages/react/src/components/Link.tsx:22](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/Link.tsx#L22)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: packages/react/src/components/Link.tsx:22
 
 > `optional` **target**: `string`
 
-Defined in: packages/react/src/components/Link.tsx:19
+Defined in: [packages/react/src/components/Link.tsx:19](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/Link.tsx#L19)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: packages/react/src/components/Link.tsx:19
 
 > `optional` **text**: `string`
 
-Defined in: packages/react/src/components/Link.tsx:20
+Defined in: [packages/react/src/components/Link.tsx:20](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/Link.tsx#L20)
 
 ***
 
@@ -84,4 +84,4 @@ Defined in: packages/react/src/components/Link.tsx:20
 
 > `optional` **title**: `string`
 
-Defined in: packages/react/src/components/Link.tsx:18
+Defined in: [packages/react/src/components/Link.tsx:18](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/Link.tsx#L18)

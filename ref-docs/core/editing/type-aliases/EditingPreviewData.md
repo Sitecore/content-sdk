@@ -8,7 +8,7 @@
 
 > **EditingPreviewData** = `object`
 
-Defined in: packages/core/src/editing/models.ts:66
+Defined in: [packages/core/src/editing/models.ts:66](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/models.ts#L66)
 
 Data for Preview (Editing) Mode.
 
@@ -18,7 +18,7 @@ Data for Preview (Editing) Mode.
 
 > **itemId**: `string`
 
-Defined in: packages/core/src/editing/models.ts:68
+Defined in: [packages/core/src/editing/models.ts:68](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/models.ts#L68)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: packages/core/src/editing/models.ts:68
 
 > **language**: `string`
 
-Defined in: packages/core/src/editing/models.ts:69
+Defined in: [packages/core/src/editing/models.ts:69](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/models.ts#L69)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: packages/core/src/editing/models.ts:69
 
 > `optional` **layoutKind**: [`LayoutKind`](../enumerations/LayoutKind.md)
 
-Defined in: packages/core/src/editing/models.ts:73
+Defined in: [packages/core/src/editing/models.ts:73](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/models.ts#L73)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: packages/core/src/editing/models.ts:73
 
 > **mode**: `Exclude`\<[`LayoutServicePageState`](../../layout/enumerations/LayoutServicePageState.md), `"Normal"`\>
 
-Defined in: packages/core/src/editing/models.ts:70
+Defined in: [packages/core/src/editing/models.ts:70](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/models.ts#L70)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: packages/core/src/editing/models.ts:70
 
 > **site**: `string`
 
-Defined in: packages/core/src/editing/models.ts:67
+Defined in: [packages/core/src/editing/models.ts:67](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/models.ts#L67)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: packages/core/src/editing/models.ts:67
 
 > **variantIds**: `string`[] \| `string`
 
-Defined in: packages/core/src/editing/models.ts:71
+Defined in: [packages/core/src/editing/models.ts:71](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/models.ts#L71)
 
 ***
 
@@ -66,4 +66,4 @@ Defined in: packages/core/src/editing/models.ts:71
 
 > `optional` **version**: `string`
 
-Defined in: packages/core/src/editing/models.ts:72
+Defined in: [packages/core/src/editing/models.ts:72](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/models.ts#L72)

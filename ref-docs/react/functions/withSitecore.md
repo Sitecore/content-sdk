@@ -8,7 +8,7 @@
 
 > **withSitecore**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element`
 
-Defined in: packages/react/src/enhancers/withSitecore.tsx:55
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:55](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/enhancers/withSitecore.tsx#L55)
 
 ## Parameters
 

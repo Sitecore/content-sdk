@@ -27,7 +27,7 @@
     "@sitecore-content-sdk/nextjs": "<%- version %>",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",
-    "next": "^15.5.9",
+    "next": "^16.1.1",
     "next-localization": "^0.12.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1"
@@ -42,7 +42,7 @@
     "@typescript-eslint/parser": "8.39.0",
     "cross-env": "~7.0.3",
     "eslint": "^9.32.0",
-    "eslint-config-next": "15.4.6",
+    "eslint-config-next": "15.5.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-jsdoc": "52.0.3",

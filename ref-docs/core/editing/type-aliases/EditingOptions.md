@@ -8,7 +8,7 @@
 
 > **EditingOptions** = `object`
 
-Defined in: packages/core/src/editing/editing-service.ts:41
+Defined in: [packages/core/src/editing/editing-service.ts:41](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/editing-service.ts#L41)
 
 Options for fetching editing data
 
@@ -18,7 +18,7 @@ Options for fetching editing data
 
 > **itemId**: `string`
 
-Defined in: packages/core/src/editing/editing-service.ts:42
+Defined in: [packages/core/src/editing/editing-service.ts:42](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/editing-service.ts#L42)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: packages/core/src/editing/editing-service.ts:42
 
 > **language**: `string`
 
-Defined in: packages/core/src/editing/editing-service.ts:43
+Defined in: [packages/core/src/editing/editing-service.ts:43](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/editing-service.ts#L43)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: packages/core/src/editing/editing-service.ts:43
 
 > `optional` **layoutKind**: [`LayoutKind`](../enumerations/LayoutKind.md)
 
-Defined in: packages/core/src/editing/editing-service.ts:45
+Defined in: [packages/core/src/editing/editing-service.ts:45](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/editing-service.ts#L45)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: packages/core/src/editing/editing-service.ts:45
 
 > **mode**: `Exclude`\<[`LayoutServicePageState`](../../layout/enumerations/LayoutServicePageState.md), `"Normal"`\>
 
-Defined in: packages/core/src/editing/editing-service.ts:46
+Defined in: [packages/core/src/editing/editing-service.ts:46](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/editing-service.ts#L46)
 
 ***
 
@@ -50,4 +50,4 @@ Defined in: packages/core/src/editing/editing-service.ts:46
 
 > `optional` **version**: `string`
 
-Defined in: packages/core/src/editing/editing-service.ts:44
+Defined in: [packages/core/src/editing/editing-service.ts:44](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/editing-service.ts#L44)

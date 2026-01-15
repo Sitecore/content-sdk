@@ -7,6 +7,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
+    "@sitecore-content-sdk/utils": "1.4.0-canary.17",
     "debug": "^4.4.3"
   },
   "description": "> TODO: description",
@@ -73,5 +74,5 @@
     "prepublishOnly": "npm run build",
     "test": "jest --config jest.config.ts"
   },
-  "version": "1.4.0-canary.15"
+  "version": "1.4.0-canary.17"
 }

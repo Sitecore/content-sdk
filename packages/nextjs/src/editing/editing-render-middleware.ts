@@ -1,4 +1,4 @@
-﻿import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { debug, NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   QUERY_PARAM_EDITING_SECRET,

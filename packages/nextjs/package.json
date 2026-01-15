@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "1.4.0-canary.15",
+  "version": "1.4.0-canary.17",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -15,7 +15,7 @@
     "test": "mocha --require ./test/setup.js \"./src/**/*.test.ts\" \"./src/**/*.test.tsx\" --exit",
     "prepublishOnly": "npm run build",
     "coverage": "nyc npm test",
-    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/nextjs --entryPoints src/index.ts --entryPoints src/monitoring/index.ts --entryPoints src/editing/index.ts --entryPoints src/middleware/index.ts --entryPoints src/context/index.ts --entryPoints src/utils/index.ts --entryPoints src/site/index.ts --entryPoints src/client/index.ts --entryPoints src/tools/index.ts --entryPoints src/editing/codegen/index.ts --entryPoints src/route-handler/index.ts --githubPages false",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/nextjs --entryPoints src/index.ts --entryPoints src/monitoring/index.ts --entryPoints src/editing/index.ts --entryPoints src/proxy/index.ts --entryPoints src/middleware/index.ts --entryPoints src/context/index.ts --entryPoints src/utils/index.ts --entryPoints src/site/index.ts --entryPoints src/client/index.ts --entryPoints src/tools/index.ts --entryPoints src/editing/codegen/index.ts --entryPoints src/route-handler/index.ts --githubPages false",
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
@@ -63,7 +63,7 @@
     "glob": "^11.0.2",
     "jsdom": "^26.1.0",
     "mocha": "^11.2.2",
-    "next": "^15.5.9",
+    "next": "^16.1.1",
     "nock": "14.0.0-beta.7",
     "nyc": "^17.1.0",
     "prettier": "^2.8.0",
@@ -79,7 +79,7 @@
     "@sitecore-content-sdk/analytics-core": "1.4.0-canary.15",
     "@sitecore-content-sdk/events": "1.4.0-canary.15",
     "@sitecore-content-sdk/personalize": "1.4.0-canary.15",
-    "next": "^15.5.9",
+    "next": "^16.1.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "typescript": "^5.4.0"
@@ -91,8 +91,8 @@
   },
   "dependencies": {
     "@babel/parser": "^7.27.2",
-    "@sitecore-content-sdk/core": "1.4.0-canary.15",
-    "@sitecore-content-sdk/react": "1.4.0-canary.15",
+    "@sitecore-content-sdk/core": "1.4.0-canary.17",
+    "@sitecore-content-sdk/react": "1.4.0-canary.17",
     "recast": "^0.23.11",
     "regex-parser": "^2.3.1",
     "sync-disk-cache": "^2.1.0"
@@ -132,6 +132,11 @@
       "import": "./dist/esm/editing/index.js",
       "require": "./dist/cjs/editing/index.js",
       "types": "./types/editing/index.d.ts"
+    },
+    "./proxy": {
+      "import": "./dist/esm/proxy/index.js",
+      "require": "./dist/cjs/proxy/index.js",
+      "types": "./types/proxy/index.d.ts"
     },
     "./middleware": {
       "import": "./dist/esm/middleware/index.js",

@@ -8,7 +8,7 @@
 
 > **ErrorPages** = `object`
 
-Defined in: packages/core/src/site/error-pages-service.ts:48
+Defined in: [packages/core/src/site/error-pages-service.ts:48](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/error-pages-service.ts#L48)
 
 Object model of Error Pages result
 
@@ -18,7 +18,7 @@ Object model of Error Pages result
 
 > **notFoundPage**: `object`
 
-Defined in: packages/core/src/site/error-pages-service.ts:49
+Defined in: [packages/core/src/site/error-pages-service.ts:49](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/error-pages-service.ts#L49)
 
 #### rendered
 
@@ -30,7 +30,7 @@ Defined in: packages/core/src/site/error-pages-service.ts:49
 
 > **notFoundPagePath**: `string`
 
-Defined in: packages/core/src/site/error-pages-service.ts:50
+Defined in: [packages/core/src/site/error-pages-service.ts:50](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/error-pages-service.ts#L50)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/core/src/site/error-pages-service.ts:50
 
 > **serverErrorPage**: `object`
 
-Defined in: packages/core/src/site/error-pages-service.ts:51
+Defined in: [packages/core/src/site/error-pages-service.ts:51](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/error-pages-service.ts#L51)
 
 #### rendered
 
@@ -50,4 +50,4 @@ Defined in: packages/core/src/site/error-pages-service.ts:51
 
 > **serverErrorPagePath**: `string`
 
-Defined in: packages/core/src/site/error-pages-service.ts:52
+Defined in: [packages/core/src/site/error-pages-service.ts:52](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/error-pages-service.ts#L52)

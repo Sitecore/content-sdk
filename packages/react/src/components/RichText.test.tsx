@@ -1,6 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
+import sinon from 'sinon';
 
 import { RichText, RichTextField } from './RichText';
 
@@ -160,6 +161,30 @@ describe('<RichText />', () => {
       const rendered = render(<RichText field={field} editable={false} />);
 
       expect(rendered.container.innerHTML).to.equal('');
+    });
+
+    it('should apply suppressHydrationWarning prop when in editing mode', () => {
+      const field = {
+        value: 'value',
+        metadata: testMetadata,
+      };
+
+      const createElementSpy = sinon.spy(React, 'createElement');
+
+      try {
+        render(<RichText field={field} />);
+
+        // Find createElement calls for 'div' with suppressHydrationWarning: true
+        const divCall = createElementSpy
+          .getCalls()
+          .find(
+            (call) => call.args[0] === 'div' && call.args[1]?.suppressHydrationWarning === true
+          );
+
+        expect(divCall !== undefined).to.equal(true);
+      } finally {
+        createElementSpy.restore();
+      }
     });
   });
 });

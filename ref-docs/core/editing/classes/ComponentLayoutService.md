@@ -6,7 +6,7 @@
 
 # Class: ComponentLayoutService
 
-Defined in: packages/core/src/editing/component-layout-service.ts:79
+Defined in: [packages/core/src/editing/component-layout-service.ts:79](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/component-layout-service.ts#L79)
 
 REST service that enables Design Library functionality.
 Returns layout data for a single rendered component.
@@ -17,7 +17,7 @@ Returns layout data for a single rendered component.
 
 > **new ComponentLayoutService**(`config`): `ComponentLayoutService`
 
-Defined in: packages/core/src/editing/component-layout-service.ts:80
+Defined in: [packages/core/src/editing/component-layout-service.ts:80](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/component-layout-service.ts#L80)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: packages/core/src/editing/component-layout-service.ts:80
 
 > **fetchComponentData**(`params`, `fetchOptions?`): `Promise`\<[`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)\>
 
-Defined in: packages/core/src/editing/component-layout-service.ts:82
+Defined in: [packages/core/src/editing/component-layout-service.ts:82](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/component-layout-service.ts#L82)
 
 #### Parameters
 
@@ -54,7 +54,7 @@ Defined in: packages/core/src/editing/component-layout-service.ts:82
 
 > `protected` **getComponentFetchParams**(`params`): `any`
 
-Defined in: packages/core/src/editing/component-layout-service.ts:125
+Defined in: [packages/core/src/editing/component-layout-service.ts:125](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/editing/component-layout-service.ts#L125)
 
 #### Parameters
 

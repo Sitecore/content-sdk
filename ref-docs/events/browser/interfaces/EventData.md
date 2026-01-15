@@ -6,7 +6,7 @@
 
 # Interface: EventData
 
-Defined in: events/src/events/custom-event/custom-event.ts:94
+Defined in: [events/src/events/custom-event/custom-event.ts:90](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/events/src/events/custom-event/custom-event.ts#L90)
 
 Interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
 
@@ -24,7 +24,7 @@ Interface with the required/optional attributes in order to send a custom event 
 
 > `optional` **channel**: `string`
 
-Defined in: events/src/events/common-interfaces.ts:9
+Defined in: [events/src/events/common-interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/events/src/events/common-interfaces.ts#L9)
 
 #### Inherited from
 
@@ -36,7 +36,7 @@ Defined in: events/src/events/common-interfaces.ts:9
 
 > `optional` **currency**: `string`
 
-Defined in: events/src/events/common-interfaces.ts:10
+Defined in: [events/src/events/common-interfaces.ts:10](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/events/src/events/common-interfaces.ts#L10)
 
 #### Inherited from
 
@@ -48,7 +48,7 @@ Defined in: events/src/events/common-interfaces.ts:10
 
 > `optional` **extensionData**: `NestedObject`
 
-Defined in: events/src/events/custom-event/custom-event.ts:97
+Defined in: [events/src/events/custom-event/custom-event.ts:93](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/events/src/events/custom-event/custom-event.ts#L93)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: events/src/events/custom-event/custom-event.ts:97
 
 > `optional` **language**: `string`
 
-Defined in: events/src/events/common-interfaces.ts:7
+Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/events/src/events/common-interfaces.ts#L7)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: events/src/events/common-interfaces.ts:7
 
 > `optional` **page**: `string`
 
-Defined in: events/src/events/common-interfaces.ts:8
+Defined in: [events/src/events/common-interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/events/src/events/common-interfaces.ts#L8)
 
 #### Inherited from
 
@@ -80,7 +80,7 @@ Defined in: events/src/events/common-interfaces.ts:8
 
 > `optional` **searchData**: `NestedObject`
 
-Defined in: events/src/events/custom-event/custom-event.ts:96
+Defined in: [events/src/events/custom-event/custom-event.ts:92](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/events/src/events/custom-event/custom-event.ts#L92)
 
 ***
 
@@ -88,4 +88,4 @@ Defined in: events/src/events/custom-event/custom-event.ts:96
 
 > **type**: `string`
 
-Defined in: events/src/events/custom-event/custom-event.ts:95
+Defined in: [events/src/events/custom-event/custom-event.ts:91](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/events/src/events/custom-event/custom-event.ts#L91)

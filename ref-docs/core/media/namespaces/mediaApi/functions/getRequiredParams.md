@@ -8,7 +8,7 @@
 
 > **getRequiredParams**(`qs`): `object`
 
-Defined in: packages/core/src/media/media-api.ts:12
+Defined in: [packages/core/src/media/media-api.ts:12](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/media/media-api.ts#L12)
 
 Get required query string params which should be merged with user params
 
