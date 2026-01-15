@@ -6,7 +6,7 @@
 
 # Interface: MiddlewareRequest
 
-Defined in: [interfaces.ts:39](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/utils/src/interfaces.ts#L39)
+Defined in: [interfaces.ts:39](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/utils/src/interfaces.ts#L39)
 
 Interface for supporting request from Edge Next.js
 includes types compatible with both NextJS versions 12 & 13
@@ -17,7 +17,7 @@ includes types compatible with both NextJS versions 12 & 13
 
 > **cookies**: `object`
 
-Defined in: [interfaces.ts:40](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/utils/src/interfaces.ts#L40)
+Defined in: [interfaces.ts:40](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/utils/src/interfaces.ts#L40)
 
 #### get()
 
@@ -43,7 +43,7 @@ Defined in: [interfaces.ts:40](https://github.com/Sitecore/content-sdk/blob/6b7c
 
 > `optional` **geo**: `object`
 
-Defined in: [interfaces.ts:52](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/utils/src/interfaces.ts#L52)
+Defined in: [interfaces.ts:52](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/utils/src/interfaces.ts#L52)
 
 #### city?
 
@@ -63,7 +63,7 @@ Defined in: [interfaces.ts:52](https://github.com/Sitecore/content-sdk/blob/6b7c
 
 > **headers**: `object`
 
-Defined in: [interfaces.ts:48](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/utils/src/interfaces.ts#L48)
+Defined in: [interfaces.ts:48](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/utils/src/interfaces.ts#L48)
 
 #### get()
 
@@ -85,4 +85,4 @@ Defined in: [interfaces.ts:48](https://github.com/Sitecore/content-sdk/blob/6b7c
 
 > `optional` **url**: `string`
 
-Defined in: [interfaces.ts:51](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/utils/src/interfaces.ts#L51)
+Defined in: [interfaces.ts:51](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/utils/src/interfaces.ts#L51)
