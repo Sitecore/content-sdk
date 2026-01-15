@@ -1,5 +1,5 @@
 export { debug } from '@sitecore-content-sdk/core';
-export { ProxyBase, ProxyBaseConfig, Proxy, defineProxy } from './proxy';
+export { ProxyBase, ProxyBaseConfig, ProxyHandler, defineProxy } from './proxy';
 export { RedirectsProxy, RedirectsProxyConfig } from './redirects-proxy';
 export { PersonalizeProxy, PersonalizeProxyConfig } from './personalize-proxy';
 export { MultisiteProxy, MultisiteProxyConfig } from './multisite-proxy';

@@ -5,7 +5,7 @@ import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
-import { defineProxy, Proxy, ProxyBase, REWRITE_HEADER_NAME } from './proxy';
+import { defineProxy, ProxyHandler, ProxyBase, REWRITE_HEADER_NAME } from './proxy';
 import { NextRequest, NextResponse } from 'next/server';
 import { SiteResolver } from '../site';
 
@@ -597,13 +597,13 @@ describe('defineProxy', () => {
     const proxy1 = new SampleProxy({
       sites: [],
     });
-    const proxy2: Proxy = {
+    const proxy2: ProxyHandler = {
       handle: (_req, res) => {
         (res as CustomResponse).params.push('m2');
         return Promise.resolve(res);
       },
     };
-    const proxy3: Proxy = {
+    const proxy3: ProxyHandler = {
       handle: (_req, res) => {
         (res as CustomResponse).params.push('m3');
         return Promise.resolve(res);
@@ -632,13 +632,13 @@ describe('defineProxy', () => {
     }
 
     const proxy1 = new SampleProxy({ sites: [] });
-    const proxy2: Proxy = {
+    const proxy2: ProxyHandler = {
       handle: (_req, res) => {
         res.headers.set('m2', 'true');
         return Promise.resolve(res);
       },
     };
-    const proxy3: Proxy = {
+    const proxy3: ProxyHandler = {
       handle: (_req, res) => {
         res.headers.set('m3', 'true');
         return Promise.resolve(res);
@@ -664,7 +664,7 @@ describe('defineProxy', () => {
     }
 
     const proxy1 = new SampleProxy({ sites: [] });
-    const proxy2: Proxy = {
+    const proxy2: ProxyHandler = {
       handle: (_req, res) => {
         res.headers.set('m2', 'true');
         return Promise.resolve(res);

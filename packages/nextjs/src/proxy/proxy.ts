@@ -38,10 +38,10 @@ export type ProxyBaseConfig = {
 };
 
 /**
- * Proxy class to be extended by all proxy implementations
+ * Proxy handler class to be extended by all proxy implementations
  * @public
  */
-export abstract class Proxy {
+export abstract class ProxyHandler {
   /**
    * Handler method to execute proxy logic
    * @param {NextRequest} req request
@@ -54,7 +54,7 @@ export abstract class Proxy {
  * Base proxy class with common methods
  * @public
  */
-export abstract class ProxyBase extends Proxy {
+export abstract class ProxyBase extends ProxyHandler {
   protected defaultHostname: string;
   protected siteResolver: SiteResolver;
 
@@ -227,11 +227,11 @@ export abstract class ProxyBase extends Proxy {
 }
 
 /**
- * Define a proxy with a list of proxies
- * @param {Proxy[]} proxies List of proxies to execute
+ * Define a proxy with a list of proxy handlers
+ * @param {ProxyHandler[]} proxies List of proxy handlers to execute
  * @public
  */
-export const defineProxy = (...proxies: Proxy[]) => {
+export const defineProxy = (...proxies: ProxyHandler[]) => {
   return {
     /**
      * Execute all proxies

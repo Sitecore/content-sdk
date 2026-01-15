@@ -338,7 +338,7 @@ export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCli
 export const defineConfig: (config?: SitecoreConfigInput) => SitecoreConfig;
 
 // @public
-export const defineProxy: (...proxies: Proxy_2[]) => {
+export const defineProxy: (...proxies: ProxyHandler_2[]) => {
     exec: (req: NextRequest, res?: NextResponse) => Promise<NextResponse<unknown>>;
 };
 
@@ -711,13 +711,7 @@ export { PlaceholdersData }
 export { PluginDefinition }
 
 // @public
-abstract class Proxy_2 {
-    abstract handle(req: NextRequest, res: NextResponse): Promise<NextResponse>;
-}
-export { Proxy_2 as Proxy }
-
-// @public
-export abstract class ProxyBase extends Proxy_2 {
+export abstract class ProxyBase extends ProxyHandler_2 {
     constructor(config: ProxyBaseConfig);
     // (undocumented)
     protected config: ProxyBaseConfig;
@@ -749,6 +743,12 @@ export type ProxyBaseConfig = {
     defaultLanguage?: string;
     sites: SiteInfo[];
 };
+
+// @public
+abstract class ProxyHandler_2 {
+    abstract handle(req: NextRequest, res: NextResponse): Promise<NextResponse>;
+}
+export { ProxyHandler_2 as ProxyHandler }
 
 export { REDIRECT_TYPE_301 }
 
