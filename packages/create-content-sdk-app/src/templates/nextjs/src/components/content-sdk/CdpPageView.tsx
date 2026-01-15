@@ -1,14 +1,13 @@
 ﻿import { CdpHelper, useSitecore } from '@sitecore-content-sdk/nextjs';
 import { useEffect } from 'react';
-import { pageView } from '@sitecore-cloudsdk/events/browser';
+import { pageView } from '@sitecore-content-sdk/events/browser';
 import config from 'sitecore.config';
 import { JSX } from 'react';
 
 /**
  * This is the CDP page view component.
- * It uses the Sitecore Cloud SDK to enable page view events on the client-side.
- * See Sitecore Cloud SDK documentation for details.
- * https://www.npmjs.com/package/@sitecore-cloudsdk/events
+ * See Sitecore Content SDK documentation for details.
+ * https://www.npmjs.com/package/@sitecore-content-sdk/events
  */
 const CdpPageView = (): JSX.Element => {
   const {
@@ -51,7 +50,7 @@ const CdpPageView = (): JSX.Element => {
       page: route.name,
       pageVariantId,
       language,
-    }).catch(e => console.debug(e));
+    }).catch((e) => console.debug(e));
   }, [mode, route, context.variantId, siteName]);
 
   return <></>;

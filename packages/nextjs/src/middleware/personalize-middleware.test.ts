@@ -22,7 +22,7 @@ describe('PersonalizeMiddleware', () => {
   });
 
   const { PersonalizeMiddleware } = proxyquire('./personalize-middleware', {
-    '@sitecore-cloudsdk/personalize/server': { personalize: CDKPersonalizeStub },
+    '@sitecore-content-sdk/personalize/server': { personalize: CDKPersonalizeStub },
   });
 
   const ua = 'user-agent-string';

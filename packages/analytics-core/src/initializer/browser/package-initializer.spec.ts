@@ -8,7 +8,7 @@ describe('PackageInitializer', () => {
   beforeEach(() => {
     pkgContext = {
       settings: { someSetting: 'someValue' },
-      sideEffects: jest.fn().mockResolvedValue(undefined)
+      sideEffects: jest.fn().mockResolvedValue(undefined),
     };
   });
 
@@ -17,7 +17,7 @@ describe('PackageInitializer', () => {
   });
 
   it('should throw error if has uninitialized dependencies', () => {
-    pkgContext.dependencies = [{ method: 'addEvents', name: '@sitecore-cloudsdk/events' }];
+    pkgContext.dependencies = [{ method: 'addEvents', name: '@sitecore-content-sdk/events' }];
 
     jest.spyOn(initializerModule, 'getEnabledPackage').mockReturnValue(undefined);
 
@@ -25,7 +25,7 @@ describe('PackageInitializer', () => {
 
     expect(() => initializer.exec()).toThrow(
       // eslint-disable-next-line max-len
-      '[IE-0020] - This functionality also requires the "events" package. Import "@sitecore-cloudsdk/events/browser", then run ".addEvents()" on "CloudSDK", before ".initialize()"'
+      '[IE-0020] - This functionality also requires the "events" package. Import "@sitecore-content-sdk/events/browser", then run ".addEvents()" on "CloudSDK", before ".initialize()"'
     );
   });
   it('should not throw error if has valid dependencies', () => {
@@ -37,7 +37,9 @@ describe('PackageInitializer', () => {
 
     const initializer = new PackageInitializer(pkgContext);
 
-    expect(() => initializer.exec()).not.toThrow('You must first initialize package. Call init on CloudSDK.');
+    expect(() => initializer.exec()).not.toThrow(
+      'You must first initialize package. Call init on CloudSDK.'
+    );
   });
 
   it('should await all dependencies', async () => {
@@ -52,7 +54,7 @@ describe('PackageInitializer', () => {
 
     const packageInitializer = new PackageInitializer({
       dependencies: [{ method: 'test', name: 'test' }],
-      sideEffects: jest.fn()
+      sideEffects: jest.fn(),
     });
 
     packageInitializer.exec();

@@ -271,7 +271,7 @@ describe('initializer browser', () => {
       );
     });
 
-    it(`should NOT call 'debug' third-party lib with 'sitecore-cloudsdk:core' as a namespace 
+    it(`should NOT call 'debug' third-party lib with 'content-sdk:analytics-core' as a namespace 
       when there are enabledPackages`, async () => {
       const debugMock = debug as unknown as jest.Mock;
       const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}123`;

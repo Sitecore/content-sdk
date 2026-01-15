@@ -8,7 +8,7 @@ describe('PackageInitializerServer', () => {
   beforeEach(() => {
     pkgContext = {
       settings: { someSetting: 'someValue' },
-      sideEffects: jest.fn().mockResolvedValue(undefined)
+      sideEffects: jest.fn().mockResolvedValue(undefined),
     };
   });
 
@@ -17,7 +17,7 @@ describe('PackageInitializerServer', () => {
   });
 
   it('should throw error if has uninitialized dependencies', async () => {
-    pkgContext.dependencies = [{ method: 'addEvents', name: '@sitecore-cloudsdk/events' }];
+    pkgContext.dependencies = [{ method: 'addEvents', name: '@sitecore-content-sdk/events' }];
 
     jest.spyOn(initializerModule, 'getEnabledPackage').mockReturnValue(undefined);
 
@@ -25,7 +25,7 @@ describe('PackageInitializerServer', () => {
 
     await expect(async () => await initializer.exec()).rejects.toThrow(
       // eslint-disable-next-line max-len
-      '[IE-0021] - This functionality also requires the "events" package. Import "@sitecore-cloudsdk/events/server", then run ".addEvents()" on "CloudSDK", before ".initialize()"'
+      '[IE-0021] - This functionality also requires the "events" package. Import "@sitecore-content-sdk/events/server", then run ".addEvents()" on "CloudSDK", before ".initialize()"'
     );
   });
 

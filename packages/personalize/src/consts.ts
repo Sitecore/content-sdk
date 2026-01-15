@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import packageJson from '../package.json';
 
-export const PERSONALIZE_NAMESPACE = 'sitecore-content-sdk:personalize' as const;
+export const PERSONALIZE_NAMESPACE = 'content-sdk:personalize' as const;
 export const PACKAGE_VERSION = packageJson.version;
 export const PACKAGE_NAME = packageJson.name;
 export const UTM_PREFIX = 'utm_';

@@ -1,1 +1,1 @@
-export const CORE_NAMESPACE = 'sitecore-cloudsdk:core';
+export const CORE_NAMESPACE = 'content-sdk:analytics-core';

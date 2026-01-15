@@ -6,6 +6,6 @@
 
 # Variable: PERSONALIZE\_NAMESPACE
 
-> `const` **PERSONALIZE\_NAMESPACE**: `"sitecore-content-sdk:personalize"`
+> `const` **PERSONALIZE\_NAMESPACE**: `"content-sdk:personalize"`
 
 Defined in: consts.ts:4

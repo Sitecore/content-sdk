@@ -55,7 +55,7 @@ export class PackageInitializer {
   private validatePackages() {
     const validatedPackages: PackageInitializer[] = [];
     this._dependencies.forEach((dependency) => {
-      // The package name is the name found in each package's package.json file e.g. @sitecore-cloudsdk/core"
+      // The package name is the name found in each package's package.json file e.g. @sitecore-content-sdk/analytics-core"
       const depName = dependency.name.split('/')[1];
       const pkg = getEnabledPackage(dependency.name);
 

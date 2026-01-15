@@ -5,15 +5,15 @@ This package is for initializing the Cloud SDK and its other packages in your ap
 ## Installation
 
 ```bash
-npm install @sitecore-cloudsdk/core
+npm install @sitecore-content-sdk/analytics-core
 ```
 
 To initialize other Cloud SDK packages, first install them:
 
 ```bash
-npm install @sitecore-cloudsdk/events
-npm install @sitecore-cloudsdk/personalize
-npm install @sitecore-cloudsdk/search
+npm install @sitecore-content-sdk/events
+npm install @sitecore-content-sdk/personalize
+npm install @sitecore-content-sdk/search
 ```
 
 ## Usage
@@ -29,9 +29,9 @@ Initialize the Cloud SDK and its packages on the browser side:
 'use client';
 
 import { useEffect } from 'react';
-import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
-import '@sitecore-cloudsdk/events/browser';
-import '@sitecore-cloudsdk/personalize/browser';
+import { CloudSDK } from '@sitecore-content-sdk/analytics-core/browser';
+import '@sitecore-content-sdk/events/browser';
+import '@sitecore-content-sdk/personalize/browser';
 
 export default function Home() {
   useEffect(() => {
@@ -57,9 +57,9 @@ Initialize the Cloud SDK and its packages on the server side:
 
 ```ts
 import type { NextRequest, NextResponse } from 'next/server';
-import { CloudSDK } from '@sitecore-cloudsdk/core/server';
-import '@sitecore-cloudsdk/events/server';
-import '@sitecore-cloudsdk/personalize/server';
+import { CloudSDK } from '@sitecore-content-sdk/analytics-core/server';
+import '@sitecore-content-sdk/events/server';
+import '@sitecore-content-sdk/personalize/server';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
