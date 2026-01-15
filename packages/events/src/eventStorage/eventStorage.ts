@@ -1,4 +1,4 @@
-import { language, pageName } from '@sitecore-content-sdk/__core__/internal';
+import { language, pageName } from '@sitecore-content-sdk/analytics-core/internal';
 import { CustomEvent } from '../events';
 import type { CustomEventArguments } from '../events';
 import { sendEvent } from '../events/send-event/sendEvent';

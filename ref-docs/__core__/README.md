@@ -1,8 +1,8 @@
-**@sitecore-content-sdk/__core__**
+**@sitecore-content-sdk/analytics-core**
 
 ***
 
-# @sitecore-content-sdk/__core__
+# @sitecore-content-sdk/analytics-core
 
 ## Modules
 

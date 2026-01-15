@@ -2,8 +2,8 @@ import {
   getCloudSDKSettingsServer,
   getCookieValueFromRequest,
   getEnabledPackageServer,
-} from '@sitecore-content-sdk/__core__/internal';
-import type { Settings as CloudSDKSettings } from '@sitecore-content-sdk/__core__/server';
+} from '@sitecore-content-sdk/analytics-core/internal';
+import type { Settings as CloudSDKSettings } from '@sitecore-content-sdk/analytics-core/server';
 import type { Request } from '@sitecore-content-sdk/utils';
 import { isNextJsMiddlewareRequest } from '@sitecore-content-sdk/utils';
 import { PACKAGE_NAME } from '../consts';

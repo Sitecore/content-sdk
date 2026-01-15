@@ -1,4 +1,4 @@
-import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-content-sdk/__core__/internal';
+import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-content-sdk/analytics-core/internal';
 import { getCookieValueClientSide } from '@sitecore-content-sdk/utils';
 import type { EventData } from '../events';
 import { awaitInit } from '../initializer/browser/initializer';

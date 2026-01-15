@@ -1,7 +1,7 @@
 import {
   getCloudSDKSettingsBrowser as getCloudSDKSettings,
   getEnabledPackageBrowser as getEnabledPackage,
-} from '@sitecore-content-sdk/__core__/internal';
+} from '@sitecore-content-sdk/analytics-core/internal';
 import { getCookieValueClientSide } from '@sitecore-content-sdk/utils';
 import { PACKAGE_NAME } from '../consts';
 import { awaitInit } from '../initializer/browser/initializer';

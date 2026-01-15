@@ -1,4 +1,4 @@
-import * as core from '@sitecore-content-sdk/__core__/internal';
+import * as core from '@sitecore-content-sdk/analytics-core/internal';
 import { ErrorMessages, EVENTS_NAMESPACE, PACKAGE_VERSION } from '../../consts';
 import { addEvents, awaitInit, sideEffects } from './initializer';
 import * as initModule from './initializer';
@@ -14,8 +14,10 @@ jest.mock('@sitecore-content-sdk/utils', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
   };
 });
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule: object = jest.requireActual(
+    '@sitecore-content-sdk/analytics-core/internal'
+  );
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

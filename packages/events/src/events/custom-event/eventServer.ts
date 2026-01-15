@@ -1,8 +1,8 @@
-import type { EPResponse } from '@sitecore-content-sdk/__core__/internal';
+import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import {
   getCloudSDKSettingsServer,
   getCookieValueFromRequest,
-} from '@sitecore-content-sdk/__core__/internal';
+} from '@sitecore-content-sdk/analytics-core/internal';
 import type { Request } from '@sitecore-content-sdk/utils';
 import { verifyEventsPackageExistence } from '../../initializer/server/initializer';
 import { sendEvent } from '../send-event/sendEvent';

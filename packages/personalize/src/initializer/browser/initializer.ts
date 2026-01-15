@@ -1,4 +1,4 @@
-import { CloudSDKBrowserInitializer } from '@sitecore-content-sdk/__core__/browser';
+import { CloudSDKBrowserInitializer } from '@sitecore-content-sdk/analytics-core/browser';
 import {
   COOKIE_NAME_PREFIX,
   debug,
@@ -8,7 +8,7 @@ import {
   type PackageContextDependencyBrowser,
   PackageInitializer,
   BROWSER_ID_COOKIE_NAME,
-} from '@sitecore-content-sdk/__core__/internal';
+} from '@sitecore-content-sdk/analytics-core/internal';
 import {
   PACKAGE_NAME as EVENTS_PACKAGE_NAME,
   PACKAGE_INITIALIZER_METHOD_NAME,
@@ -106,7 +106,7 @@ export function addPersonalize(
 
 CloudSDKBrowserInitializer.prototype.addPersonalize = addPersonalize;
 
-declare module '@sitecore-content-sdk/__core__/browser' {
+declare module '@sitecore-content-sdk/analytics-core/browser' {
   // eslint-disable-next-line no-unused-vars
   interface CloudSDKBrowserInitializer {
     addPersonalize: typeof addPersonalize;

@@ -1,4 +1,4 @@
-import * as core from '@sitecore-content-sdk/__core__/internal';
+import * as core from '@sitecore-content-sdk/analytics-core/internal';
 import * as utilsModule from '@sitecore-content-sdk/utils';
 import { ErrorMessages } from '../../consts';
 import * as initializerModule from '../../initializer/browser/initializer';
@@ -7,8 +7,8 @@ import { pageView } from './page-view';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -16,8 +16,8 @@ jest.mock('@sitecore-content-sdk/__core__/internal', () => {
     ...originalModule,
   };
 });
-jest.mock('@sitecore-content-sdk/__core__/browser', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/__core__/browser');
+jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/browser');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -1,5 +1,5 @@
-import * as internal from '@sitecore-content-sdk/__core__/internal';
-import { PackageInitializer } from '@sitecore-content-sdk/__core__/internal';
+import * as internal from '@sitecore-content-sdk/analytics-core/internal';
+import { PackageInitializer } from '@sitecore-content-sdk/analytics-core/internal';
 import * as utilsModule from '@sitecore-content-sdk/utils';
 import { ErrorMessages, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 import * as getCdnUrl from '../../web-personalization/get-cdn-url';
@@ -15,8 +15,10 @@ jest.mock('@sitecore-content-sdk/utils', () => {
     ...originalModule,
   };
 });
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule: object = jest.requireActual(
+    '@sitecore-content-sdk/analytics-core/internal'
+  );
 
   return {
     __esModule: true,

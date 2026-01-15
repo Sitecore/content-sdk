@@ -1,4 +1,4 @@
-import type * as core from '@sitecore-content-sdk/__core__/internal';
+import type * as core from '@sitecore-content-sdk/analytics-core/internal';
 import * as utils from '@sitecore-content-sdk/utils';
 import { ErrorMessages } from '../../consts';
 import { BaseEvent } from '../base-event';
@@ -17,8 +17,10 @@ jest.mock('@sitecore-content-sdk/utils', () => {
     ...originalModule,
   };
 });
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule: object = jest.requireActual(
+    '@sitecore-content-sdk/analytics-core/internal'
+  );
 
   return {
     __esModule: true,

@@ -3,8 +3,8 @@ import {
   getCookieValueFromMiddlewareRequest,
   getDefaultCookieAttributes,
   getGuestIdServer,
-} from '@sitecore-content-sdk/__core__/internal';
-import type { Settings } from '@sitecore-content-sdk/__core__/server';
+} from '@sitecore-content-sdk/analytics-core/internal';
+import type { Settings } from '@sitecore-content-sdk/analytics-core/server';
 import type {
   MiddlewareNextResponse,
   MiddlewareRequest,

@@ -1,5 +1,5 @@
-import type { Settings } from '@sitecore-content-sdk/__core__/internal';
-import { language } from '@sitecore-content-sdk/__core__/internal';
+import type { Settings } from '@sitecore-content-sdk/analytics-core/internal';
+import { language } from '@sitecore-content-sdk/analytics-core/internal';
 import type { NestedObject } from '@sitecore-content-sdk/utils';
 import { ErrorMessages, UTM_PREFIX } from '../consts';
 import type { EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';

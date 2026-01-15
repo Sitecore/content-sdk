@@ -1,5 +1,5 @@
-import * as coreBrowserModule from '@sitecore-content-sdk/__core__/browser';
-import * as core from '@sitecore-content-sdk/__core__/internal';
+import * as coreBrowserModule from '@sitecore-content-sdk/analytics-core/browser';
+import * as core from '@sitecore-content-sdk/analytics-core/internal';
 import { ErrorMessages as UtilsErrorMessages } from '@sitecore-content-sdk/utils';
 import { ErrorMessages, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import type { PersonalizeData, PersonalizeIdentifierInput } from './personalizer';
@@ -7,8 +7,10 @@ import { Personalizer } from './personalizer';
 import * as CallFlowsRequest from './send-call-flows-request';
 import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule: object = jest.requireActual(
+    '@sitecore-content-sdk/analytics-core/internal'
+  );
 
   return {
     __esModule: true,
@@ -18,8 +20,8 @@ jest.mock('@sitecore-content-sdk/__core__/internal', () => {
   };
 });
 
-jest.mock('@sitecore-content-sdk/__core__/browser', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/browser');
+jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
+  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/browser');
 
   return {
     __esModule: true,

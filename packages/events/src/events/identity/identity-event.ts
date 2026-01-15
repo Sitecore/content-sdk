@@ -1,4 +1,4 @@
-import type { EPResponse, Infer, Settings } from '@sitecore-content-sdk/__core__/internal';
+import type { EPResponse, Infer, Settings } from '@sitecore-content-sdk/analytics-core/internal';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import { flattenObject, isShortISODateString, isValidEmail } from '@sitecore-content-sdk/utils';
 import { BaseEvent } from '../base-event';

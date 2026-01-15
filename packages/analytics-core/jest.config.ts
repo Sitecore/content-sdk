@@ -1,7 +1,7 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-  displayName: '__core__',
+  displayName: 'analytics-core',
   preset: 'ts-jest',
   transform: {
     '^.+\\.ts$': [

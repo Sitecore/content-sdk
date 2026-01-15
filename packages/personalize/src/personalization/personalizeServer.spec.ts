@@ -1,4 +1,4 @@
-import * as coreInternalModule from '@sitecore-content-sdk/__core__/internal';
+import * as coreInternalModule from '@sitecore-content-sdk/analytics-core/internal';
 import type { MiddlewareRequest } from '@sitecore-content-sdk/utils';
 import { ErrorMessages } from '../consts';
 import type { PersonalizeData } from './personalizer';
@@ -7,8 +7,8 @@ import { personalizeServer } from './personalizeServer';
 
 jest.mock('./personalizer');
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/internal');
 
   return {
     __esModule: true,
@@ -18,8 +18,8 @@ jest.mock('@sitecore-content-sdk/__core__/internal', () => {
   };
 });
 
-jest.mock('@sitecore-content-sdk/__core__/server', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/__core__/server');
+jest.mock('@sitecore-content-sdk/analytics-core/server', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/server');
 
   return {
     __esModule: true,

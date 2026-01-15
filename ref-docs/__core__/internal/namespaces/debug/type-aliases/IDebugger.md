@@ -1,8 +1,8 @@
-[**@sitecore-content-sdk/__core__**](../../../../README.md)
+[**@sitecore-content-sdk/analytics-core**](../../../../README.md)
 
 ***
 
-[@sitecore-content-sdk/__core__](../../../../README.md) / [internal](../../../README.md) / [debug](../README.md) / IDebugger
+[@sitecore-content-sdk/analytics-core](../../../../README.md) / [internal](../../../README.md) / [debug](../README.md) / IDebugger
 
 # Type Alias: IDebugger
 

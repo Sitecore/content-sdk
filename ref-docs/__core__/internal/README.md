@@ -1,8 +1,8 @@
-[**@sitecore-content-sdk/__core__**](../README.md)
+[**@sitecore-content-sdk/analytics-core**](../README.md)
 
 ***
 
-[@sitecore-content-sdk/__core__](../README.md) / internal
+[@sitecore-content-sdk/analytics-core](../README.md) / internal
 
 # internal
 

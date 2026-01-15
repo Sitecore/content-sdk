@@ -1,14 +1,14 @@
-[**@sitecore-content-sdk/__core__**](../../README.md)
+[**@sitecore-content-sdk/analytics-core**](../../README.md)
 
 ***
 
-[@sitecore-content-sdk/__core__](../../README.md) / [internal](../README.md) / getDefaultCookieAttributes
+[@sitecore-content-sdk/analytics-core](../../README.md) / [internal](../README.md) / getDefaultCookieAttributes
 
 # Function: getDefaultCookieAttributes()
 
 > **getDefaultCookieAttributes**(`maxAge?`, `cookieDomain?`): `CookieProperties`
 
-Defined in: [src/cookie/get-default-cookie-attributes.ts:10](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/__core__/src/cookie/get-default-cookie-attributes.ts#L10)
+Defined in: [src/cookie/get-default-cookie-attributes.ts:10](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/analytics-core/src/cookie/get-default-cookie-attributes.ts#L10)
 
 Gets the default cookie attributes.
 

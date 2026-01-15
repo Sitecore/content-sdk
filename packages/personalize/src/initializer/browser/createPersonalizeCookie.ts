@@ -1,8 +1,8 @@
-import { getGuestId, type Settings } from '@sitecore-content-sdk/__core__/browser';
+import { getGuestId, type Settings } from '@sitecore-content-sdk/analytics-core/browser';
 import {
   getCookiesValuesFromEdgeBrowser,
   getDefaultCookieAttributes,
-} from '@sitecore-content-sdk/__core__/internal';
+} from '@sitecore-content-sdk/analytics-core/internal';
 import { createCookieString, getCookieValueClientSide } from '@sitecore-content-sdk/utils';
 import type { PersonalizeSettings } from './interfaces';
 

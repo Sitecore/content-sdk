@@ -1,12 +1,12 @@
-[**@sitecore-content-sdk/__core__**](../../README.md)
+[**@sitecore-content-sdk/analytics-core**](../../README.md)
 
 ***
 
-[@sitecore-content-sdk/__core__](../../README.md) / [server](../README.md) / CloudSDKServerInitializer
+[@sitecore-content-sdk/analytics-core](../../README.md) / [server](../README.md) / CloudSDKServerInitializer
 
 # Class: CloudSDKServerInitializer
 
-Defined in: [src/initializer/server/initializer.ts:39](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/__core__/src/initializer/server/initializer.ts#L39)
+Defined in: [src/initializer/server/initializer.ts:39](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/analytics-core/src/initializer/server/initializer.ts#L39)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [src/initializer/server/initializer.ts:39](https://github.com/Siteco
 
 > **new CloudSDKServerInitializer**(`request`, `response`, `settings`): `CloudSDKServerInitializer`
 
-Defined in: [src/initializer/server/initializer.ts:52](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/__core__/src/initializer/server/initializer.ts#L52)
+Defined in: [src/initializer/server/initializer.ts:52](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/analytics-core/src/initializer/server/initializer.ts#L52)
 
 Runs the initialization logic. Enables packages and creates cookies for CloudSDK.
 
@@ -48,7 +48,7 @@ ErrorMessages.IV_0001
 
 > **initialize**(): `Promise`\<`void`\>
 
-Defined in: [src/initializer/server/initializer.ts:63](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/__core__/src/initializer/server/initializer.ts#L63)
+Defined in: [src/initializer/server/initializer.ts:63](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/analytics-core/src/initializer/server/initializer.ts#L63)
 
 Runs the initialization logic. Enables packages and create cookies for CloudSDK.
 

@@ -1,14 +1,14 @@
-[**@sitecore-content-sdk/__core__**](../../README.md)
+[**@sitecore-content-sdk/analytics-core**](../../README.md)
 
 ***
 
-[@sitecore-content-sdk/__core__](../../README.md) / [server](../README.md) / CloudSDK
+[@sitecore-content-sdk/analytics-core](../../README.md) / [server](../README.md) / CloudSDK
 
 # Function: CloudSDK()
 
 > **CloudSDK**(`request`, `response`, `settings`): [`CloudSDKServerInitializer`](../classes/CloudSDKServerInitializer.md)
 
-Defined in: [src/initializer/server/initializer.ts:259](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/__core__/src/initializer/server/initializer.ts#L259)
+Defined in: [src/initializer/server/initializer.ts:259](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/analytics-core/src/initializer/server/initializer.ts#L259)
 
 Runs the initialization logic. Enables packages and creates cookies for CloudSDK.
 

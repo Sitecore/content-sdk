@@ -1,4 +1,4 @@
-import type { Settings } from '@sitecore-content-sdk/__core__/server';
+import type { Settings } from '@sitecore-content-sdk/analytics-core/server';
 import {
   isHttpRequest,
   isHttpResponse,
