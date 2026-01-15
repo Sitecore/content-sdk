@@ -58,5 +58,5 @@
     "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/utils --entryPoints src/index.ts --githubPages false"
   },
   "types": "types/index.d.ts",
-  "version": "1.4.0-canary.16"
+  "version": "1.4.0-canary.17"
 }
