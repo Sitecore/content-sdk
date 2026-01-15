@@ -14,9 +14,7 @@
     "api-extractor:verify": "lerna run api-extractor:verify",
     "version": "yarn install && git stage yarn.lock",
     "changeset": "changeset",
-    "changeset:cascade-version": "tsx ./scripts/changesets/cascade-version.ts",
-    "prep-release": "yarn changeset:cascade-version && node scripts/fix-dependency-ranges.js && yarn install",
-    "publish-release": "changeset tag && lerna publish from-package --yes && git push --follow-tags"
+    "changeset:cascade-version": "tsx ./scripts/changesets/cascade-version.ts"
   },
   "author": {
     "name": "Sitecore Corporation",
