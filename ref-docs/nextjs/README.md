@@ -12,6 +12,7 @@
 - [index](index/README.md)
 - [middleware](middleware/README.md)
 - [monitoring](monitoring/README.md)
+- [proxy](proxy/README.md)
 - [route-handler](route-handler/README.md)
 - [site](site/README.md)
 - [tools](tools/README.md)

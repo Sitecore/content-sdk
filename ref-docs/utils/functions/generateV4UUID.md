@@ -8,7 +8,7 @@
 
 > **generateV4UUID**(): `string`
 
-Defined in: [generators/generate-v4-uuid.ts:5](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/utils/src/generators/generate-v4-uuid.ts#L5)
+Defined in: [generators/generate-v4-uuid.ts:5](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/utils/src/generators/generate-v4-uuid.ts#L5)
 
 Generates a v4 UUID string using the global crypto API.
 

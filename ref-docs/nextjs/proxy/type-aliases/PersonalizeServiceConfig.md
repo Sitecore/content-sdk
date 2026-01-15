@@ -2,7 +2,7 @@
 
 ***
 
-[@sitecore-content-sdk/nextjs](../../README.md) / [middleware](../README.md) / PersonalizeServiceConfig
+[@sitecore-content-sdk/nextjs](../../README.md) / [proxy](../README.md) / PersonalizeServiceConfig
 
 # Type Alias: PersonalizeServiceConfig
 

@@ -2,53 +2,53 @@
 
 ***
 
-[@sitecore-content-sdk/nextjs](../../README.md) / [middleware](../README.md) / PersonalizeMiddleware
+[@sitecore-content-sdk/nextjs](../../README.md) / [proxy](../README.md) / PersonalizeProxy
 
-# Class: PersonalizeMiddleware
+# Class: PersonalizeProxy
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:62](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/personalize-middleware.ts#L62)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:62](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/personalize-proxy.ts#L62)
 
-Middleware / handler to support Sitecore Personalize
+Proxy / handler to support Sitecore Personalize
 
 ## Extends
 
-- [`MiddlewareBase`](MiddlewareBase.md)
+- [`ProxyBase`](ProxyBase.md)
 
 ## Constructors
 
 ### Constructor
 
-> **new PersonalizeMiddleware**(`config?`): `PersonalizeMiddleware`
+> **new PersonalizeProxy**(`config?`): `PersonalizeProxy`
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:68](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/personalize-middleware.ts#L68)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:68](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/personalize-proxy.ts#L68)
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `config?` | [`PersonalizeMiddlewareConfig`](../type-aliases/PersonalizeMiddlewareConfig.md) | Personalize middleware config |
+| `config?` | [`PersonalizeProxyConfig`](../type-aliases/PersonalizeProxyConfig.md) | Personalize proxy config |
 
 #### Returns
 
-`PersonalizeMiddleware`
+`PersonalizeProxy`
 
 #### Overrides
 
-[`MiddlewareBase`](MiddlewareBase.md).[`constructor`](MiddlewareBase.md#constructor)
+[`ProxyBase`](ProxyBase.md).[`constructor`](ProxyBase.md#constructor)
 
 ## Properties
 
 ### config
 
-> `protected` **config**: [`PersonalizeMiddlewareConfig`](../type-aliases/PersonalizeMiddlewareConfig.md)
+> `protected` **config**: [`PersonalizeProxyConfig`](../type-aliases/PersonalizeProxyConfig.md)
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:68](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/personalize-middleware.ts#L68)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:68](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/personalize-proxy.ts#L68)
 
-Personalize middleware config
+Personalize proxy config
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`config`](MiddlewareBase.md#config)
+[`ProxyBase`](ProxyBase.md).[`config`](ProxyBase.md#config)
 
 ***
 
@@ -56,11 +56,11 @@ Personalize middleware config
 
 > `protected` **defaultHostname**: `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:59](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L59)
+Defined in: [nextjs/src/proxy/proxy.ts:58](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L58)
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`defaultHostname`](MiddlewareBase.md#defaulthostname)
+[`ProxyBase`](ProxyBase.md).[`defaultHostname`](ProxyBase.md#defaulthostname)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:59](https://github.com/Sitecore
 
 > `protected` **personalizeService**: [`PersonalizeService`](../../index/classes/PersonalizeService.md) \| `null`
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:63](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/personalize-middleware.ts#L63)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:63](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/personalize-proxy.ts#L63)
 
 ***
 
@@ -76,11 +76,11 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:63](https://github.
 
 > `protected` **siteResolver**: [`SiteResolver`](../../index/classes/SiteResolver.md)
 
-Defined in: [nextjs/src/middleware/middleware.ts:60](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L60)
+Defined in: [nextjs/src/proxy/proxy.ts:59](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L59)
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`siteResolver`](MiddlewareBase.md#siteresolver)
+[`ProxyBase`](ProxyBase.md).[`siteResolver`](ProxyBase.md#siteresolver)
 
 ## Methods
 
@@ -88,7 +88,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:60](https://github.com/Sitecore
 
 > `protected` **disabled**(`req`, `res`): `boolean` \| `undefined`
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:238](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/personalize-middleware.ts#L238)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:238](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/personalize-proxy.ts#L238)
 
 #### Parameters
 
@@ -103,7 +103,7 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:238](https://github
 
 #### Overrides
 
-[`MiddlewareBase`](MiddlewareBase.md).[`disabled`](MiddlewareBase.md#disabled)
+[`ProxyBase`](ProxyBase.md).[`disabled`](ProxyBase.md#disabled)
 
 ***
 
@@ -111,10 +111,10 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:238](https://github
 
 > `protected` **extractDebugHeaders**(`incomingHeaders`): `object`
 
-Defined in: [nextjs/src/middleware/middleware.ts:130](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L130)
+Defined in: [nextjs/src/proxy/proxy.ts:129](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L129)
 
 Safely extract all headers for debug logging
-Necessary to avoid middleware issue https://github.com/vercel/next.js/issues/39765
+Necessary to avoid proxy issue https://github.com/vercel/next.js/issues/39765
 
 #### Parameters
 
@@ -130,7 +130,7 @@ Object with headers as key/value pairs
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`extractDebugHeaders`](MiddlewareBase.md#extractdebugheaders)
+[`ProxyBase`](ProxyBase.md).[`extractDebugHeaders`](ProxyBase.md#extractdebugheaders)
 
 ***
 
@@ -138,7 +138,7 @@ Object with headers as key/value pairs
 
 > `protected` **getClientFactory**(`graphQLOptions`): [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [nextjs/src/middleware/middleware.ts:198](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L198)
+Defined in: [nextjs/src/proxy/proxy.ts:197](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L197)
 
 #### Parameters
 
@@ -152,7 +152,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:198](https://github.com/Sitecor
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`getClientFactory`](MiddlewareBase.md#getclientfactory)
+[`ProxyBase`](ProxyBase.md).[`getClientFactory`](ProxyBase.md#getclientfactory)
 
 ***
 
@@ -160,7 +160,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:198](https://github.com/Sitecor
 
 > `protected` **getExperienceParams**(`req`): `ExperienceParams`
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:248](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/personalize-middleware.ts#L248)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:248](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/personalize-proxy.ts#L248)
 
 #### Parameters
 
@@ -178,7 +178,7 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:248](https://github
 
 > `protected` **getHostHeader**(`req`): `string` \| `undefined`
 
-Defined in: [nextjs/src/middleware/middleware.ts:166](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L166)
+Defined in: [nextjs/src/proxy/proxy.ts:165](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L165)
 
 Extract 'host' header
 
@@ -194,7 +194,7 @@ Extract 'host' header
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`getHostHeader`](MiddlewareBase.md#gethostheader)
+[`ProxyBase`](ProxyBase.md).[`getHostHeader`](ProxyBase.md#gethostheader)
 
 ***
 
@@ -202,7 +202,7 @@ Extract 'host' header
 
 > `protected` **getLanguage**(`req`, `res?`): `string`
 
-Defined in: [nextjs/src/middleware/middleware.ts:142](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L142)
+Defined in: [nextjs/src/proxy/proxy.ts:141](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L141)
 
 Provides used language
 
@@ -221,7 +221,7 @@ language
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`getLanguage`](MiddlewareBase.md#getlanguage)
+[`ProxyBase`](ProxyBase.md).[`getLanguage`](ProxyBase.md#getlanguage)
 
 ***
 
@@ -229,10 +229,10 @@ language
 
 > `protected` **getLanguageFromHeader**(`res?`): `string` \| `undefined`
 
-Defined in: [nextjs/src/middleware/middleware.ts:158](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L158)
+Defined in: [nextjs/src/proxy/proxy.ts:157](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L157)
 
 Extract language from locale header of the response
-set by LocaleMiddleware for app router application
+set by LocaleProxy for app router application
 
 #### Parameters
 
@@ -248,7 +248,7 @@ language or undefined if not found
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`getLanguageFromHeader`](MiddlewareBase.md#getlanguagefromheader)
+[`ProxyBase`](ProxyBase.md).[`getLanguageFromHeader`](ProxyBase.md#getlanguagefromheader)
 
 ***
 
@@ -256,7 +256,7 @@ language or undefined if not found
 
 > `protected` **getPersonalizeExecutions**(`personalizeInfo`, `language`): `PersonalizeExecution`[]
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:331](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/personalize-middleware.ts#L331)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:331](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/personalize-proxy.ts#L331)
 
 Aggregates personalize executions based on the provided route personalize information and language
 
@@ -279,7 +279,7 @@ An array of personalize executions
 
 > `protected` **getSite**(`req`, `res?`): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
-Defined in: [nextjs/src/middleware/middleware.ts:178](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L178)
+Defined in: [nextjs/src/proxy/proxy.ts:177](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L177)
 
 Get site information. If site name is stored in cookie, use it, otherwise resolve by hostname
 - If site can't be resolved by site name cookie use default site info based on provided parameters
@@ -300,7 +300,7 @@ site information
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`getSite`](MiddlewareBase.md#getsite)
+[`ProxyBase`](ProxyBase.md).[`getSite`](ProxyBase.md#getsite)
 
 ***
 
@@ -308,9 +308,9 @@ site information
 
 > **handle**(`req`, `res`): `Promise`\<`NextResponse`\<`unknown`\>\>
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:103](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/personalize-middleware.ts#L103)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:103](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/personalize-proxy.ts#L103)
 
-Handler method to execute middleware logic
+Handler method to execute proxy logic
 
 #### Parameters
 
@@ -325,7 +325,7 @@ Handler method to execute middleware logic
 
 #### Overrides
 
-[`MiddlewareBase`](MiddlewareBase.md).[`handle`](MiddlewareBase.md#handle)
+[`ProxyBase`](ProxyBase.md).[`handle`](ProxyBase.md#handle)
 
 ***
 
@@ -333,7 +333,7 @@ Handler method to execute middleware logic
 
 > `protected` **initPersonalizeServer**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:266](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/personalize-middleware.ts#L266)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:266](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/personalize-proxy.ts#L266)
 
 #### Parameters
 
@@ -355,7 +355,7 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:266](https://github
 
 > `protected` **isAppRouter**(`res`): `boolean`
 
-Defined in: [nextjs/src/middleware/middleware.ts:85](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L85)
+Defined in: [nextjs/src/proxy/proxy.ts:84](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L84)
 
 Determines if the application is using the app router based on the locale header
 
@@ -373,7 +373,7 @@ true if app router is used
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`isAppRouter`](MiddlewareBase.md#isapprouter)
+[`ProxyBase`](ProxyBase.md).[`isAppRouter`](ProxyBase.md#isapprouter)
 
 ***
 
@@ -381,7 +381,7 @@ true if app router is used
 
 > `protected` **isPrefetch**(`req`): `boolean`
 
-Defined in: [nextjs/src/middleware/middleware.ts:94](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L94)
+Defined in: [nextjs/src/proxy/proxy.ts:93](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L93)
 
 Determines if the request is a Next.js (next/link) prefetch request
 
@@ -399,7 +399,7 @@ is prefetch
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`isPrefetch`](MiddlewareBase.md#isprefetch)
+[`ProxyBase`](ProxyBase.md).[`isPrefetch`](ProxyBase.md#isprefetch)
 
 ***
 
@@ -407,7 +407,7 @@ is prefetch
 
 > `protected` **isPreview**(`req`): `boolean`
 
-Defined in: [nextjs/src/middleware/middleware.ts:73](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L73)
+Defined in: [nextjs/src/proxy/proxy.ts:72](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L72)
 
 Determines if mode is preview
 
@@ -425,7 +425,7 @@ is preview
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`isPreview`](MiddlewareBase.md#ispreview)
+[`ProxyBase`](ProxyBase.md).[`isPreview`](ProxyBase.md#ispreview)
 
 ***
 
@@ -433,7 +433,7 @@ is preview
 
 > `protected` **personalize**(`__namedParameters`, `request`): `Promise`\<\{ `variantId`: `string`; \}\>
 
-Defined in: [nextjs/src/middleware/personalize-middleware.ts:288](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/personalize-middleware.ts#L288)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:288](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/personalize-proxy.ts#L288)
 
 #### Parameters
 
@@ -458,7 +458,7 @@ Defined in: [nextjs/src/middleware/personalize-middleware.ts:288](https://github
 
 > `protected` **rewrite**(`rewritePath`, `req`, `res`, `skipHeader?`): `NextResponse`
 
-Defined in: [nextjs/src/middleware/middleware.ts:209](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/nextjs/src/middleware/middleware.ts#L209)
+Defined in: [nextjs/src/proxy/proxy.ts:208](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L208)
 
 Create a rewrite response
 
@@ -477,4 +477,4 @@ Create a rewrite response
 
 #### Inherited from
 
-[`MiddlewareBase`](MiddlewareBase.md).[`rewrite`](MiddlewareBase.md#rewrite)
+[`ProxyBase`](ProxyBase.md).[`rewrite`](ProxyBase.md#rewrite)

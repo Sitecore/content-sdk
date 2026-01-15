@@ -8,6 +8,6 @@
 
 > **BasicTypes** = `string` \| `boolean` \| `number` \| `undefined` \| (`string` \| `boolean` \| `number` \| \{\[`key`: `string`\]: `BasicTypes`; \} \| `BasicTypes`[])[]
 
-Defined in: [interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/2646e29add542674aa036ec1a2cad4404a52dd59/packages/utils/src/interfaces.ts#L6)
+Defined in: [interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/utils/src/interfaces.ts#L6)
 
 A reusable type that accepts only basic types and arrays of those
