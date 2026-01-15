@@ -51,6 +51,7 @@ export const RichText: React.FC<RichTextProps> = withFieldMetadata<RichTextProps
             __html: field.value,
           },
           ref,
+          suppressHydrationWarning: field.metadata ? true : undefined,
           ...otherProps,
         };
 
