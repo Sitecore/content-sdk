@@ -1,4 +1,4 @@
-# Sitecore Content SDK Next.js App Router Sample Application (beta)
+# Sitecore Content SDK Next.js App Router Sample Application
 
 <!---
 @TODO: Update link with appropriate page when avaiable

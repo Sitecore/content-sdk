@@ -6,7 +6,7 @@ permissions:
 
 on:
   # Trigger for canary and stable releases:
-  # - Full release: When PR from changeset-release/* branch is merged
+  # - Stable prod release: When PR from changeset-release/* branch is merged with [release] prefix
   # - Canary release: Push to dev or release/* branches (not from changeset-release merge)
   push:
     branches:
@@ -32,13 +32,13 @@ jobs:
       - name: Configure action
         id: configure-action
         run: |
-          # Check commit message for [release] prefix to determine if this is a full release
+          # Check commit message for [release] prefix to determine release type
           # For push events, head_commit.message contains the commit message
           COMMIT_MSG="${{ github.event.head_commit.message }}"
           if [[ "$COMMIT_MSG" =~ ^\[release\] ]]; then
-            echo "isFullRelease=true" >> $GITHUB_OUTPUT
+            echo "isCanaryRelease=false" >> $GITHUB_OUTPUT
           else
-            echo "isFullRelease=false" >> $GITHUB_OUTPUT
+            echo "isCanaryRelease=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Checkout repository
@@ -92,7 +92,7 @@ jobs:
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
 
       - name: Pre-release version update (Canary)
-        if: steps.configure-action.outputs.isFullRelease != 'true'
+        if: steps.configure-action.outputs.isCanaryRelease == 'true'
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
           if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
@@ -114,7 +114,7 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
 
       - name: Pre-release canary publish
-        if: steps.configure-action.outputs.isFullRelease != 'true'
+        if: steps.configure-action.outputs.isCanaryRelease == 'true'
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
           if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
@@ -139,9 +139,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
 
-      # Publish to npm when release PR is merged (commit message starts with [release])
+      # Publish non-canary release to npm when release PR is merged (commit message starts with [release])
       - name: Prod Release Publish to npm
-        if: steps.configure-action.outputs.isFullRelease == 'true'
+        if: steps.configure-action.outputs.isCanaryRelease != 'true'
         run: changeset tag && lerna publish from-package --yes && git push --follow-tags
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
