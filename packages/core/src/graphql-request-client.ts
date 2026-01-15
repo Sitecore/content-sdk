@@ -180,8 +180,9 @@ export class GraphQLRequestClient implements GraphQLClient {
         variables,
         timeout: this.timeout,
       });
-      const startTimestamp = Date.now();
+      // Use performance.now() for Next.js 16 compatibility (safe to use before request data access)
       const headers = { ...this.headers, ...options?.headers };
+      const startTimestamp = performance.now();
       const fetchWithOptionalTimeout = [this.client.request(query, variables, headers)];
       if (this.timeout) {
         this.abortTimeout = new TimeoutPromise(this.timeout);
@@ -191,7 +192,7 @@ export class GraphQLRequestClient implements GraphQLClient {
       return Promise.race(fetchWithOptionalTimeout).then(
         (data: unknown) => {
           this.abortTimeout?.clear();
-          this.debug('response in %dms: %o', Date.now() - startTimestamp, data);
+          this.debug('response in %dms: %o', performance.now() - startTimestamp, data);
           return Promise.resolve(data as T);
         },
         async (error: GraphQLClientError) => {

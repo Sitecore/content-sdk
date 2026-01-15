@@ -1,4 +1,4 @@
-﻿/* eslint-disable dot-notation */
+/* eslint-disable dot-notation */
 import chai from 'chai';
 import chaiString from 'chai-string';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/core/editing';

@@ -54,9 +54,10 @@ export function createSitemapRouteHandler(options: RouteHandlerOptions) {
 
   const GET = async (req: NextRequest) => {
     try {
-      const startTimestamp = Date.now();
-
       const options = getOptions(req);
+
+      // Access request data first, then capture timestamp for Next.js 16 compatibility
+      const startTimestamp = Date.now();
 
       debug.sitemap('sitemap route handler start: %o', {
         options,
@@ -72,6 +73,11 @@ export function createSitemapRouteHandler(options: RouteHandlerOptions) {
         },
       });
     } catch (error) {
+      // Re-throw prerender bail-out errors so Next.js can handle them properly
+      if (error instanceof Error && (error as any).digest === 'NEXT_PRERENDER_INTERRUPTED') {
+        throw error;
+      }
+
       console.log('Sitemap route handler failed:');
       console.log(error);
 

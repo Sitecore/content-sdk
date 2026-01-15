@@ -6,7 +6,7 @@
 
 # Interface: HttpRequest
 
-Defined in: [interfaces.ts:16](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/utils/src/interfaces.ts#L16)
+Defined in: [interfaces.ts:16](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/utils/src/interfaces.ts#L16)
 
 Interface for supporting request IncomingMessage http node type
 
@@ -16,7 +16,7 @@ Interface for supporting request IncomingMessage http node type
 
 > **headers**: `object`
 
-Defined in: [interfaces.ts:17](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/utils/src/interfaces.ts#L17)
+Defined in: [interfaces.ts:17](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/utils/src/interfaces.ts#L17)
 
 #### content-language?
 
@@ -40,4 +40,4 @@ Defined in: [interfaces.ts:17](https://github.com/Sitecore/content-sdk/blob/6b7c
 
 > `optional` **url**: `string`
 
-Defined in: [interfaces.ts:23](https://github.com/Sitecore/content-sdk/blob/6b7c7b667b2f4d24b0f2f2dc3cbdfa4d1a32ad10/packages/utils/src/interfaces.ts#L23)
+Defined in: [interfaces.ts:23](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/utils/src/interfaces.ts#L23)
