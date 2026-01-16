@@ -8,6 +8,6 @@
 
 > **ComponentType** = `"server"` \| `"client"` \| `"universal"`
 
-Defined in: [packages/core/src/tools/templating/components.ts:24](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/tools/templating/components.ts#L24)
+Defined in: [packages/core/src/tools/templating/components.ts:24](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/tools/templating/components.ts#L24)
 
 **`Internal`**

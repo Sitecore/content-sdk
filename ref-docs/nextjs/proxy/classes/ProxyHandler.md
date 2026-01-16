@@ -6,7 +6,7 @@
 
 # Abstract Class: ProxyHandler
 
-Defined in: [nextjs/src/proxy/proxy.ts:44](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L44)
+Defined in: [nextjs/src/proxy/proxy.ts:44](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/nextjs/src/proxy/proxy.ts#L44)
 
 Proxy handler class to be extended by all proxy implementations
 
@@ -30,7 +30,7 @@ Proxy handler class to be extended by all proxy implementations
 
 > `abstract` **handle**(`req`, `res`): `Promise`\<`NextResponse`\<`unknown`\>\>
 
-Defined in: [nextjs/src/proxy/proxy.ts:50](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/nextjs/src/proxy/proxy.ts#L50)
+Defined in: [nextjs/src/proxy/proxy.ts:50](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/nextjs/src/proxy/proxy.ts#L50)
 
 Handler method to execute proxy logic
 

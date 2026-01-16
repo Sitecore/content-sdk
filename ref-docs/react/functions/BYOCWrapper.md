@@ -8,7 +8,7 @@
 
 > **BYOCWrapper**(`props`): `Element`
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:121](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L121)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:121](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L121)
 
 SXA wrapper for BYOC components
 

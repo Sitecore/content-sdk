@@ -6,7 +6,7 @@
 
 # Class: SitePathService
 
-Defined in: [packages/core/src/site/sitepath-service.ts:152](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/sitepath-service.ts#L152)
+Defined in: [packages/core/src/site/sitepath-service.ts:152](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/site/sitepath-service.ts#L152)
 
 Service that fetches the list of site pages using Sitecore's GraphQL API.
 Used to handle a single site
@@ -22,7 +22,7 @@ SearchQueryService<PageListQueryResult>
 
 > **new SitePathService**(`options`): `SitePathService`
 
-Defined in: [packages/core/src/site/sitepath-service.ts:159](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/sitepath-service.ts#L159)
+Defined in: [packages/core/src/site/sitepath-service.ts:159](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/site/sitepath-service.ts#L159)
 
 Creates an instance of graphQL sitemap service with the provided options
 
@@ -42,7 +42,7 @@ Creates an instance of graphQL sitemap service with the provided options
 
 > **options**: [`SitePathServiceConfig`](../interfaces/SitePathServiceConfig.md)
 
-Defined in: [packages/core/src/site/sitepath-service.ts:159](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/sitepath-service.ts#L159)
+Defined in: [packages/core/src/site/sitepath-service.ts:159](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/site/sitepath-service.ts#L159)
 
 instance
 
@@ -54,7 +54,7 @@ instance
 
 > **get** `protected` **graphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/site/sitepath-service.ts:166](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/sitepath-service.ts#L166)
+Defined in: [packages/core/src/site/sitepath-service.ts:166](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/site/sitepath-service.ts#L166)
 
 GraphQL client accessible by descendant classes when needed
 
@@ -70,7 +70,7 @@ GraphQL client accessible by descendant classes when needed
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [packages/core/src/site/sitepath-service.ts:173](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/sitepath-service.ts#L173)
+Defined in: [packages/core/src/site/sitepath-service.ts:173](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/site/sitepath-service.ts#L173)
 
 Gets the default query used for fetching the list of site pages
 
@@ -84,7 +84,7 @@ Gets the default query used for fetching the list of site pages
 
 > `protected` **fetchLanguageSitePaths**(`language`, `siteName`, `fetchOptions?`): `Promise`\<`RouteListQueryResult`[]\>
 
-Defined in: [packages/core/src/site/sitepath-service.ts:281](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/sitepath-service.ts#L281)
+Defined in: [packages/core/src/site/sitepath-service.ts:281](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/site/sitepath-service.ts#L281)
 
 Fetch and return site paths for multisite implementation, with prefixes included
 
@@ -108,7 +108,7 @@ modified paths
 
 > **fetchSiteRoutes**(`sites`, `languages`, `fetchOptions?`): `Promise`\<[`StaticPath`](../../index/type-aliases/StaticPath.md)[]\>
 
-Defined in: [packages/core/src/site/sitepath-service.ts:187](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/sitepath-service.ts#L187)
+Defined in: [packages/core/src/site/sitepath-service.ts:187](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/site/sitepath-service.ts#L187)
 
 Fetch a flat list of all pages that belong to all the requested sites and have a
 version in the specified language(s).
@@ -141,7 +141,7 @@ if the any of the languages is an empty string.
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../index/interfaces/GraphQLClient.md)
 
-Defined in: [packages/core/src/site/sitepath-service.ts:264](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/sitepath-service.ts#L264)
+Defined in: [packages/core/src/site/sitepath-service.ts:264](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/site/sitepath-service.ts#L264)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -159,7 +159,7 @@ implementation
 
 > `protected` **transformLanguageSitePaths**(`sitePaths`, `formatStaticPath`, `language`): `Promise`\<[`StaticPath`](../../index/type-aliases/StaticPath.md)[]\>
 
-Defined in: [packages/core/src/site/sitepath-service.ts:225](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/site/sitepath-service.ts#L225)
+Defined in: [packages/core/src/site/sitepath-service.ts:225](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/site/sitepath-service.ts#L225)
 
 #### Parameters
 

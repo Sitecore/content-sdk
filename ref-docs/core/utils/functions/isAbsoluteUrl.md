@@ -8,7 +8,7 @@
 
 > **isAbsoluteUrl**(`url`): `boolean`
 
-Defined in: [packages/core/src/utils/utils.ts:67](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/core/src/utils/utils.ts#L67)
+Defined in: [packages/core/src/utils/utils.ts:67](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/utils/utils.ts#L67)
 
 Checks if the given URL is an absolute URL
 
