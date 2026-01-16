@@ -70,7 +70,7 @@ export const executeScriptElements = (rootElement: HTMLElement) => {
 };
 
 /**
- * Subscribes to the Form event and then sends data to CloudSDK.
+ * Subscribes to the Form event
  * This listener captures interactions such as form views or submissions
  * @param {HTMLElement} formElement - The form element to subscribe to events on
  * @param {string} [componentId] - The unique identifier of the component
