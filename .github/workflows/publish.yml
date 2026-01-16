@@ -35,7 +35,7 @@ jobs:
           # Check commit message for [release] prefix to determine release type
           # For push events, head_commit.message contains the commit message
           COMMIT_MSG="${{ github.event.head_commit.message }}"
-          if [[ "$COMMIT_MSG" =~ ^\[release\] ]]; then
+          if [[ "$COMMIT_MSG" =~ ^\[release\] || "$COMMIT_MSG" =~ ^\[chore\]  ]]; then
             echo "isCanaryRelease=false" >> $GITHUB_OUTPUT
           else
             echo "isCanaryRelease=true" >> $GITHUB_OUTPUT
@@ -101,6 +101,7 @@ jobs:
             PREID="canary.${TIMESTAMP}"
           else
             PREID="canary"
+          fi
           echo "Creating canary release on dev branch (no tags)..."
           npx lerna version prerelease --exact --preid "$PREID" --sign-git-tag false --yes --no-git-tag-version
           yarn install
@@ -121,6 +122,7 @@ jobs:
             NPM_TAG="hotfix.rc.canary"
           else
             NPM_TAG="canary"
+          fi
           echo "Publishing canary packages to npm..."
           npx lerna publish from-package --canary --pre-dist-tag "$NPM_TAG" --preid canary --no-verify-access --yes
         env:
@@ -129,6 +131,8 @@ jobs:
 
       # ========== CHANGESET ACTION ==========
       # Create/update the release PR with updated versions based on changesets
+      # OR
+      # Publish to npm when release PR is merged
       - name: Create Release Pull Request
         id: changesets
         uses: changesets/action@v1
@@ -140,9 +144,15 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
 
       # Publish non-canary release to npm when release PR is merged (commit message starts with [release])
-      - name: Prod Release Publish to npm
-        if: steps.configure-action.outputs.isCanaryRelease != 'true'
-        run: changeset tag && lerna publish from-package --yes && git push --follow-tags
+      - name: Create Release Pull Request
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          # using scripts from monorepo root package.json
+          version: yarn csdk:prep-release
+          publish: yarn csdk:publish-release
+          commit: '[release][ci] changelog, release and version bump'
+          title: ${{ github.ref_name == 'dev' && '[csdk] latest release' || format('[csdk] patch release - {0}', github.ref_name) }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}

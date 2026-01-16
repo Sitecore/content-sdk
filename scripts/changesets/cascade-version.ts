@@ -24,7 +24,7 @@ import { getCommitsThatAddFiles } from '@changesets/git';
 import { read as readConfig } from '@changesets/config';
 import { getPackages } from '@manypkg/get-packages';
 import { getDependentsGraph } from '@changesets/get-dependents-graph';
-import type { VersionType, NewChangesetWithCommit } from '@changesets/types';
+import type { VersionType, NewChangesetWithCommit, NewChangeset } from '@changesets/types';
 
 const REPO = 'sitecore/content-sdk';
 // Bump type priority (higher = more significant)
@@ -70,15 +70,18 @@ async function main(): Promise<void> {
   // Build dependents graph
   const dependentsGraph = getDependentsGraph(packages) as DependentsGraph;
 
-  // Collect initial bumps from all changesets (highest priority per package)
-  const initialBumps = new Map<string, BumpInfo>();
+  // Collect all pending version bumps from minor/major changesets
+  const pendingBumps = new Map<string, BumpInfo[]>();
   changesets.forEach((changeset) => {
-    changeset.releases.forEach((release) => {
-      const existing = initialBumps.get(release.name);
-      if (!existing || BUMP_PRIORITY[release.type] > BUMP_PRIORITY[existing.type]) {
-        initialBumps.set(release.name, {
-          type: release.type,
-          sourcePkg: release.name,
+    changeset.releases.forEach((pendingRelease) => {
+      const isMinorOrMajor = BUMP_PRIORITY[pendingRelease.type] >= BUMP_PRIORITY.minor;
+      if (isMinorOrMajor) {
+        if (!pendingBumps.has(pendingRelease.name)) {
+          pendingBumps.set(pendingRelease.name, []);
+        }
+        pendingBumps.get(pendingRelease.name)!.push({
+          type: pendingRelease.type,
+          sourcePkg: pendingRelease.name,
           summary: changeset.summary,
           commit: changeset.commit,
         });
@@ -87,10 +90,10 @@ async function main(): Promise<void> {
   });
 
   // Propagate bumps through dependency graph
-  const extraBumps = getPropagatedBumps(initialBumps, dependentsGraph);
+  const extraBumps = addCascadedBumps(pendingBumps, dependentsGraph);
 
   // Determine which packages need synthetic changesets (cascade bumps)
-  const syntheticChangesets = generateSynteticChangesets(initialBumps, extraBumps);
+  const syntheticChangesets = generateSynteticChangesets(extraBumps);
 
   if (syntheticChangesets.length === 0) {
     console.log(
@@ -138,87 +141,122 @@ function generateChangesetId(): string {
 
 /**
  * Propagate bumps through the dependency graph
- * Uses iterative approach to handle transitive dependencies correctly
+ * Collects all bumps that need to cascade to dependents
  */
-function getPropagatedBumps(
-  originalBumps: Map<string, BumpInfo>,
+function addCascadedBumps(
+  originalBumps: Map<string, BumpInfo[]>,
   dependentsGraph: DependentsGraph
-): Map<string, BumpInfo> {
-  // Map of package -> { type, source } for final bump decisions
-  const extraBumps = new Map<string, BumpInfo>();
+): Map<string, BumpInfo[]> {
+  const extraBumps = new Map<string, BumpInfo[]>();
 
-  // Combined map of all bumps (original + extra) for propagation
-  const allBumps = new Map<string, BumpInfo>(originalBumps);
+  // Propagate each bump from each package to all its dependents
+  originalBumps.forEach((bumps, pkg) => {
+    const dependents = getAllDependents(pkg, dependentsGraph);
 
-  // Keep propagating until no more changes to add
-  let changed = true;
-  while (changed) {
-    changed = false;
-
-    // Iterate over ALL bumps (original + newly added extras)
-    allBumps.forEach((bumpInfo, pkg) => {
-      const dependents = dependentsGraph.get(pkg) || [];
-
+    bumps.forEach((bumpInfo) => {
       dependents.forEach((depPkg) => {
-        const existingExtra = extraBumps.get(depPkg);
-        const existingOriginal = originalBumps.get(depPkg);
+        // Skip if dependent is the source package itself
+        if (depPkg === pkg) return;
 
-        // If dependent doesn't have a bump, or has a lower priority bump, upgrade it
-        const currentPriority = Math.max(
-          BUMP_PRIORITY[existingExtra?.type || 'none'],
-          BUMP_PRIORITY[existingOriginal?.type || 'none']
-        );
-
-        if (BUMP_PRIORITY[bumpInfo.type] > currentPriority) {
-          const newBumpInfo: BumpInfo = {
-            type: bumpInfo.type,
-            sourcePkg: pkg,
-            // use only the short package name in the summary
-            summary: `[${pkg.replace(/^@.+\//, '')}] ${bumpInfo.summary}`,
-            commit: bumpInfo.commit,
-          };
-          extraBumps.set(depPkg, newBumpInfo);
-          allBumps.set(depPkg, newBumpInfo); // Add to allBumps so it can propagate further
-          changed = true;
+        if (!extraBumps.has(depPkg)) {
+          extraBumps.set(depPkg, []);
         }
+
+        extraBumps.get(depPkg)!.push({
+          type: bumpInfo.type,
+          sourcePkg: pkg,
+          summary: bumpInfo.summary,
+          commit: bumpInfo.commit,
+        });
       });
     });
-  }
+  });
 
   return extraBumps;
 }
 
 /**
- * Generate synthetic changesets for cascaded bumps
+ * Get all dependents (direct and transitive) for a package using BFS
  */
-function generateSynteticChangesets(
-  initialBumps: Map<string, BumpInfo>,
-  extraBumps: Map<string, BumpInfo>
-): NewChangesetWithCommit[] {
-  const syntheticChangesets: NewChangesetWithCommit[] = [];
-  extraBumps.forEach((info, pkgName) => {
-    const originalBump = initialBumps.get(pkgName);
+function getAllDependents(pkg: string, dependentsGraph: DependentsGraph): Set<string> {
+  const allDependents = new Set<string>();
+  const queue = [pkg];
+  const visited = new Set<string>([pkg]);
 
-    // Create synthetic changeset if:
-    // 1. Package didn't have an original changeset, OR
-    // 2. The cascaded bump is higher priority than the original
-    if (!originalBump || BUMP_PRIORITY[info.type] > BUMP_PRIORITY[originalBump.type]) {
-      // syntetic changeset's commit will be ignored by changesets, so we add it to summary
-      const shortCommit = info.commit?.substring(0, 7);
-      const commitLink = shortCommit
-        ? ` ([${shortCommit}](https://github.com/${REPO}/commit/${info.commit}))`
-        : '';
-      const syntheticChangeset: NewChangesetWithCommit = {
-        id: generateChangesetId(),
-        summary: `${info.summary} ${commitLink}`,
-        releases: [{ name: pkgName, type: info.type }],
-      };
-      syntheticChangesets.push(syntheticChangeset);
-      console.log(
-        `  🔄 ${pkgName}: ${originalBump?.type || 'none'} → ${info.type} (from ${info.sourcePkg})`
-      );
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    const directDependents = dependentsGraph.get(current) || [];
+
+    for (const dep of directDependents) {
+      if (!visited.has(dep)) {
+        visited.add(dep);
+        allDependents.add(dep);
+        queue.push(dep);
+      }
     }
+  }
+
+  return allDependents;
+}
+
+/**
+ * Generate synthetic changesets for cascaded bumps
+ * Groups by dependent package -> source package -> bump type
+ */
+function generateSynteticChangesets(extraBumps: Map<string, BumpInfo[]>): NewChangeset[] {
+  const syntheticChangesets: NewChangeset[] = [];
+
+  // Group extraBumps by: dependentPkg -> sourcePkg -> bumpType -> BumpInfo[]
+  type GroupedBumps = Map<string, Map<VersionType, BumpInfo[]>>;
+  const grouped = new Map<string, GroupedBumps>();
+
+  extraBumps.forEach((bumps, depPkg) => {
+    bumps.forEach((bump) => {
+      if (!grouped.has(depPkg)) {
+        grouped.set(depPkg, new Map());
+      }
+      const bySource = grouped.get(depPkg)!;
+
+      if (!bySource.has(bump.sourcePkg)) {
+        bySource.set(bump.sourcePkg, new Map());
+      }
+      const byType = bySource.get(bump.sourcePkg)!;
+
+      if (!byType.has(bump.type)) {
+        byType.set(bump.type, []);
+      }
+      byType.get(bump.type)!.push(bump);
+    });
   });
+
+  // Generate synthetic changesets
+  grouped.forEach((bySource, depPkg) => {
+    bySource.forEach((byType, sourcePkg) => {
+      byType.forEach((bumps, type) => {
+        const shortSourceName = sourcePkg.replace(/^@.+\//, '');
+        const changeLines = bumps.map((b) => {
+          const shortCommit = b.commit?.substring(0, 7);
+          const commitLink = shortCommit
+            ? ` ([${shortCommit}](https://github.com/${REPO}/commit/${b.commit}))`
+            : '';
+          return `  - ${b.summary}${commitLink}`;
+        });
+
+        const summary = `${type} \`${shortSourceName}\` dependency update:\n${changeLines.join('\n')}`;
+
+        syntheticChangesets.push({
+          id: generateChangesetId(),
+          summary,
+          releases: [{ name: depPkg, type }],
+        });
+
+        console.log(
+          `  🔄 ${depPkg}: ${type} (from ${shortSourceName}, ${bumps.length} change(s))`
+        );
+      });
+    });
+  });
+
   return syntheticChangesets;
 }
 
