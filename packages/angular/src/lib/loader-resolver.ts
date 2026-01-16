@@ -9,11 +9,8 @@ import {
   RedirectCommand,
   Params,
 } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { LoaderApiRequest, LoaderApiResponse } from './api';
 import { LOADER_REGISTRY } from './loader-registry.token';
-import { firstValueFrom } from 'rxjs';
-import { DEFAULT_DATA_ENDPOINT } from './server/config';
+import { LoaderDataService } from './loader-data.service';
 
 export class LoaderRedirect extends Error {
   constructor(public location: string, public status: 301 | 302 | 307 | 308 = 302) {
@@ -60,14 +57,17 @@ export type LoaderId = keyof LoaderIdMap extends never ? string : keyof LoaderId
 
 export const loaderResolver: (loaderId: LoaderId) => ResolveFn<any> = (loaderId: string) => {
   return async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-    const url = state.url;
-    const key = tsKey(loaderId, url);
-
+    // All inject() calls must happen synchronously at the top before any await
     const transferState = inject(TransferState);
     const platformId = inject(PLATFORM_ID);
     const router = inject(Router);
+    const registry = inject(LOADER_REGISTRY);
+    const loaderData = inject(LoaderDataService);
 
-    // Browser: use SSR TransferState once, otherwise fetch /_data
+    const url = state.url;
+    const key = tsKey(loaderId, url);
+
+    // Browser: use SSR TransferState once, otherwise fetch via LoaderDataService
     if (!isPlatformServer(platformId)) {
       if (transferState.hasKey(key)) {
         const data = transferState.get(key, null);
@@ -75,23 +75,18 @@ export const loaderResolver: (loaderId: LoaderId) => ResolveFn<any> = (loaderId:
         return data;
       }
 
-      const http = inject(HttpClient);
+      // Get data from LoaderDataService (handles caching and pending requests)
       const allParams = route.pathFromRoot.reduce(
         (acc, r) => ({ ...acc, ...r.params }),
         {}
       ) as Params;
-      const reqBody: LoaderApiRequest = {
-        loaderId,
+
+      const resp = await loaderData.getData({
         url,
+        loaderId,
         params: allParams,
-        query: route.queryParams,
-      };
-
-      const resp = await firstValueFrom(
-        http.post<LoaderApiResponse>(DEFAULT_DATA_ENDPOINT, reqBody)
-      );
-
-      if (!resp) throw new Error('No response from /_data');
+        query: route.queryParams as Record<string, string | string[]>,
+      });
 
       if (resp.kind === 'redirect') {
         const urlTree = router.parseUrl(resp.location);
@@ -102,11 +97,12 @@ export const loaderResolver: (loaderId: LoaderId) => ResolveFn<any> = (loaderId:
         serverError(resp.message);
       } else if (resp.kind === 'notFound') {
         notFound();
-      } else return resp.data;
+      } else {
+        return resp.data;
+      }
     }
 
     // Server: execute loader directly (no HTTP hop)
-    const registry = inject(LOADER_REGISTRY);
     const loader = registry[loaderId];
     if (!loader) throw new Error(`No loader registered for id "${loaderId}"`);
 

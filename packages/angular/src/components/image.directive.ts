@@ -8,11 +8,13 @@ import {
   inject,
   EmbeddedViewRef,
   Renderer2,
+  inputBinding,
 } from '@angular/core';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 import { mediaApi } from '@sitecore-content-sdk/core/media';
 import { MetadataKind } from '@sitecore-content-sdk/core/editing';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
+import { FieldMetadataMarkerComponent } from './field-metadata-marker.component';
 
 /**
  * The interface for the Image field value.
@@ -128,50 +130,15 @@ export class ScImageDirective implements OnChanges {
     const isEmpty = isFieldValueEmpty(this.field);
     const shouldShowEmptyEditing = hasMetadata && isEmpty;
 
-    // Create the view
-    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
-      $implicit: this.field,
-    });
-
-    const imgElement = this.viewRef.rootNodes[0] as HTMLImageElement;
-    if (!imgElement) return;
-
-    // Handle empty field in editing mode
-    if (shouldShowEmptyEditing) {
-      this.renderEmptyImage(imgElement);
-      this.wrapWithMetadata(imgElement);
-      return;
-    }
-
     // Don't render if empty (non-editing mode)
-    if (isEmpty) {
-      this.viewContainer.clear();
+    if (isEmpty && !shouldShowEmptyEditing) {
       return;
-    }
-
-    const imageAttrs = this.getImageAttrs();
-    if (!imageAttrs) {
-      this.viewContainer.clear();
-      return;
-    }
-
-    // Apply image attributes
-    this.renderer.setAttribute(imgElement, 'src', imageAttrs.src || '');
-    if (imageAttrs.srcSet) {
-      this.renderer.setAttribute(imgElement, 'srcset', imageAttrs.srcSet);
-    }
-    if (imageAttrs.alt !== undefined) {
-      this.renderer.setAttribute(imgElement, 'alt', imageAttrs.alt);
-    }
-    if (imageAttrs.width !== undefined) {
-      this.renderer.setAttribute(imgElement, 'width', String(imageAttrs.width));
-    }
-    if (imageAttrs.height !== undefined) {
-      this.renderer.setAttribute(imgElement, 'height', String(imageAttrs.height));
     }
 
     if (hasMetadata) {
-      this.wrapWithMetadata(imgElement);
+      this.renderWithMetadata(shouldShowEmptyEditing);
+    } else {
+      this.renderWithoutMetadata();
     }
   }
 
@@ -220,41 +187,72 @@ export class ScImageDirective implements OnChanges {
     return result;
   }
 
-  private renderEmptyImage(element: HTMLImageElement): void {
-    this.renderer.setAttribute(element, 'src', EMPTY_IMAGE_SVG);
-    this.renderer.setAttribute(element, 'alt', '');
-    this.renderer.addClass(element, 'scEmptyImage');
-    this.renderer.setStyle(element, 'minWidth', '48px');
-    this.renderer.setStyle(element, 'minHeight', '48px');
-    this.renderer.setStyle(element, 'maxWidth', '400px');
-    this.renderer.setStyle(element, 'maxHeight', '400px');
-    this.renderer.setStyle(element, 'cursor', 'pointer');
+  private applyImageAttrs(imgElement: HTMLImageElement, isEmpty: boolean): void {
+    if (isEmpty) {
+      this.renderer.setAttribute(imgElement, 'src', EMPTY_IMAGE_SVG);
+      this.renderer.setAttribute(imgElement, 'alt', '');
+      this.renderer.addClass(imgElement, 'scEmptyImage');
+      this.renderer.setStyle(imgElement, 'minWidth', '48px');
+      this.renderer.setStyle(imgElement, 'minHeight', '48px');
+      this.renderer.setStyle(imgElement, 'maxWidth', '400px');
+      this.renderer.setStyle(imgElement, 'maxHeight', '400px');
+      this.renderer.setStyle(imgElement, 'cursor', 'pointer');
+      return;
+    }
+
+    const imageAttrs = this.getImageAttrs();
+    if (!imageAttrs) return;
+
+    this.renderer.setAttribute(imgElement, 'src', imageAttrs.src || '');
+    if (imageAttrs.srcSet) {
+      this.renderer.setAttribute(imgElement, 'srcset', imageAttrs.srcSet);
+    }
+    if (imageAttrs.alt !== undefined) {
+      this.renderer.setAttribute(imgElement, 'alt', imageAttrs.alt);
+    }
+    if (imageAttrs.width !== undefined) {
+      this.renderer.setAttribute(imgElement, 'width', String(imageAttrs.width));
+    }
+    if (imageAttrs.height !== undefined) {
+      this.renderer.setAttribute(imgElement, 'height', String(imageAttrs.height));
+    }
   }
 
-  private wrapWithMetadata(element: HTMLElement): void {
-    const parent = element.parentNode;
-    if (!parent) return;
-
+  private renderWithMetadata(isEmpty: boolean): void {
     const metadata = (this.field as ImageField)?.metadata;
-    if (!metadata) return;
 
-    // Create opening metadata tag
-    const openCode = this.renderer.createElement('code');
-    this.renderer.setAttribute(openCode, 'type', 'text/sitecore');
-    this.renderer.setAttribute(openCode, 'chrometype', 'field');
-    this.renderer.addClass(openCode, 'scpm');
-    this.renderer.setAttribute(openCode, 'kind', MetadataKind.Open);
-    this.renderer.setProperty(openCode, 'textContent', JSON.stringify(metadata));
+    // Create opening metadata marker
+    this.viewContainer.createComponent(FieldMetadataMarkerComponent, {
+      bindings: [
+        inputBinding('metadata', () => metadata),
+        inputBinding('kind', () => MetadataKind.Open),
+      ],
+    });
 
-    // Create closing metadata tag
-    const closeCode = this.renderer.createElement('code');
-    this.renderer.setAttribute(closeCode, 'type', 'text/sitecore');
-    this.renderer.setAttribute(closeCode, 'chrometype', 'field');
-    this.renderer.addClass(closeCode, 'scpm');
-    this.renderer.setAttribute(closeCode, 'kind', MetadataKind.Close);
+    // Create the content view
+    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
+      $implicit: this.field,
+    });
 
-    // Insert metadata tags
-    parent.insertBefore(openCode, element);
-    parent.insertBefore(closeCode, element.nextSibling);
+    const imgElement = this.viewRef.rootNodes[0] as HTMLImageElement;
+    if (imgElement) {
+      this.applyImageAttrs(imgElement, isEmpty);
+    }
+
+    // Create closing metadata marker
+    this.viewContainer.createComponent(FieldMetadataMarkerComponent, {
+      bindings: [inputBinding('kind', () => MetadataKind.Close)],
+    });
+  }
+
+  private renderWithoutMetadata(): void {
+    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
+      $implicit: this.field,
+    });
+
+    const imgElement = this.viewRef.rootNodes[0] as HTMLImageElement;
+    if (imgElement) {
+      this.applyImageAttrs(imgElement, false);
+    }
   }
 }

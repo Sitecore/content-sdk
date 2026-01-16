@@ -1,3 +1,5 @@
+/* eslint-disable dot-notation */
+/* eslint-disable @typescript-eslint/member-ordering */
 import {
   Directive,
   Input,
@@ -8,10 +10,13 @@ import {
   inject,
   EmbeddedViewRef,
   Renderer2,
+  inputBinding,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 import { MetadataKind } from '@sitecore-content-sdk/core/editing';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
+import { FieldMetadataMarkerComponent } from './field-metadata-marker.component';
 
 /**
  * The interface for the Link field value.
@@ -89,15 +94,23 @@ export class ScLinkDirective implements OnChanges {
    */
   @Input('scLinkEditable') editable = true;
 
+  /**
+   * Whether to use Angular Router for internal/local links.
+   * When true, local links (starting with /) will use Router for SPA navigation.
+   * @default true
+   */
+  @Input('scLinkUseRouter') useRouter = true;
+
   private readonly templateRef = inject(TemplateRef<ScLinkContext>);
   private readonly viewContainer = inject(ViewContainerRef);
   private readonly renderer = inject(Renderer2);
+  private readonly router = inject(Router);
   private readonly sitecoreContext = inject(SitecoreContextService);
 
   private viewRef: EmbeddedViewRef<ScLinkContext> | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['field'] || changes['showText'] || changes['editable']) {
+    if (changes['field'] || changes['showText'] || changes['editable'] || changes['useRouter']) {
       this.updateView();
     }
   }
@@ -111,32 +124,38 @@ export class ScLinkDirective implements OnChanges {
     const isEmpty = isFieldValueEmpty(this.field);
     const shouldShowEmptyEditing = hasMetadata && isEmpty;
 
-    // Create the view
-    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
-      $implicit: this.field,
-    });
-
-    const anchorElement = this.viewRef.rootNodes[0] as HTMLAnchorElement;
-    if (!anchorElement) return;
-
-    // Handle empty field in editing mode
-    if (shouldShowEmptyEditing) {
-      this.renderEmptyLink(anchorElement);
-      this.wrapWithMetadata(anchorElement);
+    // Don't render if empty (non-editing mode)
+    if (isEmpty && !shouldShowEmptyEditing) {
       return;
     }
 
-    // Don't render if empty (non-editing mode)
+    if (hasMetadata) {
+      this.renderWithMetadata(shouldShowEmptyEditing);
+    } else {
+      this.renderWithoutMetadata();
+    }
+  }
+
+  private getLinkData(): LinkFieldValue | null {
+    const dynamicField = this.field as LinkField | LinkFieldValue;
+
+    // Handle link directly on field (LinkFieldValue) vs wrapped (LinkField)
+    if ((dynamicField as LinkFieldValue).href) {
+      return this.field as LinkFieldValue;
+    }
+
+    return (dynamicField as LinkField).value || null;
+  }
+
+  private applyLinkAttrs(anchorElement: HTMLAnchorElement, isEmpty: boolean): void {
     if (isEmpty) {
-      this.viewContainer.clear();
+      this.renderer.setAttribute(anchorElement, 'href', '#');
+      this.renderer.setProperty(anchorElement, 'textContent', '[No text in field]');
       return;
     }
 
     const linkData = this.getLinkData();
-    if (!linkData) {
-      this.viewContainer.clear();
-      return;
-    }
+    if (!linkData) return;
 
     // Build href
     const anchor = linkData.linktype !== 'anchor' && linkData.anchor ? `#${linkData.anchor}` : '';
@@ -162,6 +181,31 @@ export class ScLinkDirective implements OnChanges {
       }
     }
 
+    // Use Angular Router for internal navigation (SPA-style)
+    if (this.useRouter && !linkData.target && linkData.href && this.isInternalLink(linkData.href)) {
+      // Create UrlTree for proper URL handling (encoding, base href, etc.)
+      const queryParams = linkData.querystring
+        ? this.parseQueryString(linkData.querystring)
+        : undefined;
+      const urlTree = this.router.createUrlTree([linkData.href], {
+        queryParams,
+        fragment: linkData.anchor,
+      });
+
+      // Update href with Router-generated URL for proper right-click behavior
+      this.renderer.setAttribute(anchorElement, 'href', this.router.serializeUrl(urlTree));
+
+      // Add click handler for SPA navigation
+      this.renderer.listen(anchorElement, 'click', (event: MouseEvent) => {
+        // Allow modifier keys for opening in new tab/window
+        if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey) {
+          return;
+        }
+        event.preventDefault();
+        this.router.navigateByUrl(urlTree);
+      });
+    }
+
     // Add link text if showText is true and element doesn't have content
     if (this.showText) {
       const hasContent = anchorElement.childNodes.length > 0;
@@ -170,52 +214,60 @@ export class ScLinkDirective implements OnChanges {
         this.renderer.setProperty(anchorElement, 'textContent', textContent);
       }
     }
+  }
 
-    if (hasMetadata) {
-      this.wrapWithMetadata(anchorElement);
+  private isInternalLink(href: string): boolean {
+    // Check if the link is internal (starts with / and not //)
+    return href.startsWith('/') && !href.startsWith('//');
+  }
+
+  private parseQueryString(querystring: string): Record<string, string> {
+    const params: Record<string, string> = {};
+    const pairs = querystring.split('&');
+    for (const pair of pairs) {
+      const [key, value] = pair.split('=');
+      if (key) {
+        params[decodeURIComponent(key)] = value ? decodeURIComponent(value) : '';
+      }
     }
+    return params;
   }
 
-  private getLinkData(): LinkFieldValue | null {
-    const dynamicField = this.field as LinkField | LinkFieldValue;
-
-    // Handle link directly on field (LinkFieldValue) vs wrapped (LinkField)
-    if ((dynamicField as LinkFieldValue).href) {
-      return this.field as LinkFieldValue;
-    }
-
-    return (dynamicField as LinkField).value || null;
-  }
-
-  private renderEmptyLink(element: HTMLAnchorElement): void {
-    this.renderer.setAttribute(element, 'href', '#');
-    this.renderer.setProperty(element, 'textContent', '[No text in field]');
-  }
-
-  private wrapWithMetadata(element: HTMLElement): void {
-    const parent = element.parentNode;
-    if (!parent) return;
-
+  private renderWithMetadata(isEmpty: boolean): void {
     const metadata = (this.field as LinkField)?.metadata;
-    if (!metadata) return;
 
-    // Create opening metadata tag
-    const openCode = this.renderer.createElement('code');
-    this.renderer.setAttribute(openCode, 'type', 'text/sitecore');
-    this.renderer.setAttribute(openCode, 'chrometype', 'field');
-    this.renderer.addClass(openCode, 'scpm');
-    this.renderer.setAttribute(openCode, 'kind', MetadataKind.Open);
-    this.renderer.setProperty(openCode, 'textContent', JSON.stringify(metadata));
+    // Create opening metadata marker
+    this.viewContainer.createComponent(FieldMetadataMarkerComponent, {
+      bindings: [
+        inputBinding('metadata', () => metadata),
+        inputBinding('kind', () => MetadataKind.Open),
+      ],
+    });
 
-    // Create closing metadata tag
-    const closeCode = this.renderer.createElement('code');
-    this.renderer.setAttribute(closeCode, 'type', 'text/sitecore');
-    this.renderer.setAttribute(closeCode, 'chrometype', 'field');
-    this.renderer.addClass(closeCode, 'scpm');
-    this.renderer.setAttribute(closeCode, 'kind', MetadataKind.Close);
+    // Create the content view
+    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
+      $implicit: this.field,
+    });
 
-    // Insert metadata tags
-    parent.insertBefore(openCode, element);
-    parent.insertBefore(closeCode, element.nextSibling);
+    const anchorElement = this.viewRef.rootNodes[0] as HTMLAnchorElement;
+    if (anchorElement) {
+      this.applyLinkAttrs(anchorElement, isEmpty);
+    }
+
+    // Create closing metadata marker
+    this.viewContainer.createComponent(FieldMetadataMarkerComponent, {
+      bindings: [inputBinding('kind', () => MetadataKind.Close)],
+    });
+  }
+
+  private renderWithoutMetadata(): void {
+    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
+      $implicit: this.field,
+    });
+
+    const anchorElement = this.viewRef.rootNodes[0] as HTMLAnchorElement;
+    if (anchorElement) {
+      this.applyLinkAttrs(anchorElement, false);
+    }
   }
 }

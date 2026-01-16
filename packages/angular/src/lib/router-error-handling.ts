@@ -1,11 +1,10 @@
 import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { Router, RedirectCommand } from '@angular/router';
-import { RESPONSE_INIT } from '@angular/core';
+import { RESPONSE_INIT, ResponseInit } from '@angular/core';
 import { LoaderRedirect, LoaderNotFound, LoaderHttpError } from './loader-resolver';
 
-function setSsrStatus(status: number, location?: string) {
-  const responseInit = inject(RESPONSE_INIT, { optional: true }) as ResponseInit | null;
+function setSsrStatus(responseInit: ResponseInit | null, status: number, location?: string) {
   if (!responseInit) return;
 
   responseInit.status = status;
@@ -30,12 +29,13 @@ export function handleNavigationError(options: NavigationErrorOptions) {
     const router = inject(Router);
     const platformId = inject(PLATFORM_ID);
     const isServer = isPlatformServer(platformId);
+    const responseInit = inject(RESPONSE_INIT, { optional: true }) as ResponseInit | null;
 
     const err = e?.error ?? e;
 
     // 1) Redirect
     if (err instanceof LoaderRedirect) {
-      if (isServer) setSsrStatus(err.status, err.location);
+      if (isServer) setSsrStatus(responseInit, err.status, err.location);
 
       // Internal vs external
       const isExternal = /^https?:\/\//i.test(err.location);
@@ -51,7 +51,7 @@ export function handleNavigationError(options: NavigationErrorOptions) {
 
     // 2) NotFound -> render 404 page but KEEP the original URL
     if (err instanceof LoaderNotFound) {
-      if (isServer) setSsrStatus(404);
+      if (isServer) setSsrStatus(responseInit, 404);
 
       return new RedirectCommand(router.parseUrl(options.notFoundRoute ?? '/404'), {
         skipLocationChange: true, // keeps original URL in the address bar
@@ -60,10 +60,11 @@ export function handleNavigationError(options: NavigationErrorOptions) {
 
     // 3) 500 (and other errors)
     const status = err instanceof LoaderHttpError ? err.status : 500;
-    if (isServer) setSsrStatus(status);
+    if (isServer) setSsrStatus(responseInit, status);
 
     return new RedirectCommand(router.parseUrl(options.internalServerErrorRoute ?? '/500'), {
       skipLocationChange: true,
     });
   };
 }
+

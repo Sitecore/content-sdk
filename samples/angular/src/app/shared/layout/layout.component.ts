@@ -1,7 +1,12 @@
 import { Component, input, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Title } from '@angular/platform-browser';
-import { PlaceholderComponent, Page, Field } from '@sitecore-content-sdk/angular';
+import {
+  PlaceholderComponent,
+  Page,
+  Field,
+  EditingScriptsComponent,
+} from '@sitecore-content-sdk/angular';
 
 /**
  * Route fields interface for page title
@@ -19,10 +24,11 @@ interface RouteFields {
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, PlaceholderComponent],
+  imports: [CommonModule, PlaceholderComponent, EditingScriptsComponent],
   template: `
     @if (route()) {
     <div [class]="mainClass()">
+      <sc-editing-scripts></sc-editing-scripts>
       <header>
         <div id="header">
           <sc-placeholder name="headless-header" [rendering]="route()!"></sc-placeholder>

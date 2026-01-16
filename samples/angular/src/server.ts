@@ -6,8 +6,14 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
-import { createExpressDataMiddleware } from '@sitecore-content-sdk/angular';
+import {
+  createExpressDataMiddleware,
+  createExpressEditingConfigMiddleware,
+} from '@sitecore-content-sdk/angular';
 import { SERVER_LOADERS } from './lib/loaders';
+import { componentMap } from '../.sitecore/component-map';
+import metadata from '../.sitecore/metadata.json';
+import scConfig from './sitecore.config';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -25,6 +31,18 @@ app.use(express.json());
  * Handles requests at /_data endpoint (configurable via options.endpoint).
  */
 app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS }));
+
+/**
+ * Editing config middleware for XM Cloud Pages integration.
+ * Provides configuration information at /api/editing/config endpoint.
+ */
+app.use(
+  createExpressEditingConfigMiddleware({
+    components: componentMap,
+    metadata,
+    editingSecret: scConfig.editingSecret,
+  })
+);
 
 /**
  * Serve static files from /browser

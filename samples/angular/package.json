@@ -32,8 +32,10 @@
     "@angular/platform-server": "^21.0.0",
     "@angular/router": "^21.0.0",
     "@angular/ssr": "^21.0.4",
-    "@sitecore-content-sdk/angular": "1.4.0-canary.12",
+    "@sitecore-content-sdk/angular": "workspace:*",
+    "bootstrap": "^5.3.8",
     "express": "^5.1.0",
+    "font-awesome": "^4.7.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

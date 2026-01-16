@@ -24,7 +24,9 @@ export { MissingComponentComponent } from './missing-component.component';
 
 // Internal components (used by directives for editing mode)
 export { FieldMetadataComponent } from './field-metadata.component';
+export { FieldMetadataMarkerComponent } from './field-metadata-marker.component';
 export {
   DefaultEmptyFieldEditingTextComponent,
   DefaultEmptyFieldEditingImageComponent,
 } from './default-empty-field-editing.component';
+export { EditingScriptsComponent } from './editing-scripts.component';

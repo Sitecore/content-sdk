@@ -13,3 +13,15 @@ export {
   ExpressNextFunction,
   ExpressMiddleware,
 } from './express-data-handler';
+
+// Editing config handlers
+export {
+  createEditingConfigMiddleware,
+  EditingConfigHandlerOptions,
+  DEFAULT_EDITING_CONFIG_ENDPOINT,
+} from './editing-config-handler';
+
+export {
+  createExpressEditingConfigMiddleware,
+  ExpressEditingConfigHandlerOptions,
+} from './express-editing-config-handler';

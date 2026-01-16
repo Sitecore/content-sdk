@@ -8,11 +8,13 @@ import {
   inject,
   EmbeddedViewRef,
   Renderer2,
+  inputBinding,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 import { MetadataKind } from '@sitecore-content-sdk/core/editing';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
+import { FieldMetadataMarkerComponent } from './field-metadata-marker.component';
 
 /**
  * The interface for the Date field.
@@ -88,39 +90,21 @@ export class ScDateDirective implements OnChanges {
     const shouldShowEmptyEditing = hasMetadata && isEmpty;
 
     const dateValue = this.getDateValue();
-
-    // Create the view
-    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
-      $implicit: this.field,
-      date: dateValue,
-    });
-
-    const rootNode = this.viewRef.rootNodes[0] as HTMLElement;
-    if (!rootNode) return;
-
-    // Handle empty field in editing mode
-    if (shouldShowEmptyEditing) {
-      this.renderWithMetadata(rootNode, '[No text in field]');
-      return;
-    }
+    const formattedDate = shouldShowEmptyEditing
+      ? '[No text in field]'
+      : isEmpty
+        ? ''
+        : this.getFormattedDate();
 
     // Don't render if empty (non-editing mode)
-    if (isEmpty) {
-      this.viewContainer.clear();
+    if (isEmpty && !shouldShowEmptyEditing) {
       return;
-    }
-
-    const formattedDate = this.getFormattedDate();
-
-    // Set datetime attribute for time elements
-    if (rootNode.tagName.toLowerCase() === 'time' && this.field?.value) {
-      this.renderer.setAttribute(rootNode, 'datetime', this.field.value);
     }
 
     if (hasMetadata) {
-      this.renderWithMetadata(rootNode, formattedDate);
+      this.renderWithMetadata(dateValue, formattedDate);
     } else {
-      this.renderer.setProperty(rootNode, 'textContent', formattedDate);
+      this.renderWithoutMetadata(dateValue, formattedDate);
     }
   }
 
@@ -143,33 +127,51 @@ export class ScDateDirective implements OnChanges {
     return this.field?.value || '';
   }
 
-  private renderWithMetadata(element: HTMLElement, value: string): void {
-    const parent = element.parentNode;
-    if (!parent) {
-      this.renderer.setProperty(element, 'textContent', value);
-      return;
+  private renderWithMetadata(dateValue: Date | null, formattedDate: string): void {
+    const metadata = this.field?.metadata;
+
+    // Create opening metadata marker
+    this.viewContainer.createComponent(FieldMetadataMarkerComponent, {
+      bindings: [
+        inputBinding('metadata', () => metadata),
+        inputBinding('kind', () => MetadataKind.Open),
+      ],
+    });
+
+    // Create the content view
+    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
+      $implicit: this.field,
+      date: dateValue,
+    });
+
+    const rootNode = this.viewRef.rootNodes[0] as HTMLElement;
+    if (rootNode) {
+      // Set datetime attribute for time elements
+      if (rootNode.tagName.toLowerCase() === 'time' && this.field?.value) {
+        this.renderer.setAttribute(rootNode, 'datetime', this.field.value);
+      }
+      this.renderer.setProperty(rootNode, 'textContent', formattedDate);
     }
 
-    // Create opening metadata tag
-    const openCode = this.renderer.createElement('code');
-    this.renderer.setAttribute(openCode, 'type', 'text/sitecore');
-    this.renderer.setAttribute(openCode, 'chrometype', 'field');
-    this.renderer.addClass(openCode, 'scpm');
-    this.renderer.setAttribute(openCode, 'kind', MetadataKind.Open);
-    this.renderer.setProperty(openCode, 'textContent', JSON.stringify(this.field?.metadata));
+    // Create closing metadata marker
+    this.viewContainer.createComponent(FieldMetadataMarkerComponent, {
+      bindings: [inputBinding('kind', () => MetadataKind.Close)],
+    });
+  }
 
-    // Create closing metadata tag
-    const closeCode = this.renderer.createElement('code');
-    this.renderer.setAttribute(closeCode, 'type', 'text/sitecore');
-    this.renderer.setAttribute(closeCode, 'chrometype', 'field');
-    this.renderer.addClass(closeCode, 'scpm');
-    this.renderer.setAttribute(closeCode, 'kind', MetadataKind.Close);
+  private renderWithoutMetadata(dateValue: Date | null, formattedDate: string): void {
+    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
+      $implicit: this.field,
+      date: dateValue,
+    });
 
-    // Insert metadata tags
-    parent.insertBefore(openCode, element);
-    parent.insertBefore(closeCode, element.nextSibling);
-
-    // Render content
-    this.renderer.setProperty(element, 'textContent', value);
+    const rootNode = this.viewRef.rootNodes[0] as HTMLElement;
+    if (rootNode) {
+      // Set datetime attribute for time elements
+      if (rootNode.tagName.toLowerCase() === 'time' && this.field?.value) {
+        this.renderer.setAttribute(rootNode, 'datetime', this.field.value);
+      }
+      this.renderer.setProperty(rootNode, 'textContent', formattedDate);
+    }
   }
 }

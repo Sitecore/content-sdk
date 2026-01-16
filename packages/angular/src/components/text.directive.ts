@@ -8,10 +8,12 @@ import {
   inject,
   EmbeddedViewRef,
   Renderer2,
+  inputBinding,
 } from '@angular/core';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 import { MetadataKind } from '@sitecore-content-sdk/core/editing';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
+import { FieldMetadataMarkerComponent } from './field-metadata-marker.component';
 
 /**
  * The interface for the Text field.
@@ -85,32 +87,21 @@ export class ScTextDirective implements OnChanges {
     const isEmpty = isFieldValueEmpty(this.field);
     const shouldShowEmptyEditing = hasMetadata && isEmpty;
 
-    // Create the view
-    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
-      $implicit: this.field,
-    });
-
-    const rootNode = this.viewRef.rootNodes[0] as HTMLElement;
-    if (!rootNode) return;
-
-    // Handle empty field in editing mode
-    if (shouldShowEmptyEditing) {
-      this.renderWithMetadata(rootNode, '[No text in field]');
-      return;
-    }
+    const value = shouldShowEmptyEditing
+      ? '[No text in field]'
+      : isEmpty
+        ? ''
+        : String(this.field?.value ?? '');
 
     // Don't render if empty (non-editing mode)
-    if (isEmpty) {
-      this.viewContainer.clear();
+    if (isEmpty && !shouldShowEmptyEditing) {
       return;
     }
 
-    const value = this.field?.value ?? '';
-
     if (hasMetadata) {
-      this.renderWithMetadata(rootNode, String(value));
+      this.renderWithMetadata(value);
     } else {
-      this.renderContent(rootNode, String(value));
+      this.renderWithoutMetadata(value);
     }
   }
 
@@ -122,33 +113,41 @@ export class ScTextDirective implements OnChanges {
     }
   }
 
-  private renderWithMetadata(element: HTMLElement, value: string): void {
-    const parent = element.parentNode;
-    if (!parent) {
-      this.renderContent(element, value);
-      return;
+  private renderWithMetadata(value: string): void {
+    const metadata = this.field?.metadata;
+
+    // Create opening metadata marker
+    this.viewContainer.createComponent(FieldMetadataMarkerComponent, {
+      bindings: [
+        inputBinding('metadata', () => metadata),
+        inputBinding('kind', () => MetadataKind.Open),
+      ],
+    });
+
+    // Create the content view
+    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
+      $implicit: this.field,
+    });
+
+    const rootNode = this.viewRef.rootNodes[0] as HTMLElement;
+    if (rootNode) {
+      this.renderContent(rootNode, value);
     }
 
-    // Create opening metadata tag
-    const openCode = this.renderer.createElement('code');
-    this.renderer.setAttribute(openCode, 'type', 'text/sitecore');
-    this.renderer.setAttribute(openCode, 'chrometype', 'field');
-    this.renderer.addClass(openCode, 'scpm');
-    this.renderer.setAttribute(openCode, 'kind', MetadataKind.Open);
-    this.renderer.setProperty(openCode, 'textContent', JSON.stringify(this.field?.metadata));
+    // Create closing metadata marker
+    this.viewContainer.createComponent(FieldMetadataMarkerComponent, {
+      bindings: [inputBinding('kind', () => MetadataKind.Close)],
+    });
+  }
 
-    // Create closing metadata tag
-    const closeCode = this.renderer.createElement('code');
-    this.renderer.setAttribute(closeCode, 'type', 'text/sitecore');
-    this.renderer.setAttribute(closeCode, 'chrometype', 'field');
-    this.renderer.addClass(closeCode, 'scpm');
-    this.renderer.setAttribute(closeCode, 'kind', MetadataKind.Close);
+  private renderWithoutMetadata(value: string): void {
+    this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
+      $implicit: this.field,
+    });
 
-    // Insert metadata tags
-    parent.insertBefore(openCode, element);
-    parent.insertBefore(closeCode, element.nextSibling);
-
-    // Render content
-    this.renderContent(element, value);
+    const rootNode = this.viewRef.rootNodes[0] as HTMLElement;
+    if (rootNode) {
+      this.renderContent(rootNode, value);
+    }
   }
 }

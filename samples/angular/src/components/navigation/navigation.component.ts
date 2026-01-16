@@ -27,6 +27,7 @@ export class NavigationComponent extends SxaComponent implements OnInit {
     effect(() => {
       const page = sitecoreContext.page();
       this.isEditing = page?.mode?.isEditing ?? false;
+      console.log('entered navigation component', this.isEditing);
     });
   }
 

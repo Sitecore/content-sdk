@@ -10,6 +10,7 @@ import {
   ChangeDetectionStrategy,
   Type,
   effect,
+  inputBinding,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
@@ -22,6 +23,8 @@ import {
   HIDDEN_RENDERING_NAME,
 } from './placeholder-utils';
 import { PlaceholderMetadataComponent } from './placeholder-metadata.component';
+import { RenderingMetadataMarkerComponent } from './rendering-metadata-marker.component';
+import { MetadataKind } from '@sitecore-content-sdk/core/editing';
 
 /**
  * Configuration for the Placeholder component
@@ -265,7 +268,9 @@ export class PlaceholderComponent implements AfterViewInit, OnChanges {
   }
 
   /**
-   * Render component with metadata wrapper for editing mode
+   * Render component with metadata wrapper for editing mode.
+   * Uses RenderingMetadataWrapperComponent to provide template-based metadata code tags,
+   * ensuring hydration compatibility.
    * @param component - The Angular component type to render
    * @param componentInputs - The inputs to pass to the component
    * @param rendering - The component rendering data
@@ -275,35 +280,19 @@ export class PlaceholderComponent implements AfterViewInit, OnChanges {
     componentInputs: ReturnType<typeof getComponentInputs>,
     rendering: ComponentRendering
   ): void {
-    // Create opening code element
-    const openCode = document.createElement('code');
-    openCode.setAttribute('type', 'text/sitecore');
-    openCode.setAttribute('chrometype', 'rendering');
-    openCode.setAttribute('class', 'scpm');
-    openCode.setAttribute('kind', 'open');
-    if (rendering.uid) {
-      openCode.setAttribute('id', rendering.uid);
-    }
-
-    // Create the component
-    const componentRef = this.componentHost.createComponent(component);
-
-    // Set component inputs
-    this.setComponentInputs(componentRef, componentInputs);
-
-    // Create closing code element
-    const closeCode = document.createElement('code');
-    closeCode.setAttribute('type', 'text/sitecore');
-    closeCode.setAttribute('chrometype', 'rendering');
-    closeCode.setAttribute('class', 'scpm');
-    closeCode.setAttribute('kind', 'close');
-
-    // Insert code elements around the component
-    const hostElement = componentRef.location.nativeElement;
-    if (hostElement && hostElement.parentNode) {
-      hostElement.parentNode.insertBefore(openCode, hostElement);
-      hostElement.parentNode.insertBefore(closeCode, hostElement.nextSibling);
-    }
+    this.componentHost.createComponent(RenderingMetadataMarkerComponent, {
+      bindings: [
+        inputBinding('uid', () => rendering.uid),
+        inputBinding('kind', () => MetadataKind.Open),
+      ],
+    });
+    this.renderComponentDirect(component, componentInputs);
+    this.componentHost.createComponent(RenderingMetadataMarkerComponent, {
+      bindings: [
+        inputBinding('uid', () => rendering.uid),
+        inputBinding('kind', () => MetadataKind.Close),
+      ],
+    });
   }
 
   /**
@@ -315,22 +304,13 @@ export class PlaceholderComponent implements AfterViewInit, OnChanges {
     component: Type<unknown>,
     componentInputs: ReturnType<typeof getComponentInputs>
   ): void {
-    const componentRef = this.componentHost.createComponent(component);
-    this.setComponentInputs(componentRef, componentInputs);
-  }
-
-  /**
-   * Set inputs on a component ref
-   * @param componentRef - The component reference with setInput method
-   * @param componentInputs - The inputs to set on the component
-   */
-  private setComponentInputs(
-    componentRef: { setInput: (name: string, value: unknown) => void },
-    componentInputs: ReturnType<typeof getComponentInputs>
-  ): void {
-    componentRef.setInput('fields', componentInputs.fields);
-    componentRef.setInput('params', componentInputs.params);
-    componentRef.setInput('rendering', componentInputs.rendering);
+    this.componentHost.createComponent(component, {
+      bindings: [
+        inputBinding('fields', () => componentInputs.fields),
+        inputBinding('params', () => componentInputs.params),
+        inputBinding('rendering', () => componentInputs.rendering),
+      ],
+    });
   }
 
   /**
