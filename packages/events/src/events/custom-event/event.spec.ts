@@ -1,5 +1,5 @@
-import * as core from '@sitecore-content-sdk/__core__/internal';
-import * as utilsModule from '@sitecore-content-sdk/utils';
+import * as core from '@sitecore-content-sdk/analytics-core/internal';
+import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages } from '../../consts';
 import * as initializerModule from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
@@ -9,8 +9,8 @@ import { event } from './event';
 
 jest.mock('../../initializer/browser/initializer');
 jest.mock('./custom-event');
-jest.mock('@sitecore-content-sdk/__core__/browser', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/__core__/browser');
+jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/browser');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -19,8 +19,8 @@ jest.mock('@sitecore-content-sdk/__core__/browser', () => {
     getCloudSDKSettings: jest.fn(),
   };
 });
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -29,8 +29,8 @@ jest.mock('@sitecore-content-sdk/utils', () => {
     getCookieValueClientSide: jest.fn(),
   };
 });
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

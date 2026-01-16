@@ -7,8 +7,7 @@
     "url": "https://github.com/Sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/__core__": "1.4.0-canary.17",
-    "@sitecore-content-sdk/utils": "1.4.0-canary.17",
+    "@sitecore-content-sdk/analytics-core": "1.4.0-canary.17",
     "debug": "^4.4.3"
   },
   "description": "> TODO: description",

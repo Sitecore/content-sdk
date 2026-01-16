@@ -1,11 +1,11 @@
-import type { DebugResponse, Settings } from '@sitecore-content-sdk/__core__/internal';
+import type { DebugResponse, Settings } from '@sitecore-content-sdk/analytics-core/internal';
 import {
   debug,
   generateCorrelationId,
   processDebugResponse,
-} from '@sitecore-content-sdk/__core__/internal';
-import type { NestedObject } from '@sitecore-content-sdk/utils';
-import { fetchWithTimeout } from '@sitecore-content-sdk/utils';
+} from '@sitecore-content-sdk/analytics-core/internal';
+import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
+import { fetchWithTimeout } from '@sitecore-content-sdk/analytics-core/utils';
 import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import { GetInteractiveExperienceDataOpts } from './personalizer';
 

@@ -1,11 +1,11 @@
-import type * as core from '@sitecore-content-sdk/__core__/internal';
+import type * as core from '@sitecore-content-sdk/analytics-core/internal';
 import * as initializerModule from '../initializer/browser/initializer';
 import * as eventQueue from './eventStorage';
 import { processEventQueue } from './processEventQueue';
 
 jest.mock('../events/custom-event/custom-event');
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

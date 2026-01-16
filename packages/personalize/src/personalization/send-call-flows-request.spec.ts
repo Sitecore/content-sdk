@@ -1,12 +1,14 @@
-import * as core from '@sitecore-content-sdk/__core__/internal';
-import * as utils from '@sitecore-content-sdk/utils';
+import * as core from '@sitecore-content-sdk/analytics-core/internal';
+import * as utils from '@sitecore-content-sdk/analytics-core/utils';
 import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import type { EPCallFlowsBody } from './send-call-flows-request';
 import { sendCallFlowsRequest } from './send-call-flows-request';
 import { expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule: object = jest.requireActual(
+    '@sitecore-content-sdk/analytics-core/internal'
+  );
 
   return {
     __esModule: true,
@@ -16,8 +18,8 @@ jest.mock('@sitecore-content-sdk/__core__/internal', () => {
   };
 });
 
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     __esModule: true,

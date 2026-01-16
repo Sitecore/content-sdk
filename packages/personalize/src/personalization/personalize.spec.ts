@@ -1,6 +1,6 @@
-import * as coreBrowserModule from '@sitecore-content-sdk/__core__/browser';
-import * as coreInternalModule from '@sitecore-content-sdk/__core__/internal';
-import * as utilsModule from '@sitecore-content-sdk/utils';
+import * as coreBrowserModule from '@sitecore-content-sdk/analytics-core/browser';
+import * as coreInternalModule from '@sitecore-content-sdk/analytics-core/internal';
+import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import * as initializerModule from '../initializer/browser/initializer';
 import { personalize } from './personalize';
 import { Personalizer } from './personalizer';
@@ -8,8 +8,10 @@ import { expect } from '@jest/globals';
 
 jest.mock('./personalizer');
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule: object = jest.requireActual(
+    '@sitecore-content-sdk/analytics-core/internal'
+  );
 
   return {
     __esModule: true,
@@ -18,8 +20,8 @@ jest.mock('@sitecore-content-sdk/__core__/internal', () => {
   };
 });
 
-jest.mock('@sitecore-content-sdk/__core__/browser', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/browser');
+jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
+  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/browser');
 
   return {
     __esModule: true,
@@ -28,8 +30,8 @@ jest.mock('@sitecore-content-sdk/__core__/browser', () => {
   };
 });
 
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     __esModule: true,

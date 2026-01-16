@@ -1,4 +1,4 @@
-import type { Settings } from '@sitecore-content-sdk/__core__/server';
+import type { Settings } from '@sitecore-content-sdk/analytics-core/server';
 import {
   isHttpRequest,
   isHttpResponse,
@@ -6,7 +6,7 @@ import {
   isNextJsMiddlewareResponse,
   type Request,
   type Response,
-} from '@sitecore-content-sdk/utils';
+} from '@sitecore-content-sdk/analytics-core/utils';
 import { handleHttpCookie } from './handleHttpCookie';
 import { handleNextJsMiddlewareCookie } from './handleNextJsMiddlewareCookie';
 import type { PersonalizeSettings } from './interfaces';

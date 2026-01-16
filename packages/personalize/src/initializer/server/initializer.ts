@@ -8,8 +8,8 @@ import {
   getEnabledPackageServer,
   PackageInitializerServer,
   BROWSER_ID_COOKIE_NAME,
-} from '@sitecore-content-sdk/__core__/internal';
-import { CloudSDKServerInitializer } from '@sitecore-content-sdk/__core__/server';
+} from '@sitecore-content-sdk/analytics-core/internal';
+import { CloudSDKServerInitializer } from '@sitecore-content-sdk/analytics-core/server';
 import { ErrorMessages, PACKAGE_NAME, PERSONALIZE_NAMESPACE } from '../../consts';
 import { createPersonalizeCookie } from './createPersonalizeCookie';
 import type { PersonalizeSettings, ServerSettings } from './interfaces';
@@ -64,7 +64,7 @@ export function addPersonalize(
 
 CloudSDKServerInitializer.prototype.addPersonalize = addPersonalize;
 
-declare module '@sitecore-content-sdk/__core__/server' {
+declare module '@sitecore-content-sdk/analytics-core/server' {
   // eslint-disable-next-line no-unused-vars
   interface CloudSDKServerInitializer {
     addPersonalize: typeof addPersonalize;

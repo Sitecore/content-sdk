@@ -1,4 +1,4 @@
-import type { NestedObject } from '@sitecore-content-sdk/utils';
+import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 
 /**
  * Event data that is sent to Sitecore EP
