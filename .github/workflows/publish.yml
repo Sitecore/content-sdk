@@ -133,18 +133,7 @@ jobs:
       # Create/update the release PR with updated versions based on changesets
       # OR
       # Publish to npm when release PR is merged
-      - name: Create Release Pull Request
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          version: yarn changeset:cascade-version && node scripts/apply-caret-version-on-release.js && yarn install
-          commit: '[release][ci] changelog, release and version bump'
-          title: ${{ github.ref_name == 'dev' && '[csdk] latest release' || format('[csdk] patch release - {0}', github.ref_name) }}
-        env:
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-
-      # Publish non-canary release to npm when release PR is merged (commit message starts with [release])
-      - name: Create Release Pull Request
+      - name: Create Release Pull Request or Publish Release
         id: changesets
         uses: changesets/action@v1
         with:
@@ -157,4 +146,3 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-

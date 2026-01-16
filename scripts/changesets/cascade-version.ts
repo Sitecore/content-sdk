@@ -4,12 +4,12 @@
  * Original `changeset version` command does not support cascading version bumps
  * This script replaces `changeset version` with a custom implementation that:
  * 1. Reads pending changesets
- * 2. Cascades major/minor/patch bumps from ANY package to all its dependents
- * 3. Assembles a new release plan with synthetic changesets
+ * 2. Cascades major/minor bumps from ANY package to all its dependents
+ * 3. Assembles a new release plan with cascade changesets
  * 4. Applies the modified release plan
  *
  * Cascading rules:
- * - If package A has a version bump (patch/minor/major),
+ * - If package A has a version bump (minor/major),
  * the version bump is propagated to all packages that depend on A (directly or transitively).
  *
  * Usage: tsx .changeset/scripts/cascade-version.ts [--dry-run]
@@ -22,27 +22,15 @@ import applyReleasePlan from '@changesets/apply-release-plan';
 import readChangesets from '@changesets/read';
 import { getCommitsThatAddFiles } from '@changesets/git';
 import { read as readConfig } from '@changesets/config';
-import { getPackages } from '@manypkg/get-packages';
+import { getPackages, Packages } from '@manypkg/get-packages';
 import { getDependentsGraph } from '@changesets/get-dependents-graph';
 import type { VersionType, NewChangesetWithCommit, NewChangeset } from '@changesets/types';
 
 const REPO = 'sitecore/content-sdk';
-// Bump type priority (higher = more significant)
-const BUMP_PRIORITY: Record<VersionType | 'none', number> = {
-  major: 3,
-  minor: 2,
-  patch: 1,
-  none: 0,
+
+type PackageChangeset = NewChangesetWithCommit & {
+  releaseType: VersionType;
 };
-
-interface BumpInfo {
-  type: VersionType;
-  sourcePkg: string;
-  summary: string;
-  commit?: string;
-}
-
-type DependentsGraph = Map<string, string[]>;
 
 /**
  * Main script entry point
@@ -59,53 +47,71 @@ async function main(): Promise<void> {
     console.log('🔍 DRY RUN MODE - Forcing no git commit to be made');
     config.commit = false;
   }
-  // Use custom reader to avoid reading from .changeset/scripts/ subdirectory
-  const changesets = await getChangesets(cwd);
 
-  if (changesets.length === 0) {
+  const originalChangesets = await getChangesetsWithCommits(cwd);
+
+  if (originalChangesets.length === 0) {
     console.log('No pending changesets found.');
     return;
   }
 
-  // Build dependents graph
-  const dependentsGraph = getDependentsGraph(packages) as DependentsGraph;
+  // get per-package changesets for easier processing
+  const changesetMap = getPackageChangesetMap(originalChangesets);
 
-  // Collect all pending version bumps from minor/major changesets
-  const pendingBumps = new Map<string, BumpInfo[]>();
-  changesets.forEach((changeset) => {
-    changeset.releases.forEach((pendingRelease) => {
-      const isMinorOrMajor = BUMP_PRIORITY[pendingRelease.type] >= BUMP_PRIORITY.minor;
-      if (isMinorOrMajor) {
-        if (!pendingBumps.has(pendingRelease.name)) {
-          pendingBumps.set(pendingRelease.name, []);
-        }
-        pendingBumps.get(pendingRelease.name)!.push({
-          type: pendingRelease.type,
-          sourcePkg: pendingRelease.name,
-          summary: changeset.summary,
-          commit: changeset.commit,
-        });
+  // package -> direct dependent packages graph/map
+  const dependentsGraph = getTransitiveDependents(packages);
+
+  const formatSummary = (changeset: PackageChangeset): string => {
+    const shortCommit = changeset.commit?.substring(0, 7);
+    const commitLink = shortCommit
+      ? ` ([${shortCommit}](https://github.com/${REPO}/commit/${changeset.commit}))`
+      : '';
+    return `  - ${changeset.summary}${commitLink}`;
+  };
+
+  const generateChangesetId = () => {
+    const random = crypto.randomUUID();
+    return `${'cascade-changeset-' + random}`;
+  };
+
+  // Apply additional changesets to dependent packages
+  const cascadeChangesets = [] as NewChangeset[];
+  dependentsGraph.forEach((dependentPkgs, sourcePkg) => {
+    const sourceChangesets = changesetMap.get(sourcePkg);
+    if (!sourceChangesets) return;
+    const aggregatedSummaries = {
+      major: [] as string[],
+      minor: [] as string[],
+    };
+    sourceChangesets.forEach((sourceChange) => {
+      if (sourceChange.releaseType === 'major') {
+        aggregatedSummaries.major.push(formatSummary(sourceChange));
+      } else if (sourceChange.releaseType === 'minor') {
+        aggregatedSummaries.minor.push(formatSummary(sourceChange));
       }
+    });
+    dependentPkgs.forEach((depPkg) => {
+      // Propagate changes from source to dependent packages if present
+      Object.keys(aggregatedSummaries).forEach((changeType) => {
+        if (aggregatedSummaries[changeType as keyof typeof aggregatedSummaries].length === 0)
+          return;
+        const synthethicChange: PackageChangeset = {
+          id: generateChangesetId(),
+          summary: `${changeType} \`${sourcePkg}\` dependency update:\n${aggregatedSummaries[
+            changeType as keyof typeof aggregatedSummaries
+          ].join('\n')}`,
+          releases: [{ name: depPkg, type: changeType as VersionType }],
+          releaseType: changeType as VersionType,
+        };
+        cascadeChangesets.push(synthethicChange);
+      });
     });
   });
 
-  // Propagate bumps through dependency graph
-  const extraBumps = addCascadedBumps(pendingBumps, dependentsGraph);
-
-  // Determine which packages need synthetic changesets (cascade bumps)
-  const syntheticChangesets = generateSynteticChangesets(extraBumps);
-
-  if (syntheticChangesets.length === 0) {
-    console.log(
-      'All dependent packages already have appropriate changesets, no extra bumps added.'
-    );
-  }
-
-  // Combine original and synthetic changesets
-  const allChangesets = [...changesets, ...syntheticChangesets];
+  const finalChangesets = [...originalChangesets, ...cascadeChangesets];
 
   // Assemble release plan with all changesets
-  const releasePlan = assembleReleasePlan(allChangesets, packages, config, undefined);
+  const releasePlan = assembleReleasePlan(finalChangesets, packages, config, undefined);
 
   console.log('\n📋 Final release plan:');
   releasePlan.releases
@@ -119,145 +125,65 @@ async function main(): Promise<void> {
   console.log('✅ Version updates applied with cascading bumps.');
 }
 
-/**
- * Read changesets with associated commits
- */
-async function getChangesets(cwd: string): Promise<NewChangesetWithCommit[]> {
+function getTransitiveDependents(packages: Packages): Map<string, string[]> {
+  const baseGraph = getDependentsGraph(packages);
+  const transitiveGraph = new Map<string, string[]>();
+
+  const collectAllDependents = (
+    pkgName: string,
+    allDependents = new Set<string>()
+  ): Set<string> => {
+    const directDependents = baseGraph.get(pkgName) || [];
+
+    for (const dependent of directDependents) {
+      // Avoid infinite loops in case of circular dependencies
+      if (!allDependents.has(dependent)) {
+        allDependents.add(dependent);
+        collectAllDependents(dependent, allDependents);
+      }
+    }
+
+    return allDependents;
+  };
+
+  baseGraph.forEach((_, pkgName) => {
+    const allDependents = collectAllDependents(pkgName);
+    transitiveGraph.set(pkgName, Array.from(allDependents));
+  });
+
+  return transitiveGraph;
+}
+
+async function getChangesetsWithCommits(cwd: string): Promise<NewChangesetWithCommit[]> {
   const changesets = await readChangesets(cwd);
   const ids = changesets.map((chset) => chset.id);
   const paths = ids.map((id) => `.changeset/${id}.md`);
   // will return an array with commit SHA or undefined string if changeset path has no commit
   const commits = await getCommitsThatAddFiles(paths, { cwd });
-  return changesets.map((chset, index) => ({ ...chset, commit: commits[index] }));
+
+  // apply found commits to changesets
+  return changesets.map((chset, index) => ({
+    ...chset,
+    commit: commits[index],
+  }));
 }
 
-/**
- * Generate a random changeset ID
- */
-function generateChangesetId(): string {
-  const random = crypto.randomUUID();
-  return `${'cascade-changeset-' + random}`;
-}
-
-/**
- * Propagate bumps through the dependency graph
- * Collects all bumps that need to cascade to dependents
- */
-function addCascadedBumps(
-  originalBumps: Map<string, BumpInfo[]>,
-  dependentsGraph: DependentsGraph
-): Map<string, BumpInfo[]> {
-  const extraBumps = new Map<string, BumpInfo[]>();
-
-  // Propagate each bump from each package to all its dependents
-  originalBumps.forEach((bumps, pkg) => {
-    const dependents = getAllDependents(pkg, dependentsGraph);
-
-    bumps.forEach((bumpInfo) => {
-      dependents.forEach((depPkg) => {
-        // Skip if dependent is the source package itself
-        if (depPkg === pkg) return;
-
-        if (!extraBumps.has(depPkg)) {
-          extraBumps.set(depPkg, []);
-        }
-
-        extraBumps.get(depPkg)!.push({
-          type: bumpInfo.type,
-          sourcePkg: pkg,
-          summary: bumpInfo.summary,
-          commit: bumpInfo.commit,
-        });
-      });
+function getPackageChangesetMap(
+  changesetsWithCommits: NewChangesetWithCommit[]
+): Map<string, PackageChangeset[]> {
+  const changesetMap = new Map<string, PackageChangeset[]>();
+  changesetsWithCommits.forEach((chset) => {
+    const pkgNames = chset.releases.map((release) => release.name);
+    pkgNames.forEach((pkgName) => {
+      const packageSpecificChangeset = {
+        ...chset,
+        releaseType: chset.releases.find((r) => r.name === pkgName)!.type,
+      };
+      changesetMap.get(pkgName)?.push(packageSpecificChangeset) ||
+        changesetMap.set(pkgName, [packageSpecificChangeset]);
     });
   });
-
-  return extraBumps;
-}
-
-/**
- * Get all dependents (direct and transitive) for a package using BFS
- */
-function getAllDependents(pkg: string, dependentsGraph: DependentsGraph): Set<string> {
-  const allDependents = new Set<string>();
-  const queue = [pkg];
-  const visited = new Set<string>([pkg]);
-
-  while (queue.length > 0) {
-    const current = queue.shift()!;
-    const directDependents = dependentsGraph.get(current) || [];
-
-    for (const dep of directDependents) {
-      if (!visited.has(dep)) {
-        visited.add(dep);
-        allDependents.add(dep);
-        queue.push(dep);
-      }
-    }
-  }
-
-  return allDependents;
-}
-
-/**
- * Generate synthetic changesets for cascaded bumps
- * Groups by dependent package -> source package -> bump type
- */
-function generateSynteticChangesets(extraBumps: Map<string, BumpInfo[]>): NewChangeset[] {
-  const syntheticChangesets: NewChangeset[] = [];
-
-  // Group extraBumps by: dependentPkg -> sourcePkg -> bumpType -> BumpInfo[]
-  type GroupedBumps = Map<string, Map<VersionType, BumpInfo[]>>;
-  const grouped = new Map<string, GroupedBumps>();
-
-  extraBumps.forEach((bumps, depPkg) => {
-    bumps.forEach((bump) => {
-      if (!grouped.has(depPkg)) {
-        grouped.set(depPkg, new Map());
-      }
-      const bySource = grouped.get(depPkg)!;
-
-      if (!bySource.has(bump.sourcePkg)) {
-        bySource.set(bump.sourcePkg, new Map());
-      }
-      const byType = bySource.get(bump.sourcePkg)!;
-
-      if (!byType.has(bump.type)) {
-        byType.set(bump.type, []);
-      }
-      byType.get(bump.type)!.push(bump);
-    });
-  });
-
-  // Generate synthetic changesets
-  grouped.forEach((bySource, depPkg) => {
-    bySource.forEach((byType, sourcePkg) => {
-      byType.forEach((bumps, type) => {
-        const shortSourceName = sourcePkg.replace(/^@.+\//, '');
-        const changeLines = bumps.map((b) => {
-          const shortCommit = b.commit?.substring(0, 7);
-          const commitLink = shortCommit
-            ? ` ([${shortCommit}](https://github.com/${REPO}/commit/${b.commit}))`
-            : '';
-          return `  - ${b.summary}${commitLink}`;
-        });
-
-        const summary = `${type} \`${shortSourceName}\` dependency update:\n${changeLines.join('\n')}`;
-
-        syntheticChangesets.push({
-          id: generateChangesetId(),
-          summary,
-          releases: [{ name: depPkg, type }],
-        });
-
-        console.log(
-          `  🔄 ${depPkg}: ${type} (from ${shortSourceName}, ${bumps.length} change(s))`
-        );
-      });
-    });
-  });
-
-  return syntheticChangesets;
+  return changesetMap;
 }
 
 try {
