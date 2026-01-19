@@ -8,8 +8,8 @@ import {
 } from '@sitecore-content-sdk/core/personalize';
 import { debug } from '@sitecore-content-sdk/core';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
-import { CloudSDK } from '@sitecore-cloudsdk/core/server';
-import { personalize } from '@sitecore-cloudsdk/personalize/server';
+import { CloudSDK } from '@sitecore-content-sdk/analytics-core/server';
+import { personalize } from '@sitecore-content-sdk/personalize/server';
 import { SitecoreConfig } from '../config';
 
 /**

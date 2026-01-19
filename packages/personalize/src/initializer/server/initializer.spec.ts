@@ -1,14 +1,16 @@
-import { PackageInitializerServer } from '@sitecore-content-sdk/__core__/internal';
-import * as coreInternalModule from '@sitecore-content-sdk/__core__/internal';
+import { PackageInitializerServer } from '@sitecore-content-sdk/analytics-core/internal';
+import * as coreInternalModule from '@sitecore-content-sdk/analytics-core/internal';
 import { ErrorMessages, PACKAGE_NAME, PERSONALIZE_NAMESPACE } from '../../consts';
 import * as createPersonalizeCookieModule from './createPersonalizeCookie';
 import * as initializerModule from './initializer';
 import { verifyPersonalizePackageExistence } from './initializer';
 import { jest, expect } from '@jest/globals';
-import { BROWSER_ID_COOKIE_NAME } from '@sitecore-content-sdk/__core__/internal';
+import { BROWSER_ID_COOKIE_NAME } from '@sitecore-content-sdk/analytics-core/internal';
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule: object = jest.requireActual(
+    '@sitecore-content-sdk/analytics-core/internal'
+  );
 
   return {
     __esModule: true,

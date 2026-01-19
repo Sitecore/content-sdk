@@ -1,4 +1,4 @@
-import { language, pageName } from '@sitecore-content-sdk/__core__/internal';
+import { language, pageName } from '@sitecore-content-sdk/analytics-core/internal';
 import type { EventAttributesInput } from './common-interfaces';
 
 export class BaseEvent {

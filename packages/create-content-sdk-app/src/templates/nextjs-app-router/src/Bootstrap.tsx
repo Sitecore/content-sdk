@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, JSX } from 'react';
-import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
-import '@sitecore-cloudsdk/events/browser';
+import { CloudSDK } from '@sitecore-content-sdk/analytics-core/browser';
+import '@sitecore-content-sdk/events/browser';
 import config from 'sitecore.config';
 
 const Bootstrap = ({

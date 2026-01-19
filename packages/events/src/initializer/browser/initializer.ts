@@ -1,10 +1,10 @@
-import { CloudSDKBrowserInitializer } from '@sitecore-content-sdk/__core__/browser';
+import { CloudSDKBrowserInitializer } from '@sitecore-content-sdk/analytics-core/browser';
 import {
   debug,
   enabledPackagesBrowser as enabledPackages,
   getEnabledPackageBrowser as getEnabledPackage,
   PackageInitializer,
-} from '@sitecore-content-sdk/__core__/internal';
+} from '@sitecore-content-sdk/analytics-core/internal';
 import { ErrorMessages, EVENTS_NAMESPACE, PACKAGE_NAME, PACKAGE_VERSION } from '../../consts';
 import { event } from '../../events/custom-event/event';
 import { form } from '../../events/custom-event/form';
@@ -49,7 +49,7 @@ export function addEvents(this: CloudSDKBrowserInitializer): CloudSDKBrowserInit
 
 CloudSDKBrowserInitializer.prototype.addEvents = addEvents;
 
-declare module '@sitecore-content-sdk/__core__/browser' {
+declare module '@sitecore-content-sdk/analytics-core/browser' {
   // eslint-disable-next-line no-unused-vars
   interface CloudSDKBrowserInitializer {
     addEvents: typeof addEvents;

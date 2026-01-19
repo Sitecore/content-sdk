@@ -1,6 +1,6 @@
-import * as core from '@sitecore-content-sdk/__core__/internal';
-import type { EPResponse, Settings } from '@sitecore-content-sdk/__core__/internal';
-import * as utils from '@sitecore-content-sdk/utils';
+import * as core from '@sitecore-content-sdk/analytics-core/internal';
+import type { EPResponse, Settings } from '@sitecore-content-sdk/analytics-core/internal';
+import * as utils from '@sitecore-content-sdk/analytics-core/utils';
 import { ErrorMessages } from '../../consts';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as sendEventModule from '../send-event/sendEvent';
@@ -8,16 +8,18 @@ import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils') as object;
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils') as object;
 
   return {
     __esModule: true,
     ...originalModule,
   };
 });
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/__core__/internal') as object;
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule = jest.requireActual(
+    '@sitecore-content-sdk/analytics-core/internal'
+  ) as object;
 
   return {
     __esModule: true,

@@ -101,9 +101,6 @@ const nextConfig = {
       config.externals = ['vertx', ...config.externals];
     }
 
-    config.resolve.alias['@sitecore-cloudsdk/events'] = path.resolve(
-      process.cwd(), './node_modules/@sitecore-cloudsdk/events'
-    );
     config.resolve.alias['@sitecore-feaas/clientside/react'] = path.resolve(
       process.cwd(), options.isServer ? 
         './node_modules/@sitecore-feaas/clientside/dist/node/react.cjs' :

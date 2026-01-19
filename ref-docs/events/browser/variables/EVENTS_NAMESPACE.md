@@ -6,6 +6,6 @@
 
 # Variable: EVENTS\_NAMESPACE
 
-> `const` **EVENTS\_NAMESPACE**: `"sitecore-cloudsdk:events"` = `'sitecore-cloudsdk:events'`
+> `const` **EVENTS\_NAMESPACE**: `"content-sdk:events"` = `'content-sdk:events'`
 
-Defined in: [events/src/consts.ts:4](https://github.com/Sitecore/content-sdk/blob/c71aa78ec59bb08efdf821d01673c8efe517b118/packages/events/src/consts.ts#L4)
+Defined in: [events/src/consts.ts:4](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/events/src/consts.ts#L4)

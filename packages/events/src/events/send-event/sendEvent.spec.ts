@@ -1,10 +1,10 @@
-import * as core from '@sitecore-content-sdk/__core__/internal';
-import * as utils from '@sitecore-content-sdk/utils';
+import * as core from '@sitecore-content-sdk/analytics-core/internal';
+import * as utils from '@sitecore-content-sdk/analytics-core/utils';
 import { EVENTS_NAMESPACE, PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import { sendEvent } from './sendEvent';
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -13,8 +13,8 @@ jest.mock('@sitecore-content-sdk/__core__/internal', () => {
   };
 });
 
-jest.mock('@sitecore-content-sdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/utils');
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

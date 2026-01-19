@@ -1,5 +1,5 @@
-import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-content-sdk/__core__/internal';
-import { getCookieValueClientSide } from '@sitecore-content-sdk/utils';
+import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-content-sdk/analytics-core/internal';
+import { getCookieValueClientSide } from '@sitecore-content-sdk/analytics-core/utils';
 import type { EventData } from '../events';
 import { awaitInit } from '../initializer/browser/initializer';
 import type { QueueEventPayload } from './eventStorage';

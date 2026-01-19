@@ -22,7 +22,7 @@ describe('PersonalizeProxy', () => {
   });
 
   const { PersonalizeProxy } = proxyquire('./personalize-proxy', {
-    '@sitecore-cloudsdk/personalize/server': { personalize: CDKPersonalizeStub },
+    '@sitecore-content-sdk/personalize/server': { personalize: CDKPersonalizeStub },
   });
 
   const ua = 'user-agent-string';
@@ -275,14 +275,13 @@ describe('PersonalizeProxy', () => {
 
       const getOverrideExperienceParamsStub = sandbox.stub().returns(customParams);
 
-      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } =
-        createProxy({
-          variantId: 'variant-2',
-          config: {
-            ...defaultConfig,
-            getExtraUtmParams: getOverrideExperienceParamsStub,
-          },
-        });
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } = createProxy({
+        variantId: 'variant-2',
+        config: {
+          ...defaultConfig,
+          getExtraUtmParams: getOverrideExperienceParamsStub,
+        },
+      });
 
       const finalRes = await proxy.handle(req, res);
 
@@ -545,10 +544,9 @@ describe('PersonalizeProxy', () => {
     it('no variant identified', async () => {
       const req = createRequest();
       const res = createResponse();
-      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } =
-        createProxy({
-          variantId: undefined,
-        });
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } = createProxy({
+        variantId: undefined,
+      });
       const headers = {};
       req.headers.forEach((value, key) => (headers[key] = value));
       const finalRes = await proxy.handle(req, res);
@@ -569,15 +567,14 @@ describe('PersonalizeProxy', () => {
       const res = createResponse();
       const handleCookieStub = sandbox.stub().resolves();
       const invalidVariant = 'invalid-variant';
-      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } =
-        createProxy({
-          personalizeInfo: {
-            pageId,
-            variantIds,
-          },
-          variantId: invalidVariant,
-          handleCookieStub,
-        });
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } = createProxy({
+        personalizeInfo: {
+          pageId,
+          variantIds,
+        },
+        variantId: invalidVariant,
+        handleCookieStub,
+      });
       const finalRes = await proxy.handle(req, res);
       const headers = {};
       req.headers.forEach((value, key) => (headers[key] = value));
@@ -1244,10 +1241,9 @@ describe('PersonalizeProxy', () => {
 
       const getPersonalizeInfoWithError = sandbox.stub().throws(error);
 
-      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } =
-        createProxy({
-          getPersonalizeInfoStub: getPersonalizeInfoWithError,
-        });
+      const { proxy, getPersonalizeInfo, initPersonalizeServer, personalize } = createProxy({
+        getPersonalizeInfoStub: getPersonalizeInfoWithError,
+      });
 
       const finalRes = await proxy.handle(req, res);
 

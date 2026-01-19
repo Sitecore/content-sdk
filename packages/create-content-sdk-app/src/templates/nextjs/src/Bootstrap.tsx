@@ -1,7 +1,7 @@
 ﻿import { useEffect, JSX } from 'react';
-import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { CloudSDK } from '@sitecore-content-sdk/analytics-core/browser';
 import { SitecorePageProps } from '@sitecore-content-sdk/nextjs';
-import '@sitecore-cloudsdk/events/browser';
+import '@sitecore-content-sdk/events/browser';
 import config from 'sitecore.config';
 
 /**

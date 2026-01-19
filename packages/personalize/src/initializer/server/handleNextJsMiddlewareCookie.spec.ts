@@ -1,7 +1,7 @@
-import * as internalModule from '@sitecore-content-sdk/__core__/internal';
+import * as internalModule from '@sitecore-content-sdk/analytics-core/internal';
 import * as handleNextJsMiddlewareCookieModule from './handleNextJsMiddlewareCookie';
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => ({
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   __esModule: true,
   getCookieValueFromMiddlewareRequest: jest.fn(),
   getCookiesValuesFromEdgeServer: jest.fn(),

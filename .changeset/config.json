@@ -4,10 +4,5 @@
   "commit": false,
   "access": "public",
   "baseBranch": "dev",
-  "ignore": [
-    "@sitecore-content-sdk/utils",
-    "@sitecore-content-sdk/__core__",
-    "@sitecore-content-sdk/events",
-    "@sitecore-content-sdk/personalize"
-  ]
+  "ignore": []
 }
