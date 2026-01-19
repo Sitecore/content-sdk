@@ -95,18 +95,11 @@ jobs:
         if: steps.configure-action.outputs.isCanaryRelease == 'true'
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
-          if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
-            TIMESTAMP=$(date -u +%Y%m%d%H%M%S)
-            # For patch canaries: use timestamp to avoid potential canary version conflicts
-            PREID="canary.${TIMESTAMP}"
-          else
-            PREID="canary"
-          fi
-          echo "Creating canary release on dev branch (no tags)..."
-          npx lerna version prerelease --exact --preid "$PREID" --sign-git-tag false --yes --no-git-tag-version
+          echo "Bumping canary version(s)"
+          npx lerna version prerelease --exact --preid canary --sign-git-tag false --yes --no-git-tag-version
           yarn install
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -a -m "chore: bump versions for canary release [skip ci]"
+            git commit -a -m "Bump canary version [skip ci]"
             git push origin HEAD:$BRANCH_NAME
           else
             echo "No version changes to commit"
@@ -119,7 +112,7 @@ jobs:
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
           if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
-            NPM_TAG="hotfix.rc.canary"
+            NPM_TAG="hotfix-canary"
           else
             NPM_TAG="canary"
           fi
@@ -133,14 +126,14 @@ jobs:
       # Create/update the release PR with updated versions based on changesets
       # OR
       # Publish to npm when release PR is merged
-      - name: Create Release Pull Request or Publish Release
+      - name: Prepare and Process Changesets Release
         id: changesets
         uses: changesets/action@v1
         with:
           # using scripts from monorepo root package.json
           version: yarn csdk:prep-release
           publish: yarn csdk:publish-release
-          commit: '[release][ci] changelog, release and version bump'
+          commit: '[release][ci] Version bump and changelog'
           title: ${{ github.ref_name == 'dev' && '[csdk] latest release' || format('[csdk] patch release - {0}', github.ref_name) }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

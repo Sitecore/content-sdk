@@ -17,6 +17,8 @@ on:
           - 'create-content-sdk'
           - '@sitecore-content-sdk/react'
           - '@sitecore-content-sdk/core'
+          - '@sitecore-content-sdk/analytics-core'
+          - '@sitecore-content-sdk/events'
 
       version:
         description: 'Base version to hotfix'
@@ -95,5 +97,5 @@ jobs:
           echo "1. Checkout the branch: \`git checkout $BRANCH_NAME\`" >> $GITHUB_STEP_SUMMARY
           echo "2. Cherrypick or add patch changes" >> $GITHUB_STEP_SUMMARY
           echo "3. Add changesets (\`yarn changeset\`)" >> $GITHUB_STEP_SUMMARY
-          echo "4. Push changes - canary versions will be published automatically" >> $GITHUB_STEP_SUMMARY
+          echo "4. Push changes. This will update pre-patch canaries and automatically create the hotfix release PR" >> $GITHUB_STEP_SUMMARY
           echo "5. Merge hotfix release PR to trigger the release" >> $GITHUB_STEP_SUMMARY

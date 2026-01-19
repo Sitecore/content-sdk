@@ -38,10 +38,10 @@
     "minimist": "^1.2.8"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/cli": "1.4.0-canary.19",
-    "@sitecore-content-sdk/nextjs": "1.4.0-canary.19",
     "@sitecore-content-sdk/analytics-core": "1.4.0-canary.19",
+    "@sitecore-content-sdk/cli": "1.4.0-canary.19",
     "@sitecore-content-sdk/events": "1.4.0-canary.19",
+    "@sitecore-content-sdk/nextjs": "1.4.0-canary.19",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@types/chai": "^5.2.2",
     "@types/cross-spawn": "^6.0.6",
