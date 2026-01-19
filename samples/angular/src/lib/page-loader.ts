@@ -4,6 +4,7 @@ import {
   isDesignLibraryRequest,
   parseEditingPreviewData,
   parseDesignLibraryPreviewData,
+  notFound,
 } from '@sitecore-content-sdk/angular';
 import { client } from './sitecore-client';
 import config from '../sitecore.config';
@@ -47,5 +48,9 @@ export const pageLoader: LoaderFn = async ({ url, query }) => {
 
   // Normal page request
   const page = await client.getPage(url);
+  if (!page) {
+    notFound();
+  }
+
   return page;
 };

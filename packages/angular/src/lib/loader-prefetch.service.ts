@@ -1,11 +1,6 @@
 import { Injectable, OnDestroy, Optional, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import {
-  Router,
-  ResolveStart,
-  ActivatedRouteSnapshot,
-  Params,
-} from '@angular/router';
+import { Router, ResolveStart, ActivatedRouteSnapshot, Params } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 import { LoaderPrefetchConfig, LOADER_PREFETCH_CONFIG } from './loader-prefetch.config';
 import { LoaderDataService } from './loader-data.service';
@@ -40,12 +35,9 @@ export class LoaderPrefetchService implements OnDestroy {
     @Optional() @Inject(LOADER_PREFETCH_CONFIG) private config: LoaderPrefetchConfig | null,
     @Inject(PLATFORM_ID) private platformId: object
   ) {
-    // Only activate in browser when enabled via provideLoaderPrefetch()
-    if (isPlatformBrowser(this.platformId) && this.config?.enabled) {
-      this.subscription = this.router.events
-        .pipe(filter((e): e is ResolveStart => e instanceof ResolveStart))
-        .subscribe((event) => this.prefetchAll(event.state.root, event.state.url));
-    }
+    this.subscription = this.router.events
+      .pipe(filter((e): e is ResolveStart => e instanceof ResolveStart))
+      .subscribe((event) => this.prefetchAll(event.state.root, event.state.url));
   }
 
   /**
@@ -72,10 +64,7 @@ export class LoaderPrefetchService implements OnDestroy {
     const resolveConfig = route.routeConfig?.resolve;
     if (resolveConfig) {
       // Collect all params from root to this route (same as loaderResolver does)
-      const params = route.pathFromRoot.reduce(
-        (acc, r) => ({ ...acc, ...r.params }),
-        {} as Params
-      );
+      const params = route.pathFromRoot.reduce((acc, r) => ({ ...acc, ...r.params }), {} as Params);
 
       for (const resolver of Object.values(resolveConfig)) {
         const loaderId = getLoaderId(resolver);

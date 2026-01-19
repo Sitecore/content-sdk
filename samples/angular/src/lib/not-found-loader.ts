@@ -7,7 +7,7 @@ export const errorPageLoader = (errorPage: ErrorPage) => async () => {
     site: scConfig.defaultSite,
     locale: scConfig.defaultLanguage,
   });
-  return {
-    page,
-  };
+  console.log('errorPageLoader', page);
+  console.log('errorPage route', page?.layout.sitecore.route);
+  return page;
 };

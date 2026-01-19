@@ -191,6 +191,7 @@ export class LoaderDataService {
       })
       .catch((error) => {
         this.pending.delete(key);
+
         const message = error instanceof Error ? error.message : 'Fetch failed';
         return { kind: 'error', status: 500, message } as LoaderApiResponse;
       });

@@ -128,9 +128,9 @@ function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
     // Return 200 with redirect info for client-side handling
     res.json(result);
   } else if (result.kind === 'notFound') {
-    res.status(404).json(result);
+    res.json(result);
   } else if (result.kind === 'error') {
-    res.status(result.status).json(result);
+    res.json(result);
   } else {
     res.json(result);
   }

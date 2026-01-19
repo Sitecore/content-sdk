@@ -63,6 +63,7 @@ export {
 } from '@sitecore-content-sdk/core/editing';
 
 // Angular-specific exports
+export * from './lib/sdk-provider';
 export * from './lib/loader-resolver';
 export * from './lib/loader-registry.token';
 export * from './lib/loader-prefetch.config';

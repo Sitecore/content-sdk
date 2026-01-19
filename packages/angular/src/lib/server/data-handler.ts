@@ -100,9 +100,9 @@ function createResponse(result: LoaderApiResponse): Response {
   if (result.kind === 'redirect') {
     return jsonResponse(result);
   } else if (result.kind === 'notFound') {
-    return jsonResponse(result, 404);
+    return jsonResponse(result, 200);
   } else if (result.kind === 'error') {
-    return jsonResponse(result, result.status);
+    return jsonResponse(result, 200);
   } else {
     return jsonResponse(result, 200);
   }
@@ -149,18 +149,18 @@ export function createDataMiddleware(
         const body = (await request.json()) as LoaderApiRequest;
 
         if (!body.loaderId) {
-          return jsonResponse({ kind: 'error', status: 400, message: 'Missing loaderId' }, 400);
+          return jsonResponse({ kind: 'error', status: 400, message: 'Missing loaderId' }, 200);
         }
 
         const result = await executeLoader(body, loaders);
         return createResponse(result);
       } else {
         // Method not allowed
-        return jsonResponse({ kind: 'error', status: 405, message: 'Method not allowed' }, 405);
+        return jsonResponse({ kind: 'error', status: 405, message: 'Method not allowed' }, 200);
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Internal server error';
-      return jsonResponse({ kind: 'error', status: 500, message }, 500);
+      return jsonResponse({ kind: 'error', status: 500, message }, 200);
     }
   };
 }
