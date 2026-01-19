@@ -55,8 +55,31 @@ export interface LoaderIdMap {}
 
 export type LoaderId = keyof LoaderIdMap extends never ? string : keyof LoaderIdMap;
 
+/**
+ * Symbol used to tag resolver functions with their loader ID.
+ * This allows the prefetch service to identify loader resolvers in the route tree.
+ * @internal
+ */
+export const LOADER_ID = Symbol('loaderId');
+
+/**
+ * Extract the loader ID from a resolver function if it was created by loaderResolver.
+ * @param fn - The resolver function to check
+ * @returns The loader ID if found, undefined otherwise
+ * @internal
+ */
+export const getLoaderId = (fn: unknown): string | undefined => {
+  if (fn && typeof fn === 'function' && LOADER_ID in fn) {
+    return (fn as Record<symbol, string>)[LOADER_ID];
+  }
+  return undefined;
+};
+
 export const loaderResolver: (loaderId: LoaderId) => ResolveFn<any> = (loaderId: string) => {
-  return async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  const resolver: ResolveFn<any> & { [LOADER_ID]?: string } = async (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ) => {
     // All inject() calls must happen synchronously at the top before any await
     const transferState = inject(TransferState);
     const platformId = inject(PLATFORM_ID);
@@ -124,4 +147,9 @@ export const loaderResolver: (loaderId: LoaderId) => ResolveFn<any> = (loaderId:
       throw e;
     }
   };
+
+  // Tag the resolver function with its loader ID for prefetch discovery
+  resolver[LOADER_ID] = loaderId;
+
+  return resolver;
 };

@@ -65,6 +65,7 @@ export {
 // Angular-specific exports
 export * from './lib/loader-resolver';
 export * from './lib/loader-registry.token';
+export * from './lib/loader-prefetch.config';
 export * from './lib/api';
 export * from './lib/types';
 export * from './lib/component-map.token';

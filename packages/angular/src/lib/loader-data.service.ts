@@ -106,7 +106,30 @@ export class LoaderDataService {
    * @param loaderId - The loader ID to use
    */
   preload(url: string, loaderId: string): void {
-    // Only preload in browser
+    this.prefetch(url, loaderId);
+  }
+
+  /**
+   * Prefetch data with full context (url, params, query).
+   * Makes a request to the /_data endpoint and caches the result.
+   * Does nothing if already cached or currently loading.
+   * Fire-and-forget - does not return the result.
+   *
+   * This method is used by the LoaderPrefetchService to start parallel
+   * fetching of all loaders in the matched route tree.
+   *
+   * @param url - The URL to prefetch
+   * @param loaderId - The loader ID to use
+   * @param params - Route parameters
+   * @param query - Query parameters
+   */
+  prefetch(
+    url: string,
+    loaderId: string,
+    params?: Params,
+    query?: Record<string, string | string[]>
+  ): void {
+    // Only prefetch in browser
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
@@ -119,8 +142,8 @@ export class LoaderDataService {
     }
 
     // Fire and forget - we don't await this
-    this.fetchData({ url, loaderId }).catch(() => {
-      // Silently fail - preloading is best effort
+    this.fetchData({ url, loaderId, params, query }).catch(() => {
+      // Silently fail - prefetching is best effort
     });
   }
 
