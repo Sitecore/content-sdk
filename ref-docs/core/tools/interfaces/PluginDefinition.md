@@ -6,7 +6,7 @@
 
 # Interface: PluginDefinition
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:26](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/tools/templating/plugins.ts#L26)
+Defined in: [packages/core/src/tools/templating/plugins.ts:26](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/tools/templating/plugins.ts#L26)
 
 Definition to be used for plugin registration during bootstrap
 
@@ -16,7 +16,7 @@ Definition to be used for plugin registration during bootstrap
 
 > **distPath**: `string`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:30](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/tools/templating/plugins.ts#L30)
+Defined in: [packages/core/src/tools/templating/plugins.ts:30](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/tools/templating/plugins.ts#L30)
 
 destination path to compile plugins to
 
@@ -26,7 +26,7 @@ destination path to compile plugins to
 
 > **moduleType**: [`ModuleType`](../enumerations/ModuleType.md)
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:38](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/tools/templating/plugins.ts#L38)
+Defined in: [packages/core/src/tools/templating/plugins.ts:38](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/tools/templating/plugins.ts#L38)
 
 CJS or ESM - which type to compile plugins to
 
@@ -36,7 +36,7 @@ CJS or ESM - which type to compile plugins to
 
 > `optional` **relative**: `boolean`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:42](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/tools/templating/plugins.ts#L42)
+Defined in: [packages/core/src/tools/templating/plugins.ts:42](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/tools/templating/plugins.ts#L42)
 
 whether to use relative or absolute paths in the generated file. By default, absolute paths are used.
 
@@ -46,7 +46,7 @@ whether to use relative or absolute paths in the generated file. By default, abs
 
 > **rootPath**: `string`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:34](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/tools/templating/plugins.ts#L34)
+Defined in: [packages/core/src/tools/templating/plugins.ts:34](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/tools/templating/plugins.ts#L34)
 
 source path for where the plugins are defined
 
@@ -56,6 +56,6 @@ source path for where the plugins are defined
 
 > `optional` **silent**: `boolean`
 
-Defined in: [packages/core/src/tools/templating/plugins.ts:46](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/tools/templating/plugins.ts#L46)
+Defined in: [packages/core/src/tools/templating/plugins.ts:46](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/tools/templating/plugins.ts#L46)
 
 whether to suppress console output
