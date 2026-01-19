@@ -10,6 +10,17 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
+### 1.3.3
+
+### 🐛 Bug Fixes
+
+* `[nextjs]` `[react]` Fix fields becoming uneditable in Pages when running Editing Host in dev mode ([#339](https://github.com/Sitecore/content-sdk/pull/339))
+
+## 1.3.2
+
+### ✨ Chores
+
+* Apply caret (`^`) verisoning to content-sdk packages, ensuring the latest patch versions are used by them.
 
 ## 1.3.1
 
