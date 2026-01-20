@@ -8,7 +8,7 @@
 
 > **getPersonalizedRewriteData**(`pathname`): [`PersonalizedRewriteData`](../type-aliases/PersonalizedRewriteData.md)
 
-Defined in: [packages/core/src/personalize/utils.ts:30](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/personalize/utils.ts#L30)
+Defined in: [packages/core/src/personalize/utils.ts:30](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/core/src/personalize/utils.ts#L30)
 
 Get personalize data from the rewrite path
 

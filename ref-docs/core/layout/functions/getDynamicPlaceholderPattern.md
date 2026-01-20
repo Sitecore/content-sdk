@@ -8,7 +8,7 @@
 
 > **getDynamicPlaceholderPattern**(`placeholder`): `RegExp`
 
-Defined in: [packages/core/src/layout/utils.ts:93](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/layout/utils.ts#L93)
+Defined in: [packages/core/src/layout/utils.ts:93](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/core/src/layout/utils.ts#L93)
 
 **`Internal`**
 

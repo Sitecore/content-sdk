@@ -6,7 +6,7 @@
 
 # Interface: DebugResponse
 
-Defined in: [src/interfaces.ts:28](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/analytics-core/src/interfaces.ts#L28)
+Defined in: [src/interfaces.ts:28](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/analytics-core/src/interfaces.ts#L28)
 
 Interface for supporting the debug object.
 
@@ -16,7 +16,7 @@ Interface for supporting the debug object.
 
 > `optional` **body**: `unknown`
 
-Defined in: [src/interfaces.ts:36](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/analytics-core/src/interfaces.ts#L36)
+Defined in: [src/interfaces.ts:36](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/analytics-core/src/interfaces.ts#L36)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/interfaces.ts:36](https://github.com/Sitecore/content-sdk/blob/
 
 > `optional` **headers**: `object`
 
-Defined in: [src/interfaces.ts:29](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/analytics-core/src/interfaces.ts#L29)
+Defined in: [src/interfaces.ts:29](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/analytics-core/src/interfaces.ts#L29)
 
 #### Index Signature
 
@@ -36,7 +36,7 @@ Defined in: [src/interfaces.ts:29](https://github.com/Sitecore/content-sdk/blob/
 
 > `optional` **redirected**: `boolean`
 
-Defined in: [src/interfaces.ts:32](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/analytics-core/src/interfaces.ts#L32)
+Defined in: [src/interfaces.ts:32](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/analytics-core/src/interfaces.ts#L32)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [src/interfaces.ts:32](https://github.com/Sitecore/content-sdk/blob/
 
 > `optional` **status**: `number`
 
-Defined in: [src/interfaces.ts:33](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/analytics-core/src/interfaces.ts#L33)
+Defined in: [src/interfaces.ts:33](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/analytics-core/src/interfaces.ts#L33)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [src/interfaces.ts:33](https://github.com/Sitecore/content-sdk/blob/
 
 > `optional` **statusText**: `string`
 
-Defined in: [src/interfaces.ts:34](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/analytics-core/src/interfaces.ts#L34)
+Defined in: [src/interfaces.ts:34](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/analytics-core/src/interfaces.ts#L34)
 
 ***
 
@@ -60,4 +60,4 @@ Defined in: [src/interfaces.ts:34](https://github.com/Sitecore/content-sdk/blob/
 
 > `optional` **url**: `string`
 
-Defined in: [src/interfaces.ts:35](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/analytics-core/src/interfaces.ts#L35)
+Defined in: [src/interfaces.ts:35](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/analytics-core/src/interfaces.ts#L35)

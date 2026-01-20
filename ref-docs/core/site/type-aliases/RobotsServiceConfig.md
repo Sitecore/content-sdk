@@ -8,7 +8,7 @@
 
 > **RobotsServiceConfig** = `object`
 
-Defined in: [packages/core/src/site/robots-service.ts:21](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/site/robots-service.ts#L21)
+Defined in: [packages/core/src/site/robots-service.ts:21](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/core/src/site/robots-service.ts#L21)
 
 Configuration for
 
@@ -22,7 +22,7 @@ RobotsService instances
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../index/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/site/robots-service.ts:30](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/site/robots-service.ts#L30)
+Defined in: [packages/core/src/site/robots-service.ts:30](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/core/src/site/robots-service.ts#L30)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -33,6 +33,6 @@ This factory function is used to create and configure GraphQL clients for making
 
 > **siteName**: `string`
 
-Defined in: [packages/core/src/site/robots-service.ts:25](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/site/robots-service.ts#L25)
+Defined in: [packages/core/src/site/robots-service.ts:25](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/core/src/site/robots-service.ts#L25)
 
 The Content SDK application name

@@ -8,7 +8,7 @@
 
 > **getEnabledPackageServer**(`packageName`): [`PackageInitializerServer`](../classes/PackageInitializerServer.md) \| `undefined`
 
-Defined in: [src/initializer/server/initializer.ts:219](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/analytics-core/src/initializer/server/initializer.ts#L219)
+Defined in: [src/initializer/server/initializer.ts:219](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/analytics-core/src/initializer/server/initializer.ts#L219)
 
 Gets an enabled package by name.
 

@@ -8,7 +8,7 @@
 
 > **getLocaleRewrite**(`pathname`, `locale`): `string`
 
-Defined in: [packages/core/src/i18n/utils.ts:8](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/i18n/utils.ts#L8)
+Defined in: [packages/core/src/i18n/utils.ts:8](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/core/src/i18n/utils.ts#L8)
 
 Get a locale rewrite path for given pathname
 
