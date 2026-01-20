@@ -97,7 +97,7 @@ jobs:
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
 
-      - name: Pre-release version update (Canary)
+      - name: Bump canary version
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
           echo "Bumping canary version(s)"

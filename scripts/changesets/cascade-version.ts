@@ -28,13 +28,13 @@ import type { VersionType, NewChangesetWithCommit, NewChangeset } from '@changes
 
 const REPO = 'sitecore/content-sdk';
 
+// List of packages that will get patch bumps instead of minor/major via cascade versioning
+const cascadeVersionPatchOnlyPkgs = ['create-content-sdk-app'];
+
 type PackageChangeset = NewChangesetWithCommit & {
   releaseType: VersionType;
 };
 
-/**
- * Main script entry point
- */
 async function main(): Promise<void> {
   const dryRun = process.argv.includes('--dry-run');
   const cwd = process.cwd();
@@ -58,7 +58,7 @@ async function main(): Promise<void> {
   // get per-package changesets for easier processing
   const changesetMap = getPackageChangesetMap(originalChangesets);
 
-  // package -> direct dependent packages graph/map
+  // package -> all dependents graph/map
   const dependentsGraph = getTransitiveDependents(packages);
 
   const formatSummary = (changeset: PackageChangeset): string => {
@@ -95,13 +95,16 @@ async function main(): Promise<void> {
       Object.keys(aggregatedSummaries).forEach((changeType) => {
         if (aggregatedSummaries[changeType as keyof typeof aggregatedSummaries].length === 0)
           return;
+        const cascadeReleaseType = cascadeVersionPatchOnlyPkgs.includes(depPkg)
+          ? 'patch'
+          : (changeType as VersionType);
         const synthethicChange: PackageChangeset = {
           id: generateChangesetId(),
           summary: `${changeType} \`${sourcePkg}\` dependency update:\n${aggregatedSummaries[
             changeType as keyof typeof aggregatedSummaries
           ].join('\n')}`,
-          releases: [{ name: depPkg, type: changeType as VersionType }],
-          releaseType: changeType as VersionType,
+          releases: [{ name: depPkg, type: cascadeReleaseType }],
+          releaseType: cascadeReleaseType,
         };
         cascadeChangesets.push(synthethicChange);
       });
