@@ -29,18 +29,6 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
-      - name: Configure action
-        id: configure-action
-        run: |
-          # Check commit message for [release] prefix to determine release type
-          # For push events, head_commit.message contains the commit message
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
-          if [[ "$COMMIT_MSG" =~ ^\[release\] || "$COMMIT_MSG" =~ ^\[chore\]  ]]; then
-            echo "isCanaryRelease=false" >> $GITHUB_OUTPUT
-          else
-            echo "isCanaryRelease=true" >> $GITHUB_OUTPUT
-          fi
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -91,37 +79,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
 
-      - name: Pre-release version update (Canary)
-        if: steps.configure-action.outputs.isCanaryRelease == 'true'
-        run: |
-          BRANCH_NAME="${{ github.ref_name }}"
-          echo "Bumping canary version(s)"
-          npx lerna version prerelease --exact --preid canary --sign-git-tag false --yes --no-git-tag-version
-          yarn install
-          if [ -n "$(git status --porcelain)" ]; then
-            git commit -a -m "Bump canary version [skip ci]"
-            git push origin HEAD:$BRANCH_NAME
-          else
-            echo "No version changes to commit"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-
-      - name: Pre-release canary publish
-        if: steps.configure-action.outputs.isCanaryRelease == 'true'
-        run: |
-          BRANCH_NAME="${{ github.ref_name }}"
-          if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
-            NPM_TAG="hotfix-canary"
-          else
-            NPM_TAG="canary"
-          fi
-          echo "Publishing canary packages to npm..."
-          npx lerna publish from-package --canary --pre-dist-tag "$NPM_TAG" --preid canary --no-verify-access --yes
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-
       # ========== CHANGESET ACTION ==========
       # Create/update the release PR with updated versions based on changesets
       # OR
@@ -139,3 +96,41 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Pre-release version update (Canary)
+        run: |
+          BRANCH_NAME="${{ github.ref_name }}"
+          echo "Bumping canary version(s)"
+
+          # If a release was just published, bump to next preminor canary
+          if [[ "$RELEASE_PUBLISHED" == "true" ]]; then
+            echo "Release was just published - bumping to preminor canary"
+            npx lerna version preminor --exact --preid canary --sign-git-tag false --yes --no-git-tag-version
+          else
+            npx lerna version prerelease --exact --preid canary --sign-git-tag false --yes --no-git-tag-version
+          fi
+
+          yarn install
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -a -m "Bump canary version [skip ci]"
+            git push origin HEAD:$BRANCH_NAME
+          else
+            echo "No version changes to commit"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          RELEASE_PUBLISHED: ${{ steps.changesets.outputs.published }}
+
+      - name: Pre-release canary publish
+        run: |
+          BRANCH_NAME="${{ github.ref_name }}"
+          if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
+            NPM_TAG="hotfix-canary"
+          else
+            NPM_TAG="canary"
+          fi
+          echo "Publishing canary packages to npm..."
+          npx lerna publish from-package --canary --pre-dist-tag "$NPM_TAG" --preid canary --no-verify-access --yes
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
