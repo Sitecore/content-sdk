@@ -30,7 +30,7 @@ Our versioning strategy is as follows:
 
 ### 🛠 Breaking Changes
 
-* `[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16 ([#334](https://github.com/Sitecore/content-sdk/pull/334))
+* `[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16 ([#334](https://github.com/Sitecore/content-sdk/pull/334))([#343](https://github.com/Sitecore/content-sdk/pull/343))
   - Next.js 16 is now required (minimum version `^16.0.0`)
   - `middleware.ts` renamed to `proxy.ts` with updated function signature
   - Removed deprecated `images.domains` usage (use `remotePatterns` instead)
