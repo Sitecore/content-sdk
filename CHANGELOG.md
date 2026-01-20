@@ -14,6 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
+* `[nextjs]` `[App Router]` Form component throws a Server component error ([#333](https://github.com/Sitecore/content-sdk/pull/333))
 * `[nextjs]` `[react]` Fix fields becoming uneditable in Pages when running Editing Host in dev mode ([#339](https://github.com/Sitecore/content-sdk/pull/339))
 
 ## 1.3.2
