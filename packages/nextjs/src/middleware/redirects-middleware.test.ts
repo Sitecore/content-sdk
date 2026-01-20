@@ -16,6 +16,7 @@ import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsMiddleware } from './redirects-middleware';
 import { LOCALE_HEADER_NAME, REWRITE_HEADER_NAME } from './middleware';
+import { NextURL } from 'next/dist/server/web/next-url';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -2207,38 +2208,46 @@ describe('RedirectsMiddleware', () => {
       });
 
       it('should preserve basePath if configured ', async () => {
-        const req = createRequest({
-          nextUrl: {
-            pathname: '/old-page',
-            search: '?param1=value1&param2=value2',
-            basePath: '/test',
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+
+        const { res, req } = createTestRequestResponse({
+          res: createResponse({
+            redirected: true,
+            status: 302,
+            url: 'http://localhost:3000/test/new-page',
+          }),
+          request: {
+            nextUrl: {
+              pathname: '/old-page',
+              search: '?param1=value1&param2=value2',
+              basePath: '/test',
+              href: 'http://localhost:3000/test/old-page?param1=value1&param2=value2',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
           },
-        });
-        const res = createResponse();
-
-        const redirectRes = createResponse({
-          redirected: true,
           status: 302,
-          url: 'http://localhost:3000/test/new-page',
         });
-        nextRedirectStub.returns(redirectRes);
+        setupRedirectStub(301);
 
-        const { middleware } = createMiddleware({
-          pattern: '/old-page',
-          target: '/new-page',
-          redirectType: REDIRECT_TYPE_301,
-          isQueryStringPreserved: true,
-        });
+        const expectedUrl = {
+          basePath: '/test',
+          pathname: '/new-page',
+          search: '?param1=value1&param2=value2',
+        };
 
-        const finalRes = await middleware.handle(req, res);
+        const { finalRes } = await runTestWithRedirect(
+          {
+            pattern: '/old-page',
+            target: '/new-page',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: true,
+          },
+          req,
+          res
+        );
 
-        expect(nextRedirectStub.calledOnce).to.be.true;
-        const redirectUrl = nextRedirectStub.getCall(0).args[0];
-        expect(redirectUrl).to.include('/new-page');
-        expect(redirectUrl).to.include('param1=value1');
-        expect(redirectUrl).to.include('param2=value2');
-
-        expect(finalRes).to.deep.equal(redirectRes);
+        expect((finalRes.url as NextURL).basePath).to.deep.equal(expectedUrl.basePath);
       });
 
       it('should redirect regardless of case in pattern and target', async () => {
