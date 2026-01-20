@@ -17,6 +17,7 @@ Our versioning strategy is as follows:
 * `[nextjs]` `[App Router]` Form component throws a Server component error ([#333](https://github.com/Sitecore/content-sdk/pull/333))
 * `[nextjs]` `[react]` Fix fields becoming uneditable in Pages when running Editing Host in dev mode ([#339](https://github.com/Sitecore/content-sdk/pull/339))
 * `[nextjs]` Add "use client" directive to import-map.ts for React hooks compatibility ([#326](https://github.com/Sitecore/content-sdk/pull/326))
+* `[nextjs]` `[template/nextjs]` `[template/nextjs-app-router]` Fix middleware initialization errors when API configuration is missing ([#325](https://github.com/Sitecore/content-sdk/pull/325))
 
 ## 1.3.2
 
@@ -27,7 +28,6 @@ Our versioning strategy is as follows:
 ### 🐛 Bug Fixes
 
 * `[nextjs]` Add "use client" directive to import-map.ts for React hooks compatibility ([#326](https://github.com/Sitecore/content-sdk/pull/326))
-* `[nextjs]` `[template/nextjs]` `[template/nextjs-app-router]` Fix middleware initialization errors when API configuration is missing ([#325](https://github.com/Sitecore/content-sdk/pull/325))
 
 ## 1.3.1
 
