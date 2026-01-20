@@ -205,9 +205,12 @@ export class RedirectsProxy extends ProxyBase {
           url.origin
         );
 
+        const basePath = url.basePath; // setting NextUrl.href overrides basePath, so we need to store it
         url.href = prepareNewURL.href;
         url.pathname = prepareNewURL.pathname;
         url.search = prepareNewURL.search;
+        url.basePath = basePath;
+
         if (!isAppRouterRequest) {
           // for pages router i18n implementation, apply default locale as backup
           url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
@@ -403,9 +406,11 @@ export class RedirectsProxy extends ProxyBase {
 
     const newUrl = new URL(`${url.pathname.toLowerCase()}?${newQueryString}`, url.origin);
 
+    const basePath = url.basePath; // setting NextUrl.href overrides basePath, so we need to store it
     url.search = newUrl.search;
     url.pathname = newUrl.pathname.toLocaleLowerCase();
     url.href = newUrl.href;
+    url.basePath = basePath;
 
     return url;
   }
