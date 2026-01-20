@@ -21,6 +21,9 @@ export default async function SiteLayout({
   children: React.ReactNode;
   params: Promise<{ site: string }>;
 }) {
+  // Access uncached data first to satisfy Next.js 16 Cache Components requirements
+  await draftMode();
+  
   const { site } = await params;
 
   // Wrap the dynamic content in Suspense for Next.js 16 PPR compatibility
