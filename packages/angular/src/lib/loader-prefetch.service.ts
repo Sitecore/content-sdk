@@ -32,12 +32,13 @@ export class LoaderPrefetchService implements OnDestroy {
   constructor(
     private router: Router,
     private loaderData: LoaderDataService,
-    @Optional() @Inject(LOADER_PREFETCH_CONFIG) private config: LoaderPrefetchConfig | null,
-    @Inject(PLATFORM_ID) private platformId: object
+    @Optional() @Inject(LOADER_PREFETCH_CONFIG) private config: LoaderPrefetchConfig | null
   ) {
-    this.subscription = this.router.events
-      .pipe(filter((e): e is ResolveStart => e instanceof ResolveStart))
-      .subscribe((event) => this.prefetchAll(event.state.root, event.state.url));
+    if (config?.enabled) {
+      this.subscription = this.router.events
+        .pipe(filter((e): e is ResolveStart => e instanceof ResolveStart))
+        .subscribe((event) => this.prefetchAll(event.state.root, event.state.url));
+    }
   }
 
   /**
@@ -89,6 +90,7 @@ export class LoaderPrefetchService implements OnDestroy {
     return loaders;
   }
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }

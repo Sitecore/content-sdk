@@ -71,6 +71,7 @@ export * from './lib/api';
 export * from './lib/types';
 export * from './lib/component-map.token';
 export * from './lib/sitecore-context.service';
+export * from './lib/dictionary-context.service';
 export * from './lib/loader-data.service';
 export * from './lib/placeholder';
 export * from './lib/server';

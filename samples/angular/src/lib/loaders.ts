@@ -1,8 +1,10 @@
 import { ErrorPage, LoaderFn } from '@sitecore-content-sdk/angular';
 import { pageLoader } from './page-loader';
 import { errorPageLoader } from './not-found-loader';
+import { dictionaryLoader } from './dictionary-loader';
 
 export const SERVER_LOADERS = {
+  dictionary: dictionaryLoader,
   page: pageLoader,
   '404': errorPageLoader(ErrorPage.NotFound),
   '500': errorPageLoader(ErrorPage.InternalServerError),
