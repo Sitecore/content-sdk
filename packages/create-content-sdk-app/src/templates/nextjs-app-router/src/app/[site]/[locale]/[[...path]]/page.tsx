@@ -51,10 +51,6 @@ async function PageContent({ site, locale, path, searchParams }: { site: string;
 }
 
 export default async function Page({ params, searchParams }: PageProps) {
-  // Access uncached data first to satisfy Next.js 16 Cache Components requirements
-  // This ensures any time-related operations (like new Date()) can be used safely
-  await draftMode();
-  
   const { site, locale, path } = await params;
 
   // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
@@ -78,7 +74,7 @@ export const generateStaticParams = async () => {
       routing.locales.slice()
     );
   }
-  // Next.js 16 with Cache Components requires at least one result
+  // Next.js 16 requires at least one result
   // Return a default param for the root page
   return [
     {
@@ -91,9 +87,6 @@ export const generateStaticParams = async () => {
 <% } -%>
 // Metadata fields for the page.
 export const generateMetadata = async ({ params }: PageProps) => {
-  // Access uncached data first to satisfy Next.js 16 Cache Components requirements
-  await draftMode();
-  
   const { path, site, locale } = await params;
 
   // The same call as for rendering the page. Should be cached by default react behavior

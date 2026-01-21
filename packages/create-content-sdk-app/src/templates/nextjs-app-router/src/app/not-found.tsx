@@ -1,17 +1,13 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { draftMode } from 'next/headers';
 import client from 'lib/sitecore-client';
 import scConfig from 'sitecore.config';
 import { ErrorPage } from '@sitecore-content-sdk/nextjs';
 import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 
-// Component that handles error page fetching (uncached data access)
+// Component that handles error page fetching
 async function NotFoundContent() {
-  // Access uncached data first to satisfy Next.js 16 Cache Components requirements
-  await draftMode();
-  
   if (scConfig.defaultSite) {
     const page = await client.getErrorPage(ErrorPage.NotFound, {
       site: scConfig.defaultSite,
