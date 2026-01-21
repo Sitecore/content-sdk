@@ -8,7 +8,7 @@
 
 > **getGuestIdServer**(`browserId`): `Promise`\<`string`\>
 
-Defined in: [src/guest-id/get-guest-id-server.ts:10](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/analytics-core/src/guest-id/get-guest-id-server.ts#L10)
+Defined in: [src/guest-id/get-guest-id-server.ts:10](https://github.com/Sitecore/content-sdk/blob/8dcb9d458e61f7c39bf98898c9a004ce461038f8/packages/analytics-core/src/guest-id/get-guest-id-server.ts#L10)
 
 Returns the guest ID for the given browser ID.
 

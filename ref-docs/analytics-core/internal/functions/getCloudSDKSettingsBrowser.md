@@ -8,7 +8,7 @@
 
 > **getCloudSDKSettingsBrowser**(): [`Settings`](../../browser/interfaces/Settings.md)
 
-Defined in: [src/initializer/browser/initializer.ts:163](https://github.com/Sitecore/content-sdk/blob/ecaa78f0077eae0acb0eb01fa2bce5c9dfea6ae3/packages/analytics-core/src/initializer/browser/initializer.ts#L163)
+Defined in: [src/initializer/browser/initializer.ts:163](https://github.com/Sitecore/content-sdk/blob/8dcb9d458e61f7c39bf98898c9a004ce461038f8/packages/analytics-core/src/initializer/browser/initializer.ts#L163)
 
 Gets the current CloudSDK settings.
 
