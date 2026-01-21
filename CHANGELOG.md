@@ -50,6 +50,7 @@ Our versioning strategy is as follows:
 * `[nextjs]` Sitecore Content SDK does not support X-Forwarded-Host, causing incorrect hostname resolution behind proxies ([#330](https://github.com/Sitecore/content-sdk/pull/330))
 * `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
 * `[nextjs]` `[react]` Fix fields becoming uneditable in Pages when running Editing Host in dev mode ([#339](https://github.com/Sitecore/content-sdk/pull/339))
+* `[nextjs]` Preserve `basePath` when doing redirects in redirects-middleware ([#344](https://github.com/Sitecore/content-sdk/pull/344))
 
 ## 1.3.1
 
