@@ -81,17 +81,26 @@ jobs:
 
       # ========== CHANGESET ACTION ==========
       # Create/update the release PR with updated versions based on changesets
-      # OR
-      # Publish to npm when release PR is merged
       - name: Prepare and Process Changesets Release
-        id: changesets
+        id: changesets-pr
         uses: changesets/action@v1
         with:
           # using scripts from monorepo root package.json
           version: yarn csdk:prep-release
-          publish: yarn csdk:publish-release
           commit: '[release][ci] Version bump and changelog'
           title: ${{ github.ref_name == 'dev' && '[csdk] latest release' || format('[csdk] patch release - {0}', github.ref_name) }}
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      # ========== CHANGESET ACTION ==========
+      # Publish to npm and create GitHub release(s) when changeset release PR is merged
+      - name: Publish Changesets Release
+        id: changesets-release
+        if: steps.changesets-pr.outputs.hasChangesets == 'false' && startsWith(github.event.head_commit.message, '[release]')
+        uses: changesets/action@v1
+        with:
+          publish: yarn csdk:publish-release
+          commit: '[release][ci] Version bump and changelog'
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
@@ -119,7 +128,7 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-          RELEASE_PUBLISHED: ${{ steps.changesets.outputs.published }}
+          RELEASE_PUBLISHED: ${{ steps.changesets-release.outputs.published }}
 
       - name: Pre-release canary publish
         run: |
