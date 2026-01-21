@@ -1,3 +1,4 @@
+import { StaticPath } from '@sitecore-content-sdk/core';
 import {
   FetchOptions,
   Page,
@@ -125,7 +126,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
     languages?: string[],
     fetchOptions?: FetchOptions
   ): Promise<StaticParams[]> {
-    const staticPaths = await this.getPagePaths(sites, languages, fetchOptions);
+    const staticPaths = await super.getPagePaths(sites, languages, fetchOptions);
 
     const params = new Array<StaticParams>();
 
@@ -141,6 +142,32 @@ export class SitecoreNextjsClient extends SitecoreClient {
     });
 
     return params;
+  }
+
+  /**
+   * Retrieves the static paths for pages based on the given languages.
+   * @param {string[]} sites - An array of site names to fetch routes for.
+   * @param {string[]} [languages] - An optional array of language codes to generate paths for.
+   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
+   * @param {boolean} [multisiteEnabled] - Indicates if multisite support is enabled.
+   * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
+   */
+  async getPagePaths(
+    sites: string[],
+    languages?: string[],
+    fetchOptions?: FetchOptions,
+    multisiteEnabled: boolean = true
+  ): Promise<StaticPath[]> {
+    const staticPaths = await super.getPagePaths(sites, languages, fetchOptions);
+
+    if (!multisiteEnabled) {
+      // remove _site_ segments when multisite is disabled
+      staticPaths.map((path) => {
+        path.params.path = normalizeSiteRewrite(path.params.path.join('/')).split('/');
+      });
+    }
+
+    return staticPaths;
   }
 
   /**

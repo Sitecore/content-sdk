@@ -58,7 +58,9 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
     try {
       paths = await client.getPagePaths(
         sites.map((site: SiteInfo) => site.name),
-        context?.locales || []
+        context?.locales || [],
+        undefined,
+        scConfig.multisite.enabled
       );
     } catch (error) {
       console.log('Error occurred while fetching static paths');
