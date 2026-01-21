@@ -835,6 +835,7 @@ export class SitecoreClient extends SitecoreClient_2 {
     getDesignLibraryData(designLibData: PreviewData, fetchOptions?: FetchOptions): Promise<Page>;
     // (undocumented)
     getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
+    getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions, multisiteEnabled?: boolean): Promise<StaticPath[]>;
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
     getSiteNameFromPath(path: string | string[]): string;
     // (undocumented)
