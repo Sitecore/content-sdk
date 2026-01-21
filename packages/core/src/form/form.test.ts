@@ -90,7 +90,7 @@ describe('form', () => {
       const formEvent = sinon.stub();
 
       proxyquire('./form', {
-        '@sitecore-content-sdk/events/browser': {
+        '@sitecore-cloudsdk/events/browser': {
           form: formEvent,
         },
       });

@@ -28,8 +28,8 @@
     "start": "cross-env-shell NODE_ENV=production npm-run-all --serial build next:start"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "<%- version %>",
-    "@sitecore-content-sdk/events": "<%- version %>",
+    "@sitecore-cloudsdk/core": "^0.5.4",
+    "@sitecore-cloudsdk/events": "^0.5.4",
     "@sitecore-content-sdk/nextjs": "<%- version %>",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",

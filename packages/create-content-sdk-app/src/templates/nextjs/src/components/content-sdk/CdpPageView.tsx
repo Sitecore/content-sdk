@@ -1,6 +1,6 @@
 ﻿import { CdpHelper, useSitecore } from '@sitecore-content-sdk/nextjs';
 import { useEffect } from 'react';
-import { pageView } from '@sitecore-content-sdk/events/browser';
+import { pageView } from '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
 import { JSX } from 'react';
 
