@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/core",
-  "version": "1.4.0-canary.25",
+  "version": "1.4.0-canary.26",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -87,7 +87,7 @@
   },
   "description": "",
   "types": "types/index.d.ts",
-  "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
+  "gitHead": "ea5d751f45a07b8ae5359f92a4234fcfe4b166b2",
   "files": [
     "dist",
     "types",
