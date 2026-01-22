@@ -25,6 +25,13 @@ import {
 } from '@sitecore-content-sdk/core/personalize';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { StaticParams } from './models';
+import { SitecoreConfig } from '../config';
+
+/**
+ * Init options for Sitecore Client that allows you to override services too
+ * @public
+ */
+export type SitecoreNextjsClientInit = SitecoreClientInit & Pick<SitecoreConfig, 'multisite'>;
 
 /**
  * The SitecoreNextjsClient class extends the SitecoreClient class to provide additional functionality for Next.js.
@@ -32,7 +39,7 @@ import { StaticParams } from './models';
  */
 export class SitecoreNextjsClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
-  constructor(protected initOptions: SitecoreClientInit) {
+  constructor(protected initOptions: SitecoreNextjsClientInit) {
     super(initOptions);
     this.componentPropsService = this.getComponentPropsService();
   }
@@ -149,18 +156,16 @@ export class SitecoreNextjsClient extends SitecoreClient {
    * @param {string[]} sites - An array of site names to fetch routes for.
    * @param {string[]} [languages] - An optional array of language codes to generate paths for.
    * @param {FetchOptions} [fetchOptions] - Additional fetch options.
-   * @param {boolean} [multisiteEnabled] - Indicates if multisite support is enabled.
    * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
    */
   async getPagePaths(
     sites: string[],
     languages?: string[],
-    fetchOptions?: FetchOptions,
-    multisiteEnabled: boolean = true
+    fetchOptions?: FetchOptions
   ): Promise<StaticPath[]> {
     const staticPaths = await super.getPagePaths(sites, languages, fetchOptions);
 
-    if (!multisiteEnabled) {
+    if (!this.initOptions.multisite?.enabled) {
       // remove _site_ segments when multisite is disabled
       staticPaths.map((path) => {
         path.params.path = normalizeSiteRewrite(path.params.path.join('/')).split('/');
