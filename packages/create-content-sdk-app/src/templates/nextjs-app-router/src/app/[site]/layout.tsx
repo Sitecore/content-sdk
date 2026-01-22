@@ -2,7 +2,7 @@ import { draftMode } from 'next/headers';
 import { Suspense } from 'react';
 import Bootstrap from 'src/Bootstrap';
 
-// Dynamic layout component that handles draft mode check.
+// Part of layout component that handles dynamic data, like the `draftMode()` call.
 // This component is wrapped in Suspense to enable Next.js 16 Partial Prerendering (PPR),
 // which allows streaming dynamic content while keeping static parts prerendered.
 // This pattern also works seamlessly when Cache Components is enabled.

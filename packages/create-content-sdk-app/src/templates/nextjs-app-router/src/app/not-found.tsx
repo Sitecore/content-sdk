@@ -6,7 +6,7 @@ import { ErrorPage } from '@sitecore-content-sdk/nextjs';
 import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 
-// Dynamic not-found component that handles error page fetching.
+// Part of not-found component that handles dynamic data, like error page fetching.
 // This component is wrapped in Suspense to enable Next.js 16 Partial Prerendering (PPR),
 // which allows streaming dynamic content while keeping static parts prerendered.
 // This pattern also works seamlessly when Cache Components is enabled.

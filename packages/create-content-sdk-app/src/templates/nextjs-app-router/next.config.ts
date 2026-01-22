@@ -2,12 +2,6 @@ import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
-  // Cache Components is disabled by default. To enable it, set cacheComponents: true
-  // and ensure all server components that call client methods access uncached data first
-  // (e.g., await draftMode(), await cookies(), await headers(), or await searchParams)
-  // See: https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents
-  // cacheComponents: true,
-
   // Enable Turbopack file system caching for faster dev startup (beta)
   // See: https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack
   experimental: {

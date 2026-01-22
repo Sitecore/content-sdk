@@ -19,7 +19,7 @@ type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-// Dynamic content component that handles draft mode check and data fetching.
+// Part of page component that handles dynamic data, like the `draftMode()` call and data fetching.
 // This component is wrapped in Suspense to enable Next.js 16 Partial Prerendering (PPR),
 // which allows streaming dynamic content while keeping static parts prerendered.
 // This pattern also works seamlessly when Cache Components is enabled.
