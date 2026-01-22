@@ -6,7 +6,7 @@
 
 # Enumeration: LayoutServicePageState
 
-Defined in: [packages/core/src/layout/models.ts:15](https://github.com/Sitecore/content-sdk/blob/2963eabebfff6bd69f88258a88aca838afb125a0/packages/core/src/layout/models.ts#L15)
+Defined in: [packages/core/src/layout/models.ts:15](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/core/src/layout/models.ts#L15)
 
 Layout Service page state enum
 
@@ -16,7 +16,7 @@ Layout Service page state enum
 
 > **Edit**: `"edit"`
 
-Defined in: [packages/core/src/layout/models.ts:17](https://github.com/Sitecore/content-sdk/blob/2963eabebfff6bd69f88258a88aca838afb125a0/packages/core/src/layout/models.ts#L17)
+Defined in: [packages/core/src/layout/models.ts:17](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/core/src/layout/models.ts#L17)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/core/src/layout/models.ts:17](https://github.com/Sitecore/
 
 > **Normal**: `"normal"`
 
-Defined in: [packages/core/src/layout/models.ts:18](https://github.com/Sitecore/content-sdk/blob/2963eabebfff6bd69f88258a88aca838afb125a0/packages/core/src/layout/models.ts#L18)
+Defined in: [packages/core/src/layout/models.ts:18](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/core/src/layout/models.ts#L18)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [packages/core/src/layout/models.ts:18](https://github.com/Sitecore/
 
 > **Preview**: `"preview"`
 
-Defined in: [packages/core/src/layout/models.ts:16](https://github.com/Sitecore/content-sdk/blob/2963eabebfff6bd69f88258a88aca838afb125a0/packages/core/src/layout/models.ts#L16)
+Defined in: [packages/core/src/layout/models.ts:16](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/core/src/layout/models.ts#L16)

@@ -8,6 +8,6 @@
 
 > **SearchServiceFetchOptions** = `Omit`\<`RequestInit`, `"method"` \| `"body"` \| `"mode"`\>
 
-Defined in: [search-service.ts:92](https://github.com/Sitecore/content-sdk/blob/2963eabebfff6bd69f88258a88aca838afb125a0/packages/search/src/search-service.ts#L92)
+Defined in: [search-service.ts:92](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/search/src/search-service.ts#L92)
 
 Fetch options for the Search Service.

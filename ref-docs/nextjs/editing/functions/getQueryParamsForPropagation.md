@@ -8,7 +8,7 @@
 
 > **getQueryParamsForPropagation**(`query`): `object`
 
-Defined in: [nextjs/src/editing/utils.ts:145](https://github.com/Sitecore/content-sdk/blob/2963eabebfff6bd69f88258a88aca838afb125a0/packages/nextjs/src/editing/utils.ts#L145)
+Defined in: [nextjs/src/editing/utils.ts:145](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/nextjs/src/editing/utils.ts#L145)
 
 **`Internal`**
 
