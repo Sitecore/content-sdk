@@ -2,8 +2,11 @@ import { draftMode } from 'next/headers';
 import { Suspense } from 'react';
 import Bootstrap from 'src/Bootstrap';
 
-// Component that handles draft mode check (uncached data access)
-async function SiteLayoutContent({ site, children }: { site: string; children: React.ReactNode }) {
+// Dynamic layout component that handles draft mode check.
+// This component is wrapped in Suspense to enable Next.js 16 Partial Prerendering (PPR),
+// which allows streaming dynamic content while keeping static parts prerendered.
+// This pattern also works seamlessly when Cache Components is enabled.
+async function DynamicLayoutContent({ site, children }: { site: string; children: React.ReactNode }) {
   const { isEnabled } = await draftMode();
 
   return (
@@ -23,10 +26,11 @@ export default async function SiteLayout({
 }) {
   const { site } = await params;
 
-  // Wrap the dynamic content in Suspense for Next.js 16 PPR compatibility
+  // Wrap dynamic content in Suspense to enable Next.js 16 Partial Prerendering (PPR).
+  // PPR allows streaming dynamic content while keeping static parts prerendered for better performance.
   return (
     <Suspense fallback={<>{children}</>}>
-      <SiteLayoutContent site={site}>{children}</SiteLayoutContent>
+      <DynamicLayoutContent site={site}>{children}</DynamicLayoutContent>
     </Suspense>
   );
 }

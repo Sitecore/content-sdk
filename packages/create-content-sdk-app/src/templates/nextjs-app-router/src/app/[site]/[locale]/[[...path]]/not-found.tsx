@@ -9,8 +9,11 @@ import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
 
-// Component that handles headers access and error page fetching (uncached data access)
-async function NotFoundContent() {
+// Dynamic not-found component that handles headers access and error page fetching.
+// This component is wrapped in Suspense to enable Next.js 16 Partial Prerendering (PPR),
+// which allows streaming dynamic content while keeping static parts prerendered.
+// This pattern also works seamlessly when Cache Components is enabled.
+async function DynamicNotFoundContent() {
   const headersList = await headers();
   const { site, locale } = parseRewriteHeader(headersList);
 
@@ -39,7 +42,8 @@ async function NotFoundContent() {
 }
 
 export default function NotFound() {
-  // Wrap the dynamic content in Suspense for Next.js 16 PPR compatibility
+  // Wrap dynamic content in Suspense to enable Next.js 16 Partial Prerendering (PPR).
+  // PPR allows streaming dynamic content while keeping static parts prerendered for better performance.
   return (
     <Suspense
       fallback={
@@ -49,7 +53,7 @@ export default function NotFound() {
         </div>
       }
     >
-      <NotFoundContent />
+      <DynamicNotFoundContent />
     </Suspense>
   );
 }
