@@ -824,7 +824,7 @@ export { RouteData }
 
 // @public
 export class SitecoreClient extends SitecoreClient_2 {
-    constructor(initOptions: SitecoreClientInit);
+    constructor(initOptions: SitecoreNextjsClientInit);
     // (undocumented)
     protected componentPropsService: ComponentPropsService;
     // Warning: (ae-forgotten-export) The symbol "StaticParams" needs to be exported by the entry point api-surface.d.ts
@@ -835,11 +835,13 @@ export class SitecoreClient extends SitecoreClient_2 {
     getDesignLibraryData(designLibData: PreviewData, fetchOptions?: FetchOptions): Promise<Page>;
     // (undocumented)
     getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
-    getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions, multisiteEnabled?: boolean): Promise<StaticPath[]>;
+    getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
     getSiteNameFromPath(path: string | string[]): string;
+    // Warning: (ae-forgotten-export) The symbol "SitecoreNextjsClientInit" needs to be exported by the entry point api-surface.d.ts
+    //
     // (undocumented)
-    protected initOptions: SitecoreClientInit;
+    protected initOptions: SitecoreNextjsClientInit;
     parsePath(path: string | string[]): string;
 }
 
