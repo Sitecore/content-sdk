@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable dot-notation */
@@ -16,6 +16,7 @@ import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsMiddleware } from './redirects-middleware';
 import { LOCALE_HEADER_NAME, REWRITE_HEADER_NAME } from './middleware';
+import { NextURL } from 'next/dist/server/web/next-url';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -202,7 +203,8 @@ describe('RedirectsMiddleware', () => {
 
     middleware['siteResolver'] = siteResolver;
 
-    const fetchRedirects = (middleware['redirectsService']['fetchRedirects'] =
+    // In test helper, we always provide API config, so redirectsService should never be null
+    const fetchRedirects = (middleware['redirectsService']!['fetchRedirects'] =
       props.fetchRedirectsStub ||
       sandbox.stub().returns(Promise.resolve(Object.keys(props).length ? redirectMaps : [])));
 
@@ -622,9 +624,9 @@ describe('RedirectsMiddleware', () => {
           res
         );
 
-        // rewrite path -> expect our custom rewrite header
+        // rewrite path -> expect our custom rewrite header (pathname only, not full URL)
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: { 'x-sc-rewrite': 'http://localhost:3000/found' },
+          headers: { 'x-sc-rewrite': '/found' },
           redirected: undefined,
           status: 200,
           url,
@@ -675,7 +677,7 @@ describe('RedirectsMiddleware', () => {
         );
 
         validateEndMessageDebugLog('redirects middleware end in %dms: %o', {
-          headers: { 'x-sc-rewrite': 'http://localhost:3000/found?abc=def' },
+          headers: { 'x-sc-rewrite': '/found?abc=def' },
           redirected: undefined,
           status: 200,
           url,
@@ -2205,6 +2207,49 @@ describe('RedirectsMiddleware', () => {
         expect(finalRes.status).to.equal(res.status);
       });
 
+      it('should preserve basePath if configured ', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+
+        const { res, req } = createTestRequestResponse({
+          res: createResponse({
+            redirected: true,
+            status: 302,
+            url: 'http://localhost:3000/test/new-page',
+          }),
+          request: {
+            nextUrl: {
+              pathname: '/old-page',
+              search: '?param1=value1&param2=value2',
+              basePath: '/test',
+              href: 'http://localhost:3000/test/old-page?param1=value1&param2=value2',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 302,
+        });
+        setupRedirectStub(301);
+
+        const expectedUrl = {
+          basePath: '/test',
+          pathname: '/new-page',
+          search: '?param1=value1&param2=value2',
+        };
+
+        const { finalRes } = await runTestWithRedirect(
+          {
+            pattern: '/old-page',
+            target: '/new-page',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: true,
+          },
+          req,
+          res
+        );
+
+        expect((finalRes.url as NextURL).basePath).to.deep.equal(expectedUrl.basePath);
+      });
+
       it('should redirect regardless of case in pattern and target', async () => {
         // Set up a clone function (used by both req and res)
         const cloneUrl = () => Object.assign({}, req.nextUrl);
@@ -2694,6 +2739,8 @@ describe('RedirectsMiddleware', () => {
       } as any); // Type assertion: Edge properties are optional at runtime
 
       expect(middleware1).to.not.be.undefined;
+      // Should be null since local config is incomplete (missing apiKey)
+      expect(middleware1['redirectsService']).to.be.null;
 
       // Only apiKey, missing apiHost
       const middleware2 = new RedirectsMiddleware({
@@ -2705,6 +2752,377 @@ describe('RedirectsMiddleware', () => {
       } as any); // Type assertion: Edge properties are optional at runtime
 
       expect(middleware2).to.not.be.undefined;
+      // Should be null since local config is incomplete (missing apiHost)
+      expect(middleware2['redirectsService']).to.be.null;
+    });
+  });
+
+  describe('configuration - missing API config', () => {
+    it('gracefully disables when no API config is provided', () => {
+      // Create middleware without any API config (no Edge, no Local)
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        sites: [],
+        locales: ['en'],
+        // No contextId, clientContextId, apiHost, or apiKey
+      } as any); // Type assertion: API properties are optional at runtime
+
+      // Verify middleware was created but redirectsService is null
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.be.null;
+    });
+
+    it('works with only contextId (no clientContextId, no local)', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        // Only contextId, but no clientContextId and no local config
+        contextId: 'edge-context-id',
+        edgeUrl: 'https://edge.url',
+        sites: [],
+        locales: ['en'],
+      } as any);
+
+      // Should work with contextId only (Edge config)
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.null;
+    });
+
+    it('works with only clientContextId (no contextId, no local)', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        // Only clientContextId, but no contextId and no local config
+        clientContextId: 'edge-client-id',
+        edgeUrl: 'https://edge.url',
+        sites: [],
+        locales: ['en'],
+      } as any);
+
+      // Should work with clientContextId only (Edge config)
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.null;
+    });
+
+    it('skips execution when redirectsService is null', async () => {
+      const req = createRequest();
+      const res = createResponse();
+
+      // Create middleware without any API config
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        sites: [],
+        locales: ['en'],
+        // No API config
+      } as any);
+
+      const finalRes = await middleware.handle(req, res);
+
+      // Should skip execution and return response unchanged
+      validateDebugLog('skipped (redirects service not configured - API config required)');
+      expect(finalRes).to.deep.equal(res);
+    });
+
+    it('works normally when Edge config is provided', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        contextId: 'edge-context-id',
+        clientContextId: 'edge-client-id',
+        edgeUrl: 'https://edge.url',
+        sites: [],
+        locales: ['en'],
+      });
+
+      // Verify middleware was created and redirectsService is initialized
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.null;
+    });
+
+    it('works normally when local config is provided', () => {
+      const middleware = new RedirectsMiddleware({
+        enabled: true,
+        apiHost: 'https://local.host',
+        apiKey: 'local-api-key',
+        path: '/api/graphql',
+        sites: [],
+        locales: ['en'],
+      } as any);
+
+      // Verify middleware was created and redirectsService is initialized
+      expect(middleware).to.not.be.undefined;
+      expect(middleware['redirectsService']).to.not.be.null;
+    });
+  });
+
+  describe('Server Transfer', () => {
+    describe('App Router locale fallback', () => {
+      it('[app router] should include locale in pathname even when isLanguagePreserved is false', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/en/target-page',
+          pathname: '/en/target-page',
+          origin: 'http://localhost:3000',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source-page',
+              href: 'http://localhost:3000/source-page',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 200,
+        });
+
+        res.headers.set(LOCALE_HEADER_NAME, 'en');
+
+        setupRewriteStub(200, res);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source-page',
+            target: '/target-page',
+            redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: false, // Not preserving language explicitly
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+
+        // App Router should have locale in the rewrite path even when isLanguagePreserved is false
+        const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
+        expect(rewriteHeader).to.include('/en/');
+      });
+
+      it('[app router] should use explicit locale from target when provided', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/da-DK/target-page',
+          pathname: '/da-DK/target-page',
+          origin: 'http://localhost:3000',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source-page',
+              href: 'http://localhost:3000/source-page',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 200,
+        });
+
+        res.headers.set(LOCALE_HEADER_NAME, 'en');
+
+        setupRewriteStub(200, res);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source-page',
+            target: '/da-DK/target-page',
+            redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+
+        const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
+        expect(rewriteHeader).to.include('/da-DK/');
+      });
+    });
+
+    describe('Site prefix preservation', () => {
+      it('[app router] should preserve site prefix from MultisiteMiddleware in Server Transfer rewrite', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/my-site/en/target-page',
+          pathname: '/my-site/en/target-page',
+          origin: 'http://localhost:3000',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source-page',
+              href: 'http://localhost:3000/source-page',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 200,
+        });
+
+        res.headers.set(LOCALE_HEADER_NAME, 'en');
+
+        res.headers.set(REWRITE_HEADER_NAME, '/my-site/en/source-page');
+
+        setupRewriteStub(200, res);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source-page',
+            target: '/target-page',
+            redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+
+        const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
+        expect(rewriteHeader).to.include('/my-site/');
+        expect(rewriteHeader).to.include('/en/');
+        expect(rewriteHeader).to.include('/target-page');
+      });
+
+      it('[app router] should work without site prefix when MultisiteMiddleware has not run', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/en/target-page',
+          pathname: '/en/target-page',
+          origin: 'http://localhost:3000',
+          search: '',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source-page',
+              href: 'http://localhost:3000/source-page',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 200,
+        });
+
+        res.headers.set(LOCALE_HEADER_NAME, 'en');
+
+        res.headers.set(REWRITE_HEADER_NAME, '/en/source-page');
+
+        setupRewriteStub(200, res);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source-page',
+            target: '/target-page',
+            redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+            isQueryStringPreserved: false,
+            isLanguagePreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+
+        const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
+        expect(rewriteHeader).to.include('/en/');
+        expect(rewriteHeader).to.include('/target-page');
+      });
+
+      it('[app router] should preserve site prefix with query string', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+        const url = {
+          href: 'http://localhost:3000/my-site/en/target-page?foo=bar',
+          pathname: '/my-site/en/target-page',
+          origin: 'http://localhost:3000',
+          search: '?foo=bar',
+          clone: cloneUrl,
+        };
+
+        const { res, req } = createTestRequestResponse({
+          response: { url },
+          request: {
+            nextUrl: {
+              pathname: '/source-page',
+              href: 'http://localhost:3000/source-page?foo=bar',
+              origin: 'http://localhost:3000',
+              search: '?foo=bar',
+              clone: cloneUrl,
+            },
+          },
+          status: 200,
+        });
+
+        res.headers.set(LOCALE_HEADER_NAME, 'en');
+
+        res.headers.set(REWRITE_HEADER_NAME, '/my-site/en/source-page');
+
+        setupRewriteStub(200, res);
+
+        const { finalRes, fetchRedirects, siteResolver } = await runTestWithRedirect(
+          {
+            redirectsMiddlewareConfig: {
+              locales: ['en', 'da-DK'],
+            },
+            pattern: '/source-page',
+            target: '/target-page',
+            redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+            isQueryStringPreserved: true,
+            isLanguagePreserved: false,
+            locale: 'en',
+          },
+          req,
+          res
+        );
+
+        expect(siteResolver.getByHost).to.be.calledWith(hostname);
+        expect(fetchRedirects.called).to.be.true;
+        expect(finalRes.status).to.equal(res.status);
+
+        const rewriteHeader = finalRes.headers.get(REWRITE_HEADER_NAME);
+        expect(rewriteHeader).to.include('/my-site/');
+        expect(rewriteHeader).to.include('/en/');
+        expect(rewriteHeader).to.include('/target-page');
+      });
     });
   });
 });

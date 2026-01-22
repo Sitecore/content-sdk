@@ -10,6 +10,27 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
+### 1.4.0
+
+### 🎉 New Features & Improvements
+
+* `[nextjs]` `[AI Component Generation]` Enable CLI command to add a new component ([#346](https://github.com/Sitecore/content-sdk/pull/346))
+
+### 🐛 Bug Fixes
+
+* `[nextjs]` `[App Router]` Form component throws a Server component error ([#333](https://github.com/Sitecore/content-sdk/pull/333))
+* `[nextjs]` Add "use client" directive to import-map.ts for React hooks compatibility ([#326](https://github.com/Sitecore/content-sdk/pull/326))
+* `[nextjs]` `[template/nextjs]` `[template/nextjs-app-router]` Fix middleware initialization errors when API configuration is missing ([#325](https://github.com/Sitecore/content-sdk/pull/325))
+* `[nextjs]` Fixes Server Transfer (rewrite) redirects ([#329](https://github.com/Sitecore/content-sdk/pull/329))
+* `[nextjs]` Preserve `basePath` when doing redirects in redirects-middleware ([#344](https://github.com/Sitecore/content-sdk/pull/344))
+* `[nextjs]` `[react]` Fix fields becoming uneditable in Pages when running Editing Host in dev mode ([#339](https://github.com/Sitecore/content-sdk/pull/339))
+* `[nextjs]` `[Pages Router]` Adjust static path generation when multisite is disabled ([#345](https://github.com/Sitecore/content-sdk/pull/345))
+
+## 1.3.2
+
+### ✨ Chores
+
+* Apply caret (`^`) verisoning to content-sdk packages, ensuring the latest patch versions are used by them.
 
 ## 1.3.1
 

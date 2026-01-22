@@ -1,4 +1,4 @@
-﻿import { debug } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/core';
 import {
   RedirectsService,
   RedirectsServiceConfig,
@@ -42,7 +42,7 @@ export type RedirectsMiddlewareConfig = Omit<RedirectsServiceConfig, 'fetch' | '
  * @public
  */
 export class RedirectsMiddleware extends MiddlewareBase {
-  protected redirectsService: RedirectsService;
+  protected redirectsService: RedirectsService | null;
   private locales: string[];
 
   /**
@@ -50,6 +50,22 @@ export class RedirectsMiddleware extends MiddlewareBase {
    */
   constructor(protected config: RedirectsMiddlewareConfig) {
     super(config);
+    this.locales = config.locales;
+
+    // Validate API config is present - redirects requires either Edge or local API configuration
+    const hasEdgeConfig = !!(this.config.contextId || this.config.clientContextId);
+    const hasLocalConfig = !!(this.config.apiHost && this.config.apiKey);
+
+    if (!hasEdgeConfig && !hasLocalConfig) {
+      console.warn(
+        '[RedirectsMiddleware] Redirects middleware requires either Edge configuration (contextId/clientContextId) or local API configuration (apiHost/apiKey). ' +
+          'Redirects features will be disabled. This is expected when API configuration is not available.'
+      );
+      // Set to null to indicate service is disabled
+      this.redirectsService = null;
+      return;
+    }
+
     const graphQLOptions = {
       api: {
         edge: {
@@ -77,7 +93,6 @@ export class RedirectsMiddleware extends MiddlewareBase {
         clientFactory: this.getClientFactory(graphQLOptions),
         fetch: fetch,
       });
-    this.locales = config.locales;
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
@@ -208,9 +223,12 @@ export class RedirectsMiddleware extends MiddlewareBase {
             url.origin
           );
 
+          const basePath = url.basePath; // setting NextUrl.href overrides basePath, so we need to store it
           url.href = prepareNewURL.href;
           url.pathname = prepareNewURL.pathname;
           url.search = prepareNewURL.search;
+          url.basePath = basePath;
+
           if (!isAppRouterRequest) {
             url.locale = req.nextUrl.locale;
           }
@@ -237,6 +255,15 @@ export class RedirectsMiddleware extends MiddlewareBase {
     }
   };
 
+  protected disabled(req: NextRequest, res: NextResponse): boolean | undefined {
+    // Check if API config is missing - if so, disable the middleware
+    if (!this.redirectsService) {
+      debug.redirects('skipped (redirects service not configured - API config required)');
+      return true;
+    }
+    return super.disabled(req, res);
+  }
+
   /**
    * Method returns RedirectInfo when matches
    * @param {NextRequest} req request
@@ -248,6 +275,10 @@ export class RedirectsMiddleware extends MiddlewareBase {
     req: NextRequest,
     siteName: string
   ): Promise<RedirectResult | undefined> {
+    if (!this.redirectsService) {
+      return undefined;
+    }
+
     const { pathname: incomingURL, search: incomingQS = '' } = this.normalizeUrl(
       req.nextUrl.clone()
     );
@@ -361,9 +392,11 @@ export class RedirectsMiddleware extends MiddlewareBase {
 
     const newUrl = new URL(`${url.pathname.toLowerCase()}?${newQueryString}`, url.origin);
 
+    const basePath = url.basePath; // setting NextUrl.href overrides basePath, so we need to store it
     url.search = newUrl.search;
     url.pathname = newUrl.pathname.toLocaleLowerCase();
     url.href = newUrl.href;
+    url.basePath = basePath;
 
     return url;
   }
@@ -390,14 +423,45 @@ export class RedirectsMiddleware extends MiddlewareBase {
         return this.createRedirectResponse(target, res, 301, 'Moved Permanently');
       case REDIRECT_TYPE_302:
         return this.createRedirectResponse(target, res, 302, 'Found');
-      case REDIRECT_TYPE_SERVER_TRANSFER:
-        // rewrite expects a string; unwrap NextURL if needed
-        return this.rewrite(
-          typeof target === 'string' ? target : target.href,
-          req,
-          res,
-          isExternal
-        );
+      case REDIRECT_TYPE_SERVER_TRANSFER: {
+        // rewrite expects a path string; for NextURL extract pathname + search
+        let rewritePath =
+          typeof target === 'string' ? target : `${target.pathname}${target.search || ''}`;
+
+        // For App Router Server Transfer, ensure locale is in the path
+        // This is needed because the route structure requires [locale] segment
+        if (this.isAppRouter(res) && !isExternal) {
+          const pathParts = rewritePath.split('/').filter(Boolean);
+          const firstSegment = pathParts[0];
+          // Check if path doesn't start with a locale
+          if (!this.locales.includes(firstSegment)) {
+            // Add current language as locale prefix
+            const language = this.getLanguage(req, res);
+            rewritePath = `/${language}${rewritePath}`;
+          }
+        }
+
+        // Check if it has a site prefix
+        // If so, preserve it for the redirect target to maintain proper routing
+        const incomingRewrite = res?.headers.get(REWRITE_HEADER_NAME);
+        if (incomingRewrite && !isExternal) {
+          // Extract locale from target path
+          const targetPathParts = rewritePath.split('/').filter(Boolean);
+          const targetLocale = targetPathParts[0];
+
+          // Find locale position in incoming rewrite to extract site prefix
+          if (targetLocale) {
+            const localePattern = `/${targetLocale}/`;
+            const localeIndex = incomingRewrite.indexOf(localePattern);
+            if (localeIndex > 0) {
+              const sitePrefix = incomingRewrite.substring(0, localeIndex);
+              rewritePath = `${sitePrefix}${rewritePath}`;
+            }
+          }
+        }
+
+        return this.rewrite(rewritePath, req, res, isExternal);
+      }
       default:
         return res;
     }

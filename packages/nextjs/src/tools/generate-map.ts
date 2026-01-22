@@ -126,6 +126,7 @@ const buildNextjsMapContent = (
   componentImports: ComponentImport[] | undefined,
   options: TemplateOptions = {}
 ): string => {
+  const isAppRouter = detectRouterType() === 'app';
   const {
     headerComment = "Below are built-in components that are available in the app, it's recommended to keep them as is",
     isClientMap = false,
@@ -143,7 +144,7 @@ import { Form } from '@sitecore-content-sdk/nextjs';
   const builtInMapEntries = options.builtInMapEntries || [
     `['BYOCWrapper', BYOCWrapper]`,
     `['FEaaSWrapper', FEaaSWrapper]`,
-    `['Form', Form]`,
+    `['Form', ${isAppRouter ? '{ ...Form, componentType: \'client\' }' : 'Form'}]`,
   ];
 
   // Add per-entry imports
@@ -323,7 +324,7 @@ import { Form } from '@sitecore-content-sdk/nextjs';
       const builtInMapEntries = [
         `['BYOCWrapper', BYOCServerWrapper]`,
         `['FEaaSWrapper', FEaaSServerWrapper]`,
-        `['Form', Form]`,
+        `['Form', { ...Form, componentType: 'client' }]`,
       ];
       mainContent = buildNextjsMapContent(getComponents.entries, componentImports, {
         headerComment:
