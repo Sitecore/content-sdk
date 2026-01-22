@@ -8,7 +8,7 @@
 
 > **getGuestId**(): `Promise`\<`string`\>
 
-Defined in: [src/guest-id/get-guest-id.ts:10](https://github.com/Sitecore/content-sdk/blob/e70bcf4a0aa34d1ca05e3c9f8e1720f1c4be4408/packages/analytics-core/src/guest-id/get-guest-id.ts#L10)
+Defined in: [src/guest-id/get-guest-id.ts:10](https://github.com/Sitecore/content-sdk/blob/2963eabebfff6bd69f88258a88aca838afb125a0/packages/analytics-core/src/guest-id/get-guest-id.ts#L10)
 
 Returns the guest ID.
 
