@@ -28,3 +28,4 @@ packages/*/*.tgz
 packages/*/temp/
 /samples/*
 !/samples/angular/
+!/samples/analog-project/
