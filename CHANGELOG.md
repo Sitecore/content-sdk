@@ -30,7 +30,7 @@ Our versioning strategy is as follows:
 
 ### ✨ Chores
 
-* Apply caret (`^`) verisoning to content-sdk packages, ensuring the latest patch versions are used by them.
+* Apply caret (`^`) verisoning to content-sdk packages, ensuring the latest patch versions are used by them
 
 ## 1.3.1
 
