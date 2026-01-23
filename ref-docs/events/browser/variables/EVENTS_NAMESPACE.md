@@ -8,4 +8,4 @@
 
 > `const` **EVENTS\_NAMESPACE**: `"content-sdk:events"` = `'content-sdk:events'`
 
-Defined in: [events/src/consts.ts:4](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/events/src/consts.ts#L4)
+Defined in: [events/src/consts.ts:4](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/events/src/consts.ts#L4)

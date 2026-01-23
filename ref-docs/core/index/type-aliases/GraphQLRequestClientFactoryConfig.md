@@ -8,7 +8,7 @@
 
 > **GraphQLRequestClientFactoryConfig** = `object`
 
-Defined in: [packages/core/src/graphql-request-client.ts:88](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/core/src/graphql-request-client.ts#L88)
+Defined in: [packages/core/src/graphql-request-client.ts:88](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/graphql-request-client.ts#L88)
 
 Configuration type for
 
@@ -18,7 +18,7 @@ Configuration type for
 
 > `optional` **apiKey**: `string`
 
-Defined in: [packages/core/src/graphql-request-client.ts:90](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/core/src/graphql-request-client.ts#L90)
+Defined in: [packages/core/src/graphql-request-client.ts:90](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/graphql-request-client.ts#L90)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/core/src/graphql-request-client.ts:90](https://github.com/
 
 > `optional` **contextId**: `string`
 
-Defined in: [packages/core/src/graphql-request-client.ts:91](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/core/src/graphql-request-client.ts#L91)
+Defined in: [packages/core/src/graphql-request-client.ts:91](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/graphql-request-client.ts#L91)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [packages/core/src/graphql-request-client.ts:91](https://github.com/
 
 > **endpoint**: `string`
 
-Defined in: [packages/core/src/graphql-request-client.ts:89](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/core/src/graphql-request-client.ts#L89)
+Defined in: [packages/core/src/graphql-request-client.ts:89](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/graphql-request-client.ts#L89)

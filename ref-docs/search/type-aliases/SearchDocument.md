@@ -8,7 +8,7 @@
 
 > **SearchDocument** = `object`
 
-Defined in: [models.ts:7](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/search/src/models.ts#L7)
+Defined in: [models.ts:7](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/search/src/models.ts#L7)
 
 Generic Search document type.
 

@@ -8,7 +8,7 @@
 
 > `const` **EDITING\_COMPONENT\_ID**: `"editing-component"` = `'editing-component'`
 
-Defined in: [packages/core/src/layout/models.ts:191](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/core/src/layout/models.ts#L191)
+Defined in: [packages/core/src/layout/models.ts:191](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/layout/models.ts#L191)
 
 **`Internal`**
 

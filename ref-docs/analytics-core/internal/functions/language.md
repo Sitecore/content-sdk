@@ -8,7 +8,7 @@
 
 > **language**(): `string` \| `undefined`
 
-Defined in: [src/infer/infer.ts:6](https://github.com/Sitecore/content-sdk/blob/022af8f424c7ebf42e9ce209f5588bec054e1bde/packages/analytics-core/src/infer/infer.ts#L6)
+Defined in: [src/infer/infer.ts:6](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/analytics-core/src/infer/infer.ts#L6)
 
 Returns the uppercase language code of the current web page's root HTML element, using the `lang` attribute.
 If unavailable or invalid, undefined is returned.
