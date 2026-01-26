@@ -1,5 +1,9 @@
 import { debugNamespace, debugModule } from '@sitecore-content-sdk/core';
 
+/**
+ * Debug module for content package
+ * @public
+ */
 const debug = {
   form: debugModule(`${debugNamespace}:form`),
   layout: debugModule(`${debugNamespace}:layout`),

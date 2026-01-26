@@ -2,8 +2,16 @@
 import debug from 'debug';
 import isServer from './utils/is-server';
 
+/**
+ * Debug module
+ * @public
+ */
 export const debugModule = debug;
 
+/**
+ * Debug namespace
+ * @public
+ */
 export const debugNamespace = 'content-sdk';
 
 /**
