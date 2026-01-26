@@ -7,7 +7,7 @@ import {
   MemoryCacheClient,
 } from '@sitecore-content-sdk/core';
 import { PageInfo } from '../client';
-import { siteNameError, languageError } from '../client/constants';
+import { siteNameError, languageError } from '../constants';
 import debug from '../debug';
 import { GraphQLServiceConfig } from '../sitecore-service-base';
 /** @private */

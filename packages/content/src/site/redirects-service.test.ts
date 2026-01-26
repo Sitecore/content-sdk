@@ -3,10 +3,9 @@
 import { expect, use, spy } from 'chai';
 import spies from 'chai-spies';
 import nock from 'nock';
-import { constants, GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import { RedirectsService, RedirectsQueryResult } from './redirects-service';
-
-const { siteNameError } = constants;
+import { siteNameError } from '../constants';
 
 use(spies);
 

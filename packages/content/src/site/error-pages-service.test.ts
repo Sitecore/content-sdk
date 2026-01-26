@@ -2,11 +2,10 @@
 import { expect } from 'chai';
 import sinon, { SinonSpy } from 'sinon';
 import nock from 'nock';
-import { constants, GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import { ErrorPages, ErrorPagesService } from './error-pages-service';
 import { LayoutServiceData } from '../layout';
-
-const { siteNameError } = constants;
+import { siteNameError } from '../constants';
 
 const errorQueryResultNull = {
   site: {

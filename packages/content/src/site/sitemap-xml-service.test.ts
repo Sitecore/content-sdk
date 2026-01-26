@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import nock from 'nock';
-import { constants, GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import { SitemapXmlService } from './sitemap-xml-service';
-
-const { siteNameError } = constants;
+import { siteNameError } from '../constants';
 
 const sitemapQueryResultNull = {
   site: {

@@ -1,8 +1,7 @@
 import { FetchOptions, GraphQLClient } from '../client';
-import { constants, GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import debug from '../debug';
-
-const { siteNameError } = constants;
+import { siteNameError } from '../constants';
 
 const PREFIX_NAME_SITEMAP = 'sitemap';
 

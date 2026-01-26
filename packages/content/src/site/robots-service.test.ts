@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import nock from 'nock';
-import { constants, GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import { RobotsService } from './robots-service';
 import { FetchOptions } from '../../client';
-
-const { siteNameError } = constants;
+import { siteNameError } from '../constants';
 
 const robotsQueryResultNull = {
   site: {

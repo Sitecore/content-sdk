@@ -1,8 +1,7 @@
-import { GraphQLRequestClientFactory, constants } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { FetchOptions, GraphQLClient } from '../client';
 import debug from '../debug';
-
-const { siteNameError } = constants;
+import { siteNameError } from '../constants';
 
 // The default query for request robots.txt
 const defaultQuery = /* GraphQL */ `

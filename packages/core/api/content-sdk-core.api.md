@@ -40,8 +40,6 @@ export { ClientError }
 
 declare namespace constants {
     export {
-        SitecoreTemplateId,
-        siteNameError,
         SITECORE_EDGE_URL_DEFAULT,
         HIDDEN_RENDERING_NAME,
         CLAIMS,
@@ -285,17 +283,6 @@ export function setCache(key: string, data: unknown): void;
 
 // @internal
 const SITECORE_EDGE_URL_DEFAULT = "https://edge-platform.sitecorecloud.io";
-
-// @public
-enum SitecoreTemplateId {
-    // (undocumented)
-    ContentSdkApp = "061cba1554744b918a0617903b102b82",
-    // (undocumented)
-    DictionaryEntry = "6d1cd89719364a3aa511289a94c2a7b1"
-}
-
-// @internal
-const siteNameError = "The siteName cannot be empty";
 
 // @public
 export interface TenantArgs {

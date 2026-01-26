@@ -1,5 +1,4 @@
-import { constants } from '@sitecore-content-sdk/core';
-import { debug } from '@sitecore-content-sdk/core';
+import { constants, debug } from '@sitecore-content-sdk/core';
 
 const { SITECORE_EDGE_URL_DEFAULT } = constants;
 
