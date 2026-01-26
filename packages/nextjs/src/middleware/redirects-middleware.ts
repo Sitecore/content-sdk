@@ -227,7 +227,11 @@ export class RedirectsMiddleware extends MiddlewareBase {
           url.href = prepareNewURL.href;
           url.pathname = prepareNewURL.pathname;
           url.search = prepareNewURL.search;
-          url.basePath = basePath;
+          // NextUrl setter sets '/' by default if basePath is empty
+          // this causes issues when basePath is not configured so we need to set it only if exists
+          if (basePath) {
+            url.basePath = basePath;
+          }
 
           if (!isAppRouterRequest) {
             url.locale = req.nextUrl.locale;
@@ -396,7 +400,11 @@ export class RedirectsMiddleware extends MiddlewareBase {
     url.search = newUrl.search;
     url.pathname = newUrl.pathname.toLocaleLowerCase();
     url.href = newUrl.href;
-    url.basePath = basePath;
+    // NextUrl setter sets '/' by default if basePath is empty
+    // this causes issues when basePath is not configured so we need to set it only if exists
+    if (basePath) {
+      url.basePath = basePath;
+    }
 
     return url;
   }
