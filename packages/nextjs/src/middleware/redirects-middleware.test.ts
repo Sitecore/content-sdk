@@ -2250,6 +2250,59 @@ describe('RedirectsMiddleware', () => {
         expect((finalRes.url as NextURL).basePath).to.deep.equal(expectedUrl.basePath);
       });
 
+      it('should preserve basePath if basePath is empty string', async () => {
+        const cloneUrl = () => Object.assign({}, req.nextUrl);
+
+        const { res, req } = createTestRequestResponse({
+          res: createResponse({
+            redirected: true,
+            status: 302,
+            url: 'http://localhost:3000/test/new-page',
+          }),
+          request: {
+            nextUrl: {
+              pathname: '/old-page',
+              search: '?param1=value1&param2=value2',
+              basePath: '',
+              href: 'http://localhost:3000/test/old-page?param1=value1&param2=value2',
+              origin: 'http://localhost:3000',
+              clone: cloneUrl,
+            },
+          },
+          status: 302,
+        });
+        setupRedirectStub(301);
+
+        const expectedUrl = {
+          basePath: '',
+          pathname: '/new-page',
+          search: '?param1=value1&param2=value2',
+          href: 'http://localhost:3000/new-page?param1=value1&param2=value2',
+          locale: 'en',
+          origin: 'http://localhost:3000',
+          clone: cloneUrl,
+        };
+
+        const { finalRes } = await runTestWithRedirect(
+          {
+            pattern: '/old-page',
+            target: '/new-page',
+            redirectType: REDIRECT_TYPE_301,
+            isQueryStringPreserved: true,
+          },
+          req,
+          res
+        );
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0];
+        expect(redirectUrl.pathname).to.equal('/new-page');
+        expect(redirectUrl.search).to.include('param1=value1');
+        expect(redirectUrl.search).to.include('param2=value2');
+
+        expect(finalRes.url).to.deep.equal(expectedUrl);
+      });
+
       it('should redirect regardless of case in pattern and target', async () => {
         // Set up a clone function (used by both req and res)
         const cloneUrl = () => Object.assign({}, req.nextUrl);

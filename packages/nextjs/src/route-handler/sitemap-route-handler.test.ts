@@ -127,6 +127,48 @@ describe('createSitemapRouteHandler', () => {
       expect(res.body).to.equal(xmlContent);
     });
 
+    it('should use x-forwarded-host header when present', async () => {
+      const reqWithForwardedHost = {
+        ...req,
+        headers: new Headers({
+          'x-forwarded-host': 'example.com',
+          host: 'localhost:3000',
+        }),
+      };
+      const siteName = sites[0].name;
+
+      await handler.GET(reqWithForwardedHost);
+
+      expect(sitecoreClientStub.getSiteMap).to.have.been.calledWithMatch({
+        reqHost: 'example.com',
+        reqProtocol: 'https',
+        siteName: siteName,
+      });
+    });
+
+    it('should use empty string when both x-forwarded-host and host headers are missing', async () => {
+      const reqWithoutHeaders = {
+        ...req,
+        headers: new Headers({
+          'x-forwarded-proto': 'https',
+        }),
+        nextUrl: {
+          pathname: '/sitemap.xml',
+        } as any,
+      };
+      const xmlContent = '<sitemapindex>...</sitemapindex>';
+
+      sitecoreClientStub.getSiteMap.resolves(xmlContent);
+
+      const res = await handler.GET(reqWithoutHeaders);
+
+      expect(sitecoreClientStub.getSiteMap.firstCall.args[0]).to.deep.include({
+        reqHost: '',
+        reqProtocol: 'https',
+      });
+      expect(res.body).to.equal(xmlContent);
+    });
+
     it('should cache the response for default revalidate time', async () => {
       const xmlContent = '<sitemapindex>...</sitemapindex>';
 

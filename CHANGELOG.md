@@ -10,6 +10,14 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
+
+### 1.4.1
+
+### 🐛 Bug Fixes
+
+* `[nextjs]` Fix basePath preservation logic in redirects-proxy in case `basePath` is not configured; Fix nextjs specific header names in redirects-proxy ([#352](https://github.com/Sitecore/content-sdk/pull/352))
+* `[nextjs]` Sitecore Content SDK does not support X-Forwarded-Host, causing incorrect hostname resolution behind proxies ([#330](https://github.com/Sitecore/content-sdk/pull/330))
+
 ### 1.4.0
 
 ### 🎉 New Features & Improvements
