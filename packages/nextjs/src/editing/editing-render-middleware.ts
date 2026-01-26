@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { debug, NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/content';
 import {
   QUERY_PARAM_EDITING_SECRET,
   INVALID_SECRET_HTML_MESSAGE,
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
-} from '@sitecore-content-sdk/core/editing';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/editing';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';

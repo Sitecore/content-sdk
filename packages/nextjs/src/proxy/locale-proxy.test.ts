@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
-import { debug } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/content';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
 
 import { LocaleProxy } from './locale-proxy';

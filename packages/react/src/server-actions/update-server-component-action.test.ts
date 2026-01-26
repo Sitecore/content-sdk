@@ -5,9 +5,9 @@ import { expect, use } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { ComponentUpdateModel } from './update-server-component-action';
-import { COMPONENT_UPDATE_CACHE_KEY_PREFIX } from '@sitecore-content-sdk/core/editing';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/core/codegen';
+import { COMPONENT_UPDATE_CACHE_KEY_PREFIX } from '@sitecore-content-sdk/content/editing';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/content/codegen';
 import proxyquire from 'proxyquire';
 
 use(sinonChai);
@@ -27,7 +27,7 @@ describe('updateServerComponentAction', () => {
       '@sitecore-content-sdk/core/utils': {
         setCache: setCacheStub,
       },
-      '@sitecore-content-sdk/core': {
+      '@sitecore-content-sdk/content': {
         debug: {
           editing: debugEditingStub,
         },

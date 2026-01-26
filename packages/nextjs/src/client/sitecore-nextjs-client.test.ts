@@ -5,11 +5,11 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SitecoreNextjsClient } from './sitecore-nextjs-client';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
-import * as siteTools from '@sitecore-content-sdk/core/site';
-import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
+import * as siteTools from '@sitecore-content-sdk/content/site';
+import { SITE_PREFIX } from '@sitecore-content-sdk/content/site';
 import { GetServerSidePropsContext } from 'next';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
-import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
+import { VARIANT_PREFIX } from '@sitecore-content-sdk/content/personalize';
 
 chai.use(sinonChai);
 

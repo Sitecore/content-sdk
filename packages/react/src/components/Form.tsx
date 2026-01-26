@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import { form } from '@sitecore-content-sdk/core';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import { form } from '@sitecore-content-sdk/content';
 import { useSitecore } from '../enhancers/withSitecore';
 import { ErrorComponent } from './ErrorBoundary';
 

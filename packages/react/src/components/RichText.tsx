@@ -1,10 +1,10 @@
 ﻿'use client';
 import React, { ForwardedRef, forwardRef } from 'react';
+import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 
 /**
  * The interface for the RichText field.

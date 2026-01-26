@@ -1,5 +1,5 @@
 ﻿import React, { JSX } from 'react';
-import { MetadataKind } from '@sitecore-content-sdk/core/editing';
+import { MetadataKind } from '@sitecore-content-sdk/content/editing';
 
 interface FieldMetadataProps {
   metadata: { [key: string]: unknown };

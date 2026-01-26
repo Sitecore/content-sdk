@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
-import * as dlHelpers from '@sitecore-content-sdk/core/editing';
-import * as codegen from '@sitecore-content-sdk/core/codegen';
+import * as dlHelpers from '@sitecore-content-sdk/content/editing';
+import * as codegen from '@sitecore-content-sdk/content/codegen';
 import { updateServerComponentAction } from '../../server-actions/update-server-component-action';
 import {
   DesignLibraryPreviewEventsProps,

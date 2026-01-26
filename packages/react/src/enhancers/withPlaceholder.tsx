@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
 import { withComponentMap } from './withComponentMap';
 import { withSitecore } from './withSitecore';
 import {

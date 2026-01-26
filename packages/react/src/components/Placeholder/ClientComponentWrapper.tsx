@@ -1,5 +1,5 @@
 'use client';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentMapReactContext } from '../SitecoreProvider';
 import { useContext } from 'react';
 import React from 'react';

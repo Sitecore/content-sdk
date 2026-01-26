@@ -10,9 +10,9 @@ import {
   QUERY_PARAM_EDITING_SECRET,
   DesignLibraryMode,
   PREVIEW_KEY,
-} from '@sitecore-content-sdk/core/editing';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';
-import { SITE_KEY } from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/editing';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
+import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   getEditingSecretFromRequest,

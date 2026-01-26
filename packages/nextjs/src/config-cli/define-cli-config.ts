@@ -1,5 +1,5 @@
-import { SitecoreCliConfigInput, SitecoreCliConfig } from '@sitecore-content-sdk/core/config';
-import { defineCliConfig as defineCliConfigCore } from '@sitecore-content-sdk/core/config-cli';
+import { SitecoreCliConfigInput, SitecoreCliConfig } from '@sitecore-content-sdk/content/config';
+import { defineCliConfig as defineCliConfigCore } from '@sitecore-content-sdk/content/config-cli';
 import { byocTemplate } from '../tools/templating/byoc-component';
 import { defaultTemplate } from '../tools/templating/default-component';
 import { generateMap } from '../tools/generate-map';

@@ -1,7 +1,7 @@
 /* eslint-disable quotes */
 import { expect } from 'chai';
 import { combineImportEntries } from './import-map';
-import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
+import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
 
 describe('Import Map Utils', () => {
   describe('combineImportEntries', () => {

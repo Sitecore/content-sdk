@@ -1,7 +1,7 @@
 import path from 'path';
 import * as dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
-import { SITECORE_CLI_MODE_ENV_VAR } from '@sitecore-content-sdk/core/config-cli';
+import { SITECORE_CLI_MODE_ENV_VAR } from '@sitecore-content-sdk/content/config-cli';
 
 /**
  * Loads and processes environment variables from `.env` files in the specified directory.

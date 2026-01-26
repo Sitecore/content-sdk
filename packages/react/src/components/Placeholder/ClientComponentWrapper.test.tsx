@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import { ClientComponentWrapper } from './ClientComponentWrapper';
 import { SitecoreProvider } from '../SitecoreProvider';
-import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
-import { Page } from '@sitecore-content-sdk/core/client';
+import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import { Page } from '@sitecore-content-sdk/content/client';
 import { convertedDevData as normalModeDevData } from '../../test-data/normal-mode-data';
 
 describe('ClientComponentWrapper', () => {

@@ -23,18 +23,18 @@ describe('GraphQLRequestClient', () => {
 
   before(() => {
     debugNamespaces = debugApi.disable();
-    debugApi.enable(`${debug.http.namespace},${debug.layout.namespace}`);
+    debugApi.enable(`${debug.http.namespace},${debug.common.namespace}`);
   });
 
   beforeEach(() => {
     spy.on(debug.http, 'log', () => true);
-    spy.on(debug.layout, 'log', () => true);
+    spy.on(debug.common, 'log', () => true);
   });
 
   afterEach(() => {
     nock.cleanAll();
     spy.restore(debug.http);
-    spy.restore(debug.layout);
+    spy.restore(debug.common);
   });
 
   after(() => {
@@ -158,17 +158,17 @@ describe('GraphQLRequestClient', () => {
         },
       });
 
-    const graphQLClient = new GraphQLRequestClient(endpoint, { debugger: debug.layout });
+    const graphQLClient = new GraphQLRequestClient(endpoint, { debugger: debug.common });
     await graphQLClient.request('test');
 
-    expect(debug.layout.log, 'request and response log').to.be.called.twice;
+    expect(debug.common.log, 'request and response log').to.be.called.twice;
   });
 
   it('should throw error when endpoint is not a valid url', () => {
     const endpoint = 'invalid';
 
     try {
-      new GraphQLRequestClient(endpoint, { debugger: debug.layout });
+      new GraphQLRequestClient(endpoint, { debugger: debug.common });
     } catch (error) {
       expect(error.toString()).to.equal(
         `Error: Invalid GraphQL endpoint '${endpoint}'. Verify that appropriate environment variable is set`

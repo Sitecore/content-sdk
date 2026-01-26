@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
-import { Page } from '@sitecore-content-sdk/core/client';
-import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { constants } from '@sitecore-content-sdk/core';
 import { ComponentMap } from './sharedTypes';
 import { ImportMapImport } from './DesignLibrary/models';

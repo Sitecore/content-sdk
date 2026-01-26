@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import { withEmptyFieldEditingComponent } from './withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from '../components/DefaultEmptyFieldEditingComponents';
-import { EMPTY_DATE_FIELD_VALUE } from '@sitecore-content-sdk/core/layout';
+import { EMPTY_DATE_FIELD_VALUE } from '@sitecore-content-sdk/content/layout';
 
 describe('withEmptyFieldEditingComponent', () => {
   describe('Metadata', () => {

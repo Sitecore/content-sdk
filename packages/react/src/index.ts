@@ -10,7 +10,7 @@
   NativeDataFetcherConfig,
 } from '@sitecore-content-sdk/core';
 export { EnhancedOmit } from '@sitecore-content-sdk/core/utils';
-export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
+export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,
@@ -28,8 +28,8 @@ export {
   ComponentFields,
   ComponentParams,
   EditMode,
-} from '@sitecore-content-sdk/core/layout';
-export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/core/i18n';
+} from '@sitecore-content-sdk/content/layout';
+export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/content/i18n';
 export {
   GraphQLClientError,
   RetryStrategy,
@@ -39,8 +39,8 @@ export {
   PageMode,
   ErrorPage,
   Page,
-} from '@sitecore-content-sdk/core/client';
-export { mediaApi } from '@sitecore-content-sdk/core/media';
+} from '@sitecore-content-sdk/content/client';
+export { mediaApi } from '@sitecore-content-sdk/content/media';
 export { Form } from './components/Form';
 export { ReactContentSdkComponent, ComponentMap, ReactModule } from './components/sharedTypes';
 export {
@@ -104,4 +104,4 @@ export {
   DefaultEmptyFieldEditingComponentImage,
 } from './components/DefaultEmptyFieldEditingComponents';
 export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
-export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
+export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';

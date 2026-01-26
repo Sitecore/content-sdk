@@ -10,7 +10,7 @@ import {
   getRenderedComponentProps,
   getComponentForRendering,
 } from './placeholder-utils';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentType, PlaceholderProps } from './models';
 import { ComponentMap, ReactModule } from '../sharedTypes';
 import { constants } from '@sitecore-content-sdk/core';

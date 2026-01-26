@@ -5,7 +5,7 @@ import {
   SitecoreProviderReactContext,
   SitecoreProviderState,
 } from '../components/SitecoreProvider';
-import { Page } from '@sitecore-content-sdk/core/client';
+import { Page } from '@sitecore-content-sdk/content/client';
 
 /**
  * The options for the withSitecore HOC.

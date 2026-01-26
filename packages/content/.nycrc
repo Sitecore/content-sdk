@@ -1,0 +1,23 @@
+{
+  "extension": [
+    ".ts"
+  ],
+  "exclude": [
+    "**/index.ts",
+    "**/*.d.ts",
+    "**/*.test.ts",
+    "src/test-data",
+    "dist",
+    "src/index.ts",
+    "./*.js",
+    "./*.d.ts",
+    "**/layout/models.ts",
+    "api"
+  ],
+  "all": true,
+  "reporter": [
+    "cobertura",
+    "text"
+  ],
+  "import": ["tsx"]
+}

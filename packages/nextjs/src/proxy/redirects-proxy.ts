@@ -1,4 +1,4 @@
-import { debug } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/content';
 import {
   RedirectsService,
   RedirectsServiceConfig,
@@ -7,7 +7,7 @@ import {
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectInfo,
   SiteInfo,
-} from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/site';
 import {
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,

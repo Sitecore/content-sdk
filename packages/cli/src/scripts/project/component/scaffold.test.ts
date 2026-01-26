@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { ComponentTemplateType } from '@sitecore-content-sdk/core/config';
-import { SitecoreCliConfig } from '@sitecore-content-sdk/core/src/config';
+import { ComponentTemplateType, SitecoreCliConfig } from '@sitecore-content-sdk/content/config';
 import proxyquire from 'proxyquire';
 import * as loadConfigModule from '../../../utils/load-config';
 
@@ -49,7 +48,7 @@ describe('scaffold command', () => {
     loadCliConfigStub = sinon.stub(loadConfigModule, 'default').returns(mockConfig);
     scaffoldComponentStub = sinon.stub();
     const scaffoldModule = proxyquire('./scaffold', {
-      '@sitecore-content-sdk/core/tools': { scaffoldComponent: scaffoldComponentStub },
+      '@sitecore-content-sdk/content/tools': { scaffoldComponent: scaffoldComponentStub },
     });
     handler = scaffoldModule.handler;
   });

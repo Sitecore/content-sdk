@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 import { NextResponse, NextRequest } from 'next/server';
-import { debug } from '@sitecore-content-sdk/core';
-import { getLocaleRewrite } from '@sitecore-content-sdk/core/i18n';
+import { debug } from '@sitecore-content-sdk/content';
+import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
 import { ProxyBase, ProxyBaseConfig, LOCALE_HEADER_NAME } from './proxy';
 
 /**

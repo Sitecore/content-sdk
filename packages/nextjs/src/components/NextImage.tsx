@@ -1,6 +1,6 @@
 ﻿'use client';
 /* eslint-disable no-unused-vars */
-import { mediaApi } from '@sitecore-content-sdk/core/media';
+import { mediaApi } from '@sitecore-content-sdk/content/media';
 import React from 'react';
 import {
   ImageProps,
@@ -12,7 +12,7 @@ import {
   withEmptyFieldEditingComponent,
 } from '@sitecore-content-sdk/react';
 import Image, { ImageProps as NextImageProperties } from 'next/image';
-import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 
 type NextImageProps = ImageProps & Partial<NextImageProperties>;
 

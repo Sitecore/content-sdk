@@ -1,19 +1,7 @@
-export { generateSites, GenerateSitesConfig } from './generateSites';
-export { generateMetadata } from './generateMetadata';
-export { scaffoldComponent } from './scaffold';
-export { GenerateMapFunction, GenerateMapArgs } from './generate-map';
-export { extractFiles } from './codegen/extract-files';
-export {
-  writeImportMap,
-  WriteImportMapArgs,
-  WriteImportMapArgsInternal,
-  defaultMapTemplate as defaultImportMapTemplate,
-  ModuleExports,
-} from './codegen/import-map';
-export { getComponentSpec, getComponentSpecUrl } from './codegen/component-generation';
-export * from './templating';
 export * from './auth/models';
 import * as authModule from './auth';
+
+export * from './metadata';
 
 /**
  * Preserve "live binding" semantics similar to ES module imports: production

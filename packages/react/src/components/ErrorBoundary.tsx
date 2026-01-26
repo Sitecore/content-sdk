@@ -1,7 +1,7 @@
 ﻿'use client';
 import React, { ReactNode, Suspense } from 'react';
-import { Page } from '@sitecore-content-sdk/core/client';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { withSitecore } from '../enhancers/withSitecore';
 
 type ErrorComponentProps = {

@@ -161,10 +161,11 @@ export const enforceCors = (
 
 /**
  * Gets enforced CORS headers
- * @param {string} requestMethod - The HTTP method of the request.
- * @param {IncomingHttpHeaders | Headers} headers - The headers of the request.
- * @param {string | string[]} presetCorsHeader - The preset CORS header.
- * @param {string[]} [allowedOrigins] - The allowed origins.
+ * @param {object} options - The options
+ * @param {string} options.requestMethod - The HTTP method of the request.
+ * @param {IncomingHttpHeaders | Headers} options.headers - The headers of the request.
+ * @param {string | string[]} options.presetCorsHeader - The preset CORS header.
+ * @param {string[]} [options.allowedOrigins] - The allowed origins.
  * @returns {Record<string, string>} - The enforced CORS headers.
  * @public
  */

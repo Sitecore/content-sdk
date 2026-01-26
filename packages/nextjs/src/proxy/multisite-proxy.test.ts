@@ -6,10 +6,10 @@ import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
-import { debug } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/content';
 
 import { MultisiteProxy } from './multisite-proxy';
-import { SiteResolver } from '@sitecore-content-sdk/core/site';
+import { SiteResolver } from '@sitecore-content-sdk/content/site';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;

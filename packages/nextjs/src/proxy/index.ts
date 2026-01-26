@@ -1,4 +1,4 @@
-export { debug } from '@sitecore-content-sdk/core';
+export { debug } from '@sitecore-content-sdk/content';
 export { ProxyBase, ProxyBaseConfig, ProxyHandler, defineProxy } from './proxy';
 export { RedirectsProxy, RedirectsProxyConfig } from './redirects-proxy';
 export { PersonalizeProxy, PersonalizeProxyConfig } from './personalize-proxy';
@@ -8,7 +8,7 @@ export { LocaleProxy, LocaleProxyConfig } from './locale-proxy';
 export {
   PersonalizeService,
   PersonalizeServiceConfig,
-} from '@sitecore-content-sdk/core/personalize';
+} from '@sitecore-content-sdk/content/personalize';
 export {
   RedirectsService,
   RedirectsServiceConfig,
@@ -16,4 +16,4 @@ export {
   REDIRECT_TYPE_302,
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectInfo,
-} from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/site';

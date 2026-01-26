@@ -12,6 +12,7 @@ node_modules/
 *.log
 npm-debug.log*
 dist
+types/
 *.eslintcache
 
 lerna-debug.log

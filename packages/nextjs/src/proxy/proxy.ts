@@ -1,10 +1,11 @@
-import { SITE_KEY, SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
-import { debug, GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
+import { SITE_KEY, SiteInfo, SiteResolver } from '@sitecore-content-sdk/content/site';
+import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
+import { debug } from '@sitecore-content-sdk/core';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   createGraphQLClientFactory,
   GraphQLClientOptions,
-} from '@sitecore-content-sdk/core/client';
+} from '@sitecore-content-sdk/content/client';
 import { PreviewCookies } from '../editing/utils';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';

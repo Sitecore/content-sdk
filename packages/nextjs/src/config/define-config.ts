@@ -2,7 +2,7 @@ import {
   DeepRequired,
   defineConfig as defineConfigCore,
   SitecoreConfigInput as SitecoreConfigInputCore,
-} from '@sitecore-content-sdk/core/config';
+} from '@sitecore-content-sdk/content/config';
 
 /**
  * Provides default NextJs initial values from env variables for SitecoreConfig

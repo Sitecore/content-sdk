@@ -1,4 +1,6 @@
 export { default as isServer } from './is-server';
+export { ensurePathExists } from './ensurePath';
+export { normalizeUrl } from './normalize-url';
 export {
   resolveUrl,
   isAbsoluteUrl,

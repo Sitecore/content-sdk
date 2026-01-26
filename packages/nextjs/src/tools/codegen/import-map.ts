@@ -1,7 +1,7 @@
 import {
   writeImportMap as writeImportMapCore,
   WriteImportMapArgs,
-} from '@sitecore-content-sdk/core/tools';
+} from '@sitecore-content-sdk/content/tools';
 import {
   detectRouterType,
   nextjsClientMapTemplate,

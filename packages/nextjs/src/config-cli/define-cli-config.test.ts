@@ -4,7 +4,7 @@ import {
   SitecoreCliConfigInput,
   SitecoreCliConfig,
   ComponentTemplateType,
-} from '@sitecore-content-sdk/core/config';
+} from '@sitecore-content-sdk/content/config';
 import chalk from 'chalk';
 
 describe('defineCliConfig', () => {

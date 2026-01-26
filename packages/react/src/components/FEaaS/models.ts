@@ -1,6 +1,6 @@
 import * as FEAAS from '@sitecore-feaas/clientside/react';
-import { ComponentFields, ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import { Page } from '@sitecore-content-sdk/core/client';
+import { ComponentFields, ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import { Page } from '@sitecore-content-sdk/content/client';
 import { MissingComponentProps } from '../MissingComponent';
 
 export const FEAAS_WRAPPER_RENDERING_NAME = 'FEaaSWrapper';

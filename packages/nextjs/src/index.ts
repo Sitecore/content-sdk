@@ -5,13 +5,14 @@
   NativeDataFetcherConfig,
   NativeDataFetcherResponse,
   NativeDataFetcherError,
-  HTMLLink,
   enableDebug,
   debug,
   CacheClient,
   CacheOptions,
   MemoryCacheClient,
 } from '@sitecore-content-sdk/core';
+
+export { HTMLLink } from '@sitecore-content-sdk/content';
 
 export {
   LayoutServiceData,
@@ -33,15 +34,15 @@ export {
   getContentStylesheetLink,
   EditMode,
   RenderingType,
-} from '@sitecore-content-sdk/core/layout';
-export { PageMode, ErrorPage, Page } from '@sitecore-content-sdk/core/client';
-export { ComponentLayoutService } from '@sitecore-content-sdk/core/editing';
-export { mediaApi } from '@sitecore-content-sdk/core/media';
+} from '@sitecore-content-sdk/content/layout';
+export { PageMode, ErrorPage, Page } from '@sitecore-content-sdk/content/client';
+export { ComponentLayoutService } from '@sitecore-content-sdk/content/editing';
+export { mediaApi } from '@sitecore-content-sdk/content/media';
 export {
   DictionaryPhrases,
   DictionaryService,
   DictionaryServiceConfig,
-} from '@sitecore-content-sdk/core/i18n';
+} from '@sitecore-content-sdk/content/i18n';
 
 export {
   personalizeLayout,
@@ -51,7 +52,7 @@ export {
   normalizePersonalizedRewrite,
   CdpHelper,
   PersonalizeService,
-} from '@sitecore-content-sdk/core/personalize';
+} from '@sitecore-content-sdk/content/personalize';
 
 export {
   SitePathService,
@@ -62,9 +63,9 @@ export {
   REDIRECT_TYPE_302,
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectInfo,
-} from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/site';
 
-export { StaticPath } from '@sitecore-content-sdk/core';
+export { StaticPath } from '@sitecore-content-sdk/content';
 
 export {
   SitemapXmlService,
@@ -82,7 +83,7 @@ export {
   getSiteRewrite,
   getSiteRewriteData,
   normalizeSiteRewrite,
-} from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/site';
 
 export {
   ComponentPropsCollection,

@@ -7,8 +7,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { generateMap } from './generate-map';
 import fs from 'fs';
-import { ComponentImport } from '@sitecore-content-sdk/core/tools';
-import * as coreTools from '@sitecore-content-sdk/core/tools';
+import { ComponentImport } from '@sitecore-content-sdk/content/tools';
+import * as coreTools from '@sitecore-content-sdk/content/tools';
 import * as templatingUtils from './templating/utils';
 
 describe('generateMap', () => {

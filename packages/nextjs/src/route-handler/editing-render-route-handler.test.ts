@@ -11,12 +11,12 @@ import {
   INVALID_SECRET_HTML_MESSAGE,
   DesignLibraryMode,
   PREVIEW_KEY,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 import {
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from '../editing/constants';
-import { SITE_KEY } from '@sitecore-content-sdk/core/site';
+import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 
 chai.use(sinonChai);
 
