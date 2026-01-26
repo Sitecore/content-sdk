@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeData
 
-Defined in: [personalization/personalizer.ts:146](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/personalization/personalizer.ts#L146)
+Defined in: [personalization/personalizer.ts:146](https://github.com/Sitecore/content-sdk/blob/c20313995d1da0b945f07f6cca98ae0c9ec5ea79/packages/personalize/src/personalization/personalizer.ts#L146)
 
 An interface that describes the flow execution model attributes input for the library
 
@@ -16,7 +16,7 @@ An interface that describes the flow execution model attributes input for the li
 
 > **channel**: `string`
 
-Defined in: [personalization/personalizer.ts:147](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/personalization/personalizer.ts#L147)
+Defined in: [personalization/personalizer.ts:147](https://github.com/Sitecore/content-sdk/blob/c20313995d1da0b945f07f6cca98ae0c9ec5ea79/packages/personalize/src/personalization/personalizer.ts#L147)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [personalization/personalizer.ts:147](https://github.com/Sitecore/co
 
 > `optional` **currency**: `string`
 
-Defined in: [personalization/personalizer.ts:148](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/personalization/personalizer.ts#L148)
+Defined in: [personalization/personalizer.ts:148](https://github.com/Sitecore/content-sdk/blob/c20313995d1da0b945f07f6cca98ae0c9ec5ea79/packages/personalize/src/personalization/personalizer.ts#L148)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [personalization/personalizer.ts:148](https://github.com/Sitecore/co
 
 > `optional` **email**: `string`
 
-Defined in: [personalization/personalizer.ts:149](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/personalization/personalizer.ts#L149)
+Defined in: [personalization/personalizer.ts:149](https://github.com/Sitecore/content-sdk/blob/c20313995d1da0b945f07f6cca98ae0c9ec5ea79/packages/personalize/src/personalization/personalizer.ts#L149)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [personalization/personalizer.ts:149](https://github.com/Sitecore/co
 
 > **friendlyId**: `string`
 
-Defined in: [personalization/personalizer.ts:150](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/personalization/personalizer.ts#L150)
+Defined in: [personalization/personalizer.ts:150](https://github.com/Sitecore/content-sdk/blob/c20313995d1da0b945f07f6cca98ae0c9ec5ea79/packages/personalize/src/personalization/personalizer.ts#L150)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [personalization/personalizer.ts:150](https://github.com/Sitecore/co
 
 > `optional` **geo**: `PersonalizeGeolocation`
 
-Defined in: [personalization/personalizer.ts:151](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/personalization/personalizer.ts#L151)
+Defined in: [personalization/personalizer.ts:151](https://github.com/Sitecore/content-sdk/blob/c20313995d1da0b945f07f6cca98ae0c9ec5ea79/packages/personalize/src/personalization/personalizer.ts#L151)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [personalization/personalizer.ts:151](https://github.com/Sitecore/co
 
 > `optional` **identifier**: `PersonalizeIdentifierInput`
 
-Defined in: [personalization/personalizer.ts:152](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/personalization/personalizer.ts#L152)
+Defined in: [personalization/personalizer.ts:152](https://github.com/Sitecore/content-sdk/blob/c20313995d1da0b945f07f6cca98ae0c9ec5ea79/packages/personalize/src/personalization/personalizer.ts#L152)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [personalization/personalizer.ts:152](https://github.com/Sitecore/co
 
 > `optional` **language**: `string`
 
-Defined in: [personalization/personalizer.ts:153](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/personalization/personalizer.ts#L153)
+Defined in: [personalization/personalizer.ts:153](https://github.com/Sitecore/content-sdk/blob/c20313995d1da0b945f07f6cca98ae0c9ec5ea79/packages/personalize/src/personalization/personalizer.ts#L153)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [personalization/personalizer.ts:153](https://github.com/Sitecore/co
 
 > `optional` **pageVariantIds**: `string`[]
 
-Defined in: [personalization/personalizer.ts:155](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/personalization/personalizer.ts#L155)
+Defined in: [personalization/personalizer.ts:155](https://github.com/Sitecore/content-sdk/blob/c20313995d1da0b945f07f6cca98ae0c9ec5ea79/packages/personalize/src/personalization/personalizer.ts#L155)
 
 ***
 
@@ -80,4 +80,4 @@ Defined in: [personalization/personalizer.ts:155](https://github.com/Sitecore/co
 
 > `optional` **params**: `NestedObject`
 
-Defined in: [personalization/personalizer.ts:154](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/personalization/personalizer.ts#L154)
+Defined in: [personalization/personalizer.ts:154](https://github.com/Sitecore/content-sdk/blob/c20313995d1da0b945f07f6cca98ae0c9ec5ea79/packages/personalize/src/personalization/personalizer.ts#L154)
