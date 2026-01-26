@@ -10,8 +10,6 @@
 
 Cache Components is **disabled by default** in this template. 
 
-**📖 For complete documentation**, including theory, step-by-step enabling guide, edge cases, and examples, see **[CACHE_COMPONENTS.md](./CACHE_COMPONENTS.md)**.
-
 **Quick Start:**
 1. Enable `cacheComponents: true` in `next.config.ts`
 2. Add uncached data access (`draftMode()`, `cookies()`, `headers()`, or `searchParams`) before calling client methods
