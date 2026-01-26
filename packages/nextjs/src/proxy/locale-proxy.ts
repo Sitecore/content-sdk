@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 import { NextResponse, NextRequest } from 'next/server';
-import { debug } from '@sitecore-content-sdk/content';
 import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
 import { ProxyBase, ProxyBaseConfig, LOCALE_HEADER_NAME } from './proxy';
+import debug from '../debug';
 
 /**
  * The interface for the Locale proxy configuration.

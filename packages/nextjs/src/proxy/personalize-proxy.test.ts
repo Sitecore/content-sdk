@@ -7,11 +7,11 @@ import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
-import { debug } from '@sitecore-content-sdk/content';
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeProxyConfig } from './personalize-proxy';
 import proxyquire from 'proxyquire';
+import debug from '../debug';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;

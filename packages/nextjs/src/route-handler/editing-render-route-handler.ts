@@ -1,5 +1,4 @@
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
-import { debug } from '@sitecore-content-sdk/content';
 import {
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
@@ -24,6 +23,7 @@ import {
   PreviewCookies,
 } from '../editing/utils';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
+import debug from '../debug';
 
 /**
  * Helper function to handle cookie operations - can be mocked for testing

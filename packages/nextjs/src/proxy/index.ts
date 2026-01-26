@@ -1,4 +1,3 @@
-export { debug } from '@sitecore-content-sdk/content';
 export { ProxyBase, ProxyBaseConfig, ProxyHandler, defineProxy } from './proxy';
 export { RedirectsProxy, RedirectsProxyConfig } from './redirects-proxy';
 export { PersonalizeProxy, PersonalizeProxyConfig } from './personalize-proxy';
@@ -17,3 +16,4 @@ export {
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectInfo,
 } from '@sitecore-content-sdk/content/site';
+export { default as debug } from '../debug';

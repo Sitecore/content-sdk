@@ -1,4 +1,6 @@
-﻿export {
+﻿export { default as debug } from './debug';
+
+export {
   constants,
   // generic data access
   NativeDataFetcher,
@@ -6,7 +8,6 @@
   NativeDataFetcherResponse,
   NativeDataFetcherError,
   enableDebug,
-  debug,
   CacheClient,
   CacheOptions,
   MemoryCacheClient,

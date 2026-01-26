@@ -2,10 +2,10 @@
 
 import { NextResponse, NextRequest } from 'next/server';
 import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/content/site';
-import { debug } from '@sitecore-content-sdk/content';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
+import debug from '../debug';
 
 export type CookieAttributes = {
   /**

@@ -1,4 +1,3 @@
-import { debug } from '@sitecore-content-sdk/content';
 import {
   RedirectsService,
   RedirectsServiceConfig,
@@ -19,6 +18,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
+import debug from '../debug';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');

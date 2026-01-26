@@ -3,7 +3,7 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/content/editing';
-import { debug } from '@sitecore-content-sdk/content';
+import debug from '../debug';
 import { Metadata } from '@sitecore-content-sdk/core/tools';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
 import { EditMode } from '@sitecore-content-sdk/content/layout';

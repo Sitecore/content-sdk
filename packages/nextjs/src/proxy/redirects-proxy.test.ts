@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable dot-notation */
 import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
-import { debug } from '@sitecore-content-sdk/content';
 import {
   REDIRECT_TYPE_301,
   REDIRECT_TYPE_302,
@@ -17,6 +16,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsProxy, RedirectsProxyConfig } from './redirects-proxy';
+import debug from '../debug';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;

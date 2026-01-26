@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
-import { debug } from '@sitecore-content-sdk/content';
 import {
   QUERY_PARAM_EDITING_SECRET,
   INVALID_SECRET_HTML_MESSAGE,
@@ -11,6 +10,7 @@ import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
+import debug from '../debug';
 import {
   getPreviewCookies,
   getRequiredEditingParamsList,

@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { debug } from '@sitecore-content-sdk/content';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
@@ -8,6 +7,7 @@ import {
 import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
 import { enforceCors } from '@sitecore-content-sdk/core/utils';
+import debug from '../debug';
 
 /**
  * Configuration for `FEAASRenderMiddleware`.
