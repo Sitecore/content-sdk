@@ -8,7 +8,7 @@
 
 > **PersonalizedRewriteData** = `object`
 
-Defined in: [packages/core/src/personalize/utils.ts:7](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/personalize/utils.ts#L7)
+Defined in: [packages/core/src/personalize/utils.ts:7](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/personalize/utils.ts#L7)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/core/src/personalize/utils.ts:7](https://github.com/Siteco
 
 > `optional` **componentVariantIds**: `string`[]
 
-Defined in: [packages/core/src/personalize/utils.ts:9](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/personalize/utils.ts#L9)
+Defined in: [packages/core/src/personalize/utils.ts:9](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/personalize/utils.ts#L9)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/core/src/personalize/utils.ts:9](https://github.com/Siteco
 
 > **variantId**: `string`
 
-Defined in: [packages/core/src/personalize/utils.ts:8](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/personalize/utils.ts#L8)
+Defined in: [packages/core/src/personalize/utils.ts:8](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/personalize/utils.ts#L8)

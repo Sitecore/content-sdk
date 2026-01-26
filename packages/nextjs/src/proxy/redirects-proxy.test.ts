@@ -663,6 +663,41 @@ describe('RedirectsProxy', () => {
       expect(finalRes).to.deep.equal(redirectRes);
     });
 
+    it('should preserve basePath if configured ', async () => {
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/old-page',
+          search: '?param1=value1&param2=value2',
+          basePath: '/test',
+        },
+      });
+      const res = createResponse();
+
+      const redirectRes = createResponse({
+        redirected: true,
+        status: 302,
+        url: 'http://localhost:3000/test/new-page',
+      });
+      nextRedirectStub.returns(redirectRes);
+
+      const { proxy } = createProxy({
+        pattern: '/old-page',
+        target: '/new-page',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: true,
+      });
+
+      const finalRes = await proxy.handle(req, res);
+
+      expect(nextRedirectStub.calledOnce).to.be.true;
+      const redirectUrl = nextRedirectStub.getCall(0).args[0];
+      expect(redirectUrl).to.include('/new-page');
+      expect(redirectUrl).to.include('param1=value1');
+      expect(redirectUrl).to.include('param2=value2');
+
+      expect(finalRes).to.deep.equal(redirectRes);
+    });
+
     it('should handle absolute URL targets', async () => {
       const req = createRequest({
         nextUrl: {

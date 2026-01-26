@@ -8,4 +8,4 @@
 
 > `const` **PACKAGE\_VERSION**: `string` = `packageJson.version`
 
-Defined in: [consts.ts:5](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/personalize/src/consts.ts#L5)
+Defined in: [consts.ts:5](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/personalize/src/consts.ts#L5)

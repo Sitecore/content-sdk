@@ -19,8 +19,11 @@ type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-// Component that handles draft mode check and data fetching (uncached data access)
-async function PageContent({ site, locale, path, searchParams }: { site: string; locale: string; path?: string[]; searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+// Part of page component that handles dynamic data, like the `draftMode()` call and data fetching.
+// This component is wrapped in Suspense to enable Next.js 16 Partial Prerendering (PPR),
+// which allows streaming dynamic content while keeping static parts prerendered.
+// This pattern also works seamlessly when Cache Components is enabled.
+async function DynamicPageContent({ site, locale, path, searchParams }: { site: string; locale: string; path?: string[]; searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const draft = await draftMode();
 
   // Fetch the page data from Sitecore
@@ -56,10 +59,11 @@ export default async function Page({ params, searchParams }: PageProps) {
   // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
   setRequestLocale(`${site}_${locale}`);
 
-  // Wrap the dynamic content in Suspense for Next.js 16 PPR compatibility
+  // Wrap dynamic content in Suspense to enable Next.js 16 Partial Prerendering (PPR).
+  // PPR allows streaming dynamic content while keeping static parts prerendered for better performance.
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <PageContent site={site} locale={locale} path={path} searchParams={searchParams} />
+      <DynamicPageContent site={site} locale={locale} path={path} searchParams={searchParams} />
     </Suspense>
   );
 }
@@ -74,7 +78,15 @@ export const generateStaticParams = async () => {
       routing.locales.slice()
     );
   }
-  return [];
+  // Next.js 16 requires at least one result
+  // Return a default param for the root page
+  return [
+    {
+      site: sites[0]?.name || 'default',
+      locale: routing.defaultLocale || scConfig.defaultLanguage,
+      path: [],
+    },
+  ];
 };
 <% } -%>
 // Metadata fields for the page.

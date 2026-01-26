@@ -8,6 +8,6 @@
 
 > **FEaaSComponentProps** = `FEaaSComponentServerProps` & `FEaaSComponentClientProps`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:116](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/react/src/components/FEaaS/models.ts#L116)
+Defined in: [packages/react/src/components/FEaaS/models.ts:116](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/react/src/components/FEaaS/models.ts#L116)
 
 The FEaaS component props.

@@ -8,7 +8,7 @@
 
 > **fetchBrowserIdFromEdgeProxy**(`sitecoreEdgeUrl`, `sitecoreEdgeContextId`, `timeout?`): `Promise`\<`ProxySettings`\>
 
-Defined in: [src/browser-id/fetch-browser-id-from-edge-proxy.ts:13](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/analytics-core/src/browser-id/fetch-browser-id-from-edge-proxy.ts#L13)
+Defined in: [src/browser-id/fetch-browser-id-from-edge-proxy.ts:13](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/analytics-core/src/browser-id/fetch-browser-id-from-edge-proxy.ts#L13)
 
 Gets the browser ID and client key from Sitecore Edge proxy.
 

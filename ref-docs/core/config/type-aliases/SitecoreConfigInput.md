@@ -8,7 +8,7 @@
 
 > **SitecoreConfigInput** = `object`
 
-Defined in: [packages/core/src/config/models.ts:24](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L24)
+Defined in: [packages/core/src/config/models.ts:24](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L24)
 
 Type to be used as config input in sitecore.config
 
@@ -18,7 +18,7 @@ Type to be used as config input in sitecore.config
 
 > `optional` **api**: `object`
 
-Defined in: [packages/core/src/config/models.ts:30](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L30)
+Defined in: [packages/core/src/config/models.ts:30](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L30)
 
 API settings required to connect to Sitecore.
 Both edge and local sets can be specified; the Content SDK app will choose
@@ -92,7 +92,7 @@ GraphQL endpoint path (appended to `apiHost` to form the full URL).
 
 > `optional` **defaultLanguage**: `string`
 
-Defined in: [packages/core/src/config/models.ts:75](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L75)
+Defined in: [packages/core/src/config/models.ts:75](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L75)
 
 The default and fallback locale for your site.
 Ensure it aligns with the framework-specific settings used in your application.
@@ -103,7 +103,7 @@ Ensure it aligns with the framework-specific settings used in your application.
 
 > `optional` **defaultSite**: `string`
 
-Defined in: [packages/core/src/config/models.ts:79](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L79)
+Defined in: [packages/core/src/config/models.ts:79](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L79)
 
 Your default site name. When using the multisite feature this variable defines the fallback site.
 
@@ -113,7 +113,7 @@ Your default site name. When using the multisite feature this variable defines t
 
 > `optional` **dictionary**: `object`
 
-Defined in: [packages/core/src/config/models.ts:121](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L121)
+Defined in: [packages/core/src/config/models.ts:121](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L121)
 
 Settings for Dictionary Service
 
@@ -137,7 +137,7 @@ Configure local memory caching for Dictionary Service requests
 
 > `optional` **disableCodeGeneration**: `boolean`
 
-Defined in: [packages/core/src/config/models.ts:210](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L210)
+Defined in: [packages/core/src/config/models.ts:210](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L210)
 
 Opt-out setting for code generation feature
 Disables code extraction procedure
@@ -148,7 +148,7 @@ Disables code extraction procedure
 
 > `optional` **editingSecret**: `string`
 
-Defined in: [packages/core/src/config/models.ts:84](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L84)
+Defined in: [packages/core/src/config/models.ts:84](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L84)
 
 Editing secret required for Sitecore editing and preview functionality.
 Default comes from the SITECORE_EDITING_SECRET environment variable.
@@ -159,7 +159,7 @@ Default comes from the SITECORE_EDITING_SECRET environment variable.
 
 > `optional` **layout**: `object`
 
-Defined in: [packages/core/src/config/models.ts:106](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L106)
+Defined in: [packages/core/src/config/models.ts:106](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L106)
 
 Settings for Layout Service
 
@@ -197,7 +197,7 @@ custom layout query
 
 > `optional` **multisite**: `object`
 
-Defined in: [packages/core/src/config/models.ts:134](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L134)
+Defined in: [packages/core/src/config/models.ts:134](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L134)
 
 Settings for multisite functionality
 
@@ -246,7 +246,7 @@ Function used to determine if site should be resolved from sc_site cookie when p
 
 > `optional` **personalize**: `object`
 
-Defined in: [packages/core/src/config/models.ts:159](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L159)
+Defined in: [packages/core/src/config/models.ts:159](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L159)
 
 Settings for Personalize functionality
 
@@ -255,7 +255,7 @@ Settings for Personalize functionality
 > `optional` **cdpTimeout**: `number`
 
 Configuration for your Sitecore CDP endpoint
-by default set by the PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT environment variable
+by default set by the PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT environment variable (for personalize proxy)
 if not set, will use the default value of 400ms
 
 #### channel?
@@ -281,14 +281,14 @@ Currency for CDP requests
 > `optional` **edgeTimeout**: `number`
 
 Configuration for your Sitecore Experience Edge endpoint
-by default set by the PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT environment variable
+by default set by the PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT environment variable (for personalize proxy)
 if not set, will use the default value of 400ms
 
 #### enabled?
 
 > `optional` **enabled**: `boolean`
 
-Enable personalize middleware
+Enable personalize proxy
 
 ##### Default
 
@@ -308,7 +308,7 @@ Optional Sitecore Personalize scope ID (to isolate data between environments)
 
 > `optional` **redirects**: `object`
 
-Defined in: [packages/core/src/config/models.ts:194](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L194)
+Defined in: [packages/core/src/config/models.ts:194](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L194)
 
 Settings for redirects functionality
 
@@ -337,7 +337,7 @@ These should match those in framework-specific configuration of your app.
 
 > `optional` **retries**: `object`
 
-Defined in: [packages/core/src/config/models.ts:88](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/core/src/config/models.ts#L88)
+Defined in: [packages/core/src/config/models.ts:88](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/core/src/config/models.ts#L88)
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services
 

@@ -23,7 +23,7 @@ describe('PersonalizeProxy', () => {
   });
 
   const { PersonalizeProxy } = proxyquire('./personalize-proxy', {
-    '@sitecore-content-sdk/personalize/server': { personalize: CDKPersonalizeStub },
+    '@sitecore-cloudsdk/personalize/server': { personalize: CDKPersonalizeStub },
   });
 
   const ua = 'user-agent-string';

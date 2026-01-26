@@ -8,7 +8,7 @@
 
 > **createSitemapRouteHandler**(`options`): `object`
 
-Defined in: [nextjs/src/route-handler/sitemap-route-handler.ts:30](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/nextjs/src/route-handler/sitemap-route-handler.ts#L30)
+Defined in: [nextjs/src/route-handler/sitemap-route-handler.ts:30](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/nextjs/src/route-handler/sitemap-route-handler.ts#L30)
 
 Creates a route handler to serve the sitemap.xml file.
 

@@ -8,7 +8,7 @@
 
 > **processDebugResponse**(`namespace`, `response`): `object`
 
-Defined in: [src/debug/debug.ts:13](https://github.com/Sitecore/content-sdk/blob/5a2b53f287cd025776a323be304373d0219e574a/packages/analytics-core/src/debug/debug.ts#L13)
+Defined in: [src/debug/debug.ts:13](https://github.com/Sitecore/content-sdk/blob/98350eaa67737835c12134f49a4886969de3cf97/packages/analytics-core/src/debug/debug.ts#L13)
 
 Extracts debug information from an HTTP response if debugging is enabled.
 
