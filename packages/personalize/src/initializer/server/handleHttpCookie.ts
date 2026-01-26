@@ -2,8 +2,8 @@ import {
   getCookiesValuesFromEdgeServer,
   getDefaultCookieAttributes,
   getGuestIdServer,
-} from '@sitecore-content-sdk/__core__/internal';
-import type { Settings } from '@sitecore-content-sdk/__core__/server';
+} from '@sitecore-content-sdk/analytics-core/internal';
+import type { Settings } from '@sitecore-content-sdk/analytics-core/server';
 import {
   createCookieString,
   getCookieServerSide,
@@ -11,7 +11,7 @@ import {
   type HttpResponse,
   type Request,
   type Response,
-} from '@sitecore-content-sdk/utils';
+} from '@sitecore-content-sdk/analytics-core/utils';
 import type { PersonalizeSettings } from './interfaces';
 
 /**

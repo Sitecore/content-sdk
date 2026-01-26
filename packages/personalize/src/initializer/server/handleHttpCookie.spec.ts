@@ -1,8 +1,8 @@
-import * as internalModule from '@sitecore-content-sdk/__core__/internal';
-import * as utilsModule from '@sitecore-content-sdk/utils';
+import * as internalModule from '@sitecore-content-sdk/analytics-core/internal';
+import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import * as handleHttpCookieModule from './handleHttpCookie';
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => ({
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   __esModule: true,
   getCookieServerSide: jest.fn(),
   getCookiesValuesFromEdgeServer: jest.fn(),
@@ -10,7 +10,7 @@ jest.mock('@sitecore-content-sdk/__core__/internal', () => ({
   getGuestIdServer: jest.fn(),
 }));
 
-jest.mock('@sitecore-content-sdk/utils', () => ({
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => ({
   __esModule: true,
   createCookieString: jest.fn(),
   getCookieServerSide: jest.fn(),
@@ -18,8 +18,8 @@ jest.mock('@sitecore-content-sdk/utils', () => ({
   isNextJsMiddlewareResponse: jest.fn(),
 }));
 
-jest.mock('@sitecore-content-sdk/__core__/browser', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/__core__/browser');
+jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
+  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/browser');
 
   return {
     __esModule: true,

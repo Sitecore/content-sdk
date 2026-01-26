@@ -1,11 +1,19 @@
-import { API_VERSION, debug, processDebugResponse } from '@sitecore-content-sdk/__core__/internal';
+import {
+  API_VERSION,
+  debug,
+  processDebugResponse,
+} from '@sitecore-content-sdk/analytics-core/internal';
 import type {
   BasePayload,
   CustomEventPayload,
   IdentityEventPayload,
   PageViewEventPayload,
 } from '..';
-import type { DebugResponse, EPResponse, Settings } from '@sitecore-content-sdk/__core__/internal';
+import type {
+  DebugResponse,
+  EPResponse,
+  Settings,
+} from '@sitecore-content-sdk/analytics-core/internal';
 import { EVENTS_NAMESPACE, PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 
 /**

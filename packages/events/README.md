@@ -5,7 +5,7 @@ This package provides browser- and server-side functions to ​capture events in
 ## Installation
 
 ```bash
-npm install @sitecore-cloudsdk/events
+npm install @sitecore-content-sdk/events
 ```
 
 ## Usage
@@ -25,8 +25,8 @@ Capture and send a VIEW event from the browser side:
 'use client';
 
 import { useEffect } from 'react';
-import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
-import { pageView } from '@sitecore-cloudsdk/events/browser';
+import { CloudSDK } from '@sitecore-content-sdk/analytics-core/browser';
+import { pageView } from '@sitecore-content-sdk/events/browser';
 
 export default function Home() {
   useEffect(() => {
@@ -48,8 +48,8 @@ Capture and send a VIEW event from the server side:
 
 ```ts
 import type { NextRequest, NextResponse } from 'next/server';
-import { CloudSDK } from '@sitecore-cloudsdk/core/server';
-import { pageView } from '@sitecore-cloudsdk/events/server';
+import { CloudSDK } from '@sitecore-content-sdk/analytics-core/server';
+import { pageView } from '@sitecore-content-sdk/events/server';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();

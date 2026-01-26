@@ -6,12 +6,7 @@ type Package = {
   version: string;
 };
 
-const trackedScopes = [
-  '@sitecore',
-  '@sitecore-cloudsdk',
-  '@sitecore-feaas',
-  '@sitecore-content-sdk',
-];
+const trackedScopes = ['@sitecore', '@sitecore-feaas', '@sitecore-content-sdk'];
 
 /**
  * Get application metadata

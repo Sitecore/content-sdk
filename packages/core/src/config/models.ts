@@ -158,19 +158,19 @@ export type SitecoreConfigInput = {
    */
   personalize?: {
     /**
-     * Enable personalize middleware
+     * Enable personalize proxy
      * @default process.env.NODE_ENV !== 'development'
      */
     enabled?: boolean;
     /**
      * Configuration for your Sitecore Experience Edge endpoint
-     * by default set by the PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT environment variable
+     * by default set by the PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT environment variable (for personalize proxy)
      * if not set, will use the default value of 400ms
      */
     edgeTimeout?: number;
     /**
      * Configuration for your Sitecore CDP endpoint
-     * by default set by the PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT environment variable
+     * by default set by the PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT environment variable (for personalize proxy)
      * if not set, will use the default value of 400ms
      */
     cdpTimeout?: number;

@@ -1,11 +1,13 @@
-import * as coreInternalModule from '@sitecore-content-sdk/__core__/internal';
-import { PackageInitializerServer } from '@sitecore-content-sdk/__core__/internal';
+import * as coreInternalModule from '@sitecore-content-sdk/analytics-core/internal';
+import { PackageInitializerServer } from '@sitecore-content-sdk/analytics-core/internal';
 import { ErrorMessages, EVENTS_NAMESPACE, PACKAGE_NAME } from '../../consts';
 import { addEvents, sideEffects, verifyEventsPackageExistence } from './initializer';
 import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/__core__/internal');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
+  const originalModule: object = jest.requireActual(
+    '@sitecore-content-sdk/analytics-core/internal'
+  );
 
   return {
     __esModule: true,

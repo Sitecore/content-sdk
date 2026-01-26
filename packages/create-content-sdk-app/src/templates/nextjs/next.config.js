@@ -7,6 +7,12 @@ const nextConfig = {
   // Allow specifying a distinct distDir when concurrently running app in a container
   distDir: process.env.NEXTJS_DIST_DIR || '.next',
 
+  // Enable Turbopack file system caching for faster dev startup (beta)
+  // See: https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack
+  experimental: {
+    turbopackFileSystemCacheForDev: true,
+  },
+
   i18n: {
     // These are all the locales you want to support in your application.
     // These should generally match (or at least be a subset of) those in Sitecore.
@@ -91,9 +97,6 @@ const nextConfig = {
       config.externals = ['vertx', ...config.externals];
     }
 
-    config.resolve.alias['@sitecore-cloudsdk/events'] = path.resolve(
-      process.cwd(), './node_modules/@sitecore-cloudsdk/events'
-    );
     config.resolve.alias['@sitecore-feaas/clientside/react'] = path.resolve(
       process.cwd(), options.isServer ? 
         './node_modules/@sitecore-feaas/clientside/dist/node/react.cjs' :

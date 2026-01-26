@@ -14,6 +14,11 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching ([#334](https://github.com/Sitecore/content-sdk/pull/334))
+  - Enabled `cacheComponents: true` for explicit caching with "use cache" directive
+  - Enabled `experimental.turbopackFileSystemCacheForDev: true` for faster dev startup (beta)
+  - Available in both Pages Router and App Router templates
+
 * Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
   * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
     - `SearchService` class for performing search queries with support for pagination, sorting, request cancellation.
@@ -21,8 +26,16 @@ Our versioning strategy is as follows:
   * `[react]` Added React hooks for search functionality
     - `useSearch` hook for paginated search queries with automatic state management, request cancellation, request status tracking.
     - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
+  * `[analytics]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Reorganize Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))
+
+* `[nextjs]` `[Pages Router]` Adjust static path generation when multisite is disabled ([#345](https://github.com/Sitecore/content-sdk/pull/345))
 
 ### 🛠 Breaking Changes
+
+* `[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16 ([#334](https://github.com/Sitecore/content-sdk/pull/334))([#343](https://github.com/Sitecore/content-sdk/pull/343))
+  - Next.js 16 is now required (minimum version `^16.0.0`)
+  - `middleware.ts` renamed to `proxy.ts` with updated function signature
+  - Removed deprecated `images.domains` usage (use `remotePatterns` instead)
 
 * `[nextjs]` Expand SXA redirects logic with support for isLanguagePreserved flag. This provides an option to preserve current locale when target redirect URL does not have a locale prefix ([#305](https://github.com/Sitecore/content-sdk/pull/305))
   - This changes the default redirects behavior out of the box.
@@ -32,13 +45,30 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
+* `[nextjs]` Sitecore Content SDK does not support X-Forwarded-Host, causing incorrect hostname resolution behind proxies ([#330](https://github.com/Sitecore/content-sdk/pull/330))
+* `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
+
+### 1.4.0
+
+### 🎉 New Features & Improvements
+
+* `[nextjs]` `[AI Component Generation]` Enable CLI command to add a new component ([#346](https://github.com/Sitecore/content-sdk/pull/346))
+
+### 🐛 Bug Fixes
+
 * `[nextjs]` `[App Router]` Form component throws a Server component error ([#333](https://github.com/Sitecore/content-sdk/pull/333))
 * `[nextjs]` Add "use client" directive to import-map.ts for React hooks compatibility ([#326](https://github.com/Sitecore/content-sdk/pull/326))
 * `[nextjs]` `[template/nextjs]` `[template/nextjs-app-router]` Fix middleware initialization errors when API configuration is missing ([#325](https://github.com/Sitecore/content-sdk/pull/325))
 * `[nextjs]` Fixes Server Transfer (rewrite) redirects ([#329](https://github.com/Sitecore/content-sdk/pull/329))
-* `[nextjs]` Sitecore Content SDK does not support X-Forwarded-Host, causing incorrect hostname resolution behind proxies ([#330](https://github.com/Sitecore/content-sdk/pull/330))
-* `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
+* `[nextjs]` Preserve `basePath` when doing redirects in redirects-middleware ([#344](https://github.com/Sitecore/content-sdk/pull/344))
 * `[nextjs]` `[react]` Fix fields becoming uneditable in Pages when running Editing Host in dev mode ([#339](https://github.com/Sitecore/content-sdk/pull/339))
+* `[nextjs]` `[Pages Router]` Adjust static path generation when multisite is disabled ([#345](https://github.com/Sitecore/content-sdk/pull/345))
+
+## 1.3.2
+
+### ✨ Chores
+
+* Apply caret (`^`) verisoning to content-sdk packages, ensuring the latest patch versions are used by them.
 
 ## 1.3.1
 

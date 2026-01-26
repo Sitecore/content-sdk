@@ -1,6 +1,7 @@
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import { notFound } from 'next/navigation';
-import { draftMode } from 'next/headers'
+import { draftMode } from 'next/headers';
+import { Suspense } from 'react';
 <% if (prerender === 'SSG') { -%>
 import { SiteInfo } from '@sitecore-content-sdk/nextjs';
 import sites from '.sitecore/sites.json';
@@ -18,12 +19,12 @@ type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function Page({ params, searchParams }: PageProps) {
-  const { site, locale, path } = await params;
+// Part of page component that handles dynamic data, like the `draftMode()` call and data fetching.
+// This component is wrapped in Suspense to enable Next.js 16 Partial Prerendering (PPR),
+// which allows streaming dynamic content while keeping static parts prerendered.
+// This pattern also works seamlessly when Cache Components is enabled.
+async function DynamicPageContent({ site, locale, path, searchParams }: { site: string; locale: string; path?: string[]; searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const draft = await draftMode();
-
-  // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
-  setRequestLocale(`${site}_${locale}`);
 
   // Fetch the page data from Sitecore
   let page;
@@ -52,6 +53,21 @@ export default async function Page({ params, searchParams }: PageProps) {
   );
 }
 
+export default async function Page({ params, searchParams }: PageProps) {
+  const { site, locale, path } = await params;
+
+  // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
+  setRequestLocale(`${site}_${locale}`);
+
+  // Wrap dynamic content in Suspense to enable Next.js 16 Partial Prerendering (PPR).
+  // PPR allows streaming dynamic content while keeping static parts prerendered for better performance.
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DynamicPageContent site={site} locale={locale} path={path} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
 <% if (prerender === 'SSG') { -%>
 // This function gets called at build and export time to determine
 // pages for SSG ("paths", as tokenized array).
@@ -62,7 +78,15 @@ export const generateStaticParams = async () => {
       routing.locales.slice()
     );
   }
-  return [];
+  // Next.js 16 requires at least one result
+  // Return a default param for the root page
+  return [
+    {
+      site: sites[0]?.name || 'default',
+      locale: routing.defaultLocale || scConfig.defaultLanguage,
+      path: [],
+    },
+  ];
 };
 <% } -%>
 // Metadata fields for the page.

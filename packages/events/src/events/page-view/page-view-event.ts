@@ -1,11 +1,11 @@
-import type { EPResponse, Infer, Settings } from '@sitecore-content-sdk/__core__/internal';
+import type { EPResponse, Infer, Settings } from '@sitecore-content-sdk/analytics-core/internal';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
-import type { FlattenedObject, NestedObject } from '@sitecore-content-sdk/utils';
+import type { FlattenedObject, NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { MAX_EXT_ATTRIBUTES, UTM_PREFIX } from '../consts';
 import { BaseEvent } from '../base-event';
 import { ErrorMessages } from '../../consts';
 import type { SendEvent } from '../send-event/sendEvent';
-import { flattenObject } from '@sitecore-content-sdk/utils';
+import { flattenObject } from '@sitecore-content-sdk/analytics-core/utils';
 
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;

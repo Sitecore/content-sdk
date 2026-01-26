@@ -1,6 +1,6 @@
-﻿import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
+import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
-import { REWRITE_HEADER_NAME } from '../middleware/middleware';
+import { REWRITE_HEADER_NAME } from '../proxy/proxy';
 
 /**
  * Since Sitecore editors do not support Fast Refresh:

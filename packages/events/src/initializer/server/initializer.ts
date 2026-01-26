@@ -3,8 +3,8 @@ import {
   enabledPackagesServer as enabledPackages,
   getEnabledPackageServer as getEnabledPackage,
   PackageInitializerServer,
-} from '@sitecore-content-sdk/__core__/internal';
-import { CloudSDKServerInitializer } from '@sitecore-content-sdk/__core__/server';
+} from '@sitecore-content-sdk/analytics-core/internal';
+import { CloudSDKServerInitializer } from '@sitecore-content-sdk/analytics-core/server';
 import { ErrorMessages, EVENTS_NAMESPACE, PACKAGE_NAME } from '../../consts';
 
 /**
@@ -28,7 +28,7 @@ export function addEvents(this: CloudSDKServerInitializer): CloudSDKServerInitia
 
 CloudSDKServerInitializer.prototype.addEvents = addEvents;
 
-declare module '@sitecore-content-sdk/__core__/server' {
+declare module '@sitecore-content-sdk/analytics-core/server' {
   // eslint-disable-next-line no-unused-vars
   interface CloudSDKServerInitializer {
     addEvents: typeof addEvents;

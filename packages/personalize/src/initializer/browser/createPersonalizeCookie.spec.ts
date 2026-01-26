@@ -1,21 +1,21 @@
-import * as browserModule from '@sitecore-content-sdk/__core__/browser';
-import * as internalModule from '@sitecore-content-sdk/__core__/internal';
-import * as utilsModule from '@sitecore-content-sdk/utils';
+import * as browserModule from '@sitecore-content-sdk/analytics-core/browser';
+import * as internalModule from '@sitecore-content-sdk/analytics-core/internal';
+import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import * as createPersonalizeCookieModule from './createPersonalizeCookie';
 
-jest.mock('@sitecore-content-sdk/__core__/internal', () => ({
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   __esModule: true,
   getCookiesValuesFromEdgeBrowser: jest.fn(),
   getDefaultCookieAttributes: jest.fn(),
   getGuestId: jest.fn(),
 }));
 
-jest.mock('@sitecore-content-sdk/__core__/browser', () => ({
+jest.mock('@sitecore-content-sdk/analytics-core/browser', () => ({
   __esModule: true,
   getGuestId: jest.fn(),
 }));
 
-jest.mock('@sitecore-content-sdk/utils', () => ({
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => ({
   __esModule: true,
   createCookieString: jest.fn(),
   getCookieValueClientSide: jest.fn(),
