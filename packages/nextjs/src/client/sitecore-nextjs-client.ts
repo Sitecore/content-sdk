@@ -1,4 +1,4 @@
-import { StaticPath } from '@sitecore-content-sdk/core';
+import { StaticPath } from '@sitecore-content-sdk/content';
 import {
   FetchOptions,
   Page,
