@@ -209,7 +209,7 @@ export class RedirectsProxy extends ProxyBase {
         url.href = prepareNewURL.href;
         url.pathname = prepareNewURL.pathname;
         url.search = prepareNewURL.search;
-        // nextjs seter sets '/' by default if basePath is empty
+        // NextUrl setter sets '/' by default if basePath is empty
         // this causes issues when basePath is not configured so we need to set it only if exists
         if (basePath) {
           url.basePath = basePath;
@@ -414,7 +414,7 @@ export class RedirectsProxy extends ProxyBase {
     url.search = newUrl.search;
     url.pathname = newUrl.pathname.toLocaleLowerCase();
     url.href = newUrl.href;
-    // nextjs seter sets '/' by default if basePath is empty
+    // NextUrl setter sets '/' by default if basePath is empty
     // this causes issues when basePath is not configured so we need to set it only if exists
     if (basePath) {
       url.basePath = basePath;
