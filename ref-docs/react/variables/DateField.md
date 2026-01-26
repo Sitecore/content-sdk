@@ -8,6 +8,6 @@
 
 > `const` **DateField**: `React.FC`\<[`DateFieldProps`](../interfaces/DateFieldProps.md)\>
 
-Defined in: [packages/react/src/components/Date.tsx:31](https://github.com/Sitecore/content-sdk/blob/0201c98750f9b9a280b6f5f642cfd58fba22afc7/packages/react/src/components/Date.tsx#L31)
+Defined in: [packages/react/src/components/Date.tsx:31](https://github.com/Sitecore/content-sdk/blob/569b47a581c50a1e9c14edbc69edab69a694783a/packages/react/src/components/Date.tsx#L31)
 
 The DateField component.
