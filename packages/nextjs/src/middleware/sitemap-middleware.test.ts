@@ -141,6 +141,33 @@ describe('SitemapMiddleware', () => {
       });
     });
 
+    it('should use x-forwarded-host header when present', async () => {
+      req.headers = {
+        'x-forwarded-host': 'example.com',
+        host: 'localhost:3000',
+      };
+
+      await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+
+      expect(siteResolverStub.getByHost).to.have.been.calledWith('example.com');
+    });
+
+    it('should use empty string when both x-forwarded-host and host headers are missing', async () => {
+      req.headers = {};
+      const xmlContent = '<sitemapindex>...</sitemapindex>';
+
+      siteResolverStub.getByHost.withArgs('').returns(sites[1]);
+
+      sitecoreClientStub.getSiteMap.resolves(xmlContent);
+
+      await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
+
+      expect(sitecoreClientStub.getSiteMap.firstCall.args[0]).to.deep.include({
+        reqHost: '',
+        reqProtocol: 'https',
+      });
+    });
+
     it('should redirect to 404 when REDIRECT_404 error is thrown', async () => {
       const error = new Error('REDIRECT_404');
 

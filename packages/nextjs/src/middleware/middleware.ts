@@ -164,7 +164,7 @@ export abstract class MiddlewareBase extends Middleware {
    * @param {NextRequest} req request
    */
   protected getHostHeader(req: NextRequest) {
-    return req.headers.get('host')?.split(':')[0];
+    return req.headers.get('x-forwarded-host') || req.headers.get('host')?.split(':')[0];
   }
 
   /**

@@ -16,6 +16,7 @@ Our versioning strategy is as follows:
 ### 🐛 Bug Fixes
 
 * `[nextjs]` Fix basePath preservation logic in redirects-proxy in case `basePath` is not configured; Fix nextjs specific header names in redirects-proxy ([#352](https://github.com/Sitecore/content-sdk/pull/352))
+* `[nextjs]` Sitecore Content SDK does not support X-Forwarded-Host, causing incorrect hostname resolution behind proxies ([#330](https://github.com/Sitecore/content-sdk/pull/330))
 
 ### 1.4.0
 
