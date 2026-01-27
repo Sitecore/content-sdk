@@ -1,4 +1,11 @@
-import { GraphQLClient, GraphQLRequestClientFactory, CacheClient, CacheOptions, MemoryCacheClient, FetchOptions } from '@sitecore-content-sdk/core';
+import {
+  GraphQLClient,
+  GraphQLRequestClientFactory,
+  CacheClient,
+  CacheOptions,
+  MemoryCacheClient,
+  FetchOptions,
+} from '@sitecore-content-sdk/core';
 import { siteNameError } from '../constants';
 import debug from '../debug';
 
