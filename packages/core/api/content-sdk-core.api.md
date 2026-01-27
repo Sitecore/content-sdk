@@ -196,9 +196,6 @@ export type GraphQLRequestClientFactoryConfig = {
 export function hasCache(key: string): boolean;
 
 // @public
-export const isAbsoluteUrl: (url: string) => boolean;
-
-// @public
 export const isRegexOrUrl: (input: string) => "regex" | "url";
 
 // @public
@@ -291,12 +288,9 @@ export interface TenantArgs {
     tenantId?: string;
 }
 
-// @public
-export const tryParseEnvValue: <T>(envValue: string | undefined, defaultValue: T) => T;
-
 // Warnings were encountered during analysis:
 //
-// src/tools/index.ts:34:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index.ts:32:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

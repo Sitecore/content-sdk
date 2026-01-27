@@ -59,24 +59,6 @@ export function resolveUrl(urlBase: string, params: ParsedUrlQueryInput = {}): s
 }
 
 /**
- * Checks if the given URL is an absolute URL
- * @param {string} url - The URL to check.
- * @returns {boolean} - Returns true if the URL is an absolute URL, otherwise false.
- * @public
- */
-export const isAbsoluteUrl = (url: string) => {
-  if (!url) {
-    return false;
-  }
-
-  if (typeof url !== 'string') {
-    throw new TypeError('Expected a string');
-  }
-
-  return /^[a-z][a-z0-9+.-]*:/.test(url);
-};
-
-/**
  * Indicates whether the error is a timeout error
  * @param {unknown} error error
  * @returns {boolean} is timeout error

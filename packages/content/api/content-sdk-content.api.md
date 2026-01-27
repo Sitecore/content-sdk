@@ -493,9 +493,6 @@ export type GenerateMapArgs = {
 export type GenerateMapFunction = (args: GenerateMapArgs) => void;
 
 // @public
-export function generatePlugins(definition: PluginDefinition): void;
-
-// @public
 export const generateSites: ({ scConfig: deprecatedScConfig, destinationPath, }?: GenerateSitesConfig) => (() => Promise<void>);
 
 // @public
@@ -763,9 +760,6 @@ export enum LayoutServicePageState {
 // @internal
 const loadForm: (contextId: string, formId: string, edgeUrl?: string) => Promise<string>;
 
-// @public
-export const matchPath: (itemPath: string, compare: string) => boolean;
-
 declare namespace mediaApi {
     export {
         getRequiredParams,
@@ -790,14 +784,6 @@ export type ModuleExports = {
     defaultExport: string | null;
     namespaceExport: string | null;
 };
-
-// @public
-export enum ModuleType {
-    // (undocumented)
-    CJS = 0,
-    // (undocumented)
-    ESM = 1
-}
 
 // @public
 export function normalizePersonalizedRewrite(pathname: string): string;
@@ -898,15 +884,6 @@ export interface PlaceholderData {
 export type PlaceholdersData<TYPEDNAME extends string = string> = {
     [P in TYPEDNAME]: Array<ComponentRendering>;
 };
-
-// @public
-export interface PluginDefinition {
-    distPath: string;
-    moduleType: ModuleType;
-    relative?: boolean;
-    rootPath: string;
-    silent?: boolean;
-}
 
 // @internal
 export const postToDesignLibrary: (evt: DesignLibraryEvent) => void;

@@ -4,9 +4,6 @@ export {
   ComponentFile,
   ComponentImport,
   getComponentList,
-  PluginDefinition,
-  generatePlugins,
-  ModuleType,
   GenerateMapArgs,
   extractFiles,
 } from '@sitecore-content-sdk/content/tools';

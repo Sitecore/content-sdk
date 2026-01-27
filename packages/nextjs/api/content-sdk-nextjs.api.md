@@ -64,7 +64,6 @@ import { Form } from '@sitecore-content-sdk/react';
 import { GenerateMapArgs } from '@sitecore-content-sdk/content/tools';
 import { GenerateMapFunction } from '@sitecore-content-sdk/content/tools';
 import { generateMetadata } from '@sitecore-content-sdk/core/tools';
-import { generatePlugins } from '@sitecore-content-sdk/content/tools';
 import { generateSites } from '@sitecore-content-sdk/content/tools';
 import { GenerateSitesConfig } from '@sitecore-content-sdk/content/tools';
 import { getChildPlaceholder } from '@sitecore-content-sdk/content/layout';
@@ -111,7 +110,6 @@ import { LinkProps as LinkProps_3 } from 'next/link';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
 import { Metadata } from '@sitecore-content-sdk/core/tools';
-import { ModuleType } from '@sitecore-content-sdk/content/tools';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
@@ -133,7 +131,6 @@ import { PersonalizeServiceConfig } from '@sitecore-content-sdk/content/personal
 import { PlaceholderComponentProps } from '@sitecore-content-sdk/react';
 import { PlaceholderData } from '@sitecore-content-sdk/content/layout';
 import { PlaceholdersData } from '@sitecore-content-sdk/content/layout';
-import { PluginDefinition } from '@sitecore-content-sdk/content/tools';
 import { PreviewData } from 'next';
 import { default as React_2 } from 'react';
 import { ReactContentSdkComponent } from '@sitecore-content-sdk/react';
@@ -174,7 +171,6 @@ import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { StaticPath } from '@sitecore-content-sdk/content';
 import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
-import { tryParseEnvValue } from '@sitecore-content-sdk/core/tools';
 import { useSitecore } from '@sitecore-content-sdk/react';
 import { withDatasourceCheck } from '@sitecore-content-sdk/react';
 import { withEditorChromes } from '@sitecore-content-sdk/react';
@@ -457,8 +453,6 @@ export { GenerateMapArgs }
 
 export { generateMetadata }
 
-export { generatePlugins }
-
 export { generateSites }
 
 export { GenerateSitesConfig }
@@ -595,8 +589,6 @@ export { mediaApi }
 
 export { MemoryCacheClient }
 
-export { ModuleType }
-
 // @public
 export class MultisiteProxy extends ProxyBase {
     constructor(config: MultisiteProxyConfig);
@@ -708,8 +700,6 @@ export { PlaceholderComponentProps }
 export { PlaceholderData }
 
 export { PlaceholdersData }
-
-export { PluginDefinition }
 
 // @public
 export abstract class ProxyBase extends ProxyHandler_2 {
@@ -899,8 +889,6 @@ export { StaticPath }
 export { Text_2 as Text }
 
 export { TextField }
-
-export { tryParseEnvValue }
 
 // @public
 export function useComponentProps<ComponentData>(componentUid: string | undefined): ComponentData | undefined;

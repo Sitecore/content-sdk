@@ -8,7 +8,6 @@ export { ensurePathExists } from './ensurePath';
 export { normalizeUrl } from './normalize-url';
 export {
   resolveUrl,
-  isAbsoluteUrl,
   isTimeoutError,
   enforceCors,
   getEnforcedCorsHeaders,
@@ -20,7 +19,6 @@ export {
   mergeURLSearchParams,
 } from './utils';
 export { hasCache, getCache, getCacheAndClean, setCache } from './globalCache';
-export { tryParseEnvValue } from './env';
 
 /**
  * Preserve "live binding" semantics similar to ES module imports: production
