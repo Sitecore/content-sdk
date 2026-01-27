@@ -26,7 +26,6 @@ import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { constants } from '@sitecore-content-sdk/core';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
 import { DateField } from '@sitecore-content-sdk/react';
-import { debug as debug_2 } from '@sitecore-content-sdk/core';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
@@ -320,6 +319,8 @@ export function createSitemapRouteHandler(options: RouteHandlerOptions): {
 
 export { DateField }
 
+// @public
+const debug_2: Record<string, debug.Debugger>;
 export { debug_2 as debug }
 
 export { DefaultEmptyFieldEditingComponentImage }

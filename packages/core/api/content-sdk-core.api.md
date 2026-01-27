@@ -41,7 +41,6 @@ export { ClientError }
 declare namespace constants {
     export {
         SITECORE_EDGE_URL_DEFAULT,
-        HIDDEN_RENDERING_NAME,
         CLAIMS,
         DEFAULT_SITECORE_AUTH_DOMAIN,
         DEFAULT_SITECORE_AUTH_AUDIENCE,
@@ -195,9 +194,6 @@ export type GraphQLRequestClientFactoryConfig = {
 
 // @internal
 export function hasCache(key: string): boolean;
-
-// @internal
-const HIDDEN_RENDERING_NAME = "Hidden Rendering";
 
 // @public
 export const isAbsoluteUrl: (url: string) => boolean;

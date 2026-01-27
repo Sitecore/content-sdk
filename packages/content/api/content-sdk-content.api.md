@@ -630,6 +630,9 @@ export { GraphQLRequestClientFactory }
 
 export { GraphQLRequestClientFactoryConfig }
 
+// @internal
+export const HIDDEN_RENDERING_NAME = "Hidden Rendering";
+
 // @public
 export type HTMLLink = {
     [key: string]: unknown;

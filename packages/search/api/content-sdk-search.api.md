@@ -4,6 +4,12 @@
 
 ```ts
 
+import { Debugger } from '@sitecore-content-sdk/core';
+
+// @public
+const debug_2: Debugger;
+export { debug_2 as debug }
+
 // @public
 export type SearchDocument = {
     [key: string]: PrimitiveType | PrimitiveType[] | SearchDocument | SearchDocument[];

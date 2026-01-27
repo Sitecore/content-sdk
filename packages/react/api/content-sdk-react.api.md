@@ -12,6 +12,7 @@ import { ComponentParams } from '@sitecore-content-sdk/content/layout';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentType } from 'react';
 import { constants } from '@sitecore-content-sdk/core';
+import { debug as debug_2 } from '@sitecore-content-sdk/search';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
@@ -148,6 +149,8 @@ export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
     render?: (date: Date | null) => React_2.ReactNode;
     tag?: string;
 }
+
+export { debug_2 as debug }
 
 // @public
 export const DefaultEmptyFieldEditingComponentImage: React_2.FC<{
