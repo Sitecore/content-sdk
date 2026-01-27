@@ -296,7 +296,7 @@ export const tryParseEnvValue: <T>(envValue: string | undefined, defaultValue: T
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index.ts:15:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index.ts:34:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

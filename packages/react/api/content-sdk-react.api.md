@@ -18,7 +18,7 @@ import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
-import { EnhancedOmit } from '@sitecore-content-sdk/core/utils';
+import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
 import { ErrorPage } from '@sitecore-content-sdk/content/client';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { Field } from '@sitecore-content-sdk/content/layout';
