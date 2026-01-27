@@ -9,7 +9,7 @@
   NativeDataFetcherResponse,
   NativeDataFetcherConfig,
 } from '@sitecore-content-sdk/core';
-export { EnhancedOmit } from '@sitecore-content-sdk/core/utils';
+export { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
 export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 export {
   getContentStylesheetLink,

@@ -13,7 +13,7 @@ import { SitecoreProvider } from '../components/SitecoreProvider';
 import { PlaceholderProps } from '../components/PlaceholderCommon';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
 import { Placeholder } from '../components/Placeholder';
-import { EnhancedOmit } from '@sitecore-content-sdk/core/utils';
+import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
 
 type CalloutProps = PlaceholderProps & {
   [prop: string]: unknown;

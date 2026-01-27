@@ -24,7 +24,7 @@ describe('updateServerComponentAction', () => {
     debugEditingStub = sandbox.stub();
 
     const module = proxyquire('./update-server-component-action', {
-      '@sitecore-content-sdk/core/utils': {
+      '@sitecore-content-sdk/core/tools': {
         setCache: setCacheStub,
       },
       '@sitecore-content-sdk/content': {

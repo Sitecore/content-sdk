@@ -44,7 +44,7 @@ describe('generateSites', () => {
     consoleErrorStub = sinon.stub(console, 'error');
 
     const generateSitesModule = proxyquire('./generateSites', {
-      '@sitecore-content-sdk/core/utils': { ensurePathExists: ensurePathExistsStub },
+      '@sitecore-content-sdk/core/tools': { ensurePathExists: ensurePathExistsStub },
     });
     generateSites = generateSitesModule.generateSites;
   });

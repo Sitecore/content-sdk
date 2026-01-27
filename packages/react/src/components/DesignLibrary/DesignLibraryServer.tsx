@@ -5,7 +5,7 @@ import {
   DesignLibraryPreviewEvents,
   DesignLibraryVariantGenerationEvents,
 } from './DesignLibraryClientEvents';
-import * as globalCache from '@sitecore-content-sdk/core/utils';
+import * as globalCache from '@sitecore-content-sdk/core/tools';
 import {
   DesignLibraryStatus,
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,

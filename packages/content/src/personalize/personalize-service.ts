@@ -5,7 +5,7 @@ import {
   CacheOptions,
   MemoryCacheClient,
 } from '@sitecore-content-sdk/core';
-import { isTimeoutError } from '@sitecore-content-sdk/core/utils';
+import { isTimeoutError } from '@sitecore-content-sdk/core/tools';
 import debug from '../debug';
 
 /**

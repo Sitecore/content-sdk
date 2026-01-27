@@ -6,7 +6,7 @@ import {
 } from '@sitecore-content-sdk/content/editing';
 import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
-import { enforceCors } from '@sitecore-content-sdk/core/utils';
+import { enforceCors } from '@sitecore-content-sdk/core/tools';
 import debug from '../debug';
 
 /**

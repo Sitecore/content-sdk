@@ -49,7 +49,7 @@ describe('createEditingConfigRouteHandler', () => {
 
     editingConfigRouteHandlerModule = proxyquire('./editing-config-route-handler', {
       '../utils/utils': { getEditingSecret: getEditingSecretStub },
-      '@sitecore-content-sdk/core/utils': { getEnforcedCorsHeaders: getEnforcedCorsHeadersStub },
+      '@sitecore-content-sdk/core/tools': { getEnforcedCorsHeaders: getEnforcedCorsHeadersStub },
     });
 
     OriginalResponse = (globalThis as any).Response;

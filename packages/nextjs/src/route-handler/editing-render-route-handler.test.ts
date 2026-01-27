@@ -116,7 +116,7 @@ describe('createEditingRenderRouteHandlers', () => {
 
     editingRenderRouteHandlerModule = proxyquire('./editing-render-route-handler', {
       '../utils/utils': { getEditingSecret: getEditingSecretStub },
-      '@sitecore-content-sdk/core/utils': { getEnforcedCorsHeaders: getEnforcedCorsHeadersStub },
+      '@sitecore-content-sdk/core/tools': { getEnforcedCorsHeaders: getEnforcedCorsHeadersStub },
       'next/headers': {
         draftMode: sandbox.stub().returns(draftModeStub),
         cookies: sandbox.stub(), // Won't be called in test environment

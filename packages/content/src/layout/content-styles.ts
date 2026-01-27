@@ -1,4 +1,4 @@
-import { normalizeUrl } from '@sitecore-content-sdk/core/utils';
+import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
 import { constants } from '@sitecore-content-sdk/core';
 import { ComponentRendering, Field, Item, LayoutServiceData, RouteData } from './index';
 import { HTMLLink } from '../models';

@@ -5,7 +5,7 @@ import {
 } from '@sitecore-content-sdk/content/editing';
 import debug from '../debug';
 import { Metadata } from '@sitecore-content-sdk/core/tools';
-import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
 import { ComponentMap } from '@sitecore-content-sdk/react';

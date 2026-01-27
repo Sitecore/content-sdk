@@ -1,5 +1,5 @@
 import { NativeDataFetcher, constants, FetchOptions } from '@sitecore-content-sdk/core';
-import { resolveUrl } from '@sitecore-content-sdk/core/utils';
+import { resolveUrl } from '@sitecore-content-sdk/core/tools';
 import { LayoutServiceData } from '../layout/models';
 import debug from '../debug';
 import { DesignLibraryMode, DesignLibraryVariantGeneration } from './models';

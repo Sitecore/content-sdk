@@ -2,7 +2,7 @@
 import { debug } from '@sitecore-content-sdk/content';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/content/codegen';
-import { setCache } from '@sitecore-content-sdk/core/utils';
+import { setCache } from '@sitecore-content-sdk/core/tools';
 import { COMPONENT_UPDATE_CACHE_KEY_PREFIX } from '@sitecore-content-sdk/content/editing';
 
 export type ComponentUpdateModel = {

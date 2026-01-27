@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { Metadata, getMetadata } from './metadata';
-import { ensurePathExists } from '../../utils/ensurePath';
+import { ensurePathExists } from '../ensurePath';
 
 /*
   METADATA GENERATION

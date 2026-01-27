@@ -9,7 +9,7 @@ import {
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
-import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import debug from '../debug';
 import {
   getPreviewCookies,

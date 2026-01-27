@@ -2,7 +2,7 @@ import { GraphQLClient as Client, ClientError } from 'graphql-request';
 import parse from 'url-parse';
 import { DocumentNode } from 'graphql';
 import debuggers, { Debugger } from './debug';
-import TimeoutPromise from './utils/timeout-promise';
+import TimeoutPromise from './tools/timeout-promise';
 import { GenericGraphQLClientError, RetryStrategy, FetchOptions } from './models';
 import { DefaultRetryStrategy } from './retries';
 

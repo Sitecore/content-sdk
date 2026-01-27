@@ -6,7 +6,7 @@ import {
   QUERY_PARAM_EDITING_SECRET,
   INVALID_SECRET_HTML_MESSAGE,
 } from '@sitecore-content-sdk/content/editing';
-import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { NextRequest } from 'next/server';
 import { getEditingSecret } from '../utils/utils';
