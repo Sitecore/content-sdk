@@ -47,6 +47,7 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` Sitecore Content SDK does not support X-Forwarded-Host, causing incorrect hostname resolution behind proxies ([#330](https://github.com/Sitecore/content-sdk/pull/330))
 * `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
+* `[nextjs]` Fix basePath preservation logic in redirects-proxy in case `basePath` is not configured; Fix nextjs specific header names in redirects-proxy ([#352](https://github.com/Sitecore/content-sdk/pull/352))
 
 ### 1.4.0
 

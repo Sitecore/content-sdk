@@ -209,7 +209,11 @@ export class RedirectsProxy extends ProxyBase {
         url.href = prepareNewURL.href;
         url.pathname = prepareNewURL.pathname;
         url.search = prepareNewURL.search;
-        url.basePath = basePath;
+        // NextUrl setter sets '/' by default if basePath is empty
+        // this causes issues when basePath is not configured so we need to set it only if exists
+        if (basePath) {
+          url.basePath = basePath;
+        }
 
         if (!isAppRouterRequest) {
           // for pages router i18n implementation, apply default locale as backup
@@ -410,7 +414,11 @@ export class RedirectsProxy extends ProxyBase {
     url.search = newUrl.search;
     url.pathname = newUrl.pathname.toLocaleLowerCase();
     url.href = newUrl.href;
-    url.basePath = basePath;
+    // NextUrl setter sets '/' by default if basePath is empty
+    // this causes issues when basePath is not configured so we need to set it only if exists
+    if (basePath) {
+      url.basePath = basePath;
+    }
 
     return url;
   }
@@ -503,8 +511,8 @@ export class RedirectsProxy extends ProxyBase {
       headers: res?.headers,
     });
     if (res?.headers) {
-      redirect.headers.delete('x-proxy-next');
-      redirect.headers.delete('x-proxy-rewrite');
+      redirect.headers.delete('x-middleware-next');
+      redirect.headers.delete('x-middleware-rewrite');
       redirect.headers.delete(REWRITE_HEADER_NAME);
     }
     return redirect;
