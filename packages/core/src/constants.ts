@@ -5,12 +5,6 @@
 export const SITECORE_EDGE_URL_DEFAULT = 'https://edge-platform.sitecorecloud.io';
 
 /**
- * Hidden rendering name
- * @internal
- */
-export const HIDDEN_RENDERING_NAME = 'Hidden Rendering';
-
-/**
  * Claims URL
  * @internal
  */

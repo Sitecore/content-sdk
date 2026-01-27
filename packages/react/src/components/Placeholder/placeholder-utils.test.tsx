@@ -13,7 +13,7 @@ import {
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentType, PlaceholderProps } from './models';
 import { ComponentMap, ReactModule } from '../sharedTypes';
-import { constants } from '@sitecore-content-sdk/core';
+import { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
 import { MissingComponent } from '../MissingComponent';
 import { HiddenRendering } from '../HiddenRendering';
 import {
@@ -587,7 +587,7 @@ describe('placeholder-utils', () => {
 
     it('should return hiddenRenderingComponent when component is hidden', () => {
       const rendering: ComponentRendering = {
-        componentName: constants.HIDDEN_RENDERING_NAME,
+        componentName: HIDDEN_RENDERING_NAME,
         uid: 'test-uid',
       };
 
@@ -604,7 +604,7 @@ describe('placeholder-utils', () => {
 
     it('should return default HiddenRendering when component is hidden and no custom hidden component provided', () => {
       const rendering: ComponentRendering = {
-        componentName: constants.HIDDEN_RENDERING_NAME,
+        componentName: HIDDEN_RENDERING_NAME,
         uid: 'test-uid',
       };
 

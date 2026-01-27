@@ -1,7 +1,5 @@
-import { constants } from '@sitecore-content-sdk/core';
 import { LayoutServiceData, ComponentRendering, PlaceholdersData } from '../layout/models';
-
-const { HIDDEN_RENDERING_NAME } = constants;
+import { HIDDEN_RENDERING_NAME } from '../constants';
 
 const transformToHiddenRenderingVariant = (component: ComponentRendering) => ({
   ...component,

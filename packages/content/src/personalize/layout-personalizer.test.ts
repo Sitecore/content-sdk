@@ -1,5 +1,4 @@
 ﻿import { expect } from 'chai';
-import { constants } from '@sitecore-content-sdk/core';
 import * as personalize from './layout-personalizer';
 import { ComponentRenderingWithExperiences } from './layout-personalizer';
 import {
@@ -17,8 +16,7 @@ import {
   mountain_bike_audience,
   city_bike_audience,
 } from '../test-data/personalizeData';
-
-const { HIDDEN_RENDERING_NAME } = constants;
+import { HIDDEN_RENDERING_NAME } from '../constants';
 
 const { personalizeLayout, personalizePlaceholder, personalizeComponent } = personalize;
 
