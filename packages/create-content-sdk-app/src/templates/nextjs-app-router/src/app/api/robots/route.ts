@@ -10,6 +10,9 @@ import client from 'lib/sitecore-client';
  * used by search engine crawlers to determine crawl and indexing rules.
  */
 
+// Force dynamic rendering since this route uses request headers
+export const dynamic = 'force-dynamic';
+
 export const { GET } = createRobotsRouteHandler({
   client,
   sites,
