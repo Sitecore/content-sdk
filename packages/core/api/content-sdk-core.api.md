@@ -101,7 +101,7 @@ export type EnhancedOmit<T, K extends PropertyKey> = {
     [P in keyof T as Exclude<P, K>]: T[P];
 };
 
-// @public
+// @internal
 export const ensurePathExists: (filePath: string) => void;
 
 // @public
