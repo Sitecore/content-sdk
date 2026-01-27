@@ -4,7 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration=development",
+    "build:production": "ng build --configuration=production",
+    "build:vercel": "node scripts/build-vercel.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:test-anngular21-ssr": "node dist/test-anngular21-ssr/server/server.mjs"
