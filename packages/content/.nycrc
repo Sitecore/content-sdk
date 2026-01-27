@@ -13,7 +13,8 @@
     "./*.js",
     "./*.d.ts",
     "**/layout/models.ts",
-    "api"
+    "api",
+    "src/debug.ts"
   ],
   "all": true,
   "reporter": [
