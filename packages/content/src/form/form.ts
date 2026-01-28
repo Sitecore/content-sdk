@@ -1,4 +1,4 @@
-import { form } from '@sitecore-cloudsdk/events/browser';
+import { form } from '@sitecore-content-sdk/events';
 import { getEdgeProxyFormsUrl } from '../client';
 import debug from '../debug';
 
