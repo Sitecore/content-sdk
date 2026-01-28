@@ -41,5 +41,3 @@ Cache Components is **disabled by default** in this template. To enable it:
    - Any server component calling Sitecore client methods
 
 3. **See the sample app** (`samples/nextjs-app-router`) for a working example with Cache Components enabled.
-
-For more information, see [Next.js Cache Components documentation](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents).

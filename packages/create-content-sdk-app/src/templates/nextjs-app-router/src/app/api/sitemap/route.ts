@@ -9,6 +9,9 @@ import client from 'lib/sitecore-client';
  * The sitemap configuration can be managed within XM Cloud.
  */
 
+// Force dynamic rendering since this route uses request headers
+export const dynamic = 'force-dynamic';
+
 export const { GET } = createSitemapRouteHandler({
   client,
   sites,
