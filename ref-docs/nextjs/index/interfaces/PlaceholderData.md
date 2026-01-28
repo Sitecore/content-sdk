@@ -6,7 +6,7 @@
 
 # Interface: PlaceholderData
 
-Defined in: core/types/layout/models.d.ts:144
+Defined in: content/types/layout/models.d.ts:144
 
 Contents of a single placeholder returned from placeholder service
 
@@ -16,7 +16,7 @@ Contents of a single placeholder returned from placeholder service
 
 > **elements**: [`ComponentRendering`](ComponentRendering.md)\<[`ComponentFields`](ComponentFields.md)\>[]
 
-Defined in: core/types/layout/models.d.ts:147
+Defined in: content/types/layout/models.d.ts:147
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: core/types/layout/models.d.ts:147
 
 > **name**: `string`
 
-Defined in: core/types/layout/models.d.ts:145
+Defined in: content/types/layout/models.d.ts:145
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: core/types/layout/models.d.ts:145
 
 > **path**: `string`
 
-Defined in: core/types/layout/models.d.ts:146
+Defined in: content/types/layout/models.d.ts:146

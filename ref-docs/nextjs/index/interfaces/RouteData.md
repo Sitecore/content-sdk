@@ -6,7 +6,7 @@
 
 # Interface: RouteData\<Fields\>
 
-Defined in: core/types/layout/models.d.ts:55
+Defined in: content/types/layout/models.d.ts:55
 
 Shape of route data returned from Sitecore Layout Service
 
@@ -22,7 +22,7 @@ Shape of route data returned from Sitecore Layout Service
 
 > `optional` **databaseName**: `string`
 
-Defined in: core/types/layout/models.d.ts:59
+Defined in: content/types/layout/models.d.ts:59
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: core/types/layout/models.d.ts:59
 
 > `optional` **deviceId**: `string`
 
-Defined in: core/types/layout/models.d.ts:60
+Defined in: content/types/layout/models.d.ts:60
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: core/types/layout/models.d.ts:60
 
 > `optional` **displayName**: `string`
 
-Defined in: core/types/layout/models.d.ts:57
+Defined in: content/types/layout/models.d.ts:57
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: core/types/layout/models.d.ts:57
 
 > `optional` **fields**: `Fields`
 
-Defined in: core/types/layout/models.d.ts:58
+Defined in: content/types/layout/models.d.ts:58
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: core/types/layout/models.d.ts:58
 
 > `optional` **itemId**: `string`
 
-Defined in: core/types/layout/models.d.ts:67
+Defined in: content/types/layout/models.d.ts:67
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: core/types/layout/models.d.ts:67
 
 > `optional` **itemLanguage**: `string`
 
-Defined in: core/types/layout/models.d.ts:61
+Defined in: content/types/layout/models.d.ts:61
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: core/types/layout/models.d.ts:61
 
 > `optional` **itemVersion**: `number`
 
-Defined in: core/types/layout/models.d.ts:62
+Defined in: content/types/layout/models.d.ts:62
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: core/types/layout/models.d.ts:62
 
 > `optional` **layoutId**: `string`
 
-Defined in: core/types/layout/models.d.ts:63
+Defined in: content/types/layout/models.d.ts:63
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: core/types/layout/models.d.ts:63
 
 > **name**: `string`
 
-Defined in: core/types/layout/models.d.ts:56
+Defined in: content/types/layout/models.d.ts:56
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: core/types/layout/models.d.ts:56
 
 > **placeholders**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)
 
-Defined in: core/types/layout/models.d.ts:66
+Defined in: content/types/layout/models.d.ts:66
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: core/types/layout/models.d.ts:66
 
 > `optional` **templateId**: `string`
 
-Defined in: core/types/layout/models.d.ts:64
+Defined in: content/types/layout/models.d.ts:64
 
 ***
 
@@ -110,4 +110,4 @@ Defined in: core/types/layout/models.d.ts:64
 
 > `optional` **templateName**: `string`
 
-Defined in: core/types/layout/models.d.ts:65
+Defined in: content/types/layout/models.d.ts:65

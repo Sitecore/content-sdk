@@ -6,7 +6,7 @@
 
 # Interface: DictionaryServiceConfig
 
-Defined in: core/types/i18n/dictionary-service.d.ts:39
+Defined in: content/types/i18n/dictionary-service.d.ts:37
 
 Configuration options for
 
@@ -64,7 +64,7 @@ Cache timeout (sec)
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: core/types/i18n/dictionary-service.d.ts:44
+Defined in: content/types/i18n/dictionary-service.d.ts:42
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -79,7 +79,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > `optional` **debugger**: `Debugger`
 
-Defined in: core/types/sitecore-service-base.d.ts:12
+Defined in: content/types/sitecore-service-base.d.ts:12
 
 Optional debug logger override
 
@@ -93,7 +93,7 @@ Optional debug logger override
 
 > `optional` **dictionaryEntryTemplateId**: `string`
 
-Defined in: core/types/i18n/dictionary-service.d.ts:49
+Defined in: content/types/i18n/dictionary-service.d.ts:47
 
 Optional. The template ID to use when searching for dictionary entries.
 
@@ -109,7 +109,7 @@ Optional. The template ID to use when searching for dictionary entries.
 
 > `optional` **pageSize**: `number`
 
-Defined in: core/types/i18n/dictionary-service.d.ts:56
+Defined in: content/types/i18n/dictionary-service.d.ts:54
 
 common variable for all GraphQL queries
 it will be used for every type of query to regulate result batch size
@@ -127,7 +127,7 @@ Optional. How many result items to fetch in each GraphQL call. This is needed fo
 
 > `optional` **retries**: `object`
 
-Defined in: core/types/config/models.d.ts:84
+Defined in: content/types/config/models.d.ts:84
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services
 

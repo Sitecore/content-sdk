@@ -8,4 +8,4 @@
 
 > **getComponentList**: *typeof* `_getComponentList`
 
-Defined in: core/types/tools/templating/components.d.ts:4
+Defined in: content/types/tools/templating/components.d.ts:4

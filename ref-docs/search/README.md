@@ -19,3 +19,7 @@
 - [SearchDocument](type-aliases/SearchDocument.md)
 - [SearchServiceFetchOptions](type-aliases/SearchServiceFetchOptions.md)
 - [SortSetting](type-aliases/SortSetting.md)
+
+## Variables
+
+- [debug](variables/debug.md)

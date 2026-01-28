@@ -8,7 +8,7 @@
 
 > **SiteInfoServiceConfig** = [`CacheOptions`](../interfaces/CacheOptions.md) & `object`
 
-Defined in: core/types/site/siteinfo-service.d.ts:9
+Defined in: content/types/site/siteinfo-service.d.ts:8
 
 Configuration for
 

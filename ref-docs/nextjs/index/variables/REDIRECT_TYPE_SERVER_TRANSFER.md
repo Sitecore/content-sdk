@@ -8,6 +8,6 @@
 
 > `const` **REDIRECT\_TYPE\_SERVER\_TRANSFER**: `"SERVER_TRANSFER"` = `"SERVER_TRANSFER"`
 
-Defined in: core/types/site/redirects-service.d.ts:18
+Defined in: content/types/site/redirects-service.d.ts:16
 
 Redirect type for server transfer

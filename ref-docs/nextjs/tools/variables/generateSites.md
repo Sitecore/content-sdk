@@ -8,7 +8,7 @@
 
 > `const` **generateSites**: (`{ scConfig: deprecatedScConfig, destinationPath, }?`) => () => `Promise`\<`void`\>
 
-Defined in: core/types/tools/generateSites.d.ts:24
+Defined in: content/types/tools/generateSites.d.ts:24
 
 Generates site information and writes it to a specified destination path.
 

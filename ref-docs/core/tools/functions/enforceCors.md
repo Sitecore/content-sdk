@@ -1,0 +1,35 @@
+[**@sitecore-content-sdk/core**](../../README.md)
+
+***
+
+[@sitecore-content-sdk/core](../../README.md) / [tools](../README.md) / enforceCors
+
+# ~~Function: enforceCors()~~
+
+> **enforceCors**(`req`, `res`, `allowedOrigins?`): `boolean`
+
+Defined in: [packages/core/src/tools/utils.ts:103](https://github.com/Sitecore/content-sdk/blob/d534b0a45dcbd360af2fbae85ddf06d144a8403c/packages/core/src/tools/utils.ts#L103)
+
+Tests origin from incoming request against allowed origins list that can be
+set in JSS's JSS_ALLOWED_ORIGINS env variable, passed via allowedOrigins param and/or
+be already set in Access-Control-Allow-Origin by other logic.
+Applies Access-Control-Allow-Origin and Access-Control-Allow-Methods on match
+Also applies Access-Control-Allow-Headers for preflight requests
+
+## Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `req` | `IncomingMessage` | incoming request |
+| `res` | `OutgoingMessage` | response to set CORS headers for |
+| `allowedOrigins?` | `string`[] | additional list of origins to test against |
+
+## Returns
+
+`boolean`
+
+true if incoming origin matches the allowed lists, false when it does not
+
+## Deprecated
+
+use getEnforcedCorsHeaders instead

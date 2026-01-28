@@ -8,7 +8,7 @@
 
 > **resolveUrl**(`urlBase`, `params?`): `string`
 
-Defined in: core/types/utils/utils.d.ts:20
+Defined in: core/types/tools/utils.d.ts:20
 
 Resolves a base URL that may contain query string parameters and an additional set of query
 string parameters into a unified string representation.

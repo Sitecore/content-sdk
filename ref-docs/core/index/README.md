@@ -9,7 +9,6 @@
 ## Namespaces
 
 - [constants](namespaces/constants/README.md)
-- [form](namespaces/form/README.md)
 
 ## Classes
 
@@ -30,20 +29,21 @@
 ## Type Aliases
 
 - [Debugger](type-aliases/Debugger.md)
+- [FetchOptions](type-aliases/FetchOptions.md)
 - [GenericGraphQLClientError](type-aliases/GenericGraphQLClientError.md)
+- [GraphQLClientError](type-aliases/GraphQLClientError.md)
 - [GraphQLRequestClientConfig](type-aliases/GraphQLRequestClientConfig.md)
 - [GraphQLRequestClientFactory](type-aliases/GraphQLRequestClientFactory.md)
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
-- [HTMLLink](type-aliases/HTMLLink.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
 - [NativeDataFetcherError](type-aliases/NativeDataFetcherError.md)
-- [StaticPath](type-aliases/StaticPath.md)
 
 ## Variables
 
 - [debug](variables/debug.md)
+- [debugModule](variables/debugModule.md)
+- [debugNamespace](variables/debugNamespace.md)
 
 ## Functions
 
-- [defineConfig](functions/defineConfig.md)
 - [enableDebug](functions/enableDebug.md)

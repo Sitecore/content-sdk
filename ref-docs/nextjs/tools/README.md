@@ -6,15 +6,10 @@
 
 # tools
 
-## Enumerations
-
-- [ModuleType](enumerations/ModuleType.md)
-
 ## Interfaces
 
 - [ComponentFile](interfaces/ComponentFile.md)
 - [ComponentImport](interfaces/ComponentImport.md)
-- [PluginDefinition](interfaces/PluginDefinition.md)
 
 ## Type Aliases
 
@@ -31,5 +26,4 @@
 
 ## Functions
 
-- [generatePlugins](functions/generatePlugins.md)
 - [writeImportMap](functions/writeImportMap.md)
