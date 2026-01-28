@@ -5,7 +5,7 @@ import { debug } from '@sitecore-content-sdk/core';
 import { getComponentList } from './../templating';
 import { SitecoreConfig } from './../../config';
 import crypto from 'crypto';
-import { isNodeModuleImport, stripExtension, getRelativeImportPath, toPosixPath } from './utils';
+import { isNodeModuleImportOrAlias, getRelativeImportPath } from './utils';
 
 let _getComponentList = getComponentList;
 const aliasImport = /^([a-zA-Z0-9]+) as .+$/;
@@ -274,23 +274,11 @@ function _getImportMap(paths: string[]) {
 
         let importModuleName: string;
 
-        if (
-          resolvedImportPath.includes('node_modules') ||
-          resolvedImportPath.endsWith('.d.ts') ||
-          !toPosixPath(resolvedImportPath).startsWith(toPosixPath(appPath) + '/')
-        ) {
-          // if import path points to a file in local app - process import path to the file (i.e. ./myComponent)
-          // if it points to node_modules or a file in monorepo - parse import path as dependency module name (i.e. React)
-          // external dependency → keep as-is
-          importModuleName = isNodeModuleImport(moduleName)
-            ? stripExtension(moduleName)
-            : getRelativeImportPath(resolvedImportPath, appPath);
-        } else {
-          // local file
-          importModuleName = isNodeModuleImport(moduleName)
-            ? stripExtension(moduleName)
-            : getRelativeImportPath(resolvedImportPath, appPath);
-        }
+        // if module path points to local app - get relative import path to the file (i.e. ./myComponent)
+        // if it points to node_modules, file or an alias - keep as-is
+        importModuleName = isNodeModuleImportOrAlias(moduleName)
+          ? moduleName
+          : getRelativeImportPath(resolvedImportPath, appPath);
 
         // Set module import info in the map. If module import exists - add entries to existing entry
         // Otherwise, add new entry

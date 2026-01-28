@@ -248,6 +248,81 @@ describe('Import Map Generation', () => {
 
       expect(convertToTestable(result)).to.deep.equal(expected);
     });
+
+    it('should return map with imports from 3rd party modules', () => {
+      const fakeCode = `import { coolFeature } from 'coolFeatureLib';
+        import { fancyNameFeature } from 'fancy.js';
+        export default function logic() {
+          console.log('document imports', coolFeature, fancyNameFeature);
+        };
+      `;
+
+      const ts = require('typescript');
+      const fakeFilePath = path.resolve(process.cwd(), 'fake-file.ts');
+      const nodeModulesPath = path.resolve(process.cwd(), 'node_modules');
+
+      // Store original functions
+      const originalReadFile = ts.sys.readFile;
+      const originalFileExists = ts.sys.fileExists;
+
+      try {
+        // Mock ts.sys.readFile to return our fake code
+        ts.sys.readFile = (filePath: string) => {
+          if (filePath === fakeFilePath) {
+            return fakeCode;
+          }
+          if (filePath.includes('tsconfig.json')) {
+            return originalReadFile(filePath);
+          }
+          // For node_modules resolution, return minimal valid module content
+          if (
+            filePath.includes('coolFeatureLib') ||
+            filePath.includes('fancy.js') ||
+            filePath.includes(nodeModulesPath)
+          ) {
+            return 'export const placeholder = true;';
+          }
+          return originalReadFile(filePath);
+        };
+
+        // Mock ts.sys.fileExists to confirm our files exist
+        ts.sys.fileExists = (filePath: string) => {
+          if (filePath === fakeFilePath) {
+            return true;
+          }
+          if (
+            filePath.includes('coolFeatureLib') ||
+            filePath.includes('fancy.js') ||
+            filePath.includes(nodeModulesPath)
+          ) {
+            return true;
+          }
+          return originalFileExists(filePath);
+        };
+
+        const result = getImportMap([fakeFilePath]);
+        const expected = [
+          {
+            module: 'coolFeatureLib',
+            namedImports: [{ name: 'coolFeature', value: 'coolFeature' }],
+            defaultImport: null,
+            namespaceImport: null,
+          },
+          {
+            module: 'fancy.js',
+            namedImports: [{ name: 'fancyNameFeature', value: 'fancyNameFeature' }],
+            defaultImport: null,
+            namespaceImport: null,
+          },
+        ];
+
+        expect(convertToTestable(result)).to.deep.equal(expected);
+      } finally {
+        // Always restore original functions, even if test fails
+        ts.sys.readFile = originalReadFile;
+        ts.sys.fileExists = originalFileExists;
+      }
+    });
   });
 
   describe('defaultMapTemplate', () => {
@@ -583,4 +658,3 @@ ${defaultMapTemplate(indexedImportMap)}`;
     });
   });
 });
-
