@@ -7,6 +7,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
+    "@sitecore-content-sdk/core": "1.5.0-canary.5",
     "debug": "^4.4.3"
   },
   "description": "> TODO: description",
@@ -29,26 +30,24 @@
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.2"
   },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "types/src/index.d.ts",
   "exports": {
-    "./browser": {
-      "import": "./dist/esm/src/browser.js",
-      "require": "./dist/cjs/src/browser.js",
-      "types": "./types/src/browser/index.d.ts"
+    ".": {
+      "import": "./dist/esm/src/index.js",
+      "require": "./dist/cjs/src/index.js",
+      "types": "./types/src/index.d.ts"
     },
     "./internal": {
       "import": "./dist/esm/src/internal.js",
       "require": "./dist/cjs/src/internal.js",
-      "types": "./types/src/internal/index.d.ts"
-    },
-    "./server": {
-      "import": "./dist/esm/src/server.js",
-      "require": "./dist/cjs/src/server.js",
-      "types": "./types/src/server/index.d.ts"
+      "types": "./types/src/internal.d.ts"
     },
     "./utils": {
       "import": "./dist/esm/src/utils.js",
       "require": "./dist/cjs/src/utils.js",
-      "types": "./types/src/utils/index.d.ts"
+      "types": "./types/src/utils.d.ts"
     }
   },
   "files": [

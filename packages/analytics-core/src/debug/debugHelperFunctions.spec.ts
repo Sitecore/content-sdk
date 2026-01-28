@@ -1,6 +1,8 @@
 import * as customDebug from './debug';
 import * as utils from '../utils';
 import debug from 'debug';
+import { jest, expect } from '@jest/globals';
+
 jest.mock('debug', () => ({
   enabled: jest.fn(),
 }));

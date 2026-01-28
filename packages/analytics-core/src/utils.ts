@@ -1,10 +1,6 @@
 export { createCookieString } from './utils/cookies/create-cookie-string';
 export { fetchWithTimeout } from './utils/fetch/fetch-with-timeout';
 export { getCookieValueClientSide } from './utils/cookies/get-cookie-value-client-side';
-export { isNextJsMiddlewareRequest } from './utils/typeguards/is-next-js-middleware-request';
-export { isNextJsMiddlewareResponse } from './utils/typeguards/is-next-js-middleware-response';
-export { isHttpRequest } from './utils/typeguards/is-http-request';
-export { isHttpResponse } from './utils/typeguards/is-http-response';
 export { getCookie } from './utils/cookies/get-cookie';
 export { getCookieServerSide } from './utils/cookies/get-cookie-server-side';
 export { cookieExists } from './utils/cookies/cookie-exists';
@@ -14,20 +10,12 @@ export { isValidEmail } from './utils/validators/is-valid-email';
 export { omit } from './utils/objects/omit';
 export { generateV4UUID } from './utils/generators/generate-v4-uuid';
 export { normalizeHeaders } from './utils/converters/normalizeHeaders';
-export { ErrorMessages } from './utils/consts';
+export { ERROR_MESSAGES } from './utils/consts';
 export { isValidHttpURL } from './utils/validators/is-valid-http-url';
 export { isValidLocation } from './utils/validators/is-valid-location';
 export { appendScriptWithAttributes } from './utils/browser/appendScriptWithAttributes';
 
-export type {
-  Request,
-  Response,
-  MiddlewareNextResponse,
-  HttpResponse,
-  MiddlewareRequest,
-  HttpRequest,
-  BasicTypes,
-} from './utils/interfaces';
+export type { BasicTypes } from './utils/interfaces';
 
 export type { Cookie, CookieProperties } from './utils/cookies/interfaces';
 export type { NestedObject, FlattenedObject } from './utils/converters/flatten-object';

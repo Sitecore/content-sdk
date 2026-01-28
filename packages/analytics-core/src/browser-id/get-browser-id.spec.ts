@@ -1,54 +1,49 @@
-import * as coreBrowserModule from '../initializer/browser/initializer';
+import * as pluginsModule from '../initialization/plugin';
 import { getBrowserId } from './get-browser-id';
+import { jest, expect } from '@jest/globals';
 
-jest.mock('../initializer/browser/initializer');
+jest.mock('../initialization/plugin');
 
 describe('getBrowserId', () => {
-  const getCloudSDKSettingsSpy = jest
-    .spyOn(coreBrowserModule, 'getCloudSDKSettings')
-    .mockReturnValue({
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
-      siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
-    });
+  const mockEnvironment = {
+    getBrowserId: jest.fn(),
+  };
+
+  const getAnalyticsPluginSpy = jest.spyOn(pluginsModule, 'getAnalyticsPlugin').mockReturnValue({
+    environment: mockEnvironment,
+  } as unknown as ReturnType<typeof pluginsModule.getAnalyticsPlugin>);
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return the cookie value when cookie exists on the page', async () => {
-    jest.spyOn(document, 'cookie', 'get').mockReturnValueOnce(`bid_name=bid_value`);
-
-    const mockCoreBrowserModule = coreBrowserModule as { initCoreState: Promise<void> };
-    mockCoreBrowserModule.initCoreState = Promise.resolve();
+  it('should return the browser ID when environment returns a value', () => {
+    mockEnvironment.getBrowserId.mockReturnValueOnce('bid_value');
 
     const browserId = getBrowserId();
+
     expect(browserId).toEqual('bid_value');
-    expect(getCloudSDKSettingsSpy).toHaveBeenCalledTimes(1);
+    expect(getAnalyticsPluginSpy).toHaveBeenCalledTimes(1);
+    expect(mockEnvironment.getBrowserId).toHaveBeenCalledTimes(1);
   });
 
-  it('should return empty string if there is a cookie but not the correct one', async () => {
-    jest.spyOn(document, 'cookie', 'get').mockReturnValueOnce('WrongCookieName=cookieValue');
-
-    const mockCoreBrowserModule = coreBrowserModule as { initCoreState: Promise<void> };
-    mockCoreBrowserModule.initCoreState = Promise.resolve();
+  it('should return empty string when environment returns null', () => {
+    mockEnvironment.getBrowserId.mockReturnValueOnce(null);
 
     const browserId = getBrowserId();
+
     expect(browserId).toEqual('');
-    expect(getCloudSDKSettingsSpy).toHaveBeenCalledTimes(1);
+    expect(getAnalyticsPluginSpy).toHaveBeenCalledTimes(1);
+    expect(mockEnvironment.getBrowserId).toHaveBeenCalledTimes(1);
   });
-  it('should return empty string if no cookie exists on the page', async () => {
-    const mockCoreBrowserModule = coreBrowserModule as { initCoreState: Promise<void> };
-    mockCoreBrowserModule.initCoreState = Promise.resolve();
+
+  it('should return empty string when environment returns undefined', () => {
+    mockEnvironment.getBrowserId.mockReturnValueOnce(undefined);
 
     const browserId = getBrowserId();
+
     expect(browserId).toBe('');
-    expect(getCloudSDKSettingsSpy).toHaveBeenCalledTimes(1);
+    expect(getAnalyticsPluginSpy).toHaveBeenCalledTimes(1);
+    expect(mockEnvironment.getBrowserId).toHaveBeenCalledTimes(1);
   });
 });

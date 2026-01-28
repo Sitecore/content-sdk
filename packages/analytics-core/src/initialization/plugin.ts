@@ -1,0 +1,130 @@
+import { AnalyticsEnvironment, AnalyticsPlugin } from './types';
+import {
+  BROWSER_ID_COOKIE_NAME,
+  COOKIE_NAME_PREFIX,
+  DEFAULT_COOKIE_EXPIRY_DAYS,
+  LIBRARY_VERSION,
+} from '../consts';
+import { ANALYTICS_PLUGIN_NAME } from './const';
+import { getCoreSettings, debug } from '@sitecore-content-sdk/core';
+import { getBrowserId } from '../browser-id/get-browser-id';
+const debugInit = debug.init;
+
+/**
+ * Parameters for creating an analytics plugin.
+ */
+interface AnalyticsPluginOptions {
+  settings?: {
+    cookieDomain?: string;
+    cookieExpiryDays?: number;
+    cookiePath?: string;
+    enableCookie?: boolean;
+    timeout?: number;
+  };
+  environment: AnalyticsEnvironment;
+}
+
+/**
+ * Creates an analytics plugin with the provided options.
+ * @param {AnalyticsPluginOptions} options - The parameters for the analytics plugin.
+ * @returns {AnalyticsPlugin} The analytics plugin instance.
+ * @public
+ */
+export function analyticsPlugin(options: AnalyticsPluginOptions): AnalyticsPlugin {
+  const { settings, environment } = options;
+
+  const analyticsSettings = {
+    cookieSettings: {
+      domain: settings?.cookieDomain,
+      enableCookie: settings?.enableCookie ?? false,
+      expiryDays: settings?.cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
+      name: {
+        browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`,
+      },
+      path: settings?.cookiePath || '/',
+    },
+    timeout: settings?.timeout,
+  };
+
+  return {
+    name: ANALYTICS_PLUGIN_NAME,
+    init,
+    settings: analyticsSettings,
+    environment,
+  };
+}
+
+/**
+ * Initializes the analytics plugin with the provided settings.
+ * @internal
+ */
+async function init() {
+  debugInit(`Initializing ${ANALYTICS_PLUGIN_NAME}`);
+  const coreConfig = getCoreSettings();
+  const analyticsPlugin = getAnalyticsPlugin();
+
+  if (!analyticsPlugin.settings.cookieSettings.enableCookie) {
+    debugInit(
+      `Cookies are disabled for ${ANALYTICS_PLUGIN_NAME}. If this was not intentional, set "enableCookie" to "true".`
+    );
+    return;
+  }
+
+  const environment = analyticsPlugin.environment;
+
+  if (!environment.getBrowserId() || analyticsPlugin.environment.type !== 'browser') {
+    await environment.setBrowserId();
+    debugInit(`Cookie set for ${ANALYTICS_PLUGIN_NAME}`);
+  }
+
+  if (analyticsPlugin.environment.type === 'browser')
+    window.scCloudSDK = {
+      ...window.scCloudSDK,
+      'analytics-core': {
+        getBrowserId,
+        settings: {
+          siteName: coreConfig.settings.siteName,
+          sitecoreEdgeContextId: coreConfig.settings.contextId,
+          sitecoreEdgeUrl: coreConfig.settings.sitecoreEdgeUrl,
+        },
+        version: LIBRARY_VERSION,
+      },
+    };
+}
+
+/**
+ * Retrieves the analytics plugin instance from the core configuration.
+ * @returns {AnalyticsPlugin} The analytics plugin instance.
+ * @internal
+ */
+export function getAnalyticsPlugin(): AnalyticsPlugin {
+  const coreConfig = getCoreSettings();
+  const plugin = coreConfig.plugins.get(ANALYTICS_PLUGIN_NAME) as AnalyticsPlugin;
+
+  if (!plugin)
+    throw new Error(
+      `[IE-0004] - You must first add "${ANALYTICS_PLUGIN_NAME}" to the "initSitecore()" "plugins" array.`
+    );
+
+  return plugin;
+}
+
+declare global {
+  interface AnalyticsCore {
+    getBrowserId: typeof getBrowserId;
+    settings: {
+      siteName: string;
+      sitecoreEdgeContextId: string;
+      sitecoreEdgeUrl: string;
+    };
+    version: string;
+  }
+  interface ScCloudSDK {
+    'analytics-core': AnalyticsCore;
+  }
+  // eslint-disable-next-line no-unused-vars
+  interface Window {
+    scCloudSDK: ScCloudSDK;
+  }
+}
+

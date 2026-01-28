@@ -1,4 +1,5 @@
 import { omit } from './omit';
+import { expect } from '@jest/globals';
 
 interface ExampleObject {
   [key: string | symbol]: any;

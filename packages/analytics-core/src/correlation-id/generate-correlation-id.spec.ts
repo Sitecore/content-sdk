@@ -1,5 +1,6 @@
 import * as utils from '../utils';
 import { generateCorrelationId } from './generate-correlation-id';
+import { jest, expect } from '@jest/globals';
 
 describe('generateCorrelationId', () => {
   const randomUUID = 'b10bb699-bfb3-419b-b63f-638c62ed1aa7';
