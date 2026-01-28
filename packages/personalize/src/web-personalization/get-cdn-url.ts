@@ -3,6 +3,7 @@
  * @param {string} sitecoreEdgeContextId - The Sitecore Edge context ID
  * @param {string} sitecoreEdgeUrl - The Sitecore Edge URL
  * @returns {Promise<string | null>} The CDN URL or null if unavailable
+ * @internal
  */
 export async function getCdnUrl(
   sitecoreEdgeContextId: string,

@@ -1,46 +1,42 @@
-import * as coreBrowserModule from '@sitecore-content-sdk/analytics-core/browser';
-import * as core from '@sitecore-content-sdk/analytics-core/internal';
-import { ErrorMessages as UtilsErrorMessages } from '@sitecore-content-sdk/analytics-core/utils';
-import { ErrorMessages, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
+import * as analyticsCore from '@sitecore-content-sdk/analytics-core/internal';
+import { ERROR_MESSAGES as UtilsERROR_MESSAGES } from '@sitecore-content-sdk/analytics-core/utils';
+import { ERROR_MESSAGES, PACKAGE_VERSION } from '../consts';
 import type { PersonalizeData, PersonalizeIdentifierInput } from './personalizer';
 import { Personalizer } from './personalizer';
 import * as CallFlowsRequest from './send-call-flows-request';
 import { jest, expect } from '@jest/globals';
+import * as debugModule from '../debug';
 
-jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
-  const originalModule: object = jest.requireActual(
-    '@sitecore-content-sdk/analytics-core/internal'
-  );
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
+  __esModule: true,
+  API_VERSION: 'v1.2',
+  SITECORE_EDGE_URL: 'https://edge-platform.sitecorecloud.io',
+  generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
+  language: jest.fn(),
+  processDebugResponse: jest.fn(),
+}));
 
-  return {
-    __esModule: true,
-    ...originalModule,
-    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
-    debug: jest.fn(() => jest.fn()),
-  };
-});
-
-jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/browser');
+jest.mock('../debug', () => {
+  const originalModule: object = jest.requireActual('../debug');
 
   return {
     __esModule: true,
     ...originalModule,
-    getBrowserId: jest.fn(),
+    debug: {
+      personalize: jest.fn(),
+    },
   };
 });
 
 describe('Test Personalizer Class', () => {
   const { window } = global;
-  let settingsMock: core.Settings;
+  let settingsMock: { contextId: string; sitecoreEdgeUrl: string; siteName: string };
   let personalizeInputMock: PersonalizeData;
   const browserId = 'browserId';
   const guestId = 'guestId';
 
-  jest.spyOn(coreBrowserModule, 'getBrowserId').mockReturnValue(browserId);
-
   beforeEach(() => {
-    jest.spyOn(core as any, 'language').mockImplementation(() => 'EN');
+    jest.spyOn(analyticsCore as any, 'language').mockImplementation(() => 'EN');
     personalizeInputMock = {
       channel: 'WEB',
       currency: 'EUR',
@@ -49,15 +45,9 @@ describe('Test Personalizer Class', () => {
     };
 
     settingsMock = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
       siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+      contextId: '123',
+      sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
     };
 
     global.window ??= Object.create(window);
@@ -100,24 +90,24 @@ describe('Test Personalizer Class', () => {
         ''
       );
       expect(validateSpy).toHaveBeenCalledTimes(1);
-      expect(() => validateSpy).not.toThrow(ErrorMessages.MV_0004);
+      expect(() => validateSpy).not.toThrow(ERROR_MESSAGES.MV_0004);
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should throw error when friendlyId is undefined ', async () => {
       const mockData = undefined;
       personalizeInputMock.friendlyId = mockData as unknown as string;
-      callValidation(personalizeInputMock, ErrorMessages.MV_0004);
+      callValidation(personalizeInputMock, ERROR_MESSAGES.MV_0004);
     });
 
     it('should throw error when friendlyId is empty space string', async () => {
       personalizeInputMock.friendlyId = ' ';
-      callValidation(personalizeInputMock, ErrorMessages.MV_0004);
+      callValidation(personalizeInputMock, ERROR_MESSAGES.MV_0004);
     });
 
     it('should throw error when friendlyId is empty string', async () => {
       personalizeInputMock.friendlyId = '';
-      callValidation(personalizeInputMock, ErrorMessages.MV_0004);
+      callValidation(personalizeInputMock, ERROR_MESSAGES.MV_0004);
     });
   });
 
@@ -153,7 +143,7 @@ describe('Test Personalizer Class', () => {
         ''
       );
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
-      expect(core.language).toHaveBeenCalledTimes(1);
+      expect(analyticsCore.language).toHaveBeenCalledTimes(1);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
         browserId: 'browserId',
         channel: 'WEB',
@@ -177,7 +167,7 @@ describe('Test Personalizer Class', () => {
         ''
       );
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
-      expect(core.language).toHaveBeenCalledTimes(1);
+      expect(analyticsCore.language).toHaveBeenCalledTimes(1);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
         browserId: 'browserId',
         channel: 'WEB',
@@ -193,7 +183,7 @@ describe('Test Personalizer Class', () => {
       });
     });
     it('should call all the respective functions and attributes when infer is not provided', () => {
-      jest.spyOn(core as any, 'language').mockImplementation(() => undefined);
+      jest.spyOn(analyticsCore as any, 'language').mockImplementation(() => undefined);
 
       personalizeInputMock.language = undefined;
       personalizeInputMock.email = 'test';
@@ -230,20 +220,14 @@ describe('Test Personalizer Class', () => {
           },
         },
         {
-          cookieSettings: {
-            domain: 'cDomain',
-            expiryDays: 730,
-            name: { browserId: 'bid_name' },
-            path: '/',
-          },
           siteName: '456',
-          sitecoreEdgeContextId: '123',
+          contextId: '123',
           sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
         },
         ''
       );
 
-      expect(core.language).toHaveBeenCalledTimes(1);
+      expect(analyticsCore.language).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
 
@@ -283,16 +267,9 @@ describe('Test Personalizer Class', () => {
           pointOfSale: '',
         },
         {
-          cookieSettings: {
-            domain: 'cDomain',
-            expiryDays: 730,
-            name: { browserId: 'bid_name' },
-            path: '/',
-          },
-
           siteName: '456',
-          sitecoreEdgeContextId: '123',
-          sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+          contextId: '123',
+          sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -332,16 +309,9 @@ describe('Test Personalizer Class', () => {
       personalizeInputMock.pageVariantIds = ['test'];
 
       settingsMock = {
-        cookieSettings: {
-          domain: 'cDomain',
-          expiryDays: 730,
-          name: { browserId: 'bid_name' },
-          path: '/',
-        },
-
         siteName: '456',
-        sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+        contextId: '123',
+        sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
       };
 
       new Personalizer(browserId, guestId).getInteractiveExperienceData(
@@ -375,16 +345,9 @@ describe('Test Personalizer Class', () => {
       personalizeInputMock.pageVariantIds = [];
 
       settingsMock = {
-        cookieSettings: {
-          domain: 'cDomain',
-          expiryDays: 730,
-          name: { browserId: 'bid_name' },
-          path: '/',
-        },
-
         siteName: '456',
-        sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+        contextId: '123',
+        sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
       };
 
       new Personalizer(browserId, guestId).getInteractiveExperienceData(
@@ -414,16 +377,9 @@ describe('Test Personalizer Class', () => {
       };
 
       settingsMock = {
-        cookieSettings: {
-          domain: 'cDomain',
-          expiryDays: 730,
-          name: { browserId: 'bid_name' },
-          path: '/',
-        },
-
         siteName: '456',
-        sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+        contextId: '123',
+        sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
       };
 
       new Personalizer(browserId, guestId).getInteractiveExperienceData(
@@ -672,16 +628,9 @@ describe('Test Personalizer Class', () => {
           variants: ['test'],
         },
         {
-          cookieSettings: {
-            domain: 'cDomain',
-            expiryDays: 730,
-            name: { browserId: 'bid_name' },
-            path: '/',
-          },
-
           siteName: '456',
-          sitecoreEdgeContextId: '123',
-          sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+          contextId: '123',
+          sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -696,7 +645,7 @@ describe('Test Personalizer Class', () => {
         ''
       );
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
-      expect(core.language).toHaveBeenCalledTimes(0);
+      expect(analyticsCore.language).toHaveBeenCalledTimes(0);
 
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledWith(personalizeInputMock);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
@@ -728,16 +677,9 @@ describe('Test Personalizer Class', () => {
           pointOfSale: '',
         },
         {
-          cookieSettings: {
-            domain: 'cDomain',
-            expiryDays: 730,
-            name: { browserId: 'bid_name' },
-            path: '/',
-          },
-
           siteName: '456',
-          sitecoreEdgeContextId: '123',
-          sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+          contextId: '123',
+          sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -757,7 +699,7 @@ describe('Test Personalizer Class', () => {
         ''
       );
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
-      expect(core.language).toHaveBeenCalledTimes(0);
+      expect(analyticsCore.language).toHaveBeenCalledTimes(0);
 
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledWith({
         channel: 'WEB',
@@ -805,16 +747,9 @@ describe('Test Personalizer Class', () => {
           pointOfSale: '',
         },
         {
-          cookieSettings: {
-            domain: 'cDomain',
-            expiryDays: 730,
-            name: { browserId: 'bid_name' },
-            path: '/',
-          },
-
           siteName: '456',
-          sitecoreEdgeContextId: '123',
-          sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+          contextId: '123',
+          sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -865,15 +800,9 @@ describe('Test Personalizer Class', () => {
           pointOfSale: '',
         },
         {
-          cookieSettings: {
-            domain: 'cDomain',
-            expiryDays: 730,
-            name: { browserId: 'bid_name' },
-            path: '/',
-          },
           siteName: '456',
-          sitecoreEdgeContextId: '123',
-          sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+          contextId: '123',
+          sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -881,13 +810,13 @@ describe('Test Personalizer Class', () => {
   });
 
   describe('timeout', () => {
-    const debugMock = core.debug as jest.MockedFunction<typeof core.debug>;
+    const debugMock = debugModule.debug.personalize;
     afterEach(() => {
       jest.clearAllMocks();
     });
 
     it('should return the response', async () => {
-      jest.spyOn(core, 'processDebugResponse').mockReturnValue({});
+      jest.spyOn(analyticsCore, 'processDebugResponse').mockReturnValue({});
       let currentTime = 1609459200000;
       jest.spyOn(Date, 'now').mockImplementation(() => {
         const returnTime = currentTime;
@@ -914,7 +843,7 @@ describe('Test Personalizer Class', () => {
 
       expect(fetch).toHaveBeenCalledWith(
         // eslint-disable-next-line max-len
-        `${core.SITECORE_EDGE_URL}/v1/personalize?siteId=${settingsMock.siteName}`,
+        `${analyticsCore.SITECORE_EDGE_URL}/v1/personalize?siteId=${settingsMock.siteName}`,
         {
           // eslint-disable-next-line max-len
           body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","guestRef":"guestId","language":"EN","pointOfSale":"","browserId":"browserId"}',
@@ -931,19 +860,18 @@ describe('Test Personalizer Class', () => {
         }
       );
       expect(debugMock).toHaveBeenCalled();
-      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][0]).toBe(
         'Personalize request: %s with options: %O'
       );
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][1]).toBe(
         'https://edge-platform.sitecorecloud.io/v1/personalize?siteId=456'
       );
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][0]).toBe(
         'Personalize response in %dms : %O'
       );
 
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][1]).toBe(1000);
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][2]).toStrictEqual({
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][1]).toBe(1000);
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][2]).toStrictEqual({
         body: expectedResponse,
       });
 
@@ -960,7 +888,7 @@ describe('Test Personalizer Class', () => {
             timeout: -10,
           }
         );
-      }).rejects.toThrow(UtilsErrorMessages.IV_0006);
+      }).rejects.toThrow(UtilsERROR_MESSAGES.IV_0006);
     });
 
     it('should throw error if a float number is used for timeout value', async () => {
@@ -973,7 +901,7 @@ describe('Test Personalizer Class', () => {
             timeout: 420.69,
           }
         );
-      }).rejects.toThrow(UtilsErrorMessages.IV_0006);
+      }).rejects.toThrow(UtilsERROR_MESSAGES.IV_0006);
     });
 
     it("should call abort method of AbortController if didn't get a response in time", async () => {
@@ -1019,7 +947,7 @@ describe('Test Personalizer Class', () => {
           { timeout: 0 }
         );
       } catch (error) {
-        expect((error as FetchError).message).toBe(UtilsErrorMessages.IE_0002);
+        expect((error as FetchError).message).toBe(UtilsERROR_MESSAGES.IE_0002);
       }
     });
 
@@ -1040,7 +968,7 @@ describe('Test Personalizer Class', () => {
           timeout: 100,
         })
         .catch((err) => {
-          expect(err.message).toEqual(UtilsErrorMessages.IE_0002);
+          expect(err.message).toEqual(UtilsERROR_MESSAGES.IE_0002);
         });
     });
 
@@ -1122,7 +1050,7 @@ describe('Test Personalizer Class', () => {
         'mapPersonalizeInputToEPData'
       );
       const sendCallFlowsRequestSpy = jest.spyOn(CallFlowsRequest, 'sendCallFlowsRequest');
-      const settings = {} as core.Settings;
+      const settings = {} as { contextId: string; sitecoreEdgeUrl: string; siteName: string };
       const data = {} as PersonalizeData;
       const opts = { timeout: 100, userAgent: 'test_ua' };
       const validateSpy = jest.spyOn(Personalizer.prototype as any, 'validate');

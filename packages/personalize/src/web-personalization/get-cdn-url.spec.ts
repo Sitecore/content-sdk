@@ -1,4 +1,5 @@
 import { getCdnUrl } from './get-cdn-url';
+import { jest, expect } from '@jest/globals';
 
 describe('getCdnUrl', () => {
   const sitecoreEdgeContextId = '12345';
@@ -12,7 +13,7 @@ describe('getCdnUrl', () => {
         ok: true,
         text: () => Promise.resolve(mockResponse),
       })
-    );
+    ) as typeof fetch;
   });
 
   afterEach(() => {
@@ -36,7 +37,7 @@ describe('getCdnUrl', () => {
         ok: false,
         text: () => Promise.resolve({ error: 'error' }),
       })
-    );
+    ) as typeof fetch;
 
     const result = await getCdnUrl(sitecoreEdgeContextId, sitecoreEdgeUrl);
 
@@ -51,7 +52,9 @@ describe('getCdnUrl', () => {
   it('should handle fetch error', async () => {
     const mockError = new Error('Network error');
 
-    global.fetch = jest.fn().mockRejectedValueOnce(mockError);
+    global.fetch = jest
+      .fn()
+      .mockImplementationOnce(() => Promise.reject(mockError)) as typeof fetch;
 
     const result = await getCdnUrl(sitecoreEdgeContextId, sitecoreEdgeUrl);
     expect(result).toEqual(null);

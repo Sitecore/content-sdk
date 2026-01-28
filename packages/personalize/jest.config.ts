@@ -14,13 +14,12 @@ const config: Config.InitialOptions = {
   moduleFileExtensions: ['ts', 'js', 'html'],
   testEnvironment: 'jsdom',
   moduleNameMapper: {
-    '^@sitecore-content-sdk/analytics-core/browser$': '<rootDir>/../analytics-core/src/browser.ts',
-    '^@sitecore-content-sdk/analytics-core/server$': '<rootDir>/../analytics-core/src/server.ts',
-    '^@sitecore-content-sdk/analytics-core/utils$': '<rootDir>/../analytics-core/src/utils.ts',
     '^@sitecore-content-sdk/analytics-core/internal$':
       '<rootDir>/../analytics-core/src/internal.ts',
+    '^@sitecore-content-sdk/analytics-core/utils$': '<rootDir>/../analytics-core/src/utils.ts',
+    '^@sitecore-content-sdk/events$': '<rootDir>/../events/src/index.ts',
     '^@sitecore-content-sdk/events/browser$': '<rootDir>/../events/src/browser.ts',
-    '^@sitecore-content-sdk/events/server$': '<rootDir>/../events/src/server.ts',
+    '^@sitecore-content-sdk/events/internal$': '<rootDir>/../events/src/internal.ts',
   },
   coverageDirectory: './coverage',
   coverageReporters: ['cobertura', 'text'],
