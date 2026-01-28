@@ -8,4 +8,4 @@
 
 > **builderInstanceBrowser**: `null` \| [`CloudSDKBrowserInitializer`](../../browser/classes/CloudSDKBrowserInitializer.md) = `null`
 
-Defined in: [src/initializer/browser/initializer.ts:177](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/analytics-core/src/initializer/browser/initializer.ts#L177)
+Defined in: [src/initializer/browser/initializer.ts:177](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/analytics-core/src/initializer/browser/initializer.ts#L177)

@@ -8,7 +8,7 @@
 
 > **mergeURLSearchParams**(`params1`, `params2`): `string`
 
-Defined in: [packages/core/src/tools/utils.ts:277](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/core/src/tools/utils.ts#L277)
+Defined in: [packages/core/src/tools/utils.ts:277](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/core/src/tools/utils.ts#L277)
 
 Merges two URLSearchParams objects. If both objects contain the same key, the value from the second object overrides the first.
 

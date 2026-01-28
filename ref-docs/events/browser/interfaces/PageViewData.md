@@ -6,7 +6,7 @@
 
 # Interface: PageViewData
 
-Defined in: [events/src/events/page-view/page-view-event.ts:175](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/events/src/events/page-view/page-view-event.ts#L175)
+Defined in: [events/src/events/page-view/page-view-event.ts:175](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/events/page-view/page-view-event.ts#L175)
 
 Type with the required/optional attributes in order to send a view event to SitecoreCloud API
 
@@ -20,7 +20,7 @@ Type with the required/optional attributes in order to send a view event to Site
 
 > `optional` **channel**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/events/src/events/common-interfaces.ts#L9)
+Defined in: [events/src/events/common-interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/events/common-interfaces.ts#L9)
 
 #### Inherited from
 
@@ -32,7 +32,7 @@ Defined in: [events/src/events/common-interfaces.ts:9](https://github.com/Siteco
 
 > `optional` **currency**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:10](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/events/src/events/common-interfaces.ts#L10)
+Defined in: [events/src/events/common-interfaces.ts:10](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/events/common-interfaces.ts#L10)
 
 #### Inherited from
 
@@ -44,7 +44,7 @@ Defined in: [events/src/events/common-interfaces.ts:10](https://github.com/Sitec
 
 > `optional` **extensionData**: `NestedObject`
 
-Defined in: [events/src/events/page-view/page-view-event.ts:179](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/events/src/events/page-view/page-view-event.ts#L179)
+Defined in: [events/src/events/page-view/page-view-event.ts:179](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/events/page-view/page-view-event.ts#L179)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [events/src/events/page-view/page-view-event.ts:179](https://github.
 
 > `optional` **includeUTMParameters**: `boolean`
 
-Defined in: [events/src/events/page-view/page-view-event.ts:178](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/events/src/events/page-view/page-view-event.ts#L178)
+Defined in: [events/src/events/page-view/page-view-event.ts:178](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/events/page-view/page-view-event.ts#L178)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [events/src/events/page-view/page-view-event.ts:178](https://github.
 
 > `optional` **language**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/events/src/events/common-interfaces.ts#L7)
+Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/events/common-interfaces.ts#L7)
 
 #### Inherited from
 
@@ -72,7 +72,7 @@ Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Siteco
 
 > `optional` **page**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/events/src/events/common-interfaces.ts#L8)
+Defined in: [events/src/events/common-interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/events/common-interfaces.ts#L8)
 
 #### Inherited from
 
@@ -84,7 +84,7 @@ Defined in: [events/src/events/common-interfaces.ts:8](https://github.com/Siteco
 
 > `optional` **pageVariantId**: `string`
 
-Defined in: [events/src/events/page-view/page-view-event.ts:176](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/events/src/events/page-view/page-view-event.ts#L176)
+Defined in: [events/src/events/page-view/page-view-event.ts:176](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/events/page-view/page-view-event.ts#L176)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [events/src/events/page-view/page-view-event.ts:176](https://github.
 
 > `optional` **referrer**: `string`
 
-Defined in: [events/src/events/page-view/page-view-event.ts:177](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/events/src/events/page-view/page-view-event.ts#L177)
+Defined in: [events/src/events/page-view/page-view-event.ts:177](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/events/page-view/page-view-event.ts#L177)
 
 ***
 
@@ -100,4 +100,4 @@ Defined in: [events/src/events/page-view/page-view-event.ts:177](https://github.
 
 > `optional` **searchData**: `NestedObject`
 
-Defined in: [events/src/events/page-view/page-view-event.ts:180](https://github.com/Sitecore/content-sdk/blob/89adbfc3ea681d0ed290aa42c633f2413d661f6c/packages/events/src/events/page-view/page-view-event.ts#L180)
+Defined in: [events/src/events/page-view/page-view-event.ts:180](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/events/page-view/page-view-event.ts#L180)
