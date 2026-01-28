@@ -4,11 +4,11 @@ import { CustomEvent } from '../events/custom-event/custom-event';
 import type { EventData } from '../events/custom-event/custom-event';
 import { sendEvent } from '../events/send-event/sendEvent';
 import * as eventQueue from './eventStorage';
+import { jest, expect } from '@jest/globals';
 
 jest.mock('../events/custom-event/custom-event');
 jest.mock('@sitecore-content-sdk/analytics-core/internal');
 
-jest.mock('@sitecore-content-sdk/analytics-core/utils');
 describe('Event Storage', () => {
   const eventData: EventData = {
     channel: 'WEB',
@@ -30,16 +30,10 @@ describe('Event Storage', () => {
 
   const id = 'test_id';
 
-  const settings: core.Settings = {
-    cookieSettings: {
-      domain: 'cDomain',
-      expiryDays: 730,
-      name: { browserId: 'bid_name' },
-      path: '/',
-    },
-    siteName: 'site',
-    sitecoreEdgeContextId: '123',
+  const settings = {
+    contextId: '123',
     sitecoreEdgeUrl: '',
+    siteName: 'site',
   };
 
   beforeEach(() => {
@@ -72,6 +66,29 @@ describe('Event Storage', () => {
   //   expect(storageMock.getItem).toHaveBeenCalledTimes(1);
   //   expect(getEventQueueSpy).toHaveReturnedWith(expect.arrayContaining([]));
   // });
+
+  it('getEventQueue should return an empty array when getItem returns null', () => {
+    const mockArray: eventQueue.QueueEventPayload[] = [];
+
+    const queueEventPayload: eventQueue.QueueEventPayload = {
+      eventData,
+      id,
+      settings,
+    };
+
+    const getSessionStorageSpy = jest.spyOn(eventQueue.eventQueue as any, 'getSessionStorage');
+    getSessionStorageSpy.mockImplementation(() => storageMock);
+    storageMock.getItem.mockReturnValueOnce(null);
+
+    mockArray.push(queueEventPayload);
+
+    eventQueue.eventQueue.enqueueEvent(queueEventPayload);
+
+    expect(getEventQueueSpy).toHaveBeenCalledTimes(1);
+    expect(getEventQueueSpy).toHaveReturnedWith(expect.arrayContaining([]));
+    expect(storageMock.setItem).toHaveBeenCalledTimes(1);
+    expect(storageMock.setItem).toHaveBeenCalledWith('EventQueue', JSON.stringify(mockArray));
+  });
 
   it('getEventQueue should return an empty array when getItem returns a string thats not parsed as an Array', () => {
     const mockArray: eventQueue.QueueEventPayload[] = [];
@@ -267,5 +284,16 @@ describe('Event Storage', () => {
 
     expect(storageMock.removeItem).toHaveBeenCalledTimes(1);
     expect(storageMock.removeItem).toHaveBeenCalledWith('EventQueue');
+  });
+
+  it('getSessionStorage should return the browser sessionStorage', () => {
+    const getSessionStorageSpy = jest.spyOn(eventQueue.eventQueue as any, 'getSessionStorage');
+
+    // Call the method without mocking to test real implementation
+    getSessionStorageSpy.mockRestore();
+
+    const result = (eventQueue.eventQueue as any).getSessionStorage();
+
+    expect(result).toBe(sessionStorage);
   });
 });

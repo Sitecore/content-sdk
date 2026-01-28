@@ -1,10 +1,11 @@
 import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCookieValueClientSide } from '@sitecore-content-sdk/analytics-core/utils';
-import { awaitInit } from '../../initializer/browser/initializer';
+import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
+
 import { sendEvent } from '../send-event/sendEvent';
 import type { IdentityData } from './identity-event';
 import { IdentityEvent } from './identity-event';
+import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
  * A function that sends an IDENTITY event to SitecoreCloud API
@@ -12,15 +13,18 @@ import { IdentityEvent } from './identity-event';
  * @returns The response object that Sitecore EP returns
  */
 export async function identity(identityData: IdentityData): Promise<EPResponse | null> {
-  await awaitInit();
+  const coreSettings = getCoreSettings();
+  await coreSettings.readyPromise;
+  getEventsPlugin();
 
-  const settings = getCloudSDKSettings();
-  const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
+  const { settings, environment } = getAnalyticsPlugin();
+
+  const id = environment.getBrowserId() || '';
 
   return new IdentityEvent({
     id,
     identityData,
     sendEvent,
-    settings,
+    settings: { ...coreSettings.settings, ...settings },
   }).send();
 }

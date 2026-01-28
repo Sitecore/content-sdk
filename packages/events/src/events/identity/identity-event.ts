@@ -1,4 +1,4 @@
-import type { EPResponse, Infer, Settings } from '@sitecore-content-sdk/analytics-core/internal';
+import type { EPResponse, Infer } from '@sitecore-content-sdk/analytics-core/internal';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import {
   flattenObject,
@@ -6,17 +6,18 @@ import {
   isValidEmail,
 } from '@sitecore-content-sdk/analytics-core/utils';
 import { BaseEvent } from '../base-event';
-import { ErrorMessages } from '../../consts';
+import { ERROR_MESSAGES } from '../../consts';
 import type { FlattenedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { SendEvent } from '../send-event/sendEvent';
+import { CoreSettings } from '@sitecore-content-sdk/core';
 
 export class IdentityEvent extends BaseEvent {
   private identityData: IdentityData;
   private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
   private numberOfExtensionDataProperties = 0;
-  private settings: Settings;
+  private settings: CoreSettings['settings'];
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -38,7 +39,7 @@ export class IdentityEvent extends BaseEvent {
     this.numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
     if (this.numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(ErrorMessages.IV_0005);
+      throw new Error(ERROR_MESSAGES.IV_0005);
   }
 
   /**
@@ -58,18 +59,18 @@ export class IdentityEvent extends BaseEvent {
    * @param {IdentityData} identityData - The data to be validated
    */
   private validateAttributes(identityData: IdentityData) {
-    if (identityData.identifiers.length === 0) throw new Error(ErrorMessages.MV_0003);
+    if (identityData.identifiers.length === 0) throw new Error(ERROR_MESSAGES.MV_0003);
 
     if (identityData.dob !== undefined && !isShortISODateString(identityData.dob))
-      throw new Error(ErrorMessages.IV_0002);
+      throw new Error(ERROR_MESSAGES.IV_0002);
 
     identityData.identifiers.forEach((identifier: Identifier) => {
       if (identifier.expiryDate && !isShortISODateString(identifier.expiryDate))
-        throw new Error(ErrorMessages.IV_0004);
+        throw new Error(ERROR_MESSAGES.IV_0004);
     });
 
     if (identityData.email && !isValidEmail(identityData.email))
-      throw new Error(ErrorMessages.IV_0003);
+      throw new Error(ERROR_MESSAGES.IV_0003);
   }
 
   /**
@@ -179,6 +180,6 @@ export interface IdentityEventArguments {
   sendEvent: SendEvent;
   identityData: IdentityData;
   id: string;
-  settings: Settings;
+  settings: CoreSettings['settings'];
   infer?: Infer;
 }

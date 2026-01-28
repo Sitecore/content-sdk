@@ -1,10 +1,10 @@
 import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCookieValueClientSide } from '@sitecore-content-sdk/analytics-core/utils';
-import { awaitInit } from '../../initializer/browser/initializer';
+import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
 import { sendEvent } from '../send-event/sendEvent';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
+import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
  * A function that sends a VIEW event to SitecoreCloud API
@@ -13,16 +13,19 @@ import { PageViewEvent } from './page-view-event';
  * @returns The response object that Sitecore EP returns
  */
 export async function pageView(pageViewData?: PageViewData): Promise<EPResponse | null> {
-  await awaitInit();
+  const coreSettings = getCoreSettings();
+  await coreSettings.readyPromise;
+  getEventsPlugin();
 
-  const settings = getCloudSDKSettings();
-  const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
+  const { settings, environment } = getAnalyticsPlugin();
+  const id = environment.getBrowserId() || '';
+  const searchParams = environment.location.getSearchParams();
 
   return new PageViewEvent({
     id,
     pageViewData,
-    searchParams: window.location.search,
+    searchParams,
     sendEvent,
-    settings,
+    settings: { ...coreSettings.settings, ...settings },
   }).send();
 }

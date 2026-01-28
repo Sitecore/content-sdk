@@ -1,21 +1,22 @@
-import type { EPResponse, Settings } from '@sitecore-content-sdk/analytics-core/internal';
+import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import type {
   BasicTypes,
   FlattenedObject,
   NestedObject,
 } from '@sitecore-content-sdk/analytics-core/utils';
 import { flattenObject } from '@sitecore-content-sdk/analytics-core/utils';
-import { ErrorMessages } from '../../consts';
+import { ERROR_MESSAGES } from '../../consts';
 import { BaseEvent } from '../base-event';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { SendEvent } from '../send-event/sendEvent';
+import { CoreSettings } from '@sitecore-content-sdk/core';
 
 export class CustomEvent extends BaseEvent {
   customEventPayload: CustomEventPayload;
   private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
-  private settings: Settings;
+  private settings: CoreSettings['settings'];
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -39,7 +40,7 @@ export class CustomEvent extends BaseEvent {
     const numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
     if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(ErrorMessages.IV_0005);
+      throw new Error(ERROR_MESSAGES.IV_0005);
 
     if (numberOfExtensionDataProperties > 0) this.customEventPayload.ext = this.extensionData;
 
@@ -72,7 +73,7 @@ export interface CustomEventArguments {
   sendEvent: SendEvent;
   eventData: EventData;
   id: string;
-  settings: Settings;
+  settings: CoreSettings['settings'];
 }
 
 /**

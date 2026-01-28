@@ -1,9 +1,9 @@
 import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCookieValueClientSide } from '@sitecore-content-sdk/analytics-core/utils';
-import { awaitInit } from '../../initializer/browser/initializer';
+import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
 import { sendEvent } from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
+import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
  * A function that sends a form event to SitecoreCloud API
@@ -17,10 +17,14 @@ export async function form(
   interactionType: 'VIEWED' | 'SUBMITTED',
   componentInstanceId: string
 ): Promise<EPResponse | null> {
-  await awaitInit();
+  const coreSettings = getCoreSettings();
+  await coreSettings.readyPromise;
+  getEventsPlugin();
 
-  const settings = getCloudSDKSettings();
-  const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
+  const { settings, environment } = getAnalyticsPlugin();
+
+  const id = environment.getBrowserId() || '';
+
   const formEvent = new CustomEvent({
     eventData: {
       extensionData: {
@@ -32,7 +36,7 @@ export async function form(
     },
     id,
     sendEvent,
-    settings,
+    settings: { ...coreSettings.settings, ...settings },
   });
 
   formEvent.page = undefined as unknown as string;
