@@ -46,4 +46,5 @@ export const enableDebug = (namespaces: string) => debug.enable(namespaces);
 export default {
   common: debug(`${debugNamespace}:common`),
   http: debug(`${debugNamespace}:http`),
+  init: debug(`${debugNamespace}:init`),
 };
