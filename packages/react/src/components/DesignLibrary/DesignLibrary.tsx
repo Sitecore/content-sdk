@@ -5,14 +5,14 @@ import React, { useEffect, useState } from 'react';
 import {
   EDITING_COMPONENT_ID,
   EDITING_COMPONENT_PLACEHOLDER,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
-} from '@sitecore-content-sdk/core/editing';
-import * as codegen from '@sitecore-content-sdk/core/codegen';
-import * as editing from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
+import * as codegen from '@sitecore-content-sdk/content/codegen';
+import * as editing from '@sitecore-content-sdk/content/editing';
 import { useSitecore } from '../../enhancers/withSitecore';
 import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';

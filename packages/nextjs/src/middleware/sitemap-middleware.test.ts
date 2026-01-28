@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { SitemapMiddleware } from './sitemap-middleware';
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
 
 chai.use(sinonChai);
 

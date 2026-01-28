@@ -3,8 +3,8 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextRequest } from 'next/server';
 import proxyquire from 'proxyquire';
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
-import { SiteInfo } from '@sitecore-content-sdk/core/site';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { SiteInfo } from '@sitecore-content-sdk/content/site';
 
 chai.use(sinonChai);
 

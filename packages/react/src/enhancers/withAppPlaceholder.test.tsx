@@ -4,13 +4,13 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import { Page } from '@sitecore-content-sdk/core/client';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { convertedDevData as normalModeDevData } from '../test-data/normal-mode-data';
 import * as metadataData from '../test-data/metadata-data';
 import { withAppPlaceholder, ComponentProps, WrapperProps } from './withAppPlaceholder';
 import { SitecoreProvider } from '../components/SitecoreProvider';
-import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
 import { AppPlaceholder } from '../components/Placeholder';
 
 type CalloutProps = ComponentProps & {

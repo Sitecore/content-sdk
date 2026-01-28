@@ -1,5 +1,5 @@
 import React from 'react';
-import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/core/layout';
+import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/layout';
 import { DesingLibraryAppProps } from './models';
 import { DesignLibraryServer } from './DesignLibraryServer';
 import { DesignLibrary } from './DesignLibrary';

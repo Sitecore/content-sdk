@@ -3568,7 +3568,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/core": "npm:1.5.0-canary.3"
+    "@sitecore-content-sdk/content": "npm:1.5.0-canary.3"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/inquirer": "npm:^9.0.9"
@@ -3607,11 +3607,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/core@npm:1.5.0-canary.3, @sitecore-content-sdk/core@workspace:packages/core":
+"@sitecore-content-sdk/content@npm:1.5.0-canary.3, @sitecore-content-sdk/content@workspace:packages/content":
   version: 0.0.0-use.local
-  resolution: "@sitecore-content-sdk/core@workspace:packages/core"
+  resolution: "@sitecore-content-sdk/content@workspace:packages/content"
   dependencies:
     "@sitecore-cloudsdk/events": "npm:^0.5.1"
+    "@sitecore-content-sdk/core": "npm:1.5.0-canary.3"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/chai-spies": "npm:^1.0.6"
@@ -3640,9 +3641,7 @@ __metadata:
     eslint-plugin-prettier: "npm:^4.0.0"
     glob: "npm:^11.0.2"
     graphql: "npm:^16.11.0"
-    graphql-request: "npm:^6.1.0"
     jsdom: "npm:^26.1.0"
-    memory-cache: "npm:^0.2.0"
     mocha: "npm:^11.2.2"
     nock: "npm:14.0.0-beta.7"
     nyc: "npm:^17.1.0"
@@ -3656,6 +3655,44 @@ __metadata:
     url-parse: "npm:^1.5.10"
   peerDependencies:
     "@sitecore-cloudsdk/events": ^0.5.1
+  languageName: unknown
+  linkType: soft
+
+"@sitecore-content-sdk/core@npm:1.5.0-canary.3, @sitecore-content-sdk/core@workspace:packages/core":
+  version: 0.0.0-use.local
+  resolution: "@sitecore-content-sdk/core@workspace:packages/core"
+  dependencies:
+    "@stylistic/eslint-plugin": "npm:^5.2.2"
+    "@types/chai": "npm:^5.2.2"
+    "@types/chai-spies": "npm:^1.0.6"
+    "@types/debug": "npm:^4.1.12"
+    "@types/memory-cache": "npm:^0.2.6"
+    "@types/mocha": "npm:^10.0.10"
+    "@types/node": "npm:^24.10.4"
+    "@types/sinon": "npm:^17.0.4"
+    "@types/url-parse": "npm:1.4.11"
+    "@typescript-eslint/eslint-plugin": "npm:8.39.0"
+    "@typescript-eslint/parser": "npm:8.39.0"
+    chai: "npm:^4.4.1"
+    chai-spies: "npm:^1.1.0"
+    debug: "npm:^4.4.0"
+    del-cli: "npm:^6.0.0"
+    eslint: "npm:^9.32.0"
+    eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-import: "npm:2.32.0"
+    eslint-plugin-jsdoc: "npm:52.0.3"
+    eslint-plugin-prettier: "npm:^4.0.0"
+    graphql: "npm:^16.11.0"
+    graphql-request: "npm:^6.1.0"
+    memory-cache: "npm:^0.2.0"
+    mocha: "npm:^11.2.2"
+    nock: "npm:14.0.0-beta.7"
+    nyc: "npm:^17.1.0"
+    prettier: "npm:^2.8.0"
+    sinon: "npm:^20.0.0"
+    tsx: "npm:^4.19.4"
+    typescript: "npm:~5.8.3"
+    url-parse: "npm:^1.5.10"
   languageName: unknown
   linkType: soft
 
@@ -3693,6 +3730,7 @@ __metadata:
     "@babel/parser": "npm:^7.27.2"
     "@sitecore-cloudsdk/core": "npm:^0.5.1"
     "@sitecore-cloudsdk/personalize": "npm:^0.5.1"
+    "@sitecore-content-sdk/content": "npm:1.5.0-canary.3"
     "@sitecore-content-sdk/core": "npm:1.5.0-canary.3"
     "@sitecore-content-sdk/react": "npm:1.5.0-canary.3"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
@@ -3783,6 +3821,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
+    "@sitecore-content-sdk/content": "npm:1.5.0-canary.3"
     "@sitecore-content-sdk/core": "npm:1.5.0-canary.3"
     "@sitecore-content-sdk/search": "npm:0.2.0-canary.3"
     "@sitecore-feaas/clientside": "npm:^0.6.0"

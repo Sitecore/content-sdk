@@ -10,7 +10,7 @@ import {
   QUERY_PARAM_EDITING_SECRET,
   EditingRenderQueryParams,
   DesignLibraryMode,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 import { EditingRenderMiddleware, EditingNextApiRequest } from './editing-render-middleware';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';

@@ -1,19 +1,19 @@
 'use server';
 import React from 'react';
-import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/core/layout';
+import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/layout';
 import {
   DesignLibraryPreviewEvents,
   DesignLibraryVariantGenerationEvents,
 } from './DesignLibraryClientEvents';
-import * as globalCache from '@sitecore-content-sdk/core/utils';
+import * as globalCache from '@sitecore-content-sdk/core/tools';
 import {
   DesignLibraryStatus,
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
   updateComponent as updateComponentOriginal,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 import { ComponentUpdateModel } from '../../server-actions/update-server-component-action';
-import * as codegen from '@sitecore-content-sdk/core/codegen';
-import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/core/codegen';
+import * as codegen from '@sitecore-content-sdk/content/codegen';
+import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/content/codegen';
 import { AppPlaceholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import {

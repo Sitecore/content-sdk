@@ -2,20 +2,21 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable dot-notation */
-import { debug, GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import {
   REDIRECT_TYPE_301,
   REDIRECT_TYPE_302,
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectsService,
   SiteResolver,
-} from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/site';
 import chai, { use } from 'chai';
 import chaiString from 'chai-string';
 import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsProxy, RedirectsProxyConfig } from './redirects-proxy';
+import debug from '../debug';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;

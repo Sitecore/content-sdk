@@ -1,5 +1,5 @@
 'use client';
-import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
+import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import React, { useEffect, JSX } from 'react';
 /**
  * Updates editing chromes in app router / RSC context.

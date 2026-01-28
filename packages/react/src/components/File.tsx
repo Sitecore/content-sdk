@@ -1,4 +1,4 @@
-﻿import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+﻿import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 import React from 'react';
 
 export interface FileFieldValue {

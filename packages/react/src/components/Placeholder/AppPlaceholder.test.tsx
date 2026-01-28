@@ -7,7 +7,7 @@ import {
   ComponentRendering,
   LayoutServicePageState,
   RouteData,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import React from 'react';
@@ -34,8 +34,8 @@ import * as HiddenRendering from '../HiddenRendering';
 import * as ErrorBoundary from '../ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
 import { AppPlaceholder } from './AppPlaceholder';
-import { AppComponentProps, ComponentProps } from './models';
-import { Page, PageMode } from '@sitecore-content-sdk/core/client';
+import { AppComponentProps } from './models';
+import { Page, PageMode } from '@sitecore-content-sdk/content/client';
 import * as rscUtils from '#rsc-env';
 import * as ClientComponentWrapperModule from './ClientComponentWrapper';
 import { SitecoreProvider } from '../..';

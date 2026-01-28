@@ -4,11 +4,11 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { Page, PageMode } from '@sitecore-content-sdk/core/client';
+import { Page, PageMode } from '@sitecore-content-sdk/content/client';
 import {
   LayoutServiceData,
   EDITING_COMPONENT_PLACEHOLDER,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
@@ -21,12 +21,12 @@ import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   DesignLibraryMode,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 import { __mockDependencies } from './DesignLibrary';
 import {
   DesignLibraryPreviewError,
   getDesignLibraryComponentPreviewErrorEvent,
-} from '@sitecore-content-sdk/core/codegen';
+} from '@sitecore-content-sdk/content/codegen';
 import { after } from 'node:test';
 
 before(() => {

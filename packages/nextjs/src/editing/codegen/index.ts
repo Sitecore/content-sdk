@@ -1,2 +1,2 @@
 export { defaultImportEntries, combineImportEntries } from './import-map';
-export { ImportEntry } from '@sitecore-content-sdk/core/codegen';
+export { ImportEntry } from '@sitecore-content-sdk/content/codegen';

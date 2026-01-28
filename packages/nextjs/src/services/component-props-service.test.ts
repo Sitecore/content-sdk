@@ -1,5 +1,5 @@
 ﻿/* eslint-disable no-unused-expressions */
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { expect } from 'chai';
 import { IncomingMessage, ServerResponse } from 'http';
 import { ParsedUrlQuery } from 'querystring';

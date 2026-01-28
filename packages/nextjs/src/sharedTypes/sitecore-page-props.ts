@@ -1,5 +1,5 @@
-import { DictionaryPhrases } from '@sitecore-content-sdk/core/i18n';
-import { Page } from '@sitecore-content-sdk/core/client';
+import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
+import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentPropsCollection } from './component-props';
 
 /**

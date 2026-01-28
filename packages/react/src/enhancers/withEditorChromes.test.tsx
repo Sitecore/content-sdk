@@ -3,7 +3,7 @@ import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import { spy } from 'sinon';
-import { PagesEditor } from '@sitecore-content-sdk/core/editing';
+import { PagesEditor } from '@sitecore-content-sdk/content/editing';
 
 import { withEditorChromes } from '../enhancers/withEditorChromes';
 

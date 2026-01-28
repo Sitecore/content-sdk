@@ -7,55 +7,56 @@
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
 import { ClientError } from '@sitecore-content-sdk/core';
-import { ComponentFields } from '@sitecore-content-sdk/core/layout';
-import { ComponentParams } from '@sitecore-content-sdk/core/layout';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { ComponentFields } from '@sitecore-content-sdk/content/layout';
+import { ComponentParams } from '@sitecore-content-sdk/content/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentType } from 'react';
 import { constants } from '@sitecore-content-sdk/core';
-import { DefaultRetryStrategy } from '@sitecore-content-sdk/core/client';
-import { DictionaryPhrases } from '@sitecore-content-sdk/core/i18n';
-import { DictionaryService } from '@sitecore-content-sdk/core/i18n';
-import { EditMode } from '@sitecore-content-sdk/core/layout';
+import { debug as debug_2 } from '@sitecore-content-sdk/search';
+import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
+import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
+import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
+import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
-import { EnhancedOmit } from '@sitecore-content-sdk/core/utils';
-import { ErrorPage } from '@sitecore-content-sdk/core/client';
+import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
+import { ErrorPage } from '@sitecore-content-sdk/content/client';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
-import { Field } from '@sitecore-content-sdk/core/layout';
-import { FieldMetadata } from '@sitecore-content-sdk/core/layout';
-import { GenericFieldValue } from '@sitecore-content-sdk/core/layout';
-import { getChildPlaceholder } from '@sitecore-content-sdk/core/layout';
-import { getContentStylesheetLink } from '@sitecore-content-sdk/core/layout';
-import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/core/layout';
-import { getFieldValue } from '@sitecore-content-sdk/core/layout';
-import { GraphQLClientError } from '@sitecore-content-sdk/core/client';
-import { GraphQLRequestClient } from '@sitecore-content-sdk/core/client';
-import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core/client';
-import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
-import { isEditorActive } from '@sitecore-content-sdk/core/editing';
-import { Item } from '@sitecore-content-sdk/core/layout';
+import { Field } from '@sitecore-content-sdk/content/layout';
+import { FieldMetadata } from '@sitecore-content-sdk/content/layout';
+import { GenericFieldValue } from '@sitecore-content-sdk/content/layout';
+import { getChildPlaceholder } from '@sitecore-content-sdk/content/layout';
+import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
+import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/content/layout';
+import { getFieldValue } from '@sitecore-content-sdk/content/layout';
+import { GraphQLClientError } from '@sitecore-content-sdk/content/client';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
+import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
+import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
+import { isEditorActive } from '@sitecore-content-sdk/content/editing';
+import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
-import { LayoutService } from '@sitecore-content-sdk/core/layout';
-import { LayoutServiceContext } from '@sitecore-content-sdk/core/layout';
-import { LayoutServiceContextData } from '@sitecore-content-sdk/core/layout';
-import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
-import { mediaApi } from '@sitecore-content-sdk/core/media';
+import { LayoutService } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceContext } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceContextData } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
-import { Page } from '@sitecore-content-sdk/core/client';
-import { PageMode } from '@sitecore-content-sdk/core/client';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { PageMode } from '@sitecore-content-sdk/content/client';
 import { default as React_2 } from 'react';
 import { RefAttributes } from 'react';
-import { resetEditorChromes } from '@sitecore-content-sdk/core/editing';
-import { RetryStrategy } from '@sitecore-content-sdk/core/client';
-import { RouteData } from '@sitecore-content-sdk/core/layout';
+import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
+import { RetryStrategy } from '@sitecore-content-sdk/content/client';
+import { RouteData } from '@sitecore-content-sdk/content/layout';
 import { SearchDocument } from '@sitecore-content-sdk/search';
 import { SearchParameters } from '@sitecore-content-sdk/search';
-import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
-import { SitePathService } from '@sitecore-content-sdk/core/site';
-import { SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
+import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
+import { SitePathService } from '@sitecore-content-sdk/content/site';
+import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
 
 // @public
 export const AppPlaceholder: (props: AppPlaceholderProps) => string | number | bigint | boolean | Iterable<React_2.ReactNode> | Promise<string | number | bigint | boolean | React_2.ReactPortal | React_2.ReactElement<unknown, string | React_2.JSXElementConstructor<any>> | Iterable<React_2.ReactNode> | null | undefined> | React_2.JSX.Element | (string | number | bigint | boolean | Iterable<React_2.ReactNode> | Promise<string | number | bigint | boolean | React_2.ReactPortal | React_2.ReactElement<unknown, string | React_2.JSXElementConstructor<any>> | Iterable<React_2.ReactNode> | null | undefined> | React_2.JSX.Element | null | undefined)[] | null | undefined;
@@ -148,6 +149,8 @@ export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
     render?: (date: Date | null) => React_2.ReactNode;
     tag?: string;
 }
+
+export { debug_2 as debug }
 
 // @public
 export const DefaultEmptyFieldEditingComponentImage: React_2.FC<{

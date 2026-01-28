@@ -3,8 +3,8 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { RobotsMiddleware } from './robots-middleware';
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
-import { SiteInfo } from '@sitecore-content-sdk/core/site';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { SiteInfo } from '@sitecore-content-sdk/content/site';
 
 chai.use(sinonChai);
 

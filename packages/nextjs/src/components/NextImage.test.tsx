@@ -15,7 +15,7 @@ import { ImageLoader } from 'next/image';
 import { spy, match } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SinonSpy } from 'sinon';
-import { DesignLibraryMode } from '@sitecore-content-sdk/core/editing';
+import { DesignLibraryMode } from '@sitecore-content-sdk/content/editing';
 
 use(sinonChai);
 const setPage = spy();

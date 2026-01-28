@@ -1,8 +1,7 @@
 ﻿'use client';
 import React, { JSX } from 'react';
 import { useSitecore } from '../enhancers/withSitecore';
-import { getContentSdkPagesClientData } from '@sitecore-content-sdk/core/editing';
-import { getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
+import { getContentSdkPagesClientData, getDesignLibraryScriptLink } from '@sitecore-content-sdk/content/editing';
 
 /**
  * Renders client scripts and data for editing/preview mode for Pages.

@@ -71,13 +71,13 @@ describe('NativeDataFetcher', () => {
 
   before(() => {
     debugNamespaces = debugApi.disable();
-    debugApi.enable(`${debug.http.namespace},${debug.personalize.namespace}`);
+    debugApi.enable(`${debug.http.namespace},${debug.common.namespace}`);
   });
 
   beforeEach(() => {
     spy.on(global, 'Headers', mockHeaders());
     spy.on(debug.http, 'log', () => true);
-    spy.on(debug.personalize, 'log', () => true);
+    spy.on(debug.common, 'log', () => true);
   });
 
   afterEach(() => {
@@ -85,7 +85,7 @@ describe('NativeDataFetcher', () => {
     fetchInit = undefined;
     spy.restore(global);
     spy.restore(debug.http);
-    spy.restore(debug.personalize);
+    spy.restore(debug.common);
   });
 
   after(() => {
@@ -269,12 +269,12 @@ describe('NativeDataFetcher', () => {
     });
 
     it('should use debugger override', async () => {
-      const fetcher = new NativeDataFetcher({ debugger: debug.personalize });
+      const fetcher = new NativeDataFetcher({ debugger: debug.common });
 
       spy.on(global, 'fetch', mockFetch(200));
 
       await fetcher.fetch('http://test.com/api');
-      expect(debug.personalize.log, 'request and response log').to.be.called.twice;
+      expect(debug.common.log, 'request and response log').to.be.called.twice;
     });
 
     it('should use fetch override', async () => {

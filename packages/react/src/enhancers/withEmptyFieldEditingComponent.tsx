@@ -4,7 +4,7 @@ import {
   Field,
   isFieldValueEmpty,
   FieldMetadata,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 
 /**
  * The HOC options

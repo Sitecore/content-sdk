@@ -3,8 +3,8 @@ import {
   ComponentRendering,
   getDynamicPlaceholderPattern,
   isDynamicPlaceholder,
-} from '@sitecore-content-sdk/core/layout';
-import { MetadataKind, DEFAULT_PLACEHOLDER_UID } from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/layout';
+import { MetadataKind, DEFAULT_PLACEHOLDER_UID } from '@sitecore-content-sdk/content/editing';
 
 /**
  *  Props containing the component data to render.

@@ -1,8 +1,8 @@
 import React from 'react';
 import { ComponentType } from 'react';
 import { AppPlaceholder } from '../components/Placeholder/AppPlaceholder';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import { Page } from '@sitecore-content-sdk/core/client';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentMap } from '../components/sharedTypes';
 
 export type ComponentProps = {

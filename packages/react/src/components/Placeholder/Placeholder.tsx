@@ -2,7 +2,7 @@
 import React from 'react';
 import { PlaceholderProps } from './models';
 import { withComponentMap } from '../../enhancers/withComponentMap';
-import { PagesEditor } from '@sitecore-content-sdk/core/editing';
+import { PagesEditor } from '@sitecore-content-sdk/content/editing';
 import { withSitecore } from '../../enhancers/withSitecore';
 import {
   getComponentForRendering,
@@ -10,7 +10,7 @@ import {
   getRenderedComponentProps,
   renderEmptyPlaceholder,
 } from './placeholder-utils';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 import ErrorBoundary, { ErrorComponent } from '../ErrorBoundary';
 

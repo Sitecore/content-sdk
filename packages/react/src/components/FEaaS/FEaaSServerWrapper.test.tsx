@@ -8,8 +8,8 @@ import { FEaaSServerWrapper } from './FEaaSSeverWrapper';
 import * as feaasUtils from './feaas-utils';
 import * as FEaaSWrapperModule from './FEaaSWrapper';
 import { FEaaSComponentProps, FEaaSComponentParams } from './models';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import { Page, PageMode } from '@sitecore-content-sdk/core/client';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import { Page, PageMode } from '@sitecore-content-sdk/content/client';
 
 describe('FEaaSServerWrapper', () => {
   let sandbox: SinonSandbox;

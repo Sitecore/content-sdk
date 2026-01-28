@@ -6,11 +6,12 @@ import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
-import { GraphQLRequestClient, debug } from '@sitecore-content-sdk/core';
-import { SiteResolver } from '@sitecore-content-sdk/core/site';
-import { CdpHelper } from '@sitecore-content-sdk/core/personalize';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { SiteResolver } from '@sitecore-content-sdk/content/site';
+import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeProxyConfig } from './personalize-proxy';
 import proxyquire from 'proxyquire';
+import debug from '../debug';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;

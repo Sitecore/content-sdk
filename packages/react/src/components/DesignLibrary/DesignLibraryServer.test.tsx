@@ -7,12 +7,12 @@ import sinon from 'sinon';
 import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { render } from '@testing-library/react';
-import { Page, PageMode } from '@sitecore-content-sdk/core/client';
+import { Page, PageMode } from '@sitecore-content-sdk/content/client';
 import {
   LayoutServiceData,
   EDITING_COMPONENT_PLACEHOLDER,
-} from '@sitecore-content-sdk/core/layout';
-import { DesignLibraryStatus, DesignLibraryMode } from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/layout';
+import { DesignLibraryStatus, DesignLibraryMode } from '@sitecore-content-sdk/content/editing';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
 import {
   DesignLibraryServer,

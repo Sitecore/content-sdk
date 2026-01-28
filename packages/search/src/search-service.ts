@@ -1,5 +1,6 @@
-import { NativeDataFetcher, debug, constants } from '@sitecore-content-sdk/core';
+import { NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
 import { SearchDocument, PathsToStringProps } from './models';
+import { debug } from './debug';
 
 /**
  * Options for sorting the search results.
@@ -102,7 +103,7 @@ export class SearchService {
     this.config.edgeUrl = this.config.edgeUrl || constants.SITECORE_EDGE_URL_DEFAULT;
 
     this.fetcher = new NativeDataFetcher({
-      debugger: debug.search,
+      debugger: debug,
     });
   }
 

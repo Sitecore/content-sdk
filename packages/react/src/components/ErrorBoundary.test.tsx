@@ -8,8 +8,8 @@ import {
   SitecoreProviderReactContext,
   SitecoreProviderState,
 } from '../components/SitecoreProvider';
-import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
-import { Page } from '@sitecore-content-sdk/core/client';
+import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import { Page } from '@sitecore-content-sdk/content/client';
 
 describe('<ErrorComponent />', () => {
   it('should render message prop with correct CSS class', () => {

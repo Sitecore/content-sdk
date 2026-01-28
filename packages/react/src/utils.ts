@@ -1,4 +1,4 @@
-﻿import { ComponentFields, getFieldValue } from '@sitecore-content-sdk/core/layout';
+﻿import { ComponentFields, getFieldValue } from '@sitecore-content-sdk/content/layout';
 
 /**
  * "class" property will be transformed into or appended to "className" instead.

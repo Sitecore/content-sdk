@@ -1,6 +1,6 @@
 'use client';
 import React, { Suspense } from 'react';
-import { DesignLibraryPreviewError, sendErrorEvent } from '@sitecore-content-sdk/core/codegen';
+import { DesignLibraryPreviewError, sendErrorEvent } from '@sitecore-content-sdk/content/codegen';
 
 type DesignLibraryErrorBoundaryProps = {
   uid: string;

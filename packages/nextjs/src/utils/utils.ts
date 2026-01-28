@@ -1,4 +1,4 @@
-import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
+import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import { REWRITE_HEADER_NAME } from '../proxy/proxy';
 

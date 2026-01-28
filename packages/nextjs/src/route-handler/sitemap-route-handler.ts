@@ -1,8 +1,8 @@
-import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/core/client';
-import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
-import { debug } from '@sitecore-content-sdk/core';
+import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/content/client';
+import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/content/site';
 import { NextRequest } from 'next/server';
 import { unstable_cache } from 'next/cache';
+import debug from '../debug';
 
 type RouteHandlerOptions = {
   /**

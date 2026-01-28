@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import { execSync } from 'child_process';
-import * as tools from '@sitecore-content-sdk/core/tools';
+import * as tools from '@sitecore-content-sdk/content/tools';
 import inquirer from 'inquirer';
 import { handler as generateMapHandler } from './generate-map';
 import loadCliConfig from '../../../utils/load-config';

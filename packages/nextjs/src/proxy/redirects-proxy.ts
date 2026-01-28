@@ -1,4 +1,3 @@
-import { debug } from '@sitecore-content-sdk/core';
 import {
   RedirectsService,
   RedirectsServiceConfig,
@@ -7,18 +6,19 @@ import {
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectInfo,
   SiteInfo,
-} from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/site';
 import {
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
   isRegexOrUrl,
   mergeURLSearchParams,
-} from '@sitecore-content-sdk/core/utils';
+} from '@sitecore-content-sdk/core/tools';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
+import debug from '../debug';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');

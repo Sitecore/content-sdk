@@ -14,42 +14,41 @@ import { BYOCServerWrapper } from '@sitecore-content-sdk/react';
 import { BYOCWrapper as BYOCWrapper_2 } from '@sitecore-content-sdk/react';
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
-import { CdpHelper } from '@sitecore-content-sdk/core/personalize';
+import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { ClientEditingChromesUpdate } from '@sitecore-content-sdk/react';
-import { ComponentFields } from '@sitecore-content-sdk/core/layout';
-import { ComponentFile } from '@sitecore-content-sdk/core/tools';
-import { ComponentImport } from '@sitecore-content-sdk/core/tools';
-import { ComponentLayoutService } from '@sitecore-content-sdk/core/editing';
+import { ComponentFields } from '@sitecore-content-sdk/content/layout';
+import { ComponentFile } from '@sitecore-content-sdk/content/tools';
+import { ComponentImport } from '@sitecore-content-sdk/content/tools';
+import { ComponentLayoutService } from '@sitecore-content-sdk/content/editing';
 import { ComponentMap } from '@sitecore-content-sdk/react';
-import { ComponentParams } from '@sitecore-content-sdk/core/layout';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { ComponentParams } from '@sitecore-content-sdk/content/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { constants } from '@sitecore-content-sdk/core';
-import { createGraphQLClientFactory } from '@sitecore-content-sdk/core/client';
+import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
 import { DateField } from '@sitecore-content-sdk/react';
-import { debug as debug_2 } from '@sitecore-content-sdk/core';
-import { DeepRequired } from '@sitecore-content-sdk/core/config';
+import { DeepRequired } from '@sitecore-content-sdk/content/config';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
-import { DefaultRetryStrategy } from '@sitecore-content-sdk/core/client';
+import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
 import { DesignLibrary } from '@sitecore-content-sdk/react';
 import { DesignLibraryApp } from '@sitecore-content-sdk/react';
-import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/core/editing';
-import { DictionaryPhrases } from '@sitecore-content-sdk/core/i18n';
-import { DictionaryService } from '@sitecore-content-sdk/core/i18n';
-import { DictionaryServiceConfig } from '@sitecore-content-sdk/core/i18n';
-import { EDITING_COMPONENT_ID } from '@sitecore-content-sdk/core/layout';
-import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/core/layout';
-import { EditingRenderQueryParams } from '@sitecore-content-sdk/core/editing';
+import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/content/editing';
+import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
+import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
+import { DictionaryServiceConfig } from '@sitecore-content-sdk/content/i18n';
+import { EDITING_COMPONENT_ID } from '@sitecore-content-sdk/content/layout';
+import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/layout';
+import { EditingRenderQueryParams } from '@sitecore-content-sdk/content/editing';
 import { EditingScripts } from '@sitecore-content-sdk/react';
-import { EditingService } from '@sitecore-content-sdk/core/editing';
-import { EditMode } from '@sitecore-content-sdk/core/layout';
+import { EditingService } from '@sitecore-content-sdk/content/editing';
+import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
 import { EnhancedOmit } from '@sitecore-content-sdk/react';
-import { ErrorPage } from '@sitecore-content-sdk/core/client';
-import { ErrorPages } from '@sitecore-content-sdk/core/site';
-import { ErrorPagesService } from '@sitecore-content-sdk/core/site';
-import { ErrorPagesServiceConfig } from '@sitecore-content-sdk/core/site';
-import { extractFiles } from '@sitecore-content-sdk/core/tools';
+import { ErrorPage } from '@sitecore-content-sdk/content/client';
+import { ErrorPages } from '@sitecore-content-sdk/content/site';
+import { ErrorPagesService } from '@sitecore-content-sdk/content/site';
+import { ErrorPagesServiceConfig } from '@sitecore-content-sdk/content/site';
+import { extractFiles } from '@sitecore-content-sdk/content/tools';
 import { FEaaSClientWrapper } from '@sitecore-content-sdk/react';
 import { FEaaSComponent } from '@sitecore-content-sdk/react';
 import { FEaaSComponentParams } from '@sitecore-content-sdk/react';
@@ -57,62 +56,60 @@ import { FEaaSComponentProps } from '@sitecore-content-sdk/react';
 import { FEaaSServerWrapper } from '@sitecore-content-sdk/react';
 import { FEaaSWrapper as FEaaSWrapper_2 } from '@sitecore-content-sdk/react';
 import { fetchFEaaSComponentServerProps } from '@sitecore-content-sdk/react';
-import { FetchOptions } from '@sitecore-content-sdk/core/client';
-import { Field } from '@sitecore-content-sdk/core/layout';
+import { FetchOptions } from '@sitecore-content-sdk/content/client';
+import { Field } from '@sitecore-content-sdk/content/layout';
 import { File as File_2 } from '@sitecore-content-sdk/react';
 import { FileField } from '@sitecore-content-sdk/react';
 import { Form } from '@sitecore-content-sdk/react';
-import { GenerateMapArgs } from '@sitecore-content-sdk/core/tools';
-import { GenerateMapFunction } from '@sitecore-content-sdk/core/tools';
+import { GenerateMapArgs } from '@sitecore-content-sdk/content/tools';
+import { GenerateMapFunction } from '@sitecore-content-sdk/content/tools';
 import { generateMetadata } from '@sitecore-content-sdk/core/tools';
-import { generatePlugins } from '@sitecore-content-sdk/core/tools';
-import { generateSites } from '@sitecore-content-sdk/core/tools';
-import { GenerateSitesConfig } from '@sitecore-content-sdk/core/tools';
-import { getChildPlaceholder } from '@sitecore-content-sdk/core/layout';
-import { getComponentList } from '@sitecore-content-sdk/core/tools';
-import { getContentStylesheetLink } from '@sitecore-content-sdk/core/layout';
+import { generateSites } from '@sitecore-content-sdk/content/tools';
+import { GenerateSitesConfig } from '@sitecore-content-sdk/content/tools';
+import { getChildPlaceholder } from '@sitecore-content-sdk/content/layout';
+import { getComponentList } from '@sitecore-content-sdk/content/tools';
+import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
 import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/react';
-import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/core/client';
-import { getFieldValue } from '@sitecore-content-sdk/core/layout';
-import { getGroomedVariantIds } from '@sitecore-content-sdk/core/personalize';
-import { getPersonalizedRewrite } from '@sitecore-content-sdk/core/personalize';
-import { getPersonalizedRewriteData } from '@sitecore-content-sdk/core/personalize';
+import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/content/client';
+import { getFieldValue } from '@sitecore-content-sdk/content/layout';
+import { getGroomedVariantIds } from '@sitecore-content-sdk/content/personalize';
+import { getPersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
+import { getPersonalizedRewriteData } from '@sitecore-content-sdk/content/personalize';
 import { GetServerSidePropsContext } from 'next';
-import { getSiteRewrite } from '@sitecore-content-sdk/core/site';
-import { getSiteRewriteData } from '@sitecore-content-sdk/core/site';
+import { getSiteRewrite } from '@sitecore-content-sdk/content/site';
+import { getSiteRewriteData } from '@sitecore-content-sdk/content/site';
 import { GetStaticPropsContext } from 'next';
-import { GraphQLClientError } from '@sitecore-content-sdk/core/client';
-import { GraphQLClientOptions } from '@sitecore-content-sdk/core/client';
-import { GraphQLRequestClient } from '@sitecore-content-sdk/core/client';
-import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core/client';
+import { GraphQLClientError } from '@sitecore-content-sdk/content/client';
+import { GraphQLClientOptions } from '@sitecore-content-sdk/content/client';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
+import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClientFactory as GraphQLRequestClientFactory_2 } from '@sitecore-content-sdk/core';
-import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core/client';
-import { HTMLLink } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
+import { HTMLLink } from '@sitecore-content-sdk/content';
 import { Image as Image_2 } from '@sitecore-content-sdk/react';
 import { ImageField } from '@sitecore-content-sdk/react';
 import { ImageFieldValue } from '@sitecore-content-sdk/react';
 import { ImageProps } from '@sitecore-content-sdk/react';
 import { ImageProps as ImageProps_2 } from 'next/image';
 import { ImageSizeParameters } from '@sitecore-content-sdk/react';
-import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
+import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
 import { IncomingHttpHeaders } from 'http';
-import { isEditorActive } from '@sitecore-content-sdk/core/editing';
-import { Item } from '@sitecore-content-sdk/core/layout';
+import { isEditorActive } from '@sitecore-content-sdk/content/editing';
+import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
-import { LayoutService } from '@sitecore-content-sdk/core/layout';
-import { LayoutServiceConfig } from '@sitecore-content-sdk/core/layout';
-import { LayoutServiceContext } from '@sitecore-content-sdk/core/layout';
-import { LayoutServiceContextData } from '@sitecore-content-sdk/core/layout';
-import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { LayoutService } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceConfig } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceContext } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceContextData } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { LinkField } from '@sitecore-content-sdk/react';
 import { LinkFieldValue } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_2 } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_3 } from 'next/link';
-import { mediaApi } from '@sitecore-content-sdk/core/media';
+import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/editing';
-import { ModuleType } from '@sitecore-content-sdk/core/tools';
+import { Metadata } from '@sitecore-content-sdk/core/tools';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
@@ -122,60 +119,58 @@ import { NextApiResponse } from 'next';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
-import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/core/personalize';
-import { normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
-import { Page } from '@sitecore-content-sdk/core/client';
-import { PageMode } from '@sitecore-content-sdk/core/client';
-import { PageOptions } from '@sitecore-content-sdk/core/client';
-import { PersonalizeInfo } from '@sitecore-content-sdk/core/personalize';
-import { personalizeLayout } from '@sitecore-content-sdk/core/personalize';
-import { PersonalizeService } from '@sitecore-content-sdk/core/personalize';
-import { PersonalizeServiceConfig } from '@sitecore-content-sdk/core/personalize';
+import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
+import { normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { PageMode } from '@sitecore-content-sdk/content/client';
+import { PageOptions } from '@sitecore-content-sdk/content/client';
+import { PersonalizeInfo } from '@sitecore-content-sdk/content/personalize';
+import { personalizeLayout } from '@sitecore-content-sdk/content/personalize';
+import { PersonalizeService } from '@sitecore-content-sdk/content/personalize';
+import { PersonalizeServiceConfig } from '@sitecore-content-sdk/content/personalize';
 import { PlaceholderComponentProps } from '@sitecore-content-sdk/react';
-import { PlaceholderData } from '@sitecore-content-sdk/core/layout';
-import { PlaceholdersData } from '@sitecore-content-sdk/core/layout';
-import { PluginDefinition } from '@sitecore-content-sdk/core/tools';
+import { PlaceholderData } from '@sitecore-content-sdk/content/layout';
+import { PlaceholdersData } from '@sitecore-content-sdk/content/layout';
 import { PreviewData } from 'next';
 import { default as React_2 } from 'react';
 import { ReactContentSdkComponent } from '@sitecore-content-sdk/react';
 import { ReactNode } from 'react';
-import { REDIRECT_TYPE_301 } from '@sitecore-content-sdk/core/site';
-import { REDIRECT_TYPE_302 } from '@sitecore-content-sdk/core/site';
-import { REDIRECT_TYPE_SERVER_TRANSFER } from '@sitecore-content-sdk/core/site';
-import { RedirectInfo } from '@sitecore-content-sdk/core/site';
-import { RedirectsService } from '@sitecore-content-sdk/core/site';
-import { RedirectsServiceConfig } from '@sitecore-content-sdk/core/site';
-import { RenderingType } from '@sitecore-content-sdk/core/layout';
-import { resetEditorChromes } from '@sitecore-content-sdk/core/editing';
-import { resolveUrl } from '@sitecore-content-sdk/core/utils';
-import { RetryStrategy } from '@sitecore-content-sdk/core/client';
+import { REDIRECT_TYPE_301 } from '@sitecore-content-sdk/content/site';
+import { REDIRECT_TYPE_302 } from '@sitecore-content-sdk/content/site';
+import { REDIRECT_TYPE_SERVER_TRANSFER } from '@sitecore-content-sdk/content/site';
+import { RedirectInfo } from '@sitecore-content-sdk/content/site';
+import { RedirectsService } from '@sitecore-content-sdk/content/site';
+import { RedirectsServiceConfig } from '@sitecore-content-sdk/content/site';
+import { RenderingType } from '@sitecore-content-sdk/content/layout';
+import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
+import { resolveUrl } from '@sitecore-content-sdk/core/tools';
+import { RetryStrategy } from '@sitecore-content-sdk/content/client';
 import { RichTextField } from '@sitecore-content-sdk/react';
 import { RichTextProps as RichTextProps_2 } from '@sitecore-content-sdk/react';
-import { RobotsQueryResult } from '@sitecore-content-sdk/core/site';
-import { RobotsService } from '@sitecore-content-sdk/core/site';
-import { RobotsServiceConfig } from '@sitecore-content-sdk/core/site';
-import { RouteData } from '@sitecore-content-sdk/core/layout';
-import { SitecoreCliConfig } from '@sitecore-content-sdk/core/config';
-import { SitecoreCliConfigInput } from '@sitecore-content-sdk/core/config';
-import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/core/client';
-import { SitecoreClientInit } from '@sitecore-content-sdk/core/client';
-import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/core/config';
-import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/core/config';
+import { RobotsQueryResult } from '@sitecore-content-sdk/content/site';
+import { RobotsService } from '@sitecore-content-sdk/content/site';
+import { RobotsServiceConfig } from '@sitecore-content-sdk/content/site';
+import { RouteData } from '@sitecore-content-sdk/content/layout';
+import { SitecoreCliConfig } from '@sitecore-content-sdk/content/config';
+import { SitecoreCliConfigInput } from '@sitecore-content-sdk/content/config';
+import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/content/client';
+import { SitecoreClientInit } from '@sitecore-content-sdk/content/client';
+import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/content/config';
+import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/content/config';
 import { SitecoreProvider } from '@sitecore-content-sdk/react';
 import { SitecoreProviderReactContext } from '@sitecore-content-sdk/react';
 import { SitecoreProviderState } from '@sitecore-content-sdk/react';
-import { SiteInfo } from '@sitecore-content-sdk/core/site';
-import { SiteInfoService } from '@sitecore-content-sdk/core/site';
-import { SiteInfoServiceConfig } from '@sitecore-content-sdk/core/site';
-import { SitemapXmlService } from '@sitecore-content-sdk/core/site';
-import { SitemapXmlServiceConfig } from '@sitecore-content-sdk/core/site';
-import { SitePathService } from '@sitecore-content-sdk/core/site';
-import { SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
-import { SiteResolver } from '@sitecore-content-sdk/core/site';
-import { StaticPath } from '@sitecore-content-sdk/core';
+import { SiteInfo } from '@sitecore-content-sdk/content/site';
+import { SiteInfoService } from '@sitecore-content-sdk/content/site';
+import { SiteInfoServiceConfig } from '@sitecore-content-sdk/content/site';
+import { SitemapXmlService } from '@sitecore-content-sdk/content/site';
+import { SitemapXmlServiceConfig } from '@sitecore-content-sdk/content/site';
+import { SitePathService } from '@sitecore-content-sdk/content/site';
+import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
+import { SiteResolver } from '@sitecore-content-sdk/content/site';
+import { StaticPath } from '@sitecore-content-sdk/content';
 import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
-import { tryParseEnvValue } from '@sitecore-content-sdk/core/utils';
 import { useSitecore } from '@sitecore-content-sdk/react';
 import { withDatasourceCheck } from '@sitecore-content-sdk/react';
 import { withEditorChromes } from '@sitecore-content-sdk/react';
@@ -186,7 +181,7 @@ import { withSitecore } from '@sitecore-content-sdk/react';
 import { WithSitecoreHocProps } from '@sitecore-content-sdk/react';
 import { WithSitecoreOptions } from '@sitecore-content-sdk/react';
 import { WithSitecoreProps } from '@sitecore-content-sdk/react';
-import { WriteImportMapArgs } from '@sitecore-content-sdk/core/tools';
+import { WriteImportMapArgs } from '@sitecore-content-sdk/content/tools';
 
 export { AppPlaceholder }
 
@@ -320,6 +315,8 @@ export function createSitemapRouteHandler(options: RouteHandlerOptions): {
 
 export { DateField }
 
+// @public
+const debug_2: Record<string, debug.Debugger>;
 export { debug_2 as debug }
 
 export { DefaultEmptyFieldEditingComponentImage }
@@ -455,8 +452,6 @@ export const generateMap: GenerateMapFunction;
 export { GenerateMapArgs }
 
 export { generateMetadata }
-
-export { generatePlugins }
 
 export { generateSites }
 
@@ -594,8 +589,6 @@ export { mediaApi }
 
 export { MemoryCacheClient }
 
-export { ModuleType }
-
 // @public
 export class MultisiteProxy extends ProxyBase {
     constructor(config: MultisiteProxyConfig);
@@ -707,8 +700,6 @@ export { PlaceholderComponentProps }
 export { PlaceholderData }
 
 export { PlaceholdersData }
-
-export { PluginDefinition }
 
 // @public
 export abstract class ProxyBase extends ProxyHandler_2 {
@@ -898,8 +889,6 @@ export { StaticPath }
 export { Text_2 as Text }
 
 export { TextField }
-
-export { tryParseEnvValue }
 
 // @public
 export function useComponentProps<ComponentData>(componentUid: string | undefined): ComponentData | undefined;

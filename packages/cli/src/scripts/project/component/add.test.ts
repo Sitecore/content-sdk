@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
 import inquirer from 'inquirer';
-import * as toolsModule from '@sitecore-content-sdk/core/tools';
+import * as toolsModule from '@sitecore-content-sdk/content/tools';
 import * as addModule from './add';
 import * as loadConfigModule from '../../../utils/load-config';
 import * as generateMapModule from './generate-map';

@@ -9,7 +9,7 @@ import {
   SitecoreProviderReactContext,
   SitecoreProviderState,
 } from '../components/SitecoreProvider';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 
 const mockContext = (editing: boolean): SitecoreProviderState => {
   return {

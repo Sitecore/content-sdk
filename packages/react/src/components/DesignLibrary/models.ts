@@ -1,13 +1,13 @@
-import { ImportEntry, ImportEntryInfo } from '@sitecore-content-sdk/core/codegen';
+import { ImportEntry, ImportEntryInfo } from '@sitecore-content-sdk/content/codegen';
 import {
   ComponentFields,
   ComponentParams,
   ComponentRendering,
   RouteData,
-} from '@sitecore-content-sdk/core/layout';
-import { DesignLibraryStatus } from '@sitecore-content-sdk/core/editing';
-import { Page } from '@sitecore-content-sdk/core/client';
-import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/core/codegen';
+} from '@sitecore-content-sdk/content/layout';
+import { DesignLibraryStatus } from '@sitecore-content-sdk/content/editing';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/content/codegen';
 import { ComponentMap } from '../sharedTypes';
 
 export type ImportMapImport = {

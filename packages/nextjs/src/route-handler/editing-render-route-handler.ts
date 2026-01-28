@@ -1,13 +1,13 @@
-import { debug, NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
   PREVIEW_KEY,
   QUERY_PARAM_EDITING_SECRET,
   INVALID_SECRET_HTML_MESSAGE,
-} from '@sitecore-content-sdk/core/editing';
-import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/editing';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { NextRequest } from 'next/server';
 import { getEditingSecret } from '../utils/utils';
 import { draftMode, cookies as nextCokies } from 'next/headers';
@@ -22,7 +22,8 @@ import {
   resolveServerUrl,
   PreviewCookies,
 } from '../editing/utils';
-import { SITE_KEY } from '@sitecore-content-sdk/core/site';
+import { SITE_KEY } from '@sitecore-content-sdk/content/site';
+import debug from '../debug';
 
 /**
  * Helper function to handle cookie operations - can be mocked for testing

@@ -5,12 +5,12 @@ import {
   PersonalizeInfo,
   CdpHelper,
   DEFAULT_VARIANT,
-} from '@sitecore-content-sdk/core/personalize';
-import { debug } from '@sitecore-content-sdk/core';
+} from '@sitecore-content-sdk/content/personalize';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { SitecoreConfig } from '../config';
+import debug from '../debug';
 
 /**
  * Represents the geolocation data used for personalization

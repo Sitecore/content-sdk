@@ -1,8 +1,18 @@
 /* eslint-disable import/no-anonymous-default-export */
 import debug from 'debug';
-import isServer from './utils/is-server';
+import isServer from './tools/is-server';
 
-const rootNamespace = 'content-sdk';
+/**
+ * Debug module
+ * @public
+ */
+export const debugModule = debug;
+
+/**
+ * Debug namespace
+ * @public
+ */
+export const debugNamespace = 'content-sdk';
 
 /**
  * Debugger type
@@ -34,19 +44,6 @@ export const enableDebug = (namespaces: string) => debug.enable(namespaces);
  * See {@link https://www.npmjs.com/package/debug} for details.
  */
 export default {
-  search: debug(`${rootNamespace}:search`),
-  common: debug(`${rootNamespace}:common`),
-  form: debug(`${rootNamespace}:form`),
-  http: debug(`${rootNamespace}:http`),
-  layout: debug(`${rootNamespace}:layout`),
-  dictionary: debug(`${rootNamespace}:dictionary`),
-  editing: debug(`${rootNamespace}:editing`),
-  sitemap: debug(`${rootNamespace}:sitemap`),
-  multisite: debug(`${rootNamespace}:multisite`),
-  robots: debug(`${rootNamespace}:robots`),
-  redirects: debug(`${rootNamespace}:redirects`),
-  personalize: debug(`${rootNamespace}:personalize`),
-  locale: debug(`${rootNamespace}:locale`),
-  errorpages: debug(`${rootNamespace}:errorpages`),
-  proxy: debug(`${rootNamespace}:proxy`),
+  common: debug(`${debugNamespace}:common`),
+  http: debug(`${debugNamespace}:http`),
 };

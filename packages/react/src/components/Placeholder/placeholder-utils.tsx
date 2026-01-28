@@ -6,8 +6,8 @@ import {
   RouteData,
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
-} from '@sitecore-content-sdk/core/layout';
-import { constants } from '@sitecore-content-sdk/core';
+} from '@sitecore-content-sdk/content/layout';
+import { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
 import { HiddenRendering } from '../HiddenRendering';
 import {
   FEaaSComponent,
@@ -185,7 +185,7 @@ export const getComponentForRendering = (
     );
   };
 
-  if (renderingDefinition.componentName === constants.HIDDEN_RENDERING_NAME) {
+  if (renderingDefinition.componentName === HIDDEN_RENDERING_NAME) {
     return {
       component: hiddenRenderingComponent ?? HiddenRendering,
       isEmpty: true,

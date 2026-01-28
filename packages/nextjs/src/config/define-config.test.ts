@@ -17,7 +17,7 @@ describe('defineConfig', () => {
   beforeEach(() => {
     defineConfigCoreStub = sandbox.stub();
     defineConfigModule = proxyquire('./define-config', {
-      '@sitecore-content-sdk/core/config': { defineConfig: defineConfigCoreStub },
+      '@sitecore-content-sdk/content/config': { defineConfig: defineConfigCoreStub },
     });
   });
 

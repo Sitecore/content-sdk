@@ -3,8 +3,7 @@ import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata } from '@sitecore-content-sdk/core/layout';
-import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 
 /**
  * The props for the DateField component.

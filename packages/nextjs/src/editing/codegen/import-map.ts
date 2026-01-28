@@ -25,7 +25,7 @@ import React, {
   memo,
   Suspense,
 } from 'react';
-import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
+import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
 import {
   Link,
   Text,

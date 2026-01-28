@@ -1,13 +1,13 @@
 ﻿/* eslint-disable no-unused-vars */
-import { mediaApi } from '@sitecore-content-sdk/core/media';
+import { mediaApi } from '@sitecore-content-sdk/content/media';
 import React from 'react';
 import { addClassName } from '../utils';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentImage } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata } from '@sitecore-content-sdk/core/layout';
-import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+import { FieldMetadata } from '@sitecore-content-sdk/content/layout';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 
 /**
  * The interface for the Image field value.

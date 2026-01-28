@@ -5,9 +5,9 @@ import {
   isDesignLibraryMode,
   PREVIEW_KEY,
   QUERY_PARAM_EDITING_SECRET,
-} from '@sitecore-content-sdk/core/editing';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';
-import { SITE_KEY } from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/editing';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
+import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import { NextApiRequest } from 'next';
 import { NextRequest } from 'next/server';
 import {
@@ -18,7 +18,7 @@ import {
 import { IncomingHttpHeaders } from 'http';
 import { SERVER_PROPS_ID, STATIC_PROPS_ID } from 'next/constants';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
-import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
+import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/tools';
 
 /**
  * Gets editing secret value from request

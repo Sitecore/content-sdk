@@ -7,7 +7,7 @@ import {
   ComponentRendering,
   LayoutServicePageState,
   RouteData,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import { expect } from 'chai';
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';
@@ -36,7 +36,7 @@ import { MissingComponent, MissingComponentProps } from '../MissingComponent';
 import { Placeholder } from './Placeholder';
 import { ComponentProps } from './models';
 import { SitecoreProvider } from '../SitecoreProvider';
-import { Page, PageMode } from '@sitecore-content-sdk/core/client';
+import { Page, PageMode } from '@sitecore-content-sdk/content/client';
 
 const componentMap = new Map<string, React.FC>();
 // Mock dynamic component for testing
