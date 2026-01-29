@@ -8,4 +8,4 @@
 
 > `const` **PACKAGE\_INITIALIZER\_METHOD\_NAME**: `"addEvents"` = `'addEvents'`
 
-Defined in: [events/src/consts.ts:7](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/events/src/consts.ts#L7)
+Defined in: [events/src/consts.ts:7](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/events/src/consts.ts#L7)
