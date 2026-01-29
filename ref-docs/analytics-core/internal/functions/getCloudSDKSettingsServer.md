@@ -8,7 +8,7 @@
 
 > **getCloudSDKSettingsServer**(): [`Settings`](../../server/interfaces/Settings.md)
 
-Defined in: [src/initializer/server/initializer.ts:208](https://github.com/Sitecore/content-sdk/blob/74365d5c2afd18a1fb476338fa7e4ac44617886c/packages/analytics-core/src/initializer/server/initializer.ts#L208)
+Defined in: [src/initializer/server/initializer.ts:208](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/analytics-core/src/initializer/server/initializer.ts#L208)
 
 Gets the current CloudSDK settings.
 

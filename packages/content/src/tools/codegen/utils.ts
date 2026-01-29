@@ -471,6 +471,6 @@ export const getRelativeImportPath = (absFile: string, appPath: string) => {
   return stripExtension(rel);
 };
 
-// Determine if a specifier is bare/aliased (i.e., not relative "./" or "../" and not absolute "/").
-export const isNodeModuleImport = (name: string) =>
+// check if resolved import module path
+export const isNodeModuleImportOrAlias = (name: string) =>
   !name.startsWith('./') && !name.startsWith('../') && !name.startsWith('/');
