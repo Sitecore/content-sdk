@@ -70,6 +70,7 @@
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
+    "@sitecore-content-sdk/analytics-core": "1.5.0-canary.5",
     "@sitecore-content-sdk/events": "1.5.0-canary.5",
     "@sitecore-feaas/clientside": "^0.6.0",
     "react": "^19.2.1",
