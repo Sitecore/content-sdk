@@ -7,10 +7,14 @@ import {
   DEFAULT_VARIANT,
 } from '@sitecore-content-sdk/content/personalize';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
-import { CloudSDK } from '@sitecore-cloudsdk/core/server';
-import { personalize } from '@sitecore-cloudsdk/personalize/server';
+import { initSitecore } from '@sitecore-content-sdk/core';
+import { personalize } from '@sitecore-content-sdk/personalize';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
+import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
+import { analyticsProxyEnvironment } from '../initialization/proxy/analytics';
+import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
+import { personalizeProxyEnvironment } from '../initialization/proxy/personalize';
 
 /**
  * Represents the geolocation data used for personalization
@@ -183,17 +187,14 @@ export class PersonalizeProxy extends ProxyBase {
 
       await Promise.all(
         executions.map((execution) =>
-          this.personalize(
-            {
-              friendlyId: execution.friendlyId,
-              variantIds: execution.variantIds,
-              params,
-              language,
-              timeout: cdpTimeout,
-              ...(geo && { geo }),
-            },
-            req
-          ).then((personalization) => {
+          this.personalize({
+            friendlyId: execution.friendlyId,
+            variantIds: execution.variantIds,
+            params,
+            language,
+            timeout: cdpTimeout,
+            ...(geo && { geo }),
+          }).then((personalization) => {
             const variantId = personalization.variantId;
             if (variantId) {
               if (!execution.variantIds.includes(variantId)) {
@@ -274,39 +275,48 @@ export class PersonalizeProxy extends ProxyBase {
     request: NextRequest;
     response: NextResponse;
   }): Promise<void> {
-    await CloudSDK(request, response, {
-      sitecoreEdgeUrl: this.config.edgeUrl,
-      sitecoreEdgeContextId: this.config.contextId,
-      siteName,
-      cookieDomain: hostname,
-      enableServerCookie: true,
-    })
-      .addPersonalize({ enablePersonalizeCookie: true })
-      .initialize();
+    await initSitecore({
+      settings: {
+        contextId: this.config.contextId,
+        sitecoreEdgeUrl: this.config.edgeUrl,
+        siteName,
+      },
+      plugins: [
+        analyticsPlugin({
+          settings: {
+            enableCookie: true,
+            cookieDomain: hostname,
+          },
+          environment: analyticsProxyEnvironment(request, response),
+        }),
+        personalizeServerPlugin({
+          settings: {
+            enablePersonalizeCookie: true,
+          },
+          environment: personalizeProxyEnvironment(request, response),
+        }),
+      ],
+    });
   }
 
-  protected async personalize(
-    {
-      params,
-      friendlyId,
-      language,
-      timeout,
-      variantIds,
-      geo,
-    }: {
-      params: ExperienceParams;
-      friendlyId: string;
-      language: string;
-      timeout?: number;
-      variantIds?: string[];
-      geo?: PersonalizeGeoData;
-    },
-    request: NextRequest
-  ) {
+  protected async personalize({
+    params,
+    friendlyId,
+    language,
+    timeout,
+    variantIds,
+    geo,
+  }: {
+    params: ExperienceParams;
+    friendlyId: string;
+    language: string;
+    timeout?: number;
+    variantIds?: string[];
+    geo?: PersonalizeGeoData;
+  }) {
     debug.personalize('executing experience for %s %o', friendlyId, params);
 
     return (await personalize(
-      request,
       {
         channel: this.config.channel || 'WEB',
         currency: this.config.currency ?? 'USD',

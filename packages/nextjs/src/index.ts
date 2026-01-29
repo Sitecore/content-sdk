@@ -168,3 +168,6 @@ export {
   AppPlaceholder,
   AppPlaceholderProps,
 } from '@sitecore-content-sdk/react';
+
+export { personalizeProxyEnvironment } from './initialization/proxy/personalize';
+export { analyticsProxyEnvironment } from './initialization/proxy/analytics';
