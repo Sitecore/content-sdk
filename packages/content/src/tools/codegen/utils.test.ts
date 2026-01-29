@@ -6,7 +6,12 @@ import * as path from 'path';
 import nock from 'nock';
 import fs from 'fs';
 import * as codegenUtils from './utils';
-import { toPosixPath, stripExtension, getRelativeImportPath, isNodeModuleImport } from './utils';
+import {
+  toPosixPath,
+  stripExtension,
+  getRelativeImportPath,
+  isNodeModuleImportOrAlias,
+} from './utils';
 
 const uniqueFilesFrom = (res: Array<{ filePath: string }>) => {
   const set = new Set<string>();
@@ -490,16 +495,16 @@ describe('codegen-utils', () => {
       });
     });
 
-    describe('isNodeModuleImport', () => {
+    describe('isNodeModuleImportOrAlias', () => {
       it('returns true for package names and alias-like specifiers', () => {
         ['react', '@scope/pkg', 'components/Button', '#internal', 'somePkg'].forEach((s) =>
-          expect(isNodeModuleImport(s), s).to.equal(true)
+          expect(isNodeModuleImportOrAlias(s), s).to.equal(true)
         );
       });
 
       it('returns false for relative and absolute specifiers', () => {
         ['./x', '../x', '/abs/path'].forEach((s) =>
-          expect(isNodeModuleImport(s), s).to.equal(false)
+          expect(isNodeModuleImportOrAlias(s), s).to.equal(false)
         );
       });
     });
