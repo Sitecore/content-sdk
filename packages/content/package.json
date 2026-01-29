@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/content",
-  "version": "1.5.0-canary.5",
+  "version": "1.5.0-canary.6",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -77,7 +77,7 @@
     "@sitecore-cloudsdk/events": "^0.5.1"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "1.5.0-canary.5",
+    "@sitecore-content-sdk/core": "1.5.0-canary.6",
     "chalk": "^4.1.2",
     "debug": "^4.4.0",
     "glob": "^11.0.2",
