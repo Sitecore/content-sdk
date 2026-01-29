@@ -36,7 +36,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/events": "1.5.0-canary.5",
+    "@sitecore-content-sdk/events": "1.5.0-canary.6",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@types/chai": "^5.2.2",
     "@types/chai-spies": "^1.0.6",
@@ -74,7 +74,7 @@
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
-    "@sitecore-content-sdk/events": "1.5.0-canary.5"
+    "@sitecore-content-sdk/events": "1.5.0-canary.6"
   },
   "dependencies": {
     "@sitecore-content-sdk/core": "1.5.0-canary.6",
