@@ -1,6 +1,6 @@
 import { GraphQLClient, GraphQLRequestClientFactory, FetchOptions } from '@sitecore-content-sdk/core';
 import debug from '../debug';
-import { LayoutServiceData, LayoutServicePageState } from '../layout';
+import { LayoutServiceData, LayoutServicePageState, rewriteEdgeHostInResponse } from '../layout';
 import { LayoutKind } from './models';
 
 /**
@@ -100,13 +100,16 @@ export class EditingService {
       }
     );
 
-    return {
-      layoutData: editingData?.item?.rendered || {
-        sitecore: {
-          context: { pageEditing: true, language },
-          route: null,
-        },
+    const layoutData = editingData?.item?.rendered || {
+      sitecore: {
+        context: { pageEditing: true, language },
+        route: null,
       },
+    };
+
+    // Rewrite Edge hostnames in response if custom hostname is configured
+    return {
+      layoutData: rewriteEdgeHostInResponse(layoutData),
     };
   }
 

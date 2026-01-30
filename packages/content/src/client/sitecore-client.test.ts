@@ -1,4 +1,4 @@
-﻿/* eslint-disable dot-notation */
+/* eslint-disable dot-notation */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
@@ -1452,6 +1452,27 @@ describe('SitecoreClient', () => {
       expect(getGraphqlSitemapXMLServiceStub.calledWith(defaultReqConfig.siteName)).to.be.true;
       expect(dataFetcherStub.calledWith(absoluteSitemapPath)).to.be.true;
       expect(result).to.equal(xmlContent);
+    });
+
+    it('should rewrite Edge hostnames in sitemap path and XML when custom hostname is configured', async () => {
+      const originalEnv = process.env.SITECORE_EDGE_HOSTNAME;
+      process.env.SITECORE_EDGE_HOSTNAME = 'https://custom.example.com';
+
+      const edgeSitemapPath = 'https://edge-platform.sitecorecloud.io/sitemap.xml';
+      const xmlContent =
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://edge-platform.sitecorecloud.io/a</loc></url></urlset>';
+
+      sitemapXmlServiceStub.getSitemap.resolves(edgeSitemapPath);
+      const dataFetcherStub = sandbox
+        .stub(NativeDataFetcher.prototype, 'fetch')
+        .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
+
+      const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig });
+
+      expect(dataFetcherStub.calledWith('https://custom.example.com/sitemap.xml')).to.be.true;
+      expect(result).to.include('https://custom.example.com/a');
+
+      process.env.SITECORE_EDGE_HOSTNAME = originalEnv;
     });
 
     it('should fetch specific sitemap when ID is provided', async () => {

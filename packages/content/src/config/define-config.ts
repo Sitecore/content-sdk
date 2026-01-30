@@ -1,8 +1,7 @@
-import { constants, DefaultRetryStrategy } from '@sitecore-content-sdk/core';
+import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
-
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
 
 /**
  * Provides default initial values for SitecoreConfig
@@ -13,7 +12,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
     edge: {
       contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
       clientContextId: '',
-      edgeUrl: process.env.SITECORE_EDGE_URL || SITECORE_EDGE_URL_DEFAULT,
+      edgeUrl: resolveEdgeUrl(),
     },
     local: {
       apiKey: process.env.SITECORE_API_KEY || process.env.NEXT_PUBLIC_SITECORE_API_KEY || '',

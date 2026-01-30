@@ -7,6 +7,15 @@ export { default as isServer } from './is-server';
 export { ensurePathExists } from './ensurePath';
 export { normalizeUrl } from './normalize-url';
 export {
+  resolveEdgeUrl,
+  hasCustomEdgeHostname,
+  getCustomEdgeUrl,
+  SITECORE_EDGE_HOSTNAME_ENV,
+  SITECORE_EDGE_HOSTNAME_PUBLIC_ENV,
+  SITECORE_EDGE_URL_ENV,
+  SITECORE_EDGE_URL_PUBLIC_ENV,
+} from './resolve-edge-url';
+export {
   resolveUrl,
   isTimeoutError,
   enforceCors,

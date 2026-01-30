@@ -1,7 +1,7 @@
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { FetchOptions, GraphQLClient } from '../client';
 import debug from '../debug';
-import { LayoutServiceData } from '../layout';
+import { LayoutServiceData, rewriteEdgeHostInResponse } from '../layout';
 import { GraphQLServiceConfig } from '../sitecore-service-base';
 import { siteNameError } from '../constants';
 
@@ -105,9 +105,21 @@ export class ErrorPagesService {
       },
       fetchOptions
     ))
-      .then((result: ErrorPagesQueryResult) =>
-        result.site.siteInfo ? result.site.siteInfo.errorHandling : null
-      )
+      .then((result: ErrorPagesQueryResult) => {
+        if (!result.site.siteInfo) return null;
+
+        // Rewrite Edge hostnames in error page layouts if custom hostname is configured
+        const errorHandling = result.site.siteInfo.errorHandling;
+        return {
+          ...errorHandling,
+          notFoundPage: {
+            rendered: rewriteEdgeHostInResponse(errorHandling.notFoundPage.rendered),
+          },
+          serverErrorPage: {
+            rendered: rewriteEdgeHostInResponse(errorHandling.serverErrorPage.rendered),
+          },
+        };
+      })
       .catch((e) => Promise.reject(e));
   }
 

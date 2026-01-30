@@ -15,6 +15,7 @@ import {
   LayoutServiceData,
   RouteOptions,
   LayoutServicePageState,
+  rewriteEdgeHostInResponse,
 } from '../layout';
 import { HTMLLink, StaticPath } from '../models';
 import { getGroomedVariantIds, PersonalizedRewriteData } from '../personalize/utils';
@@ -623,12 +624,13 @@ export class SitecoreClient implements BaseSitecoreClient {
     // regular sitemap
     if (sitemapPath) {
       try {
+        const rewrittenSitemapPath = rewriteEdgeHostInResponse(sitemapPath);
         const fetcher = new NativeDataFetcher();
-        const xmlResponse = await fetcher.fetch<string>(sitemapPath);
+        const xmlResponse = await fetcher.fetch<string>(rewrittenSitemapPath);
         if (!xmlResponse.data) {
           throw new Error('REDIRECT_404');
         }
-        return xmlResponse.data;
+        return rewriteEdgeHostInResponse(xmlResponse.data);
         // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error('REDIRECT_404');

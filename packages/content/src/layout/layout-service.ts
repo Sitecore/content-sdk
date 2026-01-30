@@ -1,6 +1,7 @@
 import { FetchOptions } from '@sitecore-content-sdk/core';
 import { GraphQLServiceConfig, SitecoreServiceBase } from '../sitecore-service-base';
 import { LayoutServiceData, RouteOptions } from './models';
+import { rewriteEdgeHostInResponse } from './rewrite-edge-host';
 import debug from '../debug';
 import { SitecoreConfigInput } from '../config';
 
@@ -51,11 +52,13 @@ export class LayoutService extends SitecoreServiceBase {
     }>(query, {}, fetchOptions);
 
     // If `rendered` is empty -> not found
-    return (
+    const layoutData =
       data?.layout?.item?.rendered || {
         sitecore: { context: { pageEditing: false, language: routeOptions?.locale }, route: null },
-      }
-    );
+      };
+
+    // Rewrite Edge hostnames in response if custom hostname is configured
+    return rewriteEdgeHostInResponse(layoutData);
   }
 
   /**

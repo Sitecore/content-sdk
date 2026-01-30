@@ -1,9 +1,6 @@
-import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
-import { constants } from '@sitecore-content-sdk/core';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { ComponentRendering, LayoutServiceData, RouteData, getFieldValue } from '.';
 import { HTMLLink } from '../models';
-
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
 
 /**
  * Pattern for library ids
@@ -15,14 +12,15 @@ const STYLES_LIBRARY_ID_REGEX = /-library--([^\s]+)/;
  * Walks through rendering tree and returns list of links of all FEAAS, BYOC or SXA Design Library Stylesheets that are used
  * @param {LayoutServiceData} layoutData Layout service data
  * @param {string} sitecoreEdgeContextId Sitecore Edge Context ID
- * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io
+ * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. If not provided,
+ *   resolves from SITECORE_EDGE_HOSTNAME or SITECORE_EDGE_URL env vars, falling back to default.
  * @returns {HTMLLink[]} library stylesheet links
  * @public
  */
 export function getDesignLibraryStylesheetLinks(
   layoutData: LayoutServiceData,
   sitecoreEdgeContextId: string,
-  sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT
+  sitecoreEdgeUrl?: string
 ): HTMLLink[] {
   const ids = new Set<string>();
 
@@ -39,11 +37,9 @@ export function getDesignLibraryStylesheetLinks(
 export const getStylesheetUrl = (
   id: string,
   sitecoreEdgeContextId: string,
-  sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT
+  sitecoreEdgeUrl?: string
 ) => {
-  return `${normalizeUrl(
-    sitecoreEdgeUrl
-  )}/v1/files/components/styles/${id}.css?sitecoreContextId=${sitecoreEdgeContextId}`;
+  return `${resolveEdgeUrl(sitecoreEdgeUrl)}/v1/files/components/styles/${id}.css?sitecoreContextId=${sitecoreEdgeContextId}`;
 };
 
 /**

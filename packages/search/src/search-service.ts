@@ -1,4 +1,5 @@
-import { NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
+import { NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { SearchDocument, PathsToStringProps } from './models';
 import { debug } from './debug';
 
@@ -100,7 +101,7 @@ export class SearchService {
   private fetcher: NativeDataFetcher;
 
   constructor(private config: SearchServiceConfig) {
-    this.config.edgeUrl = this.config.edgeUrl || constants.SITECORE_EDGE_URL_DEFAULT;
+    this.config.edgeUrl = resolveEdgeUrl(this.config.edgeUrl);
 
     this.fetcher = new NativeDataFetcher({
       debugger: debug,

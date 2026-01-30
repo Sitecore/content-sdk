@@ -3,6 +3,7 @@ import {
   defineConfig as defineConfigCore,
   SitecoreConfigInput as SitecoreConfigInputCore,
 } from '@sitecore-content-sdk/content/config';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 
 /**
  * Provides default NextJs initial values from env variables for SitecoreConfig
@@ -19,7 +20,7 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
         contextId: config?.api?.edge?.contextId || '',
         clientContextId:
           config?.api?.edge?.clientContextId || process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
-        edgeUrl: config?.api?.edge?.edgeUrl || process.env.NEXT_PUBLIC_SITECORE_EDGE_URL,
+        edgeUrl: resolveEdgeUrl(config?.api?.edge?.edgeUrl),
       },
       local: {
         ...config?.api?.local,

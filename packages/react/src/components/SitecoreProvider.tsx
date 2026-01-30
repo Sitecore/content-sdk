@@ -3,7 +3,7 @@ import React from 'react';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
-import { constants } from '@sitecore-content-sdk/core';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { ComponentMap } from './sharedTypes';
 import { ImportMapImport } from './DesignLibrary/models';
 
@@ -77,7 +77,7 @@ export class SitecoreProvider extends React.Component<
   constructor(props: SitecoreProviderProps) {
     super(props);
 
-    // If any Edge ID is present but no edgeUrl, apply the default
+    // If any Edge ID is present but no edgeUrl, resolve using custom hostname or default
     let api = props.api;
     if (
       (props.api?.edge?.contextId || props.api?.edge?.clientContextId) &&
@@ -87,7 +87,7 @@ export class SitecoreProvider extends React.Component<
         ...props.api,
         edge: {
           ...props.api.edge,
-          edgeUrl: constants.SITECORE_EDGE_URL_DEFAULT,
+          edgeUrl: resolveEdgeUrl(),
         },
       };
     }
