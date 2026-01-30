@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { checkPluginDependencies, initPlugins, validateCoreConfig } from './helpers';
+import proxyquire from 'proxyquire';
+import { checkPluginDependencies, initPlugins, constructCoreConfigSettings } from './helpers';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
 
@@ -249,15 +250,41 @@ describe('helpers', () => {
     });
   });
 
-  describe('validateCoreConfig', () => {
-    it('should not throw for valid configuration', () => {
+  describe('constructCoreConfigSettings', () => {
+    let debugInitStub: sinon.SinonStub;
+    let constructCoreConfigSettingsMocked: typeof import('./helpers').constructCoreConfigSettings;
+
+    beforeEach(() => {
+      debugInitStub = sandbox.stub();
+      const module = proxyquire('./helpers', {
+        '../debug': {
+          default: {
+            init: debugInitStub,
+          },
+        },
+      });
+      constructCoreConfigSettingsMocked = module.constructCoreConfigSettings;
+    });
+
+    it('should return settings object for valid configuration and log debug message', () => {
       const config = {
         contextId: 'test-context-id',
         sitecoreEdgeUrl: 'https://edge.example.com',
         siteName: 'test-site',
       };
 
-      expect(() => validateCoreConfig(config)).to.not.throw();
+      const result = constructCoreConfigSettingsMocked(config);
+
+      expect(result).to.deep.equal({
+        contextId: 'test-context-id',
+        sitecoreEdgeUrl: 'https://edge.example.com',
+        siteName: 'test-site',
+      });
+
+      const configValidCall = debugInitStub
+        .getCalls()
+        .find((call) => (call.args[0] as string).includes('Configuration is valid'));
+      expect(configValidCall?.args[0]).to.equal('Configuration is valid');
     });
 
     describe('contextId validation', () => {
@@ -268,7 +295,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.MV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0001);
       });
 
       it('should throw when contextId is only whitespace', () => {
@@ -278,7 +305,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.MV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0001);
       });
 
       it('should throw when contextId is undefined', () => {
@@ -288,7 +315,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.MV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0001);
       });
 
       it('should throw when contextId is null', () => {
@@ -298,7 +325,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.MV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0001);
       });
     });
 
@@ -310,7 +337,7 @@ describe('helpers', () => {
           siteName: '',
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.MV_0002);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0002);
       });
 
       it('should throw when siteName is only whitespace', () => {
@@ -320,7 +347,7 @@ describe('helpers', () => {
           siteName: '   ',
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.MV_0002);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0002);
       });
 
       it('should throw when siteName is undefined', () => {
@@ -330,7 +357,7 @@ describe('helpers', () => {
           siteName: undefined as unknown as string,
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.MV_0002);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0002);
       });
 
       it('should throw when siteName is null', () => {
@@ -340,19 +367,22 @@ describe('helpers', () => {
           siteName: null as unknown as string,
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.MV_0002);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0002);
       });
     });
 
     describe('sitecoreEdgeUrl validation', () => {
-      it('should not throw when sitecoreEdgeUrl is undefined', () => {
+      it('should use default sitecoreEdgeUrl when undefined', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: undefined as unknown as string,
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.not.throw();
+        const result = constructCoreConfigSettings(config);
+
+        expect(result.sitecoreEdgeUrl).to.equal('https://edge-platform.sitecorecloud.io');
+        expect(result.contextId).to.equal('test-context-id');
+        expect(result.siteName).to.equal('test-site');
       });
 
       it('should throw when sitecoreEdgeUrl is invalid URL', () => {
@@ -362,7 +392,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.IV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.IV_0001);
       });
 
       it('should accept valid http URL', () => {
@@ -372,7 +402,9 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.not.throw();
+        const result = constructCoreConfigSettings(config);
+
+        expect(result.sitecoreEdgeUrl).to.equal('http://edge.example.com');
       });
 
       it('should accept valid https URL', () => {
@@ -382,7 +414,9 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.not.throw();
+        const result = constructCoreConfigSettings(config);
+
+        expect(result.sitecoreEdgeUrl).to.equal('https://edge.example.com');
       });
 
       it('should accept URL with path', () => {
@@ -392,7 +426,9 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.not.throw();
+        const result = constructCoreConfigSettings(config);
+
+        expect(result.sitecoreEdgeUrl).to.equal('https://edge.example.com/api/v1');
       });
 
       it('should accept URL with port', () => {
@@ -402,7 +438,9 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.not.throw();
+        const result = constructCoreConfigSettings(config);
+
+        expect(result.sitecoreEdgeUrl).to.equal('https://edge.example.com:8080');
       });
 
       it('should throw for empty string URL', () => {
@@ -412,7 +450,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.IV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.IV_0001);
       });
 
       it('should throw for URL without protocol', () => {
@@ -422,9 +460,8 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => validateCoreConfig(config)).to.throw(ERROR_MESSAGES.IV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.IV_0001);
       });
     });
   });
 });
-

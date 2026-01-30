@@ -8,8 +8,9 @@ import { ERROR_MESSAGES } from './consts';
 describe('init-sitecore', () => {
   let sandbox: sinon.SinonSandbox;
   let initPluginsStub: sinon.SinonStub;
-  let validateCoreConfigStub: sinon.SinonStub;
+  let constructCoreConfigSettingsStub: sinon.SinonStub;
   let debugInitStub: sinon.SinonStub;
+
   let initSitecore: typeof import('./init-sitecore').initSitecore;
   let getCoreSettings: typeof import('./init-sitecore').getCoreSettings;
 
@@ -22,15 +23,15 @@ describe('init-sitecore', () => {
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     initPluginsStub = sandbox.stub().resolves();
-    validateCoreConfigStub = sandbox.stub();
+    constructCoreConfigSettingsStub = sandbox.stub().callsFake((config) => config);
     debugInitStub = sandbox.stub();
 
-    const module = proxyquire.noCallThru()('./init-sitecore', {
+    const module = proxyquire('./init-sitecore', {
       './helpers': {
         initPlugins: initPluginsStub,
-        validateCoreConfig: validateCoreConfigStub,
+        constructCoreConfigSettings: constructCoreConfigSettingsStub,
       },
-      './debug': {
+      '../debug': {
         default: {
           init: debugInitStub,
         },
@@ -71,25 +72,13 @@ describe('init-sitecore', () => {
   });
 
   describe('initSitecore', () => {
-    it('should validate configuration', async () => {
-      const mockPlugin: Plugin = {
-        name: 'test-plugin',
-      };
-
-      await initSitecore({
-        settings: validConfig,
-        plugins: [mockPlugin],
-      });
-
-      expect(validateCoreConfigStub.calledOnceWith(validConfig)).to.be.true;
-    });
-
     it('should initialize without error when no plugins are provided and log a warning', async () => {
       await initSitecore({
         settings: validConfig,
         plugins: [],
       });
 
+      expect(constructCoreConfigSettingsStub.calledOnceWith(validConfig)).to.be.true;
       expect(debugInitStub.calledWith('No plugins provided to the plugins array')).to.be.true;
 
       const settings = getCoreSettings();
@@ -111,22 +100,17 @@ describe('init-sitecore', () => {
       expect(settings.plugins.has('plugin-1')).to.be.true;
       expect(settings.plugins.has('plugin-2')).to.be.true;
       expect(settings.plugins.has('plugin-3')).to.be.true;
-    });
 
-    it('should call initPlugins with registered plugins', async () => {
-      const mockPlugin: Plugin = {
-        name: 'test-plugin',
-      };
-
-      await initSitecore({
-        settings: validConfig,
-        plugins: [mockPlugin],
-      });
+      expect(debugInitStub.firstCall.args[0]).to.equal('Initializing Content SDK with options:');
+      const registeredPluginsCall = debugInitStub
+        .getCalls()
+        .find((call) => (call.args[0] as string).includes('Registered'));
+      expect(registeredPluginsCall?.args[0]).to.equal('Registered 3 plugins');
 
       expect(initPluginsStub.calledOnce).to.be.true;
       const pluginsArg = initPluginsStub.firstCall.args[0] as Map<string, Plugin>;
       expect(pluginsArg).to.be.instanceOf(Map);
-      expect(pluginsArg.size).to.equal(1);
+      expect(pluginsArg.size).to.equal(3);
     });
 
     it('should store plugins with their settings', async () => {
@@ -193,6 +177,9 @@ describe('init-sitecore', () => {
 
       const settings = getCoreSettings();
       expect(settings.readyPromise).to.exist;
+
+      const lastCall = debugInitStub.lastCall;
+      expect(lastCall?.args[0]).to.equal('SDK initialization complete');
     });
 
     it('should overwrite previous initialization when called again', async () => {
@@ -222,55 +209,3 @@ describe('init-sitecore', () => {
     });
   });
 });
-
-describe('init-sitecore integration', () => {
-  // These tests use the real implementation (not mocked) to ensure full code coverage
-  let initSitecore: typeof import('./init-sitecore').initSitecore;
-  let getCoreSettings: typeof import('./init-sitecore').getCoreSettings;
-
-  const validConfig = {
-    contextId: 'test-context-id',
-    sitecoreEdgeUrl: 'https://edge.example.com',
-    siteName: 'test-site',
-  };
-
-  beforeEach(() => {
-    // Get a fresh module instance for each test using proxyquire without mocks
-    const module = proxyquire.noCallThru().noPreserveCache()('./init-sitecore', {});
-    initSitecore = module.initSitecore;
-    getCoreSettings = module.getCoreSettings;
-  });
-
-  it('should initialize with real validation and plugin initialization', async () => {
-    const mockPlugin: Plugin = {
-      name: 'test-plugin',
-      init: () => {},
-    };
-
-    await initSitecore({
-      settings: validConfig,
-      plugins: [mockPlugin],
-    });
-
-    const settings = getCoreSettings();
-    expect(settings).to.exist;
-    expect(settings.settings).to.deep.equal(validConfig);
-    expect(settings.plugins.size).to.equal(1);
-  });
-
-  it('should execute debug logging during initialization', async () => {
-    const mockPlugin: Plugin = {
-      name: 'debug-test-plugin',
-    };
-
-    // This test ensures the debugInit calls are executed
-    await initSitecore({
-      settings: validConfig,
-      plugins: [mockPlugin],
-    });
-
-    const settings = getCoreSettings();
-    expect(settings.readyPromise).to.exist;
-  });
-});
-

@@ -5,7 +5,7 @@ export interface InitSitecoreOptions {
   /** Initialization settings */
   settings: {
     contextId: string;
-    sitecoreEdgeUrl: string;
+    sitecoreEdgeUrl?: string;
     siteName: string;
   };
   /** Array of plugins to initialize */
@@ -70,4 +70,3 @@ export interface Plugin<Settings = unknown, Environment = unknown> {
 export interface PluginEnvironment {
   type: 'browser' | (string & {});
 }
-

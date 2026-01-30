@@ -1,7 +1,8 @@
-import { InitSitecoreOptions } from './types';
+import { CoreSettings, InitSitecoreOptions } from './types';
 import debug from '../debug';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
+import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 
 const debugInit = debug.init;
 
@@ -42,11 +43,13 @@ export async function initPlugins(plugins: Map<string, Plugin>): Promise<void> {
 }
 
 /**
- * Validates the core configuration.
+ * Validates and constructs the core configuration.
  * @param {InitSitecoreOptions['settings']} config - The core configuration object.
  * @internal
  */
-export function validateCoreConfig(config: InitSitecoreOptions['settings']): void {
+export function constructCoreConfigSettings(
+  config: InitSitecoreOptions['settings']
+): CoreSettings['settings'] {
   const { contextId, siteName, sitecoreEdgeUrl } = config;
   if (!contextId || contextId.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_0001);
 
@@ -60,5 +63,9 @@ export function validateCoreConfig(config: InitSitecoreOptions['settings']): voi
     }
 
   debugInit('Configuration is valid');
-}
 
+  return {
+    ...config,
+    sitecoreEdgeUrl: sitecoreEdgeUrl?.trim() ?? SITECORE_EDGE_URL_DEFAULT,
+  };
+}

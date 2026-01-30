@@ -1,6 +1,6 @@
 import debug from '../debug';
 import type { CoreSettings, InitSitecoreOptions } from './types';
-import { initPlugins, validateCoreConfig } from './helpers';
+import { initPlugins, constructCoreConfigSettings } from './helpers';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
 
@@ -27,12 +27,12 @@ export async function initSitecore(options: InitSitecoreOptions): Promise<void> 
   debug.init('Initializing Content SDK with options:', options);
   const { settings, plugins } = options;
 
-  validateCoreConfig(settings);
+  const constructedSettings = constructCoreConfigSettings(settings);
 
   if (plugins.length === 0) debug.init('No plugins provided to the plugins array');
 
   coreSettings = {
-    settings,
+    settings: constructedSettings,
     plugins: new Map<string, Plugin>(),
     readyPromise: null,
   };
@@ -48,4 +48,3 @@ export async function initSitecore(options: InitSitecoreOptions): Promise<void> 
 
   debug.init('SDK initialization complete');
 }
-
