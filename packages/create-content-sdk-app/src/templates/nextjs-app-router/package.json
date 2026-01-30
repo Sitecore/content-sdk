@@ -29,7 +29,6 @@
   },
   "dependencies": {
     "@sitecore-content-sdk/nextjs": "<%- version %>",
-    "@sitecore-content-sdk/core": "<%- version %>",
     "@sitecore-content-sdk/analytics-core": "<%- version %>",
     "@sitecore-content-sdk/personalize": "<%- version %>",
     "@sitecore-content-sdk/events": "<%- version %>",
