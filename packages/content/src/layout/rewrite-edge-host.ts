@@ -16,20 +16,27 @@ const DEFAULT_EDGE_HOSTNAMES = [
  * @internal
  */
 const EDGE_HOST_PATTERNS = DEFAULT_EDGE_HOSTNAMES.map(
-  (hostname) => new RegExp(`https?://${hostname.replace(/\./g, '\\.')}`, 'gi')
+  (hostname) => new RegExp(`https?://${escapeRegExp(hostname)}`, 'gi')
 );
+
+/**
+ * Escapes a string so it can be safely embedded in a RegExp as a literal.
+ * @param {string} input - The string to escape
+ * @returns {string} The escaped string safe for RegExp construction
+ * @internal
+ */
+function escapeRegExp(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 /**
  * Rewrites Edge Platform hostnames in a response object to use the custom hostname.
  * This function performs a deep traversal of the object and replaces any string values
  * containing the default Edge hostnames with the custom hostname.
- *
  * Only performs rewriting when a custom Edge hostname is configured via environment variables.
- *
  * @param {T} response - The response object to process (typically LayoutServiceData)
  * @returns {T} The response object with Edge hostnames rewritten (same reference if no custom hostname)
  * @public
- *
  * @example
  * const layout = await layoutService.fetchLayoutData(path, options);
  * const rewritten = rewriteEdgeHostInResponse(layout);
@@ -47,7 +54,6 @@ export function rewriteEdgeHostInResponse<T>(response: T): T {
 
 /**
  * Recursively traverses an object/array and rewrites Edge hostnames in string values.
- *
  * @param {T} value - The value to process
  * @param {string} customEdgeUrl - The custom Edge URL to replace with
  * @returns {T} The processed value with Edge hostnames replaced
@@ -89,7 +95,6 @@ function deepRewriteEdgeHost<T>(value: T, customEdgeUrl: string): T {
 
 /**
  * Replaces Edge Platform hostnames in a string with the custom hostname.
- *
  * @param {string} str - The string to process
  * @param {string} customEdgeUrl - The custom Edge URL to replace with
  * @returns {string} The string with Edge hostnames replaced
@@ -109,7 +114,6 @@ function rewriteEdgeHostInString(str: string, customEdgeUrl: string): string {
 
 /**
  * Checks if a string contains any default Edge Platform hostnames.
- *
  * @param {string} str - The string to check
  * @returns {boolean} True if the string contains a default Edge hostname
  * @public
