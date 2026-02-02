@@ -140,10 +140,10 @@ describe('defineConfig', () => {
 
   describe('config.api.edge.edgeUrl', () => {
     describe('environment variable is not set', () => {
-      it('should default to undefined', () => {
+      it('should default to Edge Platform URL', () => {
         defineConfigModule.defineConfig(defaultConfig());
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.edge?.edgeUrl).to.be.undefined;
+        expect(resultConfig.api?.edge?.edgeUrl).to.equal('https://edge-platform.sitecorecloud.io');
       });
 
       it('should use the value from the config', () => {
