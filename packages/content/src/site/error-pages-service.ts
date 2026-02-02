@@ -46,9 +46,17 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
  * @public
  */
 export type ErrorPages = {
-  notFoundPage: { rendered: LayoutServiceData };
+  /**
+   * Rendered 404 page layout.
+   * Can be null if the site has no error handling configured for the requested language.
+   */
+  notFoundPage: { rendered: LayoutServiceData } | null;
   notFoundPagePath: string;
-  serverErrorPage: { rendered: LayoutServiceData };
+  /**
+   * Rendered 500 page layout.
+   * Can be null if the site has no error handling configured for the requested language.
+   */
+  serverErrorPage: { rendered: LayoutServiceData } | null;
   serverErrorPagePath: string;
 };
 
@@ -110,14 +118,17 @@ export class ErrorPagesService {
 
         // Rewrite Edge hostnames in error page layouts if custom hostname is configured
         const errorHandling = result.site.siteInfo.errorHandling;
+        const notFoundPage = errorHandling.notFoundPage?.rendered
+          ? { rendered: rewriteEdgeHostInResponse(errorHandling.notFoundPage.rendered) }
+          : null;
+        const serverErrorPage = errorHandling.serverErrorPage?.rendered
+          ? { rendered: rewriteEdgeHostInResponse(errorHandling.serverErrorPage.rendered) }
+          : null;
+
         return {
           ...errorHandling,
-          notFoundPage: {
-            rendered: rewriteEdgeHostInResponse(errorHandling.notFoundPage.rendered),
-          },
-          serverErrorPage: {
-            rendered: rewriteEdgeHostInResponse(errorHandling.serverErrorPage.rendered),
-          },
+          notFoundPage,
+          serverErrorPage,
         };
       })
       .catch((e) => Promise.reject(e));
