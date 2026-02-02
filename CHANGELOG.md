@@ -30,7 +30,8 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` `[Pages Router]` Adjust static path generation when multisite is disabled ([#345](https://github.com/Sitecore/content-sdk/pull/345))
 
-* `[sdk]` Rework Analytics initialization ([#357](https://github.com/Sitecore/content-sdk/pull/357))
+* Introduce Analytics packages:
+  * `[sdk]` Rework Analytics initialization ([#357](https://github.com/Sitecore/content-sdk/pull/357))
 
 ### 🛠 Breaking Changes
 
