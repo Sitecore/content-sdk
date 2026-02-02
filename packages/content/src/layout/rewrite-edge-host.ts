@@ -7,7 +7,7 @@ import { hasCustomEdgeHostname, resolveEdgeUrl } from '@sitecore-content-sdk/cor
  */
 const DEFAULT_EDGE_HOSTNAMES = [
   'edge-platform.sitecorecloud.io',
-  'edge.sitecorecloud.io', // Legacy hostname, included for defensive replacement
+  'edge.sitecorecloud.io', // Legacy hostname included for safety replacement
 ];
 
 /**
@@ -31,10 +31,8 @@ const EDGE_HOST_PATTERNS = DEFAULT_EDGE_HOSTNAMES.map(
  * @public
  *
  * @example
- * // With SITECORE_EDGE_HOSTNAME=my-tenant.edge.example.com
  * const layout = await layoutService.fetchLayoutData(path, options);
  * const rewritten = rewriteEdgeHostInResponse(layout);
- * // All URLs like 'https://edge-platform.sitecorecloud.io/...' are now 'https://my-tenant.edge.example.com/...'
  */
 export function rewriteEdgeHostInResponse<T>(response: T): T {
   // Skip if no custom hostname is configured

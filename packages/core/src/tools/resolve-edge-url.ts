@@ -45,19 +45,16 @@ export const SITECORE_EDGE_URL_PUBLIC_ENV = 'NEXT_PUBLIC_SITECORE_EDGE_URL';
  * @public
  *
  * @example
- * // With SITECORE_EDGE_HOSTNAME=my-tenant.edge.example.com
  * resolveEdgeUrl() // => 'https://my-tenant.edge.example.com'
  *
  * @example
- * // With explicit edgeUrl parameter
  * resolveEdgeUrl('https://custom.edge.com') // => 'https://custom.edge.com'
  *
  * @example
- * // With no env vars set (fallback to default)
  * resolveEdgeUrl() // => 'https://edge-platform.sitecorecloud.io'
  */
 export function resolveEdgeUrl(edgeUrl?: string): string {
-  // 1. Use explicit edgeUrl if provided and not empty
+  // Use explicit edgeUrl if provided and not empty
   const explicit = normalizeMaybeEnvValue(edgeUrl);
   if (explicit) {
     return normalizeUrl(explicit);
@@ -66,7 +63,7 @@ export function resolveEdgeUrl(edgeUrl?: string): string {
   // Determine if we're in browser context
   const isBrowser = typeof window !== 'undefined';
 
-  // 2. Check for custom hostname env var (prioritize custom hostname over URL)
+  // Check for custom hostname env var (prioritize custom hostname over URL)
   const hostnameEnvVarRaw = isBrowser
     ? process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV]
     : process.env[SITECORE_EDGE_HOSTNAME_ENV] || process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV];
@@ -76,7 +73,7 @@ export function resolveEdgeUrl(edgeUrl?: string): string {
     return normalizeHostnameToUrl(hostnameEnvVar);
   }
 
-  // 3. Check for Edge URL env var
+  // Check for Edge URL env var
   const urlEnvVarRaw = isBrowser
     ? process.env[SITECORE_EDGE_URL_PUBLIC_ENV]
     : process.env[SITECORE_EDGE_URL_ENV] || process.env[SITECORE_EDGE_URL_PUBLIC_ENV];
@@ -86,7 +83,7 @@ export function resolveEdgeUrl(edgeUrl?: string): string {
     return normalizeUrl(urlEnvVar);
   }
 
-  // 4. Fall back to default
+  // Fall back to default
   return SITECORE_EDGE_URL_DEFAULT;
 }
 
