@@ -2,7 +2,7 @@ import { debugNamespace, debugModule } from '@sitecore-content-sdk/core';
 
 export const PERSONALIZE_NAMESPACE = 'personalize';
 /**
- * Debug module for content package
+ * Debug module for personalize package
  * @public
  */
 export const debug = {
