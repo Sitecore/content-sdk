@@ -98,6 +98,16 @@
     "regex-parser": "^2.3.1",
     "sync-disk-cache": "^2.1.0"
   },
+  "imports": {
+    "#scConfigProvider": {
+      "react-server": {
+        "import": "./dist/esm/config-provider/server.js",
+        "default": "./dist/cjs/config-provider/server.js"
+      },
+      "import": "./dist/esm/config-provider/client.js",
+      "default": "./dist/cjs/config-provider/client.js"
+    }
+  },
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",

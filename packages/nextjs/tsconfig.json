@@ -8,7 +8,8 @@
     "outDir": "dist/cjs",
     "types": ["node"],
     "typeRoots": ["node_modules/@types"],
-    "declarationDir": "./types"
+    "declarationDir": "./types",
+    "paths": { "#scConfigProvider": ["./src/config-provider/config-provider.d.ts"] }
   },
   "exclude": [
     "node_modules",
