@@ -35,7 +35,7 @@ export interface CoreSettings {
 /**
  * Dependency definition for a plugin.
  * Used to declare that a plugin requires another plugin to be present.
- * @internal
+ * @public
  */
 export type PluginDependency = string;
 
@@ -43,7 +43,7 @@ export type PluginDependency = string;
  * Plugin interface for extending SDK functionality.
  * Plugins are the standard way to add capabilities to the SDK.
  * @template Settings - Plugin-specific settings type
- * @internal
+ * @public
  */
 export interface Plugin<Settings = unknown, Environment = unknown> {
   /**
