@@ -1,6 +1,6 @@
-import { enabled } from 'debug';
 import { normalizeHeaders } from '../utils';
 import type { DebugResponse } from '../interfaces';
+import { isNamespaceEnabled } from '@sitecore-content-sdk/core';
 
 /**
  * Extracts debug information from an HTTP response if debugging is enabled.
@@ -12,7 +12,7 @@ import type { DebugResponse } from '../interfaces';
 export function processDebugResponse(namespace: string, response: Response): object {
   let debugResponse: DebugResponse = {};
 
-  if (enabled(namespace))
+  if (isNamespaceEnabled(namespace))
     debugResponse = {
       headers: normalizeHeaders(response.headers),
       redirected: response.redirected,

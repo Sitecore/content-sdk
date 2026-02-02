@@ -1,6 +1,13 @@
 import * as constants from './constants';
 
-export { default as debug, Debugger, enableDebug, debugNamespace, debugModule } from './debug';
+export {
+  default as debug,
+  Debugger,
+  enableDebug,
+  debugNamespace,
+  debugModule,
+  isNamespaceEnabled,
+} from './debug';
 export {
   GraphQLClient,
   GraphQLRequestClient,

@@ -40,6 +40,16 @@ if (
 export const enableDebug = (namespaces: string) => debug.enable(namespaces);
 
 /**
+ * Check if a debug namespace is enabled
+ * @param {string} namespace the namespace to check
+ * @returns {boolean} whether the namespace is enabled
+ * @public
+ */
+export function isNamespaceEnabled(namespace: string): boolean {
+  return debug.enabled(namespace);
+}
+
+/**
  * Default Sitecore Content SDK 'debug' module debuggers. Uses namespace prefix 'content-sdk:'.
  * See {@link https://www.npmjs.com/package/debug} for details.
  */
