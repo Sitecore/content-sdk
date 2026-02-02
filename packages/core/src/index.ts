@@ -20,6 +20,4 @@ export {
 } from './native-fetcher';
 export { RetryStrategy, GenericGraphQLClientError, FetchOptions } from './models';
 export { constants };
-export { initSitecore, getCoreSettings } from './initialization/init-sitecore';
-export { CoreSettings } from './initialization/types';
-export { Plugin, PluginDependency, PluginEnvironment } from './initialization/types';
+export * from './initialization';
