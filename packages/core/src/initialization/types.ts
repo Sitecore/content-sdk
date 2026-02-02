@@ -1,5 +1,6 @@
 /**
  * Options for initSitecore
+ * @public
  */
 export interface InitSitecoreOptions {
   /** Initialization settings */
@@ -14,6 +15,7 @@ export interface InitSitecoreOptions {
 
 /**
  * Internal settings of the SDK initialization
+ * @internal
  */
 export interface CoreSettings {
   /**
@@ -67,6 +69,10 @@ export interface Plugin<Settings = unknown, Environment = unknown> {
   environment?: Environment;
 }
 
+/**
+ * Environment definition for plugins.
+ * @internal
+ */
 export interface PluginEnvironment {
   type: 'browser' | (string & {});
 }
