@@ -142,6 +142,9 @@ export function getCache<T>(key: string): T | undefined;
 export function getCacheAndClean<T>(key: string): T | undefined;
 
 // @public
+export function getCustomEdgeUrl(): string | undefined;
+
+// @public
 export const getEnforcedCorsHeaders: ({ requestMethod, headers, presetCorsHeader, allowedOrigins, }: {
     requestMethod: string | undefined;
     headers: IncomingHttpHeaders | Headers;
@@ -194,6 +197,9 @@ export type GraphQLRequestClientFactoryConfig = {
 
 // @internal
 export function hasCache(key: string): boolean;
+
+// @public
+export function hasCustomEdgeHostname(): boolean;
 
 // @public
 export const isRegexOrUrl: (input: string) => "regex" | "url";
@@ -263,6 +269,9 @@ export interface NativeDataFetcherResponse<T> {
 export const normalizeUrl: (url: string) => string;
 
 // @public
+export function resolveEdgeUrl(edgeUrl?: string): string;
+
+// @public
 export function resolveUrl(urlBase: string, params?: ParsedUrlQueryInput): string;
 
 // @public
@@ -274,8 +283,20 @@ export interface RetryStrategy {
 // @internal
 export function setCache(key: string, data: unknown): void;
 
+// @public
+export const SITECORE_EDGE_HOSTNAME_ENV = "SITECORE_EDGE_HOSTNAME";
+
+// @public
+export const SITECORE_EDGE_HOSTNAME_PUBLIC_ENV = "NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME";
+
 // @internal
 const SITECORE_EDGE_URL_DEFAULT = "https://edge-platform.sitecorecloud.io";
+
+// @public
+export const SITECORE_EDGE_URL_ENV = "SITECORE_EDGE_URL";
+
+// @public
+export const SITECORE_EDGE_URL_PUBLIC_ENV = "NEXT_PUBLIC_SITECORE_EDGE_URL";
 
 // @public
 export interface TenantArgs {
@@ -290,7 +311,7 @@ export interface TenantArgs {
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index.ts:32:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index.ts:41:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 
