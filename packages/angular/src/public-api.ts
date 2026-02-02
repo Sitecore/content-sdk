@@ -62,6 +62,18 @@ export {
   isDesignLibraryMode,
 } from '@sitecore-content-sdk/core/editing';
 
+export { SiteInfo, SITE_KEY } from '@sitecore-content-sdk/core/site';
+
+export {
+  PersonalizeService,
+  PersonalizeInfo,
+  getPersonalizedRewrite,
+  getPersonalizedRewriteData,
+  normalizePersonalizedRewrite,
+  CdpHelper,
+  DEFAULT_VARIANT,
+} from '@sitecore-content-sdk/core/personalize';
+
 // Angular-specific exports
 export * from './lib/sdk-provider';
 export * from './lib/loader-resolver';

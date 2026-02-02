@@ -33,10 +33,18 @@
             "ssr": {
               "entry": "src/server.ts"
             },
-            "define": {}
+            "define": {
+              "process.env.SC_API_URL": "https://dev.sitecorecloud.io"
+            }
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/clientEnvs.ts",
+                  "with": "src/environments/clientEnbs.generated.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",

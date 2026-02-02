@@ -36,6 +36,7 @@
     "@angular/ssr": "^21.0.4",
     "@sitecore-content-sdk/angular": "workspace:*",
     "bootstrap": "^5.3.8",
+    "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
     "font-awesome": "^4.7.0",
     "rxjs": "~7.8.0",
@@ -45,8 +46,10 @@
     "@angular/build": "^21.0.4",
     "@angular/cli": "^21.0.4",
     "@angular/compiler-cli": "^21.0.0",
+    "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
+    "esbuild": "^0.24.0",
     "jsdom": "^27.1.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"

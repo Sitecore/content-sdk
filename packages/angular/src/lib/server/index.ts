@@ -25,3 +25,27 @@ export {
   createExpressEditingConfigMiddleware,
   ExpressEditingConfigHandlerOptions,
 } from './express-editing-config-handler';
+
+// Multisite middleware
+export {
+  createExpressMultisiteMiddleware,
+  ExpressMultisiteMiddlewareOptions,
+  MultisiteExpressRequest,
+  MultisiteExpressResponse,
+  MultisiteExpressMiddleware,
+  CookieOptions,
+  DEFAULT_EDITING_RENDER_PATH,
+} from './express-multisite-middleware';
+
+// Personalize middleware
+export {
+  createExpressPersonalizeMiddleware,
+  ExpressPersonalizeMiddlewareOptions,
+  PersonalizeExpressRequest,
+  PersonalizeExpressResponse,
+  PersonalizeExpressMiddleware,
+  PersonalizeEdgeConfig,
+  PersonalizeGeoData,
+  ExperienceParams,
+  PERSONALIZE_REWRITE_HEADER,
+} from './express-personalize-middleware';

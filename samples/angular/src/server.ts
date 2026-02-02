@@ -5,37 +5,47 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { join } from 'node:path';
 import {
   createExpressDataMiddleware,
   createExpressEditingConfigMiddleware,
+  createExpressMultisiteMiddleware,
+  createExpressPersonalizeMiddleware,
 } from '@sitecore-content-sdk/angular';
 import { SERVER_LOADERS } from './lib/loaders';
 import { componentMap } from '../.sitecore/component-map';
 import metadata from '../.sitecore/metadata.json';
 import scConfig from './sitecore.config';
+import sites from './sites.json';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-/**
- * Parse JSON body for POST requests
- */
 app.use(express.json());
 
-/**
- * Data middleware for client-side loader requests.
- * Uses the reusable middleware from @sitecore-content-sdk/angular.
- * Handles requests at /_data endpoint (configurable via options.endpoint).
- */
+app.use(cookieParser());
+
+app.use(createExpressMultisiteMiddleware({ sites }));
+
+app.use(
+  createExpressPersonalizeMiddleware({
+    // Enable/disable personalization
+    enabled: !!scConfig.api?.edge?.contextId,
+    sites,
+    edge: {
+      contextId: scConfig.api?.edge?.contextId,
+      clientContextId: scConfig.api?.edge?.clientContextId,
+      edgeUrl: scConfig.api?.edge?.edgeUrl,
+    },
+    defaultLanguage: scConfig.defaultLanguage,
+  })
+);
+
 app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS }));
 
-/**
- * Editing config middleware for XM Cloud Pages integration.
- * Provides configuration information at /api/editing/config endpoint.
- */
 app.use(
   createExpressEditingConfigMiddleware({
     components: componentMap,
@@ -54,6 +64,11 @@ app.use(
     redirect: false,
   })
 );
+
+app.get('/', (req, res) => {
+  req.accepted
+  res.cookie('test', 'test');
+});
 
 /**
  * Handle all other requests by rendering the Angular application.
