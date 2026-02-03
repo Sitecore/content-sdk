@@ -24,7 +24,7 @@ export type DesignLibraryProps = {
   /**
    * The dynamic import for import map to be used in variant generation mode.
    */
-  loadImportMap: () => Promise<ImportMapImport>;
+  loadImportMap?: () => Promise<ImportMapImport>;
 };
 
 export type DesignLibraryServerProps = {
