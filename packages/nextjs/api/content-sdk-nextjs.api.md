@@ -141,6 +141,7 @@ import { REDIRECT_TYPE_SERVER_TRANSFER } from '@sitecore-content-sdk/content/sit
 import { RedirectInfo } from '@sitecore-content-sdk/content/site';
 import { RedirectsService } from '@sitecore-content-sdk/content/site';
 import { RedirectsServiceConfig } from '@sitecore-content-sdk/content/site';
+import { renderEmptyPlaceholder } from '@sitecore-content-sdk/react';
 import { RenderingType } from '@sitecore-content-sdk/content/layout';
 import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { resolveUrl } from '@sitecore-content-sdk/core/tools';
@@ -775,6 +776,8 @@ export type RedirectsProxyConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clien
 export { RedirectsService }
 
 export { RedirectsServiceConfig }
+
+export { renderEmptyPlaceholder }
 
 export { RenderingType }
 
