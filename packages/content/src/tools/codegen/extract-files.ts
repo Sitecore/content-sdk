@@ -14,10 +14,6 @@ import path from 'path';
 import fs from 'fs';
 
 export type ExtractFilesConfig = {
-  /**
-   * @deprecated Pass `config` to the `defineCliConfig` function instead. This argument will be removed in the next major version.
-   */
-  scConfig?: SitecoreConfig;
   componentMapPath?: string;
   clientComponentMapPath?: string;
   customValidateDeployContext?: () => boolean;
@@ -52,9 +48,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
   const renderingHost = process.env.SITECORE_RENDERINGHOST_NAME;
 
   return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
-    const config = args.scConfig ?? scConfig;
-
-    if (!config) {
+    if (!scConfig) {
       throw new Error('Sitecore configuration is required to be provided');
     }
 
@@ -65,7 +59,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
       debug.common('Skipping code extraction, not in deploy context');
       return;
     }
-    if (config.disableCodeGeneration) {
+    if (scConfig.disableCodeGeneration) {
       debug.common('Skipping code extraction, code generation has been disabled');
       return;
     }
@@ -76,7 +70,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
 
     try {
       // Use Edge Platform mesh endpoint - staging is ready, prod QA in progress
-      const targetUrl = config.api.edge.edgeUrl;
+      const targetUrl = scConfig.api.edge.edgeUrl;
       const { accessToken } = await auth.clientCredentialsFlow(authParams);
       if (!accessToken) {
         console.error(chalk.red('Failed to get access token, aborting code extraction'));
