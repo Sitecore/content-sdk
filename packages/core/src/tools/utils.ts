@@ -226,6 +226,20 @@ export const isRegexOrUrl = (input: string): 'regex' | 'url' => {
   return 'regex';
 };
 
+export const isExperimentalEnv = () => {
+  // const experimentalEnvName = feature
+  //   ? `${feature.toUpperCase}_SC_EXPERIMENTAL`
+  //   : 'SC_EXPERIMENTAL';
+  // dynamic env retrieval via string literal (process.env[experimentalEnvName])
+  // only works in server context
+  const experimentalEnv =
+    process.env.SC_EXPERIMENTAL ||
+    process.env.NEXT_PUBLIC_SC_EXPERIMENTAL ||
+    process.env.REACT_APP_SC_EXPERIMENTAL ||
+    process.env.PUBLIC_SC_EXPERIMENTAL;
+  return experimentalEnv === '1';
+};
+
 /**
  * Compares two URLSearchParams objects to determine if they are equal.
  * @param {URLSearchParams} params1 - The first set of URL search parameters.

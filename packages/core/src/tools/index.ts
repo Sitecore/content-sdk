@@ -17,6 +17,7 @@ export {
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
   mergeURLSearchParams,
+  isExperimentalEnv,
 } from './utils';
 export { hasCache, getCache, getCacheAndClean, setCache } from './globalCache';
 
