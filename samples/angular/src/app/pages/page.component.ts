@@ -7,7 +7,7 @@ import {
   DictionaryPhrases,
 } from '@sitecore-content-sdk/angular';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { LayoutComponent } from '../shared';
+import { LayoutComponent } from '../shared/layout.component';
 
 /**
  * Page component that sets the Sitecore context and dictionary phrases, then renders the layout.
