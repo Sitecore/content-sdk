@@ -6,7 +6,6 @@ import {
   SitecoreProviderState,
 } from '../components/SitecoreProvider';
 import { Page } from '@sitecore-content-sdk/content/client';
-import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 
 /**
  * The options for the withSitecore HOC.
@@ -28,8 +27,6 @@ export interface WithSitecoreProps {
    * The current page context.
    */
   page: Page;
-  /** TODO: make non optional */
-  scConfig?: SitecoreConfig;
   /**
    * The API configuration defined in the `SitecoreConfig`.
    */
@@ -100,7 +97,6 @@ export function useSitecore(options?: WithSitecoreOptions): WithSitecoreProps {
   return {
     api: reactContext.api,
     page: reactContext.page,
-    scConfig: reactContext.scConfig,
     updatePage: updatable ? reactContext.setPage : undefined,
   };
 }

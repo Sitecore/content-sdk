@@ -8,7 +8,6 @@ import { ComponentMap } from './sharedTypes';
 import { ImportMapImport } from './DesignLibrary/models';
 
 export interface SitecoreProviderProps {
-  scConfig: SitecoreConfig;
   /**
    * The API configuration defined in the `SitecoreConfig`.
    */
@@ -45,7 +44,6 @@ export interface SitecoreProviderState {
    * The current page.
    */
   page: Page;
-  scConfig?: SitecoreConfig;
   /**
    * The API configuration defined in the `SitecoreConfig`.
    */
@@ -98,7 +96,6 @@ export class SitecoreProvider extends React.Component<
       page: props.page,
       setPage: this.setPage,
       api,
-      scConfig: props.scConfig,
     };
   }
 

@@ -10,5 +10,3 @@
   SitecoreClientInit,
 } from '@sitecore-content-sdk/content/client';
 export { SitecoreNextjsClient as SitecoreClient } from './sitecore-nextjs-client';
-import useSitecoreConfigProvider from '#scConfigProvider';
-export { useSitecoreConfigProvider };
