@@ -386,7 +386,7 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
  * @public
  */
 export const writeImportMap = (args: WriteImportMapArgsInternal) => {
-  return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
+  return async ({ scConfig }: { scConfig: SitecoreConfig }) => {
     const defaultTemplate = args.serverTemplate || defaultMapTemplate;
     const clientTemplate = args.clientTemplate || defaultMapTemplate;
 

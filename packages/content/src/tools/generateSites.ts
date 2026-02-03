@@ -27,10 +27,10 @@ export type GenerateSitesConfig = {
  * @returns {Promise<Function>} - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
  * @public
  */
-export const generateSites = ({
-  destinationPath,
-}: GenerateSitesConfig = {}): (() => Promise<void>) => {
-  return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
+export const generateSites = ({ destinationPath }: GenerateSitesConfig = {}): ((args: {
+  scConfig: SitecoreConfig;
+}) => Promise<void>) => {
+  return async ({ scConfig }: { scConfig: SitecoreConfig }) => {
     if (!scConfig) {
       throw new Error('Sitecore configuration is required to be provided');
     }

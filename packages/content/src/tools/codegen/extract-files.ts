@@ -47,7 +47,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
   };
   const renderingHost = process.env.SITECORE_RENDERINGHOST_NAME;
 
-  return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
+  return async ({ scConfig }: { scConfig: SitecoreConfig }) => {
     if (!scConfig) {
       throw new Error('Sitecore configuration is required to be provided');
     }
