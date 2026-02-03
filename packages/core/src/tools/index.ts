@@ -9,7 +9,6 @@ export { normalizeUrl } from './normalize-url';
 export {
   resolveUrl,
   isTimeoutError,
-  enforceCors,
   getEnforcedCorsHeaders,
   EnhancedOmit,
   getAllowedOriginsFromEnv,

@@ -72,7 +72,6 @@ export class EditingConfigMiddleware {
     if (_req.method === 'OPTIONS') {
       debug.editing('preflight request');
 
-      // CORS headers are set by enforceCors
       return res.status(204).send(null);
     }
 

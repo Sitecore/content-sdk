@@ -88,60 +88,6 @@ export const getAllowedOriginsFromEnv = () =>
     : [];
 
 /**
- * Tests origin from incoming request against allowed origins list that can be
- * set in JSS's JSS_ALLOWED_ORIGINS env variable, passed via allowedOrigins param and/or
- * be already set in Access-Control-Allow-Origin by other logic.
- * Applies Access-Control-Allow-Origin and Access-Control-Allow-Methods on match
- * Also applies Access-Control-Allow-Headers for preflight requests
- * @param {IncomingMessage} req incoming request
- * @param {OutgoingMessage} res response to set CORS headers for
- * @param {string[]} [allowedOrigins] additional list of origins to test against
- * @returns true if incoming origin matches the allowed lists, false when it does not
- * @deprecated use getEnforcedCorsHeaders instead
- * @public
- */
-export const enforceCors = (
-  req: IncomingMessage,
-  res: OutgoingMessage,
-  allowedOrigins?: string[]
-): boolean => {
-  // origin in not present for non-CORS requests (e.g. server-side) - so we skip the checks
-  if (!req.headers.origin) {
-    return true;
-  }
-  // 3 sources of allowed origins are considered:
-  // the env value
-  const defaultAllowedOrigins = getAllowedOriginsFromEnv();
-  // the allowedOrigins prop
-  allowedOrigins = defaultAllowedOrigins.concat(allowedOrigins || []);
-  // and the existing CORS header, if present (i.e. set by nextjs config)
-  const presetCors = res.getHeader('Access-Control-Allow-Origin');
-  if (presetCors) {
-    allowedOrigins.push(presetCors as string);
-  }
-
-  const origin = req.headers.origin;
-  if (
-    origin &&
-    allowedOrigins.some(
-      (allowedOrigin) =>
-        origin === allowedOrigin || new RegExp(convertToWildcardRegex(allowedOrigin)).test(origin)
-    )
-  ) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, DELETE, PUT, PATCH');
-
-    // set the allowed headers for preflight requests
-    if (req.method === 'OPTIONS') {
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    }
-
-    return true;
-  }
-  return false;
-};
-
-/**
  * Gets enforced CORS headers
  * @param {object} options - The options
  * @param {string} options.requestMethod - The HTTP method of the request.
