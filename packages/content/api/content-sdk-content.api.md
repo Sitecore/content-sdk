@@ -183,6 +183,9 @@ export interface ComponentUpdateEventArgs {
     name: string;
 }
 
+// @public
+export function containsDefaultEdgeHost(str: string): boolean;
+
 // @internal
 export const createComponentInstance: (importMap: ImportEntry[], previewEventArgs: ComponentPreviewEventArgs) => unknown;
 
@@ -416,11 +419,11 @@ export enum ErrorPage {
 export type ErrorPages = {
     notFoundPage: {
         rendered: LayoutServiceData;
-    };
+    } | null;
     notFoundPagePath: string;
     serverErrorPage: {
         rendered: LayoutServiceData;
-    };
+    } | null;
     serverErrorPagePath: string;
 };
 
@@ -977,6 +980,9 @@ export const resetEditorChromes: () => void;
 export { RetryStrategy }
 
 // @public
+export function rewriteEdgeHostInResponse<T>(response: T): T;
+
+// @public
 export type RobotsQueryResult = {
     site: {
         siteInfo: {
@@ -1338,7 +1344,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:58:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:59:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:108:5 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
