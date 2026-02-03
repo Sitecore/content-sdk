@@ -6,6 +6,7 @@ import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { constants } from '@sitecore-content-sdk/core';
 import { ComponentMap } from './sharedTypes';
 import { ImportMapImport } from './DesignLibrary/models';
+import { isExperimentalEnv } from '@sitecore-content-sdk/core/tools';
 
 export interface SitecoreProviderProps {
   /**
@@ -120,6 +121,7 @@ export class SitecoreProvider extends React.Component<
   };
 
   render() {
+    console.log('in react, SC context (client), experimental is ', isExperimentalEnv());
     return (
       <ImportMapReactContext.Provider value={this.props.loadImportMap}>
         <ComponentMapReactContext.Provider value={this.props.componentMap}>

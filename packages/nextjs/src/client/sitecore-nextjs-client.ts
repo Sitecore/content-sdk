@@ -26,6 +26,7 @@ import {
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { StaticParams } from './models';
 import { SitecoreConfig } from '../config';
+import { isExperimentalEnv } from '@sitecore-content-sdk/core/tools';
 
 /**
  * Init options for Sitecore Client that allows you to override services too
@@ -42,6 +43,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
   constructor(protected initOptions: SitecoreNextjsClientInit) {
     super(initOptions);
     this.componentPropsService = this.getComponentPropsService();
+    console.log('in nextjs, sc client, experimental is ', isExperimentalEnv());
   }
 
   /**

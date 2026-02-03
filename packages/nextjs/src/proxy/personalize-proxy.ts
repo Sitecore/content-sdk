@@ -11,6 +11,7 @@ import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
+import { isExperimentalEnv } from '@sitecore-content-sdk/core/tools';
 
 /**
  * Represents the geolocation data used for personalization
@@ -101,6 +102,7 @@ export class PersonalizeProxy extends ProxyBase {
   }
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+    console.log('in next, personalize proxy, experimental is ', isExperimentalEnv());
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize proxy is disabled globally)');
       return res;

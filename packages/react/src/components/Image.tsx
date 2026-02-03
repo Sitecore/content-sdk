@@ -8,6 +8,7 @@ import { DefaultEmptyFieldEditingComponentImage } from './DefaultEmptyFieldEditi
 import { EditableFieldProps } from './sharedTypes';
 import { FieldMetadata } from '@sitecore-content-sdk/content/layout';
 import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
+import { isExperimentalEnv } from '@sitecore-content-sdk/core/tools';
 
 /**
  * The interface for the Image field value.
@@ -121,6 +122,8 @@ export const Image: React.FC<ImageProps> = withFieldMetadata<ImageProps>(
   withEmptyFieldEditingComponent<ImageProps>(
     ({ editable = true, imageParams, field, mediaUrlPrefix, ...otherProps }) => {
       const dynamicMedia = field as ImageField | ImageFieldValue;
+
+      console.log('in react, Image, experimental is ', isExperimentalEnv());
 
       if (isFieldValueEmpty(dynamicMedia)) {
         return null;

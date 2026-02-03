@@ -3,6 +3,7 @@ import { GraphQLServiceConfig, SitecoreServiceBase } from '../sitecore-service-b
 import { LayoutServiceData, RouteOptions } from './models';
 import debug from '../debug';
 import { SitecoreConfigInput } from '../config';
+import { isExperimentalEnv } from '@sitecore-content-sdk/core/tools';
 
 /**
  * GraphQL layout query name
@@ -49,7 +50,7 @@ export class LayoutService extends SitecoreServiceBase {
     const data = await this.graphQLClient.request<{
       layout: { item: { rendered: LayoutServiceData } };
     }>(query, {}, fetchOptions);
-
+    console.log('in content, layout svc, experimental is ', isExperimentalEnv());
     // If `rendered` is empty -> not found
     return (
       data?.layout?.item?.rendered || {

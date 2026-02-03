@@ -7,6 +7,7 @@ import {
   EnhancedOmit,
 } from '@sitecore-content-sdk/react';
 import { ComponentPropsReactContext } from './ComponentPropsContext';
+import { isExperimentalEnv } from '@sitecore-content-sdk/core/tools';
 
 /**
  * React Placeholder component wrapped by withSitecore, so these properties shouldn't be passed to the Next.js Placeholder.
@@ -20,7 +21,7 @@ type PlaceholderProps = EnhancedOmit<PlaceholderComponentProps, keyof WithSiteco
  */
 export const Placeholder = (props: PlaceholderProps) => {
   const componentPropsContext = useContext(ComponentPropsReactContext);
-
+  console.log('in next, placeholder client, experimental is ', isExperimentalEnv());
   return (
     <ReactPlaceholder
       {...props}

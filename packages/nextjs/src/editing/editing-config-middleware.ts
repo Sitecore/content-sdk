@@ -4,7 +4,7 @@ import {
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/content/editing';
 import debug from '../debug';
-import { Metadata } from '@sitecore-content-sdk/core/tools';
+import { isExperimentalEnv, Metadata } from '@sitecore-content-sdk/core/tools';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
@@ -46,6 +46,7 @@ export class EditingConfigMiddleware {
   }
 
   private handler = async (_req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+    console.log('in next, config API, experimental is ', isExperimentalEnv());
     const secret = _req.query[QUERY_PARAM_EDITING_SECRET];
     const corsHeaders = getEnforcedCorsHeaders({
       requestMethod: _req.method,

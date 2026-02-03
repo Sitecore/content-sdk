@@ -5,6 +5,7 @@ import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './tools/timeout-promise';
 import { GenericGraphQLClientError, RetryStrategy, FetchOptions } from './models';
 import { DefaultRetryStrategy } from './retries';
+import { isExperimentalEnv } from './tools';
 
 /**
  * An interface for GraphQL clients for Sitecore APIs
@@ -166,7 +167,7 @@ export class GraphQLRequestClient implements GraphQLClient {
     options?: FetchOptions
   ): Promise<T> {
     let attempt = 1;
-
+    console.log('in core, gql client, experimental is ', isExperimentalEnv());
     const retryer = async (): Promise<T> => {
       const retries = options?.retries || this.retries;
       const retryStrategy = options?.retryStrategy || this.retryStrategy;

@@ -13,6 +13,7 @@ import {
 } from '@sitecore-content-sdk/react';
 import Image, { ImageProps as NextImageProperties } from 'next/image';
 import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
+import { isExperimentalEnv } from '@sitecore-content-sdk/core/tools';
 
 type NextImageProps = ImageProps & Partial<NextImageProperties>;
 
@@ -23,6 +24,7 @@ type NextImageProps = ImageProps & Partial<NextImageProperties>;
 export const NextImage: React.FC<NextImageProps> = withFieldMetadata<NextImageProps>(
   withEmptyFieldEditingComponent<NextImageProps>(
     ({ editable = true, imageParams, field, mediaUrlPrefix, fill, priority, ...otherProps }) => {
+      console.log('in next, Image, experimental is ', isExperimentalEnv());
       const context = React.useContext(SitecoreProviderReactContext);
       // next handles src and we use a custom loader,
       // throw error if these are present

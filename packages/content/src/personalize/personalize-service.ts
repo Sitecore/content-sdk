@@ -5,7 +5,7 @@ import {
   CacheOptions,
   MemoryCacheClient,
 } from '@sitecore-content-sdk/core';
-import { isTimeoutError } from '@sitecore-content-sdk/core/tools';
+import { isExperimentalEnv, isTimeoutError } from '@sitecore-content-sdk/core/tools';
 import debug from '../debug';
 
 /**
@@ -101,7 +101,7 @@ export class PersonalizeService {
     // while other graphql services can use fetchOptions, personalize is more sensitive
     // we don't allow retries in it since we need to be fast
     debug.personalize('fetching personalize info for %s %s %s', siteName, itemPath, language);
-
+    console.log('in content, peronalize svc, experimental is ', isExperimentalEnv());
     const cacheKey = this.getCacheKey(itemPath, language, siteName);
     let data = this.cache.getCacheValue(cacheKey);
 
