@@ -1,10 +1,13 @@
-import type { Settings } from '@sitecore-content-sdk/analytics-core/internal';
 import { language } from '@sitecore-content-sdk/analytics-core/internal';
 import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
-import { ErrorMessages, UTM_PREFIX } from '../consts';
+import { ERROR_MESSAGES, UTM_PREFIX } from '../consts';
 import type { EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { sendCallFlowsRequest } from './send-call-flows-request';
+import { CoreSettings } from '@sitecore-content-sdk/core';
 
+/**
+ * @internal
+ */
 export class Personalizer {
   /**
    * The Personalizer Class runs a flow of interactive experiments.
@@ -16,14 +19,14 @@ export class Personalizer {
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint
    * @param {PersonalizeData} personalizeData - The personalize input from the developer
-   * @param {Settings} settings - The setting that was set during initialization
+   * @param {CoreSettings['settings']} settings - The setting that was set during initialization
    * @param {string} searchParams - The URL search parameters
    * @param {GetInteractiveExperienceDataOpts} opts - Optional object that contains options for timeout and UA
    * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore EP response object or null
    */
   async getInteractiveExperienceData(
     personalizeData: PersonalizeData,
-    settings: Settings,
+    settings: CoreSettings['settings'],
     searchParams: string,
     opts?: GetInteractiveExperienceDataOpts
   ): Promise<unknown | null | FailedCalledFlowsResponse> {
@@ -105,7 +108,7 @@ export class Personalizer {
    */
   private validate(params: PersonalizeData) {
     if (!params.friendlyId || params.friendlyId.trim().length === 0)
-      throw new Error(ErrorMessages.MV_0004);
+      throw new Error(ERROR_MESSAGES.MV_0004);
   }
 
   /**

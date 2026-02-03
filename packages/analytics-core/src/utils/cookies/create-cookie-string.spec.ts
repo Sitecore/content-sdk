@@ -1,6 +1,7 @@
 import type { CookieProperties } from './interfaces';
 import { DAILY_SECONDS } from './consts';
 import { createCookieString } from './create-cookie-string';
+import { expect } from '@jest/globals';
 
 describe('createCookieString', () => {
   const cookieMaxAge = 365 * DAILY_SECONDS;

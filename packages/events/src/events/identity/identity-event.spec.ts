@@ -1,6 +1,6 @@
-import type * as core from '@sitecore-content-sdk/analytics-core/internal';
+import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import * as utils from '@sitecore-content-sdk/analytics-core/utils';
-import { ErrorMessages } from '../../consts';
+import { ERROR_MESSAGES } from '../../consts';
 import { BaseEvent } from '../base-event';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as sendEvent from '../send-event/sendEvent';
@@ -29,14 +29,14 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
 });
 describe('Test Identity', () => {
   let data: IdentityData;
-  let settingsMock: core.Settings;
+  let settingsMock: { contextId: string; sitecoreEdgeUrl: string; siteName: string };
   const id = 'test_id';
 
   const isShortISODateStringSpy = jest.spyOn(utils, 'isShortISODateString');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as EPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as any;
 
@@ -55,15 +55,9 @@ describe('Test Identity', () => {
     };
 
     settingsMock = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
-      siteName: '456',
-      sitecoreEdgeContextId: '123',
+      contextId: '123',
       sitecoreEdgeUrl: '',
+      siteName: '456',
     };
   });
 
@@ -81,7 +75,7 @@ describe('Test Identity', () => {
           sendEvent: sendEvent.sendEvent,
           settings: settingsMock,
         })
-    ).not.toThrow(ErrorMessages.MV_0003);
+    ).not.toThrow(ERROR_MESSAGES.MV_0003);
 
     expect(data.city).toEqual(undefined);
     expect(data.country).toEqual(undefined);
@@ -158,7 +152,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       });
-    }).toThrow(ErrorMessages.MV_0003);
+    }).toThrow(ERROR_MESSAGES.MV_0003);
   });
 
   it('Should throw error when an invalid email parameter is passed', () => {
@@ -184,7 +178,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       });
-    }).toThrow(ErrorMessages.IV_0003);
+    }).toThrow(ERROR_MESSAGES.IV_0003);
   });
 
   it('should not throw error when the identifiers has object', () => {
@@ -195,7 +189,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       });
-    }).not.toThrow(ErrorMessages.MV_0003);
+    }).not.toThrow(ERROR_MESSAGES.MV_0003);
   });
 
   it('Should make all values to Title Case', () => {
@@ -371,7 +365,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       }).send();
-    }).toThrow(ErrorMessages.IV_0002);
+    }).toThrow(ERROR_MESSAGES.IV_0002);
   });
 
   it('Should throw an error if expiry date has invalid date format', () => {
@@ -385,12 +379,12 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       }).send();
-    }).toThrow(ErrorMessages.IV_0004);
+    }).toThrow(ERROR_MESSAGES.IV_0004);
   });
 
   it('should send a identity event with an ext property containing extension data when passed', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as EPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as any;
 
@@ -412,15 +406,9 @@ describe('Test Identity', () => {
     };
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
+      contextId: '123',
       sitecoreEdgeUrl: '',
     };
     new IdentityEvent({
@@ -453,15 +441,9 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
+      contextId: '123',
       sitecoreEdgeUrl: '',
     };
     const extensionData: { [key: string]: string } = {};
@@ -475,7 +457,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings,
       }).send();
-    }).toThrow(ErrorMessages.IV_0005);
+    }).toThrow(ERROR_MESSAGES.IV_0005);
   });
 
   it('should not throw an error when no more than 50 ext attributes are passed', () => {
@@ -493,15 +475,9 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
+      contextId: '123',
       sitecoreEdgeUrl: '',
     };
     const extensionData: { [key: string]: string } = {};
@@ -514,7 +490,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings,
       }).send();
-    }).not.toThrow(ErrorMessages.IV_0005);
+    }).not.toThrow(ERROR_MESSAGES.IV_0005);
   });
 
   it('should not call flatten object method when no extension data is passed', () => {
@@ -533,15 +509,9 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
+      contextId: '123',
       sitecoreEdgeUrl: '',
     };
 
@@ -572,15 +542,9 @@ describe('Test Identity', () => {
       ],
     };
 
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
+      contextId: '123',
       sitecoreEdgeUrl: '',
     };
 

@@ -1,15 +1,16 @@
-import type { EPResponse, Infer, Settings } from '@sitecore-content-sdk/analytics-core/internal';
+import type { EPResponse, Infer } from '@sitecore-content-sdk/analytics-core/internal';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import type { FlattenedObject, NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { MAX_EXT_ATTRIBUTES, UTM_PREFIX } from '../consts';
 import { BaseEvent } from '../base-event';
-import { ErrorMessages } from '../../consts';
+import { ERROR_MESSAGES } from '../../consts';
 import type { SendEvent } from '../send-event/sendEvent';
 import { flattenObject } from '@sitecore-content-sdk/analytics-core/utils';
+import { CoreSettings } from '@sitecore-content-sdk/core';
 
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;
-  settings: Settings;
+  settings: CoreSettings['settings'];
   private sendEvent: SendEvent;
   private pageViewData?: PageViewData;
   private extensionData: FlattenedObject = {};
@@ -41,7 +42,7 @@ export class PageViewEvent extends BaseEvent {
     const numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
     if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(ErrorMessages.IV_0005);
+      throw new Error(ERROR_MESSAGES.IV_0005);
 
     this.includeUTMParameters =
       (args.pageViewData && args.pageViewData.includeUTMParameters) ?? true;
@@ -163,7 +164,7 @@ export interface PageViewEventArguments {
   sendEvent: SendEvent;
   pageViewData?: PageViewData;
   id: string;
-  settings: Settings;
+  settings: CoreSettings['settings'];
   infer?: Infer;
   extensionData?: NestedObject;
   searchParams: string;

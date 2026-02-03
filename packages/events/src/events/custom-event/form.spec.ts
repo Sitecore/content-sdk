@@ -1,70 +1,70 @@
-import * as coreInternalModule from '@sitecore-content-sdk/analytics-core/internal';
 import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
-import * as utils from '@sitecore-content-sdk/analytics-core/utils';
-import { ErrorMessages, PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
-import * as initializerModule from '../../initializer/browser/initializer';
+import * as analyticsPluginsModule from '@sitecore-content-sdk/analytics-core/internal';
+import * as coreModule from '@sitecore-content-sdk/core';
+import { PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
+import * as eventsPluginModule from '../../initialization/plugin';
 import { form } from './form';
+import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/browser');
-
+jest.mock('@sitecore-content-sdk/analytics-core/internal');
+jest.mock('@sitecore-content-sdk/core');
+jest.mock('../../initialization/plugin');
+jest.mock('../../debug', () => {
+  const initialModule: object = jest.requireActual('../../debug');
   return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
+    ...initialModule,
+    debug: {
+      events: jest.fn(),
+    },
   };
 });
-jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-  };
-});
-jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/internal');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-    getCloudSDKSettingsBrowser: jest.fn(),
-  };
-});
-
-const id = 'test_id';
 
 describe('form event', () => {
+  const mockEnvironment = {
+    getBrowserId: jest.fn(),
+  };
+
+  const mockAnalyticsPlugin = {
+    settings: {
+      cookieSettings: {
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/',
+      },
+    },
+    environment: mockEnvironment,
+  };
+
+  const mockCoreSettings = {
+    settings: {
+      contextId: '123',
+      sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
+      siteName: '456',
+    },
+    readyPromise: Promise.resolve(),
+  };
+
   jest.spyOn(Date.prototype, 'toISOString').mockReturnValue('2024-01-01T00:00:00.000Z');
 
-  it('should send the form event without EP optional attributes', async () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue(mockCoreSettings as any);
     jest
-      .spyOn(coreInternalModule, 'getEnabledPackageBrowser')
-      .mockReturnValue({ initState: true } as any);
+      .spyOn(analyticsPluginsModule, 'getAnalyticsPlugin')
+      .mockReturnValue(mockAnalyticsPlugin as any);
+    jest.spyOn(eventsPluginModule, 'getEventsPlugin').mockReturnValue({} as any);
+  });
+
+  it('should send the form event without EP optional attributes', async () => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
     });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch);
+    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-    const getCookieValueClientSideSpy = jest
-      .spyOn(utils, 'getCookieValueClientSide')
-      .mockReturnValueOnce(id);
-    const getSettingsSpy = jest
-      .spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser')
-      .mockReturnValue({
-        cookieSettings: {
-          domain: 'cDomain',
-          expiryDays: 730,
-          name: { browserId: 'bid_name' },
-          path: '/',
-        },
-        siteName: '456',
-        sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
-      });
+    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+
     const expectedBody = JSON.stringify({
       type: 'FORM',
       ext: { componentInstanceId: 'test', formId: '1234', interactionType: 'SUBMITTED' },
@@ -76,8 +76,6 @@ describe('form event', () => {
 
     await form('1234', 'SUBMITTED', 'test');
 
-    expect(getCookieValueClientSideSpy).toHaveBeenCalledTimes(1);
-    expect(getSettingsSpy).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenLastCalledWith(
       'https://edge-platform.sitecorecloud.io/v1/events/v1.2/events?siteId=456',
@@ -93,16 +91,63 @@ describe('form event', () => {
       }
     );
   });
-  it('should throw error if settings have not been configured properly', async () => {
-    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-    const getSettingsSpy = jest.spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser');
 
-    getSettingsSpy.mockImplementation(() => {
-      throw new Error(ErrorMessages.IE_0014);
+  it('should use empty string for id when getBrowserId returns null', async () => {
+    const mockFetch = Promise.resolve({
+      json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
+    });
+    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
+
+    mockEnvironment.getBrowserId.mockReturnValue(null);
+
+    await form('1234', 'VIEWED', 'test');
+
+    expect(fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        body: expect.stringContaining('"browser_id":""'),
+      })
+    );
+  });
+
+  it('should wait for core settings ready promise', async () => {
+    let resolveReady: () => void;
+    const readyPromise = new Promise<void>((resolve) => {
+      resolveReady = resolve;
     });
 
-    await expect(async () => await form('1234', 'SUBMITTED', 'test')).rejects.toThrow(
-      ErrorMessages.IE_0014
-    );
+    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue({
+      ...mockCoreSettings,
+      readyPromise,
+    } as any);
+
+    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+
+    const mockFetch = Promise.resolve({
+      json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
+    });
+    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
+
+    const formPromise = form('1234', 'SUBMITTED', 'test');
+
+    expect(fetch).not.toHaveBeenCalled();
+
+    resolveReady!();
+    await formPromise;
+
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call getEventsPlugin to ensure plugin is initialized', async () => {
+    const mockFetch = Promise.resolve({
+      json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
+    });
+    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
+
+    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+
+    await form('1234', 'SUBMITTED', 'test');
+
+    expect(eventsPluginModule.getEventsPlugin).toHaveBeenCalledTimes(1);
   });
 });

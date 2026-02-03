@@ -1,24 +1,26 @@
-import type { DebugResponse, Settings } from '@sitecore-content-sdk/analytics-core/internal';
+import type { DebugResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import {
-  debug,
   generateCorrelationId,
   processDebugResponse,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { fetchWithTimeout } from '@sitecore-content-sdk/analytics-core/utils';
-import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
+import { PACKAGE_VERSION } from '../consts';
 import { GetInteractiveExperienceDataOpts } from './personalizer';
+import { CoreSettings } from '@sitecore-content-sdk/core';
+import { debug, PERSONALIZE_NAMESPACE } from '../debug';
 
 /**
  * A function that sends a CallFlow request to Sitecore EP
  * @param {EPCallFlowsBody} epCallFlowsBody - Properties to be send to Sitecore EP
- * @param {Settings} settings - Settings for the url params
+ * @param {CoreSettings['settings']} settings - Settings for the url params
  * @param {GetInteractiveExperienceDataOpts} opts - Optional configuration object
  * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore EP response object or unknown
+ * @internal
  */
 export async function sendCallFlowsRequest(
   epCallFlowsBody: EPCallFlowsBody,
-  settings: Settings,
+  settings: CoreSettings['settings'],
   opts?: GetInteractiveExperienceDataOpts
 ) {
   const startTimestamp = Date.now();
@@ -34,7 +36,7 @@ export async function sendCallFlowsRequest(
       'Content-Type': 'application/json',
       'X-Library-Version': PACKAGE_VERSION,
       'x-sc-correlation-id': generateCorrelationId(),
-      'x-sitecore-contextid': settings.sitecoreEdgeContextId,
+      'x-sitecore-contextid': settings.contextId,
       /* eslint-enable @typescript-eslint/naming-convention */
     },
     method: 'POST',
@@ -42,11 +44,7 @@ export async function sendCallFlowsRequest(
 
   if (opts?.userAgent) fetchOptions.headers['User-Agent'] = opts.userAgent;
 
-  debug(PERSONALIZE_NAMESPACE)(
-    'Personalize request: %s with options: %O' as const,
-    requestUrl,
-    fetchOptions
-  );
+  debug.personalize('Personalize request: %s with options: %O' as const, requestUrl, fetchOptions);
 
   if (opts?.timeout === undefined)
     return fetch(requestUrl, fetchOptions)
@@ -58,7 +56,7 @@ export async function sendCallFlowsRequest(
       .then((data) => {
         debugResponse.body = data;
 
-        debug(PERSONALIZE_NAMESPACE)(
+        debug.personalize(
           'Personalize response in %dms : %O',
           Date.now() - startTimestamp,
           debugResponse
@@ -67,7 +65,7 @@ export async function sendCallFlowsRequest(
         return data;
       })
       .catch((error) => {
-        debug(PERSONALIZE_NAMESPACE)('Error personalize response: %O' as const, error);
+        debug.personalize('Error personalize response: %O' as const, error);
         return null;
       });
 
@@ -82,7 +80,7 @@ export async function sendCallFlowsRequest(
     .then((data) => {
       debugResponse.body = data;
 
-      debug(PERSONALIZE_NAMESPACE)(
+      debug.personalize(
         'Personalize response in %dms : %O',
         Date.now() - startTimestamp,
         debugResponse
@@ -91,7 +89,7 @@ export async function sendCallFlowsRequest(
       return data;
     })
     .catch((error) => {
-      debug(PERSONALIZE_NAMESPACE)('Error personalize response: %O' as const, error);
+      debug.personalize('Error personalize response: %O' as const, error);
       if (error.message.includes('IV-0006') || error.message.includes('IE-0002'))
         throw new Error(error.message);
 
@@ -103,7 +101,7 @@ export async function sendCallFlowsRequest(
  * An interface with the basic functionality that the derived classes needs to implement
  */
 export interface PersonalizeClient {
-  settings: Settings;
+  settings: CoreSettings['settings'];
   sendCallFlowsRequest: (
     epCallFlowAttributes: EPCallFlowsBody,
     timeout?: number

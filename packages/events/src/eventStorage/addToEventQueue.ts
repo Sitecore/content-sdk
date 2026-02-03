@@ -1,23 +1,26 @@
-import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCookieValueClientSide } from '@sitecore-content-sdk/analytics-core/utils';
+import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
 import type { EventData } from '../events';
-import { awaitInit } from '../initializer/browser/initializer';
 import type { QueueEventPayload } from './eventStorage';
 import { eventQueue } from './eventStorage';
+import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getEventsPlugin } from '../initialization/plugin';
 
 /**
  * A function that adds event to the queue
  * @param {EventData} eventData - The required/optional attributes in order to be send to SitecoreCloud API
  */
 export async function addToEventQueue(eventData: EventData): Promise<void> {
-  await awaitInit();
+  const coreSettings = getCoreSettings();
+  await coreSettings.readyPromise;
+  getEventsPlugin();
 
-  const settings = getCloudSDKSettings();
-  const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
+  const { settings, environment } = getAnalyticsPlugin();
+  const id = environment.getBrowserId() || '';
+
   const queueEventPayload: QueueEventPayload = {
     eventData,
     id,
-    settings,
+    settings: { ...coreSettings.settings, ...settings },
   };
 
   eventQueue.enqueueEvent(queueEventPayload);

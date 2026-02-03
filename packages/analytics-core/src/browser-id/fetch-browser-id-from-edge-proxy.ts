@@ -1,6 +1,6 @@
 import type { EPResponse, ProxySettings } from '../interfaces';
-import { ErrorMessages, LIBRARY_VERSION } from '../consts';
-import { ErrorMessages as UtilsErrorMessages, fetchWithTimeout } from '../utils';
+import { ERROR_MESSAGES, LIBRARY_VERSION } from '../consts';
+import { ERROR_MESSAGES as UTILS_ERROR_MESSAGES, fetchWithTimeout } from '../utils';
 import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';
 
 /**
@@ -33,8 +33,8 @@ export async function fetchBrowserIdFromEdgeProxy(
       })
       .catch((err) => {
         if (
-          err.message === UtilsErrorMessages.IV_0006 ||
-          err.message === UtilsErrorMessages.IE_0002
+          err.message === UTILS_ERROR_MESSAGES.IV_0006 ||
+          err.message === UTILS_ERROR_MESSAGES.IE_0002
         )
           throw new Error(err.message);
 
@@ -45,7 +45,7 @@ export async function fetchBrowserIdFromEdgeProxy(
       .then((res) => res.json())
       .catch(() => undefined);
 
-  if (!payload?.ref) throw new Error(ErrorMessages.IE_0003);
+  if (!payload?.ref) throw new Error(ERROR_MESSAGES.IE_0003);
 
   const { ref: browserId, customer_ref: guestId }: EPResponse = payload;
   return { browserId, guestId };

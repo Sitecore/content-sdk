@@ -1,20 +1,28 @@
 import * as core from '@sitecore-content-sdk/analytics-core/internal';
 import * as utils from '@sitecore-content-sdk/analytics-core/utils';
-import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
+import { PACKAGE_VERSION } from '../consts';
 import type { EPCallFlowsBody } from './send-call-flows-request';
 import { sendCallFlowsRequest } from './send-call-flows-request';
-import { expect } from '@jest/globals';
+import { jest, expect } from '@jest/globals';
+import * as debugModule from '../debug';
 
-jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
-  const originalModule: object = jest.requireActual(
-    '@sitecore-content-sdk/analytics-core/internal'
-  );
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
+  __esModule: true,
+  API_VERSION: 'v1.2',
+  SITECORE_EDGE_URL: 'https://edge-platform.sitecorecloud.io',
+  generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
+  processDebugResponse: jest.fn(),
+}));
+
+jest.mock('../debug', () => {
+  const originalModule: object = jest.requireActual('../debug');
 
   return {
     __esModule: true,
     ...originalModule,
-    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
-    debug: jest.fn(() => jest.fn()),
+    debug: {
+      personalize: jest.fn(),
+    },
   };
 });
 
@@ -30,15 +38,9 @@ jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
 describe('sendCallFlowsRequest', () => {
   let currentTime = 1609459200000; // Starting timestamp
 
-  const settingsObj: core.Settings = {
-    cookieSettings: {
-      domain: 'cDomain',
-      expiryDays: 730,
-      name: { browserId: 'bid_name' },
-      path: '/',
-    },
+  const settingsObj: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
     siteName: 'site',
-    sitecoreEdgeContextId: '123',
+    contextId: '123',
     sitecoreEdgeUrl: 'http://testurl',
   };
   const personalizeDataOriginal = {
@@ -56,7 +58,7 @@ describe('sendCallFlowsRequest', () => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
     });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch);
+    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
     personalizeData = { ...personalizeDataOriginal };
   });
@@ -66,7 +68,7 @@ describe('sendCallFlowsRequest', () => {
   });
 
   describe('requests', () => {
-    const debugMock = core.debug as jest.MockedFunction<typeof core.debug>;
+    const debugMock = debugModule.debug.personalize;
     personalizeData.email = 'test';
     personalizeData.identifiers = {
       id: '1',
@@ -104,19 +106,18 @@ describe('sendCallFlowsRequest', () => {
 
       expect(payload).toEqual({ status: 'OK' });
       expect(debugMock).toHaveBeenCalled();
-      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][0]).toBe(
         'Personalize request: %s with options: %O'
       );
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][1]).toBe(
         'http://testurl/v1/personalize?siteId=site'
       );
 
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][0]).toBe(
         'Personalize response in %dms : %O'
       );
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][1]).toBe(1000);
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][2]).toStrictEqual({
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][1]).toBe(1000);
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][2]).toStrictEqual({
         body: { status: 'OK' },
         headers: {},
         redirected: undefined,
@@ -146,18 +147,17 @@ describe('sendCallFlowsRequest', () => {
 
       expect(payload).toEqual({ status: 'OK' });
       expect(debugMock).toHaveBeenCalled();
-      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][0]).toBe(
         'Personalize request: %s with options: %O'
       );
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][1]).toBe(
         'http://testurl/v1/personalize?siteId=site'
       );
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][0]).toBe(
         'Personalize response in %dms : %O'
       );
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][1]).toBe(1000);
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][2]).toStrictEqual({
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][1]).toBe(1000);
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][2]).toStrictEqual({
         body: { status: 'OK' },
         headers: {},
         redirected: undefined,
@@ -169,22 +169,21 @@ describe('sendCallFlowsRequest', () => {
 
     it('should return null if an error occurs and show debug', async () => {
       const mockFetch = Promise.reject('Error');
-      global.fetch = jest.fn().mockImplementation(() => mockFetch);
+      global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
       const response = await sendCallFlowsRequest(personalizeData, settingsObj);
       expect(response).toEqual(null);
       expect(debugMock).toHaveBeenCalled();
-      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][0]).toBe(
         'Personalize request: %s with options: %O'
       );
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][1]).toBe(
         'http://testurl/v1/personalize?siteId=site'
       );
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][0]).toBe(
         'Error personalize response: %O'
       );
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][1]).toBe('Error');
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][1]).toBe('Error');
     });
 
     it('should return null if resolved response equals null and show debug', async () => {
@@ -200,18 +199,17 @@ describe('sendCallFlowsRequest', () => {
       expect(response).toEqual(null);
 
       expect(debugMock).toHaveBeenCalled();
-      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][0]).toBe(
         'Personalize request: %s with options: %O'
       );
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][1]).toBe(
         'http://testurl/v1/personalize?siteId=site'
       );
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][0]).toBe(
         'Personalize response in %dms : %O'
       );
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][1]).toBe(1000);
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][2]).toStrictEqual({
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][1]).toBe(1000);
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][2]).toStrictEqual({
         body: null,
       });
     });
@@ -225,7 +223,7 @@ describe('sendCallFlowsRequest', () => {
       expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
       expect(response).toEqual(null);
 
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][0]).toBe(
         'Error personalize response: %O'
       );
     });
@@ -255,20 +253,19 @@ describe('sendCallFlowsRequest', () => {
       expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
       expect(response).toEqual({ status: 'OK' });
       expect(debugMock).toHaveBeenCalled();
-      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][0]).toBe(
         'Personalize request: %s with options: %O'
       );
-      expect((debugMock as any).mock.results[0].value.mock.calls[0][1]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[0][1]).toBe(
         'http://testurl/v1/personalize?siteId=site'
       );
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][0]).toBe(
         'Personalize response in %dms : %O'
       );
-      expect(typeof (debugMock as any).mock.results[1].value.mock.calls[0][1]).toBe('number');
+      expect(typeof (debugMock as unknown as jest.Mock).mock.calls[1][1]).toBe('number');
 
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][1]).toBe(1000);
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][2]).toEqual({
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][1]).toBe(1000);
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][2]).toEqual({
         body: { status: 'OK' },
       });
     });
@@ -277,12 +274,12 @@ describe('sendCallFlowsRequest', () => {
       const fetchWithTimeoutSpy = jest
         .spyOn(utils, 'fetchWithTimeout')
         .mockImplementationOnce(() => {
-          throw new Error(utils.ErrorMessages.IV_0006);
+          throw new Error(utils.ERROR_MESSAGES.IV_0006);
         });
 
       await expect(async () => {
         await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: -100 });
-      }).rejects.toThrow(utils.ErrorMessages.IV_0006);
+      }).rejects.toThrow(utils.ERROR_MESSAGES.IV_0006);
       expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -290,12 +287,12 @@ describe('sendCallFlowsRequest', () => {
       const fetchWithTimeoutSpy = jest
         .spyOn(utils, 'fetchWithTimeout')
         .mockImplementationOnce(() => {
-          throw new Error(utils.ErrorMessages.IE_0002);
+          throw new Error(utils.ERROR_MESSAGES.IE_0002);
         });
 
       await expect(async () => {
         await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: -100 });
-      }).rejects.toThrow(utils.ErrorMessages.IE_0002);
+      }).rejects.toThrow(utils.ERROR_MESSAGES.IE_0002);
       expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -307,10 +304,10 @@ describe('sendCallFlowsRequest', () => {
       const response = await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: 100 });
       expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
       expect(response).toEqual(null);
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][0]).toBe(
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][0]).toBe(
         'Error personalize response: %O'
       );
-      expect((debugMock as any).mock.results[1].value.mock.calls[0][1]).toEqual({
+      expect((debugMock as unknown as jest.Mock).mock.calls[1][1]).toEqual({
         message: 'random error',
       });
     });

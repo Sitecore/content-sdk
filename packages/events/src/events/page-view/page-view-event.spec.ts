@@ -1,7 +1,7 @@
 import * as core from '@sitecore-content-sdk/analytics-core/internal';
-import type { EPResponse, Settings } from '@sitecore-content-sdk/analytics-core/internal';
+import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import * as utils from '@sitecore-content-sdk/analytics-core/utils';
-import { ErrorMessages } from '../../consts';
+import { ERROR_MESSAGES } from '../../consts';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as sendEventModule from '../send-event/sendEvent';
 import type { PageViewData } from './page-view-event';
@@ -34,7 +34,7 @@ describe('PageViewEvent', () => {
 
   let expectedBasicAttributes = {};
   let pageViewData: PageViewData;
-  let settings: Settings;
+  let settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string };
 
   // eslint-disable-next-line jsdoc/require-jsdoc
   function callPageViewEvent(
@@ -74,15 +74,9 @@ describe('PageViewEvent', () => {
     };
 
     settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
-      siteName: '456',
-      sitecoreEdgeContextId: '123',
+      contextId: '123',
       sitecoreEdgeUrl: '',
+      siteName: '456',
     };
     jest.spyOn(core, 'language').mockImplementation(() => 'EN');
     jest.spyOn(core, 'pageName').mockImplementation(() => 'races');
@@ -297,7 +291,7 @@ describe('PageViewEvent', () => {
 
       expect(() => {
         callPageViewEvent(pageViewData, id, settings, extensionData);
-      }).toThrow(ErrorMessages.IV_0005);
+      }).toThrow(ERROR_MESSAGES.IV_0005);
     });
 
     it('should not throw an error when no more than 50 ext attributes are passed', () => {
@@ -306,7 +300,7 @@ describe('PageViewEvent', () => {
 
       expect(() => {
         callPageViewEvent(pageViewData, id, settings, extensionData);
-      }).not.toThrow(ErrorMessages.IV_0005);
+      }).not.toThrow(ERROR_MESSAGES.IV_0005);
     });
   });
 

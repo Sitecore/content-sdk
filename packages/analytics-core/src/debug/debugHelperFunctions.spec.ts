@@ -1,8 +1,10 @@
 import * as customDebug from './debug';
 import * as utils from '../utils';
-import debug from 'debug';
-jest.mock('debug', () => ({
-  enabled: jest.fn(),
+import * as corePackage from '@sitecore-content-sdk/core';
+import { jest, expect } from '@jest/globals';
+
+jest.mock('@sitecore-content-sdk/core', () => ({
+  isNamespaceEnabled: jest.fn(),
 }));
 
 describe('processDebugResponse', () => {
@@ -26,15 +28,17 @@ describe('processDebugResponse', () => {
   });
 
   it('should return an empty object when debug is not enabled', () => {
-    (debug.enabled as jest.Mock).mockImplementation((namespace) => namespace === 'test:namespace');
+    (corePackage.isNamespaceEnabled as jest.Mock).mockImplementation(
+      (namespace) => namespace === 'test:namespace'
+    );
 
     const result = customDebug.processDebugResponse('testNamespace', mockResponse);
     expect(result).toEqual({});
-    expect(debug.enabled).toHaveBeenCalledWith('testNamespace');
+    expect(corePackage.isNamespaceEnabled).toHaveBeenCalledWith('testNamespace');
   });
 
   it('should return debug information when debug is enabled', () => {
-    (debug.enabled as jest.Mock).mockReturnValueOnce(true);
+    (corePackage.isNamespaceEnabled as jest.Mock).mockReturnValueOnce(true);
     const normalizeHeadersSpy = jest.spyOn(utils, 'normalizeHeaders');
     const result = customDebug.processDebugResponse('testNamespace', mockResponse);
     expect(result).toEqual({
@@ -49,7 +53,7 @@ describe('processDebugResponse', () => {
       statusText: 'OK',
       url: 'http://example.com',
     });
-    expect(debug.enabled).toHaveBeenCalledWith('testNamespace');
+    expect(corePackage.isNamespaceEnabled).toHaveBeenCalledWith('testNamespace');
     expect(normalizeHeadersSpy).toHaveBeenCalledWith(mockHeaders);
   });
 });

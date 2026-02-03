@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@sitecore-content-sdk/analytics-core": "1.5.0-canary.6",
+    "@sitecore-content-sdk/core": "1.5.0-canary.6",
     "@sitecore-content-sdk/events": "1.5.0-canary.6",
     "debug": "^4.4.3"
   },
@@ -31,16 +32,19 @@
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.2"
   },
+  "main": "dist/cjs/src/index.js",
+  "module": "dist/esm/src/index.js",
+  "types": "types/src/index.d.ts",
   "exports": {
-    "./browser": {
-      "import": "./dist/esm/src/browser.js",
-      "require": "./dist/cjs/src/browser.js",
-      "types": "./types/src/browser.d.ts"
+    ".": {
+      "import": "./dist/esm/src/index.js",
+      "require": "./dist/cjs/src/index.js",
+      "types": "./types/src/index.d.ts"
     },
-    "./server": {
-      "import": "./dist/esm/src/server.js",
-      "require": "./dist/cjs/src/server.js",
-      "types": "./types/src/server.d.ts"
+    "./internal": {
+      "import": "./dist/esm/src/internal.js",
+      "require": "./dist/cjs/src/internal.js",
+      "types": "./types/src/internal.d.ts"
     }
   },
   "files": [

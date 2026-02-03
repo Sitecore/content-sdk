@@ -1,5 +1,6 @@
 import { isValidHttpURL } from './is-valid-http-url';
 import { it } from '@jest/globals';
+import { expect } from '@jest/globals';
 
 describe('isValidHttpURL', () => {
   const validHttpURLs = ['https://blog.openreplay.com/', 'http://test.com'];
