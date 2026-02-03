@@ -914,8 +914,8 @@ export { WithSitecoreOptions }
 export { WithSitecoreProps }
 
 // @public
-export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }?: {
-    scConfig?: SitecoreConfig_2;
+export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }: {
+    scConfig: SitecoreConfig_2;
 }) => Promise<void>;
 
 

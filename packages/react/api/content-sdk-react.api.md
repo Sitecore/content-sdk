@@ -404,6 +404,9 @@ export type ReactModule = {
     default?: ComponentType;
 };
 
+// @public
+export const renderEmptyPlaceholder: (node: React_2.ReactNode | React_2.ReactElement[]) => React_2.JSX.Element;
+
 export { resetEditorChromes }
 
 export { RetryStrategy }
