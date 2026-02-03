@@ -167,4 +167,5 @@ export {
   ClientEditingChromesUpdate,
   AppPlaceholder,
   AppPlaceholderProps,
+  renderEmptyPlaceholder,
 } from '@sitecore-content-sdk/react';
