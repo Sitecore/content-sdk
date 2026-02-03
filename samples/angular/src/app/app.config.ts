@@ -8,6 +8,7 @@ import { provideSitecoreContentSdk, handleNavigationError } from '@sitecore-cont
 
 // Import the component map
 import { componentMap } from '../../.sitecore/component-map';
+import config from '../sitecore.config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,10 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideSitecoreContentSdk({
       componentMap,
+      i18n: {
+        supportedLanguages: [config.defaultLanguage],
+        defaultLanguage: config.defaultLanguage,
+      },
     }),
   ],
 };

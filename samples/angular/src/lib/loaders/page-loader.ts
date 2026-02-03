@@ -6,8 +6,8 @@ import {
   parseDesignLibraryPreviewData,
   notFound,
 } from '@sitecore-content-sdk/angular';
-import { client } from './sitecore-client';
-import config from '../sitecore.config';
+import { client } from '../sitecore-client';
+import config from '../../sitecore.config';
 
 /**
  * Validates that the incoming secret matches the configured editing secret

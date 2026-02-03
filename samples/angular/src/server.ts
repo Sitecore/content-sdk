@@ -65,11 +65,6 @@ app.use(
   })
 );
 
-app.get('/', (req, res) => {
-  req.accepted
-  res.cookie('test', 'test');
-});
-
 /**
  * Handle all other requests by rendering the Angular application.
  */

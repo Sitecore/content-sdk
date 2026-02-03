@@ -1,8 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "buildCommand": "npm run build:vercel",
-  "outputDirectory": ".vercel/output",
+  "buildCommand": "yarn build:production",
+  "outputDirectory": "./samples/angular/dist/test-anngular21-ssr",
+
   "framework": null,
-  "installCommand": "npm install"
+  "installCommand": "yarn install"
+
 }

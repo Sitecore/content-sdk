@@ -89,6 +89,7 @@ export * from './lib/placeholder';
 export * from './lib/server';
 export * from './lib/router-error-handling';
 export * from './lib/editing-utils';
+export * from './lib/language-router-matcher';
 
 // Field components
 export * from './components';

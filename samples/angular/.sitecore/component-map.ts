@@ -1,17 +1,17 @@
 import { Type } from '@angular/core';
 
 // Import all Sitecore components
-import { ColumnSplitterComponent } from '../src/components/column-splitter/column-splitter.component';
-import { ContainerComponent } from '../src/components/container/container.component';
-import { ImageComponent } from '../src/components/image/image.component';
-import { LinkListComponent } from '../src/components/link-list/link-list.component';
-import { NavigationComponent } from '../src/components/navigation/navigation.component';
-import { PageContentComponent } from '../src/components/page-content/page-content.component';
-import { PartialDesignDynamicPlaceholderComponent } from '../src/components/partial-design-dynamic-placeholder/partial-design-dynamic-placeholder.component';
-import { PromoComponent } from '../src/components/promo/promo.component';
-import { RichTextComponent } from '../src/components/richtext/richtext.component';
-import { RowSplitterComponent } from '../src/components/row-splitter/row-splitter.component';
-import { TitleComponent } from '../src/components/title/title.component';
+import { ColumnSplitterComponent } from '../src/app/components/column-splitter/column-splitter.component';
+import { ContainerComponent } from '../src/app/components/container/container.component';
+import { ImageComponent } from '../src/app/components/image/image.component';
+import { LinkListComponent } from '../src/app/components/link-list/link-list.component';
+import { NavigationComponent } from '../src/app/components/navigation/navigation.component';
+import { PageContentComponent } from '../src/app/components/page-content/page-content.component';
+import { PartialDesignDynamicPlaceholderComponent } from '../src/app/components/partial-design-dynamic-placeholder/partial-design-dynamic-placeholder.component';
+import { PromoComponent } from '../src/app/components/promo/promo.component';
+import { RichTextComponent } from '../src/app/components/richtext/richtext.component';
+import { RowSplitterComponent } from '../src/app/components/row-splitter/row-splitter.component';
+import { TitleComponent } from '../src/app/components/title/title.component';
 
 /**
  * Component map for Sitecore components.

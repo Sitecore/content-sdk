@@ -3,6 +3,7 @@ import { COMPONENT_MAP, ComponentMap } from './component-map.token';
 import { LOADER_REGISTRY } from './loader-registry.token';
 import { LoaderFn } from './types';
 import { provideLoaderPrefetch, LoaderPrefetchConfig } from './loader-prefetch.config';
+import { I18N_CONFIG, I18nConfig } from './i18n-config.token';
 
 /**
  * Configuration options for the Sitecore Content SDK (client/shared).
@@ -23,6 +24,12 @@ export interface SitecoreContentSdkConfig {
    * @default true
    */
   prefetch?: boolean | Partial<LoaderPrefetchConfig>;
+
+  /**
+   * Internationalization (i18n) configuration for language-aware routing.
+   * Required when using `languageMatcher()` in route configuration.
+   */
+  i18n?: I18nConfig;
 }
 
 /**
@@ -56,6 +63,11 @@ export function provideSitecoreContentSdk(config: SitecoreContentSdkConfig): Env
     const prefetchConfig =
       typeof config.prefetch === 'object' ? config.prefetch : { enabled: true };
     providers.push(...provideLoaderPrefetch(prefetchConfig));
+  }
+
+  // i18n configuration for language-aware routing
+  if (config.i18n) {
+    providers.push({ provide: I18N_CONFIG, useValue: config.i18n });
   }
 
   // Always provide empty loader registry for client-side

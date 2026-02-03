@@ -4,5 +4,5 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "allowedNonPeerDependencies": ["@sitecore-content-sdk/core"]
+  "allowedNonPeerDependencies": ["@sitecore-content-sdk/core", "@sitecore-cloudsdk/personalize", "@sitecore-cloudsdk/core"]
 }
