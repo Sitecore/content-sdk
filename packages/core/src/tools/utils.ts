@@ -1,5 +1,5 @@
 import { ClientError } from 'graphql-request';
-import { IncomingHttpHeaders, IncomingMessage, OutgoingMessage } from 'http';
+import { IncomingHttpHeaders } from 'http';
 import { ParsedUrlQueryInput } from 'querystring';
 import isServer from './is-server';
 
