@@ -2,6 +2,7 @@ import { LoaderApiRequest, LoaderApiResponse } from '../api';
 import { LoaderContext, LoaderFn } from '../types';
 import { LoaderRedirect, LoaderNotFound, LoaderHttpError } from '../loader-resolver';
 import { DEFAULT_DATA_ENDPOINT, DataHandlerConfig } from './config';
+import { RequestContext, extractRequestContext } from './site-resolver';
 
 /**
  * Minimal Express Request interface for type safety without requiring Express as a dependency
@@ -13,6 +14,14 @@ export interface ExpressRequest {
   url: string;
   body: unknown;
   query: Record<string, string | string[] | undefined>;
+  /**
+   * Cookies from the request (requires cookie-parser middleware)
+   */
+  cookies?: Record<string, string>;
+  /**
+   * Headers from the request
+   */
+  headers?: Record<string, string | string[] | undefined>;
 }
 
 /**
@@ -62,7 +71,8 @@ export interface ExpressDataHandlerOptions extends DataHandlerConfig {
  */
 async function executeLoader(
   request: LoaderApiRequest,
-  loaders: LoaderRegistry
+  loaders: LoaderRegistry,
+  requestContext?: RequestContext
 ): Promise<LoaderApiResponse> {
   const { loaderId, url, params, query } = request;
 
@@ -78,6 +88,7 @@ async function executeLoader(
     url,
     params,
     query,
+    requestContext,
   };
 
   try {
@@ -176,6 +187,9 @@ export function createExpressDataMiddleware(options: ExpressDataHandlerOptions):
       return;
     }
 
+    // Extract request context for loaders
+    const requestContext = extractRequestContext(req);
+
     try {
       if (req.method === 'POST') {
         // POST: parse body
@@ -186,7 +200,7 @@ export function createExpressDataMiddleware(options: ExpressDataHandlerOptions):
           return;
         }
 
-        const result = await executeLoader(body, loaders);
+        const result = await executeLoader(body, loaders, requestContext);
         sendResponse(res, result);
       } else if (req.method === 'GET') {
         // GET: use query parameters
@@ -213,7 +227,7 @@ export function createExpressDataMiddleware(options: ExpressDataHandlerOptions):
           query,
         };
 
-        const result = await executeLoader(loaderRequest, loaders);
+        const result = await executeLoader(loaderRequest, loaders, requestContext);
         sendResponse(res, result);
       } else {
         // Method not allowed

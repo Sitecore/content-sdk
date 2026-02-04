@@ -1,5 +1,5 @@
 // src/app/loaders/loader.resolver.ts
-import { inject, makeStateKey, TransferState, PLATFORM_ID } from '@angular/core';
+import { inject, makeStateKey, TransferState, PLATFORM_ID, REQUEST } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import {
   ResolveFn,
@@ -11,6 +11,7 @@ import {
 } from '@angular/router';
 import { LOADER_REGISTRY } from './loader-registry.token';
 import { LoaderDataService } from './loader-data.service';
+import { extractRequestContext } from './server/site-resolver';
 
 export class LoaderRedirect extends Error {
   constructor(public location: string, public status: 301 | 302 | 307 | 308 = 302) {
@@ -51,7 +52,7 @@ function tsKey(loaderId: string, url: string) {
   return makeStateKey<any>(`loader:${loaderId}:${url}`);
 }
 
-export interface LoaderIdMap {}
+export interface LoaderIdMap { }
 
 export type LoaderId = keyof LoaderIdMap extends never ? string : keyof LoaderIdMap;
 
@@ -86,6 +87,8 @@ export const loaderResolver: (loaderId: LoaderId) => ResolveFn<any> = (loaderId:
     const router = inject(Router);
     const registry = inject(LOADER_REGISTRY);
     const loaderData = inject(LoaderDataService);
+    // Inject Angular's REQUEST token if available (server-side only)
+    const request = inject(REQUEST, { optional: true });
 
     const url = state.url;
     const key = tsKey(loaderId, url);
@@ -129,12 +132,15 @@ export const loaderResolver: (loaderId: LoaderId) => ResolveFn<any> = (loaderId:
     const loader = registry[loaderId];
     if (!loader) throw new Error(`No loader registered for id "${loaderId}"`);
 
+    // Extract request context from Angular's REQUEST token for loaders
+    const requestContext = request ? extractRequestContext(request) : undefined;
+
     try {
       const data = await loader({
         url,
         params: route.params,
         query: route.queryParams,
-        // optionally pass Request via DI if you want, see note below
+        requestContext,
       });
 
       transferState.set(key, data);

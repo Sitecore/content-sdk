@@ -49,3 +49,12 @@ export {
   ExperienceParams,
   PERSONALIZE_REWRITE_HEADER,
 } from './express-personalize-middleware';
+
+// Site resolution utilities
+export {
+  createSiteResolver,
+  extractRequestContext,
+  RequestContext,
+  SiteResolverOptions,
+  SiteResolutionResult,
+} from './site-resolver';

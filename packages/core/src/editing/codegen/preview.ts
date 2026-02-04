@@ -68,44 +68,28 @@ export type ComponentImport = {
 export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
   message: {
-    /**
-     * The unique identifier for the component.
-     */
+    type: 'code';
     uid: string;
-    /**
-     * The code of the component.
-     */
     code: {
       type: 'function';
       content: string;
     };
-    /**
-     * The styles of the component.
-     */
     styles: {
       type: 'style-element';
-      /**
-       * The styles content to be attached to the DOM.
-       */
       content: string;
-      /**
-       * The CSS module import
-       */
       styleImport: {
-        /**
-         * The name of the style import.
-         */
         name: string;
-        /**
-         * The value of the style import
-         */
         content: unknown;
       };
     };
-    /**
-     * The imports of the component.
-     */
     imports: ComponentImport[];
+  } | {
+    type: 'cache'
+    uid: string;
+    cache: {
+      id: string;
+      token: string
+    }
   };
 }
 

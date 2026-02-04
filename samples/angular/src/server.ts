@@ -67,6 +67,8 @@ app.use(
 
 /**
  * Handle all other requests by rendering the Angular application.
+ * Angular's REQUEST token is automatically provided during SSR and can be
+ * injected in loaders to access request context for site resolution.
  */
 app.use((req, res, next) => {
   angularApp

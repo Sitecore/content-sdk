@@ -7,6 +7,7 @@ import {
   notFound,
 } from '@sitecore-content-sdk/angular';
 import { client } from '../sitecore-client';
+import { resolveSite } from '../site-resolver';
 import config from '../../sitecore.config';
 
 /**
@@ -22,7 +23,7 @@ function validateSecret(secret: string | string[] | undefined): boolean {
   return secretValue === config.editingSecret;
 }
 
-export const pageLoader: LoaderFn = async ({ url, query }) => {
+export const pageLoader: LoaderFn = async ({ url, query, requestContext }) => {
   console.log('pageLoader called with url:', url);
 
   // Check if this is an editing mode request (edit, preview, or design library)
@@ -46,8 +47,12 @@ export const pageLoader: LoaderFn = async ({ url, query }) => {
     return client.getPreview(previewData);
   }
 
-  // Normal page request
-  const page = await client.getPage(url);
+  // Resolve the current site from request context
+  const { site } = resolveSite(requestContext || {});
+  console.log(`pageLoader: site resolved to "${site.name}"`);
+
+  // Normal page request with resolved site
+  const page = await client.getPage(url, { site: site.name });
   if (!page) {
     notFound();
   }
