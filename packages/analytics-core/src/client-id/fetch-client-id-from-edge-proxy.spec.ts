@@ -1,12 +1,12 @@
 import * as utils from '../utils';
 import { ERROR_MESSAGES, LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
 import type { EPResponse } from '../interfaces';
-import * as constructGetBrowserIdUrl from './construct-get-browser-id-url';
-import { fetchBrowserIdFromEdgeProxy } from './fetch-browser-id-from-edge-proxy';
+import * as constructGetClientIdUrl from './construct-get-client-id-url';
+import { fetchClientIdFromEdgeProxy } from './fetch-client-id-from-edge-proxy';
 import { jest, expect } from '@jest/globals';
 
-describe('fetchBrowserIdFromEdgeProxy', () => {
-  const constructBrowserIdUrlSpy = jest.spyOn(constructGetBrowserIdUrl, 'constructGetBrowserIdUrl');
+describe('fetchClientIdFromEdgeProxy', () => {
+  const constructClientIdUrlSpy = jest.spyOn(constructGetClientIdUrl, 'constructGetClientIdUrl');
   const sitecoreEdgeContextId = '83d8199c-2837-4c29-a8ab-1bf234fea2d1';
   const mockResponse = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -27,7 +27,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch) as typeof fetch;
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout');
 
-    const res = await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 3000);
+    const res = await fetchClientIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 3000);
     expect(fetchWithTimeoutSpy).toHaveBeenCalled();
     expect(fetchWithTimeoutSpy).toHaveBeenCalledWith(
       // eslint-disable-next-line max-len
@@ -54,9 +54,9 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
         signal: new AbortController().signal,
       }
     );
-    expect(res).toMatchObject({ browserId: mockResponse.ref });
+    expect(res).toMatchObject({ clientId: mockResponse.ref });
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(SITECORE_EDGE_URL);
+    expect(constructClientIdUrlSpy).toHaveBeenCalledWith(SITECORE_EDGE_URL);
   });
 
   it('should resolve with an appropriate response object', () => {
@@ -64,8 +64,8 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
       json: () => Promise.resolve(mockResponse as EPResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch) as typeof fetch;
-    fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId).then((res) => {
-      expect(res).toMatchObject({ browserId: mockResponse.ref });
+    fetchClientIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId).then((res) => {
+      expect(res).toMatchObject({ clientId: mockResponse.ref });
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
         // eslint-disable-next-line max-len
@@ -78,7 +78,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
           },
         }
       );
-      expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(SITECORE_EDGE_URL);
+      expect(constructClientIdUrlSpy).toHaveBeenCalledWith(SITECORE_EDGE_URL);
     });
   });
 
@@ -91,7 +91,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     const expectedError = ERROR_MESSAGES.IE_005;
 
     expect(async () => {
-      await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId);
+      await fetchClientIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId);
     }).rejects.toThrow(expectedError);
   });
 
@@ -101,7 +101,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     const expectedError = ERROR_MESSAGES.IE_005;
 
     expect(async () => {
-      await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
+      await fetchClientIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
     }).rejects.toThrow(expectedError);
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });
@@ -114,7 +114,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     const expectedError = ERROR_MESSAGES.IE_005;
 
     expect(async () => {
-      await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
+      await fetchClientIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
     }).rejects.toThrow(expectedError);
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });
@@ -125,7 +125,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     });
 
     expect(async () => {
-      await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, -100);
+      await fetchClientIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, -100);
     }).rejects.toThrow(utils.ERROR_MESSAGES.IV_002);
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });
@@ -136,7 +136,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     });
 
     await expect(async () => {
-      await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
+      await fetchClientIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
     }).rejects.toThrow(utils.ERROR_MESSAGES.IE_003);
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });

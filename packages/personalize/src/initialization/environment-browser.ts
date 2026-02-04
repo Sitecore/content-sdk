@@ -58,8 +58,8 @@ export function personalizeBrowserEnvironment(): PersonalizeBrowserEnvironment {
       const cookiesValuesFromEdgeBrowser = getAnalyticsPlugin().settings.proxyValues;
 
       const guestIdCookieValue = getCookieValueClientSide(guestIdCookieName);
-      const browserIdCookieValue = getCookieValueClientSide(
-        analyticsSettings.cookieSettings.name.browserId
+      const clientIdCookieValue = getCookieValueClientSide(
+        analyticsSettings.cookieSettings.name.clientId
       );
 
       if (guestIdCookieValue) return;
@@ -69,9 +69,9 @@ export function personalizeBrowserEnvironment(): PersonalizeBrowserEnvironment {
           cookiesValuesFromEdgeBrowser.guestId,
           cookieAttributes
         );
-      else if (browserIdCookieValue) {
+      else if (clientIdCookieValue) {
         const guestIdCookieValue = await fetchGuestIdFromEdgeProxy(
-          browserIdCookieValue,
+          clientIdCookieValue,
           coreSettings.contextId,
           coreSettings.sitecoreEdgeUrl
         );
@@ -85,4 +85,3 @@ export function personalizeBrowserEnvironment(): PersonalizeBrowserEnvironment {
     },
   };
 }
-

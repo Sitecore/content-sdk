@@ -131,7 +131,7 @@ export interface EPIdentifier {
  * An interface that describes the payload sent to Sitecore EP library
  */
 export interface EPCallFlowsBody {
-  browserId?: string;
+  clientId?: string;
   email?: string;
   friendlyId: string;
   identifiers?: EPIdentifier;

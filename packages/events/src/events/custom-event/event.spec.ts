@@ -14,7 +14,7 @@ jest.mock('./custom-event');
 
 describe('event', () => {
   const mockEnvironment = {
-    getBrowserId: jest.fn(),
+    getClientId: jest.fn(),
   };
 
   const mockAnalyticsPlugin = {
@@ -22,7 +22,7 @@ describe('event', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        name: { browserId: 'bid_name' },
+        name: { clientId: 'cid_name' },
         path: '/',
       },
     },
@@ -61,7 +61,7 @@ describe('event', () => {
       type: 'CUSTOM_TYPE',
     };
 
-    mockEnvironment.getBrowserId.mockReturnValue(id);
+    mockEnvironment.getClientId.mockReturnValue(id);
 
     await event(eventData);
 
@@ -74,14 +74,14 @@ describe('event', () => {
     expect(CustomEvent).toHaveBeenCalledTimes(1);
   });
 
-  it('should use empty string for id when getBrowserId returns null', async () => {
+  it('should use empty string for id when getClientId returns null', async () => {
     const eventData: EventData = {
       channel: 'WEB',
       currency: 'EUR',
       type: 'CUSTOM_TYPE',
     };
 
-    mockEnvironment.getBrowserId.mockReturnValue(null);
+    mockEnvironment.getClientId.mockReturnValue(null);
 
     await event(eventData);
 
@@ -104,7 +104,7 @@ describe('event', () => {
       readyPromise,
     } as any);
 
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockEnvironment.getClientId.mockReturnValue('test_id');
 
     const eventPromise = event({ type: 'TEST' });
 
@@ -117,7 +117,7 @@ describe('event', () => {
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockEnvironment.getClientId.mockReturnValue('test_id');
 
     await event({ type: 'TEST' });
 

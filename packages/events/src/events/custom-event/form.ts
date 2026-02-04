@@ -23,7 +23,7 @@ export async function form(
 
   const { settings, environment } = getAnalyticsPlugin();
 
-  const id = environment.getBrowserId() || '';
+  const id = environment.getClientId() || '';
 
   const formEvent = new CustomEvent({
     eventData: {

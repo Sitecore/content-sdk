@@ -15,12 +15,12 @@ describe('analyticsProxyEnvironment', () => {
   let getAnalyticsPluginStub: sinon.SinonStub;
   let getCoreSettingsStub: sinon.SinonStub;
   let getDefaultCookieAttributesStub: sinon.SinonStub;
-  let fetchBrowserIdFromEdgeProxyStub: sinon.SinonStub;
+  let fetchClientIdFromEdgeProxyStub: sinon.SinonStub;
 
   const mockAnalyticsPlugin = {
     settings: {
       cookieSettings: {
-        name: { browserId: 'sc_cid' },
+        name: { clientId: 'sc_cid' },
         expiryDays: 730,
         domain: '.example.com',
       },
@@ -91,7 +91,7 @@ describe('analyticsProxyEnvironment', () => {
     getAnalyticsPluginStub = sandbox.stub().returns(mockAnalyticsPlugin);
     getCoreSettingsStub = sandbox.stub().returns(mockCoreSettings);
     getDefaultCookieAttributesStub = sandbox.stub().returns(mockCookieAttributes);
-    fetchBrowserIdFromEdgeProxyStub = sandbox.stub();
+    fetchClientIdFromEdgeProxyStub = sandbox.stub();
 
     analyticsProxyEnvironmentModule = proxyquire('./analytics', {
       '@sitecore-content-sdk/core': {
@@ -100,7 +100,7 @@ describe('analyticsProxyEnvironment', () => {
       '@sitecore-content-sdk/analytics-core/internal': {
         COOKIE_NAME_PREFIX: 'sc_',
         getDefaultCookieAttributes: getDefaultCookieAttributesStub,
-        fetchBrowserIdFromEdgeProxy: fetchBrowserIdFromEdgeProxyStub,
+        fetchClientIdFromEdgeProxy: fetchClientIdFromEdgeProxyStub,
         getAnalyticsPlugin: getAnalyticsPluginStub,
       },
     });
@@ -110,19 +110,19 @@ describe('analyticsProxyEnvironment', () => {
     sandbox.restore();
   });
 
-  describe('getBrowserId', () => {
-    it('should return the browser ID from request cookies', () => {
-      const request = createMockRequest({ sc_cid: 'browser-id-123' });
+  describe('getClientId', () => {
+    it('should return the client ID from request cookies', () => {
+      const request = createMockRequest({ sc_cid: 'client-id-123' });
 
-      const result = analyticsProxyEnvironmentModule.getBrowserId(request);
+      const result = analyticsProxyEnvironmentModule.getClientId(request);
 
-      expect(result).to.equal('browser-id-123');
+      expect(result).to.equal('client-id-123');
     });
 
     it('should return null when cookie does not exist', () => {
       const request = createMockRequest({});
 
-      const result = analyticsProxyEnvironmentModule.getBrowserId(request);
+      const result = analyticsProxyEnvironmentModule.getClientId(request);
 
       expect(result).to.be.null;
     });
@@ -130,7 +130,7 @@ describe('analyticsProxyEnvironment', () => {
     it('should return null when cookie value is empty', () => {
       const request = createMockRequest({ sc_cid: '' });
 
-      const result = analyticsProxyEnvironmentModule.getBrowserId(request);
+      const result = analyticsProxyEnvironmentModule.getClientId(request);
 
       expect(result).to.be.null;
     });
@@ -149,41 +149,41 @@ describe('analyticsProxyEnvironment', () => {
       expect(environment.type).to.equal('proxy');
     });
 
-    describe('getBrowserId', () => {
-      it('should return browser ID from request cookies', () => {
-        const request = createMockRequest({ sc_cid: 'browser-id-456' });
+    describe('getClientId', () => {
+      it('should return client ID from request cookies', () => {
+        const request = createMockRequest({ sc_cid: 'client-id-456' });
         const response = createMockResponse();
 
         const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
           request,
           response
         );
-        const result = environment.getBrowserId();
+        const result = environment.getClientId();
 
-        expect(result).to.equal('browser-id-456');
+        expect(result).to.equal('client-id-456');
       });
     });
 
-    describe('setBrowserId', () => {
+    describe('setClientId', () => {
       describe('legacy cookie migration', () => {
         it('should migrate legacy cookie and set new cookie in response', async () => {
-          const request = createMockRequest({ 'sc_test-context-id': 'legacy-browser-id' });
+          const request = createMockRequest({ 'sc_test-context-id': 'legacy-client-id' });
           const response = createMockResponse();
 
           const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
             request,
             response
           );
-          await environment.setBrowserId();
+          await environment.setClientId();
 
           expect(response.cookieStore.sc_cid).to.deep.include({
-            value: 'legacy-browser-id',
+            value: 'legacy-client-id',
             sameSite: 'none',
           });
         });
 
         it('should set new cookie on request when migrating legacy cookie', async () => {
-          const cookieStore = { 'sc_test-context-id': 'legacy-browser-id' };
+          const cookieStore = { 'sc_test-context-id': 'legacy-client-id' };
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
@@ -191,58 +191,58 @@ describe('analyticsProxyEnvironment', () => {
             request,
             response
           );
-          await environment.setBrowserId();
+          await environment.setClientId();
 
-          expect(request.cookies.get('sc_cid')?.value).to.equal('legacy-browser-id');
+          expect(request.cookies.get('sc_cid')?.value).to.equal('legacy-client-id');
         });
 
         it('should delete legacy cookie from request and response', async () => {
-          const request = createMockRequest({ 'sc_test-context-id': 'legacy-browser-id' });
+          const request = createMockRequest({ 'sc_test-context-id': 'legacy-client-id' });
           const response = createMockResponse();
 
           const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
             request,
             response
           );
-          await environment.setBrowserId();
+          await environment.setClientId();
 
           expect(request.cookies.get('sc_test-context-id')).to.be.undefined;
         });
 
         it('should not fetch from edge proxy when legacy cookie exists', async () => {
-          const request = createMockRequest({ 'sc_test-context-id': 'legacy-browser-id' });
+          const request = createMockRequest({ 'sc_test-context-id': 'legacy-client-id' });
           const response = createMockResponse();
 
           const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
             request,
             response
           );
-          await environment.setBrowserId();
+          await environment.setClientId();
 
-          expect(fetchBrowserIdFromEdgeProxyStub).to.not.have.been.called;
+          expect(fetchClientIdFromEdgeProxyStub).to.not.have.been.called;
         });
       });
 
-      describe('existing browser ID', () => {
-        it('should use existing browser ID and set cookie in response', async () => {
-          const request = createMockRequest({ sc_cid: 'existing-browser-id' });
+      describe('existing client ID', () => {
+        it('should use existing client ID and set cookie in response', async () => {
+          const request = createMockRequest({ sc_cid: 'existing-client-id' });
           const response = createMockResponse();
 
           const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
             request,
             response
           );
-          await environment.setBrowserId();
+          await environment.setClientId();
 
-          expect(fetchBrowserIdFromEdgeProxyStub).to.not.have.been.called;
+          expect(fetchClientIdFromEdgeProxyStub).to.not.have.been.called;
           expect(response.cookieStore.sc_cid).to.deep.include({
-            value: 'existing-browser-id',
+            value: 'existing-client-id',
             sameSite: 'none',
           });
         });
 
-        it('should not set cookie on request when browser ID exists', async () => {
-          const cookieStore = { sc_cid: 'existing-browser-id' };
+        it('should not set cookie on request when client ID exists', async () => {
+          const cookieStore = { sc_cid: 'existing-client-id' };
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
@@ -250,17 +250,17 @@ describe('analyticsProxyEnvironment', () => {
             request,
             response
           );
-          await environment.setBrowserId();
+          await environment.setClientId();
 
           // The request cookie should remain unchanged
-          expect(request.cookies.get('sc_cid')?.value).to.equal('existing-browser-id');
+          expect(request.cookies.get('sc_cid')?.value).to.equal('existing-client-id');
         });
       });
 
       describe('fetch from edge proxy', () => {
-        it('should fetch browser ID from edge proxy when no cookies exist', async () => {
-          fetchBrowserIdFromEdgeProxyStub.resolves({
-            browserId: 'new-browser-id',
+        it('should fetch client ID from edge proxy when no cookies exist', async () => {
+          fetchClientIdFromEdgeProxyStub.resolves({
+            clientId: 'new-client-id',
             guestId: 'guest-id',
           });
 
@@ -271,9 +271,9 @@ describe('analyticsProxyEnvironment', () => {
             request,
             response
           );
-          await environment.setBrowserId();
+          await environment.setClientId();
 
-          expect(fetchBrowserIdFromEdgeProxyStub).to.have.been.calledWith(
+          expect(fetchClientIdFromEdgeProxyStub).to.have.been.calledWith(
             'https://edge.test.com',
             'test-context-id',
             3000
@@ -282,10 +282,10 @@ describe('analyticsProxyEnvironment', () => {
 
         it('should store proxy values in plugin settings after fetching', async () => {
           const proxyValues = {
-            browserId: 'new-browser-id',
+            clientId: 'new-client-id',
             guestId: 'guest-id',
           };
-          fetchBrowserIdFromEdgeProxyStub.resolves(proxyValues);
+          fetchClientIdFromEdgeProxyStub.resolves(proxyValues);
 
           const request = createMockRequest({});
           const response = createMockResponse();
@@ -294,14 +294,14 @@ describe('analyticsProxyEnvironment', () => {
             request,
             response
           );
-          await environment.setBrowserId();
+          await environment.setClientId();
 
           expect(mockAnalyticsPlugin.settings.proxyValues).to.deep.equal(proxyValues);
         });
 
         it('should set new cookie on request when fetching from edge proxy', async () => {
-          fetchBrowserIdFromEdgeProxyStub.resolves({
-            browserId: 'new-browser-id',
+          fetchClientIdFromEdgeProxyStub.resolves({
+            clientId: 'new-client-id',
           });
 
           const cookieStore: Record<string, string> = {};
@@ -312,14 +312,14 @@ describe('analyticsProxyEnvironment', () => {
             request,
             response
           );
-          await environment.setBrowserId();
+          await environment.setClientId();
 
-          expect(request.cookies.get('sc_cid')?.value).to.equal('new-browser-id');
+          expect(request.cookies.get('sc_cid')?.value).to.equal('new-client-id');
         });
 
         it('should set cookie in response with correct attributes', async () => {
-          fetchBrowserIdFromEdgeProxyStub.resolves({
-            browserId: 'new-browser-id',
+          fetchClientIdFromEdgeProxyStub.resolves({
+            clientId: 'new-client-id',
           });
 
           const request = createMockRequest({});
@@ -329,10 +329,10 @@ describe('analyticsProxyEnvironment', () => {
             request,
             response
           );
-          await environment.setBrowserId();
+          await environment.setClientId();
 
           expect(response.cookieStore.sc_cid).to.deep.include({
-            value: 'new-browser-id',
+            value: 'new-client-id',
             sameSite: 'none',
           });
         });
@@ -368,4 +368,3 @@ describe('analyticsProxyEnvironment', () => {
     });
   });
 });
-

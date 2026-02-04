@@ -15,7 +15,7 @@ export async function addToEventQueue(eventData: EventData): Promise<void> {
   getEventsPlugin();
 
   const { settings, environment } = getAnalyticsPlugin();
-  const id = environment.getBrowserId() || '';
+  const id = environment.getClientId() || '';
 
   const queueEventPayload: QueueEventPayload = {
     eventData,

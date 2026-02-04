@@ -3,8 +3,8 @@ import { Plugin, type PluginEnvironment } from '@sitecore-content-sdk/core';
 import { ANALYTICS_PLUGIN_NAME } from './const';
 
 export interface AnalyticsEnvironment extends PluginEnvironment {
-  getBrowserId: () => string | null;
-  setBrowserId: () => Promise<void>;
+  getClientId: () => string | null;
+  setClientId: () => Promise<void>;
   location: {
     getSearchParams: () => string;
   };
@@ -13,7 +13,7 @@ export interface AnalyticsEnvironment extends PluginEnvironment {
 export interface AnalyticsSettings {
   cookieSettings: {
     name: {
-      browserId: string;
+      clientId: string;
     };
     domain?: string;
     expiryDays: number;
@@ -30,4 +30,3 @@ export interface AnalyticsPlugin extends Plugin {
   init: () => Promise<void>;
   name: typeof ANALYTICS_PLUGIN_NAME;
 }
-

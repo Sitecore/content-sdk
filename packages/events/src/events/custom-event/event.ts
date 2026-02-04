@@ -18,7 +18,7 @@ export async function event(eventData: EventData): Promise<EPResponse | null> {
 
   const { settings, environment } = getAnalyticsPlugin();
 
-  const id = environment.getBrowserId() || '';
+  const id = environment.getClientId() || '';
 
   return new CustomEvent({
     eventData,

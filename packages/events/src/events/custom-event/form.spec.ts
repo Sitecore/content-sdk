@@ -21,7 +21,7 @@ jest.mock('../../debug', () => {
 
 describe('form event', () => {
   const mockEnvironment = {
-    getBrowserId: jest.fn(),
+    getClientId: jest.fn(),
   };
 
   const mockAnalyticsPlugin = {
@@ -29,7 +29,7 @@ describe('form event', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        name: { browserId: 'bid_name' },
+        name: { clientId: 'cid_name' },
         path: '/',
       },
     },
@@ -63,12 +63,12 @@ describe('form event', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockEnvironment.getClientId.mockReturnValue('test_id');
 
     const expectedBody = JSON.stringify({
       type: 'FORM',
       ext: { componentInstanceId: 'test', formId: '1234', interactionType: 'SUBMITTED' },
-      browser_id: 'test_id',
+      client_id: 'test_id',
       client_key: '',
       pos: '',
       requested_at: '2024-01-01T00:00:00.000Z',
@@ -92,20 +92,20 @@ describe('form event', () => {
     );
   });
 
-  it('should use empty string for id when getBrowserId returns null', async () => {
+  it('should use empty string for id when getClientId returns null', async () => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    mockEnvironment.getBrowserId.mockReturnValue(null);
+    mockEnvironment.getClientId.mockReturnValue(null);
 
     await form('1234', 'VIEWED', 'test');
 
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        body: expect.stringContaining('"browser_id":""'),
+        body: expect.stringContaining('"client_id":""'),
       })
     );
   });
@@ -121,7 +121,7 @@ describe('form event', () => {
       readyPromise,
     } as any);
 
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockEnvironment.getClientId.mockReturnValue('test_id');
 
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
@@ -144,7 +144,7 @@ describe('form event', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockEnvironment.getClientId.mockReturnValue('test_id');
 
     await form('1234', 'SUBMITTED', 'test');
 

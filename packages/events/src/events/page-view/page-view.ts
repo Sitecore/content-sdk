@@ -18,7 +18,7 @@ export async function pageView(pageViewData?: PageViewData): Promise<EPResponse 
   getEventsPlugin();
 
   const { settings, environment } = getAnalyticsPlugin();
-  const id = environment.getBrowserId() || '';
+  const id = environment.getClientId() || '';
   const searchParams = environment.location.getSearchParams();
 
   return new PageViewEvent({

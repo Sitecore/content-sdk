@@ -38,7 +38,7 @@ const extensionData = { extKey: 'extValue' };
 
 describe('identity', () => {
   const mockEnvironment = {
-    getBrowserId: jest.fn(),
+    getClientId: jest.fn(),
   };
 
   const mockAnalyticsPlugin = {
@@ -46,7 +46,7 @@ describe('identity', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        name: { browserId: 'bid_name' },
+        name: { clientId: 'cid_name' },
         path: '/',
       },
     },
@@ -73,7 +73,7 @@ describe('identity', () => {
   });
 
   it('should send an IdentityEvent to the server', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue(id);
+    mockEnvironment.getClientId.mockReturnValue(id);
 
     const response = await identity({ ...identityData, extensionData });
 
@@ -86,8 +86,8 @@ describe('identity', () => {
     expect(response).toBe('mockedResponse');
   });
 
-  it('should use empty string for id when getBrowserId returns null', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue(null);
+  it('should use empty string for id when getClientId returns null', async () => {
+    mockEnvironment.getClientId.mockReturnValue(null);
 
     await identity({ ...identityData, extensionData });
 
@@ -109,7 +109,7 @@ describe('identity', () => {
       readyPromise,
     } as any);
 
-    mockEnvironment.getBrowserId.mockReturnValue(id);
+    mockEnvironment.getClientId.mockReturnValue(id);
 
     const identityPromise = identity({ ...identityData, extensionData });
 
@@ -122,7 +122,7 @@ describe('identity', () => {
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue(id);
+    mockEnvironment.getClientId.mockReturnValue(id);
 
     await identity({ ...identityData, extensionData });
 

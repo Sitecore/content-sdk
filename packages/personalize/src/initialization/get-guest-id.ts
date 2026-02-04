@@ -11,7 +11,7 @@ import { getCoreSettings } from '@sitecore-content-sdk/core';
 export async function getGuestId(): Promise<string> {
   const { settings } = getCoreSettings();
 
-  const browserId = getAnalyticsPlugin().environment.getBrowserId() || '';
+  const clientId = getAnalyticsPlugin().environment.getClientId() || '';
 
-  return fetchGuestIdFromEdgeProxy(browserId, settings.contextId, settings.sitecoreEdgeUrl);
+  return fetchGuestIdFromEdgeProxy(clientId, settings.contextId, settings.sitecoreEdgeUrl);
 }

@@ -1,13 +1,13 @@
 import { analyticsPlugin, getAnalyticsPlugin } from './plugin';
 import { ANALYTICS_PLUGIN_NAME } from './const';
 import {
-  BROWSER_ID_COOKIE_NAME,
+  CLIENT_ID_COOKIE_NAME,
   COOKIE_NAME_PREFIX,
   DEFAULT_COOKIE_EXPIRY_DAYS,
   LIBRARY_VERSION,
 } from '../consts';
 import * as coreModule from '@sitecore-content-sdk/core';
-import * as getBrowserIdModule from '../browser-id/get-browser-id';
+import * as getClientIdModule from '../client-id/get-client-id';
 import { AnalyticsEnvironment } from './types';
 import { expect, jest } from '@jest/globals';
 
@@ -19,14 +19,14 @@ jest.mock('@sitecore-content-sdk/core', () => ({
 }));
 
 describe('plugin', () => {
-  const mockGetBrowserId = jest.fn<AnalyticsEnvironment['getBrowserId']>();
-  const mockSetBrowserId = jest.fn<AnalyticsEnvironment['setBrowserId']>();
+  const mockGetClientId = jest.fn<AnalyticsEnvironment['getClientId']>();
+  const mockSetClientId = jest.fn<AnalyticsEnvironment['setClientId']>();
   const mockGetSearchParams = jest.fn<AnalyticsEnvironment['location']['getSearchParams']>();
 
   const createMockEnvironment = (type: 'browser' | 'server' = 'browser'): AnalyticsEnvironment => ({
     type,
-    getBrowserId: mockGetBrowserId,
-    setBrowserId: mockSetBrowserId,
+    getClientId: mockGetClientId,
+    setClientId: mockSetClientId,
     location: {
       getSearchParams: mockGetSearchParams,
     },
@@ -83,7 +83,7 @@ describe('plugin', () => {
           enableCookie: false,
           expiryDays: DEFAULT_COOKIE_EXPIRY_DAYS,
           name: {
-            browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`,
+            clientId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
           },
           path: '/',
         });
@@ -98,7 +98,7 @@ describe('plugin', () => {
           enableCookie: false,
           expiryDays: DEFAULT_COOKIE_EXPIRY_DAYS,
           name: {
-            browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`,
+            clientId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
           },
           path: '/',
         });
@@ -186,7 +186,7 @@ describe('plugin', () => {
             enableCookie: true,
             expiryDays: 100,
             name: {
-              browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`,
+              clientId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
             },
             path: '/app',
           },
@@ -217,72 +217,72 @@ describe('plugin', () => {
   });
 
   describe('init', () => {
-    it('should not call setBrowserId when enableCookie is false', async () => {
+    it('should not call setClientId when enableCookie is false', async () => {
       const environment = createMockEnvironment();
       const plugin = analyticsPlugin({ settings: { enableCookie: false }, environment });
       mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
-      expect(mockSetBrowserId).not.toHaveBeenCalled();
+      expect(mockSetClientId).not.toHaveBeenCalled();
     });
 
-    it('should call setBrowserId when enableCookie is true and browser ID does not exist', async () => {
+    it('should call setClientId when enableCookie is true and client ID does not exist', async () => {
       const environment = createMockEnvironment();
-      mockGetBrowserId.mockReturnValue(null);
-      mockSetBrowserId.mockResolvedValue(undefined);
+      mockGetClientId.mockReturnValue(null);
+      mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
       mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
-      expect(mockSetBrowserId).toHaveBeenCalledTimes(1);
+      expect(mockSetClientId).toHaveBeenCalledTimes(1);
     });
 
-    it('should call setBrowserId when enableCookie is true and getBrowserId returns empty string', async () => {
+    it('should call setClientId when enableCookie is true and getClientId returns empty string', async () => {
       const environment = createMockEnvironment();
-      mockGetBrowserId.mockReturnValue('');
-      mockSetBrowserId.mockResolvedValue(undefined);
+      mockGetClientId.mockReturnValue('');
+      mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
       mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
-      expect(mockSetBrowserId).toHaveBeenCalledTimes(1);
+      expect(mockSetClientId).toHaveBeenCalledTimes(1);
     });
 
-    it('should not call setBrowserId when browser ID exists and environment type is browser', async () => {
+    it('should not call setClientId when client ID exists and environment type is browser', async () => {
       const environment = createMockEnvironment('browser');
-      mockGetBrowserId.mockReturnValue('existing-browser-id');
-      mockSetBrowserId.mockResolvedValue(undefined);
+      mockGetClientId.mockReturnValue('existing-client-id');
+      mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
       mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
-      expect(mockSetBrowserId).not.toHaveBeenCalled();
+      expect(mockSetClientId).not.toHaveBeenCalled();
     });
 
-    it('should call setBrowserId when browser ID exists but environment type is not browser', async () => {
+    it('should call setClientId when client ID exists but environment type is not browser', async () => {
       const environment = createMockEnvironment('server');
-      mockGetBrowserId.mockReturnValue('existing-browser-id');
-      mockSetBrowserId.mockResolvedValue(undefined);
+      mockGetClientId.mockReturnValue('existing-client-id');
+      mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
       mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
-      expect(mockSetBrowserId).toHaveBeenCalledTimes(1);
+      expect(mockSetClientId).toHaveBeenCalledTimes(1);
     });
 
     it('should set up window.scCloudSDK when environment type is browser', async () => {
       const environment = createMockEnvironment('browser');
-      mockGetBrowserId.mockReturnValue('existing-browser-id');
-      mockSetBrowserId.mockResolvedValue(undefined);
+      mockGetClientId.mockReturnValue('existing-client-id');
+      mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
       mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
@@ -291,9 +291,7 @@ describe('plugin', () => {
 
       expect(window.scCloudSDK).toBeDefined();
       expect(window.scCloudSDK['analytics-core']).toBeDefined();
-      expect(window.scCloudSDK['analytics-core'].getBrowserId).toBe(
-        getBrowserIdModule.getBrowserId
-      );
+      expect(window.scCloudSDK['analytics-core'].getClientId).toBe(getClientIdModule.getClientId);
       expect(window.scCloudSDK['analytics-core'].settings).toEqual({
         siteName: 'test-site',
         sitecoreEdgeContextId: 'test-context-id',
@@ -304,8 +302,8 @@ describe('plugin', () => {
 
     it('should not set up window.scCloudSDK when environment type is server', async () => {
       const environment = createMockEnvironment('server');
-      mockGetBrowserId.mockReturnValue(null);
-      mockSetBrowserId.mockResolvedValue(undefined);
+      mockGetClientId.mockReturnValue(null);
+      mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
       mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
@@ -321,8 +319,8 @@ describe('plugin', () => {
       };
 
       const environment = createMockEnvironment('browser');
-      mockGetBrowserId.mockReturnValue('existing-browser-id');
-      mockSetBrowserId.mockResolvedValue(undefined);
+      mockGetClientId.mockReturnValue('existing-client-id');
+      mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
       mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);

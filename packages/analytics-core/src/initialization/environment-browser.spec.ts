@@ -17,7 +17,7 @@ jest.mock('./plugin', () => ({
 
 jest.mock('../internal', () => ({
   COOKIE_NAME_PREFIX: 'sc_',
-  fetchBrowserIdFromEdgeProxy: jest.fn(),
+  fetchClientIdFromEdgeProxy: jest.fn(),
   getDefaultCookieAttributes: jest.fn(),
 }));
 
@@ -33,7 +33,7 @@ jest.mock('../utils/cookies/delete-cookie', () => ({
 describe('analyticsBrowserEnvironment', () => {
   const mockAnalyticsSettings = {
     cookieSettings: {
-      name: { browserId: 'sc_cid' },
+      name: { clientId: 'sc_cid' },
       expiryDays: 730,
       domain: '.example.com',
     },
@@ -76,14 +76,14 @@ describe('analyticsBrowserEnvironment', () => {
     expect(environment.type).toBe('browser');
   });
 
-  describe('getBrowserId', () => {
-    it('should return the browser ID from cookie', () => {
-      (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('browser-id-123');
+  describe('getClientId', () => {
+    it('should return the client ID from cookie', () => {
+      (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('client-id-123');
 
       const environment = analyticsBrowserEnvironment();
-      const result = environment.getBrowserId();
+      const result = environment.getClientId();
 
-      expect(result).toBe('browser-id-123');
+      expect(result).toBe('client-id-123');
       expect(utilsModule.getCookieValueClientSide).toHaveBeenCalledWith('sc_cid');
     });
 
@@ -91,7 +91,7 @@ describe('analyticsBrowserEnvironment', () => {
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('');
 
       const environment = analyticsBrowserEnvironment();
-      const result = environment.getBrowserId();
+      const result = environment.getClientId();
 
       expect(result).toBe('');
     });
@@ -100,21 +100,21 @@ describe('analyticsBrowserEnvironment', () => {
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue(null);
 
       const environment = analyticsBrowserEnvironment();
-      const result = environment.getBrowserId();
+      const result = environment.getClientId();
 
       expect(result).toBeNull();
     });
   });
 
-  describe('setBrowserId', () => {
+  describe('setClientId', () => {
     it('should migrate legacy cookie and delete old cookie when legacy cookie exists', async () => {
-      (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('legacy-browser-id');
+      (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('legacy-client-id');
       (utilsModule.createCookieString as jest.Mock).mockReturnValue(
-        'sc_cid=legacy-browser-id; Max-Age=63072000'
+        'sc_cid=legacy-client-id; Max-Age=63072000'
       );
 
       const environment = analyticsBrowserEnvironment();
-      await environment.setBrowserId();
+      await environment.setClientId();
 
       expect(utilsModule.getCookieValueClientSide).toHaveBeenCalledWith(
         `${COOKIE_NAME_PREFIX}test-context-id`
@@ -122,58 +122,58 @@ describe('analyticsBrowserEnvironment', () => {
       expect(utilsModule.createCookieString).toHaveBeenCalledTimes(1);
       expect(utilsModule.createCookieString).toHaveBeenCalledWith(
         'sc_cid',
-        'legacy-browser-id',
+        'legacy-client-id',
         mockCookieAttributes
       );
       expect(deleteCookieModule.deleteCookie).toHaveBeenCalledWith(
         `${COOKIE_NAME_PREFIX}test-context-id`
       );
-      expect(internalModule.fetchBrowserIdFromEdgeProxy).not.toHaveBeenCalled();
+      expect(internalModule.fetchClientIdFromEdgeProxy).not.toHaveBeenCalled();
     });
 
-    it('should fetch browser ID from edge proxy when no legacy cookie exists', async () => {
+    it('should fetch client ID from edge proxy when no legacy cookie exists', async () => {
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('');
       (
-        internalModule.fetchBrowserIdFromEdgeProxy as jest.Mock<
-          typeof internalModule.fetchBrowserIdFromEdgeProxy
+        internalModule.fetchClientIdFromEdgeProxy as jest.Mock<
+          typeof internalModule.fetchClientIdFromEdgeProxy
         >
       ).mockResolvedValue({
-        browserId: 'new-browser-id',
+        clientId: 'new-client-id',
         guestId: 'client-key-123',
       });
       (utilsModule.createCookieString as jest.Mock).mockReturnValue(
-        'sc_cid=new-browser-id; Max-Age=63072000'
+        'sc_cid=new-client-id; Max-Age=63072000'
       );
 
       const environment = analyticsBrowserEnvironment();
-      await environment.setBrowserId();
+      await environment.setClientId();
 
-      expect(internalModule.fetchBrowserIdFromEdgeProxy).toHaveBeenCalledWith(
+      expect(internalModule.fetchClientIdFromEdgeProxy).toHaveBeenCalledWith(
         'https://edge.test.com',
         'test-context-id'
       );
       expect(utilsModule.createCookieString).toHaveBeenCalledWith(
         'sc_cid',
-        'new-browser-id',
+        'new-client-id',
         mockCookieAttributes
       );
     });
 
     it('should store proxy values in plugin settings after fetching from edge proxy', async () => {
       const proxyValues = {
-        browserId: 'new-browser-id',
+        clientId: 'new-client-id',
         guestId: 'client-key-123',
       };
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('');
       (
-        internalModule.fetchBrowserIdFromEdgeProxy as jest.Mock<
-          typeof internalModule.fetchBrowserIdFromEdgeProxy
+        internalModule.fetchClientIdFromEdgeProxy as jest.Mock<
+          typeof internalModule.fetchClientIdFromEdgeProxy
         >
       ).mockResolvedValue(proxyValues);
       (utilsModule.createCookieString as jest.Mock).mockReturnValue('cookie-string');
 
       const environment = analyticsBrowserEnvironment();
-      await environment.setBrowserId();
+      await environment.setClientId();
 
       expect(mockAnalyticsSettings.proxyValues).toEqual(proxyValues);
     });
@@ -181,17 +181,17 @@ describe('analyticsBrowserEnvironment', () => {
     it('should use correct cookie attributes from settings', async () => {
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('');
       (
-        internalModule.fetchBrowserIdFromEdgeProxy as jest.Mock<
-          typeof internalModule.fetchBrowserIdFromEdgeProxy
+        internalModule.fetchClientIdFromEdgeProxy as jest.Mock<
+          typeof internalModule.fetchClientIdFromEdgeProxy
         >
       ).mockResolvedValue({
-        browserId: 'browser-id',
+        clientId: 'client-id',
         guestId: 'client-key-123',
       });
       (utilsModule.createCookieString as jest.Mock).mockReturnValue('cookie-string');
 
       const environment = analyticsBrowserEnvironment();
-      await environment.setBrowserId();
+      await environment.setClientId();
 
       expect(internalModule.getDefaultCookieAttributes).toHaveBeenCalledWith(730, '.example.com');
     });
@@ -223,4 +223,3 @@ describe('analyticsBrowserEnvironment', () => {
     });
   });
 });
-

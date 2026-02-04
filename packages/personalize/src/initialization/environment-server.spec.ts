@@ -46,7 +46,7 @@ describe('personalizeServerEnvironment', () => {
       cookieSettings: {
         expiryDays: 730,
         domain: '.example.com',
-        name: { browserId: 'sc_cid' },
+        name: { clientId: 'sc_cid' },
       },
       proxyValues: undefined as any,
     },
@@ -234,7 +234,7 @@ describe('personalizeServerEnvironment', () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy cookie check
           .mockReturnValueOnce({ name: 'sc_cid_personalize', value: 'existing-guest-id' }) // guest id check
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' }); // browser id check
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' }); // client id check
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
           'sc_cid_personalize=existing-guest-id'
         );
@@ -259,12 +259,12 @@ describe('personalizeServerEnvironment', () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy cookie
           .mockReturnValueOnce(undefined) // guest id cookie
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' }); // browser id
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' }); // client id
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
           'sc_cid_personalize=proxy-guest-id'
         );
 
-        const request = createMockRequest('sc_cid=browser-id');
+        const request = createMockRequest('sc_cid=client-id');
         const response = createMockResponse();
 
         const environment = personalizeServerEnvironment(request, response);
@@ -280,11 +280,11 @@ describe('personalizeServerEnvironment', () => {
     });
 
     describe('fetch from edge proxy', () => {
-      it('should fetch guest ID from edge proxy when browser ID exists', async () => {
+      it('should fetch guest ID from edge proxy when client ID exists', async () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy cookie
           .mockReturnValueOnce(undefined) // guest id cookie
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id-123' }); // browser id
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id-123' }); // client id
         jest
           .spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy')
           .mockResolvedValue('new-guest-id');
@@ -292,20 +292,20 @@ describe('personalizeServerEnvironment', () => {
           'sc_cid_personalize=new-guest-id'
         );
 
-        const request = createMockRequest('sc_cid=browser-id-123');
+        const request = createMockRequest('sc_cid=client-id-123');
         const response = createMockResponse();
 
         const environment = personalizeServerEnvironment(request, response);
         await environment.setGuestId();
 
         expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).toHaveBeenCalledWith(
-          'browser-id-123',
+          'client-id-123',
           'test-context-id',
           'https://edge.test.com'
         );
       });
 
-      it('should return early when no browser ID cookie exists', async () => {
+      it('should return early when no client ID cookie exists', async () => {
         (utilsModule.getCookieServerSide as jest.Mock).mockReturnValue(undefined);
 
         const request = createMockRequest();
@@ -322,7 +322,7 @@ describe('personalizeServerEnvironment', () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy
           .mockReturnValueOnce(undefined) // guest id
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' }); // browser id
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' }); // client id
         jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
           'sc_cid_personalize=guest-id'
@@ -342,7 +342,7 @@ describe('personalizeServerEnvironment', () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy
           .mockReturnValueOnce(undefined) // guest id
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' }); // browser id
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' }); // client id
         jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
           'sc_cid_personalize=guest-id'
@@ -363,7 +363,7 @@ describe('personalizeServerEnvironment', () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined)
           .mockReturnValueOnce(undefined)
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' });
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' });
         jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
           'sc_cid_personalize=guest-id'
@@ -385,7 +385,7 @@ describe('personalizeServerEnvironment', () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined)
           .mockReturnValueOnce(undefined)
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' });
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' });
         jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
           'sc_cid_personalize=guest-id'
@@ -408,7 +408,7 @@ describe('personalizeServerEnvironment', () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined)
           .mockReturnValueOnce(undefined)
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' });
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' });
         jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
           'sc_cid_personalize=guest-id'
@@ -430,4 +430,3 @@ describe('personalizeServerEnvironment', () => {
     });
   });
 });
-

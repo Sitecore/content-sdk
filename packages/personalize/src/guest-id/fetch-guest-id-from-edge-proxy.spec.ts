@@ -17,7 +17,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
 }));
 
 describe('fetchGuestIdFromEdgeProxy', () => {
-  const bid = 'bid';
+  const cid = 'cid';
   const sitecoreEdgeContextId = 'contextId';
 
   afterEach(() => {
@@ -31,7 +31,7 @@ describe('fetchGuestIdFromEdgeProxy', () => {
       ok: true,
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
-    const response = await fetchGuestIdFromEdgeProxy(bid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
+    const response = await fetchGuestIdFromEdgeProxy(cid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
     expect(response).toBe(expectedResponse);
   });
 
@@ -42,8 +42,8 @@ describe('fetchGuestIdFromEdgeProxy', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    const expectedUrl = `${SITECORE_EDGE_URL}/v1/events/${API_VERSION}/browser/${bid}/show.json?client_key=&api_token=`;
-    await fetchGuestIdFromEdgeProxy(bid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
+    const expectedUrl = `${SITECORE_EDGE_URL}/v1/events/${API_VERSION}/browser/${cid}/show.json?client_key=&api_token=`;
+    await fetchGuestIdFromEdgeProxy(cid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(expectedUrl, {
@@ -71,7 +71,7 @@ describe('fetchGuestIdFromEdgeProxy', () => {
 
     const expectedErrorMessage = `${expectedMsg}, for more info: ${expectedMoreInfo}`;
     expect(() =>
-      fetchGuestIdFromEdgeProxy(bid, sitecoreEdgeContextId, SITECORE_EDGE_URL)
+      fetchGuestIdFromEdgeProxy(cid, sitecoreEdgeContextId, SITECORE_EDGE_URL)
     ).rejects.toThrow(expectedErrorMessage);
   });
 
@@ -84,7 +84,7 @@ describe('fetchGuestIdFromEdgeProxy', () => {
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
     expect(async () => {
-      await fetchGuestIdFromEdgeProxy(bid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
+      await fetchGuestIdFromEdgeProxy(cid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
     }).rejects.toThrow(ERROR_MESSAGES.IE_006);
   });
 });

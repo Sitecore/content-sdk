@@ -198,7 +198,7 @@ describe.only('CustomEvent', () => {
       };
 
       const expectedData = {
-        browser_id: id,
+        client_id: id,
         channel: 'WEB',
         client_key: '',
         currency: 'EUR',
@@ -226,16 +226,13 @@ describe.only('CustomEvent', () => {
       };
 
       const expectedData = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        browser_id: id,
+        client_id: id,
         channel: 'WEB',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_key: '',
         currency: 'EUR',
         language: 'EN',
         page: 'races',
         pos: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         requested_at: '2024-01-01T00:00:00.000Z',
         type: 'CUSTOM_TYPE',
       };
@@ -255,14 +252,11 @@ describe.only('CustomEvent', () => {
       };
 
       const expectedData = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        browser_id: id,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
+        client_id: id,
         client_key: '',
         language: 'EN',
         page: 'races',
         pos: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         requested_at: '2024-01-01T00:00:00.000Z',
         type: 'CUSTOM_TYPE',
       };
@@ -293,7 +287,7 @@ describe.only('CustomEvent', () => {
       };
 
       const expectedData = {
-        browser_id: id,
+        client_id: id,
         channel: 'WEB',
         client_key: '',
         currency: 'EUR',

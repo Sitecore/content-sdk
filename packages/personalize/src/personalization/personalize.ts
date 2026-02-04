@@ -22,12 +22,12 @@ export async function personalize(
 
   const { environment: analyticsEnvironment } = getAnalyticsPlugin();
 
-  const browserId = analyticsEnvironment.getBrowserId() || '';
+  const clientId = analyticsEnvironment.getClientId() || '';
   const guestId = personalizeEnvironment.getGuestId() || '';
   const searchParams = analyticsEnvironment.location.getSearchParams();
   const userAgent = personalizeEnvironment.getUserAgent?.();
 
-  return new Personalizer(browserId, guestId).getInteractiveExperienceData(
+  return new Personalizer(clientId, guestId).getInteractiveExperienceData(
     personalizeData,
     settings,
     searchParams,

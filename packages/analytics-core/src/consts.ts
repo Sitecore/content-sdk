@@ -4,7 +4,7 @@ export const LIBRARY_VERSION = packageJson.version;
 
 export const COOKIE_NAME_PREFIX = 'sc_';
 
-export const BROWSER_ID_COOKIE_NAME = 'cid';
+export const CLIENT_ID_COOKIE_NAME = 'cid';
 
 export const DEFAULT_COOKIE_EXPIRY_DAYS = 730;
 

@@ -13,7 +13,7 @@ jest.mock('@sitecore-content-sdk/core', () => ({
 
 describe('getGuestId', () => {
   const mockEnvironment = {
-    getBrowserId: jest.fn(),
+    getClientId: jest.fn(),
   };
 
   const mockAnalyticsPlugin = {
@@ -44,7 +44,7 @@ describe('getGuestId', () => {
     const fetchGuestIdSpy = jest
       .spyOn(fetchGuestIdFromEdgeProxyModule, 'fetchGuestIdFromEdgeProxy')
       .mockResolvedValueOnce('guestID');
-    mockEnvironment.getBrowserId.mockReturnValue(id);
+    mockEnvironment.getClientId.mockReturnValue(id);
 
     const guestID = await getGuestId();
 
@@ -57,11 +57,11 @@ describe('getGuestId', () => {
     expect(guestID).toBe('guestID');
   });
 
-  it('should use empty string for browserId when getBrowserId returns null', async () => {
+  it('should use empty string for clientId when getClientId returns null', async () => {
     const fetchGuestIdSpy = jest
       .spyOn(fetchGuestIdFromEdgeProxyModule, 'fetchGuestIdFromEdgeProxy')
       .mockResolvedValueOnce('guestID');
-    mockEnvironment.getBrowserId.mockReturnValue(null);
+    mockEnvironment.getClientId.mockReturnValue(null);
 
     await getGuestId();
 

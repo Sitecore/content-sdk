@@ -1,6 +1,6 @@
 import {
   COOKIE_NAME_PREFIX,
-  fetchBrowserIdFromEdgeProxy,
+  fetchClientIdFromEdgeProxy,
   getDefaultCookieAttributes,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import {
@@ -26,56 +26,55 @@ export function analyticsProxyEnvironment(
 ): AnalyticsProxyEnvironment {
   return {
     type: 'proxy',
-    getBrowserId: () => {
-      return getBrowserId(request);
+    getClientId: () => {
+      return getClientId(request);
     },
-    setBrowserId: async () => {
+    setClientId: async () => {
       const coreSettings = getCoreSettings().settings;
       const analyticsSettings = getAnalyticsPlugin().settings;
       const cookieSettings = analyticsSettings.cookieSettings;
-      const browserIdName = cookieSettings.name.browserId;
-      const legacyBrowserIdName = `${COOKIE_NAME_PREFIX}${coreSettings.contextId}`;
+      const clientIdName = cookieSettings.name.clientId;
+      const legacyClientIdName = `${COOKIE_NAME_PREFIX}${coreSettings.contextId}`;
       const cookieAttributes = getDefaultCookieAttributes(
         cookieSettings.expiryDays,
         cookieSettings.domain
       );
 
-      const legacyBrowserIdCookie = request.cookies.get(legacyBrowserIdName)?.value;
-      if (legacyBrowserIdCookie) {
-        request.cookies.set(browserIdName, legacyBrowserIdCookie);
-        response.cookies.set(browserIdName, legacyBrowserIdCookie, {
+      const legacyClientIdCookie = request.cookies.get(legacyClientIdName)?.value;
+      if (legacyClientIdCookie) {
+        request.cookies.set(clientIdName, legacyClientIdCookie);
+        response.cookies.set(clientIdName, legacyClientIdCookie, {
           ...cookieAttributes,
           sameSite: 'none',
         });
 
-        request.cookies.delete(legacyBrowserIdName);
-        response.cookies.delete(legacyBrowserIdName);
+        request.cookies.delete(legacyClientIdName);
+        response.cookies.delete(legacyClientIdName);
 
         return;
       }
 
-      const browserIdCookie = getBrowserId(request);
+      const clientIdCookie = getClientId(request);
 
-      let newBrowserIdCookieValue;
-      if (!browserIdCookie) {
-        const cookieValues = await fetchBrowserIdFromEdgeProxy(
+      let newClientIdCookieValue;
+      if (!clientIdCookie) {
+        const cookieValues = await fetchClientIdFromEdgeProxy(
           coreSettings.sitecoreEdgeUrl,
           coreSettings.contextId,
           analyticsSettings.timeout
         );
 
-        newBrowserIdCookieValue = cookieValues.browserId;
+        newClientIdCookieValue = cookieValues.clientId;
         getAnalyticsPlugin().settings.proxyValues = cookieValues;
-      } else newBrowserIdCookieValue = browserIdCookie;
+      } else newClientIdCookieValue = clientIdCookie;
 
-      if (!browserIdCookie) request.cookies.set(browserIdName, newBrowserIdCookieValue);
-
+      if (!clientIdCookie) request.cookies.set(clientIdName, newClientIdCookieValue);
       const attributes = getDefaultCookieAttributes(
         cookieSettings.expiryDays,
         cookieSettings.domain
       );
 
-      response.cookies.set(browserIdName, newBrowserIdCookieValue, {
+      response.cookies.set(clientIdName, newClientIdCookieValue, {
         ...attributes,
         sameSite: 'none',
       });
@@ -89,14 +88,13 @@ export function analyticsProxyEnvironment(
 }
 
 /**
- * Retrieves the browser ID from the request cookies.
+ * Retrieves the client ID from the request cookies.
  * @param {NextRequest} request
- * @returns {string | null} The browser ID or null if not found.
+ * @returns {string | null} The client ID or null if not found.
  * @internal
  */
-export const getBrowserId = (request: NextRequest): string | null => {
-  const browserIdName = getAnalyticsPlugin().settings.cookieSettings.name.browserId;
+export const getClientId = (request: NextRequest): string | null => {
+  const clientIdName = getAnalyticsPlugin().settings.cookieSettings.name.clientId;
 
-  return request.cookies.get(browserIdName)?.value || null;
+  return request.cookies.get(clientIdName)?.value || null;
 };
-

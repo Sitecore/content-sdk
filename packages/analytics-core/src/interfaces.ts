@@ -10,7 +10,7 @@ export interface EPResponse {
 }
 
 export interface ProxySettings {
-  browserId: string;
+  clientId: string;
   guestId: string;
 }
 

@@ -1,13 +1,13 @@
 import { AnalyticsEnvironment, AnalyticsPlugin } from './types';
 import {
-  BROWSER_ID_COOKIE_NAME,
+  CLIENT_ID_COOKIE_NAME,
   COOKIE_NAME_PREFIX,
   DEFAULT_COOKIE_EXPIRY_DAYS,
   LIBRARY_VERSION,
 } from '../consts';
 import { ANALYTICS_PLUGIN_NAME } from './const';
 import { getCoreSettings, debug } from '@sitecore-content-sdk/core';
-import { getBrowserId } from '../browser-id/get-browser-id';
+import { getClientId } from '../client-id/get-client-id';
 const debugInit = debug.init;
 
 /**
@@ -39,7 +39,7 @@ export function analyticsPlugin(options: AnalyticsPluginOptions): AnalyticsPlugi
       enableCookie: settings?.enableCookie ?? false,
       expiryDays: settings?.cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
       name: {
-        browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`,
+        clientId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
       },
       path: settings?.cookiePath || '/',
     },
@@ -72,8 +72,8 @@ async function init() {
 
   const environment = analyticsPlugin.environment;
 
-  if (!environment.getBrowserId() || analyticsPlugin.environment.type !== 'browser') {
-    await environment.setBrowserId();
+  if (!environment.getClientId() || analyticsPlugin.environment.type !== 'browser') {
+    await environment.setClientId();
     debugInit(`Cookie set for ${ANALYTICS_PLUGIN_NAME}`);
   }
 
@@ -81,7 +81,7 @@ async function init() {
     window.scCloudSDK = {
       ...window.scCloudSDK,
       'analytics-core': {
-        getBrowserId,
+        getClientId,
         settings: {
           siteName: coreConfig.settings.siteName,
           sitecoreEdgeContextId: coreConfig.settings.contextId,
@@ -111,7 +111,7 @@ export function getAnalyticsPlugin(): AnalyticsPlugin {
 
 declare global {
   interface AnalyticsCore {
-    getBrowserId: typeof getBrowserId;
+    getClientId: typeof getClientId;
     settings: {
       siteName: string;
       sitecoreEdgeContextId: string;

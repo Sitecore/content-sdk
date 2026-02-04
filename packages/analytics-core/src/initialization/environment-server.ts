@@ -1,6 +1,6 @@
 import {
   COOKIE_NAME_PREFIX,
-  fetchBrowserIdFromEdgeProxy,
+  fetchClientIdFromEdgeProxy,
   getDefaultCookieAttributes,
 } from '../internal';
 import { createCookieString, getCookieServerSide } from '../utils';
@@ -25,61 +25,58 @@ export function analyticsServerEnvironment(
 ): AnalyticsServerEnvironment {
   return {
     type: 'server',
-    getBrowserId: () => {
-      return getBrowserId(request);
+    getClientId: () => {
+      return getClientId(request);
     },
-    setBrowserId: async () => {
+    setClientId: async () => {
       const coreSettings = getCoreSettings().settings;
       const analyticsSettings = getAnalyticsPlugin().settings;
       const cookieSettings = analyticsSettings.cookieSettings;
-      const browserIdName = cookieSettings.name.browserId;
-      const legacyBrowserIdName = `${COOKIE_NAME_PREFIX}${coreSettings.contextId}`;
+      const clientIdName = cookieSettings.name.clientId;
+      const legacyClientIdName = `${COOKIE_NAME_PREFIX}${coreSettings.contextId}`;
       const defaultCookieAttributes = getDefaultCookieAttributes(
         cookieSettings.expiryDays,
         cookieSettings.domain
       );
 
-      const legacyBrowserIdCookie = getCookieServerSide(
-        request.headers.cookie,
-        legacyBrowserIdName
-      );
+      const legacyClientIdCookie = getCookieServerSide(request.headers.cookie, legacyClientIdName);
 
-      if (legacyBrowserIdCookie) {
+      if (legacyClientIdCookie) {
         request.headers.cookie = request.headers.cookie?.replace(
-          legacyBrowserIdCookie.name,
-          browserIdName
+          legacyClientIdCookie.name,
+          clientIdName
         );
         response.setHeader('Set-Cookie', [
-          createCookieString(browserIdName, legacyBrowserIdCookie.value, defaultCookieAttributes),
-          createCookieString(legacyBrowserIdName, '', { ...defaultCookieAttributes, maxAge: 0 }),
+          createCookieString(clientIdName, legacyClientIdCookie.value, defaultCookieAttributes),
+          createCookieString(legacyClientIdName, '', { ...defaultCookieAttributes, maxAge: 0 }),
         ]);
         return;
       }
 
-      const browserIdCookie = getBrowserId(request);
-      let browserIdCookieValue;
+      const clientIdCookie = getClientId(request);
+      let clientIdCookieValue;
 
-      if (!browserIdCookie) {
-        const cookieValues = await fetchBrowserIdFromEdgeProxy(
+      if (!clientIdCookie) {
+        const cookieValues = await fetchClientIdFromEdgeProxy(
           coreSettings.sitecoreEdgeUrl,
           coreSettings.contextId,
           analyticsSettings.timeout
         );
 
-        browserIdCookieValue = cookieValues.browserId;
+        clientIdCookieValue = cookieValues.clientId;
         getAnalyticsPlugin().settings.proxyValues = cookieValues;
-      } else browserIdCookieValue = browserIdCookie;
+      } else clientIdCookieValue = clientIdCookie;
 
-      const browserIdCookieString = createCookieString(
-        browserIdName,
-        browserIdCookieValue,
+      const clientIdCookieString = createCookieString(
+        clientIdName,
+        clientIdCookieValue,
         defaultCookieAttributes
       );
 
-      if (!browserIdCookie) {
+      if (!clientIdCookie) {
         request.headers.cookie = request.headers.cookie
-          ? request.headers.cookie + '; ' + browserIdCookieString
-          : browserIdCookieString;
+          ? request.headers.cookie + '; ' + clientIdCookieString
+          : clientIdCookieString;
       }
 
       let cookieHeader;
@@ -87,12 +84,12 @@ export function analyticsServerEnvironment(
 
       if (currentSetCookieHeader) {
         if (Array.isArray(currentSetCookieHeader)) {
-          cookieHeader = [...currentSetCookieHeader, browserIdCookieString];
+          cookieHeader = [...currentSetCookieHeader, clientIdCookieString];
         } else {
-          cookieHeader = `${currentSetCookieHeader}; ${browserIdCookieString}`;
+          cookieHeader = `${currentSetCookieHeader}; ${clientIdCookieString}`;
         }
       } else {
-        cookieHeader = browserIdCookieString;
+        cookieHeader = clientIdCookieString;
       }
 
       response.setHeader('Set-Cookie', cookieHeader);
@@ -109,16 +106,16 @@ export function analyticsServerEnvironment(
 }
 
 /**
- * Retrieves the browser ID from the request cookies.
+ * Retrieves the client ID from the request cookies.
  * @param {IncomingMessage} request
- * @returns {string | null} The browser ID or null if not found.
+ * @returns {string | null} The client ID or null if not found.
  * @internal
  */
-function getBrowserId(request: IncomingMessage): string | null {
+function getClientId(request: IncomingMessage): string | null {
   return (
     getCookieServerSide(
       request.headers.cookie,
-      getAnalyticsPlugin().settings.cookieSettings.name.browserId
+      getAnalyticsPlugin().settings.cookieSettings.name.clientId
     )?.value ?? null
   );
 }

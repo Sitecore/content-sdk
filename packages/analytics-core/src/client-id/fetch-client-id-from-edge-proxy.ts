@@ -1,16 +1,16 @@
 import type { EPResponse, ProxySettings } from '../interfaces';
 import { ERROR_MESSAGES, LIBRARY_VERSION } from '../consts';
 import { ERROR_MESSAGES as UTILS_ERROR_MESSAGES, fetchWithTimeout } from '../utils';
-import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';
+import { constructGetClientIdUrl } from './construct-get-client-id-url';
 
 /**
- * Gets the browser ID and client key from Sitecore Edge proxy.
+ * Gets the client ID and client key from Sitecore Edge proxy.
  * @param {string} sitecoreEdgeUrl - The base URL for the Edge proxy API.
  * @param {string} sitecoreEdgeContextId - The Sitecore context ID parameter for the Edge proxy API.
  * @param {number} [timeout] - The timeout in milliseconds for the call to the proxy.
- * @returns {Promise<ProxySettings>} The browser ID and guest ID from the proxy.
+ * @returns {Promise<ProxySettings>} The client ID and guest ID from the proxy.
  */
-export async function fetchBrowserIdFromEdgeProxy(
+export async function fetchClientIdFromEdgeProxy(
   sitecoreEdgeUrl: string,
   sitecoreEdgeContextId: string,
   timeout?: number
@@ -23,7 +23,7 @@ export async function fetchBrowserIdFromEdgeProxy(
     },
   };
 
-  const url = constructGetBrowserIdUrl(sitecoreEdgeUrl);
+  const url = constructGetClientIdUrl(sitecoreEdgeUrl);
   let payload;
 
   if (timeout !== undefined)
@@ -47,6 +47,6 @@ export async function fetchBrowserIdFromEdgeProxy(
 
   if (!payload?.ref) throw new Error(ERROR_MESSAGES.IE_005);
 
-  const { ref: browserId, customer_ref: guestId }: EPResponse = payload;
-  return { browserId, guestId };
+  const { ref: clientId, customer_ref: guestId }: EPResponse = payload;
+  return { clientId, guestId };
 }

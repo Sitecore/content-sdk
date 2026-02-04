@@ -12,13 +12,13 @@ export {
   LIBRARY_VERSION,
   SITECORE_EDGE_URL,
   CORRELATION_ID_HEADER,
-  BROWSER_ID_COOKIE_NAME,
+  CLIENT_ID_COOKIE_NAME,
 } from './consts';
 
 // Interfaces
 export type { EPResponse, Infer, DebugResponse } from './interfaces';
 
-export { fetchBrowserIdFromEdgeProxy } from './browser-id/fetch-browser-id-from-edge-proxy';
+export { fetchClientIdFromEdgeProxy } from './client-id/fetch-client-id-from-edge-proxy';
 export { getAnalyticsPlugin } from './initialization/plugin';
 export { ANALYTICS_PLUGIN_NAME } from './initialization/const';
 export type { AnalyticsPlugin } from './initialization/types';

@@ -16,8 +16,7 @@ jest.mock('./shared', () => ({
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   ANALYTICS_PLUGIN_NAME: 'AnalyticsPlugin',
   COOKIE_NAME_PREFIX: 'sc_',
-  BROWSER_ID_COOKIE_NAME: 'cid',
-
+  CLIENT_ID_COOKIE_NAME: 'cid',
   getAnalyticsPlugin: jest.fn(),
 }));
 
@@ -37,7 +36,7 @@ describe('personalizeServerPlugin', () => {
         enableCookie: true,
         expiryDays: 730,
         domain: '.example.com',
-        name: { browserId: 'sc_cid' },
+        name: { clientId: 'sc_cid' },
       },
     },
   };
@@ -166,4 +165,3 @@ describe('personalizeServerPlugin', () => {
     });
   });
 });
-

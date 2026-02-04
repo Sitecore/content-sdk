@@ -19,7 +19,7 @@ export async function identity(identityData: IdentityData): Promise<EPResponse |
 
   const { settings, environment } = getAnalyticsPlugin();
 
-  const id = environment.getBrowserId() || '';
+  const id = environment.getClientId() || '';
 
   return new IdentityEvent({
     id,

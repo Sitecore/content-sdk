@@ -21,7 +21,7 @@ jest.mock('./shared', () => ({
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   ANALYTICS_PLUGIN_NAME: 'AnalyticsPlugin',
   COOKIE_NAME_PREFIX: 'sc_',
-  BROWSER_ID_COOKIE_NAME: 'cid',
+  CLIENT_ID_COOKIE_NAME: 'cid',
   getAnalyticsPlugin: jest.fn(),
 }));
 
@@ -55,7 +55,7 @@ describe('personalizeBrowserPlugin', () => {
         enableCookie: true,
         expiryDays: 730,
         domain: '.example.com',
-        name: { browserId: 'sc_cid' },
+        name: { clientId: 'sc_cid' },
       },
     },
   };
@@ -330,7 +330,7 @@ describe('personalizeBrowserPlugin', () => {
       it('should preserve existing window.scCloudSDK properties', async () => {
         (window as any).scCloudSDK = {
           'analytics-core': {
-            getBrowserId: jest.fn(),
+            getClientId: jest.fn(),
             version: '1.0.0',
           },
         };
@@ -343,7 +343,7 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect((window.scCloudSDK as any)['analytics-core'].getBrowserId).toBeDefined();
+        expect((window.scCloudSDK as any)['analytics-core'].getClientId).toBeDefined();
         expect((window.scCloudSDK as any)['analytics-core'].version).toBe('1.0.0');
         expect(window.scCloudSDK['analytics-core'].getGuestId).toBe(getGuestIdModule.getGuestId);
       });
@@ -439,4 +439,3 @@ describe('personalizeBrowserPlugin', () => {
     });
   });
 });
-

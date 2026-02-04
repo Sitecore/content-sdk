@@ -10,7 +10,7 @@ import {
 } from '@sitecore-content-sdk/personalize/internal';
 import { PersonalizeEnvironment } from '@sitecore-content-sdk/personalize/types/src/initialization/types';
 import { NextRequest, NextResponse } from 'next/server';
-import { getBrowserId } from './analytics';
+import { getClientId } from './analytics';
 
 export interface PersonalizeProxyEnvironment extends Required<PersonalizeEnvironment> {
   type: 'proxy';
@@ -60,15 +60,15 @@ export function personalizeProxyEnvironment(
       const cookiesValuesFromEdgeServer = getAnalyticsPlugin().settings.proxyValues;
 
       const guestIdCookie = getGuestId(request);
-      const browserIdCookie = getBrowserId(request);
+      const clientIdCookie = getClientId(request);
 
       let newGuestIdCookieValue;
       if (guestIdCookie) newGuestIdCookieValue = guestIdCookie;
       else if (cookiesValuesFromEdgeServer?.guestId)
         newGuestIdCookieValue = cookiesValuesFromEdgeServer.guestId;
-      else if (browserIdCookie) {
+      else if (clientIdCookie) {
         const guestIdCookieValueFromEdgeProxy = await fetchGuestIdFromEdgeProxy(
-          browserIdCookie,
+          clientIdCookie,
           coreSettings.contextId,
           coreSettings.sitecoreEdgeUrl
         );
@@ -101,4 +101,3 @@ function getGuestId(request: NextRequest): string | null {
 
   return request.cookies.get(guestIdName)?.value || null;
 }
-

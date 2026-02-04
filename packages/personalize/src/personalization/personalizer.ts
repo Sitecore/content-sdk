@@ -11,10 +11,10 @@ import { CoreSettings } from '@sitecore-content-sdk/core';
 export class Personalizer {
   /**
    * The Personalizer Class runs a flow of interactive experiments.
-   * @param {string} browserId - The browser id of the user
+   * @param {string} clientId - The client id of the user
    * @param {string} [guestId] - The guestRef of the user
    */
-  constructor(private browserId: string, private guestId?: string) {}
+  constructor(private clientId: string, private guestId?: string) {}
 
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint
@@ -40,7 +40,7 @@ export class Personalizer {
     }
 
     const mappedData = this.mapPersonalizeInputToEPData(sanitizedInput);
-    if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.browserId;
+    if (!mappedData.email && !mappedData.identifiers) mappedData.clientId = this.clientId;
 
     return await sendCallFlowsRequest(mappedData, settings, opts);
   }

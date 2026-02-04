@@ -20,7 +20,7 @@ const eventData: EventData = {
 
 describe('addToEventQueue', () => {
   const mockEnvironment = {
-    getBrowserId: jest.fn(),
+    getClientId: jest.fn(),
   };
 
   const mockAnalyticsPlugin = {
@@ -28,7 +28,7 @@ describe('addToEventQueue', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        name: { browserId: 'bid_name' },
+        name: { clientId: 'cid_name' },
         path: '/',
       },
       siteName: '456',
@@ -55,7 +55,7 @@ describe('addToEventQueue', () => {
   });
 
   it('should add an event to the queue with the correct payload', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockEnvironment.getClientId.mockReturnValue('test_id');
 
     const enqueueEventSpy = jest
       .spyOn(eventStorageModule.eventQueue, 'enqueueEvent')
@@ -71,8 +71,8 @@ describe('addToEventQueue', () => {
     } as any);
   });
 
-  it('should use empty string for id when getBrowserId returns null', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue(null);
+  it('should use empty string for id when getClientId returns null', async () => {
+    mockEnvironment.getClientId.mockReturnValue(null);
 
     const enqueueEventSpy = jest
       .spyOn(eventStorageModule.eventQueue, 'enqueueEvent')
@@ -99,7 +99,7 @@ describe('addToEventQueue', () => {
       readyPromise,
     } as any);
 
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockEnvironment.getClientId.mockReturnValue('test_id');
 
     const enqueueEventSpy = jest
       .spyOn(eventStorageModule.eventQueue, 'enqueueEvent')
@@ -118,7 +118,7 @@ describe('addToEventQueue', () => {
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockEnvironment.getClientId.mockReturnValue('test_id');
     jest.spyOn(eventStorageModule.eventQueue, 'enqueueEvent').mockImplementation(() => {});
 
     await addToEventQueue(eventData);

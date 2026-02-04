@@ -1,6 +1,6 @@
 import {
   COOKIE_NAME_PREFIX,
-  fetchBrowserIdFromEdgeProxy,
+  fetchClientIdFromEdgeProxy,
   getDefaultCookieAttributes,
 } from '../internal';
 import { createCookieString, getCookieValueClientSide } from '../utils';
@@ -20,10 +20,10 @@ interface AnalyticsBrowserEnvironment extends AnalyticsEnvironment {
 export function analyticsBrowserEnvironment(): AnalyticsBrowserEnvironment {
   return {
     type: 'browser',
-    getBrowserId: () => {
-      return getCookieValueClientSide(getAnalyticsPlugin().settings.cookieSettings.name.browserId);
+    getClientId: () => {
+      return getCookieValueClientSide(getAnalyticsPlugin().settings.cookieSettings.name.clientId);
     },
-    setBrowserId: async () => {
+    setClientId: async () => {
       const coreSettings = getCoreSettings().settings;
       const analyticsSettings = getAnalyticsPlugin().settings;
 
@@ -38,7 +38,7 @@ export function analyticsBrowserEnvironment(): AnalyticsBrowserEnvironment {
 
       if (legacyCookie) {
         document.cookie = createCookieString(
-          analyticsSettings.cookieSettings.name.browserId,
+          analyticsSettings.cookieSettings.name.clientId,
           legacyCookie,
           cookieAttributes
         );
@@ -47,7 +47,7 @@ export function analyticsBrowserEnvironment(): AnalyticsBrowserEnvironment {
         return;
       }
 
-      const cookieValues = await fetchBrowserIdFromEdgeProxy(
+      const cookieValues = await fetchClientIdFromEdgeProxy(
         coreSettings.sitecoreEdgeUrl,
         coreSettings.contextId
       );
@@ -55,8 +55,8 @@ export function analyticsBrowserEnvironment(): AnalyticsBrowserEnvironment {
       getAnalyticsPlugin().settings.proxyValues = cookieValues;
 
       document.cookie = createCookieString(
-        analyticsSettings.cookieSettings.name.browserId,
-        cookieValues.browserId,
+        analyticsSettings.cookieSettings.name.clientId,
+        cookieValues.clientId,
         cookieAttributes
       );
     },
@@ -67,4 +67,3 @@ export function analyticsBrowserEnvironment(): AnalyticsBrowserEnvironment {
     },
   };
 }
-

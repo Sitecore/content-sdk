@@ -1,7 +1,7 @@
 import { PERSONALIZE_PLUGIN_NAME } from './const';
 import { PACKAGE_VERSION } from '../consts';
 import {
-  BROWSER_ID_COOKIE_NAME,
+  CLIENT_ID_COOKIE_NAME,
   COOKIE_NAME_PREFIX,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import {
@@ -89,7 +89,7 @@ export function personalizeBrowserPlugin({
 }: PersonalizeBrowserPluginParams): PersonalizeBrowserPlugin {
   const cookieSettings = {
     name: {
-      guestId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}_personalize`,
+      guestId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}_personalize`,
     },
   };
 
@@ -139,4 +139,3 @@ declare global {
     };
   }
 }
-

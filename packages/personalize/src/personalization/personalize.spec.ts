@@ -20,7 +20,7 @@ jest.mock('../initialization/shared', () => ({
 
 describe('personalize', () => {
   describe('new init', () => {
-    const browserId = 'browser_id_value';
+    const clientId = 'client_id_value';
     const guestId = 'guest_id_value';
     const personalizeData = {
       channel: 'WEB',
@@ -38,7 +38,7 @@ describe('personalize', () => {
     };
 
     const mockEnvironment = {
-      getBrowserId: jest.fn().mockReturnValue(browserId),
+      getClientId: jest.fn().mockReturnValue(clientId),
       location: {
         getSearchParams: jest.fn().mockReturnValue(''),
       },
@@ -79,7 +79,7 @@ describe('personalize', () => {
       expect(coreModule.getCoreSettings).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(Personalizer).toHaveBeenCalledTimes(1);
-      expect(Personalizer).toHaveBeenCalledWith(browserId, guestId);
+      expect(Personalizer).toHaveBeenCalledWith(clientId, guestId);
     });
 
     it('should throw error if settings have not been configured properly', async () => {
@@ -159,8 +159,8 @@ describe('personalize', () => {
       );
     });
 
-    it('should use empty string for browserId when getBrowserId returns null', async () => {
-      mockEnvironment.getBrowserId.mockReturnValue(null);
+    it('should use empty string for clientId when getClientId returns null', async () => {
+      mockEnvironment.getClientId.mockReturnValue(null);
 
       await personalize(personalizeData);
 
@@ -168,12 +168,12 @@ describe('personalize', () => {
     });
 
     it('should use empty string for guestId when getGuestId returns null', async () => {
-      mockEnvironment.getBrowserId.mockReturnValue(browserId);
+      mockEnvironment.getClientId.mockReturnValue(clientId);
       mockPersonalizeEnvironment.getGuestId.mockReturnValue(null);
 
       await personalize(personalizeData);
 
-      expect(Personalizer).toHaveBeenCalledWith(browserId, '');
+      expect(Personalizer).toHaveBeenCalledWith(clientId, '');
     });
 
     it('should handle undefined getUserAgent method', async () => {

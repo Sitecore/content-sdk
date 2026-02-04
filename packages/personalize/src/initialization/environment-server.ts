@@ -45,7 +45,7 @@ export function personalizeServerEnvironment(
     setGuestId: async () => {
       const coreSettings = getCoreSettings().settings;
       const cookieSettings = getAnalyticsPlugin().settings.cookieSettings;
-      const browserIdName = cookieSettings.name.browserId;
+      const clientIdName = cookieSettings.name.clientId;
       const personalizePlugin = getPersonalizePlugin();
       const guestIdName = personalizePlugin.settings.cookieSettings.name.guestId;
       const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreSettings.contextId}_personalize`;
@@ -78,7 +78,7 @@ export function personalizeServerEnvironment(
       const cookiesValuesFromEdgeServer = getAnalyticsPlugin().settings.proxyValues;
 
       const guestIdCookie = getCookieServerSide(request.headers.cookie, guestIdName);
-      const browserIdCookie = getCookieServerSide(request.headers.cookie, browserIdName);
+      const clientIdCookie = getCookieServerSide(request.headers.cookie, clientIdName);
 
       let guestIdCookieString;
 
@@ -94,9 +94,9 @@ export function personalizeServerEnvironment(
           cookiesValuesFromEdgeServer.guestId,
           cookieAttributes
         );
-      else if (browserIdCookie) {
+      else if (clientIdCookie) {
         const guestIdCookieValueFromEdgeProxy = await fetchGuestIdFromEdgeProxy(
-          browserIdCookie.value,
+          clientIdCookie.value,
           coreSettings.contextId,
           coreSettings.sitecoreEdgeUrl
         );
@@ -129,4 +129,3 @@ export function personalizeServerEnvironment(
     },
   };
 }
-

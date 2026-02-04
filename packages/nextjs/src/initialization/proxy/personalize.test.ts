@@ -17,12 +17,12 @@ describe('personalizeProxyEnvironment', () => {
   let getPersonalizePluginStub: sinon.SinonStub;
   let getDefaultCookieAttributesStub: sinon.SinonStub;
   let fetchGuestIdFromEdgeProxyStub: sinon.SinonStub;
-  let getBrowserIdStub: sinon.SinonStub;
+  let getClientIdStub: sinon.SinonStub;
 
   const mockAnalyticsPlugin = {
     settings: {
       cookieSettings: {
-        name: { browserId: 'sc_cid' },
+        name: { clientId: 'sc_cid' },
         expiryDays: 730,
         domain: '.example.com',
       },
@@ -101,7 +101,7 @@ describe('personalizeProxyEnvironment', () => {
     getPersonalizePluginStub = sandbox.stub().returns(mockPersonalizePlugin);
     getDefaultCookieAttributesStub = sandbox.stub().returns(mockCookieAttributes);
     fetchGuestIdFromEdgeProxyStub = sandbox.stub();
-    getBrowserIdStub = sandbox.stub();
+    getClientIdStub = sandbox.stub();
 
     personalizeProxyEnvironmentModule = proxyquire('./personalize', {
       '@sitecore-content-sdk/core': {
@@ -117,7 +117,7 @@ describe('personalizeProxyEnvironment', () => {
         fetchGuestIdFromEdgeProxy: fetchGuestIdFromEdgeProxyStub,
       },
       './analytics': {
-        getBrowserId: getBrowserIdStub,
+        getClientId: getClientIdStub,
       },
     });
   });
@@ -328,7 +328,7 @@ describe('personalizeProxyEnvironment', () => {
       describe('proxy values from edge server', () => {
         it('should use guest ID from proxy values when available', async () => {
           mockAnalyticsPlugin.settings.proxyValues = {
-            browserId: 'browser-id',
+            clientId: 'client-id',
             guestId: 'proxy-guest-id',
           };
 
@@ -350,7 +350,7 @@ describe('personalizeProxyEnvironment', () => {
 
         it('should set cookie on request when using proxy values', async () => {
           mockAnalyticsPlugin.settings.proxyValues = {
-            browserId: 'browser-id',
+            clientId: 'client-id',
             guestId: 'proxy-guest-id',
           };
 
@@ -369,10 +369,10 @@ describe('personalizeProxyEnvironment', () => {
 
         it('should fallback to edge proxy fetch when proxy values exist but guestId is undefined', async () => {
           mockAnalyticsPlugin.settings.proxyValues = {
-            browserId: 'browser-id',
+            clientId: 'client-id',
             guestId: undefined,
           };
-          getBrowserIdStub.returns('browser-id-123');
+          getClientIdStub.returns('client-id-123');
           fetchGuestIdFromEdgeProxyStub.resolves('fetched-guest-id');
 
           const request = createMockRequest({});
@@ -385,7 +385,7 @@ describe('personalizeProxyEnvironment', () => {
           await environment.setGuestId();
 
           expect(fetchGuestIdFromEdgeProxyStub).to.have.been.calledWith(
-            'browser-id-123',
+            'client-id-123',
             'test-context-id',
             'https://edge.test.com'
           );
@@ -397,8 +397,8 @@ describe('personalizeProxyEnvironment', () => {
       });
 
       describe('fetch from edge proxy', () => {
-        it('should fetch guest ID from edge proxy when browser ID exists', async () => {
-          getBrowserIdStub.returns('browser-id-123');
+        it('should fetch guest ID from edge proxy when client ID exists', async () => {
+          getClientIdStub.returns('client-id-123');
           fetchGuestIdFromEdgeProxyStub.resolves('new-guest-id');
 
           const request = createMockRequest({});
@@ -411,14 +411,14 @@ describe('personalizeProxyEnvironment', () => {
           await environment.setGuestId();
 
           expect(fetchGuestIdFromEdgeProxyStub).to.have.been.calledWith(
-            'browser-id-123',
+            'client-id-123',
             'test-context-id',
             'https://edge.test.com'
           );
         });
 
         it('should set guest ID cookie from edge proxy response', async () => {
-          getBrowserIdStub.returns('browser-id-123');
+          getClientIdStub.returns('client-id-123');
           fetchGuestIdFromEdgeProxyStub.resolves('new-guest-id');
 
           const request = createMockRequest({});
@@ -437,7 +437,7 @@ describe('personalizeProxyEnvironment', () => {
         });
 
         it('should set cookie on request when fetching from edge proxy', async () => {
-          getBrowserIdStub.returns('browser-id-123');
+          getClientIdStub.returns('client-id-123');
           fetchGuestIdFromEdgeProxyStub.resolves('new-guest-id');
 
           const cookieStore: Record<string, string> = {};
@@ -454,9 +454,9 @@ describe('personalizeProxyEnvironment', () => {
         });
       });
 
-      describe('no browser ID available', () => {
-        it('should return early when no browser ID or proxy values exist', async () => {
-          getBrowserIdStub.returns(null);
+      describe('no client ID available', () => {
+        it('should return early when no client ID or proxy values exist', async () => {
+          getClientIdStub.returns(null);
 
           const request = createMockRequest({});
           const response = createMockResponse();
@@ -474,4 +474,3 @@ describe('personalizeProxyEnvironment', () => {
     });
   });
 });
-
