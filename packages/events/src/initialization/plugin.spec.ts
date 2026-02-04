@@ -56,9 +56,9 @@ describe('plugin', () => {
     jest.clearAllMocks();
     (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
     mockCoreSettings.plugins.clear();
-    // Reset window.scCloudSDK
+    // Reset window.scContentSDK
     if (typeof window !== 'undefined') {
-      delete (window as any).scCloudSDK;
+      delete (window as any).scContentSDK;
     }
   });
 
@@ -102,38 +102,42 @@ describe('plugin', () => {
   });
 
   describe('init', () => {
-    it('should set up window.scCloudSDK.events when window is defined', async () => {
+    it('should set up window.scContentSDK.events when window is defined', async () => {
       const plugin = eventsPlugin();
 
       await plugin.init();
 
-      expect(window.scCloudSDK).toBeDefined();
-      expect(window.scCloudSDK.events).toBeDefined();
-      expect(window.scCloudSDK.events.addToEventQueue).toBe(addToEventQueueModule.addToEventQueue);
-      expect(window.scCloudSDK.events.clearEventQueue).toBe(clearEventQueueModule.clearEventQueue);
-      expect(window.scCloudSDK.events.event).toBe(eventModule.event);
-      expect(window.scCloudSDK.events.form).toBe(formModule.form);
-      expect(window.scCloudSDK.events.identity).toBe(identityModule.identity);
-      expect(window.scCloudSDK.events.pageView).toBe(pageViewModule.pageView);
-      expect(window.scCloudSDK.events.processEventQueue).toBe(
+      expect(window.scContentSDK).toBeDefined();
+      expect(window.scContentSDK.events).toBeDefined();
+      expect(window.scContentSDK.events.addToEventQueue).toBe(
+        addToEventQueueModule.addToEventQueue
+      );
+      expect(window.scContentSDK.events.clearEventQueue).toBe(
+        clearEventQueueModule.clearEventQueue
+      );
+      expect(window.scContentSDK.events.event).toBe(eventModule.event);
+      expect(window.scContentSDK.events.form).toBe(formModule.form);
+      expect(window.scContentSDK.events.identity).toBe(identityModule.identity);
+      expect(window.scContentSDK.events.pageView).toBe(pageViewModule.pageView);
+      expect(window.scContentSDK.events.processEventQueue).toBe(
         processEventQueueModule.processEventQueue
       );
-      expect(window.scCloudSDK.events.version).toBe(PACKAGE_VERSION);
+      expect(window.scContentSDK.events.version).toBe(PACKAGE_VERSION);
     });
 
-    it('should preserve existing window.scCloudSDK properties when adding events', async () => {
-      (window as any).scCloudSDK = {
+    it('should preserve existing window.scContentSDK properties when adding events', async () => {
+      (window as any).scContentSDK = {
         'other-plugin': { version: '1.0.0' },
       };
 
       const plugin = eventsPlugin();
       await plugin.init();
 
-      expect((window.scCloudSDK as any)['other-plugin']).toEqual({ version: '1.0.0' });
-      expect(window.scCloudSDK.events).toBeDefined();
+      expect((window.scContentSDK as any)['other-plugin']).toEqual({ version: '1.0.0' });
+      expect(window.scContentSDK.events).toBeDefined();
     });
 
-    it('should not set up window.scCloudSDK when window is undefined', async () => {
+    it('should not set up window.scContentSDK when window is undefined', async () => {
       const originalWindow = global.window;
       // @ts-expect-error - intentionally setting window to undefined
       delete global.window;

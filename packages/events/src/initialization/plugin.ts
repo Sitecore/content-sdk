@@ -17,8 +17,8 @@ import { EventsPlugin } from './types';
  */
 async function init() {
   if (typeof window !== 'undefined')
-    window.scCloudSDK = {
-      ...window.scCloudSDK,
+    window.scContentSDK = {
+      ...window.scContentSDK,
       events: {
         addToEventQueue,
         clearEventQueue,
@@ -63,7 +63,7 @@ export function getEventsPlugin(): EventsPlugin {
 
 declare global {
   // eslint-disable-next-line no-unused-vars
-  interface ScCloudSDK {
+  interface ScContentSDK {
     events: {
       addToEventQueue: typeof addToEventQueue;
       clearEventQueue: typeof clearEventQueue;

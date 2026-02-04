@@ -45,9 +45,9 @@ describe('plugin', () => {
     jest.clearAllMocks();
     (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
     mockCoreSettings.plugins.clear();
-    // Reset window.scCloudSDK
+    // Reset window.scContentSDK
     if (typeof window !== 'undefined') {
-      delete (window as any).scCloudSDK;
+      delete (window as any).scContentSDK;
     }
   });
 
@@ -279,7 +279,7 @@ describe('plugin', () => {
       expect(mockSetClientId).toHaveBeenCalledTimes(1);
     });
 
-    it('should set up window.scCloudSDK when environment type is browser', async () => {
+    it('should set up window.scContentSDK when environment type is browser', async () => {
       const environment = createMockEnvironment('browser');
       mockGetClientId.mockReturnValue('existing-client-id');
       mockSetClientId.mockResolvedValue(undefined);
@@ -289,18 +289,18 @@ describe('plugin', () => {
 
       await plugin.init();
 
-      expect(window.scCloudSDK).toBeDefined();
-      expect(window.scCloudSDK['analytics-core']).toBeDefined();
-      expect(window.scCloudSDK['analytics-core'].getClientId).toBe(getClientIdModule.getClientId);
-      expect(window.scCloudSDK['analytics-core'].settings).toEqual({
+      expect(window.scContentSDK).toBeDefined();
+      expect(window.scContentSDK['analytics-core']).toBeDefined();
+      expect(window.scContentSDK['analytics-core'].getClientId).toBe(getClientIdModule.getClientId);
+      expect(window.scContentSDK['analytics-core'].settings).toEqual({
         siteName: 'test-site',
         sitecoreEdgeContextId: 'test-context-id',
         sitecoreEdgeUrl: 'https://edge.test.com',
       });
-      expect(window.scCloudSDK['analytics-core'].version).toBe(LIBRARY_VERSION);
+      expect(window.scContentSDK['analytics-core'].version).toBe(LIBRARY_VERSION);
     });
 
-    it('should not set up window.scCloudSDK when environment type is server', async () => {
+    it('should not set up window.scContentSDK when environment type is server', async () => {
       const environment = createMockEnvironment('server');
       mockGetClientId.mockReturnValue(null);
       mockSetClientId.mockResolvedValue(undefined);
@@ -310,11 +310,11 @@ describe('plugin', () => {
 
       await plugin.init();
 
-      expect(window.scCloudSDK).toBeUndefined();
+      expect(window.scContentSDK).toBeUndefined();
     });
 
-    it('should preserve existing window.scCloudSDK properties when adding analytics-core', async () => {
-      (window as any).scCloudSDK = {
+    it('should preserve existing window.scContentSDK properties when adding analytics-core', async () => {
+      (window as any).scContentSDK = {
         'other-plugin': { version: '1.0.0' },
       };
 
@@ -327,8 +327,8 @@ describe('plugin', () => {
 
       await plugin.init();
 
-      expect((window.scCloudSDK as any)['other-plugin']).toEqual({ version: '1.0.0' });
-      expect(window.scCloudSDK['analytics-core']).toBeDefined();
+      expect((window.scContentSDK as any)['other-plugin']).toEqual({ version: '1.0.0' });
+      expect(window.scContentSDK['analytics-core']).toBeDefined();
     });
   });
 });

@@ -78,8 +78,8 @@ async function init() {
   }
 
   if (analyticsPlugin.environment.type === 'browser')
-    window.scCloudSDK = {
-      ...window.scCloudSDK,
+    window.scContentSDK = {
+      ...window.scContentSDK,
       'analytics-core': {
         getClientId,
         settings: {
@@ -119,11 +119,11 @@ declare global {
     };
     version: string;
   }
-  interface ScCloudSDK {
+  interface ScContentSDK {
     'analytics-core': AnalyticsCore;
   }
   // eslint-disable-next-line no-unused-vars
   interface Window {
-    scCloudSDK: ScCloudSDK;
+    scContentSDK: ScContentSDK;
   }
 }

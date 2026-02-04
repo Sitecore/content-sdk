@@ -72,9 +72,9 @@ describe('personalizeBrowserPlugin', () => {
     jest.clearAllMocks();
     (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue(mockAnalyticsPlugin);
     (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
-    // Reset window.scCloudSDK
+    // Reset window.scContentSDK
     if (typeof window !== 'undefined') {
-      delete (window as any).scCloudSDK;
+      delete (window as any).scContentSDK;
     }
   });
 
@@ -291,15 +291,15 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        // Should not throw and should not try to set window.scCloudSDK
+        // Should not throw and should not try to set window.scContentSDK
         expect(getCdnUrlModule.getCdnUrl).not.toHaveBeenCalled();
 
         global.window = originalWindow;
       });
     });
 
-    describe('window.scCloudSDK setup', () => {
-      it('should set up window.scCloudSDK with personalize properties', async () => {
+    describe('window.scContentSDK setup', () => {
+      it('should set up window.scContentSDK with personalize properties', async () => {
         const environment = createMockEnvironment();
 
         const plugin = personalizeBrowserPlugin({ environment });
@@ -308,13 +308,13 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect(window.scCloudSDK).toBeDefined();
-        expect(window.scCloudSDK.personalize).toBeDefined();
-        expect(window.scCloudSDK.personalize.version).toBe(PACKAGE_VERSION);
-        expect(window.scCloudSDK.personalize.settings).toEqual({});
+        expect(window.scContentSDK).toBeDefined();
+        expect(window.scContentSDK.personalize).toBeDefined();
+        expect(window.scContentSDK.personalize.version).toBe(PACKAGE_VERSION);
+        expect(window.scContentSDK.personalize.settings).toEqual({});
       });
 
-      it('should add getGuestId to window.scCloudSDK.analytics-core', async () => {
+      it('should add getGuestId to window.scContentSDK.analytics-core', async () => {
         const environment = createMockEnvironment();
 
         const plugin = personalizeBrowserPlugin({ environment });
@@ -323,12 +323,12 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect(window.scCloudSDK['analytics-core']).toBeDefined();
-        expect(window.scCloudSDK['analytics-core'].getGuestId).toBe(getGuestIdModule.getGuestId);
+        expect(window.scContentSDK['analytics-core']).toBeDefined();
+        expect(window.scContentSDK['analytics-core'].getGuestId).toBe(getGuestIdModule.getGuestId);
       });
 
-      it('should preserve existing window.scCloudSDK properties', async () => {
-        (window as any).scCloudSDK = {
+      it('should preserve existing window.scContentSDK properties', async () => {
+        (window as any).scContentSDK = {
           'analytics-core': {
             getClientId: jest.fn(),
             version: '1.0.0',
@@ -343,9 +343,9 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect((window.scCloudSDK as any)['analytics-core'].getClientId).toBeDefined();
-        expect((window.scCloudSDK as any)['analytics-core'].version).toBe('1.0.0');
-        expect(window.scCloudSDK['analytics-core'].getGuestId).toBe(getGuestIdModule.getGuestId);
+        expect((window.scContentSDK as any)['analytics-core'].getClientId).toBeDefined();
+        expect((window.scContentSDK as any)['analytics-core'].version).toBe('1.0.0');
+        expect(window.scContentSDK['analytics-core'].getGuestId).toBe(getGuestIdModule.getGuestId);
       });
     });
 
@@ -410,7 +410,7 @@ describe('personalizeBrowserPlugin', () => {
         expect(analyticsUtilsModule.appendScriptWithAttributes).not.toHaveBeenCalled();
       });
 
-      it('should set webPersonalization settings on window.scCloudSDK.personalize', async () => {
+      it('should set webPersonalization settings on window.scContentSDK.personalize', async () => {
         const environment = createMockEnvironment();
         (
           getCdnUrlModule.getCdnUrl as jest.Mock<typeof getCdnUrlModule.getCdnUrl>
@@ -430,7 +430,7 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect(window.scCloudSDK.personalize.settings).toEqual({
+        expect(window.scContentSDK.personalize.settings).toEqual({
           async: false,
           defer: true,
           language: undefined,

@@ -44,21 +44,21 @@ async function init() {
 
   if (typeof window === 'undefined') return;
 
-  window.scCloudSDK = {
-    ...window.scCloudSDK,
+  window.scContentSDK = {
+    ...window.scContentSDK,
     personalize: {
       version: PACKAGE_VERSION,
       settings: {},
     },
     'analytics-core': {
-      ...window.scCloudSDK?.['analytics-core'],
+      ...window.scContentSDK?.['analytics-core'],
       getGuestId,
     },
   };
 
   if (!personalizeSettings.webPersonalization) return;
 
-  window.scCloudSDK.personalize.settings = personalizeSettings.webPersonalization;
+  window.scContentSDK.personalize.settings = personalizeSettings.webPersonalization;
   const cdnUrl = await getCdnUrl(coreSettings.contextId, coreSettings.sitecoreEdgeUrl);
 
   if (!cdnUrl) return;
@@ -129,7 +129,7 @@ declare global {
     getGuestId: typeof getGuestId;
   }
   // eslint-disable-next-line no-unused-vars
-  interface ScCloudSDK {
+  interface ScContentSDK {
     personalize: {
       settings?: {
         async?: boolean;
