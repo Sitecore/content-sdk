@@ -50,8 +50,8 @@ async function init() {
       version: PACKAGE_VERSION,
       settings: {},
     },
-    'analytics-core': {
-      ...window.scContentSDK?.['analytics-core'],
+    analytics_core: {
+      ...window.scContentSDK?.analytics_core,
       getGuestId,
     },
   };

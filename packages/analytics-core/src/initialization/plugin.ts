@@ -80,7 +80,7 @@ async function init() {
   if (analyticsPlugin.environment.type === 'browser')
     window.scContentSDK = {
       ...window.scContentSDK,
-      'analytics-core': {
+      analytics_core: {
         getClientId,
         settings: {
           siteName: coreConfig.settings.siteName,
@@ -120,7 +120,7 @@ declare global {
     version: string;
   }
   interface ScContentSDK {
-    'analytics-core': AnalyticsCore;
+    analytics_core: AnalyticsCore;
   }
   // eslint-disable-next-line no-unused-vars
   interface Window {

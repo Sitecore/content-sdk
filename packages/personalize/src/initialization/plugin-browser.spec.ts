@@ -314,7 +314,7 @@ describe('personalizeBrowserPlugin', () => {
         expect(window.scContentSDK.personalize.settings).toEqual({});
       });
 
-      it('should add getGuestId to window.scContentSDK.analytics-core', async () => {
+      it('should add getGuestId to window.scContentSDK.analytics_core', async () => {
         const environment = createMockEnvironment();
 
         const plugin = personalizeBrowserPlugin({ environment });
@@ -323,13 +323,13 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect(window.scContentSDK['analytics-core']).toBeDefined();
-        expect(window.scContentSDK['analytics-core'].getGuestId).toBe(getGuestIdModule.getGuestId);
+        expect(window.scContentSDK.analytics_core).toBeDefined();
+        expect(window.scContentSDK.analytics_core.getGuestId).toBe(getGuestIdModule.getGuestId);
       });
 
       it('should preserve existing window.scContentSDK properties', async () => {
         (window as any).scContentSDK = {
-          'analytics-core': {
+          analytics_core: {
             getClientId: jest.fn(),
             version: '1.0.0',
           },
@@ -343,9 +343,9 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect((window.scContentSDK as any)['analytics-core'].getClientId).toBeDefined();
-        expect((window.scContentSDK as any)['analytics-core'].version).toBe('1.0.0');
-        expect(window.scContentSDK['analytics-core'].getGuestId).toBe(getGuestIdModule.getGuestId);
+        expect((window.scContentSDK as any).analytics_core.getClientId).toBeDefined();
+        expect((window.scContentSDK as any).analytics_core.version).toBe('1.0.0');
+        expect(window.scContentSDK.analytics_core.getGuestId).toBe(getGuestIdModule.getGuestId);
       });
     });
 

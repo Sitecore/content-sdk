@@ -290,14 +290,14 @@ describe('plugin', () => {
       await plugin.init();
 
       expect(window.scContentSDK).toBeDefined();
-      expect(window.scContentSDK['analytics-core']).toBeDefined();
-      expect(window.scContentSDK['analytics-core'].getClientId).toBe(getClientIdModule.getClientId);
-      expect(window.scContentSDK['analytics-core'].settings).toEqual({
+      expect(window.scContentSDK.analytics_core).toBeDefined();
+      expect(window.scContentSDK.analytics_core.getClientId).toBe(getClientIdModule.getClientId);
+      expect(window.scContentSDK.analytics_core.settings).toEqual({
         siteName: 'test-site',
         sitecoreEdgeContextId: 'test-context-id',
         sitecoreEdgeUrl: 'https://edge.test.com',
       });
-      expect(window.scContentSDK['analytics-core'].version).toBe(LIBRARY_VERSION);
+      expect(window.scContentSDK.analytics_core.version).toBe(LIBRARY_VERSION);
     });
 
     it('should not set up window.scContentSDK when environment type is server', async () => {
@@ -328,7 +328,7 @@ describe('plugin', () => {
       await plugin.init();
 
       expect((window.scContentSDK as any)['other-plugin']).toEqual({ version: '1.0.0' });
-      expect(window.scContentSDK['analytics-core']).toBeDefined();
+      expect(window.scContentSDK.analytics_core).toBeDefined();
     });
   });
 });
