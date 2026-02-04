@@ -1,7 +1,16 @@
 ﻿import React, { JSX } from 'react';
-import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-import { useSitecore } from './withSitecore';
+import { ComponentRendering, LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { DesignLibraryMode } from '@sitecore-content-sdk/core/editing';
 
+export type PageMode = {
+  isNormal: boolean;
+  isPreview: boolean;
+  isEditing: boolean;
+  isDesignLibrary: boolean;
+};
+export type Page = {
+  mode: PageMode;
+};
 export const DefaultEditingError = (): JSX.Element => (
   <div className="sc-jss-editing-error" role="alert">
     Datasource is required. Please choose a content item for this component.
@@ -10,6 +19,8 @@ export const DefaultEditingError = (): JSX.Element => (
 
 export interface WithDatasourceCheckProps {
   rendering: ComponentRendering;
+  pageState?: LayoutServicePageState;
+  libraryMode?: DesignLibraryMode;
 }
 
 export interface WithDatasourceCheckOptions {
@@ -33,15 +44,15 @@ export function withDatasourceCheck(options?: WithDatasourceCheckOptions) {
     Component: React.ComponentType<ComponentProps>
   ) {
     return function WithDatasourceCheck(props: ComponentProps) {
-      const { page } = useSitecore();
       const EditingError = options?.editingErrorComponent ?? DefaultEditingError;
-
+      const { pageState, libraryMode } = props;
       // If the component is rendered in DesignLibrary, we don't need to check for datasource
-      const isDesignLibrary = page.mode.isDesignLibrary;
+      const isDesignLibrary = !!libraryMode;
+      const isEditing = pageState === LayoutServicePageState.Edit;
 
       return isDesignLibrary || props.rendering?.dataSource ? (
         <Component {...props} />
-      ) : page.mode.isEditing ? (
+      ) : isEditing ? (
         <EditingError />
       ) : null;
     };
