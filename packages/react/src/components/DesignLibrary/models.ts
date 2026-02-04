@@ -20,13 +20,6 @@ export type DynamicComponent = React.ComponentType<{
   params?: ComponentParams;
 }>;
 
-export type DesignLibraryProps = {
-  /**
-   * The dynamic import for import map to be used in variant generation mode.
-   */
-  loadImportMap?: () => Promise<ImportMapImport>;
-};
-
 export type DesignLibraryServerProps = {
   /**
    * Component Map will be used to map Sitecore component names to app implementation

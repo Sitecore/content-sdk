@@ -6,7 +6,7 @@ import { expect, use } from 'chai';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { render } from '@testing-library/react';
-import { withLoadImportMap, WithLoadImportMapProps } from './withLoadImportMap';
+import { withLoadImportMap, WithLoadImportMapProps, useLoadImportMap } from './withLoadImportMap';
 import { ImportMapReactContext } from '../components/SitecoreProvider';
 import { ImportMapImport } from '../components/DesignLibrary/models';
 
@@ -115,5 +115,46 @@ describe('withLoadImportMap', () => {
 
     expect(loadImportMapProp).to.have.been.calledOnce;
     expect(getByTestId('test-component').textContent).to.equal('loaded');
+  });
+});
+
+describe('useLoadImportMap', () => {
+  const mockImportMapData: ImportMapImport = {
+    default: [
+      {
+        module: 'react',
+        exports: [
+          { name: 'default', value: {} },
+          { name: 'useState', value: {} },
+        ],
+      },
+    ],
+  };
+
+  const TestComponent = () => {
+    const loadImportMap = useLoadImportMap();
+    return (
+      <div data-testid="test-hook">
+        {loadImportMap ? 'loadImportMap available' : 'no loadImportMap'}
+      </div>
+    );
+  };
+
+  it('should return loadImportMap function from context', () => {
+    const contextLoadImportMap = spy(() => Promise.resolve(mockImportMapData));
+
+    const { getByTestId } = render(
+      <ImportMapReactContext.Provider value={contextLoadImportMap}>
+        <TestComponent />
+      </ImportMapReactContext.Provider>
+    );
+
+    expect(getByTestId('test-hook').textContent).to.equal('loadImportMap available');
+  });
+
+  it('should return undefined when context is not provided', () => {
+    const { getByTestId } = render(<TestComponent />);
+
+    expect(getByTestId('test-hook').textContent).to.equal('no loadImportMap');
   });
 });
