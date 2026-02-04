@@ -17,6 +17,6 @@ export const SITECORE_EDGE_URL = 'https://edge-platform.sitecorecloud.io';
 export const CORRELATION_ID_HEADER = 'x-sc-correlation-id';
 
 export const ERROR_MESSAGES = {
-  IE_0003:
-    '[IE-0003] Unable to set the "sc_cid" cookie because the browser ID could not be retrieved from the server. Make sure to set the correct values for "contextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.',
+  IE_005:
+    '[IE-005] Unable to set the "sc_cid" cookie because the client ID could not be retrieved from the server. Make sure to set the correct values for "contextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.',
 } as const;

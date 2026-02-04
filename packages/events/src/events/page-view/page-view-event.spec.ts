@@ -291,7 +291,7 @@ describe('PageViewEvent', () => {
 
       expect(() => {
         callPageViewEvent(pageViewData, id, settings, extensionData);
-      }).toThrow(ERROR_MESSAGES.IV_0005);
+      }).toThrow(ERROR_MESSAGES.IV_006);
     });
 
     it('should not throw an error when no more than 50 ext attributes are passed', () => {
@@ -300,7 +300,7 @@ describe('PageViewEvent', () => {
 
       expect(() => {
         callPageViewEvent(pageViewData, id, settings, extensionData);
-      }).not.toThrow(ERROR_MESSAGES.IV_0005);
+      }).not.toThrow(ERROR_MESSAGES.IV_006);
     });
   });
 

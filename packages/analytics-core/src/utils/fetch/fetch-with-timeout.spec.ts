@@ -52,7 +52,7 @@ describe('fetchWithTimeout', () => {
     const timeout = -100; // Negative timeout value
 
     await expect(fetchWithTimeout(url, timeout, fetchOptions)).rejects.toThrow(
-      ERROR_MESSAGES.IV_0006
+      ERROR_MESSAGES.IV_002
     );
   });
 
@@ -60,14 +60,14 @@ describe('fetchWithTimeout', () => {
     const timeout = 5000.5; // Non-integer timeout value
 
     await expect(fetchWithTimeout(url, timeout, fetchOptions)).rejects.toThrow(
-      ERROR_MESSAGES.IV_0006
+      ERROR_MESSAGES.IV_002
     );
   });
 
   it('should catch an error with the appropriate message error if the fetch request fails', async () => {
     const timeout = 1000; // 1 second timeout
 
-    const abortError = new Error(ERROR_MESSAGES.IE_0002);
+    const abortError = new Error(ERROR_MESSAGES.IE_003);
     abortError.name = 'AbortError';
 
     global.fetch = jest.fn(() => Promise.reject(abortError)) as typeof fetch;
@@ -78,22 +78,22 @@ describe('fetchWithTimeout', () => {
       expect(result).toBeUndefined();
       expect(error).toBeInstanceOf(Error);
       expect(abortError.name).toBe('AbortError');
-      expect(error.message).toBe(ERROR_MESSAGES.IE_0002);
+      expect(error.message).toBe(ERROR_MESSAGES.IE_003);
     }
   });
 
   it('should catch an error with the appropriate message error if the fetch request fails version 2', async () => {
     const timeout = 1000; // 1 second timeout
 
-    const abortError = new Error(ERROR_MESSAGES.IE_0002);
+    const abortError = new Error(ERROR_MESSAGES.IE_003);
     abortError.name = 'AbortError';
 
     global.fetch = jest.fn(() => Promise.reject(abortError)) as typeof fetch;
 
     const result = await fetchWithTimeout(url, timeout, fetchOptions).catch((error) => {
       expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe(ERROR_MESSAGES.IE_0002);
-      expect(error.message).toBe(ERROR_MESSAGES.IE_0002);
+      expect(error.message).toBe(ERROR_MESSAGES.IE_003);
+      expect(error.message).toBe(ERROR_MESSAGES.IE_003);
     });
 
     expect(result).toBeUndefined();
@@ -102,7 +102,7 @@ describe('fetchWithTimeout', () => {
   it('should catch an error with the appropriate message error if the fetch request fails', async () => {
     const timeout = 1000; // 1 second timeout
 
-    const abortError = new Error(ERROR_MESSAGES.IE_0002);
+    const abortError = new Error(ERROR_MESSAGES.IE_003);
     abortError.name = 'AbortError ';
 
     global.fetch = jest.fn(() => Promise.reject(abortError)) as typeof fetch;
@@ -110,13 +110,13 @@ describe('fetchWithTimeout', () => {
     expect(async () => {
       const result = await fetchWithTimeout(url, timeout, fetchOptions);
       expect(result).toBeNull();
-    }).not.toThrow(ERROR_MESSAGES.IE_0002);
+    }).not.toThrow(ERROR_MESSAGES.IE_003);
   });
 
   it('should catch an error with the appropriate message error if the fetch request fails', async () => {
     const timeout = 1000; // 1 second timeout
 
-    const abortError = new Error(ERROR_MESSAGES.IV_0006);
+    const abortError = new Error(ERROR_MESSAGES.IV_002);
     abortError.name = '  ';
 
     global.fetch = jest.fn(() => Promise.reject(abortError)) as typeof fetch;
@@ -124,7 +124,7 @@ describe('fetchWithTimeout', () => {
     expect(async () => {
       const result = await fetchWithTimeout(url, timeout, fetchOptions);
       expect(result).toBeNull();
-    }).not.toThrow(ERROR_MESSAGES.IE_0002);
+    }).not.toThrow(ERROR_MESSAGES.IE_003);
   });
 
   it('should catch an error and return null if the fetch request fails', async () => {
@@ -157,7 +157,7 @@ describe('fetchWithTimeout', () => {
       expect(result).toBeNull();
       expect(abortError.name.length).toBeGreaterThan(0);
       expect(abortError.name).toEqual('abc');
-    }).not.toThrow(ERROR_MESSAGES.IE_0002);
+    }).not.toThrow(ERROR_MESSAGES.IE_003);
   });
 
   it('should return bad object if response has no .json method', async () => {

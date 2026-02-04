@@ -75,7 +75,7 @@ describe('fetchGuestIdFromEdgeProxy', () => {
     ).rejects.toThrow(expectedErrorMessage);
   });
 
-  it('should throw IE-0011 error if no ref exists', async () => {
+  it('should throw IE-006 error if no ref exists', async () => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ customer: {} }),
       ok: true,
@@ -85,6 +85,6 @@ describe('fetchGuestIdFromEdgeProxy', () => {
 
     expect(async () => {
       await fetchGuestIdFromEdgeProxy(bid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
-    }).rejects.toThrow(ERROR_MESSAGES.IE_0011);
+    }).rejects.toThrow(ERROR_MESSAGES.IE_006);
   });
 });

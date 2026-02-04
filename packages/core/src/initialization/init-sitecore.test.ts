@@ -48,7 +48,7 @@ describe('init-sitecore', () => {
 
   describe('getCoreSettings', () => {
     it('should throw error when SDK is not initialized', () => {
-      expect(() => getCoreSettings()).to.throw(ERROR_MESSAGES.IE_0002);
+      expect(() => getCoreSettings()).to.throw(ERROR_MESSAGES.IE_002);
     });
 
     it('should return core settings after initialization', async () => {

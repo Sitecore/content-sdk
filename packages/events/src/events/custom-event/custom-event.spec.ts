@@ -118,7 +118,7 @@ describe.only('CustomEvent', () => {
           sendEvent: sendEventModule.sendEvent,
           settings,
         });
-      }).toThrow(ERROR_MESSAGES.IV_0005);
+      }).toThrow(ERROR_MESSAGES.IV_006);
     });
 
     it('should not throw an error when no more than 50 ext attributes are passed', () => {
@@ -132,7 +132,7 @@ describe.only('CustomEvent', () => {
           sendEvent: sendEventModule.sendEvent,
           settings,
         });
-      }).not.toThrow(ERROR_MESSAGES.IV_0005);
+      }).not.toThrow(ERROR_MESSAGES.IV_006);
     });
   });
 

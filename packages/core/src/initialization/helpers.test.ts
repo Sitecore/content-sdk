@@ -49,7 +49,7 @@ describe('helpers', () => {
       plugins.set('dependent-plugin', plugin);
 
       expect(() => checkPluginDependencies(plugin, plugins)).to.throw(
-        '[IE-0001] - "dependent-plugin" also requires "missing-plugin"'
+        '[IE-001] "dependent-plugin" also requires "missing-plugin"'
       );
     });
 
@@ -63,7 +63,7 @@ describe('helpers', () => {
       plugins.set('dependent-plugin', plugin);
 
       expect(() => checkPluginDependencies(plugin, plugins)).to.throw(
-        '[IE-0001] - "dependent-plugin" also requires "missing-plugin-1"'
+        '[IE-001] "dependent-plugin" also requires "missing-plugin-1"'
       );
     });
 
@@ -219,7 +219,7 @@ describe('helpers', () => {
         expect.fail('Should have thrown an error');
       } catch (error) {
         expect((error as Error).message).to.equal(
-          '[IE-0001] - "dependent-plugin" also requires "missing-plugin"'
+          '[IE-001] "dependent-plugin" also requires "missing-plugin"'
         );
       }
     });
@@ -295,7 +295,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_001);
       });
 
       it('should throw when contextId is only whitespace', () => {
@@ -305,7 +305,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_001);
       });
 
       it('should throw when contextId is undefined', () => {
@@ -315,7 +315,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_001);
       });
 
       it('should throw when contextId is null', () => {
@@ -325,7 +325,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_001);
       });
     });
 
@@ -337,7 +337,7 @@ describe('helpers', () => {
           siteName: '',
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0002);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_002);
       });
 
       it('should throw when siteName is only whitespace', () => {
@@ -347,7 +347,7 @@ describe('helpers', () => {
           siteName: '   ',
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0002);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_002);
       });
 
       it('should throw when siteName is undefined', () => {
@@ -357,7 +357,7 @@ describe('helpers', () => {
           siteName: undefined as unknown as string,
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0002);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_002);
       });
 
       it('should throw when siteName is null', () => {
@@ -367,7 +367,7 @@ describe('helpers', () => {
           siteName: null as unknown as string,
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_0002);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.MV_002);
       });
     });
 
@@ -392,7 +392,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.IV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.IV_001);
       });
 
       it('should accept valid http URL', () => {
@@ -450,7 +450,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.IV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.IV_001);
       });
 
       it('should throw for URL without protocol', () => {
@@ -460,7 +460,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.IV_0001);
+        expect(() => constructCoreConfigSettings(config)).to.throw(ERROR_MESSAGES.IV_001);
       });
     });
   });

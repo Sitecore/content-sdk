@@ -108,7 +108,7 @@ export class Personalizer {
    */
   private validate(params: PersonalizeData) {
     if (!params.friendlyId || params.friendlyId.trim().length === 0)
-      throw new Error(ERROR_MESSAGES.MV_0004);
+      throw new Error(ERROR_MESSAGES.MV_004);
   }
 
   /**

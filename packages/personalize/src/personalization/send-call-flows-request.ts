@@ -90,7 +90,7 @@ export async function sendCallFlowsRequest(
     })
     .catch((error) => {
       debug.personalize('Error personalize response: %O' as const, error);
-      if (error.message.includes('IV-0006') || error.message.includes('IE-0002'))
+      if (error.message.includes('IV-002') || error.message.includes('IE-003'))
         throw new Error(error.message);
 
       return null;

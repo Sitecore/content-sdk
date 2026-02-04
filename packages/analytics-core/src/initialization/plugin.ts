@@ -103,7 +103,7 @@ export function getAnalyticsPlugin(): AnalyticsPlugin {
 
   if (!plugin)
     throw new Error(
-      `[IE-0004] - You must first add "${ANALYTICS_PLUGIN_NAME}" to the "initSitecore()" "plugins" array.`
+      `[IE-004] - You must first add "${ANALYTICS_PLUGIN_NAME}" to the "initContentSDK()" "plugins" array.`
     );
 
   return plugin;
@@ -127,4 +127,3 @@ declare global {
     scCloudSDK: ScCloudSDK;
   }
 }
-

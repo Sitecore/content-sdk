@@ -82,23 +82,23 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     });
   });
 
-  it('should throw IE-0003 error if fetch fails', async () => {
+  it('should throw IE-005 error if fetch fails', async () => {
     const abortError = new Error('abc');
     abortError.name = 'AbortError';
 
     global.fetch = jest.fn(() => Promise.reject(abortError));
 
-    const expectedError = ERROR_MESSAGES.IE_0003;
+    const expectedError = ERROR_MESSAGES.IE_005;
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId);
     }).rejects.toThrow(expectedError);
   });
 
-  it('should throw IE-0003 error if fetch returns null - fetchWithTimeout', async () => {
+  it('should throw IE-005 error if fetch returns null - fetchWithTimeout', async () => {
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockResolvedValue(null);
 
-    const expectedError = ERROR_MESSAGES.IE_0003;
+    const expectedError = ERROR_MESSAGES.IE_005;
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
@@ -106,12 +106,12 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw IE-0003 error if fetch rejects - fetchWithTimeout', async () => {
+  it('should throw IE-005 error if fetch rejects - fetchWithTimeout', async () => {
     const fetchWithTimeoutSpy = jest
       .spyOn(utils, 'fetchWithTimeout')
       .mockRejectedValueOnce({ message: 'random error' });
 
-    const expectedError = ERROR_MESSAGES.IE_0003;
+    const expectedError = ERROR_MESSAGES.IE_005;
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
@@ -119,25 +119,25 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw [IV-0006] when we pass negative timeout value', async () => {
+  it('should throw [IV-002] when we pass negative timeout value', async () => {
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
-      message: utils.ERROR_MESSAGES.IV_0006,
+      message: utils.ERROR_MESSAGES.IV_002,
     });
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, -100);
-    }).rejects.toThrow(utils.ERROR_MESSAGES.IV_0006);
+    }).rejects.toThrow(utils.ERROR_MESSAGES.IV_002);
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw [IE-0002] when we get an AbortError', async () => {
+  it('should throw [IE-003] when we get an AbortError', async () => {
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
-      message: utils.ERROR_MESSAGES.IE_0002,
+      message: utils.ERROR_MESSAGES.IE_003,
     });
 
     await expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
-    }).rejects.toThrow(utils.ERROR_MESSAGES.IE_0002);
+    }).rejects.toThrow(utils.ERROR_MESSAGES.IE_003);
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });
 });

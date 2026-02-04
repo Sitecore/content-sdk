@@ -42,7 +42,7 @@ export class PageViewEvent extends BaseEvent {
     const numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
     if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(ERROR_MESSAGES.IV_0005);
+      throw new Error(ERROR_MESSAGES.IV_006);
 
     this.includeUTMParameters =
       (args.pageViewData && args.pageViewData.includeUTMParameters) ?? true;

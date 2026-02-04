@@ -96,7 +96,7 @@ describe('plugin', () => {
       mockCoreSettings.plugins.clear();
 
       expect(() => getEventsPlugin()).toThrow(
-        `[IE-0004] - You must first add "${EVENTS_PLUGIN_NAME}" to the "initSitecore()" "plugins" array.`
+        `[IE-004] You must first add "${EVENTS_PLUGIN_NAME}" to the "initContentSDK()" "plugins" array.`
       );
     });
   });
@@ -149,4 +149,3 @@ describe('plugin', () => {
     });
   });
 });
-

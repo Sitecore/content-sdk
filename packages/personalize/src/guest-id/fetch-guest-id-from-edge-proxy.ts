@@ -32,7 +32,7 @@ export async function fetchGuestIdFromEdgeProxy(
     throw new Error(`${errorMsg}, for more info: ${moreInfo}`);
   }
 
-  if (!data.customer.ref) throw new Error(ERROR_MESSAGES.IE_0011);
+  if (!data.customer.ref) throw new Error(ERROR_MESSAGES.IE_006);
 
   return (data as GetGuestRefResponse).customer.ref;
 }

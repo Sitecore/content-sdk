@@ -33,8 +33,8 @@ export async function fetchBrowserIdFromEdgeProxy(
       })
       .catch((err) => {
         if (
-          err.message === UTILS_ERROR_MESSAGES.IV_0006 ||
-          err.message === UTILS_ERROR_MESSAGES.IE_0002
+          err.message === UTILS_ERROR_MESSAGES.IV_002 ||
+          err.message === UTILS_ERROR_MESSAGES.IE_003
         )
           throw new Error(err.message);
 
@@ -45,7 +45,7 @@ export async function fetchBrowserIdFromEdgeProxy(
       .then((res) => res.json())
       .catch(() => undefined);
 
-  if (!payload?.ref) throw new Error(ERROR_MESSAGES.IE_0003);
+  if (!payload?.ref) throw new Error(ERROR_MESSAGES.IE_005);
 
   const { ref: browserId, customer_ref: guestId }: EPResponse = payload;
   return { browserId, guestId };

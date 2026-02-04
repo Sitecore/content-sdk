@@ -17,7 +17,7 @@ export function checkPluginDependencies(plugin: Plugin, plugins: Map<string, Plu
 
   for (const dependency of plugin.dependencies) {
     if (!plugins.has(dependency))
-      throw new Error(`[IE-0001] - "${plugin.name}" also requires "${dependency}"`);
+      throw new Error(`[IE-001] "${plugin.name}" also requires "${dependency}"`);
   }
 
   debugInit(`All required dependencies for "${plugin.name}" are present`);
@@ -51,15 +51,15 @@ export function constructCoreConfigSettings(
   config: InitSitecoreOptions['settings']
 ): CoreSettings['settings'] {
   const { contextId, siteName, sitecoreEdgeUrl } = config;
-  if (!contextId || contextId.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_0001);
+  if (!contextId || contextId.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_001);
 
-  if (!siteName || siteName.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_0002);
+  if (!siteName || siteName.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_002);
 
   if (sitecoreEdgeUrl !== undefined)
     try {
       new URL(sitecoreEdgeUrl);
     } catch {
-      throw new Error(ERROR_MESSAGES.IV_0001);
+      throw new Error(ERROR_MESSAGES.IV_001);
     }
 
   debugInit('Configuration is valid');

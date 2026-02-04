@@ -39,7 +39,7 @@ export class IdentityEvent extends BaseEvent {
     this.numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
     if (this.numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(ERROR_MESSAGES.IV_0005);
+      throw new Error(ERROR_MESSAGES.IV_006);
   }
 
   /**
@@ -59,18 +59,18 @@ export class IdentityEvent extends BaseEvent {
    * @param {IdentityData} identityData - The data to be validated
    */
   private validateAttributes(identityData: IdentityData) {
-    if (identityData.identifiers.length === 0) throw new Error(ERROR_MESSAGES.MV_0003);
+    if (identityData.identifiers.length === 0) throw new Error(ERROR_MESSAGES.MV_003);
 
     if (identityData.dob !== undefined && !isShortISODateString(identityData.dob))
-      throw new Error(ERROR_MESSAGES.IV_0002);
+      throw new Error(ERROR_MESSAGES.IV_003);
 
     identityData.identifiers.forEach((identifier: Identifier) => {
       if (identifier.expiryDate && !isShortISODateString(identifier.expiryDate))
-        throw new Error(ERROR_MESSAGES.IV_0004);
+        throw new Error(ERROR_MESSAGES.IV_005);
     });
 
     if (identityData.email && !isValidEmail(identityData.email))
-      throw new Error(ERROR_MESSAGES.IV_0003);
+      throw new Error(ERROR_MESSAGES.IV_004);
   }
 
   /**

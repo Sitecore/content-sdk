@@ -75,7 +75,7 @@ describe('Test Identity', () => {
           sendEvent: sendEvent.sendEvent,
           settings: settingsMock,
         })
-    ).not.toThrow(ERROR_MESSAGES.MV_0003);
+    ).not.toThrow(ERROR_MESSAGES.MV_003);
 
     expect(data.city).toEqual(undefined);
     expect(data.country).toEqual(undefined);
@@ -152,7 +152,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       });
-    }).toThrow(ERROR_MESSAGES.MV_0003);
+    }).toThrow(ERROR_MESSAGES.MV_003);
   });
 
   it('Should throw error when an invalid email parameter is passed', () => {
@@ -178,7 +178,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       });
-    }).toThrow(ERROR_MESSAGES.IV_0003);
+    }).toThrow(ERROR_MESSAGES.IV_004);
   });
 
   it('should not throw error when the identifiers has object', () => {
@@ -189,7 +189,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       });
-    }).not.toThrow(ERROR_MESSAGES.MV_0003);
+    }).not.toThrow(ERROR_MESSAGES.MV_003);
   });
 
   it('Should make all values to Title Case', () => {
@@ -365,7 +365,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       }).send();
-    }).toThrow(ERROR_MESSAGES.IV_0002);
+    }).toThrow(ERROR_MESSAGES.IV_003);
   });
 
   it('Should throw an error if expiry date has invalid date format', () => {
@@ -379,7 +379,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       }).send();
-    }).toThrow(ERROR_MESSAGES.IV_0004);
+    }).toThrow(ERROR_MESSAGES.IV_005);
   });
 
   it('should send a identity event with an ext property containing extension data when passed', () => {
@@ -457,7 +457,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings,
       }).send();
-    }).toThrow(ERROR_MESSAGES.IV_0005);
+    }).toThrow(ERROR_MESSAGES.IV_006);
   });
 
   it('should not throw an error when no more than 50 ext attributes are passed', () => {
@@ -490,7 +490,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings,
       }).send();
-    }).not.toThrow(ERROR_MESSAGES.IV_0005);
+    }).not.toThrow(ERROR_MESSAGES.IV_006);
   });
 
   it('should not call flatten object method when no extension data is passed', () => {

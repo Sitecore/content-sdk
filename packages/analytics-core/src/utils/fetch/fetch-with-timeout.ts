@@ -13,7 +13,7 @@ export async function fetchWithTimeout(
   timeout: number,
   fetchOptions: RequestInit
 ): Promise<Response | null> {
-  if (!Number.isInteger(timeout) || timeout < 0) throw new Error(ERROR_MESSAGES.IV_0006);
+  if (!Number.isInteger(timeout) || timeout < 0) throw new Error(ERROR_MESSAGES.IV_002);
 
   const abortController = new AbortController();
   const signal = abortController.signal;
@@ -28,7 +28,7 @@ export async function fetchWithTimeout(
       return response;
     })
     .catch((error) => {
-      if (error.name === 'AbortError') throw new Error(ERROR_MESSAGES.IE_0002);
+      if (error.name === 'AbortError') throw new Error(ERROR_MESSAGES.IE_003);
       return null;
     });
 }

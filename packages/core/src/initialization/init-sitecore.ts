@@ -12,7 +12,7 @@ let coreSettings: CoreSettings | undefined;
  * @internal
  */
 export function getCoreSettings(): CoreSettings {
-  if (!coreSettings) throw new Error(ERROR_MESSAGES.IE_0002);
+  if (!coreSettings) throw new Error(ERROR_MESSAGES.IE_002);
 
   return coreSettings;
 }

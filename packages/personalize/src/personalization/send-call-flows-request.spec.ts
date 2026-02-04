@@ -270,29 +270,29 @@ describe('sendCallFlowsRequest', () => {
       });
     });
 
-    it('should throw [IV-0006] when we pass negative timeout value', async () => {
+    it('should throw [IV-002] when we pass negative timeout value', async () => {
       const fetchWithTimeoutSpy = jest
         .spyOn(utils, 'fetchWithTimeout')
         .mockImplementationOnce(() => {
-          throw new Error(utils.ERROR_MESSAGES.IV_0006);
+          throw new Error(utils.ERROR_MESSAGES.IV_002);
         });
 
       await expect(async () => {
         await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: -100 });
-      }).rejects.toThrow(utils.ERROR_MESSAGES.IV_0006);
+      }).rejects.toThrow(utils.ERROR_MESSAGES.IV_002);
       expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw [IE-0002] when we get an AbortError', async () => {
+    it('should throw [IE-003] when we get an AbortError', async () => {
       const fetchWithTimeoutSpy = jest
         .spyOn(utils, 'fetchWithTimeout')
         .mockImplementationOnce(() => {
-          throw new Error(utils.ERROR_MESSAGES.IE_0002);
+          throw new Error(utils.ERROR_MESSAGES.IE_003);
         });
 
       await expect(async () => {
         await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: -100 });
-      }).rejects.toThrow(utils.ERROR_MESSAGES.IE_0002);
+      }).rejects.toThrow(utils.ERROR_MESSAGES.IE_003);
       expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
     });
 

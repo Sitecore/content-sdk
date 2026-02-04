@@ -90,24 +90,24 @@ describe('Test Personalizer Class', () => {
         ''
       );
       expect(validateSpy).toHaveBeenCalledTimes(1);
-      expect(() => validateSpy).not.toThrow(ERROR_MESSAGES.MV_0004);
+      expect(() => validateSpy).not.toThrow(ERROR_MESSAGES.MV_004);
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should throw error when friendlyId is undefined ', async () => {
       const mockData = undefined;
       personalizeInputMock.friendlyId = mockData as unknown as string;
-      callValidation(personalizeInputMock, ERROR_MESSAGES.MV_0004);
+      callValidation(personalizeInputMock, ERROR_MESSAGES.MV_004);
     });
 
     it('should throw error when friendlyId is empty space string', async () => {
       personalizeInputMock.friendlyId = ' ';
-      callValidation(personalizeInputMock, ERROR_MESSAGES.MV_0004);
+      callValidation(personalizeInputMock, ERROR_MESSAGES.MV_004);
     });
 
     it('should throw error when friendlyId is empty string', async () => {
       personalizeInputMock.friendlyId = '';
-      callValidation(personalizeInputMock, ERROR_MESSAGES.MV_0004);
+      callValidation(personalizeInputMock, ERROR_MESSAGES.MV_004);
     });
   });
 
@@ -888,7 +888,7 @@ describe('Test Personalizer Class', () => {
             timeout: -10,
           }
         );
-      }).rejects.toThrow(UtilsERROR_MESSAGES.IV_0006);
+      }).rejects.toThrow(UtilsERROR_MESSAGES.IV_002);
     });
 
     it('should throw error if a float number is used for timeout value', async () => {
@@ -901,7 +901,7 @@ describe('Test Personalizer Class', () => {
             timeout: 420.69,
           }
         );
-      }).rejects.toThrow(UtilsERROR_MESSAGES.IV_0006);
+      }).rejects.toThrow(UtilsERROR_MESSAGES.IV_002);
     });
 
     it("should call abort method of AbortController if didn't get a response in time", async () => {
@@ -947,7 +947,7 @@ describe('Test Personalizer Class', () => {
           { timeout: 0 }
         );
       } catch (error) {
-        expect((error as FetchError).message).toBe(UtilsERROR_MESSAGES.IE_0002);
+        expect((error as FetchError).message).toBe(UtilsERROR_MESSAGES.IE_003);
       }
     });
 
@@ -968,7 +968,7 @@ describe('Test Personalizer Class', () => {
           timeout: 100,
         })
         .catch((err) => {
-          expect(err.message).toEqual(UtilsERROR_MESSAGES.IE_0002);
+          expect(err.message).toEqual(UtilsERROR_MESSAGES.IE_003);
         });
     });
 
