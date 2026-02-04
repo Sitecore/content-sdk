@@ -55,7 +55,6 @@
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
   "license": "Apache-2.0",
   "name": "@sitecore-content-sdk/personalize",
-  "private": true,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
