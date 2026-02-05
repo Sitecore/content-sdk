@@ -84,8 +84,8 @@ async function init() {
         getClientId,
         settings: {
           siteName: coreConfig.settings.siteName,
-          sitecoreEdgeContextId: coreConfig.settings.contextId,
-          sitecoreEdgeUrl: coreConfig.settings.sitecoreEdgeUrl,
+          edgeContextId: coreConfig.settings.contextId,
+          edgeUrl: coreConfig.settings.sitecoreEdgeUrl,
         },
         version: LIBRARY_VERSION,
       },
@@ -114,8 +114,8 @@ declare global {
     getClientId: typeof getClientId;
     settings: {
       siteName: string;
-      sitecoreEdgeContextId: string;
-      sitecoreEdgeUrl: string;
+      edgeContextId: string;
+      edgeUrl: string;
     };
     version: string;
   }

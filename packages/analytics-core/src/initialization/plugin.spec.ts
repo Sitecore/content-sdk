@@ -294,8 +294,8 @@ describe('plugin', () => {
       expect(window.scContentSDK.analytics_core.getClientId).toBe(getClientIdModule.getClientId);
       expect(window.scContentSDK.analytics_core.settings).toEqual({
         siteName: 'test-site',
-        sitecoreEdgeContextId: 'test-context-id',
-        sitecoreEdgeUrl: 'https://edge.test.com',
+        edgeContextId: 'test-context-id',
+        edgeUrl: 'https://edge.test.com',
       });
       expect(window.scContentSDK.analytics_core.version).toBe(LIBRARY_VERSION);
     });
