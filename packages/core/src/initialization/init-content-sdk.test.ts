@@ -8,7 +8,7 @@ import { ERROR_MESSAGES } from './consts';
 describe('init-content-sdk', () => {
   let sandbox: sinon.SinonSandbox;
   let initPluginsStub: sinon.SinonStub;
-  let constructCoreConfigSettingsStub: sinon.SinonStub;
+  let constructCoreContextSettingsStub: sinon.SinonStub;
   let debugInitStub: sinon.SinonStub;
 
   let initContentSdk: typeof import('./init-content-sdk').initContentSdk;
@@ -23,13 +23,13 @@ describe('init-content-sdk', () => {
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     initPluginsStub = sandbox.stub().resolves();
-    constructCoreConfigSettingsStub = sandbox.stub().callsFake((config) => config);
+    constructCoreContextSettingsStub = sandbox.stub().callsFake((config) => config);
     debugInitStub = sandbox.stub();
 
     const module = proxyquire('./init-content-sdk', {
       './helpers': {
         initPlugins: initPluginsStub,
-        constructCoreConfigSettings: constructCoreConfigSettingsStub,
+        constructCoreContextSettings: constructCoreContextSettingsStub,
       },
       '../debug': {
         default: {
@@ -78,7 +78,7 @@ describe('init-content-sdk', () => {
         plugins: [],
       });
 
-      expect(constructCoreConfigSettingsStub.calledOnceWith(validConfig)).to.be.true;
+      expect(constructCoreContextSettingsStub.calledOnceWith(validConfig)).to.be.true;
       expect(debugInitStub.calledWith('No plugins provided to the plugins array')).to.be.true;
 
       const coreContext = getCoreContext();
