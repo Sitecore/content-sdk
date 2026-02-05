@@ -22,7 +22,6 @@
 ## Functions
 
 - [areURLSearchParamsEqual](functions/areURLSearchParamsEqual.md)
-- [~~enforceCors~~](functions/enforceCors.md)
 - [ensurePathExists](functions/ensurePathExists.md)
 - [escapeNonSpecialQuestionMarks](functions/escapeNonSpecialQuestionMarks.md)
 - [generateMetadata](functions/generateMetadata.md)

@@ -8,7 +8,7 @@
 
 > **SitecoreCliConfigInput** = `object`
 
-Defined in: [content/src/config/models.ts:224](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/config/models.ts#L224)
+Defined in: [content/src/config/models.ts:224](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/config/models.ts#L224)
 
 Type used as CLI config input in sitecore.cli.config
 
@@ -18,7 +18,7 @@ Type used as CLI config input in sitecore.cli.config
 
 > `optional` **build**: `object`
 
-Defined in: [content/src/config/models.ts:232](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/config/models.ts#L232)
+Defined in: [content/src/config/models.ts:232](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/config/models.ts#L232)
 
 Configuration for the `sitecore-tools build` CLI command
 
@@ -32,7 +32,7 @@ Commands to run during the build process
 
 | Parameter | Type |
 | ------ | ------ |
-| `args?` | \{ `scConfig?`: [`SitecoreConfig`](SitecoreConfig.md); \} |
+| `args?` | \{ `scConfig`: [`SitecoreConfig`](SitecoreConfig.md); \} |
 | `args.scConfig?` | [`SitecoreConfig`](SitecoreConfig.md) |
 
 ##### Returns
@@ -45,7 +45,7 @@ Commands to run during the build process
 
 > `optional` **componentMap**: [`GenerateMapArgs`](../../tools/type-aliases/GenerateMapArgs.md) & `object`
 
-Defined in: [content/src/config/models.ts:250](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/config/models.ts#L250)
+Defined in: [content/src/config/models.ts:250](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/config/models.ts#L250)
 
 Configuration for the `sitecore-tools component generate-map` CLI command
 
@@ -59,11 +59,11 @@ Function implementation for generating a component map
 
 ***
 
-### config?
+### config
 
-> `optional` **config**: [`SitecoreConfig`](SitecoreConfig.md)
+> **config**: [`SitecoreConfig`](SitecoreConfig.md)
 
-Defined in: [content/src/config/models.ts:228](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/config/models.ts#L228)
+Defined in: [content/src/config/models.ts:228](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/config/models.ts#L228)
 
 Sitecore configuration (`sitecore.config` file)
 
@@ -73,7 +73,7 @@ Sitecore configuration (`sitecore.config` file)
 
 > `optional` **scaffold**: `object`
 
-Defined in: [content/src/config/models.ts:241](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/config/models.ts#L241)
+Defined in: [content/src/config/models.ts:241](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/config/models.ts#L241)
 
 Configuration for the `sitecore-tools scaffold` CLI command
 

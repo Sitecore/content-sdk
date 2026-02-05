@@ -6,7 +6,7 @@
 
 # Class: SitecoreProvider
 
-Defined in: react/types/components/SitecoreProvider.d.ts:57
+Defined in: react/types/components/SitecoreProvider.d.ts:56
 
 The SitecoreProvider component.
 
@@ -20,7 +20,7 @@ The SitecoreProvider component.
 
 > **new SitecoreProvider**(`props`): `SitecoreProvider`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:59
+Defined in: react/types/components/SitecoreProvider.d.ts:58
 
 #### Parameters
 
@@ -84,7 +84,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:970
 
 > **setPage**: (`value`) => `void`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:65
+Defined in: react/types/components/SitecoreProvider.d.ts:64
 
 Update page state.
 
@@ -149,7 +149,7 @@ class Foo extends React.Component {
 
 > `static` **displayName**: `string`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:58
+Defined in: react/types/components/SitecoreProvider.d.ts:57
 
 ***
 
@@ -219,7 +219,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:60
+Defined in: react/types/components/SitecoreProvider.d.ts:59
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -431,7 +431,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:66
+Defined in: react/types/components/SitecoreProvider.d.ts:65
 
 #### Returns
 
