@@ -2,7 +2,7 @@ import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/interna
 import type { PersonalizeData } from './personalizer';
 import { Personalizer } from './personalizer';
 import type { FailedCalledFlowsResponse } from './send-call-flows-request';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getPersonalizePlugin } from '../initialization/shared';
 
 /**
@@ -16,7 +16,7 @@ export async function personalize(
   personalizeData: PersonalizeData,
   opts?: PersonalizeOpts
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
-  const { settings, readyPromise } = getCoreSettings();
+  const { settings, readyPromise } = getCoreContext();
   await readyPromise;
   const { environment: personalizeEnvironment } = getPersonalizePlugin();
 

@@ -17,7 +17,7 @@ export interface InitContentSdkOptions {
  * Internal settings of the SDK initialization
  * @internal
  */
-export interface CoreSettings {
+export interface CoreContext {
   /**
    * The SDK initialization settings
    */

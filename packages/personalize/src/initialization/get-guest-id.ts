@@ -1,6 +1,6 @@
 import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
 import { fetchGuestIdFromEdgeProxy } from '../guest-id/fetch-guest-id-from-edge-proxy';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 
 /**
  * Returns the guest ID.
@@ -9,7 +9,7 @@ import { getCoreSettings } from '@sitecore-content-sdk/core';
  * @internal
  */
 export async function getGuestId(): Promise<string> {
-  const { settings } = getCoreSettings();
+  const { settings } = getCoreContext();
 
   const clientId = getAnalyticsPlugin().environment.getClientId() || '';
 

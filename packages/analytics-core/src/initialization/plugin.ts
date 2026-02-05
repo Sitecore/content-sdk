@@ -6,7 +6,7 @@ import {
   LIBRARY_VERSION,
 } from '../consts';
 import { ANALYTICS_PLUGIN_NAME } from './const';
-import { getCoreSettings, debug, CoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext, debug, CoreContext } from '@sitecore-content-sdk/core';
 import { getClientId } from '../client-id/get-client-id';
 const debugInit = debug.init;
 
@@ -60,7 +60,7 @@ export function analyticsPlugin(options: AnalyticsPluginOptions): AnalyticsPlugi
  */
 async function init() {
   debugInit(`Initializing ${ANALYTICS_PLUGIN_NAME}`);
-  const coreConfig = getCoreSettings();
+  const coreContext = getCoreContext();
   const analyticsPlugin = getAnalyticsPlugin();
 
   if (!analyticsPlugin.settings.cookieSettings.enableCookie) {
@@ -83,9 +83,9 @@ async function init() {
       analytics_core: {
         getClientId,
         settings: {
-          siteName: coreConfig.settings.siteName,
-          contextId: coreConfig.settings.contextId,
-          edgeUrl: coreConfig.settings.edgeUrl,
+          siteName: coreContext.settings.siteName,
+          contextId: coreContext.settings.contextId,
+          edgeUrl: coreContext.settings.edgeUrl,
         },
         version: LIBRARY_VERSION,
       },
@@ -98,8 +98,7 @@ async function init() {
  * @internal
  */
 export function getAnalyticsPlugin(): AnalyticsPlugin {
-  const coreConfig = getCoreSettings();
-  const plugin = coreConfig.plugins.get(ANALYTICS_PLUGIN_NAME) as AnalyticsPlugin;
+  const plugin = getCoreContext().plugins.get(ANALYTICS_PLUGIN_NAME) as AnalyticsPlugin | undefined;
 
   if (!plugin)
     throw new Error(
@@ -112,7 +111,7 @@ export function getAnalyticsPlugin(): AnalyticsPlugin {
 declare global {
   interface AnalyticsCore {
     getClientId: typeof getClientId;
-    settings: CoreSettings['settings'];
+    settings: CoreContext['settings'];
     version: string;
   }
   interface ScContentSDK {

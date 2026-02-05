@@ -36,7 +36,7 @@ describe('form event', () => {
     environment: mockEnvironment,
   };
 
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       contextId: '123',
       edgeUrl: 'https://edge-platform.sitecorecloud.io',
@@ -50,7 +50,7 @@ describe('form event', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue(mockCoreSettings as any);
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
     jest
       .spyOn(analyticsPluginsModule, 'getAnalyticsPlugin')
       .mockReturnValue(mockAnalyticsPlugin as any);
@@ -116,8 +116,8 @@ describe('form event', () => {
       resolveReady = resolve;
     });
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue({
-      ...mockCoreSettings,
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
       readyPromise,
     } as any);
 

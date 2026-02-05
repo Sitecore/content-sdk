@@ -40,7 +40,7 @@ describe('pageView', () => {
     environment: mockEnvironment,
   };
 
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       contextId: '123',
       edgeUrl: 'https://edge.test.com',
@@ -52,7 +52,7 @@ describe('pageView', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue(mockCoreSettings as any);
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
     jest
       .spyOn(analyticsPluginsModule, 'getAnalyticsPlugin')
       .mockReturnValue(mockAnalyticsPlugin as any);
@@ -79,7 +79,7 @@ describe('pageView', () => {
       pageViewData: { ...pageViewData, extensionData },
       searchParams: '?test=value',
       sendEvent,
-      settings: { ...mockCoreSettings.settings, ...mockAnalyticsPlugin.settings },
+      settings: { ...mockCoreContext.settings, ...mockAnalyticsPlugin.settings },
     });
     expect(response).toBe('mockedResponse');
   });
@@ -110,8 +110,8 @@ describe('pageView', () => {
       resolveReady = resolve;
     });
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue({
-      ...mockCoreSettings,
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
       readyPromise,
     } as any);
 

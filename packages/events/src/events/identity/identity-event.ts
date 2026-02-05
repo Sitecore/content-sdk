@@ -10,14 +10,14 @@ import { ERROR_MESSAGES } from '../../consts';
 import type { FlattenedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { SendEvent } from '../send-event/sendEvent';
-import { CoreSettings } from '@sitecore-content-sdk/core';
+import { CoreContext } from '@sitecore-content-sdk/core';
 
 export class IdentityEvent extends BaseEvent {
   private identityData: IdentityData;
   private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
   private numberOfExtensionDataProperties = 0;
-  private settings: CoreSettings['settings'];
+  private settings: CoreContext['settings'];
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -180,6 +180,6 @@ export interface IdentityEventArguments {
   sendEvent: SendEvent;
   identityData: IdentityData;
   id: string;
-  settings: CoreSettings['settings'];
+  settings: CoreContext['settings'];
   infer?: Infer;
 }

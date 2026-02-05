@@ -2,7 +2,7 @@ import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
 import { sendEvent } from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
@@ -17,8 +17,8 @@ export async function form(
   interactionType: 'VIEWED' | 'SUBMITTED',
   componentInstanceId: string
 ): Promise<EPResponse | null> {
-  const coreSettings = getCoreSettings();
-  await coreSettings.readyPromise;
+  const coreContext = getCoreContext();
+  await coreContext.readyPromise;
   getEventsPlugin();
 
   const { settings, environment } = getAnalyticsPlugin();
@@ -36,7 +36,7 @@ export async function form(
     },
     id,
     sendEvent,
-    settings: { ...coreSettings.settings, ...settings },
+    settings: { ...coreContext.settings, ...settings },
   });
 
   formEvent.page = undefined as unknown as string;

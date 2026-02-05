@@ -8,7 +8,7 @@ import * as fetchGuestIdModule from '../guest-id/fetch-guest-id-from-edge-proxy'
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
 }));
 
 jest.mock('./shared', () => ({
@@ -51,7 +51,7 @@ describe('personalizeBrowserEnvironment', () => {
     },
   };
 
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       contextId: 'test-context-id',
       edgeUrl: 'https://edge.test.com',
@@ -71,7 +71,7 @@ describe('personalizeBrowserEnvironment', () => {
     mockAnalyticsPlugin.settings.proxyValues = undefined;
     (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(mockPersonalizePlugin);
     (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue(mockAnalyticsPlugin);
-    (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
+    (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
     (internalModule.getDefaultCookieAttributes as jest.Mock).mockReturnValue(mockCookieAttributes);
     // Reset document.cookie
     Object.defineProperty(document, 'cookie', {

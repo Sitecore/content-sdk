@@ -1,20 +1,20 @@
 import debug from '../debug';
-import type { CoreSettings, InitContentSdkOptions } from './types';
+import type { CoreContext, InitContentSdkOptions } from './types';
 import { initPlugins, constructCoreConfigSettings } from './helpers';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
 
-let coreSettings: CoreSettings | undefined;
+let coreContext: CoreContext | undefined;
 
 /**
- * Retrieves the current core configuration.
- * @returns {CoreSettings} The current core configuration object.
+ * Retrieves the current core context.
+ * @returns {CoreContext} The current core context object.
  * @internal
  */
-export function getCoreSettings(): CoreSettings {
-  if (!coreSettings) throw new Error(ERROR_MESSAGES.IE_002);
+export function getCoreContext(): CoreContext {
+  if (!coreContext) throw new Error(ERROR_MESSAGES.IE_002);
 
-  return coreSettings;
+  return coreContext;
 }
 
 /**
@@ -31,20 +31,20 @@ export async function initContentSdk(options: InitContentSdkOptions): Promise<vo
 
   if (plugins.length === 0) debug.init('No plugins provided to the plugins array');
 
-  coreSettings = {
+  coreContext = {
     settings: constructedSettings,
     plugins: new Map<string, Plugin>(),
     readyPromise: null,
   };
 
   for (const plugin of plugins) {
-    coreSettings.plugins.set(plugin.name, plugin);
+    coreContext.plugins.set(plugin.name, plugin);
   }
 
-  debug.init(`Registered ${coreSettings.plugins.size} plugins`);
-  coreSettings.readyPromise = initPlugins(coreSettings.plugins);
+  debug.init(`Registered ${coreContext.plugins.size} plugins`);
+  coreContext.readyPromise = initPlugins(coreContext.plugins);
 
-  await coreSettings.readyPromise;
+  await coreContext.readyPromise;
 
   debug.init('SDK initialization complete');
 }

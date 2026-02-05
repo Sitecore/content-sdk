@@ -9,7 +9,7 @@ import type { IncomingMessage, OutgoingMessage } from 'http';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
 }));
 
 jest.mock('./shared', () => ({
@@ -52,7 +52,7 @@ describe('personalizeServerEnvironment', () => {
     },
   };
 
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       contextId: 'test-context-id',
       edgeUrl: 'https://edge.test.com',
@@ -99,7 +99,7 @@ describe('personalizeServerEnvironment', () => {
     mockAnalyticsPlugin.settings.proxyValues = undefined;
     (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(mockPersonalizePlugin);
     (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue(mockAnalyticsPlugin);
-    (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
+    (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
     (internalModule.getDefaultCookieAttributes as jest.Mock).mockReturnValue(mockCookieAttributes);
   });
 

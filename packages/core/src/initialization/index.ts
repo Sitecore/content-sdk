@@ -1,3 +1,3 @@
-export { initContentSdk, getCoreSettings } from './init-content-sdk';
-export { CoreSettings } from './types';
+export { initContentSdk, getCoreContext } from './init-content-sdk';
+export { CoreContext } from './types';
 export { Plugin, PluginDependency, PluginEnvironment } from './types';

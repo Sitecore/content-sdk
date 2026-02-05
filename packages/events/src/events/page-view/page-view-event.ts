@@ -6,11 +6,11 @@ import { BaseEvent } from '../base-event';
 import { ERROR_MESSAGES } from '../../consts';
 import type { SendEvent } from '../send-event/sendEvent';
 import { flattenObject } from '@sitecore-content-sdk/analytics-core/utils';
-import { CoreSettings } from '@sitecore-content-sdk/core';
+import { CoreContext } from '@sitecore-content-sdk/core';
 
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;
-  settings: CoreSettings['settings'];
+  settings: CoreContext['settings'];
   private sendEvent: SendEvent;
   private pageViewData?: PageViewData;
   private extensionData: FlattenedObject = {};
@@ -164,7 +164,7 @@ export interface PageViewEventArguments {
   sendEvent: SendEvent;
   pageViewData?: PageViewData;
   id: string;
-  settings: CoreSettings['settings'];
+  settings: CoreContext['settings'];
   infer?: Infer;
   extensionData?: NestedObject;
   searchParams: string;

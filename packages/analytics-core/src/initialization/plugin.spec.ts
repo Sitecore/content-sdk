@@ -12,7 +12,7 @@ import { AnalyticsEnvironment } from './types';
 import { expect, jest } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
   debug: {
     init: jest.fn(),
   },
@@ -32,7 +32,7 @@ describe('plugin', () => {
     },
   });
 
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       siteName: 'test-site',
       contextId: 'test-context-id',
@@ -43,8 +43,8 @@ describe('plugin', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
-    mockCoreSettings.plugins.clear();
+    (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
+    mockCoreContext.plugins.clear();
     // Reset window.scContentSDK
     if (typeof window !== 'undefined') {
       delete (window as any).scContentSDK;
@@ -200,7 +200,7 @@ describe('plugin', () => {
     it('should return the analytics plugin from core settings', () => {
       const environment = createMockEnvironment();
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
-      mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
+      mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       const result = getAnalyticsPlugin();
 
@@ -208,7 +208,7 @@ describe('plugin', () => {
     });
 
     it('should throw an error when analytics plugin is not registered', () => {
-      mockCoreSettings.plugins.clear();
+      mockCoreContext.plugins.clear();
 
       expect(() => getAnalyticsPlugin()).toThrow(
         `[IE-004] - You must first add "${ANALYTICS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`
@@ -220,7 +220,7 @@ describe('plugin', () => {
     it('should not call setClientId when enableCookie is false', async () => {
       const environment = createMockEnvironment();
       const plugin = analyticsPlugin({ settings: { enableCookie: false }, environment });
-      mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
+      mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
@@ -233,7 +233,7 @@ describe('plugin', () => {
       mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
-      mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
+      mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
@@ -246,7 +246,7 @@ describe('plugin', () => {
       mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
-      mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
+      mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
@@ -259,7 +259,7 @@ describe('plugin', () => {
       mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
-      mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
+      mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
@@ -272,7 +272,7 @@ describe('plugin', () => {
       mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
-      mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
+      mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
@@ -285,7 +285,7 @@ describe('plugin', () => {
       mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
-      mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
+      mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
@@ -306,7 +306,7 @@ describe('plugin', () => {
       mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
-      mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
+      mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 
@@ -323,7 +323,7 @@ describe('plugin', () => {
       mockSetClientId.mockResolvedValue(undefined);
 
       const plugin = analyticsPlugin({ settings: { enableCookie: true }, environment });
-      mockCoreSettings.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
+      mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
 

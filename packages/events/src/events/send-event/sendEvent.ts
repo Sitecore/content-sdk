@@ -7,7 +7,7 @@ import type {
 } from '..';
 import type { DebugResponse, EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import { PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
-import { CoreSettings } from '@sitecore-content-sdk/core';
+import { CoreContext } from '@sitecore-content-sdk/core';
 import { EVENTS_NAMESPACE, debug } from '../../debug';
 
 /**
@@ -17,7 +17,7 @@ import { EVENTS_NAMESPACE, debug } from '../../debug';
  */
 export async function sendEvent(
   body: EPFetchBody & BasePayload,
-  settings: CoreSettings['settings']
+  settings: CoreContext['settings']
 ): Promise<EPResponse | null> {
   // eslint-disable-next-line max-len
   const eventUrl = `${settings.edgeUrl}/v1/events/${API_VERSION}/events?siteId=${settings.siteName}`;
@@ -61,7 +61,7 @@ export async function sendEvent(
  */
 export type SendEvent = (
   body: EPFetchBody & BasePayload,
-  settings: CoreSettings['settings']
+  settings: CoreContext['settings']
 ) => Promise<EPResponse | null>;
 
 /**

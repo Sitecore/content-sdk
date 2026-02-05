@@ -10,7 +10,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   getAnalyticsPlugin: jest.fn(),
 }));
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
   debugModule: jest.fn(() => jest.fn()),
   debugNamespace: 'sitecore-content-sdk',
 }));
@@ -49,7 +49,7 @@ describe('personalize', () => {
       getUserAgent: jest.fn().mockReturnValue('test-user-agent'),
     };
 
-    const mockCoreSettings = {
+    const mockCoreContext = {
       settings,
       readyPromise: Promise.resolve(),
     };
@@ -57,7 +57,7 @@ describe('personalize', () => {
     beforeEach(() => {
       jest.clearAllMocks();
 
-      (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
+      (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
       (analyticsPluginsModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
         environment: mockEnvironment,
       });
@@ -76,14 +76,14 @@ describe('personalize', () => {
 
       await personalize(personalizeData);
 
-      expect(coreModule.getCoreSettings).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(Personalizer).toHaveBeenCalledTimes(1);
       expect(Personalizer).toHaveBeenCalledWith(clientId, guestId);
     });
 
     it('should throw error if settings have not been configured properly', async () => {
-      (coreModule.getCoreSettings as jest.Mock).mockImplementation(() => {
+      (coreModule.getCoreContext as jest.Mock).mockImplementation(() => {
         throw new Error('Test error');
       });
 
@@ -104,7 +104,7 @@ describe('personalize', () => {
       const expectedData = personalizeData;
       const expectedSettings = settings;
 
-      expect(coreModule.getCoreSettings).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         expectedData,
@@ -128,7 +128,7 @@ describe('personalize', () => {
       const expectedData = personalizeData;
       const expectedSettings = settings;
 
-      expect(coreModule.getCoreSettings).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         expectedData,
@@ -149,7 +149,7 @@ describe('personalize', () => {
 
       await personalize(personalizeData);
 
-      expect(coreModule.getCoreSettings).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         personalizeData,
@@ -205,8 +205,8 @@ describe('personalize', () => {
         resolveReady = resolve;
       });
 
-      (coreModule.getCoreSettings as jest.Mock).mockReturnValue({
-        ...mockCoreSettings,
+      (coreModule.getCoreContext as jest.Mock).mockReturnValue({
+        ...mockCoreContext,
         readyPromise,
       });
 

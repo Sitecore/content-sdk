@@ -3,7 +3,7 @@ import {
   getDefaultCookieAttributes,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import {
   fetchGuestIdFromEdgeProxy,
   getPersonalizePlugin,
@@ -33,7 +33,7 @@ export function personalizeProxyEnvironment(
       return getGuestId(request);
     },
     setGuestId: async () => {
-      const coreSettings = getCoreSettings().settings;
+      const coreSettings = getCoreContext().settings;
       const cookieSettings = getAnalyticsPlugin().settings.cookieSettings;
       const personalizePlugin = getPersonalizePlugin();
       const guestIdName = personalizePlugin.settings.cookieSettings.name.guestId;

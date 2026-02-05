@@ -13,7 +13,7 @@ describe('analyticsProxyEnvironment', () => {
 
   let analyticsProxyEnvironmentModule: any;
   let getAnalyticsPluginStub: sinon.SinonStub;
-  let getCoreSettingsStub: sinon.SinonStub;
+  let getCoreContextStub: sinon.SinonStub;
   let getDefaultCookieAttributesStub: sinon.SinonStub;
   let fetchClientIdFromEdgeProxyStub: sinon.SinonStub;
 
@@ -29,7 +29,7 @@ describe('analyticsProxyEnvironment', () => {
     },
   };
 
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       contextId: 'test-context-id',
       edgeUrl: 'https://edge.test.com',
@@ -89,13 +89,13 @@ describe('analyticsProxyEnvironment', () => {
     mockAnalyticsPlugin.settings.proxyValues = undefined;
 
     getAnalyticsPluginStub = sandbox.stub().returns(mockAnalyticsPlugin);
-    getCoreSettingsStub = sandbox.stub().returns(mockCoreSettings);
+    getCoreContextStub = sandbox.stub().returns(mockCoreContext);
     getDefaultCookieAttributesStub = sandbox.stub().returns(mockCookieAttributes);
     fetchClientIdFromEdgeProxyStub = sandbox.stub();
 
     analyticsProxyEnvironmentModule = proxyquire('./analytics', {
       '@sitecore-content-sdk/core': {
-        getCoreSettings: getCoreSettingsStub,
+        getCoreContext: getCoreContextStub,
       },
       '@sitecore-content-sdk/analytics-core/internal': {
         COOKIE_NAME_PREFIX: 'sc_',

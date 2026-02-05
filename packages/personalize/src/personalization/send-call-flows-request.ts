@@ -7,20 +7,20 @@ import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { fetchWithTimeout } from '@sitecore-content-sdk/analytics-core/utils';
 import { PACKAGE_VERSION } from '../consts';
 import { GetInteractiveExperienceDataOpts } from './personalizer';
-import { CoreSettings } from '@sitecore-content-sdk/core';
+import { CoreContext } from '@sitecore-content-sdk/core';
 import { debug, PERSONALIZE_NAMESPACE } from '../debug';
 
 /**
  * A function that sends a CallFlow request to Sitecore EP
  * @param {EPCallFlowsBody} epCallFlowsBody - Properties to be send to Sitecore EP
- * @param {CoreSettings['settings']} settings - Settings for the url params
+ * @param {CoreContext['settings']} settings - Settings for the url params
  * @param {GetInteractiveExperienceDataOpts} opts - Optional configuration object
  * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore EP response object or unknown
  * @internal
  */
 export async function sendCallFlowsRequest(
   epCallFlowsBody: EPCallFlowsBody,
-  settings: CoreSettings['settings'],
+  settings: CoreContext['settings'],
   opts?: GetInteractiveExperienceDataOpts
 ) {
   const startTimestamp = Date.now();
@@ -101,7 +101,7 @@ export async function sendCallFlowsRequest(
  * An interface with the basic functionality that the derived classes needs to implement
  */
 export interface PersonalizeClient {
-  settings: CoreSettings['settings'];
+  settings: CoreContext['settings'];
   sendCallFlowsRequest: (
     epCallFlowAttributes: EPCallFlowsBody,
     timeout?: number

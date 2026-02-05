@@ -8,7 +8,7 @@ import { jest, expect } from '@jest/globals';
 import { analyticsBrowserEnvironment } from './environment-browser';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
 }));
 
 jest.mock('./plugin', () => ({
@@ -40,7 +40,7 @@ describe('analyticsBrowserEnvironment', () => {
     proxyValues: undefined as any,
   };
 
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       siteName: 'test-site',
       contextId: 'test-context-id',
@@ -61,7 +61,7 @@ describe('analyticsBrowserEnvironment', () => {
     (pluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
       settings: mockAnalyticsSettings,
     });
-    (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
+    (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
     (internalModule.getDefaultCookieAttributes as jest.Mock).mockReturnValue(mockCookieAttributes);
     // Reset document.cookie
     Object.defineProperty(document, 'cookie', {

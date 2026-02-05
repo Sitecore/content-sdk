@@ -6,7 +6,7 @@ import {
 import { createCookieString, getCookieServerSide } from '../utils';
 import { getAnalyticsPlugin } from './plugin';
 import { AnalyticsEnvironment } from './types';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import type { IncomingMessage, OutgoingMessage } from 'http';
 
 interface AnalyticsServerEnvironment extends AnalyticsEnvironment {
@@ -29,11 +29,11 @@ export function analyticsServerEnvironment(
       return getClientId(request);
     },
     setClientId: async () => {
-      const coreSettings = getCoreSettings().settings;
+      const coreContext = getCoreContext().settings;
       const analyticsSettings = getAnalyticsPlugin().settings;
       const cookieSettings = analyticsSettings.cookieSettings;
       const clientIdName = cookieSettings.name.clientId;
-      const legacyClientIdName = `${COOKIE_NAME_PREFIX}${coreSettings.contextId}`;
+      const legacyClientIdName = `${COOKIE_NAME_PREFIX}${coreContext.contextId}`;
       const defaultCookieAttributes = getDefaultCookieAttributes(
         cookieSettings.expiryDays,
         cookieSettings.domain
@@ -58,8 +58,8 @@ export function analyticsServerEnvironment(
 
       if (!clientIdCookie) {
         const cookieValues = await fetchClientIdFromEdgeProxy(
-          coreSettings.edgeUrl,
-          coreSettings.contextId,
+          coreContext.edgeUrl,
+          coreContext.contextId,
           analyticsSettings.timeout
         );
 

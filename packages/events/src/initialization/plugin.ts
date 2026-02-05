@@ -1,4 +1,4 @@
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { EVENTS_PLUGIN_NAME } from './const';
 import { PACKAGE_VERSION } from '../consts';
 import { event } from '../events/custom-event/event';
@@ -51,8 +51,7 @@ export function eventsPlugin(): EventsPlugin {
  * @internal
  */
 export function getEventsPlugin(): EventsPlugin {
-  const coreConfig = getCoreSettings();
-  const plugin = coreConfig.plugins.get(EVENTS_PLUGIN_NAME) as EventsPlugin;
+  const plugin = getCoreContext().plugins.get(EVENTS_PLUGIN_NAME) as EventsPlugin | undefined;
 
   if (!plugin)
     throw new Error(

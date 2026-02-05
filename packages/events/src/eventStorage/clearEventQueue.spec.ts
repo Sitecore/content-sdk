@@ -8,7 +8,7 @@ jest.mock('@sitecore-content-sdk/core');
 jest.mock('../initialization/plugin');
 
 describe('clearEventQueue', () => {
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       contextId: '123',
       edgeUrl: 'https://edge.test.com',
@@ -19,7 +19,7 @@ describe('clearEventQueue', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue(mockCoreSettings as any);
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
     jest.spyOn(eventsPluginModule, 'getEventsPlugin').mockReturnValue({} as any);
   });
 
@@ -33,14 +33,14 @@ describe('clearEventQueue', () => {
     expect(clearQueueSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should wait for core settings ready promise', async () => {
+  it('should wait for core context ready promise', async () => {
     let resolveReady: () => void;
     const readyPromise = new Promise<void>((resolve) => {
       resolveReady = resolve;
     });
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue({
-      ...mockCoreSettings,
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
       readyPromise,
     } as any);
 

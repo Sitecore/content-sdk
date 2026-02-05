@@ -6,7 +6,7 @@ import { PersonalizeEnvironment } from './types';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
 }));
 
 jest.mock('./shared', () => ({

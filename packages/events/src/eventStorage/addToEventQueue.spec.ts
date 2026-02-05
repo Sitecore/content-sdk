@@ -36,7 +36,7 @@ describe('addToEventQueue', () => {
     environment: mockEnvironment,
   };
 
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       contextId: '123',
       edgeUrl: 'https://edge.test.com',
@@ -47,7 +47,7 @@ describe('addToEventQueue', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue(mockCoreSettings as any);
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
     jest
       .spyOn(analyticsPluginsModule, 'getAnalyticsPlugin')
       .mockReturnValue(mockAnalyticsPlugin as any);
@@ -67,7 +67,7 @@ describe('addToEventQueue', () => {
     expect(enqueueEventSpy).toHaveBeenCalledWith({
       eventData,
       id: 'test_id',
-      settings: { ...mockCoreSettings.settings, ...mockAnalyticsPlugin.settings },
+      settings: { ...mockCoreContext.settings, ...mockAnalyticsPlugin.settings },
     } as any);
   });
 
@@ -84,7 +84,7 @@ describe('addToEventQueue', () => {
     expect(enqueueEventSpy).toHaveBeenCalledWith({
       eventData,
       id: '',
-      settings: { ...mockCoreSettings.settings, ...mockAnalyticsPlugin.settings },
+      settings: { ...mockCoreContext.settings, ...mockAnalyticsPlugin.settings },
     } as any);
   });
 
@@ -94,8 +94,8 @@ describe('addToEventQueue', () => {
       resolveReady = resolve;
     });
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue({
-      ...mockCoreSettings,
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
       readyPromise,
     } as any);
 

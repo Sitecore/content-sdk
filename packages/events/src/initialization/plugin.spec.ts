@@ -13,7 +13,7 @@ import * as processEventQueueModule from '../eventStorage/processEventQueue';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
   debug: {
     init: jest.fn(),
   },
@@ -48,14 +48,14 @@ jest.mock('../eventStorage/processEventQueue', () => ({
 }));
 
 describe('plugin', () => {
-  const mockCoreSettings = {
+  const mockCoreContext = {
     plugins: new Map(),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
-    mockCoreSettings.plugins.clear();
+    (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
+    mockCoreContext.plugins.clear();
     // Reset window.scContentSDK
     if (typeof window !== 'undefined') {
       delete (window as any).scContentSDK;
@@ -85,7 +85,7 @@ describe('plugin', () => {
   describe('getEventsPlugin', () => {
     it('should return the events plugin from core settings', () => {
       const plugin = eventsPlugin();
-      mockCoreSettings.plugins.set(EVENTS_PLUGIN_NAME, plugin);
+      mockCoreContext.plugins.set(EVENTS_PLUGIN_NAME, plugin);
 
       const result = getEventsPlugin();
 
@@ -93,7 +93,7 @@ describe('plugin', () => {
     });
 
     it('should throw an error when events plugin is not registered', () => {
-      mockCoreSettings.plugins.clear();
+      mockCoreContext.plugins.clear();
 
       expect(() => getEventsPlugin()).toThrow(
         `[IE-004] You must first add "${EVENTS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`

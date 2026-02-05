@@ -1,10 +1,9 @@
 import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
-
 import { sendEvent } from '../send-event/sendEvent';
 import type { IdentityData } from './identity-event';
 import { IdentityEvent } from './identity-event';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
@@ -13,8 +12,8 @@ import { getEventsPlugin } from '../../initialization/plugin';
  * @returns The response object that Sitecore EP returns
  */
 export async function identity(identityData: IdentityData): Promise<EPResponse | null> {
-  const coreSettings = getCoreSettings();
-  await coreSettings.readyPromise;
+  const coreContext = getCoreContext();
+  await coreContext.readyPromise;
   getEventsPlugin();
 
   const { settings, environment } = getAnalyticsPlugin();
@@ -25,6 +24,6 @@ export async function identity(identityData: IdentityData): Promise<EPResponse |
     id,
     identityData,
     sendEvent,
-    settings: { ...coreSettings.settings, ...settings },
+    settings: { ...coreContext.settings, ...settings },
   }).send();
 }

@@ -10,13 +10,13 @@ import { BaseEvent } from '../base-event';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { SendEvent } from '../send-event/sendEvent';
-import { CoreSettings } from '@sitecore-content-sdk/core';
+import { CoreContext } from '@sitecore-content-sdk/core';
 
 export class CustomEvent extends BaseEvent {
   customEventPayload: CustomEventPayload;
   private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
-  private settings: CoreSettings['settings'];
+  private settings: CoreContext['settings'];
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -73,7 +73,7 @@ export interface CustomEventArguments {
   sendEvent: SendEvent;
   eventData: EventData;
   id: string;
-  settings: CoreSettings['settings'];
+  settings: CoreContext['settings'];
 }
 
 /**

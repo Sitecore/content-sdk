@@ -12,7 +12,7 @@ import {
   WebPersonalizationSettings,
 } from './types';
 import { EVENTS_PLUGIN_NAME } from '@sitecore-content-sdk/events/internal';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getCdnUrl } from '../web-personalization/get-cdn-url';
 import { appendScriptWithAttributes } from '@sitecore-content-sdk/analytics-core/utils';
 import { getPersonalizePlugin } from './shared';
@@ -27,8 +27,7 @@ import { getGuestId } from './get-guest-id';
  * @internal
  */
 async function init() {
-  const coreConfig = getCoreSettings();
-  const coreSettings = coreConfig.settings;
+  const coreSettings = getCoreContext().settings;
   const personalizePlugin = getPersonalizePlugin();
   const personalizeSettings = personalizePlugin.settings as PersonalizeSettings;
 

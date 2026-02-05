@@ -53,7 +53,7 @@ describe('identity', () => {
     environment: mockEnvironment,
   };
 
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       contextId: '123',
       edgeUrl: 'https://edge.test.com',
@@ -65,7 +65,7 @@ describe('identity', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue(mockCoreSettings as any);
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
     jest
       .spyOn(analyticsPluginsModule, 'getAnalyticsPlugin')
       .mockReturnValue(mockAnalyticsPlugin as any);
@@ -81,7 +81,7 @@ describe('identity', () => {
       id,
       identityData: { ...identityData, extensionData },
       sendEvent: sendEventModule.sendEvent,
-      settings: { ...mockCoreSettings.settings, ...mockAnalyticsPlugin.settings },
+      settings: { ...mockCoreContext.settings, ...mockAnalyticsPlugin.settings },
     });
     expect(response).toBe('mockedResponse');
   });
@@ -104,8 +104,8 @@ describe('identity', () => {
       resolveReady = resolve;
     });
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue({
-      ...mockCoreSettings,
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
       readyPromise,
     } as any);
 

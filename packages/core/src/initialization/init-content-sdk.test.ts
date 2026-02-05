@@ -12,7 +12,7 @@ describe('init-content-sdk', () => {
   let debugInitStub: sinon.SinonStub;
 
   let initContentSdk: typeof import('./init-content-sdk').initContentSdk;
-  let getCoreSettings: typeof import('./init-content-sdk').getCoreSettings;
+  let getCoreContext: typeof import('./init-content-sdk').getCoreContext;
 
   const validConfig = {
     contextId: 'test-context-id',
@@ -39,16 +39,16 @@ describe('init-content-sdk', () => {
     });
 
     initContentSdk = module.initContentSdk;
-    getCoreSettings = module.getCoreSettings;
+    getCoreContext = module.getCoreContext;
   });
 
   afterEach(() => {
     sandbox.restore();
   });
 
-  describe('getCoreSettings', () => {
+  describe('getCoreContext', () => {
     it('should throw error when SDK is not initialized', () => {
-      expect(() => getCoreSettings()).to.throw(ERROR_MESSAGES.IE_002);
+      expect(() => getCoreContext()).to.throw(ERROR_MESSAGES.IE_002);
     });
 
     it('should return core settings after initialization', async () => {
@@ -62,12 +62,12 @@ describe('init-content-sdk', () => {
         plugins: [mockPlugin],
       });
 
-      const settings = getCoreSettings();
+      const coreContext = getCoreContext();
 
-      expect(settings).to.exist;
-      expect(settings.settings).to.deep.equal(validConfig);
-      expect(settings.plugins.size).to.equal(1);
-      expect(settings.plugins.has('test-plugin')).to.be.true;
+      expect(coreContext).to.exist;
+      expect(coreContext.settings).to.deep.equal(validConfig);
+      expect(coreContext.plugins.size).to.equal(1);
+      expect(coreContext.plugins.has('test-plugin')).to.be.true;
     });
   });
 
@@ -81,8 +81,8 @@ describe('init-content-sdk', () => {
       expect(constructCoreConfigSettingsStub.calledOnceWith(validConfig)).to.be.true;
       expect(debugInitStub.calledWith('No plugins provided to the plugins array')).to.be.true;
 
-      const settings = getCoreSettings();
-      expect(settings.plugins.size).to.equal(0);
+      const coreContext = getCoreContext();
+      expect(coreContext.plugins.size).to.equal(0);
     });
 
     it('should register all provided plugins', async () => {
@@ -95,11 +95,11 @@ describe('init-content-sdk', () => {
         plugins: [plugin1, plugin2, plugin3],
       });
 
-      const settings = getCoreSettings();
-      expect(settings.plugins.size).to.equal(3);
-      expect(settings.plugins.has('plugin-1')).to.be.true;
-      expect(settings.plugins.has('plugin-2')).to.be.true;
-      expect(settings.plugins.has('plugin-3')).to.be.true;
+      const coreContext = getCoreContext();
+      expect(coreContext.plugins.size).to.equal(3);
+      expect(coreContext.plugins.has('plugin-1')).to.be.true;
+      expect(coreContext.plugins.has('plugin-2')).to.be.true;
+      expect(coreContext.plugins.has('plugin-3')).to.be.true;
 
       expect(debugInitStub.firstCall.args[0]).to.equal('Initializing Content SDK with options:');
       const registeredPluginsCall = debugInitStub
@@ -125,8 +125,8 @@ describe('init-content-sdk', () => {
         plugins: [mockPlugin],
       });
 
-      const settings = getCoreSettings();
-      const storedPlugin = settings.plugins.get('test-plugin');
+      const coreContext = getCoreContext();
+      const storedPlugin = coreContext.plugins.get('test-plugin');
       expect(storedPlugin?.settings).to.deep.equal(pluginSettings);
     });
 
@@ -145,8 +145,8 @@ describe('init-content-sdk', () => {
         plugins: [basePlugin, mockPlugin],
       });
 
-      const settings = getCoreSettings();
-      const storedPlugin = settings.plugins.get('dependent-plugin');
+      const coreContext = getCoreContext();
+      const storedPlugin = coreContext.plugins.get('dependent-plugin');
       expect(storedPlugin?.dependencies).to.deep.equal(['base-plugin']);
     });
 
@@ -167,7 +167,7 @@ describe('init-content-sdk', () => {
       expect(initPluginsResolved).to.be.true;
     });
 
-    it('should store readyPromise in coreSettings', async () => {
+    it('should store readyPromise in coreContext', async () => {
       const mockPlugin: Plugin = { name: 'test-plugin' };
 
       await initContentSdk({
@@ -175,8 +175,8 @@ describe('init-content-sdk', () => {
         plugins: [mockPlugin],
       });
 
-      const settings = getCoreSettings();
-      expect(settings.readyPromise).to.exist;
+      const coreContext = getCoreContext();
+      expect(coreContext.readyPromise).to.exist;
 
       const lastCall = debugInitStub.lastCall;
       expect(lastCall?.args[0]).to.equal('SDK initialization complete');
@@ -201,11 +201,11 @@ describe('init-content-sdk', () => {
         plugins: [plugin2],
       });
 
-      const settings = getCoreSettings();
-      expect(settings.settings.siteName).to.equal('new-site');
-      expect(settings.plugins.size).to.equal(1);
-      expect(settings.plugins.has('plugin-2')).to.be.true;
-      expect(settings.plugins.has('plugin-1')).to.be.false;
+      const coreContext = getCoreContext();
+      expect(coreContext.settings.siteName).to.equal('new-site');
+      expect(coreContext.plugins.size).to.equal(1);
+      expect(coreContext.plugins.has('plugin-2')).to.be.true;
+      expect(coreContext.plugins.has('plugin-1')).to.be.false;
     });
   });
 });

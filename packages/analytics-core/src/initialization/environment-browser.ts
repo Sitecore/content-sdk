@@ -7,7 +7,7 @@ import { createCookieString, getCookieValueClientSide } from '../utils';
 import { deleteCookie } from '../utils/cookies/delete-cookie';
 import { getAnalyticsPlugin } from './plugin';
 import { AnalyticsEnvironment } from './types';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 
 interface AnalyticsBrowserEnvironment extends AnalyticsEnvironment {
   type: 'browser';
@@ -24,7 +24,7 @@ export function analyticsBrowserEnvironment(): AnalyticsBrowserEnvironment {
       return getCookieValueClientSide(getAnalyticsPlugin().settings.cookieSettings.name.clientId);
     },
     setClientId: async () => {
-      const coreSettings = getCoreSettings().settings;
+      const coreContext = getCoreContext().settings;
       const analyticsSettings = getAnalyticsPlugin().settings;
 
       const cookieAttributes = getDefaultCookieAttributes(
@@ -33,7 +33,7 @@ export function analyticsBrowserEnvironment(): AnalyticsBrowserEnvironment {
       );
 
       const legacyCookie = getCookieValueClientSide(
-        `${COOKIE_NAME_PREFIX}${coreSettings.contextId}`
+        `${COOKIE_NAME_PREFIX}${coreContext.contextId}`
       );
 
       if (legacyCookie) {
@@ -42,14 +42,14 @@ export function analyticsBrowserEnvironment(): AnalyticsBrowserEnvironment {
           legacyCookie,
           cookieAttributes
         );
-        deleteCookie(`${COOKIE_NAME_PREFIX}${coreSettings.contextId}`);
+        deleteCookie(`${COOKIE_NAME_PREFIX}${coreContext.contextId}`);
 
         return;
       }
 
       const cookieValues = await fetchClientIdFromEdgeProxy(
-        coreSettings.edgeUrl,
-        coreSettings.contextId
+        coreContext.edgeUrl,
+        coreContext.contextId
       );
 
       getAnalyticsPlugin().settings.proxyValues = cookieValues;

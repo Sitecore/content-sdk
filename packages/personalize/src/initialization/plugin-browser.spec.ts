@@ -11,7 +11,7 @@ import { PersonalizeEnvironment } from './types';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
 }));
 
 jest.mock('./shared', () => ({
@@ -60,7 +60,7 @@ describe('personalizeBrowserPlugin', () => {
     },
   };
 
-  const mockCoreSettings = {
+  const mockCoreContext = {
     settings: {
       contextId: 'test-context-id',
       edgeUrl: 'https://edge.test.com',
@@ -71,7 +71,7 @@ describe('personalizeBrowserPlugin', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue(mockAnalyticsPlugin);
-    (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
+    (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
     // Reset window.scContentSDK
     if (typeof window !== 'undefined') {
       delete (window as any).scContentSDK;

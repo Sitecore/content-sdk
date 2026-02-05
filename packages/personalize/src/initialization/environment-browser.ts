@@ -3,7 +3,7 @@ import {
   getCookieValueClientSide,
 } from '@sitecore-content-sdk/analytics-core/utils';
 import { PersonalizeEnvironment } from './types';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getPersonalizePlugin } from './shared';
 import {
   COOKIE_NAME_PREFIX,
@@ -27,12 +27,11 @@ export function personalizeBrowserEnvironment(): PersonalizeBrowserEnvironment {
       return getCookieValueClientSide(getPersonalizePlugin().settings.cookieSettings.name.guestId);
     },
     setGuestId: async () => {
-      const coreSettings = getCoreSettings().settings;
+      const coreContext = getCoreContext().settings;
       const analyticsSettings = getAnalyticsPlugin().settings;
       const personalizePlugin = getPersonalizePlugin();
       const guestIdCookieName = personalizePlugin.settings.cookieSettings.name.guestId;
-      const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreSettings.contextId}_personalize`;
-
+      const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreContext.contextId}_personalize`;
       const cookieAttributes = getDefaultCookieAttributes(
         analyticsSettings.cookieSettings.expiryDays,
         analyticsSettings.cookieSettings.domain
@@ -72,8 +71,8 @@ export function personalizeBrowserEnvironment(): PersonalizeBrowserEnvironment {
       else if (clientIdCookieValue) {
         const guestIdCookieValue = await fetchGuestIdFromEdgeProxy(
           clientIdCookieValue,
-          coreSettings.contextId,
-          coreSettings.edgeUrl
+          coreContext.contextId,
+          coreContext.edgeUrl
         );
 
         document.cookie = createCookieString(

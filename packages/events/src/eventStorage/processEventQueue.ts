@@ -1,4 +1,4 @@
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { eventQueue } from './eventStorage';
 import { getEventsPlugin } from '../initialization/plugin';
 
@@ -7,7 +7,7 @@ import { getEventsPlugin } from '../initialization/plugin';
  * Clears the queue upon completion.
  */
 export async function processEventQueue(): Promise<void> {
-  await getCoreSettings().readyPromise;
+  await getCoreContext().readyPromise;
   getEventsPlugin();
 
   eventQueue.sendAllEvents();

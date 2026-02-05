@@ -3,7 +3,7 @@ import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/interna
 import { sendEvent } from '../send-event/sendEvent';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
@@ -13,8 +13,8 @@ import { getEventsPlugin } from '../../initialization/plugin';
  * @returns The response object that Sitecore EP returns
  */
 export async function pageView(pageViewData?: PageViewData): Promise<EPResponse | null> {
-  const coreSettings = getCoreSettings();
-  await coreSettings.readyPromise;
+  const coreContext = getCoreContext();
+  await coreContext.readyPromise;
   getEventsPlugin();
 
   const { settings, environment } = getAnalyticsPlugin();
@@ -26,6 +26,6 @@ export async function pageView(pageViewData?: PageViewData): Promise<EPResponse 
     pageViewData,
     searchParams,
     sendEvent,
-    settings: { ...coreSettings.settings, ...settings },
+    settings: { ...coreContext.settings, ...settings },
   }).send();
 }

@@ -3,7 +3,7 @@ import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { ERROR_MESSAGES, UTM_PREFIX } from '../consts';
 import type { EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { sendCallFlowsRequest } from './send-call-flows-request';
-import { CoreSettings } from '@sitecore-content-sdk/core';
+import { CoreContext } from '@sitecore-content-sdk/core';
 
 /**
  * @internal
@@ -19,14 +19,14 @@ export class Personalizer {
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint
    * @param {PersonalizeData} personalizeData - The personalize input from the developer
-   * @param {CoreSettings['settings']} settings - The setting that was set during initialization
+   * @param {CoreContext['settings']} settings - The setting that was set during initialization
    * @param {string} searchParams - The URL search parameters
    * @param {GetInteractiveExperienceDataOpts} opts - Optional object that contains options for timeout and UA
    * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore EP response object or null
    */
   async getInteractiveExperienceData(
     personalizeData: PersonalizeData,
-    settings: CoreSettings['settings'],
+    settings: CoreContext['settings'],
     searchParams: string,
     opts?: GetInteractiveExperienceDataOpts
   ): Promise<unknown | null | FailedCalledFlowsResponse> {

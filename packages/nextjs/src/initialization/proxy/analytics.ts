@@ -7,7 +7,7 @@ import {
   getAnalyticsPlugin,
   AnalyticsEnvironment,
 } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface AnalyticsProxyEnvironment extends AnalyticsEnvironment {
@@ -30,7 +30,7 @@ export function analyticsProxyEnvironment(
       return getClientId(request);
     },
     setClientId: async () => {
-      const coreSettings = getCoreSettings().settings;
+      const coreSettings = getCoreContext().settings;
       const analyticsSettings = getAnalyticsPlugin().settings;
       const cookieSettings = analyticsSettings.cookieSettings;
       const clientIdName = cookieSettings.name.clientId;
