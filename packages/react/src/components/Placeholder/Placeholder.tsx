@@ -111,16 +111,6 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
     this.setState({ error });
   }
 
-  /**
-   * Renders the placeholder when it is empty. The required CSS styles are applied to the placeholder in edit mode.
-   * @param {React.ReactNode | React.ReactElement[]} node react node
-   * @returns react node
-   * @deprecated use renderEmptyPlaceholder from react/nextjs import instead
-   */
-  renderEmptyPlaceholder(node: React.ReactNode | React.ReactElement[]) {
-    return renderEmptyPlaceholder(node);
-  }
-
   render() {
     const childProps: PlaceholderProps = { ...this.props };
 

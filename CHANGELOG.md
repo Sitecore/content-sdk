@@ -43,6 +43,14 @@ Our versioning strategy is as follows:
     - Previously, `/da/source -> /target` rule would redirect to `/da/target` path when default locale is not `da`
     - Now, `/da/source -> /target` rule would redirect to `/target` path, using default locale, unless the `Shall language be preserved upon redirect?` checkbox is enabled in Redirect Map.
 * Upgrade to Node.js 24.x ([#332](https://github.com/Sitecore/content-sdk/pull/332))
+* Remove deprecated api's ([#360](https://github.com/Sitecore/content-sdk/pull/360]))
+  - `sitecore.cli.config`: 
+    - The `config` property is now required; a reference to `sitecore.config` must be provided.
+    - Build-time functions defined in the build array no longer accept the scConfig argument in their constructor. However, the function implementation must receive scConfig, which is passed internally by the CLI command.
+  - `renderEmptyPlaceholder` method of `PlaceholderComponent` has been removed; instead import `renderEmptyPlaceholder` from `react`/`next` package
+  - `DesignLibrary` component now does not accept any props
+  - `SitecoreProvider`'s `loadImportMap` is now required
+    
 
 ### 🐛 Bug Fixes
 

@@ -20,15 +20,6 @@ export type DynamicComponent = React.ComponentType<{
   params?: ComponentParams;
 }>;
 
-// @MAJOR-RELEASE-TODO - Make loadImportMap required in next major version
-export type DesignLibraryProps = {
-  /**
-   * The dynamic import for import map to be used in variant generation mode.
-   * Currently it's optional but it will be required in the next major version.
-   */
-  loadImportMap?: () => Promise<ImportMapImport>;
-};
-
 export type DesignLibraryServerProps = {
   /**
    * Component Map will be used to map Sitecore component names to app implementation

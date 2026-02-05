@@ -16,8 +16,8 @@ import * as editing from '@sitecore-content-sdk/content/editing';
 import { useSitecore } from '../../enhancers/withSitecore';
 import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
-import { DesignLibraryProps, DynamicComponent } from './models';
-import { withLoadImportMap } from '../../enhancers/withLoadImportMap';
+import { DynamicComponent } from './models';
+import { useLoadImportMap } from '../../enhancers/withLoadImportMap';
 import { ErrorComponent } from '../ErrorBoundary';
 
 let {
@@ -50,8 +50,9 @@ export const __mockDependencies = (mocks: any) => {
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  * @public
  */
-export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibraryProps) => {
+export const DesignLibrary = () => {
   const { page } = useSitecore();
+  const loadImportMap = useLoadImportMap();
   const route = page.layout.sitecore.route;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
   const uid = rendering?.uid;
@@ -174,4 +175,4 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
       )}
     </main>
   );
-});
+};

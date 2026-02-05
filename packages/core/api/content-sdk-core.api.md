@@ -9,8 +9,6 @@ import { default as debug_3 } from 'debug';
 import { Debugger as Debugger_2 } from 'debug';
 import { DocumentNode } from 'graphql';
 import { IncomingHttpHeaders } from 'http';
-import { IncomingMessage } from 'http';
-import { OutgoingMessage } from 'http';
 import { ParsedUrlQueryInput } from 'querystring';
 
 // @public
@@ -92,9 +90,6 @@ export class DefaultRetryStrategy implements RetryStrategy {
 
 // @public
 export const enableDebug: (namespaces: string) => void;
-
-// @public @deprecated
-export const enforceCors: (req: IncomingMessage, res: OutgoingMessage, allowedOrigins?: string[]) => boolean;
 
 // @public
 export type EnhancedOmit<T, K extends PropertyKey> = {
@@ -290,7 +285,7 @@ export interface TenantArgs {
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index.ts:32:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index.ts:31:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

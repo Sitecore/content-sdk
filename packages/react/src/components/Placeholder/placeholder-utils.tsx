@@ -103,6 +103,7 @@ export const getSXAParams = (rendering: ComponentRendering) => {
  * Renders the placeholder when it is empty. The required CSS styles are applied to the placeholder in edit mode.
  * @param {React.ReactNode | React.ReactElement[]} node react node
  * @returns react node
+ * @public
  */
 export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElement[]) => {
   return <div className="sc-jss-empty-placeholder">{node}</div>;

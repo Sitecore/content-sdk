@@ -493,11 +493,12 @@ export type GenerateMapArgs = {
 export type GenerateMapFunction = (args: GenerateMapArgs) => void;
 
 // @public
-export const generateSites: ({ scConfig: deprecatedScConfig, destinationPath, }?: GenerateSitesConfig) => (() => Promise<void>);
+export const generateSites: ({ destinationPath }?: GenerateSitesConfig) => ((args: {
+    scConfig: SitecoreConfig;
+}) => Promise<void>);
 
 // @public
 export type GenerateSitesConfig = {
-    scConfig?: SitecoreConfig;
     destinationPath?: string;
 };
 
@@ -1067,10 +1068,10 @@ export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;
 
 // @public
 export type SitecoreCliConfigInput = {
-    config?: SitecoreConfig;
+    config: SitecoreConfig;
     build?: {
         commands?: Array<(args?: {
-            scConfig?: SitecoreConfig;
+            scConfig: SitecoreConfig;
         }) => Promise<void>>;
     };
     scaffold?: {
@@ -1318,14 +1319,13 @@ export const VARIANT_PREFIX = "_variantId_";
 // Warning: (ae-incompatible-release-tags) The symbol "writeImportMap" is marked as @public, but its signature references "WriteImportMapArgsInternal" which is marked as @internal
 //
 // @public
-export const writeImportMap: (args: WriteImportMapArgsInternal) => ({ scConfig }?: {
-    scConfig?: SitecoreConfig;
+export const writeImportMap: (args: WriteImportMapArgsInternal) => ({ scConfig }: {
+    scConfig: SitecoreConfig;
 }) => Promise<void>;
 
 // @public
 export type WriteImportMapArgs = {
     paths: string[];
-    scConfig?: SitecoreConfig;
     exclude?: string[];
 };
 
