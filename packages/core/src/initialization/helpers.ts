@@ -43,11 +43,11 @@ export async function initPlugins(plugins: Map<string, Plugin>): Promise<void> {
 }
 
 /**
- * Validates and constructs the core configuration.
- * @param {InitContentSdkOptions['settings']} config - The core configuration object.
+ * Validates and constructs the core context settings.
+ * @param {InitContentSdkOptions['settings']} config - The core context settings object.
  * @internal
  */
-export function constructCoreConfigSettings(
+export function constructCoreContextSettings(
   config: InitContentSdkOptions['settings']
 ): CoreContext['settings'] {
   const { contextId, siteName, edgeUrl } = config;

@@ -1,6 +1,6 @@
 import debug from '../debug';
 import type { CoreContext, InitContentSdkOptions } from './types';
-import { initPlugins, constructCoreConfigSettings } from './helpers';
+import { initPlugins, constructCoreContextSettings } from './helpers';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
 
@@ -27,12 +27,12 @@ export async function initContentSdk(options: InitContentSdkOptions): Promise<vo
   debug.init('Initializing Content SDK with options:', options);
   const { settings, plugins } = options;
 
-  const constructedSettings = constructCoreConfigSettings(settings);
+  const resolvedSettings = constructCoreContextSettings(settings);
 
   if (plugins.length === 0) debug.init('No plugins provided to the plugins array');
 
   coreContext = {
-    settings: constructedSettings,
+    settings: resolvedSettings,
     plugins: new Map<string, Plugin>(),
     readyPromise: null,
   };
