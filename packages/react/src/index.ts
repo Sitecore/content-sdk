@@ -1,4 +1,4 @@
-﻿export {
+export {
   constants,
   enableDebug,
   ClientError,
@@ -106,3 +106,18 @@ export {
 } from './components/DefaultEmptyFieldEditingComponents';
 export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
+
+// Optimized components - Modern React patterns with hooks and functional components
+export { useComponentMap } from './hooks';
+export { SitecoreProviderOptimized } from './components/SitecoreProviderOptimized';
+export { FormOptimized, mockFormModuleOptimized } from './components/FormOptimized';
+export { DesignLibraryOptimized, __mockDependencies as __mockDependenciesOptimized } from './components/DesignLibrary/DesignLibraryOptimized';
+export { TextOptimized } from './components/TextOptimized';
+export { LinkOptimized } from './components/LinkOptimized';
+export { DateFieldOptimized } from './components/DateOptimized';
+export { FileOptimized } from './components/FileOptimized';
+export { RichTextOptimized } from './components/RichTextOptimized';
+export {
+  DefaultEmptyFieldEditingComponentTextOptimized,
+  DefaultEmptyFieldEditingComponentImageOptimized,
+} from './components/DefaultEmptyFieldEditingComponentsOptimized';

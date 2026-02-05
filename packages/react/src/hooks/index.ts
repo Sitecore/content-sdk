@@ -1,0 +1,1 @@
+export { useComponentMap } from './useComponentMap';
