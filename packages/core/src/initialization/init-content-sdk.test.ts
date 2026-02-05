@@ -26,7 +26,7 @@ describe('init-content-sdk', () => {
     constructCoreConfigSettingsStub = sandbox.stub().callsFake((config) => config);
     debugInitStub = sandbox.stub();
 
-    const module = proxyquire('./init-sitecore', {
+    const module = proxyquire('./init-content-sdk', {
       './helpers': {
         initPlugins: initPluginsStub,
         constructCoreConfigSettings: constructCoreConfigSettingsStub,
