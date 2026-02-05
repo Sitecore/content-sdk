@@ -18,7 +18,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
 
 describe('fetchGuestIdFromEdgeProxy', () => {
   const cid = 'cid';
-  const sitecoreEdgeContextId = 'contextId';
+  const contextId = 'contextId';
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -31,7 +31,7 @@ describe('fetchGuestIdFromEdgeProxy', () => {
       ok: true,
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
-    const response = await fetchGuestIdFromEdgeProxy(cid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
+    const response = await fetchGuestIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL);
     expect(response).toBe(expectedResponse);
   });
 
@@ -43,14 +43,14 @@ describe('fetchGuestIdFromEdgeProxy', () => {
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
     const expectedUrl = `${SITECORE_EDGE_URL}/v1/events/${API_VERSION}/browser/${cid}/show.json?client_key=&api_token=`;
-    await fetchGuestIdFromEdgeProxy(cid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
+    await fetchGuestIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL);
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(expectedUrl, {
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'X-Library-Version': PACKAGE_VERSION,
-        'x-sitecore-contextid': sitecoreEdgeContextId,
+        'x-sitecore-contextid': contextId,
       },
     });
   });
@@ -70,9 +70,9 @@ describe('fetchGuestIdFromEdgeProxy', () => {
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
     const expectedErrorMessage = `${expectedMsg}, for more info: ${expectedMoreInfo}`;
-    expect(() =>
-      fetchGuestIdFromEdgeProxy(cid, sitecoreEdgeContextId, SITECORE_EDGE_URL)
-    ).rejects.toThrow(expectedErrorMessage);
+    expect(() => fetchGuestIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL)).rejects.toThrow(
+      expectedErrorMessage
+    );
   });
 
   it('should throw IE-006 error if no ref exists', async () => {
@@ -84,7 +84,7 @@ describe('fetchGuestIdFromEdgeProxy', () => {
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
     expect(async () => {
-      await fetchGuestIdFromEdgeProxy(cid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
+      await fetchGuestIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL);
     }).rejects.toThrow(ERROR_MESSAGES.IE_006);
   });
 });

@@ -6,7 +6,7 @@ export interface InitSitecoreOptions {
   /** Initialization settings */
   settings: {
     contextId: string;
-    sitecoreEdgeUrl?: string;
+    edgeUrl?: string;
     siteName: string;
   };
   /** Array of plugins to initialize */
@@ -21,7 +21,7 @@ export interface CoreSettings {
   /**
    * The SDK initialization settings
    */
-  settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string };
+  settings: { contextId: string; edgeUrl: string; siteName: string };
   /**
    * Map of enabled plugins by name
    */

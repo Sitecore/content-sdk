@@ -278,7 +278,7 @@ export class PersonalizeProxy extends ProxyBase {
     await initSitecore({
       settings: {
         contextId: this.config.contextId,
-        sitecoreEdgeUrl: this.config.edgeUrl,
+        edgeUrl: this.config.edgeUrl,
         siteName,
       },
       plugins: [

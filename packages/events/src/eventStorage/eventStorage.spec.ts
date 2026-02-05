@@ -32,7 +32,7 @@ describe('Event Storage', () => {
 
   const settings = {
     contextId: '123',
-    sitecoreEdgeUrl: '',
+    edgeUrl: '',
     siteName: 'site',
   };
 

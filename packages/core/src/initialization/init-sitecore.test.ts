@@ -16,7 +16,7 @@ describe('init-sitecore', () => {
 
   const validConfig = {
     contextId: 'test-context-id',
-    sitecoreEdgeUrl: 'https://edge.example.com',
+    edgeUrl: 'https://edge.example.com',
     siteName: 'test-site',
   };
 

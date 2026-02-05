@@ -27,7 +27,7 @@ export async function sendCallFlowsRequest(
   let debugResponse: DebugResponse = {};
 
   // eslint-disable-next-line max-len
-  const requestUrl = `${settings.sitecoreEdgeUrl}/v1/personalize?siteId=${settings.siteName}`;
+  const requestUrl = `${settings.edgeUrl}/v1/personalize?siteId=${settings.siteName}`;
 
   const fetchOptions: FetchOptions = {
     body: JSON.stringify(epCallFlowsBody),

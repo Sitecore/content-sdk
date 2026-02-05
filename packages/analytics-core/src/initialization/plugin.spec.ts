@@ -36,7 +36,7 @@ describe('plugin', () => {
     settings: {
       siteName: 'test-site',
       contextId: 'test-context-id',
-      sitecoreEdgeUrl: 'https://edge.test.com',
+      edgeUrl: 'https://edge.test.com',
     },
     plugins: new Map(),
   };
@@ -294,7 +294,7 @@ describe('plugin', () => {
       expect(window.scContentSDK.analytics_core.getClientId).toBe(getClientIdModule.getClientId);
       expect(window.scContentSDK.analytics_core.settings).toEqual({
         siteName: 'test-site',
-        edgeContextId: 'test-context-id',
+        contextId: 'test-context-id',
         edgeUrl: 'https://edge.test.com',
       });
       expect(window.scContentSDK.analytics_core.version).toBe(LIBRARY_VERSION);

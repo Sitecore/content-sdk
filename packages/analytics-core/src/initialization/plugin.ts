@@ -6,7 +6,7 @@ import {
   LIBRARY_VERSION,
 } from '../consts';
 import { ANALYTICS_PLUGIN_NAME } from './const';
-import { getCoreSettings, debug } from '@sitecore-content-sdk/core';
+import { getCoreSettings, debug, CoreSettings } from '@sitecore-content-sdk/core';
 import { getClientId } from '../client-id/get-client-id';
 const debugInit = debug.init;
 
@@ -84,8 +84,8 @@ async function init() {
         getClientId,
         settings: {
           siteName: coreConfig.settings.siteName,
-          edgeContextId: coreConfig.settings.contextId,
-          edgeUrl: coreConfig.settings.sitecoreEdgeUrl,
+          contextId: coreConfig.settings.contextId,
+          edgeUrl: coreConfig.settings.edgeUrl,
         },
         version: LIBRARY_VERSION,
       },
@@ -112,11 +112,7 @@ export function getAnalyticsPlugin(): AnalyticsPlugin {
 declare global {
   interface AnalyticsCore {
     getClientId: typeof getClientId;
-    settings: {
-      siteName: string;
-      edgeContextId: string;
-      edgeUrl: string;
-    };
+    settings: CoreSettings['settings'];
     version: string;
   }
   interface ScContentSDK {

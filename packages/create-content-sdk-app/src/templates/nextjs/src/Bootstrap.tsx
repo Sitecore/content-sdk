@@ -29,7 +29,7 @@ const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
         initSitecore({
           settings: {
             contextId: config.api.edge.clientContextId,
-            sitecoreEdgeUrl: config.api.edge.edgeUrl,
+            edgeUrl: config.api.edge.edgeUrl,
             siteName: page.siteName || config.defaultSite,
           },
           plugins: [

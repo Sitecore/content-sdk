@@ -30,7 +30,7 @@ jest.mock('../debug', () => {
 
 describe('Test Personalizer Class', () => {
   const { window } = global;
-  let settingsMock: { contextId: string; sitecoreEdgeUrl: string; siteName: string };
+  let settingsMock: { contextId: string; edgeUrl: string; siteName: string };
   let personalizeInputMock: PersonalizeData;
   const clientId = 'clientId';
   const guestId = 'guestId';
@@ -47,7 +47,7 @@ describe('Test Personalizer Class', () => {
     settingsMock = {
       siteName: '456',
       contextId: '123',
-      sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
+      edgeUrl: analyticsCore.SITECORE_EDGE_URL,
     };
 
     global.window ??= Object.create(window);
@@ -222,7 +222,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
+          edgeUrl: 'https://edge-platform.sitecorecloud.io',
         },
         ''
       );
@@ -269,7 +269,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
+          edgeUrl: analyticsCore.SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -311,7 +311,7 @@ describe('Test Personalizer Class', () => {
       settingsMock = {
         siteName: '456',
         contextId: '123',
-        sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
+        edgeUrl: analyticsCore.SITECORE_EDGE_URL,
       };
 
       new Personalizer(clientId, guestId).getInteractiveExperienceData(
@@ -347,7 +347,7 @@ describe('Test Personalizer Class', () => {
       settingsMock = {
         siteName: '456',
         contextId: '123',
-        sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
+        edgeUrl: analyticsCore.SITECORE_EDGE_URL,
       };
 
       new Personalizer(clientId, guestId).getInteractiveExperienceData(
@@ -379,7 +379,7 @@ describe('Test Personalizer Class', () => {
       settingsMock = {
         siteName: '456',
         contextId: '123',
-        sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
+        edgeUrl: analyticsCore.SITECORE_EDGE_URL,
       };
 
       new Personalizer(clientId, guestId).getInteractiveExperienceData(
@@ -630,7 +630,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
+          edgeUrl: analyticsCore.SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -679,7 +679,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
+          edgeUrl: analyticsCore.SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -749,7 +749,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
+          edgeUrl: analyticsCore.SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -802,7 +802,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          sitecoreEdgeUrl: analyticsCore.SITECORE_EDGE_URL,
+          edgeUrl: analyticsCore.SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -1050,7 +1050,7 @@ describe('Test Personalizer Class', () => {
         'mapPersonalizeInputToEPData'
       );
       const sendCallFlowsRequestSpy = jest.spyOn(CallFlowsRequest, 'sendCallFlowsRequest');
-      const settings = {} as { contextId: string; sitecoreEdgeUrl: string; siteName: string };
+      const settings = {} as { contextId: string; edgeUrl: string; siteName: string };
       const data = {} as PersonalizeData;
       const opts = { timeout: 100, userAgent: 'test_ua' };
       const validateSpy = jest.spyOn(Personalizer.prototype as any, 'validate');

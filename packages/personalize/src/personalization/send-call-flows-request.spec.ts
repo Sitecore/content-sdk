@@ -38,10 +38,10 @@ jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
 describe('sendCallFlowsRequest', () => {
   let currentTime = 1609459200000; // Starting timestamp
 
-  const settingsObj: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
+  const settingsObj: { contextId: string; edgeUrl: string; siteName: string } = {
     siteName: 'site',
     contextId: '123',
-    sitecoreEdgeUrl: 'http://testurl',
+    edgeUrl: 'http://testurl',
   };
   const personalizeDataOriginal = {
     channel: 'WEB',

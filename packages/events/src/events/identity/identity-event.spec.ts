@@ -29,7 +29,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
 });
 describe('Test Identity', () => {
   let data: IdentityData;
-  let settingsMock: { contextId: string; sitecoreEdgeUrl: string; siteName: string };
+  let settingsMock: { contextId: string; edgeUrl: string; siteName: string };
   const id = 'test_id';
 
   const isShortISODateStringSpy = jest.spyOn(utils, 'isShortISODateString');
@@ -56,7 +56,7 @@ describe('Test Identity', () => {
 
     settingsMock = {
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
       siteName: '456',
     };
   });
@@ -406,10 +406,10 @@ describe('Test Identity', () => {
     };
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
-    const settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
+    const settings: { contextId: string; edgeUrl: string; siteName: string } = {
       siteName: '456',
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
     };
     new IdentityEvent({
       id,
@@ -441,10 +441,10 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
+    const settings: { contextId: string; edgeUrl: string; siteName: string } = {
       siteName: '456',
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
     };
     const extensionData: { [key: string]: string } = {};
 
@@ -475,10 +475,10 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
+    const settings: { contextId: string; edgeUrl: string; siteName: string } = {
       siteName: '456',
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
     };
     const extensionData: { [key: string]: string } = {};
     for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) extensionData[`key${i}`] = `value${i}`;
@@ -509,10 +509,10 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
+    const settings: { contextId: string; edgeUrl: string; siteName: string } = {
       siteName: '456',
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
     };
 
     new IdentityEvent({
@@ -542,10 +542,10 @@ describe('Test Identity', () => {
       ],
     };
 
-    const settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string } = {
+    const settings: { contextId: string; edgeUrl: string; siteName: string } = {
       siteName: '456',
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
     };
 
     const extensionData = {};

@@ -269,7 +269,7 @@ describe('helpers', () => {
     it('should return settings object for valid configuration and log debug message', () => {
       const config = {
         contextId: 'test-context-id',
-        sitecoreEdgeUrl: 'https://edge.example.com',
+        edgeUrl: 'https://edge.example.com',
         siteName: 'test-site',
       };
 
@@ -277,7 +277,7 @@ describe('helpers', () => {
 
       expect(result).to.deep.equal({
         contextId: 'test-context-id',
-        sitecoreEdgeUrl: 'https://edge.example.com',
+        edgeUrl: 'https://edge.example.com',
         siteName: 'test-site',
       });
 
@@ -291,7 +291,7 @@ describe('helpers', () => {
       it('should throw when contextId is missing', () => {
         const config = {
           contextId: '',
-          sitecoreEdgeUrl: 'https://edge.example.com',
+          edgeUrl: 'https://edge.example.com',
           siteName: 'test-site',
         };
 
@@ -301,7 +301,7 @@ describe('helpers', () => {
       it('should throw when contextId is only whitespace', () => {
         const config = {
           contextId: '   ',
-          sitecoreEdgeUrl: 'https://edge.example.com',
+          edgeUrl: 'https://edge.example.com',
           siteName: 'test-site',
         };
 
@@ -311,7 +311,7 @@ describe('helpers', () => {
       it('should throw when contextId is undefined', () => {
         const config = {
           contextId: undefined as unknown as string,
-          sitecoreEdgeUrl: 'https://edge.example.com',
+          edgeUrl: 'https://edge.example.com',
           siteName: 'test-site',
         };
 
@@ -321,7 +321,7 @@ describe('helpers', () => {
       it('should throw when contextId is null', () => {
         const config = {
           contextId: null as unknown as string,
-          sitecoreEdgeUrl: 'https://edge.example.com',
+          edgeUrl: 'https://edge.example.com',
           siteName: 'test-site',
         };
 
@@ -333,7 +333,7 @@ describe('helpers', () => {
       it('should throw when siteName is missing', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: 'https://edge.example.com',
+          edgeUrl: 'https://edge.example.com',
           siteName: '',
         };
 
@@ -343,7 +343,7 @@ describe('helpers', () => {
       it('should throw when siteName is only whitespace', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: 'https://edge.example.com',
+          edgeUrl: 'https://edge.example.com',
           siteName: '   ',
         };
 
@@ -353,7 +353,7 @@ describe('helpers', () => {
       it('should throw when siteName is undefined', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: 'https://edge.example.com',
+          edgeUrl: 'https://edge.example.com',
           siteName: undefined as unknown as string,
         };
 
@@ -363,7 +363,7 @@ describe('helpers', () => {
       it('should throw when siteName is null', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: 'https://edge.example.com',
+          edgeUrl: 'https://edge.example.com',
           siteName: null as unknown as string,
         };
 
@@ -371,8 +371,8 @@ describe('helpers', () => {
       });
     });
 
-    describe('sitecoreEdgeUrl validation', () => {
-      it('should use default sitecoreEdgeUrl when undefined', () => {
+    describe('edgeUrl validation', () => {
+      it('should use default edgeUrl when undefined', () => {
         const config = {
           contextId: 'test-context-id',
           siteName: 'test-site',
@@ -380,15 +380,15 @@ describe('helpers', () => {
 
         const result = constructCoreConfigSettings(config);
 
-        expect(result.sitecoreEdgeUrl).to.equal('https://edge-platform.sitecorecloud.io');
+        expect(result.edgeUrl).to.equal('https://edge-platform.sitecorecloud.io');
         expect(result.contextId).to.equal('test-context-id');
         expect(result.siteName).to.equal('test-site');
       });
 
-      it('should throw when sitecoreEdgeUrl is invalid URL', () => {
+      it('should throw when edgeUrl is invalid URL', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: 'not-a-valid-url',
+          edgeUrl: 'not-a-valid-url',
           siteName: 'test-site',
         };
 
@@ -398,55 +398,55 @@ describe('helpers', () => {
       it('should accept valid http URL', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: 'http://edge.example.com',
+          edgeUrl: 'http://edge.example.com',
           siteName: 'test-site',
         };
 
         const result = constructCoreConfigSettings(config);
 
-        expect(result.sitecoreEdgeUrl).to.equal('http://edge.example.com');
+        expect(result.edgeUrl).to.equal('http://edge.example.com');
       });
 
       it('should accept valid https URL', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: 'https://edge.example.com',
+          edgeUrl: 'https://edge.example.com',
           siteName: 'test-site',
         };
 
         const result = constructCoreConfigSettings(config);
 
-        expect(result.sitecoreEdgeUrl).to.equal('https://edge.example.com');
+        expect(result.edgeUrl).to.equal('https://edge.example.com');
       });
 
       it('should accept URL with path', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: 'https://edge.example.com/api/v1',
+          edgeUrl: 'https://edge.example.com/api/v1',
           siteName: 'test-site',
         };
 
         const result = constructCoreConfigSettings(config);
 
-        expect(result.sitecoreEdgeUrl).to.equal('https://edge.example.com/api/v1');
+        expect(result.edgeUrl).to.equal('https://edge.example.com/api/v1');
       });
 
       it('should accept URL with port', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: 'https://edge.example.com:8080',
+          edgeUrl: 'https://edge.example.com:8080',
           siteName: 'test-site',
         };
 
         const result = constructCoreConfigSettings(config);
 
-        expect(result.sitecoreEdgeUrl).to.equal('https://edge.example.com:8080');
+        expect(result.edgeUrl).to.equal('https://edge.example.com:8080');
       });
 
       it('should throw for empty string URL', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: '',
+          edgeUrl: '',
           siteName: 'test-site',
         };
 
@@ -456,7 +456,7 @@ describe('helpers', () => {
       it('should throw for URL without protocol', () => {
         const config = {
           contextId: 'test-context-id',
-          sitecoreEdgeUrl: 'edge.example.com',
+          edgeUrl: 'edge.example.com',
           siteName: 'test-site',
         };
 

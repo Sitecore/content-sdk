@@ -39,7 +39,7 @@ describe('form event', () => {
   const mockCoreSettings = {
     settings: {
       contextId: '123',
-      sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
+      edgeUrl: 'https://edge-platform.sitecorecloud.io',
       siteName: '456',
     },
     readyPromise: Promise.resolve(),

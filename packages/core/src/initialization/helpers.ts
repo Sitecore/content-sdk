@@ -50,14 +50,14 @@ export async function initPlugins(plugins: Map<string, Plugin>): Promise<void> {
 export function constructCoreConfigSettings(
   config: InitSitecoreOptions['settings']
 ): CoreSettings['settings'] {
-  const { contextId, siteName, sitecoreEdgeUrl } = config;
+  const { contextId, siteName, edgeUrl } = config;
   if (!contextId || contextId.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_001);
 
   if (!siteName || siteName.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_002);
 
-  if (sitecoreEdgeUrl !== undefined)
+  if (edgeUrl !== undefined)
     try {
-      new URL(sitecoreEdgeUrl);
+      new URL(edgeUrl);
     } catch {
       throw new Error(ERROR_MESSAGES.IV_001);
     }
@@ -66,6 +66,6 @@ export function constructCoreConfigSettings(
 
   return {
     ...config,
-    sitecoreEdgeUrl: sitecoreEdgeUrl?.trim() ?? SITECORE_EDGE_URL_DEFAULT,
+    edgeUrl: edgeUrl?.trim() ?? SITECORE_EDGE_URL_DEFAULT,
   };
 }

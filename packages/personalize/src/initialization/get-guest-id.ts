@@ -13,5 +13,5 @@ export async function getGuestId(): Promise<string> {
 
   const clientId = getAnalyticsPlugin().environment.getClientId() || '';
 
-  return fetchGuestIdFromEdgeProxy(clientId, settings.contextId, settings.sitecoreEdgeUrl);
+  return fetchGuestIdFromEdgeProxy(clientId, settings.contextId, settings.edgeUrl);
 }

@@ -73,7 +73,7 @@ export function personalizeBrowserEnvironment(): PersonalizeBrowserEnvironment {
         const guestIdCookieValue = await fetchGuestIdFromEdgeProxy(
           clientIdCookieValue,
           coreSettings.contextId,
-          coreSettings.sitecoreEdgeUrl
+          coreSettings.edgeUrl
         );
 
         document.cookie = createCookieString(

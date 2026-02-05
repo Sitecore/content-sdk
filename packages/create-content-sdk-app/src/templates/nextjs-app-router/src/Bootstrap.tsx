@@ -28,7 +28,7 @@ const Bootstrap = ({
       initSitecore({
         settings: {
           contextId: config.api.edge.clientContextId,
-          sitecoreEdgeUrl: config.api.edge.edgeUrl,
+          edgeUrl: config.api.edge.edgeUrl,
           siteName: siteName || config.defaultSite,
         },
         plugins: [

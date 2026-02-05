@@ -32,7 +32,7 @@ describe('analyticsProxyEnvironment', () => {
   const mockCoreSettings = {
     settings: {
       contextId: 'test-context-id',
-      sitecoreEdgeUrl: 'https://edge.test.com',
+      edgeUrl: 'https://edge.test.com',
     },
   };
 

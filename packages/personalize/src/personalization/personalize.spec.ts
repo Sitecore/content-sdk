@@ -34,7 +34,7 @@ describe('personalize', () => {
     const settings = {
       siteName: '456',
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
     };
 
     const mockEnvironment = {

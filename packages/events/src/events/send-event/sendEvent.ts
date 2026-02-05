@@ -20,7 +20,7 @@ export async function sendEvent(
   settings: CoreSettings['settings']
 ): Promise<EPResponse | null> {
   // eslint-disable-next-line max-len
-  const eventUrl = `${settings.sitecoreEdgeUrl}/v1/events/${API_VERSION}/events?siteId=${settings.siteName}`;
+  const eventUrl = `${settings.edgeUrl}/v1/events/${API_VERSION}/events?siteId=${settings.siteName}`;
   const startTimestamp = Date.now();
   let debugResponse: DebugResponse = {};
 

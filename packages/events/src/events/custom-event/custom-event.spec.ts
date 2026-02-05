@@ -47,7 +47,7 @@ describe.only('CustomEvent', () => {
     let eventData: EventData;
     const settings = {
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
       siteName: '456',
     };
 
@@ -139,7 +139,7 @@ describe.only('CustomEvent', () => {
   describe('send', () => {
     const settings = {
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
       siteName: '456',
     } as const;
 
@@ -272,7 +272,7 @@ describe.only('CustomEvent', () => {
     it('should include sc_search if searchData is provided', async () => {
       const settings = {
         contextId: '123',
-        sitecoreEdgeUrl: '',
+        edgeUrl: '',
         siteName: '456',
       };
       const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');

@@ -34,7 +34,7 @@ describe('PageViewEvent', () => {
 
   let expectedBasicAttributes = {};
   let pageViewData: PageViewData;
-  let settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string };
+  let settings: { contextId: string; edgeUrl: string; siteName: string };
 
   // eslint-disable-next-line jsdoc/require-jsdoc
   function callPageViewEvent(
@@ -75,7 +75,7 @@ describe('PageViewEvent', () => {
 
     settings = {
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
       siteName: '456',
     };
     jest.spyOn(core, 'language').mockImplementation(() => 'EN');

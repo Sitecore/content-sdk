@@ -70,7 +70,7 @@ export function personalizeProxyEnvironment(
         const guestIdCookieValueFromEdgeProxy = await fetchGuestIdFromEdgeProxy(
           clientIdCookie,
           coreSettings.contextId,
-          coreSettings.sitecoreEdgeUrl
+          coreSettings.edgeUrl
         );
         newGuestIdCookieValue = guestIdCookieValueFromEdgeProxy;
       } else return;

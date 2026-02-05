@@ -44,7 +44,7 @@ describe('analyticsBrowserEnvironment', () => {
     settings: {
       siteName: 'test-site',
       contextId: 'test-context-id',
-      sitecoreEdgeUrl: 'https://edge.test.com',
+      edgeUrl: 'https://edge.test.com',
     },
   };
 

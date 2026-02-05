@@ -43,7 +43,7 @@ describe('pageView', () => {
   const mockCoreSettings = {
     settings: {
       contextId: '123',
-      sitecoreEdgeUrl: 'https://edge.test.com',
+      edgeUrl: 'https://edge.test.com',
       siteName: '456',
     },
     readyPromise: Promise.resolve(),

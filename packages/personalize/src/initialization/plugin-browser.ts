@@ -59,7 +59,7 @@ async function init() {
   if (!personalizeSettings.webPersonalization) return;
 
   window.scContentSDK.personalize.settings = personalizeSettings.webPersonalization;
-  const cdnUrl = await getCdnUrl(coreSettings.contextId, coreSettings.sitecoreEdgeUrl);
+  const cdnUrl = await getCdnUrl(coreSettings.contextId, coreSettings.edgeUrl);
 
   if (!cdnUrl) return;
 

@@ -37,7 +37,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
 
 const settingsObj = {
   contextId: '123',
-  sitecoreEdgeUrl: 'http://testurl',
+  edgeUrl: 'http://testurl',
   siteName: 'site',
 };
 

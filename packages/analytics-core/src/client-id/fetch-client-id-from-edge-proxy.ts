@@ -5,25 +5,25 @@ import { constructGetClientIdUrl } from './construct-get-client-id-url';
 
 /**
  * Gets the client ID and client key from Sitecore Edge proxy.
- * @param {string} sitecoreEdgeUrl - The base URL for the Edge proxy API.
- * @param {string} sitecoreEdgeContextId - The Sitecore context ID parameter for the Edge proxy API.
+ * @param {string} edgeUrl - The base URL for the Edge proxy API.
+ * @param {string} contextId - The Sitecore context ID parameter for the Edge proxy API.
  * @param {number} [timeout] - The timeout in milliseconds for the call to the proxy.
  * @returns {Promise<ProxySettings>} The client ID and guest ID from the proxy.
  */
 export async function fetchClientIdFromEdgeProxy(
-  sitecoreEdgeUrl: string,
-  sitecoreEdgeContextId: string,
+  edgeUrl: string,
+  contextId: string,
   timeout?: number
 ): Promise<ProxySettings> {
   const fetchOptions = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     headers: {
       'X-Library-Version': LIBRARY_VERSION,
-      'x-sitecore-contextid': sitecoreEdgeContextId,
+      'x-sitecore-contextid': contextId,
     },
   };
 
-  const url = constructGetClientIdUrl(sitecoreEdgeUrl);
+  const url = constructGetClientIdUrl(edgeUrl);
   let payload;
 
   if (timeout !== undefined)

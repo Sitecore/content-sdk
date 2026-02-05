@@ -23,7 +23,7 @@ describe('getGuestId', () => {
   const mockCoreSettings = {
     settings: {
       contextId: '123',
-      sitecoreEdgeUrl: 'https://edge.test.com',
+      edgeUrl: 'https://edge.test.com',
       siteName: '456',
     },
   };
@@ -52,7 +52,7 @@ describe('getGuestId', () => {
     expect(fetchGuestIdSpy).toHaveBeenCalledWith(
       id,
       mockCoreSettings.settings.contextId,
-      mockCoreSettings.settings.sitecoreEdgeUrl
+      mockCoreSettings.settings.edgeUrl
     );
     expect(guestID).toBe('guestID');
   });
@@ -68,7 +68,7 @@ describe('getGuestId', () => {
     expect(fetchGuestIdSpy).toHaveBeenCalledWith(
       '',
       mockCoreSettings.settings.contextId,
-      mockCoreSettings.settings.sitecoreEdgeUrl
+      mockCoreSettings.settings.edgeUrl
     );
   });
 });

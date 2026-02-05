@@ -98,7 +98,7 @@ export function personalizeServerEnvironment(
         const guestIdCookieValueFromEdgeProxy = await fetchGuestIdFromEdgeProxy(
           clientIdCookie.value,
           coreSettings.contextId,
-          coreSettings.sitecoreEdgeUrl
+          coreSettings.edgeUrl
         );
         guestIdCookieString = createCookieString(
           guestIdName,

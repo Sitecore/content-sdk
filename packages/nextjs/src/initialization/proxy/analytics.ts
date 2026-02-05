@@ -59,7 +59,7 @@ export function analyticsProxyEnvironment(
       let newClientIdCookieValue;
       if (!clientIdCookie) {
         const cookieValues = await fetchClientIdFromEdgeProxy(
-          coreSettings.sitecoreEdgeUrl,
+          coreSettings.edgeUrl,
           coreSettings.contextId,
           analyticsSettings.timeout
         );
