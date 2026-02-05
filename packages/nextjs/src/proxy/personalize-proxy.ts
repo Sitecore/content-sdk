@@ -7,7 +7,7 @@ import {
   DEFAULT_VARIANT,
 } from '@sitecore-content-sdk/content/personalize';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
-import { initSitecore } from '@sitecore-content-sdk/core';
+import { initContentSdk } from '@sitecore-content-sdk/core';
 import { personalize } from '@sitecore-content-sdk/personalize';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
@@ -275,7 +275,7 @@ export class PersonalizeProxy extends ProxyBase {
     request: NextRequest;
     response: NextResponse;
   }): Promise<void> {
-    await initSitecore({
+    await initContentSdk({
       settings: {
         contextId: this.config.contextId,
         edgeUrl: this.config.edgeUrl,

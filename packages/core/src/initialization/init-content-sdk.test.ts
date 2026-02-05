@@ -5,14 +5,14 @@ import proxyquire from 'proxyquire';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
 
-describe('init-sitecore', () => {
+describe('init-content-sdk', () => {
   let sandbox: sinon.SinonSandbox;
   let initPluginsStub: sinon.SinonStub;
   let constructCoreConfigSettingsStub: sinon.SinonStub;
   let debugInitStub: sinon.SinonStub;
 
-  let initSitecore: typeof import('./init-sitecore').initSitecore;
-  let getCoreSettings: typeof import('./init-sitecore').getCoreSettings;
+  let initContentSdk: typeof import('./init-content-sdk').initContentSdk;
+  let getCoreSettings: typeof import('./init-content-sdk').getCoreSettings;
 
   const validConfig = {
     contextId: 'test-context-id',
@@ -38,7 +38,7 @@ describe('init-sitecore', () => {
       },
     });
 
-    initSitecore = module.initSitecore;
+    initContentSdk = module.initContentSdk;
     getCoreSettings = module.getCoreSettings;
   });
 
@@ -57,7 +57,7 @@ describe('init-sitecore', () => {
         init: sandbox.stub().resolves(),
       };
 
-      await initSitecore({
+      await initContentSdk({
         settings: validConfig,
         plugins: [mockPlugin],
       });
@@ -71,9 +71,9 @@ describe('init-sitecore', () => {
     });
   });
 
-  describe('initSitecore', () => {
+  describe('initContentSdk', () => {
     it('should initialize without error when no plugins are provided and log a warning', async () => {
-      await initSitecore({
+      await initContentSdk({
         settings: validConfig,
         plugins: [],
       });
@@ -90,7 +90,7 @@ describe('init-sitecore', () => {
       const plugin2: Plugin = { name: 'plugin-2' };
       const plugin3: Plugin = { name: 'plugin-3' };
 
-      await initSitecore({
+      await initContentSdk({
         settings: validConfig,
         plugins: [plugin1, plugin2, plugin3],
       });
@@ -120,7 +120,7 @@ describe('init-sitecore', () => {
         settings: pluginSettings,
       };
 
-      await initSitecore({
+      await initContentSdk({
         settings: validConfig,
         plugins: [mockPlugin],
       });
@@ -140,7 +140,7 @@ describe('init-sitecore', () => {
         name: 'base-plugin',
       };
 
-      await initSitecore({
+      await initContentSdk({
         settings: validConfig,
         plugins: [basePlugin, mockPlugin],
       });
@@ -159,7 +159,7 @@ describe('init-sitecore', () => {
 
       const mockPlugin: Plugin = { name: 'test-plugin' };
 
-      await initSitecore({
+      await initContentSdk({
         settings: validConfig,
         plugins: [mockPlugin],
       });
@@ -170,7 +170,7 @@ describe('init-sitecore', () => {
     it('should store readyPromise in coreSettings', async () => {
       const mockPlugin: Plugin = { name: 'test-plugin' };
 
-      await initSitecore({
+      await initContentSdk({
         settings: validConfig,
         plugins: [mockPlugin],
       });
@@ -186,7 +186,7 @@ describe('init-sitecore', () => {
       const plugin1: Plugin = { name: 'plugin-1' };
       const plugin2: Plugin = { name: 'plugin-2' };
 
-      await initSitecore({
+      await initContentSdk({
         settings: validConfig,
         plugins: [plugin1],
       });
@@ -196,7 +196,7 @@ describe('init-sitecore', () => {
         siteName: 'new-site',
       };
 
-      await initSitecore({
+      await initContentSdk({
         settings: newConfig,
         plugins: [plugin2],
       });

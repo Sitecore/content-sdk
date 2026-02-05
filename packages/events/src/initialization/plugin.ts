@@ -56,7 +56,7 @@ export function getEventsPlugin(): EventsPlugin {
 
   if (!plugin)
     throw new Error(
-      `[IE-004] You must first add "${EVENTS_PLUGIN_NAME}" to the "initContentSDK()" "plugins" array.`
+      `[IE-004] You must first add "${EVENTS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`
     );
   return plugin;
 }

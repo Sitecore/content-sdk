@@ -1,8 +1,8 @@
 /**
- * Options for initSitecore
+ * Options for initContentSdk
  * @public
  */
-export interface InitSitecoreOptions {
+export interface initContentSdkOptions {
   /** Initialization settings */
   settings: {
     contextId: string;

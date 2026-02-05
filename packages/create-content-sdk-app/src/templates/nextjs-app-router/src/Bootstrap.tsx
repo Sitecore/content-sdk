@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, JSX } from 'react';
-import { initSitecore } from '@sitecore-content-sdk/nextjs';
+import { initContentSdk } from '@sitecore-content-sdk/nextjs';
 import { eventsPlugin } from '@sitecore-content-sdk/events';
 import { analyticsBrowserEnvironment, analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import config from 'sitecore.config';
@@ -25,7 +25,7 @@ const Bootstrap = ({
 
     if (config.api.edge?.clientContextId) {
       console.log('✨ Initializing CloudSDK for site:', siteName);
-      initSitecore({
+      initContentSdk({
         settings: {
           contextId: config.api.edge.clientContextId,
           edgeUrl: config.api.edge.edgeUrl,

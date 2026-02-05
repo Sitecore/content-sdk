@@ -96,7 +96,7 @@ describe('plugin', () => {
       mockCoreSettings.plugins.clear();
 
       expect(() => getEventsPlugin()).toThrow(
-        `[IE-004] You must first add "${EVENTS_PLUGIN_NAME}" to the "initContentSDK()" "plugins" array.`
+        `[IE-004] You must first add "${EVENTS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`
       );
     });
   });

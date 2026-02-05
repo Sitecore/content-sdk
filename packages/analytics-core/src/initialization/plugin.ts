@@ -103,7 +103,7 @@ export function getAnalyticsPlugin(): AnalyticsPlugin {
 
   if (!plugin)
     throw new Error(
-      `[IE-004] - You must first add "${ANALYTICS_PLUGIN_NAME}" to the "initContentSDK()" "plugins" array.`
+      `[IE-004] - You must first add "${ANALYTICS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`
     );
 
   return plugin;
