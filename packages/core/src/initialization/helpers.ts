@@ -1,4 +1,4 @@
-import { CoreSettings, initContentSdkOptions } from './types';
+import { CoreSettings, InitContentSdkOptions } from './types';
 import debug from '../debug';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
@@ -44,11 +44,11 @@ export async function initPlugins(plugins: Map<string, Plugin>): Promise<void> {
 
 /**
  * Validates and constructs the core configuration.
- * @param {initContentSdkOptions['settings']} config - The core configuration object.
+ * @param {InitContentSdkOptions['settings']} config - The core configuration object.
  * @internal
  */
 export function constructCoreConfigSettings(
-  config: initContentSdkOptions['settings']
+  config: InitContentSdkOptions['settings']
 ): CoreSettings['settings'] {
   const { contextId, siteName, edgeUrl } = config;
   if (!contextId || contextId.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_001);

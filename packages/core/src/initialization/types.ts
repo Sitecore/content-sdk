@@ -2,7 +2,7 @@
  * Options for initContentSdk
  * @public
  */
-export interface initContentSdkOptions {
+export interface InitContentSdkOptions {
   /** Initialization settings */
   settings: {
     contextId: string;

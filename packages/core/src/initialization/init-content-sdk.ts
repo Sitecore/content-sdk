@@ -1,5 +1,5 @@
 import debug from '../debug';
-import type { CoreSettings, initContentSdkOptions } from './types';
+import type { CoreSettings, InitContentSdkOptions } from './types';
 import { initPlugins, constructCoreConfigSettings } from './helpers';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
@@ -19,11 +19,11 @@ export function getCoreSettings(): CoreSettings {
 
 /**
  * Initializes the Content SDK with the provided options.
- * @param {initContentSdkOptions} options - The initialization options including settings and plugins.
+ * @param {InitContentSdkOptions} options - The initialization options including settings and plugins.
  * @returns A promise that resolves when initialization is complete.
  * @public
  */
-export async function initContentSdk(options: initContentSdkOptions): Promise<void> {
+export async function initContentSdk(options: InitContentSdkOptions): Promise<void> {
   debug.init('Initializing Content SDK with options:', options);
   const { settings, plugins } = options;
 
