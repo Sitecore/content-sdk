@@ -6,10 +6,10 @@ import {
 import { createCookieString, getCookieValueClientSide } from '../utils';
 import { deleteCookie } from '../utils/cookies/delete-cookie';
 import { getAnalyticsPlugin } from './plugin';
-import { AnalyticsEnvironment } from './types';
+import { AnalyticsAdapter } from './types';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 
-interface AnalyticsBrowserEnvironment extends AnalyticsEnvironment {
+interface AnalyticsBrowserAdapter extends AnalyticsAdapter {
   type: 'browser';
 }
 
@@ -17,7 +17,7 @@ interface AnalyticsBrowserEnvironment extends AnalyticsEnvironment {
  * Enables analytics functionality in the browser environment.
  * @public
  */
-export function analyticsBrowserEnvironment(): AnalyticsBrowserEnvironment {
+export function analyticsBrowserAdapter(): AnalyticsBrowserAdapter {
   return {
     type: 'browser',
     getClientId: () => {

@@ -4,7 +4,7 @@ import {
   COOKIE_NAME_PREFIX,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import {
-  PersonalizeEnvironment,
+  PersonalizeAdapter,
   PersonalizeServerPlugin,
   PersonalizeServerPluginOptions,
   PersonalizeServerSettings,
@@ -29,11 +29,11 @@ async function init() {
     analyticsPlugin.settings.cookieSettings.enableCookie &&
     personalizeSettings.enablePersonalizeCookie
   )
-    await personalizePlugin.environment.setGuestId();
+    await personalizePlugin.adapter.setGuestId();
 }
 
 interface PersonalizeServerPluginParams {
-  environment: PersonalizeEnvironment;
+  adapter: PersonalizeAdapter;
   settings?: PersonalizeServerPluginOptions;
 }
 
@@ -45,7 +45,7 @@ interface PersonalizeServerPluginParams {
  */
 export function personalizeServerPlugin({
   settings,
-  environment,
+  adapter,
 }: PersonalizeServerPluginParams): PersonalizeServerPlugin {
   const cookieSettings = {
     name: {
@@ -65,6 +65,6 @@ export function personalizeServerPlugin({
     init,
     dependencies,
     settings: personalizeSettings,
-    environment,
+    adapter,
   };
 }

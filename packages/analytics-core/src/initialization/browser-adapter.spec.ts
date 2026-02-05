@@ -5,7 +5,7 @@ import * as utilsModule from '../utils';
 import * as deleteCookieModule from '../utils/cookies/delete-cookie';
 import { COOKIE_NAME_PREFIX } from '../consts';
 import { jest, expect } from '@jest/globals';
-import { analyticsBrowserEnvironment } from './environment-browser';
+import { analyticsBrowserAdapter } from './browser-adapter';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
   getCoreContext: jest.fn(),
@@ -30,7 +30,7 @@ jest.mock('../utils/cookies/delete-cookie', () => ({
   deleteCookie: jest.fn(),
 }));
 
-describe('analyticsBrowserEnvironment', () => {
+describe('analyticsBrowserAdapter', () => {
   const mockAnalyticsSettings = {
     cookieSettings: {
       name: { clientId: 'sc_cid' },
@@ -70,18 +70,18 @@ describe('analyticsBrowserEnvironment', () => {
     });
   });
 
-  it('should return an environment with type "browser"', () => {
-    const environment = analyticsBrowserEnvironment();
+  it('should return an adapter with type "browser"', () => {
+    const adapter = analyticsBrowserAdapter();
 
-    expect(environment.type).toBe('browser');
+    expect(adapter.type).toBe('browser');
   });
 
   describe('getClientId', () => {
     it('should return the client ID from cookie', () => {
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('client-id-123');
 
-      const environment = analyticsBrowserEnvironment();
-      const result = environment.getClientId();
+      const adapter = analyticsBrowserAdapter();
+      const result = adapter.getClientId();
 
       expect(result).toBe('client-id-123');
       expect(utilsModule.getCookieValueClientSide).toHaveBeenCalledWith('sc_cid');
@@ -90,8 +90,8 @@ describe('analyticsBrowserEnvironment', () => {
     it('should return empty string when cookie does not exist', () => {
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('');
 
-      const environment = analyticsBrowserEnvironment();
-      const result = environment.getClientId();
+      const adapter = analyticsBrowserAdapter();
+      const result = adapter.getClientId();
 
       expect(result).toBe('');
     });
@@ -99,8 +99,8 @@ describe('analyticsBrowserEnvironment', () => {
     it('should return null when getCookieValueClientSide returns null', () => {
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue(null);
 
-      const environment = analyticsBrowserEnvironment();
-      const result = environment.getClientId();
+      const adapter = analyticsBrowserAdapter();
+      const result = adapter.getClientId();
 
       expect(result).toBeNull();
     });
@@ -113,8 +113,8 @@ describe('analyticsBrowserEnvironment', () => {
         'sc_cid=legacy-client-id; Max-Age=63072000'
       );
 
-      const environment = analyticsBrowserEnvironment();
-      await environment.setClientId();
+      const adapter = analyticsBrowserAdapter();
+      await adapter.setClientId();
 
       expect(utilsModule.getCookieValueClientSide).toHaveBeenCalledWith(
         `${COOKIE_NAME_PREFIX}test-context-id`
@@ -145,8 +145,8 @@ describe('analyticsBrowserEnvironment', () => {
         'sc_cid=new-client-id; Max-Age=63072000'
       );
 
-      const environment = analyticsBrowserEnvironment();
-      await environment.setClientId();
+      const adapter = analyticsBrowserAdapter();
+      await adapter.setClientId();
 
       expect(internalModule.fetchClientIdFromEdgeProxy).toHaveBeenCalledWith(
         'https://edge.test.com',
@@ -172,8 +172,8 @@ describe('analyticsBrowserEnvironment', () => {
       ).mockResolvedValue(proxyValues);
       (utilsModule.createCookieString as jest.Mock).mockReturnValue('cookie-string');
 
-      const environment = analyticsBrowserEnvironment();
-      await environment.setClientId();
+      const adapter = analyticsBrowserAdapter();
+      await adapter.setClientId();
 
       expect(mockAnalyticsSettings.proxyValues).toEqual(proxyValues);
     });
@@ -190,8 +190,8 @@ describe('analyticsBrowserEnvironment', () => {
       });
       (utilsModule.createCookieString as jest.Mock).mockReturnValue('cookie-string');
 
-      const environment = analyticsBrowserEnvironment();
-      await environment.setClientId();
+      const adapter = analyticsBrowserAdapter();
+      await adapter.setClientId();
 
       expect(internalModule.getDefaultCookieAttributes).toHaveBeenCalledWith(730, '.example.com');
     });
@@ -204,8 +204,8 @@ describe('analyticsBrowserEnvironment', () => {
         writable: true,
       });
 
-      const environment = analyticsBrowserEnvironment();
-      const result = environment.location.getSearchParams();
+      const adapter = analyticsBrowserAdapter();
+      const result = adapter.location.getSearchParams();
 
       expect(result).toBe('?param1=value1&param2=value2');
     });
@@ -216,8 +216,8 @@ describe('analyticsBrowserEnvironment', () => {
         writable: true,
       });
 
-      const environment = analyticsBrowserEnvironment();
-      const result = environment.location.getSearchParams();
+      const adapter = analyticsBrowserAdapter();
+      const result = adapter.location.getSearchParams();
 
       expect(result).toBe('');
     });

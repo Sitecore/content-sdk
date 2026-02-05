@@ -8,10 +8,10 @@ import { NextRequest, NextResponse } from 'next/server';
 chai.use(sinonChai);
 const expect = chai.expect;
 
-describe('personalizeProxyEnvironment', () => {
+describe('personalizeProxyAdapter', () => {
   const sandbox = sinon.createSandbox();
 
-  let personalizeProxyEnvironmentModule: any;
+  let personalizeProxyAdapterModule: any;
   let getAnalyticsPluginStub: sinon.SinonStub;
   let getCoreContextStub: sinon.SinonStub;
   let getPersonalizePluginStub: sinon.SinonStub;
@@ -103,7 +103,7 @@ describe('personalizeProxyEnvironment', () => {
     fetchGuestIdFromEdgeProxyStub = sandbox.stub();
     getClientIdStub = sandbox.stub();
 
-    personalizeProxyEnvironmentModule = proxyquire('./personalize', {
+    personalizeProxyAdapterModule = proxyquire('./personalize-adapter', {
       '@sitecore-content-sdk/core': {
         getCoreContext: getCoreContextStub,
       },
@@ -116,7 +116,7 @@ describe('personalizeProxyEnvironment', () => {
         getPersonalizePlugin: getPersonalizePluginStub,
         fetchGuestIdFromEdgeProxy: fetchGuestIdFromEdgeProxyStub,
       },
-      './analytics': {
+      './analytics-adapter': {
         getClientId: getClientIdStub,
       },
     });
@@ -126,17 +126,14 @@ describe('personalizeProxyEnvironment', () => {
     sandbox.restore();
   });
 
-  describe('personalizeProxyEnvironment', () => {
-    it('should return an environment with type "proxy"', () => {
+  describe('personalizeProxyAdapter', () => {
+    it('should return an adapter with type "proxy"', () => {
       const request = createMockRequest();
       const response = createMockResponse();
 
-      const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-        request,
-        response
-      );
+      const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
 
-      expect(environment.type).to.equal('proxy');
+      expect(adapter.type).to.equal('proxy');
     });
 
     describe('getUserAgent', () => {
@@ -144,12 +141,8 @@ describe('personalizeProxyEnvironment', () => {
         const request = createMockRequest({}, { 'user-agent': 'Mozilla/5.0 TestBrowser' });
         const response = createMockResponse();
 
-        const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-          request,
-          response
-        );
-        const result = environment.getUserAgent();
-
+        const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+        const result = adapter.getUserAgent();
         expect(result).to.equal('Mozilla/5.0 TestBrowser');
       });
 
@@ -157,11 +150,8 @@ describe('personalizeProxyEnvironment', () => {
         const request = createMockRequest({}, {});
         const response = createMockResponse();
 
-        const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-          request,
-          response
-        );
-        const result = environment.getUserAgent();
+        const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+        const result = adapter.getUserAgent();
 
         expect(result).to.be.undefined;
       });
@@ -172,12 +162,8 @@ describe('personalizeProxyEnvironment', () => {
         const request = createMockRequest({ sc_gid: 'guest-id-123' });
         const response = createMockResponse();
 
-        const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-          request,
-          response
-        );
-        const result = environment.getGuestId();
-
+        const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+        const result = adapter.getGuestId();
         expect(result).to.equal('guest-id-123');
       });
 
@@ -185,12 +171,8 @@ describe('personalizeProxyEnvironment', () => {
         const request = createMockRequest({});
         const response = createMockResponse();
 
-        const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-          request,
-          response
-        );
-        const result = environment.getGuestId();
-
+        const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+        const result = adapter.getGuestId();
         expect(result).to.be.null;
       });
     });
@@ -203,11 +185,8 @@ describe('personalizeProxyEnvironment', () => {
           });
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(response.cookieStore.sc_gid).to.deep.include({
             value: 'legacy-guest-id',
@@ -220,11 +199,8 @@ describe('personalizeProxyEnvironment', () => {
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(request.cookies.get('sc_gid')?.value).to.equal('legacy-guest-id');
         });
@@ -235,11 +211,8 @@ describe('personalizeProxyEnvironment', () => {
           });
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(request.cookies.get('sc_test-context-id_personalize')).to.be.undefined;
         });
@@ -250,11 +223,8 @@ describe('personalizeProxyEnvironment', () => {
           });
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(fetchGuestIdFromEdgeProxyStub).to.not.have.been.called;
         });
@@ -265,11 +235,8 @@ describe('personalizeProxyEnvironment', () => {
           const request = createMockRequest({ sc_gid: 'existing-guest-id' });
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(fetchGuestIdFromEdgeProxyStub).to.not.have.been.called;
           expect(response.cookieStore.sc_gid).to.deep.include({
@@ -283,11 +250,8 @@ describe('personalizeProxyEnvironment', () => {
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           // The request cookie should remain unchanged
           expect(request.cookies.get('sc_gid')?.value).to.equal('existing-guest-id');
@@ -314,11 +278,8 @@ describe('personalizeProxyEnvironment', () => {
           } as unknown as NextRequest;
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           // The request.cookies.set should not have been called because guestIdCookie exists
           expect(setCalled).to.be.false;
@@ -335,11 +296,8 @@ describe('personalizeProxyEnvironment', () => {
           const request = createMockRequest({});
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(fetchGuestIdFromEdgeProxyStub).to.not.have.been.called;
           expect(response.cookieStore.sc_gid).to.deep.include({
@@ -358,11 +316,8 @@ describe('personalizeProxyEnvironment', () => {
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(request.cookies.get('sc_gid')?.value).to.equal('proxy-guest-id');
         });
@@ -378,11 +333,8 @@ describe('personalizeProxyEnvironment', () => {
           const request = createMockRequest({});
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(fetchGuestIdFromEdgeProxyStub).to.have.been.calledWith(
             'client-id-123',
@@ -404,11 +356,8 @@ describe('personalizeProxyEnvironment', () => {
           const request = createMockRequest({});
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(fetchGuestIdFromEdgeProxyStub).to.have.been.calledWith(
             'client-id-123',
@@ -424,11 +373,8 @@ describe('personalizeProxyEnvironment', () => {
           const request = createMockRequest({});
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(response.cookieStore.sc_gid).to.deep.include({
             value: 'new-guest-id',
@@ -444,11 +390,8 @@ describe('personalizeProxyEnvironment', () => {
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(request.cookies.get('sc_gid')?.value).to.equal('new-guest-id');
         });
@@ -461,11 +404,8 @@ describe('personalizeProxyEnvironment', () => {
           const request = createMockRequest({});
           const response = createMockResponse();
 
-          const environment = personalizeProxyEnvironmentModule.personalizeProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setGuestId();
+          const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
+          await adapter.setGuestId();
 
           expect(fetchGuestIdFromEdgeProxyStub).to.not.have.been.called;
           expect(response.cookieStore.sc_gid).to.be.undefined;

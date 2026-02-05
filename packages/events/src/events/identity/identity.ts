@@ -16,9 +16,9 @@ export async function identity(identityData: IdentityData): Promise<EPResponse |
   await coreContext.readyPromise;
   getEventsPlugin();
 
-  const { settings, environment } = getAnalyticsPlugin();
+  const { settings, adapter } = getAnalyticsPlugin();
 
-  const id = environment.getClientId() || '';
+  const id = adapter.getClientId() || '';
 
   return new IdentityEvent({
     id,

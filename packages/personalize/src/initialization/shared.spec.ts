@@ -25,7 +25,7 @@ describe('shared', () => {
         init: jest.fn(),
         dependencies: [],
         settings: {},
-        environment: {},
+        adapter: {},
       };
       mockCoreContext.plugins.set(PERSONALIZE_PLUGIN_NAME, mockPlugin);
 

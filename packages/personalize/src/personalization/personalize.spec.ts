@@ -37,14 +37,14 @@ describe('personalize', () => {
       edgeUrl: '',
     };
 
-    const mockEnvironment = {
+    const mockAdapter = {
       getClientId: jest.fn().mockReturnValue(clientId),
       location: {
         getSearchParams: jest.fn().mockReturnValue(''),
       },
     };
 
-    const mockPersonalizeEnvironment = {
+    const mockPersonalizeAdapter = {
       getGuestId: jest.fn().mockReturnValue(guestId),
       getUserAgent: jest.fn().mockReturnValue('test-user-agent'),
     };
@@ -59,10 +59,10 @@ describe('personalize', () => {
 
       (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
       (analyticsPluginsModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
-        environment: mockEnvironment,
+        adapter: mockAdapter,
       });
       (personalizePluginModule.getPersonalizePlugin as jest.Mock).mockReturnValue({
-        environment: mockPersonalizeEnvironment,
+        adapter: mockPersonalizeAdapter,
       });
     });
 
@@ -140,7 +140,7 @@ describe('personalize', () => {
 
     it('should call getInteractiveExperience with search params', async () => {
       const searchParams = '?utm_campaign=campaign&utm_medium=email';
-      mockEnvironment.location.getSearchParams.mockReturnValue(searchParams);
+      mockAdapter.location.getSearchParams.mockReturnValue(searchParams);
 
       const getInteractiveExperienceDataSpy = jest.spyOn(
         Personalizer.prototype,
@@ -160,7 +160,7 @@ describe('personalize', () => {
     });
 
     it('should use empty string for clientId when getClientId returns null', async () => {
-      mockEnvironment.getClientId.mockReturnValue(null);
+      mockAdapter.getClientId.mockReturnValue(null);
 
       await personalize(personalizeData);
 
@@ -168,8 +168,8 @@ describe('personalize', () => {
     });
 
     it('should use empty string for guestId when getGuestId returns null', async () => {
-      mockEnvironment.getClientId.mockReturnValue(clientId);
-      mockPersonalizeEnvironment.getGuestId.mockReturnValue(null);
+      mockAdapter.getClientId.mockReturnValue(clientId);
+      mockPersonalizeAdapter.getGuestId.mockReturnValue(null);
 
       await personalize(personalizeData);
 
@@ -177,14 +177,14 @@ describe('personalize', () => {
     });
 
     it('should handle undefined getUserAgent method', async () => {
-      const mockPersonalizeEnvironmentWithoutUserAgent = {
+      const mockPersonalizeAdapterWithoutUserAgent = {
         getGuestId: jest.fn().mockReturnValue(guestId),
       };
 
       (personalizePluginModule.getPersonalizePlugin as jest.Mock).mockReturnValue({
-        environment: mockPersonalizeEnvironmentWithoutUserAgent,
+        adapter: mockPersonalizeAdapterWithoutUserAgent,
       });
-      mockEnvironment.location.getSearchParams.mockReturnValue('');
+      mockAdapter.location.getSearchParams.mockReturnValue('');
 
       const getInteractiveExperienceDataSpy = jest.spyOn(
         Personalizer.prototype,

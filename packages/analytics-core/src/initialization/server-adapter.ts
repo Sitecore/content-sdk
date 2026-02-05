@@ -5,11 +5,11 @@ import {
 } from '../internal';
 import { createCookieString, getCookieServerSide } from '../utils';
 import { getAnalyticsPlugin } from './plugin';
-import { AnalyticsEnvironment } from './types';
+import { AnalyticsAdapter } from './types';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import type { IncomingMessage, OutgoingMessage } from 'http';
 
-interface AnalyticsServerEnvironment extends AnalyticsEnvironment {
+interface AnalyticsServerAdapter extends AnalyticsAdapter {
   type: 'server';
 }
 
@@ -19,10 +19,10 @@ interface AnalyticsServerEnvironment extends AnalyticsEnvironment {
  * @param {OutgoingMessage} response - The HTTP response object.
  * @public
  */
-export function analyticsServerEnvironment(
+export function analyticsServerAdapter(
   request: IncomingMessage,
   response: OutgoingMessage
-): AnalyticsServerEnvironment {
+): AnalyticsServerAdapter {
   return {
     type: 'server',
     getClientId: () => {

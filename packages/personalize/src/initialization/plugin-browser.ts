@@ -6,7 +6,7 @@ import {
 } from '@sitecore-content-sdk/analytics-core/internal';
 import {
   PersonalizeBrowserPlugin,
-  PersonalizeEnvironment,
+  PersonalizeAdapter,
   PersonalizePluginOptions,
   PersonalizeSettings,
   WebPersonalizationSettings,
@@ -36,10 +36,9 @@ async function init() {
   if (
     analyticsPlugin.settings.cookieSettings.enableCookie &&
     personalizeSettings.enablePersonalizeCookie &&
-    (!personalizePlugin.environment.getGuestId() ||
-      personalizePlugin.environment.type !== 'browser')
+    (!personalizePlugin.adapter.getGuestId() || personalizePlugin.adapter.type !== 'browser')
   )
-    await personalizePlugin.environment.setGuestId();
+    await personalizePlugin.adapter.setGuestId();
 
   if (typeof window === 'undefined') return;
 
@@ -72,18 +71,18 @@ async function init() {
  * Parameters for creating a personalize browser plugin.
  */
 interface PersonalizeBrowserPluginParams {
-  environment: PersonalizeEnvironment;
+  adapter: PersonalizeAdapter;
   settings?: PersonalizePluginOptions;
 }
 
 /**
- * Creates a personalize browser plugin with the provided environment and settings.
- * @param {PersonalizeBrowserPluginParams} params - The personalize plugin parameters including environment and settings.
+ * Creates a personalize browser plugin with the provided adapter and settings.
+ * @param {PersonalizeBrowserPluginParams} params - The personalize plugin parameters including adapter and settings.
  * @returns {PersonalizeBrowserPlugin} The configured personalize browser plugin.
  * @public
  */
 export function personalizeBrowserPlugin({
-  environment,
+  adapter,
   settings,
 }: PersonalizeBrowserPluginParams): PersonalizeBrowserPlugin {
   const cookieSettings = {
@@ -118,7 +117,7 @@ export function personalizeBrowserPlugin({
     init,
     dependencies,
     settings: personalizeSettings,
-    environment,
+    adapter,
   };
 }
 

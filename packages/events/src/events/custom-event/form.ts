@@ -21,9 +21,9 @@ export async function form(
   await coreContext.readyPromise;
   getEventsPlugin();
 
-  const { settings, environment } = getAnalyticsPlugin();
+  const { settings, adapter } = getAnalyticsPlugin();
 
-  const id = environment.getClientId() || '';
+  const id = adapter.getClientId() || '';
 
   const formEvent = new CustomEvent({
     eventData: {

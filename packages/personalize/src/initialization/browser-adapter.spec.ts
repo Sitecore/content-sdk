@@ -1,4 +1,4 @@
-import { personalizeBrowserEnvironment } from './environment-browser';
+import { personalizeBrowserAdapter } from './browser-adapter';
 import * as sharedModule from './shared';
 import * as coreModule from '@sitecore-content-sdk/core';
 import * as analyticsPluginModule from '@sitecore-content-sdk/analytics-core/internal';
@@ -31,7 +31,7 @@ jest.mock('../guest-id/fetch-guest-id-from-edge-proxy', () => ({
   fetchGuestIdFromEdgeProxy: jest.fn(),
 }));
 
-describe('personalizeBrowserEnvironment', () => {
+describe('personalizeBrowserAdapter', () => {
   const mockPersonalizePlugin = {
     settings: {
       cookieSettings: {
@@ -80,18 +80,18 @@ describe('personalizeBrowserEnvironment', () => {
     });
   });
 
-  it('should return an environment with type "browser"', () => {
-    const environment = personalizeBrowserEnvironment();
+  it('should return an adapter with type "browser"', () => {
+    const adapter = personalizeBrowserAdapter();
 
-    expect(environment.type).toBe('browser');
+    expect(adapter.type).toBe('browser');
   });
 
   describe('getGuestId', () => {
     it('should return the guest ID from cookie', () => {
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('guest-id-123');
 
-      const environment = personalizeBrowserEnvironment();
-      const result = environment.getGuestId();
+      const adapter = personalizeBrowserAdapter();
+      const result = adapter.getGuestId();
 
       expect(result).toBe('guest-id-123');
       expect(utilsModule.getCookieValueClientSide).toHaveBeenCalledWith('sc_cid_personalize');
@@ -100,8 +100,8 @@ describe('personalizeBrowserEnvironment', () => {
     it('should return empty string when cookie does not exist', () => {
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('');
 
-      const environment = personalizeBrowserEnvironment();
-      const result = environment.getGuestId();
+      const adapter = personalizeBrowserAdapter();
+      const result = adapter.getGuestId();
 
       expect(result).toBe('');
     });
@@ -115,8 +115,8 @@ describe('personalizeBrowserEnvironment', () => {
           .mockReturnValueOnce('sc_cid_personalize=legacy-guest-id')
           .mockReturnValueOnce('sc_test-context-id_personalize=; Max-Age=0');
 
-        const environment = personalizeBrowserEnvironment();
-        await environment.setGuestId();
+        const adapter = personalizeBrowserAdapter();
+        await adapter.setGuestId();
 
         expect(utilsModule.getCookieValueClientSide).toHaveBeenCalledWith(
           'sc_test-context-id_personalize'
@@ -145,8 +145,8 @@ describe('personalizeBrowserEnvironment', () => {
           .mockReturnValueOnce('existing-guest-id') // guest id check
           .mockReturnValueOnce('client-id'); // client id check
 
-        const environment = personalizeBrowserEnvironment();
-        await environment.setGuestId();
+        const adapter = personalizeBrowserAdapter();
+        await adapter.setGuestId();
 
         expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).not.toHaveBeenCalled();
         expect(utilsModule.createCookieString).not.toHaveBeenCalled();
@@ -164,8 +164,8 @@ describe('personalizeBrowserEnvironment', () => {
           'sc_cid_personalize=proxy-guest-id'
         );
 
-        const environment = personalizeBrowserEnvironment();
-        await environment.setGuestId();
+        const adapter = personalizeBrowserAdapter();
+        await adapter.setGuestId();
 
         expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).not.toHaveBeenCalled();
         expect(utilsModule.createCookieString).toHaveBeenCalledWith(
@@ -190,8 +190,8 @@ describe('personalizeBrowserEnvironment', () => {
           'sc_cid_personalize=new-guest-id'
         );
 
-        const environment = personalizeBrowserEnvironment();
-        await environment.setGuestId();
+        const adapter = personalizeBrowserAdapter();
+        await adapter.setGuestId();
 
         expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).toHaveBeenCalledWith(
           'client-id-123',
@@ -210,8 +210,8 @@ describe('personalizeBrowserEnvironment', () => {
           .mockReturnValueOnce('') // legacy cookie
           .mockReturnValueOnce('') // guest id cookie
           .mockReturnValueOnce(''); // client id - empty
-        const environment = personalizeBrowserEnvironment();
-        await environment.setGuestId();
+        const adapter = personalizeBrowserAdapter();
+        await adapter.setGuestId();
 
         expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).not.toHaveBeenCalled();
         expect(utilsModule.createCookieString).not.toHaveBeenCalled();
@@ -226,8 +226,8 @@ describe('personalizeBrowserEnvironment', () => {
       jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
       (utilsModule.createCookieString as jest.Mock).mockReturnValue('cookie-string');
 
-      const environment = personalizeBrowserEnvironment();
-      await environment.setGuestId();
+      const adapter = personalizeBrowserAdapter();
+      await adapter.setGuestId();
 
       expect(internalModule.getDefaultCookieAttributes).toHaveBeenCalledWith(730, '.example.com');
     });

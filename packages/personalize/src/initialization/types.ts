@@ -1,4 +1,4 @@
-import { PluginEnvironment } from '@sitecore-content-sdk/core';
+import { PluginAdapter } from '@sitecore-content-sdk/core';
 import { PERSONALIZE_PLUGIN_NAME } from './const';
 
 export type WebPersonalizationSettings = { async: boolean; defer: boolean; language?: string };
@@ -27,7 +27,7 @@ export interface PersonalizePlugin {
   init: () => Promise<void>;
   name: typeof PERSONALIZE_PLUGIN_NAME;
   dependencies: string[];
-  environment: PersonalizeEnvironment;
+  adapter: PersonalizeAdapter;
 }
 
 export interface PersonalizeBrowserPlugin {
@@ -35,7 +35,7 @@ export interface PersonalizeBrowserPlugin {
   init: () => Promise<void>;
   name: typeof PERSONALIZE_PLUGIN_NAME;
   dependencies: string[];
-  environment: PersonalizeEnvironment;
+  adapter: PersonalizeAdapter;
 }
 
 export interface PersonalizeServerPlugin {
@@ -43,12 +43,11 @@ export interface PersonalizeServerPlugin {
   init: () => Promise<void>;
   name: typeof PERSONALIZE_PLUGIN_NAME;
   dependencies: string[];
-  environment: PersonalizeEnvironment;
+  adapter: PersonalizeAdapter;
 }
 
-export interface PersonalizeEnvironment extends PluginEnvironment {
+export interface PersonalizeAdapter extends PluginAdapter {
   getGuestId: () => string | null;
   setGuestId: () => Promise<void>;
   getUserAgent?: () => string | undefined;
 }
-

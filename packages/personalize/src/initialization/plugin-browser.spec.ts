@@ -7,7 +7,7 @@ import * as analyticsPluginModule from '@sitecore-content-sdk/analytics-core/int
 import * as analyticsUtilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import * as getCdnUrlModule from '../web-personalization/get-cdn-url';
 import * as getGuestIdModule from './get-guest-id';
-import { PersonalizeEnvironment } from './types';
+import { PersonalizeAdapter } from './types';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
@@ -38,12 +38,10 @@ jest.mock('../web-personalization/get-cdn-url', () => ({
 }));
 
 describe('personalizeBrowserPlugin', () => {
-  const mockGetGuestId = jest.fn() as jest.Mock<PersonalizeEnvironment['getGuestId']>;
-  const mockSetGuestId = jest.fn() as jest.Mock<PersonalizeEnvironment['setGuestId']>;
+  const mockGetGuestId = jest.fn() as jest.Mock<PersonalizeAdapter['getGuestId']>;
+  const mockSetGuestId = jest.fn() as jest.Mock<PersonalizeAdapter['setGuestId']>;
 
-  const createMockEnvironment = (
-    type: 'browser' | 'server' = 'browser'
-  ): PersonalizeEnvironment => ({
+  const createMockAdapter = (type: 'browser' | 'server' = 'browser'): PersonalizeAdapter => ({
     type,
     getGuestId: mockGetGuestId,
     setGuestId: mockSetGuestId,
@@ -80,39 +78,39 @@ describe('personalizeBrowserPlugin', () => {
 
   describe('plugin creation', () => {
     it('should create a plugin with the correct name', () => {
-      const environment = createMockEnvironment();
-      const plugin = personalizeBrowserPlugin({ environment });
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({ adapter });
 
       expect(plugin.name).toBe(PERSONALIZE_PLUGIN_NAME);
     });
 
     it('should create a plugin with analytics plugin as dependency', () => {
-      const environment = createMockEnvironment();
-      const plugin = personalizeBrowserPlugin({ environment });
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({ adapter });
 
       expect(plugin.dependencies).toEqual(['AnalyticsPlugin']);
     });
 
     it('should create a plugin with analytics and events plugins as dependencies when webPersonalization is enabled', () => {
-      const environment = createMockEnvironment();
+      const adapter = createMockAdapter();
       const plugin = personalizeBrowserPlugin({
-        environment,
+        adapter,
         settings: { webPersonalization: { async: true } },
       });
 
       expect(plugin.dependencies).toEqual(['AnalyticsPlugin', 'EventsPlugin']);
     });
 
-    it('should create a plugin with the correct environment', () => {
-      const environment = createMockEnvironment();
-      const plugin = personalizeBrowserPlugin({ environment });
+    it('should create a plugin with the correct adapter', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({ adapter });
 
-      expect(plugin.environment).toBe(environment);
+      expect(plugin.adapter).toBe(adapter);
     });
 
     it('should create a plugin with default settings when no settings provided', () => {
-      const environment = createMockEnvironment();
-      const plugin = personalizeBrowserPlugin({ environment });
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({ adapter });
 
       expect(plugin.settings).toEqual({
         enablePersonalizeCookie: false,
@@ -126,9 +124,9 @@ describe('personalizeBrowserPlugin', () => {
     });
 
     it('should create a plugin with enablePersonalizeCookie true', () => {
-      const environment = createMockEnvironment();
+      const adapter = createMockAdapter();
       const plugin = personalizeBrowserPlugin({
-        environment,
+        adapter,
         settings: { enablePersonalizeCookie: true },
       });
 
@@ -136,9 +134,9 @@ describe('personalizeBrowserPlugin', () => {
     });
 
     it('should create a plugin with enablePersonalizeCookie false', () => {
-      const environment = createMockEnvironment();
+      const adapter = createMockAdapter();
       const plugin = personalizeBrowserPlugin({
-        environment,
+        adapter,
         settings: { enablePersonalizeCookie: false },
       });
 
@@ -146,9 +144,9 @@ describe('personalizeBrowserPlugin', () => {
     });
 
     it('should create a plugin with webPersonalization settings with defaults', () => {
-      const environment = createMockEnvironment();
+      const adapter = createMockAdapter();
       const plugin = personalizeBrowserPlugin({
-        environment,
+        adapter,
         settings: { webPersonalization: {} },
       });
 
@@ -160,9 +158,9 @@ describe('personalizeBrowserPlugin', () => {
     });
 
     it('should create a plugin with custom webPersonalization settings', () => {
-      const environment = createMockEnvironment();
+      const adapter = createMockAdapter();
       const plugin = personalizeBrowserPlugin({
-        environment,
+        adapter,
         settings: {
           webPersonalization: {
             async: false,
@@ -180,8 +178,8 @@ describe('personalizeBrowserPlugin', () => {
     });
 
     it('should have an init function', () => {
-      const environment = createMockEnvironment();
-      const plugin = personalizeBrowserPlugin({ environment });
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({ adapter });
 
       expect(typeof plugin.init).toBe('function');
     });
@@ -190,12 +188,12 @@ describe('personalizeBrowserPlugin', () => {
   describe('init', () => {
     describe('setGuestId', () => {
       it('should call setGuestId when both enableCookie and enablePersonalizeCookie are true and guest ID does not exist', async () => {
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
         mockGetGuestId.mockReturnValue('');
         mockSetGuestId.mockResolvedValue(undefined);
 
         const plugin = personalizeBrowserPlugin({
-          environment,
+          adapter,
           settings: { enablePersonalizeCookie: true },
         });
 
@@ -206,13 +204,13 @@ describe('personalizeBrowserPlugin', () => {
         expect(mockSetGuestId).toHaveBeenCalledTimes(1);
       });
 
-      it('should call setGuestId when environment type is not browser even if guest ID exists', async () => {
-        const environment = createMockEnvironment('server');
+      it('should call setGuestId when adapter type is not browser even if guest ID exists', async () => {
+        const adapter = createMockAdapter('server');
         mockGetGuestId.mockReturnValue('existing-guest-id');
         mockSetGuestId.mockResolvedValue(undefined);
 
         const plugin = personalizeBrowserPlugin({
-          environment,
+          adapter,
           settings: { enablePersonalizeCookie: true },
         });
 
@@ -223,12 +221,12 @@ describe('personalizeBrowserPlugin', () => {
         expect(mockSetGuestId).toHaveBeenCalledTimes(1);
       });
 
-      it('should not call setGuestId when guest ID exists and environment type is browser', async () => {
-        const environment = createMockEnvironment('browser');
+      it('should not call setGuestId when guest ID exists and adapter type is browser', async () => {
+        const adapter = createMockAdapter('browser');
         mockGetGuestId.mockReturnValue('existing-guest-id');
 
         const plugin = personalizeBrowserPlugin({
-          environment,
+          adapter,
           settings: { enablePersonalizeCookie: true },
         });
 
@@ -240,10 +238,10 @@ describe('personalizeBrowserPlugin', () => {
       });
 
       it('should not call setGuestId when enableCookie is false', async () => {
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
 
         const plugin = personalizeBrowserPlugin({
-          environment,
+          adapter,
           settings: { enablePersonalizeCookie: true },
         });
 
@@ -262,10 +260,10 @@ describe('personalizeBrowserPlugin', () => {
       });
 
       it('should not call setGuestId when enablePersonalizeCookie is false', async () => {
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
 
         const plugin = personalizeBrowserPlugin({
-          environment,
+          adapter,
           settings: { enablePersonalizeCookie: false },
         });
 
@@ -283,9 +281,9 @@ describe('personalizeBrowserPlugin', () => {
         // @ts-expect-error - simulating SSR environment
         delete global.window;
 
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
 
-        const plugin = personalizeBrowserPlugin({ environment });
+        const plugin = personalizeBrowserPlugin({ adapter });
 
         (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
 
@@ -300,9 +298,9 @@ describe('personalizeBrowserPlugin', () => {
 
     describe('window.scContentSDK setup', () => {
       it('should set up window.scContentSDK with personalize properties', async () => {
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
 
-        const plugin = personalizeBrowserPlugin({ environment });
+        const plugin = personalizeBrowserPlugin({ adapter });
 
         (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
 
@@ -315,9 +313,9 @@ describe('personalizeBrowserPlugin', () => {
       });
 
       it('should add getGuestId to window.scContentSDK.analytics_core', async () => {
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
 
-        const plugin = personalizeBrowserPlugin({ environment });
+        const plugin = personalizeBrowserPlugin({ adapter });
 
         (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
 
@@ -335,9 +333,9 @@ describe('personalizeBrowserPlugin', () => {
           },
         };
 
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
 
-        const plugin = personalizeBrowserPlugin({ environment });
+        const plugin = personalizeBrowserPlugin({ adapter });
 
         (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
 
@@ -351,10 +349,10 @@ describe('personalizeBrowserPlugin', () => {
 
     describe('webPersonalization', () => {
       it('should not load CDN script when webPersonalization is false', async () => {
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
 
         const plugin = personalizeBrowserPlugin({
-          environment,
+          adapter,
           settings: { webPersonalization: false },
         });
 
@@ -367,13 +365,13 @@ describe('personalizeBrowserPlugin', () => {
       });
 
       it('should load CDN script when webPersonalization is enabled and CDN URL is available', async () => {
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
         (
           getCdnUrlModule.getCdnUrl as jest.Mock<typeof getCdnUrlModule.getCdnUrl>
         ).mockResolvedValue('https://cdn.test.com/script.js');
 
         const plugin = personalizeBrowserPlugin({
-          environment,
+          adapter,
           settings: { webPersonalization: { async: true } },
         });
 
@@ -392,13 +390,13 @@ describe('personalizeBrowserPlugin', () => {
       });
 
       it('should not load CDN script when CDN URL is not available', async () => {
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
         (
           getCdnUrlModule.getCdnUrl as jest.Mock<typeof getCdnUrlModule.getCdnUrl>
         ).mockResolvedValue(null);
 
         const plugin = personalizeBrowserPlugin({
-          environment,
+          adapter,
           settings: { webPersonalization: { async: true } },
         });
 
@@ -411,13 +409,13 @@ describe('personalizeBrowserPlugin', () => {
       });
 
       it('should set webPersonalization settings on window.scContentSDK.personalize', async () => {
-        const environment = createMockEnvironment();
+        const adapter = createMockAdapter();
         (
           getCdnUrlModule.getCdnUrl as jest.Mock<typeof getCdnUrlModule.getCdnUrl>
         ).mockResolvedValue('https://cdn.test.com/script.js');
 
         const plugin = personalizeBrowserPlugin({
-          environment,
+          adapter,
           settings: {
             webPersonalization: {
               async: false,

@@ -19,7 +19,7 @@ const eventData: EventData = {
 };
 
 describe('addToEventQueue', () => {
-  const mockEnvironment = {
+  const mockAdapter = {
     getClientId: jest.fn(),
   };
 
@@ -33,7 +33,7 @@ describe('addToEventQueue', () => {
       },
       siteName: '456',
     },
-    environment: mockEnvironment,
+    adapter: mockAdapter,
   };
 
   const mockCoreContext = {
@@ -55,7 +55,7 @@ describe('addToEventQueue', () => {
   });
 
   it('should add an event to the queue with the correct payload', async () => {
-    mockEnvironment.getClientId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     const enqueueEventSpy = jest
       .spyOn(eventStorageModule.eventQueue, 'enqueueEvent')
@@ -72,7 +72,7 @@ describe('addToEventQueue', () => {
   });
 
   it('should use empty string for id when getClientId returns null', async () => {
-    mockEnvironment.getClientId.mockReturnValue(null);
+    mockAdapter.getClientId.mockReturnValue(null);
 
     const enqueueEventSpy = jest
       .spyOn(eventStorageModule.eventQueue, 'enqueueEvent')
@@ -99,7 +99,7 @@ describe('addToEventQueue', () => {
       readyPromise,
     } as any);
 
-    mockEnvironment.getClientId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     const enqueueEventSpy = jest
       .spyOn(eventStorageModule.eventQueue, 'enqueueEvent')
@@ -118,7 +118,7 @@ describe('addToEventQueue', () => {
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    mockEnvironment.getClientId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
     jest.spyOn(eventStorageModule.eventQueue, 'enqueueEvent').mockImplementation(() => {});
 
     await addToEventQueue(eventData);

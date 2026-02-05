@@ -2,7 +2,7 @@
 import { SitecorePageProps, initContentSdk } from '@sitecore-content-sdk/nextjs';
 import config from 'sitecore.config';
 import { eventsPlugin } from '@sitecore-content-sdk/events';
-import { analyticsBrowserEnvironment, analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
+import { analyticsBrowserAdapter, analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 
 /**
  * The Bootstrap component is the entry point for performing any initialization logic
@@ -38,7 +38,7 @@ const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
                 enableCookie: true,
                 cookieDomain: window.location.hostname.replace(/^www\./, ''),
               },
-              environment: analyticsBrowserEnvironment(),
+              adapter: analyticsBrowserAdapter(),
             }),
             eventsPlugin(),
           ],

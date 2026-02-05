@@ -16,9 +16,9 @@ export async function event(eventData: EventData): Promise<EPResponse | null> {
   await coreContext.readyPromise;
   getEventsPlugin();
 
-  const { settings, environment } = getAnalyticsPlugin();
+  const { settings, adapter } = getAnalyticsPlugin();
 
-  const id = environment.getClientId() || '';
+  const id = adapter.getClientId() || '';
 
   return new CustomEvent({
     eventData,

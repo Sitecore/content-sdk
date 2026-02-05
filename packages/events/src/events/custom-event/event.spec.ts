@@ -13,7 +13,7 @@ jest.mock('../../initialization/plugin');
 jest.mock('./custom-event');
 
 describe('event', () => {
-  const mockEnvironment = {
+  const mockAdapter = {
     getClientId: jest.fn(),
   };
 
@@ -26,7 +26,7 @@ describe('event', () => {
         path: '/',
       },
     },
-    environment: mockEnvironment,
+    adapter: mockAdapter,
   };
 
   const mockCoreContext = {
@@ -61,7 +61,7 @@ describe('event', () => {
       type: 'CUSTOM_TYPE',
     };
 
-    mockEnvironment.getClientId.mockReturnValue(id);
+    mockAdapter.getClientId.mockReturnValue(id);
 
     await event(eventData);
 
@@ -81,7 +81,7 @@ describe('event', () => {
       type: 'CUSTOM_TYPE',
     };
 
-    mockEnvironment.getClientId.mockReturnValue(null);
+    mockAdapter.getClientId.mockReturnValue(null);
 
     await event(eventData);
 
@@ -104,7 +104,7 @@ describe('event', () => {
       readyPromise,
     } as any);
 
-    mockEnvironment.getClientId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     const eventPromise = event({ type: 'TEST' });
 
@@ -117,7 +117,7 @@ describe('event', () => {
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    mockEnvironment.getClientId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     await event({ type: 'TEST' });
 

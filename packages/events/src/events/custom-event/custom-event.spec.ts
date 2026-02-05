@@ -28,7 +28,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
   };
 });
 
-describe.only('CustomEvent', () => {
+describe('CustomEvent', () => {
   const id = 'test_id';
   const languageSpy = jest.spyOn(core, 'language').mockImplementation(() => 'EN');
   const pageNameSpy = jest.spyOn(core, 'pageName').mockImplementation(() => 'races');

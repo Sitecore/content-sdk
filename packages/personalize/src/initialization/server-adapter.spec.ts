@@ -1,4 +1,4 @@
-import { personalizeServerEnvironment } from './environment-server';
+import { personalizeServerAdapter } from './server-adapter';
 import * as sharedModule from './shared';
 import * as coreModule from '@sitecore-content-sdk/core';
 import * as analyticsPluginModule from '@sitecore-content-sdk/analytics-core/internal';
@@ -32,7 +32,7 @@ jest.mock('../guest-id/fetch-guest-id-from-edge-proxy', () => ({
   fetchGuestIdFromEdgeProxy: jest.fn(),
 }));
 
-describe('personalizeServerEnvironment', () => {
+describe('personalizeServerAdapter', () => {
   const mockPersonalizePlugin = {
     settings: {
       cookieSettings: {
@@ -103,13 +103,12 @@ describe('personalizeServerEnvironment', () => {
     (internalModule.getDefaultCookieAttributes as jest.Mock).mockReturnValue(mockCookieAttributes);
   });
 
-  it('should return an environment with type "server"', () => {
+  it('should return an adapter with type "server"', () => {
     const request = createMockRequest();
     const response = createMockResponse();
 
-    const environment = personalizeServerEnvironment(request, response);
-
-    expect(environment.type).toBe('server');
+    const adapter = personalizeServerAdapter(request, response);
+    expect(adapter.type).toBe('server');
   });
 
   describe('getUserAgent', () => {
@@ -117,8 +116,8 @@ describe('personalizeServerEnvironment', () => {
       const request = createMockRequest(undefined, '/test', 'Mozilla/5.0');
       const response = createMockResponse();
 
-      const environment = personalizeServerEnvironment(request, response);
-      const result = environment.getUserAgent?.();
+      const adapter = personalizeServerAdapter(request, response);
+      const result = adapter.getUserAgent?.();
 
       expect(result).toBe('Mozilla/5.0');
     });
@@ -128,8 +127,8 @@ describe('personalizeServerEnvironment', () => {
       delete request.headers['user-agent'];
       const response = createMockResponse();
 
-      const environment = personalizeServerEnvironment(request, response);
-      const result = environment.getUserAgent?.();
+      const adapter = personalizeServerAdapter(request, response);
+      const result = adapter.getUserAgent?.();
 
       expect(result).toBeUndefined();
     });
@@ -144,8 +143,8 @@ describe('personalizeServerEnvironment', () => {
       const request = createMockRequest('sc_cid_personalize=guest-id-123');
       const response = createMockResponse();
 
-      const environment = personalizeServerEnvironment(request, response);
-      const result = environment.getGuestId();
+      const adapter = personalizeServerAdapter(request, response);
+      const result = adapter.getGuestId();
 
       expect(result).toBe('guest-id-123');
       expect(utilsModule.getCookieServerSide).toHaveBeenCalledWith(
@@ -159,8 +158,8 @@ describe('personalizeServerEnvironment', () => {
       const request = createMockRequest();
       const response = createMockResponse();
 
-      const environment = personalizeServerEnvironment(request, response);
-      const result = environment.getGuestId();
+      const adapter = personalizeServerAdapter(request, response);
+      const result = adapter.getGuestId();
 
       expect(result).toBeNull();
     });
@@ -181,8 +180,8 @@ describe('personalizeServerEnvironment', () => {
         const request = createMockRequest(`${legacyCookieName}=legacy-guest-id`);
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', [
           'sc_cid_personalize=legacy-guest-id',
@@ -203,8 +202,8 @@ describe('personalizeServerEnvironment', () => {
         const request = createMockRequest(`${legacyCookieName}=legacy-guest-id`);
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(request.headers.cookie).toBe('sc_cid_personalize=legacy-guest-id');
       });
@@ -222,8 +221,8 @@ describe('personalizeServerEnvironment', () => {
         const request = createMockRequest(undefined);
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(request.headers.cookie).toBeUndefined();
       });
@@ -242,8 +241,8 @@ describe('personalizeServerEnvironment', () => {
         const request = createMockRequest('sc_cid_personalize=existing-guest-id');
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).not.toHaveBeenCalled();
         expect(response.setHeader).toHaveBeenCalledWith(
@@ -267,8 +266,8 @@ describe('personalizeServerEnvironment', () => {
         const request = createMockRequest('sc_cid=client-id');
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).not.toHaveBeenCalled();
         expect(utilsModule.createCookieString).toHaveBeenCalledWith(
@@ -295,8 +294,8 @@ describe('personalizeServerEnvironment', () => {
         const request = createMockRequest('sc_cid=client-id-123');
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).toHaveBeenCalledWith(
           'client-id-123',
@@ -311,8 +310,8 @@ describe('personalizeServerEnvironment', () => {
         const request = createMockRequest();
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).not.toHaveBeenCalled();
         expect(response.setHeader).not.toHaveBeenCalled();
@@ -332,8 +331,8 @@ describe('personalizeServerEnvironment', () => {
         request.headers.cookie = undefined;
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(request.headers.cookie).toBe('sc_cid_personalize=guest-id');
       });
@@ -351,8 +350,8 @@ describe('personalizeServerEnvironment', () => {
         const request = createMockRequest('other_cookie=value');
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(request.headers.cookie).toBe('other_cookie=value; sc_cid_personalize=guest-id');
       });
@@ -372,8 +371,8 @@ describe('personalizeServerEnvironment', () => {
         const request = createMockRequest();
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(response.setHeader).toHaveBeenCalledWith(
           'Set-Cookie',
@@ -395,8 +394,8 @@ describe('personalizeServerEnvironment', () => {
         const response = createMockResponse();
         response.headers['Set-Cookie'] = 'existing_cookie=value';
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(response.setHeader).toHaveBeenCalledWith(
           'Set-Cookie',
@@ -418,8 +417,8 @@ describe('personalizeServerEnvironment', () => {
         const response = createMockResponse();
         response.headers['Set-Cookie'] = ['cookie1=value1', 'cookie2=value2'];
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setGuestId();
 
         expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', [
           'cookie1=value1',

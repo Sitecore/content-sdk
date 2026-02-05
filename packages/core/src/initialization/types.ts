@@ -45,7 +45,7 @@ export type PluginDependency = string;
  * @template Settings - Plugin-specific settings type
  * @public
  */
-export interface Plugin<Settings = unknown, Environment = unknown> {
+export interface Plugin<Settings = unknown, Adapter = unknown> {
   /**
    * Unique identifier for the plugin (e.g., '@sitecore-content-sdk/events')
    */
@@ -64,15 +64,15 @@ export interface Plugin<Settings = unknown, Environment = unknown> {
    */
   init?: () => void | Promise<void>;
   /**
-   * Optional environment requirements for the plugin.
+   * Optional adapter requirements for the plugin.
    */
-  environment?: Environment;
+  adapter?: Adapter;
 }
 
 /**
- * Environment definition for plugins.
+ * Adapter definition for plugins.
  * @internal
  */
-export interface PluginEnvironment {
+export interface PluginAdapter {
   type: 'browser' | (string & {});
 }

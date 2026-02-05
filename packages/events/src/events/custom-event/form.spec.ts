@@ -20,7 +20,7 @@ jest.mock('../../debug', () => {
 });
 
 describe('form event', () => {
-  const mockEnvironment = {
+  const mockAdapter = {
     getClientId: jest.fn(),
   };
 
@@ -33,7 +33,7 @@ describe('form event', () => {
         path: '/',
       },
     },
-    environment: mockEnvironment,
+    adapter: mockAdapter,
   };
 
   const mockCoreContext = {
@@ -63,7 +63,7 @@ describe('form event', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    mockEnvironment.getClientId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     const expectedBody = JSON.stringify({
       type: 'FORM',
@@ -98,7 +98,7 @@ describe('form event', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    mockEnvironment.getClientId.mockReturnValue(null);
+    mockAdapter.getClientId.mockReturnValue(null);
 
     await form('1234', 'VIEWED', 'test');
 
@@ -121,7 +121,7 @@ describe('form event', () => {
       readyPromise,
     } as any);
 
-    mockEnvironment.getClientId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
@@ -144,7 +144,7 @@ describe('form event', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    mockEnvironment.getClientId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     await form('1234', 'SUBMITTED', 'test');
 

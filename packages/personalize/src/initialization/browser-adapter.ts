@@ -2,7 +2,7 @@ import {
   createCookieString,
   getCookieValueClientSide,
 } from '@sitecore-content-sdk/analytics-core/utils';
-import { PersonalizeEnvironment } from './types';
+import { PersonalizeAdapter } from './types';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getPersonalizePlugin } from './shared';
 import {
@@ -12,15 +12,16 @@ import {
 import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
 import { fetchGuestIdFromEdgeProxy } from '../guest-id/fetch-guest-id-from-edge-proxy';
 
-export interface PersonalizeBrowserEnvironment extends PersonalizeEnvironment {
+export interface PersonalizeBrowserAdapter extends PersonalizeAdapter {
   type: 'browser';
 }
 
 /**
  * Enables personalize functionality in the browser environment.
+ * @returns An PersonalizeBrowserAdapter instance.
  * @public
  */
-export function personalizeBrowserEnvironment(): PersonalizeBrowserEnvironment {
+export function personalizeBrowserAdapter(): PersonalizeBrowserAdapter {
   return {
     type: 'browser',
     getGuestId: () => {

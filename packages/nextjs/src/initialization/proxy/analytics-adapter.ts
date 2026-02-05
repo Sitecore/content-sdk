@@ -5,12 +5,12 @@ import {
 } from '@sitecore-content-sdk/analytics-core/internal';
 import {
   getAnalyticsPlugin,
-  AnalyticsEnvironment,
+  AnalyticsAdapter,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import { NextRequest, NextResponse } from 'next/server';
 
-interface AnalyticsProxyEnvironment extends AnalyticsEnvironment {
+interface AnalyticsProxyAdapter extends AnalyticsAdapter {
   type: 'proxy';
 }
 
@@ -20,10 +20,10 @@ interface AnalyticsProxyEnvironment extends AnalyticsEnvironment {
  * @param {NextResponse} response - The Next.js response object.
  * @public
  */
-export function analyticsProxyEnvironment(
+export function analyticsProxyAdapter(
   request: NextRequest,
   response: NextResponse
-): AnalyticsProxyEnvironment {
+): AnalyticsProxyAdapter {
   return {
     type: 'proxy',
     getClientId: () => {

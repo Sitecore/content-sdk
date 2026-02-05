@@ -14,8 +14,8 @@ export async function addToEventQueue(eventData: EventData): Promise<void> {
   await coreContext.readyPromise;
   getEventsPlugin();
 
-  const { settings, environment } = getAnalyticsPlugin();
-  const id = environment.getClientId() || '';
+  const { settings, adapter } = getAnalyticsPlugin();
+  const id = adapter.getClientId() || '';
 
   const queueEventPayload: QueueEventPayload = {
     eventData,

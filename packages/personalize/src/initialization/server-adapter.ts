@@ -2,7 +2,7 @@ import {
   createCookieString,
   getCookieServerSide,
 } from '@sitecore-content-sdk/analytics-core/utils';
-import { PersonalizeEnvironment } from './types';
+import { PersonalizeAdapter } from './types';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getPersonalizePlugin } from './shared';
 import {
@@ -13,9 +13,9 @@ import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/interna
 import { fetchGuestIdFromEdgeProxy } from '../guest-id/fetch-guest-id-from-edge-proxy';
 import type { IncomingMessage, OutgoingMessage } from 'http';
 
-export interface PersonalizeServerEnvironment extends PersonalizeEnvironment {
+export interface PersonalizeServerAdapter extends PersonalizeAdapter {
   type: 'server';
-  getUserAgent: PersonalizeEnvironment['getUserAgent'];
+  getUserAgent: PersonalizeAdapter['getUserAgent'];
 }
 
 const getGuestId = (request: IncomingMessage): string | null => {
@@ -31,13 +31,13 @@ const getGuestId = (request: IncomingMessage): string | null => {
  * Enables personalize functionality in the server environment.
  * @param {IncomingMessage} request - The HTTP request object.
  * @param {OutgoingMessage} response - The HTTP response object.
- * @returns An PersonalizeServerEnvironment instance.
+ * @returns An PersonalizeServerAdapter instance.
  * @public
  */
-export function personalizeServerEnvironment(
+export function personalizeServerAdapter(
   request: IncomingMessage,
   response: OutgoingMessage
-): PersonalizeServerEnvironment {
+): PersonalizeServerAdapter {
   return {
     type: 'server',
     getUserAgent: () => request.headers['user-agent'],

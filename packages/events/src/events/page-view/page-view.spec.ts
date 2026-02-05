@@ -21,7 +21,7 @@ jest.mock('./page-view-event', () => {
 });
 
 describe('pageView', () => {
-  const mockEnvironment = {
+  const mockAdapter = {
     getClientId: jest.fn(),
     location: {
       getSearchParams: jest.fn(),
@@ -37,7 +37,7 @@ describe('pageView', () => {
         path: '/',
       },
     },
-    environment: mockEnvironment,
+    adapter: mockAdapter,
   };
 
   const mockCoreContext = {
@@ -69,8 +69,8 @@ describe('pageView', () => {
       page: 'races',
     };
 
-    mockEnvironment.getClientId.mockReturnValue(id);
-    mockEnvironment.location.getSearchParams.mockReturnValue('?test=value');
+    mockAdapter.getClientId.mockReturnValue(id);
+    mockAdapter.location.getSearchParams.mockReturnValue('?test=value');
 
     const response = await pageView({ ...pageViewData, extensionData });
 
@@ -92,8 +92,8 @@ describe('pageView', () => {
       page: 'races',
     };
 
-    mockEnvironment.getClientId.mockReturnValue(null);
-    mockEnvironment.location.getSearchParams.mockReturnValue('');
+    mockAdapter.getClientId.mockReturnValue(null);
+    mockAdapter.location.getSearchParams.mockReturnValue('');
 
     await pageView(pageViewData);
 
@@ -115,8 +115,8 @@ describe('pageView', () => {
       readyPromise,
     } as any);
 
-    mockEnvironment.getClientId.mockReturnValue('test_id');
-    mockEnvironment.location.getSearchParams.mockReturnValue('');
+    mockAdapter.getClientId.mockReturnValue('test_id');
+    mockAdapter.location.getSearchParams.mockReturnValue('');
 
     const pageViewPromise = pageView({ channel: 'WEB' });
 
@@ -129,17 +129,17 @@ describe('pageView', () => {
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    mockEnvironment.getClientId.mockReturnValue('test_id');
-    mockEnvironment.location.getSearchParams.mockReturnValue('');
+    mockAdapter.getClientId.mockReturnValue('test_id');
+    mockAdapter.location.getSearchParams.mockReturnValue('');
 
     await pageView({ channel: 'WEB' });
 
     expect(eventsPluginModule.getEventsPlugin).toHaveBeenCalledTimes(1);
   });
 
-  it('should pass searchParams from environment.location.getSearchParams', async () => {
-    mockEnvironment.getClientId.mockReturnValue('test_id');
-    mockEnvironment.location.getSearchParams.mockReturnValue('?utm_source=google&utm_medium=cpc');
+  it('should pass searchParams from adapter.location.getSearchParams', async () => {
+    mockAdapter.getClientId.mockReturnValue('test_id');
+    mockAdapter.location.getSearchParams.mockReturnValue('?utm_source=google&utm_medium=cpc');
 
     await pageView({ channel: 'WEB' });
 

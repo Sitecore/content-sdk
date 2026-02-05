@@ -1,8 +1,8 @@
 import { ProxySettings } from '../interfaces';
-import { Plugin, type PluginEnvironment } from '@sitecore-content-sdk/core';
+import { Plugin, type PluginAdapter } from '@sitecore-content-sdk/core';
 import { ANALYTICS_PLUGIN_NAME } from './const';
 
-export interface AnalyticsEnvironment extends PluginEnvironment {
+export interface AnalyticsAdapter extends PluginAdapter {
   getClientId: () => string | null;
   setClientId: () => Promise<void>;
   location: {
@@ -26,7 +26,7 @@ export interface AnalyticsSettings {
 
 export interface AnalyticsPlugin extends Plugin {
   settings: AnalyticsSettings;
-  environment: AnalyticsEnvironment;
+  adapter: AnalyticsAdapter;
   init: () => Promise<void>;
   name: typeof ANALYTICS_PLUGIN_NAME;
 }

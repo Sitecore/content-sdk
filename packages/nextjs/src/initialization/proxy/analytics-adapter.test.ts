@@ -8,10 +8,10 @@ import { NextRequest, NextResponse } from 'next/server';
 chai.use(sinonChai);
 const expect = chai.expect;
 
-describe('analyticsProxyEnvironment', () => {
+describe('analyticsProxyAdapter', () => {
   const sandbox = sinon.createSandbox();
 
-  let analyticsProxyEnvironmentModule: any;
+  let analyticsProxyAdapterModule: any;
   let getAnalyticsPluginStub: sinon.SinonStub;
   let getCoreContextStub: sinon.SinonStub;
   let getDefaultCookieAttributesStub: sinon.SinonStub;
@@ -93,7 +93,7 @@ describe('analyticsProxyEnvironment', () => {
     getDefaultCookieAttributesStub = sandbox.stub().returns(mockCookieAttributes);
     fetchClientIdFromEdgeProxyStub = sandbox.stub();
 
-    analyticsProxyEnvironmentModule = proxyquire('./analytics', {
+    analyticsProxyAdapterModule = proxyquire('./analytics-adapter', {
       '@sitecore-content-sdk/core': {
         getCoreContext: getCoreContextStub,
       },
@@ -114,7 +114,7 @@ describe('analyticsProxyEnvironment', () => {
     it('should return the client ID from request cookies', () => {
       const request = createMockRequest({ sc_cid: 'client-id-123' });
 
-      const result = analyticsProxyEnvironmentModule.getClientId(request);
+      const result = analyticsProxyAdapterModule.getClientId(request);
 
       expect(result).to.equal('client-id-123');
     });
@@ -122,7 +122,7 @@ describe('analyticsProxyEnvironment', () => {
     it('should return null when cookie does not exist', () => {
       const request = createMockRequest({});
 
-      const result = analyticsProxyEnvironmentModule.getClientId(request);
+      const result = analyticsProxyAdapterModule.getClientId(request);
 
       expect(result).to.be.null;
     });
@@ -130,23 +130,20 @@ describe('analyticsProxyEnvironment', () => {
     it('should return null when cookie value is empty', () => {
       const request = createMockRequest({ sc_cid: '' });
 
-      const result = analyticsProxyEnvironmentModule.getClientId(request);
+      const result = analyticsProxyAdapterModule.getClientId(request);
 
       expect(result).to.be.null;
     });
   });
 
-  describe('analyticsProxyEnvironment', () => {
-    it('should return an environment with type "proxy"', () => {
+  describe('analyticsProxyAdapter', () => {
+    it('should return an adapter with type "proxy"', () => {
       const request = createMockRequest();
       const response = createMockResponse();
 
-      const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-        request,
-        response
-      );
+      const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
 
-      expect(environment.type).to.equal('proxy');
+      expect(adapter.type).to.equal('proxy');
     });
 
     describe('getClientId', () => {
@@ -154,11 +151,8 @@ describe('analyticsProxyEnvironment', () => {
         const request = createMockRequest({ sc_cid: 'client-id-456' });
         const response = createMockResponse();
 
-        const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-          request,
-          response
-        );
-        const result = environment.getClientId();
+        const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+        const result = adapter.getClientId();
 
         expect(result).to.equal('client-id-456');
       });
@@ -170,11 +164,8 @@ describe('analyticsProxyEnvironment', () => {
           const request = createMockRequest({ 'sc_test-context-id': 'legacy-client-id' });
           const response = createMockResponse();
 
-          const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setClientId();
+          const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+          await adapter.setClientId();
 
           expect(response.cookieStore.sc_cid).to.deep.include({
             value: 'legacy-client-id',
@@ -187,11 +178,8 @@ describe('analyticsProxyEnvironment', () => {
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
-          const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setClientId();
+          const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+          await adapter.setClientId();
 
           expect(request.cookies.get('sc_cid')?.value).to.equal('legacy-client-id');
         });
@@ -200,11 +188,8 @@ describe('analyticsProxyEnvironment', () => {
           const request = createMockRequest({ 'sc_test-context-id': 'legacy-client-id' });
           const response = createMockResponse();
 
-          const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setClientId();
+          const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+          await adapter.setClientId();
 
           expect(request.cookies.get('sc_test-context-id')).to.be.undefined;
         });
@@ -213,11 +198,8 @@ describe('analyticsProxyEnvironment', () => {
           const request = createMockRequest({ 'sc_test-context-id': 'legacy-client-id' });
           const response = createMockResponse();
 
-          const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setClientId();
+          const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+          await adapter.setClientId();
 
           expect(fetchClientIdFromEdgeProxyStub).to.not.have.been.called;
         });
@@ -228,11 +210,8 @@ describe('analyticsProxyEnvironment', () => {
           const request = createMockRequest({ sc_cid: 'existing-client-id' });
           const response = createMockResponse();
 
-          const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setClientId();
+          const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+          await adapter.setClientId();
 
           expect(fetchClientIdFromEdgeProxyStub).to.not.have.been.called;
           expect(response.cookieStore.sc_cid).to.deep.include({
@@ -246,11 +225,8 @@ describe('analyticsProxyEnvironment', () => {
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
-          const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setClientId();
+          const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+          await adapter.setClientId();
 
           // The request cookie should remain unchanged
           expect(request.cookies.get('sc_cid')?.value).to.equal('existing-client-id');
@@ -267,11 +243,8 @@ describe('analyticsProxyEnvironment', () => {
           const request = createMockRequest({});
           const response = createMockResponse();
 
-          const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setClientId();
+          const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+          await adapter.setClientId();
 
           expect(fetchClientIdFromEdgeProxyStub).to.have.been.calledWith(
             'https://edge.test.com',
@@ -290,11 +263,8 @@ describe('analyticsProxyEnvironment', () => {
           const request = createMockRequest({});
           const response = createMockResponse();
 
-          const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setClientId();
+          const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+          await adapter.setClientId();
 
           expect(mockAnalyticsPlugin.settings.proxyValues).to.deep.equal(proxyValues);
         });
@@ -308,11 +278,8 @@ describe('analyticsProxyEnvironment', () => {
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
-          const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setClientId();
+          const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+          await adapter.setClientId();
 
           expect(request.cookies.get('sc_cid')?.value).to.equal('new-client-id');
         });
@@ -325,11 +292,8 @@ describe('analyticsProxyEnvironment', () => {
           const request = createMockRequest({});
           const response = createMockResponse();
 
-          const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-            request,
-            response
-          );
-          await environment.setClientId();
+          const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+          await adapter.setClientId();
 
           expect(response.cookieStore.sc_cid).to.deep.include({
             value: 'new-client-id',
@@ -344,11 +308,8 @@ describe('analyticsProxyEnvironment', () => {
         const request = createMockRequest({}, 'param1=value1&param2=value2');
         const response = createMockResponse();
 
-        const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-          request,
-          response
-        );
-        const result = environment.location.getSearchParams();
+        const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+        const result = adapter.location.getSearchParams();
 
         expect(result).to.equal('param1=value1&param2=value2');
       });
@@ -357,11 +318,8 @@ describe('analyticsProxyEnvironment', () => {
         const request = createMockRequest({}, '');
         const response = createMockResponse();
 
-        const environment = analyticsProxyEnvironmentModule.analyticsProxyEnvironment(
-          request,
-          response
-        );
-        const result = environment.location.getSearchParams();
+        const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+        const result = adapter.location.getSearchParams();
 
         expect(result).to.equal('');
       });

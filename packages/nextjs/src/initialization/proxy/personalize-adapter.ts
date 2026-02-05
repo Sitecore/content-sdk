@@ -8,11 +8,11 @@ import {
   fetchGuestIdFromEdgeProxy,
   getPersonalizePlugin,
 } from '@sitecore-content-sdk/personalize/internal';
-import { PersonalizeEnvironment } from '@sitecore-content-sdk/personalize/types/src/initialization/types';
+import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
 import { NextRequest, NextResponse } from 'next/server';
-import { getClientId } from './analytics';
+import { getClientId } from './analytics-adapter';
 
-export interface PersonalizeProxyEnvironment extends Required<PersonalizeEnvironment> {
+export interface PersonalizeProxyAdapter extends Required<PersonalizeAdapter> {
   type: 'proxy';
 }
 
@@ -22,10 +22,10 @@ export interface PersonalizeProxyEnvironment extends Required<PersonalizeEnviron
  * @param {NextResponse} response - The HTTP response object.
  * @public
  */
-export function personalizeProxyEnvironment(
+export function personalizeProxyAdapter(
   request: NextRequest,
   response: NextResponse
-): PersonalizeProxyEnvironment {
+): PersonalizeProxyAdapter {
   return {
     type: 'proxy',
     getUserAgent: () => request.headers.get('user-agent') || undefined,

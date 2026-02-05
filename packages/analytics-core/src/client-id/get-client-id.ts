@@ -5,5 +5,5 @@ import { getAnalyticsPlugin } from '../internal';
  * @returns {string} The client ID if the cookie exists.
  */
 export function getClientId(): string {
-  return getAnalyticsPlugin().environment.getClientId() || '';
+  return getAnalyticsPlugin().adapter.getClientId() || '';
 }

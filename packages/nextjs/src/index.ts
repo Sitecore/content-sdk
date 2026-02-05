@@ -170,5 +170,5 @@ export {
 } from '@sitecore-content-sdk/react';
 
 export { initContentSdk } from '@sitecore-content-sdk/core';
-export { personalizeProxyEnvironment } from './initialization/proxy/personalize';
-export { analyticsProxyEnvironment } from './initialization/proxy/analytics';
+export { personalizeProxyAdapter } from './initialization/proxy/personalize-adapter';
+export { analyticsProxyAdapter } from './initialization/proxy/analytics-adapter';

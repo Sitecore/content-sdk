@@ -37,7 +37,7 @@ const identityData = {
 const extensionData = { extKey: 'extValue' };
 
 describe('identity', () => {
-  const mockEnvironment = {
+  const mockAdapter = {
     getClientId: jest.fn(),
   };
 
@@ -50,7 +50,7 @@ describe('identity', () => {
         path: '/',
       },
     },
-    environment: mockEnvironment,
+    adapter: mockAdapter,
   };
 
   const mockCoreContext = {
@@ -73,7 +73,7 @@ describe('identity', () => {
   });
 
   it('should send an IdentityEvent to the server', async () => {
-    mockEnvironment.getClientId.mockReturnValue(id);
+    mockAdapter.getClientId.mockReturnValue(id);
 
     const response = await identity({ ...identityData, extensionData });
 
@@ -87,7 +87,7 @@ describe('identity', () => {
   });
 
   it('should use empty string for id when getClientId returns null', async () => {
-    mockEnvironment.getClientId.mockReturnValue(null);
+    mockAdapter.getClientId.mockReturnValue(null);
 
     await identity({ ...identityData, extensionData });
 
@@ -109,7 +109,7 @@ describe('identity', () => {
       readyPromise,
     } as any);
 
-    mockEnvironment.getClientId.mockReturnValue(id);
+    mockAdapter.getClientId.mockReturnValue(id);
 
     const identityPromise = identity({ ...identityData, extensionData });
 
@@ -122,7 +122,7 @@ describe('identity', () => {
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    mockEnvironment.getClientId.mockReturnValue(id);
+    mockAdapter.getClientId.mockReturnValue(id);
 
     await identity({ ...identityData, extensionData });
 

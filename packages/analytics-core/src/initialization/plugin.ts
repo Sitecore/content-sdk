@@ -1,4 +1,4 @@
-import { AnalyticsEnvironment, AnalyticsPlugin } from './types';
+import { AnalyticsAdapter, AnalyticsPlugin } from './types';
 import {
   CLIENT_ID_COOKIE_NAME,
   COOKIE_NAME_PREFIX,
@@ -21,7 +21,7 @@ interface AnalyticsPluginOptions {
     enableCookie?: boolean;
     timeout?: number;
   };
-  environment: AnalyticsEnvironment;
+  adapter: AnalyticsAdapter;
 }
 
 /**
@@ -31,7 +31,7 @@ interface AnalyticsPluginOptions {
  * @public
  */
 export function analyticsPlugin(options: AnalyticsPluginOptions): AnalyticsPlugin {
-  const { settings, environment } = options;
+  const { settings, adapter } = options;
 
   const analyticsSettings = {
     cookieSettings: {
@@ -50,7 +50,7 @@ export function analyticsPlugin(options: AnalyticsPluginOptions): AnalyticsPlugi
     name: ANALYTICS_PLUGIN_NAME,
     init,
     settings: analyticsSettings,
-    environment,
+    adapter,
   };
 }
 
@@ -70,14 +70,14 @@ async function init() {
     return;
   }
 
-  const environment = analyticsPlugin.environment;
+  const adapter = analyticsPlugin.adapter;
 
-  if (!environment.getClientId() || analyticsPlugin.environment.type !== 'browser') {
-    await environment.setClientId();
+  if (!adapter.getClientId() || analyticsPlugin.adapter.type !== 'browser') {
+    await adapter.setClientId();
     debugInit(`Cookie set for ${ANALYTICS_PLUGIN_NAME}`);
   }
 
-  if (analyticsPlugin.environment.type === 'browser')
+  if (analyticsPlugin.adapter.type === 'browser')
     window.scContentSDK = {
       ...window.scContentSDK,
       analytics_core: {

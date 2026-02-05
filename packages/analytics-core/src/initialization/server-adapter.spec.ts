@@ -1,4 +1,4 @@
-import { analyticsServerEnvironment } from './environment-server';
+import { analyticsServerAdapter } from './server-adapter';
 import * as pluginModule from './plugin';
 import * as coreModule from '@sitecore-content-sdk/core';
 import * as internalModule from '../internal';
@@ -26,7 +26,7 @@ jest.mock('../utils', () => ({
   getCookieServerSide: jest.fn(),
 }));
 
-describe('analyticsServerEnvironment', () => {
+describe('analyticsServerAdapter', () => {
   const mockAnalyticsSettings = {
     cookieSettings: {
       name: { clientId: 'sc_cid' },
@@ -85,13 +85,12 @@ describe('analyticsServerEnvironment', () => {
     (internalModule.getDefaultCookieAttributes as jest.Mock).mockReturnValue(mockCookieAttributes);
   });
 
-  it('should return an environment with type "server"', () => {
+  it('should return an adapter with type "server"', () => {
     const request = createMockRequest();
     const response = createMockResponse();
 
-    const environment = analyticsServerEnvironment(request, response);
-
-    expect(environment.type).toBe('server');
+    const adapter = analyticsServerAdapter(request, response);
+    expect(adapter.type).toBe('server');
   });
 
   describe('getClientId', () => {
@@ -103,8 +102,8 @@ describe('analyticsServerEnvironment', () => {
       const request = createMockRequest('sc_cid=client-id-123');
       const response = createMockResponse();
 
-      const environment = analyticsServerEnvironment(request, response);
-      const result = environment.getClientId();
+      const adapter = analyticsServerAdapter(request, response);
+      const result = adapter.getClientId();
 
       expect(result).toBe('client-id-123');
       expect(utilsModule.getCookieServerSide).toHaveBeenCalledWith(
@@ -118,8 +117,8 @@ describe('analyticsServerEnvironment', () => {
       const request = createMockRequest();
       const response = createMockResponse();
 
-      const environment = analyticsServerEnvironment(request, response);
-      const result = environment.getClientId();
+      const adapter = analyticsServerAdapter(request, response);
+      const result = adapter.getClientId();
 
       expect(result).toBeNull();
     });
@@ -129,8 +128,8 @@ describe('analyticsServerEnvironment', () => {
       const request = createMockRequest('sc_cid=');
       const response = createMockResponse();
 
-      const environment = analyticsServerEnvironment(request, response);
-      const result = environment.getClientId();
+      const adapter = analyticsServerAdapter(request, response);
+      const result = adapter.getClientId();
 
       expect(result).toBeNull();
     });
@@ -151,8 +150,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest(`${legacyCookieName}=legacy-client-id`);
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(utilsModule.getCookieServerSide).toHaveBeenCalledWith(
           `${legacyCookieName}=legacy-client-id`,
@@ -178,8 +177,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest(`${legacyCookieName}=legacy-client-id`);
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(request.headers.cookie).toBe('sc_cid=legacy-client-id');
       });
@@ -194,8 +193,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest('legacy-cookie=legacy-client-id');
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(internalModule.fetchClientIdFromEdgeProxy).not.toHaveBeenCalled();
       });
@@ -213,8 +212,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest(undefined);
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(request.headers.cookie).toBeUndefined();
         expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', [
@@ -236,8 +235,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest('sc_cid=existing-client-id');
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(internalModule.fetchClientIdFromEdgeProxy).not.toHaveBeenCalled();
         expect(utilsModule.createCookieString).toHaveBeenCalledWith(
@@ -260,8 +259,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest('sc_cid=existing-id');
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(request.headers.cookie).toBe('sc_cid=existing-id');
       });
@@ -285,8 +284,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest();
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(internalModule.fetchClientIdFromEdgeProxy).toHaveBeenCalledWith(
           'https://edge.test.com',
@@ -311,8 +310,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest();
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(mockAnalyticsSettings.proxyValues).toEqual(proxyValues);
       });
@@ -334,8 +333,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest(undefined);
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(request.headers.cookie).toBe('sc_cid=new-client-id; Max-Age=63072000');
       });
@@ -357,8 +356,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest('other_cookie=value');
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(request.headers.cookie).toBe(
           'other_cookie=value; sc_cid=new-client-id; Max-Age=63072000'
@@ -382,8 +381,8 @@ describe('analyticsServerEnvironment', () => {
         const request = createMockRequest();
         const response = createMockResponse();
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', 'sc_cid=new-client-id');
       });
@@ -404,8 +403,8 @@ describe('analyticsServerEnvironment', () => {
         const response = createMockResponse();
         response.headers['Set-Cookie'] = 'existing_cookie=value';
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(response.setHeader).toHaveBeenCalledWith(
           'Set-Cookie',
@@ -429,8 +428,8 @@ describe('analyticsServerEnvironment', () => {
         const response = createMockResponse();
         response.headers['Set-Cookie'] = ['cookie1=value1', 'cookie2=value2'];
 
-        const environment = analyticsServerEnvironment(request, response);
-        await environment.setClientId();
+        const adapter = analyticsServerAdapter(request, response);
+        await adapter.setClientId();
 
         expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', [
           'cookie1=value1',
@@ -446,8 +445,8 @@ describe('analyticsServerEnvironment', () => {
       const request = createMockRequest(undefined, '/page?param1=value1&param2=value2');
       const response = createMockResponse();
 
-      const environment = analyticsServerEnvironment(request, response);
-      const result = environment.location.getSearchParams();
+      const adapter = analyticsServerAdapter(request, response);
+      const result = adapter.location.getSearchParams();
 
       expect(result).toBe('?param1=value1&param2=value2');
     });
@@ -456,8 +455,8 @@ describe('analyticsServerEnvironment', () => {
       const request = createMockRequest(undefined, '/page');
       const response = createMockResponse();
 
-      const environment = analyticsServerEnvironment(request, response);
-      const result = environment.location.getSearchParams();
+      const adapter = analyticsServerAdapter(request, response);
+      const result = adapter.location.getSearchParams();
 
       expect(result).toBe('');
     });
@@ -466,8 +465,8 @@ describe('analyticsServerEnvironment', () => {
       const request = createMockRequest(undefined, '/');
       const response = createMockResponse();
 
-      const environment = analyticsServerEnvironment(request, response);
-      const result = environment.location.getSearchParams();
+      const adapter = analyticsServerAdapter(request, response);
+      const result = adapter.location.getSearchParams();
 
       expect(result).toBe('');
     });
@@ -479,8 +478,8 @@ describe('analyticsServerEnvironment', () => {
       );
       const response = createMockResponse();
 
-      const environment = analyticsServerEnvironment(request, response);
-      const result = environment.location.getSearchParams();
+      const adapter = analyticsServerAdapter(request, response);
+      const result = adapter.location.getSearchParams();
 
       expect(result).toBe('?utm_source=google&utm_medium=cpc&utm_campaign=test');
     });

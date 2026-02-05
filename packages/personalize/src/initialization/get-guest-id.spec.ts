@@ -12,12 +12,12 @@ jest.mock('@sitecore-content-sdk/core', () => ({
 }));
 
 describe('getGuestId', () => {
-  const mockEnvironment = {
+  const mockAdapter = {
     getClientId: jest.fn(),
   };
 
   const mockAnalyticsPlugin = {
-    environment: mockEnvironment,
+    adapter: mockAdapter,
   };
 
   const mockCoreContext = {
@@ -44,7 +44,7 @@ describe('getGuestId', () => {
     const fetchGuestIdSpy = jest
       .spyOn(fetchGuestIdFromEdgeProxyModule, 'fetchGuestIdFromEdgeProxy')
       .mockResolvedValueOnce('guestID');
-    mockEnvironment.getClientId.mockReturnValue(id);
+    mockAdapter.getClientId.mockReturnValue(id);
 
     const guestID = await getGuestId();
 
@@ -61,7 +61,7 @@ describe('getGuestId', () => {
     const fetchGuestIdSpy = jest
       .spyOn(fetchGuestIdFromEdgeProxyModule, 'fetchGuestIdFromEdgeProxy')
       .mockResolvedValueOnce('guestID');
-    mockEnvironment.getClientId.mockReturnValue(null);
+    mockAdapter.getClientId.mockReturnValue(null);
 
     await getGuestId();
 

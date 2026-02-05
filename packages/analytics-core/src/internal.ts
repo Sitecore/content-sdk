@@ -22,4 +22,4 @@ export { fetchClientIdFromEdgeProxy } from './client-id/fetch-client-id-from-edg
 export { getAnalyticsPlugin } from './initialization/plugin';
 export { ANALYTICS_PLUGIN_NAME } from './initialization/const';
 export type { AnalyticsPlugin } from './initialization/types';
-export { AnalyticsEnvironment, AnalyticsSettings } from './initialization/types';
+export { AnalyticsAdapter, AnalyticsSettings } from './initialization/types';

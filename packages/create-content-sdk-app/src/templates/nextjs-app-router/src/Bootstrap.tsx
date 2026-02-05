@@ -2,7 +2,7 @@
 import { useEffect, JSX } from 'react';
 import { initContentSdk } from '@sitecore-content-sdk/nextjs';
 import { eventsPlugin } from '@sitecore-content-sdk/events';
-import { analyticsBrowserEnvironment, analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
+import { analyticsBrowserAdapter, analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import config from 'sitecore.config';
 
 const Bootstrap = ({
@@ -37,7 +37,7 @@ const Bootstrap = ({
               enableCookie: true,
               cookieDomain: window.location.hostname.replace(/^www\./, ''),
             },
-            environment: analyticsBrowserEnvironment(),
+            adapter: analyticsBrowserAdapter(),
           }),
           eventsPlugin(),
         ],

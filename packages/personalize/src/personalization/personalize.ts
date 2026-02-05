@@ -18,14 +18,14 @@ export async function personalize(
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
   const { settings, readyPromise } = getCoreContext();
   await readyPromise;
-  const { environment: personalizeEnvironment } = getPersonalizePlugin();
+  const { adapter: personalizeAdapter } = getPersonalizePlugin();
 
-  const { environment: analyticsEnvironment } = getAnalyticsPlugin();
+  const { adapter: analyticsAdapter } = getAnalyticsPlugin();
 
-  const clientId = analyticsEnvironment.getClientId() || '';
-  const guestId = personalizeEnvironment.getGuestId() || '';
-  const searchParams = analyticsEnvironment.location.getSearchParams();
-  const userAgent = personalizeEnvironment.getUserAgent?.();
+  const clientId = analyticsAdapter.getClientId() || '';
+  const guestId = personalizeAdapter.getGuestId() || '';
+  const searchParams = analyticsAdapter.location.getSearchParams();
+  const userAgent = personalizeAdapter.getUserAgent?.();
 
   return new Personalizer(clientId, guestId).getInteractiveExperienceData(
     personalizeData,

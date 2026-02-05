@@ -12,9 +12,9 @@ import { personalize } from '@sitecore-content-sdk/personalize';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
-import { analyticsProxyEnvironment } from '../initialization/proxy/analytics';
+import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
 import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
-import { personalizeProxyEnvironment } from '../initialization/proxy/personalize';
+import { personalizeProxyAdapter } from '../initialization/proxy/personalize-adapter';
 
 /**
  * Represents the geolocation data used for personalization
@@ -287,13 +287,13 @@ export class PersonalizeProxy extends ProxyBase {
             enableCookie: true,
             cookieDomain: hostname,
           },
-          environment: analyticsProxyEnvironment(request, response),
+          adapter: analyticsProxyAdapter(request, response),
         }),
         personalizeServerPlugin({
           settings: {
             enablePersonalizeCookie: true,
           },
-          environment: personalizeProxyEnvironment(request, response),
+          adapter: personalizeProxyAdapter(request, response),
         }),
       ],
     });
